@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f0f2f5; /* 少し明るいグレー */
+  color: #333;
+  font-family: 'Helvetica Neue', 'Arial', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', 'sans-serif';
+}
+
+.card {
+  @apply bg-white p-4 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg;
+}
+
+.nav-header {
+  @apply bg-white shadow-md mb-8;
+}
+
+.nav-title {
+  @apply text-2xl font-bold text-gray-800;
+}
