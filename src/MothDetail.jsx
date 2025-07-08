@@ -1,20 +1,26 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 
+const DetailCard = ({ title, children }) => (
+  <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl shadow-xl">
+    <h2 className="text-2xl font-bold mb-4 text-primary-600 dark:text-primary-400">{title}</h2>
+    {children}
+  </div>
+);
+
 const MothDetail = ({ moths, hostPlants }) => {
   const { mothId } = useParams();
   const moth = moths.find(m => m.id === parseInt(mothId));
 
   if (!moth) {
     return (
-        <div className="container mx-auto p-4 text-center">
-            <p className="text-xl">蛾が見つかりません。</p>
-            <Link to="/" className="text-blue-500 hover:underline mt-4 inline-block">← リストに戻る</Link>
-        </div>
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-red-500 text-lg">蛾が見つかりません。</p>
+        <Link to="/" className="text-primary-600 dark:text-primary-400 hover:underline mt-4 inline-block">← リストに戻る</Link>
+      </div>
     );
   }
 
-  // 同じ食草を持つ他の蛾を探す
   const relatedMoths = new Set();
   moth.hostPlants.forEach(plant => {
     if (hostPlants[plant]) {
@@ -26,69 +32,99 @@ const MothDetail = ({ moths, hostPlants }) => {
     }
   });
 
-  const imagePath = `/images/moths/${moth.name}.jpg`;
+  const imagePath = `/images/moths/${encodeURIComponent(moth.scientificFilename)}.jpg`;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-xl p-6 md:p-8">
-        <div className="mb-6">
-            <Link to="/" className="text-blue-600 hover:underline">← 蛾のリストに戻る</Link>
-        </div>
-
-        <h1 className="text-4xl md:text-5xl font-bold mb-2">{moth.name}</h1>
-        <p className="text-xl md:text-2xl italic text-gray-500 mb-6">{moth.scientificName}</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 border-b pb-2">基本情報</h2>
-            <div className="w-full h-64 bg-gray-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+    <div className="container mx-auto px-4 py-8">
+      <Link to="/" className="text-primary-600 dark:text-primary-400 hover:underline mb-6 inline-block">← 蛾のリストに戻る</Link>
+      <div className="mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-primary-600 dark:text-primary-400">{moth.name}</h1>
+        <p className="text-xl text-neutral-500 dark:text-neutral-400 italic mt-1">{moth.scientificName}</p>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1">
+          <DetailCard title="基本情報">
+            <div className="w-full h-64 bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center rounded-lg mb-4">
               <img 
                 src={imagePath} 
                 alt={moth.name}
-                className="w-full h-full object-cover"
-                onError={(e) => { e.target.onerror = null; e.target.style.display='none'; e.target.parentElement.innerHTML = '<span class="text-gray-500">画像なし</span>'; }}
+                className="max-w-full max-h-full object-contain rounded-lg"
+                onError={(e) => { e.target.onerror = null; e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; e.target.alt='画像が見つかりません'; }}
               />
             </div>
-            <div className="mt-4">
-                <h3 className="font-semibold">出典:</h3>
-                <p className="text-gray-700">{moth.source}</p>
+            <div>
+                <h3 className="text-lg font-semibold text-neutral-700 dark:text-neutral-300">出典:</h3>
+                <p className="text-neutral-600 dark:text-neutral-400">{moth.source}</p>
             </div>
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 border-b pb-2">食草</h2>
-            <ul className="space-y-2 mt-4">
+          </DetailCard>
+        </div>
+
+        <div className="lg:col-span-2 space-y-8">
+          <DetailCard title="分類">
+            <dl className="space-y-2 text-neutral-600 dark:text-neutral-400">
+              {moth.classification.familyJapanese && (
+                <div>
+                  <dt className="font-semibold text-neutral-700 dark:text-neutral-300">科:</dt>
+                  <dd className="ml-4">{moth.classification.familyJapanese} ({moth.classification.family})</dd>
+                </div>
+              )}
+              {moth.classification.subfamilyJapanese && (
+                <div>
+                  <dt className="font-semibold text-neutral-700 dark:text-neutral-300">亜科:</dt>
+                  <dd className="ml-4">{moth.classification.subfamilyJapanese} ({moth.classification.subfamily})</dd>
+                </div>
+              )}
+              {moth.classification.tribeJapanese && (
+                <div>
+                  <dt className="font-semibold text-neutral-700 dark:text-neutral-300">族:</dt>
+                  <dd className="ml-4">{moth.classification.tribeJapanese} ({moth.classification.tribe})</dd>
+                </div>
+              )}
+              {moth.classification.genus && (
+                <div>
+                  <dt className="font-semibold text-neutral-700 dark:text-neutral-300">属:</dt>
+                  <dd className="ml-4">{moth.classification.genus}</dd>
+                </div>
+              )}
+            </dl>
+          </DetailCard>
+
+          <DetailCard title="食草">
+            <ul className="space-y-2">
               {moth.hostPlants.length > 0 ? (
                 moth.hostPlants.map(plant => (
                     <li key={plant}>
-                        <Link to={`/plant/${encodeURIComponent(plant)}`} className="text-green-700 hover:underline font-semibold">
+                        <Link to={`/plant/${encodeURIComponent(plant)}`} className="text-secondary-600 dark:text-secondary-400 hover:underline">
                             {plant}
                         </Link>
                     </li>
                 ))
               ) : (
-                <li>不明</li>
+                <li className="text-neutral-500 dark:text-neutral-400">不明</li>
               )}
             </ul>
-          </div>
+          </DetailCard>
         </div>
+      </div>
 
-        <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-3 border-b pb-2">同じ食草を持つ蛾</h2>
+      <div className="mt-8">
+        <DetailCard title="同じ食草を持つ蛾">
             {relatedMoths.size > 0 ? (
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2">
                 {[...relatedMoths].map(relatedMothName => {
                     const relatedMoth = moths.find(m => m.name === relatedMothName);
                     return relatedMoth ? (
-                        <Link key={relatedMoth.id} to={`/moth/${relatedMoth.id}`} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm hover:bg-blue-200">
+                        <Link key={relatedMoth.id} to={`/moth/${relatedMoth.id}`} className="bg-neutral-200 dark:bg-neutral-700 px-3 py-1 rounded-full text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors">
                             {relatedMothName}
                         </Link>
                     ) : null;
                 })}
               </div>
             ) : (
-              <p className="mt-4">同じ食草を持つ他の蛾は見つかりませんでした。</p>
+              <p className="text-neutral-500 dark:text-neutral-400">同じ食草を持つ他の蛾は見つかりませんでした。</p>
             )}
-        </div>
+        </DetailCard>
       </div>
     </div>
   );

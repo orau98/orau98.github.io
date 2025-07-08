@@ -1,3 +1,5 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* No @apply here, direct Tailwind classes are used in App.jsx */

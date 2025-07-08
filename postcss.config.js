@@ -1,6 +1,9 @@
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+
 export default {
-    plugins: {
-      "@tailwindcss/postcss": {},   // ← ★ このキー名が重要
-      autoprefixer: {},
-    },
-  }
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
