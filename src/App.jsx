@@ -300,7 +300,7 @@ function App() {
                 plantDetailData[plant].genus = yListPlantScientificNameMap[plant]?.split(' ')[0] || '';
               });
             });
-          }
+          } // Added missing closing brace for complete callback
         });
 
         // Combine all moth data after all parsing is complete
