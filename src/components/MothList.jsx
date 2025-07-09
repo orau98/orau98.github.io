@@ -24,11 +24,11 @@ const MothList = ({ moths }) => {
   const filteredMoths = useMemo(() => moths.filter(moth => {
     const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
     return moth.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-           (moth.scientificName && moth.scientificName.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.familyJapanese && moth.classification.familyJapanese.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.subfamilyJapanese && moth.classification.subfamilyJapanese.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.tribeJapanese && moth.classification.tribeJapanese.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.genus && moth.classification.genus.toLowerCase().includes(lowerCaseSearchTerm));
+           (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+           (moth.classification.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+           (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+           (moth.classification.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+           (moth.classification.genus?.toLowerCase().includes(lowerCaseSearchTerm));
   }), [moths, debouncedSearchTerm]);
 
   const allSuggestions = useMemo(() => {
