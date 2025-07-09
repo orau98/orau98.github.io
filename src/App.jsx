@@ -259,7 +259,7 @@ function App() {
                   let plant = entry.trim();
                   console.log('DEBUG: Initial entry:', entry);
                   console.log('DEBUG: Trimmed entry:', plant);
-                  plant = plant.replace(/[[\"(\uFF08\uFF3B\u300C\u300E][^)\]}"）」「』】]*[\\)\]}"）」「』】]/g, '');
+                  plant = plant.replace(/[["(\uFF08\uFF3B\u300C\u300E][^)\]}"）」「』】]*[\\)\]}"（）」「』】]/g, '');
                   console.log('DEBUG: After bracket removal:', plant);
                   plant = plant.replace(/など/g, '');
                   console.log('DEBUG: After "など" removal:', plant);
@@ -310,47 +310,3 @@ function App() {
         setHostPlants(hostPlantData);
         setPlantDetails(plantDetailData);
         console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Host Plants count:", Object.keys(hostPlantData).length);
-      } catch (error) {
-        console.error("Failed to fetch or parse data:", error);
-        // Optionally, set an error state to display a message to the user
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
-
-  return (
-    <div className="min-h-screen flex flex-col bg-neutral-100 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 transition-colors duration-300">
-      <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-neutral-800 dark:text-neutral-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors transform hover:scale-105">
-            <h1>”繋がり”が見える昆虫図鑑</h1>
-          </Link>
-          <button onClick={toggleTheme} className="p-2 rounded-full text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-            {theme === 'light' ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
-          </button>
-        </div>
-      </header>
-      <main className="flex-grow container max-w-7xl mx-auto px-4 py-8">
-        {loading ? (
-          <SkeletonLoader />
-        ) : (
-          <Routes>
-            <Route path="/" element={<InsectsHostPlantExplorer moths={moths} hostPlants={hostPlants} plantDetails={plantDetails} />} />
-            <Route path="/moth/:mothId" element={<MothDetail moths={moths} hostPlants={hostPlants} />} />
-            <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} hostPlants={hostPlants} plantDetails={plantDetails} />} />
-          </Routes>
-        )}
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
-export default App;
