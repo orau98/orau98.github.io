@@ -284,6 +284,7 @@ function App() {
             Papa.parse(book1Text, {
               header: true,
               skipEmptyLines: true,
+              encoding: 'utf8', // Explicitly set encoding
               delimiter: ',',    // Explicitly set delimiter
               complete: (results) => {
                 if (results.errors.length) {
