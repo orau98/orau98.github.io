@@ -286,8 +286,7 @@ function App() {
               skipEmptyLines: true,
               encoding: 'utf8', // Explicitly set encoding
               delimiter: ',',    // Explicitly set delimiter
-              newline: '
-',   // Explicitly set newline character
+              newline: '\r\n',   // Explicitly set newline character
               complete: (results) => {
                 if (results.errors.length) {
                   console.error("PapaParse errors in Book1.csv:", results.errors);
