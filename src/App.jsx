@@ -281,84 +281,163 @@ function App() {
               });
             });
 
-            Papa.parse(book1Text, {
-              header: true,
-              skipEmptyLines: true,
-              encoding: 'utf8', // Explicitly set encoding
-              delimiter: ',',    // Explicitly set delimiter
-              newline: '\r\n',   // Explicitly set newline character
-              complete: (results) => {
-                if (results.errors.length) {
-                  console.error("PapaParse errors in Book1.csv:", results.errors);
-                  results.errors.forEach(err => console.error(err));
-                }
-                const book1Data = results.data;
-
-                Papa.parse(hamushiSpeciesText, {
-                  header: true,
-                  skipEmptyLines: true,
-                  delimiter: ',',
-                  complete: (hamushiResults) => {
-                    if (hamushiResults.errors.length) {
-                      console.error("PapaParse errors in hamushi_species.csv:", hamushiResults.errors);
-                      hamushiResults.errors.forEach(err => console.error(err));
-                    }
-
-                    const hamushiMap = {};
-                    hamushiResults.data.forEach(row => {
-                      const name = row['和名']?.trim();
-                      if (name) {
-                        hamushiMap[name] = row;
-                      }
-                    });
-
-                    book1Data.forEach((row, index) => {
-                      const originalInsectName = row['和名']?.trim();
-                      if (!originalInsectName) return;
-
-                      const insectName = correctMothName(originalInsectName);
-                      let scientificName = row['学名'] || '';
-                      let classification = { family: 'ハムシ科' };
-
-                      const hamushiDetail = hamushiMap[insectName];
-                      if (hamushiDetail) {
-                        scientificName = `${hamushiDetail['属']} ${hamushiDetail['種小名']}`.trim();
-                        classification = {
-                          family: hamushiDetail['科'] || '',
-                          subfamily: hamushiDetail['亜科'] || '',
-                          genus: hamushiDetail['属'] || '',
-                          speciesEpithet: hamushiDetail['種小名'] || '',
-                        };
-                      }
-
-                      const scientificFilename = formatScientificNameForFilename(scientificName);
-
-                      const hostPlantList = (row['食草'] || '').split(/\u3001|,/).map(p => p.trim()).filter(Boolean);
-                      mothData.push({ id: mothData.length + index, name: insectName, scientificName: scientificName, scientificFilename: scientificFilename, hostPlants: hostPlantList, source: 'ハムシ', classification: classification });
-                      console.log(`Moth ID: ${mothData.length + index}, Name: ${insectName}, Source: ハムシ`);
-
-                      hostPlantList.forEach(plant => {
-                        if (!hostPlantData[plant]) hostPlantData[plant] = [];
-                        hostPlantData[plant].push(insectName);
-
-                        if (!plantDetailData[plant]) plantDetailData[plant] = { family: '不明' };
-                        plantDetailData[plant].family = yListPlantFamilyMap[plant] || wameiFamilyMap[plant] || '不明';
-                        plantDetailData[plant].scientificName = yListPlantScientificNameMap[plant] || '';
-                      });
-                    });
-
-                    setMoths(mothData);
-                    setHostPlants(hostPlantData);
-                    setPlantDetails(plantDetailData);
-                    console.log("Main CSV parsed. Moths count:", mothData.length, "Host Plants count:", Object.keys(hostPlantData).length);
-                  }
-                });
+            // Process hamushi_species.csv first to create hamushiMap
+        const hamushiMap = {};
+        Papa.parse(hamushiSpeciesText, {
+          header: true,
+          skipEmptyLines: true,
+          delimiter: ',',
+          complete: (hamushiResults) => {
+            if (hamushiResults.errors.length) {
+              console.error("PapaParse errors in hamushi_species.csv:", hamushiResults.errors);
+              hamushiResults.errors.forEach(err => console.error(err));
+            }
+            hamushiResults.data.forEach(row => {
+              const name = row['和名']?.trim();
+              if (name) {
+                hamushiMap[name] = row;
               }
             });
-
-            
-          },
+          }
         });
+
+        // Process book1Text using the hamushiMap
+        const book1MothData = [];
+        Papa.parse(book1Text, {
+          header: true,
+          skipEmptyLines: true,
+          encoding: 'utf8', // Explicitly set encoding
+          delimiter: ',',    // Explicitly set delimiter
+          newline: '\r\n',   // Explicitly set newline character
+          complete: (results) => {
+            if (results.errors.length) {
+              console.error("PapaParse errors in Book1.csv:", results.errors);
+              results.errors.forEach(err => console.error(err));
+            }
+            results.data.forEach((row, index) => {
+              const originalInsectName = row['和名']?.trim();
+              if (!originalInsectName) return;
+
+              const insectName = correctMothName(originalInsectName);
+              let scientificName = row['学名'] || '';
+              let classification = { family: 'ハムシ科' };
+
+              const hamushiDetail = hamushiMap[insectName];
+              if (hamushiDetail) {
+                scientificName = `${hamushiDetail['属']} ${hamushiDetail['種小名']}`.trim();
+                classification = {
+                  family: hamushiDetail['科'] || '',
+                  subfamily: hamushiDetail['亜科'] || '',
+                  genus: hamushiDetail['属'] || '',
+                  speciesEpithet: hamushiDetail['種小名'] || '',
+                };
+              }
+
+              const scientificFilename = formatScientificNameForFilename(scientificName);
+
+              const hostPlantList = (row['食草'] || '').split(/\u3001|,/).map(p => p.trim()).filter(Boolean);
+              book1MothData.push({ id: `book1-${index}`, name: insectName, scientificName: scientificName, scientificFilename: scientificFilename, hostPlants: hostPlantList, source: 'ハムシ', classification: classification });
+            });
+          }
+        });
+
+        // Process mainText
+        const mainMothData = [];
+        const hostPlantData = {};
+        const plantDetailData = {};
+
+        Papa.parse(mainText, {
+          header: true,
+          skipEmptyLines: true,
+          delimiter: ',',
+          complete: (results) => {
+            if (results.errors.length) {
+              console.error("PapaParse errors in ListMJ_hostplants_integrated_with_bokutou.csv:", results.errors);
+            }
+            results.data.forEach((row, index) => {
+              const originalMothName = row['和名']?.trim();
+              if (!originalMothName) return;
+
+              const mothName = correctMothName(originalMothName);
+              const scientificName = row['学名'] || '';
+              const scientificFilename = formatScientificNameForFilename(scientificName);
+
+              const familyFromMainCsv = row['科和名'] || row['科名'] || '';
+
+              const classification = {
+                family: row['科名'] || '', familyJapanese: row['科和名'] || '', subfamily: row['亜科名'] || '',
+                subfamilyJapanese: row['亜科和名'] || '', tribe: row['族名'] || '', tribeJapanese: row['族和名'] || '',
+                subtribe: row['亜族名'] || '', subtribeJapanese: row['亜族和名'] || '', genus: row['属名'] || '',
+                subgenus: row['亜属名'] || '', speciesEpithet: row['種小名'] || '', subspeciesEpithet: row['亜種小名'] || '',
+              };
+
+              const hostPlantEntries = (row['食草'] || ' ')
+                .split(';')
+                .flatMap(entry => {
+                  let plant = entry.trim();
+                  console.log('DEBUG: Initial entry:', entry);
+                  console.log('DEBUG: Trimmed entry:', plant);
+                  // 1. 全ての括弧とその中身を削除
+                  plant = plant.replace(/[["(\uFF08\uFF3B\u300C\u300E][^)\]}"）」「』】]*[\\)\]}"）」「』】]/g, '');
+                  console.log('DEBUG: After bracket removal:', plant);
+                  // 2. 「など」を削除
+                  plant = plant.replace(/など/g, '');
+                  console.log('DEBUG: After "など" removal:', plant);
+                  // 3. 数字とその他の記号を削除 (ただし、カンマや「、」は残す)
+                  plant = plant.replace(/[^\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}\s,\u3001]/gu, '');
+                  console.log('DEBUG: After non-Japanese/symbol removal:', plant);
+                  // 4. 複数のスペースを単一のスペースに変換し、前後のスペースをトリム
+                  plant = plant.replace(/\s+/g, ' ').trim();
+                  console.log('DEBUG: After space normalization and trim:', plant);
+
+                  // ここで、カンマや「、」で分割し、それぞれの要素を処理
+                  return plant.split(/,|\u3001/).map(p => {
+                    let cleanedP = p.trim();
+                    console.log('DEBUG: Sub-entry before final cleaning:', p, '->', cleanedP);
+
+                    // ここで、最初の日本語の単語を抽出する
+                    const match = cleanedP.match(/^[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]+/u);
+                    cleanedP = match ? match[0] : '';
+                    console.log('DEBUG: After Japanese word extraction:', cleanedP);
+
+                    // 「科」と「属」を削除 (抽出後に適用)
+                    cleanedP = cleanedP.replace(/科|属/g, '');
+                    console.log('DEBUG: After "科"/"属" removal:', cleanedP);
+                    // 最終的なトリム
+                    cleanedP = cleanedP.trim();
+                    console.log('DEBUG: Final cleanedP:', cleanedP);
+
+                    if (!cleanedP) return null;
+
+                    const correctedPlantName = correctPlantName(wameiMap[cleanedP] || cleanedP);
+
+                    return { plant: correctedPlantName, familyFromMainCsv: familyFromMainCsv };
+                  });
+                }).filter(Boolean);
+
+              const hostPlantList = hostPlantEntries.map(e => e.plant);
+              mainMothData.push({ id: `main-${index}`, name: mothName, scientificName: scientificName, scientificFilename: scientificFilename, hostPlants: hostPlantList, source: row['出典'] || '不明', classification });
+
+              hostPlantEntries.forEach(({ plant, familyFromMainCsv }) => {
+                if (!hostPlantData[plant]) hostPlantData[plant] = [];
+                hostPlantData[plant].push(mothName);
+
+                if (!plantDetailData[plant]) plantDetailData[plant] = { family: '不明' };
+                plantDetailData[plant].family = yListPlantFamilyMap[plant] || wameiFamilyMap[plant] || familyFromMainCsv || plantFamilyMap[plant] || '不明';
+                plantDetailData[plant].scientificName = yListPlantScientificNameMap[plant] || '';
+                plantDetailData[plant].genus = yListPlantScientificNameMap[plant]?.split(' ')[0] || '';
+              });
+            });
+          }
+        });
+
+        // Combine all moth data after all parsing is complete
+        const combinedMothData = [...mainMothData, ...book1MothData];
+
+        setMoths(combinedMothData);
+        setHostPlants(hostPlantData);
+        setPlantDetails(plantDetailData);
+        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Host Plants count:", Object.keys(hostPlantData).length);
       } catch (error) {
         console.error("Failed to fetch or parse data:", error);
         // Optionally, set an error state to display a message to the user
