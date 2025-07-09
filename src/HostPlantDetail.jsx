@@ -8,13 +8,19 @@ const DetailCard = ({ title, children }) => (
   </div>
 );
 
-const HostPlantDetail = ({ moths, hostPlants, plantDetails }) => {
+const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
 
   const mothsOnThisPlant = hostPlants[decodedPlantName] || [];
   const details = plantDetails[decodedPlantName] || { family: '不明' };
   const imagePath = `/images/plants/${decodedPlantName}.jpg`;
+  
+  // Separate moths and butterflies that use this plant
+  const allInsects = [...moths, ...butterflies];
+  const insectsOnThisPlant = allInsects.filter(insect => 
+    insect.hostPlants.includes(decodedPlantName)
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -50,23 +56,40 @@ const HostPlantDetail = ({ moths, hostPlants, plantDetails }) => {
         </div>
 
         <div className="lg:col-span-2">
-          <DetailCard title="この植物を食べる蛾">
-            {mothsOnThisPlant.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {mothsOnThisPlant.map(mothName => {
-                    const moth = moths.find(m => m.name === mothName);
-                    return (
-                      moth ? (
-                          <Link key={moth.id} to={`/moth/${moth.id}`} className="bg-neutral-200 dark:bg-neutral-700 px-3 py-1 rounded-full text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors">
-                              {mothName}
-                          </Link>
-                      ) : null
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-neutral-500 dark:text-neutral-400">この食草を食べる蛾の情報はありません。</p>
-              )}
+          <DetailCard title="この植物を食べる昆虫">
+            {insectsOnThisPlant.length > 0 ? (
+              <>
+                {/* Moths section */}
+                {insectsOnThisPlant.filter(insect => insect.type !== 'butterfly').length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold mb-3 text-purple-600 dark:text-purple-400">蛾</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {insectsOnThisPlant.filter(insect => insect.type !== 'butterfly').map(moth => (
+                        <Link key={moth.id} to={`/moth/${moth.id}`} className="bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-full text-sm text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors">
+                          {moth.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Butterflies section */}
+                {insectsOnThisPlant.filter(insect => insect.type === 'butterfly').length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 text-orange-600 dark:text-orange-400">蝶</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {insectsOnThisPlant.filter(insect => insect.type === 'butterfly').map(butterfly => (
+                        <Link key={butterfly.id} to={`/butterfly/${butterfly.id}`} className="bg-orange-100 dark:bg-orange-900/30 px-3 py-1 rounded-full text-sm text-orange-700 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors">
+                          {butterfly.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-neutral-500 dark:text-neutral-400">この食草を食べる昆虫の情報はありません。</p>
+            )}
           </DetailCard>
         </div>
       </div>

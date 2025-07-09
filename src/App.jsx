@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Papa from 'papaparse';
 import InsectsHostPlantExplorer from './InsectsHostPlantExplorer';
 import MothDetail from './MothDetail';
 import HostPlantDetail from './HostPlantDetail';
 import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
+import Header from './components/Header';
 
 // This map can be a fallback, but the primary source is now the wamei_checklist.csv.
 const plantFamilyMap = {
@@ -23,6 +23,7 @@ const plantFamilyMap = {
 
 function App() {
   const [moths, setMoths] = useState([]);
+  const [butterflies, setButterflies] = useState([]);
   const [hostPlants, setHostPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,7 @@ function App() {
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const book1CsvPath = `${import.meta.env.BASE_URL}Book1.csv`;
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species.csv`;
+      const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
 
       console.log("Fetching CSV files...");
       console.log("wameiCsvPath:", wameiCsvPath);
@@ -56,12 +58,13 @@ function App() {
       console.log("book1CsvPath:", book1CsvPath);
 
       try {
-        const [wameiRes, mainRes, yListRes, book1Res, hamushiSpeciesRes] = await Promise.all([
+        const [wameiRes, mainRes, yListRes, book1Res, hamushiSpeciesRes, butterflyRes] = await Promise.all([
           fetch(wameiCsvPath),
           fetch(mainCsvPath),
           fetch(yListCsvPath),
           fetch(book1CsvPath),
-          fetch(hamushiSpeciesCsvPath)
+          fetch(hamushiSpeciesCsvPath),
+          fetch(butterflyCsvPath)
         ]);
 
         if (!wameiRes.ok) throw new Error(`Failed to fetch ${wameiCsvPath}: ${wameiRes.statusText}`);
@@ -69,13 +72,15 @@ function App() {
         if (!yListRes.ok) throw new Error(`Failed to fetch ${yListCsvPath}: ${yListRes.statusText}`);
         if (!book1Res.ok) throw new Error(`Failed to fetch ${book1CsvPath}: ${book1Res.statusText}`);
         if (!hamushiSpeciesRes.ok) throw new Error(`Failed to fetch ${hamushiSpeciesCsvPath}: ${hamushiSpeciesRes.statusText}`);
+        if (!butterflyRes.ok) throw new Error(`Failed to fetch ${butterflyCsvPath}: ${butterflyRes.statusText}`);
 
-        const [wameiText, mainText, yListText, book1Text, hamushiSpeciesText] = await Promise.all([
+        const [wameiText, mainText, yListText, book1Text, hamushiSpeciesText, butterflyText] = await Promise.all([
           wameiRes.text(),
           mainRes.text(),
           yListRes.text(),
           book1Res.text(),
-          hamushiSpeciesRes.text()
+          hamushiSpeciesRes.text(),
+          butterflyRes.text()
         ]);
 
         console.log("CSV files fetched successfully. Parsing...");
@@ -123,8 +128,19 @@ function App() {
 
         const formatScientificNameForFilename = (scientificName) => {
           if (!scientificName) return '';
-          let cleanedName = scientificName.replace(/\s*\(.+?\)\s*(,\s*\d{4})?/, '');
+          console.log("Original scientificName:", scientificName);
+          // Remove anything in parentheses, or from ( to end of string if no closing parenthesis
+          let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+          // Remove common author/year patterns at the end of the string
+          cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, ''); // e.g., ", 1766"
+          cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, ''); // e.g., "Hufnagel 1766" or "Hufnagel, 1766"
+          // More specific pattern to remove author names - only remove if it's after a binomial name
+          cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1'); // e.g., "Genus species Author"
+          // Keep only alphanumeric characters and spaces
+          cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+          // Replace spaces with underscores
           cleanedName = cleanedName.replace(/\s/g, '_');
+          console.log("Cleaned scientificName for filename:", cleanedName);
           return cleanedName;
         };
 
@@ -223,7 +239,7 @@ function App() {
           const scientificFilename = formatScientificNameForFilename(scientificName);
 
           const hostPlantList = (row['食草'] || '').split(/\u3001|,/).map(p => p.trim()).filter(Boolean);
-          book1MothData.push({ id: `book1-${index}`, name: insectName, scientificName: scientificName, scientificFilename: scientificFilename, hostPlants: hostPlantList, source: 'ハムシ', classification: classification });
+          book1MothData.push({ id: `book1-${index}`, name: insectName, scientificName: scientificName, scientificFilename: scientificFilename, type: 'moth', hostPlants: hostPlantList, source: 'ハムシ', classification: classification });
         });
 
         // Process mainText
@@ -287,14 +303,26 @@ function App() {
                   });
                 }).filter(Boolean);
 
-              const hostPlantList = hostPlantEntries.map(e => e.plant);
-              mainMothData.push({ id: `main-${index}`, name: mothName, scientificName: scientificName, scientificFilename: scientificFilename, hostPlants: hostPlantList, source: row['出典'] || '不明', classification });
+              const hostPlantList = [...new Set(hostPlantEntries.map(e => e.plant))];
+              console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
+              mainMothData.push({ 
+                id: `main-${index}`, 
+                name: mothName, 
+                scientificName: scientificName, 
+                scientificFilename: scientificFilename, 
+                type: 'moth',
+                hostPlants: hostPlantList, 
+                source: row['出典'] || '不明', 
+                classification,
+                // Instagram data (if available)
+                instagramUrl: row['instagram_url'] || ''
+              });
 
               hostPlantEntries.forEach(({ plant, familyFromMainCsv }) => {
                 if (!hostPlantData[plant]) hostPlantData[plant] = [];
                 hostPlantData[plant].push(mothName);
 
-                if (!plantDetailData[plant]) plantDetailData[plant] = { family: '不明' };
+                if (!plantDetailData[plant]) plantDetailData[plant] = {}; // Ensure it's an object
                 plantDetailData[plant].family = yListPlantFamilyMap[plant] || wameiFamilyMap[plant] || familyFromMainCsv || plantFamilyMap[plant] || '不明';
                 plantDetailData[plant].scientificName = yListPlantScientificNameMap[plant] || '';
                 plantDetailData[plant].genus = yListPlantScientificNameMap[plant]?.split(' ')[0] || '';
@@ -303,12 +331,123 @@ function App() {
           } // Added missing closing brace for complete callback
         });
 
+        // Parse butterfly_host.csv
+        const butterflyParsed = Papa.parse(butterflyText, { header: true, skipEmptyLines: true, delimiter: ',' });
+        if (butterflyParsed.errors.length) {
+          console.error("PapaParse errors in butterfly_host.csv:", butterflyParsed.errors);
+        }
+
+        const butterflyData = [];
+        butterflyParsed.data.forEach((row, index) => {
+          const source = row['文献名'];
+          const family = row['科'];
+          const subfamily = row['亜科'];
+          const genus = row['属'];
+          const species = row['種小名'];
+          const japaneseName = row['和名'];
+          const hostPlants = row['食草'];
+          
+          if (!japaneseName || !genus || !species) return;
+          
+          const scientificName = `${genus} ${species}`;
+          const id = `butterfly-${index}`;
+          
+          // Parse host plants
+          let hostPlantList = [];
+          if (hostPlants) {
+            // Remove quotes and split by various delimiters
+            const cleanedHostPlants = hostPlants.replace(/["""]/g, '').trim();
+            hostPlantList = [...new Set(cleanedHostPlants.split(/[,;、，；]/)
+              .map(plant => plant.trim())
+              .filter(plant => plant.length > 0)
+              .map(plant => {
+                // Clean up plant names
+                plant = plant.replace(/など/g, '');
+                plant = plant.replace(/類$/g, '');
+                plant = plant.replace(/\([^)]*\)/g, ''); // Remove parenthetical content
+                return plant.trim();
+              })
+              .filter(plant => plant.length > 0))];
+          }
+
+          const butterfly = {
+            id,
+            name: japaneseName,
+            scientificName,
+            scientificFilename: formatScientificNameForFilename(scientificName),
+            type: 'butterfly',
+            classification: {
+              family: family,
+              familyJapanese: family,
+              subfamily: subfamily,
+              subfamilyJapanese: subfamily,
+              genus: genus
+            },
+            hostPlants: hostPlantList,
+            source: source || "日本産蝶類標準図鑑"
+          };
+
+          butterflyData.push(butterfly);
+
+          // Add to host plants data
+          hostPlantList.forEach(plant => {
+            if (!hostPlantData[plant]) {
+              hostPlantData[plant] = [];
+            }
+            if (!hostPlantData[plant].includes(japaneseName)) {
+              hostPlantData[plant].push(japaneseName);
+            }
+          });
+        });
+
+        console.log("Butterfly data parsed:", butterflyData.length);
+
         // Combine all moth data after all parsing is complete
         const combinedMothData = [...mainMothData, ...book1MothData];
 
         setMoths(combinedMothData);
+        setButterflies(butterflyData);
+        console.log("Moths data set:", combinedMothData.length);
+        console.log("Butterflies data set:", butterflyData.length);
         setHostPlants(hostPlantData);
+        console.log("Host Plants data set:", Object.keys(hostPlantData).length);
         setPlantDetails(plantDetailData);
-        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Host Plants count:", Object.keys(hostPlantData).length);
-      } // This is the missing closing brace for the fetchData async function
-    }; // This is the closing brace for the fetchData function declaration
+        console.log("plantDetailData before setting state:", plantDetailData);
+        console.log("Plant Details data set:", Object.keys(plantDetailData).length);
+        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Host Plants count:", Object.keys(hostPlantData).length);
+        setLoading(false); // Set loading to false after data is loaded
+        console.log("Loading set to false.");
+      } catch (error) {
+        console.error("Error fetching or parsing CSVs:", error);
+      }
+    };
+    fetchData(); // Call fetchData
+  }, []); // Close useEffect and add dependency array
+
+  return (
+    console.log("App rendering. Loading:", loading, "Moths count:", moths.length),
+    <div className={theme === 'dark' ? 'dark' : ''}>
+      <Header 
+        theme={theme} 
+        setTheme={setTheme} 
+        moths={moths}
+        butterflies={butterflies}
+        hostPlants={hostPlants}
+        plantDetails={plantDetails}
+      />
+
+      {loading ? (
+        <SkeletonLoader />
+      ) : (
+        <Routes>
+          <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} hostPlants={hostPlants} plantDetails={plantDetails} />} />
+          <Route path="/moth/:mothId" element={<MothDetail moths={moths} hostPlants={hostPlants} />} />
+          <Route path="/butterfly/:butterflyId" element={<MothDetail moths={butterflies} hostPlants={hostPlants} />} />
+          <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} butterflies={butterflies} hostPlants={hostPlants} plantDetails={plantDetails} />} />
+        </Routes>
+      )}
+      <Footer />
+    </div>
+  );
+}
+export default App;
