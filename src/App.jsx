@@ -380,7 +380,7 @@ function App() {
       <header className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <Link to="/" className="text-2xl font-bold text-neutral-800 dark:text-neutral-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors transform hover:scale-105">
-            <h1>”繋がり”が見える蛾類図鑑</h1>
+            <h1>”繋がり”が見える昆虫図鑑</h1>
           </Link>
           <button onClick={toggleTheme} className="p-2 rounded-full text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
             {theme === 'light' ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}

@@ -13,7 +13,7 @@ const InsectsHostPlantExplorer = ({ moths, hostPlants, plantDetails }) => {
           onError={(e) => { e.target.onerror = null; e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; e.target.alt='画像が見つかりません'; }}
         />
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <h2 className="text-white text-3xl md:text-5xl font-bold text-center drop-shadow-lg">”繋がり”が見える蛾類図鑑</h2>
+          <h2 className="text-white text-3xl md:text-5xl font-bold text-center drop-shadow-lg">”繋がり”が見える昆虫図鑑</h2>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
