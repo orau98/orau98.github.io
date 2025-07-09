@@ -332,10 +332,15 @@ function App() {
         });
 
         // Parse butterfly_host.csv
-        const butterflyParsed = Papa.parse(butterflyText, { header: true, skipEmptyLines: true, delimiter: ',' });
+        // Remove BOM and fix header format
+        const cleanedButterflyText = butterflyText.replace(/^\uFEFF/, '').replace(/^"([^"]+)"/, '$1');
+        const butterflyParsed = Papa.parse(cleanedButterflyText, { header: true, skipEmptyLines: true, delimiter: ',' });
         if (butterflyParsed.errors.length) {
           console.error("PapaParse errors in butterfly_host.csv:", butterflyParsed.errors);
         }
+
+        console.log("Butterfly headers:", Object.keys(butterflyParsed.data[0] || {}));
+        console.log("First butterfly row:", butterflyParsed.data[0]);
 
         const butterflyData = [];
         butterflyParsed.data.forEach((row, index) => {
@@ -347,7 +352,10 @@ function App() {
           const japaneseName = row['和名'];
           const hostPlants = row['食草'];
           
-          if (!japaneseName || !genus || !species) return;
+          if (!japaneseName || !genus || !species) {
+            console.log("Skipping butterfly row:", { japaneseName, genus, species, rowIndex: index });
+            return;
+          }
           
           const scientificName = `${genus} ${species}`;
           const id = `butterfly-${index}`;
@@ -388,6 +396,7 @@ function App() {
           };
 
           butterflyData.push(butterfly);
+          console.log("Added butterfly:", japaneseName, scientificName);
 
           // Add to host plants data
           hostPlantList.forEach(plant => {
