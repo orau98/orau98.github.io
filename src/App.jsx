@@ -310,3 +310,5 @@ function App() {
         setHostPlants(hostPlantData);
         setPlantDetails(plantDetailData);
         console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Host Plants count:", Object.keys(hostPlantData).length);
+      } // This is the missing closing brace for the fetchData async function
+    }; // This is the closing brace for the fetchData function declaration
