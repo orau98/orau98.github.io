@@ -10,9 +10,13 @@ const InstagramEmbed = ({ url, className = "" }) => {
 
     const processEmbeds = () => {
       try {
-        if (window.instgrm) {
+        if (window.instgrm && window.instgrm.Embeds) {
           window.instgrm.Embeds.process();
-          setIsLoading(false);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 1000);
+        } else {
+          setTimeout(processEmbeds, 500);
         }
       } catch (error) {
         console.error('Instagram embed error:', error);
@@ -28,18 +32,29 @@ const InstagramEmbed = ({ url, className = "" }) => {
       script.async = true;
       script.defer = true;
       script.onload = () => {
-        setTimeout(processEmbeds, 100); // Give a small delay
+        setTimeout(processEmbeds, 500);
       };
       script.onerror = () => {
+        console.error('Failed to load Instagram script');
         setHasError(true);
         setIsLoading(false);
       };
       document.body.appendChild(script);
     } else {
-      setTimeout(processEmbeds, 100);
+      setTimeout(processEmbeds, 500);
     }
 
-  }, [url]);
+    // Fallback timeout - if still loading after 10 seconds, show error
+    const timeout = setTimeout(() => {
+      if (isLoading) {
+        console.warn('Instagram embed timeout');
+        setHasError(true);
+        setIsLoading(false);
+      }
+    }, 10000);
+
+    return () => clearTimeout(timeout);
+  }, [url, isLoading]);
 
   if (!url) return null;
 
