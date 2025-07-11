@@ -92,6 +92,23 @@ function App() {
 
         console.log("CSV files fetched successfully. Parsing...");
 
+        // Centralized function to normalize plant names by removing family annotations
+        const normalizePlantName = (plantName) => {
+          if (!plantName || typeof plantName !== 'string') {
+            return plantName;
+          }
+          
+          // Remove family annotations like "アカマツ（マツ科）" -> "アカマツ"
+          let normalized = plantName.replace(/（[^）]*科[^）]*）/g, ''); // Remove (科名) patterns
+          normalized = normalized.replace(/\([^)]*科[^)]*\)/g, ''); // Remove (family) patterns
+          
+          // Remove other common annotations
+          normalized = normalized.replace(/（[^）]*）/g, ''); // Remove remaining parentheses
+          normalized = normalized.replace(/\([^)]*\)/g, ''); // Remove remaining parentheses
+          
+          return normalized.trim();
+        };
+        
         // Centralized function to validate plant names
         const isValidPlantName = (plantName) => {
           // Basic validation - must be a string with reasonable length
@@ -553,8 +570,9 @@ function App() {
                       plant = plant.replace(/（[^）]*）/g, '');
                       plant = plant.replace(/\([^)]*\)/g, '');
                       if (plant.length > 1 && isValidPlantName(plant)) {
+                        const normalizedPlant = normalizePlantName(plant);
                         hostPlantEntries.push({
-                          plant: plant,
+                          plant: normalizedPlant,
                           condition: '自然状態',
                           familyFromMainCsv: familyFromMainCsv
                         });
@@ -580,8 +598,9 @@ function App() {
                         if (mainPlantMatch) {
                           const mainPlant = mainPlantMatch[1].trim();
                           if (mainPlant && isValidPlantName(mainPlant)) {
+                            const normalizedPlant = normalizePlantName(mainPlant);
                             hostPlantEntries.push({
-                              plant: mainPlant,
+                              plant: normalizedPlant,
                               condition: '飼育条件下',
                               familyFromMainCsv: familyFromMainCsv
                             });
@@ -605,12 +624,13 @@ function App() {
                       console.log('DEBUG: Extracted cultured plant:', plant);
                       
                       if (plant.length > 1 && isValidPlantName(plant)) {
+                        const normalizedPlant = normalizePlantName(plant);
                         hostPlantEntries.push({
-                          plant: plant,
+                          plant: normalizedPlant,
                           condition: '飼育条件下',
                           familyFromMainCsv: familyFromMainCsv
                         });
-                        console.log('DEBUG: Added cultured plant:', plant);
+                        console.log('DEBUG: Added cultured plant:', normalizedPlant);
                       } else {
                         console.log('DEBUG: Rejected cultured plant:', plant, 'Valid:', isValidPlantName(plant));
                       }
@@ -619,8 +639,9 @@ function App() {
                   
                   generalPlants.forEach(plant => {
                     if (plant.length > 1 && isValidPlantName(plant)) {
+                      const normalizedPlant = normalizePlantName(plant);
                       hostPlantEntries.push({
-                        plant: plant,
+                        plant: normalizedPlant,
                         condition: '',
                         familyFromMainCsv: familyFromMainCsv
                       });
@@ -744,7 +765,8 @@ function App() {
                     plant = plant.replace(/[\-\u2010-\u2015_=+|\\\\;:<>/?~`!@#$%^&*]/g, ''); // Remove symbols
                     plant = plant.trim(); // Final trim
                     if (plant.length > 1 && isValidPlantName(plant)) {
-                      const correctedPlantName = correctPlantName(wameiMap[plant] || plant);
+                      const normalizedPlant = normalizePlantName(plant);
+                      const correctedPlantName = correctPlantName(wameiMap[normalizedPlant] || normalizedPlant);
                       hostPlantEntries.push({
                         plant: correctedPlantName,
                         condition: '',
@@ -965,7 +987,8 @@ function App() {
               .filter(plant => plant.length > 0)
               .filter(plant => plant !== '科' && plant !== '属' && plant !== '類')
               .filter(plant => !plant.endsWith('科') && !plant.endsWith('属')) // Remove items ending with 科 or 属
-              .filter(plant => plant.length > 1); // Remove single character items
+              .filter(plant => plant.length > 1) // Remove single character items
+              .map(plant => normalizePlantName(plant)); // Normalize plant names
             
             // Remove duplicates
             hostPlantList = [...new Set(hostPlantList)];
@@ -1038,7 +1061,8 @@ function App() {
             const plants = hostPlants.split(/[、，,]/);
             hostPlantList = plants
               .map(plant => plant.trim())
-              .filter(plant => plant.length > 0);
+              .filter(plant => plant.length > 0)
+              .map(plant => normalizePlantName(plant));
             hostPlantList = [...new Set(hostPlantList)];
           }
 
@@ -1082,11 +1106,16 @@ function App() {
         // Combine beetle data from integrated file and separate CSV
         const combinedBeetleData = [...mainBeetleData, ...beetleData];
 
-        // Clean up hostPlantData to remove any invalid plant names that may have slipped through
+        // Clean up hostPlantData to remove any invalid plant names and normalize duplicates
         const cleanedHostPlantData = {};
         Object.entries(hostPlantData).forEach(([plantName, mothList]) => {
           if (isValidPlantName(plantName)) {
-            cleanedHostPlantData[plantName] = mothList;
+            const normalizedName = normalizePlantName(plantName);
+            if (!cleanedHostPlantData[normalizedName]) {
+              cleanedHostPlantData[normalizedName] = [];
+            }
+            // Merge moth lists for the same normalized plant name
+            cleanedHostPlantData[normalizedName] = [...new Set([...cleanedHostPlantData[normalizedName], ...mothList])];
           } else {
             console.log("Removed invalid plant name:", plantName);
           }
@@ -1096,7 +1125,11 @@ function App() {
         const cleanedPlantDetailData = {};
         Object.entries(plantDetailData).forEach(([plantName, details]) => {
           if (isValidPlantName(plantName)) {
-            cleanedPlantDetailData[plantName] = details;
+            const normalizedName = normalizePlantName(plantName);
+            // Use the first occurrence details for the normalized name
+            if (!cleanedPlantDetailData[normalizedName]) {
+              cleanedPlantDetailData[normalizedName] = details;
+            }
           }
         });
 
