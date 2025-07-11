@@ -5,57 +5,45 @@ const InstagramEmbed = ({ url, className = "" }) => {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
+    if (!url) return;
+
     // Reset states on URL change
     setIsLoading(true);
     setHasError(false);
 
-    const scriptId = 'instagram-embed-script';
-    let script = document.getElementById(scriptId);
-    let retryCount = 0;
-    const maxRetries = 3;
+    let timeoutId;
+    let isMounted = true;
+
+    const safeSetState = (stateSetter, value) => {
+      if (isMounted) {
+        stateSetter(value);
+      }
+    };
 
     const processEmbeds = () => {
       try {
-        if (window.instgrm && window.instgrm.Embeds) {
+        if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
           console.log('Processing Instagram embeds...');
           window.instgrm.Embeds.process();
           
-          // Check if embed was successful after processing
-          setTimeout(() => {
-            const embedElements = document.querySelectorAll('.instagram-media');
-            let hasVisibleEmbed = false;
-            
-            embedElements.forEach(el => {
-              if (el.offsetHeight > 0 && el.offsetWidth > 0) {
-                hasVisibleEmbed = true;
-              }
-            });
-            
-            if (hasVisibleEmbed) {
-              setIsLoading(false);
-            } else if (retryCount < maxRetries) {
-              retryCount++;
-              console.log(`Instagram embed retry ${retryCount}/${maxRetries}`);
-              setTimeout(processEmbeds, 1000 * retryCount);
-            } else {
-              console.warn('Instagram embed failed after retries');
-              setHasError(true);
-              setIsLoading(false);
-            }
-          }, 2000);
-        } else if (retryCount < maxRetries) {
-          retryCount++;
-          setTimeout(processEmbeds, 1000);
+          // Simple timeout to hide loading state
+          timeoutId = setTimeout(() => {
+            safeSetState(setIsLoading, false);
+          }, 3000);
         } else {
-          setHasError(true);
-          setIsLoading(false);
+          // If Instagram API not available, show error state
+          safeSetState(setHasError, true);
+          safeSetState(setIsLoading, false);
         }
       } catch (error) {
         console.error('Instagram embed error:', error);
-        setHasError(true);
-        setIsLoading(false);
+        safeSetState(setHasError, true);
+        safeSetState(setIsLoading, false);
       }
     };
+
+    const scriptId = 'instagram-embed-script';
+    let script = document.getElementById(scriptId);
 
     if (!script) {
       script = document.createElement('script');
@@ -69,25 +57,31 @@ const InstagramEmbed = ({ url, className = "" }) => {
       };
       script.onerror = () => {
         console.error('Failed to load Instagram script');
-        setHasError(true);
-        setIsLoading(false);
+        safeSetState(setHasError, true);
+        safeSetState(setIsLoading, false);
       };
-      document.body.appendChild(script);
+      
+      // Only append script if component is still mounted
+      if (isMounted) {
+        document.body.appendChild(script);
+      }
     } else {
       setTimeout(processEmbeds, 1000);
     }
 
-    // Fallback timeout - if still loading after 15 seconds, show error
-    const timeout = setTimeout(() => {
-      if (isLoading) {
-        console.warn('Instagram embed timeout');
-        setHasError(true);
-        setIsLoading(false);
-      }
-    }, 15000);
+    // Fallback timeout - if still loading after 10 seconds, show error
+    const fallbackTimeout = setTimeout(() => {
+      console.warn('Instagram embed timeout');
+      safeSetState(setHasError, true);
+      safeSetState(setIsLoading, false);
+    }, 10000);
 
-    return () => clearTimeout(timeout);
-  }, [url]); // Remove isLoading from dependencies to prevent loops
+    return () => {
+      isMounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
+      if (fallbackTimeout) clearTimeout(fallbackTimeout);
+    };
+  }, [url]);
 
   if (!url) return null;
 

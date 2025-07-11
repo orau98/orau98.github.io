@@ -175,8 +175,9 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   
                   {/* Instagram埋め込み - 複数の投稿を試行 */}
                   <div className="space-y-4">
-                    <InstagramEmbed url="https://www.instagram.com/p/C82_pYqS7y8/" />
-                    <InstagramEmbed url="https://www.instagram.com/p/CzVpzVyS-0G/" />
+                    <div className="instagram-wrapper">
+                      <InstagramEmbed url="https://www.instagram.com/p/C82_pYqS7y8/" />
+                    </div>
                   </div>
                   
                 </div>
