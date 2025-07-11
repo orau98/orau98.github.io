@@ -5,18 +5,50 @@ const InstagramEmbed = ({ url, className = "" }) => {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
+    // Reset states on URL change
+    setIsLoading(true);
+    setHasError(false);
+
     const scriptId = 'instagram-embed-script';
     let script = document.getElementById(scriptId);
+    let retryCount = 0;
+    const maxRetries = 3;
 
     const processEmbeds = () => {
       try {
         if (window.instgrm && window.instgrm.Embeds) {
+          console.log('Processing Instagram embeds...');
           window.instgrm.Embeds.process();
+          
+          // Check if embed was successful after processing
           setTimeout(() => {
-            setIsLoading(false);
-          }, 1000);
+            const embedElements = document.querySelectorAll('.instagram-media');
+            let hasVisibleEmbed = false;
+            
+            embedElements.forEach(el => {
+              if (el.offsetHeight > 0 && el.offsetWidth > 0) {
+                hasVisibleEmbed = true;
+              }
+            });
+            
+            if (hasVisibleEmbed) {
+              setIsLoading(false);
+            } else if (retryCount < maxRetries) {
+              retryCount++;
+              console.log(`Instagram embed retry ${retryCount}/${maxRetries}`);
+              setTimeout(processEmbeds, 1000 * retryCount);
+            } else {
+              console.warn('Instagram embed failed after retries');
+              setHasError(true);
+              setIsLoading(false);
+            }
+          }, 2000);
+        } else if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(processEmbeds, 1000);
         } else {
-          setTimeout(processEmbeds, 500);
+          setHasError(true);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Instagram embed error:', error);
@@ -32,7 +64,8 @@ const InstagramEmbed = ({ url, className = "" }) => {
       script.async = true;
       script.defer = true;
       script.onload = () => {
-        setTimeout(processEmbeds, 500);
+        console.log('Instagram script loaded');
+        setTimeout(processEmbeds, 1000);
       };
       script.onerror = () => {
         console.error('Failed to load Instagram script');
@@ -41,20 +74,20 @@ const InstagramEmbed = ({ url, className = "" }) => {
       };
       document.body.appendChild(script);
     } else {
-      setTimeout(processEmbeds, 500);
+      setTimeout(processEmbeds, 1000);
     }
 
-    // Fallback timeout - if still loading after 10 seconds, show error
+    // Fallback timeout - if still loading after 15 seconds, show error
     const timeout = setTimeout(() => {
       if (isLoading) {
         console.warn('Instagram embed timeout');
         setHasError(true);
         setIsLoading(false);
       }
-    }, 10000);
+    }, 15000);
 
     return () => clearTimeout(timeout);
-  }, [url, isLoading]);
+  }, [url]); // Remove isLoading from dependencies to prevent loops
 
   if (!url) return null;
 

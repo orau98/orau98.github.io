@@ -173,8 +173,11 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     最新の投稿
                   </h3>
                   
-                  {/* Instagram埋め込み */}
-                  <InstagramEmbed url="https://www.instagram.com/p/C82_pYqS7y8/" />
+                  {/* Instagram埋め込み - 複数の投稿を試行 */}
+                  <div className="space-y-4">
+                    <InstagramEmbed url="https://www.instagram.com/p/C82_pYqS7y8/" />
+                    <InstagramEmbed url="https://www.instagram.com/p/CzVpzVyS-0G/" />
+                  </div>
                   
                   {/* フォールバック用のリンクカード */}
                   <div className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl p-4 border border-pink-200/50 dark:border-pink-700/50">
