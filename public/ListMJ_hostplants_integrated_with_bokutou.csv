@@ -50,7 +50,7 @@
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,morivora,,Hirano,2010,,ヤマグワモグリチビガ,,,,,,,"Stigmella morivora Hirano, 2010",ヤマグワ（クワ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,naturnella,,(Klimesch),1936,,ホソオビモグリチビガ,ホソオビモグリチビガ（和名新称）,,,,,,"Stigmella naturnella (Klimesch, 1936)",シラカンパ; オノオレカンパ（以上カバノキ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,sashai,,Puplesis,1984,,シナノキモグリチビガ,,,,,出版後の追加,新記録・再分類等,,,
-,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,betulicola,,(Stainton),1856,,シラカバモグリチビガ,,,,,,,"Stigmella betulicola (Stainton, 1856)",シラカンパ; ダケカンバ（以上カバノキ科）; 国外では; 各種のカバノキ科の Betula 属の葉,日本産蛾類標準図鑑3
+,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,betulicola,,(Stainton),1856,,シラカバモグリチビガ,,,,,,,"Stigmella betulicola (Stainton, 1856)",シラカンパ; ダケカンバ（以上カバノキ科）; 国外では; 各種の Betula 属の葉（カバノキ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,microtheriella,,(Stainton),1854,,イヌシデモグリチビガ,,アサダモグリチビガ,,,出版後の追加,名前変更,"Stigmella cathepostis Kemperman & Wilkinson, 1985",イヌシデ; ツノハシパミ; アカシデ（以上カバノキ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,nivenburgensis,,(Preissecker),1942,,ポプラモグリチビガ,ポプラモグリチビガ（和名新称）,,,,出版後の追加,名前変更,"Stigmella populnea Kemperman & Wilkinson, 1985",セイヨウハコヤナギ（ポプラ）（ヤナギ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,sakhalinella,,(Stainton),1854,,サハリンモグリチビガ,サハリンモグリチビガ（和名新称）,,,,,,"Stigmella sakhalinella Puplesis, 1984",シラカンパ（カバノキ科）; 国外では; 各種のカバノキ Betula 属の葉,日本産蛾類標準図鑑3
@@ -3534,8 +3534,8 @@
 ,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Dysaethria,,fulvihamata,,(Hampson),1912,,シタクロオビフタオ,,,,,,,"Dysaethria fulvihamata (Hampson, 1912)",不明,日本産蛾類標準図鑑1
 ,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Dysaethria,,wilemani,,(West),1932,,ウスチャオビフタオ,,,,,出版後の追加,新記録・再分類等,,,
 2951,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Europlema,,desistaria,,(Walker),1861,,アトシロオビフタオ,,,,,,,"Europlema desistaria (Walker, 1861)",不明,日本産蛾類標準図鑑1
-2952,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Europlema,,semibrunnea,,(Pagenstecher),1888,,オキナワフタオ,,,,,,,"Europlema semibrunnea (Pagenstecher, 1888)",ハマクサギ類 (シソ科); ハマクサギ類(シソ科),日本産蛾類標準図鑑1
-,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Europlema,,nivosaria,,(Walker),1866,,クロテンシロフタオ,,,,,,,"Europlema nivosaria (Walker, 1866)",ハマクサギ類 (シソ科); 台湾でシソ科ハマクサギ類の記録がある,日本産蛾類標準図鑑1
+2952,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Europlema,,semibrunnea,,(Pagenstecher),1888,,オキナワフタオ,,,,,,,"Europlema semibrunnea (Pagenstecher, 1888)",ハマクサギ類（シソ科）,日本産蛾類標準図鑑1
+,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Europlema,,nivosaria,,(Walker),1866,,クロテンシロフタオ,,,,,,,"Europlema nivosaria (Walker, 1866)",ハマクサギ類（シソ科）; 台湾でハマクサギ類（シソ科）の記録がある,日本産蛾類標準図鑑1
 2953,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Oroplema,,plagifera,,(Butler),1881,,クロオビシロフタオ,,,,,,,"Oroplema plagifera (Butler, 1881)",ガマズミ (レンプクソウ科),日本産蛾類標準図鑑1
 2946,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Oroplema,,oyamana,,(Matsumura),1931,,カバイロフタオ,,,,,,,"Oroplema oyamana (Matsumura, 1931)",ヒメユズリハ (ユズリハ科),日本産蛾類標準図鑑1
 ,Uraniidae,ツバメガ科,Epipleminae,フタオガ亜科,,,,,Pterotosoma,,castanea,,(Warren),1898,,クリフタオ,クリフタオ(新称),,,,,,"Pterotosoma castanea (Warren, 1898)",アカネ科 (台湾での記録); 台湾ではアカネ科を食べるという,日本産蛾類標準図鑑1
@@ -4001,7 +4001,7 @@
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Timandra,,comptaria,,Walker,1863,,コベニスジヒメシャク,,,,,,,"Timandra comptaria Walker, 1863",ミチヤナギ (ニワヤナギ); イヌタデ; ママコノシリヌグイ; ギシギシ; ミズヒキ(以上タデ科),日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Timandra,,apicirosea,,(Prout),1935,,フトベニスジヒメシャク,,,,,,,"Timandra apicirosea (Prout, 1935)",ミズヒキ; ミゾソバ; イヌタデ(以上タデ科),日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Timandra,,dichela,,(Prout),1935,,ウスベニスジヒメシャク,,,,,,,"Timandra dichela (Prout, 1935)",ソバ; スイバ(以上タデ科),日本産蛾類標準図鑑1
-,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Traminda,,aventiaria,,(Guenée),1858,,マエアカヒメシャク,,,,,,,"Traminda aventiaria (Guenée, 1857)",沖縄島ではソウシジュ (マメ科)。国外でもマメ科の記録がある,日本産蛾類標準図鑑1
+,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Traminda,,aventiaria,,(Guenée),1858,,マエアカヒメシャク,,,,,,,"Traminda aventiaria (Guenée, 1857)",沖縄島ではソウシジュ（マメ科）。国外でもマメ科植物の記録がある,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Chrysocraspeda,,sanguinea,,Warren,1896,,モモイロヒメシャク,,,,,,,"Chrysocraspeda sanguinea Warren, 1896",不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Chrysocraspeda,,faganaria,,(Guenée),1858,,ビンガタヒメシャク,,,,,,,"Chrysocraspeda faganaria (Guenée, 1857)",不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Cyclophora,,albipunctata,,(Hufnagel),1767,,ヨツメヒメシャク,ヨツメヒメシャク,,,,,,"Cyclophora albipunctata (Hufnagel, 1767)",不明,日本産蛾類標準図鑑1
@@ -4033,7 +4033,7 @@
 2274,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,takao,,Inoue,1954,,タカオシロヒメシャク,,,,,,,,タチツボスミレ (スミレ科) に幼虫がついていた記録。ミゾソバ (タデ科) での飼育記録がある。,日本産蛾類標準図鑑1
 2275,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,umbelaria,,(Hübner),1813,,スミレシロヒメシャク,スミレシロヒメシャク,,,,,,,ミゾソバ (タデ科) による飼育記録がある。国外では; カモメヅル属 (キョウチクトウ科) の記録があり; ヨーロッパでは各種の樹木; 草本につくという。,日本産蛾類標準図鑑1
 2276,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,hanna,,(Butler),1878,,サカハチヒメシャク,,,,,,,,不明,日本産蛾類標準図鑑1
-2277,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,corrivalaria,,(Kretschmar),1862,,ウラナミヒメシャク,ウラナミヒメシャク,,,,,,,ハンゲショウ (ドクダミ科); ミゾソバ (タデ科) による飼育記録がある。ヨーロッパでは water dock (タデ科のスイバ; ギシギシの類) や各種草本を食すという。,日本産蛾類標準図鑑1
+2277,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,corrivalaria,,(Kretschmar),1862,,ウラナミヒメシャク,ウラナミヒメシャク,,,,,,,ハンゲショウ（ドクダミ科）; ミゾソバ（タデ科）による飼育記録がある。ヨーロッパでは water dock（スイバ、ギシギシの類; タデ科）や各種草本を食すという。,日本産蛾類標準図鑑1
 2278,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,confusa,,(Butler),1878,,ウスキトガリヒメシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 2279,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,personata,,(Prout),1913,,ナミスジチビヒメシャク,,,,,,,,幼虫はクサギ (シソ科) の落ち葉やハスノハカズラ (ツヅラフジ科) の枯れかかった葉などを食べる。広食性,日本産蛾類標準図鑑1
 2280,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Scopula,,kawabei,,Inoue,1982,,チビシロヒメシャク,,,,,,,,不明,日本産蛾類標準図鑑1
@@ -4216,7 +4216,7 @@
 2443,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Philereme,,transversata,,(Hufnagel),1767,,トビスジヤエナミシャク,トビスジヤエナミシャク,,,,,,,クロウメモドキ (クロウメモドキ科),日本産蛾類標準図鑑1
 2445,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Photoscotosia,,atrostrigata,,(Bremer),1864,,ネグロウスベニナミシャク,,,,,,,,野外では記録ないが; 採卵によりヨモギ (キク科) で飼育記録がある。,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Photoscotosia,,lucicolens,,(Butler),1878,,オオネグロウスベニナミシャク,,,,,,,,コナラ (ブナ科); キツネヤナギ (ヤナギ科)。本種は前種と異なり広食性,日本産蛾類標準図鑑1
-2446,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Telenomeuta,,punctimarginaria,,(Leech),1891,,テンヅマナミシャク,テンヅマナミシャク,,,,,,,クサギ (シソ科); シャクガ科の幼虫にはめずらしく; クサギに固有である。,日本産蛾類標準図鑑1
+2446,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Telenomeuta,,punctimarginaria,,(Leech),1891,,テンヅマナミシャク,テンヅマナミシャク,,,,,,,クサギ（シソ科）; シャクガ科の幼虫にはめずらしく; クサギに固有である。,日本産蛾類標準図鑑1
 2450,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Gandaritis,,evanescens,,(Butler),1881,,マルモンシロナミシャク,,,,,,,,ツルアジサイ; ガクアジサイ; イワガラミ; ノリウツギ (以上アジサイ科),日本産蛾類標準図鑑1
 2447,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Gandaritis,,maculata,,Swinhoe,1894,,オオナミシャク,,,,,,,,イワガラミ (アジサイ科),日本産蛾類標準図鑑1
 2449,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Gandaritis,,placida,,(Butler),1878,,キベリシロナミシャク,,,,,,,,ガクウツギ; イワガラミ; ノリウツギ (以上アジサイ科),日本産蛾類標準図鑑1
@@ -4253,7 +4253,7 @@
 2478,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,truncata,,(Hufnagel),1767,,ウチジロナミシャク,ウチジロナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
 2479,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,cinereata,,(Moore),1867,,フタテンナカジロナミシャク,フタテンナカジロナミシャク,,,,,,,キイチゴ類 (バラ科),日本産蛾類標準図鑑1
 2480,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,infuscata,,(Tengström),1869,,ウスキナカジロナミシャク,ウスキナカジロナミシャク,,,,,,,ガンコウラン; ウラシマツツジ (以上ツツジ科),日本産蛾類標準図鑑1
-2481,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,citrata,,(Linnaeus),1761,,ツマキナカジロナミシャク,ツマキナカジロナミシャク,,,,,,,タデ科; バラ科; ツツジ科; キク科の各科の4科18種の植物の記録があり; 広食性,日本産蛾類標準図鑑1
+2481,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,citrata,,(Linnaeus),1761,,ツマキナカジロナミシャク,ツマキナカジロナミシャク,,,,,,,タデ科、バラ科、ツツジ科、キク科の4科18種の植物の記録があり; 広食性,日本産蛾類標準図鑑1
 2482,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,pseudimmanata,,Heydemann,1929,,アルプスナカジロナミシャク,アルプスナカジロナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
 2483,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,korbi,,Heydemann,1929,,マエキナカジロナミシャク,,,,,,,,シラカシ (ブナ科),日本産蛾類標準図鑑1
 2484,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Dysstroma,,albicoma,,(Inoue),1954,,シロマダラナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
@@ -4268,7 +4268,7 @@
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Heterothera,,serrataria,,(Prout),1914,,マダラクロオビナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 2493,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Heterothera,,postalbida,,(Wileman),1911,,シロシタトビイロナミシャク,,,,,,,,アカマツ (マツ科),日本産蛾類標準図鑑1
 2494,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Xenortholitha,,propinguata,,(Kollar),1844,,フタクロテンナミシャク,フタクロテンナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
-[2495+----],Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Operophtera,,brunnea,,Nakajima,1991,,ナミスジフユナミシャク,,コナミフユナミシャク，オオナミフユナミシャク,,,,,,カバノキ科; ブナ科; クルミ科; バラ科; ニレ科; ムクロジ科; アオイ科; ツツジ科の8科20種の食樹が記録されている。,日本産蛾類標準図鑑1
+[2495+----],Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Operophtera,,brunnea,,Nakajima,1991,,ナミスジフユナミシャク,,コナミフユナミシャク，オオナミフユナミシャク,,,,,,カバノキ科、ブナ科、クルミ科、バラ科、ニレ科、ムクロジ科、アオイ科、ツツジ科の8科20種の食樹が記録されている。,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Operophtera,,mizunoi,,Nakajima,2020,,ユキノコフユナミシャク,,,,,出版後の追加,新記録・再分類等,,,
 2496,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Operophtera,,rectipostmediana,,Inoue,1942,,イチモジフユナミシャク,,,,,,,,リンゴ; ソメイヨシノ (以上バラ科); ハルニレ; ケヤキ (以上ニレ科),日本産蛾類標準図鑑1
 2497,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Operophtera,,japonaria,,(Leech),1891,,サザナミフユナミシャク,,,,,,,,クヌギ; コナラ (以上ブナ科),日本産蛾類標準図鑑1
@@ -4451,7 +4451,7 @@
 2962,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Gastropacha,,populifolia,,(Esper),1783,,ホシカレハ,ホシカレハ,,,,,,"Gastropacha populifolia (Esper, 1783)",ネコヤナギ、シダレヤナギ、セイヨウハコヤナギ (ヤナギ科); ネコヤナギ; シダレヤナギ; セイヨウハコヤナギ (以上ヤナギ科),日本産蛾類標準図鑑1
 2966,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Phyllodesma,,japonica,,(Leech),[1889],,ヒメカレハ,,,,,,,"Phyllodesma japonica (Leech, 1889)",オオヤマザクラ (バラ科)、セイヨウハコヤナギ (ヤナギ科); オオヤマザクラ (バラ科); セイヨウハコヤナギ (ヤナギ科),日本産蛾類標準図鑑1
 2967,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Cosmotriche,,lobulina,,(Denis & Schiffermüller),1775,,タカムクカレハ,タカムクカレハ,,,,,,"Cosmotriche lobulina (Denis & Schiffermüller, 1775)",マツ、モミ (マツ科); 幼虫はマツ類; モミ (以上マツ科) を食す。北海道亜種はハイマツ (マツ科) を食することが知られている。,日本産蛾類標準図鑑1
-2968,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Pyrosis,,idiota,,Graeser,1888,,ウスマダラカレハ,,,,,,,"Pyrosis idiota Graeser, 1888",コハウチワカエデ (ムクロジ科)、クリ、アベマキ、コナラ、ミズナラ (ブナ科)、ヤナギ科、バラ科; 飼育ではコハウチワカエデ (ムクロジ科); クリ; アベマキ; コナラ; ミズナラ (以上ブナ科) で育つことが判明した。国外では; ヤナギ科やバラ科の植物を食すことが知られている。,日本産蛾類標準図鑑1
+2968,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Pyrosis,,idiota,,Graeser,1888,,ウスマダラカレハ,,,,,,,"Pyrosis idiota Graeser, 1888",コハウチワカエデ（ムクロジ科）、クリ、アベマキ、コナラ、ミズナラ（ブナ科）、ヤナギ科、バラ科; 飼育ではコハウチワカエデ（ムクロジ科）; クリ; アベマキ; コナラ; ミズナラ（以上ブナ科）で育つことが判明した。国外では; ヤナギ科やバラ科の植物を食すことが知られている。,日本産蛾類標準図鑑1
 2970,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Euthrix,,albomaculata,,(Bremer),1861,,タケカレハ,タケカレハ,,,,,,"Euthrix albomaculata (Bremer, 1861)",タケ、ササ、ススキ、ヨシ (イネ科); タケ類; ササ類; ススキ; ヨシ (以上イネ科),日本産蛾類標準図鑑1
 2969,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Euthrix,,potatoria,,(Linnaeus),1758,,ヨシカレハ,ヨシカレハ,,,,,,"Euthrix potatoria (Linnaeus, 1758)",ヨシ、ササ、ススキ (イネ科)、ミヤマキリシマ (ツツジ科); ヨシ; ササ類; ススキ (以上イネ科); ミヤマキリシマ (ツツジ科) を食す。,日本産蛾類標準図鑑1
 2971,Lasiocampidae,カレハガ科,Gastropachinae,ホシカレハ亜科,,,,,Euthrix,,laeta,,(Walker),1855,,タケヒメカレハ,タケヒメカレハ,ヤマハギカレハ,,,,,"Euthrix laeta (Walker, 1855)",不明,日本産蛾類標準図鑑1
