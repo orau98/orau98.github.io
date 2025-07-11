@@ -98,8 +98,11 @@ function App() {
             return plantName;
           }
           
+          // Remove family prefixes like "アカネ科ミサオノキ" -> "ミサオノキ", "ウマノスズクサ科ウマノスズクサ" -> "ウマノスズクサ"
+          let normalized = plantName.replace(/^[^科]*科([のに]?)/g, ''); // Remove family prefixes like "科名の", "科名に", or just "科名"
+          
           // Remove family annotations like "アカマツ（マツ科）" -> "アカマツ"
-          let normalized = plantName.replace(/（[^）]*科[^）]*）/g, ''); // Remove (科名) patterns
+          normalized = normalized.replace(/（[^）]*科[^）]*）/g, ''); // Remove (科名) patterns
           normalized = normalized.replace(/\([^)]*科[^)]*\)/g, ''); // Remove (family) patterns
           
           // Remove incomplete parentheses like "オオカメノキ（" -> "オオカメノキ"
