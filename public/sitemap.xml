@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://h-amoto.github.io/insects-host-plant-explorer-/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- 動的なコンテンツはJavaScriptで生成されるため、ここでは主要なパスのみ記述 -->
+  <!-- 例: <url><loc>https://h-amoto.github.io/insects-host-plant-explorer-/#/moth/main-3833</loc></url> -->
+  <!-- 実際には、すべての蛾や食草のページをここに含める必要がありますが、手動での追加は非現実的です。
+       これらの動的URLは、Google Search Consoleで別途登録するか、JavaScriptで動的に生成するsitemapを検討してください。 -->
+</urlset>

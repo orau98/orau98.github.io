@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { formatScientificName } from './utils/scientificNameFormatter.jsx';
 
 const DetailCard = ({ title, children }) => (
   <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl shadow-xl">
@@ -34,7 +35,7 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
           {details.scientificName && (
             <>
               <dt className="font-semibold mt-2">学名:</dt>
-              <dd className="ml-4 italic">{details.scientificName}</dd>
+              <dd className="ml-4">{formatScientificName(details.scientificName)}</dd>
             </>
           )}
         </dl>

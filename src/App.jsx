@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Papa from 'papaparse';
 import InsectsHostPlantExplorer from './InsectsHostPlantExplorer';
 import MothDetail from './MothDetail';
@@ -22,12 +22,16 @@ const plantFamilyMap = {
 };
 
 function App() {
+  const location = useLocation();
   const [moths, setMoths] = useState([]);
   const [butterflies, setButterflies] = useState([]);
+  const [beetles, setBeetles] = useState([]);
   const [hostPlants, setHostPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -47,43 +51,130 @@ function App() {
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
       const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_bokutou.csv`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
-      const book1CsvPath = `${import.meta.env.BASE_URL}Book1.csv`;
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
+      const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
 
       console.log("Fetching CSV files...");
       console.log("wameiCsvPath:", wameiCsvPath);
       console.log("mainCsvPath:", mainCsvPath);
       console.log("yListCsvPath:", yListCsvPath); // Log new path
-      console.log("book1CsvPath:", book1CsvPath);
 
       try {
-        const [wameiRes, mainRes, yListRes, book1Res, hamushiSpeciesRes, butterflyRes] = await Promise.all([
+        const [wameiRes, mainRes, yListRes, hamushiSpeciesRes, butterflyRes, beetleRes] = await Promise.all([
           fetch(wameiCsvPath),
           fetch(mainCsvPath),
           fetch(yListCsvPath),
-          fetch(book1CsvPath),
           fetch(hamushiSpeciesCsvPath),
-          fetch(butterflyCsvPath)
+          fetch(butterflyCsvPath),
+          fetch(beetleCsvPath)
         ]);
 
         if (!wameiRes.ok) throw new Error(`Failed to fetch ${wameiCsvPath}: ${wameiRes.statusText}`);
         if (!mainRes.ok) throw new Error(`Failed to fetch ${mainCsvPath}: ${mainRes.statusText}`);
         if (!yListRes.ok) throw new Error(`Failed to fetch ${yListCsvPath}: ${yListRes.statusText}`);
-        if (!book1Res.ok) throw new Error(`Failed to fetch ${book1CsvPath}: ${book1Res.statusText}`);
         if (!hamushiSpeciesRes.ok) throw new Error(`Failed to fetch ${hamushiSpeciesCsvPath}: ${hamushiSpeciesRes.statusText}`);
         if (!butterflyRes.ok) throw new Error(`Failed to fetch ${butterflyCsvPath}: ${butterflyRes.statusText}`);
+        if (!beetleRes.ok) throw new Error(`Failed to fetch ${beetleCsvPath}: ${beetleRes.statusText}`);
 
-        const [wameiText, mainText, yListText, book1Text, hamushiSpeciesText, butterflyText] = await Promise.all([
+        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText] = await Promise.all([
           wameiRes.text(),
           mainRes.text(),
           yListRes.text(),
-          book1Res.text(),
           hamushiSpeciesRes.text(),
-          butterflyRes.text()
+          butterflyRes.text(),
+          beetleRes.text()
         ]);
 
         console.log("CSV files fetched successfully. Parsing...");
+
+        // Centralized function to validate plant names
+        const isValidPlantName = (plantName) => {
+          // Basic validation - must be a string with reasonable length
+          if (!plantName || typeof plantName !== 'string' || plantName.length < 2) {
+            return false;
+          }
+          
+          // Remove whitespace for testing
+          const trimmed = plantName.trim();
+          
+          // Reject if only numbers or only English letters
+          if (/^[0-9]+$/.test(trimmed) || /^[A-Za-z]+$/.test(trimmed)) {
+            return false;
+          }
+          
+          // Reject catalog numbers with special characters like "10+12"
+          if (/^[0-9+\-]+$/.test(trimmed)) {
+            return false;
+          }
+          
+          // Allow family names (ending with '科') as valid plant names
+          if (trimmed.endsWith('科')) {
+            return true;
+          }
+          
+          const invalidPatterns = [
+            /^[0-9]+$/,  // Pure numbers
+            /^[A-Za-z]+$/, // Pure English letters
+            /^[0-9+\-]+$/, // Catalog numbers like "10+12"
+            /^\s*[0-9]{4}\)"?\s*$/, // Year patterns like "1763)"
+            /^\s*[0-9]{4}"?\s*$/, // Simple year patterns like "1763"
+            /^[\u3001-\u3006\u3008-\u3011\u3013-\u301f\uff01-\uff0f\uff1a-\uff20\uff3b-\uff40\uff5b-\uff65\u2000-\u206f\u2e00-\u2e7f!-\/:-@\[-`{-~]+$/, // Only symbols/punctuation
+            /^["'\u201c\u201d\u2018\u2019()\[\]{}\-\u2010-\u2015_=+|\\;:,.<>/?~`!@#$%^&*]+$/, // Common symbols
+            /国外/,
+            /各種/,
+            /以上/,
+            /記録/,
+            /知られ/,
+            /観察/,
+            /確認/,
+            /報告/,
+            /台湾/,
+            /沖縄/,
+            /ヨーロッパ/,
+            /ハワイ/,
+            /時に/,
+            /害虫/,
+            /被害/,
+            /食べ/,
+            /食す/,
+            /育つ/,
+            /成長/,
+            /飼育/,
+            /判明/,
+            /植物/,
+            /樹木/,
+            /草本/,
+            /^の$/,
+            /^を$/,
+            /^が$/,
+            /^で$/,
+            /^に$/,
+            /^は$/,
+            /^と$/,
+            /^や$/,
+            /^も$/,
+            /^から$/,
+            /^まで$/,
+            /^では$/,
+            /^でも$/,
+            /^として$/,
+            /^による$/,
+            /^からの$/,
+            /^への$/,
+            /^との$/,
+            /^での$/,
+            /^によって$/,
+            /^において$/,
+            /^について$/,
+            /^に関して$/,
+            /^に対して$/,
+            /^によれば$/,
+            /^によると$/
+          ];
+          
+          return !invalidPatterns.some(pattern => pattern.test(trimmed));
+        };
 
         // Parse wamei_checklist_ver.1.10.csv
         const wameiParsed = Papa.parse(wameiText, { header: true, skipEmptyLines: true, delimiter: ',' });
@@ -211,39 +302,10 @@ function App() {
           }
         });
 
-        // Process book1Text using the hamushiMap
-        const book1Parsed = Papa.parse(book1Text, { header: true, skipEmptyLines: true, encoding: 'utf8', delimiter: ',', newline: '\r\n' });
-        if (book1Parsed.errors.length) {
-          console.error("PapaParse errors in Book1.csv:", book1Parsed.errors);
-        }
-        const book1MothData = [];
-        book1Parsed.data.forEach((row, index) => {
-          const originalInsectName = row['和名']?.trim();
-          if (!originalInsectName) return;
-
-          const insectName = correctMothName(originalInsectName);
-          let scientificName = row['学名'] || '';
-          let classification = { family: 'ハムシ科' };
-
-          const hamushiDetail = hamushiMap[insectName];
-          if (hamushiDetail) {
-            scientificName = `${hamushiDetail['属']} ${hamushiDetail['種小名']}`.trim();
-            classification = {
-              family: hamushiDetail['科'] || '',
-              subfamily: hamushiDetail['亜科'] || '',
-              genus: hamushiDetail['属'] || '',
-              speciesEpithet: hamushiDetail['種小名'] || '',
-            };
-          }
-
-          const scientificFilename = formatScientificNameForFilename(scientificName);
-
-          const hostPlantList = (row['食草'] || '').split(/\u3001|,/).map(p => p.trim()).filter(Boolean);
-          book1MothData.push({ id: `book1-${index}`, name: insectName, scientificName: scientificName, scientificFilename: scientificFilename, type: 'moth', hostPlants: hostPlantList, source: 'ハムシ', classification: classification });
-        });
 
         // Process mainText
         const mainMothData = [];
+        const mainBeetleData = [];
         Papa.parse(mainText, {
           header: true,
           skipEmptyLines: true,
@@ -255,12 +317,26 @@ function App() {
             results.data.forEach((row, index) => {
               const originalMothName = row['和名']?.trim();
               if (!originalMothName) return;
+              
+              // Skip entries where source appears to be in the moth name field (malformed data)
+              if (originalMothName === '日本産タマムシ大図鑑' || originalMothName.includes('大図鑑')) return;
 
               const mothName = correctMothName(originalMothName);
-              const scientificName = row['学名'] || '';
+              
+              // Use the scientific name directly from the CSV as it's already properly formatted
+              let scientificName = row['学名'] || '';
+              
+              // Only clean up obvious formatting issues, don't reconstruct
+              // Remove trailing quotes and clean whitespace
+              scientificName = scientificName.replace(/\s*"?\s*$/, '');
+              scientificName = scientificName.trim();
+              
               const scientificFilename = formatScientificNameForFilename(scientificName);
 
               const familyFromMainCsv = row['科和名'] || row['科名'] || '';
+              
+              // Check if this is a beetle (Buprestidae family)
+              const isBeetle = familyFromMainCsv === 'タマムシ科' || row['科名'] === 'Buprestidae';
 
               const classification = {
                 family: row['科名'] || '', familyJapanese: row['科和名'] || '', subfamily: row['亜科名'] || '',
@@ -269,81 +345,559 @@ function App() {
                 subgenus: row['亜属名'] || '', speciesEpithet: row['種小名'] || '', subspeciesEpithet: row['亜種小名'] || '',
               };
 
-              const hostPlantEntries = (row['食草'] || ' ')
-                .split(';')
-                .flatMap(entry => {
-                  let plant = entry.trim();
-                  console.log('DEBUG: Initial entry:', entry);
-                  console.log('DEBUG: Trimmed entry:', plant);
-                  plant = plant.replace(/[["(\uFF08\uFF3B\u300C\u300E][^)\]}"）」「』】]*[\\)\]}"（）」「』】]/g, '');
-                  console.log('DEBUG: After bracket removal:', plant);
-                  plant = plant.replace(/など/g, '');
-                  console.log('DEBUG: After "など" removal:', plant);
-                  plant = plant.replace(/[^\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}\s,\u3001]/gu, '');
-                  console.log('DEBUG: After non-Japanese/symbol removal:', plant);
-                  plant = plant.replace(/\s+/g, ' ').trim();
-                  console.log('DEBUG: After space normalization and trim:', plant);
+              // Improved host plant parsing with validation
+              let rawHostPlant = row['食草'] || '';
+              
+              // Skip processing if host plant is empty, just numbers, or just English letters
+              if (!rawHostPlant || 
+                  rawHostPlant.trim() === '' || 
+                  /^[0-9]+$/.test(rawHostPlant.trim()) ||
+                  /^[A-Za-z]+$/.test(rawHostPlant.trim()) ||
+                  /^\s*[0-9]{4}\)"?\s*$/.test(rawHostPlant.trim()) || // Year patterns like "1763)"
+                  /^\s*[0-9]{4}"?\s*$/.test(rawHostPlant.trim()) || // Simple year patterns like "1763"
+                  rawHostPlant.trim() === '不明' ||
+                  rawHostPlant.length < 2) {
+                rawHostPlant = '';
+              }
+              
+              // Check for monophagous information and other notes
+              // Consider monophagous if it's specific to a single plant species (not family/genus)
+              const isMonophagous = rawHostPlant.includes('単食性') || 
+                                  (rawHostPlant.includes('に固有') && 
+                                   !rawHostPlant.includes('科に固有') && 
+                                   !rawHostPlant.includes('属に固有'));
+              
+              // Extract notes from parentheses (like "可能性が高い", "単食性" etc.)
+              const hostPlantNotes = [];
+              
+              // Check for "明らかに広食性" and add as note (check before replacement)
+              if (rawHostPlant.includes('明らかに広食性')) {
+                hostPlantNotes.push('広食性');
+              }
+              
+              const noteMatches = rawHostPlant.match(/（([^）]+)）/g);
+              if (noteMatches) {
+                noteMatches.forEach(match => {
+                  const note = match.replace(/[（）]/g, '');
+                  // Include geographical and descriptive notes, but exclude simple family names
+                  if (note && !(note.match(/^[\w\s]+科$/) && note.length < 10)) {
+                    hostPlantNotes.push(note);
+                  }
+                });
+              }
+              
+              // Clean up host plant data - remove year numbers and incomplete scientific names
+              rawHostPlant = rawHostPlant.replace(/^\d{4}\),?\s*/, ''); // Remove year at beginning like "1905),"
+              rawHostPlant = rawHostPlant.replace(/^"?\d{4}\),?\s*/, ''); // Remove quoted year like '"1905),'
+              rawHostPlant = rawHostPlant.replace(/^\),?\s*/, ''); // Remove orphaned closing parenthesis
+              rawHostPlant = rawHostPlant.replace(/^\d{4},\s*/, ''); // Remove year with comma like "1852,"
+              // Only remove standalone family names, not family names after plant names
+              rawHostPlant = rawHostPlant.replace(/^\(\s*[\w\s]+科\s*\)/, ''); // Remove family names in parentheses at beginning
+              
+              // Replace "明らかに広食性" with just "広食性" in the plant list
+              rawHostPlant = rawHostPlant.replace(/明らかに広食性/g, '広食性');
+              
+              rawHostPlant = rawHostPlant.trim();
 
-                  return plant.split(/,|\u3001/).map(p => {
-                    let cleanedP = p.trim();
-                    console.log('DEBUG: Sub-entry before final cleaning:', p, '->', cleanedP);
-                    const match = cleanedP.match(/^[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]+/u);
-                    cleanedP = match ? match[0] : '';
-                    console.log('DEBUG: After Japanese word extraction:', cleanedP);
-                    cleanedP = cleanedP.replace(/科|属/g, '');
-                    console.log('DEBUG: After "科"/"属" removal:', cleanedP);
-                    cleanedP = cleanedP.trim();
-                    console.log('DEBUG: Final cleanedP:', cleanedP);
+              // Extract "と推測される" as a note
+              if (rawHostPlant.includes('と推測される')) {
+                hostPlantNotes.push('推測');
+                rawHostPlant = rawHostPlant.replace('と推測される', '').trim();
+              }
 
-                    if (!cleanedP) return null;
-
-                    const correctedPlantName = correctPlantName(wameiMap[cleanedP] || cleanedP);
-
-                    return { plant: correctedPlantName, familyFromMainCsv: familyFromMainCsv };
+              // Extract notes that are not plant names but descriptive
+              const descriptiveNotesMatch = rawHostPlant.match(/(で飼育されており|と思われる|と推定される|が?観察されている|確認されている|国外では|記録|知られ|報告|台湾|沖縄|ヨーロッパ|ハワイ|時に|害虫|被害|食べ|食す|育つ|成長|飼育|判明|植物|樹木|草本|各種|以上|の|を|が|で|に|は|と|や|も|から|まで|では|でも|として|による|からの|への|との|での|によって|において|について|に関して|に対して|によれば|によると).*/);
+              if (descriptiveNotesMatch) {
+                hostPlantNotes.push(descriptiveNotesMatch[0].trim());
+                rawHostPlant = rawHostPlant.replace(descriptiveNotesMatch[0], '').trim();
+              }
+              
+              let hostPlantEntries = [];
+              
+              if (rawHostPlant) {
+                console.log('DEBUG: Raw host plant data:', rawHostPlant);
+                
+                // Check if this is a descriptive text (contains observation conditions)
+                const hasObservationConditions = /自然状態では|飼育条件下では|観察されている|確認されている|国外では/.test(rawHostPlant);
+                
+                if (hasObservationConditions) {
+                  // Parse descriptive text more carefully
+                  const parts = rawHostPlant.split(/[。；]/);
+                  
+                  let naturalCondition = '';
+                  let culturedCondition = '';
+                  let internationalCondition = '';
+                  let generalPlants = [];
+                  
+                  parts.forEach(part => {
+                    part = part.trim();
+                    if (part.includes('自然状態では')) {
+                      naturalCondition = part.replace('自然状態では', '').replace(/が?観察されている/, '').trim();
+                    } else if (part.includes('飼育条件下では')) {
+                      culturedCondition = part.replace('飼育条件下では', '').replace(/を?食べる?/, '').trim();
+                    } else if (part.includes('国外では')) {
+                      // Handle international observations as notes, not as host plants
+                      internationalCondition = part.replace('国外では', '').replace(/が?[記録知].*れている?/, '').trim();
+                      console.log('DEBUG: International condition found:', internationalCondition);
+                      // Add international information to host plant notes
+                      if (internationalCondition) {
+                        hostPlantNotes.push('国外では' + internationalCondition);
+                      }
+                    } else if (part && !part.includes('観察されている') && !part.includes('確認されている') && !part.includes('記録') && !part.includes('知られ')) {
+                      // Extract plant names from general descriptions
+                      const plantMatches = part.match(/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]+/gu);
+                      if (plantMatches) {
+                        plantMatches.forEach(match => {
+                          if (match.length > 1 && !match.includes('食べ') && !match.includes('成長') && !match.includes('状態') && !match.includes('国外')) {
+                            generalPlants.push(match);
+                          }
+                        });
+                      }
+                    }
                   });
-                }).filter(Boolean);
+                  
+                  // Helper function to check if a plant name is valid
+                  const isValidPlantName = (plantName) => {
+                    // Basic validation - must be a string with reasonable length
+                    if (!plantName || typeof plantName !== 'string' || plantName.length < 2) {
+                      return false;
+                    }
+                    
+                    // Remove whitespace for testing
+                    const trimmed = plantName.trim();
+                    
+                    // Reject if only numbers or only English letters
+                    if (/^[0-9]+$/.test(trimmed) || /^[A-Za-z]+$/.test(trimmed)) {
+                      return false;
+                    }
+                    
+                    // Reject catalog numbers with special characters like "10+12"
+                    if (/^[0-9+\-]+$/.test(trimmed)) {
+                      return false;
+                    }
+                    
+                    // Allow family names (ending with '科') as valid plant names
+                    if (trimmed.endsWith('科')) {
+                      return true;
+                    }
+                    
+                    const invalidPatterns = [
+                      /^[0-9]+$/,  // Pure numbers
+                      /^[A-Za-z]+$/, // Pure English letters
+                      /^[0-9+\-]+$/, // Catalog numbers like "10+12"
+                      /国外/,
+                      /各種/,
+                      /以上/,
+                      /記録/,
+                      /知られ/,
+                      /観察/,
+                      /確認/,
+                      /報告/,
+                      /台湾/,
+                      /沖縄/,
+                      /ヨーロッパ/,
+                      /ハワイ/,
+                      /時に/,
+                      /害虫/,
+                      /被害/,
+                      /食べ/,
+                      /食す/,
+                      /育つ/,
+                      /成長/,
+                      /飼育/,
+                      /判明/,
+                      /植物/,
+                      /樹木/,
+                      /草本/,
+                      /^の$/,
+                      /^を$/,
+                      /^が$/,
+                      /^で$/,
+                      /^に$/,
+                      /^は$/,
+                      /^と$/,
+                      /^や$/,
+                      /^も$/,
+                      /^から$/,
+                      /^まで$/,
+                      /^では$/,
+                      /^でも$/,
+                      /^として$/,
+                      /^による$/,
+                      /^からの$/,
+                      /^への$/,
+                      /^との$/,
+                      /^での$/,
+                      /^によって$/,
+                      /^において$/,
+                      /^について$/,
+                      /^に関して$/,
+                      /^に対して$/,
+                      /^によれば$/,
+                      /^によると$/
+                    ];
+                    
+                    return !invalidPatterns.some(pattern => pattern.test(trimmed));
+                  };
+                  
+                  // Create structured entries
+                  if (naturalCondition) {
+                    const plants = naturalCondition.split(/[、，;]/);
+                    plants.forEach(plant => {
+                      plant = plant.trim().replace(/の?カビ|など|類/g, '');
+                      // Remove notes in parentheses from plant names
+                      plant = plant.replace(/（[^）]*）/g, '');
+                      plant = plant.replace(/\([^)]*\)/g, '');
+                      if (plant.length > 1 && isValidPlantName(plant)) {
+                        hostPlantEntries.push({
+                          plant: plant,
+                          condition: '自然状態',
+                          familyFromMainCsv: familyFromMainCsv
+                        });
+                      }
+                    });
+                  }
+                  
+                  if (culturedCondition) {
+                    console.log('DEBUG: Processing culturedCondition:', culturedCondition);
+                    // More specific pattern to extract plant names from cultured condition
+                    const plants = culturedCondition.split(/[、，;]/);
+                    plants.forEach(plant => {
+                      plant = plant.trim();
+                      
+                      // Clean up the plant name but preserve actual plant names
+                      plant = plant.replace(/で飼育に成功している/g, '');
+                      
+                      // Special handling for "などマメ科植物" to preserve the nuance
+                      const hasNadoMamekaNote = plant.includes('などマメ科植物');
+                      if (hasNadoMamekaNote) {
+                        // Extract the main plant name but keep the "などマメ科植物" context as a note
+                        const mainPlantMatch = plant.match(/^([^な]+)など/);
+                        if (mainPlantMatch) {
+                          const mainPlant = mainPlantMatch[1].trim();
+                          if (mainPlant && isValidPlantName(mainPlant)) {
+                            hostPlantEntries.push({
+                              plant: mainPlant,
+                              condition: '飼育条件下',
+                              familyFromMainCsv: familyFromMainCsv
+                            });
+                          }
+                          // Add a note about the broader family context (insert at beginning)
+                          hostPlantNotes.unshift('マメ科植物での飼育が可能');
+                          return; // Skip the regular processing for this plant
+                        }
+                      }
+                      
+                      plant = plant.replace(/などマメ科植物/g, '');
+                      plant = plant.replace(/など/g, '');
+                      plant = plant.replace(/類$/g, '');
+                      
+                      // Remove notes in parentheses from plant names
+                      plant = plant.replace(/（[^）]*）/g, '');
+                      plant = plant.replace(/\([^)]*\)/g, '');
+                      
+                      plant = plant.trim();
+                      
+                      console.log('DEBUG: Extracted cultured plant:', plant);
+                      
+                      if (plant.length > 1 && isValidPlantName(plant)) {
+                        hostPlantEntries.push({
+                          plant: plant,
+                          condition: '飼育条件下',
+                          familyFromMainCsv: familyFromMainCsv
+                        });
+                        console.log('DEBUG: Added cultured plant:', plant);
+                      } else {
+                        console.log('DEBUG: Rejected cultured plant:', plant, 'Valid:', isValidPlantName(plant));
+                      }
+                    });
+                  }
+                  
+                  generalPlants.forEach(plant => {
+                    if (plant.length > 1 && isValidPlantName(plant)) {
+                      hostPlantEntries.push({
+                        plant: plant,
+                        condition: '',
+                        familyFromMainCsv: familyFromMainCsv
+                      });
+                    }
+                  });
+                  
+                } else {
+                  // Pre-process to extract notes after '。'
+                  if (rawHostPlant.includes('。')) {
+                    const parts = rawHostPlant.split('。');
+                    rawHostPlant = parts[0].trim();
+                    for (let i = 1; i < parts.length; i++) {
+                      if (parts[i].trim()) {
+                        hostPlantNotes.push(parts[i].trim());
+                      }
+                    }
+                  }
+                  
+                  // Helper function to check if a plant name is valid (defined locally for standard parsing)
+                  const isValidPlantName = (plantName) => {
+                    // Basic validation - must be a string with reasonable length
+                    if (!plantName || typeof plantName !== 'string' || plantName.length < 2) {
+                      return false;
+                    }
+                    
+                    // Remove whitespace for testing
+                    const trimmed = plantName.trim();
+                    
+                    // Reject if only numbers or only English letters
+                    if (/^[0-9]+$/.test(trimmed) || /^[A-Za-z]+$/.test(trimmed)) {
+                      return false;
+                    }
+                    
+                    // Reject catalog numbers with special characters like "10+12"
+                    if (/^[0-9+\-]+$/.test(trimmed)) {
+                      return false;
+                    }
+                    
+                    // Allow family names (ending with '科') as valid plant names
+                    if (trimmed.endsWith('科')) {
+                      return true;
+                    }
+                    
+                    const invalidPatterns = [
+                      /^[0-9]+$/,  // Pure numbers
+                      /^[A-Za-z]+$/, // Pure English letters
+                      /^[0-9+\-]+$/, // Catalog numbers like "10+12"
+                      /国外/,
+                      /各種/,
+                      /以上/,
+                      /記録/,
+                      /知られ/,
+                      /観察/,
+                      /確認/,
+                      /報告/,
+                      /台湾/,
+                      /沖縄/,
+                      /ヨーロッパ/,
+                      /ハワイ/,
+                      /時に/,
+                      /害虫/,
+                      /被害/,
+                      /食べ/,
+                      /食す/,
+                      /育つ/,
+                      /成長/,
+                      /飼育/,
+                      /判明/,
+                      /植物/,
+                      /樹木/,
+                      /草本/,
+                      /^の$/,
+                      /^を$/,
+                      /^が$/,
+                      /^で$/,
+                      /^に$/,
+                      /^は$/,
+                      /^と$/,
+                      /^や$/,
+                      /^も$/
+                    ];
+                    
+                    return !invalidPatterns.some(pattern => pattern.test(trimmed));
+                  };
+                  
+                  // Standard parsing for normal plant lists
+                  // First, extract and temporarily store the notes
+                  let tempHostPlant = rawHostPlant;
+                  const extractedNotes = [];
+                  
+                  // Extract notes in parentheses (e.g., "(ブナ科)", "(可能性が高い)")
+                  const notePattern = /\(([^)]+?)\)/g;
+                  let noteMatch;
+                  while ((noteMatch = notePattern.exec(tempHostPlant)) !== null) {
+                    const noteContent = noteMatch[1].trim();
+                    // Only add as a note if it's not a plant family name
+                    if (!noteContent.endsWith('科')) {
+                      extractedNotes.push(noteContent);
+                    }
+                  }
+                  
+                  // Extract notes after a period or semicolon that are not part of a plant name
+                  const descriptivePattern = /[。；]([^。；]+)/g;
+                  let descriptiveMatch;
+                  while ((descriptiveMatch = descriptivePattern.exec(tempHostPlant)) !== null) {
+                    extractedNotes.push(descriptiveMatch[1].trim());
+                  }
+
+                  // Remove all notes and family names in parentheses from the plant text before splitting
+                  tempHostPlant = tempHostPlant.replace(/\([^)]+\)/g, '');
+                  tempHostPlant = tempHostPlant.replace(/[。；].*/g, '');
+                  
+                  const plants = tempHostPlant.split(/[;、，,]/);
+                  plants.forEach(plant => {
+                    plant = plant.trim().replace(/など|類/g, '');
+                    // Clean up any remaining formatting
+                    plant = plant.replace(/^\s*[\,\、\，]\s*/, ''); // Remove leading separators
+                    plant = plant.replace(/\s*[\,\、\，]\s*$/, ''); // Remove trailing separators
+                    plant = plant.replace(/^["']|["']$/g, ''); // Remove leading/trailing quotes
+                    plant = plant.replace(/[\(\)\[\]\{\}]/g, ''); // Remove brackets and parentheses
+                    plant = plant.replace(/[\-\u2010-\u2015_=+|\\\\;:<>/?~`!@#$%^&*]/g, ''); // Remove symbols
+                    plant = plant.trim(); // Final trim
+                    if (plant.length > 1 && isValidPlantName(plant)) {
+                      const correctedPlantName = correctPlantName(wameiMap[plant] || plant);
+                      hostPlantEntries.push({
+                        plant: correctedPlantName,
+                        condition: '',
+                        familyFromMainCsv: familyFromMainCsv
+                      });
+                    }
+                  });
+                  // Add all extracted notes to hostPlantNotes
+                  hostPlantNotes.push(...extractedNotes);
+                }
+              }
 
               const hostPlantList = [...new Set(hostPlantEntries.map(e => e.plant))];
               console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
-              mainMothData.push({ 
-                id: `main-${index}`, 
-                name: mothName, 
-                scientificName: scientificName, 
-                scientificFilename: scientificFilename, 
-                type: 'moth',
-                hostPlants: hostPlantList, 
-                source: row['出典'] || '不明', 
-                classification,
-                // Instagram data (if available)
-                instagramUrl: row['instagram_url'] || ''
-              });
+              
+              if (isBeetle) {
+                // Process as beetle
+                mainBeetleData.push({ 
+                  id: `main-beetle-${index}`, 
+                  name: mothName, 
+                  scientificName: scientificName, 
+                  scientificFilename: scientificFilename, 
+                  type: 'beetle',
+                  hostPlants: hostPlantList,
+                  hostPlantDetails: hostPlantEntries, // Include detailed host plant info
+                  source: row['出典'] || '日本産タマムシ大図鑑', 
+                  classification,
+                  isMonophagous: isMonophagous, // Add monophagous information
+                  hostPlantNotes: hostPlantNotes, // Add host plant notes
+                  // Instagram data (if available)
+                  instagramUrl: row['instagram_url'] || ''
+                });
+              } else {
+                // Process as moth
+                mainMothData.push({ 
+                  id: `main-${index}`, 
+                  name: mothName, 
+                  scientificName: scientificName, 
+                  scientificFilename: scientificFilename, 
+                  type: 'moth',
+                  hostPlants: hostPlantList,
+                  hostPlantDetails: hostPlantEntries, // Include detailed host plant info
+                  source: row['出典'] || '不明', 
+                  classification,
+                  isMonophagous: isMonophagous, // Add monophagous information
+                  hostPlantNotes: hostPlantNotes, // Add host plant notes
+                  // Instagram data (if available)
+                  instagramUrl: row['instagram_url'] || ''
+                });
+              }
 
               hostPlantEntries.forEach(({ plant, familyFromMainCsv }) => {
-                if (!hostPlantData[plant]) hostPlantData[plant] = [];
-                hostPlantData[plant].push(mothName);
+                // Final validation to ensure we don't add invalid plant names
+                if (plant && plant.trim() && plant.length > 1 && isValidPlantName(plant)) {
+                  const validPlant = plant.trim();
+                  if (!hostPlantData[validPlant]) hostPlantData[validPlant] = [];
+                  if (!hostPlantData[validPlant].includes(mothName)) {
+                    hostPlantData[validPlant].push(mothName);
+                  }
 
-                if (!plantDetailData[plant]) plantDetailData[plant] = {}; // Ensure it's an object
-                plantDetailData[plant].family = yListPlantFamilyMap[plant] || wameiFamilyMap[plant] || familyFromMainCsv || plantFamilyMap[plant] || '不明';
-                plantDetailData[plant].scientificName = yListPlantScientificNameMap[plant] || '';
-                plantDetailData[plant].genus = yListPlantScientificNameMap[plant]?.split(' ')[0] || '';
+                  if (!plantDetailData[validPlant]) plantDetailData[validPlant] = {}; // Ensure it's an object
+                  plantDetailData[validPlant].family = yListPlantFamilyMap[validPlant] || wameiFamilyMap[validPlant] || familyFromMainCsv || plantFamilyMap[validPlant] || '不明';
+                  plantDetailData[validPlant].scientificName = yListPlantScientificNameMap[validPlant] || '';
+                  plantDetailData[validPlant].genus = yListPlantScientificNameMap[validPlant]?.split(' ')[0] || '';
+                }
               });
             });
           } // Added missing closing brace for complete callback
         });
 
-        // Parse butterfly_host.csv
-        // Remove BOM and fix header format
-        const cleanedButterflyText = butterflyText.replace(/^\uFEFF/, '').replace(/^"([^"]+)"/, '$1');
-        const butterflyParsed = Papa.parse(cleanedButterflyText, { header: true, skipEmptyLines: true, delimiter: ',' });
-        if (butterflyParsed.errors.length) {
-          console.error("PapaParse errors in butterfly_host.csv:", butterflyParsed.errors);
+        // Parse butterfly_host.csv - Direct string processing approach
+        const cleanedButterflyText = butterflyText.replace(/^\uFEFF/, '');
+        const lines = cleanedButterflyText.split('\n').filter(line => line.trim());
+        
+        console.log("Total lines in butterfly CSV:", lines.length);
+        
+        // Manual parsing since this CSV has complex structure
+        const butterflyParsedData = [];
+        
+        // Skip header (first line)
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          
+          // Remove outer quotes if present
+          const cleanLine = line.startsWith('"') && line.endsWith('"') ? line.slice(1, -1) : line;
+          
+          // Split manually by comma, but be careful with quoted content
+          const parts = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let j = 0; j < cleanLine.length; j++) {
+            const char = cleanLine[j];
+            const nextChar = cleanLine[j + 1];
+            
+            if (char === '"' && nextChar === '"') {
+              // Escaped quote
+              current += '"';
+              j++; // Skip next quote
+            } else if (char === '"') {
+              // Toggle quote state
+              inQuotes = !inQuotes;
+              current += char;
+            } else if (char === ',' && !inQuotes) {
+              // Field separator
+              parts.push(current.trim());
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          
+          if (current) {
+            parts.push(current.trim());
+          }
+          
+          // Create butterfly object if we have enough parts
+          if (parts.length >= 7) {
+            const row = {
+              '文献名': parts[0],
+              '科': parts[1],
+              '亜科': parts[2],
+              '属': parts[3],
+              '種小名': parts[4],
+              '和名': parts[5],
+              '食草': parts[6]
+            };
+            butterflyParsedData.push(row);
+          }
         }
+        
+        console.log("Manually parsed butterfly data:", butterflyParsedData.length);
+        console.log("First butterfly:", butterflyParsedData[0]);
 
-        console.log("Butterfly headers:", Object.keys(butterflyParsed.data[0] || {}));
-        console.log("First butterfly row:", butterflyParsed.data[0]);
-
-        const butterflyData = [];
-        butterflyParsed.data.forEach((row, index) => {
+        // Add a test butterfly first to confirm the system works
+        const butterflyData = [
+          {
+            id: "test-butterfly-1",
+            name: "ギフチョウ",
+            scientificName: "Luehdorfia japonica",
+            scientificFilename: "Luehdorfia_japonica",
+            type: "butterfly",
+            classification: {
+              family: "アゲハチョウ科",
+              familyJapanese: "アゲハチョウ科",
+              subfamily: "ウスバアゲハ亜科",
+              subfamilyJapanese: "ウスバアゲハ亜科",
+              genus: "Luehdorfia"
+            },
+            hostPlants: ["カンアオイ", "ウスバサイシン", "フタバアオイ"],
+            source: "日本産蝶類標準図鑑"
+          }
+        ];
+        
+        // Process CSV data and add to butterflyData
+        butterflyParsedData.forEach((row, index) => {
           const source = row['文献名'];
           const family = row['科'];
           const subfamily = row['亜科'];
@@ -352,30 +906,67 @@ function App() {
           const japaneseName = row['和名'];
           const hostPlants = row['食草'];
           
+          console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants });
+          
           if (!japaneseName || !genus || !species) {
             console.log("Skipping butterfly row:", { japaneseName, genus, species, rowIndex: index });
             return;
           }
           
           const scientificName = `${genus} ${species}`;
-          const id = `butterfly-${index}`;
+          const id = `butterfly-csv-${index}`;
           
-          // Parse host plants
+          // Parse host plants properly
           let hostPlantList = [];
           if (hostPlants) {
-            // Remove quotes and split by various delimiters
-            const cleanedHostPlants = hostPlants.replace(/["""]/g, '').trim();
-            hostPlantList = [...new Set(cleanedHostPlants.split(/[,;、，；]/)
+            console.log("Raw host plants for", japaneseName, ":", hostPlants);
+            
+            // Remove outer quotes and inner quotes
+            let cleanedHostPlants = hostPlants;
+            
+            // Remove outer double quotes if present
+            if (cleanedHostPlants.startsWith('""') && cleanedHostPlants.endsWith('""')) {
+              cleanedHostPlants = cleanedHostPlants.slice(2, -2);
+            }
+            
+            console.log("After removing quotes:", cleanedHostPlants);
+            
+            // Extract content from parentheses first
+            const parenthesesMatch = cleanedHostPlants.match(/[（(]([^）)]+)[）)]/);
+            if (parenthesesMatch) {
+              // If there's content in parentheses, use that
+              cleanedHostPlants = parenthesesMatch[1];
+              console.log("Extracted from parentheses:", cleanedHostPlants);
+            } else {
+              // Otherwise, clean up the whole string - be more careful with scientific terms
+              cleanedHostPlants = cleanedHostPlants
+                .replace(/[^、，,]*科の?/g, '') // Remove family names like "ブナ科の"
+                .replace(/[^、，,]*属の?/g, '') // Remove genus names like "コナラ属の"
+                .replace(/類\s*[（(][^）)]*[）)]/g, '') // Remove "類" with parentheses
+                .replace(/類/g, '') // Remove standalone "類"
+                .replace(/など/g, '')
+                .replace(/の/g, '') // Remove remaining "の" particles
+                .replace(/^[、，,]+|[、，,]+$/g, '') // Remove leading/trailing delimiters
+                .replace(/[、，,]+/g, '、'); // Normalize delimiters
+            }
+            
+            // Split by delimiters
+            const plants = cleanedHostPlants.split(/[、，,]/);
+            
+            hostPlantList = plants
               .map(plant => plant.trim())
+              .map(plant => plant.replace(/^"(.+)"$/, '$1')) // Remove outer quotes from individual plant names
+              .map(plant => plant.replace(/^"(.+)$/, '$1')) // Remove unclosed quotes at beginning
+              .map(plant => plant.replace(/^(.+)"$/, '$1')) // Remove unclosed quotes at end
               .filter(plant => plant.length > 0)
-              .map(plant => {
-                // Clean up plant names
-                plant = plant.replace(/など/g, '');
-                plant = plant.replace(/類$/g, '');
-                plant = plant.replace(/\([^)]*\)/g, ''); // Remove parenthetical content
-                return plant.trim();
-              })
-              .filter(plant => plant.length > 0))];
+              .filter(plant => plant !== '科' && plant !== '属' && plant !== '類')
+              .filter(plant => !plant.endsWith('科') && !plant.endsWith('属')) // Remove items ending with 科 or 属
+              .filter(plant => plant.length > 1); // Remove single character items
+            
+            // Remove duplicates
+            hostPlantList = [...new Set(hostPlantList)];
+            
+            console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
           }
 
           const butterfly = {
@@ -398,32 +989,128 @@ function App() {
           butterflyData.push(butterfly);
           console.log("Added butterfly:", japaneseName, scientificName);
 
-          // Add to host plants data
+          // Add to host plants data with validation
           hostPlantList.forEach(plant => {
-            if (!hostPlantData[plant]) {
-              hostPlantData[plant] = [];
-            }
-            if (!hostPlantData[plant].includes(japaneseName)) {
-              hostPlantData[plant].push(japaneseName);
+            // Validate plant name before adding using centralized validation
+            const trimmedPlant = plant.trim();
+            if (isValidPlantName(trimmedPlant)) {
+              if (!hostPlantData[trimmedPlant]) {
+                hostPlantData[trimmedPlant] = [];
+              }
+              if (!hostPlantData[trimmedPlant].includes(japaneseName)) {
+                hostPlantData[trimmedPlant].push(japaneseName);
+              }
             }
           });
         });
 
-        console.log("Butterfly data parsed:", butterflyData.length);
+        // Parse beetle CSV data
+        const beetleParsed = Papa.parse(beetleText, { header: true, skipEmptyLines: true, delimiter: ',' });
+        if (beetleParsed.errors.length) {
+          console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
+        }
+        
+        const beetleData = [];
+        beetleParsed.data.forEach((row, index) => {
+          const source = row['文献名'];
+          const family = row['科'];
+          const subfamily = row['亜科'];
+          const genus = row['属'];
+          const species = row['種小名'];
+          const japaneseName = row['和名'];
+          const hostPlants = row['食草'];
+          
+          if (!japaneseName || !genus || !species) {
+            console.log("Skipping beetle row:", { japaneseName, genus, species, rowIndex: index });
+            return;
+          }
+          
+          const scientificName = `${genus} ${species}`;
+          const id = `beetle-${index}`;
+          
+          // Parse host plants
+          let hostPlantList = [];
+          if (hostPlants) {
+            const plants = hostPlants.split(/[、，,]/);
+            hostPlantList = plants
+              .map(plant => plant.trim())
+              .filter(plant => plant.length > 0);
+            hostPlantList = [...new Set(hostPlantList)];
+          }
+
+          const beetle = {
+            id,
+            name: japaneseName,
+            scientificName,
+            scientificFilename: formatScientificNameForFilename(scientificName),
+            type: 'beetle',
+            classification: {
+              family: family,
+              familyJapanese: family,
+              subfamily: subfamily,
+              subfamilyJapanese: subfamily,
+              genus: genus
+            },
+            hostPlants: hostPlantList,
+            source: source || "日本産タマムシ大図鑑"
+          };
+
+          beetleData.push(beetle);
+          console.log("Added beetle:", japaneseName, scientificName);
+
+          // Add to host plants data with validation
+          hostPlantList.forEach(plant => {
+            // Validate plant name before adding using centralized validation
+            const trimmedPlant = plant.trim();
+            if (isValidPlantName(trimmedPlant)) {
+              if (!hostPlantData[trimmedPlant]) {
+                hostPlantData[trimmedPlant] = [];
+              }
+              if (!hostPlantData[trimmedPlant].includes(japaneseName)) {
+                hostPlantData[trimmedPlant].push(japaneseName);
+              }
+            }
+          });
+        });
 
         // Combine all moth data after all parsing is complete
-        const combinedMothData = [...mainMothData, ...book1MothData];
+        const combinedMothData = [...mainMothData];
+        // Combine beetle data from integrated file and separate CSV
+        const combinedBeetleData = [...mainBeetleData, ...beetleData];
 
+        console.log("Final butterfly data:", butterflyData.length, "butterflies");
+        console.log("Final beetle data:", combinedBeetleData.length, "beetles");
+        console.log("Sample butterfly:", butterflyData[0]);
+        console.log("All butterflies:", butterflyData.map(b => b.name));
+        console.log("Host Plants data set:", Object.keys(cleanedHostPlantData).length);
+        console.log("plantDetailData before setting state:", cleanedPlantDetailData);
+        console.log("Plant Details data set:", Object.keys(cleanedPlantDetailData).length);
+        // Clean up hostPlantData to remove any invalid plant names that may have slipped through
+        const cleanedHostPlantData = {};
+        Object.entries(hostPlantData).forEach(([plantName, mothList]) => {
+          if (isValidPlantName(plantName)) {
+            cleanedHostPlantData[plantName] = mothList;
+          } else {
+            console.log("Removed invalid plant name:", plantName);
+          }
+        });
+        
+        // Clean up plantDetailData as well
+        const cleanedPlantDetailData = {};
+        Object.entries(plantDetailData).forEach(([plantName, details]) => {
+          if (isValidPlantName(plantName)) {
+            cleanedPlantDetailData[plantName] = details;
+          }
+        });
+        
+        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
+        console.log("Removed", Object.keys(hostPlantData).length - Object.keys(cleanedHostPlantData).length, "invalid host plant entries");
+        
         setMoths(combinedMothData);
         setButterflies(butterflyData);
-        console.log("Moths data set:", combinedMothData.length);
-        console.log("Butterflies data set:", butterflyData.length);
-        setHostPlants(hostPlantData);
-        console.log("Host Plants data set:", Object.keys(hostPlantData).length);
-        setPlantDetails(plantDetailData);
-        console.log("plantDetailData before setting state:", plantDetailData);
-        console.log("Plant Details data set:", Object.keys(plantDetailData).length);
-        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Host Plants count:", Object.keys(hostPlantData).length);
+        setBeetles(combinedBeetleData);
+        setHostPlants(cleanedHostPlantData);
+        setPlantDetails(cleanedPlantDetailData);
         setLoading(false); // Set loading to false after data is loaded
         console.log("Loading set to false.");
       } catch (error) {
@@ -436,23 +1123,27 @@ function App() {
   return (
     console.log("App rendering. Loading:", loading, "Moths count:", moths.length),
     <div className={theme === 'dark' ? 'dark' : ''}>
-      <Header 
-        theme={theme} 
-        setTheme={setTheme} 
-        moths={moths}
-        butterflies={butterflies}
-        hostPlants={hostPlants}
-        plantDetails={plantDetails}
-      />
+      {!isHomePage && (
+        <Header 
+          theme={theme} 
+          setTheme={setTheme} 
+          moths={moths}
+          butterflies={butterflies}
+          beetles={beetles}
+          hostPlants={hostPlants}
+          plantDetails={plantDetails}
+        />
+      )}
 
       {loading ? (
         <SkeletonLoader />
       ) : (
         <Routes>
-          <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} hostPlants={hostPlants} plantDetails={plantDetails} />} />
-          <Route path="/moth/:mothId" element={<MothDetail moths={moths} hostPlants={hostPlants} />} />
-          <Route path="/butterfly/:butterflyId" element={<MothDetail moths={butterflies} hostPlants={hostPlants} />} />
-          <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} butterflies={butterflies} hostPlants={hostPlants} plantDetails={plantDetails} />} />
+          <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} />} />
+          <Route path="/moth/:mothId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} />} />
+          <Route path="/butterfly/:butterflyId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} />} />
+          <Route path="/beetle/:beetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} />} />
+          <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} plantDetails={plantDetails} />} />
         </Routes>
       )}
       <Footer />
