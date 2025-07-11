@@ -102,6 +102,13 @@ function App() {
           let normalized = plantName.replace(/（[^）]*科[^）]*）/g, ''); // Remove (科名) patterns
           normalized = normalized.replace(/\([^)]*科[^)]*\)/g, ''); // Remove (family) patterns
           
+          // Remove incomplete parentheses like "オオカメノキ（" -> "オオカメノキ"
+          normalized = normalized.replace(/（[^）]*$/g, ''); // Remove opening parentheses without closing
+          normalized = normalized.replace(/\([^)]*$/g, ''); // Remove opening parentheses without closing
+          // Only remove closing parentheses at the start if they look like orphaned closing parentheses
+          normalized = normalized.replace(/^）/g, ''); // Remove orphaned closing parentheses at start
+          normalized = normalized.replace(/^\)/g, ''); // Remove orphaned closing parentheses at start
+          
           // Remove other common annotations
           normalized = normalized.replace(/（[^）]*）/g, ''); // Remove remaining parentheses
           normalized = normalized.replace(/\([^)]*\)/g, ''); // Remove remaining parentheses
@@ -140,6 +147,10 @@ function App() {
             /^[0-9+\-]+$/, // Catalog numbers like "10+12"
             /^\s*[0-9]{4}\)"?\s*$/, // Year patterns like "1763)"
             /^\s*[0-9]{4}"?\s*$/, // Simple year patterns like "1763"
+            /（[^）]*$/, // Incomplete opening parentheses like "オオカメノキ（"
+            /^[^（]*）/, // Incomplete closing parentheses like "）スイカズラ科"
+            /\([^)]*$/, // Incomplete opening parentheses (half-width)
+            /^[^(]*\)/, // Incomplete closing parentheses (half-width)
             /^[\u3001-\u3006\u3008-\u3011\u3013-\u301f\uff01-\uff0f\uff1a-\uff20\uff3b-\uff40\uff5b-\uff65\u2000-\u206f\u2e00-\u2e7f!-\/:-@\[-`{-~]+$/, // Only symbols/punctuation
             /^["'\u201c\u201d\u2018\u2019()\[\]{}\-\u2010-\u2015_=+|\\;:,.<>/?~`!@#$%^&*]+$/, // Common symbols
             /国外/,
@@ -391,9 +402,14 @@ function App() {
               // Extract notes from parentheses (like "可能性が高い", "単食性" etc.)
               const hostPlantNotes = [];
               
-              // Check for "明らかに広食性" and add as note (check before replacement)
+              // Check for "明らかに広食性" and "多食性" and add as note (check before replacement)
               if (rawHostPlant.includes('明らかに広食性')) {
                 hostPlantNotes.push('広食性');
+              }
+              
+              // Check for "多食性" (polyphagous) and add as "広食性" (euryphagous) note
+              if (rawHostPlant.includes('多食性')) {
+                hostPlantNotes.push('広食性（多食性）');
               }
               
               const noteMatches = rawHostPlant.match(/（([^）]+)）/g);
@@ -417,6 +433,11 @@ function App() {
               
               // Replace "明らかに広食性" with just "広食性" in the plant list
               rawHostPlant = rawHostPlant.replace(/明らかに広食性/g, '広食性');
+              
+              // Remove "多食性" and related phrases from plant list since it's now in notes
+              rawHostPlant = rawHostPlant.replace(/多食性[。；;\s]*/g, '');
+              rawHostPlant = rawHostPlant.replace(/^多食性[。；;\s]*/, '');
+              rawHostPlant = rawHostPlant.replace(/[。；;\s]*多食性$/g, '');
               
               rawHostPlant = rawHostPlant.trim();
 
@@ -957,23 +978,32 @@ function App() {
             
             console.log("After removing quotes:", cleanedHostPlants);
             
-            // Extract content from parentheses first
-            const parenthesesMatch = cleanedHostPlants.match(/[（(]([^）)]+)[）)]/);
-            if (parenthesesMatch) {
-              // If there's content in parentheses, use that
-              cleanedHostPlants = parenthesesMatch[1];
-              console.log("Extracted from parentheses:", cleanedHostPlants);
+            // Check if this has the pattern "科名（植物名、植物名）"
+            const familyWithParenthesesMatch = cleanedHostPlants.match(/(.+科)\s*[（(]([^）)]+)[）)]/);
+            if (familyWithParenthesesMatch) {
+              // If it's like "イネ科（チヂミザサ、ノガリヤス）", include both family and plants
+              const familyName = familyWithParenthesesMatch[1];
+              const plantsInParentheses = familyWithParenthesesMatch[2];
+              cleanedHostPlants = familyName + '、' + plantsInParentheses;
+              console.log("Family with parentheses - combined:", cleanedHostPlants);
             } else {
-              // Otherwise, clean up the whole string - be more careful with scientific terms
-              cleanedHostPlants = cleanedHostPlants
-                .replace(/[^、，,]*科の?/g, '') // Remove family names like "ブナ科の"
-                .replace(/[^、，,]*属の?/g, '') // Remove genus names like "コナラ属の"
-                .replace(/類\s*[（(][^）)]*[）)]/g, '') // Remove "類" with parentheses
-                .replace(/類/g, '') // Remove standalone "類"
-                .replace(/など/g, '')
-                .replace(/の/g, '') // Remove remaining "の" particles
-                .replace(/^[、，,]+|[、，,]+$/g, '') // Remove leading/trailing delimiters
-                .replace(/[、，,]+/g, '、'); // Normalize delimiters
+              // Extract content from parentheses only
+              const parenthesesMatch = cleanedHostPlants.match(/[（(]([^）)]+)[）)]/);
+              if (parenthesesMatch) {
+                // If there's content in parentheses, use that
+                cleanedHostPlants = parenthesesMatch[1];
+                console.log("Extracted from parentheses:", cleanedHostPlants);
+              } else {
+                // Otherwise, clean up the whole string - be more careful with scientific terms
+                cleanedHostPlants = cleanedHostPlants
+                  .replace(/[^、，,]*属の?/g, '') // Remove genus names like "コナラ属の"
+                  .replace(/類\s*[（(][^）)]*[）)]/g, '') // Remove "類" with parentheses
+                  .replace(/類/g, '') // Remove standalone "類"
+                  .replace(/など/g, '')
+                  .replace(/の/g, '') // Remove remaining "の" particles
+                  .replace(/^[、，,]+|[、，,]+$/g, '') // Remove leading/trailing delimiters
+                  .replace(/[、，,]+/g, '、'); // Normalize delimiters
+              }
             }
             
             // Split by delimiters
@@ -986,7 +1016,7 @@ function App() {
               .map(plant => plant.replace(/^(.+)"$/, '$1')) // Remove unclosed quotes at end
               .filter(plant => plant.length > 0)
               .filter(plant => plant !== '科' && plant !== '属' && plant !== '類')
-              .filter(plant => !plant.endsWith('科') && !plant.endsWith('属')) // Remove items ending with 科 or 属
+              .filter(plant => !plant.endsWith('属')) // Remove items ending with 属, but keep family names (科)
               .filter(plant => plant.length > 1) // Remove single character items
               .map(plant => normalizePlantName(plant)); // Normalize plant names
             

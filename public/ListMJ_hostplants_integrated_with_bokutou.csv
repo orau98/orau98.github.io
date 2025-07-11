@@ -4671,7 +4671,7 @@
 3168,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Fusapteryx,,ladislai,,(Oberthür),1880,,シロスジエグリシャチホコ,,,,,,,"Fusapteryx ladislai (Oberthür, 1880)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
 3152,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Leucodonta,,bicoloria,,(Denis & Schiffermüller),1775,,モンキシロシャチホコ,,,,,,,,,
 3160,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Epinotodonta,,fumosa,,Matsumura,1919,,ウスグロシャチホコ,,,,,,,"Epinotodonta fumosa (Matsumura, 1919)",ダケカンバ; ウダイカンバ; ヤシャブシ(以上カバノキ科); シナノキ(アオイ科),日本産蛾類標準図鑑2
-3158,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hexafrenum,,leucodera,,(Staudinger),1892,,ツマジロシャチホコ,ツマジロシャチホコ,,,,,,"Hexafrenum leucodera (Staudinger, 1892)",多食性。クリ; コナラ(以上ブナ科); クマシデ; サワシバ; イヌシデ; シラカンバ; ミズメ; ツノハシバミ(以上カバノキ科)など,日本産蛾類標準図鑑2
+3158,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hexafrenum,,leucodera,,(Staudinger),1892,,ツマジロシャチホコ,ツマジロシャチホコ,,,,,,"Hexafrenum leucodera (Staudinger, 1892)","クリ; コナラ(以上ブナ科); クマシデ; サワシバ; イヌシデ; シラカンバ; ミズメ; ツノハシバミ(以上カバノキ科)など; 広食性（多食性）",日本産蛾類標準図鑑2
 3159,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Takadonta,,takamukui,,Matsumura,1920,,タカムクシャチホコ,,,,,,,"Takadonta takamukui (Matsumura, 1920)",ブナ; イヌブナ(ブナ科),日本産蛾類標準図鑑2
 3175,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Himeropteryx,,miraculosa,,Staudinger,1887,,キエグリシャチホコ,キエグリシャチホコ,,,,,,"Himeropteryx miraculosa (Staudinger, 1887)",トチノキ; カエデ(以上ムクロジ科); クマシデ; サワシバ(以上カバノキ科),日本産蛾類標準図鑑2
 3132,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Nephodonta,,tsushimensis,,Sugi,1980,,トビネシャチホコ,トビネシャチホコ,,,,,,"Nephodonta tsushimensis (Sugi, 1980)",クヌギ; カシワ; アラカシ; アベマキ; コナラ(以上ブナ科),日本産蛾類標準図鑑2
@@ -4707,7 +4707,7 @@
 3198,Lymantriidae,ドクガ科,,,,,,,Cifuna,,locuples,,Walker,1855,,マメドクガ,マメドクガ,,,,,,"Cifuna locuples (Walker, 1855)",ダイズ; フジ(以上マメ科); ミカイドウ; バラ(以上バラ科); ケヤキ(ニレ科); エノキ(アサ科); クヌギ; コナラ(以上ブナ科); ウツギ(アジサイ科)など,日本産蛾類標準図鑑2
 3200,Lymantriidae,ドクガ科,,,,,,,Gynaephora,,rossii,,(Curtis),1835,,ダイセツドクガ,ダイセツドクガ,,,,,,"Gynaephora rossii (Curtis, 1835)",クロマメノキ; エゾツツジ; キバナシャクナゲ; ウラシマツツジ; コメバツガザクラ; チシマツガザクラ; イワヒゲ; ガンコウラン(以上ツツジ科); エゾノタカネヤナギ; ミヤマヤナギ(以上ヤナギ科); ダイセツイワスゲ (カヤツリグサ科),日本産蛾類標準図鑑2
 3201,Lymantriidae,ドクガ科,,,,,,,Telochurus,,recens,,(Hübner),[1819],,アカモンドクガ,アカモンドクガ,,,,,,"Telochurus recens (Hübner, 1819)",コナラ; クヌギ(以上ブナ科); リンゴ; ウメ; サクラ (以上バラ科); ダイズ(マメ科),日本産蛾類標準図鑑2
-3203,Lymantriidae,ドクガ科,,,,,,,Orgyia,,thyellina,,Butler,1881,,ヒメシロモンドクガ,,,,,,,"Orgyia thyellina (Butler, 1881)",バラ科; クワ科; ブナ科; ヤナギ科; カバノキ科; マメ科; アサ科; アオイ科など多数,日本産蛾類標準図鑑2
+3203,Lymantriidae,ドクガ科,,,,,,,Orgyia,,thyellina,,Butler,1881,,ヒメシロモンドクガ,,,,,,,"Orgyia thyellina (Butler, 1881)",バラ科; クワ科; ブナ科; ヤナギ科; カバノキ科; マメ科; アサ科; アオイ科,日本産蛾類標準図鑑2
 3202,Lymantriidae,ドクガ科,,,,,,,Orgyia,,postica,,(Walker),1855,,コシロモンドクガ,,,,,,,"Orgyia postica (Walker, 1855)",イジュ(ツバキ科); マルヤマカンコノキ(コミカンソウ科); トウゴマ(トウダイグサ科); イスノキ(マンサク科); ハマセンダン(ミカン科); サイハイデイゴ; ギンネム(以上マメ科); アコウ(クワ科); ヤマモモ (ヤマモモ科); バラ(バラ科),日本産蛾類標準図鑑2
 3204,Lymantriidae,ドクガ科,,,,,,,Orgyia,,triangularis,,Nomura,1938,,ヤクシマドクガ,,,,,,,"Orgyia triangularis (Nomura, 1938)",イジュ (ツバキ科); スダジイ(ブナ科); ヤマモモ(ヤマモモ科); イスノキ(マンサク科); バラ(バラ科); サルスベリ (ミソハギ科),日本産蛾類標準図鑑2
 3205,Lymantriidae,ドクガ科,,,,,,,Laelia,,coenosa,,(Hübner),[1808],,スゲドクガ,スゲドクガ,,,,,,"Laelia coenosa (Hübner, 1808)",スゲの一種; マツカサススキ(以上カヤツリグサ科); ヒメガマ(ガマ科); ヨシ(イネ科),日本産蛾類標準図鑑2
@@ -4728,7 +4728,7 @@
 3217,Lymantriidae,ドクガ科,,,,,,,Numenes,,albofascia,,(Leech),[1889],,シロオビドクガ,シロオビドクガ,,,,,,"Numenes albofascia (Leech, 1889)",イヌシデ (カバノキ科)で飼育されている,日本産蛾類標準図鑑2
 3229,Lymantriidae,ドクガ科,,,,,,,Kuromondokuga,,niphonis,,(Butler),1881,,クロモンドクガ,クロモンドクガ,,,,,,"Kuromondokuga niphonis (Butler, 1881)",ハシバミ; アサダ(以上カバノキ科); サクラ(バラ科),日本産蛾類標準図鑑2
 3227,Lymantriidae,ドクガ科,,,,,,,Parocneria,,furva,,(Leech),[1889],,ウチジロマイマイ,,,,,,,"Parocneria furva (Leech, 1889)",ヒノキ; ビャクシン; ハイビャクシン(以上ヒノキ科),日本産蛾類標準図鑑2
-3218,Lymantriidae,ドクガ科,,,,,,,Lymantria,,dispar,,(Linnaeus),1758,,マイマイガ,マイマイガ,エゾマイマイ,,,,,"Lymantria dispar (Linnaeus, 1758)",多食性。リンゴ; ナシ; モモ; ウメ; ソメイヨシノ(以上バラ科); ヤナギ類; セイヨウハコヤナギ(以上ヤナギ科); クヌギ; ミズナラ; カシワ; アラカシ(以上ブナ科); ハルニレ; ケヤキ(以上ニレ科); ウルシ (ウルシ科); ミヤマキリシマ(ツツジ科); ブドウ(ブドウ科); シナノキ(アオイ科); ハンノキ(カバノキ科); カキノキ(カキノキ科)など,日本産蛾類標準図鑑2
+3218,Lymantriidae,ドクガ科,,,,,,,Lymantria,,dispar,,(Linnaeus),1758,,マイマイガ,マイマイガ,エゾマイマイ,,,,,"Lymantria dispar (Linnaeus, 1758)","リンゴ; ナシ; モモ; ウメ; ソメイヨシノ(以上バラ科); ヤナギ類; セイヨウハコヤナギ(以上ヤナギ科); クヌギ; ミズナラ; カシワ; アラカシ(以上ブナ科); ハルニレ; ケヤキ(以上ニレ科); ウルシ (ウルシ科); ミヤマキリシマ(ツツジ科); ブドウ(ブドウ科); シナノキ(アオイ科); ハンノキ(カバノキ科); カキノキ(カキノキ科)など; 広食性（多食性）",日本産蛾類標準図鑑2
 ,Lymantriidae,ドクガ科,,,,,,,Lymantria,,albescens,,Hori & Umeno,1930,,シロシタマイマイ,シロシタマイマイ,コシロシタマイマイ,,,,,"Lymantria albescens (Hori & Umeno, 1930)",オオバギ; トウゴマ(以上トウダイグサ科),日本産蛾類標準図鑑2
 3222,Lymantriidae,ドクガ科,,,,,,,Lymantria,Lymantria,monacha,,(Linnaeus),1758,,ノンネマイマイ,,,,,,,"Lymantria monacha (Linnaeus, 1758)",クヌギ; ブナ(以上ブナ科); シラカンバ(カバノキ科); マツ; カラマツ(以上マツ科),日本産蛾類標準図鑑2
 3223,Lymantriidae,ドクガ科,,,,,,,Lymantria,Lymantria,minomonis,,Matsumura,1933,,ミノオマイマイ,ミノオマイマイ,ミノモマイマイ,,,,,"Lymantria minomonis (Matsumura, 1933)",アラカシ (ブナ科),日本産蛾類標準図鑑2
@@ -5490,7 +5490,7 @@
 4224,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Mocis,,ancilla,,(Warren),1913,,ニセウンモンクチバ,,,,,,,"Mocis ancilla (Warren, 1913)","ヌスビトハギ (マメ科)",日本産蛾類標準図鑑2
 4225,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Mocis,,dolosa,,(Butler),1880,,ヒメウンモンクチバ,,,,,,,Mocis dolosa (Butler,不明,日本産蛾類標準図鑑2
 ,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Mocis,,kagoshimaensis,,Kishida,2010,,ナガウンモンクチバ,,,,,,,Mocis kagoshimaensis Kishida,不明,日本産蛾類標準図鑑2
-4226,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Mocis,,frugalis,,(Fabricius),1775,,ウスオビクチバ,,,,,,,"Mocis frugalis (Fabricius, 1775)","イネ科その他の単子葉植物",日本産蛾類標準図鑑2
+4226,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Mocis,,frugalis,,(Fabricius),1775,,ウスオビクチバ,,,,,,,"Mocis frugalis (Fabricius, 1775)","イネ科; その他の単子葉植物",日本産蛾類標準図鑑2
 4227,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Trigonodes,,hyppasia,,(Cramer),1779,,サンカククチバ,サンカククチバ,,,,,,"Trigonodes hyppasia (Cramer, 1779)","ヤハズソウ (マメ科); 国外では; マメ科; イネ科; ムクロジ科が知られる。",日本産蛾類標準図鑑2
 4238,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Thyas,,honesta,,Hübner,[1824],,シタベニコノハ,,,,,,,Thyas honesta Hübner,不明,日本産蛾類標準図鑑2
 4239,Noctuidae,ヤガ科,Catocalinae,シタバガ亜科,Ophiusini,クチバ族,,,Thyas,,juno,,(Dalman),1823,,ムクゲコノハ,,,,,,,"Thyas juno (Dalman, 1823)","クヌギ; コナラ; クリ; シリブカガシ (以上ブナ科); オニグルミ; サワグルミ; カシグルミ (以上クルミ科)など",日本産蛾類標準図鑑2
@@ -6053,7 +6053,7 @@
 3687,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Lithophane,,nagaii,,Sugi,1958,,コケイロホソキリガ,,,,,,,Lithophane nagaii Sugi,不明,日本産蛾類標準図鑑2
 3688,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Elwesia,,sugii,,Yoshimoto,1994,,サヌキキリガ,サヌキキリガ,,,,,,"Elwesia sugii Yoshimoto, 1994","ツゲ (ツゲ科)",日本産蛾類標準図鑑2
 3689,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Eupsilia,,transversa,,(Hufnagel),1766,,エゾミツボシキリガ,エゾミツボシキリガ,,,,,,"Eupsilia transversa (Hufnagel, 1766)","シラカンバ (カバノキ科); コナラ(ブナ科); ズミ(バラ科) などから得られており; サクラ類でも飼育できる; おそらく各種広葉樹を食すと思われる。",日本産蛾類標準図鑑2
-,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Eupsilia,,hidakaensis,,Sugi,1987,,ヒダカミツボシキリガ,,,,,,,"Eupsilia hidakaensis Sugi, 1987","シナノキ (アオイ科)で飼育されており; 野外でも利用していると思われる",日本産蛾類標準図鑑2
+,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Eupsilia,,hidakaensis,,Sugi,1987,,ヒダカミツボシキリガ,,,,,,,"Eupsilia hidakaensis Sugi, 1987","シナノキ (アオイ科); 飼育されており野外でも利用していると思われる",日本産蛾類標準図鑑2
 3690,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Eupsilia,,tripunctata,,Butler,1878,,ミツボシキリガ,,,,,,,"Eupsilia tripunctata Butler, 1878","エノキ(アサ科)",日本産蛾類標準図鑑2
 3691,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Eupsilia,,unipuncta,,Scriba,1919,,ムラサキミツボシキリガ,,,,,,,Eupsilia unipuncta Scriba,不明,日本産蛾類標準図鑑2
 3692,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Eupsilia,,boursini,,Sugi,1958,,カバイロミツボシキリガ,,,,,,,"Eupsilia boursini Sugi, 1958","シナノキ (アオイ科)",日本産蛾類標準図鑑2
@@ -6173,13 +6173,13 @@
 3557,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Melanchra,,persicariae,,(Linnaeus),1761,,シラホシヨトウ,,,,,,,"Melanchra persicariae (Linnaeus, 1761)","ヤマネコヤナギ (ヤナギ科); フジウツギ (ゴマノハグサ科); オオバコ (オオバコ科) などが知られ; ヨーロッパでは多食性であることがわかっている。",日本産蛾類標準図鑑2
 3558,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Melanchra,,postalba,,Sugi,1982,,アトジロシラホシヨトウ,,,,,,,"Melanchra postalba Sugi, 1982","杉 (1984) によると; 幼虫は多食性なので; 手近な植物でよく育ったという。",日本産蛾類標準図鑑2
 ,,,,,,,,,,,,,,,,"""インドで知られる寄主植物は、Grewia tiliusfolia (シナノキ科)"",,,,,,,"Rusicada privata (Walker, 1865)",ムクゲ; フヨウ(以上アオイ科),日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""ミヤマハンノキ、ダケカンバ(以上カバノキ科)""モンキシロシャチホコ",,,,,,,"Leucodonta bicoloria (Denis & Schiffermüller, 1775)",ダケカンバ; シラカンバ; ミズメ(以上カバノキ科); アズキナシ; ナナカマド(以上バラ科),日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""幼虫はキイチゴ類やキジムシロ(ともにバラ科)、ミヤコグサ (マメ科)、スノキ(ツツジ科)、ハッカ(シソ科)などにつくという""ツマモンコブガ",,,,,,,"Casminola pulchella (Leech, 1889)",不明,日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""未知""エルモンドクガ",,,,,,,"Arctornis l-nigrum (Müller, 1764)",ケヤキ; ハルニレ(以上ニレ科),日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""未知""ニワトコドクガ",,,,,,,"Topomesoides jonasii (Butler, 1877)",カマツカ; ズミ(以上バラ科); ブナ(ブナ科); ニワトコ(レンプクソウ科),日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""未知""ネウスシャチホコ",,,,,,,"Chadisra bipartita (Matsumura, 1925)",台湾では; ウラジロエノキ(アサ科)の記録がある,日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""未知""ネジロキノカワガ",,,,,,,"Negritothripa hampsoni (Wileman, 1911)",クヌギ; コナラ(以上ブナ科),日本産蛾類標準図鑑2
-,,,,,,,,,,,,,,,,"""未知。おそらくイネ科植物を食すと考えられる""スゲオオドクガ",,,,,,,"Laelia gigantea (Butler, 1885)",ササなどのイネ科植物で飼育できる,日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,モンキシロシャチホコ,,,,,,,"Leucodonta bicoloria (Denis & Schiffermüller, 1775)",ダケカンバ; シラカンバ; ミズメ(以上カバノキ科); アズキナシ; ナナカマド(以上バラ科),日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,ツマモンコブガ,,,,,,,"Casminola pulchella (Leech, 1889)",不明,日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,エルモンドクガ,,,,,,,"Arctornis l-nigrum (Müller, 1764)",ケヤキ; ハルニレ(以上ニレ科),日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,ニワトコドクガ,,,,,,,"Topomesoides jonasii (Butler, 1877)",カマツカ; ズミ(以上バラ科); ブナ(ブナ科); ニワトコ(レンプクソウ科),日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,ネウスシャチホコ,,,,,,,"Chadisra bipartita (Matsumura, 1925)",台湾では; ウラジロエノキ(アサ科)の記録がある,日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,ネジロキノカワガ,,,,,,,"Negritothripa hampsoni (Wileman, 1911)",クヌギ; コナラ(以上ブナ科),日本産蛾類標準図鑑2
+,,,,,,,,,,,,,,,,スゲオオドクガ,,,,,,,"Laelia gigantea (Butler, 1885)",ササなどのイネ科植物で飼育できる,日本産蛾類標準図鑑2
 ,,,,,,,,,,,,,,,,アウラコデスヒメハマキ,,,,,,,Dudua aulacodes,不明,日本のハマキガ1
 ,,,,,,,,,,,,,,,,アエオログリプタヒメハマキ,,,,,,,Enarmonodes aeologlypta,不明,日本のハマキガ1
 ,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,,,Herochroma,,cristata,,(Warren),1894,,アカオピアヤシャク,,,,,,,"Herochroma cristata (Warren, 1894)",不明,日本産蛾類標準図鑑1
