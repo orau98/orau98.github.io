@@ -58,7 +58,11 @@ function App() {
       console.log("Fetching CSV files...");
       console.log("wameiCsvPath:", wameiCsvPath);
       console.log("mainCsvPath:", mainCsvPath);
-      console.log("yListCsvPath:", yListCsvPath); // Log new path
+      console.log("yListCsvPath:", yListCsvPath);
+      console.log("hamushiSpeciesCsvPath:", hamushiSpeciesCsvPath);
+      console.log("butterflyCsvPath:", butterflyCsvPath);
+      console.log("beetleCsvPath:", beetleCsvPath);
+      console.log("BASE_URL:", import.meta.env.BASE_URL);
 
       try {
         const [wameiRes, mainRes, yListRes, hamushiSpeciesRes, butterflyRes, beetleRes] = await Promise.all([
@@ -1078,13 +1082,6 @@ function App() {
         // Combine beetle data from integrated file and separate CSV
         const combinedBeetleData = [...mainBeetleData, ...beetleData];
 
-        console.log("Final butterfly data:", butterflyData.length, "butterflies");
-        console.log("Final beetle data:", combinedBeetleData.length, "beetles");
-        console.log("Sample butterfly:", butterflyData[0]);
-        console.log("All butterflies:", butterflyData.map(b => b.name));
-        console.log("Host Plants data set:", Object.keys(cleanedHostPlantData).length);
-        console.log("plantDetailData before setting state:", cleanedPlantDetailData);
-        console.log("Plant Details data set:", Object.keys(cleanedPlantDetailData).length);
         // Clean up hostPlantData to remove any invalid plant names that may have slipped through
         const cleanedHostPlantData = {};
         Object.entries(hostPlantData).forEach(([plantName, mothList]) => {
@@ -1102,6 +1099,14 @@ function App() {
             cleanedPlantDetailData[plantName] = details;
           }
         });
+
+        console.log("Final butterfly data:", butterflyData.length, "butterflies");
+        console.log("Final beetle data:", combinedBeetleData.length, "beetles");
+        console.log("Sample butterfly:", butterflyData[0]);
+        console.log("All butterflies:", butterflyData.map(b => b.name));
+        console.log("Host Plants data set:", Object.keys(cleanedHostPlantData).length);
+        console.log("plantDetailData before setting state:", cleanedPlantDetailData);
+        console.log("Plant Details data set:", Object.keys(cleanedPlantDetailData).length);
         
         console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
         console.log("Removed", Object.keys(hostPlantData).length - Object.keys(cleanedHostPlantData).length, "invalid host plant entries");
@@ -1112,16 +1117,30 @@ function App() {
         setHostPlants(cleanedHostPlantData);
         setPlantDetails(cleanedPlantDetailData);
         setLoading(false); // Set loading to false after data is loaded
-        console.log("Loading set to false.");
+        console.log("Loading set to false. Final data counts:", {
+          moths: combinedMothData.length,
+          butterflies: butterflyData.length, 
+          beetles: combinedBeetleData.length,
+          hostPlants: Object.keys(cleanedHostPlantData).length,
+          plantDetails: Object.keys(cleanedPlantDetailData).length
+        });
       } catch (error) {
         console.error("Error fetching or parsing CSVs:", error);
+        setLoading(false); // Ensure loading is set to false even on error
+        // Set empty data to prevent app from hanging
+        setMoths([]);
+        setButterflies([]);
+        setBeetles([]);
+        setHostPlants({});
+        setPlantDetails({});
       }
     };
     fetchData(); // Call fetchData
   }, []); // Close useEffect and add dependency array
 
+  console.log("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
+  
   return (
-    console.log("App rendering. Loading:", loading, "Moths count:", moths.length),
     <div className={theme === 'dark' ? 'dark' : ''}>
       {!isHomePage && (
         <Header 
