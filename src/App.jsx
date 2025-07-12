@@ -865,8 +865,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
-                  // Get geographical remarks from 27th column
-                  geographicalRemarks: String(row['地理的備考'] || '').trim(),
+                  // Get remarks from 27th column
+                  geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || ''
                 });
@@ -884,8 +884,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
-                  // Get geographical remarks from 27th column
-                  geographicalRemarks: String(row['地理的備考'] || '').trim(),
+                  // Get remarks from 27th column
+                  geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || ''
                 });
