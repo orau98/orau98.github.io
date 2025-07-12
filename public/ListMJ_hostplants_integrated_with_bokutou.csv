@@ -66,7 +66,7 @@
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,vittata,,Kemperman & Wilkinson,1985,,ヤナギモグリチビガ,,,,,,,"Stigmella vittata Kemperman & Wilkinson, 1985",ネコヤナギ; バッコヤナギ; シバヤナギ,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,alaurulenta,,Kemperman & Wilkinson,1985,,ズミクロエリモグリチビガ,ズミクロエリモグリチビガ（和名新称）,,,,,,"Stigmella alaurulenta Kemperman & Wilkinson, 1985",ズミ（バラ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,chaenomelae,,Kemperman & Wilkinson,1985,,クサボケモグリチビガ,,,,,,,"Stigmella chaenomelae Kemperman & Wilkinson, 1985",クサボケ（バラ科）,日本産蛾類標準図鑑3
-,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,honshui,,Kemperman & Wilkinson,1985,,リンゴクロモグリチビガ,,,,,,,"Stigmella honshui Kemperman & Wilkinson, 1985",セイヨウリンゴ（バラ科）,日本産蛾類標準図鑑3
+,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,honshui,,Kemperman & Wilkinson,1985,,リンゴクロモグリチビガ,,,,,,,"Stigmella honshui Kemperman & Wilkinson, 1985",リンゴ（バラ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,sorbivora,,Kemperman & Wilkinson,1985,,ウラジロノキモグリチビガ,,,,,,,"Stigmella sorbivora Kemperman & Wilkinson, 1985",ウラジロノキ（バラ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,zumii,,Kemperman & Wilkinson,1985,,ズミモグリチビガ,,,,,,,"Stigmella zmnii Kemperman & Wilkinson, 1985",ズミ（バラ科）,日本産蛾類標準図鑑3
 ,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,,,Stigmella,,egonokii,,Kemperman & Wilkinson,1985,,エゴノモグリチビガ,,,,,,,"Stigmella egonokii Kemperman & Wilkinson, 1985",エゴノキ（エゴノキ科）,日本産蛾類標準図鑑3
@@ -340,7 +340,7 @@
 693,Psychidae,ミノガ科,,,,,,,Acanthopsyche,,nigraplaga,,(Wileman),1911,,ネグロミノガ,,,,,,,"Acanthopsyche nigraplaga (Wileman, 1911)",カキの葉で飼育された記録がある。長野県戸台で夏季にイタドリの葉を食べている幼虫を採集した。生息地の状況から; 草地の各種草本類を食べると推定される,日本産蛾類標準図鑑3
 691,Psychidae,ミノガ科,,,,,,,Nipponopsyche,,fuscescens,,Yazaki,1926,,シバミノガ,,,,,,,"Nipponopsyche fuscescens Yazaki, 1926","イネ科、カヤツリグサ科",日本産蛾類標準図鑑3
 690,Psychidae,ミノガ科,,,,,,,Canephora,,pungelerii,,(Heylaerts),1900,,キタクロミノガ,,,,,,,"Canephora pungelerii (Heylaerts, 1900)",イネ科など,日本産蛾類標準図鑑3
-,Psychidae,ミノガ科,,,,,,,Canephora,,hirsuta,,(Poda),1761,,オオキタクロミノガ,,,,,,,"Canephora hirsuta (Poda, 1761)",北海道ではアルファルファ（マメ科）; ギシギシ（タデ科）などの草本,日本産蛾類標準図鑑3
+691,Psychidae,ミノガ科,,,,,,,Canephora,,hirsuta,,(Poda),1761,,オオキタクロミノガ,,,,,,,"Canephora hirsuta (Poda, 1761)","アルファルファ (マメ科); ギシギシ (タデ科)",日本産蛾類標準図鑑3,北海道
 ,Psychidae,ミノガ科,,,,,,,Sterrhopterix,,fusca,,(Haworth),1809,,ヒメカラフトミノガ,ヒメカラフトミノガ（和名新称）,,,,,,"Sterrhopterix fusca (Haworth, 1809)",ヨーロッパでは最初の年は草本類を; 翌年は各種の広葉樹の葉を食べるといわれている,日本産蛾類標準図鑑3
 ,Psychidae,ミノガ科,,,,,,,Gen.,,"sp. of Doi, 2005",,,,,ドイミノガ,ウスバハルノミノガ,,,,非掲載,,,,
 902,Roeslerstammiidae,ヒカリバコガ科,,,,,,,Roeslerstammia,,pronubella,,(Denis & Schiffermüller),1775,,ムジヒカリバコガ,,,,,,,,,
@@ -3505,7 +3505,7 @@
 2133,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Nemacerota,,tancrei,,(Graeser),1888,,ヒメナカジロトガリバ,,,,,,,"Nemacerota tancrei (Graeser, 1888)",不明,日本産蛾類標準図鑑1
 2136,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Parapsestis,,albida,,Suzuki,1916,,ウスジロトガリバ,,,,,,,"Parapsestis albida Suzuki, 1916",ブナ (ブナ科); ブナ(ブナ科),日本産蛾類標準図鑑1
 2135,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Parapsestis,,argenteopicta,,(Oberthür),1879,,ギンモントガリバ,ギンモントガリバ,,,,,,"Parapsestis argenteopicta (Oberthür, 1879)",不明,日本産蛾類標準図鑑1
-2140,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Mimopsestis,,basalis,,(Wileman),1911,,ネグロトガリバ,ネグロトガリバ,,,,,,"Mimopsestis basalis (Wileman, 1911)",オニグルミ (クルミ科); オニグルミ(クルミ科); 単食性,日本産蛾類標準図鑑1
+2140,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Mimopsestis,,basalis,,(Wileman),1911,,ネグロトガリバ,ネグロトガリバ,,,,,,"Mimopsestis basalis (Wileman, 1911)","オニグルミ (クルミ科)",日本産蛾類標準図鑑1,単食性
 2141,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Kurama,,mirabilis,,(Butler),1879,,サカハチトガリバ,,,,,,,"Kurama mirabilis (Butler, 1879)",アカガシ、クヌギ、ミズナラ、カシワ (ブナ科); アカガシ; クヌギ; ミズナラ; カシワ(以上ブナ科),日本産蛾類標準図鑑1
 2138,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Epipsestis,,nikkoensis,,(Matsumura),1921,,ニッコウトガリバ,,,,,,,"Epipsestis nikkoensis (Matsumura, 1921)",不明,日本産蛾類標準図鑑1
 2137,Drepanidae,カギバガ科,Thyatirinae,トガリバガ亜科,,,,,Epipsestis,,ornata,,(Leech),[1889],,ムラサキトガリバ,,,,,,,"Epipsestis ornata (Leech, 1889)",アカガシ、ミズナラ、カシワ、アラカシ、コナラ (ブナ科); アカガシ; ミズナラ; カシワ; アラカシ; コナラ(以上ブナ科),日本産蛾類標準図鑑1
@@ -3711,7 +3711,7 @@
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Hypomecis,,punctinalis,,(Scopoli),1763,,ウスバミスジエダシャク,ウスバミスジエダシャク,,,,,,"Hypomecis punctinalis (Scopoli, 1763)",広食性,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Hypomecis,,yuwanina,,(Sato),1981,,アマミミスジエダシャク,,,,,,,"Hypomecis yuwanina (Sato, 1981)",不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Hypomecis,,kuriligena,,(Bryk),1942,,ヒメミスジエダシャク,,,,,,,"Hypomecis kuriligena (Bryk, 1942)",不明,日本産蛾類標準図鑑1
-,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Hypomecis,,crassestrigata,,(Christoph),1881,,フトオビエダシャク,,,,,,,"Hypomecis crassestrigata (Christoph, 1881)",ヨモギ (キク科); Artemisia 属の他種につく可能性,日本産蛾類標準図鑑1
+,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Hypomecis,,crassestrigata,,(Christoph),1881,,フトオビエダシャク,,,,,,,"Hypomecis crassestrigata (Christoph, 1881)","ヨモギ (キク科) (本属の他種とは異なり単食性〜狭食性で、しかも樹木ではなく草本につく点で特異)",日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Calicha,,ornataria,,(Leech),1891,,ソトシロオビエダシャク,,,,,,,"Calicha ornataria (Leech, 1891)",コマユミ; マユミ(以上ニシキギ科); ニシキギ科に固有,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Microcalicha,,fumosaria,,(Leech),1891,,クロオオモンエダシャク,クロオオモンエダシャク,,,,,,"Microcalicha fumosaria (Leech, 1891)",マサキ; コマユミ; ツリバナ; ツルマサキ(以上ニシキギ科); 同科ニシキギ属に固有,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Microcalicha,,sordida,,(Butler),1878,,シタクモエダシャク,,,,,,,"Microcalicha sordida (Butler, 1878)",クロヅル; ツルウメモドキ(以上ニシキギ科),日本産蛾類標準図鑑1
@@ -4095,7 +4095,7 @@
 2331,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,trisetata,,(Prout),1922,,ミジンキヒメシャク,,,,,,,,♀からの採卵でミゾソバ (タデ科) の生葉; 枯れ葉による飼育記録がある。,日本産蛾類標準図鑑1
 2332,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,neovalida,,(Inoue),1958,,チビキヒメシャク,,,,,,,,広食性,日本産蛾類標準図鑑1
 2333,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,contravalida,,Inoue,1982,,サキシマキヒメシャク,,,,,,,,不明,日本産蛾類標準図鑑1
-2334,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,sakuraii,,(Inoue),1963,,サクライキヒメシャク,,,,,,,,落下したクリ (ブナ科) の花穂に幼虫がついていた記録がある。広食性,日本産蛾類標準図鑑1
+2334,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,sakuraii,,(Inoue),1963,,サクライキヒメシャク,,,,,,,"Idaea sakuraii (Inoue, 1963)","クリ (ブナ科)",日本産蛾類標準図鑑1,落下したクリの花穂に幼虫がついていた記録がある。広食性
 2335,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,crassipuncta,,(Inoue),1971,,クロモンチビヒメシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,paravalida,,Sato,1988,,ツシマキヒメシャク,,,,,,,,ミゾソバ; イヌタデ (以上タデ科) の生葉および枯れ葉による飼育記録がある。,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Sterrhinae,ヒメシャク亜科,,,,,Idaea,,tanakai,,Sato,1994,,タナカヒメシャク,,,,,,,,不明,日本産蛾類標準図鑑1
@@ -4401,7 +4401,7 @@
 2561,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Mesoptila,,melanolopha,,(Swinhoe),1895,,フタシロスジカバナミシャク,,,,,出版後の追加,名前変更,,タマザキツヅラフジ; ハスノハカズラ (以上ツヅラフジ科) の花や核果。,日本産蛾類標準図鑑1
 2566,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Pareupithecia,,spadix,,(Inoue),1955,,シロモンカバナミシャク,,,,,出版後の追加,名前変更,,不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Casuariclystis,,latifascia,,(Walker),1866,,ナカジマチビナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
-2610,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Spiralisigna,,subpumilata,,(Inoue),1972,,ホソバチビナミシャク,,,,,,,,アキニレ花・若い翼果 (ニレ科); マンゴー (ウルシ科); ワダンノキ; オオバナセンダングサ (以上キク科),日本産蛾類標準図鑑1
+2610,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Spiralisigna,,subpumilata,,(Inoue),1972,,ホソバチビナミシャク,,,,,,,,アキニレ (ニレ科) (花・若い翼果); マンゴー (ウルシ科); ワダンノキ; オオバナセンダングサ (以上キク科),日本産蛾類標準図鑑1
 2611,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eriopithex,,ishigakiensis,,(Inoue),1971,,イシガキチビナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eriopithex,,lanaris,,Warren,1896,,クニガミチビナミシャク,クニガミチビナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Gymnoscelis,,pseudotibialis,,Holloway,1997,,テルクビチビナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
@@ -5852,13 +5852,13 @@
 3932,Noctuidae,ヤガ科,Condicinae,ヒメヨトウ亜科,,,,,Iambia,,transversa,,(Moore),1882,,アミメヒメヨトウ,,,,,,,Iambia transversa (Moore,不明,日本産蛾類標準図鑑2
 3933,Noctuidae,ヤガ科,Condicinae,ヒメヨトウ亜科,,,,,Iambia,,japonica,,Sugi,1958,,シロマダラヒメヨトウ,,,,,,,Iambia japonica Sugi,不明,日本産蛾類標準図鑑2
 3934,Noctuidae,ヤガ科,Condicinae,ヒメヨトウ亜科,,,,,Prometopus,,flavicollis,,(Leech),[1889],,キクビヒメヨトウ,,,,,,,"Prometopus flavicollis (Leech, 1889)","カラマツ (マツ科) が知られているが; カラマツの分布しない地域でも採集されている。",日本産蛾類標準図鑑2
-3938,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,juventina,,(Stoll),1782,,ムラサキツマキリヨトウ,,,,,,,,"Callopistria juventina (Stoll, 1782)","カニクサ (カニクサ科); ワラビ(コバノイシカグマ科)",日本産蛾類標準図鑑2
-3939,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,duplicans,,Walker,1858,,ヒメツマキリヨトウ,,,,,,,,"Callopistria duplicans Walker, 1858","カニクサ (カニクサ科)",日本産蛾類標準図鑑2
-3940,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,repleta,,Walker,1858,,マダラツマキリヨトウ,,,,,,,,"Callopistria repleta Walker, 1858","コタニワタリ (チャセンシダ科); ワラビ(コバノイシカグマ科); ベニシダ; オニヤブソテツ; イノデ(以上オシダ科); ヒメワラビ(ヒメシダ科)",日本産蛾類標準図鑑2
+3938,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,juventina,,(Stoll),1782,,ムラサキツマキリヨトウ,,,,,,,Callopistria juventina (Stoll) 1782,"カニクサ (カニクサ科); ワラビ(コバノイシカグマ科)",日本産蛾類標準図鑑2
+3939,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,duplicans,,Walker,1858,,ヒメツマキリヨトウ,,,,,,,Callopistria duplicans Walker 1858,カニクサ (カニクサ科),日本産蛾類標準図鑑2
+3940,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,repleta,,Walker,1858,,マダラツマキリヨトウ,,,,,,,Callopistria repleta Walker 1858,"コタニワタリ (チャセンシダ科); ワラビ(コバノイシカグマ科); ベニシダ; オニヤブソテツ; イノデ(以上オシダ科); ヒメワラビ(ヒメシダ科)",日本産蛾類標準図鑑2
 ,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,nobilior,,Eda,2000,,ミナミツマキリヨトウ,,,,,,,Callopistria nobilior Eda,不明,日本産蛾類標準図鑑2
-3941,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,maillardi,,(Guenée),1862,,ナカウスツマキリヨトウ,ナカウスツマキリヨトウ,,,,,,"Callopistria maillardi (Guenée, 1862)","イシカグマ(コバノイシカグマ科); ヒリュウシダ; ハチジョウカグマ(以上シシガシラ科); ホウビカンジュ(ツルシダ科)",日本産蛾類標準図鑑2
-3942,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,aethiops,,Butler,1878,,アミメツマキリヨトウ,,,,,,,,"Callopistria aethiops Butler, 1878","ホシダ (ヒメシダ科)",日本産蛾類標準図鑑2
-3943,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,albolineola,,(Graeser),1889,,シロスジツマキリヨトウ,,,,,,,"Callopistria albolineola (Graeser, 1889)","イワヒバ; カタヒバ (イワヒバ科)",日本産蛾類標準図鑑2
+3941,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,maillardi,,(Guenée),1862,,ナカウスツマキリヨトウ,ナカウスツマキリヨトウ,,,,,,"Callopistria maillardi (Guenée, 1862)","ホシダ; イシカグマ(コバノイシカグマ科); ヒリュウシダ; ハチジョウカグマ(以上シシガシラ科); ホウビカンジュ(ツルシダ科)",日本産蛾類標準図鑑2
+3942,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,aethiops,,Butler,1878,,アミメツマキリヨトウ,,,,,,,Callopistria aethiops Butler 1878,ホシダ (ヒメシダ科),日本産蛾類標準図鑑2
+3943,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,albolineola,,(Graeser),1889,,シロスジツマキリヨトウ,,,,,,,Callopistria albolineola (Graeser) 1889,"イワヒバ; カタヒバ (イワヒバ科)",日本産蛾類標準図鑑2
 3944,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,japonibia,,Inoue & Sugi,1958,,キスジツマキリヨトウ,,,,,,,,"Callopistria japonibia Inoue & Sugi, 1958","フモトシダ; イワヒメワラビ(以上コバノイシカグマ科); イノデ; リョウメンシダ (以上オシダ科); タチシノブ; イノモトソウ(以上イノモトソウ科); イシカグマ(コバノイシカグマ科)",日本産蛾類標準図鑑2
 3945,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,rivularis,,Walker,1858,,クロキスジツマキリヨトウ,,,,,,,,"Callopistria rivularis Walker, 1858","イシカグマ(コバノイシカグマ科)",日本産蛾類標準図鑑2
 3946,Noctuidae,ヤガ科,Eriopinae,ツマキリヨトウ亜科,,,,,Callopistria,,pulchrilinea,,(Walker),1862,,コガタツマキリヨトウ,,,,,,,"Callopistria pulchrilinea (Walker, 1862)","コンテリクラマゴケ; トリノハカタヒバ (以上イワヒバ科)",日本産蛾類標準図鑑2
@@ -6081,7 +6081,7 @@
 ,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Agrocholorta,,amamiensis,,(Shikata),2015,,アマミキリガ,,,,,出版後の追加,新記録・再分類等,,,
 ,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Agrocholorta,,kimurai,,(Shikata),2015,,ヤンバルキリガ,,,,,出版後の追加,新記録・再分類等,,,
 3711,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Orbona,,fragariae,,(Vieweg),1790,,イチゴキリガ,イチゴキリガ,,,,,,"Orbona fragariae (Vieweg, 1790)","各種植物で飼育が可能; ヨーロッパではヒユ科; キンポウゲ科; バラ科; アカネ科; シソ科; オオバコ科; タデ科; ヤナギ科; キク科; マメ科など多くの科の植物が記録されている。",日本産蛾類標準図鑑2
-3712,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Xanthia,,togata,,(Esper),1788,,キイロキリガ,,,,,,,Xanthia togata (Esper,不明,日本産蛾類標準図鑑2
+3712,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Xanthia,,togata,,(Esper),1788,,キイロキリガ,,,,,,,Xanthia togata (Esper,本属の他種とは異なり単食性〜狭食性で、しかも樹木ではなく草本につく点で特異,日本産蛾類標準図鑑2
 3713,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Xanthia,,icteritia,,(Hufnagel),1766,,モンキキリガ,,,,,,,"Xanthia icteritia (Hufnagel, 1766)","日本では北海道でカワヤナギ; オノエヤナギ(以上ヤナギ科)の花を食べ; 特に雄花を好むことが報告されている; 幼虫はやがて雄花とともに地面へ落下し; その枯れた部分を食べて成長するという; ヨーロッパではカンバ類(カバノキ科); ポプラ類(ヤナギ科); キンロバイ類(バラ科); ニレ類(ニレ科); コケモモ類(ツツジ科)などを食べるという。",日本産蛾類標準図鑑2
 3714,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Xanthia,,tunicata,,Graeser,1889,,オオモンキキリガ,,,,,,,"Xanthia tunicata Graeser, 1889","ハルニレ (ニレ科); またヤナギ類(ヤナギ科)の枯れ葉の中で発見した幼虫にタンポポ類 (キク科)を与えて飼育した例がある",日本産蛾類標準図鑑2
 3715,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Tiliacea,,japonago,,(Wileman & West),1929,,エゾキイロキリガ,,,,,,,"Tiliacea japonago (Wileman & West, 1929)",""シナノキ属 (アオイ科)",日本産蛾類標準図鑑2
@@ -6089,7 +6089,7 @@
 3717,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Telorta,,acuminata,,(Butler),1878,,ウスキトガリキリガ,,,,,,,"Telorta acuminata (Butler, 1878)","ツバキ (ツバキ科)の花; サクラ (バラ科)の花; 集で飼育されている。若齢時は花を好むと考えられている。",日本産蛾類標準図鑑2
 3718,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Telorta,,edentata,,(Leech),[1889],,キトガリキリガ,,,,,,,Telorta edentata (Leech,不明,日本産蛾類標準図鑑2
 3719,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Telorta,,divergens,,(Butler),1879,,ノコメトガリキリガ,,,,,,,"Telorta divergens (Butler, 1879)","モモ (バラ科); ツバキの花(ツバキ科)",日本産蛾類標準図鑑2
-3720,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Antivaleria,,viridimacula,,(Graeser),1889,,アオバハガタヨトウ,,,,,,,"Antivaleria viridimacula (Graeser, 1889)","ウラジロガシ (ブナ科); サクラ類; リンゴ(以上バラ科)ほか",日本産蛾類標準図鑑2
+3720,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Antivaleria,,viridimacula,,(Graeser),1889,,アオバハガタヨトウ,,,,,,,"Antivaleria viridimacula (Graeser, 1889)","ウラジロガシ (ブナ科); サクラ類; リンゴ (以上バラ科)",日本産蛾類標準図鑑2
 3721,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Nyctycia,,strigidisca,,(Moore),1881,,ヒマラヤハガタヨトウ,ヒマラヤハガタヨトウ,,,,,,Nyctycia strigidisca (Moore,不明,日本産蛾類標準図鑑2
 3722,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Nyctycia,,stenoptera,,(Sugi),1959,,ヤマトハガタヨトウ,ヤマトハガタヨトウ,,,,,,Nyctycia stenoptera (Sugi,不明,日本産蛾類標準図鑑2
 3723,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylenina,キリガ亜族,Nyctycia,,hoenei,,(Boursin),1958,,ヘーネアオハガタヨトウ,ヘーネアオハガタヨトウ,,,,,,Nyctycia hoenei (Boursin,不明,日本産蛾類標準図鑑2
@@ -6522,7 +6522,7 @@
 ,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Euxoa,,tritici,,(Linnaeus),1761,,ハコダテクロヤガ,,,,,出版後の追加,新記録・再分類等,,,
 3488,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,ipsilon,,(Hufnagel),1766,,タマナヤガ,,,,,,,"Agrotis ipsilon (Hufnagel, 1766)","多食性で種々の作物につく; マメ科; イネ科; タデ科; アブラナ科; サトイモ科; アオイ科; ショウガ科; シソ科; セリ科; バラ科; アカザ科; キク科; ユリ科; ネギ科; ナス科; ウリ科; ヒルガオ科",日本産蛾類標準図鑑2
 3493,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,segetum,,(Denis & Schiffermüller),1775,,カブラヤガ,,,,,,,"Agrotis segetum (Denis & Schiffermüller, 1775)",""多食性で; 種々の作物; 草本につく。",日本産蛾類標準図鑑2
-3489,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,exclamationis,,(Linnaeus),1758,,センモンヤガ,センモンヤガ,,,,,,"Agrotis exclamationis (Linnaeus, 1758)","農業害虫であり; ムギ類(イネ科); マメ類 (マメ科)やテンサイ(アカザ科)などの農作物; キャベツ(アブラナ科); タマネギ (ユリ科)などの野菜につく。",日本産蛾類標準図鑑2
+3489,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,exclamationis,,(Linnaeus),1758,,センモンヤガ,センモンヤガ,,,,,,"Agrotis exclamationis (Linnaeus, 1758)","ムギ (イネ科); マメ (マメ科); テンサイ (アカザ科); キャベツ (アブラナ科); タマネギ (ユリ科)",日本産蛾類標準図鑑2,農業害虫であり、農作物や野菜につく
 3495,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,ruta,,(Eversmann),1851,,ホッキョクモンヤガ,,,,,,,"Agrotis ruta (Eversmann, 1851)","コマクサ (ケシ科); ウスユキトウヒレン(キク科); ミヤマクロスゲ (カヤツリグサ科); ホソバウルップソウ (ウルップソウ科); キャベツで飼育可。",日本産蛾類標準図鑑2
 3490,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,tokionis,,Butler,1881,,オオカブラヤガ,,,,,,,"Agrotis tokionis Butler, 1881","ハクサイ (アブラナ科); ネギ (ネギ科)",日本産蛾類標準図鑑2
 3491,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Agrotini,カブラヤガ族,,,Agrotis,,scotacra,,(Filipjev),1927,,マエグロヤガ,,,,,,,Agrotis scotacra (Filipjev,不明,日本産蛾類標準図鑑2
