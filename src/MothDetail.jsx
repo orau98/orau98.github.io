@@ -436,7 +436,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
                     <div className="flex flex-wrap gap-2">
                       {/* 生態学的特徴（単食性、多食性など）か地域情報かを判断 */}
-                      {moth.geographicalRemarks.trim().match(/単食性|多食性|広食性|狭食性/) ? (
+                      {moth.geographicalRemarks.trim().match(/^(単食性|多食性|広食性|狭食性)$/) ? (
                         <>
                           <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">食性:</span>
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
@@ -445,7 +445,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                         </>
                       ) : (
                         <>
-                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">地域:</span>
+                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">備考:</span>
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
                             {moth.geographicalRemarks.trim()}
                           </span>
