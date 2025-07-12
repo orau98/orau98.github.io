@@ -198,7 +198,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                         <div className="text-slate-700 dark:text-slate-300">
                           <p className="font-medium">専門分野：行動生態学、化学生態学</p>
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 italic">
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                             ※分類学は専門ではありません
                           </p>
                         </div>
