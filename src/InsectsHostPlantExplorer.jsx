@@ -173,10 +173,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     最新の投稿
                   </h3>
                   
-                  {/* Instagram埋め込み - 複数の投稿を試行 */}
+                  {/* Instagram埋め込み - タイムライン表示 */}
                   <div className="space-y-4">
                     <div className="instagram-wrapper">
-                      <InstagramEmbed url="https://www.instagram.com/p/C82_pYqS7y8/" />
+                      <InstagramEmbed username="onychodactylus_nipponoborealis" />
                     </div>
                   </div>
                   
