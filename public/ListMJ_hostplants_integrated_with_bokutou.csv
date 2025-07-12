@@ -1,4 +1,4 @@
-﻿大図鑑カタログNo,科名,科和名,亜科名,亜科和名,族名,族和名,亜族名,亜族和名,属名,亜属名,種小名,亜種小名,著者,公表年,類似種,和名,旧和名,別名,その他の和名,亜種範囲,標準図鑑ステータス,標準図鑑以後の変更,学名,食草,出典
+﻿大図鑑カタログNo,科名,科和名,亜科名,亜科和名,族名,族和名,亜族名,亜族和名,属名,亜属名,種小名,亜種小名,著者,公表年,類似種,和名,旧和名,別名,その他の和名,亜種範囲,標準図鑑ステータス,標準図鑑以後の変更,学名,食草,出典,地理的備考
 1,Micropterigidae,コバネガ科,,,,,,,Micropterix,,aureatella,,(Scopoli),1763,,モンフタオビコバネ,,,,,,,"Micropterix aureatella (Scopoli, 1763)",不明,日本産蛾類標準図鑑3
 3,Micropterigidae,コバネガ科,,,,,,,Paramartyria,,immaculatella,,Issiki,1931,,ムモンコバネ,,,,,,,"Paramartyria immaculatella Issiki, 1931",マキノゴケ（マキノゴケ科）,日本産蛾類標準図鑑3
 2,Micropterigidae,コバネガ科,,,,,,,Paramartyria,,semifasciella,,Issiki,1931,,マエモンコバネ,,,,,,,"Paramartyria semifasciella Issiki, 1931",マキノゴケ（マキノゴケ科）; オオウロコゴケ（ウロコゴケ科）,日本産蛾類標準図鑑3
@@ -309,7 +309,7 @@
 695,Tineidae,ヒロズコガ科,incertae sedis,ヒロズコガ科 亜科所属不明,,,,,Pelecystola,,strigosa,,(Moore),1888,,クシヒゲキヒロズコガ,,,,,,,"Pelecystola strigosa (Moore, 1888)",不明,日本産蛾類標準図鑑3
 ,Psychidae,ミノガ科,,,,,,,Gen.,,"sp. of Saigusa, 1962",,,,,ヒモミノガ,,,,,非掲載,,,,
 ,Psychidae,ミノガ科,,,,,,,Gen.,,"sp. of Nakamura, 1977",,,,,キノコヒモミノガ,,,,,非掲載,,,,
-719,Psychidae,ミノガ科,,,,,,,Ceratosticha,,leptodeta,,Meyrick,1935,,ヒロズミノガ,,,,,,,"Ceratosticha leptodeta Meyrick, 1935",岩石（ときには樹幹）表面の地衣類など,日本産蛾類標準図鑑3
+719,Psychidae,ミノガ科,,,,,,,Ceratosticha,,leptodeta,,Meyrick,1935,,ヒロズミノガ,,,,,,,"Ceratosticha leptodeta Meyrick, 1935",地衣類,日本産蛾類標準図鑑3,岩石（ときには樹幹）表面の地衣類など
 ,Psychidae,ミノガ科,,,,,,,Ceratosticha,,"sp. of Saigusa, 2013",,,,,オオヒロズミノガ,,,,,,,,,
 ,Psychidae,ミノガ科,,,,,,,Eumasia,,viridilichenella,,Saigusa & Sugimoto,2005,,ミドリチイヒロズミノガ,ミドリチィヒロズミノガ,,,,,,"Eumasia viridilichenella Saigusa & Sugimoto, 2005",粉状地衣類,日本産蛾類標準図鑑3
 ,Psychidae,ミノガ科,,,,,,,Eumasia,,muscella,,Saigusa & Sugimoto,2005,,コケヒロズミノガ,,,,,,,"Eumasia muscella Saigusa & Sugimoto, 2005",蘚類など,日本産蛾類標準図鑑3
