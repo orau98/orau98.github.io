@@ -865,8 +865,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
-                  // Get 27th column (geographical remarks) manually
-                  geographicalRemarks: String(Object.values(row)[26] || '').trim(),
+                  // No geographical remarks column in current CSV format
+                  geographicalRemarks: '',
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || ''
                 });
@@ -884,8 +884,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
-                  // Get 27th column (geographical remarks) manually
-                  geographicalRemarks: String(Object.values(row)[26] || '').trim(),
+                  // No geographical remarks column in current CSV format
+                  geographicalRemarks: '',
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || ''
                 });
