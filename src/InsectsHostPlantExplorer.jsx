@@ -147,11 +147,8 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 </div>
                 <div className="flex-1">
                   <h2 className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">
-                    管理者のInstagram
+                    サイトについて
                   </h2>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    徒然なるままに野生生物の観察記録をInstagramで投稿しています
-                  </p>
                 </div>
               </div>
             </div>
@@ -160,9 +157,14 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Instagram投稿の埋め込み - 複数の投稿を表示できます */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
-                    最新の投稿
-                  </h3>
+                  <div className="flex items-start space-x-4 mb-4">
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                      最新の投稿
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 flex-1">
+                      徒然なるままに野生生物の観察記録をInstagramで投稿しています
+                    </p>
+                  </div>
                   
                   {/* Instagram埋め込み - 個別投稿表示 */}
                   <div className="space-y-4">
