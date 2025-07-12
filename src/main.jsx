@@ -4,12 +4,22 @@ import { HashRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
-// Global error handler to suppress removeChild errors
+// Global error handler to suppress harmless browser extension errors
 window.addEventListener('error', (event) => {
-  if (event.error && event.error.message && 
-      event.error.message.includes('removeChild') &&
-      event.error.message.includes('not a child of this node')) {
-    console.debug('Suppressed removeChild error (harmless):', event.error.message);
+  const errorMessage = event.error?.message || '';
+  
+  // Suppress removeChild errors
+  if (errorMessage.includes('removeChild') && errorMessage.includes('not a child of this node')) {
+    console.debug('Suppressed removeChild error (harmless):', errorMessage);
+    event.preventDefault();
+    return false;
+  }
+  
+  // Suppress browser extension errors (Weblio, etc.)
+  if (errorMessage.includes('startContainer') || 
+      event.filename?.includes('content.js') ||
+      event.filename?.includes('extension')) {
+    console.debug('Suppressed browser extension error (harmless):', errorMessage);
     event.preventDefault();
     return false;
   }
@@ -17,10 +27,17 @@ window.addEventListener('error', (event) => {
 
 // Also handle unhandled promise rejections
 window.addEventListener('unhandledrejection', (event) => {
-  if (event.reason && event.reason.message && 
-      event.reason.message.includes('removeChild') &&
-      event.reason.message.includes('not a child of this node')) {
-    console.debug('Suppressed removeChild promise rejection (harmless):', event.reason.message);
+  const reasonMessage = event.reason?.message || '';
+  
+  if (reasonMessage.includes('removeChild') && reasonMessage.includes('not a child of this node')) {
+    console.debug('Suppressed removeChild promise rejection (harmless):', reasonMessage);
+    event.preventDefault();
+    return false;
+  }
+  
+  // Suppress extension-related promise rejections
+  if (reasonMessage.includes('startContainer') || reasonMessage.includes('extension')) {
+    console.debug('Suppressed extension promise rejection (harmless):', reasonMessage);
     event.preventDefault();
     return false;
   }
