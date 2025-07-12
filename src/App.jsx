@@ -34,12 +34,16 @@ function App() {
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    try {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('theme', theme);
+    } catch (error) {
+      console.debug('Theme change error (harmless):', error);
     }
-    localStorage.setItem('theme', theme);
   }, [theme]);
 
   useEffect(() => {
@@ -116,7 +120,27 @@ function App() {
           normalized = normalized.replace(/（[^）]*）/g, ''); // Remove remaining parentheses
           normalized = normalized.replace(/\([^)]*\)/g, ''); // Remove remaining parentheses
           
-          return normalized.trim();
+          normalized = normalized.trim();
+          
+          // Handle synonyms - consolidate different names for the same plant
+          const synonymMap = {
+            'セイヨウリンゴ': 'リンゴ',
+            'セイヨウナシ': 'ナシ',
+            'セイヨウカラシナ': 'カラシナ',
+            'セイヨウタンポポ': 'タンポポ',
+            'セイヨウミザクラ': 'ミザクラ',
+            'セイヨウアブラナ': 'アブラナ',
+            'セイヨウハコヤナギ': 'ハコヤナギ',
+            'ヨーロッパリンゴ': 'リンゴ',
+            'ヨーロッパナシ': 'ナシ'
+          };
+          
+          // Apply synonym mapping
+          if (synonymMap[normalized]) {
+            normalized = synonymMap[normalized];
+          }
+          
+          return normalized;
         };
         
         // Centralized function to validate plant names
@@ -371,13 +395,23 @@ function App() {
               
               const scientificFilename = formatScientificNameForFilename(scientificName);
 
-              const familyFromMainCsv = row['科和名'] || row['科名'] || '';
+              let familyFromMainCsv = row['科和名'] || row['科名'] || '';
+              
+              // Special handling for hamaki moths from "日本のハマキガ" source
+              const source = row['出典'] || '';
+              const isHamakiFromBook = source.includes('日本のハマキガ');
+              
+              if (isHamakiFromBook && !familyFromMainCsv) {
+                familyFromMainCsv = 'ハマキガ科';
+              }
               
               // Check if this is a beetle (Buprestidae family)
               const isBeetle = familyFromMainCsv === 'タマムシ科' || row['科名'] === 'Buprestidae';
 
               const classification = {
-                family: row['科名'] || '', familyJapanese: row['科和名'] || '', subfamily: row['亜科名'] || '',
+                family: row['科名'] || (isHamakiFromBook ? 'Tortricidae' : ''), 
+                familyJapanese: row['科和名'] || (isHamakiFromBook ? 'ハマキガ科' : ''), 
+                subfamily: row['亜科名'] || '',
                 subfamilyJapanese: row['亜科和名'] || '', tribe: row['族名'] || '', tribeJapanese: row['族和名'] || '',
                 subtribe: row['亜族名'] || '', subtribeJapanese: row['亜族和名'] || '', genus: row['属名'] || '',
                 subgenus: row['亜属名'] || '', speciesEpithet: row['種小名'] || '', subspeciesEpithet: row['亜種小名'] || '',
@@ -418,16 +452,24 @@ function App() {
                 hostPlantNotes.push('広食性（多食性）');
               }
               
-              const noteMatches = rawHostPlant.match(/（([^）]+)）/g);
+              // Extract notes from both （）and () parentheses
+              const noteMatches = rawHostPlant.match(/[（(]([^）)]+)[）)]/g);
               if (noteMatches) {
                 noteMatches.forEach(match => {
-                  const note = match.replace(/[（）]/g, '');
-                  // Include geographical and descriptive notes, but exclude simple family names
-                  if (note && !(note.match(/^[\w\s]+科$/) && note.length < 10)) {
+                  const note = match.replace(/[（）()]/g, '');
+                  // Exclude family names (科) and short plant-related terms
+                  if (note && 
+                      !note.match(/^[\w\s]*科$/) && 
+                      !note.match(/科$/) &&
+                      note.length > 3 &&
+                      !note.match(/^[ア-ン]+科$/)) {
                     hostPlantNotes.push(note);
                   }
                 });
               }
+              
+              // Remove parenthetical content from host plant list
+              rawHostPlant = rawHostPlant.replace(/[（(][^）)]*[）)]/g, '').trim();
               
               // Clean up host plant data - remove year numbers and incomplete scientific names
               rawHostPlant = rawHostPlant.replace(/^\d{4}\),?\s*/, ''); // Remove year at beginning like "1905),"
@@ -823,6 +865,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
+                  // Get 27th column (geographical remarks) manually
+                  geographicalRemarks: String(Object.values(row)[26] || '').trim(),
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || ''
                 });
@@ -840,6 +884,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
+                  // Get 27th column (geographical remarks) manually
+                  geographicalRemarks: String(Object.values(row)[26] || '').trim(),
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || ''
                 });
@@ -1020,14 +1066,15 @@ function App() {
               .map(plant => plant.replace(/^"(.+)"$/, '$1')) // Remove outer quotes from individual plant names
               .map(plant => plant.replace(/^"(.+)$/, '$1')) // Remove unclosed quotes at beginning
               .map(plant => plant.replace(/^(.+)"$/, '$1')) // Remove unclosed quotes at end
-              .filter(plant => plant.length > 0)
+              .filter(plant => plant && plant.length > 0) // Remove empty strings
               .filter(plant => plant !== '科' && plant !== '属' && plant !== '類')
               .filter(plant => !plant.endsWith('属')) // Remove items ending with 属, but keep family names (科)
               .filter(plant => plant.length > 1) // Remove single character items
+              .filter(plant => plant.trim() !== '') // Additional empty string check
               .map(plant => normalizePlantName(plant)); // Normalize plant names
             
-            // Remove duplicates
-            hostPlantList = [...new Set(hostPlantList)];
+            // Remove duplicates and final empty string check
+            hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
             
             console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
           }
@@ -1097,9 +1144,10 @@ function App() {
             const plants = hostPlants.split(/[、，,]/);
             hostPlantList = plants
               .map(plant => plant.trim())
-              .filter(plant => plant.length > 0)
+              .filter(plant => plant && plant.length > 0)
+              .filter(plant => plant.trim() !== '')
               .map(plant => normalizePlantName(plant));
-            hostPlantList = [...new Set(hostPlantList)];
+            hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
           }
 
           const beetle = {

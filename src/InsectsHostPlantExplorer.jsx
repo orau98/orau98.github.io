@@ -147,10 +147,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 </div>
                 <div className="flex-1">
                   <h2 className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">
-                    昆虫研究者のInstagram
+                    管理者のInstagram
                   </h2>
                   <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    最新の昆虫観察記録や研究成果をInstagramで発信しています
+                    徒然なるままに野生生物の観察記録をInstagramで投稿しています
                   </p>
                 </div>
                 <a 
@@ -184,26 +184,26 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
-                    研究について
+                    サイト管理者について
                   </h3>
                   <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
                     <div className="space-y-3">
                       <div className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                         <p className="text-slate-700 dark:text-slate-300">
-                          昆虫と植物の共進化関係の研究
+                          研究者・博士（理学）
                         </p>
                       </div>
                       <div className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                         <p className="text-slate-700 dark:text-slate-300">
-                          食草データベースの構築と維持
+                          専門分野：昆虫学、生態学、昆虫と植物の相互作用
                         </p>
                       </div>
                       <div className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                         <p className="text-slate-700 dark:text-slate-300">
-                          野外調査による新知見の発見
+                          所属：研究機関・大学
                         </p>
                       </div>
                     </div>

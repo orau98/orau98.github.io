@@ -4,6 +4,7 @@ export const sourceLinks = {
   "日本産蛾類標準図鑑2": "https://www.amazon.co.jp/s?k=日本産蛾類標準図鑑2+岸田泰則", 
   "日本産蛾類標準図鑑3": "https://www.amazon.co.jp/s?k=日本産蛾類標準図鑑3+岸田泰則",
   "日本産蛾類標準図鑑4": "https://www.amazon.co.jp/s?k=日本産蛾類標準図鑑4+岸田泰則",
+  "日本産蝶類標準図鑑": "https://www.amazon.co.jp/日本産蝶類標準図鑑-白水-隆/dp/4052022963",
   "日本産タマムシ大図鑑": "https://www.amazon.co.jp/dp/4832608150"
 };
 

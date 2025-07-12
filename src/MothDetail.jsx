@@ -14,6 +14,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
   const moth = allInsects.find(m => m.id === insectId);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!moth) {
     return (
@@ -80,7 +81,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
   };
 
   const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
-  const staticImagePath = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
+  const japaneseName = moth.name;
+  
+  // Try multiple image paths: scientific name, japanese name
+  const possibleImagePaths = [
+    `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`,
+    `${import.meta.env.BASE_URL}images/moths/${japaneseName}.jpg`
+  ];
+  
+  const staticImagePath = possibleImagePaths[0]; // Default to scientific name
   
   // Debug logging
   console.log('Moth ID:', moth.id);
@@ -94,8 +103,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
   };
 
   const handleImageError = () => {
-    setImageLoaded(false);
-    setImageError(true);
+    if (currentImageIndex < possibleImagePaths.length - 1) {
+      // Try next image path
+      setCurrentImageIndex(currentImageIndex + 1);
+    } else {
+      // All paths failed
+      setImageLoaded(false);
+      setImageError(true);
+    }
   };
 
   return (
@@ -168,40 +183,44 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                     <InstagramEmbed url={moth.instagramUrl} />
                   </div>
                 ) : (
-                  <div className="relative aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 group">
+                  <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-purple-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 group overflow-hidden">
                     {!imageError ? (
-                      <img 
-                        src={staticImagePath} 
-                        alt={moth.name}
-                        className={`w-full h-full object-cover transition-all duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                        onLoad={handleImageLoad}
-                        onError={handleImageError}
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative h-full">
                         <img 
-                          src={`${import.meta.env.BASE_URL}images/placeholder.jpg`} 
-                          alt="画像が見つかりません"
-                          className="w-full h-full object-cover opacity-50"
+                          src={possibleImagePaths[currentImageIndex]} 
+                          alt={moth.name}
+                          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                          onLoad={handleImageLoad}
+                          onError={handleImageError}
                         />
+                        {/* Elegant gradient overlay on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        {/* Moth name overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                          <h3 className="text-white font-bold text-lg drop-shadow-lg">{moth.name}</h3>
+                          <p className="text-white/90 text-sm drop-shadow-md italic">{moth.scientificName}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
+                        <div className="text-center p-6">
+                          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center shadow-lg">
+                            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <p className="text-slate-500 dark:text-slate-400 font-medium">画像が見つかりません</p>
+                          <p className="text-slate-400 dark:text-slate-500 text-sm mt-2">写真をお持ちの場合はご提供ください</p>
+                        </div>
                       </div>
                     )}
                     
                     {!imageLoaded && !imageError && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-                      </div>
-                    )}
-                    
-                    {imageError && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="text-center p-6">
-                          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-slate-400 to-slate-500 rounded-full flex items-center justify-center">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                          </div>
-                          <p className="text-slate-500 dark:text-slate-400 font-medium">画像が見つかりません</p>
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-900/40 dark:to-blue-900/40">
+                        <div className="relative">
+                          <div className="w-16 h-16 border-4 border-purple-200 dark:border-purple-700 rounded-full"></div>
+                          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                         </div>
                       </div>
                     )}
@@ -313,11 +332,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                                     className="group bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-lg p-3 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-900/30 dark:hover:to-teal-900/30 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md"
                                   >
                                     <div>
-                                      <div className="flex items-center space-x-3">
-                                        <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
-                                        <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                          {detail.plant}
-                                        </span>
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-3">
+                                          <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
+                                          <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                            {detail.plant}
+                                          </span>
+                                        </div>
+                                        {/* Show plant-specific remarks only for relevant plants */}
+                                        {detail.plant === 'アキニレ' && moth.hostPlantNotes && moth.hostPlantNotes.some(note => note.includes('花・若い翼果')) && (
+                                          <div className="ml-2">
+                                            {moth.hostPlantNotes.filter(note => note.includes('花・若い翼果')).map((note, noteIndex) => (
+                                              <span key={noteIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-1">
+                                                {note}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   </Link>
@@ -337,11 +368,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                             className="group bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-lg p-3 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-900/30 dark:hover:to-teal-900/30 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md"
                           >
                             <div>
-                              <div className="flex items-center space-x-3">
-                                <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
-                                <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                  {plant}
-                                </span>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
+                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                    {plant}
+                                  </span>
+                                </div>
+                                {/* Show plant-specific remarks only for relevant plants */}
+                                {plant === 'アキニレ' && moth.hostPlantNotes && moth.hostPlantNotes.some(note => note.includes('花・若い翼果')) && (
+                                  <div className="ml-2">
+                                    {moth.hostPlantNotes.filter(note => note.includes('花・若い翼果')).map((note, noteIndex) => (
+                                      <span key={noteIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-1">
+                                        {note}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </Link>
@@ -360,12 +403,26 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                   </div>
                 )}
                 
-                {/* 食草備考情報 */}
-                {moth.hostPlantNotes && moth.hostPlantNotes.length > 0 && (
+                {/* 食草備考情報 - 植物固有でない汎用的な備考のみ */}
+                {moth.hostPlantNotes && moth.hostPlantNotes.filter(note => 
+                  !note.includes('花・若い翼果') && 
+                  !note.includes('実') && 
+                  !note.includes('葉') && 
+                  !note.includes('茎') && 
+                  !note.includes('根') && 
+                  !note.includes('果実')
+                ).length > 0 && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
                     <div className="flex flex-wrap gap-2">
                       <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">備考:</span>
-                      {moth.hostPlantNotes.map((note, noteIndex) => (
+                      {moth.hostPlantNotes.filter(note => 
+                        !note.includes('花・若い翼果') && 
+                        !note.includes('実') && 
+                        !note.includes('葉') && 
+                        !note.includes('茎') && 
+                        !note.includes('根') && 
+                        !note.includes('果実')
+                      ).map((note, noteIndex) => (
                         <span key={noteIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
                           {note}
                         </span>
@@ -374,6 +431,30 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                   </div>
                 )}
                 
+                {/* 地理的備考・生態学的特徴 */}
+                {moth.geographicalRemarks && typeof moth.geographicalRemarks === 'string' && moth.geographicalRemarks.trim() && (
+                  <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
+                    <div className="flex flex-wrap gap-2">
+                      {/* 生態学的特徴（単食性、多食性など）か地域情報かを判断 */}
+                      {moth.geographicalRemarks.trim().match(/単食性|多食性|広食性|狭食性/) ? (
+                        <>
+                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">食性:</span>
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                            {moth.geographicalRemarks.trim()}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">地域:</span>
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                            {moth.geographicalRemarks.trim()}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* 出典情報 */}
                 {moth.source && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
