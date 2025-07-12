@@ -11,42 +11,115 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
     (moth.type === 'butterfly' ? `/butterfly/${moth.id}` : 
      moth.type === 'beetle' ? `/beetle/${moth.id}` : `/moth/${moth.id}`) : 
     `${baseRoute}/${moth.id}`;
+  
+  // Check if image exists for this moth
+  const [imageExists, setImageExists] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  // Create safe filename for image checking
+  const createSafeFilename = (scientificName) => {
+    if (!scientificName) return '';
+    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+    cleanedName = cleanedName.replace(/\s+/g, '_');
+    return cleanedName;
+  };
+  
+  const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
+  const imageUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
+  
+  React.useEffect(() => {
+    // Check if image exists
+    const img = new Image();
+    img.onload = () => {
+      setImageExists(true);
+      setImageLoaded(true);
+    };
+    img.onerror = () => {
+      setImageExists(false);
+      setImageError(true);
+    };
+    img.src = imageUrl;
+  }, [imageUrl]);
     
   return (
     <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-purple-300 dark:hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.02] transform">
-      <Link to={route} className="block p-5">
-      <div className="flex items-start">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center space-x-2 mb-1">
-            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
-              {moth.name}
-            </h3>
-            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-              moth.type === 'butterfly' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300' : 
-              moth.type === 'beetle' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300' :
-              'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-            }`}>
-              {moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? '甲虫' : '蛾'}
-            </span>
+      <Link to={route} className="block">
+        <div className="flex">
+          {/* Image section */}
+          <div className="w-24 h-24 flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800">
+            {imageExists ? (
+              <img
+                src={imageUrl}
+                alt={moth.name}
+                className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-110 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            )}
+            {!imageLoaded && imageExists && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-900/40 dark:to-blue-900/40">
+                <div className="relative">
+                  <div className="w-6 h-6 border-2 border-purple-200 dark:border-purple-700 rounded-full"></div>
+                  <div className="absolute top-0 left-0 w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              </div>
+            )}
+            {imageExists && (
+              <div className="absolute top-1 right-1">
+                <span className="inline-flex items-center p-1 rounded-full text-xs font-medium bg-green-500/80 text-white backdrop-blur-sm">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </span>
+              </div>
+            )}
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2 line-clamp-1">
-            {formatScientificName(moth.scientificName)}
-          </p>
-          <div className="flex items-center space-x-2">
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
-              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-              食草
-            </span>
-            <span className="text-sm text-slate-600 dark:text-slate-300 truncate">
-              {moth.hostPlants.join(', ') || '不明'}
-            </span>
+          
+          {/* Content section */}
+          <div className="flex-1 min-w-0 p-4">
+            <div className="flex items-center space-x-2 mb-1">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-1">
+                {moth.name}
+              </h3>
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                moth.type === 'butterfly' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300' : 
+                moth.type === 'beetle' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300' :
+                'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+              }`}>
+                {moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? '甲虫' : '蛾'}
+              </span>
+            </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-2 line-clamp-1">
+              {formatScientificName(moth.scientificName)}
+            </p>
+            <div className="flex items-center space-x-2">
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+                食草
+              </span>
+              <span className="text-sm text-slate-600 dark:text-slate-300 truncate">
+                {moth.hostPlants.join(', ') || '不明'}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
-  </li>
+      </Link>
+    </li>
   );
 };
 
@@ -109,12 +182,48 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     return Array.from(uniqueSuggestions).slice(0, 10);
   }, [moths, searchTerm]);
 
-  const totalPages = Math.ceil(filteredMoths.length / itemsPerPage);
+  // Sort moths to prioritize those with images
+  const sortedMoths = useMemo(() => {
+    return [...filteredMoths].sort((a, b) => {
+      // Create safe filename check function
+      const createSafeFilename = (scientificName) => {
+        if (!scientificName) return '';
+        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+        cleanedName = cleanedName.replace(/\s+/g, '_');
+        return cleanedName;
+      };
+      
+      // Check if species has an Instagram post (considered as having image)
+      const hasInstagramA = a.instagramUrl && a.instagramUrl.trim();
+      const hasInstagramB = b.instagramUrl && b.instagramUrl.trim();
+      
+      // Check if species has a static image file (based on filename existence)
+      const hasStaticImageA = a.scientificFilename || createSafeFilename(a.scientificName);
+      const hasStaticImageB = b.scientificFilename || createSafeFilename(b.scientificName);
+      
+      // Priority: Instagram posts first, then static images, then others
+      const scoreA = (hasInstagramA ? 100 : 0) + (hasStaticImageA ? 10 : 0);
+      const scoreB = (hasInstagramB ? 100 : 0) + (hasStaticImageB ? 10 : 0);
+      
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA; // Higher score first
+      }
+      
+      // If scores are equal, sort alphabetically by name
+      return a.name.localeCompare(b.name, 'ja');
+    });
+  }, [filteredMoths]);
+
+  const totalPages = Math.ceil(sortedMoths.length / itemsPerPage);
   const currentMoths = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return filteredMoths.slice(startIndex, endIndex);
-  }, [filteredMoths, currentPage, itemsPerPage]);
+    return sortedMoths.slice(startIndex, endIndex);
+  }, [sortedMoths, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -193,7 +302,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       <div className="p-6">
         <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-purple-100 dark:scrollbar-thumb-purple-600 dark:scrollbar-track-purple-900/20">
           {currentMoths.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {currentMoths.map((moth, index) => (
                 <div key={moth.id} className="animate-fadeIn" style={{ animationDelay: `${index * 0.05}s` }}>
                   <MothListItem moth={moth} baseRoute={baseRoute} />
