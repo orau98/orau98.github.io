@@ -153,15 +153,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     徒然なるままに野生生物の観察記録をInstagramで投稿しています
                   </p>
                 </div>
-                <a 
-                  href="https://www.instagram.com/onychodactylus_nipponoborealis/" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  <InstagramIcon className="w-4 h-4 mr-2" />
-                  フォローする
-                </a>
               </div>
             </div>
             
