@@ -445,7 +445,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                         </>
                       ) : (
                         <>
-                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">備考:</span>
+                          <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">地域:</span>
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
                             {moth.geographicalRemarks.trim()}
                           </span>
