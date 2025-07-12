@@ -2,20 +2,20 @@ import React from 'react';
 
 // Instagram Link Cards Component - Safe alternative to embeds
 const InstagramEmbed = ({ className = "" }) => {
-  // Recent Instagram post data
+  // Recent Instagram post data - using profile link since individual post URLs may be unavailable
   const recentPosts = [
     {
-      url: "https://www.instagram.com/p/C82_pYqS7y8/",
+      url: "https://www.instagram.com/onychodactylus_nipponoborealis/",
       title: "野外での昆虫観察記録",
-      description: "フィールドワークでの最新の発見"
+      description: "フィールドワークでの最新の発見や生態学的研究の投稿"
     },
     {
-      url: "https://www.instagram.com/p/C8q6NGOScR0/",
+      url: "https://www.instagram.com/onychodactylus_nipponoborealis/",
       title: "昆虫と植物の関係",
-      description: "食草関係の興味深い観察"
+      description: "食草関係の興味深い観察記録"
     },
     {
-      url: "https://www.instagram.com/p/C8UtJBnyA2R/",
+      url: "https://www.instagram.com/onychodactylus_nipponoborealis/",
       title: "生態学的研究",
       description: "行動生態学・化学生態学の研究成果"
     }

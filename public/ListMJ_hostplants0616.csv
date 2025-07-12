@@ -3664,7 +3664,7 @@
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Metabraxas,,clerica,,Butler,1881,,オオシロエダシャク,,,,,,,"Metabraxas clerica Butler, 1881",不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Arichanna,,pryeraria,,Leech,1891,,プライヤエダシャク,,,,,,,"Arichanna pryeraria Leech, 1891",不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Arichanna,,albomacularia,,Leech,1891,,シロホシエダシャク,,,,,,,"Arichanna albomacularia Leech, 1891",不明,日本産蛾類標準図鑑1
-,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Arichanna,,tetrica,,(Butler),1878,,キジマエダシャク,,,,,,,"Arichanna tetrica (Butler, 1878)",ガマズミ; オオカメノキ(以上レンプクソウ科); Viburnum 属に固有の可能性がある,日本産蛾類標準図鑑1
+,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Arichanna,,tetrica,,(Butler),1878,,キジマエダシャク,,,,,,,"Arichanna tetrica (Butler, 1878)","ガマズミ; オオカメノキ",日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Arichanna,,melanaria,,(Linnaeus),1758,,キシタエダシャク,キシタエダシャク,,,,,,"Arichanna melanaria (Linnaeus, 1758)",アセビ; ミヤマキリシマ; レンゲツツジ; ヤマツツジ; イソツツジ; ガンコウラン(以上ツツジ科),日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Arichanna,,gaschkevitchii,,(Motschulsky),1861,,ヒョウモンエダシャク,ヒョウモンエダシャク,,,,,,"Arichanna gaschkevitchii (Motschulsky, 1861)",アセビ; ハナヒリノキ; レンゲツツジ; クロマメノキ(以上ツツジ科),日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Alcis,,angulifera,,(Butler),1878,,ナカウスエダシャク,,,,,,,"Alcis angulifera (Butler, 1878)",広食性; シダ類; 針葉樹類; 草本類をふくむ多くの植物,日本産蛾類標準図鑑1
@@ -5816,7 +5816,7 @@
 3668,Noctuidae,ヤガ科,Psaphidinae,モクメキリガ亜科,Feraliini,ミヤマゴマキリガ族,,,Feralia,,sauberi,,(Graeser),1892,,ミヤマゴマキリガ,,,,,,,Feralia sauberi (Graeser,"1892),カラマツ(マツ科)",日本産蛾類標準図鑑2
 3474,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Helicoverpa,,armigera,,(Hübner),[1808],,オオタバコガ,オオタバコガ,,,,,,Helicoverpa armigera (Hübner,"1808),トウモロコシ (イネ科); ナス; トマト; ピーマン; タバコ(以上ナス科); エンドウ(マメ科); オクラ(アオイ科); キャベツ(アブラナ科); チシャ (キク科); カーネーション (ナデシコ科)など",日本産蛾類標準図鑑2
 3475,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Helicoverpa,,assulta,,(Guenée),1852,,タバコガ,タバコガ,,,,,,Helicoverpa assulta (Guenée,"1852),タバコ; ピーマン(以上ナス科)",日本産蛾類標準図鑑2
-,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Helicoverpa,,sugii,,Yoshimatsu,2004,,クロタバコガ,,,,,,,Helicoverpa sugii Yoshimatsu,"2004,シマムロ (ヒノキ科); 室内では; コメップウマゴヤシ(マメ科)でも飼育可能であった。",日本産蛾類標準図鑑2
+,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Helicoverpa,,sugii,,Yoshimatsu,2004,,クロタバコガ,,,,,,,Helicoverpa sugii Yoshimatsu,"2004,シマムロ,日本産蛾類標準図鑑2
 3476,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Schinia,,scutosa,,(Denis & Schiffermüller),1775,,ヨモギガ,,,,,,,Schinia scutosa (Denis & Schiffermüller,"1775),ミブヨモギ; ヨモギ(以上キク科)",日本産蛾類標準図鑑2
 3477,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Heliothis,,maritima,,Graslin,1855,,ツメクサガ,ツメクサガ,,,,,,Heliothis maritima Graslin,"1855,アマ (アマ科); マメ科牧草",日本産蛾類標準図鑑2
 3481,Noctuidae,ヤガ科,Heliothinae,タバコガ亜科,,,,,Heliothis,,cruentata,,(Moore),1881,,トガリウスアカヤガ,,,,,,,Heliothis cruentata (Moore,不明,日本産蛾類標準図鑑2
