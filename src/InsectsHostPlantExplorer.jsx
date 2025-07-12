@@ -187,23 +187,34 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     サイト管理者について
                   </h3>
                   <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-slate-700 dark:text-slate-300">
-                          研究者・博士（理学）
+                        <p className="text-slate-700 dark:text-slate-300 font-medium">
+                          フィールド好きの大学院生
                         </p>
                       </div>
                       <div className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-slate-700 dark:text-slate-300">
-                          専門分野：昆虫学、生態学、昆虫と植物の相互作用
-                        </p>
+                        <div className="text-slate-700 dark:text-slate-300">
+                          <p className="font-medium">専門分野：行動生態学、化学生態学</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 italic">
+                            ※分類学は専門ではありません
+                          </p>
+                        </div>
                       </div>
                       <div className="flex items-start space-x-3">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                         <p className="text-slate-700 dark:text-slate-300">
-                          所属：研究機関・大学
+                          詳しいプロフィールは
+                          <a 
+                            href="https://researchmap.jp/HAkimoto" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 underline decoration-emerald-300 hover:decoration-emerald-500 transition-colors ml-1"
+                          >
+                            こちら
+                          </a>
                         </p>
                       </div>
                     </div>
