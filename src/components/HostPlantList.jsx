@@ -25,9 +25,19 @@ const HostPlantListItem = ({ plant, mothNames }) => {
   const [plantImageUrl, setPlantImageUrl] = React.useState('');
   
   React.useEffect(() => {
+    let isMounted = true;
+    
+    // Reset states when starting new check
+    setImageExists(false);
+    setImageLoaded(false);
+    setImageError(false);
+    setPlantImageUrl('');
+    
     // Check for plant images with various naming patterns
     const checkImageExists = async (urls) => {
       for (const url of urls) {
+        if (!isMounted) return; // Component unmounted
+        
         try {
           const img = new Image();
           const imageExists = await new Promise((resolve) => {
@@ -36,20 +46,26 @@ const HostPlantListItem = ({ plant, mothNames }) => {
             img.src = url;
           });
           
+          if (!isMounted) return; // Component unmounted
+          
           if (imageExists) {
+            console.log(`Found plant image: ${url}`);
             setPlantImageUrl(url);
             setImageExists(true);
             setImageLoaded(true);
             return;
           }
         } catch (error) {
-          console.log(`Failed to load image: ${url}`);
+          console.log(`Failed to load image: ${url}`, error);
         }
       }
       
       // No images found
-      setImageExists(false);
-      setImageError(true);
+      if (isMounted) {
+        console.log(`No images found for plant: ${plant}`);
+        setImageExists(false);
+        setImageError(true);
+      }
     };
 
     // Try multiple filename patterns
@@ -59,15 +75,22 @@ const HostPlantListItem = ({ plant, mothNames }) => {
     
     const urlsToTry = [];
     
-    // Generate all possible combinations
+    // Generate all possible combinations - prioritize exact match first
     for (const suffix of descriptiveSuffixes) {
       for (const ext of extensions) {
         urlsToTry.push(`${baseUrl}${suffix}.${ext}`);
       }
     }
     
+    console.log(`Checking images for plant: ${plant}, safeName: ${safePlantName}`);
+    console.log(`URLs to try:`, urlsToTry.slice(0, 5)); // Log first 5 URLs
+    
     checkImageExists(urlsToTry);
-  }, [safePlantName]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [plant, safePlantName]);
 
   return (
   <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-teal-300 dark:hover:border-teal-500 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/20 hover:scale-[1.02] transform">
