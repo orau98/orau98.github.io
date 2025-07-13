@@ -8,7 +8,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
   const [activeTab, setActiveTab] = useState('insects');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="space-y-6 p-4 md:p-8">
         <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-3xl overflow-hidden shadow-2xl group">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/20 via-transparent to-slate-900/30 z-10"></div>
@@ -26,10 +26,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
             <div className="max-w-4xl mx-auto">
               
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 leading-tight">
-                <span className="block bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="block bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl">
                   "繋がり"が見える
                 </span>
-                <span className="block bg-gradient-to-r from-purple-100 via-pink-100 to-teal-100 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="block bg-gradient-to-r from-blue-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl">
                   昆虫図鑑
                 </span>
               </h1>
@@ -68,8 +68,8 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 onClick={() => setActiveTab('insects')}
                 className={`flex-1 px-6 py-4 text-lg font-semibold transition-all duration-200 relative ${
                   activeTab === 'insects'
-                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50/50 dark:bg-purple-900/20'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-purple-500 dark:hover:text-purple-400 hover:bg-purple-50/30 dark:hover:bg-purple-900/10'
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-blue-50/30 dark:hover:bg-blue-900/10'
                 }`}
               >
                 <div className="flex items-center justify-center space-x-3">
@@ -79,7 +79,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   <span>昆虫 ({[...moths, ...butterflies, ...beetles].length})</span>
                 </div>
                 {activeTab === 'insects' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-t-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-t-lg"></div>
                 )}
               </button>
               
@@ -98,7 +98,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   <span>食草 ({Object.keys(hostPlants).length})</span>
                 </div>
                 {activeTab === 'plants' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-t-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-t-lg"></div>
                 )}
               </button>
             </div>
@@ -140,15 +140,15 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
         {/* Instagram セクション */}
         <div className="max-w-6xl mx-auto">
           <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
-            <div className="p-4 bg-gradient-to-r from-slate-500/10 to-gray-500/10 dark:from-slate-500/20 dark:to-gray-500/20 border-b border-slate-200/30 dark:border-slate-700/30">
+            <div className="p-4 bg-slate-500/10 dark:bg-slate-500/20 border-b border-slate-200/30 dark:border-slate-700/30">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-slate-600 to-gray-600 rounded-lg">
+                <div className="p-2 bg-slate-600 rounded-lg">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-bold bg-gradient-to-r from-slate-700 to-gray-700 dark:from-slate-300 dark:to-gray-300 bg-clip-text text-transparent">
+                  <h2 className="text-xl font-bold text-slate-700 dark:text-slate-300">
                     サイトについて
                   </h2>
                 </div>
@@ -163,7 +163,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
                       サイト管理者について
                     </h3>
-                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -203,7 +203,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
                       サイトポリシー
                     </h3>
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -259,10 +259,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 <div className="space-y-4">
                   <div className="mb-6">
                     <div className="flex items-center space-x-3 mb-3">
-                      <div className="p-2 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg">
+                      <div className="p-2 bg-blue-500 rounded-lg">
                         <InstagramIcon className="w-5 h-5 text-white" alt="Instagramアイコン" />
                       </div>
-                      <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">
+                      <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
                         Instagram 最新投稿
                       </h3>
                     </div>
@@ -273,7 +273,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   
                   {/* Instagram埋め込み - 個別投稿表示 */}
                   <div className="space-y-4">
-                    <div className="instagram-wrapper border-2 border-pink-200/50 dark:border-pink-700/50 rounded-xl p-3 bg-gradient-to-br from-pink-50/30 to-rose-50/30 dark:from-pink-900/10 dark:to-rose-900/10">
+                    <div className="instagram-wrapper border-2 border-blue-200/50 dark:border-blue-700/50 rounded-xl p-3 bg-blue-50/30 dark:bg-blue-900/10">
                       <InstagramEmbed />
                     </div>
                   </div>
