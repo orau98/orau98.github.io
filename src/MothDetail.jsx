@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
@@ -15,6 +15,73 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // SEO optimization: Update page title and meta tags
+  useEffect(() => {
+    if (moth) {
+      const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? '甲虫' : '蛾';
+      const title = `${moth.name} (${moth.scientificName}) | ${insectType}の詳細 - 昆虫食草図鑑`;
+      const description = `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${moth.hostPlants.join('、') || '不明'}。昆虫食草図鑑で${insectType}と植物の関係を詳しく学ぼう。`;
+      
+      document.title = title;
+      
+      // Update meta description
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (!metaDescription) {
+        metaDescription = document.createElement('meta');
+        metaDescription.name = 'description';
+        document.head.appendChild(metaDescription);
+      }
+      metaDescription.content = description;
+      
+      // Update OG tags
+      let ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.content = title;
+      
+      let ogDescription = document.querySelector('meta[property="og:description"]');
+      if (ogDescription) ogDescription.content = description;
+      
+      // Add structured data for the specific insect
+      const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": moth.name,
+        "description": description,
+        "author": {
+          "@type": "Organization",
+          "name": "昆虫食草図鑑"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "昆虫食草図鑑"
+        },
+        "mainEntity": {
+          "@type": "Animal",
+          "name": moth.name,
+          "scientificName": moth.scientificName,
+          "classification": moth.classification?.familyJapanese || '不明'
+        }
+      };
+      
+      let structuredDataScript = document.querySelector('#insect-structured-data');
+      if (!structuredDataScript) {
+        structuredDataScript = document.createElement('script');
+        structuredDataScript.id = 'insect-structured-data';
+        structuredDataScript.type = 'application/ld+json';
+        document.head.appendChild(structuredDataScript);
+      }
+      structuredDataScript.textContent = JSON.stringify(structuredData);
+    }
+    
+    // Cleanup function to restore original title
+    return () => {
+      document.title = '昆虫食草図鑑 - 蛾と食草の繋がりを探る | 7000種以上の昆虫データベース';
+      const structuredDataScript = document.querySelector('#insect-structured-data');
+      if (structuredDataScript) {
+        structuredDataScript.remove();
+      }
+    };
+  }, [moth]);
 
   if (!moth) {
     return (
