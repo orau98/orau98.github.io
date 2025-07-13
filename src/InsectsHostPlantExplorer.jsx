@@ -217,9 +217,18 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">利用・著作権について</p>
+                            <p className="font-medium mb-1">写真について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              学術研究・教育目的での利用を歓迎します。掲載データは学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
+                              掲載写真は全て管理者が撮影したものです。学術研究・教育目的での利用を歓迎しますが、商用利用の場合は事前にご相談ください。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">データの利用・著作権について</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              掲載データは学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。学術研究・教育目的での利用を歓迎します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
                             </p>
                           </div>
                         </div>
