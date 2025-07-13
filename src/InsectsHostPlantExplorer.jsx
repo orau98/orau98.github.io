@@ -244,15 +244,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">免責事項</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトの情報利用により生じた損害について、管理者は一切の責任を負いません。情報の正確性や最新性についても保証いたしません。
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">お問い合わせ</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
                               データの誤りや修正依頼は
