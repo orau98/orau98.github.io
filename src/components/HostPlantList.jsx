@@ -41,9 +41,17 @@ const HostPlantListItem = ({ plant, mothNames }) => {
         try {
           const img = new Image();
           const imageExists = await new Promise((resolve) => {
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
+            const timeout = setTimeout(() => resolve(false), 5000); // 5 second timeout
+            img.onload = () => {
+              clearTimeout(timeout);
+              resolve(true);
+            };
+            img.onerror = () => {
+              clearTimeout(timeout);
+              resolve(false);
+            };
+            // Properly encode the URL for Japanese characters
+            img.src = encodeURI(url);
           });
           
           if (!isMounted) return; // Component unmounted
@@ -69,21 +77,30 @@ const HostPlantListItem = ({ plant, mothNames }) => {
     };
 
     // Try multiple filename patterns
-    const baseUrl = `${import.meta.env.BASE_URL}images/plants/${safePlantName}`;
+    const baseUrl = `${import.meta.env.BASE_URL}images/plants/`;
     const extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'];
-    const descriptiveSuffixes = ['', '_実', '_葉', '_樹皮', '_花', '_果実', '_葉表', '_葉裏', '_羽状複葉', '_枝', '_全体'];
+    const descriptiveSuffixes = ['', '_実', '_葉', '_樹皮', '_花', '_果実', '_葉表', '_葉裏', '_羽状複葉', '_枝'];
     
     const urlsToTry = [];
     
     // Generate all possible combinations - prioritize exact match first
     for (const suffix of descriptiveSuffixes) {
       for (const ext of extensions) {
-        urlsToTry.push(`${baseUrl}${suffix}.${ext}`);
+        // Don't URL encode Japanese characters - let browser handle it naturally
+        const filename = `${safePlantName}${suffix}.${ext}`;
+        urlsToTry.push(`${baseUrl}${filename}`);
       }
     }
     
     console.log(`Checking images for plant: ${plant}, safeName: ${safePlantName}`);
-    console.log(`URLs to try:`, urlsToTry.slice(0, 5)); // Log first 5 URLs
+    console.log(`URLs to try:`, urlsToTry.slice(0, 8)); // Log first 8 URLs
+    
+    // For debugging - show the actual encoded URLs that will be tested
+    const encodedUrls = urlsToTry.slice(0, 5).map(url => ({
+      original: url,
+      encoded: encodeURI(url)
+    }));
+    console.log(`Encoded URLs:`, encodedUrls);
     
     checkImageExists(urlsToTry);
     
