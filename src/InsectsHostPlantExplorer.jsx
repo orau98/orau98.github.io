@@ -208,36 +208,18 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの出典について</p>
+                            <p className="font-medium mb-1">データについて</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトは既存の図鑑や学術文献に基づいてデータを編集・構成したものです。各データには可能な限り出典を明記しています。
+                              本サイトは既存の図鑑や学術文献からのデータを編集・構成したものです。原典に基づくため誤りや古い情報が含まれる可能性があります。重要な用途での利用時は必ず原典をご確認ください。
                             </p>
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの正確性について</p>
+                            <p className="font-medium mb-1">利用・著作権について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              原典となる図鑑や文献の情報に基づくため、誤りや古い情報が含まれる可能性があります。重要な用途での利用時は必ず原典をご確認ください。
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">著作権について</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">
-                              掲載データは各種文献からの引用・編集により構成されています。学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの利用について</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトのデータは学術研究・教育目的での利用を歓迎します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
+                              学術研究・教育目的での利用を歓迎します。掲載データは学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
                             </p>
                           </div>
                         </div>
