@@ -22,21 +22,52 @@ const HostPlantListItem = ({ plant, mothNames }) => {
   };
   
   const safePlantName = createSafePlantFilename(plant);
-  const plantImageUrl = `${import.meta.env.BASE_URL}images/plants/${safePlantName}.jpg`;
+  const [plantImageUrl, setPlantImageUrl] = React.useState('');
   
   React.useEffect(() => {
-    // Check if plant image exists
-    const img = new Image();
-    img.onload = () => {
-      setImageExists(true);
-      setImageLoaded(true);
-    };
-    img.onerror = () => {
+    // Check for plant images with various naming patterns
+    const checkImageExists = async (urls) => {
+      for (const url of urls) {
+        try {
+          const img = new Image();
+          const imageExists = await new Promise((resolve) => {
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+          });
+          
+          if (imageExists) {
+            setPlantImageUrl(url);
+            setImageExists(true);
+            setImageLoaded(true);
+            return;
+          }
+        } catch (error) {
+          console.log(`Failed to load image: ${url}`);
+        }
+      }
+      
+      // No images found
       setImageExists(false);
       setImageError(true);
     };
-    img.src = plantImageUrl;
-  }, [plantImageUrl]);
+
+    // Try multiple filename patterns
+    const baseUrl = `${import.meta.env.BASE_URL}images/plants/${safePlantName}`;
+    const extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'];
+    const descriptiveSuffixes = ['', '_実', '_葉', '_樹皮', '_花', '_果実', '_葉表', '_葉裏', '_羽状複葉', '_枝', '_全体'];
+    
+    const urlsToTry = [];
+    
+    // Generate all possible combinations
+    for (const suffix of descriptiveSuffixes) {
+      for (const ext of extensions) {
+        urlsToTry.push(`${baseUrl}${suffix}.${ext}`);
+      }
+    }
+    
+    checkImageExists(urlsToTry);
+  }, [safePlantName]);
 
   return (
   <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-teal-300 dark:hover:border-teal-500 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/20 hover:scale-[1.02] transform">
