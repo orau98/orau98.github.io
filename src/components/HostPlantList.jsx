@@ -41,7 +41,7 @@ const HostPlantListItem = ({ plant, mothNames }) => {
         try {
           const img = new Image();
           const imageExists = await new Promise((resolve) => {
-            const timeout = setTimeout(() => resolve(false), 5000); // 5 second timeout
+            const timeout = setTimeout(() => resolve(false), 2000); // Reduced to 2 seconds
             img.onload = () => {
               clearTimeout(timeout);
               resolve(true);
@@ -66,6 +66,9 @@ const HostPlantListItem = ({ plant, mothNames }) => {
         } catch (error) {
           console.log(`Failed to load image: ${url}`, error);
         }
+        
+        // Add small delay between requests to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
       
       // No images found
@@ -76,33 +79,29 @@ const HostPlantListItem = ({ plant, mothNames }) => {
       }
     };
 
-    // Try multiple filename patterns
+    // Try multiple filename patterns with priority order
     const baseUrl = `${import.meta.env.BASE_URL}images/plants/`;
     const extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'];
-    const descriptiveSuffixes = ['', '_実', '_葉', '_樹皮', '_花', '_果実', '_葉表', '_葉裏', '_羽状複葉', '_枝'];
+    // Prioritize most common patterns first to reduce requests
+    const descriptiveSuffixes = ['', '_実', '_葉', '_樹皮', '_花', '_羽状複葉', '_葉表', '_葉裏'];
     
     const urlsToTry = [];
     
-    // Generate all possible combinations - prioritize exact match first
+    // Generate combinations with priority - exact match and most common patterns first
     for (const suffix of descriptiveSuffixes) {
       for (const ext of extensions) {
-        // Don't URL encode Japanese characters - let browser handle it naturally
         const filename = `${safePlantName}${suffix}.${ext}`;
         urlsToTry.push(`${baseUrl}${filename}`);
       }
     }
     
+    // Limit the number of URLs to try to avoid rate limiting
+    const limitedUrls = urlsToTry.slice(0, 20); // Only try first 20 combinations
+    
     console.log(`Checking images for plant: ${plant}, safeName: ${safePlantName}`);
-    console.log(`URLs to try:`, urlsToTry.slice(0, 8)); // Log first 8 URLs
+    console.log(`Limited URLs to try (${limitedUrls.length}):`, limitedUrls.slice(0, 6)); // Log first 6 URLs
     
-    // For debugging - show the actual encoded URLs that will be tested
-    const encodedUrls = urlsToTry.slice(0, 5).map(url => ({
-      original: url,
-      encoded: encodeURI(url)
-    }));
-    console.log(`Encoded URLs:`, encodedUrls);
-    
-    checkImageExists(urlsToTry);
+    checkImageExists(limitedUrls);
     
     return () => {
       isMounted = false;
