@@ -85,9 +85,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
 
   if (!moth) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <div className="text-center p-8">
-          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-red-400 to-pink-400 rounded-full flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto mb-6 bg-blue-400 rounded-full flex items-center justify-center">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
@@ -96,7 +96,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
           <p className="text-slate-600 dark:text-slate-400 mb-6">指定されたIDの昆虫は存在しません。</p>
           <Link 
             to="/" 
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-medium rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="inline-flex items-center px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -181,7 +181,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
           <Link 
@@ -210,7 +210,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
             {moth.classification.subfamilyJapanese && (
               <Link
                 to={`/?classification=${encodeURIComponent(moth.classification.subfamilyJapanese)}`}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50 transition-all duration-200 border border-green-200/50 dark:border-green-700/50"
+                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
               >
                 <span className="font-medium">{moth.classification.subfamilyJapanese}</span>
                 {moth.classification.subfamily && (
@@ -221,7 +221,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
             {moth.classification.tribeJapanese && (
               <Link
                 to={`/?classification=${encodeURIComponent(moth.classification.tribeJapanese)}`}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-all duration-200 border border-purple-200/50 dark:border-purple-700/50"
+                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
               >
                 <span className="font-medium">{moth.classification.tribeJapanese}</span>
                 {moth.classification.tribe && (
@@ -232,7 +232,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
             {moth.classification.genus && (
               <Link
                 to={`/?classification=${encodeURIComponent(moth.classification.genus)}`}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-all duration-200 border border-orange-200/50 dark:border-orange-700/50"
+                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-900/50 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50"
               >
                 <span className="font-medium italic">{moth.classification.genus}</span>
               </Link>
@@ -250,7 +250,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                     <InstagramEmbed url={moth.instagramUrl} />
                   </div>
                 ) : (
-                  <div className="relative aspect-[4/3] bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-purple-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 group overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
                     {!imageError ? (
                       <div className="relative h-full">
                         <img 
@@ -272,7 +272,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
                         <div className="text-center p-6">
-                          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center shadow-lg">
+                          <div className="w-20 h-20 mx-auto mb-4 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
                             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
                             </svg>
@@ -284,10 +284,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                     )}
                     
                     {!imageLoaded && !imageError && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-900/40 dark:to-blue-900/40">
+                      <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 dark:bg-blue-900/40">
                         <div className="relative">
-                          <div className="w-16 h-16 border-4 border-purple-200 dark:border-purple-700 rounded-full"></div>
-                          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                          <div className="w-16 h-16 border-4 border-blue-200 dark:border-blue-700 rounded-full"></div>
+                          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                         </div>
                       </div>
                     )}
@@ -297,7 +297,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                 <div className="p-4">
                   {hasInstagramPost && (
                     <div className="flex items-center justify-end mb-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 dark:from-pink-900/30 dark:to-rose-900/30 dark:text-pink-300">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
                         <InstagramIcon className="w-4 h-4 mr-2" />
                         Instagram
                       </span>
@@ -308,7 +308,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                     <div className="mt-4 pt-4 border-t border-slate-200/50 dark:border-slate-700/50">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <InstagramIcon className="w-4 h-4 text-pink-500" />
+                          <InstagramIcon className="w-4 h-4 text-blue-500" />
                           <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                             Instagram投稿
                           </span>
@@ -317,7 +317,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                           href={moth.instagramUrl} 
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 font-medium hover:underline"
+                          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium hover:underline"
                         >
                           投稿を見る →
                         </a>
@@ -349,14 +349,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
 
             {/* 食草情報 */}
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
-              <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 dark:from-emerald-500/20 dark:to-teal-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
+              <div className="p-4 bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg">
+                  <div className="p-2 bg-emerald-500 rounded-lg">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+                  <h2 className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
                     食草
                     {moth.isMonophagous && (
                       <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
@@ -396,12 +396,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                                   <Link
                                     key={`${condition}-${detail.plant}-${index}`}
                                     to={`/plant/${encodeURIComponent(detail.plant)}`}
-                                    className="group bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-lg p-3 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-900/30 dark:hover:to-teal-900/30 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md"
+                                    className="group bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md"
                                   >
                                     <div>
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                          <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
+                                          <div className="w-2 h-2 bg-emerald-400 rounded-full group-hover:scale-125 transition-transform"></div>
                                           <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                                             {detail.plant}
                                           </span>
@@ -461,7 +461,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-slate-400 to-slate-500 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-slate-400 rounded-full flex items-center justify-center">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -551,14 +551,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
             {/* 関連種情報 - 食草ごとに表示 */}
             {Object.keys(relatedMothsByPlant).length > 0 && (
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
-                <div className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 dark:from-purple-500/20 dark:to-pink-500/20 border-b border-purple-200/30 dark:border-purple-700/30">
+                <div className="p-4 bg-blue-500/10 dark:bg-blue-500/20 border-b border-blue-200/30 dark:border-blue-700/30">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                    <div className="p-2 bg-blue-500 rounded-lg">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                       </svg>
                     </div>
-                    <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+                    <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">
                       同じ食草を持つ昆虫
                     </h2>
                   </div>
@@ -593,7 +593,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
                             <Link
                               key={relatedMoth.id}
                               to={`${baseUrl}${relatedMoth.id}`}
-                              className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg text-sm font-medium text-purple-700 dark:text-purple-300 hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-900/30 dark:hover:to-pink-900/30 transition-all duration-200 border border-purple-200/50 dark:border-purple-700/50 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-sm transform hover:scale-105"
+                              className="inline-flex items-center px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-sm font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-sm transform hover:scale-105"
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
