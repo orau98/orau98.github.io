@@ -140,13 +140,15 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
         {/* Instagram セクション */}
         <div className="max-w-6xl mx-auto">
           <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
-            <div className="p-4 bg-gradient-to-r from-pink-500/10 to-rose-500/10 dark:from-pink-500/20 dark:to-rose-500/20 border-b border-pink-200/30 dark:border-pink-700/30">
+            <div className="p-4 bg-gradient-to-r from-slate-500/10 to-gray-500/10 dark:from-slate-500/20 dark:to-gray-500/20 border-b border-slate-200/30 dark:border-slate-700/30">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg">
-                  <InstagramIcon className="w-5 h-5 text-white" alt="Instagramアイコン" />
+                <div className="p-2 bg-gradient-to-r from-slate-600 to-gray-600 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">
+                  <h2 className="text-xl font-bold bg-gradient-to-r from-slate-700 to-gray-700 dark:from-slate-300 dark:to-gray-300 bg-clip-text text-transparent">
                     サイトについて
                   </h2>
                 </div>
@@ -155,40 +157,99 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
             
             <div className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
-                    サイト管理者について
-                  </h3>
-                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-slate-700 dark:text-slate-300 font-medium">
-                          フィールド好きの大学院生
-                        </p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div className="text-slate-700 dark:text-slate-300">
-                          <p className="font-medium">専門分野：行動生態学、化学生態学</p>
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                            ※分類学は専門ではありません
+                <div className="space-y-6">
+                  {/* サイト管理者について */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                      サイト管理者について
+                    </h3>
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
+                      <div className="space-y-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-slate-700 dark:text-slate-300 font-medium">
+                            フィールド好きの大学院生
+                          </p>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium">専門分野：行動生態学、化学生態学</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                              ※分類学は専門ではありません
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-slate-700 dark:text-slate-300">
+                            詳しいプロフィールは
+                            <a 
+                              href="https://researchmap.jp/HAkimoto" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 underline decoration-emerald-300 hover:decoration-emerald-500 transition-colors ml-1"
+                            >
+                              こちら
+                            </a>
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-slate-700 dark:text-slate-300">
-                          詳しいプロフィールは
-                          <a 
-                            href="https://researchmap.jp/HAkimoto" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 underline decoration-emerald-300 hover:decoration-emerald-500 transition-colors ml-1"
-                          >
-                            こちら
-                          </a>
-                        </p>
+                    </div>
+                  </div>
+
+                  {/* サイトポリシー */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                      サイトポリシー
+                    </h3>
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
+                      <div className="space-y-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">データの利用について</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              本サイトのデータは学術研究・教育目的での利用を歓迎します。商用利用の場合は事前にご相談ください。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">データの正確性について</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              可能な限り正確なデータ提供に努めていますが、誤りがある場合があります。重要な用途での利用時は原典をご確認ください。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">免責事項</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              本サイトの情報利用により生じた損害について、管理者は一切の責任を負いません。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">お問い合わせ</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              データの誤りや修正依頼は
+                              <a 
+                                href="https://github.com/h-amoto/insects-host-plant-explorer-/issues" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                              >
+                                GitHub Issues
+                              </a>
+                              までお願いします。
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -196,18 +257,23 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 
                 {/* Instagram投稿の埋め込み - 複数の投稿を表示できます */}
                 <div className="space-y-4">
-                  <div className="flex items-start space-x-4 mb-4">
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-                      最新の投稿
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 flex-1">
+                  <div className="mb-6">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="p-2 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg">
+                        <InstagramIcon className="w-5 h-5 text-white" alt="Instagramアイコン" />
+                      </div>
+                      <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">
+                        Instagram 最新投稿
+                      </h3>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 ml-11">
                       徒然なるままに野生生物の観察記録をInstagramで投稿しています
                     </p>
                   </div>
                   
                   {/* Instagram埋め込み - 個別投稿表示 */}
                   <div className="space-y-4">
-                    <div className="instagram-wrapper">
+                    <div className="instagram-wrapper border-2 border-pink-200/50 dark:border-pink-700/50 rounded-xl p-3 bg-gradient-to-br from-pink-50/30 to-rose-50/30 dark:from-pink-900/10 dark:to-rose-900/10">
                       <InstagramEmbed />
                     </div>
                   </div>
