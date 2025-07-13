@@ -208,9 +208,9 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの利用について</p>
+                            <p className="font-medium mb-1">データの出典について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトのデータは学術研究・教育目的での利用を歓迎します。商用利用の場合は事前にご相談ください。
+                              本サイトは既存の図鑑や学術文献に基づいてデータを編集・構成したものです。各データには可能な限り出典を明記しています。
                             </p>
                           </div>
                         </div>
@@ -219,7 +219,25 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">データの正確性について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              可能な限り正確なデータ提供に努めていますが、誤りがある場合があります。重要な用途での利用時は原典をご確認ください。
+                              原典となる図鑑や文献の情報に基づくため、誤りや古い情報が含まれる可能性があります。重要な用途での利用時は必ず原典をご確認ください。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">著作権について</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              掲載データは各種文献からの引用・編集により構成されています。学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">データの利用について</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              本サイトのデータは学術研究・教育目的での利用を歓迎します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
                             </p>
                           </div>
                         </div>
@@ -228,7 +246,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">免責事項</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトの情報利用により生じた損害について、管理者は一切の責任を負いません。
+                              本サイトの情報利用により生じた損害について、管理者は一切の責任を負いません。情報の正確性や最新性についても保証いたしません。
                             </p>
                           </div>
                         </div>
