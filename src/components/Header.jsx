@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 
-const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
+const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const location = useLocation();
   
   // Get current moth or plant data for classification display
@@ -18,6 +18,39 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
           name: moth.name,
           scientificName: moth.scientificName,
           classification: moth.classification
+        };
+      }
+    } else if (pathParts[1] === 'butterfly' && pathParts[2]) {
+      const butterflyId = pathParts[2];
+      const butterfly = butterflies.find(b => b.id === butterflyId);
+      if (butterfly) {
+        return {
+          type: 'butterfly',
+          name: butterfly.name,
+          scientificName: butterfly.scientificName,
+          classification: butterfly.classification
+        };
+      }
+    } else if (pathParts[1] === 'beetle' && pathParts[2]) {
+      const beetleId = pathParts[2];
+      const beetle = beetles.find(b => b.id === beetleId);
+      if (beetle) {
+        return {
+          type: 'beetle',
+          name: beetle.name,
+          scientificName: beetle.scientificName,
+          classification: beetle.classification
+        };
+      }
+    } else if (pathParts[1] === 'leafbeetle' && pathParts[2]) {
+      const leafbeetleId = pathParts[2];
+      const leafbeetle = leafbeetles.find(l => l.id === leafbeetleId);
+      if (leafbeetle) {
+        return {
+          type: 'leafbeetle',
+          name: leafbeetle.name,
+          scientificName: leafbeetle.scientificName,
+          classification: leafbeetle.classification
         };
       }
     } else if (pathParts[1] === 'plant' && pathParts[2]) {

@@ -184,7 +184,7 @@ const PlantImageGallery = ({ images }) => {
 };
 
 
-const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
 
@@ -214,8 +214,8 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
   
   const plantImages = getPlantImages(decodedPlantName);
   
-  // Separate moths and butterflies that use this plant
-  const allInsects = [...moths, ...butterflies];
+  // Separate moths, butterflies, beetles and leafbeetles that use this plant
+  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const insectsOnThisPlant = allInsects.filter(insect => 
     insect.hostPlants.includes(decodedPlantName)
   );

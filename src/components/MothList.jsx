@@ -9,7 +9,8 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
   // Determine the correct route based on insect type
   const route = baseRoute === "" ? 
     (moth.type === 'butterfly' ? `/butterfly/${moth.id}` : 
-     moth.type === 'beetle' ? `/beetle/${moth.id}` : `/moth/${moth.id}`) : 
+     moth.type === 'beetle' ? `/beetle/${moth.id}` : 
+     moth.type === 'leafbeetle' ? `/leafbeetle/${moth.id}` : `/moth/${moth.id}`) : 
     `${baseRoute}/${moth.id}`;
   
   // Check if image exists for this moth
@@ -99,9 +100,12 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm shadow-sm ${
                 moth.type === 'butterfly' ? 'bg-orange-500/90 text-white' : 
                 moth.type === 'beetle' ? 'bg-emerald-500/90 text-white' :
+                moth.type === 'leafbeetle' ? 'bg-amber-500/90 text-white' :
                 'bg-blue-500/90 text-white'
               }`}>
-                {moth.type === 'butterfly' ? '🦋 蝶' : moth.type === 'beetle' ? '🪲 甲虫' : '🦋 蛾'}
+                {moth.type === 'butterfly' ? '🦋 蝶' : 
+                 moth.type === 'beetle' ? '🪲 甲虫' : 
+                 moth.type === 'leafbeetle' ? '🐛 ハムシ' : '🦋 蛾'}
               </span>
             </div>
           </div>

@@ -26,6 +26,7 @@ function App() {
   const [moths, setMoths] = useState([]);
   const [butterflies, setButterflies] = useState([]);
   const [beetles, setBeetles] = useState([]);
+  const [leafbeetles, setLeafbeetles] = useState([]);
   const [hostPlants, setHostPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
@@ -55,7 +56,7 @@ function App() {
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
       const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_bokutou.csv`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
-      const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species.csv`;
+      const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
 
@@ -1185,10 +1186,78 @@ function App() {
           });
         });
 
+        // Process hamushi_species_integrated.csv to create leafbeetle data
+        const leafbeetleData = [];
+        hamushiParsed.data.forEach((row, index) => {
+          const japaneseName = row['和名']?.trim();
+          const family = row['科和名'] || row['科名'];
+          const subfamily = row['亜科和名'] || row['亜科名'];
+          const genus = row['属名'];
+          const species = row['種小名'];
+          const hostPlants = row['食草'];
+          const source = row['出典'];
+          
+          if (!japaneseName || !genus || !species) {
+            console.log("Skipping leafbeetle row:", { japaneseName, genus, species, rowIndex: index });
+            return;
+          }
+          
+          const scientificName = `${genus} ${species}`;
+          const id = `leafbeetle-${index}`;
+          
+          // Parse host plants
+          let hostPlantList = [];
+          if (hostPlants && hostPlants !== '不明') {
+            const plants = hostPlants.split(/[、，,]/);
+            hostPlantList = plants
+              .map(plant => plant.trim())
+              .filter(plant => plant && plant.length > 0)
+              .filter(plant => plant.trim() !== '')
+              .map(plant => normalizePlantName(plant));
+            hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
+          }
+
+          const leafbeetle = {
+            id,
+            name: japaneseName,
+            scientificName,
+            scientificFilename: formatScientificNameForFilename(scientificName),
+            type: 'leafbeetle',
+            classification: {
+              family: 'Chrysomelidae',
+              familyJapanese: 'ハムシ科',
+              subfamily: subfamily,
+              subfamilyJapanese: subfamily,
+              genus: genus
+            },
+            hostPlants: hostPlantList,
+            source: source || "ハムシハンドブック"
+          };
+
+          leafbeetleData.push(leafbeetle);
+          console.log("Added leafbeetle:", japaneseName, scientificName);
+
+          // Add to host plants data with validation
+          hostPlantList.forEach(plant => {
+            // Validate plant name before adding using centralized validation
+            const trimmedPlant = plant.trim();
+            if (isValidPlantName(trimmedPlant)) {
+              if (!hostPlantData[trimmedPlant]) {
+                hostPlantData[trimmedPlant] = [];
+              }
+              if (!hostPlantData[trimmedPlant].includes(japaneseName)) {
+                hostPlantData[trimmedPlant].push(japaneseName);
+              }
+            }
+          });
+        });
+
         // Combine all moth data after all parsing is complete
         const combinedMothData = [...mainMothData];
         // Combine beetle data from integrated file and separate CSV
         const combinedBeetleData = [...mainBeetleData, ...beetleData];
+        // Add leafbeetle data
+        const combinedLeafbeetleData = [...leafbeetleData];
 
         // Clean up hostPlantData to remove any invalid plant names and normalize duplicates
         const cleanedHostPlantData = {};
@@ -1219,18 +1288,20 @@ function App() {
 
         console.log("Final butterfly data:", butterflyData.length, "butterflies");
         console.log("Final beetle data:", combinedBeetleData.length, "beetles");
+        console.log("Final leafbeetle data:", combinedLeafbeetleData.length, "leafbeetles");
         console.log("Sample butterfly:", butterflyData[0]);
         console.log("All butterflies:", butterflyData.map(b => b.name));
         console.log("Host Plants data set:", Object.keys(cleanedHostPlantData).length);
         console.log("plantDetailData before setting state:", cleanedPlantDetailData);
         console.log("Plant Details data set:", Object.keys(cleanedPlantDetailData).length);
         
-        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
+        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Leafbeetles count:", combinedLeafbeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
         console.log("Removed", Object.keys(hostPlantData).length - Object.keys(cleanedHostPlantData).length, "invalid host plant entries");
         
         setMoths(combinedMothData);
         setButterflies(butterflyData);
         setBeetles(combinedBeetleData);
+        setLeafbeetles(combinedLeafbeetleData);
         setHostPlants(cleanedHostPlantData);
         setPlantDetails(cleanedPlantDetailData);
         setLoading(false); // Set loading to false after data is loaded
@@ -1238,6 +1309,7 @@ function App() {
           moths: combinedMothData.length,
           butterflies: butterflyData.length, 
           beetles: combinedBeetleData.length,
+          leafbeetles: combinedLeafbeetleData.length,
           hostPlants: Object.keys(cleanedHostPlantData).length,
           plantDetails: Object.keys(cleanedPlantDetailData).length
         });
@@ -1248,6 +1320,7 @@ function App() {
         setMoths([]);
         setButterflies([]);
         setBeetles([]);
+        setLeafbeetles([]);
         setHostPlants({});
         setPlantDetails({});
       }
@@ -1266,6 +1339,7 @@ function App() {
           moths={moths}
           butterflies={butterflies}
           beetles={beetles}
+          leafbeetles={leafbeetles}
           hostPlants={hostPlants}
           plantDetails={plantDetails}
         />
@@ -1275,11 +1349,12 @@ function App() {
         <SkeletonLoader />
       ) : (
         <Routes>
-          <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} />} />
-          <Route path="/moth/:mothId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} />} />
-          <Route path="/butterfly/:butterflyId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} />} />
-          <Route path="/beetle/:beetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} />} />
-          <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} butterflies={butterflies} beetles={beetles} hostPlants={hostPlants} plantDetails={plantDetails} />} />
+          <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} />} />
+          <Route path="/moth/:mothId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
+          <Route path="/butterfly/:butterflyId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
+          <Route path="/beetle/:beetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
+          <Route path="/leafbeetle/:leafbeetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
+          <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} />} />
         </Routes>
       )}
       <Footer />

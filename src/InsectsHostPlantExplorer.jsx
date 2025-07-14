@@ -4,7 +4,7 @@ import HostPlantList from './components/HostPlantList';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 
-const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, plantDetails, theme, setTheme }) => {
+const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
 
   return (
@@ -76,7 +76,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span>昆虫 ({[...moths, ...butterflies, ...beetles].length})</span>
+                  <span>昆虫 ({[...moths, ...butterflies, ...beetles, ...leafbeetles].length})</span>
                 </div>
                 {activeTab === 'insects' && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-t-lg"></div>
@@ -111,7 +111,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 {activeTab === 'insects' && (
                   <div className="p-0">
                     <MothList 
-                      moths={[...moths, ...butterflies, ...beetles]} 
+                      moths={[...moths, ...butterflies, ...beetles, ...leafbeetles]} 
                       title="昆虫" 
                       baseRoute="" 
                       embedded={true}
@@ -289,8 +289,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
           <p>Moths: {moths.length}</p>
           <p>Butterflies: {butterflies.length}</p>
           <p>Beetles: {beetles.length}</p>
-          <p>Combined: {[...moths, ...butterflies, ...beetles].length}</p>
+          <p>Leafbeetles: {leafbeetles.length}</p>
+          <p>Combined: {[...moths, ...butterflies, ...beetles, ...leafbeetles].length}</p>
           <p>First beetle: {beetles[0]?.name || 'None'}</p>
+          <p>First leafbeetle: {leafbeetles[0]?.name || 'None'}</p>
         </div>
       </div>
     </div>

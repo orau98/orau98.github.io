@@ -5,12 +5,12 @@ import InstagramEmbed from './components/InstagramEmbed';
 import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificName } from './utils/scientificNameFormatter.jsx';
 
-const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
-  const { mothId, butterflyId, beetleId } = useParams();
-  const insectId = mothId || butterflyId || beetleId;
+const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
+  const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
+  const insectId = mothId || butterflyId || beetleId || leafbeetleId;
   
   // Combine all insects for searching
-  const allInsects = [...moths, ...butterflies, ...beetles];
+  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const moth = allInsects.find(m => m.id === insectId);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -19,7 +19,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], hostPlants }) => {
   // SEO optimization: Update page title and meta tags
   useEffect(() => {
     if (moth) {
-      const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? '甲虫' : '蛾';
+      const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? '甲虫' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾';
       const title = `${moth.name} (${moth.scientificName}) | ${insectType}の詳細 - 昆虫食草図鑑`;
       const description = `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${moth.hostPlants.join('、') || '不明'}。昆虫食草図鑑で${insectType}と植物の関係を詳しく学ぼう。`;
       
