@@ -56,7 +56,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
             {imageExists ? (
               <img
                 src={imageUrl}
-                alt={moth.name}
+                alt={`${moth.name}（${moth.scientificName}）の写真`}
                 className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}

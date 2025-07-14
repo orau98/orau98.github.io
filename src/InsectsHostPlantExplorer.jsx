@@ -3,19 +3,22 @@ import MothList from './components/MothList';
 import HostPlantList from './components/HostPlantList';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
+import { MainStructuredData } from './components/StructuredData';
 
 const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* 構造化データ */}
+      <MainStructuredData />
       <div className="space-y-6 p-4 md:p-8">
         <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-3xl overflow-hidden shadow-2xl group">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/20 via-transparent to-slate-900/30 z-10"></div>
           
           <img 
             src={`${import.meta.env.BASE_URL}images/moths/Cucullia_argentea.jpg`} 
-            alt="蛾と食草の繋がりを示す美しい昆虫図鑑のメインビジュアル" 
+            alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）" 
             className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
             onError={(e) => { e.target.onerror = null; e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; e.target.alt='画像が見つかりません'; }}
           />

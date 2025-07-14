@@ -4,6 +4,8 @@ import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificName } from './utils/scientificNameFormatter.jsx';
+import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData } from './components/StructuredData';
+import { RelatedInsects } from './components/RelatedLinks';
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
@@ -182,6 +184,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* 構造化データ */}
+      {mothId && moth && <MothStructuredData moth={moth} />}
+      {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
+      {(beetleId || leafbeetleId) && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
           <Link 
@@ -255,7 +261,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       <div className="relative h-full">
                         <img 
                           src={possibleImagePaths[currentImageIndex]} 
-                          alt={moth.name}
+                          alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
                           className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                           onLoad={handleImageLoad}
                           onError={handleImageError}
@@ -561,6 +567,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 )}
               </div>
             </div>
+
+            {/* 関連する昆虫のリンク */}
+            <RelatedInsects 
+              currentInsect={moth} 
+              allInsects={[...moths, ...butterflies, ...beetles, ...leafbeetles]} 
+              hostPlants={hostPlants} 
+            />
 
             {/* 関連種情報 - 食草ごとに表示 */}
             {Object.keys(relatedMothsByPlant).length > 0 && (

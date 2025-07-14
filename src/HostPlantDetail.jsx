@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificName } from './utils/scientificNameFormatter.jsx';
+import { PlantStructuredData } from './components/StructuredData';
+import { RelatedPlants } from './components/RelatedLinks';
 
 const DetailCard = ({ title, children }) => (
   <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-slate-700/50">
@@ -222,6 +224,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* 構造化データ */}
+      <PlantStructuredData 
+        plant={{ name: decodedPlantName }} 
+        relatedInsects={insectsOnThisPlant} 
+      />
       <Link to="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-block">← リストに戻る</Link>
       
       <div className="mb-8">
@@ -285,6 +292,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
               <p className="text-slate-500 dark:text-slate-400">この食草を食べる昆虫の情報はありません。</p>
             )}
         </DetailCard>
+        
+        {/* 関連する植物と昆虫のリンク */}
+        <RelatedPlants 
+          currentPlant={decodedPlantName} 
+          allInsects={allInsects} 
+          hostPlants={hostPlants} 
+        />
       </div>
     </div>
   );
