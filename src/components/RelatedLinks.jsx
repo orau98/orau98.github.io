@@ -87,7 +87,8 @@ export const RelatedInsects = ({ currentInsect, allInsects, hostPlants }) => {
   // 同じ食草を持つ昆虫を検索
   const relatedInsects = allInsects.filter(insect => 
     insect.id !== currentInsect.id &&
-    insect.hostPlants?.some(plant => currentInsect.hostPlants.includes(plant))
+    Array.isArray(insect.hostPlants) && Array.isArray(currentInsect.hostPlants) &&
+    insect.hostPlants.some(plant => currentInsect.hostPlants.includes(plant))
   ).slice(0, 6); // 最大6件
 
   if (relatedInsects.length === 0) return null;
@@ -128,12 +129,14 @@ export const RelatedInsects = ({ currentInsect, allInsects, hostPlants }) => {
                 {/* 共通の食草を表示 */}
                 <div className="mt-2">
                   <div className="flex flex-wrap gap-1">
-                    {insect.hostPlants?.filter(plant => currentInsect.hostPlants.includes(plant)).slice(0, 2).map(plant => (
+                    {Array.isArray(insect.hostPlants) && Array.isArray(currentInsect.hostPlants) && 
+                     insect.hostPlants.filter(plant => currentInsect.hostPlants.includes(plant)).slice(0, 2).map(plant => (
                       <span key={plant} className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                         {plant}
                       </span>
                     ))}
-                    {insect.hostPlants?.filter(plant => currentInsect.hostPlants.includes(plant)).length > 2 && (
+                    {Array.isArray(insect.hostPlants) && Array.isArray(currentInsect.hostPlants) && 
+                     insect.hostPlants.filter(plant => currentInsect.hostPlants.includes(plant)).length > 2 && (
                       <span className="text-xs text-slate-500 dark:text-slate-400">+{insect.hostPlants.filter(plant => currentInsect.hostPlants.includes(plant)).length - 2}</span>
                     )}
                   </div>
@@ -153,11 +156,11 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
 
   // この植物を食べる昆虫を探す
   const insectsOnThisPlant = allInsects.filter(insect => 
-    insect.hostPlants?.includes(currentPlant)
+    Array.isArray(insect.hostPlants) && insect.hostPlants.includes(currentPlant)
   );
 
   // 同じ科の植物を探す（簡易的な実装）
-  const relatedPlants = hostPlants.filter(plant => 
+  const relatedPlants = Array.isArray(hostPlants) ? hostPlants.filter(plant => 
     plant.name !== currentPlant &&
     plant.name !== '不明' &&
     // 同じ文字パターンを持つ植物（例：～ノキ、～ガシなど）
@@ -166,7 +169,7 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
      plant.name.includes('カエデ') && currentPlant.includes('カエデ') ||
      plant.name.includes('ザクラ') && currentPlant.includes('ザクラ') ||
      plant.name.includes('ヤナギ') && currentPlant.includes('ヤナギ'))
-  ).slice(0, 6);
+  ).slice(0, 6) : [];
 
   return (
     <div className="space-y-6">
