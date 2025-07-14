@@ -12,7 +12,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* 構造化データ */}
       <MainStructuredData />
-      <div className="space-y-6 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
         <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-3xl overflow-hidden shadow-2xl group">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/20 via-transparent to-slate-900/30 z-10"></div>
           
@@ -26,7 +26,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent z-20"></div>
           
           <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 leading-tight">
                 <span className="block bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl">
@@ -63,8 +63,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
           </div>
         </div>
         {/* タブナビゲーション */}
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
             {/* タブヘッダー */}
             <div className="flex border-b border-slate-200/30 dark:border-slate-700/30">
               <button
@@ -137,12 +136,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                 )}
               </div>
             </div>
-          </div>
         </div>
         
         {/* Instagram セクション */}
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
             <div className="p-4 bg-slate-500/10 dark:bg-slate-500/20 border-b border-slate-200/30 dark:border-slate-700/30">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-slate-600 rounded-lg">
@@ -284,7 +281,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                 </div>
               </div>
             </div>
-          </div>
         </div>
         
         {/* Debug info */}
