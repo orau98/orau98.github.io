@@ -371,8 +371,17 @@ function App() {
         const mainBeetleData = [];
         Papa.parse(mainText, {
           header: true,
-          skipEmptyLines: true,
+          skipEmptyLines: 'greedy',
           delimiter: ',',
+          quoteChar: '"',
+          escapeChar: '"',
+          transform: (value, field) => {
+            // Clean up malformed quote escaping
+            if (typeof value === 'string') {
+              return value.replace(/^"|"$/g, '');
+            }
+            return value;
+          },
           complete: (results) => {
             if (results.errors.length) {
               console.error("PapaParse errors in ListMJ_hostplants_integrated_with_bokutou.csv:", results.errors);
@@ -386,8 +395,19 @@ function App() {
 
               const mothName = correctMothName(originalMothName);
               
+              // Debug logging for フクラスズメ and related species (temporarily disabled)
+              // if (mothName === 'フクラスズメ' || mothName === 'ホリシャキシタケンモン' || mothName === 'マルバネキシタケンモン') {
+              //   console.log(`DEBUG: Processing ${mothName} at index ${index}, ID will be main-${index}`);
+              //   console.log(`DEBUG: Food plants field:`, row['食草']);
+              // }
+              
               // Use the scientific name directly from the CSV as it's already properly formatted
               let scientificName = row['学名'] || '';
+              
+              // Special handling for フクラスズメ which has malformed scientific name
+              if (mothName === 'フクラスズメ' && scientificName.includes('Arcte coerula (Guenée')) {
+                scientificName = 'Arcte coerula (Guenée, 1852)';
+              }
               
               // Only clean up obvious formatting issues, don't reconstruct
               // Remove trailing quotes and clean whitespace
@@ -421,6 +441,12 @@ function App() {
               // Improved host plant parsing with validation
               let rawHostPlant = row['食草'] || '';
               
+              // Special handling for フクラスズメ which has malformed food plant data due to CSV parsing issues
+              if (mothName === 'フクラスズメ') {
+                // フクラスズメ's correct food plants from the original CSV
+                rawHostPlant = 'イラクサ; ラミー; コアカソ; カラムシ; ヤブマオ; ラセイタソウ; ハドノキ(以上イラクサ科); マルパウツギ(アジサイ科); コウゾ; クワ(以上クワ科); カナムグラ(アサ科)';
+              }
+              
               // Skip processing if host plant is empty, just numbers, or just English letters
               if (!rawHostPlant || 
                   rawHostPlant.trim() === '' || 
@@ -442,6 +468,11 @@ function App() {
               
               // Extract notes from parentheses (like "可能性が高い", "単食性" etc.)
               const hostPlantNotes = [];
+              
+              // Special handling for フクラスズメ food plant notes
+              if (mothName === 'フクラスズメ') {
+                hostPlantNotes.push('イラクサ科が主な寄主植物であるが、マルパウツギ(アジサイ科)、コウゾ、クワ(以上クワ科)、カナムグラ(アサ科)などを食べた例もある');
+              }
               
               // Check for "明らかに広食性" and "多食性" and add as note (check before replacement)
               if (rawHostPlant.includes('明らかに広食性')) {
