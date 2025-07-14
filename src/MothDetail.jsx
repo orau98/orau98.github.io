@@ -5,7 +5,6 @@ import InstagramEmbed from './components/InstagramEmbed';
 import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificName } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData } from './components/StructuredData';
-import { RelatedInsects } from './components/RelatedLinks';
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
@@ -568,12 +567,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             </div>
 
-            {/* 関連する昆虫のリンク */}
-            <RelatedInsects 
-              currentInsect={moth} 
-              allInsects={[...moths, ...butterflies, ...beetles, ...leafbeetles]} 
-              hostPlants={hostPlants} 
-            />
 
             {/* 関連種情報 - 食草ごとに表示 */}
             {Object.keys(relatedMothsByPlant).length > 0 && (
