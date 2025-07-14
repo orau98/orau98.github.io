@@ -35,7 +35,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
               </h1>
               
               <p className="text-lg md:text-xl text-blue-100/90 font-medium drop-shadow-lg max-w-2xl">
-                蛾と食草の美しい関係を探る、自然界の神秘的な繋がりを発見しよう
+                昆虫と食草の美しい関係を探る、自然界の意外な繋がりを発見しよう
               </p>
               
             </div>
