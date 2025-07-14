@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://h-amoto.github.io/insects-host-plant-explorer-/sitemap.xml
