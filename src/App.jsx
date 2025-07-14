@@ -1100,7 +1100,7 @@ function App() {
               .map(plant => plant.replace(/^(.+)"$/, '$1')) // Remove unclosed quotes at end
               .filter(plant => plant && plant.length > 0) // Remove empty strings
               .filter(plant => plant !== '科' && plant !== '属' && plant !== '類')
-              .filter(plant => !plant.endsWith('属')) // Remove items ending with 属, but keep family names (科)
+              .filter(plant => !plant.endsWith('属') || /^[A-Z][a-z]+属$/.test(plant)) // Remove items ending with 属, but keep scientific genus names like "Acer属"
               .filter(plant => plant.length > 1) // Remove single character items
               .filter(plant => plant.trim() !== '') // Additional empty string check
               .map(plant => normalizePlantName(plant)); // Normalize plant names
