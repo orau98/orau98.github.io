@@ -405,26 +405,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                           <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                                             {detail.plant}
                                           </span>
-                                        </div>
-                                        {/* Show plant parts information */}
-                                        {moth.remarks && moth.remarks.includes('部位:') && (
-                                          <div className="ml-2">
-                                            {moth.remarks.split(';').filter(remark => remark.includes('部位:')).map((remark, remarkIndex) => {
+                                          {/* Show plant parts information right next to plant name */}
+                                          {moth.remarks && moth.remarks.includes('部位:') && (
+                                            moth.remarks.split(';').filter(remark => remark.includes('部位:')).map((remark, remarkIndex) => {
                                               const parts = remark.split('部位:')[1]?.trim();
                                               if (parts && parts.includes(detail.plant)) {
                                                 const plantPart = parts.match(new RegExp(`${detail.plant}\\(([^)]+)\\)`))?.[1];
                                                 if (plantPart) {
                                                   return (
-                                                    <span key={remarkIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-1">
+                                                    <span key={remarkIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
                                                       {plantPart}
                                                     </span>
                                                   );
                                                 }
                                               }
                                               return null;
-                                            })}
-                                          </div>
-                                        )}
+                                            })
+                                          )}
+                                        </div>
                                       </div>
                                     </div>
                                   </Link>
@@ -450,26 +448,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                   <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                                     {plant}
                                   </span>
-                                </div>
-                                {/* Show plant parts information */}
-                                {moth.remarks && moth.remarks.includes('部位:') && (
-                                  <div className="ml-2">
-                                    {moth.remarks.split(';').filter(remark => remark.includes('部位:')).map((remark, remarkIndex) => {
+                                  {/* Show plant parts information right next to plant name */}
+                                  {moth.remarks && moth.remarks.includes('部位:') && (
+                                    moth.remarks.split(';').filter(remark => remark.includes('部位:')).map((remark, remarkIndex) => {
                                       const parts = remark.split('部位:')[1]?.trim();
                                       if (parts && parts.includes(plant)) {
                                         const plantPart = parts.match(new RegExp(`${plant}\\(([^)]+)\\)`))?.[1];
                                         if (plantPart) {
                                           return (
-                                            <span key={remarkIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-1">
+                                            <span key={remarkIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
                                               {plantPart}
                                             </span>
                                           );
                                         }
                                       }
                                       return null;
-                                    })}
-                                  </div>
-                                )}
+                                    })
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </Link>
