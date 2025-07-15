@@ -9,7 +9,8 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
   // Determine the correct route based on insect type
   const route = baseRoute === "" ? 
     (moth.type === 'butterfly' ? `/butterfly/${moth.id}` : 
-     moth.type === 'beetle' ? `/beetle/${moth.id}` : `/moth/${moth.id}`) : 
+     moth.type === 'beetle' ? `/beetle/${moth.id}` : 
+     moth.type === 'leafbeetle' ? `/leafbeetle/${moth.id}` : `/moth/${moth.id}`) : 
     `${baseRoute}/${moth.id}`;
   
   // Check if image exists for this moth
@@ -47,7 +48,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
   }, [imageUrl]);
     
   return (
-    <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-purple-300 dark:hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.02] transform">
+    <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform">
       <Link to={route} className="block">
         <div className="flex flex-col">
           {/* Enhanced Image section - much larger and more prominent */}
@@ -55,7 +56,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
             {imageExists ? (
               <img
                 src={imageUrl}
-                alt={moth.name}
+                alt={`${moth.name}（${moth.scientificName}）の写真`}
                 className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
@@ -73,10 +74,10 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
               </div>
             )}
             {!imageLoaded && imageExists && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50/80 to-blue-50/80 dark:from-purple-900/40 dark:to-blue-900/40">
+              <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 dark:bg-blue-900/40">
                 <div className="relative">
-                  <div className="w-8 h-8 border-3 border-purple-200 dark:border-purple-700 rounded-full"></div>
-                  <div className="absolute top-0 left-0 w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-8 h-8 border-3 border-blue-200 dark:border-blue-700 rounded-full"></div>
+                  <div className="absolute top-0 left-0 w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               </div>
             )}
@@ -99,9 +100,12 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm shadow-sm ${
                 moth.type === 'butterfly' ? 'bg-orange-500/90 text-white' : 
                 moth.type === 'beetle' ? 'bg-emerald-500/90 text-white' :
-                'bg-purple-500/90 text-white'
+                moth.type === 'leafbeetle' ? 'bg-amber-500/90 text-white' :
+                'bg-blue-500/90 text-white'
               }`}>
-                {moth.type === 'butterfly' ? '🦋 蝶' : moth.type === 'beetle' ? '🪲 甲虫' : '🦋 蛾'}
+                {moth.type === 'butterfly' ? '🦋 蝶' : 
+                 moth.type === 'beetle' ? '🪲 甲虫' : 
+                 moth.type === 'leafbeetle' ? '🐛 ハムシ' : '🦋 蛾'}
               </span>
             </div>
           </div>
@@ -109,7 +113,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
           {/* Enhanced Content section */}
           <div className="p-4">
             <div className="mb-2">
-              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2 leading-tight">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight">
                 {moth.name}
               </h3>
             </div>
@@ -249,15 +253,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   return (
     <div className={embedded ? "" : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden"}>
       {!embedded && (
-        <div className="p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 dark:from-purple-500/20 dark:to-pink-500/20 border-b border-purple-200/30 dark:border-purple-700/30">
+        <div className="p-6 bg-blue-500/10 dark:bg-blue-500/20 border-b border-blue-200/30 dark:border-blue-700/30">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+            <div className="p-2 bg-blue-500 rounded-lg">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+              <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {title}のリスト
               </h2>
               {classificationFilter && (
@@ -313,7 +317,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       )}
       
       <div className="p-6">
-        <div className="max-h-[800px] overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-purple-100 dark:scrollbar-thumb-purple-600 dark:scrollbar-track-purple-900/20">
+        <div className="max-h-[800px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 dark:scrollbar-thumb-blue-600 dark:scrollbar-track-blue-900/20">
           {currentMoths.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {currentMoths.map((moth, index) => (
@@ -324,7 +328,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-blue-400 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -336,7 +340,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         </div>
         
         {totalPages > 1 && (
-          <div className="mt-6 pt-4 border-t border-purple-200/30 dark:border-purple-700/30">
+          <div className="mt-6 pt-4 border-t border-blue-200/30 dark:border-blue-700/30">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

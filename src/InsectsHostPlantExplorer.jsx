@@ -3,19 +3,22 @@ import MothList from './components/MothList';
 import HostPlantList from './components/HostPlantList';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
+import { MainStructuredData } from './components/StructuredData';
 
-const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, plantDetails, theme, setTheme }) => {
+const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="space-y-6 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* 構造化データ */}
+      <MainStructuredData />
+      <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
         <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-3xl overflow-hidden shadow-2xl group">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/20 via-transparent to-slate-900/30 z-10"></div>
           
           <img 
             src={`${import.meta.env.BASE_URL}images/moths/Cucullia_argentea.jpg`} 
-            alt="蛾と食草の繋がりを示す美しい昆虫図鑑のメインビジュアル" 
+            alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）" 
             className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
             onError={(e) => { e.target.onerror = null; e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; e.target.alt='画像が見つかりません'; }}
           />
@@ -23,19 +26,19 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent z-20"></div>
           
           <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 leading-tight">
-                <span className="block bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="block bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl">
                   "繋がり"が見える
                 </span>
-                <span className="block bg-gradient-to-r from-purple-100 via-pink-100 to-teal-100 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="block bg-gradient-to-r from-blue-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl">
                   昆虫図鑑
                 </span>
               </h1>
               
               <p className="text-lg md:text-xl text-blue-100/90 font-medium drop-shadow-lg max-w-2xl">
-                蛾と食草の美しい関係を探る、自然界の神秘的な繋がりを発見しよう
+                昆虫と食草の美しい関係を探る、自然界の意外な繋がりを発見しよう
               </p>
               
             </div>
@@ -60,26 +63,25 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
           </div>
         </div>
         {/* タブナビゲーション */}
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
             {/* タブヘッダー */}
             <div className="flex border-b border-slate-200/30 dark:border-slate-700/30">
               <button
                 onClick={() => setActiveTab('insects')}
                 className={`flex-1 px-6 py-4 text-lg font-semibold transition-all duration-200 relative ${
                   activeTab === 'insects'
-                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50/50 dark:bg-purple-900/20'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-purple-500 dark:hover:text-purple-400 hover:bg-purple-50/30 dark:hover:bg-purple-900/10'
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-blue-50/30 dark:hover:bg-blue-900/10'
                 }`}
               >
                 <div className="flex items-center justify-center space-x-3">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span>昆虫 ({[...moths, ...butterflies, ...beetles].length})</span>
+                  <span>昆虫 ({[...moths, ...butterflies, ...beetles, ...leafbeetles].length})</span>
                 </div>
                 {activeTab === 'insects' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-t-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-t-lg"></div>
                 )}
               </button>
               
@@ -98,7 +100,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   <span>食草 ({Object.keys(hostPlants).length})</span>
                 </div>
                 {activeTab === 'plants' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-t-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-t-lg"></div>
                 )}
               </button>
             </div>
@@ -111,7 +113,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 {activeTab === 'insects' && (
                   <div className="p-0">
                     <MothList 
-                      moths={[...moths, ...butterflies, ...beetles]} 
+                      moths={[...moths, ...butterflies, ...beetles, ...leafbeetles]} 
                       title="昆虫" 
                       baseRoute="" 
                       embedded={true}
@@ -134,21 +136,19 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 )}
               </div>
             </div>
-          </div>
         </div>
         
         {/* Instagram セクション */}
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
-            <div className="p-4 bg-gradient-to-r from-slate-500/10 to-gray-500/10 dark:from-slate-500/20 dark:to-gray-500/20 border-b border-slate-200/30 dark:border-slate-700/30">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden">
+            <div className="p-4 bg-slate-500/10 dark:bg-slate-500/20 border-b border-slate-200/30 dark:border-slate-700/30">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-slate-600 to-gray-600 rounded-lg">
+                <div className="p-2 bg-slate-600 rounded-lg">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-bold bg-gradient-to-r from-slate-700 to-gray-700 dark:from-slate-300 dark:to-gray-300 bg-clip-text text-transparent">
+                  <h2 className="text-xl font-bold text-slate-700 dark:text-slate-300">
                     サイトについて
                   </h2>
                 </div>
@@ -163,7 +163,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
                       サイト管理者について
                     </h3>
-                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -203,32 +203,32 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                     <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
                       サイトポリシー
                     </h3>
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの利用について</p>
+                            <p className="font-medium mb-1">データについて</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトのデータは学術研究・教育目的での利用を歓迎します。商用利用の場合は事前にご相談ください。
+                              本サイトは既存の図鑑や学術文献からのデータを編集・構成したものです。原典に基づくため誤りや古い情報が含まれる可能性があります。重要な用途での利用時は必ず原典をご確認ください。
                             </p>
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの正確性について</p>
+                            <p className="font-medium mb-1">写真について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              可能な限り正確なデータ提供に努めていますが、誤りがある場合があります。重要な用途での利用時は原典をご確認ください。
+                              掲載写真は全て管理者が撮影したものです。学術研究・教育目的での利用を歓迎しますが、商用利用の場合は事前にご相談ください。
                             </p>
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">免責事項</p>
+                            <p className="font-medium mb-1">データの利用・著作権について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトの情報利用により生じた損害について、管理者は一切の責任を負いません。
+                              掲載データは学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。学術研究・教育目的での利用を歓迎します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
                             </p>
                           </div>
                         </div>
@@ -259,10 +259,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 <div className="space-y-4">
                   <div className="mb-6">
                     <div className="flex items-center space-x-3 mb-3">
-                      <div className="p-2 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg">
+                      <div className="p-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg">
                         <InstagramIcon className="w-5 h-5 text-white" alt="Instagramアイコン" />
                       </div>
-                      <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 dark:from-pink-400 dark:to-rose-400 bg-clip-text text-transparent">
+                      <h3 className="text-lg font-semibold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
                         Instagram 最新投稿
                       </h3>
                     </div>
@@ -273,7 +273,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                   
                   {/* Instagram埋め込み - 個別投稿表示 */}
                   <div className="space-y-4">
-                    <div className="instagram-wrapper border-2 border-pink-200/50 dark:border-pink-700/50 rounded-xl p-3 bg-gradient-to-br from-pink-50/30 to-rose-50/30 dark:from-pink-900/10 dark:to-rose-900/10">
+                    <div className="instagram-wrapper border-2 border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-xl p-3 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
                       <InstagramEmbed />
                     </div>
                   </div>
@@ -281,7 +281,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
                 </div>
               </div>
             </div>
-          </div>
         </div>
         
         {/* Debug info */}
@@ -289,8 +288,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, hostPlants, pla
           <p>Moths: {moths.length}</p>
           <p>Butterflies: {butterflies.length}</p>
           <p>Beetles: {beetles.length}</p>
-          <p>Combined: {[...moths, ...butterflies, ...beetles].length}</p>
+          <p>Leafbeetles: {leafbeetles.length}</p>
+          <p>Combined: {[...moths, ...butterflies, ...beetles, ...leafbeetles].length}</p>
           <p>First beetle: {beetles[0]?.name || 'None'}</p>
+          <p>First leafbeetle: {leafbeetles[0]?.name || 'None'}</p>
         </div>
       </div>
     </div>
