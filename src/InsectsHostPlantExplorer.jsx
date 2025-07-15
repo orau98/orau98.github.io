@@ -208,9 +208,18 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データについて</p>
+                            <p className="font-medium mb-1">はじめに</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              本サイトは既存の図鑑や学術文献からのデータを編集・構成したものです。原典に基づくため誤りや古い情報が含まれる可能性があります。重要な用途での利用時は必ず原典をご確認ください。
+                              当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium mb-1">免責事項</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400">
+                              データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。当サイトの情報を利用したことによって生じた、いかなる損害についても責任を負いかねますので、あらかじめご了承ください。
                             </p>
                           </div>
                         </div>
@@ -219,16 +228,16 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">写真について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              掲載写真は全て管理者が撮影したものです。学術研究・教育目的での利用を歓迎しますが、商用利用の場合は事前にご相談ください。
+                              掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、以下のGoogleフォームよりお気軽にご連絡ください。
                             </p>
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium mb-1">データの利用・著作権について</p>
+                            <p className="font-medium mb-1">データについて</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              掲載データは学術的引用の範囲内での利用を意図しており、著作権は各原典の著者・出版社に帰属します。学術研究・教育目的での利用を歓迎します。商用利用や大量データの転用をお考えの場合は事前にご相談ください。
+                              掲載データは、学術的引用の範囲内での利用を想定しており、元となる情報の著作権は各原典の著者・出版社に帰属します。
                             </p>
                           </div>
                         </div>
@@ -237,16 +246,7 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">お問い合わせ</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              データの誤りや修正依頼は
-                              <a 
-                                href="https://github.com/h-amoto/insects-host-plant-explorer-/issues" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
-                              >
-                                GitHub Issues
-                              </a>
-                              までお願いします。
+                              誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、以下のGoogleフォームまでお寄せください。
                             </p>
                           </div>
                         </div>
