@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificName } from './utils/scientificNameFormatter.jsx';
+import { PlantStructuredData } from './components/StructuredData';
+import { RelatedPlants } from './components/RelatedLinks';
 
 const DetailCard = ({ title, children }) => (
-  <div className="bg-neutral-50 dark:bg-neutral-800 p-6 rounded-xl shadow-xl">
-    <h2 className="text-2xl font-bold mb-4 text-primary-600 dark:text-primary-400">{title}</h2>
+  <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-slate-700/50">
+    <h2 className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-400">{title}</h2>
     {children}
   </div>
 );
@@ -89,7 +91,7 @@ const PlantImageGallery = ({ images }) => {
 
   if (availableImages.length === 0) {
     return (
-      <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
+      <div className="text-center py-8 text-slate-500 dark:text-slate-400">
         <p>この植物の写真はまだ登録されていません。</p>
       </div>
     );
@@ -112,10 +114,10 @@ const PlantImageGallery = ({ images }) => {
         {mainImage && (
           <div className="relative">
             <div 
-              className="group relative bg-gradient-to-br from-white to-gray-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer"
+              className="group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer"
               onClick={() => handleImageClick(mainImage)}
             >
-              <div className="relative bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 overflow-hidden aspect-[16/10] min-h-[500px]">
+              <div className="relative bg-emerald-50 dark:bg-emerald-900/20 overflow-hidden aspect-[16/10] min-h-[500px]">
                 <img 
                   src={mainImage.finalSrc}
                   alt={mainImage.alt}
@@ -152,7 +154,7 @@ const PlantImageGallery = ({ images }) => {
                   }`}
                   onClick={() => setMainImage(image)}
                 >
-                  <div className="relative aspect-square bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20">
+                  <div className="relative aspect-square bg-emerald-50 dark:bg-emerald-900/20">
                     <img 
                       src={image.finalSrc}
                       alt={image.alt}
@@ -184,7 +186,7 @@ const PlantImageGallery = ({ images }) => {
 };
 
 
-const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
 
@@ -214,19 +216,24 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
   
   const plantImages = getPlantImages(decodedPlantName);
   
-  // Separate moths and butterflies that use this plant
-  const allInsects = [...moths, ...butterflies];
+  // Separate moths, butterflies, beetles and leafbeetles that use this plant
+  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const insectsOnThisPlant = allInsects.filter(insect => 
     insect.hostPlants.includes(decodedPlantName)
   );
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link to="/" className="text-primary-600 dark:text-primary-400 hover:underline mb-6 inline-block">← リストに戻る</Link>
+      {/* 構造化データ */}
+      <PlantStructuredData 
+        plant={{ name: decodedPlantName }} 
+        relatedInsects={insectsOnThisPlant} 
+      />
+      <Link to="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-block">← リストに戻る</Link>
       
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-primary-600 dark:text-primary-400">{decodedPlantName}</h1>
-        <dl className="text-xl text-neutral-500 dark:text-neutral-400 mt-1">
+        <h1 className="text-4xl md:text-5xl font-bold text-blue-600 dark:text-blue-400">{decodedPlantName}</h1>
+        <dl className="text-xl text-slate-500 dark:text-slate-400 mt-1">
           <dt className="font-semibold">科名:</dt>
           <dd className="ml-4">{details.family}</dd>
           {details.scientificName && (
@@ -242,7 +249,7 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
         {/* Full-width photo gallery */}
         <DetailCard title="植物写真ギャラリー">
           <PlantImageGallery images={plantImages} />
-          <div className="mt-6 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl border border-emerald-200/50 dark:border-emerald-700/50">
+          <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200/50 dark:border-emerald-700/50">
             <p className="text-emerald-700 dark:text-emerald-300 text-sm leading-relaxed">
               <span className="font-semibold">🌿 植物の特徴:</span> この植物の詳細な説明や生態学的特徴についての情報がここに表示されます。
             </p>
@@ -256,10 +263,10 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
                 {/* Moths section */}
                 {insectsOnThisPlant.filter(insect => insect.type !== 'butterfly').length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-3 text-purple-600 dark:text-purple-400">蛾</h3>
+                    <h3 className="text-lg font-semibold mb-3 text-blue-600 dark:text-blue-400">蛾</h3>
                     <div className="flex flex-wrap gap-2">
                       {insectsOnThisPlant.filter(insect => insect.type !== 'butterfly').map(moth => (
-                        <Link key={moth.id} to={`/moth/${moth.id}`} className="bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-full text-sm text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors">
+                        <Link key={moth.id} to={`/moth/${moth.id}`} className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full text-sm text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors">
                           {moth.name}
                         </Link>
                       ))}
@@ -270,10 +277,10 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
                 {/* Butterflies section */}
                 {insectsOnThisPlant.filter(insect => insect.type === 'butterfly').length > 0 && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-3 text-orange-600 dark:text-orange-400">蝶</h3>
+                    <h3 className="text-lg font-semibold mb-3 text-emerald-600 dark:text-emerald-400">蝶</h3>
                     <div className="flex flex-wrap gap-2">
                       {insectsOnThisPlant.filter(insect => insect.type === 'butterfly').map(butterfly => (
-                        <Link key={butterfly.id} to={`/butterfly/${butterfly.id}`} className="bg-orange-100 dark:bg-orange-900/30 px-3 py-1 rounded-full text-sm text-orange-700 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors">
+                        <Link key={butterfly.id} to={`/butterfly/${butterfly.id}`} className="bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full text-sm text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors">
                           {butterfly.name}
                         </Link>
                       ))}
@@ -282,9 +289,16 @@ const HostPlantDetail = ({ moths, butterflies = [], hostPlants, plantDetails }) 
                 )}
               </>
             ) : (
-              <p className="text-neutral-500 dark:text-neutral-400">この食草を食べる昆虫の情報はありません。</p>
+              <p className="text-slate-500 dark:text-slate-400">この食草を食べる昆虫の情報はありません。</p>
             )}
         </DetailCard>
+        
+        {/* 関連する植物と昆虫のリンク */}
+        <RelatedPlants 
+          currentPlant={decodedPlantName} 
+          allInsects={allInsects} 
+          hostPlants={hostPlants} 
+        />
       </div>
     </div>
   );

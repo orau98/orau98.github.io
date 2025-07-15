@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
+Allow: /images/
+Allow: /assets/
+Crawl-delay: 1
+
+# Google Bot specific settings
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing Bot specific settings  
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
 
 Sitemap: https://h-amoto.github.io/insects-host-plant-explorer-/sitemap.xml
+
+# Additional meta information
+# Host: h-amoto.github.io

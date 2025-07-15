@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 
-const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
+const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const location = useLocation();
   
   // Get current moth or plant data for classification display
@@ -18,6 +18,39 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
           name: moth.name,
           scientificName: moth.scientificName,
           classification: moth.classification
+        };
+      }
+    } else if (pathParts[1] === 'butterfly' && pathParts[2]) {
+      const butterflyId = pathParts[2];
+      const butterfly = butterflies.find(b => b.id === butterflyId);
+      if (butterfly) {
+        return {
+          type: 'butterfly',
+          name: butterfly.name,
+          scientificName: butterfly.scientificName,
+          classification: butterfly.classification
+        };
+      }
+    } else if (pathParts[1] === 'beetle' && pathParts[2]) {
+      const beetleId = pathParts[2];
+      const beetle = beetles.find(b => b.id === beetleId);
+      if (beetle) {
+        return {
+          type: 'beetle',
+          name: beetle.name,
+          scientificName: beetle.scientificName,
+          classification: beetle.classification
+        };
+      }
+    } else if (pathParts[1] === 'leafbeetle' && pathParts[2]) {
+      const leafbeetleId = pathParts[2];
+      const leafbeetle = leafbeetles.find(l => l.id === leafbeetleId);
+      if (leafbeetle) {
+        return {
+          type: 'leafbeetle',
+          name: leafbeetle.name,
+          scientificName: leafbeetle.scientificName,
+          classification: leafbeetle.classification
         };
       }
     } else if (pathParts[1] === 'plant' && pathParts[2]) {
@@ -43,15 +76,15 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="group flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
               </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse"></div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-2xl font-black bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:via-purple-200 group-hover:to-teal-200 transition-all duration-300">
+              <h1 className="text-2xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-emerald-200 transition-all duration-300">
                 "繋がり"が見える昆虫図鑑
               </h1>
               <p className="text-xs text-slate-400 font-medium tracking-wide -mt-1">
@@ -59,7 +92,7 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
               </p>
             </div>
             <div className="sm:hidden">
-              <h1 className="text-xl font-black bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+              <h1 className="text-xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                 "繋がり"が見える昆虫図鑑
               </h1>
             </div>
@@ -71,7 +104,7 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
               <div className="hidden lg:flex items-center space-x-3 bg-white/5 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/10">
                 {speciesInfo.type === 'moth' ? (
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
                       {speciesInfo.classification?.familyJapanese && (
@@ -81,7 +114,7 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
                       {speciesInfo.family && (
@@ -104,7 +137,7 @@ const Header = ({ theme, setTheme, moths, hostPlants, plantDetails }) => {
                 ) : (
                   <MoonIcon className="h-5 w-5 text-blue-400 group-hover:text-blue-300 transition-colors" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-blue-400/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 bg-blue-400/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
             </button>
           </div>
