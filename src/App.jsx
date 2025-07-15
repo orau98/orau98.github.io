@@ -110,6 +110,12 @@ function App() {
           normalized = normalized.replace(/（[^）]*科[^）]*）/g, ''); // Remove (科名) patterns
           normalized = normalized.replace(/\([^)]*科[^)]*\)/g, ''); // Remove (family) patterns
           
+          // Remove "以上〇〇科" patterns like "以上バラ科" -> ""
+          normalized = normalized.replace(/以上[^科]*科/g, '');
+          
+          // Remove "ほか" and similar patterns
+          normalized = normalized.replace(/ほか/g, '');
+          
           // Remove incomplete parentheses like "オオカメノキ（" -> "オオカメノキ"
           normalized = normalized.replace(/（[^）]*$/g, ''); // Remove opening parentheses without closing
           normalized = normalized.replace(/\([^)]*$/g, ''); // Remove opening parentheses without closing
@@ -208,6 +214,7 @@ function App() {
             /広食性/,
             /多食性/,
             /単食性/,
+            /ほか/,
             /^の$/,
             /^を$/,
             /^が$/,
@@ -349,7 +356,8 @@ function App() {
               }
             }
           }
-          return name; // Return original name if no correction is found
+          // Return empty string if not found in YList (this will be filtered out)
+          return '';
         };
 
         // Process hamushi_species.csv first to create hamushiMap
@@ -627,6 +635,7 @@ function App() {
                       /育つ/,
                       /成長/,
                       /飼育/,
+                      /ほか/,
                       /判明/,
                       /植物/,
                       /樹木/,
@@ -666,17 +675,23 @@ function App() {
                   if (naturalCondition) {
                     const plants = naturalCondition.split(/[、，;]/);
                     plants.forEach(plant => {
-                      plant = plant.trim().replace(/の?カビ|など|類/g, '');
+                      plant = plant.trim().replace(/の?カビ|など|類|ほか/g, '');
+                      // Remove "以上〇〇科" patterns
+                      plant = plant.replace(/以上[^科]*科/g, '');
                       // Remove notes in parentheses from plant names
                       plant = plant.replace(/（[^）]*）/g, '');
                       plant = plant.replace(/\([^)]*\)/g, '');
                       if (plant.length > 1 && isValidPlantName(plant)) {
                         const normalizedPlant = normalizePlantName(plant);
-                        hostPlantEntries.push({
-                          plant: normalizedPlant,
-                          condition: '自然状態',
-                          familyFromMainCsv: familyFromMainCsv
-                        });
+                        const correctedPlantName = correctPlantName(normalizedPlant);
+                        // Only add if the corrected plant name is not empty (i.e., found in YList)
+                        if (correctedPlantName && correctedPlantName.trim()) {
+                          hostPlantEntries.push({
+                            plant: correctedPlantName,
+                            condition: '自然状態',
+                            familyFromMainCsv: familyFromMainCsv
+                          });
+                        }
                       }
                     });
                   }
@@ -715,6 +730,9 @@ function App() {
                       plant = plant.replace(/などマメ科植物/g, '');
                       plant = plant.replace(/など/g, '');
                       plant = plant.replace(/類$/g, '');
+                      plant = plant.replace(/ほか/g, '');
+                      // Remove "以上〇〇科" patterns
+                      plant = plant.replace(/以上[^科]*科/g, '');
                       
                       // Remove notes in parentheses from plant names
                       plant = plant.replace(/（[^）]*）/g, '');
@@ -726,12 +744,18 @@ function App() {
                       
                       if (plant.length > 1 && isValidPlantName(plant)) {
                         const normalizedPlant = normalizePlantName(plant);
-                        hostPlantEntries.push({
-                          plant: normalizedPlant,
-                          condition: '飼育条件下',
-                          familyFromMainCsv: familyFromMainCsv
-                        });
-                        console.log('DEBUG: Added cultured plant:', normalizedPlant);
+                        const correctedPlantName = correctPlantName(normalizedPlant);
+                        // Only add if the corrected plant name is not empty (i.e., found in YList)
+                        if (correctedPlantName && correctedPlantName.trim()) {
+                          hostPlantEntries.push({
+                            plant: correctedPlantName,
+                            condition: '飼育条件下',
+                            familyFromMainCsv: familyFromMainCsv
+                          });
+                          console.log('DEBUG: Added cultured plant:', correctedPlantName);
+                        } else {
+                          console.log('DEBUG: Rejected cultured plant (not in YList):', plant);
+                        }
                       } else {
                         console.log('DEBUG: Rejected cultured plant:', plant, 'Valid:', isValidPlantName(plant));
                       }
@@ -741,11 +765,15 @@ function App() {
                   generalPlants.forEach(plant => {
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
-                      hostPlantEntries.push({
-                        plant: normalizedPlant,
-                        condition: '',
-                        familyFromMainCsv: familyFromMainCsv
-                      });
+                      const correctedPlantName = correctPlantName(normalizedPlant);
+                      // Only add if the corrected plant name is not empty (i.e., found in YList)
+                      if (correctedPlantName && correctedPlantName.trim()) {
+                        hostPlantEntries.push({
+                          plant: correctedPlantName,
+                          condition: '',
+                          familyFromMainCsv: familyFromMainCsv
+                        });
+                      }
                     }
                   });
                   
@@ -810,6 +838,7 @@ function App() {
                       /育つ/,
                       /成長/,
                       /飼育/,
+                      /ほか/,
                       /判明/,
                       /植物/,
                       /樹木/,
@@ -857,7 +886,9 @@ function App() {
                   
                   const plants = tempHostPlant.split(/[;、，,]/);
                   plants.forEach(plant => {
-                    plant = plant.trim().replace(/など|類/g, '');
+                    plant = plant.trim().replace(/など|類|ほか/g, '');
+                    // Remove "以上〇〇科" patterns
+                    plant = plant.replace(/以上[^科]*科/g, '');
                     // Clean up any remaining formatting
                     plant = plant.replace(/^\s*[\,\、\，]\s*/, ''); // Remove leading separators
                     plant = plant.replace(/\s*[\,\、\，]\s*$/, ''); // Remove trailing separators
@@ -868,11 +899,14 @@ function App() {
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
                       const correctedPlantName = correctPlantName(wameiMap[normalizedPlant] || normalizedPlant);
-                      hostPlantEntries.push({
-                        plant: correctedPlantName,
-                        condition: '',
-                        familyFromMainCsv: familyFromMainCsv
-                      });
+                      // Only add if the corrected plant name is not empty (i.e., found in YList)
+                      if (correctedPlantName && correctedPlantName.trim()) {
+                        hostPlantEntries.push({
+                          plant: correctedPlantName,
+                          condition: '',
+                          familyFromMainCsv: familyFromMainCsv
+                        });
+                      }
                     }
                   });
                   // Add all extracted notes to hostPlantNotes
@@ -1103,7 +1137,9 @@ function App() {
               .filter(plant => !plant.endsWith('属') || /^[A-Z][a-z]+属$/.test(plant)) // Remove items ending with 属, but keep scientific genus names like "Acer属"
               .filter(plant => plant.length > 1) // Remove single character items
               .filter(plant => plant.trim() !== '') // Additional empty string check
-              .map(plant => normalizePlantName(plant)); // Normalize plant names
+              .map(plant => normalizePlantName(plant)) // Normalize plant names
+              .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
+              .filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
             
             // Remove duplicates and final empty string check
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
@@ -1178,7 +1214,9 @@ function App() {
               .map(plant => plant.trim())
               .filter(plant => plant && plant.length > 0)
               .filter(plant => plant.trim() !== '')
-              .map(plant => normalizePlantName(plant));
+              .map(plant => normalizePlantName(plant))
+              .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
+              .filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
           }
 
@@ -1244,7 +1282,9 @@ function App() {
               .map(plant => plant.trim())
               .filter(plant => plant && plant.length > 0)
               .filter(plant => plant.trim() !== '')
-              .map(plant => normalizePlantName(plant));
+              .map(plant => normalizePlantName(plant))
+              .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
+              .filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
           }
 
