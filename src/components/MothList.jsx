@@ -199,28 +199,61 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     return Array.from(uniqueSuggestions).slice(0, 10);
   }, [moths, searchTerm]);
 
+  // Keep track of which images actually exist
+  const [imageExistenceCache, setImageExistenceCache] = useState({});
+  
+  // Create safe filename function
+  const createSafeFilename = (scientificName) => {
+    if (!scientificName) return '';
+    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+    cleanedName = cleanedName.replace(/\s+/g, '_');
+    return cleanedName;
+  };
+  
+  // Function to check if an image actually exists
+  const checkImageExists = React.useCallback((moth) => {
+    return new Promise((resolve) => {
+      const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
+      const imageUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
+      
+      // Check cache first
+      if (imageExistenceCache[imageUrl] !== undefined) {
+        resolve(imageExistenceCache[imageUrl]);
+        return;
+      }
+      
+      const img = new Image();
+      img.onload = () => {
+        setImageExistenceCache(prev => ({ ...prev, [imageUrl]: true }));
+        resolve(true);
+      };
+      img.onerror = () => {
+        setImageExistenceCache(prev => ({ ...prev, [imageUrl]: false }));
+        resolve(false);
+      };
+      img.src = imageUrl;
+    });
+  }, [imageExistenceCache]);
+
   // Sort moths to prioritize those with images
   const sortedMoths = useMemo(() => {
     return [...filteredMoths].sort((a, b) => {
-      // Create safe filename check function
-      const createSafeFilename = (scientificName) => {
-        if (!scientificName) return '';
-        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-        cleanedName = cleanedName.replace(/\s+/g, '_');
-        return cleanedName;
-      };
-      
       // Check if species has an Instagram post (considered as having image)
       const hasInstagramA = a.instagramUrl && a.instagramUrl.trim();
       const hasInstagramB = b.instagramUrl && b.instagramUrl.trim();
       
-      // Check if species has a static image file (based on filename existence)
-      const hasStaticImageA = a.scientificFilename || createSafeFilename(a.scientificName);
-      const hasStaticImageB = b.scientificFilename || createSafeFilename(b.scientificName);
+      // Check if species has a static image file that actually exists
+      const safeFilenameA = a.scientificFilename || createSafeFilename(a.scientificName);
+      const safeFilenameB = b.scientificFilename || createSafeFilename(b.scientificName);
+      const imageUrlA = `${import.meta.env.BASE_URL}images/moths/${safeFilenameA}.jpg`;
+      const imageUrlB = `${import.meta.env.BASE_URL}images/moths/${safeFilenameB}.jpg`;
+      
+      const hasStaticImageA = imageExistenceCache[imageUrlA] === true;
+      const hasStaticImageB = imageExistenceCache[imageUrlB] === true;
       
       // Priority: Instagram posts first, then static images, then others
       const scoreA = (hasInstagramA ? 100 : 0) + (hasStaticImageA ? 10 : 0);
@@ -233,7 +266,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       // If scores are equal, sort alphabetically by name
       return a.name.localeCompare(b.name, 'ja');
     });
-  }, [filteredMoths]);
+  }, [filteredMoths, imageExistenceCache]);
 
   const totalPages = Math.ceil(sortedMoths.length / itemsPerPage);
   const currentMoths = useMemo(() => {
@@ -249,6 +282,18 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   React.useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearchTerm]);
+
+  // Pre-load image existence for visible moths
+  React.useEffect(() => {
+    const checkImagesForMoths = async () => {
+      const promises = currentMoths.map(moth => checkImageExists(moth));
+      await Promise.all(promises);
+    };
+    
+    if (currentMoths.length > 0) {
+      checkImagesForMoths();
+    }
+  }, [currentMoths, checkImageExists]);
 
   return (
     <div className={embedded ? "" : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden"}>
