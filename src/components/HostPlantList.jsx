@@ -113,7 +113,7 @@ const HostPlantListItem = ({ plant, mothNames }) => {
     <Link to={`/plant/${encodeURIComponent(plant)}`} className="block">
       <div className="flex flex-col">
         {/* Enhanced Plant Image/Icon section */}
-        <div className="w-full relative overflow-hidden rounded-t-xl">
+        <div className="w-full relative overflow-hidden rounded-t-[11px]">
           {imageExists ? (
             // Actual plant image
             <div className="relative w-full aspect-[4/3]">
