@@ -49,6 +49,15 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
                     e.target.nextSibling.style.display = 'flex';
                   }}
                 />
+                {/* Names overlay at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
+                  <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg">
+                    {moth.name}
+                  </h3>
+                  <p className="text-white/90 text-sm italic drop-shadow-md">
+                    {formatScientificName(moth.scientificName)}
+                  </p>
+                </div>
               </div>
             ) : null}
             
@@ -60,6 +69,15 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
                   </svg>
                   <p className="text-xs text-slate-500 dark:text-slate-400">画像なし</p>
                 </div>
+                {/* Names overlay at bottom for no-image case */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-600/80 via-slate-600/60 to-transparent p-4">
+                  <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg">
+                    {moth.name}
+                  </h3>
+                  <p className="text-white/90 text-sm italic drop-shadow-md">
+                    {formatScientificName(moth.scientificName)}
+                  </p>
+                </div>
               </div>
             )}
             
@@ -67,14 +85,6 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
           
           {/* Enhanced Content section */}
           <div className="p-4">
-            <div className="mb-2">
-              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight">
-                {moth.name}
-              </h3>
-            </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-3 line-clamp-1 italic">
-              {formatScientificName(moth.scientificName)}
-            </p>
             <div className="space-y-2">
               <div className="flex items-start space-x-2">
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 flex-shrink-0">

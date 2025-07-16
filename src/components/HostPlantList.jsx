@@ -126,6 +126,12 @@ const HostPlantListItem = ({ plant, mothNames }) => {
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageError(true)}
               />
+              {/* Plant name overlay at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
+                <h3 className="text-white font-bold text-lg drop-shadow-lg">
+                  {plant}
+                </h3>
+              </div>
             </div>
           ) : (
             // Fallback to beautiful plant icon
@@ -138,6 +144,12 @@ const HostPlantListItem = ({ plant, mothNames }) => {
                 <div className="px-3 py-1 bg-emerald-500/20 rounded-full backdrop-blur-sm">
                   <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">植物</p>
                 </div>
+              </div>
+              {/* Plant name overlay at bottom for no-image case */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-emerald-600/80 via-emerald-600/60 to-transparent p-4">
+                <h3 className="text-white font-bold text-lg drop-shadow-lg">
+                  {plant}
+                </h3>
               </div>
             </div>
           )}
