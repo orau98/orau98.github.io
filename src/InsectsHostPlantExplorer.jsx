@@ -158,46 +158,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
             <div className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-6">
-                  {/* サイト管理者について */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
-                      サイト管理者について
-                    </h3>
-                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
-                      <div className="space-y-4">
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <p className="text-slate-700 dark:text-slate-300 font-medium">
-                            フィールド好きの大学院生
-                          </p>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <div className="text-slate-700 dark:text-slate-300">
-                            <p className="font-medium">専門分野：行動生態学、化学生態学</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                              ※分類学は専門ではありません
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-                          <p className="text-slate-700 dark:text-slate-300">
-                            詳しいプロフィールは
-                            <a 
-                              href="https://researchmap.jp/HAkimoto" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 underline decoration-emerald-300 hover:decoration-emerald-500 transition-colors ml-1"
-                            >
-                              こちら
-                            </a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* サイトポリシー */}
                   <div>
                     <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
@@ -257,6 +217,46 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                 
                 {/* Instagram投稿の埋め込み - 複数の投稿を表示できます */}
                 <div className="space-y-4">
+                  {/* サイト管理者について */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                      サイト管理者について
+                    </h3>
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
+                      <div className="space-y-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-slate-700 dark:text-slate-300 font-medium">
+                            フィールド好きの大学院生
+                          </p>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="text-slate-700 dark:text-slate-300">
+                            <p className="font-medium">専門分野：行動生態学、化学生態学</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                              ※分類学は専門ではありません
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-slate-700 dark:text-slate-300">
+                            詳しいプロフィールは
+                            <a 
+                              href="https://researchmap.jp/HAkimoto" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 underline decoration-emerald-300 hover:decoration-emerald-500 transition-colors ml-1"
+                            >
+                              こちら
+                            </a>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="mb-6">
                     <div className="flex items-center space-x-3 mb-3">
                       <div className="p-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg">

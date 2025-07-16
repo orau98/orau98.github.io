@@ -13,11 +13,6 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
      moth.type === 'leafbeetle' ? `/leafbeetle/${moth.id}` : `/moth/${moth.id}`) : 
     `${baseRoute}/${moth.id}`;
   
-  // Check if image exists for this moth
-  const [imageExists, setImageExists] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  
   // Create safe filename for image checking
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';
@@ -33,19 +28,8 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
   const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
   const imageUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
   
-  React.useEffect(() => {
-    // Check if image exists
-    const img = new Image();
-    img.onload = () => {
-      setImageExists(true);
-      setImageLoaded(true);
-    };
-    img.onerror = () => {
-      setImageExists(false);
-      setImageError(true);
-    };
-    img.src = imageUrl;
-  }, [imageUrl]);
+  // Simple check: if we have a filename, assume image exists
+  const hasImageFilename = !!(moth.scientificFilename || safeFilename);
     
   return (
     <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform">
@@ -53,44 +37,28 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
         <div className="flex flex-col">
           {/* Enhanced Image section - much larger and more prominent */}
           <div className="w-full h-48 relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800">
-            {imageExists ? (
+            {hasImageFilename ? (
               <img
                 src={imageUrl}
                 alt={`${moth.name}（${moth.scientificName}）の写真`}
-                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setImageError(true)}
+                className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
+                loading="lazy"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
               />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="text-center">
-                  <svg className="w-16 h-16 text-slate-400 dark:text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">画像なし</p>
-                </div>
+            ) : null}
+            
+            <div className={`w-full h-full flex items-center justify-center ${hasImageFilename ? 'hidden' : ''}`}>
+              <div className="text-center">
+                <svg className="w-16 h-16 text-slate-400 dark:text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
+                </svg>
+                <p className="text-xs text-slate-500 dark:text-slate-400">画像なし</p>
               </div>
-            )}
-            {!imageLoaded && imageExists && (
-              <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 dark:bg-blue-900/40">
-                <div className="relative">
-                  <div className="w-8 h-8 border-3 border-blue-200 dark:border-blue-700 rounded-full"></div>
-                  <div className="absolute top-0 left-0 w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              </div>
-            )}
-            {imageExists && (
-              <div className="absolute top-2 right-2">
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/90 text-white backdrop-blur-sm shadow-sm">
-                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                  </svg>
-                  画像あり
-                </span>
-              </div>
-            )}
+            </div>
+            
             
             {/* Gradient overlay for better text readability */}
             <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -199,74 +167,55 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     return Array.from(uniqueSuggestions).slice(0, 10);
   }, [moths, searchTerm]);
 
-  // Keep track of which images actually exist
-  const [imageExistenceCache, setImageExistenceCache] = useState({});
+  // Load image filenames list for lightweight sorting
+  const [imageFilenames, setImageFilenames] = useState(new Set());
   
-  // Create safe filename function
-  const createSafeFilename = (scientificName) => {
-    if (!scientificName) return '';
-    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-    cleanedName = cleanedName.replace(/\s+/g, '_');
-    return cleanedName;
-  };
-  
-  // Function to check if an image actually exists
-  const checkImageExists = React.useCallback((moth) => {
-    return new Promise((resolve) => {
-      const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
-      const imageUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
-      
-      // Check cache first
-      if (imageExistenceCache[imageUrl] !== undefined) {
-        resolve(imageExistenceCache[imageUrl]);
-        return;
+  useEffect(() => {
+    const loadImageFilenames = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
+        const text = await response.text();
+        const filenames = new Set(text.trim().split('\n').filter(Boolean));
+        setImageFilenames(filenames);
+      } catch (error) {
+        console.debug('Could not load image filenames:', error);
       }
-      
-      const img = new Image();
-      img.onload = () => {
-        setImageExistenceCache(prev => ({ ...prev, [imageUrl]: true }));
-        resolve(true);
-      };
-      img.onerror = () => {
-        setImageExistenceCache(prev => ({ ...prev, [imageUrl]: false }));
-        resolve(false);
-      };
-      img.src = imageUrl;
-    });
-  }, [imageExistenceCache]);
+    };
+    loadImageFilenames();
+  }, []);
 
-  // Sort moths to prioritize those with images
+  // Sort moths to prioritize those with images (lightweight)
   const sortedMoths = useMemo(() => {
+    if (imageFilenames.size === 0) return filteredMoths;
+    
     return [...filteredMoths].sort((a, b) => {
-      // Check if species has an Instagram post (considered as having image)
-      const hasInstagramA = a.instagramUrl && a.instagramUrl.trim();
-      const hasInstagramB = b.instagramUrl && b.instagramUrl.trim();
+      // Create safe filename check function
+      const createSafeFilename = (scientificName) => {
+        if (!scientificName) return '';
+        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+        cleanedName = cleanedName.replace(/\s+/g, '_');
+        return cleanedName;
+      };
       
-      // Check if species has a static image file that actually exists
-      const safeFilenameA = a.scientificFilename || createSafeFilename(a.scientificName);
-      const safeFilenameB = b.scientificFilename || createSafeFilename(b.scientificName);
-      const imageUrlA = `${import.meta.env.BASE_URL}images/moths/${safeFilenameA}.jpg`;
-      const imageUrlB = `${import.meta.env.BASE_URL}images/moths/${safeFilenameB}.jpg`;
+      // Check if species has a static image file (based on preloaded filename list)
+      const filenameA = a.scientificFilename || createSafeFilename(a.scientificName);
+      const filenameB = b.scientificFilename || createSafeFilename(b.scientificName);
       
-      const hasStaticImageA = imageExistenceCache[imageUrlA] === true;
-      const hasStaticImageB = imageExistenceCache[imageUrlB] === true;
+      const hasImageA = imageFilenames.has(filenameA);
+      const hasImageB = imageFilenames.has(filenameB);
       
-      // Priority: Instagram posts first, then static images, then others
-      const scoreA = (hasInstagramA ? 100 : 0) + (hasStaticImageA ? 10 : 0);
-      const scoreB = (hasInstagramB ? 100 : 0) + (hasStaticImageB ? 10 : 0);
+      // Priority: Images first, then others
+      if (hasImageA && !hasImageB) return -1;
+      if (!hasImageA && hasImageB) return 1;
       
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA; // Higher score first
-      }
-      
-      // If scores are equal, sort alphabetically by name
+      // If both have images or both don't, sort alphabetically by name
       return a.name.localeCompare(b.name, 'ja');
     });
-  }, [filteredMoths, imageExistenceCache]);
+  }, [filteredMoths, imageFilenames]);
 
   const totalPages = Math.ceil(sortedMoths.length / itemsPerPage);
   const currentMoths = useMemo(() => {
@@ -282,18 +231,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   React.useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearchTerm]);
-
-  // Pre-load image existence for visible moths
-  React.useEffect(() => {
-    const checkImagesForMoths = async () => {
-      const promises = currentMoths.map(moth => checkImageExists(moth));
-      await Promise.all(promises);
-    };
-    
-    if (currentMoths.length > 0) {
-      checkImagesForMoths();
-    }
-  }, [currentMoths, checkImageExists]);
 
   return (
     <div className={embedded ? "" : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden"}>

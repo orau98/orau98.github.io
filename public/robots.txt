@@ -14,7 +14,7 @@ User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-Sitemap: https://h-amoto.github.io/insects-host-plant-explorer-/sitemap.xml
+Sitemap: https://h-amoto.github.io/insects-host-plant-explorer/sitemap.xml
 
 # Additional meta information
 # Host: h-amoto.github.io

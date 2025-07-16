@@ -97,6 +97,96 @@ function App() {
 
         console.log("CSV files fetched successfully. Parsing...");
 
+        // Function to clean and normalize scientific names for comparison
+        const cleanScientificNameForComparison = (scientificName) => {
+          if (!scientificName) return '';
+          // Remove author/year information and normalize spacing
+          let cleaned = scientificName.replace(/\s*\([^)]*\)\s*$/, ''); // Remove (Author, Year)
+          cleaned = cleaned.replace(/\s*,\s*\d{4}\s*$/, ''); // Remove ", 1234"
+          cleaned = cleaned.replace(/\s+/g, ' ').trim(); // Normalize spacing
+          return cleaned.toLowerCase();
+        };
+
+        // Function to clean moth names by removing change annotations
+        const cleanMothName = (name) => {
+          if (!name) return name;
+          // Remove various change annotations
+          return name
+            .replace(/\s*\([^)]*改称[^)]*\)/g, '')
+            .replace(/\s*\([^)]*新称[^)]*\)/g, '')
+            .replace(/\s*（[^）]*改称[^）]*）/g, '')
+            .replace(/\s*（[^）]*新称[^）]*）/g, '')
+            .trim();
+        };
+
+        // Function to merge duplicate moth entries based on scientific name
+        const mergeMoths = (existing, newEntry) => {
+          // Prioritize entries with catalog numbers
+          const hasCatalogA = existing.id && existing.id.startsWith('main-') && existing.id !== 'main-0';
+          const hasCatalogB = newEntry.id && newEntry.id.startsWith('main-') && newEntry.id !== 'main-0';
+          
+          // Determine which entry should be the base
+          let baseEntry, otherEntry;
+          if (hasCatalogA && !hasCatalogB) {
+            baseEntry = existing;
+            otherEntry = newEntry;
+          } else if (!hasCatalogA && hasCatalogB) {
+            baseEntry = newEntry;
+            otherEntry = existing;
+          } else {
+            // Both have or both don't have catalog numbers
+            // Prefer the one without change annotations
+            const existingHasAnnotation = existing.name.includes('改称') || existing.name.includes('新称');
+            const newEntryHasAnnotation = newEntry.name.includes('改称') || newEntry.name.includes('新称');
+            
+            if (existingHasAnnotation && !newEntryHasAnnotation) {
+              baseEntry = newEntry;
+              otherEntry = existing;
+            } else if (!existingHasAnnotation && newEntryHasAnnotation) {
+              baseEntry = existing;
+              otherEntry = newEntry;
+            } else {
+              // Both or neither have annotations - use existing as base
+              baseEntry = existing;
+              otherEntry = newEntry;
+            }
+          }
+          
+          // Merge the entries
+          return {
+            ...baseEntry,
+            name: cleanMothName(baseEntry.name),
+            hostPlants: [...new Set([...baseEntry.hostPlants, ...otherEntry.hostPlants])],
+            scientificName: baseEntry.scientificName || otherEntry.scientificName,
+            // Merge other potentially useful fields
+            instagramUrl: baseEntry.instagramUrl || otherEntry.instagramUrl,
+            // Keep the more complete source information
+            source: baseEntry.source || otherEntry.source
+          };
+        };
+
+        // Function to deduplicate moths by scientific name
+        const deduplicateMoths = (moths) => {
+          const scientificNameMap = new Map();
+          
+          moths.forEach(moth => {
+            const cleanScientificName = cleanScientificNameForComparison(moth.scientificName);
+            if (!cleanScientificName) {
+              // Keep entries without scientific names as-is
+              scientificNameMap.set(moth.id, moth);
+            } else if (scientificNameMap.has(cleanScientificName)) {
+              // Merge with existing entry
+              const existing = scientificNameMap.get(cleanScientificName);
+              const merged = mergeMoths(existing, moth);
+              scientificNameMap.set(cleanScientificName, merged);
+            } else {
+              scientificNameMap.set(cleanScientificName, moth);
+            }
+          });
+          
+          return Array.from(scientificNameMap.values());
+        };
+
         // Centralized function to normalize plant names by removing family annotations
         const normalizePlantName = (plantName) => {
           if (!plantName || typeof plantName !== 'string') {
@@ -500,6 +590,24 @@ function App() {
               
               // Use the scientific name directly from the CSV as it's already properly formatted
               let scientificName = row['学名'] || '';
+              
+              // If scientific name is empty, try to construct from genus and species
+              if (!scientificName || scientificName.trim() === '') {
+                const genus = row['属名'] || '';
+                const species = row['種小名'] || '';
+                const author = row['著者'] || '';
+                const year = row['公表年'] || '';
+                
+                if (genus && species) {
+                  scientificName = `${genus} ${species}`;
+                  if (author || year) {
+                    const authorYear = [author, year].filter(Boolean).join(', ');
+                    if (authorYear) {
+                      scientificName += ` (${authorYear})`;
+                    }
+                  }
+                }
+              }
               
               // Special handling for フクラスズメ which has malformed scientific name
               if (mothName === 'フクラスズメ' && scientificName.includes('Arcte coerula (Guenée')) {
@@ -1352,16 +1460,32 @@ function App() {
           const subfamily = row['亜科和名'] || row['亜科名'];
           const genus = row['属名'];
           const species = row['種小名'];
+          const author = row['著者'];
+          const year = row['公表年'];
           const hostPlants = row['食草'];
           const source = row['出典'];
+          let scientificName = row['学名']?.trim();
           
-          if (!japaneseName || !genus || !species) {
+          if (!japaneseName || !genus) {
             console.log("Skipping leafbeetle row:", { japaneseName, genus, species, rowIndex: index });
             return;
           }
           
-          const scientificName = `${genus} ${species}`;
-          const id = `leafbeetle-${index}`;
+          // If scientific name is empty, try to construct from genus and species
+          if (!scientificName || scientificName.trim() === '') {
+            if (genus && species) {
+              scientificName = `${genus} ${species}`;
+              if (author || year) {
+                const authorYear = [author, year].filter(Boolean).join(', ');
+                if (authorYear) {
+                  scientificName += ` (${authorYear})`;
+                }
+              }
+            } else if (genus) {
+              scientificName = genus;
+            }
+          }
+          const id = `leafbeetle-${index + 1}`;
           
           // Parse host plants
           let hostPlantList = [];
@@ -1391,7 +1515,8 @@ function App() {
               genus: genus
             },
             hostPlants: hostPlantList,
-            source: source || "ハムシハンドブック"
+            source: source || "ハムシハンドブック",
+            sourceUrl: "https://amzn.to/456YVhu"
           };
 
           leafbeetleData.push(leafbeetle);
@@ -1458,7 +1583,11 @@ function App() {
         console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Leafbeetles count:", combinedLeafbeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
         console.log("Removed", Object.keys(hostPlantData).length - Object.keys(cleanedHostPlantData).length, "invalid host plant entries");
         
-        setMoths(combinedMothData);
+        // Deduplicate moths by scientific name
+        const deduplicatedMoths = deduplicateMoths(combinedMothData);
+        console.log("Deduplicated moths:", combinedMothData.length, "->", deduplicatedMoths.length, "(removed", combinedMothData.length - deduplicatedMoths.length, "duplicates)");
+        
+        setMoths(deduplicatedMoths);
         setButterflies(butterflyData);
         setBeetles(combinedBeetleData);
         setLeafbeetles(combinedLeafbeetleData);
