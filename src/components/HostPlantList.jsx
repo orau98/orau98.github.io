@@ -157,9 +157,9 @@ const HostPlantListItem = ({ plant, mothNames }) => {
               
               {/* Plant indicator at bottom */}
               <div className="flex-shrink-0 mt-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/50 dark:bg-emerald-600/50 text-emerald-700 dark:text-emerald-300">
-                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12,2A1,1 0 0,1 13,3V4.5L14,4V3A2,2 0 0,0 12,1A2,2 0 0,0 10,3V4L11,4.5V3A1,1 0 0,1 12,2M18,7V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7C4.89,7 4,7.89 4,9V21A2,2 0 0,0 6,23H18A2,2 0 0,0 20,21V9C20,7.89 19.11,7 18,7Z"/>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/70 dark:bg-emerald-600/70 text-emerald-800 dark:text-emerald-200 border border-emerald-400/30 dark:border-emerald-500/30">
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                   </svg>
                   植物図鑑
                 </span>
