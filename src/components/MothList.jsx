@@ -36,7 +36,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
       <Link to={route} className="block">
         <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
-          <div className="w-full relative overflow-hidden rounded-t-[10px] -m-0.5 -mt-0.5">
+          <div className="w-full relative overflow-hidden rounded-t-[10px] -m-0.5 -mt-[2px]">
             {hasImageFilename ? (
               <div className="relative w-full aspect-[4/3]">
                 <img
