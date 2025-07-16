@@ -104,7 +104,6 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
               <div className="hidden lg:flex items-center space-x-3 bg-white/5 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/10">
                 {speciesInfo.type === 'moth' ? (
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
                       {speciesInfo.classification?.familyJapanese && (
@@ -114,7 +113,6 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
                       {speciesInfo.family && (

@@ -166,7 +166,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                     <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">はじめに</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -175,7 +174,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">免責事項</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -184,7 +182,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">写真について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -193,7 +190,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">データについて</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -202,7 +198,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">お問い合わせ</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -231,7 +226,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           </p>
                         </div>
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium">専門分野：行動生態学、化学生態学</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
