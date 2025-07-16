@@ -406,7 +406,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                     <div>
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                          <div className="w-2 h-2 bg-emerald-400 rounded-full group-hover:scale-125 transition-transform"></div>
                                           <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                                             {detail.plant}
                                           </span>
@@ -449,7 +448,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                             <div>
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3">
-                                  <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
                                   <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                                     {plant}
                                   </span>
