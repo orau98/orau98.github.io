@@ -35,14 +35,14 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
     <li className="group relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform">
       <Link to={route} className="block">
         <div className="flex flex-col">
-          {/* Enhanced Image section - adaptive layout */}
-          <div className="w-full relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800">
+          {/* Enhanced Image section - full card width */}
+          <div className="w-full relative overflow-hidden rounded-t-xl">
             {hasImageFilename ? (
-              <div className="relative w-full min-h-[200px] max-h-[300px] flex items-center justify-center p-4">
+              <div className="relative w-full aspect-[4/3]">
                 <img
                   src={imageUrl}
                   alt={`${moth.name}（${moth.scientificName}）の写真`}
-                  className="max-w-full max-h-full object-contain transition-all duration-300 group-hover:scale-105 shadow-lg rounded-lg"
+                  className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
                   loading="lazy"
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -53,7 +53,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
             ) : null}
             
             {!hasImageFilename && (
-              <div className="relative w-full min-h-[200px] max-h-[300px] flex items-center justify-center p-4">
+              <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center">
                 <div className="text-center">
                   <svg className="w-16 h-16 text-slate-400 dark:text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />

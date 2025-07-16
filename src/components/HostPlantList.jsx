@@ -113,14 +113,14 @@ const HostPlantListItem = ({ plant, mothNames }) => {
     <Link to={`/plant/${encodeURIComponent(plant)}`} className="block">
       <div className="flex flex-col">
         {/* Enhanced Plant Image/Icon section */}
-        <div className="w-full relative overflow-hidden bg-emerald-100 dark:bg-emerald-800">
+        <div className="w-full relative overflow-hidden rounded-t-xl">
           {imageExists ? (
             // Actual plant image
-            <div className="relative w-full min-h-[200px] max-h-[300px] flex items-center justify-center p-4">
+            <div className="relative w-full aspect-[4/3]">
               <img
                 src={plantImageUrl}
                 alt={plant}
-                className={`max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-105 shadow-lg rounded-lg ${
+                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={() => setImageLoaded(true)}
@@ -129,7 +129,7 @@ const HostPlantListItem = ({ plant, mothNames }) => {
             </div>
           ) : (
             // Fallback to beautiful plant icon
-            <div className="relative w-full min-h-[200px] max-h-[300px] flex items-center justify-center p-4">
+            <div className="relative w-full aspect-[4/3] bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
               <div className="text-center">
                 {/* Beautiful plant icon */}
                 <svg className="w-20 h-20 text-emerald-600 dark:text-emerald-400 mx-auto mb-2 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
