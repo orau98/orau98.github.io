@@ -1517,8 +1517,8 @@ function App() {
             },
             hostPlants: hostPlantList,
             emergenceTime: emergenceTime || '不明',
-            source: source || "ハムシハンドブック",
-            sourceUrl: "https://amzn.to/456YVhu"
+            source: hostPlantList.length > 0 ? "ハムシハンドブック" : (source || "ハムシ目録データベース"),
+            sourceUrl: hostPlantList.length > 0 ? "https://amzn.to/456YVhu" : undefined
           };
 
           leafbeetleData.push(leafbeetle);
