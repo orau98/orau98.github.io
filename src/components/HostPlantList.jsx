@@ -109,7 +109,7 @@ const HostPlantListItem = ({ plant, mothNames }) => {
   }, [plant, safePlantName]);
 
   return (
-  <li className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md">
+  <li className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
     <Link to={`/plant/${encodeURIComponent(plant)}`} className="block">
       <div className="flex flex-col h-full">
         {/* Enhanced Plant Image/Icon section */}
