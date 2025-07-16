@@ -116,31 +116,27 @@ const HostPlantListItem = ({ plant, mothNames }) => {
         <div className="w-full relative overflow-hidden bg-emerald-100 dark:bg-emerald-800">
           {imageExists ? (
             // Actual plant image
-            <div className="relative aspect-square">
+            <div className="relative w-full min-h-[200px] max-h-[300px] flex items-center justify-center p-4">
               <img
                 src={plantImageUrl}
                 alt={plant}
-                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+                className={`max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-105 shadow-lg rounded-lg ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageError(true)}
               />
-              {/* Subtle gradient overlay for better text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
           ) : (
             // Fallback to beautiful plant icon
-            <div className="relative aspect-square">
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="text-center">
-                  {/* Beautiful plant icon */}
-                  <svg className="w-20 h-20 text-emerald-600 dark:text-emerald-400 mx-auto mb-2 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M12,4A1,1 0 0,0 11,5V11A1,1 0 0,0 12,12A1,1 0 0,0 13,11V5A1,1 0 0,0 12,4M12,14.5L16,18.5L12,22.5L8,18.5L12,14.5Z"/>
-                  </svg>
-                  <div className="px-3 py-1 bg-emerald-500/20 rounded-full backdrop-blur-sm">
-                    <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">植物</p>
-                  </div>
+            <div className="relative w-full min-h-[200px] max-h-[300px] flex items-center justify-center p-4">
+              <div className="text-center">
+                {/* Beautiful plant icon */}
+                <svg className="w-20 h-20 text-emerald-600 dark:text-emerald-400 mx-auto mb-2 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M12,4A1,1 0 0,0 11,5V11A1,1 0 0,0 12,12A1,1 0 0,0 13,11V5A1,1 0 0,0 12,4M12,14.5L16,18.5L12,22.5L8,18.5L12,14.5Z"/>
+                </svg>
+                <div className="px-3 py-1 bg-emerald-500/20 rounded-full backdrop-blur-sm">
+                  <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">植物</p>
                 </div>
               </div>
             </div>
