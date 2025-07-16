@@ -209,7 +209,6 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                 className="group bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-all duration-200 border border-teal-200/50 dark:border-teal-700/50"
               >
                 <div className="flex items-center space-x-2">
-                  <div className="w-1.5 h-1.5 bg-teal-400 rounded-full group-hover:scale-125 transition-transform"></div>
                   <span className="text-sm font-medium text-slate-800 dark:text-slate-200 group-hover:text-teal-700 dark:group-hover:text-teal-400">
                     {plant.name}
                   </span>
