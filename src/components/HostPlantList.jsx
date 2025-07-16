@@ -134,22 +134,35 @@ const HostPlantListItem = ({ plant, mothNames }) => {
               </div>
             </div>
           ) : (
-            // Fallback to beautiful plant icon
-            <div className="relative w-full aspect-[4/3] bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
-              <div className="text-center">
-                {/* Beautiful plant icon */}
-                <svg className="w-20 h-20 text-emerald-600 dark:text-emerald-400 mx-auto mb-2 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+            // Fallback to beautiful plant icon with better layout
+            <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-800 dark:to-emerald-900 flex flex-col items-center justify-center p-6">
+              {/* Plant icon at top */}
+              <div className="flex-shrink-0 mb-4">
+                <svg className="w-16 h-16 text-emerald-600 dark:text-emerald-400 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M12,4A1,1 0 0,0 11,5V11A1,1 0 0,0 12,12A1,1 0 0,0 13,11V5A1,1 0 0,0 12,4M12,14.5L16,18.5L12,22.5L8,18.5L12,14.5Z"/>
                 </svg>
-                <div className="px-3 py-1 bg-emerald-500/20 rounded-full backdrop-blur-sm">
-                  <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">植物</p>
-                </div>
               </div>
-              {/* Plant name overlay at bottom for no-image case */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-emerald-600/80 via-emerald-600/60 to-transparent p-4">
-                <h3 className="text-white font-bold text-lg drop-shadow-lg">
+              
+              {/* Plant name displayed prominently in center */}
+              <div className="text-center flex-1 flex flex-col justify-center">
+                <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg leading-tight mb-2">
                   {plant}
                 </h3>
+                {plantDetails[plant]?.familyName && (
+                  <p className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">
+                    {plantDetails[plant].familyName}
+                  </p>
+                )}
+              </div>
+              
+              {/* Plant indicator at bottom */}
+              <div className="flex-shrink-0 mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/50 dark:bg-emerald-600/50 text-emerald-700 dark:text-emerald-300">
+                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12,2A1,1 0 0,1 13,3V4.5L14,4V3A2,2 0 0,0 12,1A2,2 0 0,0 10,3V4L11,4.5V3A1,1 0 0,1 12,2M18,7V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7C4.89,7 4,7.89 4,9V21A2,2 0 0,0 6,23H18A2,2 0 0,0 20,21V9C20,7.89 19.11,7 18,7Z"/>
+                  </svg>
+                  植物図鑑
+                </span>
               </div>
             </div>
           )}
