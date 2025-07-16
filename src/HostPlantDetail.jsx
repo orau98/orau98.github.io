@@ -216,7 +216,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const plantImages = getPlantImages(decodedPlantName);
   
-  // Separate moths, butterflies, beetles and leafbeetles that use this plant
+  // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const insectsOnThisPlant = allInsects.filter(insect => 
     insect.hostPlants.includes(decodedPlantName)
@@ -256,42 +256,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           </div>
         </DetailCard>
 
-        {/* Insects section below */}
-        <DetailCard title="この植物を食べる昆虫">
-            {insectsOnThisPlant.length > 0 ? (
-              <>
-                {/* Moths section */}
-                {insectsOnThisPlant.filter(insect => insect.type !== 'butterfly').length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-3 text-blue-600 dark:text-blue-400">蛾</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {insectsOnThisPlant.filter(insect => insect.type !== 'butterfly').map(moth => (
-                        <Link key={moth.id} to={`/moth/${moth.id}`} className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full text-sm text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors">
-                          {moth.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Butterflies section */}
-                {insectsOnThisPlant.filter(insect => insect.type === 'butterfly').length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold mb-3 text-emerald-600 dark:text-emerald-400">蝶</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {insectsOnThisPlant.filter(insect => insect.type === 'butterfly').map(butterfly => (
-                        <Link key={butterfly.id} to={`/butterfly/${butterfly.id}`} className="bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full text-sm text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors">
-                          {butterfly.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p className="text-slate-500 dark:text-slate-400">この食草を食べる昆虫の情報はありません。</p>
-            )}
-        </DetailCard>
         
         {/* 関連する植物と昆虫のリンク */}
         <RelatedPlants 
