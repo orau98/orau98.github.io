@@ -34,9 +34,9 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
   return (
     <li className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md">
       <Link to={route} className="block">
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
-          <div className="w-full relative overflow-hidden rounded-t-[11px]">
+          <div className="w-full relative overflow-hidden rounded-t-[10px] -m-0.5 mt-[-2px]">
             {hasImageFilename ? (
               <div className="relative w-full aspect-[4/3]">
                 <img
