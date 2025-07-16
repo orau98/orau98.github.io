@@ -220,7 +220,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                     <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-200/50 dark:border-emerald-700/50">
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                           <p className="text-slate-700 dark:text-slate-300 font-medium">
                             フィールド好きの大学院生
                           </p>
@@ -234,7 +233,6 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           </div>
                         </div>
                         <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                           <p className="text-slate-700 dark:text-slate-300">
                             詳しいプロフィールは
                             <a 

@@ -565,6 +565,40 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             </div>
 
+            {/* 成虫発生時期情報 - ハムシのみ表示 */}
+            {moth.type === 'leafbeetle' && moth.emergenceTime && (
+              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+                <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-orange-500 rounded-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h2 className="text-xl font-bold text-orange-600 dark:text-orange-400">
+                      成虫発生時期
+                    </h2>
+                  </div>
+                </div>
+                
+                <div className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0">
+                      <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                    </div>
+                    <span className="text-lg font-medium text-slate-800 dark:text-slate-200">
+                      {moth.emergenceTime}
+                    </span>
+                  </div>
+                  
+                  {moth.emergenceTime !== '不明' && (
+                    <div className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+                      <span className="font-medium">※</span> ハムシハンドブックに基づく情報
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* 関連種情報 - 食草ごとに表示 */}
             {Object.keys(relatedMothsByPlant).length > 0 && (

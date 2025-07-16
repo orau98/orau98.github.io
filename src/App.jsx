@@ -1463,6 +1463,7 @@ function App() {
           const author = row['著者'];
           const year = row['公表年'];
           const hostPlants = row['食草'];
+          const emergenceTime = row['成虫出現時期'];
           const source = row['出典'];
           let scientificName = row['学名']?.trim();
           
@@ -1515,6 +1516,7 @@ function App() {
               genus: genus
             },
             hostPlants: hostPlantList,
+            emergenceTime: emergenceTime || '不明',
             source: source || "ハムシハンドブック",
             sourceUrl: "https://amzn.to/456YVhu"
           };
