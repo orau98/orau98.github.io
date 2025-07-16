@@ -62,7 +62,7 @@ const InsectImage = ({ insect }) => {
       <img 
         src={imagePaths[imageIndex]}
         alt={`${insect.name}（${insect.scientificName}）`}
-        className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-110 ${
+        className={`w-full h-full object-contain transition-all duration-300 group-hover:scale-105 ${
           imageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={handleImageLoad}
@@ -108,20 +108,10 @@ export const RelatedInsects = ({ currentInsect, allInsects, hostPlants }) => {
             <div className="flex items-start space-x-3">
               <InsectImage insect={insect} />
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
+                <div className="mb-1">
                   <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors truncate">
                     {insect.name}
                   </h4>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ml-2 ${
-                    insect.type === 'moth' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                    insect.type === 'butterfly' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300' :
-                    insect.type === 'beetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                    'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                  }`}>
-                    {insect.type === 'moth' ? '蛾' : 
-                     insect.type === 'butterfly' ? '蝶' : 
-                     insect.type === 'beetle' ? '甲虫' : 'ハムシ'}
-                  </span>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed">
                   {insect.scientificName}
@@ -189,20 +179,10 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                 <div className="flex items-start space-x-3">
                   <InsectImage insect={insect} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
+                    <div className="mb-1">
                       <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors truncate">
                         {insect.name}
                       </h4>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ml-2 ${
-                        insect.type === 'moth' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                        insect.type === 'butterfly' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300' :
-                        insect.type === 'beetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                        'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                      }`}>
-                        {insect.type === 'moth' ? '蛾' : 
-                         insect.type === 'butterfly' ? '蝶' : 
-                         insect.type === 'beetle' ? '甲虫' : 'ハムシ'}
-                      </span>
                     </div>
                     <p className="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed">
                       {insect.scientificName}

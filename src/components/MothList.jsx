@@ -41,7 +41,7 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
               <img
                 src={imageUrl}
                 alt={`${moth.name}（${moth.scientificName}）の写真`}
-                className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
+                className="w-full h-full object-contain transition-all duration-300 group-hover:scale-105"
                 loading="lazy"
                 onError={(e) => {
                   e.target.style.display = 'none';
@@ -63,19 +63,6 @@ const MothListItem = ({ moth, baseRoute = "/moth" }) => {
             {/* Gradient overlay for better text readability */}
             <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/50 to-transparent"></div>
             
-            {/* Type badge on image */}
-            <div className="absolute bottom-2 left-2">
-              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm shadow-sm ${
-                moth.type === 'butterfly' ? 'bg-orange-500/90 text-white' : 
-                moth.type === 'beetle' ? 'bg-emerald-500/90 text-white' :
-                moth.type === 'leafbeetle' ? 'bg-amber-500/90 text-white' :
-                'bg-blue-500/90 text-white'
-              }`}>
-                {moth.type === 'butterfly' ? '🦋 蝶' : 
-                 moth.type === 'beetle' ? '🪲 甲虫' : 
-                 moth.type === 'leafbeetle' ? '🐛 ハムシ' : '🦋 蛾'}
-              </span>
-            </div>
           </div>
           
           {/* Enhanced Content section */}

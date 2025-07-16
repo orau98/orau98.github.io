@@ -119,7 +119,7 @@ const HostPlantListItem = ({ plant, mothNames }) => {
             <img
               src={plantImageUrl}
               alt={plant}
-              className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
+              className={`w-full h-full object-contain transition-all duration-500 group-hover:scale-105 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoad={() => setImageLoaded(true)}
@@ -199,7 +199,7 @@ const HostPlantListItem = ({ plant, mothNames }) => {
           <div className="space-y-2">
             <div className="flex items-start space-x-2">
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 flex-shrink-0">
-                🐛 昆虫
+                昆虫
               </span>
               <span className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
                 {mothNames.slice(0, 4).join('、')}
