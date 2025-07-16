@@ -257,11 +257,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 ) : (
                   <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
                     {!imageError ? (
-                      <div className="relative h-full">
+                      <div className="relative h-full w-full">
                         <img 
                           src={possibleImagePaths[currentImageIndex]} 
                           alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
-                          className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                           onLoad={handleImageLoad}
                           onError={handleImageError}
                         />
@@ -666,7 +666,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                 <img 
                                   src={imagePaths[imageIndex]}
                                   alt={`${insect.name}（${insect.scientificName}）`}
-                                  className={`w-full h-full object-contain transition-all duration-300 group-hover:scale-105 ${
+                                  className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
                                     imageLoaded ? 'opacity-100' : 'opacity-0'
                                   }`}
                                   onLoad={handleImageLoad}

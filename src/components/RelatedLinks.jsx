@@ -62,7 +62,7 @@ const InsectImage = ({ insect }) => {
       <img 
         src={imagePaths[imageIndex]}
         alt={`${insect.name}（${insect.scientificName}）`}
-        className={`w-full h-full object-contain transition-all duration-300 group-hover:scale-105 ${
+        className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
           imageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={handleImageLoad}
