@@ -53,7 +53,6 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
   
   const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
   const imageUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
-  const webpUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.webp`;
   
   // Simple check: if we have a filename, assume image exists
   const hasImageFilename = !!(moth.scientificFilename || safeFilename);
@@ -67,24 +66,21 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
             {hasImageFilename ? (
               <div className="relative w-full aspect-[4/3]">
                 {isVisible ? (
-                  <picture>
-                    <source srcSet={webpUrl} type="image/webp" />
-                    <img
-                      src={imageUrl}
-                      alt={`${moth.name}（${moth.scientificName}）の写真`}
-                      className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
-                        imageLoaded ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      loading={isPriority ? "eager" : "lazy"}
-                      decoding="async"
-                      fetchpriority={isPriority ? "high" : "auto"}
-                      onLoad={() => setImageLoaded(true)}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.parentElement.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  </picture>
+                  <img
+                    src={imageUrl}
+                    alt={`${moth.name}（${moth.scientificName}）の写真`}
+                    className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
+                      imageLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    loading={isPriority ? "eager" : "lazy"}
+                    decoding="async"
+                    fetchpriority={isPriority ? "high" : "auto"}
+                    onLoad={() => setImageLoaded(true)}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.nextSibling.style.display = 'flex';
+                    }}
+                  />
                 ) : (
                   <div className="w-full h-full bg-slate-200 dark:bg-slate-700 animate-pulse flex items-center justify-center">
                     <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
