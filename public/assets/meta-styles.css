@@ -1,0 +1,299 @@
+/* Meta Pages Styling - Optimized for SEO and accessibility */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+  font-size: 16px;
+}
+
+/* Layout */
+.meta-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Header */
+.meta-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.meta-header h1 {
+  font-size: 2.2em;
+  color: #2c5530;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.meta-header h2 {
+  font-size: 1.4em;
+  color: #666;
+  font-style: italic;
+  font-weight: normal;
+}
+
+/* Main Content */
+.meta-content {
+  margin-bottom: 40px;
+}
+
+.meta-content section {
+  margin-bottom: 30px;
+}
+
+.meta-content h3 {
+  font-size: 1.5em;
+  color: #2c5530;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Basic Info Section */
+.basic-info dl {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px 20px;
+  margin-bottom: 20px;
+}
+
+.basic-info dt {
+  font-weight: bold;
+  color: #555;
+  align-self: start;
+}
+
+.basic-info dd {
+  color: #333;
+}
+
+/* Image Section */
+.image-section {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.image-section img {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  object-fit: cover;
+}
+
+.image-section .image-caption {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+}
+
+/* Host Plants Section */
+.host-plants ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.host-plants li {
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-left: 4px solid #2c5530;
+  border-radius: 0 4px 4px 0;
+}
+
+.host-plants a {
+  color: #2c5530;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.host-plants a:hover {
+  color: #1a3d1e;
+  text-decoration: underline;
+}
+
+/* Related Insects Section (for plant pages) */
+.related-insects {
+  margin-top: 30px;
+}
+
+.related-insects ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.related-insects li {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.related-insects li:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.related-insects .insect-name {
+  font-weight: bold;
+  color: #2c5530;
+  margin-bottom: 5px;
+}
+
+.related-insects .insect-scientific {
+  font-style: italic;
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Navigation Section */
+.navigation {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+  text-align: center;
+}
+
+.navigation a {
+  display: inline-block;
+  margin: 0 15px;
+  padding: 12px 24px;
+  background-color: #2c5530;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navigation a:hover {
+  background-color: #1a3d1e;
+}
+
+.navigation .back-link {
+  background-color: #6c757d;
+}
+
+.navigation .back-link:hover {
+  background-color: #545b62;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 0.9em;
+}
+
+.breadcrumb a {
+  color: #2c5530;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  margin: 0 8px;
+  color: #999;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .meta-page {
+    padding: 15px;
+    margin: 0;
+    box-shadow: none;
+  }
+  
+  .meta-header h1 {
+    font-size: 1.8em;
+  }
+  
+  .meta-header h2 {
+    font-size: 1.2em;
+  }
+  
+  .basic-info dl {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  
+  .basic-info dt {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .navigation a {
+    display: block;
+    margin: 10px 0;
+  }
+  
+  .related-insects ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .meta-page {
+    box-shadow: none;
+    max-width: none;
+  }
+  
+  .navigation {
+    display: none;
+  }
+  
+  body {
+    background-color: white;
+  }
+}
+
+/* Enhanced Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus states for accessibility */
+a:focus,
+button:focus {
+  outline: 2px solid #2c5530;
+  outline-offset: 2px;
+}
+
+/* Loading state for images */
+.image-section img {
+  background-color: #f0f0f0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23cccccc' stroke-width='2'%3E%3Cpath d='M20 6v8m0 12v8m-6-14h8m12 0h8'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
