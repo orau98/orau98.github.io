@@ -6,6 +6,36 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// 学名フォーマッティング関数 - 属名+種小名のみをイタリック体にし、著者名と年は通常体にする
+function formatScientificNameHTML(scientificName) {
+  if (!scientificName || scientificName.trim() === '') {
+    return '';
+  }
+
+  const trimmed = scientificName.trim();
+  
+  // 括弧で囲まれた著者名と年を特定
+  const authorMatch = trimmed.match(/^(.+?)\s*(\([^)]+\))?\s*$/);
+  
+  if (authorMatch) {
+    const nameWithoutAuthor = authorMatch[1].trim();
+    const authorInfo = authorMatch[2] || '';
+    
+    // 属名と種小名を分離（最初の2語のみを取得）
+    const nameParts = nameWithoutAuthor.split(/\s+/);
+    if (nameParts.length >= 2) {
+      const binomialName = `${nameParts[0]} ${nameParts[1]}`;
+      const extraInfo = nameParts.slice(2).join(' ');
+      
+      // イタリック体の学名 + 通常体の著者情報
+      return `<em>${binomialName}</em>${extraInfo ? ' ' + extraInfo : ''}${authorInfo ? ' ' + authorInfo : ''}`;
+    }
+  }
+  
+  // フォールバック: 全体をイタリック体にする
+  return `<em>${trimmed}</em>`;
+}
+
 // CSVファイルを読み込む関数
 function loadCSV(filePath) {
   const csvContent = fs.readFileSync(filePath, 'utf-8');
@@ -119,7 +149,7 @@ function generateInsectHTML(insect, type) {
     
     <header class="meta-header">
       <h1>${insect.name}</h1>
-      <h2>${scientificName}</h2>
+      <h2>${formatScientificNameHTML(scientificName)}</h2>
     </header>
     
     <main class="meta-content">
@@ -129,7 +159,7 @@ function generateInsectHTML(insect, type) {
           <dt>和名</dt>
           <dd>${insect.name}</dd>
           <dt>学名</dt>
-          <dd><em>${scientificName}</em></dd>
+          <dd>${formatScientificNameHTML(scientificName)}</dd>
           <dt>分類</dt>
           <dd>${familyName}</dd>
           <dt>種類</dt>
@@ -165,7 +195,7 @@ function generateInsectHTML(insect, type) {
       
       <section class="description">
         <h3>詳細説明</h3>
-        <p>${insect.name}（学名：<em>${scientificName}</em>）は${familyName}に分類される${typeNames[type]}の一種です。</p>
+        <p>${insect.name}（学名：${formatScientificNameHTML(scientificName)}）は${familyName}に分類される${typeNames[type]}の一種です。</p>
         ${hostPlantsArray.length > 0 ? `
         <p>幼虫は${hostPlantsArray.slice(0, 3).join('、')}${hostPlantsArray.length > 3 ? 'など' : ''}を食草として成長します。${hostPlantsArray.length}種の植物との関係が確認されており、多様な植物資源を利用する種です。</p>` : ''}
         <p>この種の詳細な生態情報や観察記録については、メインの図鑑ページでご確認ください。</p>
@@ -340,7 +370,7 @@ function generatePlantHTML(plantName, relatedInsects) {
             <div class="insect-name">
               <a href="/insects-host-plant-explorer-/${type}/${insect.id}">${insect.name}</a>
             </div>
-            <div class="insect-scientific"><em>${insect.scientificName}</em></div>
+            <div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>
           </li>`).join('')}
         </ul>`).join('')}
       </section>
