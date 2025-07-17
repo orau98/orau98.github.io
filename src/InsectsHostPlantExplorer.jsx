@@ -23,7 +23,11 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
             loading="eager"
             decoding="async" 
             fetchpriority="high"
-            onError={(e) => { e.target.onerror = null; e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; e.target.alt='画像が見つかりません'; }}
+            onError={(e) => { 
+              e.target.onerror = null; 
+              e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; 
+              e.target.alt='画像が見つかりません';
+            }}
           />
           
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent z-20"></div>

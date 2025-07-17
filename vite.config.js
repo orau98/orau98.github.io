@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/insects-host-plant-explorer-/',
+  base: command === 'build' ? '/insects-host-plant-explorer-/' : '/',
   build: {
     rollupOptions: {
       output: {
@@ -17,4 +17,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
