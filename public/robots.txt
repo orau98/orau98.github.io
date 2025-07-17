@@ -1,20 +1,21 @@
 User-agent: *
 Allow: /
+
+# サイトマップ
+Sitemap: https://h-amoto.github.io/insects-host-plant-explorer-/sitemap.xml
+
+# 画像ディレクトリを許可
 Allow: /images/
-Allow: /assets/
+
+# metaディレクトリを許可（SEO用）
+Allow: /meta/
+
+# 不要なファイルをブロック
+Disallow: /*.json$
+Disallow: /*.csv$
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /scripts/
+
+# クロール頻度の調整
 Crawl-delay: 1
-
-# Google Bot specific settings
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-# Bing Bot specific settings  
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-Sitemap: https://h-amoto.github.io/insects-host-plant-explorer/sitemap.xml
-
-# Additional meta information
-# Host: h-amoto.github.io

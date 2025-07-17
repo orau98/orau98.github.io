@@ -20,7 +20,7 @@ export const MothStructuredData = ({ moth }) => {
       }
     },
     "description": `${moth.name}（${moth.scientificName}）は${moth.family || '蛾科'}に属する蛾の一種です。${moth.hostPlants?.length ? `主な食草：${moth.hostPlants.slice(0, 3).join('、')}` : ''}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/#/moth/${moth.id}`,
+    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/moth/${moth.id}`,
     "mainEntity": {
       "@type": "Article",
       "headline": `${moth.name} - 蛾の詳細情報`,
@@ -71,7 +71,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
       }
     },
     "description": `${butterfly.name}（${butterfly.scientificName}）は${butterfly.family || '蝶科'}に属する蝶の一種です。${butterfly.hostPlants?.length ? `主な食草：${butterfly.hostPlants.slice(0, 3).join('、')}` : ''}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/#/butterfly/${butterfly.id}`,
+    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/butterfly/${butterfly.id}`,
     "mainEntity": {
       "@type": "Article",
       "headline": `${butterfly.name} - 蝶の詳細情報`,
@@ -85,6 +85,57 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 
   if (butterfly.hostPlants?.length) {
     structuredData.interactionWithOtherOrganisms = butterfly.hostPlants.map(plant => ({
+      "@type": "InteractionWithOtherOrganisms",
+      "interactionType": "feeds on",
+      "organism": {
+        "@type": "Plant",
+        "name": plant
+      }
+    }));
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+    />
+  );
+};
+
+// 甲虫の構造化データ
+export const BeetleStructuredData = ({ beetle }) => {
+  if (!beetle) return null;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Animal",
+    "name": beetle.name,
+    "alternateName": beetle.scientificName,
+    "scientificName": beetle.scientificName,
+    "classification": {
+      "@type": "Taxon",
+      "taxonomicRank": "Species",
+      "parentTaxon": {
+        "@type": "Taxon",
+        "name": "タマムシ科",
+        "taxonomicRank": "Family"
+      }
+    },
+    "description": `${beetle.name}（${beetle.scientificName}）はタマムシ科に属する甲虫の一種です。${beetle.hostPlants?.length ? `主な食草：${beetle.hostPlants.slice(0, 3).join('、')}` : ''}`,
+    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
+    "mainEntity": {
+      "@type": "Article",
+      "headline": `${beetle.name} - 甲虫の詳細情報`,
+      "description": `${beetle.name}（${beetle.scientificName}）の詳細情報、食草、生態について`,
+      "author": {
+        "@type": "Organization",
+        "name": "昆虫食草図鑑"
+      }
+    }
+  };
+
+  if (beetle.hostPlants?.length) {
+    structuredData.interactionWithOtherOrganisms = beetle.hostPlants.map(plant => ({
       "@type": "InteractionWithOtherOrganisms",
       "interactionType": "feeds on",
       "organism": {
@@ -122,7 +173,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
       }
     },
     "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属する甲虫の一種です。${leafbeetle.hostPlants?.length ? `主な食草：${leafbeetle.hostPlants.slice(0, 3).join('、')}` : ''}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/#/leafbeetle/${leafbeetle.id}`,
+    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
     "mainEntity": {
       "@type": "Article",
       "headline": `${leafbeetle.name} - ハムシの詳細情報`,
@@ -162,7 +213,7 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
     "@type": "Plant",
     "name": plant.name,
     "description": `${plant.name}の詳細情報。${relatedInsects?.length ? `この植物を食草とする昆虫：${relatedInsects.slice(0, 3).map(i => i.name).join('、')}` : ''}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/#/plant/${encodeURIComponent(plant.name)}`,
+    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plant.name)}`,
     "mainEntity": {
       "@type": "Article",
       "headline": `${plant.name} - 食草植物の詳細情報`,
@@ -210,7 +261,7 @@ export const MainStructuredData = () => {
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://h-amoto.github.io/insects-host-plant-explorer-/?search={search_term_string}",
+      "target": "https://h-amoto.github.io/insects-host-plant-explorer-/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     },
     "mainEntity": {

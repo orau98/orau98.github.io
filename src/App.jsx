@@ -606,10 +606,6 @@ function App() {
                       scientificName += ` (${authorYear})`;
                     }
                   }
-                  // Debug log for constructed scientific names
-                  if (genus === 'Agrilus' || genus === 'Chariaspilates' || genus === 'Cosmia') {
-                    console.log(`Constructed scientific name for ${mothName}: ${scientificName}`);
-                  }
                 }
               }
               
@@ -625,10 +621,6 @@ function App() {
               
               const scientificFilename = formatScientificNameForFilename(scientificName);
               
-              // Debug log for filename generation
-              if (mothName === 'ケヤキナガタマムシ' || mothName.includes('エダシャク') || mothName.includes('アフマキ')) {
-                console.log(`${mothName}: scientificName="${scientificName}" -> filename="${scientificFilename}"`);
-              }
 
               let familyFromMainCsv = row['科和名'] || row['科名'] || '';
               
