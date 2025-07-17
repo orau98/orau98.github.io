@@ -20,6 +20,10 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
             src={`${import.meta.env.BASE_URL}images/moths/Cucullia_argentea.jpg`} 
             alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）" 
             className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+            style={{ 
+              imageRendering: 'auto',
+              willChange: 'transform'
+            }}
             loading="eager"
             decoding="async" 
             fetchpriority="high"

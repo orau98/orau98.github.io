@@ -23,7 +23,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
     
     const observer = new IntersectionObserver(handleIntersection, {
       threshold: 0.1,
-      rootMargin: '50px'
+      rootMargin: '200px' // Increased preload distance for better perceived performance
     });
     
     if (imgRef.current) {
@@ -56,6 +56,14 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
   
   // Simple check: if we have a filename, assume image exists
   const hasImageFilename = !!(moth.scientificFilename || safeFilename);
+  
+  // Preload priority images
+  useEffect(() => {
+    if (isPriority && hasImageFilename) {
+      const img = new Image();
+      img.src = imageUrl;
+    }
+  }, [isPriority, hasImageFilename, imageUrl]);
     
   return (
     <li ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
@@ -72,6 +80,10 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                     className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
                       imageLoaded ? 'opacity-100' : 'opacity-0'
                     }`}
+                    style={{ 
+                      imageRendering: 'crisp-edges',
+                      willChange: imageLoaded ? 'auto' : 'opacity'
+                    }}
                     loading={isPriority ? "eager" : "lazy"}
                     decoding="async"
                     fetchpriority={isPriority ? "high" : "auto"}
@@ -370,7 +382,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
                   <MothListItem 
                     moth={moth} 
                     baseRoute={baseRoute} 
-                    isPriority={index < 8} 
+                    isPriority={index < 12} 
                   />
                 </div>
               ))}
