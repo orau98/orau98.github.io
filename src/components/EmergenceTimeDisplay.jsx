@@ -207,43 +207,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
         })}
       </div>
       
-      {/* 活動ピーク表示 */}
-      {activeMonths.length > 0 && (
-        <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-700/50">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 mt-1">
-              <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-            </div>
-            <div>
-              <h5 className="text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-1">
-                活動期間
-              </h5>
-              <p className="text-sm text-emerald-700 dark:text-emerald-300">
-                {activeMonths.length === 12 ? '通年' : 
-                 activeMonths.length >= 6 ? '長期間活動' :
-                 activeMonths.length >= 3 ? '複数月活動' : '短期間活動'
-                } 
-                （{activeMonths.length}ヶ月間）
-              </p>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {activeMonths.map(monthIndex => {
-                  const month = MONTHS[monthIndex - 1];
-                  return (
-                    <span
-                      key={monthIndex}
-                      className={`inline-flex items-center px-2 py-1 text-xs rounded-md border ${month.color}`}
-                    >
-                      {month.name}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
