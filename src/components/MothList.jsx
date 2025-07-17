@@ -181,9 +181,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   useEffect(() => {
     const loadImageFilenames = async () => {
       try {
-        const response = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
+        const response = await fetch(`${import.meta.env.BASE_URL}images/image_filenames.txt`);
         const text = await response.text();
         const filenames = new Set(text.trim().split('\n').filter(Boolean));
+        console.log('Loaded image filenames:', filenames);
         setImageFilenames(filenames);
       } catch (error) {
         console.debug('Could not load image filenames:', error);
@@ -215,6 +216,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       
       const hasImageA = imageFilenames.has(filenameA);
       const hasImageB = imageFilenames.has(filenameB);
+      
+      // Debug logging for image detection (temporary)
+      if (hasImageA || hasImageB) {
+        console.log(`Image detected - ${a.name}: ${filenameA} (${hasImageA}), ${b.name}: ${filenameB} (${hasImageB})`);
+      }
       
       // Priority: Images first, then others
       if (hasImageA && !hasImageB) return -1;
