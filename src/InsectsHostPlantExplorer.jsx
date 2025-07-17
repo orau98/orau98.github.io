@@ -23,7 +23,9 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
             loading="eager"
             decoding="async" 
             fetchpriority="high"
+            onLoad={() => console.log('Hero image loaded successfully')}
             onError={(e) => { 
+              console.error('Hero image failed to load:', e.target.src);
               e.target.onerror = null; 
               e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; 
               e.target.alt='画像が見つかりません';
