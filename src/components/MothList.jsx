@@ -150,9 +150,6 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
             <div className="space-y-3">
               <div className="flex items-start space-x-2">
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 flex-shrink-0">
-                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
                   食草
                 </span>
                 <span className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">

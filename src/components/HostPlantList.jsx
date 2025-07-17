@@ -158,9 +158,6 @@ const HostPlantListItem = ({ plant, mothNames }) => {
               {/* Plant indicator at bottom */}
               <div className="flex-shrink-0 mt-4">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/70 dark:bg-emerald-600/70 text-emerald-800 dark:text-emerald-200 border border-emerald-400/30 dark:border-emerald-500/30">
-                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
                   植物図鑑
                 </span>
               </div>
@@ -327,11 +324,6 @@ const HostPlantList = ({ hostPlants, plantDetails, embedded = false }) => {
       {!embedded && (
         <div className="p-6 bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-emerald-500 rounded-lg">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-            </div>
             <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
               食草リスト
             </h2>
@@ -370,11 +362,6 @@ const HostPlantList = ({ hostPlants, plantDetails, embedded = false }) => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-emerald-400 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              </div>
               <p className="text-slate-500 dark:text-slate-400 font-medium">結果が見つかりませんでした</p>
               <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">別のキーワードで検索してみてください</p>
             </div>
