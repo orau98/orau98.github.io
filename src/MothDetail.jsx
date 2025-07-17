@@ -6,7 +6,6 @@ import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificName } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
-import SeasonalChart from './components/SeasonalChart';
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
@@ -584,30 +583,20 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 </div>
                 
                 <div className="p-4">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* 詳細表示 */}
-                    <div>
-                      <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} />
-                      
-                      {moth.emergenceTime !== '不明' && (
-                        <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700/50">
-                          <div className="flex items-start space-x-2">
-                            <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <p className="text-sm text-amber-700 dark:text-amber-300">
-                              <span className="font-medium">出典:</span> ハムシハンドブックに基づく情報
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} />
+                  
+                  {moth.emergenceTime !== '不明' && (
+                    <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700/50">
+                      <div className="flex items-start space-x-2">
+                        <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-sm text-amber-700 dark:text-amber-300">
+                          <span className="font-medium">出典:</span> ハムシハンドブックに基づく情報
+                        </p>
+                      </div>
                     </div>
-                    
-                    {/* 年間チャート */}
-                    <div>
-                      <SeasonalChart emergenceTime={moth.emergenceTime} />
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
