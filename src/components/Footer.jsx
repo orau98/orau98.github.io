@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="bg-neutral-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">
       <div className="container mx-auto px-4 py-6 text-center text-neutral-500 dark:text-neutral-400">
         <p className="text-sm">
-          Data sourced from a private collection and the National Museum of Nature and Science. 
+          掲載データは私設コレクションに基づく情報であり、学術的引用の範囲内での利用を想定しています。 
           This project is open source. You can find the code on {' '}
           <a 
             href="https://github.com/H-Amoto/insects-host-plant-explorer-" 
