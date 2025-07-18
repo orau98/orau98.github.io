@@ -2402,26 +2402,26 @@ function App() {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('dragstart', handleDragStart);
 
-    // Basic dev tools detection
-    let devtools = {
-      open: false,
-      orientation: null
-    };
+    // Basic dev tools detection - TEMPORARILY DISABLED FOR DEBUGGING
+    // let devtools = {
+    //   open: false,
+    //   orientation: null
+    // };
     
-    const threshold = 160;
-    setInterval(() => {
-      if (window.outerHeight - window.innerHeight > threshold || 
-          window.outerWidth - window.innerWidth > threshold) {
-        if (!devtools.open) {
-          devtools.open = true;
-          console.clear();
-          console.log('%c⚠️ 開発者ツールが検出されました', 'color: red; font-size: 20px; font-weight: bold;');
-          console.log('%c研究用データの保護にご協力ください', 'color: orange; font-size: 14px;');
-        }
-      } else {
-        devtools.open = false;
-      }
-    }, 500);
+    // const threshold = 160;
+    // setInterval(() => {
+    //   if (window.outerHeight - window.innerHeight > threshold || 
+    //       window.outerWidth - window.innerWidth > threshold) {
+    //     if (!devtools.open) {
+    //       devtools.open = true;
+    //       console.clear();
+    //       console.log('%c⚠️ 開発者ツールが検出されました', 'color: red; font-size: 20px; font-weight: bold;');
+    //       console.log('%c研究用データの保護にご協力ください', 'color: orange; font-size: 14px;');
+    //     }
+    //   } else {
+    //     devtools.open = false;
+    //   }
+    // }, 500);
 
     // Cleanup function
     return () => {
