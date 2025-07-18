@@ -312,21 +312,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
           })}
         </div>
         
-        {/* アクティブ月の統計 */}
-        <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 border border-emerald-200 dark:border-emerald-700/50">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-emerald-700 dark:text-emerald-300 font-medium">
-              発生期間: {activeMonths.length}ヶ月間
-            </span>
-            <div className="flex items-center space-x-2">
-              {activeRanges.map((range, index) => (
-                <span key={index} className="text-emerald-600 dark:text-emerald-400 text-xs bg-emerald-100 dark:bg-emerald-800 px-2 py-1 rounded">
-                  {range.start}月{range.start !== range.end ? `～${range.end}月` : ''}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
