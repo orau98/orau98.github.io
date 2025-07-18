@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# サイトマップ
+Sitemap: https://h-amoto.github.io/insects-host-plant-explorer-/sitemap.xml
+
+# 画像ディレクトリを許可
+Allow: /images/
+
+# metaディレクトリを許可（SEO用）
+Allow: /meta/
+
+# 不要なファイルをブロック
+Disallow: /*.json$
+Disallow: /*.csv$
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /scripts/
+
+# クロール頻度の調整
+Crawl-delay: 1
