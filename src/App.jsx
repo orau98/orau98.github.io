@@ -763,42 +763,63 @@ function App() {
               //   console.log(`DEBUG: Food plants field:`, row['食草']);
               // }
               
-              // Use the scientific name directly from the CSV as it's already properly formatted
-              let scientificName = row['学名'] || '';
-              
-              // Fix malformed scientific names with quote issues
-              if (scientificName && scientificName.includes(',"')) {
-                // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
-                scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
-              }
-              
-              // If scientific name is empty, try to construct from genus and species
-              if (!scientificName || scientificName.trim() === '') {
-                const genus = row['属名'] || '';
-                const species = row['種小名'] || '';
-                const author = row['著者'] || '';
-                const year = row['公表年'] || '';
+              // Comprehensive scientific name processing with publication year validation
+              const reconstructScientificName = (csvScientificName, genus, species, author, year) => {
+                let scientificName = csvScientificName || '';
                 
-                if (genus && species) {
-                  scientificName = `${genus} ${species}`;
+                // Clean up basic formatting issues first
+                scientificName = scientificName.replace(/\s*"?\s*$/, '').trim();
+                
+                // Fix specific malformed patterns
+                if (scientificName.includes(',"')) {
+                  // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
+                  scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
+                }
+                
+                // Fix other common malformations
+                scientificName = scientificName.replace(/,(\d{4})\)/g, ', $1)'); // Fix missing space before year
+                scientificName = scientificName.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
+                
+                // Special case fixes
+                if (scientificName.includes('Arcte coerula (Guenée') && !scientificName.includes('1852')) {
+                  scientificName = 'Arcte coerula (Guenée, 1852)';
+                }
+                
+                // Check if scientific name has publication year
+                const hasPublicationYear = /\(\s*[^,)]+\s*,?\s*\d{4}\s*\)|\s+[A-Z][a-zA-Z\s&.]+\s*,?\s*\d{4}\s*$/.test(scientificName);
+                
+                // If no publication year found and we have individual fields, reconstruct
+                if (!hasPublicationYear && genus && species) {
+                  const binomial = `${genus} ${species}`;
+                  
                   if (author || year) {
                     const authorYear = [author, year].filter(Boolean).join(', ');
-                    if (authorYear) {
-                      scientificName += ` (${authorYear})`;
-                    }
+                    scientificName = `${binomial} (${authorYear})`;
+                  } else {
+                    scientificName = binomial;
                   }
                 }
-              }
+                // If still no scientific name but we have genus and species, use them
+                else if ((!scientificName || scientificName.trim() === '') && genus && species) {
+                  const binomial = `${genus} ${species}`;
+                  
+                  if (author || year) {
+                    const authorYear = [author, year].filter(Boolean).join(', ');
+                    scientificName = `${binomial} (${authorYear})`;
+                  } else {
+                    scientificName = binomial;
+                  }
+                }
+                
+                return scientificName.trim();
+              };
               
-              // Special handling for フクラスズメ which has malformed scientific name
-              if (mothName === 'フクラスズメ' && scientificName.includes('Arcte coerula (Guenée')) {
-                scientificName = 'Arcte coerula (Guenée, 1852)';
-              }
+              const genus = row['属名'] || '';
+              const species = row['種小名'] || '';
+              const author = row['著者'] || '';
+              const year = row['公表年'] || '';
               
-              // Only clean up obvious formatting issues, don't reconstruct
-              // Remove trailing quotes and clean whitespace
-              scientificName = scientificName.replace(/\s*"?\s*$/, '');
-              scientificName = scientificName.trim();
+              let scientificName = reconstructScientificName(row['学名'], genus, species, author, year);
               
               const scientificFilename = formatScientificNameForFilename(scientificName);
               
@@ -1507,15 +1528,25 @@ function App() {
           const species = row['種小名'];
           const japaneseName = row['和名'];
           const hostPlants = row['食草'];
+          const author = row['著者'] || '';
+          const year = row['公表年'] || '';
           
-          console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants });
+          console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants, author, year });
           
           if (!japaneseName || !genus || !species) {
             console.log("Skipping butterfly row:", { japaneseName, genus, species, rowIndex: index });
             return;
           }
           
-          const scientificName = `${genus} ${species}`;
+          // Comprehensive scientific name construction for butterflies
+          let scientificName = `${genus} ${species}`;
+          if (author || year) {
+            const authorYear = [author, year].filter(Boolean).join(', ');
+            if (authorYear) {
+              scientificName += ` (${authorYear})`;
+            }
+          }
+          
           const id = `butterfly-csv-${index}`;
           
           // Parse host plants properly
@@ -1634,13 +1665,23 @@ function App() {
           const species = row['種小名'];
           const japaneseName = row['和名'];
           const hostPlants = row['食草'];
+          const author = row['著者'] || '';
+          const year = row['公表年'] || '';
           
           if (!japaneseName || !genus || !species) {
             console.log("Skipping beetle row:", { japaneseName, genus, species, rowIndex: index });
             return;
           }
           
-          const scientificName = `${genus} ${species}`;
+          // Comprehensive scientific name construction for beetles
+          let scientificName = `${genus} ${species}`;
+          if (author || year) {
+            const authorYear = [author, year].filter(Boolean).join(', ');
+            if (authorYear) {
+              scientificName += ` (${authorYear})`;
+            }
+          }
+          
           const id = `beetle-${index}`;
           
           // Parse host plants
@@ -1712,25 +1753,50 @@ function App() {
             return;
           }
           
-          // Fix malformed scientific names with quote issues
-          if (scientificName && scientificName.includes(',"')) {
-            // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
-            scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
+          // Comprehensive scientific name processing for leafbeetles
+          if (scientificName) {
+            // Clean up basic formatting issues first
+            scientificName = scientificName.replace(/\s*"?\s*$/, '').trim();
+            
+            // Fix specific malformed patterns
+            if (scientificName.includes(',"')) {
+              // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
+              scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
+            }
+            
+            // Fix other common malformations
+            scientificName = scientificName.replace(/,(\d{4})\)/g, ', $1)'); // Fix missing space before year
+            scientificName = scientificName.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
           }
           
-          // If scientific name is empty, try to construct from genus and species
-          if (!scientificName || scientificName.trim() === '') {
-            if (genus && species) {
-              scientificName = `${genus} ${species}`;
-              if (author || year) {
-                const authorYear = [author, year].filter(Boolean).join(', ');
-                if (authorYear) {
-                  scientificName += ` (${authorYear})`;
-                }
-              }
-            } else if (genus) {
-              scientificName = genus;
+          // Check if scientific name has publication year
+          const hasPublicationYear = scientificName && /\(\s*[^,)]+\s*,?\s*\d{4}\s*\)|\s+[A-Z][a-zA-Z\s&.]+\s*,?\s*\d{4}\s*$/.test(scientificName);
+          
+          // If no publication year found and we have individual fields, reconstruct
+          if (!hasPublicationYear && genus && species) {
+            const binomial = `${genus} ${species}`;
+            
+            if (author || year) {
+              const authorYear = [author, year].filter(Boolean).join(', ');
+              scientificName = `${binomial} (${authorYear})`;
+            } else {
+              scientificName = binomial;
             }
+          }
+          // If still no scientific name but we have genus and species, use them
+          else if ((!scientificName || scientificName.trim() === '') && genus && species) {
+            const binomial = `${genus} ${species}`;
+            
+            if (author || year) {
+              const authorYear = [author, year].filter(Boolean).join(', ');
+              scientificName = `${binomial} (${authorYear})`;
+            } else {
+              scientificName = binomial;
+            }
+          }
+          // If we only have genus, use that
+          else if ((!scientificName || scientificName.trim() === '') && genus) {
+            scientificName = genus;
           }
           const id = `leafbeetle-${index + 1}`;
           
@@ -1864,6 +1930,101 @@ function App() {
     };
     fetchData(); // Call fetchData
   }, []); // Close useEffect and add dependency array
+
+  // Content protection measures
+  useEffect(() => {
+    // Disable right-click context menu
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // Disable common keyboard shortcuts for copying/saving content
+    const handleKeyDown = (e) => {
+      // Disable F12 (Developer Tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable Ctrl+Shift+I (Developer Tools)
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable Ctrl+Shift+J (Console)
+      if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable Ctrl+U (View Source)
+      if (e.ctrlKey && e.key === 'u') {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable Ctrl+S (Save Page)
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable Ctrl+A (Select All) - but allow in input fields
+      if (e.ctrlKey && e.key === 'a' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable Ctrl+P (Print)
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // Disable image dragging
+    const handleDragStart = (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // Add event listeners
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('dragstart', handleDragStart);
+
+    // Basic dev tools detection
+    let devtools = {
+      open: false,
+      orientation: null
+    };
+    
+    const threshold = 160;
+    setInterval(() => {
+      if (window.outerHeight - window.innerHeight > threshold || 
+          window.outerWidth - window.innerWidth > threshold) {
+        if (!devtools.open) {
+          devtools.open = true;
+          console.clear();
+          console.log('%c⚠️ 開発者ツールが検出されました', 'color: red; font-size: 20px; font-weight: bold;');
+          console.log('%c研究用データの保護にご協力ください', 'color: orange; font-size: 14px;');
+        }
+      } else {
+        devtools.open = false;
+      }
+    }, 500);
+
+    // Cleanup function
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('dragstart', handleDragStart);
+    };
+  }, []);
 
   console.log("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
   

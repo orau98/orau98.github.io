@@ -4,6 +4,52 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
+// Bot detection and anti-scraping measures
+(function() {
+  // Detect headless browsers and automation tools
+  const suspiciousFeatures = [
+    !window.navigator.webdriver === undefined,
+    window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect,
+    window.phantom,
+    window._phantom,
+    window.__nightmare,
+    window.domAutomation,
+    window.callPhantom,
+    navigator.userAgent.includes('PhantomJS'),
+    navigator.userAgent.includes('HeadlessChrome'),
+    navigator.userAgent.includes('bot'),
+    navigator.userAgent.includes('crawler'),
+    navigator.userAgent.includes('spider'),
+    navigator.webdriver === true
+  ];
+
+  if (suspiciousFeatures.some(feature => feature)) {
+    document.body.innerHTML = '<div style="text-align:center;padding:50px;">Access Restricted</div>';
+    throw new Error('Automated access detected');
+  }
+
+  // Rate limiting check
+  const accessKey = 'page_access_count';
+  const timeKey = 'page_access_time';
+  const maxRequests = 100;
+  const timeWindow = 3600000; // 1 hour
+  
+  const currentTime = Date.now();
+  const lastAccess = localStorage.getItem(timeKey);
+  const accessCount = parseInt(localStorage.getItem(accessKey) || '0');
+  
+  if (lastAccess && (currentTime - parseInt(lastAccess)) < timeWindow) {
+    if (accessCount > maxRequests) {
+      document.body.innerHTML = '<div style="text-align:center;padding:50px;">Rate limit exceeded</div>';
+      throw new Error('Rate limit exceeded');
+    }
+    localStorage.setItem(accessKey, (accessCount + 1).toString());
+  } else {
+    localStorage.setItem(accessKey, '1');
+    localStorage.setItem(timeKey, currentTime.toString());
+  }
+})();
+
 // Global error handler to suppress harmless browser extension errors
 window.addEventListener('error', (event) => {
   const errorMessage = event.error?.message || '';
