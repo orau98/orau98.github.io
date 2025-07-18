@@ -763,55 +763,110 @@ function App() {
               //   console.log(`DEBUG: Food plants field:`, row['食草']);
               // }
               
-              // Comprehensive scientific name processing with publication year validation
-              const reconstructScientificName = (csvScientificName, genus, species, author, year) => {
-                let scientificName = csvScientificName || '';
+              // Unified scientific name processing function for all insect types
+              const processScientificName = (existingScientificName, genusName, speciesName, authorName, yearName, insectType = 'moth') => {
+                // Clean up inputs
+                const cleanGenus = genusName?.trim() || '';
+                const cleanSpecies = speciesName?.trim() || '';
+                const cleanAuthor = authorName?.trim() || '';
+                const cleanYear = yearName?.trim() || '';
+                let cleanExisting = existingScientificName?.trim() || '';
                 
                 // Clean up basic formatting issues first
-                scientificName = scientificName.replace(/\s*"?\s*$/, '').trim();
+                cleanExisting = cleanExisting.replace(/\s*"?\s*$/, '').trim();
                 
                 // Fix specific malformed patterns
-                if (scientificName.includes(',"')) {
+                if (cleanExisting.includes(',"')) {
                   // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
-                  scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
+                  cleanExisting = cleanExisting.replace(/,\"(\d{4})\)/g, ' $1)');
                 }
                 
                 // Fix other common malformations
-                scientificName = scientificName.replace(/,(\d{4})\)/g, ', $1)'); // Fix missing space before year
-                scientificName = scientificName.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
+                cleanExisting = cleanExisting.replace(/,(\d{4})\)/g, ', $1)'); // Fix missing space before year
+                cleanExisting = cleanExisting.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
                 
                 // Special case fixes
-                if (scientificName.includes('Arcte coerula (Guenée') && !scientificName.includes('1852')) {
-                  scientificName = 'Arcte coerula (Guenée, 1852)';
+                if (cleanExisting.includes('Arcte coerula (Guenée') && !cleanExisting.includes('1852')) {
+                  cleanExisting = 'Arcte coerula (Guenée, 1852)';
                 }
                 
-                // Check if scientific name has publication year
-                const hasPublicationYear = /\(\s*[^,)]+\s*,?\s*\d{4}\s*\)|\s+[A-Z][a-zA-Z\s&.]+\s*,?\s*\d{4}\s*$/.test(scientificName);
-                
-                // If no publication year found and we have individual fields, reconstruct
-                if (!hasPublicationYear && genus && species) {
-                  const binomial = `${genus} ${species}`;
-                  
-                  if (author || year) {
-                    const authorYear = [author, year].filter(Boolean).join(', ');
-                    scientificName = `${binomial} (${authorYear})`;
-                  } else {
-                    scientificName = binomial;
+                // Check if existing scientific name is valid (has both genus and species)
+                if (cleanExisting) {
+                  // Check if it's a complete binomial (genus + species)
+                  const binomialMatch = cleanExisting.match(/^([A-Z][a-z]+)\s+([a-z]+(?:\s+[a-z]+)*)/);
+                  if (binomialMatch) {
+                    // It's a valid binomial, use it
+                    return cleanExisting;
                   }
-                }
-                // If still no scientific name but we have genus and species, use them
-                else if ((!scientificName || scientificName.trim() === '') && genus && species) {
-                  const binomial = `${genus} ${species}`;
                   
-                  if (author || year) {
-                    const authorYear = [author, year].filter(Boolean).join(', ');
-                    scientificName = `${binomial} (${authorYear})`;
-                  } else {
-                    scientificName = binomial;
+                  // Check if it's an incomplete name (genus + subgenus only)
+                  const incompleteMatch = cleanExisting.match(/^([A-Z][a-z]+)\s+\([^)]+\)$/);
+                  if (incompleteMatch) {
+                    // It's incomplete (genus + subgenus), need to fix
+                    console.log(`Incomplete scientific name detected for ${insectType}: ${cleanExisting}`);
+                    return cleanGenus ? `${cleanGenus} sp.` : '未同定';
                   }
                 }
                 
-                return scientificName.trim();
+                // If we have both genus and species, construct binomial
+                if (cleanGenus && cleanSpecies) {
+                  let binomial = `${cleanGenus} ${cleanSpecies}`;
+                  
+                  // Add author and year if available
+                  if (cleanAuthor || cleanYear) {
+                    const authorYear = [cleanAuthor, cleanYear].filter(Boolean).join(', ');
+                    binomial += ` (${authorYear})`;
+                  }
+                  
+                  return binomial;
+                }
+                
+                // If we only have genus (no species), mark as unidentified
+                if (cleanGenus) {
+                  return `${cleanGenus} sp.`;
+                }
+                
+                // If we have nothing useful, return unknown
+                return '未同定';
+              };
+              
+              // Scientific name quality validation function
+              const validateScientificName = (scientificName, japaneseName, insectType) => {
+                if (!scientificName) return { isValid: false, issues: ['学名が空白'] };
+                
+                const issues = [];
+                
+                // Check for incomplete names (genus + subgenus only)
+                const incompletePattern = /^([A-Z][a-z]+)\s+\([^)]+\)$/;
+                if (incompletePattern.test(scientificName)) {
+                  issues.push('種小名が不明（属名＋亜属名のみ）');
+                }
+                
+                // Check for "sp." designation
+                if (scientificName.includes(' sp.')) {
+                  issues.push('未同定種（sp.）');
+                }
+                
+                // Check for "未同定"
+                if (scientificName === '未同定') {
+                  issues.push('未同定');
+                }
+                
+                // Check for basic binomial structure
+                const binomialPattern = /^([A-Z][a-z]+)\s+([a-z]+(?:\s+[a-z]+)*)/;
+                if (!binomialPattern.test(scientificName) && !scientificName.includes(' sp.') && scientificName !== '未同定') {
+                  issues.push('不正な学名形式');
+                }
+                
+                // Log issues for debugging
+                if (issues.length > 0) {
+                  console.log(`Scientific name quality issues for ${insectType} "${japaneseName}": ${scientificName} - ${issues.join(', ')}`);
+                }
+                
+                return {
+                  isValid: issues.length === 0,
+                  issues: issues
+                };
               };
               
               const genus = row['属名'] || '';
@@ -819,7 +874,10 @@ function App() {
               const author = row['著者'] || '';
               const year = row['公表年'] || '';
               
-              let scientificName = reconstructScientificName(row['学名'], genus, species, author, year);
+              let scientificName = processScientificName(row['学名'], genus, species, author, year, 'moth');
+              
+              // Validate scientific name quality
+              const validationResult = validateScientificName(scientificName, mothName, 'moth');
               
               const scientificFilename = formatScientificNameForFilename(scientificName);
               
@@ -1628,14 +1686,11 @@ function App() {
             return;
           }
           
-          // Comprehensive scientific name construction for butterflies
-          let scientificName = `${genus} ${species}`;
-          if (author || year) {
-            const authorYear = [author, year].filter(Boolean).join(', ');
-            if (authorYear) {
-              scientificName += ` (${authorYear})`;
-            }
-          }
+          // Use unified scientific name processing
+          let scientificName = processScientificName('', genus, species, author, year, 'butterfly');
+          
+          // Validate scientific name quality
+          const validationResult = validateScientificName(scientificName, japaneseName, 'butterfly');
           
           const id = `butterfly-csv-${index}`;
           
@@ -1817,14 +1872,11 @@ function App() {
             return;
           }
           
-          // Comprehensive scientific name construction for beetles
-          let scientificName = `${genus} ${species}`;
-          if (author || year) {
-            const authorYear = [author, year].filter(Boolean).join(', ');
-            if (authorYear) {
-              scientificName += ` (${authorYear})`;
-            }
-          }
+          // Use unified scientific name processing
+          let scientificName = processScientificName('', genus, species, author, year, 'beetle');
+          
+          // Validate scientific name quality
+          const validationResult = validateScientificName(scientificName, japaneseName, 'beetle');
           
           const id = `beetle-${index}`;
           
@@ -1966,35 +2018,12 @@ function App() {
             scientificName = scientificName.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
           }
           
-          // Check if scientific name has publication year
-          const hasPublicationYear = scientificName && /\(\s*[^,)]+\s*,?\s*\d{4}\s*\)|\s+[A-Z][a-zA-Z\s&.]+\s*,?\s*\d{4}\s*$/.test(scientificName);
+          // Use unified scientific name processing
+          scientificName = processScientificName(scientificName, genus, species, author, year, 'leafbeetle');
           
-          // If no publication year found and we have individual fields, reconstruct
-          if (!hasPublicationYear && genus && species) {
-            const binomial = `${genus} ${species}`;
-            
-            if (author || year) {
-              const authorYear = [author, year].filter(Boolean).join(', ');
-              scientificName = `${binomial} (${authorYear})`;
-            } else {
-              scientificName = binomial;
-            }
-          }
-          // If still no scientific name but we have genus and species, use them
-          else if ((!scientificName || scientificName.trim() === '') && genus && species) {
-            const binomial = `${genus} ${species}`;
-            
-            if (author || year) {
-              const authorYear = [author, year].filter(Boolean).join(', ');
-              scientificName = `${binomial} (${authorYear})`;
-            } else {
-              scientificName = binomial;
-            }
-          }
-          // If we only have genus, use that
-          else if ((!scientificName || scientificName.trim() === '') && genus) {
-            scientificName = genus;
-          }
+          // Validate scientific name quality
+          const validationResult = validateScientificName(scientificName, japaneseName, 'leafbeetle');
+          
           const id = `leafbeetle-${index + 1}`;
           
           // Parse host plants
