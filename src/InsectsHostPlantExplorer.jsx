@@ -195,7 +195,16 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">写真について</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、<a href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors">こちらのGoogleフォーム</a>よりお気軽にご連絡ください。
+                              掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、
+                              <a 
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                              >
+                                こちらのGoogleフォーム
+                              </a>
+                              よりお気軽にご連絡ください。
                             </p>
                           </div>
                         </div>
@@ -211,7 +220,16 @@ const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, ho
                           <div className="text-slate-700 dark:text-slate-300">
                             <p className="font-medium mb-1">お問い合わせ</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400">
-                              誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、<a href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors">こちらのGoogleフォーム</a>までお寄せください。
+                              誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、
+                              <a 
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                              >
+                                こちらのGoogleフォーム
+                              </a>
+                              までお寄せください。
                             </p>
                           </div>
                         </div>
