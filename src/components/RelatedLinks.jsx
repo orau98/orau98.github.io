@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
 // 昆虫の画像を取得する関数
 const getInsectImagePath = (insect) => {
@@ -113,8 +114,8 @@ export const RelatedInsects = ({ currentInsect, allInsects, hostPlants }) => {
                     {insect.name}
                   </h4>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed">
-                  {insect.scientificName}
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {formatScientificNameReact(insect.scientificName)}
                 </p>
                 {/* 共通の食草を表示 */}
                 <div className="mt-2">
@@ -184,8 +185,8 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                         {insect.name}
                       </h4>
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 italic leading-relaxed">
-                      {insect.scientificName}
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {formatScientificNameReact(insect.scientificName)}
                     </p>
                   </div>
                 </div>

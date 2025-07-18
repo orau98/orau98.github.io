@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
 import Pagination from './Pagination';
-import { formatScientificName } from '../utils/scientificNameFormatter.jsx';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 
 const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
@@ -106,7 +106,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                     {moth.name}
                   </h3>
                   <p className="text-white/90 text-sm drop-shadow-md">
-                    {formatScientificName(moth.scientificName)}
+                    {formatScientificNameReact(moth.scientificName)}
                   </p>
                 </div>
               </div>
@@ -127,7 +127,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                     {moth.name}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    {formatScientificName(moth.scientificName)}
+                    {formatScientificNameReact(moth.scientificName)}
                   </p>
                 </div>
                 

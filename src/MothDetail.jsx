@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import { getSourceLink } from './utils/sourceLinks';
-import { formatScientificName } from './utils/scientificNameFormatter.jsx';
+import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 
@@ -272,7 +272,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                         {/* Moth name overlay */}
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                           <h3 className="text-white font-bold text-lg drop-shadow-lg">{moth.name}</h3>
-                          <p className="text-white/90 text-sm drop-shadow-md italic">{moth.scientificName}</p>
+                          <p className="text-white/90 text-sm drop-shadow-md">{formatScientificNameReact(moth.scientificName)}</p>
                         </div>
                       </div>
                     ) : (
@@ -349,7 +349,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 {moth.name}
               </h1>
               <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
-                {formatScientificName(moth.scientificName)}
+                {formatScientificNameReact(moth.scientificName)}
               </p>
             </div>
 
@@ -800,8 +800,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                        relatedMoth.type === 'beetle' ? 'タマムシ' : 'ハムシ'}
                                     </span>
                                   </div>
-                                  <p className="text-xs text-slate-600 dark:text-slate-400 italic mt-0.5">
-                                    {relatedMoth.scientificName}
+                                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                                    {formatScientificNameReact(relatedMoth.scientificName)}
                                   </p>
                                 </div>
                               </div>

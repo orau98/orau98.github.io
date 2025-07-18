@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { formatScientificName } from './utils/scientificNameFormatter.jsx';
+import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import { RelatedPlants } from './components/RelatedLinks';
 
@@ -239,7 +239,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           {details.scientificName && (
             <>
               <dt className="font-semibold mt-2">学名:</dt>
-              <dd className="ml-4">{formatScientificName(details.scientificName)}</dd>
+              <dd className="ml-4">{formatScientificNameReact(details.scientificName)}</dd>
             </>
           )}
         </dl>
