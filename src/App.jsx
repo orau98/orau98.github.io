@@ -848,6 +848,71 @@ function App() {
 
               // Improved host plant parsing with validation
               let rawHostPlant = row['食草'] || '';
+              let rawRemarks = row['備考'] || '';
+              
+              // Function to extract and integrate plant part information
+              const extractPlantParts = (text) => {
+                const partPatterns = [
+                  { pattern: /の花(?:弁|びら)?/g, part: '花' },
+                  { pattern: /の花/g, part: '花' },
+                  { pattern: /の実/g, part: '実' },
+                  { pattern: /の果実/g, part: '実' },
+                  { pattern: /の種子/g, part: '種子' },
+                  { pattern: /の葉/g, part: '葉' },
+                  { pattern: /の若葉/g, part: '若葉' },
+                  { pattern: /の新葉/g, part: '新葉' },
+                  { pattern: /の古葉/g, part: '古葉' },
+                  { pattern: /の樹皮/g, part: '樹皮' },
+                  { pattern: /の幹/g, part: '幹' },
+                  { pattern: /の枝/g, part: '枝' },
+                  { pattern: /の茎/g, part: '茎' },
+                  { pattern: /の根/g, part: '根' },
+                  { pattern: /の蕾/g, part: '蕾' },
+                  { pattern: /の芽/g, part: '芽' }
+                ];
+                
+                const extractedParts = new Map();
+                
+                partPatterns.forEach(({ pattern, part }) => {
+                  const matches = [...text.matchAll(pattern)];
+                  matches.forEach(match => {
+                    // Extract plant name before the part
+                    const beforeMatch = text.substring(0, match.index);
+                    const plantMatch = beforeMatch.match(/([ア-ン一-龯]{2,})$/);
+                    if (plantMatch) {
+                      const plantName = plantMatch[1];
+                      if (!extractedParts.has(plantName)) {
+                        extractedParts.set(plantName, []);
+                      }
+                      if (!extractedParts.get(plantName).includes(part)) {
+                        extractedParts.get(plantName).push(part);
+                      }
+                    }
+                  });
+                });
+                
+                return extractedParts;
+              };
+              
+              // Extract plant parts from both food plants and remarks
+              const plantPartsFromFood = extractPlantParts(rawHostPlant);
+              const plantPartsFromRemarks = extractPlantParts(rawRemarks);
+              
+              // Merge plant parts information
+              const allPlantParts = new Map(plantPartsFromFood);
+              for (const [plant, parts] of plantPartsFromRemarks) {
+                if (allPlantParts.has(plant)) {
+                  // Merge parts, avoiding duplicates
+                  const existingParts = allPlantParts.get(plant);
+                  parts.forEach(part => {
+                    if (!existingParts.includes(part)) {
+                      existingParts.push(part);
+                    }
+                  });
+                } else {
+                  allPlantParts.set(plant, [...parts]);
+                }
+              }
               
               // Check if we have キリガ CSV data for this species
               const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
@@ -1111,8 +1176,13 @@ function App() {
                         const correctedPlantName = correctPlantName(normalizedPlant);
                         // Only add if the corrected plant name is not empty (i.e., found in YList)
                         if (correctedPlantName && correctedPlantName.trim()) {
+                          // Check if this plant has part information
+                          const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
+                          const plantWithParts = plantParts && plantParts.length > 0 ? 
+                            `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
+                          
                           hostPlantEntries.push({
-                            plant: correctedPlantName,
+                            plant: plantWithParts,
                             condition: '自然状態',
                             familyFromMainCsv: familyFromMainCsv
                           });
@@ -1140,8 +1210,13 @@ function App() {
                           const mainPlant = mainPlantMatch[1].trim();
                           if (mainPlant && isValidPlantName(mainPlant)) {
                             const normalizedPlant = normalizePlantName(mainPlant);
+                            // Check if this plant has part information
+                            const plantParts = allPlantParts.get(mainPlant) || allPlantParts.get(normalizedPlant);
+                            const plantWithParts = plantParts && plantParts.length > 0 ? 
+                              `${normalizedPlant}（${plantParts.join('・')}）` : normalizedPlant;
+                            
                             hostPlantEntries.push({
-                              plant: normalizedPlant,
+                              plant: plantWithParts,
                               condition: '飼育条件下',
                               familyFromMainCsv: familyFromMainCsv
                             });
@@ -1172,12 +1247,17 @@ function App() {
                         const correctedPlantName = correctPlantName(normalizedPlant);
                         // Only add if the corrected plant name is not empty (i.e., found in YList)
                         if (correctedPlantName && correctedPlantName.trim()) {
+                          // Check if this plant has part information
+                          const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
+                          const plantWithParts = plantParts && plantParts.length > 0 ? 
+                            `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
+                          
                           hostPlantEntries.push({
-                            plant: correctedPlantName,
+                            plant: plantWithParts,
                             condition: '飼育条件下',
                             familyFromMainCsv: familyFromMainCsv
                           });
-                          console.log('DEBUG: Added cultured plant:', correctedPlantName);
+                          console.log('DEBUG: Added cultured plant:', plantWithParts);
                         } else {
                           console.log('DEBUG: Rejected cultured plant (not in YList):', plant);
                         }
@@ -1193,8 +1273,13 @@ function App() {
                       const correctedPlantName = correctPlantName(normalizedPlant);
                       // Only add if the corrected plant name is not empty (i.e., found in YList)
                       if (correctedPlantName && correctedPlantName.trim()) {
+                        // Check if this plant has part information
+                        const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
+                        const plantWithParts = plantParts && plantParts.length > 0 ? 
+                          `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
+                        
                         hostPlantEntries.push({
-                          plant: correctedPlantName,
+                          plant: plantWithParts,
                           condition: '',
                           familyFromMainCsv: familyFromMainCsv
                         });
@@ -1326,8 +1411,13 @@ function App() {
                       const correctedPlantName = correctPlantName(wameiMap[normalizedPlant] || normalizedPlant);
                       // Only add if the corrected plant name is not empty (i.e., found in YList)
                       if (correctedPlantName && correctedPlantName.trim()) {
+                        // Check if this plant has part information
+                        const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
+                        const plantWithParts = plantParts && plantParts.length > 0 ? 
+                          `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
+                        
                         hostPlantEntries.push({
-                          plant: correctedPlantName,
+                          plant: plantWithParts,
                           condition: '',
                           familyFromMainCsv: familyFromMainCsv
                         });
@@ -1554,6 +1644,52 @@ function App() {
           if (hostPlants) {
             console.log("Raw host plants for", japaneseName, ":", hostPlants);
             
+            // Extract plant parts information from hostPlants field
+            const extractPlantParts = (text) => {
+              const partPatterns = [
+                { pattern: /の花(?:弁|びら)?/g, part: '花' },
+                { pattern: /の花/g, part: '花' },
+                { pattern: /の実/g, part: '実' },
+                { pattern: /の果実/g, part: '実' },
+                { pattern: /の種子/g, part: '種子' },
+                { pattern: /の葉/g, part: '葉' },
+                { pattern: /の若葉/g, part: '若葉' },
+                { pattern: /の新葉/g, part: '新葉' },
+                { pattern: /の古葉/g, part: '古葉' },
+                { pattern: /の樹皮/g, part: '樹皮' },
+                { pattern: /の幹/g, part: '幹' },
+                { pattern: /の枝/g, part: '枝' },
+                { pattern: /の茎/g, part: '茎' },
+                { pattern: /の根/g, part: '根' },
+                { pattern: /の蕾/g, part: '蕾' },
+                { pattern: /の芽/g, part: '芽' }
+              ];
+              
+              const extractedParts = new Map();
+              
+              partPatterns.forEach(({ pattern, part }) => {
+                const matches = [...text.matchAll(pattern)];
+                matches.forEach(match => {
+                  // Extract plant name before the part
+                  const beforeMatch = text.substring(0, match.index);
+                  const plantMatch = beforeMatch.match(/([ア-ン一-龯]{2,})$/);
+                  if (plantMatch) {
+                    const plantName = plantMatch[1];
+                    if (!extractedParts.has(plantName)) {
+                      extractedParts.set(plantName, []);
+                    }
+                    if (!extractedParts.get(plantName).includes(part)) {
+                      extractedParts.get(plantName).push(part);
+                    }
+                  }
+                });
+              });
+              
+              return extractedParts;
+            };
+            
+            const butterflyPlantParts = extractPlantParts(hostPlants);
+            
             // Remove outer quotes and inner quotes
             let cleanedHostPlants = hostPlants;
             
@@ -1607,7 +1743,15 @@ function App() {
               .filter(plant => plant.trim() !== '') // Additional empty string check
               .map(plant => normalizePlantName(plant)) // Normalize plant names
               .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
-              .filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
+              .filter(plant => plant && plant.trim() !== '') // Remove plants not found in YList
+              .map(plant => {
+                // Add part information if available
+                const plantParts = butterflyPlantParts.get(plant);
+                if (plantParts && plantParts.length > 0) {
+                  return `${plant}（${plantParts.join('・')}）`;
+                }
+                return plant;
+              });
             
             // Remove duplicates and final empty string check
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
@@ -1687,6 +1831,51 @@ function App() {
           // Parse host plants
           let hostPlantList = [];
           if (hostPlants) {
+            // Extract plant parts information from hostPlants field
+            const extractPlantParts = (text) => {
+              const partPatterns = [
+                { pattern: /の花(?:弁|びら)?/g, part: '花' },
+                { pattern: /の花/g, part: '花' },
+                { pattern: /の実/g, part: '実' },
+                { pattern: /の果実/g, part: '実' },
+                { pattern: /の種子/g, part: '種子' },
+                { pattern: /の葉/g, part: '葉' },
+                { pattern: /の若葉/g, part: '若葉' },
+                { pattern: /の新葉/g, part: '新葉' },
+                { pattern: /の古葉/g, part: '古葉' },
+                { pattern: /の樹皮/g, part: '樹皮' },
+                { pattern: /の幹/g, part: '幹' },
+                { pattern: /の枝/g, part: '枝' },
+                { pattern: /の茎/g, part: '茎' },
+                { pattern: /の根/g, part: '根' },
+                { pattern: /の蕾/g, part: '蕾' },
+                { pattern: /の芽/g, part: '芽' }
+              ];
+              
+              const extractedParts = new Map();
+              
+              partPatterns.forEach(({ pattern, part }) => {
+                const matches = [...text.matchAll(pattern)];
+                matches.forEach(match => {
+                  // Extract plant name before the part
+                  const beforeMatch = text.substring(0, match.index);
+                  const plantMatch = beforeMatch.match(/([ア-ン一-龯]{2,})$/);
+                  if (plantMatch) {
+                    const plantName = plantMatch[1];
+                    if (!extractedParts.has(plantName)) {
+                      extractedParts.set(plantName, []);
+                    }
+                    if (!extractedParts.get(plantName).includes(part)) {
+                      extractedParts.get(plantName).push(part);
+                    }
+                  }
+                });
+              });
+              
+              return extractedParts;
+            };
+            
+            const beetlePlantParts = extractPlantParts(hostPlants);
             const plants = hostPlants.split(/[、，,]/);
             hostPlantList = plants
               .map(plant => plant.trim())
@@ -1694,7 +1883,15 @@ function App() {
               .filter(plant => plant.trim() !== '')
               .map(plant => normalizePlantName(plant))
               .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
-              .filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
+              .filter(plant => plant && plant.trim() !== '') // Remove plants not found in YList
+              .map(plant => {
+                // Add part information if available
+                const plantParts = beetlePlantParts.get(plant);
+                if (plantParts && plantParts.length > 0) {
+                  return `${plant}（${plantParts.join('・')}）`;
+                }
+                return plant;
+              });
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
           }
 
@@ -1803,6 +2000,51 @@ function App() {
           // Parse host plants
           let hostPlantList = [];
           if (hostPlants && hostPlants !== '不明') {
+            // Extract plant parts information from hostPlants field
+            const extractPlantParts = (text) => {
+              const partPatterns = [
+                { pattern: /の花(?:弁|びら)?/g, part: '花' },
+                { pattern: /の花/g, part: '花' },
+                { pattern: /の実/g, part: '実' },
+                { pattern: /の果実/g, part: '実' },
+                { pattern: /の種子/g, part: '種子' },
+                { pattern: /の葉/g, part: '葉' },
+                { pattern: /の若葉/g, part: '若葉' },
+                { pattern: /の新葉/g, part: '新葉' },
+                { pattern: /の古葉/g, part: '古葉' },
+                { pattern: /の樹皮/g, part: '樹皮' },
+                { pattern: /の幹/g, part: '幹' },
+                { pattern: /の枝/g, part: '枝' },
+                { pattern: /の茎/g, part: '茎' },
+                { pattern: /の根/g, part: '根' },
+                { pattern: /の蕾/g, part: '蕾' },
+                { pattern: /の芽/g, part: '芽' }
+              ];
+              
+              const extractedParts = new Map();
+              
+              partPatterns.forEach(({ pattern, part }) => {
+                const matches = [...text.matchAll(pattern)];
+                matches.forEach(match => {
+                  // Extract plant name before the part
+                  const beforeMatch = text.substring(0, match.index);
+                  const plantMatch = beforeMatch.match(/([ア-ン一-龯]{2,})$/);
+                  if (plantMatch) {
+                    const plantName = plantMatch[1];
+                    if (!extractedParts.has(plantName)) {
+                      extractedParts.set(plantName, []);
+                    }
+                    if (!extractedParts.get(plantName).includes(part)) {
+                      extractedParts.get(plantName).push(part);
+                    }
+                  }
+                });
+              });
+              
+              return extractedParts;
+            };
+            
+            const leafbeetlePlantParts = extractPlantParts(hostPlants);
             const plants = hostPlants.split(/[、，,]/);
             hostPlantList = plants
               .map(plant => plant.trim())
@@ -1810,7 +2052,15 @@ function App() {
               .filter(plant => plant.trim() !== '')
               .map(plant => normalizePlantName(plant))
               .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
-              .filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
+              .filter(plant => plant && plant.trim() !== '') // Remove plants not found in YList
+              .map(plant => {
+                // Add part information if available
+                const plantParts = leafbeetlePlantParts.get(plant);
+                if (plantParts && plantParts.length > 0) {
+                  return `${plant}（${plantParts.join('・')}）`;
+                }
+                return plant;
+              });
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
           }
 
