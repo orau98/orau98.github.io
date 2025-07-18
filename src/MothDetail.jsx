@@ -645,7 +645,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="text-sm text-amber-700 dark:text-amber-300">
-                          <span className="font-medium">出典:</span> {moth.type === 'leafbeetle' ? 'ハムシハンドブック' : '日本のキリガ'}
+                          <span className="font-medium">出典:</span> {moth.type === 'leafbeetle' ? 'ハムシハンドブック' : moth.type === 'beetle' ? (
+                            <a 
+                              href="https://amzn.to/4m2vPWp" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="underline hover:text-amber-600 dark:hover:text-amber-200 transition-colors"
+                            >
+                              日本産タマムシ大図鑑
+                            </a>
+                          ) : '日本のキリガ'}
                         </p>
                       </div>
                     </div>
