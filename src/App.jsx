@@ -71,43 +71,63 @@ function App() {
       console.log("BASE_URL:", import.meta.env.BASE_URL);
 
       try {
-        // Fetch キリガ file with timeout as it's causing issues
-        const fetchWithTimeout = (url, timeout = 10000) => {
+        // Fetch with timeout for all files to prevent hanging
+        const fetchWithTimeout = (url, timeout = 15000) => {
           return Promise.race([
             fetch(url),
             new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Request timeout')), timeout)
+              setTimeout(() => reject(new Error(`Request timeout for ${url}`)), timeout)
             )
           ]);
         };
 
-        const [wameiRes, mainRes, yListRes, hamushiSpeciesRes, butterflyRes, beetleRes, kirigaRes] = await Promise.all([
-          fetch(wameiCsvPath),
-          fetch(mainCsvPath),
-          fetch(yListCsvPath),
-          fetch(hamushiSpeciesCsvPath),
-          fetch(butterflyCsvPath),
-          fetch(beetleCsvPath),
-          fetchWithTimeout(kirigaCsvPath, 10000).catch(() => null) // Don't fail if キリガ times out
-        ]);
+        const safeFileLoad = async (path, name, timeout = 15000) => {
+          try {
+            console.log(`Loading ${name} from ${path}`);
+            const res = await fetchWithTimeout(path, timeout);
+            if (!res.ok) {
+              console.error(`Failed to fetch ${name}: ${res.statusText}`);
+              return null;
+            }
+            const text = await res.text();
+            console.log(`Successfully loaded ${name} (${text.length} characters)`);
+            return text;
+          } catch (error) {
+            console.error(`Error loading ${name}:`, error);
+            return null;
+          }
+        };
 
-        if (!wameiRes.ok) throw new Error(`Failed to fetch ${wameiCsvPath}: ${wameiRes.statusText}`);
-        if (!mainRes.ok) throw new Error(`Failed to fetch ${mainCsvPath}: ${mainRes.statusText}`);
-        if (!yListRes.ok) throw new Error(`Failed to fetch ${yListCsvPath}: ${yListRes.statusText}`);
-        if (!hamushiSpeciesRes.ok) throw new Error(`Failed to fetch ${hamushiSpeciesCsvPath}: ${hamushiSpeciesRes.statusText}`);
-        if (!butterflyRes.ok) throw new Error(`Failed to fetch ${butterflyCsvPath}: ${butterflyCsvPath.statusText}`);
-        if (!beetleRes.ok) throw new Error(`Failed to fetch ${beetleCsvPath}: ${beetleRes.statusText}`);
-        // Don't check kirigaRes as it may be null
-
+        // Load files with safe loading - prioritize essential files
+        console.log("Starting file loading process...");
+        
         const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText] = await Promise.all([
-          wameiRes.text(),
-          mainRes.text(),
-          yListRes.text(),
-          hamushiSpeciesRes.text(),
-          butterflyRes.text(),
-          beetleRes.text(),
-          kirigaRes ? kirigaRes.text() : Promise.resolve('') // Return empty string if キリガ failed
+          safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
+          safeFileLoad(mainCsvPath, 'main moth data', 20000),
+          safeFileLoad(yListCsvPath, 'YList data', 30000), // Longer timeout for large file
+          safeFileLoad(hamushiSpeciesCsvPath, 'hamushi species', 20000),
+          safeFileLoad(butterflyCsvPath, 'butterfly data', 15000),
+          safeFileLoad(beetleCsvPath, 'beetle data', 15000),
+          safeFileLoad(kirigaCsvPath, 'kiriga data', 10000)
         ]);
+
+        console.log("File loading results:", {
+          wamei: wameiText ? 'SUCCESS' : 'FAILED',
+          main: mainText ? 'SUCCESS' : 'FAILED',
+          yList: yListText ? 'SUCCESS' : 'FAILED',
+          hamushi: hamushiSpeciesText ? 'SUCCESS' : 'FAILED',
+          butterfly: butterflyText ? 'SUCCESS' : 'FAILED',
+          beetle: beetleText ? 'SUCCESS' : 'FAILED',
+          kiriga: kirigaText ? 'SUCCESS' : 'FAILED'
+        });
+
+        // Check if essential files loaded
+        if (!mainText) {
+          throw new Error('Main moth data file failed to load - cannot continue');
+        }
+        if (!wameiText) {
+          console.warn('Wamei checklist failed to load - plant family data may be incomplete');
+        }
 
         console.log("CSV files fetched successfully. Parsing...");
 
@@ -451,24 +471,36 @@ function App() {
           return !invalidPatterns.some(pattern => pattern.test(trimmed));
         };
 
-        // Parse wamei_checklist_ver.1.10.csv
-        const wameiParsed = Papa.parse(wameiText, { header: true, skipEmptyLines: true, delimiter: ',' });
-        if (wameiParsed.errors.length) {
-          console.error("PapaParse errors in wamei_checklist_ver.1.10.csv:", wameiParsed.errors);
+        // Parse wamei_checklist_ver.1.10.csv with error handling
+        let wameiMap = {};
+        let wameiFamilyMap = {};
+        let correctMothNames = new Set();
+        
+        if (wameiText) {
+          try {
+            console.log("Parsing wamei checklist data...");
+            const wameiParsed = Papa.parse(wameiText, { header: true, skipEmptyLines: true, delimiter: ',' });
+            if (wameiParsed.errors.length) {
+              console.error("PapaParse errors in wamei_checklist_ver.1.10.csv:", wameiParsed.errors);
+            }
+            
+            wameiParsed.data.forEach(row => {
+              const allName = row['all_name']?.trim();
+              const hubName = row['Hub name']?.trim();
+              const familyJp = row['Family name (JP)']?.trim();
+              if (allName) correctMothNames.add(allName);
+              if (hubName) correctMothNames.add(hubName);
+              if (allName && hubName) wameiMap[allName] = hubName;
+              if (hubName && familyJp) wameiFamilyMap[hubName] = familyJp;
+            });
+            console.log("wamei_checklist_ver.1.10.csv parsed successfully. wameiMap size:", Object.keys(wameiMap).length);
+          } catch (error) {
+            console.error("Error parsing wamei checklist data:", error);
+            console.warn("Continuing without wamei checklist data - moth name validation may be incomplete");
+          }
+        } else {
+          console.warn("Wamei checklist data not available - moth name validation will be limited");
         }
-        const wameiMap = {};
-        const wameiFamilyMap = {};
-        const correctMothNames = new Set();
-        wameiParsed.data.forEach(row => {
-          const allName = row['all_name']?.trim();
-          const hubName = row['Hub name']?.trim();
-          const familyJp = row['Family name (JP)']?.trim();
-          if (allName) correctMothNames.add(allName);
-          if (hubName) correctMothNames.add(hubName);
-          if (allName && hubName) wameiMap[allName] = hubName;
-          if (hubName && familyJp) wameiFamilyMap[hubName] = familyJp;
-        });
-        console.log("wamei_checklist_ver.1.10.csv parsed. wameiMap size:", Object.keys(wameiMap).length);
 
         // 和名クリーニング処理 - 余計な文字や引用符を除去
         const cleanJapaneseName = (name) => {
@@ -589,31 +621,43 @@ function App() {
           return cleanedName;
         };
 
-        // Parse 20210514YList_download.csv
-        const yListParsed = Papa.parse(yListText, { header: true, skipEmptyLines: true, delimiter: ',' });
-        if (yListParsed.errors.length) {
-          console.error("PapaParse errors in 20210514YList_download.csv:", yListParsed.errors);
-        }
-        const yListPlantFamilyMap = {};
-        const yListPlantScientificNameMap = {};
-        const yListPlantNames = new Set();
-        yListParsed.data.forEach(row => {
-          const plantName = row['和名']?.trim();
-          const familyJp = row['LAPG 科名']?.trim();
-          const scientificName = row['学名']?.trim();
+        // Parse 20210514YList_download.csv with error handling
+        let yListPlantFamilyMap = {};
+        let yListPlantScientificNameMap = {};
+        let yListPlantNames = new Set();
+        
+        if (yListText) {
+          try {
+            console.log("Parsing YList data...");
+            const yListParsed = Papa.parse(yListText, { header: true, skipEmptyLines: true, delimiter: ',' });
+            if (yListParsed.errors.length) {
+              console.error("PapaParse errors in 20210514YList_download.csv:", yListParsed.errors);
+            }
+            
+            yListParsed.data.forEach(row => {
+              const plantName = row['和名']?.trim();
+              const familyJp = row['LAPG 科名']?.trim();
+              const scientificName = row['学名']?.trim();
 
-          if (plantName) {
-            yListPlantNames.add(plantName);
+              if (plantName) {
+                yListPlantNames.add(plantName);
+              }
+              if (plantName && familyJp) {
+                yListPlantFamilyMap[plantName] = familyJp;
+              }
+              if (plantName && scientificName) {
+                yListPlantScientificNameMap[plantName] = scientificName;
+              }
+            });
+            console.log("20210514YList_download.csv parsed successfully. yListPlantFamilyMap size:", Object.keys(yListPlantFamilyMap).length);
+            console.log("20210514YList_download.csv parsed successfully. yListPlantScientificNameMap size:", Object.keys(yListPlantScientificNameMap).length);
+          } catch (error) {
+            console.error("Error parsing YList data:", error);
+            console.warn("Continuing without YList data - plant family information may be incomplete");
           }
-          if (plantName && familyJp) {
-            yListPlantFamilyMap[plantName] = familyJp;
-          }
-          if (plantName && scientificName) {
-            yListPlantScientificNameMap[plantName] = scientificName;
-          }
-        });
-        console.log("20210514YList_download.csv parsed. yListPlantFamilyMap size:", Object.keys(yListPlantFamilyMap).length);
-        console.log("20210514YList_download.csv parsed. yListPlantScientificNameMap size:", Object.keys(yListPlantScientificNameMap).length);
+        } else {
+          console.warn("YList data not available - plant family information will be limited");
+        }
 
         // 非維管束植物のリスト
         const nonVascularPlants = new Set([
@@ -733,18 +777,30 @@ function App() {
           return '';
         };
 
-        // Process hamushi_species.csv first to create hamushiMap
-        const hamushiParsed = Papa.parse(hamushiSpeciesText, { header: true, skipEmptyLines: true, delimiter: ',' });
-        if (hamushiParsed.errors.length) {
-          console.error("PapaParse errors in hamushi_species.csv:", hamushiParsed.errors);
-        }
-        const hamushiMap = {};
-        hamushiParsed.data.forEach(row => {
-          const name = row['和名']?.trim();
-          if (name) {
-            hamushiMap[name] = row;
+        // Process hamushi_species.csv first to create hamushiMap with error handling
+        let hamushiMap = {};
+        if (hamushiSpeciesText) {
+          try {
+            console.log("Parsing hamushi species data...");
+            const hamushiParsed = Papa.parse(hamushiSpeciesText, { header: true, skipEmptyLines: true, delimiter: ',' });
+            if (hamushiParsed.errors.length) {
+              console.error("PapaParse errors in hamushi_species.csv:", hamushiParsed.errors);
+            }
+            
+            hamushiParsed.data.forEach(row => {
+              const name = row['和名']?.trim();
+              if (name) {
+                hamushiMap[name] = row;
+              }
+            });
+            console.log("Hamushi species data parsed successfully. hamushiMap size:", Object.keys(hamushiMap).length);
+          } catch (error) {
+            console.error("Error parsing hamushi species data:", error);
+            console.warn("Continuing without hamushi species data - detailed hamushi information may be incomplete");
           }
-        });
+        } else {
+          console.warn("Hamushi species data not available - detailed hamushi information will be limited");
+        }
 
 
         // Process mainText
@@ -1601,14 +1657,18 @@ function App() {
           } // Added missing closing brace for complete callback
         });
 
-        // Parse butterfly_host.csv - Direct string processing approach
-        const cleanedButterflyText = butterflyText.replace(/^\uFEFF/, '');
-        const lines = cleanedButterflyText.split('\n').filter(line => line.trim());
-        
-        console.log("Total lines in butterfly CSV:", lines.length);
-        
-        // Manual parsing since this CSV has complex structure
-        const butterflyParsedData = [];
+        // Parse butterfly_host.csv - Direct string processing approach with error handling
+        let butterflyParsedData = [];
+        if (butterflyText) {
+          try {
+            console.log("Parsing butterfly data...");
+            const cleanedButterflyText = butterflyText.replace(/^\uFEFF/, '');
+            const lines = cleanedButterflyText.split('\n').filter(line => line.trim());
+            
+            console.log("Total lines in butterfly CSV:", lines.length);
+            
+            // Manual parsing since this CSV has complex structure
+            butterflyParsedData = [];
         
         // Skip header (first line)
         for (let i = 1; i < lines.length; i++) {
@@ -1867,14 +1927,27 @@ function App() {
             }
           });
         });
-
-        // Parse beetle CSV data
-        const beetleParsed = Papa.parse(beetleText, { header: true, skipEmptyLines: true, delimiter: ',' });
-        if (beetleParsed.errors.length) {
-          console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
-        }
         
-        const beetleData = [];
+        console.log("Butterfly data parsed successfully. butterflyData count:", butterflyData.length);
+        } catch (error) {
+          console.error("Error parsing butterfly data:", error);
+          console.warn("Continuing without butterfly data - butterfly information may be incomplete");
+        }
+        } else {
+          console.warn("Butterfly data not available - butterfly information will be limited");
+        }
+
+        // Parse beetle CSV data with error handling
+        let beetleData = [];
+        if (beetleText) {
+          try {
+            console.log("Parsing beetle data...");
+            const beetleParsed = Papa.parse(beetleText, { header: true, skipEmptyLines: true, delimiter: ',' });
+            if (beetleParsed.errors.length) {
+              console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
+            }
+            
+            beetleData = [];
         beetleParsed.data.forEach((row, index) => {
           const source = row['文献名'];
           const family = row['科'];
@@ -2000,10 +2073,22 @@ function App() {
             }
           });
         });
+        
+        console.log("Beetle data parsed successfully. beetleData count:", beetleData.length);
+        } catch (error) {
+          console.error("Error parsing beetle data:", error);
+          console.warn("Continuing without beetle data - beetle information may be incomplete");
+        }
+        } else {
+          console.warn("Beetle data not available - beetle information will be limited");
+        }
 
         // Process hamushi_species_integrated.csv to create leafbeetle data
         const leafbeetleData = [];
-        hamushiParsed.data.forEach((row, index) => {
+        if (Object.keys(hamushiMap).length > 0) {
+          try {
+            console.log("Processing leafbeetle data...");
+            Object.values(hamushiMap).forEach((row, index) => {
           const japaneseName = row['和名']?.trim();
           const family = row['科和名'] || row['科名'];
           const subfamily = row['亜科和名'] || row['亜科名'];
@@ -2148,6 +2233,15 @@ function App() {
             }
           });
         });
+        
+        console.log("Leafbeetle data processed successfully. leafbeetleData count:", leafbeetleData.length);
+        } catch (error) {
+          console.error("Error processing leafbeetle data:", error);
+          console.warn("Continuing without leafbeetle data - leafbeetle information may be incomplete");
+        }
+        } else {
+          console.warn("Hamushi species data not available - leafbeetle information will be limited");
+        }
 
         // Combine all moth data after all parsing is complete
         const combinedMothData = [...mainMothData];
