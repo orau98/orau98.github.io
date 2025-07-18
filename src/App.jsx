@@ -71,6 +71,16 @@ function App() {
       console.log("BASE_URL:", import.meta.env.BASE_URL);
 
       try {
+        // Fetch キリガ file with timeout as it's causing issues
+        const fetchWithTimeout = (url, timeout = 10000) => {
+          return Promise.race([
+            fetch(url),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Request timeout')), timeout)
+            )
+          ]);
+        };
+
         const [wameiRes, mainRes, yListRes, hamushiSpeciesRes, butterflyRes, beetleRes, kirigaRes] = await Promise.all([
           fetch(wameiCsvPath),
           fetch(mainCsvPath),
@@ -78,7 +88,7 @@ function App() {
           fetch(hamushiSpeciesCsvPath),
           fetch(butterflyCsvPath),
           fetch(beetleCsvPath),
-          fetch(kirigaCsvPath)
+          fetchWithTimeout(kirigaCsvPath, 10000).catch(() => null) // Don't fail if キリガ times out
         ]);
 
         if (!wameiRes.ok) throw new Error(`Failed to fetch ${wameiCsvPath}: ${wameiRes.statusText}`);
@@ -87,7 +97,7 @@ function App() {
         if (!hamushiSpeciesRes.ok) throw new Error(`Failed to fetch ${hamushiSpeciesCsvPath}: ${hamushiSpeciesRes.statusText}`);
         if (!butterflyRes.ok) throw new Error(`Failed to fetch ${butterflyCsvPath}: ${butterflyCsvPath.statusText}`);
         if (!beetleRes.ok) throw new Error(`Failed to fetch ${beetleCsvPath}: ${beetleRes.statusText}`);
-        if (!kirigaRes.ok) throw new Error(`Failed to fetch ${kirigaCsvPath}: ${kirigaRes.statusText}`);
+        // Don't check kirigaRes as it may be null
 
         const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText] = await Promise.all([
           wameiRes.text(),
@@ -96,7 +106,7 @@ function App() {
           hamushiSpeciesRes.text(),
           butterflyRes.text(),
           beetleRes.text(),
-          kirigaRes.text()
+          kirigaRes ? kirigaRes.text() : Promise.resolve('') // Return empty string if キリガ failed
         ]);
 
         console.log("CSV files fetched successfully. Parsing...");
@@ -104,16 +114,25 @@ function App() {
         // Parse キリガ CSV to create emergence time lookup table
         const emergenceTimeMap = new Map();
         
-        // Use Papa.parse for proper CSV parsing
-        const kirigaParsed = Papa.parse(kirigaText, {
-          header: true,
-          skipEmptyLines: 'greedy',
-          delimiter: ',',
-          quoteChar: '"',
-          escapeChar: '"'
-        });
-        
-        const kirigaData = kirigaParsed.data;
+        // Use Papa.parse for proper CSV parsing - handle empty kirigaText gracefully
+        let kirigaData = [];
+        if (kirigaText && kirigaText.trim()) {
+          try {
+            const kirigaParsed = Papa.parse(kirigaText, {
+              header: true,
+              skipEmptyLines: 'greedy',
+              delimiter: ',',
+              quoteChar: '"',
+              escapeChar: '"'
+            });
+            kirigaData = kirigaParsed.data;
+          } catch (error) {
+            console.warn('Failed to parse キリガ CSV:', error);
+            kirigaData = [];
+          }
+        } else {
+          console.warn('キリガ CSV data is empty or failed to load');
+        }
         
         // Debug log for キバラモクメキリガ
         const kibaraEntry = kirigaData.find(row => row['和名'] && row['和名'].includes('キバラモクメキリガ'));
