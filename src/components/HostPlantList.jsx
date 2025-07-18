@@ -4,7 +4,7 @@ import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
 import Pagination from './Pagination';
 
-const HostPlantListItem = ({ plant, mothNames }) => {
+const HostPlantListItem = ({ plant, mothNames, plantDetails = {} }) => {
   // Check if plant image exists
   const [imageExists, setImageExists] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -238,23 +238,25 @@ const HostPlantListItem = ({ plant, mothNames }) => {
   );
 };
 
-const HostPlantList = ({ hostPlants, plantDetails, embedded = false }) => {
-  console.log("HostPlantList props:", { hostPlants, plantDetails });
+const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false }) => {
   const [plantSearchTerm, setPlantSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 50;
 
   const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
 
+  const safeHostPlants = hostPlants || {};
   const safePlantDetails = plantDetails || {};
   const filteredHostPlants = useMemo(() => {
-    console.log("Inside filteredHostPlants useMemo. hostPlants:", hostPlants, "plantDetails:", plantDetails);
+    if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {
+      return [];
+    }
     const lowerCaseSearchTerm = debouncedPlantSearch.toLowerCase();
-    const filtered = Object.entries(hostPlants).filter(([plantName]) => {
+    const filtered = Object.entries(safeHostPlants).filter(([plantName]) => {
       console.log("Filtering plant:", plantName, "Details:", safePlantDetails[plantName]);
-      const detail = safePlantDetails[plantName];
-      const family = detail && detail.family ? detail.family.toLowerCase() : '';
-      const genus = detail && detail.genus ? detail.genus.toLowerCase() : '';
+      const detail = safePlantDetails[plantName] || {};
+      const family = detail.family ? detail.family.toLowerCase() : '';
+      const genus = detail.genus ? detail.genus.toLowerCase() : '';
       return plantName.toLowerCase().includes(lowerCaseSearchTerm) ||
              family.includes(lowerCaseSearchTerm) ||
              genus.includes(lowerCaseSearchTerm);
@@ -283,17 +285,17 @@ const HostPlantList = ({ hostPlants, plantDetails, embedded = false }) => {
       if (!aHasImage && bHasImage) return 1;
       return a.localeCompare(b, 'ja');
     });
-  }, [hostPlants, plantDetails, debouncedPlantSearch]);
+  }, [safeHostPlants, safePlantDetails, debouncedPlantSearch]);
 
   const plantNameSuggestions = useMemo(() => {
     if (!plantSearchTerm) return [];
     const lowerCaseSearchTerm = plantSearchTerm.toLowerCase();
     const suggestions = new Set();
-    Object.keys(hostPlants).forEach(plant => {
+    Object.keys(safeHostPlants).forEach(plant => {
       if (plant.toLowerCase().includes(lowerCaseSearchTerm)) {
         suggestions.add(plant);
       }
-      const detail = plantDetails[plant] || {};
+      const detail = safePlantDetails[plant] || {};
       if (detail.family?.toLowerCase().includes(lowerCaseSearchTerm)) {
         suggestions.add(detail.family);
       }
@@ -302,7 +304,7 @@ const HostPlantList = ({ hostPlants, plantDetails, embedded = false }) => {
       }
     });
     return Array.from(suggestions).slice(0, 10);
-  }, [hostPlants, plantDetails, plantSearchTerm]);
+  }, [safeHostPlants, safePlantDetails, plantSearchTerm]);
 
   const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
   const currentHostPlants = useMemo(() => {
@@ -356,7 +358,7 @@ const HostPlantList = ({ hostPlants, plantDetails, embedded = false }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {currentHostPlants.map(([plant, mothList], index) => (
                 <div key={plant} className="animate-fadeIn" style={{ animationDelay: `${index * 0.05}s` }}>
-                  <HostPlantListItem plant={plant} mothNames={mothList} />
+                  <HostPlantListItem plant={plant} mothNames={mothList} plantDetails={safePlantDetails} />
                 </div>
               ))}
             </div>

@@ -105,7 +105,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                   <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg">
                     {moth.name}
                   </h3>
-                  <p className="text-white/90 text-sm italic drop-shadow-md">
+                  <p className="text-white/90 text-sm drop-shadow-md">
                     {formatScientificName(moth.scientificName)}
                   </p>
                 </div>
@@ -126,7 +126,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                   <h3 className="text-slate-800 dark:text-slate-200 font-bold text-lg mb-2 leading-tight">
                     {moth.name}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm italic leading-relaxed">
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
                     {formatScientificName(moth.scientificName)}
                   </p>
                 </div>

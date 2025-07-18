@@ -54,11 +54,12 @@ function App() {
       let hostPlantData = {};
       let plantDetailData = {};
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
-      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_bokutou.csv`;
+      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_bokutou.csv?v=${Date.now()}`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
+      const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
 
       console.log("Fetching CSV files...");
       console.log("wameiCsvPath:", wameiCsvPath);
@@ -70,32 +71,127 @@ function App() {
       console.log("BASE_URL:", import.meta.env.BASE_URL);
 
       try {
-        const [wameiRes, mainRes, yListRes, hamushiSpeciesRes, butterflyRes, beetleRes] = await Promise.all([
+        const [wameiRes, mainRes, yListRes, hamushiSpeciesRes, butterflyRes, beetleRes, kirigaRes] = await Promise.all([
           fetch(wameiCsvPath),
           fetch(mainCsvPath),
           fetch(yListCsvPath),
           fetch(hamushiSpeciesCsvPath),
           fetch(butterflyCsvPath),
-          fetch(beetleCsvPath)
+          fetch(beetleCsvPath),
+          fetch(kirigaCsvPath)
         ]);
 
         if (!wameiRes.ok) throw new Error(`Failed to fetch ${wameiCsvPath}: ${wameiRes.statusText}`);
         if (!mainRes.ok) throw new Error(`Failed to fetch ${mainCsvPath}: ${mainRes.statusText}`);
         if (!yListRes.ok) throw new Error(`Failed to fetch ${yListCsvPath}: ${yListRes.statusText}`);
         if (!hamushiSpeciesRes.ok) throw new Error(`Failed to fetch ${hamushiSpeciesCsvPath}: ${hamushiSpeciesRes.statusText}`);
-        if (!butterflyRes.ok) throw new Error(`Failed to fetch ${butterflyCsvPath}: ${butterflyRes.statusText}`);
+        if (!butterflyRes.ok) throw new Error(`Failed to fetch ${butterflyCsvPath}: ${butterflyCsvPath.statusText}`);
         if (!beetleRes.ok) throw new Error(`Failed to fetch ${beetleCsvPath}: ${beetleRes.statusText}`);
+        if (!kirigaRes.ok) throw new Error(`Failed to fetch ${kirigaCsvPath}: ${kirigaRes.statusText}`);
 
-        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText] = await Promise.all([
+        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText] = await Promise.all([
           wameiRes.text(),
           mainRes.text(),
           yListRes.text(),
           hamushiSpeciesRes.text(),
           butterflyRes.text(),
-          beetleRes.text()
+          beetleRes.text(),
+          kirigaRes.text()
         ]);
 
         console.log("CSV files fetched successfully. Parsing...");
+
+        // Parse キリガ CSV to create emergence time lookup table
+        const emergenceTimeMap = new Map();
+        
+        // Use Papa.parse for proper CSV parsing
+        const kirigaParsed = Papa.parse(kirigaText, {
+          header: true,
+          skipEmptyLines: 'greedy',
+          delimiter: ',',
+          quoteChar: '"',
+          escapeChar: '"'
+        });
+        
+        const kirigaData = kirigaParsed.data;
+        
+        // Debug log for キバラモクメキリガ
+        const kibaraEntry = kirigaData.find(row => row['和名'] && row['和名'].includes('キバラモクメキリガ'));
+        if (kibaraEntry) {
+          console.log('Found キバラモクメキリガ:', kibaraEntry);
+        } else {
+          console.log('キバラモクメキリガ not found in parsed data');
+          console.log('Sample parsed entries:', kirigaData.slice(0, 5));
+        }
+        
+        console.log("Parsed キリガ data:", kirigaData.length, "entries");
+        
+        // Create comprehensive data maps from キリガ data
+        const kirigaHostPlantMap = new Map();
+        const kirigaRemarksMap = new Map();
+        
+        kirigaData.forEach(row => {
+          const japaneseName = row['和名']?.trim();
+          const scientificName = row['学名']?.trim();
+          const emergenceTime = row['成虫の発生時期']?.trim();
+          const hostPlants = row['食草']?.trim();
+          const remarks = row['食草に関する備考']?.trim();
+          
+          // Store emergence time data
+          if (japaneseName && emergenceTime && emergenceTime !== '不明') {
+            emergenceTimeMap.set(japaneseName, emergenceTime);
+            
+            // Debug log for target species
+            if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ')) {
+              console.log(`Added to emergenceTimeMap: ${japaneseName} -> ${emergenceTime}`);
+            }
+          }
+          if (scientificName && emergenceTime && emergenceTime !== '不明') {
+            emergenceTimeMap.set(scientificName, emergenceTime);
+            
+            // Also store with author/year removed for better matching
+            const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            if (cleanedScientificName !== scientificName) {
+              emergenceTimeMap.set(cleanedScientificName, emergenceTime);
+              
+              // Debug log for target species
+              if (cleanedScientificName.includes('Xylena formosa') || cleanedScientificName.includes('Diphtherocome autumnalis')) {
+                console.log(`Added to emergenceTimeMap: ${cleanedScientificName} -> ${emergenceTime}`);
+              }
+            }
+          }
+          
+          // Store host plant information
+          if (japaneseName && hostPlants) {
+            kirigaHostPlantMap.set(japaneseName, hostPlants);
+          }
+          if (scientificName && hostPlants) {
+            kirigaHostPlantMap.set(scientificName, hostPlants);
+            
+            // Also store with author/year removed for better matching
+            const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            if (cleanedScientificName !== scientificName) {
+              kirigaHostPlantMap.set(cleanedScientificName, hostPlants);
+            }
+          }
+          
+          // Store remarks information
+          if (japaneseName && remarks) {
+            kirigaRemarksMap.set(japaneseName, remarks);
+          }
+          if (scientificName && remarks) {
+            kirigaRemarksMap.set(scientificName, remarks);
+            
+            // Also store with author/year removed for better matching
+            const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            if (cleanedScientificName !== scientificName) {
+              kirigaRemarksMap.set(cleanedScientificName, remarks);
+            }
+          }
+        });
+
+        console.log("Emergence time map created with", emergenceTimeMap.size, "entries");
+        console.log("Sample entries:", Array.from(emergenceTimeMap.entries()).slice(0, 5));
 
         // Function to clean and normalize scientific names for comparison
         const cleanScientificNameForComparison = (scientificName) => {
@@ -355,9 +451,88 @@ function App() {
         });
         console.log("wamei_checklist_ver.1.10.csv parsed. wameiMap size:", Object.keys(wameiMap).length);
 
+        // 和名クリーニング処理 - 余計な文字や引用符を除去
+        const cleanJapaneseName = (name) => {
+          if (!name) return name;
+          
+          let cleaned = name;
+          
+          // 外側の余計な引用符を除去
+          if (cleaned.startsWith('"""') && cleaned.endsWith('"""')) {
+            cleaned = cleaned.slice(3, -3);
+          } else if (cleaned.startsWith('""') && cleaned.endsWith('""')) {
+            cleaned = cleaned.slice(2, -2);
+          } else if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
+            cleaned = cleaned.slice(1, -1);
+          }
+          
+          // パターンマッチングで問題のある形式を修正
+          
+          // パターン1: "未知"和名 -> 和名
+          const pattern1 = /^"*未知"*"*(.+?)$/;
+          const match1 = cleaned.match(pattern1);
+          if (match1) {
+            cleaned = match1[1].replace(/"/g, '');
+          }
+          
+          // パターン2: "説明文(植物科名を含む)"和名 -> 和名
+          const pattern2 = /^"*[^"]*(?:科)[^"]*"*"*([^"]+?)$/;
+          const match2 = cleaned.match(pattern2);
+          if (match2) {
+            const candidate = match2[1].replace(/"/g, '');
+            // 和名っぽい文字列かチェック（カタカナ+ひらがなの組み合わせ）
+            if (/^[ァ-ヶあ-ん]+$/.test(candidate)) {
+              cleaned = candidate;
+            }
+          }
+          
+          // パターン3: "〜という"和名 -> 和名
+          const pattern3 = /^"*[^"]+という"*"*([^"]+?)$/;
+          const match3 = cleaned.match(pattern3);
+          if (match3) {
+            const candidate = match3[1].replace(/"/g, '');
+            if (/^[ァ-ヶあ-ん]+$/.test(candidate)) {
+              cleaned = candidate;
+            }
+          }
+          
+          // パターン4: "説明文。説明文"和名 -> 和名
+          const pattern4 = /^"*[^"]+。[^"]*"*"*([^"]+?)$/;
+          const match4 = cleaned.match(pattern4);
+          if (match4) {
+            const candidate = match4[1].replace(/"/g, '');
+            if (/^[ァ-ヶあ-ん]+$/.test(candidate)) {
+              cleaned = candidate;
+            }
+          }
+          
+          // パターン5: 特別なケース - "。〜"和名 -> 和名
+          if (cleaned.startsWith('。')) {
+            const pattern5 = /^。[^"]*"*([^"]+?)$/;
+            const match5 = cleaned.match(pattern5);
+            if (match5) {
+              const candidate = match5[1].replace(/"/g, '');
+              if (/^[ァ-ヶあ-ん]+$/.test(candidate)) {
+                cleaned = candidate;
+              }
+            }
+          }
+          
+          // 残った余計な引用符を除去
+          cleaned = cleaned.replace(/"/g, '');
+          
+          // 空白文字の正規化
+          cleaned = cleaned.trim();
+          
+          return cleaned;
+        };
+
         const correctMothName = (name) => {
-          if (correctMothNames.has(name)) {
-            return name;
+          // まず和名をクリーニング
+          const cleanedName = cleanJapaneseName(name);
+          
+          if (correctMothNames.has(cleanedName)) {
+            return cleanedName;
           }
           const corrections = {
             'パ': 'バ', 'ピ': 'ビ', 'プ': 'ブ', 'ペ': 'ベ', 'ポ': 'ボ',
@@ -365,7 +540,7 @@ function App() {
             'ザ': 'サ', 'ジ': 'シ', 'ズ': 'ス', 'ゼ': 'セ', 'ゾ': 'ソ',
             'ダ': 'タ', 'ヂ': 'チ', 'ヅ': 'ツ', 'デ': 'テ', 'ド': 'ト',
           };
-          let correctedName = name;
+          let correctedName = cleanedName;
           for (const [wrong, correct] of Object.entries(corrections)) {
             if (correctedName.includes(wrong)) {
               const tempName = correctedName.replace(new RegExp(wrong, 'g'), correct);
@@ -374,7 +549,7 @@ function App() {
               }
             }
           }
-          return name;
+          return cleanedName;
         };
 
         const formatScientificNameForFilename = (scientificName) => {
@@ -562,7 +737,7 @@ function App() {
           delimiter: ',',
           quoteChar: '"',
           escapeChar: '"',
-          transform: (value, field) => {
+          transform: (value) => {
             // Clean up malformed quote escaping
             if (typeof value === 'string') {
               return value.replace(/^"|"$/g, '');
@@ -590,6 +765,12 @@ function App() {
               
               // Use the scientific name directly from the CSV as it's already properly formatted
               let scientificName = row['学名'] || '';
+              
+              // Fix malformed scientific names with quote issues
+              if (scientificName && scientificName.includes(',"')) {
+                // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
+                scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
+              }
               
               // If scientific name is empty, try to construct from genus and species
               if (!scientificName || scientificName.trim() === '') {
@@ -646,6 +827,31 @@ function App() {
 
               // Improved host plant parsing with validation
               let rawHostPlant = row['食草'] || '';
+              
+              // Check if we have キリガ CSV data for this species
+              const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+              const kirigaHostPlants = kirigaHostPlantMap.get(mothName) || 
+                                       kirigaHostPlantMap.get(scientificName) ||
+                                       kirigaHostPlantMap.get(cleanedScientificName);
+              const kirigaRemarks = kirigaRemarksMap.get(mothName) || 
+                                    kirigaRemarksMap.get(scientificName) ||
+                                    kirigaRemarksMap.get(cleanedScientificName);
+              const hasKirigaData = kirigaHostPlants || kirigaRemarks;
+              
+              if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
+                // Use キリガ data as primary source
+                rawHostPlant = kirigaHostPlants;
+                
+                // Add remarks if available
+                if (kirigaRemarks) {
+                  rawHostPlant += ` (${kirigaRemarks})`;
+                }
+                
+                // Debug log for target species
+                if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ')) {
+                  console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
+                }
+              }
               
               // Special handling for フクラスズメ which has malformed food plant data due to CSV parsing issues
               if (mothName === 'フクラスズメ') {
@@ -1135,6 +1341,21 @@ function App() {
                   instagramUrl: row['instagram_url'] || ''
                 });
               } else {
+                // Check if we have キリガ data for this species
+                const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+                const hasKirigaData = kirigaHostPlantMap.get(mothName) || 
+                                     kirigaHostPlantMap.get(scientificName) ||
+                                     kirigaHostPlantMap.get(cleanedScientificName) ||
+                                     kirigaRemarksMap.get(mothName) || 
+                                     kirigaRemarksMap.get(scientificName) ||
+                                     kirigaRemarksMap.get(cleanedScientificName) ||
+                                     emergenceTimeMap.get(mothName) || 
+                                     emergenceTimeMap.get(scientificName) ||
+                                     emergenceTimeMap.get(cleanedScientificName);
+                
+                // Determine the source based on whether we have キリガ data
+                const sourceToUse = hasKirigaData ? '日本のキリガ' : (row['出典'] || '不明');
+                
                 // Process as moth
                 mainMothData.push({ 
                   id: `main-${index}`, 
@@ -1144,14 +1365,32 @@ function App() {
                   type: 'moth',
                   hostPlants: hostPlantList,
                   hostPlantDetails: hostPlantEntries, // Include detailed host plant info
-                  source: row['出典'] || '不明', 
+                  source: sourceToUse, 
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
                   // Get remarks from 27th column
                   geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
-                  instagramUrl: row['instagram_url'] || ''
+                  instagramUrl: row['instagram_url'] || '',
+                  // Emergence time - lookup from キリガ data
+                  emergenceTime: (() => {
+                    const emergenceTime = emergenceTimeMap.get(mothName) || 
+                                         emergenceTimeMap.get(scientificName) ||
+                                         emergenceTimeMap.get(cleanedScientificName) || '不明';
+                    if (emergenceTime !== '不明') {
+                      console.log(`Found emergence time for ${mothName} (${scientificName}): ${emergenceTime}`);
+                    } else {
+                      // Debug log for target species
+                      if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ')) {
+                        console.log(`DEBUG: ${mothName} not found in emergenceTimeMap`);
+                        console.log(`Searching for: japanese="${mothName}", scientific="${scientificName}", cleaned="${cleanedScientificName}"`);
+                        const keys = Array.from(emergenceTimeMap.keys());
+                        console.log(`Keys in emergenceTimeMap (first 10):`, keys.slice(0, 10));
+                      }
+                    }
+                    return emergenceTime;
+                  })()
                 });
               }
 
@@ -1471,6 +1710,12 @@ function App() {
           if (!japaneseName || !genus) {
             console.log("Skipping leafbeetle row:", { japaneseName, genus, species, rowIndex: index });
             return;
+          }
+          
+          // Fix malformed scientific names with quote issues
+          if (scientificName && scientificName.includes(',"')) {
+            // Fix pattern like 'Xylena formosa (Butler,"1878)' to 'Xylena formosa (Butler 1878)'
+            scientificName = scientificName.replace(/,\"(\d{4})\)/g, ' $1)');
           }
           
           // If scientific name is empty, try to construct from genus and species

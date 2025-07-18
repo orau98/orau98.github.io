@@ -22,7 +22,11 @@ export const formatScientificName = (scientificName) => {
   return (
     <>
       <em>{binomialName}</em>
-      {authorInfo && <span>{authorInfo}</span>}
+      {authorInfo && (
+        <span className="scientific-name-author">
+          {authorInfo}
+        </span>
+      )}
     </>
   );
 };

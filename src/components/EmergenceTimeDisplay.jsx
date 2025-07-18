@@ -2,18 +2,18 @@ import React, { useMemo } from 'react';
 
 // 月名と色のマッピング
 const MONTHS = [
-  { name: '1月', short: 'Jan', color: 'bg-blue-100 text-blue-800 border-blue-200', season: 'winter' },
-  { name: '2月', short: 'Feb', color: 'bg-blue-100 text-blue-800 border-blue-200', season: 'winter' },
-  { name: '3月', short: 'Mar', color: 'bg-green-100 text-green-800 border-green-200', season: 'spring' },
-  { name: '4月', short: 'Apr', color: 'bg-green-100 text-green-800 border-green-200', season: 'spring' },
-  { name: '5月', short: 'May', color: 'bg-green-100 text-green-800 border-green-200', season: 'spring' },
-  { name: '6月', short: 'Jun', color: 'bg-yellow-100 text-yellow-800 border-yellow-200', season: 'summer' },
-  { name: '7月', short: 'Jul', color: 'bg-red-100 text-red-800 border-red-200', season: 'summer' },
-  { name: '8月', short: 'Aug', color: 'bg-red-100 text-red-800 border-red-200', season: 'summer' },
-  { name: '9月', short: 'Sep', color: 'bg-orange-100 text-orange-800 border-orange-200', season: 'autumn' },
-  { name: '10月', short: 'Oct', color: 'bg-orange-100 text-orange-800 border-orange-200', season: 'autumn' },
-  { name: '11月', short: 'Nov', color: 'bg-amber-100 text-amber-800 border-amber-200', season: 'autumn' },
-  { name: '12月', short: 'Dec', color: 'bg-blue-100 text-blue-800 border-blue-200', season: 'winter' }
+  { name: '1月', short: 'Jan', number: 1, color: 'bg-blue-500', lightColor: 'bg-blue-100', textColor: 'text-blue-700', season: 'winter' },
+  { name: '2月', short: 'Feb', number: 2, color: 'bg-blue-500', lightColor: 'bg-blue-100', textColor: 'text-blue-700', season: 'winter' },
+  { name: '3月', short: 'Mar', number: 3, color: 'bg-green-500', lightColor: 'bg-green-100', textColor: 'text-green-700', season: 'spring' },
+  { name: '4月', short: 'Apr', number: 4, color: 'bg-green-500', lightColor: 'bg-green-100', textColor: 'text-green-700', season: 'spring' },
+  { name: '5月', short: 'May', number: 5, color: 'bg-green-500', lightColor: 'bg-green-100', textColor: 'text-green-700', season: 'spring' },
+  { name: '6月', short: 'Jun', number: 6, color: 'bg-yellow-500', lightColor: 'bg-yellow-100', textColor: 'text-yellow-700', season: 'summer' },
+  { name: '7月', short: 'Jul', number: 7, color: 'bg-red-500', lightColor: 'bg-red-100', textColor: 'text-red-700', season: 'summer' },
+  { name: '8月', short: 'Aug', number: 8, color: 'bg-red-500', lightColor: 'bg-red-100', textColor: 'text-red-700', season: 'summer' },
+  { name: '9月', short: 'Sep', number: 9, color: 'bg-orange-500', lightColor: 'bg-orange-100', textColor: 'text-orange-700', season: 'autumn' },
+  { name: '10月', short: 'Oct', number: 10, color: 'bg-orange-500', lightColor: 'bg-orange-100', textColor: 'text-orange-700', season: 'autumn' },
+  { name: '11月', short: 'Nov', number: 11, color: 'bg-amber-500', lightColor: 'bg-amber-100', textColor: 'text-amber-700', season: 'autumn' },
+  { name: '12月', short: 'Dec', number: 12, color: 'bg-blue-500', lightColor: 'bg-blue-100', textColor: 'text-blue-700', season: 'winter' }
 ];
 
 // 季節アイコン
@@ -120,8 +120,36 @@ const parseEmergenceTime = (emergenceTime) => {
   return Array.from(activeMonths).sort((a, b) => a - b);
 };
 
+// 連続する月の期間を取得する関数
+const getActiveRanges = (activeMonths) => {
+  if (activeMonths.length === 0) return [];
+  
+  const ranges = [];
+  let currentRange = { start: activeMonths[0], end: activeMonths[0] };
+  
+  for (let i = 1; i < activeMonths.length; i++) {
+    const currentMonth = activeMonths[i];
+    const prevMonth = activeMonths[i - 1];
+    
+    // 連続する月かチェック（年をまたぐ場合も考慮）
+    const isConsecutive = currentMonth === prevMonth + 1 || 
+                         (prevMonth === 12 && currentMonth === 1);
+    
+    if (isConsecutive) {
+      currentRange.end = currentMonth;
+    } else {
+      ranges.push({ ...currentRange });
+      currentRange = { start: currentMonth, end: currentMonth };
+    }
+  }
+  
+  ranges.push(currentRange);
+  return ranges;
+};
+
 const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
   const activeMonths = useMemo(() => parseEmergenceTime(emergenceTime), [emergenceTime]);
+  const activeRanges = useMemo(() => getActiveRanges(activeMonths), [activeMonths]);
   
   if (!emergenceTime || emergenceTime === '不明' || activeMonths.length === 0) {
     return (
@@ -135,26 +163,41 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
   }
   
   if (compact) {
-    // コンパクト表示：アクティブな月のみ表示
+    // コンパクト表示：アクティブな月のバーを小さく表示
     return (
-      <div className="flex flex-wrap gap-1">
-        {activeMonths.map(monthIndex => {
-          const month = MONTHS[monthIndex - 1];
-          return (
-            <span
-              key={monthIndex}
-              className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-md border ${month.color}`}
-            >
-              <SeasonIcon season={month.season} className="w-3 h-3 mr-1" />
-              {month.short}
-            </span>
-          );
-        })}
+      <div className="space-y-2">
+        <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+          成虫発生時期
+        </div>
+        <div className="relative">
+          {/* 背景のタイムライン */}
+          <div className="flex h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            {MONTHS.map((month) => {
+              const isActive = activeMonths.includes(month.number);
+              return (
+                <div
+                  key={month.number}
+                  className={`flex-1 ${isActive ? MONTHS[month.number - 1].color : ''} transition-all duration-200`}
+                  title={`${month.name} ${isActive ? '(活動期)' : ''}`}
+                />
+              );
+            })}
+          </div>
+          
+          {/* 月のラベル */}
+          <div className="flex justify-between mt-1 px-1">
+            {[1, 3, 6, 9, 12].map(monthNum => (
+              <span key={monthNum} className="text-xs text-slate-500 dark:text-slate-400">
+                {monthNum}月
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
   
-  // フル表示：全月表示でアクティブ月をハイライト
+  // フル表示：ガントチャート風デザイン
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2 mb-3">
@@ -173,40 +216,118 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
         </p>
       </div>
       
-      {/* 月別カレンダー表示 */}
-      <div className="grid grid-cols-12 gap-1 sm:gap-2">
-        {MONTHS.map((month, index) => {
-          const monthNumber = index + 1;
-          const isActive = activeMonths.includes(monthNumber);
-          
-          return (
-            <div
-              key={monthNumber}
-              className={`
-                relative flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg border transition-all duration-200
-                ${isActive 
-                  ? `${month.color} shadow-sm transform scale-105 ring-2 ring-offset-1 ring-opacity-50` 
-                  : 'bg-slate-50 text-slate-400 border-slate-200 dark:bg-slate-800 dark:text-slate-500 dark:border-slate-700'
-                }
-              `}
-            >
-              {isActive && (
-                <div className="absolute -top-1 -right-1">
-                  <SeasonIcon season={month.season} className="w-3 h-3 sm:w-4 sm:h-4" />
-                </div>
-              )}
-              
-              <span className="text-xs sm:text-sm font-bold">
-                {monthNumber}
-              </span>
-              <span className="text-[10px] sm:text-xs mt-1">
-                {month.name}
-              </span>
+      {/* ガントチャート風タイムライン */}
+      <div className="space-y-3">
+        {/* 月のヘッダー */}
+        <div className="grid grid-cols-12 gap-1 text-center">
+          {MONTHS.map((month) => (
+            <div key={month.number} className="text-xs font-medium text-slate-600 dark:text-slate-400">
+              <div className="flex flex-col items-center">
+                <SeasonIcon season={month.season} className="w-3 h-3 mb-1" />
+                <span className="hidden sm:block">{month.number}月</span>
+                <span className="sm:hidden">{month.number}</span>
+              </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+        
+        {/* メインタイムライン */}
+        <div className="relative">
+          {/* 背景グリッド */}
+          <div className="grid grid-cols-12 gap-1 h-8">
+            {MONTHS.map((month) => (
+              <div
+                key={month.number}
+                className="bg-slate-100 dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600"
+              />
+            ))}
+          </div>
+          
+          {/* アクティブ期間のバー */}
+          <div className="absolute inset-0 grid grid-cols-12 gap-1">
+            {MONTHS.map((month) => {
+              const isActive = activeMonths.includes(month.number);
+              if (!isActive) return <div key={month.number} />;
+              
+              return (
+                <div
+                  key={month.number}
+                  className={`
+                    ${month.color} 
+                    rounded 
+                    shadow-sm 
+                    border-2 
+                    border-white 
+                    dark:border-slate-800 
+                    transition-all 
+                    duration-200 
+                    hover:scale-105 
+                    hover:shadow-md
+                    relative
+                    overflow-hidden
+                  `}
+                  title={`${month.name} - 成虫発生期`}
+                >
+                  {/* 光沢効果 */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+                  
+                  {/* 月番号 */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-white font-bold text-xs drop-shadow">
+                      {month.number}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* 季節ラベル */}
+        <div className="grid grid-cols-4 gap-2 mt-4">
+          {[
+            { season: 'winter', label: '冬', months: [12, 1, 2], color: 'text-blue-600' },
+            { season: 'spring', label: '春', months: [3, 4, 5], color: 'text-green-600' },
+            { season: 'summer', label: '夏', months: [6, 7, 8], color: 'text-red-600' },
+            { season: 'autumn', label: '秋', months: [9, 10, 11], color: 'text-orange-600' }
+          ].map(({ season, label, months, color }) => {
+            const hasActiveMonths = months.some(month => activeMonths.includes(month));
+            return (
+              <div 
+                key={season}
+                className={`
+                  flex items-center justify-center p-2 rounded-lg border transition-all duration-200
+                  ${hasActiveMonths 
+                    ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 shadow-sm' 
+                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-50'
+                  }
+                `}
+              >
+                <SeasonIcon season={season} className={`w-4 h-4 mr-2 ${color}`} />
+                <span className={`text-sm font-medium ${color} ${hasActiveMonths ? '' : 'opacity-50'}`}>
+                  {label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* アクティブ月の統計 */}
+        <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 border border-emerald-200 dark:border-emerald-700/50">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-emerald-700 dark:text-emerald-300 font-medium">
+              発生期間: {activeMonths.length}ヶ月間
+            </span>
+            <div className="flex items-center space-x-2">
+              {activeRanges.map((range, index) => (
+                <span key={index} className="text-emerald-600 dark:text-emerald-400 text-xs bg-emerald-100 dark:bg-emerald-800 px-2 py-1 rounded">
+                  {range.start}月{range.start !== range.end ? `～${range.end}月` : ''}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      
     </div>
   );
 };

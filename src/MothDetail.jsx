@@ -535,6 +535,64 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   </div>
                 )}
 
+                {/* 詳細備考情報（キリガデータ統合対応） */}
+                {moth.remarks && (
+                  <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
+                    <div className="space-y-2">
+                      <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">詳細情報:</span>
+                      {moth.remarks.split(' | ').map((remark, remarkIndex) => {
+                        // 食草備考の場合
+                        if (remark.startsWith('食草: ')) {
+                          const content = remark.substring(3);
+                          return (
+                            <div key={remarkIndex} className="flex items-start space-x-2">
+                              <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                              </svg>
+                              <p className="text-sm text-slate-700 dark:text-slate-300">{content}</p>
+                            </div>
+                          );
+                        }
+                        // 発生時期の場合
+                        else if (remark.startsWith('発生時期: ')) {
+                          const content = remark.substring(5);
+                          return (
+                            <div key={remarkIndex} className="flex items-start space-x-2">
+                              <svg className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <p className="text-sm text-slate-700 dark:text-slate-300">{content}</p>
+                            </div>
+                          );
+                        }
+                        // 旧備考の場合
+                        else if (remark.startsWith('旧備考: ')) {
+                          const content = remark.substring(4);
+                          return (
+                            <div key={remarkIndex} className="flex items-start space-x-2">
+                              <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <p className="text-sm text-slate-600 dark:text-slate-400 italic">{content}</p>
+                            </div>
+                          );
+                        }
+                        // その他の備考
+                        else {
+                          return (
+                            <div key={remarkIndex} className="flex items-start space-x-2">
+                              <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <p className="text-sm text-slate-700 dark:text-slate-300">{remark}</p>
+                            </div>
+                          );
+                        }
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* 出典情報 */}
                 {moth.source && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
@@ -561,8 +619,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             </div>
 
-            {/* 成虫発生時期情報 - ハムシのみ表示 */}
-            {moth.type === 'leafbeetle' && moth.emergenceTime && (
+            {/* 成虫発生時期情報 - ハムシと蛾で表示 */}
+            {(moth.type === 'leafbeetle' || moth.type === 'moth') && moth.emergenceTime && moth.emergenceTime !== '不明' && (
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
@@ -587,7 +645,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="text-sm text-amber-700 dark:text-amber-300">
-                          <span className="font-medium">出典:</span> ハムシハンドブックに基づく情報
+                          <span className="font-medium">出典:</span> {moth.type === 'leafbeetle' ? 'ハムシハンドブックに基づく情報' : '日本のキリガ及び関連文献に基づく情報'}
                         </p>
                       </div>
                     </div>
