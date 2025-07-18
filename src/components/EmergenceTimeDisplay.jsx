@@ -229,7 +229,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="text-sm">発生時期不明</span>
+        <span className="text-sm">時期不明</span>
       </div>
     );
   }
@@ -239,7 +239,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
     return (
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-          発生時期
+          時期
         </div>
         <div className="relative">
           {/* 背景のタイムライン */}
@@ -272,14 +272,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
   // フル表示：ガントチャート風デザイン
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2 mb-3">
-        <svg className="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <h4 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-          発生時期
-        </h4>
-      </div>
       
       {/* 原文表示 */}
       <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
