@@ -94,6 +94,78 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   }
   
+  // 「X月頃羽化し、Y月頃まで」「X月頃発生し、Y月頃まで」パターンを検出
+  const hatchingToPattern = /(\d{1,2})月頃(?:羽化|発生)し?、?(?:.*?)?(\d{1,2})月頃まで/g;
+  while ((match = hatchingToPattern.exec(emergenceTime)) !== null) {
+    const start = parseInt(match[1]);
+    const end = parseInt(match[2]);
+    
+    if (start <= end) {
+      for (let i = start; i <= end; i++) {
+        activeMonths.add(i);
+      }
+    } else {
+      // 年をまたぐ場合（例：11月頃羽化し、1月頃まで）
+      for (let i = start; i <= 12; i++) {
+        activeMonths.add(i);
+      }
+      for (let i = 1; i <= end; i++) {
+        activeMonths.add(i);
+      }
+    }
+  }
+  
+  // 「X月〜Y月」「X月からY月」パターンを検出
+  const fromToPattern = /(\d{1,2})月(?:から|より)?[〜～-](\d{1,2})月/g;
+  while ((match = fromToPattern.exec(emergenceTime)) !== null) {
+    const start = parseInt(match[1]);
+    const end = parseInt(match[2]);
+    
+    if (start <= end) {
+      for (let i = start; i <= end; i++) {
+        activeMonths.add(i);
+      }
+    } else {
+      // 年をまたぐ場合
+      for (let i = start; i <= 12; i++) {
+        activeMonths.add(i);
+      }
+      for (let i = 1; i <= end; i++) {
+        activeMonths.add(i);
+      }
+    }
+  }
+  
+  // 「X月頃〜Y月頃」パターンを検出
+  const approximateRangePattern = /(\d{1,2})月頃[〜～-](\d{1,2})月頃/g;
+  while ((match = approximateRangePattern.exec(emergenceTime)) !== null) {
+    const start = parseInt(match[1]);
+    const end = parseInt(match[2]);
+    
+    if (start <= end) {
+      for (let i = start; i <= end; i++) {
+        activeMonths.add(i);
+      }
+    } else {
+      // 年をまたぐ場合
+      for (let i = start; i <= 12; i++) {
+        activeMonths.add(i);
+      }
+      for (let i = 1; i <= end; i++) {
+        activeMonths.add(i);
+      }
+    }
+  }
+  
+  // 「X月頃発生」「X月頃出現」パターンを検出
+  const approximateMonthPattern = /(\d{1,2})月頃(?:発生|出現|羽化)/g;
+  while ((match = approximateMonthPattern.exec(emergenceTime)) !== null) {
+    const month = parseInt(match[1]);
+    if (month >= 1 && month <= 12) {
+      activeMonths.add(month);
+    }
+  }
+  
   // 季節表現を月に変換
   const seasonMap = {
     '春': [3, 4, 5],
