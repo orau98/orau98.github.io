@@ -630,7 +630,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       </svg>
                     </div>
                     <h2 className="text-xl font-bold text-orange-600 dark:text-orange-400">
-                      成虫発生時期
+                      発生時期
                     </h2>
                   </div>
                 </div>
@@ -645,7 +645,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="text-sm text-amber-700 dark:text-amber-300">
-                          <span className="font-medium">出典:</span> {moth.type === 'leafbeetle' ? 'ハムシハンドブックに基づく情報' : '日本のキリガ及び関連文献に基づく情報'}
+                          <span className="font-medium">出典:</span> {moth.type === 'leafbeetle' ? 'ハムシハンドブック' : '日本のキリガ'}
                         </p>
                       </div>
                     </div>

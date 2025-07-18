@@ -167,7 +167,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
     return (
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-          成虫発生時期
+          発生時期
         </div>
         <div className="relative">
           {/* 背景のタイムライン */}
@@ -205,7 +205,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         <h4 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-          成虫発生時期
+          発生時期
         </h4>
       </div>
       
@@ -223,7 +223,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
           {MONTHS.map((month) => (
             <div key={month.number} className="text-xs font-medium text-slate-600 dark:text-slate-400">
               <div className="flex flex-col items-center">
-                <SeasonIcon season={month.season} className="w-3 h-3 mb-1" />
                 <span className="hidden sm:block">{month.number}月</span>
                 <span className="sm:hidden">{month.number}</span>
               </div>
@@ -283,34 +282,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
           </div>
         </div>
         
-        {/* 季節ラベル */}
-        <div className="grid grid-cols-4 gap-2 mt-4">
-          {[
-            { season: 'winter', label: '冬', months: [12, 1, 2], color: 'text-blue-600' },
-            { season: 'spring', label: '春', months: [3, 4, 5], color: 'text-green-600' },
-            { season: 'summer', label: '夏', months: [6, 7, 8], color: 'text-red-600' },
-            { season: 'autumn', label: '秋', months: [9, 10, 11], color: 'text-orange-600' }
-          ].map(({ season, label, months, color }) => {
-            const hasActiveMonths = months.some(month => activeMonths.includes(month));
-            return (
-              <div 
-                key={season}
-                className={`
-                  flex items-center justify-center p-2 rounded-lg border transition-all duration-200
-                  ${hasActiveMonths 
-                    ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 shadow-sm' 
-                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-50'
-                  }
-                `}
-              >
-                <SeasonIcon season={season} className={`w-4 h-4 mr-2 ${color}`} />
-                <span className={`text-sm font-medium ${color} ${hasActiveMonths ? '' : 'opacity-50'}`}>
-                  {label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
         
       </div>
     </div>
