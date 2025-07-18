@@ -40,7 +40,7 @@ export const generateSitemap = (moths, butterflies, beetles, leafbeetles, hostPl
     }
   });
 
-  // 甲虫の詳細ページ
+  // タマムシの詳細ページ
   beetles.forEach((beetle, index) => {
     if (beetle.name) {
       sitemap += `  <url>

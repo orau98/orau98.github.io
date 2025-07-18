@@ -212,10 +212,10 @@ async function generateMetaPages() {
         if (!name) return;
 
         const id = `beetle-${index + 1}`;
-        const title = scientificName ? `${name} (${scientificName}) - 甲虫図鑑` : `${name} - 甲虫図鑑`;
+        const title = scientificName ? `${name} (${scientificName}) - タマムシ図鑑` : `${name} - タマムシ図鑑`;
         const description = hostPlants ? 
           `${name}の詳細情報。食草: ${hostPlants.substring(0, 100)}${hostPlants.length > 100 ? '...' : ''}` :
-          `${name}の詳細情報を掲載。甲虫と食草の関係を探る図鑑サイト。`;
+          `${name}の詳細情報を掲載。タマムシと食草の関係を探る図鑑サイト。`;
         
         const url = `${BASE_URL}/meta/beetle/${id}`;
         

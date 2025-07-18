@@ -50,7 +50,7 @@ function generateInsectHTML(insect, type) {
   const typeNames = {
     moth: '蛾',
     butterfly: '蝶',
-    beetle: '甲虫',
+    beetle: 'タマムシ',
     leafbeetle: 'ハムシ'
   };
   
@@ -251,7 +251,7 @@ function generatePlantHTML(plantName, relatedInsects) {
   const typeNames = {
     moth: '蛾',
     butterfly: '蝶',
-    beetle: '甲虫',
+    beetle: 'タマムシ',
     leafbeetle: 'ハムシ'
   };
   
@@ -261,7 +261,7 @@ function generatePlantHTML(plantName, relatedInsects) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
-  <meta name="description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、甲虫、ハムシの生態と食草関係について。">
+  <meta name="description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${plantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.name).join(',')}">
   <link rel="canonical" href="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plantName)}">
   <link rel="stylesheet" href="/insects-host-plant-explorer-/assets/meta-styles.css">
@@ -499,7 +499,7 @@ async function generateMetaPages() {
     console.log(`メタページ生成完了:`);
     console.log(`- 蛾: ${mothCount}種`);
     console.log(`- 蝶: ${butterflyCount}種`);
-    console.log(`- 甲虫: ${beetleCount}種`);
+    console.log(`- タマムシ: ${beetleCount}種`);
     console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- 食草: ${plantCount}種`);
     

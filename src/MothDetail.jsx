@@ -21,7 +21,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // SEO optimization: Update page title and meta tags
   useEffect(() => {
     if (moth) {
-      const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? '甲虫' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾';
+      const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? 'タマムシ' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾';
       const title = `${moth.name} (${moth.scientificName}) | ${insectType}の詳細 - 昆虫食草図鑑`;
       const description = `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${moth.hostPlants.join('、') || '不明'}。昆虫食草図鑑で${insectType}と植物の関係を詳しく学ぼう。`;
       
@@ -788,7 +788,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                     }`}>
                                       {relatedMoth.type === 'moth' ? '蛾' : 
                                        relatedMoth.type === 'butterfly' ? '蝶' : 
-                                       relatedMoth.type === 'beetle' ? '甲虫' : 'ハムシ'}
+                                       relatedMoth.type === 'beetle' ? 'タマムシ' : 'ハムシ'}
                                     </span>
                                   </div>
                                   <p className="text-xs text-slate-600 dark:text-slate-400 italic mt-0.5">

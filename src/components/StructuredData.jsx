@@ -256,7 +256,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
   );
 };
 
-// Enhanced 甲虫の構造化データ with Species and detailed taxonomy
+// Enhanced タマムシの構造化データ with Species and detailed taxonomy
 export const BeetleStructuredData = ({ beetle }) => {
   if (!beetle) return null;
 
@@ -298,7 +298,7 @@ export const BeetleStructuredData = ({ beetle }) => {
         }
       ]
     },
-    "description": `${beetle.name}（${beetle.scientificName}）は${beetle.classification?.family || 'タマムシ科'}に属する甲虫の一種です。${beetle.hostPlants?.length ? `主な食草：${beetle.hostPlants.slice(0, 3).join('、')}など${beetle.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    "description": `${beetle.name}（${beetle.scientificName}）は${beetle.classification?.family || 'タマムシ科'}に属するタマムシの一種です。${beetle.hostPlants?.length ? `主な食草：${beetle.hostPlants.slice(0, 3).join('、')}など${beetle.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
     "url": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
     "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
     "inLanguage": "ja",
@@ -364,7 +364,7 @@ export const BeetleStructuredData = ({ beetle }) => {
       {
         "@type": "ListItem", 
         "position": 2,
-        "name": "甲虫",
+        "name": "タマムシ",
         "item": "https://h-amoto.github.io/insects-host-plant-explorer-/beetle"
       },
       {
@@ -420,7 +420,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         }
       ]
     },
-    "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属する甲虫の一種です。${leafbeetle.hostPlants?.length ? `主な食草：${leafbeetle.hostPlants.slice(0, 3).join('、')}など${leafbeetle.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}${leafbeetle.emergenceTime && leafbeetle.emergenceTime !== '不明' ? ` 成虫発生時期：${leafbeetle.emergenceTime}` : ''}`,
+    "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属するハムシの一種です。${leafbeetle.hostPlants?.length ? `主な食草：${leafbeetle.hostPlants.slice(0, 3).join('、')}など${leafbeetle.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}${leafbeetle.emergenceTime && leafbeetle.emergenceTime !== '不明' ? ` 成虫発生時期：${leafbeetle.emergenceTime}` : ''}`,
     "url": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
     "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
     "inLanguage": "ja",
@@ -672,7 +672,7 @@ export const MainStructuredData = () => {
       "@type": "Dataset",
       "name": "昆虫食草データベース",
       "description": "日本の昆虫と食草の関係を網羅的に収録したデータベース",
-      "keywords": ["昆虫", "食草", "蛾", "蝶", "甲虫", "ハムシ", "植物", "生態学"],
+      "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "ハムシ", "植物", "生態学"],
       "creator": {
         "@type": "Organization",
         "name": "昆虫食草図鑑"

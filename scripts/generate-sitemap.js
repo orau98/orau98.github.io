@@ -117,7 +117,7 @@ function generateSitemap() {
     console.log(`サイトマップ生成完了: ${urls.length} URLs`);
     console.log(`- 蛾: ${mothCount}種`);
     console.log(`- 蝶: ${butterflyCount}種`);
-    console.log(`- 甲虫: ${beetleCount}種`);
+    console.log(`- タマムシ: ${beetleCount}種`);
     console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- 食草: ${hostPlantsSet.size}種`);
     
