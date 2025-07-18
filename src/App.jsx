@@ -2293,6 +2293,18 @@ function App() {
         const deduplicatedMoths = deduplicateMoths(combinedMothData);
         console.log("Deduplicated moths:", combinedMothData.length, "->", deduplicatedMoths.length, "(removed", combinedMothData.length - deduplicatedMoths.length, "duplicates)");
         
+        // CRITICAL DEBUG: Log actual data before setting state
+        console.log("CRITICAL DEBUG - About to set state with:", {
+          deduplicatedMoths: deduplicatedMoths.length,
+          butterflyData: butterflyData.length,
+          combinedBeetleData: combinedBeetleData.length,
+          combinedLeafbeetleData: combinedLeafbeetleData.length,
+          sampleMoth: deduplicatedMoths[0],
+          sampleButterfly: butterflyData[0],
+          sampleBeetle: combinedBeetleData[0],
+          sampleLeafbeetle: combinedLeafbeetleData[0]
+        });
+        
         setMoths(deduplicatedMoths);
         setButterflies(butterflyData);
         setBeetles(combinedBeetleData);
@@ -2300,8 +2312,9 @@ function App() {
         setHostPlants(cleanedHostPlantData);
         setPlantDetails(cleanedPlantDetailData);
         setLoading(false); // Set loading to false after data is loaded
-        console.log("Loading set to false. Final data counts:", {
-          moths: combinedMothData.length,
+        
+        console.log("CRITICAL DEBUG - State set. Loading set to false. Final data counts:", {
+          moths: deduplicatedMoths.length,
           butterflies: butterflyData.length, 
           beetles: combinedBeetleData.length,
           leafbeetles: combinedLeafbeetleData.length,

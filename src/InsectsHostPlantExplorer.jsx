@@ -8,6 +8,19 @@ import { MainStructuredData } from './components/StructuredData';
 const InsectsHostPlantExplorer = ({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
 
+  // CRITICAL DEBUG: Log props received
+  console.log("CRITICAL DEBUG - InsectsHostPlantExplorer received props:", {
+    mothsCount: moths?.length || 0,
+    butterfliesCount: butterflies?.length || 0,
+    beetlesCount: beetles?.length || 0,
+    leafbeetlesCount: leafbeetles?.length || 0,
+    hostPlantsCount: Object.keys(hostPlants || {}).length,
+    sampleMoth: moths?.[0],
+    sampleButterfly: butterflies?.[0],
+    sampleBeetle: beetles?.[0],
+    sampleLeafbeetle: leafbeetles?.[0]
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* 構造化データ */}
