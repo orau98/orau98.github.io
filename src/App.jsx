@@ -167,6 +167,14 @@ function App() {
         };
       };
 
+      // Initialize all data arrays at function scope to prevent scope errors
+      let butterflyData = [];
+      let combinedBeetleData = [];
+      let combinedLeafbeetleData = [];
+      let mainBeetleData = [];
+      let beetleData = [];
+      let leafbeetleData = [];
+
       console.log("Fetching CSV files...");
       console.log("wameiCsvPath:", wameiCsvPath);
       console.log("mainCsvPath:", mainCsvPath);
@@ -911,7 +919,7 @@ function App() {
 
         // Process mainText
         const mainMothData = [];
-        const mainBeetleData = [];
+        mainBeetleData = [];
         Papa.parse(mainText, {
           header: true,
           skipEmptyLines: 'greedy',
@@ -1728,7 +1736,7 @@ function App() {
         console.log("First butterfly:", butterflyParsedData[0]);
 
         // Add a test butterfly first to confirm the system works
-        const butterflyData = [
+        butterflyData = [
           {
             id: "test-butterfly-1",
             name: "ギフチョウ",
@@ -1939,7 +1947,7 @@ function App() {
         }
 
         // Parse beetle CSV data with error handling
-        let beetleData = [];
+        beetleData = [];
         if (beetleText) {
           try {
             console.log("Parsing beetle data...");
@@ -2085,7 +2093,7 @@ function App() {
         }
 
         // Process hamushi_species_integrated.csv to create leafbeetle data
-        const leafbeetleData = [];
+        leafbeetleData = [];
         if (Object.keys(hamushiMap).length > 0) {
           try {
             console.log("Processing leafbeetle data...");
@@ -2247,9 +2255,9 @@ function App() {
         // Combine all moth data after all parsing is complete
         const combinedMothData = [...mainMothData];
         // Combine beetle data from integrated file and separate CSV
-        const combinedBeetleData = [...mainBeetleData, ...beetleData];
+        combinedBeetleData = [...mainBeetleData, ...beetleData];
         // Add leafbeetle data
-        const combinedLeafbeetleData = [...leafbeetleData];
+        combinedLeafbeetleData = [...leafbeetleData];
 
         // Clean up hostPlantData to remove any invalid plant names and normalize duplicates
         const cleanedHostPlantData = {};
