@@ -993,7 +993,8 @@ function App() {
               let rawRemarks = row['備考'] || '';
               
               // Function to extract and integrate plant part information
-              const extractPlantParts = (text) => {
+              // Enhanced function to extract plant parts and clean plant names
+              const extractPlantPartsAndCleanNames = (text) => {
                 const partPatterns = [
                   { pattern: /の花(?:弁|びら)?/g, part: '花' },
                   { pattern: /の花/g, part: '花' },
@@ -1014,13 +1015,32 @@ function App() {
                 ];
                 
                 const extractedParts = new Map();
+                let cleanedText = text;
                 
+                // First, handle simple patterns like "ツバキの花"
                 partPatterns.forEach(({ pattern, part }) => {
+                  // Look for standalone plant+part combinations
+                  const standalonePattern = new RegExp(`([ア-ン一-龯ァ-ヶー]{2,})${pattern.source.replace(/\/g$/, '')}`, 'g');
+                  const standaloneMatches = [...text.matchAll(standalonePattern)];
+                  
+                  standaloneMatches.forEach(match => {
+                    const plantName = match[1];
+                    if (!extractedParts.has(plantName)) {
+                      extractedParts.set(plantName, []);
+                    }
+                    if (!extractedParts.get(plantName).includes(part)) {
+                      extractedParts.get(plantName).push(part);
+                    }
+                    // Remove the part from the text, keeping only the plant name
+                    cleanedText = cleanedText.replace(match[0], plantName);
+                  });
+                  
+                  // Also handle the original pattern for complex text
                   const matches = [...text.matchAll(pattern)];
                   matches.forEach(match => {
                     // Extract plant name before the part
                     const beforeMatch = text.substring(0, match.index);
-                    const plantMatch = beforeMatch.match(/([ア-ン一-龯]{2,})$/);
+                    const plantMatch = beforeMatch.match(/([ア-ン一-龯ァ-ヶー]{2,})$/);
                     if (plantMatch) {
                       const plantName = plantMatch[1];
                       if (!extractedParts.has(plantName)) {
@@ -1033,7 +1053,12 @@ function App() {
                   });
                 });
                 
-                return extractedParts;
+                return { parts: extractedParts, cleanedText: cleanedText };
+              };
+              
+              // Legacy function for backward compatibility
+              const extractPlantParts = (text) => {
+                return extractPlantPartsAndCleanNames(text).parts;
               };
               
               // Extract plant parts from both food plants and remarks
@@ -1067,8 +1092,24 @@ function App() {
               const hasKirigaData = kirigaHostPlants || kirigaRemarks;
               
               if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
-                // Use キリガ data as primary source
-                rawHostPlant = kirigaHostPlants;
+                // Use キリガ data as primary source and extract parts
+                const kirigaResult = extractPlantPartsAndCleanNames(kirigaHostPlants);
+                rawHostPlant = kirigaResult.cleanedText;
+                
+                // Merge the extracted parts with existing parts
+                for (const [plant, parts] of kirigaResult.parts) {
+                  if (allPlantParts.has(plant)) {
+                    // Merge parts, avoiding duplicates
+                    const existingParts = allPlantParts.get(plant);
+                    parts.forEach(part => {
+                      if (!existingParts.includes(part)) {
+                        existingParts.push(part);
+                      }
+                    });
+                  } else {
+                    allPlantParts.set(plant, [...parts]);
+                  }
+                }
                 
                 // Add remarks if available
                 if (kirigaRemarks) {
@@ -1076,8 +1117,9 @@ function App() {
                 }
                 
                 // Debug log for target species
-                if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ')) {
+                if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('スミレモンキリガ')) {
                   console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
+                  console.log(`Extracted parts for ${mothName}:`, Array.from(kirigaResult.parts.entries()));
                 }
               }
               
