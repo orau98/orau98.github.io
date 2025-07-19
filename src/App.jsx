@@ -61,7 +61,7 @@ function App() {
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
 
-      // Unified scientific name processing function for all insect types
+      // Unified scientific name processing function for all insect types - FIXED SCOPE
       const processScientificName = (existingScientificName, genusName, speciesName, authorName, yearName, insectType = 'moth') => {
         // Clean up inputs
         const cleanGenus = genusName?.trim() || '';
