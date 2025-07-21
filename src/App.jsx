@@ -54,7 +54,7 @@ function App() {
       let hostPlantData = {};
       let plantDetailData = {};
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
-      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_bokutou.csv?v=${Date.now()}`;
+      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_kiriga.csv?v=${Date.now()}`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
