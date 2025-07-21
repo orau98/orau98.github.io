@@ -402,26 +402,29 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                     <div>
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                          <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                            {detail.plant}
-                                          </span>
-                                          {/* Show plant parts information right next to plant name */}
-                                          {moth.remarks && moth.remarks.includes('部位:') && (
-                                            moth.remarks.split(';').filter(remark => remark.includes('部位:')).map((remark, remarkIndex) => {
-                                              const parts = remark.split('部位:')[1]?.trim();
-                                              if (parts && parts.includes(detail.plant)) {
-                                                const plantPart = parts.match(new RegExp(`${detail.plant}\\(([^)]+)\\)`))?.[1];
-                                                if (plantPart) {
-                                                  return (
-                                                    <span key={remarkIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
-                                                      {plantPart}
-                                                    </span>
-                                                  );
-                                                }
-                                              }
-                                              return null;
-                                            })
-                                          )}
+                                          {/* Extract plant name and parts from integrated format like "ツバキ（花）" */}
+                                          {(() => {
+                                            const plantPartsMatch = detail.plant.match(/^(.+?)（([^）]+)）$/);
+                                            if (plantPartsMatch) {
+                                              const [, plantName, parts] = plantPartsMatch;
+                                              return (
+                                                <>
+                                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                    {plantName}
+                                                  </span>
+                                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                                    {parts}
+                                                  </span>
+                                                </>
+                                              );
+                                            } else {
+                                              return (
+                                                <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                  {detail.plant}
+                                                </span>
+                                              );
+                                            }
+                                          })()}
                                         </div>
                                       </div>
                                     </div>
@@ -444,26 +447,29 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                             <div>
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3">
-                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                    {plant}
-                                  </span>
-                                  {/* Show plant parts information right next to plant name */}
-                                  {moth.remarks && moth.remarks.includes('部位:') && (
-                                    moth.remarks.split(';').filter(remark => remark.includes('部位:')).map((remark, remarkIndex) => {
-                                      const parts = remark.split('部位:')[1]?.trim();
-                                      if (parts && parts.includes(plant)) {
-                                        const plantPart = parts.match(new RegExp(`${plant}\\(([^)]+)\\)`))?.[1];
-                                        if (plantPart) {
-                                          return (
-                                            <span key={remarkIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
-                                              {plantPart}
-                                            </span>
-                                          );
-                                        }
-                                      }
-                                      return null;
-                                    })
-                                  )}
+                                  {/* Extract plant name and parts from integrated format like "ツバキ（花）" */}
+                                  {(() => {
+                                    const plantPartsMatch = plant.match(/^(.+?)（([^）]+)）$/);
+                                    if (plantPartsMatch) {
+                                      const [, plantName, parts] = plantPartsMatch;
+                                      return (
+                                        <>
+                                          <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                            {plantName}
+                                          </span>
+                                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                            {parts}
+                                          </span>
+                                        </>
+                                      );
+                                    } else {
+                                      return (
+                                        <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                          {plant}
+                                        </span>
+                                      );
+                                    }
+                                  })()}
                                 </div>
                               </div>
                             </div>
