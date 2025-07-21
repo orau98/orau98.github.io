@@ -54,7 +54,7 @@ function App() {
       let hostPlantData = {};
       let plantDetailData = {};
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
-      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_kiriga.csv?v=${Date.now()}&bust=${Math.random()}`;
+      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_kiriga.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
@@ -205,6 +205,17 @@ function App() {
             }
             const text = await res.text();
             console.log(`Successfully loaded ${name} (${text.length} characters)`);
+            
+            // Debug: Check if スミレモンキリガ exists in the loaded file
+            if (name === 'main moth data' && text.includes('スミレモンキリガ')) {
+              console.log('DEBUG: スミレモンキリガ found in loaded CSV');
+              const lines = text.split('\n');
+              const sumiLine = lines.find(line => line.includes('スミレモンキリガ'));
+              if (sumiLine) {
+                console.log('DEBUG: スミレモンキリガ line:', sumiLine);
+              }
+            }
+            
             return text;
           } catch (error) {
             console.error(`Error loading ${name}:`, error);
@@ -940,6 +951,15 @@ function App() {
             results.data.forEach((row, index) => {
               const originalMothName = row['和名']?.trim();
               if (!originalMothName) return;
+              
+              // Debug logging for スミレモンキリガ
+              if (originalMothName.includes('スミレモンキリガ')) {
+                console.log(`DEBUG: Found スミレモンキリガ at index ${index}:`, {
+                  originalMothName,
+                  hostPlants: row['食草'],
+                  willBeId: `main-${index}`
+                });
+              }
               
               // Skip entries where source appears to be in the moth name field (malformed data)
               if (originalMothName === '日本産タマムシ大図鑑' || originalMothName.includes('大図鑑')) return;
