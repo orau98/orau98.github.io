@@ -8,11 +8,22 @@ const __dirname = path.dirname(__filename);
 
 // CSVファイルを読み込む関数
 function loadCSV(filePath) {
-  const csvContent = fs.readFileSync(filePath, 'utf-8');
-  return Papa.parse(csvContent, {
-    header: true,
-    skipEmptyLines: true
-  }).data;
+  try {
+    if (!fs.existsSync(filePath)) {
+      console.error(`CSVファイルが見つかりません: ${filePath}`);
+      console.error(`現在のディレクトリ: ${process.cwd()}`);
+      console.error(`スクリプトのディレクトリ: ${__dirname}`);
+      process.exit(1);
+    }
+    const csvContent = fs.readFileSync(filePath, 'utf-8');
+    return Papa.parse(csvContent, {
+      header: true,
+      skipEmptyLines: true
+    }).data;
+  } catch (error) {
+    console.error(`CSVファイルの読み込みエラー: ${error.message}`);
+    process.exit(1);
+  }
 }
 
 // サイトマップXMLを生成
@@ -34,7 +45,7 @@ function generateSitemap() {
   
   try {
     // CSVデータを読み込み
-    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_bokutou.csv'));
+    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv'));
     
     // 昆虫データの処理
     let mothCount = 0, butterflyCount = 0, beetleCount = 0, leafbeetleCount = 0;
