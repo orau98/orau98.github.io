@@ -73,8 +73,8 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   });
   
-  // 範囲指定（例：5～8月、3月～10月）を検出
-  const rangePattern = /(\d{1,2})月?[～〜-](\d{1,2})月/g;
+  // 範囲指定（例：5～8月、3月～10月）を検出 - ASCII チルダ (~) も含む
+  const rangePattern = /(\d{1,2})月?[～〜~-](\d{1,2})月/g;
   while ((match = rangePattern.exec(emergenceTime)) !== null) {
     const start = parseInt(match[1]);
     const end = parseInt(match[2]);
@@ -115,8 +115,8 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   }
   
-  // 「X月〜Y月」「X月からY月」パターンを検出
-  const fromToPattern = /(\d{1,2})月(?:から|より)?[〜～-](\d{1,2})月/g;
+  // 「X月〜Y月」「X月からY月」パターンを検出 - ASCII チルダ (~) も含む
+  const fromToPattern = /(\d{1,2})月(?:から|より)?[〜～~-](\d{1,2})月/g;
   while ((match = fromToPattern.exec(emergenceTime)) !== null) {
     const start = parseInt(match[1]);
     const end = parseInt(match[2]);
@@ -136,8 +136,8 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   }
   
-  // 「X月頃〜Y月頃」パターンを検出
-  const approximateRangePattern = /(\d{1,2})月頃[〜～-](\d{1,2})月頃/g;
+  // 「X月頃〜Y月頃」パターンを検出 - ASCII チルダ (~) も含む
+  const approximateRangePattern = /(\d{1,2})月頃[〜～~-](\d{1,2})月頃/g;
   while ((match = approximateRangePattern.exec(emergenceTime)) !== null) {
     const start = parseInt(match[1]);
     const end = parseInt(match[2]);

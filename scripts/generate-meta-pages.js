@@ -56,6 +56,51 @@ function loadCSV(filePath) {
   }
 }
 
+// 学名を正しく構築する関数 - SPAと同じロジック
+function processScientificName(existingScientificName, genusName, speciesName, authorName, yearName) {
+  // Clean up inputs
+  const cleanGenus = genusName?.trim() || '';
+  const cleanSpecies = speciesName?.trim() || '';
+  const cleanAuthor = authorName?.trim() || '';
+  const cleanYear = yearName?.trim() || '';
+  let cleanExisting = existingScientificName?.trim() || '';
+  
+  // Clean up basic formatting issues first
+  cleanExisting = cleanExisting.replace(/\s*"?\s*$/, '').trim();
+  
+  // Check if existing scientific name is valid (has both genus and species)
+  if (cleanExisting) {
+    // Check if it's a complete binomial (genus + species)
+    const binomialMatch = cleanExisting.match(/^([A-Z][a-z]+)\s+([a-z]+(?:\s+[a-z]+)*)/);
+    if (binomialMatch) {
+      // It's a valid binomial, but check if it has complete author and year
+      const hasCompleteAuthorYear = cleanExisting.match(/\([^)]+,\s*\d{4}\)$/);
+      if (hasCompleteAuthorYear) {
+        return cleanExisting;
+      }
+      // If not complete, we'll reconstruct it below
+    }
+  }
+  
+  // If we have both genus and species, construct binomial
+  if (cleanGenus && cleanSpecies) {
+    let binomial = `${cleanGenus} ${cleanSpecies}`;
+    
+    // Add author and year if available
+    if (cleanAuthor || cleanYear) {
+      // Clean up author - remove existing brackets if present
+      let author = cleanAuthor.replace(/^\(|\)$/g, '').trim();
+      const authorYear = [author, cleanYear].filter(Boolean).join(', ');
+      binomial += ` (${authorYear})`;
+    }
+    
+    return binomial;
+  }
+  
+  // Fallback to existing or default
+  return cleanExisting || '未同定';
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
 function generateInsectHTML(insect, type) {
   const typeNames = {
@@ -453,8 +498,17 @@ async function generateMetaPages() {
       if (!insectName) return;
       
       const familyJapanese = row['科和名'] || row['科名'] || '';
-      // Use the complete scientific name from '学名' column instead of constructing from parts
-      const scientificName = (row['学名'] || '').trim();
+      
+      // Construct complete scientific name from parts
+      const existingScientificName = (row['学名'] || '').trim();
+      const genus = row['属名'] || '';
+      const species = row['種小名'] || '';
+      const author = row['著者'] || '';
+      const year = row['公表年'] || '';
+      
+      // Use the processScientificName function to construct complete scientific name
+      const scientificName = processScientificName(existingScientificName, genus, species, author, year);
+      
       const hostPlants = row['食草'] || '不明';
       const source = row['出典'] || row['出典\r'] || '不明';
       
@@ -468,7 +522,7 @@ async function generateMetaPages() {
         scientificName: scientificName,
         hostPlants: hostPlants,
         source: source,
-        scientificFilename: scientificName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''),
+        scientificFilename: scientificName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_()\,]/g, ''),
         familyJapanese: familyJapanese,
         type: type
       };
