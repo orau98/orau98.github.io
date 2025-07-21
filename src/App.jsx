@@ -207,12 +207,26 @@ function App() {
             console.log(`Successfully loaded ${name} (${text.length} characters)`);
             
             // Debug: Check if スミレモンキリガ exists in the loaded file
-            if (name === 'main moth data' && text.includes('スミレモンキリガ')) {
-              console.log('DEBUG: スミレモンキリガ found in loaded CSV');
-              const lines = text.split('\n');
-              const sumiLine = lines.find(line => line.includes('スミレモンキリガ'));
-              if (sumiLine) {
-                console.log('DEBUG: スミレモンキリガ line:', sumiLine);
+            if (name === 'main moth data') {
+              if (text.includes('スミレモンキリガ')) {
+                console.log('DEBUG: スミレモンキリガ found in loaded CSV');
+                const lines = text.split('\n');
+                const sumiLine = lines.find(line => line.includes('スミレモンキリガ'));
+                if (sumiLine) {
+                  console.log('DEBUG: スミレモンキリガ line:', sumiLine);
+                  // Check specific content to determine which CSV was loaded
+                  if (sumiLine.includes('ツバキ類(ツバキ科)')) {
+                    console.log('DEBUG: ✅ CORRECT CSV - New kiriga data with ツバキ類(ツバキ科)');
+                  } else if (sumiLine.includes('1990,ツバキ類(ツバキ科)')) {
+                    console.error('DEBUG: ❌ OLD CSV - Bokutou data with malformed food plant');
+                  } else {
+                    console.warn('DEBUG: ⚠️ UNKNOWN CSV FORMAT for スミレモンキリガ');
+                  }
+                }
+              } else {
+                console.error('DEBUG: ❌ スミレモンキリガ NOT FOUND in loaded CSV - This is the problem!');
+                console.log('DEBUG: CSV size:', text.length, 'characters');
+                console.log('DEBUG: First 500 chars:', text.substring(0, 500));
               }
             }
             
