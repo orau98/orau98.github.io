@@ -67,6 +67,7 @@ function generateInsectHTML(insect, type) {
   
   const hostPlants = insect.hostPlants || '不明';
   const scientificName = insect.scientificName || '';
+  const source = insect.source || '不明';
   const imageUrl = insect.scientificFilename ? 
     `/insects-host-plant-explorer-/images/moths/${insect.scientificFilename}.jpg` : '';
   
@@ -178,6 +179,8 @@ function generateInsectHTML(insect, type) {
           ${hostPlantsArray.length > 0 ? `
           <dt>食草数</dt>
           <dd>${hostPlantsArray.length}種</dd>` : ''}
+          <dt>出典</dt>
+          <dd>${source}</dd>
         </dl>
       </section>
       
@@ -209,6 +212,7 @@ function generateInsectHTML(insect, type) {
         <p>${insect.name}（学名：${formatScientificNameHTML(scientificName)}）は${familyName}に分類される${typeNames[type]}の一種です。</p>
         ${hostPlantsArray.length > 0 ? `
         <p>幼虫は${hostPlantsArray.slice(0, 3).join('、')}${hostPlantsArray.length > 3 ? 'など' : ''}を食草として成長します。${hostPlantsArray.length}種の植物との関係が確認されており、多様な植物資源を利用する種です。</p>` : ''}
+        ${source && source !== '不明' ? `<p>出典: ${source}</p>` : ''}
         <p>この種の詳細な生態情報や観察記録については、メインの図鑑ページでご確認ください。</p>
       </section>
     </main>
@@ -452,6 +456,7 @@ async function generateMetaPages() {
       // Use the complete scientific name from '学名' column instead of constructing from parts
       const scientificName = (row['学名'] || '').trim();
       const hostPlants = row['食草'] || '不明';
+      const source = row['出典'] || row['出典\r'] || '不明';
       
       // Use main-{index} format to match the expected URLs
       const insectId = `main-${index}`;
@@ -462,6 +467,7 @@ async function generateMetaPages() {
         name: insectName,
         scientificName: scientificName,
         hostPlants: hostPlants,
+        source: source,
         scientificFilename: scientificName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''),
         familyJapanese: familyJapanese,
         type: type
