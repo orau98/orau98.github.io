@@ -441,7 +441,7 @@ async function generateMetaPages() {
     const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv'));
     
     // 昆虫データの処理
-    let mothCount = 0, butterflyCount = 0, beetleCount = 0, leafbeetleCount = 0;
+    let mothCount = 0;
     const hostPlantsMap = new Map();
     
     csvData.forEach((row, index) => {
@@ -449,42 +449,29 @@ async function generateMetaPages() {
       if (!insectName) return;
       
       const familyJapanese = row['科和名'] || row['科名'] || '';
-      const scientificName = `${row['属名'] || ''} ${row['種小名'] || ''}`.trim();
+      // Use the complete scientific name from '学名' column instead of constructing from parts
+      const scientificName = (row['学名'] || '').trim();
       const hostPlants = row['食草'] || '不明';
       
-      // 昆虫タイプを判定
-      let type, counter;
-      if (familyJapanese.includes('蛾') || familyJapanese === 'ヤガ科' || familyJapanese === 'シャチホコガ科') {
-        type = 'moth';
-        counter = ++mothCount;
-      } else if (familyJapanese.includes('蝶') || familyJapanese === 'セセリチョウ科' || familyJapanese === 'アゲハチョウ科') {
-        type = 'butterfly';
-        counter = ++butterflyCount;
-      } else if (familyJapanese === 'タマムシ科') {
-        type = 'beetle';
-        counter = ++beetleCount;
-      } else if (familyJapanese === 'ハムシ科') {
-        type = 'leafbeetle';
-        counter = ++leafbeetleCount;
-      } else {
-        type = 'moth'; // デフォルト
-        counter = ++mothCount;
-      }
+      // Use main-{index} format to match the expected URLs
+      const insectId = `main-${index}`;
+      const type = 'moth'; // All entries are moths for this CSV
       
       const insect = {
-        id: counter,
+        id: insectId,
         name: insectName,
         scientificName: scientificName,
         hostPlants: hostPlants,
-        scientificFilename: scientificName.replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''),
+        scientificFilename: scientificName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''),
         familyJapanese: familyJapanese,
         type: type
       };
       
       // HTMLファイルを生成
       const html = generateInsectHTML(insect, type);
-      const filename = path.join(__dirname, `../public/meta/${type}/${type}-${counter}.html`);
+      const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
+      mothCount++;
       
       // 食草データを収集
       if (hostPlants && hostPlants !== '不明') {
@@ -509,9 +496,6 @@ async function generateMetaPages() {
     
     console.log(`メタページ生成完了:`);
     console.log(`- 蛾: ${mothCount}種`);
-    console.log(`- 蝶: ${butterflyCount}種`);
-    console.log(`- タマムシ: ${beetleCount}種`);
-    console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- 食草: ${plantCount}種`);
     
   } catch (error) {
