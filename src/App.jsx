@@ -934,8 +934,9 @@ function App() {
             return name;
           }
           
-          // 7. 見つからない場合は空文字列を返す
-          return '';
+          // 7. 見つからない場合は元の名前を返す（YListにない植物も表示する）
+          console.log(`DEBUG: Plant "${name}" not found in YList, keeping original name`);
+          return name;
         };
 
         // Process hamushi_species.csv first to create hamushiMap with error handling
@@ -1540,7 +1541,7 @@ function App() {
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
                       const correctedPlantName = correctPlantName(normalizedPlant);
-                      // Only add if the corrected plant name is not empty (i.e., found in YList)
+                      // Add the plant name if it's valid
                       if (correctedPlantName && correctedPlantName.trim()) {
                         // Check if this plant has part information
                         const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
@@ -1666,10 +1667,10 @@ function App() {
                   
                   const plants = tempHostPlant.split(/[;；、，,]/);
                   
-                  // Debug for センモンヤガ
-                  if (mothName === 'センモンヤガ') {
-                    console.log('DEBUG: センモンヤガ tempHostPlant after cleaning:', tempHostPlant);
-                    console.log('DEBUG: センモンヤガ split plants:', plants);
+                  // Debug for センモンヤガ and スミレモンキリガ
+                  if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                    console.log(`DEBUG: ${mothName} tempHostPlant after cleaning:`, tempHostPlant);
+                    console.log(`DEBUG: ${mothName} split plants:`, plants);
                   }
                   
                   plants.forEach(plant => {
@@ -1688,8 +1689,8 @@ function App() {
                     
                     // Skip non-plant descriptive texts like "農業害虫であり"
                     if (plant.includes('害虫') || plant.includes('であり') || plant === '農業害虫であり') {
-                      if (mothName === 'センモンヤガ') {
-                        console.log('DEBUG: センモンヤガ - Skipping non-plant text:', plant);
+                      if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                        console.log(`DEBUG: ${mothName} - Skipping non-plant text:`, plant);
                       }
                       return;
                     }
@@ -1697,7 +1698,18 @@ function App() {
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
                       const correctedPlantName = correctPlantName(wameiMap[normalizedPlant] || normalizedPlant);
-                      // Only add if the corrected plant name is not empty (i.e., found in YList)
+                      
+                      // Debug for センモンヤガ and スミレモンキリガ
+                      if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                        console.log(`DEBUG: ${mothName} - Processing plant:`, {
+                          original: plant,
+                          normalized: normalizedPlant,
+                          corrected: correctedPlantName,
+                          inWameiMap: !!wameiMap[normalizedPlant]
+                        });
+                      }
+                      
+                      // Add the plant name if it's valid
                       if (correctedPlantName && correctedPlantName.trim()) {
                         // Check if this plant has part information
                         const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
