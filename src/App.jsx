@@ -912,7 +912,29 @@ function App() {
             }
           }
 
-          // 6. 見つからない場合は空文字列を返す
+          // 6. 「類」の展開処理
+          if (name.endsWith('類')) {
+            // ツバキ類 -> ヤブツバキ（YListで標準名として存在）
+            const groupExpansions = {
+              'ツバキ類': 'ヤブツバキ',
+              'ヤナギ類': 'シダレヤナギ',
+              'マツ類': 'アカマツ',
+              'ナラ類': 'コナラ',
+              'カエデ類': 'イタヤカエデ',
+              'サクラ類': 'ヤマザクラ'
+            };
+            
+            const expanded = groupExpansions[name];
+            if (expanded && yListPlantNames.has(expanded)) {
+              console.log(`DEBUG: Expanded ${name} to ${expanded}`);
+              return expanded;
+            }
+            
+            // 記述的表現として扱う
+            return name;
+          }
+          
+          // 7. 見つからない場合は空文字列を返す
           return '';
         };
 
@@ -1383,7 +1405,7 @@ function App() {
                   if (naturalCondition) {
                     const plants = naturalCondition.split(/[、，;]/);
                     plants.forEach(plant => {
-                      plant = plant.trim().replace(/の?カビ|など|類|ほか/g, '');
+                      plant = plant.trim().replace(/の?カビ|など|ほか/g, '');
                       // Remove "以上〇〇科" patterns
                       plant = plant.replace(/以上[^科]*科/g, '');
                       // Remove notes in parentheses from plant names
@@ -1391,7 +1413,15 @@ function App() {
                       plant = plant.replace(/\([^)]*\)/g, '');
                       if (plant.length > 1 && isValidPlantName(plant)) {
                         const normalizedPlant = normalizePlantName(plant);
+                        // Debug for スミレモンキリガ
+                        if (originalMothName?.includes('スミレモンキリガ')) {
+                          console.log(`DEBUG: スミレモンキリガ plant processing: "${plant}" -> normalized: "${normalizedPlant}"`);
+                        }
                         const correctedPlantName = correctPlantName(normalizedPlant);
+                        // Debug for スミレモンキリガ
+                        if (originalMothName?.includes('スミレモンキリガ')) {
+                          console.log(`DEBUG: スミレモンキリガ corrected plant: "${correctedPlantName}"`);
+                        }
                         // Only add if the corrected plant name is not empty (i.e., found in YList)
                         if (correctedPlantName && correctedPlantName.trim()) {
                           // Check if this plant has part information
@@ -1447,7 +1477,7 @@ function App() {
                       
                       plant = plant.replace(/などマメ科植物/g, '');
                       plant = plant.replace(/など/g, '');
-                      plant = plant.replace(/類$/g, '');
+                      // Do not remove '類' - it's meaningful for plant groups
                       plant = plant.replace(/ほか/g, '');
                       // Remove "以上〇〇科" patterns
                       plant = plant.replace(/以上[^科]*科/g, '');
@@ -1614,7 +1644,7 @@ function App() {
                   
                   const plants = tempHostPlant.split(/[;、，,]/);
                   plants.forEach(plant => {
-                    plant = plant.trim().replace(/など|類|ほか/g, '');
+                    plant = plant.trim().replace(/など|ほか/g, '');
                     // Remove "以上〇〇科" patterns
                     plant = plant.replace(/以上[^科]*科/g, '');
                     // Clean up any remaining formatting
@@ -1686,7 +1716,7 @@ function App() {
                 const sourceToUse = hasKirigaData ? '日本のキリガ' : (row['出典'] || '不明');
                 
                 // Process as moth
-                mainMothData.push({ 
+                const mothData = { 
                   id: `main-${index}`, 
                   name: mothName, 
                   scientificName: scientificName, 
@@ -1720,7 +1750,18 @@ function App() {
                     }
                     return emergenceTime;
                   })()
-                });
+                };
+                
+                // Debug for スミレモンキリガ
+                if (mothName === 'スミレモンキリガ') {
+                  console.log('DEBUG: Final スミレモンキリガ data:', {
+                    id: mothData.id,
+                    hostPlants: mothData.hostPlants,
+                    hostPlantDetails: mothData.hostPlantDetails
+                  });
+                }
+                
+                mainMothData.push(mothData);
               }
 
               hostPlantEntries.forEach(({ plant, familyFromMainCsv }) => {
@@ -1938,8 +1979,7 @@ function App() {
                 // Otherwise, clean up the whole string - be more careful with scientific terms
                 cleanedHostPlants = cleanedHostPlants
                   .replace(/[^、，,]*属の?/g, '') // Remove genus names like "コナラ属の"
-                  .replace(/類\s*[（(][^）)]*[）)]/g, '') // Remove "類" with parentheses
-                  .replace(/類/g, '') // Remove standalone "類"
+                  // Do not remove '類' - it's meaningful for plant groups
                   .replace(/など/g, '')
                   .replace(/の/g, '') // Remove remaining "の" particles
                   .replace(/^[、，,]+|[、，,]+$/g, '') // Remove leading/trailing delimiters
@@ -1956,7 +1996,7 @@ function App() {
               .map(plant => plant.replace(/^"(.+)$/, '$1')) // Remove unclosed quotes at beginning
               .map(plant => plant.replace(/^(.+)"$/, '$1')) // Remove unclosed quotes at end
               .filter(plant => plant && plant.length > 0) // Remove empty strings
-              .filter(plant => plant !== '科' && plant !== '属' && plant !== '類')
+              .filter(plant => plant !== '科' && plant !== '属')
               .filter(plant => !plant.endsWith('属') || /^[A-Z][a-z]+属$/.test(plant)) // Remove items ending with 属, but keep scientific genus names like "Acer属"
               .filter(plant => plant.length > 1) // Remove single character items
               .filter(plant => plant.trim() !== '') // Additional empty string check
