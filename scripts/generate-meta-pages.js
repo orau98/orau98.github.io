@@ -119,7 +119,12 @@ function generateInsectHTML(insect, type) {
   // 食草リストを配列として処理
   // セミコロン区切りも処理する（例：センモンヤガの場合）
   const hostPlantsArray = hostPlants !== '不明' ? 
-    hostPlants.split(/[;；、,，]/).map(p => p.trim()).filter(p => p) : [];
+    hostPlants.split(/[;；、,，]/)
+      .map(p => p.trim())
+      .map(p => p.replace(/につく[。．]?$/g, '').trim()) // Remove "につく。"
+      .filter(p => p) 
+      .filter(p => !p.includes('害虫') && !p.includes('であり') && p !== '農業害虫であり') // Filter out non-plant texts
+      : [];
   
   // 分類情報の生成
   const familyName = insect.familyJapanese || {
