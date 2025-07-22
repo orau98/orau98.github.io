@@ -1403,7 +1403,7 @@ function App() {
                   
                   // Create structured entries
                   if (naturalCondition) {
-                    const plants = naturalCondition.split(/[、，;]/);
+                    const plants = naturalCondition.split(/[;；、，,]/);
                     plants.forEach(plant => {
                       plant = plant.trim().replace(/の?カビ|など|ほか/g, '');
                       // Remove "以上〇〇科" patterns
@@ -1442,7 +1442,7 @@ function App() {
                   if (culturedCondition) {
                     console.log('DEBUG: Processing culturedCondition:', culturedCondition);
                     // More specific pattern to extract plant names from cultured condition
-                    const plants = culturedCondition.split(/[、，;]/);
+                    const plants = culturedCondition.split(/[;；、，,]/);
                     plants.forEach(plant => {
                       plant = plant.trim();
                       
@@ -1642,7 +1642,7 @@ function App() {
                   tempHostPlant = tempHostPlant.replace(/\([^)]+\)/g, '');
                   tempHostPlant = tempHostPlant.replace(/[。；].*/g, '');
                   
-                  const plants = tempHostPlant.split(/[;、，,]/);
+                  const plants = tempHostPlant.split(/[;；、，,]/);
                   plants.forEach(plant => {
                     plant = plant.trim().replace(/など|ほか/g, '');
                     // Remove "以上〇〇科" patterns
@@ -1989,8 +1989,8 @@ function App() {
               }
             }
             
-            // Split by delimiters
-            const plants = cleanedHostPlants.split(/[、，,]/);
+            // Split by delimiters including semicolon for cases like センモンヤガ
+            const plants = cleanedHostPlants.split(/[;；、，,]/);
             
             hostPlantList = plants
               .map(plant => plant.trim())
@@ -2147,7 +2147,7 @@ function App() {
             };
             
             const beetlePlantParts = extractPlantParts(hostPlants);
-            const plants = hostPlants.split(/[、，,]/);
+            const plants = hostPlants.split(/[;；、，,]/);
             hostPlantList = plants
               .map(plant => plant.trim())
               .filter(plant => plant && plant.length > 0)
@@ -2305,7 +2305,7 @@ function App() {
             };
             
             const leafbeetlePlantParts = extractPlantParts(hostPlants);
-            const plants = hostPlants.split(/[、，,]/);
+            const plants = hostPlants.split(/[;；、，,]/);
             hostPlantList = plants
               .map(plant => plant.trim())
               .filter(plant => plant && plant.length > 0)

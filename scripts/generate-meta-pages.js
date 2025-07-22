@@ -117,8 +117,9 @@ function generateInsectHTML(insect, type) {
     `/insects-host-plant-explorer-/images/moths/${insect.scientificFilename}.jpg` : '';
   
   // 食草リストを配列として処理
+  // セミコロン区切りも処理する（例：センモンヤガの場合）
   const hostPlantsArray = hostPlants !== '不明' ? 
-    hostPlants.split(/[、,，]/).map(p => p.trim()).filter(p => p) : [];
+    hostPlants.split(/[;；、,，]/).map(p => p.trim()).filter(p => p) : [];
   
   // 分類情報の生成
   const familyName = insect.familyJapanese || {
