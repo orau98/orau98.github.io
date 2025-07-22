@@ -1829,7 +1829,7 @@ function App() {
 
               hostPlantEntries.forEach(({ plant, familyFromMainCsv }) => {
                 // Final validation to ensure we don't add invalid plant names
-                if (plant && plant.trim() && plant.length > 1 && isValidPlantName(plant)) {
+                if (plant && plant.trim() && plant.length > 1) {
                   const validPlant = plant.trim();
                   if (!hostPlantData[validPlant]) hostPlantData[validPlant] = [];
                   if (!hostPlantData[validPlant].includes(mothName)) {

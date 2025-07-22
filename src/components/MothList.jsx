@@ -195,32 +195,35 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, [classificationFilter, searchTerm]);
 
-  const filteredMoths = useMemo(() => moths.filter(moth => {
-    const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
-    
-    // If there's a classification filter from URL, prioritize that
-    if (classificationFilter && !debouncedSearchTerm) {
-      const lowerClassification = classificationFilter.toLowerCase();
-      return (moth.classification.familyJapanese?.toLowerCase().includes(lowerClassification)) ||
-             (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
-             (moth.classification.tribeJapanese?.toLowerCase().includes(lowerClassification)) ||
-             (moth.classification.genus?.toLowerCase().includes(lowerClassification)) ||
-             (moth.classification.family?.toLowerCase().includes(lowerClassification)) ||
-             (moth.classification.subfamily?.toLowerCase().includes(lowerClassification)) ||
-             (moth.classification.tribe?.toLowerCase().includes(lowerClassification));
-    }
-    
-    // Regular search filtering
-    return moth.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-           (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.genus?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.family?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-           (moth.classification.tribe?.toLowerCase().includes(lowerCaseSearchTerm));
-  }), [moths, debouncedSearchTerm, classificationFilter]);
+  const filteredMoths = useMemo(() => {
+    console.log('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
+    return moths.filter(moth => {
+      const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+      
+      // If there's a classification filter from URL, prioritize that
+      if (classificationFilter && !debouncedSearchTerm) {
+        const lowerClassification = classificationFilter.toLowerCase();
+        return (moth.classification.familyJapanese?.toLowerCase().includes(lowerClassification)) ||
+               (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
+               (moth.classification.tribeJapanese?.toLowerCase().includes(lowerClassification)) ||
+               (moth.classification.genus?.toLowerCase().includes(lowerClassification)) ||
+               (moth.classification.family?.toLowerCase().includes(lowerClassification)) ||
+               (moth.classification.subfamily?.toLowerCase().includes(lowerClassification)) ||
+               (moth.classification.tribe?.toLowerCase().includes(lowerClassification));
+      }
+      
+      // Regular search filtering
+      return moth.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+             (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.genus?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.family?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+             (moth.classification.tribe?.toLowerCase().includes(lowerCaseSearchTerm));
+    });
+  }, [moths, debouncedSearchTerm, classificationFilter]);
 
   const allSuggestions = useMemo(() => {
     if (!searchTerm) return [];

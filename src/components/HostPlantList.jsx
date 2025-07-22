@@ -248,7 +248,9 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   const safeHostPlants = hostPlants || {};
   const safePlantDetails = plantDetails || {};
   const filteredHostPlants = useMemo(() => {
+    console.log('DEBUG: Filtering plants, total count:', Object.keys(safeHostPlants).length, 'search term:', debouncedPlantSearch);
     if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {
+      console.log('DEBUG: No host plants available');
       return [];
     }
     const lowerCaseSearchTerm = debouncedPlantSearch.toLowerCase();
