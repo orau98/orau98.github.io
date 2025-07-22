@@ -1682,8 +1682,9 @@ function App() {
               
               if (isBeetle) {
                 // Process as beetle
+                const catalogNo = row['大図鑑カタログNo'] || '';
                 mainBeetleData.push({ 
-                  id: `main-beetle-${index}`, 
+                  id: catalogNo ? `catalog-${catalogNo}` : `main-beetle-${index}`, 
                   name: mothName, 
                   scientificName: scientificName, 
                   scientificFilename: scientificFilename, 
@@ -1716,8 +1717,9 @@ function App() {
                 const sourceToUse = hasKirigaData ? '日本のキリガ' : (row['出典'] || '不明');
                 
                 // Process as moth
+                const catalogNo = row['大図鑑カタログNo'] || '';
                 const mothData = { 
-                  id: `main-${index}`, 
+                  id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`, 
                   name: mothName, 
                   scientificName: scientificName, 
                   scientificFilename: scientificFilename, 

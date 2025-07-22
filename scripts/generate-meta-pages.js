@@ -512,8 +512,9 @@ async function generateMetaPages() {
       const hostPlants = row['食草'] || '不明';
       const source = row['出典'] || row['出典\r'] || '不明';
       
-      // Use main-{index} format to match the expected URLs
-      const insectId = `main-${index}`;
+      // Use catalog number as ID for stability
+      const catalogNo = row['大図鑑カタログNo'] || '';
+      const insectId = catalogNo ? `catalog-${catalogNo}` : `main-${index}`;
       const type = 'moth'; // All entries are moths for this CSV
       
       const insect = {
