@@ -539,6 +539,11 @@ function App() {
             return true;
           }
           
+          // Allow plant names with family info in parentheses like "ムギ類(イネ科)"
+          if (/[ぁ-んァ-ヶー一-龠]+.*[\(（][^)）]*科[\)）]/.test(trimmed)) {
+            return true;
+          }
+          
           const invalidPatterns = [
             /^[0-9]+$/,  // Pure numbers
             /^[A-Za-z]+$/, // Pure English letters
@@ -878,8 +883,14 @@ function App() {
           if (descriptiveTerms.has(name)) {
             return name;
           }
+          
+          // 4. 括弧付き植物名の処理（例：「ムギ類(イネ科)」）
+          if (name.includes('(') || name.includes('（')) {
+            // Return the original name with family info
+            return name;
+          }
 
-          // 4. 属レベル展開
+          // 5. 属レベル展開
           if (name.endsWith('属')) {
             const genusPlants = taxonomicHierarchy[name] || [];
             const validPlants = genusPlants.filter(p => yListPlantNames.has(p));
@@ -985,6 +996,25 @@ function App() {
             if (results.errors.length) {
               console.error("PapaParse errors in ListMJ_hostplants_integrated_with_kiriga.csv:", results.errors);
             }
+            
+            // Pre-scan for センモンヤガ
+            console.log('=== MAIN CSV PARSED - SEARCHING FOR センモンヤガ ===');
+            const senmonYagaPreScan = results.data.filter((row, idx) => {
+              const matchesName = row['和名'] === 'センモンヤガ' || row['大図鑑和名'] === 'センモンヤガ';
+              const matchesCatalog = row['大図鑑カタログNo'] === '3489';
+              if (matchesName || matchesCatalog) {
+                console.log(`Pre-scan found センモンヤガ at row ${idx}:`, {
+                  和名: row['和名'],
+                  大図鑑和名: row['大図鑑和名'],
+                  カタログNo: row['大図鑑カタログNo'],
+                  食草: row['食草'] ? row['食草'].substring(0, 50) + '...' : 'EMPTY',
+                  食草length: row['食草'] ? row['食草'].length : 0
+                });
+              }
+              return matchesName || matchesCatalog;
+            });
+            console.log(`Total センモンヤガ entries found in pre-scan: ${senmonYagaPreScan.length}`);
+            console.log('=== END PRE-SCAN ===');
             results.data.forEach((row, index) => {
               const originalMothName = row['和名']?.trim();
               if (!originalMothName) return;
@@ -1061,12 +1091,15 @@ function App() {
               let rawRemarks = row['備考'] || '';
               
               // Debug logging for センモンヤガ host plant processing
-              if (mothName === 'センモンヤガ') {
+              if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
                 console.log(`DEBUG: Processing センモンヤガ host plants:`, {
+                  mothName,
                   rawHostPlant,
                   rawRemarks,
                   hasHostPlant: !!rawHostPlant,
-                  hostPlantLength: rawHostPlant.length
+                  hostPlantLength: rawHostPlant.length,
+                  catalogNo: row['大図鑑カタログNo'],
+                  fullRow: row
                 });
               }
               
@@ -1216,6 +1249,9 @@ function App() {
                   /^\s*[0-9]{4}"?\s*$/.test(rawHostPlant.trim()) || // Simple year patterns like "1763"
                   rawHostPlant.trim() === '不明' ||
                   rawHostPlant.length < 2) {
+                if (mothName === 'センモンヤガ') {
+                  console.log('DEBUG: センモンヤガ rawHostPlant was cleared! Original:', row['食草']);
+                }
                 rawHostPlant = '';
               }
               
@@ -1297,7 +1333,11 @@ function App() {
               let hostPlantEntries = [];
               
               if (rawHostPlant) {
-                console.log('DEBUG: Raw host plant data:', rawHostPlant);
+                if (mothName === 'センモンヤガ') {
+                  console.log('DEBUG: センモンヤガ - Raw host plant data before processing:', rawHostPlant);
+                } else {
+                  console.log('DEBUG: Raw host plant data:', rawHostPlant);
+                }
                 
                 // Check if this is a descriptive text (contains observation conditions)
                 const hasObservationConditions = /自然状態では|飼育条件下では|観察されている|確認されている|国外では/.test(rawHostPlant);
@@ -1360,6 +1400,11 @@ function App() {
                     
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
+                      return true;
+                    }
+                    
+                    // Allow plant names with family info in parentheses like "ムギ類(イネ科)"
+                    if (/[ぁ-んァ-ヶー一-龠]+.*[\(（][^)）]*科[\)）]/.test(trimmed)) {
                       return true;
                     }
                     
@@ -1559,7 +1604,13 @@ function App() {
                   
                 } else {
                   // Pre-process to extract notes after '。'
-                  if (rawHostPlant.includes('。')) {
+                  // Special handling for センモンヤガ - don't split by '。' as it ends with "につく。"
+                  if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
+                    console.log('DEBUG: センモンヤガ special handling - keeping full rawHostPlant:', rawHostPlant);
+                    // Remove only the final "につく。" pattern
+                    rawHostPlant = rawHostPlant.replace(/につく。$/, '');
+                    console.log('DEBUG: センモンヤガ after removing につく。:', rawHostPlant);
+                  } else if (rawHostPlant.includes('。')) {
                     const parts = rawHostPlant.split('。');
                     rawHostPlant = parts[0].trim();
                     for (let i = 1; i < parts.length; i++) {
@@ -1591,6 +1642,11 @@ function App() {
                     
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
+                      return true;
+                    }
+                    
+                    // Allow plant names with family info in parentheses like "ムギ類(イネ科)"
+                    if (/[ぁ-んァ-ヶー一-龠]+.*[\(（][^)）]*科[\)）]/.test(trimmed)) {
                       return true;
                     }
                     
@@ -1660,22 +1716,51 @@ function App() {
                     extractedNotes.push(descriptiveMatch[1].trim());
                   }
 
-                  // Remove all notes and family names in parentheses from the plant text before splitting
-                  tempHostPlant = tempHostPlant.replace(/\([^)]+\)/g, '');
+                  // Don't remove parenthetical content for センモンヤガ as it contains family info like "(イネ科)"
+                  if (mothName !== 'センモンヤガ' && mothName !== 'スミレモンキリガ') {
+                    // Remove all notes and family names in parentheses from the plant text before splitting
+                    tempHostPlant = tempHostPlant.replace(/\([^)]+\)/g, '');
+                  }
                   // Only remove text after periods (。), not semicolons (；;) as semicolons are used as delimiters
                   tempHostPlant = tempHostPlant.replace(/[。].*/g, '');
                   
-                  const plants = tempHostPlant.split(/[;；、，,]/);
+                  // Split by various delimiters including "や" for complex entries
+                  let plants = tempHostPlant.split(/[;；、，,]/);
+                  
+                  // Further split entries that contain "や" (e.g., "マメ類 (マメ科)やテンサイ(アカザ科)などの農作物")
+                  const expandedPlants = [];
+                  plants.forEach(plant => {
+                    if (plant.includes('や')) {
+                      // Split by "や" but preserve family info in parentheses
+                      const subPlants = plant.split(/や/);
+                      subPlants.forEach(subPlant => {
+                        if (subPlant.trim()) {
+                          expandedPlants.push(subPlant.trim());
+                        }
+                      });
+                    } else {
+                      expandedPlants.push(plant);
+                    }
+                  });
+                  plants = expandedPlants;
                   
                   // Debug for センモンヤガ and スミレモンキリガ
                   if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
-                    console.log(`DEBUG: ${mothName} tempHostPlant after cleaning:`, tempHostPlant);
-                    console.log(`DEBUG: ${mothName} split plants:`, plants);
+                    console.log(`DEBUG: ${mothName} before processing:`, {
+                      rawHostPlant,
+                      tempHostPlant,
+                      'tempHostPlant after 。 removal': tempHostPlant.replace(/[。].*/g, ''),
+                      plants,
+                      plantsCount: plants.length,
+                      'plants after expansion': plants
+                    });
                   }
                   
                   plants.forEach(plant => {
-                    plant = plant.trim().replace(/など|ほか/g, '');
-                    // Remove trailing "につく。" or similar patterns
+                    plant = plant.trim();
+                    // Remove trailing patterns like "などの農作物", "などの野菜", "につく"
+                    plant = plant.replace(/など.*$/g, '').trim();
+                    plant = plant.replace(/ほか.*$/g, '').trim();
                     plant = plant.replace(/につく[。．]?$/g, '').trim();
                     // Remove "以上〇〇科" patterns
                     plant = plant.replace(/以上[^科]*科/g, '');
@@ -1688,11 +1773,17 @@ function App() {
                     plant = plant.trim(); // Final trim
                     
                     // Skip non-plant descriptive texts like "農業害虫であり"
-                    if (plant.includes('害虫') || plant.includes('であり') || plant === '農業害虫であり') {
-                      if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
-                        console.log(`DEBUG: ${mothName} - Skipping non-plant text:`, plant);
-                      }
-                      return;
+                    if (!plant) return;
+                    if (plant.includes('害虫') || plant.includes('であり')) return;
+                    if (plant === '農業' || plant === '農業害虫' || plant === '農業害虫であり') return;
+                    // Filter out year numbers that might be parsed as plants
+                    if (/^\d{4}\)?$/.test(plant)) return;
+                    // Must have at least one Japanese or alphabetic character
+                    if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(plant)) return;
+                    
+                    if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                      console.log(`DEBUG: ${mothName} - Processing plant:`, plant);
+                      console.log(`DEBUG: ${mothName} - isValidPlantName result:`, isValidPlantName(plant));
                     }
                     
                     if (plant.length > 1 && isValidPlantName(plant)) {
@@ -1711,6 +1802,9 @@ function App() {
                       
                       // Add the plant name if it's valid
                       if (correctedPlantName && correctedPlantName.trim()) {
+                        if (mothName === 'センモンヤガ') {
+                          console.log(`DEBUG: センモンヤガ - Adding plant to list:`, correctedPlantName);
+                        }
                         // Check if this plant has part information
                         const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
                         const plantWithParts = plantParts && plantParts.length > 0 ? 
@@ -1733,12 +1827,18 @@ function App() {
               console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
               
               // Debug logging for センモンヤガ final data
-              if (mothName === 'センモンヤガ') {
+              if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
                 console.log(`DEBUG: Final センモンヤガ data:`, {
+                  mothName,
                   hostPlantEntries,
                   hostPlantList,
-                  hostPlantNotes
+                  hostPlantNotes,
+                  hasKirigaData,
+                  isBeetle,
+                  catalogNo: row['大図鑑カタログNo'],
+                  rawHostPlantFromCSV: row['食草']
                 });
+                console.log(`DEBUG: センモンヤガ will be added to:`, isBeetle ? 'beetles' : 'moths');
               }
               
               if (isBeetle) {
@@ -1824,6 +1924,19 @@ function App() {
                   });
                 }
                 
+                // Debug for センモンヤガ
+                if (mothName === 'センモンヤガ' || mothData.id === 'catalog-3489') {
+                  console.log('=== FINAL センモンヤガ DATA BEFORE PUSH ===');
+                  console.log('ID:', mothData.id);
+                  console.log('Name:', mothData.name);
+                  console.log('Host plants array:', mothData.hostPlants);
+                  console.log('Host plants count:', mothData.hostPlants.length);
+                  console.log('Host plant details:', mothData.hostPlantDetails);
+                  console.log('Raw host plant text:', rawHostPlant);
+                  console.log('Host plant entries:', hostPlantEntries);
+                  console.log('=== END センモンヤガ DATA ===');
+                }
+                
                 mainMothData.push(mothData);
               }
 
@@ -1843,6 +1956,23 @@ function App() {
                 }
               });
             });
+            
+            // Final check for センモンヤガ in mainMothData
+            console.log('=== FINAL CHECK FOR センモンヤガ IN mainMothData ===');
+            const senmonYagaFinal = mainMothData.filter(moth => 
+              moth.name === 'センモンヤガ' || moth.id === 'catalog-3489'
+            );
+            console.log(`Found ${senmonYagaFinal.length} センモンヤガ entries in final data`);
+            senmonYagaFinal.forEach((moth, idx) => {
+              console.log(`センモンヤガ ${idx}:`, {
+                id: moth.id,
+                name: moth.name,
+                hostPlantsCount: moth.hostPlants.length,
+                hostPlants: moth.hostPlants,
+                hostPlantDetails: moth.hostPlantDetails
+              });
+            });
+            console.log('=== END FINAL CHECK ===');
           } // Added missing closing brace for complete callback
         });
 

@@ -123,7 +123,17 @@ function generateInsectHTML(insect, type) {
       .map(p => p.trim())
       .map(p => p.replace(/につく[。．]?$/g, '').trim()) // Remove "につく。"
       .filter(p => p) 
-      .filter(p => !p.includes('害虫') && !p.includes('であり') && p !== '農業害虫であり') // Filter out non-plant texts
+      .filter(p => {
+        // Filter out non-plant texts
+        if (!p) return false;
+        if (p.includes('害虫') || p.includes('であり')) return false;
+        if (p === '農業' || p === '農業害虫' || p === '農業害虫であり') return false;
+        // Filter out year numbers that might be parsed as plants
+        if (/^\d{4}\)?$/.test(p)) return false;
+        // Must have at least one Japanese or alphabetic character
+        if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(p)) return false;
+        return true;
+      })
       : [];
   
   // 分類情報の生成

@@ -14,6 +14,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // Combine all insects for searching
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const moth = allInsects.find(m => m.id === insectId);
+  
+  // Debug logging for センモンヤガ
+  if (insectId === 'catalog-3489' || insectId === 'main-6519') {
+    console.log('DEBUG: Looking for センモンヤガ with ID:', insectId);
+    console.log('DEBUG: Found moth:', moth);
+    if (moth) {
+      console.log('DEBUG: センモンヤガ hostPlants:', moth.hostPlants);
+      console.log('DEBUG: センモンヤガ hostPlantDetails:', moth.hostPlantDetails);
+    }
+  }
+  
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
