@@ -56,6 +56,107 @@ function loadCSV(filePath) {
   }
 }
 
+// 植物名として有効かどうかを検証
+function isValidPlantName(plantName) {
+  if (!plantName || typeof plantName !== 'string') {
+    return false;
+  }
+  
+  const trimmed = plantName.trim();
+  
+  // 基本的な長さチェック
+  if (trimmed.length < 2 || trimmed.length > 50) {
+    return false;
+  }
+  
+  // 年号パターンを除外
+  if (/^\d{4}\)?$/.test(trimmed)) {
+    return false;
+  }
+  
+  // 括弧付き年号を除外
+  if (/^[（(]\d{4}[）)]?$/.test(trimmed)) {
+    return false;
+  }
+  
+  // 学名記号を除外
+  const taxonomicPatterns = [
+    /^comb\.\s*nov\.?$/i,
+    /^sp\.?$/i,
+    /^spp\.?$/i,
+    /^var\.?$/i,
+    /^subsp\.?$/i,
+    /^f\.?$/i,
+    /^emend\.?$/i,
+    /^nom\.\s*nud\.?$/i,
+    /^auct\.?$/i,
+    /^non$/i,
+    /^sensu$/i,
+    /^cf\.?$/i,
+    /^aff\.?$/i
+  ];
+  
+  for (const pattern of taxonomicPatterns) {
+    if (pattern.test(trimmed)) {
+      return false;
+    }
+  }
+  
+  // 時期情報を含む場合は除外
+  if (/[0-9０-９]月[上中下]旬|[0-9０-９]月頃/.test(trimmed)) {
+    return false;
+  }
+  
+  // 説明文のパターンを除外
+  const descriptivePatterns = [
+    /野外で/,
+    /飼育下で/,
+    /から記録/,
+    /による飼育/,
+    /幼虫[がはを]/,
+    /成虫[がはを]/,
+    /海外では/,
+    /ヨーロッパでは/,
+    /日本では/,
+    /を食[すし]/,
+    /を好む/,
+    /から[得発]られ/,
+    /ことが[判知]明/,
+    /推[測定]される/,
+    /と[思考]われる/,
+    /に固有/,
+    /に寄生/,
+    /害虫/,
+    /栽培/,
+    /発生する/,
+    /生息/,
+    /分布/
+  ];
+  
+  for (const pattern of descriptivePatterns) {
+    if (pattern.test(trimmed)) {
+      return false;
+    }
+  }
+  
+  // 数字だけ、英字だけは除外
+  if (/^[0-9０-９]+$/.test(trimmed) || /^[A-Za-z]+$/.test(trimmed)) {
+    return false;
+  }
+  
+  // 最低限日本語文字を含むこと
+  if (!/[ぁ-んァ-ヶー一-龯]/.test(trimmed)) {
+    return false;
+  }
+  
+  // 著者名パターンを除外
+  if (/^[A-Z][a-z]+[,\s]+\d{4}/.test(trimmed)) {
+    return false;
+  }
+  
+  return true;
+}
+
 // 学名を正しく構築する関数 - SPAと同じロジック
 function processScientificName(existingScientificName, genusName, speciesName, authorName, yearName) {
   // Clean up inputs
@@ -552,19 +653,29 @@ async function generateMetaPages() {
       
       // 食草データを収集
       if (hostPlants && hostPlants !== '不明') {
-        const plants = hostPlants.split(/[、,，]/).map(p => p.trim()).filter(p => p);
+        const plants = hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
         plants.forEach(plant => {
-          if (!hostPlantsMap.has(plant)) {
-            hostPlantsMap.set(plant, []);
+          // 植物名の検証
+          if (isValidPlantName(plant)) {
+            if (!hostPlantsMap.has(plant)) {
+              hostPlantsMap.set(plant, []);
+            }
+            hostPlantsMap.get(plant).push(insect);
           }
-          hostPlantsMap.get(plant).push(insect);
         });
       }
     });
     
     // 植物ページを生成
     let plantCount = 0;
+    let skippedPlants = 0;
     hostPlantsMap.forEach((insects, plantName) => {
+      // 植物名の最終検証
+      if (!isValidPlantName(plantName)) {
+        console.log(`スキップ: 無効な植物名 '${plantName}'`);
+        skippedPlants++;
+        return;
+      }
       plantCount++;
       const html = generatePlantHTML(plantName, insects);
       const filename = path.join(__dirname, `../public/meta/plant/plant-${plantCount}.html`);
@@ -574,6 +685,9 @@ async function generateMetaPages() {
     console.log(`メタページ生成完了:`);
     console.log(`- 蛾: ${mothCount}種`);
     console.log(`- 食草: ${plantCount}種`);
+    if (skippedPlants > 0) {
+      console.log(`- スキップされた無効な植物: ${skippedPlants}件`);
+    }
     
   } catch (error) {
     console.error('メタページ生成中にエラーが発生しました:', error);
