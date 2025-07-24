@@ -559,6 +559,39 @@ function App() {
             return false;
           }
           
+          // Reject taxonomic abbreviations and notations
+          const taxonomicPatterns = [
+            /^comb\.\s*nov\.?$/i,
+            /^sp\.?$/i,
+            /^spp\.?$/i,
+            /^var\.?$/i,
+            /^subsp\.?$/i,
+            /^f\.?$/i,
+            /^emend\.?$/i,
+            /^nom\.\s*nud\.?$/i,
+            /^auct\.?$/i,
+            /^non$/i,
+            /^sensu$/i,
+            /^cf\.?$/i,
+            /^aff\.?$/i
+          ];
+          
+          for (const pattern of taxonomicPatterns) {
+            if (pattern.test(trimmed)) {
+              return false;
+            }
+          }
+          
+          // Reject year patterns in parentheses like "1878)" or "(1766)"
+          if (/^\d{4}\)?$/.test(trimmed) || /^[（(]\d{4}[）)]?$/.test(trimmed)) {
+            return false;
+          }
+          
+          // Reject author names (common patterns) like "Butler, 1878"
+          if (/^[（(]?[A-Z][a-z]+[,\s]+\d{4}[）)]?$/.test(trimmed)) {
+            return false;
+          }
+          
           // Allow family names (ending with '科') as valid plant names
           if (trimmed.endsWith('科')) {
             return true;
@@ -1925,7 +1958,12 @@ function App() {
                     plant = plant.replace(/^\s*[\,\、\，]\s*/, ''); // Remove leading separators
                     plant = plant.replace(/\s*[\,\、\，]\s*$/, ''); // Remove trailing separators
                     plant = plant.replace(/^["']|["']$/g, ''); // Remove leading/trailing quotes
-                    plant = plant.replace(/[\(\)\[\]\{\}]/g, ''); // Remove brackets and parentheses
+                    // Remove brackets but keep parentheses for family names
+                    plant = plant.replace(/[\[\]\{\}]/g, ''); // Remove brackets only
+                    // Only remove parentheses if they don't contain family names (科)
+                    if (!plant.match(/[（(][^）)]*科[）)]/)) {
+                      plant = plant.replace(/[\(\)（）]/g, ''); // Remove parentheses only if not family names
+                    }
                     plant = plant.replace(/[\-\u2010-\u2015_=+|\\\\;:<>/?~`!@#$%^&*]/g, ''); // Remove symbols
                     plant = plant.trim(); // Final trim
                     
