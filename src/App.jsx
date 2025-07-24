@@ -60,6 +60,7 @@ function App() {
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
+      const emergenceTimeCsvPath = `${import.meta.env.BASE_URL}emergence_time_integrated.csv`;
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
       const processScientificName = (existingScientificName, genusName, speciesName, authorName, yearName, insectType = 'moth') => {
@@ -83,9 +84,57 @@ function App() {
         cleanExisting = cleanExisting.replace(/,(\d{4})\)/g, ', $1)'); // Fix missing space before year
         cleanExisting = cleanExisting.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
         
-        // Special case fixes
-        if (cleanExisting.includes('Arcte coerula (Guenée') && !cleanExisting.includes('1852')) {
-          cleanExisting = 'Arcte coerula (Guenée, 1852)';
+        // COMPREHENSIVE SCIENTIFIC NAME REPAIR SYSTEM
+        // Fix critically broken scientific names from CSV parsing errors
+        const repairBrokenScientificName = (brokenName) => {
+          // Pattern 1: Scientific names mixed with food plant data
+          // e.g., "Genus species (Author,"food plant data; year), more data; year)"
+          const mixedDataPattern = /^([A-Z][a-z]+\s+[a-z]+\s*\([^,"]+),?\s*"?[^)]*(\d{4})[^)]*\)/;
+          const mixedMatch = brokenName.match(mixedDataPattern);
+          if (mixedMatch) {
+            const [, binomial, year] = mixedMatch;
+            const cleanBinomial = binomial.trim();
+            console.log(`REPAIR: Fixed mixed data pattern: "${brokenName}" -> "${cleanBinomial}, ${year})"`);
+            return `${cleanBinomial}, ${year})`;
+          }
+          
+          // Pattern 2: Extract valid binomial from corrupted data
+          // Look for pattern: Genus species (Author at the beginning
+          const binomialExtractPattern = /^([A-Z][a-z]+\s+[a-z]+\s*\([^,")]+)/;
+          const extractMatch = brokenName.match(binomialExtractPattern);
+          if (extractMatch) {
+            const extracted = extractMatch[1];
+            // Try to find year in the corrupted data
+            const yearMatch = brokenName.match(/\b(19|20)\d{2}\b/);
+            if (yearMatch) {
+              console.log(`REPAIR: Extracted from corrupted data: "${brokenName}" -> "${extracted}, ${yearMatch[0]})"`);
+              return `${extracted}, ${yearMatch[0]})`;
+            } else {
+              console.log(`REPAIR: Extracted binomial without year: "${brokenName}" -> "${extracted})"`);
+              return `${extracted})`;
+            }
+          }
+          
+          return brokenName; // Return unchanged if no pattern matches
+        };
+        
+        // Apply repair function to existing scientific name
+        if (cleanExisting && (cleanExisting.includes('",') || cleanExisting.includes('; ') || cleanExisting.includes('で飼育'))) {
+          cleanExisting = repairBrokenScientificName(cleanExisting);
+        }
+        
+        // Special case fixes for known problematic species
+        const knownFixes = {
+          'Diphtherocome autumnalis (Chang,"サクラ類': 'Diphtherocome autumnalis (Chang, 1991)',
+          'Arcte coerula (Guenée': 'Arcte coerula (Guenée, 1852)'
+        };
+        
+        for (const [broken, fixed] of Object.entries(knownFixes)) {
+          if (cleanExisting.includes(broken)) {
+            console.log(`REPAIR: Applied known fix: "${cleanExisting}" -> "${fixed}"`);
+            cleanExisting = fixed;
+            break;
+          }
         }
         
         // Check if existing scientific name is valid (has both genus and species)
@@ -148,6 +197,22 @@ function App() {
         // Check for "未同定"
         if (scientificName === '未同定') {
           issues.push('未同定');
+        }
+        
+        // ENHANCED VALIDATION: Check for corrupted scientific names
+        const corruptionPatterns = [
+          { pattern: /[";]/, description: '破損データの残存（セミコロンまたは引用符）' },
+          { pattern: /で飼育|により|について/, description: '食草データの混入' },
+          { pattern: /科$/, description: '科名の混入' },
+          { pattern: /\d{4}[^)]/, description: '年数の表記異常' },
+          { pattern: /\([^)]*,.*[^)]/, description: '括弧の不完全な閉じ' }
+        ];
+        
+        for (const { pattern, description } of corruptionPatterns) {
+          if (pattern.test(scientificName)) {
+            issues.push(`データ破損の可能性: ${description}`);
+            console.warn(`CORRUPTION DETECTED in "${japaneseName}": ${scientificName} - ${description}`);
+          }
         }
         
         // Check for basic binomial structure
@@ -240,14 +305,15 @@ function App() {
         // Load files with safe loading - prioritize essential files
         console.log("Starting file loading process...");
         
-        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText] = await Promise.all([
+        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, emergenceTimeText] = await Promise.all([
           safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
           safeFileLoad(mainCsvPath, 'main moth data', 20000),
           safeFileLoad(yListCsvPath, 'YList data', 30000), // Longer timeout for large file
           safeFileLoad(hamushiSpeciesCsvPath, 'hamushi species', 20000),
           safeFileLoad(butterflyCsvPath, 'butterfly data', 15000),
           safeFileLoad(beetleCsvPath, 'beetle data', 15000),
-          safeFileLoad(kirigaCsvPath, 'kiriga data', 10000)
+          safeFileLoad(kirigaCsvPath, 'kiriga data', 10000),
+          safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000)
         ]);
 
         console.log("File loading results:", {
@@ -257,7 +323,8 @@ function App() {
           hamushi: hamushiSpeciesText ? 'SUCCESS' : 'FAILED',
           butterfly: butterflyText ? 'SUCCESS' : 'FAILED',
           beetle: beetleText ? 'SUCCESS' : 'FAILED',
-          kiriga: kirigaText ? 'SUCCESS' : 'FAILED'
+          kiriga: kirigaText ? 'SUCCESS' : 'FAILED',
+          emergenceTime: emergenceTimeText ? 'SUCCESS' : 'FAILED'
         });
 
         // Check if essential files loaded
@@ -272,6 +339,37 @@ function App() {
 
         // Parse キリガ CSV to create emergence time lookup table
         const emergenceTimeMap = new Map();
+        
+        // First, parse the integrated emergence time CSV
+        if (emergenceTimeText && emergenceTimeText.trim()) {
+          try {
+            console.log("Parsing integrated emergence time data...");
+            const emergenceTimeParsed = Papa.parse(emergenceTimeText, {
+              header: true,
+              skipEmptyLines: 'greedy',
+              delimiter: ',',
+              encoding: 'UTF-8'
+            });
+            
+            emergenceTimeParsed.data.forEach(row => {
+              const japaneseName = row['和名']?.trim();
+              const scientificName = row['学名']?.trim();
+              const emergenceTime = row['成虫出現時期']?.trim();
+              const source = row['出典']?.trim();
+              
+              if (japaneseName && emergenceTime && emergenceTime !== '不明') {
+                emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: source });
+              }
+              if (scientificName && emergenceTime && emergenceTime !== '不明') {
+                emergenceTimeMap.set(scientificName, { time: emergenceTime, source: source });
+              }
+            });
+            
+            console.log(`Loaded ${emergenceTimeParsed.data.length} emergence time records from integrated CSV`);
+          } catch (error) {
+            console.error("Error parsing integrated emergence time data:", error);
+          }
+        }
         
         // Use Papa.parse for proper CSV parsing - handle empty kirigaText gracefully
         let kirigaData = [];
@@ -315,9 +413,11 @@ function App() {
           const hostPlants = row['食草']?.trim();
           const remarks = row['食草に関する備考']?.trim();
           
-          // Store emergence time data
+          // Store emergence time data from キリガ (优先度は統合CSVより低い)
           if (japaneseName && emergenceTime && emergenceTime !== '不明') {
-            emergenceTimeMap.set(japaneseName, emergenceTime);
+            if (!emergenceTimeMap.has(japaneseName)) {
+              emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のキリガ' });
+            }
             
             // Debug log for target species
             if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ')) {
@@ -325,12 +425,14 @@ function App() {
             }
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
-            emergenceTimeMap.set(scientificName, emergenceTime);
+            if (!emergenceTimeMap.has(scientificName)) {
+              emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のキリガ' });
+            }
             
             // Also store with author/year removed for better matching
             const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
-            if (cleanedScientificName !== scientificName) {
-              emergenceTimeMap.set(cleanedScientificName, emergenceTime);
+            if (cleanedScientificName !== scientificName && !emergenceTimeMap.has(cleanedScientificName)) {
+              emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本のキリガ' });
               
               // Debug log for target species
               if (cleanedScientificName.includes('Xylena formosa') || cleanedScientificName.includes('Diphtherocome autumnalis')) {
@@ -2111,13 +2213,15 @@ function App() {
                   geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || '',
-                  // Emergence time - lookup from キリガ data
+                  // Emergence time - lookup from integrated data
                   emergenceTime: (() => {
-                    const emergenceTime = emergenceTimeMap.get(mothName) || 
+                    const emergenceData = emergenceTimeMap.get(mothName) || 
                                          emergenceTimeMap.get(scientificName) ||
-                                         emergenceTimeMap.get(cleanedScientificName) || '不明';
-                    if (emergenceTime !== '不明') {
-                      console.log(`Found emergence time for ${mothName} (${scientificName}): ${emergenceTime}`);
+                                         emergenceTimeMap.get(cleanedScientificName) || null;
+                    
+                    if (emergenceData) {
+                      console.log(`Found emergence time for ${mothName} (${scientificName}): ${emergenceData.time} [出典: ${emergenceData.source}]`);
+                      return emergenceData.time;
                     } else {
                       // Debug log for target species
                       if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ')) {
@@ -2127,7 +2231,13 @@ function App() {
                         console.log(`Keys in emergenceTimeMap (first 10):`, keys.slice(0, 10));
                       }
                     }
-                    return emergenceTime;
+                    return '不明';
+                  })(),
+                  emergenceTimeSource: (() => {
+                    const emergenceData = emergenceTimeMap.get(mothName) || 
+                                         emergenceTimeMap.get(scientificName) ||
+                                         emergenceTimeMap.get(cleanedScientificName) || null;
+                    return emergenceData ? emergenceData.source : null;
                   })()
                 };
                 

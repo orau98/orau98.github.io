@@ -673,7 +673,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 </div>
                 
                 <div className="p-4">
-                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} />
+                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} source={moth.emergenceTimeSource} />
                   
                   {moth.emergenceTime !== '不明' && (
                     <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700/50">
@@ -682,7 +682,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="text-sm text-amber-700 dark:text-amber-300">
-                          <span className="font-medium">出典:</span> {moth.type === 'leafbeetle' ? 'ハムシハンドブック' : moth.type === 'beetle' ? (
+                          <span className="font-medium">出典:</span> {moth.emergenceTimeSource || (moth.type === 'leafbeetle' ? 'ハムシハンドブック' : moth.type === 'beetle' ? (
                             <a 
                               href="https://amzn.to/4m2vPWp" 
                               target="_blank" 
@@ -691,7 +691,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                             >
                               日本産タマムシ大図鑑
                             </a>
-                          ) : '日本のキリガ'}
+                          ) : '日本のキリガ')}
                         </p>
                       </div>
                     </div>

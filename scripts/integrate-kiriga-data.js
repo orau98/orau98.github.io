@@ -20,7 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ファイルパス設定
-const MAIN_DATA_FILE = path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_bokutou.csv');
+const MAIN_DATA_FILE = path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv');
 const KIRIGA_DATA_FILE = path.join(__dirname, '../public/日本のキリガ.csv');
 const OUTPUT_FILE = path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv');
 

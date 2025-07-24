@@ -219,7 +219,7 @@ const getActiveRanges = (activeMonths) => {
   return ranges;
 };
 
-const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
   const activeMonths = useMemo(() => parseEmergenceTime(emergenceTime), [emergenceTime]);
   const activeRanges = useMemo(() => getActiveRanges(activeMonths), [activeMonths]);
   
@@ -239,7 +239,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
     return (
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-          時期
+          時期{source && <span className="font-normal text-slate-500"> ({source})</span>}
         </div>
         <div className="relative">
           {/* 背景のタイムライン */}
@@ -278,6 +278,11 @@ const EmergenceTimeDisplay = ({ emergenceTime, compact = false }) => {
         <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
           {emergenceTime}
         </p>
+        {source && (
+          <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+            出典: {source}
+          </p>
+        )}
       </div>
       
       {/* ガントチャート風タイムライン */}

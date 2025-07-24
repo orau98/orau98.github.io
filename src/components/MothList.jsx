@@ -168,7 +168,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                       発生時期
                     </span>
                   </div>
-                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} compact={true} />
+                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} source={moth.emergenceTimeSource} compact={true} />
                 </div>
               )}
             </div>

@@ -362,9 +362,10 @@ function generateInsectHTML(insect, type) {
         ${hostPlantsArray.length > 0 ? `
         <p>${insect.name}は以下の植物を食草として利用します：</p>
         <ul>
-          ${hostPlantsArray.map(plant => 
-            `<li><a href="/insects-host-plant-explorer-/plant/${encodeURIComponent(plant)}">${plant}</a></li>`
-          ).join('')}
+          ${hostPlantsArray.map(plant => {
+            const safePlantName = plant.replace(/[/\\?%*:|"<>]/g, '-');
+            return `<li><a href="/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html">${plant}</a></li>`;
+          }).join('')}
         </ul>` : `
         <p>食草情報は現在調査中です。</p>`}
       </section>
@@ -414,9 +415,16 @@ function generateInsectHTML(insect, type) {
 }
 
 // Enhanced 植物のHTMLテンプレートを生成する関数 - フルコンテンツバージョン
-function generatePlantHTML(plantName, relatedInsects) {
+function generatePlantHTML(plantName, relatedInsects, plantImages) {
   const insectsList = relatedInsects.map(insect => insect.name).join(', ');
-  
+  const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+
+  // この植物に関連する画像を探す
+  const plantImageFiles = plantImages.filter(img => img.startsWith(plantName));
+  const mainImageUrl = plantImageFiles.length > 0 
+    ? `/insects-host-plant-explorer-/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
+    : '';
+
   // 昆虫を種類別に分類
   const insectsByType = {
     moth: relatedInsects.filter(i => i.type === 'moth'),
@@ -440,20 +448,22 @@ function generatePlantHTML(plantName, relatedInsects) {
   <title>${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
   <meta name="description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${plantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.name).join(',')}">
-  <link rel="canonical" href="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plantName)}">
+  <link rel="canonical" href="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html">
   <link rel="stylesheet" href="/insects-host-plant-explorer-/assets/meta-styles.css">
   
   <!-- Open Graph -->
   <meta property="og:title" content="${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
   <meta property="og:description" content="${plantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plantName)}">
+  <meta property="og:url" content="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html">
+  ${mainImageUrl ? `<meta property="og:image" content="https://h-amoto.github.io${mainImageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
   
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${plantName} - 食草図鑑">
   <meta property="twitter:description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫情報">
+  ${mainImageUrl ? `<meta property="twitter:image" content="https://h-amoto.github.io${mainImageUrl}">` : ''}
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -466,8 +476,9 @@ function generatePlantHTML(plantName, relatedInsects) {
       "propertyID": "plant_name",
       "value": "${plantName}"
     },
-    "description": "${plantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します。",
-    "url": "https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plantName)}",
+    "description": "${plantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
+    "url": "https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html",
+    ${mainImageUrl ? `"image": "https://h-amoto.github.io${mainImageUrl}",` : ''}
     "inLanguage": "ja",
     "hasEcologicalInteraction": [
       ${relatedInsects.map(insect => `{
@@ -523,6 +534,22 @@ function generatePlantHTML(plantName, relatedInsects) {
           </dd>
         </dl>
       </section>
+
+      ${plantImageFiles.length > 0 ? `
+      <section class="image-gallery">
+        <h3>${plantName}の写真</h3>
+        <div class="gallery-container">
+          ${plantImageFiles.map(img => `
+            <div class="gallery-item">
+              <a href="/insects-host-plant-explorer-/images/plants/${encodeURIComponent(img)}" target="_blank" title="画像を拡大表示">
+                <img src="/insects-host-plant-explorer-/images/plants/${encodeURIComponent(img)}" alt="${plantName}の写真 - ${img.replace(/\.[^/.]+$/, '')}" loading="lazy">
+              </a>
+              <div class="image-caption">${img.replace(/\.[^/.]+$/, '').replace(/_/g, ' ')}</div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+      ` : ''}
       
       <section class="description">
         <h3>生態系での役割</h3>
@@ -555,7 +582,6 @@ function generatePlantHTML(plantName, relatedInsects) {
     
     <section class="navigation">
       <a href="/insects-host-plant-explorer-/" class="back-link">図鑑トップへ</a>
-      <a href="/insects-host-plant-explorer-/plant/${encodeURIComponent(plantName)}" class="detail-link">詳細ページへ</a>
     </section>
   </div>
   
@@ -597,12 +623,23 @@ async function generateMetaPages() {
   
   ['moth', 'butterfly', 'beetle', 'leafbeetle', 'plant'].forEach(type => {
     const typeDir = path.join(metaDir, type);
-    if (!fs.existsSync(typeDir)) {
-      fs.mkdirSync(typeDir, { recursive: true });
+    if (fs.existsSync(typeDir)) {
+      // 古いファイルを削除して再生成に備える
+      fs.rmSync(typeDir, { recursive: true, force: true });
     }
+    fs.mkdirSync(typeDir, { recursive: true });
   });
   
   try {
+    // 植物の画像一覧を取得
+    const plantImagesDir = path.join(__dirname, '../public/images/plants');
+    const allPlantImages = fs.existsSync(plantImagesDir) 
+      ? fs.readdirSync(plantImagesDir).filter(file =>
+          /\.jpe?g|\.png|\.gif|\.webp$/i.test(file)
+        )
+      : [];
+    console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
+
     // CSVデータを読み込み
     const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv'));
     
@@ -616,23 +653,20 @@ async function generateMetaPages() {
       
       const familyJapanese = row['科和名'] || row['科名'] || '';
       
-      // Construct complete scientific name from parts
       const existingScientificName = (row['学名'] || '').trim();
       const genus = row['属名'] || '';
       const species = row['種小名'] || '';
       const author = row['著者'] || '';
       const year = row['公表年'] || '';
       
-      // Use the processScientificName function to construct complete scientific name
       const scientificName = processScientificName(existingScientificName, genus, species, author, year);
       
       const hostPlants = row['食草'] || '不明';
       const source = row['出典'] || row['出典\r'] || '不明';
       
-      // Use catalog number as ID for stability
       const catalogNo = row['大図鑑カタログNo'] || '';
       const insectId = catalogNo ? `catalog-${catalogNo}` : `main-${index}`;
-      const type = 'moth'; // All entries are moths for this CSV
+      const type = 'moth';
       
       const insect = {
         id: insectId,
@@ -645,17 +679,14 @@ async function generateMetaPages() {
         type: type
       };
       
-      // HTMLファイルを生成
       const html = generateInsectHTML(insect, type);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       mothCount++;
       
-      // 食草データを収集
       if (hostPlants && hostPlants !== '不明') {
         const plants = hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
         plants.forEach(plant => {
-          // 植物名の検証
           if (isValidPlantName(plant)) {
             if (!hostPlantsMap.has(plant)) {
               hostPlantsMap.set(plant, []);
@@ -670,15 +701,15 @@ async function generateMetaPages() {
     let plantCount = 0;
     let skippedPlants = 0;
     hostPlantsMap.forEach((insects, plantName) => {
-      // 植物名の最終検証
       if (!isValidPlantName(plantName)) {
         console.log(`スキップ: 無効な植物名 '${plantName}'`);
         skippedPlants++;
         return;
       }
       plantCount++;
-      const html = generatePlantHTML(plantName, insects);
-      const filename = path.join(__dirname, `../public/meta/plant/plant-${plantCount}.html`);
+      const html = generatePlantHTML(plantName, insects, allPlantImages);
+      const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+      const filename = path.join(__dirname, `../public/meta/plant/${safePlantName}.html`);
       fs.writeFileSync(filename, html);
     });
     

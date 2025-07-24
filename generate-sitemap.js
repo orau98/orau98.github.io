@@ -51,7 +51,7 @@ async function generateSitemap() {
     // Read and parse CSV files
     const csvFiles = [
       { 
-        path: 'public/ListMJ_hostplants_integrated_with_bokutou.csv', 
+        path: 'public/ListMJ_hostplants_integrated_with_kiriga.csv', 
         type: 'moth',
         prefix: 'moth'
       },
@@ -153,8 +153,8 @@ async function generateSitemap() {
     // First, try to collect plant names from moth data
     const uniquePlants = new Set();
     
-    if (fs.existsSync('public/ListMJ_hostplants_integrated_with_bokutou.csv')) {
-      const mothPlantData = fs.readFileSync('public/ListMJ_hostplants_integrated_with_bokutou.csv', 'utf8');
+    if (fs.existsSync('public/ListMJ_hostplants_integrated_with_kiriga.csv')) {
+      const mothPlantData = fs.readFileSync('public/ListMJ_hostplants_integrated_with_kiriga.csv', 'utf8');
       const mothPlantResults = Papa.parse(mothPlantData, {
         header: true,
         skipEmptyLines: 'greedy'
