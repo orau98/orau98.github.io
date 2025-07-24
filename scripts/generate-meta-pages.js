@@ -420,7 +420,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
   const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
 
   // この植物に関連する画像を探す
-  const plantImageFiles = plantImages.filter(img => img.startsWith(plantName));
+  const basePlantName = plantName.split(' ')[0]; // "タケニグサ (ケシ科)" -> "タケニグサ"
+  const plantImageFiles = plantImages.filter(img => img.startsWith(basePlantName));
   const mainImageUrl = plantImageFiles.length > 0 
     ? `/insects-host-plant-explorer-/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
     : '';
