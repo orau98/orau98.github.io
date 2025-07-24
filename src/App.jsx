@@ -1809,7 +1809,14 @@ function App() {
                     
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
-                      const wameiMapped = wameiMap[normalizedPlant];
+                      // ツバキは特別処理 - 常にヤブツバキに統一
+                      let wameiMapped = wameiMap[normalizedPlant];
+                      if (normalizedPlant === 'ツバキ' || normalizedPlant === 'つばき') {
+                        wameiMapped = 'ヤブツバキ';
+                        if (mothName === 'スミレモンキリガ') {
+                          console.log('DEBUG: ツバキ→ヤブツバキに変換しました');
+                        }
+                      }
                       const correctedPlantName = correctPlantName(wameiMapped || normalizedPlant);
                       
                       // Debug for センモンヤガ and スミレモンキリガ
