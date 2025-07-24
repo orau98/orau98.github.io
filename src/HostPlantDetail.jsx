@@ -189,6 +189,11 @@ const PlantImageGallery = ({ images }) => {
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
+  
+  // Debug logging for plant detail
+  console.log('HostPlantDetail - plantName param:', plantName);
+  console.log('HostPlantDetail - decodedPlantName:', decodedPlantName);
+  console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
   const mothsOnThisPlant = hostPlants[decodedPlantName] || [];
   const details = plantDetails[decodedPlantName] || { family: '不明' };

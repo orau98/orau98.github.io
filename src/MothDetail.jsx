@@ -15,6 +15,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const moth = allInsects.find(m => m.id === insectId);
   
+  // Debug logging for catalog-6065 (スミレモンキリガ)
+  if (insectId === 'catalog-6065') {
+    console.log('DEBUG catalog-6065: Found moth:', moth);
+    if (moth) {
+      console.log('DEBUG catalog-6065: hostPlants:', moth.hostPlants);
+      console.log('DEBUG catalog-6065: hostPlantDetails:', moth.hostPlantDetails);
+    }
+  }
+  
   // Debug logging for センモンヤガ
   if (insectId === 'catalog-3489' || insectId === 'main-6519') {
     console.log('DEBUG: Looking for センモンヤガ with ID:', insectId);

@@ -634,7 +634,13 @@ function App() {
               const familyJp = row['Family name (JP)']?.trim();
               if (allName) correctMothNames.add(allName);
               if (hubName) correctMothNames.add(hubName);
-              if (allName && hubName) wameiMap[allName] = hubName;
+              if (allName && hubName) {
+                wameiMap[allName] = hubName;
+                // Debug ツバキ-related mappings
+                if ((allName && allName.includes('ツバキ')) || (hubName && hubName.includes('ツバキ'))) {
+                  console.log(`DEBUG: wameiMap ツバキ mapping: "${allName}" -> "${hubName}"`);
+                }
+              }
               if (hubName && familyJp) wameiFamilyMap[hubName] = familyJp;
             });
             console.log("wamei_checklist_ver.1.10.csv parsed successfully. wameiMap size:", Object.keys(wameiMap).length);
@@ -785,6 +791,10 @@ function App() {
 
               if (plantName) {
                 yListPlantNames.add(plantName);
+                // Debug ツバキ-related plants in YList
+                if (plantName.includes('ツバキ')) {
+                  console.log(`DEBUG: YList ツバキ plant added: "${plantName}"`);
+                }
               }
               if (plantName && familyJp) {
                 yListPlantFamilyMap[plantName] = familyJp;
@@ -869,8 +879,16 @@ function App() {
         ]);
 
         const correctPlantName = (name) => {
+          // Special debug for ツバキ-related plants
+          if (name && (name.includes('ツバキ') || name.includes('ヤブツバキ') || name.includes('ユキツバキ'))) {
+            console.log(`DEBUG: ツバキ-related plant correction: input="${name}"`);
+          }
+          
           // 1. 直接マッチ（最優先）
           if (yListPlantNames.has(name)) {
+            if (name && name.includes('ツバキ')) {
+              console.log(`DEBUG: ツバキ plant found directly in YList: "${name}"`);
+            }
             return name;
           }
 
@@ -936,6 +954,9 @@ function App() {
             };
             
             const expanded = groupExpansions[name];
+            if (name === 'ツバキ類') {
+              console.log(`DEBUG: ツバキ類 expansion - expanded to: ${expanded}, exists in YList: ${yListPlantNames.has(expanded)}`);
+            }
             if (expanded && yListPlantNames.has(expanded)) {
               console.log(`DEBUG: Expanded ${name} to ${expanded}`);
               return expanded;
@@ -1788,13 +1809,15 @@ function App() {
                     
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
-                      const correctedPlantName = correctPlantName(wameiMap[normalizedPlant] || normalizedPlant);
+                      const wameiMapped = wameiMap[normalizedPlant];
+                      const correctedPlantName = correctPlantName(wameiMapped || normalizedPlant);
                       
                       // Debug for センモンヤガ and スミレモンキリガ
                       if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
                         console.log(`DEBUG: ${mothName} - Processing plant:`, {
                           original: plant,
                           normalized: normalizedPlant,
+                          wameiMapped: wameiMapped,
                           corrected: correctedPlantName,
                           inWameiMap: !!wameiMap[normalizedPlant]
                         });
