@@ -544,6 +544,16 @@ function App() {
             return false;
           }
           
+          // Reject temporal/descriptive phrases
+          if (/^(早春|春|初夏|夏|秋|冬|晩秋|初冬)/.test(trimmed)) {
+            return false;
+          }
+          
+          // Reject if it's a descriptive phrase about collection/observation
+          if (/野外で|雑木林|林床|落葉から|幼虫が得られ|採卵では|による飼育|で飼育|から記録/.test(trimmed)) {
+            return false;
+          }
+          
           // Reject if it's a long sentence (likely a description, not a plant name)
           if (trimmed.length > 50 && (trimmed.includes('野外で') || trimmed.includes('から記録') || trimmed.includes('飼育下で'))) {
             return false;
@@ -1734,31 +1744,142 @@ function App() {
                   let tempHostPlant = rawHostPlant;
                   const extractedNotes = [];
                   
-                  // Extract notes in parentheses (e.g., "(ブナ科)", "(可能性が高い)")
-                  const notePattern = /\(([^)]+?)\)/g;
-                  let noteMatch;
-                  while ((noteMatch = notePattern.exec(tempHostPlant)) !== null) {
-                    const noteContent = noteMatch[1].trim();
-                    // Only add as a note if it's not a plant family name
-                    if (!noteContent.endsWith('科')) {
-                      extractedNotes.push(noteContent);
+                  // Enhanced plant extraction for descriptive text
+                  // Look for patterns like "植物名 (科名)" in descriptive text
+                  // Use more specific pattern to capture Japanese plant names
+                  const plantWithFamilyPattern = /([ア-ン一-龯ァ-ヶー]{1,20})\s*[（(]\s*([^）)]+科)\s*[）)]/g;
+                  const foundPlantsWithFamily = [];
+                  let plantFamilyMatch;
+                  while ((plantFamilyMatch = plantWithFamilyPattern.exec(tempHostPlant)) !== null) {
+                    const beforeFamily = plantFamilyMatch[1].trim();
+                    const familyName = plantFamilyMatch[2].trim();
+                    
+                    // Extract just the plant name by removing common prefixes
+                    let plantName = beforeFamily;
+                    
+                    // Remove common patterns that precede plant names
+                    const prefixPatterns = [
+                      /^.*採卵では/,     // 採卵では (sairan de wa)
+                      /^.*野外では/,     // 野外では (yagai de wa)
+                      /^.*飼育下では/, // 飼育下では (shiiku-ka de wa)
+                      /^.*条件下では/, // 条件下では (jouken-ka de wa)
+                      /^.*状態では/,     // 状態では (joutai de wa)
+                      /^.*では/,           // では (de wa)
+                      /^.*での/,           // での (de no)
+                      /^.*から/,           // から (kara)
+                      /^.*による/        // による (ni yoru)
+                    ];
+                    
+                    for (const pattern of prefixPatterns) {
+                      if (pattern.test(plantName)) {
+                        plantName = plantName.replace(pattern, '');
+                        break;
+                      }
+                    }
+                    
+                    plantName = plantName.trim();
+                    
+                    // Validate the extracted plant name more strictly
+                    const isValid = plantName && 
+                                   plantName.length > 1 && 
+                                   plantName.length <= 15 && // Plant names shouldn't be too long
+                                   !plantName.match(/月[上中下]?旬|月頃/) &&
+                                   !plantName.match(/^[0-9０-９]+$/) &&
+                                   !plantName.match(/早春|春|初夏|夏|初秋|秋|晩秋|冬/) &&
+                                   !plantName.match(/野外で|雑木林|林床|落葉から/) &&
+                                   !plantName.match(/幼虫が得られ|採卵では|による飼育|で飼育|から記録/) &&
+                                   !plantName.match(/^(から|では|での|による|記録|観察|確認)$/);
+                    
+                    // Validate the plant name
+                    if (isValid) {
+                      foundPlantsWithFamily.push({
+                        plant: plantName,
+                        family: familyName,
+                        fullMatch: plantFamilyMatch[0]
+                      });
                     }
                   }
                   
-                  // Extract notes after a period or semicolon that are not part of a plant name
-                  const descriptivePattern = /[。；]([^。；]+)/g;
-                  let descriptiveMatch;
-                  while ((descriptiveMatch = descriptivePattern.exec(tempHostPlant)) !== null) {
-                    extractedNotes.push(descriptiveMatch[1].trim());
+                  // If we found plants with family names in the descriptive text, process them
+                  if (foundPlantsWithFamily.length > 0) {
+                    console.log('DEBUG: Found plants with family names in descriptive text:', foundPlantsWithFamily);
+                    
+                    // Extract the descriptive context as notes
+                    const contextPatterns = [
+                      /野外で[^。；]+から[^。；]+得られ/,
+                      /♀からの採卵では[^。；]+/,
+                      /[^。；]+による飼育記録/,
+                      /[^。；]+で飼育/,
+                      /[^。；]+から記録/
+                    ];
+                    
+                    contextPatterns.forEach(pattern => {
+                      const contextMatch = tempHostPlant.match(pattern);
+                      if (contextMatch) {
+                        extractedNotes.push(contextMatch[0].trim());
+                      }
+                    });
+                    
+                    // Process each found plant
+                    foundPlantsWithFamily.forEach(item => {
+                      const plantWithFamily = `${item.plant} (${item.family})`;
+                      
+                      // Check if this plant has additional context (like 生葉, 枯れ葉)
+                      const afterPattern = new RegExp(`${item.fullMatch.replace(/[()（）]/g, '\\$&')}\\s*の([^；;。、，,]+)`);
+                      const contextMatch = tempHostPlant.match(afterPattern);
+                      if (contextMatch && contextMatch[1]) {
+                        const partInfo = contextMatch[1].trim().split(/[；;。、，,]/)[0];
+                        if (partInfo && partInfo.match(/生葉|枯れ葉|葉|花|実|種子|樹皮|根/)) {
+                          hostPlantEntries.push({
+                            plant: `${plantWithFamily}（${partInfo}）`,
+                            condition: '',
+                            familyFromMainCsv: familyFromMainCsv
+                          });
+                        } else {
+                          hostPlantEntries.push({
+                            plant: plantWithFamily,
+                            condition: '',
+                            familyFromMainCsv: familyFromMainCsv
+                          });
+                        }
+                      } else {
+                        hostPlantEntries.push({
+                          plant: plantWithFamily,
+                          condition: '',
+                          familyFromMainCsv: familyFromMainCsv
+                        });
+                      }
+                    });
+                    
+                    // Skip the normal parsing if we found plants with families
+                    tempHostPlant = '';
+                  } else {
+                    // Original logic for extracting notes
+                    // Extract notes in parentheses (e.g., "(ブナ科)", "(可能性が高い)")
+                    const notePattern = /\(([^)]+?)\)/g;
+                    let noteMatch;
+                    while ((noteMatch = notePattern.exec(tempHostPlant)) !== null) {
+                      const noteContent = noteMatch[1].trim();
+                      // Only add as a note if it's not a plant family name
+                      if (!noteContent.endsWith('科')) {
+                        extractedNotes.push(noteContent);
+                      }
+                    }
+                    
+                    // Extract notes after a period or semicolon that are not part of a plant name
+                    const descriptivePattern = /[。；]([^。；]+)/g;
+                    let descriptiveMatch;
+                    while ((descriptiveMatch = descriptivePattern.exec(tempHostPlant)) !== null) {
+                      extractedNotes.push(descriptiveMatch[1].trim());
+                    }
+                    // Don't remove parenthetical content for センモンヤガ as it contains family info like "(イネ科)"
+                    if (mothName !== 'センモンヤガ' && mothName !== 'スミレモンキリガ') {
+                      // Remove all notes and family names in parentheses from the plant text before splitting
+                      tempHostPlant = tempHostPlant.replace(/\([^)]+\)/g, '');
+                    }
+                    // Only remove text after periods (。), not semicolons (；;) as semicolons are used as delimiters
+                    tempHostPlant = tempHostPlant.replace(/[。].*/g, '');
                   }
-
-                  // Don't remove parenthetical content for センモンヤガ as it contains family info like "(イネ科)"
-                  if (mothName !== 'センモンヤガ' && mothName !== 'スミレモンキリガ') {
-                    // Remove all notes and family names in parentheses from the plant text before splitting
-                    tempHostPlant = tempHostPlant.replace(/\([^)]+\)/g, '');
-                  }
-                  // Only remove text after periods (。), not semicolons (；;) as semicolons are used as delimiters
-                  tempHostPlant = tempHostPlant.replace(/[。].*/g, '');
                   
                   // Split by various delimiters including "や" for complex entries
                   let plants = tempHostPlant.split(/[;；、，,]/);
