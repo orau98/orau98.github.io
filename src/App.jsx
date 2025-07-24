@@ -954,6 +954,18 @@ function App() {
           if (nonVascularPlants.has(name)) {
             return name;
           }
+          
+          // 2.5. 地名・地域名を除外
+          const geographicNames = new Set([
+            '小笠原諸島', '小笠原', '沖縄島', '沖縄', '本州', '北海道', '九州', '四国',
+            '屋久島', '奄美', '伊豆諸島', '伊豆', '対馬', '五島', '種子島',
+            '日本', '中国', '台湾', '朝鮮', '韓国', 'アジア', 'アメリカ', 'ヨーロッパ', 'アフリカ'
+          ]);
+          
+          if (geographicNames.has(name) || /諸島$|島では$|地方$|県$|市$|区$/.test(name)) {
+            console.log(`DEBUG: Plant "${name}" is a geographic location, returning null`);
+            return '';  // Return empty string to filter out
+          }
 
           // 3. 記述的表現チェック
           if (descriptiveTerms.has(name)) {

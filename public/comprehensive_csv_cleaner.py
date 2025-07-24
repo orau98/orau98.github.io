@@ -51,6 +51,22 @@ def is_valid_plant_name(plant_name):
     if re.search(r'[0-9０-９]月[上中下]旬|[0-9０-９]月頃', trimmed):
         return False
     
+    # 地名・地域名を除外
+    if re.search(r'諸島$|島では$|地方$|県$|市$|区$', trimmed):
+        return False
+    
+    # 具体的な地名を除外
+    geographic_names = [
+        '小笠原諸島', '小笠原', '沖縄島', '沖縄', '本州', '北海道', '九州', '四国',
+        '屋久島', '奄美', '伊豆諸島', '伊豆', '対馬', '五島', '種子島',
+        '日本', '中国', '台湾', '朝鮮', '韓国', 'アジア', 'アメリカ', 'ヨーロッパ', 'アフリカ',
+        '東京', '大阪', '京都', '神奈川', '千葉', '埼玉', '愛知', '福岡', '兵庫'
+    ]
+    
+    for geo_name in geographic_names:
+        if geo_name in trimmed:
+            return False
+    
     # 説明文のパターンを除外
     descriptive_patterns = [
         r'野外で',
@@ -74,7 +90,8 @@ def is_valid_plant_name(plant_name):
         r'栽培',
         r'発生する',
         r'生息',
-        r'分布'
+        r'分布',
+        r'では$'  # 「〜では」で終わるもの
     ]
     
     for pattern in descriptive_patterns:
@@ -155,9 +172,15 @@ def clean_csv_file(input_file, output_file, plant_column_index):
             # 植物名を抽出
             valid_plants = extract_plant_names(original)
             
-            if valid_plants:
+            # 抽出された植物名をさらに検証
+            validated_plants = []
+            for plant in valid_plants:
+                if is_valid_plant_name(plant):
+                    validated_plants.append(plant)
+            
+            if validated_plants:
                 # 有効な植物名をセミコロンで結合
-                cleaned = '; '.join(valid_plants)
+                cleaned = '; '.join(validated_plants)
             else:
                 # 有効な植物名がない場合は「不明」
                 if original and original.strip() and original.strip() != '不明':
