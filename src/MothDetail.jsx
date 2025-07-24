@@ -21,6 +21,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     if (moth) {
       console.log('DEBUG catalog-6065: hostPlants:', moth.hostPlants);
       console.log('DEBUG catalog-6065: hostPlantDetails:', moth.hostPlantDetails);
+      // Log the actual plant names
+      if (moth.hostPlants && moth.hostPlants.length > 0) {
+        moth.hostPlants.forEach((plant, index) => {
+          console.log(`DEBUG catalog-6065: hostPlant[${index}] = "${plant}"`);
+        });
+      }
+      if (moth.hostPlantDetails && moth.hostPlantDetails.length > 0) {
+        moth.hostPlantDetails.forEach((detail, index) => {
+          console.log(`DEBUG catalog-6065: hostPlantDetail[${index}] = `, detail);
+        });
+      }
     }
   }
   
