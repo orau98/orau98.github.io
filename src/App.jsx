@@ -534,6 +534,21 @@ function App() {
             return false;
           }
           
+          // Reject if it contains time period information (月旬, 月頃, etc.)
+          if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
+            return false;
+          }
+          
+          // Reject if it starts with time period information
+          if (/^[0-9０-９]+月/.test(trimmed)) {
+            return false;
+          }
+          
+          // Reject if it's a long sentence (likely a description, not a plant name)
+          if (trimmed.length > 50 && (trimmed.includes('野外で') || trimmed.includes('から記録') || trimmed.includes('飼育下で'))) {
+            return false;
+          }
+          
           // Allow family names (ending with '科') as valid plant names
           if (trimmed.endsWith('科')) {
             return true;
