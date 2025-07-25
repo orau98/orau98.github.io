@@ -703,7 +703,21 @@ function App() {
           
           normalized = normalized.trim();
           
-          // Handle synonyms - consolidate different names for the same plant
+          // Comprehensive normalization for duplicate prevention
+          // Convert full-width to half-width characters
+          normalized = normalized.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+            return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+          });
+          
+          // Normalize various dash and space characters  
+          normalized = normalized.replace(/[－─━ー]/g, 'ー'); // Normalize different dash types
+          normalized = normalized.replace(/\s+/g, ''); // Remove all spaces
+          
+          // Normalize punctuation marks
+          normalized = normalized.replace(/[、，]/g, '、'); // Normalize commas
+          normalized = normalized.replace(/[。．]/g, '。'); // Normalize periods
+          
+          // Handle synonyms and variations - consolidate different names for the same plant
           const synonymMap = {
             'セイヨウリンゴ': 'リンゴ',
             'セイヨウナシ': 'ナシ',
@@ -713,7 +727,17 @@ function App() {
             'セイヨウアブラナ': 'アブラナ',
             'セイヨウハコヤナギ': 'ハコヤナギ',
             'ヨーロッパリンゴ': 'リンゴ',
-            'ヨーロッパナシ': 'ナシ'
+            'ヨーロッパナシ': 'ナシ',
+            // Common variations
+            'アカマツ': 'アカマツ',
+            'クロマツ': 'クロマツ',
+            'ニホンアカマツ': 'アカマツ',
+            'ニホンクロマツ': 'クロマツ',
+            // Remove common modifiers that don't change the essential plant
+            'ヤマザクラ類': 'ヤマザクラ',
+            'サクラ類': 'サクラ',
+            'カエデ類': 'カエデ',
+            'ヤナギ類': 'ヤナギ'
           };
           
           // Apply synonym mapping
@@ -721,7 +745,63 @@ function App() {
             normalized = synonymMap[normalized];
           }
           
+          // Handle generic terms like "類" at the end
+          normalized = normalized.replace(/類$/, '');
+          
           return normalized;
+        };
+        
+        // Function to check if a plant entry is already in the hostPlantEntries array
+        const isDuplicateEntry = (hostPlantEntries, newEntry) => {
+          const normalizedNewPlant = normalizePlantName(newEntry.plant);
+          const newBasePlant = newEntry.plant.replace(/（[^）]*）$/, '').replace(/\([^)]*\)$/, '');
+          const normalizedNewBasePlant = normalizePlantName(newBasePlant);
+          
+          return hostPlantEntries.some(existingEntry => {
+            const normalizedExistingPlant = normalizePlantName(existingEntry.plant);
+            const existingBasePlant = existingEntry.plant.replace(/（[^）]*）$/, '').replace(/\([^)]*\)$/, '');
+            const normalizedExistingBasePlant = normalizePlantName(existingBasePlant);
+            
+            // Check for exact match on normalized plant names
+            if (normalizedNewPlant === normalizedExistingPlant) {
+              return true;
+            }
+            
+            // Check for base plant match (without part information)
+            if (normalizedNewBasePlant === normalizedExistingBasePlant && 
+                normalizedNewBasePlant.length > 1) {
+              return true;
+            }
+            
+            // Check for partial matches that indicate the same plant
+            if (normalizedNewBasePlant.includes(normalizedExistingBasePlant) && 
+                normalizedExistingBasePlant.length > 2) {
+              return true;
+            }
+            
+            if (normalizedExistingBasePlant.includes(normalizedNewBasePlant) && 
+                normalizedNewBasePlant.length > 2) {
+              return true;
+            }
+            
+            return false;
+          });
+        };
+        
+        // Helper function to add entry to hostPlantEntries with duplicate checking
+        const addPlantEntry = (hostPlantEntries, plant, condition = '', familyFromMainCsv = '') => {
+          const newEntry = {
+            plant: plant,
+            condition: condition,
+            familyFromMainCsv: familyFromMainCsv
+          };
+          
+          // Only add if not duplicate
+          if (!isDuplicateEntry(hostPlantEntries, newEntry)) {
+            hostPlantEntries.push(newEntry);
+            return true; // Successfully added
+          }
+          return false; // Duplicate, not added
         };
         
         // Centralized function to validate plant names
@@ -1853,11 +1933,7 @@ function App() {
                           const plantWithParts = plantParts && plantParts.length > 0 ? 
                             `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
                           
-                          hostPlantEntries.push({
-                            plant: plantWithParts,
-                            condition: '自然状態',
-                            familyFromMainCsv: familyFromMainCsv
-                          });
+                          addPlantEntry(hostPlantEntries, plantWithParts, '自然状態', familyFromMainCsv);
                         }
                       }
                     });
@@ -1887,11 +1963,7 @@ function App() {
                             const plantWithParts = plantParts && plantParts.length > 0 ? 
                               `${normalizedPlant}（${plantParts.join('・')}）` : normalizedPlant;
                             
-                            hostPlantEntries.push({
-                              plant: plantWithParts,
-                              condition: '飼育条件下',
-                              familyFromMainCsv: familyFromMainCsv
-                            });
+                            addPlantEntry(hostPlantEntries, plantWithParts, '飼育条件下', familyFromMainCsv);
                           }
                           // Add a note about the broader family context (insert at beginning)
                           hostPlantNotes.unshift('マメ科植物での飼育が可能');
@@ -1924,12 +1996,12 @@ function App() {
                           const plantWithParts = plantParts && plantParts.length > 0 ? 
                             `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
                           
-                          hostPlantEntries.push({
-                            plant: plantWithParts,
-                            condition: '飼育条件下',
-                            familyFromMainCsv: familyFromMainCsv
-                          });
-                          console.log('DEBUG: Added cultured plant:', plantWithParts);
+                          const added = addPlantEntry(hostPlantEntries, plantWithParts, '飼育条件下', familyFromMainCsv);
+                          if (added) {
+                            console.log('DEBUG: Added cultured plant:', plantWithParts);
+                          } else {
+                            console.log('DEBUG: Skipped duplicate cultured plant:', plantWithParts);
+                          }
                         } else {
                           console.log('DEBUG: Rejected cultured plant (not in YList):', plant);
                         }
@@ -1950,11 +2022,7 @@ function App() {
                         const plantWithParts = plantParts && plantParts.length > 0 ? 
                           `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
                         
-                        hostPlantEntries.push({
-                          plant: plantWithParts,
-                          condition: '',
-                          familyFromMainCsv: familyFromMainCsv
-                        });
+                        addPlantEntry(hostPlantEntries, plantWithParts, '', familyFromMainCsv);
                       }
                     }
                   });
@@ -2141,24 +2209,12 @@ function App() {
                       if (contextMatch && contextMatch[1]) {
                         const partInfo = contextMatch[1].trim().split(/[；;。、，,]/)[0];
                         if (partInfo && partInfo.match(/生葉|枯れ葉|葉|花|実|種子|樹皮|根/)) {
-                          hostPlantEntries.push({
-                            plant: `${plantWithFamily}（${partInfo}）`,
-                            condition: '',
-                            familyFromMainCsv: familyFromMainCsv
-                          });
+                          addPlantEntry(hostPlantEntries, `${plantWithFamily}（${partInfo}）`, '', familyFromMainCsv);
                         } else {
-                          hostPlantEntries.push({
-                            plant: plantWithFamily,
-                            condition: '',
-                            familyFromMainCsv: familyFromMainCsv
-                          });
+                          addPlantEntry(hostPlantEntries, plantWithFamily, '', familyFromMainCsv);
                         }
                       } else {
-                        hostPlantEntries.push({
-                          plant: plantWithFamily,
-                          condition: '',
-                          familyFromMainCsv: familyFromMainCsv
-                        });
+                        addPlantEntry(hostPlantEntries, plantWithFamily, '', familyFromMainCsv);
                       }
                     });
                     
@@ -2292,11 +2348,7 @@ function App() {
                         const plantWithParts = plantParts && plantParts.length > 0 ? 
                           `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
                         
-                        hostPlantEntries.push({
-                          plant: plantWithParts,
-                          condition: '',
-                          familyFromMainCsv: familyFromMainCsv
-                        });
+                        addPlantEntry(hostPlantEntries, plantWithParts, '', familyFromMainCsv);
                       }
                     }
                   });
@@ -2305,17 +2357,48 @@ function App() {
                 }
               }
 
-              // Extract unique plants while preserving the most detailed condition info
+              // Enhanced unique plant extraction with comprehensive duplicate removal
               const plantMap = new Map();
               hostPlantEntries.forEach(entry => {
-                const basePlant = entry.plant.replace(/（[^）]*）$/, ''); // Remove parts info for comparison
-                if (!plantMap.has(basePlant) || 
-                    (entry.condition === '自然状態' && plantMap.get(basePlant).condition !== '自然状態') ||
-                    (entry.plant.includes('（') && !plantMap.get(basePlant).plant.includes('（'))) {
-                  plantMap.set(basePlant, entry);
+                const basePlant = entry.plant.replace(/（[^）]*）$/, '').replace(/\([^)]*\)$/, ''); // Remove parts info for comparison
+                const normalizedBasePlant = normalizePlantName(basePlant);
+                
+                // Use normalized plant name as the key for better duplicate detection
+                let mapKey = normalizedBasePlant || basePlant;
+                
+                // Look for existing entries with similar normalized names
+                let existingKey = null;
+                for (const [key, existingEntry] of plantMap.entries()) {
+                  const existingNormalized = normalizePlantName(key);
+                  if (existingNormalized === normalizedBasePlant || 
+                      (existingNormalized.includes(normalizedBasePlant) && normalizedBasePlant.length > 2) ||
+                      (normalizedBasePlant.includes(existingNormalized) && existingNormalized.length > 2)) {
+                    existingKey = key;
+                    break;
+                  }
+                }
+                
+                if (existingKey) {
+                  // Update existing entry if new one has better conditions or more detail
+                  const existingEntry = plantMap.get(existingKey);
+                  if ((entry.condition === '自然状態' && existingEntry.condition !== '自然状態') ||
+                      (entry.plant.includes('（') && !existingEntry.plant.includes('（')) ||
+                      (!existingEntry.condition && entry.condition)) {
+                    plantMap.delete(existingKey);
+                    plantMap.set(mapKey, entry);
+                  }
+                } else if (normalizedBasePlant && normalizedBasePlant.length > 1) {
+                  // Add new entry only if normalized name is valid
+                  plantMap.set(mapKey, entry);
                 }
               });
+              
               const hostPlantList = [...plantMap.values()].map(e => e.plant);
+              
+              // Additional debug logging for duplicate detection
+              if (hostPlantEntries.length > hostPlantList.length) {
+                console.log(`Duplicate removal: ${hostPlantEntries.length} -> ${hostPlantList.length} for ${mothName}`);
+              }
               console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
               
               // Debug logging for センモンヤガ final data
