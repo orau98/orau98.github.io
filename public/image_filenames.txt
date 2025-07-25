@@ -85,3 +85,7 @@ Trigonodes_hyppasia
 Xylena_changi
 Xylena_formosa
 Zaranga_permagna
+ハスモンヨトウ Spodoptera litura(Fabricius, 1775) 
+ヒナシャチホコ Micromelalopha troglodyta (Graeser, 1890) (1)
+ヒナシャチホコ Micromelalopha troglodyta (Graeser, 1890) (3)
+ヒメスズメ Deilephila askoldensis (Oberthür, 1879) (2)
