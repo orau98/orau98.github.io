@@ -1523,38 +1523,8 @@ function App() {
                 console.log(`hasFuyushakuData: ${hasFuyushakuData}`);
               }
               
-              if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
-                // Use キリガ data as primary source and extract parts
-                const kirigaResult = extractPlantPartsAndCleanNames(kirigaHostPlants);
-                rawHostPlant = kirigaResult.cleanedText;
-                
-                // Merge the extracted parts with existing parts
-                for (const [plant, parts] of kirigaResult.parts) {
-                  if (allPlantParts.has(plant)) {
-                    // Merge parts, avoiding duplicates
-                    const existingParts = allPlantParts.get(plant);
-                    parts.forEach(part => {
-                      if (!existingParts.includes(part)) {
-                        existingParts.push(part);
-                      }
-                    });
-                  } else {
-                    allPlantParts.set(plant, [...parts]);
-                  }
-                }
-                
-                // Add remarks if available
-                if (kirigaRemarks) {
-                  rawHostPlant += ` (${kirigaRemarks})`;
-                }
-                
-                // Debug log for target species
-                if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('スミレモンキリガ')) {
-                  console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
-                  console.log(`Extracted parts for ${mothName}:`, Array.from(kirigaResult.parts.entries()));
-                }
-              } else if (fuyushakuHostPlants && fuyushakuHostPlants !== rawHostPlant) {
-                // Use フユシャク data as primary source and extract parts
+              if (fuyushakuHostPlants) {
+                // Use フユシャク data as highest priority source and extract parts
                 const fuyushakuResult = extractPlantPartsAndCleanNames(fuyushakuHostPlants);
                 rawHostPlant = fuyushakuResult.cleanedText;
                 
@@ -1582,6 +1552,36 @@ function App() {
                 if (mothName.includes('フユエダシャク') || mothName.includes('フユシャク') || mothName.includes('トゲエダシャク') || mothName === 'クロスジフユエダシャク') {
                   console.log(`Updated フユシャク host plants for ${mothName}: ${rawHostPlant}`);
                   console.log(`Extracted parts for ${mothName}:`, Array.from(fuyushakuResult.parts.entries()));
+                }
+              } else if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
+                // Use キリガ data as secondary priority source and extract parts
+                const kirigaResult = extractPlantPartsAndCleanNames(kirigaHostPlants);
+                rawHostPlant = kirigaResult.cleanedText;
+                
+                // Merge the extracted parts with existing parts
+                for (const [plant, parts] of kirigaResult.parts) {
+                  if (allPlantParts.has(plant)) {
+                    // Merge parts, avoiding duplicates
+                    const existingParts = allPlantParts.get(plant);
+                    parts.forEach(part => {
+                      if (!existingParts.includes(part)) {
+                        existingParts.push(part);
+                      }
+                    });
+                  } else {
+                    allPlantParts.set(plant, [...parts]);
+                  }
+                }
+                
+                // Add remarks if available
+                if (kirigaRemarks) {
+                  rawHostPlant += ` (${kirigaRemarks})`;
+                }
+                
+                // Debug log for target species
+                if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('スミレモンキリガ')) {
+                  console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
+                  console.log(`Extracted parts for ${mothName}:`, Array.from(kirigaResult.parts.entries()));
                 }
               }
               
@@ -2373,11 +2373,12 @@ function App() {
                                         emergenceTimeMap.get(cleanedScientificName);
                 
                 // Determine the source based on whether we have specialized data
+                // フユシャクデータを最優先にする
                 let sourceToUse = row['出典'] || '不明';
-                if (hasKirigaData) {
-                  sourceToUse = '日本のキリガ';
-                } else if (hasFuyushakuData) {
+                if (hasFuyushakuData) {
                   sourceToUse = '日本のフユシャク';
+                } else if (hasKirigaData) {
+                  sourceToUse = '日本のキリガ';
                 }
                 
                 // Process as moth
