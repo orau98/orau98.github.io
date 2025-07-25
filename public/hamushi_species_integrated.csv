@@ -378,10 +378,10 @@ H376,Chrysomelidae,ハムシ科,Bruchinae,マメゾウムシ亜科,,,,,Bruchus,,
 H377,Chrysomelidae,ハムシ科,Bruchinae,マメゾウムシ亜科,,,,,Bruchus,,pisorum,,,,,エンドウゾウムシ,,,,,,,Bruchus pisorum,エンドウ,,ハムシ目録データベース,年1回発生
 H378,Chrysomelidae,ハムシ科,Bruchinae,マメゾウムシ亜科,,,,,Bruchus,,rufimanus,,,,,ソラマメゾウムシ,,,,,,,Bruchus rufimanus,ソラマメ,,ハムシ目録データベース,年1回発生
 H379,Chrysomelidae,ハムシ科,Bruchinae,マメゾウムシ亜科,,,,,Kytorhinus,,senilis,,,,,シャープマメゾウムシ,,,,,,,Kytorhinus senilis,不明,,ハムシ目録データベース,
-H380,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Cyphogaster),,,,,ガガブタネクイハムシ,,,,,,,Donacia (Cyphogaster),不明,,ハムシ目録データベース,
-H381,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Cyphogaster),,,,,イネネクイハムシ,,,,,,,Donacia (Cyphogaster),ジュンサイ、コウホネ、ヒルムシロ、ヒツジグサ、ヒシなど、イネの根,,ハムシ目録データベース,5~11月
-H382,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donacia),,,,,セラネクイハムシ,,,,,,,Donacia (Donacia),不明,,ハムシ目録データベース,
-H383,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donacia),,,,,コウホネネクイハムシ,,,,,,,Donacia (Donacia),不明,,ハムシ目録データベース,
+H380,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Cyphogaster),lenzi,,Schönfeldt,1888,ガガブタネクイハムシ,,,,,,,Donacia (Cyphogaster) lenzi Schönfeldt, 1888,ガガブタ,,ハムシ目録データベース,
+H381,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Cyphogaster),provostii,,Fairmaire,1856,イネネクイハムシ,,,,,,,Donacia (Cyphogaster) provostii Fairmaire, 1856,ジュンサイ、コウホネ、ヒルムシロ、ヒツジグサ、ヒシなど、イネの根,,ハムシ目録データベース,5~11月
+H382,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donacia),crassipes,,Fabricius,1775,セラネクイハムシ,,,,,,,Donacia (Donacia) crassipes Fabricius, 1775,セリ、ヒシ、ヒルムシロ類,,ハムシ目録データベース,
+H383,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donacia),sparganii,,Ahrens,1810,コウホネネクイハムシ,,,,,,,Donacia (Donacia) sparganii Ahrens, 1810,コウホネ、スイレン類,,ハムシ目録データベース,
 H384,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donaciomima),,,,,キアシネクイハムシ,,,,,,,Donacia (Donaciomima),不明,,ハムシ目録データベース,
 H385,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donaciomima),,,,,フトネクイハムシ,,,,,,,Donacia (Donaciomima),不明,,ハムシ目録データベース,
 H386,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,,,,,Donacia,,(Donaciomima),,,,,クロガネネクイハムシ,,,,,,,Donacia (Donaciomima),不明,,ハムシ目録データベース,
