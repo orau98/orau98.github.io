@@ -179,6 +179,15 @@ function processScientificName(existingScientificName, genusName, speciesName, a
       if (hasCompleteAuthorYear) {
         return cleanExisting;
       }
+      
+      // Check if it has incomplete author/year (missing comma and year)
+      const hasIncompleteAuthor = cleanExisting.match(/\([^)]+$/);
+      if (hasIncompleteAuthor && cleanYear) {
+        // Fix incomplete format like "Cucullia argentea (Hufnagel" by adding year
+        const incompleteAuthor = hasIncompleteAuthor[0].substring(1); // Remove opening parenthesis
+        return `${binomialMatch[1]} ${binomialMatch[2]} (${incompleteAuthor}, ${cleanYear})`;
+      }
+      
       // If not complete, we'll reconstruct it below
     }
   }
@@ -220,7 +229,7 @@ function generateInsectHTML(insect, type) {
   // 食草リストを配列として処理
   // セミコロン区切りも処理する（例：センモンヤガの場合）
   const hostPlantsArray = hostPlants !== '不明' ? 
-    hostPlants.split(/[;；、,，]/)
+    [...new Set(hostPlants.split(/[;；、,，]/)
       .map(p => p.trim())
       .map(p => p.replace(/につく[。．]?$/g, '').trim()) // Remove "につく。"
       .filter(p => p) 
@@ -234,7 +243,7 @@ function generateInsectHTML(insect, type) {
         // Must have at least one Japanese or alphabetic character
         if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(p)) return false;
         return true;
-      })
+      }))]
       : [];
   
   // 分類情報の生成
@@ -258,7 +267,7 @@ function generateInsectHTML(insect, type) {
   
   <!-- Open Graph -->
   <meta property="og:title" content="${insect.name} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta property="og:description" content="${insect.name}の詳細情報。食草: ${hostPlants}">
+  <meta property="og:description" content="${insect.name}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://h-amoto.github.io/insects-host-plant-explorer-/${type}/${insect.id}">
   ${imageUrl ? `<meta property="og:image" content="https://h-amoto.github.io${imageUrl}">` : ''}
@@ -267,7 +276,7 @@ function generateInsectHTML(insect, type) {
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${insect.name} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta property="twitter:description" content="${insect.name}の詳細情報。食草: ${hostPlants}">
+  <meta property="twitter:description" content="${insect.name}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   ${imageUrl ? `<meta property="twitter:image" content="https://h-amoto.github.io${imageUrl}">` : ''}
   
   <!-- Enhanced Structured Data -->
@@ -341,6 +350,9 @@ function generateInsectHTML(insect, type) {
           ${hostPlantsArray.length > 0 ? `
           <dt>食草数</dt>
           <dd>${hostPlantsArray.length}種</dd>` : ''}
+          ${insect.emergenceTime && insect.emergenceTime !== '不明' ? `
+          <dt>成虫出現時期</dt>
+          <dd>${insect.emergenceTime}</dd>` : ''}
           <dt>出典</dt>
           <dd>${source}</dd>
         </dl>
@@ -642,7 +654,41 @@ async function generateMetaPages() {
     console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
 
     // CSVデータを読み込み
-    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv'));
+    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_bokutou.csv'));
+    
+    // 日本のキリガ.csvから成虫出現時期データを読み込み
+    const kirigaData = loadCSV(path.join(__dirname, '../public/日本のキリガ.csv'));
+    const emergenceTimeMap = new Map();
+    
+    kirigaData.forEach(row => {
+      const japaneseName = row['和名']?.trim();
+      const scientificName = row['学名']?.trim();
+      const emergenceTime = row['成虫の発生時期']?.trim();
+      
+      if (japaneseName && emergenceTime && emergenceTime !== '' && emergenceTime !== '不明') {
+        emergenceTimeMap.set(japaneseName, emergenceTime);
+      }
+      if (scientificName && emergenceTime && emergenceTime !== '' && emergenceTime !== '不明') {
+        emergenceTimeMap.set(scientificName, emergenceTime);
+        // Also store with author/year removed
+        const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+        if (cleanedScientificName !== scientificName) {
+          emergenceTimeMap.set(cleanedScientificName, emergenceTime);
+        }
+      }
+    });
+    
+    console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました`);
+    
+    // カシワキボシキリガの検索
+    const kashiwaData = emergenceTimeMap.get('カシワキボシキリガ') || 
+                        emergenceTimeMap.get('Lithophane pruinosa (Butler, 1878)') || 
+                        emergenceTimeMap.get('Lithophane pruinosa');
+    if (kashiwaData) {
+      console.log(`カシワキボシキリガの成虫出現時期: ${kashiwaData}`);
+    } else {
+      console.log('カシワキボシキリガの成虫出現時期データが見つかりません');
+    }
     
     // 昆虫データの処理
     let mothCount = 0;
@@ -669,15 +715,27 @@ async function generateMetaPages() {
       const insectId = catalogNo ? `catalog-${catalogNo}` : `main-${index}`;
       const type = 'moth';
       
+      // 成虫出現時期の検索
+      const emergenceTime = emergenceTimeMap.get(insectName) || 
+                           emergenceTimeMap.get(scientificName) ||
+                           emergenceTimeMap.get(scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim()) ||
+                           null;
+      
       const insect = {
         id: insectId,
         name: insectName,
         scientificName: scientificName,
         hostPlants: hostPlants,
         source: source,
-        scientificFilename: scientificName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_()\,]/g, ''),
+        scientificFilename: (() => {
+          // Extract binomial name (genus + species) from scientific name for filename
+          const binomialMatch = scientificName.match(/^([A-Z][a-z]+)\s+([a-z]+)/);
+          const binomialName = binomialMatch ? `${binomialMatch[1]} ${binomialMatch[2]}` : scientificName;
+          return binomialName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_()\,]/g, '');
+        })(),
         familyJapanese: familyJapanese,
-        type: type
+        type: type,
+        emergenceTime: emergenceTime
       };
       
       const html = generateInsectHTML(insect, type);
@@ -686,7 +744,7 @@ async function generateMetaPages() {
       mothCount++;
       
       if (hostPlants && hostPlants !== '不明') {
-        const plants = hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
+        const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p))];
         plants.forEach(plant => {
           if (isValidPlantName(plant)) {
             if (!hostPlantsMap.has(plant)) {
@@ -721,8 +779,47 @@ async function generateMetaPages() {
       console.log(`- スキップされた無効な植物: ${skippedPlants}件`);
     }
     
+    // 画像ファイルリストを生成
+    generateImageFileLists();
+    
   } catch (error) {
     console.error('メタページ生成中にエラーが発生しました:', error);
+  }
+}
+
+// 画像ファイルリストを生成する関数
+function generateImageFileLists() {
+  console.log('\n画像ファイルリストを生成中...');
+  
+  try {
+    // 昆虫画像ファイルリストの生成
+    const mothImagesDir = path.join(__dirname, '../public/images/moths');
+    if (fs.existsSync(mothImagesDir)) {
+      const mothImages = fs.readdirSync(mothImagesDir)
+        .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去
+        .sort();
+      
+      const imageListPath = path.join(__dirname, '../public/image_filenames.txt');
+      fs.writeFileSync(imageListPath, mothImages.join('\n') + '\n');
+      console.log(`- 昆虫画像リスト生成完了: ${mothImages.length}件`);
+    }
+    
+    // 植物画像ファイルリストの生成
+    const plantImagesDir = path.join(__dirname, '../public/images/plants');
+    if (fs.existsSync(plantImagesDir)) {
+      const plantImages = fs.readdirSync(plantImagesDir)
+        .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去
+        .sort();
+      
+      const plantImageListPath = path.join(__dirname, '../public/plant_image_filenames.txt');
+      fs.writeFileSync(plantImageListPath, plantImages.join('\n') + '\n');
+      console.log(`- 植物画像リスト生成完了: ${plantImages.length}件`);
+    }
+    
+  } catch (error) {
+    console.error('画像ファイルリスト生成中にエラーが発生しました:', error);
   }
 }
 

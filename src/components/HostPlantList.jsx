@@ -1,14 +1,37 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
 import Pagination from './Pagination';
 
-const HostPlantListItem = ({ plant, mothNames, plantDetails = {} }) => {
-  // Check if plant image exists
+// Preload list of available plant images
+let plantImageFilenames = [];
+let plantImageFilenamesLoaded = false;
+
+const loadPlantImageFilenames = async () => {
+  if (plantImageFilenamesLoaded) return plantImageFilenames;
+  
+  try {
+    const response = await fetch(`${import.meta.env.BASE_URL}plant_image_filenames.txt`);
+    if (response.ok) {
+      const text = await response.text();
+      plantImageFilenames = text.split('\n')
+        .map(line => line.trim())
+        .filter(line => line);
+      plantImageFilenamesLoaded = true;
+    }
+  } catch (error) {
+    console.error('植物画像リストの読み込みに失敗しました:', error);
+  }
+  
+  return plantImageFilenames;
+};
+
+const HostPlantListItem = ({ plant, mothNames, plantDetails = {}, plantImageFilenames: preloadedFilenames = [] }) => {
   const [imageExists, setImageExists] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [plantImageUrl, setPlantImageUrl] = useState('');
   
   // Create safe filename for plant image
   const createSafePlantFilename = (plantName) => {
@@ -16,97 +39,96 @@ const HostPlantListItem = ({ plant, mothNames, plantDetails = {} }) => {
     // Remove family annotations and special characters
     let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');
     cleanedName = cleanedName.replace(/\([^)]*科[^)]*\)/g, '');
+    // Also remove patterns like (クルミ) without 科
+    cleanedName = cleanedName.replace(/\([^)]*\)/g, '');
     cleanedName = cleanedName.replace(/科$/g, ''); // Remove trailing '科'
     cleanedName = cleanedName.replace(/[^a-zA-Z0-9ぁ-んァ-ヶ一-龠]/g, '');
     return cleanedName;
   };
   
   const safePlantName = createSafePlantFilename(plant);
-  const [plantImageUrl, setPlantImageUrl] = React.useState('');
   
   React.useEffect(() => {
-    let isMounted = true;
-    
-    // Reset states when starting new check
-    setImageExists(false);
-    setImageLoaded(false);
-    setImageError(false);
-    setPlantImageUrl('');
-    
-    // Check for plant images with various naming patterns
-    const checkImageExists = async (urls) => {
-      for (const url of urls) {
-        if (!isMounted) return; // Component unmounted
-        
-        try {
-          const img = new Image();
-          const imageExists = await new Promise((resolve) => {
-            const timeout = setTimeout(() => resolve(false), 2000); // Reduced to 2 seconds
-            img.onload = () => {
-              clearTimeout(timeout);
-              resolve(true);
-            };
-            img.onerror = () => {
-              clearTimeout(timeout);
-              resolve(false);
-            };
-            // Properly encode the URL for Japanese characters
-            img.src = encodeURI(url);
-          });
-          
-          if (!isMounted) return; // Component unmounted
-          
-          if (imageExists) {
-            console.log(`Found plant image: ${url}`);
-            setPlantImageUrl(url);
-            setImageExists(true);
-            setImageLoaded(true);
-            return;
-          }
-        } catch (error) {
-          console.log(`Failed to load image: ${url}`, error);
-        }
-        
-        // Add small delay between requests to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+    // Check if plant image exists using preloaded list
+    const checkPlantImage = () => {
+      if (!preloadedFilenames || preloadedFilenames.length === 0) return;
       
-      // No images found
-      if (isMounted) {
-        console.log(`No images found for plant: ${plant}`);
-        setImageExists(false);
+      // Reset states
+      setImageExists(false);
+      setImageLoaded(false);
+      setImageError(false);
+      setPlantImageUrl('');
+      
+      // Try to find matching image in the preloaded list, prioritizing 葉表 (leaf surface)
+      const getMatchingImages = () => {
+        const matches = preloadedFilenames.filter(filename => {
+          // Extract the base name from the filename (part before underscore)
+          const filenameBase = filename.split('_')[0];
+          
+          // First, try exact match with safePlantName
+          if (filenameBase === safePlantName) {
+            return true;
+          }
+          // Also try with original plant name (first part before space)
+          const basePlantName = plant.split(' ')[0];
+          const baseNameCleaned = createSafePlantFilename(basePlantName);
+          // Use exact match to avoid "タケ" matching "タケニグサ"
+          return filenameBase === basePlantName || filenameBase === baseNameCleaned;
+        });
+        
+        // Sort matches to prioritize 葉表 (leaf surface)
+        return matches.sort((a, b) => {
+          const aHasLeafSurface = a.includes('葉表');
+          const bHasLeafSurface = b.includes('葉表');
+          
+          // Prioritize 葉表
+          if (aHasLeafSurface && !bHasLeafSurface) return -1;
+          if (!aHasLeafSurface && bHasLeafSurface) return 1;
+          
+          // Secondary priority order: 葉 > 花 > 実 > 樹皮 > others
+          const getPriority = (filename) => {
+            if (filename.includes('葉表')) return 1;
+            if (filename.includes('葉')) return 2;
+            if (filename.includes('花')) return 3;
+            if (filename.includes('実')) return 4;
+            if (filename.includes('樹皮')) return 5;
+            return 6;
+          };
+          
+          return getPriority(a) - getPriority(b);
+        });
+      };
+      
+      const matchingImages = getMatchingImages();
+      const matchingImage = matchingImages[0]; // Use the highest priority match
+      
+      if (matchingImage) {
+        // Find the appropriate extension
+        const baseUrl = `${import.meta.env.BASE_URL}images/plants/`;
+        const extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'];
+        
+        // Try each extension to find the actual file
+        for (const ext of extensions) {
+          const url = `${baseUrl}${matchingImage}.${ext}`;
+          const img = new Image();
+          img.onload = () => {
+            setImageExists(true);
+            setPlantImageUrl(url);
+            setImageLoaded(true);
+          };
+          img.onerror = () => {
+            // Try next extension if current one fails
+          };
+          img.src = url;
+          break; // Only try first matching pattern for now
+        }
+      } else {
         setImageError(true);
       }
     };
-
-    // Try multiple filename patterns with priority order
-    const baseUrl = `${import.meta.env.BASE_URL}images/plants/`;
-    const extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'];
-    // Prioritize most common patterns first to reduce requests
-    const descriptiveSuffixes = ['', '_実', '_葉', '_樹皮', '_花', '_羽状複葉', '_葉表', '_葉裏'];
     
-    const urlsToTry = [];
-    
-    // Generate combinations with priority - exact match and most common patterns first
-    for (const suffix of descriptiveSuffixes) {
-      for (const ext of extensions) {
-        const filename = `${safePlantName}${suffix}.${ext}`;
-        urlsToTry.push(`${baseUrl}${filename}`);
-      }
-    }
-    
-    // Limit the number of URLs to try to avoid rate limiting
-    const limitedUrls = urlsToTry.slice(0, 20); // Only try first 20 combinations
-    
-    console.log(`Checking images for plant: ${plant}, safeName: ${safePlantName}`);
-    console.log(`Limited URLs to try (${limitedUrls.length}):`, limitedUrls.slice(0, 6)); // Log first 6 URLs
-    
-    checkImageExists(limitedUrls);
-    
-    return () => {
-      isMounted = false;
-    };
-  }, [plant, safePlantName]);
+    checkPlantImage();
+  }, [plant, safePlantName, preloadedFilenames]);
 
   return (
   <li className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
@@ -120,7 +142,7 @@ const HostPlantListItem = ({ plant, mothNames, plantDetails = {} }) => {
               <img
                 src={plantImageUrl}
                 alt={plant}
-                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+                className={`w-full h-full object-cover transition-opacity duration-500 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={() => setImageLoaded(true)}
@@ -241,7 +263,15 @@ const HostPlantListItem = ({ plant, mothNames, plantDetails = {} }) => {
 const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false }) => {
   const [plantSearchTerm, setPlantSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [plantImageFilenames, setPlantImageFilenames] = useState([]);
   const itemsPerPage = 50;
+
+  // Load plant image filenames on component mount
+  useEffect(() => {
+    loadPlantImageFilenames().then(filenames => {
+      setPlantImageFilenames(filenames);
+    });
+  }, []);
 
   const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
 
@@ -265,7 +295,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
     });
     
     // Sort with plants with images first, then "不明" at the end
-    return filtered.sort(([a], [b]) => {
+    const sorted = filtered.sort(([a], [b]) => {
       // Helper function to check if plant image exists
       const createSafePlantFilename = (plantName) => {
         if (!plantName) return '';
@@ -276,9 +306,34 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         return cleanedName;
       };
       
-      // Check if images exist (this is a simple heuristic, actual check happens in component)
-      const aHasImage = createSafePlantFilename(a) && a !== '不明' && !a.endsWith('科');
-      const bHasImage = createSafePlantFilename(b) && b !== '不明' && !b.endsWith('科');
+      // Check if images exist using the preloaded image list
+      const checkHasImage = (plantName) => {
+        if (!plantName || plantName === '不明' || plantName.endsWith('科')) return false;
+        const safeName = createSafePlantFilename(plantName);
+        const baseName = plantName.split(' ')[0];
+        const baseNameCleaned = createSafePlantFilename(baseName);
+        return plantImageFilenames.some(filename => {
+          // Extract the base name from the filename (part before underscore)
+          const filenameBase = filename.split('_')[0];
+          // Use exact match to avoid "タケ" matching "タケニグサ"
+          return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
+        });
+      };
+      
+      const aHasImage = checkHasImage(a);
+      const bHasImage = checkHasImage(b);
+      
+      // Debug logging for specific plants
+      if (a === 'マタタビ' || b === 'マタタビ' || a === 'オニグルミ' || b === 'オニグルミ') {
+        console.log(`Plant sorting: ${a} vs ${b}:`, {
+          plantA: a,
+          plantB: b,
+          aHasImage,
+          bHasImage,
+          plantImageFilenamesLength: plantImageFilenames.length,
+          sampleFilenames: plantImageFilenames.slice(0, 5)
+        });
+      }
       
       // Sort priority: images first, then regular plants, then "不明" last
       if (a === '不明') return 1;
@@ -287,7 +342,63 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       if (!aHasImage && bHasImage) return 1;
       return a.localeCompare(b, 'ja');
     });
-  }, [safeHostPlants, safePlantDetails, debouncedPlantSearch]);
+    
+    // Count plants with images for debugging
+    const plantsWithImages = sorted.filter(([plant]) => {
+      const createSafePlantFilename = (plantName) => {
+        if (!plantName) return '';
+        let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');
+        cleanedName = cleanedName.replace(/\([^)]*科[^)]*\)/g, '');
+        cleanedName = cleanedName.replace(/科$/g, '');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9ぁ-んァ-ヶ一-龠]/g, '');
+        return cleanedName;
+      };
+      
+      if (!plant || plant === '不明' || plant.endsWith('科')) return false;
+      const safeName = createSafePlantFilename(plant);
+      const baseName = plant.split(' ')[0];
+      const baseNameCleaned = createSafePlantFilename(baseName);
+      return plantImageFilenames.some(filename => {
+        const filenameBase = filename.split('_')[0];
+        return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
+      });
+    });
+    
+    console.log(`Plant image prioritization: ${plantsWithImages.length} plants have images out of ${sorted.length} total`);
+    console.log('First 10 sorted plants:', sorted.slice(0, 10).map(([plant]) => {
+      const createSafePlantFilename = (plantName) => {
+        if (!plantName) return '';
+        let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');
+        cleanedName = cleanedName.replace(/\([^)]*科[^)]*\)/g, '');
+        cleanedName = cleanedName.replace(/科$/g, '');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9ぁ-んァ-ヶ一-龠]/g, '');
+        return cleanedName;
+      };
+      
+      if (!plant || plant === '不明' || plant.endsWith('科')) return { plant, hasImage: false };
+      const safeName = createSafePlantFilename(plant);
+      const baseName = plant.split(' ')[0];
+      const baseNameCleaned = createSafePlantFilename(baseName);
+      const hasImage = plantImageFilenames.some(filename => {
+        const filenameBase = filename.split('_')[0];
+        return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
+      });
+      
+      return {
+        plant,
+        safeName,
+        baseName,
+        baseNameCleaned,
+        hasImage,
+        matchingFilenames: plantImageFilenames.filter(filename => {
+          const filenameBase = filename.split('_')[0];
+          return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
+        })
+      };
+    }));
+    
+    return sorted;
+  }, [safeHostPlants, safePlantDetails, debouncedPlantSearch, plantImageFilenames]);
 
   const plantNameSuggestions = useMemo(() => {
     if (!plantSearchTerm) return [];
@@ -360,7 +471,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {currentHostPlants.map(([plant, mothList], index) => (
                 <div key={plant} className="animate-fadeIn" style={{ animationDelay: `${index * 0.05}s` }}>
-                  <HostPlantListItem plant={plant} mothNames={mothList} plantDetails={safePlantDetails} />
+                  <HostPlantListItem plant={plant} mothNames={mothList} plantDetails={safePlantDetails} plantImageFilenames={plantImageFilenames} />
                 </div>
               ))}
             </div>

@@ -54,7 +54,7 @@ function App() {
       let hostPlantData = {};
       let plantDetailData = {};
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
-      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_kiriga.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
+      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_integrated_with_bokutou.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
@@ -502,7 +502,13 @@ function App() {
         let fuyushakuData = [];
         if (fuyushakuText && fuyushakuText.trim()) {
           try {
-            const fuyushakuParsed = Papa.parse(fuyushakuText, {
+            // Remove BOM if present
+            let cleanedText = fuyushakuText;
+            if (cleanedText.charCodeAt(0) === 0xFEFF) {
+              cleanedText = cleanedText.substring(1);
+            }
+            
+            const fuyushakuParsed = Papa.parse(cleanedText, {
               header: true,
               skipEmptyLines: 'greedy',
               delimiter: ',',
@@ -510,6 +516,44 @@ function App() {
               escapeChar: '"'
             });
             fuyushakuData = fuyushakuParsed.data;
+            
+            if (fuyushakuParsed.errors.length > 0) {
+              console.warn('フユシャク CSV parsing errors:', fuyushakuParsed.errors);
+            }
+            
+            // Fix parsing issues caused by commas in scientific names
+            fuyushakuData = fuyushakuData.map(row => {
+              // Check if the scientific name field is incomplete (missing year)
+              if (row['学名'] && row['食草'] && 
+                  row['学名'].includes('(') && !row['学名'].includes(')') &&
+                  row['食草'].match(/^\s*\d{4}\)/)) {
+                // The year part got split into the food plants field
+                const year = row['食草'];
+                const fixedScientificName = row['学名'] + ', ' + year;
+                
+                // The emergence time data might be in __parsed_extra
+                let emergenceTime = '';
+                if (row.__parsed_extra && row.__parsed_extra.length > 0) {
+                  emergenceTime = row.__parsed_extra[0];
+                } else if (Object.keys(row).length > 5) {
+                  // Try to get from additional fields
+                  const keys = Object.keys(row);
+                  emergenceTime = row[keys[5]] || '';
+                }
+                
+                // Shift the fields back to their correct positions
+                return {
+                  '和名': row['和名'],
+                  '学名': fixedScientificName,
+                  '食草': row['食草に関する備考'] || '',
+                  '食草に関する備考': row['成虫の発生時期'] || '',
+                  '成虫の発生時期': emergenceTime
+                };
+              }
+              return row;
+            });
+            
+            console.log('フユシャク CSV parsing successful, entries:', fuyushakuData.length);
           } catch (error) {
             console.warn('Failed to parse フユシャク CSV:', error);
             fuyushakuData = [];
@@ -580,6 +624,7 @@ function App() {
         console.log("フユシャク host plant map size:", fuyushakuHostPlantMap.size);
         console.log("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
         console.log("フユシャク Pachyerannis obliquaria check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria (Motschulsky, 1861)'));
+        console.log("フユシャク Pachyerannis obliquaria (no author) check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria'));
 
         // Function to clean and normalize scientific names for comparison
         const cleanScientificNameForComparison = (scientificName) => {
@@ -1375,7 +1420,7 @@ function App() {
           },
           complete: (results) => {
             if (results.errors.length) {
-              console.error("PapaParse errors in ListMJ_hostplants_integrated_with_kiriga.csv:", results.errors);
+              console.error("PapaParse errors in ListMJ_hostplants_integrated_with_bokutou.csv:", results.errors);
             }
             
             // Pre-scan for センモンヤガ
@@ -2247,6 +2292,36 @@ function App() {
                     // Only remove text after periods (。), not semicolons (；;) as semicolons are used as delimiters
                     tempHostPlant = tempHostPlant.replace(/[。].*/g, '');
                   }
+                  
+                  // Remove duplicate phrases that often appear in corrupted data
+                  const removeDuplicatePhrases = (text) => {
+                    if (!text) return text;
+                    
+                    // Split by semicolons and process each part
+                    const parts = text.split(/[;；]/);
+                    const uniqueParts = [];
+                    const seenParts = new Set();
+                    
+                    parts.forEach(part => {
+                      const cleanPart = part.trim();
+                      if (cleanPart && !seenParts.has(cleanPart)) {
+                        // Also check for partial matches to avoid "知られる" appearing multiple times
+                        const isRedundant = Array.from(seenParts).some(existing => 
+                          (existing.includes(cleanPart) && cleanPart.length > 3) ||
+                          (cleanPart.includes(existing) && existing.length > 3)
+                        );
+                        
+                        if (!isRedundant) {
+                          seenParts.add(cleanPart);
+                          uniqueParts.push(cleanPart);
+                        }
+                      }
+                    });
+                    
+                    return uniqueParts.join('; ');
+                  };
+                  
+                  tempHostPlant = removeDuplicatePhrases(tempHostPlant);
                   
                   // Split by various delimiters including "や" for complex entries
                   let plants = tempHostPlant.split(/[;；、，,]/);

@@ -121,7 +121,7 @@ const PlantImageGallery = ({ images }) => {
                 <img 
                   src={mainImage.finalSrc}
                   alt={mainImage.alt}
-                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
                 
                 {/* Elegant gradient overlay on hover */}
@@ -150,7 +150,7 @@ const PlantImageGallery = ({ images }) => {
                   className={`group relative bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer ${
                     mainImage?.finalSrc === image.finalSrc 
                       ? 'ring-3 ring-emerald-500 ring-offset-2 dark:ring-offset-slate-900' 
-                      : 'hover:scale-105'
+                      : ''
                   }`}
                   onClick={() => setMainImage(image)}
                 >
@@ -201,14 +201,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   // Get all available images for this plant
   const getPlantImages = (plantName) => {
     const commonImages = [
-      { suffix: '_羽状複葉', label: '羽状複葉' },
+      { suffix: '', label: '全体' },
       { suffix: '_葉表', label: '葉表' },
       { suffix: '_葉裏', label: '葉裏' },
+      { suffix: '_葉表白化', label: '葉表白化' },
+      { suffix: '_羽状複葉', label: '羽状複葉' },
       { suffix: '_樹皮', label: '樹皮' },
       { suffix: '_実', label: '実' },
+      { suffix: '_果実', label: '果実' },
       { suffix: '_花', label: '花' },
+      { suffix: '_蕾', label: '蕾' },
       { suffix: '_若葉', label: '若葉' },
-      { suffix: '', label: '全体' }
+      { suffix: '_茎', label: '茎' },
+      { suffix: '_枝', label: '枝' },
+      { suffix: '_断面', label: '断面' }
     ];
     
     return commonImages.map(({ suffix, label }) => ({

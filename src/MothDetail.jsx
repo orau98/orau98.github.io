@@ -730,7 +730,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           ({relatedMothNames.length}種)
                         </span>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6">
+                      <div className="space-y-2">
                         {relatedMothNames.map(relatedMothName => {
                           const relatedMoth = allInsects.find(m => m.name === relatedMothName);
                           if (!relatedMoth) return null;
@@ -739,108 +739,36 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                          relatedMoth.type === 'beetle' ? '/beetle/' : 
                                          relatedMoth.type === 'leafbeetle' ? '/leafbeetle/' : '/moth/';
                           
-                          // InsectImageコンポーネントをインライン定義
-                          const InsectImage = ({ insect }) => {
-                            const [imageIndex, setImageIndex] = React.useState(0);
-                            const [imageError, setImageError] = React.useState(false);
-                            const [imageLoaded, setImageLoaded] = React.useState(false);
-                            
-                            const createSafeFilename = (scientificName) => {
-                              if (!scientificName) return '';
-                              let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-                              cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-                              cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-                              cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-                              cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-                              cleanedName = cleanedName.replace(/\s+/g, '_');
-                              return cleanedName;
-                            };
-
-                            const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
-                            const imageFolder = insect.type === 'butterfly' ? 'butterflies' : 
-                                               insect.type === 'beetle' ? 'beetles' : 
-                                               insect.type === 'leafbeetle' ? 'leafbeetles' : 'moths';
-                            
-                            const imagePaths = [
-                              `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpg`,
-                              `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`
-                            ];
-                            
-                            const handleImageError = () => {
-                              if (imageIndex < imagePaths.length - 1) {
-                                setImageIndex(imageIndex + 1);
-                                setImageLoaded(false);
-                              } else {
-                                setImageError(true);
-                              }
-                            };
-                            
-                            const handleImageLoad = () => {
-                              setImageLoaded(true);
-                              setImageError(false);
-                            };
-                            
-                            if (imageError) {
-                              return (
-                                <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-lg flex items-center justify-center shrink-0">
-                                  <svg className="w-6 h-6 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                                  </svg>
-                                </div>
-                              );
-                            }
-                            
-                            return (
-                              <div className="relative w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-hidden shrink-0">
-                                <img 
-                                  src={imagePaths[imageIndex]}
-                                  alt={`${insect.name}（${insect.scientificName}）`}
-                                  className={`w-full h-full object-contain transition-all duration-300 group-hover:scale-105 ${
-                                    imageLoaded ? 'opacity-100' : 'opacity-0'
-                                  }`}
-                                  onLoad={handleImageLoad}
-                                  onError={handleImageError}
-                                />
-                                {!imageLoaded && (
-                                  <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 dark:bg-blue-900/40">
-                                    <div className="relative">
-                                      <div className="w-4 h-4 border-2 border-blue-200 dark:border-blue-700 rounded-full"></div>
-                                      <div className="absolute top-0 left-0 w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          };
-                          
                           return (
                             <Link
                               key={relatedMoth.id}
                               to={`${baseUrl}${relatedMoth.id}`}
-                              className="group bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-3 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 transition-all duration-300 border border-blue-200/50 dark:border-blue-700/50 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transform hover:scale-105"
+                              className="flex items-center space-x-3 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
                             >
-                              <div className="flex items-center space-x-3">
-                                <InsectImage insect={relatedMoth} />
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between">
-                                    <h5 className="text-sm font-medium text-slate-800 dark:text-slate-200 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors truncate">
-                                      {relatedMothName}
-                                    </h5>
-                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ml-2 ${
-                                      relatedMoth.type === 'moth' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                                      relatedMoth.type === 'butterfly' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300' :
-                                      relatedMoth.type === 'beetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                                      'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                                    }`}>
-                                      {relatedMoth.type === 'moth' ? '蛾' : 
-                                       relatedMoth.type === 'butterfly' ? '蝶' : 
-                                       relatedMoth.type === 'beetle' ? 'タマムシ' : 'ハムシ'}
-                                    </span>
-                                  </div>
-                                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                                    {formatScientificNameReact(relatedMoth.scientificName)}
-                                  </p>
+                              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg className="w-6 h-6 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
+                                </svg>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between">
+                                  <h5 className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
+                                    {relatedMothName}
+                                  </h5>
+                                  <span className={`px-2 py-1 rounded text-xs font-medium ml-2 ${
+                                    relatedMoth.type === 'moth' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                                    relatedMoth.type === 'butterfly' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300' :
+                                    relatedMoth.type === 'beetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                                    'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+                                  }`}>
+                                    {relatedMoth.type === 'moth' ? '蛾' : 
+                                     relatedMoth.type === 'butterfly' ? '蝶' : 
+                                     relatedMoth.type === 'beetle' ? 'タマムシ' : 'ハムシ'}
+                                  </span>
                                 </div>
+                                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 italic">
+                                  {formatScientificNameReact(relatedMoth.scientificName)}
+                                </p>
                               </div>
                             </Link>
                           );

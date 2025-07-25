@@ -157,20 +157,6 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
                 </span>
               </div>
               
-              {/* 成虫発生時期表示 - ハムシのみ */}
-              {moth.type === 'leafbeetle' && moth.emergenceTime && moth.emergenceTime !== '不明' && (
-                <div className="mt-2">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 flex-shrink-0">
-                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      発生時期
-                    </span>
-                  </div>
-                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} source={moth.emergenceTimeSource} compact={true} />
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -247,9 +233,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   useEffect(() => {
     const loadImageFilenames = async () => {
       try {
-        const response = await fetch(`${import.meta.env.BASE_URL}images/image_filenames.txt`);
+        const response = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
         const text = await response.text();
         const filenames = new Set(text.trim().split('\n').filter(Boolean));
+        console.log('Loaded image filenames:', filenames.size, 'files');
+        console.log('Has Cryphia_mitsuhashi:', filenames.has('Cryphia_mitsuhashi'));
+        console.log('First 10 filenames:', Array.from(filenames).slice(0, 10));
         setImageFilenames(filenames);
       } catch (error) {
         console.debug('Could not load image filenames:', error);
@@ -260,12 +249,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
 
   // Sort moths to prioritize those with images (lightweight)
   const sortedMoths = useMemo(() => {
-    if (imageFilenames.size === 0) return filteredMoths;
+    if (imageFilenames.size === 0) {
+      console.log('No image filenames loaded yet, returning unsorted');
+      return filteredMoths;
+    }
     
-    return [...filteredMoths].sort((a, b) => {
-      // Create safe filename check function
+    const sorted = [...filteredMoths].sort((a, b) => {
+      // Create safe filename check function - must match the logic in generate-meta-pages.js
       const createSafeFilename = (scientificName) => {
         if (!scientificName) return '';
+        // Extract genus and species only
         let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
         cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
         cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
@@ -282,6 +275,27 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const hasImageA = imageFilenames.has(filenameA);
       const hasImageB = imageFilenames.has(filenameB);
       
+      // Debug logging for specific moths
+      const debugMoths = ['キノコヨトウ', 'キグチヨトウ', 'アズサキリガ', 'イセキリガ', 'クモガタキリガ', 'ヒロバモクメキリガ', 'ベニモントガリホソガ'];
+      if (debugMoths.includes(a.name) || debugMoths.includes(b.name)) {
+        const targetMoth = debugMoths.find(moth => a.name === moth || b.name === moth);
+        console.log(`Sorting ${targetMoth}:`, {
+          mothA: a.name,
+          mothB: b.name,
+          filenameA,
+          filenameB,
+          hasImageA,
+          hasImageB,
+          scientificFilenameA: a.scientificFilename,
+          scientificFilenameB: b.scientificFilename,
+          scientificNameA: a.scientificName,
+          scientificNameB: b.scientificName,
+          imageFilenamesSize: imageFilenames.size,
+          imageFilenamesHasPseudopanolis: imageFilenames.has('Pseudopanolis_azusa'),
+          imageFilenamesHasAgrochola: imageFilenames.has('Agrochola_sakabei'),
+          imageFilenamesHasLabdia: imageFilenames.has('Labdia_semicoccinea')
+        });
+      }
       
       // Priority: Images first, then others
       if (hasImageA && !hasImageB) return -1;
@@ -290,6 +304,47 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       // If both have images or both don't, sort alphabetically by name
       return a.name.localeCompare(b.name, 'ja');
     });
+    
+    // Count moths with images
+    const mothsWithImages = sorted.filter(m => {
+      const createSafeFilename = (scientificName) => {
+        if (!scientificName) return '';
+        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+        cleanedName = cleanedName.replace(/\s+/g, '_');
+        return cleanedName;
+      };
+      return imageFilenames.has(m.scientificFilename || createSafeFilename(m.scientificName));
+    });
+    
+    // Log the first few sorted moths to see if images are prioritized
+    console.log(`Image prioritization: ${mothsWithImages.length} moths have images out of ${sorted.length} total`);
+    console.log('First 20 sorted moths:', sorted.slice(0, 20).map(m => {
+      const createSafeFilename = (scientificName) => {
+        if (!scientificName) return '';
+        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+        cleanedName = cleanedName.replace(/\s+/g, '_');
+        return cleanedName;
+      };
+      
+      const filename = m.scientificFilename || createSafeFilename(m.scientificName);
+      return {
+        name: m.name,
+        scientificName: m.scientificName,
+        scientificFilename: m.scientificFilename,
+        generatedFilename: filename,
+        hasImage: imageFilenames.has(filename)
+      };
+    }));
+    
+    return sorted;
   }, [filteredMoths, imageFilenames]);
 
   const totalPages = Math.ceil(sortedMoths.length / itemsPerPage);
