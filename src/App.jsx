@@ -577,6 +577,9 @@ function App() {
 
         console.log("Emergence time map created with", emergenceTimeMap.size, "entries");
         console.log("Sample entries:", Array.from(emergenceTimeMap.entries()).slice(0, 5));
+        console.log("フユシャク host plant map size:", fuyushakuHostPlantMap.size);
+        console.log("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
+        console.log("フユシャク Pachyerannis obliquaria check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria (Motschulsky, 1861)'));
 
         // Function to clean and normalize scientific names for comparison
         const cleanScientificNameForComparison = (scientificName) => {
@@ -1507,6 +1510,19 @@ function App() {
               const hasKirigaData = kirigaHostPlants || kirigaRemarks;
               const hasFuyushakuData = fuyushakuHostPlants || fuyushakuRemarks;
               
+              // Debug log for クロスジフユエダシャク
+              if (mothName === 'クロスジフユエダシャク') {
+                console.log(`=== Debug クロスジフユエダシャク ===`);
+                console.log(`mothName: ${mothName}`);
+                console.log(`scientificName: ${scientificName}`);
+                console.log(`cleanedScientificName: ${cleanedScientificName}`);
+                console.log(`rawHostPlant (before): ${rawHostPlant}`);
+                console.log(`kirigaHostPlants: ${kirigaHostPlants}`);
+                console.log(`fuyushakuHostPlants: ${fuyushakuHostPlants}`);
+                console.log(`hasKirigaData: ${hasKirigaData}`);
+                console.log(`hasFuyushakuData: ${hasFuyushakuData}`);
+              }
+              
               if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
                 // Use キリガ data as primary source and extract parts
                 const kirigaResult = extractPlantPartsAndCleanNames(kirigaHostPlants);
@@ -1562,11 +1578,17 @@ function App() {
                   rawHostPlant += ` (${fuyushakuRemarks})`;
                 }
                 
-                // Debug log for フユシャク species
-                if (mothName.includes('フユエダシャク') || mothName.includes('フユシャク') || mothName.includes('トゲエダシャク')) {
+                // Debug log for フユシャク species and クロスジフユエダシャク
+                if (mothName.includes('フユエダシャク') || mothName.includes('フユシャク') || mothName.includes('トゲエダシャク') || mothName === 'クロスジフユエダシャク') {
                   console.log(`Updated フユシャク host plants for ${mothName}: ${rawHostPlant}`);
                   console.log(`Extracted parts for ${mothName}:`, Array.from(fuyushakuResult.parts.entries()));
                 }
+              }
+              
+              // Debug log for クロスジフユエダシャク after processing
+              if (mothName === 'クロスジフユエダシャク') {
+                console.log(`rawHostPlant (after): ${rawHostPlant}`);
+                console.log(`=== End Debug クロスジフユエダシャク ===`);
               }
               
               // Special handling for フクラスズメ which has malformed food plant data due to CSV parsing issues
