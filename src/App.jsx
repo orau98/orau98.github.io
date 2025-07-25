@@ -60,6 +60,7 @@ function App() {
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
+      const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本のフユシャク.csv`;
       const emergenceTimeCsvPath = `${import.meta.env.BASE_URL}emergence_time_integrated.csv`;
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
@@ -142,7 +143,28 @@ function App() {
           // Check if it's a complete binomial (genus + species)
           const binomialMatch = cleanExisting.match(/^([A-Z][a-z]+)\s+([a-z]+(?:\s+[a-z]+)*)/);
           if (binomialMatch) {
-            // It's a valid binomial, use it
+            // It's a valid binomial, but check if it has complete author and year
+            const hasCompleteAuthorYear = cleanExisting.match(/\([^)]+,\s*\d{4}\)$/);
+            if (hasCompleteAuthorYear) {
+              return cleanExisting;
+            }
+            
+            // Check if it has incomplete author/year (missing comma and year)
+            const hasIncompleteAuthor = cleanExisting.match(/\([^)]+$/);
+            if (hasIncompleteAuthor && cleanYear) {
+              // Fix incomplete format like "Cucullia argentea (Hufnagel" by adding year
+              const incompleteAuthor = hasIncompleteAuthor[0].substring(1); // Remove opening parenthesis
+              return `${binomialMatch[1]} ${binomialMatch[2]} (${incompleteAuthor}, ${cleanYear})`;
+            }
+            
+            // Check if it has author without parentheses (e.g., "Orthosia satoi Sugi")
+            const authorWithoutParentheses = cleanExisting.match(/^([A-Z][a-z]+\s+[a-z]+)\s+([A-Z][a-zA-Z]+)$/);
+            if (authorWithoutParentheses && cleanYear) {
+              const [, binomial, author] = authorWithoutParentheses;
+              return `${binomial} (${author}, ${cleanYear})`;
+            }
+            
+            // If binomial is complete but no author/year, use as is
             return cleanExisting;
           }
           
@@ -305,7 +327,7 @@ function App() {
         // Load files with safe loading - prioritize essential files
         console.log("Starting file loading process...");
         
-        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, emergenceTimeText] = await Promise.all([
+        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, fuyushakuText, emergenceTimeText] = await Promise.all([
           safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
           safeFileLoad(mainCsvPath, 'main moth data', 20000),
           safeFileLoad(yListCsvPath, 'YList data', 30000), // Longer timeout for large file
@@ -313,6 +335,7 @@ function App() {
           safeFileLoad(butterflyCsvPath, 'butterfly data', 15000),
           safeFileLoad(beetleCsvPath, 'beetle data', 15000),
           safeFileLoad(kirigaCsvPath, 'kiriga data', 10000),
+          safeFileLoad(fuyushakuCsvPath, 'fuyushaku data', 10000),
           safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000)
         ]);
 
@@ -324,6 +347,7 @@ function App() {
           butterfly: butterflyText ? 'SUCCESS' : 'FAILED',
           beetle: beetleText ? 'SUCCESS' : 'FAILED',
           kiriga: kirigaText ? 'SUCCESS' : 'FAILED',
+          fuyushaku: fuyushakuText ? 'SUCCESS' : 'FAILED',
           emergenceTime: emergenceTimeText ? 'SUCCESS' : 'FAILED'
         });
 
@@ -466,6 +490,87 @@ function App() {
             const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
             if (cleanedScientificName !== scientificName) {
               kirigaRemarksMap.set(cleanedScientificName, remarks);
+            }
+          }
+        });
+
+        // Parse フユシャク CSV to create host plant and emergence time lookup tables
+        const fuyushakuHostPlantMap = new Map();
+        const fuyushakuRemarksMap = new Map();
+        
+        // Use Papa.parse for proper CSV parsing - handle empty fuyushakuText gracefully
+        let fuyushakuData = [];
+        if (fuyushakuText && fuyushakuText.trim()) {
+          try {
+            const fuyushakuParsed = Papa.parse(fuyushakuText, {
+              header: true,
+              skipEmptyLines: 'greedy',
+              delimiter: ',',
+              quoteChar: '"',
+              escapeChar: '"'
+            });
+            fuyushakuData = fuyushakuParsed.data;
+          } catch (error) {
+            console.warn('Failed to parse フユシャク CSV:', error);
+            fuyushakuData = [];
+          }
+        } else {
+          console.warn('フユシャク CSV data is empty or failed to load');
+        }
+        
+        console.log("Parsed フユシャク data:", fuyushakuData.length, "entries");
+        
+        // Create comprehensive data maps from フユシャク data
+        fuyushakuData.forEach(row => {
+          const japaneseName = row['和名']?.trim();
+          const scientificName = row['学名']?.trim();
+          const emergenceTime = row['成虫の発生時期']?.trim();
+          const hostPlants = row['食草']?.trim();
+          const remarks = row['食草に関する備考']?.trim();
+          
+          // Store emergence time data from フユシャク (priority lower than integrated CSV)
+          if (japaneseName && emergenceTime && emergenceTime !== '不明') {
+            if (!emergenceTimeMap.has(japaneseName)) {
+              emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のフユシャク' });
+            }
+          }
+          if (scientificName && emergenceTime && emergenceTime !== '不明') {
+            if (!emergenceTimeMap.has(scientificName)) {
+              emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のフユシャク' });
+            }
+            
+            // Also store with author/year removed for better matching
+            const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            if (cleanedScientificName !== scientificName && !emergenceTimeMap.has(cleanedScientificName)) {
+              emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本のフユシャク' });
+            }
+          }
+          
+          // Store host plant information
+          if (japaneseName && hostPlants) {
+            fuyushakuHostPlantMap.set(japaneseName, hostPlants);
+          }
+          if (scientificName && hostPlants) {
+            fuyushakuHostPlantMap.set(scientificName, hostPlants);
+            
+            // Also store with author/year removed for better matching
+            const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            if (cleanedScientificName !== scientificName) {
+              fuyushakuHostPlantMap.set(cleanedScientificName, hostPlants);
+            }
+          }
+          
+          // Store remarks information
+          if (japaneseName && remarks) {
+            fuyushakuRemarksMap.set(japaneseName, remarks);
+          }
+          if (scientificName && remarks) {
+            fuyushakuRemarksMap.set(scientificName, remarks);
+            
+            // Also store with author/year removed for better matching
+            const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            if (cleanedScientificName !== scientificName) {
+              fuyushakuRemarksMap.set(cleanedScientificName, remarks);
             }
           }
         });
@@ -1385,7 +1490,7 @@ function App() {
                 }
               }
               
-              // Check if we have キリガ CSV data for this species
+              // Check if we have キリガ or フユシャク CSV data for this species
               const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
               const kirigaHostPlants = kirigaHostPlantMap.get(mothName) || 
                                        kirigaHostPlantMap.get(scientificName) ||
@@ -1393,7 +1498,14 @@ function App() {
               const kirigaRemarks = kirigaRemarksMap.get(mothName) || 
                                     kirigaRemarksMap.get(scientificName) ||
                                     kirigaRemarksMap.get(cleanedScientificName);
+              const fuyushakuHostPlants = fuyushakuHostPlantMap.get(mothName) || 
+                                          fuyushakuHostPlantMap.get(scientificName) ||
+                                          fuyushakuHostPlantMap.get(cleanedScientificName);
+              const fuyushakuRemarks = fuyushakuRemarksMap.get(mothName) || 
+                                       fuyushakuRemarksMap.get(scientificName) ||
+                                       fuyushakuRemarksMap.get(cleanedScientificName);
               const hasKirigaData = kirigaHostPlants || kirigaRemarks;
+              const hasFuyushakuData = fuyushakuHostPlants || fuyushakuRemarks;
               
               if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
                 // Use キリガ data as primary source and extract parts
@@ -1424,6 +1536,36 @@ function App() {
                 if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('スミレモンキリガ')) {
                   console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
                   console.log(`Extracted parts for ${mothName}:`, Array.from(kirigaResult.parts.entries()));
+                }
+              } else if (fuyushakuHostPlants && fuyushakuHostPlants !== rawHostPlant) {
+                // Use フユシャク data as primary source and extract parts
+                const fuyushakuResult = extractPlantPartsAndCleanNames(fuyushakuHostPlants);
+                rawHostPlant = fuyushakuResult.cleanedText;
+                
+                // Merge the extracted parts with existing parts
+                for (const [plant, parts] of fuyushakuResult.parts) {
+                  if (allPlantParts.has(plant)) {
+                    // Merge parts, avoiding duplicates
+                    const existingParts = allPlantParts.get(plant);
+                    parts.forEach(part => {
+                      if (!existingParts.includes(part)) {
+                        existingParts.push(part);
+                      }
+                    });
+                  } else {
+                    allPlantParts.set(plant, [...parts]);
+                  }
+                }
+                
+                // Add remarks if available
+                if (fuyushakuRemarks) {
+                  rawHostPlant += ` (${fuyushakuRemarks})`;
+                }
+                
+                // Debug log for フユシャク species
+                if (mothName.includes('フユエダシャク') || mothName.includes('フユシャク') || mothName.includes('トゲエダシャク')) {
+                  console.log(`Updated フユシャク host plants for ${mothName}: ${rawHostPlant}`);
+                  console.log(`Extracted parts for ${mothName}:`, Array.from(fuyushakuResult.parts.entries()));
                 }
               }
               
@@ -2141,7 +2283,17 @@ function App() {
                 }
               }
 
-              const hostPlantList = [...new Set(hostPlantEntries.map(e => e.plant))];
+              // Extract unique plants while preserving the most detailed condition info
+              const plantMap = new Map();
+              hostPlantEntries.forEach(entry => {
+                const basePlant = entry.plant.replace(/（[^）]*）$/, ''); // Remove parts info for comparison
+                if (!plantMap.has(basePlant) || 
+                    (entry.condition === '自然状態' && plantMap.get(basePlant).condition !== '自然状態') ||
+                    (entry.plant.includes('（') && !plantMap.get(basePlant).plant.includes('（'))) {
+                  plantMap.set(basePlant, entry);
+                }
+              });
+              const hostPlantList = [...plantMap.values()].map(e => e.plant);
               console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
               
               // Debug logging for センモンヤガ final data
@@ -2180,20 +2332,31 @@ function App() {
                   instagramUrl: row['instagram_url'] || ''
                 });
               } else {
-                // Check if we have キリガ data for this species
+                // Check if we have キリガ or フユシャク data for this species
                 const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
                 const hasKirigaData = kirigaHostPlantMap.get(mothName) || 
                                      kirigaHostPlantMap.get(scientificName) ||
                                      kirigaHostPlantMap.get(cleanedScientificName) ||
                                      kirigaRemarksMap.get(mothName) || 
                                      kirigaRemarksMap.get(scientificName) ||
-                                     kirigaRemarksMap.get(cleanedScientificName) ||
-                                     emergenceTimeMap.get(mothName) || 
-                                     emergenceTimeMap.get(scientificName) ||
-                                     emergenceTimeMap.get(cleanedScientificName);
+                                     kirigaRemarksMap.get(cleanedScientificName);
+                const hasFuyushakuData = fuyushakuHostPlantMap.get(mothName) || 
+                                        fuyushakuHostPlantMap.get(scientificName) ||
+                                        fuyushakuHostPlantMap.get(cleanedScientificName) ||
+                                        fuyushakuRemarksMap.get(mothName) || 
+                                        fuyushakuRemarksMap.get(scientificName) ||
+                                        fuyushakuRemarksMap.get(cleanedScientificName);
+                const hasEmergenceData = emergenceTimeMap.get(mothName) || 
+                                        emergenceTimeMap.get(scientificName) ||
+                                        emergenceTimeMap.get(cleanedScientificName);
                 
-                // Determine the source based on whether we have キリガ data
-                const sourceToUse = hasKirigaData ? '日本のキリガ' : (row['出典'] || '不明');
+                // Determine the source based on whether we have specialized data
+                let sourceToUse = row['出典'] || '不明';
+                if (hasKirigaData) {
+                  sourceToUse = '日本のキリガ';
+                } else if (hasFuyushakuData) {
+                  sourceToUse = '日本のフユシャク';
+                }
                 
                 // Process as moth
                 const catalogNo = row['大図鑑カタログNo'] || '';
@@ -2224,11 +2387,17 @@ function App() {
                       return emergenceData.time;
                     } else {
                       // Debug log for target species
-                      if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ')) {
+                      if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('カシワキボシキリガ')) {
                         console.log(`DEBUG: ${mothName} not found in emergenceTimeMap`);
                         console.log(`Searching for: japanese="${mothName}", scientific="${scientificName}", cleaned="${cleanedScientificName}"`);
                         const keys = Array.from(emergenceTimeMap.keys());
                         console.log(`Keys in emergenceTimeMap (first 10):`, keys.slice(0, 10));
+                        
+                        // Check if there are any similar keys
+                        const similarKeys = keys.filter(key => 
+                          key.includes('カシワ') || key.includes('Lithophane') || key.includes('pruinosa')
+                        );
+                        console.log(`Similar keys for カシワキボシキリガ:`, similarKeys);
                       }
                     }
                     return '不明';
