@@ -338,6 +338,14 @@ function App() {
           safeFileLoad(fuyushakuCsvPath, 'fuyushaku data', 10000),
           safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000)
         ]);
+        
+        // Debug フユシャク file loading
+        console.log('DEBUG: フユシャク file load result:', {
+          path: fuyushakuCsvPath,
+          loaded: !!fuyushakuText,
+          length: fuyushakuText ? fuyushakuText.length : 0,
+          firstChars: fuyushakuText ? fuyushakuText.substring(0, 100) : 'N/A'
+        });
 
         console.log("File loading results:", {
           wamei: wameiText ? 'SUCCESS' : 'FAILED',
@@ -1446,8 +1454,8 @@ function App() {
               console.error("PapaParse errors in ListMJ_hostplants_integrated_with_bokutou.csv:", results.errors);
             }
             
-            // Pre-scan for センモンヤガ
-            console.log('=== MAIN CSV PARSED - SEARCHING FOR センモンヤガ ===');
+            // Pre-scan for センモンヤガ and カバシタムクゲエダシャク
+            console.log('=== MAIN CSV PARSED - SEARCHING FOR センモンヤガ AND カバシタムクゲエダシャク ===');
             const senmonYagaPreScan = results.data.filter((row, idx) => {
               const matchesName = row['和名'] === 'センモンヤガ' || row['大図鑑和名'] === 'センモンヤガ';
               const matchesCatalog = row['大図鑑カタログNo'] === '3489';
@@ -1462,7 +1470,22 @@ function App() {
               }
               return matchesName || matchesCatalog;
             });
+            
+            const kabaShitaPreScan = results.data.filter((row, idx) => {
+              const matchesName = row['和名'] === 'カバシタムクゲエダシャク';
+              if (matchesName) {
+                console.log(`Pre-scan found カバシタムクゲエダシャク at row ${idx}:`, {
+                  和名: row['和名'],
+                  学名: row['学名']?.substring(0, 50),
+                  食草: row['食草'] ? row['食草'].substring(0, 50) + '...' : 'EMPTY',
+                  備考: row['備考'] ? row['備考'].substring(0, 50) + '...' : 'EMPTY'
+                });
+              }
+              return matchesName;
+            });
+            
             console.log(`Total センモンヤガ entries found in pre-scan: ${senmonYagaPreScan.length}`);
+            console.log(`Total カバシタムクゲエダシャク entries found in pre-scan: ${kabaShitaPreScan.length}`);
             console.log('=== END PRE-SCAN ===');
             results.data.forEach((row, index) => {
               const originalMothName = row['和名']?.trim();
