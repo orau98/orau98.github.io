@@ -232,6 +232,16 @@ function generateInsectHTML(insect, type) {
     [...new Set(hostPlants.split(/[;；、,，]/)
       .map(p => p.trim())
       .map(p => p.replace(/につく[。．]?$/g, '').trim()) // Remove "につく。"
+      .flatMap(p => {
+        // Handle patterns like "クマノミズキ (以上ミズキ科)" - extract individual plant names
+        const familyMatch = p.match(/^(.+?)\s*\(\s*以上[^)]*科\s*\)$/);
+        if (familyMatch) {
+          // Split individual plant names before the family annotation
+          const plantNames = familyMatch[1].split(/[、，,]/).map(name => name.trim()).filter(name => name);
+          return plantNames;
+        }
+        return [p];
+      })
       .filter(p => p) 
       .filter(p => {
         // Filter out non-plant texts
