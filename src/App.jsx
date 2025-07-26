@@ -2343,8 +2343,8 @@ function App() {
                   });
                   plants = expandedPlants;
                   
-                  // Debug for センモンヤガ and スミレモンキリガ
-                  if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                  // Debug for センモンヤガ, スミレモンキリガ, and アオバシャチホコ
+                  if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ') {
                     console.log(`DEBUG: ${mothName} before processing:`, {
                       rawHostPlant,
                       tempHostPlant,
@@ -2385,7 +2385,7 @@ function App() {
                     // Must have at least one Japanese or alphabetic character
                     if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(plant)) return;
                     
-                    if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                    if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ') {
                       console.log(`DEBUG: ${mothName} - Processing plant:`, plant);
                       console.log(`DEBUG: ${mothName} - isValidPlantName result:`, isValidPlantName(plant));
                     }
@@ -2402,8 +2402,8 @@ function App() {
                       }
                       const correctedPlantName = correctPlantName(wameiMapped || normalizedPlant);
                       
-                      // Debug for センモンヤガ and スミレモンキリガ
-                      if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ') {
+                      // Debug for センモンヤガ, スミレモンキリガ, and アオバシャチホコ
+                      if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ') {
                         console.log(`DEBUG: ${mothName} - Processing plant:`, {
                           original: plant,
                           normalized: normalizedPlant,
