@@ -564,6 +564,18 @@ function App() {
         
         console.log("Parsed フユシャク data:", fuyushakuData.length, "entries");
         
+        // Debug: Show first few entries of フユシャク data
+        if (fuyushakuData.length > 0) {
+          console.log('DEBUG: フユシャク.csv first few entries:', fuyushakuData.slice(0, 3));
+          // Check if カバシタムクゲエダシャク exists
+          const kabaShitaEntry = fuyushakuData.find(row => row['和名']?.trim() === 'カバシタムクゲエダシャク');
+          if (kabaShitaEntry) {
+            console.log('DEBUG: カバシタムクゲエダシャク found in フユシャク.csv raw data:', kabaShitaEntry);
+          } else {
+            console.log('DEBUG: カバシタムクゲエダシャク NOT found in フユシャク.csv');
+          }
+        }
+        
         // Create comprehensive data maps from フユシャク data
         fuyushakuData.forEach(row => {
           const japaneseName = row['和名']?.trim();
@@ -571,6 +583,17 @@ function App() {
           const emergenceTime = row['成虫の発生時期']?.trim();
           const hostPlants = row['食草']?.trim();
           const remarks = row['食草に関する備考']?.trim();
+          
+          // Debug log for カバシタムクゲエダシャク
+          if (japaneseName === 'カバシタムクゲエダシャク') {
+            console.log('DEBUG: Found カバシタムクゲエダシャク in フユシャク.csv:', {
+              japaneseName,
+              scientificName,
+              hostPlants,
+              remarks,
+              emergenceTime
+            });
+          }
           
           // Store emergence time data from フユシャク (priority lower than integrated CSV)
           if (japaneseName && emergenceTime && emergenceTime !== '不明') {
@@ -1635,9 +1658,9 @@ function App() {
               const hasKirigaData = kirigaHostPlants || kirigaRemarks;
               const hasFuyushakuData = fuyushakuHostPlants || fuyushakuRemarks;
               
-              // Debug log for クロスジフユエダシャク
-              if (mothName === 'クロスジフユエダシャク') {
-                console.log(`=== Debug クロスジフユエダシャク ===`);
+              // Debug log for クロスジフユエダシャク and カバシタムクゲエダシャク
+              if (mothName === 'クロスジフユエダシャク' || mothName === 'カバシタムクゲエダシャク') {
+                console.log(`=== Debug ${mothName} ===`);
                 console.log(`mothName: ${mothName}`);
                 console.log(`scientificName: ${scientificName}`);
                 console.log(`cleanedScientificName: ${cleanedScientificName}`);
@@ -1649,6 +1672,14 @@ function App() {
               }
               
               if (fuyushakuHostPlants) {
+                // Debug log for カバシタムクゲエダシャク
+                if (mothName === 'カバシタムクゲエダシャク') {
+                  console.log('DEBUG: Using フユシャク data for カバシタムクゲエダシャク:', {
+                    fuyushakuHostPlants,
+                    fuyushakuRemarks
+                  });
+                }
+                
                 // Use フユシャク data as highest priority source and extract parts
                 const fuyushakuResult = extractPlantPartsAndCleanNames(fuyushakuHostPlants);
                 rawHostPlant = fuyushakuResult.cleanedText;
