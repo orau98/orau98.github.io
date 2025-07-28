@@ -221,32 +221,46 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
               <Link
                 key={insect.id}
                 to={`/${insect.type}/${insect.id}`}
-                className="group bg-gradient-to-br from-white to-emerald-50 dark:from-slate-700 dark:to-emerald-900/20 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 transform hover:scale-105"
+                className="group bg-gradient-to-br from-white to-emerald-50 dark:from-slate-700 dark:to-emerald-900/20 rounded-xl overflow-hidden hover:shadow-xl hover:shadow-emerald-200/50 dark:hover:shadow-emerald-900/30 transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-400 dark:hover:border-emerald-500 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer"
               >
                 <div className="relative w-full h-48">
                   <InsectImage insect={insect} large={true} />
                 </div>
-                <div className="p-4">
-                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors mb-2 overflow-hidden" style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical'
-                  }}>
-                    {insect.name}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed overflow-hidden" style={{
+                <div className="p-4 relative">
+                  <div className="mb-2">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors overflow-hidden" style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical'
+                    }}>
+                      {insect.name}
+                    </h4>
+                    {/* 科名表示 */}
+                    {insect.classification?.familyJapanese && (
+                      <span className="inline-block px-2 py-0.5 mt-1 text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-full">
+                        {insect.classification.familyJapanese}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3 overflow-hidden" style={{
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical'
                   }}>
                     {formatScientificNameReact(insect.scientificName)}
                   </p>
-                  <div className="mt-3 flex items-center text-xs text-emerald-600 dark:text-emerald-400">
-                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    詳細を見る
+                  
+                  {/* ホバー時に表示される矢印アイコン */}
+                  <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-emerald-500 dark:bg-emerald-600 rounded-full p-1.5 shadow-lg">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
+                  
+                  {/* カード全体のクリック可能性を示すオーバーレイ */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-50/0 via-emerald-50/0 to-emerald-50/0 group-hover:from-emerald-50/5 group-hover:via-emerald-50/2 group-hover:to-emerald-50/10 dark:group-hover:from-emerald-900/5 dark:group-hover:via-emerald-900/2 dark:group-hover:to-emerald-900/10 transition-all duration-300 rounded-xl pointer-events-none"></div>
                 </div>
               </Link>
             ))}
