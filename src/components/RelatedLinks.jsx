@@ -26,13 +26,16 @@ const getInsectImagePath = (insect) => {
   ];
 };
 
-// 昆虫画像コンポーネント
-const InsectImage = ({ insect }) => {
+// 昆虫画像コンポーネント（大きなサイズ）
+const InsectImage = ({ insect, large = false }) => {
   const [imageIndex, setImageIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   
   const imagePaths = getInsectImagePath(insect);
+  const sizeClasses = large ? "w-full h-48 sm:h-56" : "w-16 h-16";
+  const loadingSize = large ? "w-8 h-8" : "w-6 h-6";
+  const iconSize = large ? "w-12 h-12" : "w-8 h-8";
   
   const handleImageError = () => {
     if (imageIndex < imagePaths.length - 1) {
@@ -50,20 +53,23 @@ const InsectImage = ({ insect }) => {
   
   if (imageError) {
     return (
-      <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-lg flex items-center justify-center">
-        <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-        </svg>
+      <div className={`${sizeClasses} bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-lg flex items-center justify-center`}>
+        <div className="text-center">
+          <svg className={`${iconSize} text-slate-400 dark:text-slate-500 mx-auto mb-2`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
+          </svg>
+          {large && <p className="text-xs text-slate-500 dark:text-slate-400">画像なし</p>}
+        </div>
       </div>
     );
   }
   
   return (
-    <div className="relative w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg overflow-hidden">
+    <div className={`relative ${sizeClasses} bg-emerald-50 dark:bg-emerald-900/20 rounded-lg overflow-hidden`}>
       <img 
         src={imagePaths[imageIndex]}
         alt={`${insect.name}（${insect.scientificName}）`}
-        className={`w-full h-full object-contain transition-all duration-300 group-hover:scale-105 ${
+        className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${
           imageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={handleImageLoad}
@@ -72,8 +78,8 @@ const InsectImage = ({ insect }) => {
       {!imageLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-emerald-50/80 dark:bg-emerald-900/40">
           <div className="relative">
-            <div className="w-6 h-6 border-2 border-emerald-200 dark:border-emerald-700 rounded-full"></div>
-            <div className="absolute top-0 left-0 w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className={`${loadingSize} border-2 border-emerald-200 dark:border-emerald-700 rounded-full`}></div>
+            <div className={`absolute top-0 left-0 ${loadingSize} border-2 border-emerald-500 border-t-transparent rounded-full animate-spin`}></div>
           </div>
         </div>
       )}
@@ -167,27 +173,39 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
       {/* この植物を食べる昆虫 */}
       {insectsOnThisPlant.length > 0 && (
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-slate-700/50">
-          <h3 className="text-lg font-bold mb-4 text-blue-600 dark:text-blue-400">
+          <h3 className="text-lg font-bold mb-6 text-blue-600 dark:text-blue-400">
             {currentPlant}を食草とする昆虫
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {insectsOnThisPlant.map(insect => (
               <Link
                 key={insect.id}
                 to={`/${insect.type}/${insect.id}`}
-                className="group bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-4 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-900/30 dark:hover:to-teal-900/30 transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-lg transform hover:scale-105"
+                className="group bg-gradient-to-br from-white to-emerald-50 dark:from-slate-700 dark:to-emerald-900/20 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 transform hover:scale-105"
               >
-                <div className="flex items-start space-x-3">
-                  <InsectImage insect={insect} />
-                  <div className="flex-1 min-w-0">
-                    <div className="mb-1">
-                      <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors truncate">
-                        {insect.name}
-                      </h4>
-                    </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                      {formatScientificNameReact(insect.scientificName)}
-                    </p>
+                <div className="relative w-full h-48">
+                  <InsectImage insect={insect} large={true} />
+                </div>
+                <div className="p-4">
+                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors mb-2 overflow-hidden" style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical'
+                  }}>
+                    {insect.name}
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed overflow-hidden" style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical'
+                  }}>
+                    {formatScientificNameReact(insect.scientificName)}
+                  </p>
+                  <div className="mt-3 flex items-center text-xs text-emerald-600 dark:text-emerald-400">
+                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    詳細を見る
                   </div>
                 </div>
               </Link>
