@@ -2776,31 +2776,35 @@ function App() {
                   geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
                   instagramUrl: row['instagram_url'] || '',
-                  // Emergence time - lookup from integrated data
+                  // Emergence time - lookup from integrated data or extract from notes
                   emergenceTime: (() => {
+                    // First check if already in emergenceTimeMap
                     const emergenceData = emergenceTimeMap.get(mothName) || 
                                          emergenceTimeMap.get(scientificName) ||
                                          emergenceTimeMap.get(cleanedScientificName) || null;
                     
                     if (emergenceData) {
-                      console.log(`Found emergence time for ${mothName} (${scientificName}): ${emergenceData.time} [出典: ${emergenceData.source}]`);
                       return emergenceData.time;
-                    } else {
-                      // Debug log for target species
-                      if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('カシワキボシキリガ') || mothName === 'カバシタムクゲエダシャク') {
-                        console.log(`DEBUG: ${mothName} not found in emergenceTimeMap`);
-                        console.log(`Searching for: japanese="${mothName}", scientific="${scientificName}", cleaned="${cleanedScientificName}"`);
-                        const keys = Array.from(emergenceTimeMap.keys());
-                        console.log(`Keys in emergenceTimeMap (first 10):`, keys.slice(0, 10));
-                        
-                        // Check if there are any similar keys
-                        const similarKeys = keys.filter(key => 
-                          key.includes('カシワ') || key.includes('Lithophane') || key.includes('pruinosa')
-                        );
-                        console.log(`Similar keys for カシワキボシキリガ:`, similarKeys);
+                    }
+                    
+                    // If not found, try to extract from current row's notes
+                    const rawNotes = String(row['備考'] || '').trim();
+                    if (rawNotes) {
+                      const { emergenceTime: extractedTime } = extractEmergenceTime(rawNotes);
+                      if (extractedTime) {
+                        // Add to emergenceTimeMap for future use
+                        emergenceTimeMap.set(mothName, { time: extractedTime, source: sourceToUse });
+                        if (scientificName && scientificName !== mothName) {
+                          emergenceTimeMap.set(scientificName, { time: extractedTime, source: sourceToUse });
+                        }
+                        if (cleanedScientificName && cleanedScientificName !== scientificName) {
+                          emergenceTimeMap.set(cleanedScientificName, { time: extractedTime, source: sourceToUse });
+                        }
+                        return extractedTime;
                       }
                     }
-                    return '不明';
+                    
+                    return null;
                   })(),
                   emergenceTimeSource: (() => {
                     const emergenceData = emergenceTimeMap.get(mothName) || 
