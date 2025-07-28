@@ -6,7 +6,7 @@ import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 
-const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set() }) => {
+const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {} }) => {
   const [isVisible, setIsVisible] = useState(isPriority);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
@@ -161,22 +161,10 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFile
   
   const imageFilename = getImageFilename();
   
-  // Determine the correct file extension by checking what file actually exists
-  let imageExtension = '.jpg';
-  if (imageFilenames.size > 0) {
-    // Check if we need to use a different extension
-    const actualFiles = Array.from(imageFilenames);
-    const matchingFile = actualFiles.find(f => f === imageFilename);
-    if (matchingFile) {
-      // The filename from imageFilenames already has the correct name without extension
-      // We need to determine the extension from the actual file on disk
-      // For now, try common extensions
-      const possibleExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-      // Since we know アオマダラタマムシ uses .jpeg, we'll handle this case
-      if (imageFilename === 'アオマダラタマムシ') {
-        imageExtension = '.jpeg';
-      }
-    }
+  // Determine the correct file extension using the extensions mapping
+  let imageExtension = '.jpg'; // default
+  if (imageExtensions && imageExtensions[imageFilename]) {
+    imageExtension = imageExtensions[imageFilename];
   }
   
   const imageUrl = `${import.meta.env.BASE_URL}images/moths/${encodeURIComponent(imageFilename)}${imageExtension}`;
@@ -367,22 +355,35 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
 
   // Load image filenames list for lightweight sorting
   const [imageFilenames, setImageFilenames] = useState(new Set());
+  const [imageExtensions, setImageExtensions] = useState({});
   
   useEffect(() => {
-    const loadImageFilenames = async () => {
+    const loadImageData = async () => {
       try {
-        const response = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
-        const text = await response.text();
-        const filenames = new Set(text.trim().split('\n').filter(Boolean));
+        // Load filenames
+        const filenamesResponse = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
+        const filenamesText = await filenamesResponse.text();
+        const filenames = new Set(filenamesText.trim().split('\n').filter(Boolean));
+        setImageFilenames(filenames);
+        
+        // Load extension mapping
+        try {
+          const extensionsResponse = await fetch(`${import.meta.env.BASE_URL}image_extensions.json`);
+          const extensionsData = await extensionsResponse.json();
+          setImageExtensions(extensionsData);
+          console.log('Loaded image extensions:', Object.keys(extensionsData).length, 'files');
+        } catch (extError) {
+          console.debug('Could not load image extensions mapping:', extError);
+        }
+        
         console.log('Loaded image filenames:', filenames.size, 'files');
         console.log('Has Cryphia_mitsuhashi:', filenames.has('Cryphia_mitsuhashi'));
         console.log('First 10 filenames:', Array.from(filenames).slice(0, 10));
-        setImageFilenames(filenames);
       } catch (error) {
         console.debug('Could not load image filenames:', error);
       }
     };
-    loadImageFilenames();
+    loadImageData();
   }, []);
 
   // Sort moths to prioritize those with images (lightweight)
@@ -577,6 +578,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
                     baseRoute={baseRoute} 
                     isPriority={index < 12} 
                     imageFilenames={imageFilenames}
+                    imageExtensions={imageExtensions}
                   />
                 </div>
               ))}

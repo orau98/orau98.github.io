@@ -841,14 +841,30 @@ function generateImageFileLists() {
       
       console.log(`和名-学名マッピング作成: ${nameMapping.size}件`);
       
-      const mothImages = fs.readdirSync(mothImagesDir)
-        .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
-        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去したファイル名をそのまま保持
+      const mothImageFiles = fs.readdirSync(mothImagesDir)
+        .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i));
+      
+      const mothImages = mothImageFiles
+        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去したファイル名
         .sort();
+      
+      // 拡張子マッピングを作成
+      const extensionMapping = {};
+      mothImageFiles.forEach(file => {
+        const nameWithoutExt = file.replace(/\.[^.]+$/, '');
+        const extension = file.match(/\.[^.]+$/)[0];
+        extensionMapping[nameWithoutExt] = extension;
+      });
       
       const imageListPath = path.join(__dirname, '../public/image_filenames.txt');
       fs.writeFileSync(imageListPath, mothImages.join('\n') + '\n');
+      
+      // 拡張子マッピングをJSONファイルとして保存
+      const extensionMappingPath = path.join(__dirname, '../public/image_extensions.json');
+      fs.writeFileSync(extensionMappingPath, JSON.stringify(extensionMapping, null, 2));
+      
       console.log(`- 昆虫画像リスト生成完了: ${mothImages.length}件`);
+      console.log(`- 画像拡張子マッピング生成完了: ${Object.keys(extensionMapping).length}件`);
     }
     
     // 植物画像ファイルリストの生成
