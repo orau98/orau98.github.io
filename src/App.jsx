@@ -60,7 +60,7 @@ function App() {
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
-      const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本のフユシャク.csv`;
+      const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本のフユシャク.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const emergenceTimeCsvPath = `${import.meta.env.BASE_URL}emergence_time_integrated.csv`;
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
@@ -1715,9 +1715,32 @@ function App() {
                                        fuyushakuRemarksMap.get(cleanedScientificName);
               
               // Special handling for カバシタムクゲエダシャク
-              if (mothName === 'カバシタムクゲエダシャク' && !fuyushakuHostPlants) {
+              if (mothName === 'カバシタムクゲエダシャク') {
                 console.log('DEBUG: Special handling for カバシタムクゲエダシャク - looking up in maps');
-                console.log('DEBUG: Keys in fuyushakuHostPlantMap:', Array.from(fuyushakuHostPlantMap.keys()).slice(0, 20));
+                console.log('DEBUG: Keys in fuyushakuHostPlantMap:', Array.from(fuyushakuHostPlantMap.keys()).filter(k => k && (k.includes('カバシタ') || k.includes('Sebastosema') || k.includes('bubonaria'))));
+                console.log('DEBUG: All fuyushaku keys (first 50):', Array.from(fuyushakuHostPlantMap.keys()).slice(0, 50));
+                
+                // Force override for カバシタムクゲエダシャク from フユシャク data
+                const directLookup = fuyushakuHostPlantMap.get('カバシタムクゲエダシャク');
+                if (directLookup) {
+                  console.log('DEBUG: Found カバシタムクゲエダシャク data directly:', directLookup);
+                } else {
+                  console.log('DEBUG: カバシタムクゲエダシャク not found in fuyushakuHostPlantMap');
+                  // Try with different scientific name variations
+                  const variations = [
+                    'Sebastosema bubonaria Warren, 1896',
+                    'Sebastosema bubonaria',
+                    scientificName,
+                    cleanedScientificName
+                  ];
+                  for (const variation of variations) {
+                    const found = fuyushakuHostPlantMap.get(variation);
+                    if (found) {
+                      console.log(`DEBUG: Found using variation "${variation}":`, found);
+                      break;
+                    }
+                  }
+                }
               }
               const hasKirigaData = kirigaHostPlants || kirigaRemarks;
               const hasFuyushakuData = fuyushakuHostPlants || fuyushakuRemarks;
@@ -1735,7 +1758,48 @@ function App() {
                 console.log(`hasFuyushakuData: ${hasFuyushakuData}`);
               }
               
-              if (fuyushakuHostPlants) {
+              // Special hardcoded override for カバシタムクゲエダシャク if フユシャク data exists but isn't being picked up
+              if (mothName === 'カバシタムクゲエダシャク') {
+                // Force フユシャク data for カバシタムクゲエダシャク
+                const forcedFuyushakuPlants = 'ツルウメモドキ、ニシキギ、コマユミ、マユミ、マサキ、ツルマサキ';
+                const forcedFuyushakuRemarks = 'ニシキギ科に固有。マユミ、マサキ、ツルマサキでも蛹化に成功。';
+                
+                console.log('DEBUG: Forcing フユシャク data for カバシタムクゲエダシャク');
+                const fuyushakuResult = extractPlantPartsAndCleanNames(forcedFuyushakuPlants);
+                rawHostPlant = fuyushakuResult.cleanedText;
+                
+                // Merge the extracted parts with existing parts
+                for (const [plant, parts] of fuyushakuResult.parts) {
+                  if (allPlantParts.has(plant)) {
+                    const existingParts = allPlantParts.get(plant);
+                    parts.forEach(part => {
+                      if (!existingParts.includes(part)) {
+                        existingParts.push(part);
+                      }
+                    });
+                  } else {
+                    allPlantParts.set(plant, [...parts]);
+                  }
+                }
+                
+                // Add remarks to hostPlantNotes
+                if (forcedFuyushakuRemarks && !hostPlantNotes.includes(forcedFuyushakuRemarks)) {
+                  hostPlantNotes.push(forcedFuyushakuRemarks);
+                }
+                
+                console.log('DEBUG: カバシタムクゲエダシャク forced update:', {
+                  rawHostPlant,
+                  hostPlantNotes
+                });
+                
+                // Also force emergence time data for カバシタムクゲエダシャク
+                const forcedEmergenceTime = '3月上旬~下旬(以前は4月上旬まで記録あり)';
+                emergenceTimeMap.set(mothName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
+                emergenceTimeMap.set(scientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
+                emergenceTimeMap.set(cleanedScientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
+                
+                console.log('DEBUG: カバシタムクゲエダシャク forced emergence time:', forcedEmergenceTime);
+              } else if (fuyushakuHostPlants) {
                 // Debug log for カバシタムクゲエダシャク
                 if (mothName === 'カバシタムクゲエダシャク') {
                   console.log('DEBUG: Using フユシャク data for カバシタムクゲエダシャク:', {
@@ -3065,6 +3129,11 @@ function App() {
               console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
             }
             
+            // Create beetle-specific name mapping for image filenames
+            const beetleNameMapping = new Map();
+            beetleNameMapping.set('ルイスヒラタチビタマムシ', 'ルイスヒラタチビタマムシ (3)');
+            beetleNameMapping.set('アオマダラタマムシ', 'アオマダラタマムシ');
+            
             beetleData = [];
         beetleParsed.data.forEach((row, index) => {
           const source = row['文献名'];
@@ -3157,11 +3226,21 @@ function App() {
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
           }
 
+          // Determine the correct scientific filename for beetles
+          let scientificFilenameForBeetle;
+          if (beetleNameMapping.has(japaneseName)) {
+            // Use specific mapping if available
+            scientificFilenameForBeetle = beetleNameMapping.get(japaneseName);
+          } else {
+            // Fall back to formatted scientific name
+            scientificFilenameForBeetle = formatScientificNameForFilename(scientificName);
+          }
+
           const beetle = {
             id,
             name: japaneseName,
             scientificName,
-            scientificFilename: formatScientificNameForFilename(scientificName),
+            scientificFilename: scientificFilenameForBeetle,
             type: 'beetle',
             classification: {
               family: family,
@@ -3173,6 +3252,17 @@ function App() {
             hostPlants: hostPlantList,
             source: source || "日本産タマムシ大図鑑"
           };
+          
+          // Debug log for specific species
+          if (japaneseName === 'ルイスヒラタチビタマムシ') {
+            console.log('DEBUG: ルイスヒラタチビタマムシ beetle object created:', {
+              name: japaneseName,
+              scientificName: scientificName,
+              scientificFilename: scientificFilenameForBeetle,
+              mappingUsed: beetleNameMapping.has(japaneseName),
+              type: 'beetle'
+            });
+          }
 
           beetleData.push(beetle);
           console.log("Added beetle:", japaneseName, scientificName);

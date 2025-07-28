@@ -511,12 +511,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-12 h-12 mx-auto mb-3 bg-slate-400 rounded-full flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <div className="w-12 h-12 mx-auto mb-3 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center">
+                      <svg className="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium">食草情報が不明です</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">食草情報未登録</p>
+                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">情報をお持ちの方はご連絡ください</p>
                   </div>
                 )}
                 
@@ -578,9 +579,32 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     <div className="space-y-2">
                       <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">詳細情報:</span>
                       {moth.remarks.split(' | ').map((remark, remarkIndex) => {
-                        // 食草備考の場合
+                        // 食草備考の場合 - 本来の食草情報として扱う
                         if (remark.startsWith('食草: ')) {
                           const content = remark.substring(3);
+                          // 食草データが空の場合、備考の食草情報を主要食草として表示
+                          if (moth.hostPlants.length === 0) {
+                            const foodPlants = content.split(/[、，,;；]/).map(p => p.trim()).filter(p => p.length > 0);
+                            return (
+                              <div key={remarkIndex} className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-700/50">
+                                <div className="flex items-start space-x-2">
+                                  <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                  </svg>
+                                  <div>
+                                    <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">食草情報（文献記録）:</p>
+                                    <div className="flex flex-wrap gap-1">
+                                      {foodPlants.map((plant, plantIndex) => (
+                                        <span key={plantIndex} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                          {plant}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
                           return (
                             <div key={remarkIndex} className="flex items-start space-x-2">
                               <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -633,23 +657,28 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 {/* 出典情報 */}
                 {moth.source && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                      <span className="font-medium">出典:</span>{' '}
-                      {getSourceLink(moth.source) ? (
-                        <a 
-                          href={getSourceLink(moth.source)} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
-                        >
-                          {moth.source}
-                          <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      ) : (
-                        <span>{moth.source}</span>
-                      )}
+                    <div className="flex items-start space-x-2">
+                      <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      <div className="text-sm text-slate-500 dark:text-slate-400">
+                        <span className="font-medium">出典:</span>{' '}
+                        {getSourceLink(moth.source) ? (
+                          <a 
+                            href={getSourceLink(moth.source)} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200 font-medium"
+                          >
+                            {moth.source}
+                            <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ) : (
+                          <span className="font-medium">{moth.source}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}

@@ -6,7 +6,7 @@ import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 
-const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
+const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set() }) => {
   const [isVisible, setIsVisible] = useState(isPriority);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
@@ -51,11 +51,149 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false }) => {
     return cleanedName;
   };
   
-  const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
-  const imageUrl = `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`;
+  // Try to find the actual image file that exists
+  const getImageFilename = () => {
+    // Debug log for specific species
+    const isDebugTarget = moth.name === 'ルイスヒラタチビタマムシ';
+    
+    if (isDebugTarget) {
+      console.log('DEBUG: ルイスヒラタチビタマムシ image filename detection:', {
+        mothName: moth.name,
+        scientificName: moth.scientificName,
+        scientificFilename: moth.scientificFilename,
+        imageFilenamesSize: imageFilenames.size,
+        imageFilenamesLoaded: imageFilenames.size > 0
+      });
+    }
+    
+    // If imageFilenames is not loaded yet, use default
+    if (!imageFilenames || imageFilenames.size === 0) {
+      if (isDebugTarget) {
+        console.log('DEBUG: ルイスヒラタチビタマムシ - imageFilenames not loaded, using default');
+      }
+      return moth.scientificFilename || createSafeFilename(moth.scientificName);
+    }
+    
+    // 1. Try scientific filename directly
+    if (moth.scientificFilename && imageFilenames.has(moth.scientificFilename)) {
+      if (isDebugTarget) {
+        console.log('DEBUG: ルイスヒラタチビタマムシ - found with scientificFilename:', moth.scientificFilename);
+      }
+      return moth.scientificFilename;
+    }
+    
+    // 2. Try generated safe filename
+    const safeFilename = createSafeFilename(moth.scientificName);
+    if (isDebugTarget) {
+      console.log('DEBUG: ルイスヒラタチビタマムシ - generated safeFilename:', safeFilename);
+    }
+    if (imageFilenames.has(safeFilename)) {
+      if (isDebugTarget) {
+        console.log('DEBUG: ルイスヒラタチビタマムシ - found with safeFilename:', safeFilename);
+      }
+      return safeFilename;
+    }
+    
+    // 3. Try Japanese name directly
+    if (isDebugTarget) {
+      console.log('DEBUG: ルイスヒラタチビタマムシ - checking Japanese name directly:', moth.name);
+      console.log('DEBUG: ルイスヒラタチビタマムシ - imageFilenames.has(moth.name):', imageFilenames.has(moth.name));
+    }
+    if (imageFilenames.has(moth.name)) {
+      if (isDebugTarget) {
+        console.log('DEBUG: ルイスヒラタチビタマムシ - found with Japanese name:', moth.name);
+      }
+      return moth.name;
+    }
+    
+    // 4. Try to find any filename containing the Japanese name
+    if (isDebugTarget) {
+      console.log('DEBUG: ルイスヒラタチビタマムシ - searching for filenames containing:', moth.name);
+      console.log('DEBUG: ルイスヒラタチビタマムシ - first 10 imageFilenames:', Array.from(imageFilenames).slice(0, 10));
+      console.log('DEBUG: ルイスヒラタチビタマムシ - last 10 imageFilenames:', Array.from(imageFilenames).slice(-10));
+      console.log('DEBUG: ルイスヒラタチビタマムシ - target string chars:', moth.name.split('').map(c => `${c}(${c.charCodeAt(0)})`));
+      
+      // Check if the specific filename exists
+      const targetFilename = 'ルイスヒラタチビタマムシ (3)';
+      console.log('DEBUG: ルイスヒラタチビタマムシ - target filename exists:', imageFilenames.has(targetFilename));
+      console.log('DEBUG: ルイスヒラタチビタマムシ - target filename chars:', targetFilename.split('').map(c => `${c}(${c.charCodeAt(0)})`));
+      
+      // Manual search for debugging
+      let foundMatches = [];
+      for (const filename of imageFilenames) {
+        if (filename.includes('ルイス')) {
+          foundMatches.push(filename);
+        }
+      }
+      console.log('DEBUG: ルイスヒラタチビタマムシ - files containing "ルイス":', foundMatches);
+    }
+    for (const filename of imageFilenames) {
+      if (filename.includes(moth.name)) {
+        if (isDebugTarget) {
+          console.log('DEBUG: ルイスヒラタチビタマムシ - found containing filename:', filename);
+        }
+        return filename;
+      }
+    }
+    
+    // 5. Try to find any filename containing the scientific name parts
+    if (moth.scientificName) {
+      const scientificParts = moth.scientificName.split(' ').slice(0, 2).join(' ');
+      if (isDebugTarget) {
+        console.log('DEBUG: ルイスヒラタチビタマムシ - searching for scientific parts:', scientificParts);
+      }
+      for (const filename of imageFilenames) {
+        if (filename.includes(scientificParts)) {
+          if (isDebugTarget) {
+            console.log('DEBUG: ルイスヒラタチビタマムシ - found with scientific parts:', filename);
+          }
+          return filename;
+        }
+      }
+    }
+    
+    // Default to safe filename
+    if (isDebugTarget) {
+      console.log('DEBUG: ルイスヒラタチビタマムシ - no match found, using default safeFilename:', safeFilename);
+    }
+    return safeFilename;
+  };
   
-  // Simple check: if we have a filename, assume image exists
-  const hasImageFilename = !!(moth.scientificFilename || safeFilename);
+  const imageFilename = getImageFilename();
+  
+  // Determine the correct file extension by checking what file actually exists
+  let imageExtension = '.jpg';
+  if (imageFilenames.size > 0) {
+    // Check if we need to use a different extension
+    const actualFiles = Array.from(imageFilenames);
+    const matchingFile = actualFiles.find(f => f === imageFilename);
+    if (matchingFile) {
+      // The filename from imageFilenames already has the correct name without extension
+      // We need to determine the extension from the actual file on disk
+      // For now, try common extensions
+      const possibleExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+      // Since we know アオマダラタマムシ uses .jpeg, we'll handle this case
+      if (imageFilename === 'アオマダラタマムシ') {
+        imageExtension = '.jpeg';
+      }
+    }
+  }
+  
+  const imageUrl = `${import.meta.env.BASE_URL}images/moths/${encodeURIComponent(imageFilename)}${imageExtension}`;
+  
+  // Check if we have an actual match in imageFilenames
+  const hasImageFilename = imageFilenames.size > 0 ? imageFilenames.has(imageFilename) : true;
+  
+  // Debug log for specific species
+  if (moth.name === 'ルイスヒラタチビタマムシ') {
+    console.log('DEBUG: ルイスヒラタチビタマムシ final image check:', {
+      selectedImageFilename: imageFilename,
+      imageUrl: imageUrl,
+      hasImageFilename: hasImageFilename,
+      imageFilenamesContainsSelectedFilename: imageFilenames.has(imageFilename),
+      encodedImageFilename: encodeURIComponent(imageFilename)
+    });
+  }
   
   // Preload priority images
   useEffect(() => {
@@ -438,6 +576,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
                     moth={moth} 
                     baseRoute={baseRoute} 
                     isPriority={index < 12} 
+                    imageFilenames={imageFilenames}
                   />
                 </div>
               ))}

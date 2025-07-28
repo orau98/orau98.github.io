@@ -1,5 +1,4 @@
 Acherontia_lachesis
-Acronicta_subpurpurea_(Matsumura
 Agrilus_spinipennis
 Agrochola_sakabei
 Agrocholorta_kimurai
@@ -8,7 +7,6 @@ Ambulyx_japonica
 Archiearis_parthenias
 Aroga_mesostrepta
 Artena_dotata
-Aventiola_pusilla
 Bomolocha_nigrobasalis
 Callopistria_argyrosticta
 Cassida_lineola
@@ -18,26 +16,16 @@ Chariaspilates_formosaria
 Chilades_pandava
 Coraebus_daisenensis
 Cosmia_affinis
-Cosmia_camptostigma
-Cosmia_pyralina
-Cosmia_restituta_Walker_1857
 Crambus_humidellus
-Craniophora_praeclara_(Graeser
 Cryphia_mitsuhashi
 Cucullia_argentea
 Cucullia_pustulata
-Deilephila_askoldensis
-Deilephila_elpenor
-Dimorphicosmia_variegata
 Diphtherocome_autumnalis
 Eligma_narcissus
 Endotricha_minialis
 Etielloides_bipartitella
 Eupithecia_virgaureata
-Gonepatica_opalina
-Habroloma_lewisii
 Helicoverpa_armigera
-Helotropha_leucostigma
 Hypocala_deflorata
 IMG_4710
 Iragaodes_nobilis
@@ -53,18 +41,13 @@ Loepa_sakaei
 Lygephila_nigricostata
 Maruca_vitrata
 Mesoplectra_griselda
-Micromelalopha_troglodyta
-Micromelalopha_troglodyta
 Microxyla_confusa
 Mimachrostia_fasciata
 Naganoella_timandra
-Narosoideus_flavidorsalis
 Negritothripa_hampsoni
 Nemophora_staudingerella
-Notodonta_albicosta
 Organopoda_carnearia
 Orgyia_postica
-Orthogonia_sera
 Orthosia_incerta
 Orthosia_lizetta
 Orthosia_satoi
@@ -74,33 +57,27 @@ Paracolax_fentoni
 Pennithera_comis
 Perigrapha_circumducta
 Phaecasiophora_roseana
-Phaecasiophora_roseana
 Phazaca_alikangensis
 Phlogophora_beatrix
 Phragmataecia_castaneae
-Phtheochroides_clandestina
 Phthonoloba_viridifasciata
 Piletocera_aegimiusalis
 Protomiselia_bilinea
 Pseuderannis_lomozemia
 Pseudoips_sylpha
 Pseudopanolis_azusa
-Pseudopanolis_takao
 Pyrosis_idiota
 Rhadinosa_nigrocyanea
 Sarcopolia_illoba
 Schiffermuelleria_zelleri
 Sebastosema_bubonaria
-Shachia_circumscripta
 Siccia_obscura
 Spatulipalpia_albistrialis
 Spirama_retorta
-Spodoptera_litura
 Stericta_kogii
 Sugitania_akirai
 Sugitaniella_kuramana
 Telorta_divergens
-Tethea_consimilis
 Thysanoplusia_intermixta
 Tiracola_aureata
 Trichopteryx_miracula
@@ -109,3 +86,27 @@ Trigonodes_hyppasia
 Xylena_changi
 Xylena_formosa
 Zaranga_permagna
+アオマダラタマムシ
+ウスムラサキケンモン
+オオマエベニトガリバ
+クロハナコヤガ
+ショウブオオヨトウ
+シラオビキリガ Cosmia camptostigma (Ménétriès, 1859)
+シラホシキリガ
+タカオキリガ Pseudopanolis takao Inaba, 1927
+ツマベニヒメハマキ Phaecasiophora roseana (Walsingham, 1900)
+ナシイラガ Narosoideus flavidorsalis (Staudinger, 1887) 
+ナシキリガ
+ニッコウケンモン
+ニッコウシャチホコ Shachia circumscripta (Butler, 1885)
+ノコメセダカヨトウ Orthogonia sera Felder & Felder, 1862
+ハスモンヨトウ Spodoptera litura(Fabricius, 1775) 
+ヒナシャチホコ Micromelalopha troglodyta (Graeser, 1890) (1)
+ヒナシャチホコ Micromelalopha troglodyta (Graeser, 1890) (3)
+ヒメスズメ Deilephila askoldensis (Oberthür, 1879) (2)
+フタスジエグリアツバ Gonepatica opalina (Butler, 1879)
+ベニスズメ Deilephila elpenor lewisii (Butler, 1875)
+マエジロシャチホコ
+マダラキボシキリガ
+ヨモギオオホソハマキ Phtheochroides clandestina Razowski, 1968
+ルイスヒラタチビタマムシ (3)

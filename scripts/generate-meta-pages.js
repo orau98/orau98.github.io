@@ -843,57 +843,7 @@ function generateImageFileLists() {
       
       const mothImages = fs.readdirSync(mothImagesDir)
         .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
-        .map(file => {
-          const fileWithoutExt = file.replace(/\.[^.]+$/, '');
-          
-          // 学名（アンダースコア形式）から和名を抽出する場合
-          const underscorePattern = /^[A-Za-z_]+$/;
-          if (underscorePattern.test(fileWithoutExt)) {
-            return fileWithoutExt; // 既に学名形式
-          }
-          
-          // 和名から学名への変換を試行
-          // まず完全マッチを試す
-          if (nameMapping.has(fileWithoutExt)) {
-            const converted = nameMapping.get(fileWithoutExt);
-            console.log(`画像変換: ${fileWithoutExt} -> ${converted}`);
-            return converted;
-          }
-          
-          // 学名が含まれているファイル名の場合（例：「タカオキリガ Pseudopanolis takao Inaba, 1927」）
-          const withScientificName = /^(.+?)\s+([A-Z][a-z]+\s+[a-z]+)/.exec(fileWithoutExt);
-          if (withScientificName) {
-            const japaneseName = withScientificName[1].trim();
-            const scientificPart = withScientificName[2];
-            
-            // 学名部分をアンダースコア形式に変換
-            const converted = scientificPart.replace(/\s+/g, '_');
-            console.log(`学名含みファイル変換: ${fileWithoutExt} -> ${converted}`);
-            return converted;
-          }
-          
-          // 番号付きファイルの場合（例：「ルイスヒラタチビタマムシ (3)」）
-          const withNumber = /^(.+?)\s*\([0-9]+\)$/.exec(fileWithoutExt);
-          if (withNumber) {
-            const baseName = withNumber[1].trim();
-            if (nameMapping.has(baseName)) {
-              const converted = nameMapping.get(baseName);
-              console.log(`番号付きファイル変換: ${fileWithoutExt} -> ${converted} (${baseName}でマッチ)`);
-              return converted;
-            }
-          }
-          
-          // 部分マッチを試す（和名の一部が含まれている場合）
-          for (const [japaneseName, scientificName] of nameMapping.entries()) {
-            if (fileWithoutExt.includes(japaneseName)) {
-              console.log(`部分マッチ変換: ${fileWithoutExt} -> ${scientificName} (${japaneseName}でマッチ)`);
-              return scientificName;
-            }
-          }
-          
-          console.log(`変換できませんでした: ${fileWithoutExt}`);
-          return fileWithoutExt; // 変換できない場合はそのまま
-        })
+        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去したファイル名をそのまま保持
         .sort();
       
       const imageListPath = path.join(__dirname, '../public/image_filenames.txt');
