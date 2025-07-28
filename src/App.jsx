@@ -2596,19 +2596,29 @@ function App() {
                           normalized: normalizedPlant,
                           wameiMapped: wameiMapped,
                           corrected: correctedPlantName,
+                          yListHas: yListPlantNames.has(correctedPlantName),
                           inWameiMap: !!wameiMap[normalizedPlant]
                         });
                       }
                       
                       // Add the plant name if it's valid
                       if (correctedPlantName && correctedPlantName.trim()) {
-                        if (mothName === 'センモンヤガ') {
-                          console.log(`DEBUG: センモンヤガ - Adding plant to list:`, correctedPlantName);
+                        if (mothName === 'センモンヤガ' || mothName === 'アオバシャチホコ') {
+                          console.log(`DEBUG: ${mothName} - Adding plant to list:`, correctedPlantName);
                         }
                         // Check if this plant has part information
                         const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
                         const plantWithParts = plantParts && plantParts.length > 0 ? 
                           `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
+                        
+                        if (mothName === 'アオバシャチホコ') {
+                          console.log(`DEBUG: アオバシャチホコ - Adding plant entry:`, {
+                            correctedPlantName,
+                            plantWithParts,
+                            familyFromMainCsv,
+                            plantParts: plantParts ? Array.from(plantParts) : null
+                          });
+                        }
                         
                         addPlantEntry(hostPlantEntries, plantWithParts, '', familyFromMainCsv);
                       }
@@ -2662,6 +2672,14 @@ function App() {
               });
               
               const hostPlantList = [...plantMap.values()].map(e => e.plant);
+              
+              // Debug logging for アオバシャチホコ hostPlantList creation
+              if (mothName === 'アオバシャチホコ') {
+                console.log('=== アオバシャチホコ hostPlantList DEBUG ===');
+                console.log('hostPlantEntries before deduplication:', hostPlantEntries);
+                console.log('plantMap after deduplication:', Array.from(plantMap.entries()));
+                console.log('Final hostPlantList:', hostPlantList);
+              }
               
               // Debug logging for カバシタムクゲエダシャク hostPlantList creation
               if (mothName === 'カバシタムクゲエダシャク') {
