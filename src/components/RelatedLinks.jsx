@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
-// 昆虫の画像を取得する関数
-const getInsectImagePath = (insect) => {
+// 昆虫の画像を取得する関数（拡張子動的対応）
+const getInsectImagePath = (insect, imageExtensions = {}) => {
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';
     let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
@@ -20,7 +20,17 @@ const getInsectImagePath = (insect) => {
                      insect.type === 'beetle' ? 'beetles' : 
                      insect.type === 'leafbeetle' ? 'leafbeetles' : 'moths';
   
+  // 動的拡張子取得（和名優先、学名、scientificFilename順）
+  const getExtension = (filename) => {
+    return imageExtensions[filename] || imageExtensions[insect.name] || imageExtensions[safeFilename] || '.jpg';
+  };
+  
+  const scientificExt = getExtension(safeFilename);
+  const nameExt = getExtension(insect.name);
+  
   return [
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}${scientificExt}`,
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}${nameExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpg`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`
   ];
@@ -31,11 +41,41 @@ const InsectImage = ({ insect, large = false }) => {
   const [imageIndex, setImageIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageExtensions, setImageExtensions] = useState({});
   
-  const imagePaths = getInsectImagePath(insect);
+  // 画像拡張子データを読み込み
+  useEffect(() => {
+    const loadImageExtensions = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.BASE_URL}image_extensions.json`);
+        if (response.ok) {
+          const extensions = await response.json();
+          setImageExtensions(extensions);
+        }
+      } catch (error) {
+        console.warn('Failed to load image extensions:', error);
+        // フォールバックとして空のオブジェクトを使用
+        setImageExtensions({});
+      }
+    };
+    
+    loadImageExtensions();
+  }, []);
+  
+  const imagePaths = getInsectImagePath(insect, imageExtensions);
   const sizeClasses = large ? "w-full h-48 sm:h-56" : "w-16 h-16";
   const loadingSize = large ? "w-8 h-8" : "w-6 h-6";
   const iconSize = large ? "w-12 h-12" : "w-8 h-8";
+  
+  // アオマダラタマムシのデバッグ
+  if (insect.name === 'アオマダラタマムシ') {
+    console.log('DEBUG: アオマダラタマムシ画像パス:', {
+      insect: insect,
+      imageExtensions: imageExtensions,
+      imagePaths: imagePaths,
+      currentIndex: imageIndex
+    });
+  }
   
   const handleImageError = () => {
     if (imageIndex < imagePaths.length - 1) {
