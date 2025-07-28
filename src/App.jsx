@@ -325,7 +325,9 @@ function App() {
         };
 
         // Load files with safe loading - prioritize essential files
-        console.log("Starting file loading process...");
+        console.log("=== Starting file loading process ===");
+        console.log("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
+        console.log("DEBUG: About to load フユシャク file with safeFileLoad");
         
         const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, fuyushakuText, emergenceTimeText] = await Promise.all([
           safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
@@ -338,6 +340,8 @@ function App() {
           safeFileLoad(fuyushakuCsvPath, 'fuyushaku data', 10000),
           safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000)
         ]);
+        
+        console.log("DEBUG: File loading completed, checking results...");
         
         // Debug フユシャク file loading
         console.log('DEBUG: フユシャク file load result:', {
@@ -579,8 +583,13 @@ function App() {
           const kabaShitaEntry = fuyushakuData.find(row => row['和名']?.trim() === 'カバシタムクゲエダシャク');
           if (kabaShitaEntry) {
             console.log('DEBUG: カバシタムクゲエダシャク found in フユシャク.csv raw data:', kabaShitaEntry);
+            console.log('DEBUG: カバシタムクゲエダシャク scientific name length:', kabaShitaEntry['学名']?.length);
+            console.log('DEBUG: カバシタムクゲエダシャク scientific name charCodes:', 
+              kabaShitaEntry['学名']?.split('').map(c => c.charCodeAt(0)).join(', '));
           } else {
             console.log('DEBUG: カバシタムクゲエダシャク NOT found in フユシャク.csv');
+            // Debug: show all 和名 in the data
+            console.log('DEBUG: All 和名 in フユシャク data:', fuyushakuData.map(row => row['和名']).filter(Boolean));
           }
         }
         
@@ -656,6 +665,15 @@ function App() {
         console.log("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
         console.log("フユシャク Pachyerannis obliquaria check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria (Motschulsky, 1861)'));
         console.log("フユシャク Pachyerannis obliquaria (no author) check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria'));
+        
+        // Debug: Check if カバシタムクゲエダシャク is in the maps
+        console.log("DEBUG: カバシタムクゲエダシャク in fuyushakuHostPlantMap:", fuyushakuHostPlantMap.get('カバシタムクゲエダシャク'));
+        console.log("DEBUG: カバシタムクゲエダシャク in emergenceTimeMap:", emergenceTimeMap.get('カバシタムクゲエダシャク'));
+        console.log("DEBUG: カバシタムクゲエダシャク in fuyushakuRemarksMap:", fuyushakuRemarksMap.get('カバシタムクゲエダシャク'));
+        
+        // Show all keys that contain カバシタ
+        const kabaKeys = Array.from(fuyushakuHostPlantMap.keys()).filter(k => k && k.includes('カバシタ'));
+        console.log("DEBUG: All keys containing カバシタ in fuyushakuHostPlantMap:", kabaKeys);
 
         // Function to clean and normalize scientific names for comparison
         const cleanScientificNameForComparison = (scientificName) => {
@@ -1478,7 +1496,10 @@ function App() {
                   和名: row['和名'],
                   学名: row['学名']?.substring(0, 50),
                   食草: row['食草'] ? row['食草'].substring(0, 50) + '...' : 'EMPTY',
-                  備考: row['備考'] ? row['備考'].substring(0, 50) + '...' : 'EMPTY'
+                  食草full: row['食草'],
+                  備考: row['備考'] ? row['備考'].substring(0, 50) + '...' : 'EMPTY',
+                  備考full: row['備考'],
+                  全カラム: Object.keys(row).map(key => `${key}: ${row[key]}`).join(' | ')
                 });
               }
               return matchesName;
@@ -1561,6 +1582,20 @@ function App() {
               // Improved host plant parsing with validation
               let rawHostPlant = row['食草'] || '';
               let rawRemarks = row['備考'] || '';
+              const hostPlantNotes = []; // Initialize hostPlantNotes array here
+              
+              // Debug logging for カバシタムクゲエダシャク processing
+              if (mothName === 'カバシタムクゲエダシャク') {
+                console.log('=== カバシタムクゲエダシャク PROCESSING DEBUG ===');
+                console.log('rawHostPlant from CSV:', rawHostPlant);
+                console.log('rawRemarks from CSV:', rawRemarks);
+                console.log('Original row data:', {
+                  食草: row['食草'],
+                  備考: row['備考'],
+                  学名: row['学名'],
+                  和名: row['和名']
+                });
+              }
               
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
@@ -1678,6 +1713,12 @@ function App() {
               const fuyushakuRemarks = fuyushakuRemarksMap.get(mothName) || 
                                        fuyushakuRemarksMap.get(scientificName) ||
                                        fuyushakuRemarksMap.get(cleanedScientificName);
+              
+              // Special handling for カバシタムクゲエダシャク
+              if (mothName === 'カバシタムクゲエダシャク' && !fuyushakuHostPlants) {
+                console.log('DEBUG: Special handling for カバシタムクゲエダシャク - looking up in maps');
+                console.log('DEBUG: Keys in fuyushakuHostPlantMap:', Array.from(fuyushakuHostPlantMap.keys()).slice(0, 20));
+              }
               const hasKirigaData = kirigaHostPlants || kirigaRemarks;
               const hasFuyushakuData = fuyushakuHostPlants || fuyushakuRemarks;
               
@@ -1722,9 +1763,9 @@ function App() {
                   }
                 }
                 
-                // Add remarks if available
-                if (fuyushakuRemarks) {
-                  rawHostPlant += ` (${fuyushakuRemarks})`;
+                // Add remarks to hostPlantNotes instead of appending to rawHostPlant
+                if (fuyushakuRemarks && !hostPlantNotes.includes(fuyushakuRemarks)) {
+                  hostPlantNotes.push(fuyushakuRemarks);
                 }
                 
                 // Debug log for フユシャク species and クロスジフユエダシャク
@@ -1752,9 +1793,9 @@ function App() {
                   }
                 }
                 
-                // Add remarks if available
-                if (kirigaRemarks) {
-                  rawHostPlant += ` (${kirigaRemarks})`;
+                // Add remarks to hostPlantNotes instead of appending to rawHostPlant
+                if (kirigaRemarks && !hostPlantNotes.includes(kirigaRemarks)) {
+                  hostPlantNotes.push(kirigaRemarks);
                 }
                 
                 // Debug log for target species
@@ -1799,7 +1840,7 @@ function App() {
                                    !rawHostPlant.includes('属に固有'));
               
               // Extract notes from parentheses (like "可能性が高い", "単食性" etc.)
-              const hostPlantNotes = [];
+              // hostPlantNotes already defined above
               
               // Special handling for フクラスズメ food plant notes
               if (mothName === 'フクラスズメ') {
@@ -2524,6 +2565,15 @@ function App() {
               
               const hostPlantList = [...plantMap.values()].map(e => e.plant);
               
+              // Debug logging for カバシタムクゲエダシャク hostPlantList creation
+              if (mothName === 'カバシタムクゲエダシャク') {
+                console.log('=== カバシタムクゲエダシャク hostPlantList DEBUG ===');
+                console.log('hostPlantEntries:', hostPlantEntries);
+                console.log('plantMap values:', [...plantMap.values()]);
+                console.log('Final hostPlantList:', hostPlantList);
+                console.log('rawHostPlant at this point:', rawHostPlant);
+              }
+              
               // Additional debug logging for duplicate detection
               if (hostPlantEntries.length > hostPlantList.length) {
                 console.log(`Duplicate removal: ${hostPlantEntries.length} -> ${hostPlantList.length} for ${mothName}`);
@@ -2595,6 +2645,26 @@ function App() {
                 
                 // Process as moth
                 const catalogNo = row['大図鑑カタログNo'] || '';
+                
+                // Debug logging for カバシタムクゲエダシャク
+                if (mothName === 'カバシタムクゲエダシャク') {
+                  console.log('DEBUG: Creating moth data for カバシタムクゲエダシャク:', {
+                    id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
+                    hostPlants: hostPlantList,
+                    hostPlantDetails: hostPlantEntries,
+                    hostPlantNotes: hostPlantNotes,
+                    geographicalRemarks: String(row['備考'] || '').trim(),
+                    source: sourceToUse,
+                    hasFuyushakuData: hasFuyushakuData,
+                    hasKirigaData: hasKirigaData,
+                    rawHostPlantFinal: rawHostPlant,
+                    rawRemarksFinal: rawRemarks,
+                    fuyushakuData: {
+                      hostPlants: fuyushakuHostPlantMap.get(mothName),
+                      remarks: fuyushakuRemarksMap.get(mothName)
+                    }
+                  });
+                }
                 const mothData = { 
                   id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`, 
                   name: mothName, 
@@ -2622,7 +2692,7 @@ function App() {
                       return emergenceData.time;
                     } else {
                       // Debug log for target species
-                      if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('カシワキボシキリガ')) {
+                      if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('カシワキボシキリガ') || mothName === 'カバシタムクゲエダシャク') {
                         console.log(`DEBUG: ${mothName} not found in emergenceTimeMap`);
                         console.log(`Searching for: japanese="${mothName}", scientific="${scientificName}", cleaned="${cleanedScientificName}"`);
                         const keys = Array.from(emergenceTimeMap.keys());

@@ -3771,7 +3771,7 @@
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Phigalia,,djakonovi,,Moltrecht,1933,,ウスシモフリトゲエダシャク,,,,,,,"Phigalia djakonovi Moltrecht, 1933",不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Phigalia,,verecundaria,,(Leech),1897,,シロトゲエダシャク,,,,,,,"Phigalia verecundaria (Leech, 1897)",広食性,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Nyssiodes,,lefuarius,,(Erschoff),1872,,フチグロトゲエダシャク,,,,,,,"Nyssiodes lefuarius (Erschoff, 1872)",広食性,日本産蛾類標準図鑑1
-,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Sebastosema,,bubonaria,,Warren,1896,,カバシタムクゲエダシャク,,,,,,,"Sebastosema bubonaria Warren, 1896","ツルウメモドキ、ニシキギ、コマユミ、マユミ、マサキ、ツルマサキ","ニシキギ科に固有。マユミ、マサキ、ツルマサキでも蛹化に成功。",日本産蛾類標準図鑑1
+,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Sebastosema,,bubonaria,,Warren,1896,,カバシタムクゲエダシャク,,,,,,,"Sebastosema bubonaria Warren, 1896",ツルウメモドキ、ニシキギ、コマユミ、マユミ、マサキ、ツルマサキ,ニシキギ科に固有。マユミ、マサキ、ツルマサキでも蛹化に成功。,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Apochima,,juglansiaria,,(Graeser),1889,,オカモトトゲエダシャク,,,,,,,"Apochima juglansiaria (Graeser, 1889)",広食性,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Apochima,,excavata,,(Dyar),1905,,クワトゲエダシャク,,,,,,,"Apochima excavata (Dyar, 1905)",クワ (クワ科); ソメイヨシノ; リンゴ(以上バラ科),日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Apochima,,praeacutaria,,(Inoue),1976,,キイロトゲエダシャク,,,,,,,"Apochima praeacutaria (Inoue, 1976)",広食性,日本産蛾類標準図鑑1
@@ -4354,8 +4354,8 @@
 2579,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,thalictrata,,Püngeler,1902,,イイジマカバナミシャク,イイジマカバナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
 2570,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,kurilensis,,Bryk,1942,,ウスイロヤスジカバナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 2571,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,scribai,,Prout,1938,,ウラモンウストビナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
-2572,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,amplexata,,Christoph,1881,,ウストビナミシャク,ウストビナミシャク,,,,,,,タカネナデシコ (ナデシコ科) の花。,日本産蛾類標準図鑑1
-2573,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,pernotata,,Guenée,1858,,オオウストビナミシャク,,,,,,,,タムラソウ (キク科); マツムシソウ (スイカズラ科) の花。,日本産蛾類標準図鑑1
+2572,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,amplexata,,Christoph,1881,,ウストビナミシャク,ウストビナミシャク,,,,,,,タカネナデシコ,花を食べる。,日本産蛾類標準図鑑1
+2573,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,pernotata,,Guenée,1858,,オオウストビナミシャク,,,,,,,,タムラソウ; マツムシソウ,花を食べる。,日本産蛾類標準図鑑1
 2574,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,veratraria,,Herrich-Schäffer,1848,,アルプスカバナミシャク,アルプスカバナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
 2575,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,extensaria,,(Freyer),1844,,シロマダラカバナミシャク,シロマダラカバナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
 2576,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,conterminata,,(Zeller),1846,,シタジロカバナミシャク,シタジロカバナミシャク,,,,,,,不明,日本産蛾類標準図鑑1
@@ -4375,11 +4375,11 @@
 2592,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,takao,,Inoue,1955,,ハネナガカバナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 ,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,ancillata,,Mironov & Galsworthy,2004,,クロスジカバナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 2594,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,tripunctaria,,Herrich-Schäffer,1855,,シロテンカバナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
-2595,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,ryukyuensis,,Inoue,1971,,クニガミカバナミシャク,,,,,,,,ツワブキ (キク科) の花。,日本産蛾類標準図鑑1
+2595,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,ryukyuensis,,Inoue,1971,,クニガミカバナミシャク,,,,,,,,ツワブキ,花を食べる。,日本産蛾類標準図鑑1
 2596,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,tenuisquama,,(Warren),1896,,トシマカバナミシャク,,,,,,,,サザンカ; チャノキ (以上ツバキ科),日本産蛾類標準図鑑1
 2597,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,kuroshio,,Inoue,1980,,クロシオカバナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 2601,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,emanata,,Dietze,1908,,クロテンカバナミシャク,,,,,,,,,
-2604,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,virgaureata,,Doubleday,1861,,アザミカバナミシャク,アザミカバナミシャク,,,,,,,アキノキリンソウ; ツワブキ; ヨメナ; ミヤコワスレ (以上キク科) などの花。,日本産蛾類標準図鑑1
+2604,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,virgaureata,,Doubleday,1861,,アザミカバナミシャク,アザミカバナミシャク,,,,,,,アキノキリンソウ; ツワブキ; ヨメナ; ミヤコワスレ,キク科の花を食べる。,日本産蛾類標準図鑑1
 2598,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,lariciata,,(Freyer),1842,,ホソカバスジナミシャク,,,,,,,,カラマツ (マツ科),日本産蛾類標準図鑑1
 2600,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,tantilloides,,Inoue,1958,,マダラカバスジナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
 2586,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,,Eupithecia,,shikokuensis,,Inoue,1980,,シコクカバナミシャク,,,,,,,,不明,日本産蛾類標準図鑑1
