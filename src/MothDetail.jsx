@@ -522,26 +522,43 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   </div>
                 )}
                 
-                {/* 食草備考情報 - 植物固有でない汎用的な備考のみ */}
-                {moth.hostPlantNotes && moth.hostPlantNotes.filter(note => 
-                  !note.includes('花・若い翼果') && 
-                  !note.includes('実') && 
-                  !note.includes('葉') && 
-                  !note.includes('茎') && 
-                  !note.includes('根') && 
-                  !note.includes('果実')
-                ).length > 0 && (
+                {/* 食草備考情報 - 植物固有でない汎用的な備考のみ（成虫発生時期も除去） */}
+                {moth.hostPlantNotes && (() => {
+                  const filteredNotes = moth.hostPlantNotes
+                    .map(note => {
+                      // 成虫発生時期を除去
+                      const { notes: filteredNote } = extractEmergenceTime(note);
+                      return filteredNote.trim();
+                    })
+                    .filter(note => 
+                      note && // 空でない
+                      !note.includes('花・若い翼果') && 
+                      !note.includes('実') && 
+                      !note.includes('葉') && 
+                      !note.includes('茎') && 
+                      !note.includes('根') && 
+                      !note.includes('果実')
+                    );
+                  return filteredNotes.length > 0;
+                })() && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
                     <div className="flex flex-wrap gap-2">
                       <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">備考:</span>
-                      {moth.hostPlantNotes.filter(note => 
-                        !note.includes('花・若い翼果') && 
-                        !note.includes('実') && 
-                        !note.includes('葉') && 
-                        !note.includes('茎') && 
-                        !note.includes('根') && 
-                        !note.includes('果実')
-                      ).map((note, noteIndex) => (
+                      {moth.hostPlantNotes
+                        .map(note => {
+                          // 成虫発生時期を除去
+                          const { notes: filteredNote } = extractEmergenceTime(note);
+                          return filteredNote.trim();
+                        })
+                        .filter(note => 
+                          note && // 空でない
+                          !note.includes('花・若い翼果') && 
+                          !note.includes('実') && 
+                          !note.includes('葉') && 
+                          !note.includes('茎') && 
+                          !note.includes('根') && 
+                          !note.includes('果実')
+                        ).map((note, noteIndex) => (
                         <span key={noteIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
                           {note}
                         </span>

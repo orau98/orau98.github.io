@@ -7,6 +7,7 @@ import HostPlantDetail from './HostPlantDetail';
 import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 
 // This map can be a fallback, but the primary source is now the wamei_checklist.csv.
 const plantFamilyMap = {
@@ -1829,7 +1830,11 @@ function App() {
                 
                 // Add remarks to hostPlantNotes instead of appending to rawHostPlant
                 if (fuyushakuRemarks && !hostPlantNotes.includes(fuyushakuRemarks)) {
-                  hostPlantNotes.push(fuyushakuRemarks);
+                  // 成虫発生時期を除去
+                  const { notes: filteredRemarks } = extractEmergenceTime(fuyushakuRemarks);
+                  if (filteredRemarks.trim()) {
+                    hostPlantNotes.push(filteredRemarks.trim());
+                  }
                 }
                 
                 // Debug log for フユシャク species and クロスジフユエダシャク
@@ -1859,7 +1864,11 @@ function App() {
                 
                 // Add remarks to hostPlantNotes instead of appending to rawHostPlant
                 if (kirigaRemarks && !hostPlantNotes.includes(kirigaRemarks)) {
-                  hostPlantNotes.push(kirigaRemarks);
+                  // 成虫発生時期を除去
+                  const { notes: filteredRemarks } = extractEmergenceTime(kirigaRemarks);
+                  if (filteredRemarks.trim()) {
+                    hostPlantNotes.push(filteredRemarks.trim());
+                  }
                 }
                 
                 // Debug log for target species
@@ -1932,7 +1941,11 @@ function App() {
                       !note.match(/科$/) &&
                       note.length > 3 &&
                       !note.match(/^[ア-ン]+科$/)) {
-                    hostPlantNotes.push(note);
+                    // 成虫発生時期を除去
+                    const { notes: filteredNote } = extractEmergenceTime(note);
+                    if (filteredNote.trim()) {
+                      hostPlantNotes.push(filteredNote.trim());
+                    }
                   }
                 });
               }
@@ -1967,7 +1980,11 @@ function App() {
               // Extract notes that are not plant names but descriptive
               const descriptiveNotesMatch = rawHostPlant.match(/(で飼育されており|と思われる|と推定される|が?観察されている|確認されている|国外では|記録|知られ|報告|台湾|沖縄|ヨーロッパ|ハワイ|時に|害虫|被害|食べ|食す|育つ|成長|飼育|判明|植物|樹木|草本|各種|以上|の|を|が|で|に|は|と|や|も|から|まで|では|でも|として|による|からの|への|との|での|によって|において|について|に関して|に対して|によれば|によると).*/);
               if (descriptiveNotesMatch) {
-                hostPlantNotes.push(descriptiveNotesMatch[0].trim());
+                // 成虫発生時期を除去してからhostPlantNotesに追加
+                const { notes: filteredNote } = extractEmergenceTime(descriptiveNotesMatch[0].trim());
+                if (filteredNote.trim()) {
+                  hostPlantNotes.push(filteredNote.trim());
+                }
                 rawHostPlant = rawHostPlant.replace(descriptiveNotesMatch[0], '').trim();
               }
               
@@ -2004,7 +2021,11 @@ function App() {
                       console.log('DEBUG: International condition found:', internationalCondition);
                       // Add international information to host plant notes
                       if (internationalCondition) {
-                        hostPlantNotes.push('国外では' + internationalCondition);
+                        // 成虫発生時期を除去
+                        const { notes: filteredCondition } = extractEmergenceTime('国外では' + internationalCondition);
+                        if (filteredCondition.trim()) {
+                          hostPlantNotes.push(filteredCondition.trim());
+                        }
                       }
                     } else if (part && !part.includes('観察されている') && !part.includes('確認されている') && !part.includes('記録') && !part.includes('知られ')) {
                       // Extract plant names from general descriptions
@@ -2244,7 +2265,11 @@ function App() {
                     rawHostPlant = parts[0].trim();
                     for (let i = 1; i < parts.length; i++) {
                       if (parts[i].trim()) {
-                        hostPlantNotes.push(parts[i].trim());
+                        // 成虫発生時期を除去してからhostPlantNotesに追加
+                        const { notes: filteredNote } = extractEmergenceTime(parts[i].trim());
+                        if (filteredNote.trim()) {
+                          hostPlantNotes.push(filteredNote.trim());
+                        }
                       }
                     }
                   }
@@ -2586,8 +2611,14 @@ function App() {
                       }
                     }
                   });
-                  // Add all extracted notes to hostPlantNotes
-                  hostPlantNotes.push(...extractedNotes);
+                  // Add all extracted notes to hostPlantNotes (filter emergence time)
+                  const filteredExtractedNotes = extractedNotes
+                    .map(note => {
+                      const { notes: filteredNote } = extractEmergenceTime(note);
+                      return filteredNote.trim();
+                    })
+                    .filter(note => note.length > 0);
+                  hostPlantNotes.push(...filteredExtractedNotes);
                 }
               }
 
