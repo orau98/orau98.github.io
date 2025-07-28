@@ -1512,6 +1512,40 @@ function App() {
             console.log(`Total センモンヤガ entries found in pre-scan: ${senmonYagaPreScan.length}`);
             console.log(`Total カバシタムクゲエダシャク entries found in pre-scan: ${kabaShitaPreScan.length}`);
             console.log('=== END PRE-SCAN ===');
+            
+            // COLUMN MISALIGNMENT FIX - Fix rows where scientific names are shifted to wrong columns
+            console.log('=== FIXING COLUMN MISALIGNMENT ===');
+            let fixedRows = 0;
+            results.data.forEach((row, index) => {
+              const japaneseName = row['和名']?.trim();
+              const scientificName = row['学名']?.trim();
+              const hostPlants = row['食草']?.trim();
+              const source = row['出典']?.trim();
+              
+              // Detect column misalignment: if 学名 contains food plant data and 食草 contains source data
+              if (japaneseName && scientificName && hostPlants && 
+                  (scientificName === '広食性' || scientificName === '不明' || 
+                   scientificName.includes('科') || scientificName.includes('種') ||
+                   scientificName.includes('属') || scientificName.includes('草')) &&
+                  (hostPlants.includes('図鑑') || hostPlants.includes('標準') || 
+                   hostPlants === '日本産蛾類標準図鑑1')) {
+                
+                console.log(`Fixing column misalignment for ${japaneseName} at row ${index + 2}`);
+                console.log(`  Before: 学名="${scientificName}", 食草="${hostPlants}", 出典="${source}"`);
+                
+                // Shift values to correct positions
+                row['学名'] = ''; // Clear scientific name (it was incorrect)
+                row['食草'] = scientificName; // Move the food plant data to correct column
+                row['出典'] = hostPlants; // Move the source data to correct column
+                row['備考'] = source || ''; // Move whatever was in source to remarks
+                
+                console.log(`  After:  学名="${row['学名']}", 食草="${row['食草']}", 出典="${row['出典']}"`);
+                fixedRows++;
+              }
+            });
+            console.log(`Fixed ${fixedRows} rows with column misalignment`);
+            console.log('=== END COLUMN MISALIGNMENT FIX ===');
+            
             results.data.forEach((row, index) => {
               const originalMothName = row['和名']?.trim();
               if (!originalMothName) return;
