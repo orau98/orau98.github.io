@@ -450,29 +450,34 @@ function App() {
           const hostPlants = row['食草']?.trim();
           const remarks = row['食草に関する備考']?.trim();
           
-          // Store emergence time data from キリガ (优先度は統合CSVより低い)
+          // Debug specific species
+          if (japaneseName && japaneseName.includes('アズサキリガ')) {
+            console.log('DEBUG: アズサキリガ found in kiriga CSV:', {
+              japaneseName, scientificName, emergenceTime, hostPlants, remarks
+            });
+          }
+          
+          // Store emergence time data from キリガ (キリガCSVを優先 - より詳細で正確なデータ)
           if (japaneseName && emergenceTime && emergenceTime !== '不明') {
-            if (!emergenceTimeMap.has(japaneseName)) {
-              emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のキリガ' });
-            }
+            // キリガCSVのデータを常に優先して上書き
+            emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のキリガ' });
             
             // Debug log for target species
-            if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ')) {
-              console.log(`Added to emergenceTimeMap: ${japaneseName} -> ${emergenceTime}`);
+            if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ') || japaneseName.includes('アズサキリガ')) {
+              console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${emergenceTime}`);
             }
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
-            if (!emergenceTimeMap.has(scientificName)) {
-              emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のキリガ' });
-            }
+            // キリガCSVのデータを常に優先して上書き
+            emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のキリガ' });
             
             // Also store with author/year removed for better matching
             const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
-            if (cleanedScientificName !== scientificName && !emergenceTimeMap.has(cleanedScientificName)) {
+            if (cleanedScientificName !== scientificName) {
               emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本のキリガ' });
               
               // Debug log for target species
-              if (cleanedScientificName.includes('Xylena formosa') || cleanedScientificName.includes('Diphtherocome autumnalis')) {
+              if (cleanedScientificName.includes('Xylena formosa') || cleanedScientificName.includes('Diphtherocome autumnalis') || cleanedScientificName.includes('Pseudopanolis azusa')) {
                 console.log(`Added to emergenceTimeMap: ${cleanedScientificName} -> ${emergenceTime}`);
               }
             }
@@ -613,20 +618,18 @@ function App() {
             });
           }
           
-          // Store emergence time data from フユシャク (priority lower than integrated CSV)
+          // Store emergence time data from フユシャク (フユシャクCSVを優先 - より詳細で正確なデータ)
           if (japaneseName && emergenceTime && emergenceTime !== '不明') {
-            if (!emergenceTimeMap.has(japaneseName)) {
-              emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のフユシャク' });
-            }
+            // フユシャクCSVのデータを常に優先して上書き
+            emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のフユシャク' });
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
-            if (!emergenceTimeMap.has(scientificName)) {
-              emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のフユシャク' });
-            }
+            // フユシャクCSVのデータを常に優先して上書き
+            emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のフユシャク' });
             
             // Also store with author/year removed for better matching
             const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
-            if (cleanedScientificName !== scientificName && !emergenceTimeMap.has(cleanedScientificName)) {
+            if (cleanedScientificName !== scientificName) {
               emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本のフユシャク' });
             }
           }
