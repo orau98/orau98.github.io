@@ -5,6 +5,7 @@ import SearchInput from './SearchInput';
 import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
+import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 
 const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {} }) => {
   const [isVisible, setIsVisible] = useState(isPriority);
@@ -282,6 +283,33 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFile
                   {moth.hostPlants.length > 0 ? moth.hostPlants.join(', ') : '不明'}
                 </span>
               </div>
+              
+              {/* 成虫発生時期表示 */}
+              {(() => {
+                const { emergenceTime } = extractEmergenceTime(moth.notes || '');
+                const normalizedTime = normalizeEmergenceTime(emergenceTime);
+                
+                if (normalizedTime) {
+                  return (
+                    <div className="space-y-2">
+                      <div className="flex items-start space-x-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 flex-shrink-0">
+                          発生時期
+                        </span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          {normalizedTime}
+                        </span>
+                      </div>
+                      <EmergenceTimeDisplay 
+                        emergenceTime={normalizedTime} 
+                        source={moth.source}
+                        compact={true}
+                      />
+                    </div>
+                  );
+                }
+                return null;
+              })()}
               
             </div>
           </div>

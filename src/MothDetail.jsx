@@ -6,6 +6,7 @@ import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
+import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
@@ -579,6 +580,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     <div className="space-y-2">
                       <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">詳細情報:</span>
                       {moth.remarks.split(' | ').map((remark, remarkIndex) => {
+                        // 成虫発生時期を含む備考は除外
+                        const { notes: filteredRemark } = extractEmergenceTime(remark);
+                        if (!filteredRemark.trim()) return null;
                         // 食草備考の場合 - 本来の食草情報として扱う
                         if (remark.startsWith('食草: ')) {
                           const content = remark.substring(3);
@@ -682,11 +686,38 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     </div>
                   </div>
                 )}
+
+                {/* 成虫発生時期を除去した備考情報 */}
+                {moth.notes && (() => {
+                  const { notes: remainingNotes } = extractEmergenceTime(moth.notes);
+                  return remainingNotes.trim();
+                })() && (
+                  <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
+                    <div className="flex items-start space-x-2">
+                      <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div className="text-sm text-slate-600 dark:text-slate-300">
+                        <span className="font-medium">備考:</span>{' '}
+                        {(() => {
+                          const { notes: remainingNotes } = extractEmergenceTime(moth.notes);
+                          return remainingNotes.trim();
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* 成虫発生時期情報 - ハムシと蛾で表示 */}
-            {(moth.type === 'leafbeetle' || moth.type === 'moth') && moth.emergenceTime && moth.emergenceTime !== '不明' && (
+            {(moth.type === 'leafbeetle' || moth.type === 'moth') && (() => {
+              const hasExistingTime = moth.emergenceTime && moth.emergenceTime !== '不明';
+              const { emergenceTime } = extractEmergenceTime(moth.notes || '');
+              const normalizedTime = normalizeEmergenceTime(emergenceTime);
+              const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
+              return hasExistingTime || hasExtractedTime;
+            })() && (
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
@@ -702,9 +733,33 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 </div>
                 
                 <div className="p-4">
-                  <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} source={moth.emergenceTimeSource} />
+                  {(() => {
+                    // 既存のemergenceTimeがある場合はそれを使用
+                    if (moth.emergenceTime && moth.emergenceTime !== '不明') {
+                      return <EmergenceTimeDisplay emergenceTime={moth.emergenceTime} source={moth.emergenceTimeSource} />;
+                    }
+                    
+                    // 備考欄から成虫発生時期を抽出
+                    const { emergenceTime } = extractEmergenceTime(moth.notes || '');
+                    const normalizedTime = normalizeEmergenceTime(emergenceTime);
+                    
+                    if (normalizedTime) {
+                      return <EmergenceTimeDisplay emergenceTime={normalizedTime} source={moth.source} />;
+                    }
+                    
+                    // デフォルトの不明表示
+                    return <EmergenceTimeDisplay emergenceTime="不明" source={moth.emergenceTimeSource} />;
+                  })()}
                   
-                  {moth.emergenceTime !== '不明' && (
+                  {(() => {
+                    // 成虫発生時期がある場合の条件判定
+                    const hasExistingTime = moth.emergenceTime && moth.emergenceTime !== '不明';
+                    const { emergenceTime } = extractEmergenceTime(moth.notes || '');
+                    const normalizedTime = normalizeEmergenceTime(emergenceTime);
+                    const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
+                    
+                    return (hasExistingTime || hasExtractedTime);
+                  })() && (
                     <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700/50">
                       <div className="flex items-start space-x-2">
                         <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
