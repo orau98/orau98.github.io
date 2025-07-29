@@ -26,7 +26,7 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
   const scientificExt = getExtension(safeFilename);
   const nameExt = getExtension(insect.name);
   
-  // メインパスリスト
+  // メインパスリスト（日本語ファイル名はURLエンコーディングしない）
   const primaryPaths = [
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}${scientificExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}${nameExt}`,

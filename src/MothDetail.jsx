@@ -184,8 +184,35 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
   const japaneseName = moth.name;
   
-  // Try multiple image paths: scientific name, japanese name
+  // 画像拡張子を動的に取得するための処理を追加
+  const [imageExtensions, setImageExtensions] = useState({});
+  
+  useEffect(() => {
+    const loadImageExtensions = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.BASE_URL}image_extensions.json`);
+        if (response.ok) {
+          const extensions = await response.json();
+          setImageExtensions(extensions);
+        }
+      } catch (error) {
+        console.warn('Failed to load image extensions:', error);
+        setImageExtensions({});
+      }
+    };
+    
+    loadImageExtensions();
+  }, []);
+
+  // 拡張子を動的に取得
+  const getExtension = (filename) => {
+    return imageExtensions[filename] || '.jpg';
+  };
+
+  // Try multiple image paths with dynamic extensions
   const possibleImagePaths = [
+    `${import.meta.env.BASE_URL}images/insects/${safeFilename}${getExtension(safeFilename)}`,
+    `${import.meta.env.BASE_URL}images/insects/${japaneseName}${getExtension(japaneseName)}`,
     `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`,
     `${import.meta.env.BASE_URL}images/insects/${japaneseName}.jpg`
   ];
