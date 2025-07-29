@@ -947,6 +947,11 @@ function App() {
             return false;
           }
           
+          // Reject specific problematic taxonomic phrases
+          if (/^次種との区別はついていない。台湾では$|^従来の記録は次種と混同している可能性があるので再検討を要する。$|^本種か次種ニセスジシロキヨトウの食草なのかは判断できない。$/.test(trimmed)) {
+            return false;
+          }
+          
           // Reject if it's a long sentence (likely a description, not a plant name)
           if (trimmed.length > 50 && (trimmed.includes('野外で') || trimmed.includes('から記録') || trimmed.includes('飼育下で'))) {
             return false;
