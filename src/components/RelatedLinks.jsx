@@ -16,9 +16,7 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
   };
 
   const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
-  const imageFolder = insect.type === 'butterfly' ? 'butterflies' : 
-                     insect.type === 'beetle' ? 'beetles' : 
-                     insect.type === 'leafbeetle' ? 'leafbeetles' : 'insects';
+  const imageFolder = insect.type === 'butterfly' ? 'butterflies' : 'insects';
   
   // 動的拡張子取得（和名優先、学名、scientificFilename順）
   const getExtension = (filename) => {
@@ -33,22 +31,14 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}${scientificExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}${nameExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpg`,
-    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`,
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpeg`,
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpeg`
   ];
   
-  // フォールバックパスリスト（タマムシが insects ディレクトリにある場合など）
-  const fallbackPaths = [];
-  if (imageFolder === 'beetles' || imageFolder === 'leafbeetles') {
-    // タマムシ類が insects ディレクトリにある場合のフォールバック
-    fallbackPaths.push(
-      `${import.meta.env.BASE_URL}images/insects/${safeFilename}${scientificExt}`,
-      `${import.meta.env.BASE_URL}images/insects/${insect.name}${nameExt}`,
-      `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`,
-      `${import.meta.env.BASE_URL}images/insects/${insect.name}.jpg`
-    );
-  }
+  // すべての昆虫画像は insects ディレクトリに統一されているため、フォールバックは不要
   
-  return [...primaryPaths, ...fallbackPaths];
+  return primaryPaths;
 };
 
 // 昆虫画像コンポーネント（大きなサイズ）
