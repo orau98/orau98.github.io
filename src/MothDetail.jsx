@@ -186,8 +186,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Try multiple image paths: scientific name, japanese name
   const possibleImagePaths = [
-    `${import.meta.env.BASE_URL}images/moths/${safeFilename}.jpg`,
-    `${import.meta.env.BASE_URL}images/moths/${japaneseName}.jpg`
+    `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`,
+    `${import.meta.env.BASE_URL}images/insects/${japaneseName}.jpg`
   ];
   
   const staticImagePath = possibleImagePaths[0]; // Default to scientific name

@@ -942,6 +942,11 @@ function App() {
             return false;
           }
           
+          // Reject taxonomic/descriptive phrases that are not plant names
+          if (/次種が分離される前の情報として|従来の記録は次種と混同|本種か次種|次種との区別/.test(trimmed)) {
+            return false;
+          }
+          
           // Reject if it's a long sentence (likely a description, not a plant name)
           if (trimmed.length > 50 && (trimmed.includes('野外で') || trimmed.includes('から記録') || trimmed.includes('飼育下で'))) {
             return false;
@@ -2742,7 +2747,7 @@ function App() {
                   catalogNo: row['大図鑑カタログNo'],
                   rawHostPlantFromCSV: row['食草']
                 });
-                console.log(`DEBUG: センモンヤガ will be added to:`, isBeetle ? 'beetles' : 'moths');
+                console.log(`DEBUG: センモンヤガ will be added to:`, isBeetle ? 'beetles' : 'insects');
               }
               
               if (isBeetle) {

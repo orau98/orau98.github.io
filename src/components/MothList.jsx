@@ -168,19 +168,27 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFile
     imageExtension = imageExtensions[imageFilename];
   }
   
-  const imageUrl = `${import.meta.env.BASE_URL}images/moths/${encodeURIComponent(imageFilename)}${imageExtension}`;
+  // Determine the correct image folder based on insect type
+  const imageFolder = moth.type === 'butterfly' ? 'butterflies' : 
+                     moth.type === 'beetle' ? 'beetles' : 
+                     moth.type === 'leafbeetle' ? 'leafbeetles' : 'insects';
+  
+  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}`;
   
   // Check if we have an actual match in imageFilenames
   const hasImageFilename = imageFilenames.size > 0 ? imageFilenames.has(imageFilename) : true;
   
   // Debug log for specific species
-  if (moth.name === 'ルイスヒラタチビタマムシ') {
-    console.log('DEBUG: ルイスヒラタチビタマムシ final image check:', {
+  if (moth.name === 'ルイスヒラタチビタマムシ' || moth.name === 'アオマダラタマムシ') {
+    console.log(`DEBUG: ${moth.name} final image check:`, {
       selectedImageFilename: imageFilename,
       imageUrl: imageUrl,
       hasImageFilename: hasImageFilename,
       imageFilenamesContainsSelectedFilename: imageFilenames.has(imageFilename),
-      encodedImageFilename: encodeURIComponent(imageFilename)
+      encodedImageFilename: encodeURIComponent(imageFilename),
+      type: moth.type,
+      imageFolder: imageFolder,
+      imageExtension: imageExtension
     });
   }
   
@@ -216,8 +224,15 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFile
                     fetchpriority={isPriority ? "high" : "auto"}
                     onLoad={() => setImageLoaded(true)}
                     onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.parentElement.nextSibling.style.display = 'flex';
+                      // Try fallback paths for beetles in insects directory
+                      if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
+                        e.target.dataset.fallbackAttempted = 'true';
+                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}`;
+                        e.target.src = fallbackUrl;
+                      } else {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.nextSibling.style.display = 'flex';
+                      }
                     }}
                   />
                 ) : (

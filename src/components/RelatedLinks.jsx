@@ -18,7 +18,7 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
   const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
   const imageFolder = insect.type === 'butterfly' ? 'butterflies' : 
                      insect.type === 'beetle' ? 'beetles' : 
-                     insect.type === 'leafbeetle' ? 'leafbeetles' : 'moths';
+                     insect.type === 'leafbeetle' ? 'leafbeetles' : 'insects';
   
   // 動的拡張子取得（和名優先、学名、scientificFilename順）
   const getExtension = (filename) => {
@@ -28,12 +28,27 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
   const scientificExt = getExtension(safeFilename);
   const nameExt = getExtension(insect.name);
   
-  return [
+  // メインパスリスト
+  const primaryPaths = [
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}${scientificExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}${nameExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpg`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`
   ];
+  
+  // フォールバックパスリスト（タマムシが insects ディレクトリにある場合など）
+  const fallbackPaths = [];
+  if (imageFolder === 'beetles' || imageFolder === 'leafbeetles') {
+    // タマムシ類が insects ディレクトリにある場合のフォールバック
+    fallbackPaths.push(
+      `${import.meta.env.BASE_URL}images/insects/${safeFilename}${scientificExt}`,
+      `${import.meta.env.BASE_URL}images/insects/${insect.name}${nameExt}`,
+      `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`,
+      `${import.meta.env.BASE_URL}images/insects/${insect.name}.jpg`
+    );
+  }
+  
+  return [...primaryPaths, ...fallbackPaths];
 };
 
 // 昆虫画像コンポーネント（大きなサイズ）
@@ -225,30 +240,53 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
               >
                 <div className="relative w-full h-48">
                   <InsectImage insect={insect} large={true} />
-                </div>
-                <div className="p-4 relative">
-                  <div className="mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors overflow-hidden" style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical'
-                    }}>
-                      {insect.name}
-                    </h4>
-                    {/* 科名表示 */}
-                    {insect.classification?.familyJapanese && (
-                      <span className="inline-block px-2 py-0.5 mt-1 text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 rounded-full">
-                        {insect.classification.familyJapanese}
-                      </span>
-                    )}
+                  
+                  {/* 画像上の半透明オーバーレイと名前表示 */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h4 className="text-sm font-bold text-white drop-shadow-lg mb-1 overflow-hidden" style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                        {insect.name}
+                      </h4>
+                      <p className="text-xs text-white/90 drop-shadow-md leading-relaxed overflow-hidden" style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                        {formatScientificNameReact(insect.scientificName)}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3 overflow-hidden" style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical'
-                  }}>
-                    {formatScientificNameReact(insect.scientificName)}
-                  </p>
+                </div>
+                
+                <div className="p-4 relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
+                  <div className="space-y-3">
+                    {/* 和名 - より大きく目立つように */}
+                    <div>
+                      <h4 className="text-base font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors overflow-hidden leading-tight" style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                        {insect.name}
+                      </h4>
+                    </div>
+                    
+                    
+                    {/* 学名 - 十分な間隔を空けて配置 */}
+                    <div className="pt-2 border-t border-slate-200/50 dark:border-slate-600/50">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium overflow-hidden" style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                        {formatScientificNameReact(insect.scientificName)}
+                      </p>
+                    </div>
+                  </div>
                   
                   {/* ホバー時に表示される矢印アイコン */}
                   <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -258,9 +296,6 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                       </svg>
                     </div>
                   </div>
-                  
-                  {/* カード全体のクリック可能性を示すオーバーレイ */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-50/0 via-emerald-50/0 to-emerald-50/0 group-hover:from-emerald-50/5 group-hover:via-emerald-50/2 group-hover:to-emerald-50/10 dark:group-hover:from-emerald-900/5 dark:group-hover:via-emerald-900/2 dark:group-hover:to-emerald-900/10 transition-all duration-300 rounded-xl pointer-events-none"></div>
                 </div>
               </Link>
             ))}

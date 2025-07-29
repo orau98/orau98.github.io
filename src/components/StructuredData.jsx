@@ -75,7 +75,7 @@ export const MothStructuredData = ({ moth }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/moths/${safeFilename}.jpg`,
+      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
       "caption": `${moth.name}（${moth.scientificName}）の写真`,
       "description": `${moth.name}の生態写真`
     };
@@ -203,7 +203,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/moths/${safeFilename}.jpg`,
+      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
       "caption": `${butterfly.name}（${butterfly.scientificName}）の写真`,
       "description": `${butterfly.name}の生態写真`
     };
@@ -331,7 +331,7 @@ export const BeetleStructuredData = ({ beetle }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/moths/${safeFilename}.jpg`,
+      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
       "caption": `${beetle.name}（${beetle.scientificName}）の写真`,
       "description": `${beetle.name}の生態写真`
     };
@@ -478,7 +478,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/moths/${safeFilename}.jpg`,
+      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
       "caption": `${leafbeetle.name}（${leafbeetle.scientificName}）の写真`,
       "description": `${leafbeetle.name}の生態写真`
     };
