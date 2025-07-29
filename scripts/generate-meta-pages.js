@@ -688,6 +688,39 @@ async function generateMetaPages() {
       }
     });
     
+    // 日本のフユシャク.csvからも成虫出現時期データを読み込み
+    const fuyushakuCsvPath = path.join(__dirname, '../public/日本のフユシャク.csv');
+    if (fs.existsSync(fuyushakuCsvPath)) {
+      const fuyushakuData = loadCSV(fuyushakuCsvPath);
+      
+      fuyushakuData.forEach(row => {
+        const japaneseName = row['和名']?.trim();
+        const scientificName = row['学名']?.trim();
+        let emergenceTime = row['成虫の発生時期']?.trim();
+        
+        // Fix for CSV parsing issue - check if real emergence time is in __parsed_extra
+        if (row.__parsed_extra && row.__parsed_extra.length > 0) {
+          const extraData = row.__parsed_extra[0]?.trim();
+          if (extraData && (extraData.includes('月') || extraData.includes('上旬') || extraData.includes('中旬') || extraData.includes('下旬'))) {
+            emergenceTime = extraData;
+          }
+        }
+        
+        
+        if (japaneseName && emergenceTime && emergenceTime !== '' && emergenceTime !== '不明') {
+          emergenceTimeMap.set(japaneseName, emergenceTime);
+        }
+        if (scientificName && emergenceTime && emergenceTime !== '' && emergenceTime !== '不明') {
+          emergenceTimeMap.set(scientificName, emergenceTime);
+          // Also store with author/year removed
+          const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+          if (cleanedScientificName !== scientificName) {
+            emergenceTimeMap.set(cleanedScientificName, emergenceTime);
+          }
+        }
+      });
+    }
+    
     console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました`);
     
     // カシワキボシキリガの検索
@@ -731,12 +764,14 @@ async function generateMetaPages() {
                            emergenceTimeMap.get(scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim()) ||
                            null;
       
+      
       const insect = {
         id: insectId,
         name: insectName,
         scientificName: scientificName,
         hostPlants: hostPlants,
         source: source,
+        emergenceTime: emergenceTime,
         scientificFilename: (() => {
           // Extract binomial name (genus + species) from scientific name for filename
           const binomialMatch = scientificName.match(/^([A-Z][a-z]+)\s+([a-z]+)/);
@@ -744,8 +779,7 @@ async function generateMetaPages() {
           return binomialName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_()\,]/g, '');
         })(),
         familyJapanese: familyJapanese,
-        type: type,
-        emergenceTime: emergenceTime
+        type: type
       };
       
       const html = generateInsectHTML(insect, type);
