@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成虫発生時期ガントチャート - 旬単位テスト</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 p-8">
+    <div id="root"></div>
+    
+    <script type="text/babel">
+    // テスト用のシンプル版EmergenceTimeDisplayコンポーネント
+    const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
+        const parseEmergenceTime = (emergenceTime) => {
+            if (!emergenceTime || emergenceTime === '不明') return { months: [], periods: [] };
+            
+            const activeMonths = new Set();
+            const activePeriods = new Set();
+            
+            // 旬範囲指定を検出（例：3月上旬~下旬、2月下旬~4月上旬）
+            const periodRangePattern = /(\d{1,2})月(上旬|中旬|下旬)[～〜~-](\d{1,2})月(上旬|中旬|下旬)/g;
+            let match;
+            while ((match = periodRangePattern.exec(emergenceTime)) !== null) {
+                const startMonth = parseInt(match[1]);
+                const startPeriod = match[2];
+                const endMonth = parseInt(match[3]);
+                const endPeriod = match[4];
+                
+                const startPeriodNum = startPeriod === '上旬' ? 1 : startPeriod === '中旬' ? 2 : 3;
+                const endPeriodNum = endPeriod === '上旬' ? 1 : endPeriod === '中旬' ? 2 : 3;
+                
+                // 同じ月内の場合
+                if (startMonth === endMonth) {
+                    activeMonths.add(startMonth);
+                    for (let p = startPeriodNum; p <= endPeriodNum; p++) {
+                        activePeriods.add(startMonth + p * 0.1);
+                    }
+                }
+            }
+            
+            // 旬単位のパターンを検出（例：4月上旬）
+            const periodPattern = /(\d{1,2})月(上旬|中旬|下旬)/g;
+            while ((match = periodPattern.exec(emergenceTime)) !== null) {
+                const month = parseInt(match[1]);
+                const period = match[2];
+                if (month >= 1 && month <= 12) {
+                    activeMonths.add(month);
+                    const periodNum = period === '上旬' ? 1 : period === '中旬' ? 2 : 3;
+                    activePeriods.add(month + periodNum * 0.1);
+                }
+            }
+            
+            return {
+                months: Array.from(activeMonths).sort((a, b) => a - b),
+                periods: Array.from(activePeriods).sort((a, b) => a - b)
+            };
+        };
+        
+        const emergenceData = parseEmergenceTime(emergenceTime);
+        const activeMonths = emergenceData.months;
+        const activePeriods = emergenceData.periods;
+        
+        const MONTHS = [
+            { name: '1月', number: 1, color: 'bg-blue-500' },
+            { name: '2月', number: 2, color: 'bg-blue-500' },
+            { name: '3月', number: 3, color: 'bg-green-500' },
+            { name: '4月', number: 4, color: 'bg-green-500' },
+            { name: '5月', number: 5, color: 'bg-green-500' },
+            { name: '6月', number: 6, color: 'bg-yellow-500' },
+            { name: '7月', number: 7, color: 'bg-red-500' },
+            { name: '8月', number: 8, color: 'bg-red-500' },
+            { name: '9月', number: 9, color: 'bg-orange-500' },
+            { name: '10月', number: 10, color: 'bg-orange-500' },
+            { name: '11月', number: 11, color: 'bg-amber-500' },
+            { name: '12月', number: 12, color: 'bg-blue-500' }
+        ];
+        
+        if (!emergenceTime || emergenceTime === '不明' || activeMonths.length === 0) {
+            return (
+                <div className="flex items-center space-x-2 text-slate-500">
+                    <span className="text-sm">時期不明</span>
+                </div>
+            );
+        }
+        
+        return (
+            <div className="space-y-4 bg-white p-4 rounded-lg shadow">
+                {/* 原文表示 */}
+                <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                    <p className="text-sm text-slate-600 font-medium">
+                        {emergenceTime}
+                    </p>
+                    {source && (
+                        <p className="text-xs text-slate-500 mt-1">
+                            出典: {source}
+                        </p>
+                    )}
+                </div>
+                
+                {/* 精密ガントチャート */}
+                <div className="space-y-3">
+                    {/* 月のヘッダー */}
+                    <div className="grid grid-cols-12 gap-1 text-center">
+                        {MONTHS.map((month) => (
+                            <div key={month.number} className="text-xs font-medium text-slate-600">
+                                <span>{month.number}月</span>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* 旬のサブヘッダー */}
+                    <div className="grid grid-cols-12 gap-1 text-center">
+                        {MONTHS.map((month) => (
+                            <div key={month.number} className="grid grid-cols-3 gap-px">
+                                {['上', '中', '下'].map((period, idx) => (
+                                    <div key={idx} className="text-xs text-slate-500 text-center">
+                                        {period}
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* メインタイムライン（旬単位） */}
+                    <div className="relative">
+                        {/* 背景グリッド */}
+                        <div className="grid grid-cols-12 gap-1 h-10">
+                            {MONTHS.map((month) => (
+                                <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-50 rounded p-px">
+                                    {[1, 2, 3].map((periodNum) => (
+                                        <div
+                                            key={periodNum}
+                                            className="bg-slate-100 rounded-sm border border-slate-200"
+                                        />
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                        
+                        {/* アクティブ期間のバー（旬単位） */}
+                        <div className="absolute inset-0 grid grid-cols-12 gap-1">
+                            {MONTHS.map((month) => (
+                                <div key={month.number} className="grid grid-cols-3 gap-px p-px">
+                                    {[1, 2, 3].map((periodNum) => {
+                                        const periodValue = month.number + periodNum * 0.1;
+                                        const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                                        const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
+                                        
+                                        if (!isActive) return <div key={periodNum} />;
+                                        
+                                        return (
+                                            <div
+                                                key={periodNum}
+                                                className={`
+                                                    ${month.color} 
+                                                    rounded-sm 
+                                                    shadow-sm 
+                                                    border 
+                                                    border-white 
+                                                    transition-all 
+                                                    duration-200 
+                                                    hover:scale-105 
+                                                    relative
+                                                    overflow-hidden
+                                                    min-h-[32px]
+                                                `}
+                                                title={`${month.name}${periodName} - 成虫発生期`}
+                                            >
+                                                {/* 光沢効果 */}
+                                                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+                                                
+                                                {/* 旬表示 */}
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <span className="text-white font-bold text-xs drop-shadow leading-none">
+                                                        {periodName[0]}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    
+    const App = () => {
+        const testCases = [
+            {
+                title: "カバシタムクゲエダシャク",
+                time: "3月上旬~下旬(以前は4月上旬まで記録あり)。",
+                source: "日本のフユシャク"
+            },
+            {
+                title: "フチグロトゲエダシャク", 
+                time: "関東周辺では3月上旬~下旬(年によっては4月上旬まで)。",
+                source: "日本のフユシャク"
+            },
+            {
+                title: "シロオビフユシャク",
+                time: "関東周辺の平地・丘陵部では12月下旬~2月中旬。山地や高緯度地域では10月下旬~11月下旬。",
+                source: "日本のフユシャク"
+            }
+        ];
+        
+        return (
+            <div className="max-w-6xl mx-auto space-y-8">
+                <h1 className="text-3xl font-bold text-slate-800 text-center mb-8">
+                    成虫発生時期ガントチャート - 旬単位表示テスト
+                </h1>
+                
+                {testCases.map((testCase, index) => (
+                    <div key={index} className="space-y-2">
+                        <h2 className="text-xl font-semibold text-slate-700">
+                            {testCase.title}
+                        </h2>
+                        <EmergenceTimeDisplay 
+                            emergenceTime={testCase.time}
+                            source={testCase.source}
+                        />
+                    </div>
+                ))}
+            </div>
+        );
+    };
+    
+    ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

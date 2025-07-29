@@ -44,11 +44,12 @@ const SeasonIcon = ({ season, className = "w-4 h-4" }) => {
   return icons[season] || null;
 };
 
-// 成虫発生時期を解析する関数
+// 成虫発生時期を解析する関数（旬単位対応）
 const parseEmergenceTime = (emergenceTime) => {
-  if (!emergenceTime || emergenceTime === '不明') return [];
+  if (!emergenceTime || emergenceTime === '不明') return { months: [], periods: [] };
   
   const activeMonths = new Set();
+  const activePeriods = new Set(); // 月.旬の形式 (例: 3.1 = 3月上旬, 3.2 = 3月中旬, 3.3 = 3月下旬)
   
   // 月の漢数字を数字に変換
   const kanjiToNumber = {
@@ -56,13 +57,105 @@ const parseEmergenceTime = (emergenceTime) => {
     '七': 7, '八': 8, '九': 9, '十': 10, '十一': 11, '十二': 12
   };
   
-  // 数字の月（1月、2月など）を検出
-  const numberMonthPattern = /(\d{1,2})月/g;
+  // 旬単位のパターンを検出（例：3月上旬、4月中旬、5月下旬）
+  const periodPattern = /(\d{1,2})月(上旬|中旬|下旬)/g;
   let match;
+  while ((match = periodPattern.exec(emergenceTime)) !== null) {
+    const month = parseInt(match[1]);
+    const period = match[2];
+    if (month >= 1 && month <= 12) {
+      activeMonths.add(month);
+      const periodNum = period === '上旬' ? 1 : period === '中旬' ? 2 : 3;
+      activePeriods.add(month + periodNum * 0.1);
+    }
+  }
+
+  // 旬範囲指定を検出（例：3月上旬~下旬、2月下旬~4月上旬）
+  const periodRangePattern = /(\d{1,2})月(上旬|中旬|下旬)[～〜~-](\d{1,2})月(上旬|中旬|下旬)/g;
+  while ((match = periodRangePattern.exec(emergenceTime)) !== null) {
+    const startMonth = parseInt(match[1]);
+    const startPeriod = match[2];
+    const endMonth = parseInt(match[3]);
+    const endPeriod = match[4];
+    
+    const startPeriodNum = startPeriod === '上旬' ? 1 : startPeriod === '中旬' ? 2 : 3;
+    const endPeriodNum = endPeriod === '上旬' ? 1 : endPeriod === '中旬' ? 2 : 3;
+    
+    const startValue = startMonth + startPeriodNum * 0.1;
+    const endValue = endMonth + endPeriodNum * 0.1;
+    
+    // 同じ月内の場合
+    if (startMonth === endMonth) {
+      activeMonths.add(startMonth);
+      for (let p = startPeriodNum; p <= endPeriodNum; p++) {
+        activePeriods.add(startMonth + p * 0.1);
+      }
+    } else {
+      // 複数月にまたがる場合
+      for (let m = startMonth; m <= endMonth; m++) {
+        if (m > 12) break;
+        activeMonths.add(m);
+        
+        if (m === startMonth) {
+          // 開始月：開始旬から月末まで
+          for (let p = startPeriodNum; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        } else if (m === endMonth) {
+          // 終了月：月初から終了旬まで
+          for (let p = 1; p <= endPeriodNum; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        } else {
+          // 中間月：全旬
+          for (let p = 1; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        }
+      }
+      
+      // 年をまたぐ場合の処理
+      if (startMonth > endMonth) {
+        // 12月まで
+        for (let m = startMonth; m <= 12; m++) {
+          activeMonths.add(m);
+          if (m === startMonth) {
+            for (let p = startPeriodNum; p <= 3; p++) {
+              activePeriods.add(m + p * 0.1);
+            }
+          } else {
+            for (let p = 1; p <= 3; p++) {
+              activePeriods.add(m + p * 0.1);
+            }
+          }
+        }
+        // 1月から終了月まで
+        for (let m = 1; m <= endMonth; m++) {
+          activeMonths.add(m);
+          if (m === endMonth) {
+            for (let p = 1; p <= endPeriodNum; p++) {
+              activePeriods.add(m + p * 0.1);
+            }
+          } else {
+            for (let p = 1; p <= 3; p++) {
+              activePeriods.add(m + p * 0.1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 数字の月（1月、2月など）を検出（旬指定がない場合）
+  const numberMonthPattern = /(\d{1,2})月(?![上中下])/g;
   while ((match = numberMonthPattern.exec(emergenceTime)) !== null) {
     const month = parseInt(match[1]);
     if (month >= 1 && month <= 12) {
       activeMonths.add(month);
+      // 旬指定がない場合は全旬を対象とする
+      for (let p = 1; p <= 3; p++) {
+        activePeriods.add(month + p * 0.1);
+      }
     }
   }
   
@@ -70,11 +163,15 @@ const parseEmergenceTime = (emergenceTime) => {
   Object.entries(kanjiToNumber).forEach(([kanji, number]) => {
     if (emergenceTime.includes(`${kanji}月`)) {
       activeMonths.add(number);
+      // 全旬を追加
+      for (let p = 1; p <= 3; p++) {
+        activePeriods.add(number + p * 0.1);
+      }
     }
   });
   
-  // 範囲指定（例：5～8月、3月～10月）を検出 - ASCII チルダ (~) も含む
-  const rangePattern = /(\d{1,2})月?[～〜~-](\d{1,2})月/g;
+  // 範囲指定（例：5～8月、3月～10月）を検出 - ASCII チルダ (~) も含む（旬指定なし）
+  const rangePattern = /(\d{1,2})月?[～〜~-](\d{1,2})月(?![上中下])/g;
   while ((match = rangePattern.exec(emergenceTime)) !== null) {
     const start = parseInt(match[1]);
     const end = parseInt(match[2]);
@@ -82,14 +179,24 @@ const parseEmergenceTime = (emergenceTime) => {
     if (start <= end) {
       for (let i = start; i <= end; i++) {
         activeMonths.add(i);
+        // 全旬を追加
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     } else {
       // 年をまたぐ場合（例：10～3月）
       for (let i = start; i <= 12; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
       for (let i = 1; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     }
   }
@@ -103,20 +210,29 @@ const parseEmergenceTime = (emergenceTime) => {
     if (start <= end) {
       for (let i = start; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     } else {
       // 年をまたぐ場合（例：11月頃羽化し、1月頃まで）
       for (let i = start; i <= 12; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
       for (let i = 1; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     }
   }
   
   // 「X月〜Y月」「X月からY月」パターンを検出 - ASCII チルダ (~) も含む
-  const fromToPattern = /(\d{1,2})月(?:から|より)?[〜～~-](\d{1,2})月/g;
+  const fromToPattern = /(\d{1,2})月(?:から|より)?[〜～~-](\d{1,2})月(?![頃上中下])/g;
   while ((match = fromToPattern.exec(emergenceTime)) !== null) {
     const start = parseInt(match[1]);
     const end = parseInt(match[2]);
@@ -124,14 +240,23 @@ const parseEmergenceTime = (emergenceTime) => {
     if (start <= end) {
       for (let i = start; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     } else {
       // 年をまたぐ場合
       for (let i = start; i <= 12; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
       for (let i = 1; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     }
   }
@@ -145,14 +270,23 @@ const parseEmergenceTime = (emergenceTime) => {
     if (start <= end) {
       for (let i = start; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     } else {
       // 年をまたぐ場合
       for (let i = start; i <= 12; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
       for (let i = 1; i <= end; i++) {
         activeMonths.add(i);
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(i + p * 0.1);
+        }
       }
     }
   }
@@ -163,6 +297,9 @@ const parseEmergenceTime = (emergenceTime) => {
     const month = parseInt(match[1]);
     if (month >= 1 && month <= 12) {
       activeMonths.add(month);
+      for (let p = 1; p <= 3; p++) {
+        activePeriods.add(month + p * 0.1);
+      }
     }
   }
   
@@ -185,11 +322,20 @@ const parseEmergenceTime = (emergenceTime) => {
   
   Object.entries(seasonMap).forEach(([season, months]) => {
     if (emergenceTime.includes(season)) {
-      months.forEach(month => activeMonths.add(month));
+      months.forEach(month => {
+        activeMonths.add(month);
+        // 全旬を追加
+        for (let p = 1; p <= 3; p++) {
+          activePeriods.add(month + p * 0.1);
+        }
+      });
     }
   });
   
-  return Array.from(activeMonths).sort((a, b) => a - b);
+  return {
+    months: Array.from(activeMonths).sort((a, b) => a - b),
+    periods: Array.from(activePeriods).sort((a, b) => a - b)
+  };
 };
 
 // 連続する月の期間を取得する関数
@@ -220,7 +366,9 @@ const getActiveRanges = (activeMonths) => {
 };
 
 const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
-  const activeMonths = useMemo(() => parseEmergenceTime(emergenceTime), [emergenceTime]);
+  const emergenceData = useMemo(() => parseEmergenceTime(emergenceTime), [emergenceTime]);
+  const activeMonths = emergenceData.months;
+  const activePeriods = emergenceData.periods;
   const activeRanges = useMemo(() => getActiveRanges(activeMonths), [activeMonths]);
   
   if (!emergenceTime || emergenceTime === '不明' || activeMonths.length === 0) {
@@ -235,25 +383,31 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
   }
   
   if (compact) {
-    // コンパクト表示：アクティブな月のバーを小さく表示
+    // コンパクト表示：アクティブな旬のバーを小さく表示
     return (
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
           時期{source && <span className="font-normal text-slate-500"> ({source})</span>}
         </div>
         <div className="relative">
-          {/* 背景のタイムライン */}
-          <div className="flex h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            {MONTHS.map((month) => {
-              const isActive = activeMonths.includes(month.number);
-              return (
-                <div
-                  key={month.number}
-                  className={`flex-1 ${isActive ? MONTHS[month.number - 1].color : ''} transition-all duration-200`}
-                  title={`${month.name} ${isActive ? '(活動期)' : ''}`}
-                />
-              );
-            })}
+          {/* 背景のタイムライン（旬単位） */}
+          <div className="flex h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            {MONTHS.map((month) => (
+              <div key={month.number} className="flex-1 flex">
+                {[1, 2, 3].map((periodNum) => {
+                  const periodValue = month.number + periodNum * 0.1;
+                  const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                  const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
+                  return (
+                    <div
+                      key={periodNum}
+                      className={`flex-1 ${isActive ? month.color : ''} transition-all duration-200 ${periodNum < 3 ? 'border-r border-slate-300 dark:border-slate-600 border-opacity-30' : ''}`}
+                      title={`${month.name}${periodName} ${isActive ? '(活動期)' : ''}`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
           </div>
           
           {/* 月のラベル */}
@@ -285,7 +439,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         )}
       </div>
       
-      {/* ガントチャート風タイムライン */}
+      {/* 精密ガントチャート風タイムライン */}
       <div className="space-y-3">
         {/* 月のヘッダー */}
         <div className="grid grid-cols-12 gap-1 text-center">
@@ -299,55 +453,80 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
           ))}
         </div>
         
-        {/* メインタイムライン */}
+        {/* 旬のサブヘッダー */}
+        <div className="grid grid-cols-12 gap-1 text-center">
+          {MONTHS.map((month) => (
+            <div key={month.number} className="grid grid-cols-3 gap-px">
+              {['上', '中', '下'].map((period, idx) => (
+                <div key={idx} className="text-xs text-slate-500 dark:text-slate-500 text-center">
+                  {period}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        
+        {/* メインタイムライン（旬単位） */}
         <div className="relative">
           {/* 背景グリッド */}
-          <div className="grid grid-cols-12 gap-1 h-8">
+          <div className="grid grid-cols-12 gap-1 h-10">
             {MONTHS.map((month) => (
-              <div
-                key={month.number}
-                className="bg-slate-100 dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600"
-              />
+              <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-50 dark:bg-slate-800 rounded p-px">
+                {[1, 2, 3].map((periodNum) => (
+                  <div
+                    key={periodNum}
+                    className="bg-slate-100 dark:bg-slate-700 rounded-sm border border-slate-200 dark:border-slate-600"
+                  />
+                ))}
+              </div>
             ))}
           </div>
           
-          {/* アクティブ期間のバー */}
+          {/* アクティブ期間のバー（旬単位） */}
           <div className="absolute inset-0 grid grid-cols-12 gap-1">
-            {MONTHS.map((month) => {
-              const isActive = activeMonths.includes(month.number);
-              if (!isActive) return <div key={month.number} />;
-              
-              return (
-                <div
-                  key={month.number}
-                  className={`
-                    ${month.color} 
-                    rounded 
-                    shadow-sm 
-                    border-2 
-                    border-white 
-                    dark:border-slate-800 
-                    transition-all 
-                    duration-200 
-                    hover:scale-105 
-                    hover:shadow-md
-                    relative
-                    overflow-hidden
-                  `}
-                  title={`${month.name} - 成虫発生期`}
-                >
-                  {/* 光沢効果 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+            {MONTHS.map((month) => (
+              <div key={month.number} className="grid grid-cols-3 gap-px p-px">
+                {[1, 2, 3].map((periodNum) => {
+                  const periodValue = month.number + periodNum * 0.1;
+                  const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                  const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
                   
-                  {/* 月番号 */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white font-bold text-xs drop-shadow">
-                      {month.number}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+                  if (!isActive) return <div key={periodNum} />;
+                  
+                  return (
+                    <div
+                      key={periodNum}
+                      className={`
+                        ${month.color} 
+                        rounded-sm 
+                        shadow-sm 
+                        border 
+                        border-white 
+                        dark:border-slate-800 
+                        transition-all 
+                        duration-200 
+                        hover:scale-105 
+                        hover:shadow-md
+                        relative
+                        overflow-hidden
+                        min-h-[32px]
+                      `}
+                      title={`${month.name}${periodName} - 成虫発生期`}
+                    >
+                      {/* 光沢効果 */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+                      
+                      {/* 旬表示 */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-white font-bold text-xs drop-shadow leading-none">
+                          {periodName[0]}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
         
