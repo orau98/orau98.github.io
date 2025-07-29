@@ -2843,6 +2843,11 @@ function App() {
                   instagramUrl: row['instagram_url'] || '',
                   // Emergence time - lookup from integrated data or extract from notes
                   emergenceTime: (() => {
+                    // Special override for カバシタムクゲエダシャク to ensure correct time is always used
+                    if (mothName === 'カバシタムクゲエダシャク') {
+                      return '3月上旬~下旬(以前は4月上旬まで記録あり)';
+                    }
+                    
                     // First check if already in emergenceTimeMap
                     const emergenceData = emergenceTimeMap.get(mothName) || 
                                          emergenceTimeMap.get(scientificName) ||
@@ -2872,6 +2877,11 @@ function App() {
                     return null;
                   })(),
                   emergenceTimeSource: (() => {
+                    // Special override for カバシタムクゲエダシャク
+                    if (mothName === 'カバシタムクゲエダシャク') {
+                      return '日本のフユシャク';
+                    }
+                    
                     const emergenceData = emergenceTimeMap.get(mothName) || 
                                          emergenceTimeMap.get(scientificName) ||
                                          emergenceTimeMap.get(cleanedScientificName) || null;
