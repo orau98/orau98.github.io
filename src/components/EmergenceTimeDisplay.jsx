@@ -415,27 +415,52 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
   }
   
   if (compact) {
-    // コンパクト表示：アクティブな旬のバーを小さく表示
+    // コンパクト表示：スマートで洗練されたタイムライン
     return (
       <div className="space-y-2">
         <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-          時期{source && <span className="font-normal text-slate-500"> ({source})</span>}
+          発生時期{source && <span className="font-normal text-slate-500"> ({source})</span>}
         </div>
         <div className="relative">
           {/* 背景のタイムライン（旬単位） */}
-          <div className="flex h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="flex h-4 bg-slate-200/50 dark:bg-slate-700/50 rounded-full overflow-hidden shadow-inner">
             {MONTHS.map((month) => (
               <div key={month.number} className="flex-1 flex">
                 {[1, 2, 3].map((periodNum) => {
                   const periodValue = month.number + periodNum * 0.1;
                   const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
                   const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
+                  
+                  // スマートな視覚効果（コンパクト版）
+                  const periodIntensity = periodNum === 1 ? 'opacity-80' : periodNum === 2 ? 'opacity-90' : 'opacity-100';
+                  const dividerClass = periodNum < 3 ? 'border-r border-white/20 dark:border-slate-800/30' : '';
+                  
                   return (
                     <div
                       key={periodNum}
-                      className={`flex-1 ${isActive ? month.color : ''} transition-all duration-200 ${periodNum < 3 ? 'border-r border-slate-300 dark:border-slate-600 border-opacity-30' : ''}`}
-                      title={`${month.name}${periodName} ${isActive ? '(活動期)' : ''}`}
-                    />
+                      className={`
+                        flex-1 
+                        ${isActive ? `${month.color} ${periodIntensity} shadow-sm` : 'bg-transparent'} 
+                        transition-all duration-300 hover:opacity-100
+                        ${dividerClass}
+                        relative overflow-hidden
+                      `}
+                      title={`${month.name}${periodName} ${isActive ? '(発生期)' : ''}`}
+                    >
+                      {isActive && (
+                        <>
+                          {/* 微妙なグラデーション効果 */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+                          {/* 期間識別ライン */}
+                          <div 
+                            className={`
+                              absolute left-0 top-0 bottom-0 w-px
+                              ${periodNum === 1 ? 'bg-white/40' : periodNum === 2 ? 'bg-white/25' : 'bg-white/35'}
+                            `} 
+                          />
+                        </>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -443,9 +468,9 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
           </div>
           
           {/* 月のラベル */}
-          <div className="flex justify-between mt-1 px-1">
+          <div className="flex justify-between mt-1.5 px-0.5">
             {[1, 3, 6, 9, 12].map(monthNum => (
-              <span key={monthNum} className="text-xs text-slate-500 dark:text-slate-400">
+              <span key={monthNum} className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 {monthNum}月
               </span>
             ))}
@@ -475,23 +500,29 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         
         
         {/* メインタイムライン（旬単位） */}
-        <div className="relative">
+        <div className="relative bg-white/50 dark:bg-slate-900/50 rounded-xl p-2 shadow-inner border border-slate-200/50 dark:border-slate-700/50">
           {/* 背景グリッド */}
           <div className="grid grid-cols-12 gap-1 h-10">
             {MONTHS.map((month) => (
-              <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-50 dark:bg-slate-800 rounded p-px">
-                {[1, 2, 3].map((periodNum) => (
-                  <div
-                    key={periodNum}
-                    className="bg-slate-100 dark:bg-slate-700 rounded-sm border border-slate-200 dark:border-slate-600"
-                  />
-                ))}
+              <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-100/80 dark:bg-slate-800/80 rounded-md p-px shadow-sm">
+                {[1, 2, 3].map((periodNum) => {
+                  // 期間による微妙な背景色の差異
+                  const bgVariation = periodNum === 1 ? 'bg-slate-50 dark:bg-slate-800' : 
+                                     periodNum === 2 ? 'bg-slate-100 dark:bg-slate-700' : 
+                                     'bg-slate-200 dark:bg-slate-600';
+                  return (
+                    <div
+                      key={periodNum}
+                      className={`${bgVariation} rounded-sm border border-slate-200/30 dark:border-slate-600/30 transition-colors duration-200`}
+                    />
+                  );
+                })}
               </div>
             ))}
           </div>
           
           {/* アクティブ期間のバー（旬単位） */}
-          <div className="absolute inset-0 grid grid-cols-12 gap-1">
+          <div className="absolute inset-2 grid grid-cols-12 gap-1">
             {MONTHS.map((month) => (
               <div key={month.number} className="grid grid-cols-3 gap-px p-px">
                 {[1, 2, 3].map((periodNum) => {
@@ -501,35 +532,53 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
                   
                   if (!isActive) return <div key={periodNum} />;
                   
+                  // スマートな視覚効果：期間による微妙な差異
+                  const periodIntensity = periodNum === 1 ? 'opacity-85' : periodNum === 2 ? 'opacity-95' : 'opacity-100';
+                  const periodPattern = periodNum === 1 ? 'bg-gradient-to-r from-white/15 to-transparent' : 
+                                       periodNum === 2 ? 'bg-gradient-to-b from-white/10 to-transparent' : 
+                                       'bg-gradient-to-br from-white/20 via-transparent to-white/5';
+                  
                   return (
                     <div
                       key={periodNum}
                       className={`
                         ${month.color} 
+                        ${periodIntensity}
                         rounded-sm 
                         shadow-sm 
                         border 
-                        border-white 
-                        dark:border-slate-800 
+                        border-white/30 
+                        dark:border-slate-800/50 
                         transition-all 
-                        duration-200 
-                        hover:scale-105 
-                        hover:shadow-md
+                        duration-300 
+                        hover:scale-110 
+                        hover:shadow-lg
+                        hover:opacity-100
+                        hover:border-white/60
                         relative
                         overflow-hidden
                         min-h-[32px]
+                        cursor-pointer
+                        group
                       `}
                       title={`${month.name}${periodName} - 成虫発生期`}
                     >
-                      {/* 光沢効果 */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
+                      {/* スマートな背景パターン */}
+                      <div className={`absolute inset-0 ${periodPattern}`} />
                       
-                      {/* 旬表示 */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-white font-bold text-xs drop-shadow leading-none">
-                          {periodName[0]}
-                        </span>
-                      </div>
+                      {/* アクティブ時の微妙な脈動効果 */}
+                      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
+                      
+                      {/* 精密な光沢効果 */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/25 via-transparent to-transparent" />
+                      
+                      {/* 期間インジケーター（左端の微妙なライン） */}
+                      <div 
+                        className={`
+                          absolute left-0 top-0 bottom-0 w-0.5 
+                          ${periodNum === 1 ? 'bg-white/40' : periodNum === 2 ? 'bg-white/30' : 'bg-white/50'}
+                        `} 
+                      />
                     </div>
                   );
                 })}
@@ -542,15 +591,20 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
       </div>
       
       {/* 原文表示 */}
-      <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
-        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-          {emergenceTime}
-        </p>
-        {source && (
-          <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
-            出典: {source}
-          </p>
-        )}
+      <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+        <div className="flex items-start space-x-2">
+          <div className="flex-shrink-0 w-2 h-2 bg-blue-400 dark:bg-blue-500 rounded-full mt-1.5 shadow-sm"></div>
+          <div className="flex-1">
+            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+              {emergenceTime}
+            </p>
+            {source && (
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                📚 出典: {source}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
