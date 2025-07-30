@@ -1850,9 +1850,15 @@ function App() {
                   }
                 }
                 
-                // Add remarks to hostPlantNotes
+                // Clear hostPlantNotes and add only the correct remarks (exclude source information)
+                hostPlantNotes.length = 0;
+                // Add remarks to hostPlantNotes, but filter out any source references
                 if (forcedFuyushakuRemarks && !hostPlantNotes.includes(forcedFuyushakuRemarks)) {
-                  hostPlantNotes.push(forcedFuyushakuRemarks);
+                  // Make sure we don't accidentally include source information in notes
+                  const cleanRemarks = forcedFuyushakuRemarks.replace(/日本産蛾類標準図鑑\d*/g, '').trim();
+                  if (cleanRemarks && !hostPlantNotes.includes(cleanRemarks)) {
+                    hostPlantNotes.push(cleanRemarks);
+                  }
                 }
                 
                 console.log('DEBUG: カバシタムクゲエダシャク forced update:', {
@@ -2790,6 +2796,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
+                  // Add notes field for compatibility with MothDetail.jsx
+                  notes: hostPlantNotes.join(' '),
                   // Get remarks from 27th column
                   geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
@@ -2857,6 +2865,8 @@ function App() {
                   classification,
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
+                  // Add notes field for compatibility with MothDetail.jsx
+                  notes: hostPlantNotes.join(' '),
                   // Get remarks from 27th column
                   geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
