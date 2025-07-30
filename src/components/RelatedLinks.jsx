@@ -68,7 +68,7 @@ const InsectImage = ({ insect, large = false }) => {
   }, []);
   
   const imagePaths = getInsectImagePath(insect, imageExtensions);
-  const sizeClasses = large ? "w-full h-48 sm:h-56" : "w-16 h-16";
+  const sizeClasses = large ? "w-full h-56 lg:h-64" : "w-16 h-16";
   const loadingSize = large ? "w-8 h-8" : "w-6 h-6";
   const iconSize = large ? "w-12 h-12" : "w-8 h-8";
   
@@ -221,27 +221,27 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
           <h3 className="text-lg font-bold mb-6 text-blue-600 dark:text-blue-400">
             {currentPlant}を食草とする昆虫
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
             {insectsOnThisPlant.map(insect => (
               <Link
                 key={insect.id}
                 to={`/${insect.type}/${insect.id}`}
                 className="group bg-gradient-to-br from-white to-emerald-50 dark:from-slate-700 dark:to-emerald-900/20 rounded-xl overflow-hidden hover:shadow-xl hover:shadow-emerald-200/50 dark:hover:shadow-emerald-900/30 transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-400 dark:hover:border-emerald-500 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer"
               >
-                <div className="relative w-full h-48">
+                <div className="relative w-full h-56 lg:h-64">
                   <InsectImage insect={insect} large={true} />
                   
                   {/* 画像上の半透明オーバーレイと名前表示 */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="text-sm font-bold text-white drop-shadow-lg mb-1 overflow-hidden" style={{
+                      <h4 className="text-base lg:text-lg font-bold text-white drop-shadow-lg mb-1 overflow-hidden" style={{
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical'
                       }}>
                         {insect.name}
                       </h4>
-                      <p className="text-xs text-white/90 drop-shadow-md leading-relaxed overflow-hidden" style={{
+                      <p className="text-sm lg:text-base text-white/90 drop-shadow-md leading-relaxed overflow-hidden" style={{
                         display: '-webkit-box',
                         WebkitLineClamp: 1,
                         WebkitBoxOrient: 'vertical'
@@ -252,11 +252,11 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                   </div>
                 </div>
                 
-                <div className="p-4 relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
+                <div className="p-5 lg:p-6 relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
                   <div className="space-y-3">
                     {/* 和名 - より大きく目立つように */}
                     <div>
-                      <h4 className="text-base font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors overflow-hidden leading-tight" style={{
+                      <h4 className="text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors overflow-hidden leading-tight" style={{
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical'
@@ -268,7 +268,7 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                     
                     {/* 学名 - 十分な間隔を空けて配置 */}
                     <div className="pt-2 border-t border-slate-200/50 dark:border-slate-600/50">
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium overflow-hidden" style={{
+                      <p className="text-sm lg:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-medium overflow-hidden" style={{
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical'
@@ -279,9 +279,9 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                   </div>
                   
                   {/* ホバー時に表示される矢印アイコン */}
-                  <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-emerald-500 dark:bg-emerald-600 rounded-full p-1.5 shadow-lg">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-emerald-500 dark:bg-emerald-600 rounded-full p-2 lg:p-2.5 shadow-lg">
+                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>

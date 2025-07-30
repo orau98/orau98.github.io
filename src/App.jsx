@@ -127,12 +127,16 @@ function App() {
           cleanExisting = repairBrokenScientificName(cleanExisting);
         }
         
-        // Special case fixes for known problematic species
+        // CSV修正により不要になった既知の修正処理
+        // Special case fixes for known problematic species (DISABLED - fixed in CSV)
+        /*
         const knownFixes = {
           'Diphtherocome autumnalis (Chang,"サクラ類': 'Diphtherocome autumnalis (Chang, 1991)',
           'Arcte coerula (Guenée': 'Arcte coerula (Guenée, 1852)'
         };
+        */
         
+        /*
         for (const [broken, fixed] of Object.entries(knownFixes)) {
           if (cleanExisting.includes(broken)) {
             console.log(`REPAIR: Applied known fix: "${cleanExisting}" -> "${fixed}"`);
@@ -140,6 +144,7 @@ function App() {
             break;
           }
         }
+        */
         
         // Check if existing scientific name is valid (has both genus and species)
         if (cleanExisting) {
@@ -1557,36 +1562,40 @@ function App() {
             console.log('=== END PRE-SCAN ===');
             
             // COLUMN MISALIGNMENT FIX - Fix rows where scientific names are shifted to wrong columns
-            console.log('=== FIXING COLUMN MISALIGNMENT ===');
+            // CSV修正により不要になった列位置ずれ修正処理
+            console.log('=== COLUMN MISALIGNMENT FIX (DISABLED - fixed in CSV) ===');
             let fixedRows = 0;
-            results.data.forEach((row, index) => {
-              const japaneseName = row['和名']?.trim();
-              const scientificName = row['学名']?.trim();
-              const hostPlants = row['食草']?.trim();
-              const source = row['出典']?.trim();
-              
-              // Detect column misalignment: if 学名 contains food plant data and 食草 contains source data
-              if (japaneseName && scientificName && hostPlants && 
-                  (scientificName === '広食性' || scientificName === '不明' || 
-                   scientificName.includes('科') || scientificName.includes('種') ||
-                   scientificName.includes('属') || scientificName.includes('草')) &&
-                  (hostPlants.includes('図鑑') || hostPlants.includes('標準') || 
-                   hostPlants === '日本産蛾類標準図鑑1')) {
+            // Column misalignment fix disabled - issues resolved in CSV files
+            if (false) { // Disabled: CSV files have been pre-cleaned
+              results.data.forEach((row, index) => {
+                const japaneseName = row['和名']?.trim();
+                const scientificName = row['学名']?.trim();
+                const hostPlants = row['食草']?.trim();
+                const source = row['出典']?.trim();
                 
-                console.log(`Fixing column misalignment for ${japaneseName} at row ${index + 2}`);
-                console.log(`  Before: 学名="${scientificName}", 食草="${hostPlants}", 出典="${source}"`);
-                
-                // Shift values to correct positions
-                row['学名'] = ''; // Clear scientific name (it was incorrect)
-                row['食草'] = scientificName; // Move the food plant data to correct column
-                row['出典'] = hostPlants; // Move the source data to correct column
-                row['備考'] = source || ''; // Move whatever was in source to remarks
-                
-                console.log(`  After:  学名="${row['学名']}", 食草="${row['食草']}", 出典="${row['出典']}"`);
-                fixedRows++;
-              }
-            });
-            console.log(`Fixed ${fixedRows} rows with column misalignment`);
+                // Detect column misalignment: if 学名 contains food plant data and 食草 contains source data
+                if (japaneseName && scientificName && hostPlants && 
+                    (scientificName === '広食性' || scientificName === '不明' || 
+                     scientificName.includes('科') || scientificName.includes('種') ||
+                     scientificName.includes('属') || scientificName.includes('草')) &&
+                    (hostPlants.includes('図鑑') || hostPlants.includes('標準') || 
+                     hostPlants === '日本産蛾類標準図鑑1')) {
+                  
+                  console.log(`Fixing column misalignment for ${japaneseName} at row ${index + 2}`);
+                  console.log(`  Before: 学名="${scientificName}", 食草="${hostPlants}", 出典="${source}"`);
+                  
+                  // Shift values to correct positions
+                  row['学名'] = ''; // Clear scientific name (it was incorrect)
+                  row['食草'] = scientificName; // Move the food plant data to correct column
+                  row['出典'] = hostPlants; // Move the source data to correct column
+                  row['備考'] = source || ''; // Move whatever was in source to remarks
+                  
+                  console.log(`  After:  学名="${row['学名']}", 食草="${row['食草']}", 出典="${row['出典']}"`);
+                  fixedRows++;
+                }
+              });
+            }
+            console.log(`Column misalignment fix: ${fixedRows} rows (disabled - CSV pre-cleaned)`);
             console.log('=== END COLUMN MISALIGNMENT FIX ===');
             
             results.data.forEach((row, index) => {
