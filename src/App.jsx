@@ -1661,6 +1661,13 @@ function App() {
               let rawRemarks = row['備考'] || '';
               const hostPlantNotes = []; // Initialize hostPlantNotes array here
               
+              // Debug logging for アオバシャチホコ processing
+              if (mothName === 'アオバシャチホコ') {
+                console.log('=== アオバシャチホコ PROCESSING DEBUG ===');
+                console.log('rawHostPlant from CSV:', rawHostPlant);
+                console.log('rawRemarks from CSV:', rawRemarks);
+              }
+              
               // Debug logging for カバシタムクゲエダシャク processing
               if (mothName === 'カバシタムクゲエダシャク') {
                 console.log('=== カバシタムクゲエダシャク PROCESSING DEBUG ===');
@@ -2591,18 +2598,31 @@ function App() {
                   
                   // Pre-process to handle "(以上〇〇科)" pattern - extract it as a separate note
                   let familyNote = '';
+                  if (mothName === 'アオバシャチホコ') {
+                    console.log(`DEBUG: アオバシャチホコ - Before (以上〇〇科) processing: "${tempHostPlant}"`);
+                  }
                   tempHostPlant = tempHostPlant.replace(/([^;；、，,]+)\s*[\(（]\s*以上([^）\)]*科)\s*[\)）]/g, (match, plant, family) => {
                     familyNote = `以上${family}`;
                     if (mothName === 'アオバシャチホコ') {
-                      console.log(`DEBUG: アオバシャチホコ - Extracted family note: "${familyNote}" from "${match}"`);
+                      console.log(`DEBUG: アオバシャチホコ - Match found: "${match}"`);
+                      console.log(`DEBUG: アオバシャチホコ - Extracted plant: "${plant}"`);
+                      console.log(`DEBUG: アオバシャチホコ - Extracted family: "${family}"`);
+                      console.log(`DEBUG: アオバシャチホコ - Family note: "${familyNote}"`);
                       console.log(`DEBUG: アオバシャチホコ - Returning plant name: "${plant.trim()}"`);
                     }
                     // Return just the plant name, family note will be handled separately
                     return plant.trim();
                   });
+                  if (mothName === 'アオバシャチホコ') {
+                    console.log(`DEBUG: アオバシャチホコ - After (以上〇〇科) processing: "${tempHostPlant}"`);
+                  }
                   
                   // Split by various delimiters including "や" for complex entries
                   let plants = tempHostPlant.split(/[;；、，,]/);
+                  
+                  if (mothName === 'アオバシャチホコ') {
+                    console.log(`DEBUG: アオバシャチホコ - Split plants:`, plants);
+                  }
                   
                   // Further split entries that contain "や" (e.g., "マメ類 (マメ科)やテンサイ(アカザ科)などの農作物")
                   const expandedPlants = [];
