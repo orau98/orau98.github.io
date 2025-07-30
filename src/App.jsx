@@ -35,6 +35,34 @@ function App() {
   
   const isDevelopment = import.meta.env.DEV;
   
+  // 全体的な和名→学名ファイル名マッピング（ファイル名変更対応）
+  const globalJapaneseToScientificMapping = new Map([
+    // 蛾類
+    ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
+    ['オオマエベニトガリバ', 'Habroloma_lewisii'],
+    ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
+    ['シラオビキリガ', 'Cosmia_camptostigma'],
+    ['シラホシキリガ', 'Cosmia_pyralina'],
+    ['タカオキリガ', 'Pseudopanolis_takao'],
+    ['ツマベニヒメハマキ', 'Phaecasiophora_roseana_2'],
+    ['ナシキリガ', 'Cosmia_restituta_Walker_1857'],
+    ['ニッコウケンモン', 'Craniophora_praeclara'],
+    ['ニッコウシャチホコ', 'Shachia_circumscripta'],
+    ['ノコメセダカヨトウ', 'Orthogonia_sera'],
+    ['ハスモンヨトウ', 'Spodoptera_litura'],
+    ['マエジロシャチホコ', 'Notodonta_albicosta'],
+    ['クロハナコヤガ', 'Aventiola_pusilla'],
+    ['フタスジエグリアツバ', 'Gonepatica_opalina'],
+    ['ベニスズメ', 'Deilephila_elpenor'],
+    ['ヒメスズメ', 'Deilephila_askoldensis'],
+    ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
+    ['ナシイラガ', 'Narosoideus_flavidorsalis'],
+    ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
+    // タマムシ科
+    ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
+    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii']
+  ]);
+  
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
@@ -1645,7 +1673,8 @@ function App() {
               // Validate scientific name quality
               const validationResult = validateScientificName(scientificName, mothName, 'moth');
               
-              const scientificFilename = formatScientificNameForFilename(scientificName);
+              // 和名→学名ファイル名マッピングを優先使用
+              const scientificFilename = globalJapaneseToScientificMapping.get(mothName) || formatScientificNameForFilename(scientificName);
               
 
               let familyFromMainCsv = row['科和名'] || row['科名'] || '';
@@ -3288,10 +3317,7 @@ function App() {
               console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
             }
             
-            // Create beetle-specific name mapping for image filenames (using scientific names)
-            const beetleNameMapping = new Map();
-            beetleNameMapping.set('ルイスヒラタチビタマムシ', 'Habroloma_lewisii');
-            beetleNameMapping.set('アオマダラタマムシ', 'Nipponobuprestis_amabilis');
+            // タマムシデータでもグローバルマッピングを使用
             
             beetleData = [];
         beetleParsed.data.forEach((row, index) => {
@@ -3387,13 +3413,8 @@ function App() {
 
           // Determine the correct scientific filename for beetles
           let scientificFilenameForBeetle;
-          if (beetleNameMapping.has(japaneseName)) {
-            // Use specific mapping if available
-            scientificFilenameForBeetle = beetleNameMapping.get(japaneseName);
-          } else {
-            // Fall back to formatted scientific name
-            scientificFilenameForBeetle = formatScientificNameForFilename(scientificName);
-          }
+          // グローバルマッピングを使用、なければフォーマット済み学名を使用
+          scientificFilenameForBeetle = globalJapaneseToScientificMapping.get(japaneseName) || formatScientificNameForFilename(scientificName);
 
           const beetle = {
             id,
@@ -3418,8 +3439,8 @@ function App() {
               name: japaneseName,
               scientificName: scientificName,
               scientificFilename: scientificFilenameForBeetle,
-              mappingUsed: beetleNameMapping.has(japaneseName),
-              mappingValue: beetleNameMapping.get(japaneseName),
+              mappingUsed: globalJapaneseToScientificMapping.has(japaneseName),
+              mappingValue: globalJapaneseToScientificMapping.get(japaneseName),
               type: 'beetle'
             });
           }

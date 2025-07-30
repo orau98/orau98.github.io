@@ -870,7 +870,28 @@ function generateImageFileLists() {
         }
       });
       
-      // 手動で追加する必要のあるマッピング（CSVパースエラーで読み込めないもの）
+      // 手動で追加する必要のあるマッピング（ファイル名変更対応）
+      nameMapping.set('ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura');
+      nameMapping.set('オオマエベニトガリバ', 'Habroloma_lewisii');
+      nameMapping.set('ショウブオオヨトウ', 'Helotropha_leucostigma');
+      nameMapping.set('シラオビキリガ', 'Cosmia_camptostigma');
+      nameMapping.set('シラホシキリガ', 'Cosmia_pyralina');
+      nameMapping.set('タカオキリガ', 'Pseudopanolis_takao');
+      nameMapping.set('ツマベニヒメハマキ', 'Phaecasiophora_roseana_2');
+      nameMapping.set('ナシキリガ', 'Cosmia_restituta_Walker_1857');
+      nameMapping.set('ニッコウケンモン', 'Craniophora_praeclara');
+      nameMapping.set('ニッコウシャチホコ', 'Shachia_circumscripta');
+      nameMapping.set('ノコメセダカヨトウ', 'Orthogonia_sera');
+      nameMapping.set('ハスモンヨトウ', 'Spodoptera_litura');
+      nameMapping.set('マエジロシャチホコ', 'Notodonta_albicosta');
+      nameMapping.set('クロハナコヤガ', 'Aventiola_pusilla');
+      nameMapping.set('フタスジエグリアツバ', 'Gonepatica_opalina');
+      nameMapping.set('ベニスズメ', 'Deilephila_elpenor');
+      nameMapping.set('ヒメスズメ', 'Deilephila_askoldensis');
+      nameMapping.set('マダラキボシキリガ', 'Dimorphicosmia_variegata');
+      nameMapping.set('ナシイラガ', 'Narosoideus_flavidorsalis');
+      nameMapping.set('ヨモギオオホソハマキ', 'Phtheochroides_clandestina');
+      nameMapping.set('アオマダラタマムシ', 'Nipponobuprestis_amabilis');
       nameMapping.set('ルイスヒラタチビタマムシ', 'Habroloma_lewisii');
       
       console.log(`和名-学名マッピング作成: ${nameMapping.size}件`);
