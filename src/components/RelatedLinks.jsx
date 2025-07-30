@@ -4,6 +4,34 @@ import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx'
 
 // 昆虫の画像を取得する関数（拡張子動的対応）
 const getInsectImagePath = (insect, imageExtensions = {}) => {
+  // 和名→学名ファイル名マッピング（App.jsxと同期）
+  const globalJapaneseToScientificMapping = new Map([
+    // 蛾類
+    ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
+    ['オオマエベニトガリバ', 'Habroloma_lewisii'],
+    ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
+    ['シラオビキリガ', 'Cosmia_camptostigma'],
+    ['シラホシキリガ', 'Cosmia_pyralina'],
+    ['タカオキリガ', 'Pseudopanolis_takao'],
+    ['ツマベニヒメハマキ', 'Phaecasiophora_roseana_2'],
+    ['ナシキリガ', 'Cosmia_restituta_Walker_1857'],
+    ['ニッコウケンモン', 'Craniophora_praeclara'],
+    ['ニッコウシャチホコ', 'Shachia_circumscripta'],
+    ['ノコメセダカヨトウ', 'Orthogonia_sera'],
+    ['ハスモンヨトウ', 'Spodoptera_litura'],
+    ['マエジロシャチホコ', 'Notodonta_albicosta'],
+    ['クロハナコヤガ', 'Aventiola_pusilla'],
+    ['フタスジエグリアツバ', 'Gonepatica_opalina'],
+    ['ベニスズメ', 'Deilephila_elpenor'],
+    ['ヒメスズメ', 'Deilephila_askoldensis'],
+    ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
+    ['ナシイラガ', 'Narosoideus_flavidorsalis'],
+    ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
+    // タマムシ科
+    ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
+    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii']
+  ]);
+
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';
     let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
@@ -15,28 +43,29 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
     return cleanedName;
   };
 
-  const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
+  // マッピングを最優先、次にscientificFilename、最後にフォールバック
+  const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
+  const safeFilename = mappedFilename || insect.scientificFilename || createSafeFilename(insect.scientificName);
   const imageFolder = insect.type === 'butterfly' ? 'butterflies' : 'insects';
   
-  // 動的拡張子取得（和名優先、学名、scientificFilename順）
+  // 動的拡張子取得（マッピング済み学名を最優先）
   const getExtension = (filename) => {
-    return imageExtensions[filename] || imageExtensions[insect.name] || imageExtensions[safeFilename] || '.jpg';
+    return imageExtensions[filename] || imageExtensions[safeFilename] || imageExtensions[insect.name] || '.jpg';
   };
   
   const scientificExt = getExtension(safeFilename);
   const nameExt = getExtension(insect.name);
   
-  // メインパスリスト（日本語ファイル名はURLエンコーディングしない）
+  // メインパスリスト（学名ファイル名を最優先）
   const primaryPaths = [
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}${scientificExt}`,
-    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}${nameExt}`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpg`,
-    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${safeFilename}.jpeg`,
+    // フォールバック：和名も試行（ただし優先度は低い）
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}${nameExt}`,
+    `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpg`,
     `${import.meta.env.BASE_URL}images/${imageFolder}/${insect.name}.jpeg`
   ];
-  
-  // すべての昆虫画像は insects ディレクトリに統一されているため、フォールバックは不要
   
   return primaryPaths;
 };
