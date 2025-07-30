@@ -1617,9 +1617,6 @@ function App() {
 
               const mothName = correctMothName(originalMothName);
               
-                console.log('大図鑑カタログNo:', row['大図鑑カタログNo']);
-              }
-              
               // Debug logging for フクラスズメ and related species (temporarily disabled)
               // if (mothName === 'フクラスズメ' || mothName === 'ホリシャキシタケンモン' || mothName === 'マルバネキシタケンモン') {
               //   console.log(`DEBUG: Processing ${mothName} at index ${index}, ID will be main-${index}`);
