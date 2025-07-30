@@ -2887,7 +2887,13 @@ function App() {
                   isMonophagous: isMonophagous, // Add monophagous information
                   hostPlantNotes: hostPlantNotes, // Add host plant notes
                   // Add notes field for compatibility with MothDetail.jsx
-                  notes: hostPlantNotes.join(' '),
+                  notes: (() => {
+                    // Special handling for カバシタムクゲエダシャク to exclude source information
+                    if (mothName === 'カバシタムクゲエダシャク') {
+                      return hostPlantNotes.filter(note => !note.includes('日本産蛾類標準図鑑')).join(' ');
+                    }
+                    return hostPlantNotes.join(' ');
+                  })(),
                   // Get remarks from 27th column
                   geographicalRemarks: String(row['備考'] || '').trim(),
                   // Instagram data (if available)
