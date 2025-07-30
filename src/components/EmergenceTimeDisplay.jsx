@@ -485,18 +485,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
           ))}
         </div>
         
-        {/* 旬のサブヘッダー */}
-        <div className="grid grid-cols-12 gap-1 text-center">
-          {MONTHS.map((month) => (
-            <div key={month.number} className="grid grid-cols-3 gap-px">
-              {['上', '中', '下'].map((period, idx) => (
-                <div key={idx} className="text-xs text-slate-500 dark:text-slate-500 text-center">
-                  {period}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
         
         {/* メインタイムライン（旬単位） */}
         <div className="relative">
