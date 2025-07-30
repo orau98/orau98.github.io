@@ -48,6 +48,12 @@ const SeasonIcon = ({ season, className = "w-4 h-4" }) => {
 const parseEmergenceTime = (emergenceTime) => {
   if (!emergenceTime || emergenceTime === '不明') return { months: [], periods: [] };
   
+  // Debug log for specific species
+  const isDebugSpecies = emergenceTime.includes('3月');
+  if (isDebugSpecies) {
+    console.log('DEBUG: parseEmergenceTime input:', emergenceTime);
+  }
+  
   const activeMonths = new Set();
   const activePeriods = new Set(); // 月.旬の形式 (例: 3.1 = 3月上旬, 3.2 = 3月中旬, 3.3 = 3月下旬)
   
@@ -70,7 +76,25 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   }
 
-  // 旬範囲指定を検出（例：3月上旬~下旬、2月下旬~4月上旬）
+  // 同月内の旬範囲指定を検出（例：3月上旬~下旬）
+  const sameMonthRangePattern = /(\d{1,2})月(上旬|中旬|下旬)[～〜~-](上旬|中旬|下旬)/g;
+  while ((match = sameMonthRangePattern.exec(emergenceTime)) !== null) {
+    const month = parseInt(match[1]);
+    const startPeriod = match[2];
+    const endPeriod = match[3];
+    
+    if (month >= 1 && month <= 12) {
+      activeMonths.add(month);
+      const startPeriodNum = startPeriod === '上旬' ? 1 : startPeriod === '中旬' ? 2 : 3;
+      const endPeriodNum = endPeriod === '上旬' ? 1 : endPeriod === '中旬' ? 2 : 3;
+      
+      for (let p = startPeriodNum; p <= endPeriodNum; p++) {
+        activePeriods.add(month + p * 0.1);
+      }
+    }
+  }
+
+  // 旬範囲指定を検出（例：2月下旬~4月上旬）
   const periodRangePattern = /(\d{1,2})月(上旬|中旬|下旬)[～〜~-](\d{1,2})月(上旬|中旬|下旬)/g;
   while ((match = periodRangePattern.exec(emergenceTime)) !== null) {
     const startMonth = parseInt(match[1]);
@@ -331,6 +355,14 @@ const parseEmergenceTime = (emergenceTime) => {
       });
     }
   });
+  
+  // Debug log for specific species
+  if (isDebugSpecies) {
+    console.log('DEBUG: parseEmergenceTime result:', {
+      activeMonths: Array.from(activeMonths).sort((a, b) => a - b),
+      activePeriods: Array.from(activePeriods).sort((a, b) => a - b)
+    });
+  }
   
   return {
     months: Array.from(activeMonths).sort((a, b) => a - b),

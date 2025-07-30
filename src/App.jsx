@@ -1876,7 +1876,7 @@ function App() {
                 });
                 
                 // Also force emergence time data for カバシタムクゲエダシャク
-                const forcedEmergenceTime = '3月上旬~下旬(以前は4月上旬まで記録あり)';
+                const forcedEmergenceTime = '3月上旬~3月下旬';
                 emergenceTimeMap.set(mothName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
                 emergenceTimeMap.set(scientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
                 emergenceTimeMap.set(cleanedScientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
@@ -2896,7 +2896,7 @@ function App() {
                   emergenceTime: (() => {
                     // Special override for カバシタムクゲエダシャク to ensure correct time is always used
                     if (mothName === 'カバシタムクゲエダシャク') {
-                      return '3月上旬~下旬(以前は4月上旬まで記録あり)';
+                      return '3月上旬~3月下旬';
                     }
                     
                     // First check if already in emergenceTimeMap
