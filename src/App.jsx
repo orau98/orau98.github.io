@@ -227,8 +227,8 @@ function App() {
           { pattern: /[";]/, description: '破損データの残存（セミコロンまたは引用符）' },
           { pattern: /で飼育|により|について/, description: '食草データの混入' },
           { pattern: /科$/, description: '科名の混入' },
-          { pattern: /\d{4}[^)]/, description: '年数の表記異常' },
-          { pattern: /\([^)]*,.*[^)]/, description: '括弧の不完全な閉じ' }
+          { pattern: /\d{4}[^),\s]/, description: '年数の表記異常' },
+          { pattern: /\([^)]*,[^)]*$/, description: '括弧の不完全な閉じ' }
         ];
         
         for (const { pattern, description } of corruptionPatterns) {
@@ -1591,6 +1591,11 @@ function App() {
               const originalMothName = row['和名']?.trim();
               if (!originalMothName) return;
               
+              // Temporary debug: Check if we encounter アオバシャチホコ
+              if (originalMothName.includes('アオバシャチホコ')) {
+                console.log('=== Found アオバシャチホコ in originalMothName ===', originalMothName);
+              }
+              
               // Debug logging for スミレモンキリガ
               if (originalMothName.includes('スミレモンキリガ')) {
                 console.log(`DEBUG: Found スミレモンキリガ at index ${index}:`, {
@@ -2629,39 +2634,23 @@ function App() {
                   });
                   plants = expandedPlants;
                   
-                  // Debug for センモンヤガ, スミレモンキリガ, and アオバシャチホコ
-                  if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ') {
-                    console.log(`DEBUG: ${mothName} before processing:`, {
-                      rawHostPlant,
-                      tempHostPlant,
-                      'tempHostPlant after 。 removal': tempHostPlant.replace(/[。].*/g, ''),
-                      plants,
-                      plantsCount: plants.length,
-                      'plants after expansion': plants
-                    });
-                  }
                   
                   plants.forEach(plant => {
                     const originalPlant = plant;
                     plant = plant.trim();
+                    
+                    // Temporary debug for アオバシャチホコ only
+                    if (mothName === 'アオバシャチホコ') {
+                      console.log(`DEBUG アオバシャチホコ: Processing plant: "${originalPlant}" -> "${plant}"`);
+                    }
                     // Remove trailing patterns like "などの農作物", "などの野菜", "につく"
                     plant = plant.replace(/など.*$/g, '').trim();
                     plant = plant.replace(/ほか.*$/g, '').trim();
                     plant = plant.replace(/につく[。．]?$/g, '').trim();
                     
-                    // Debug before removing family patterns
-                    if (mothName === 'アオバシャチホコ' && plant.includes('クマノミズキ')) {
-                      console.log(`DEBUG: アオバシャチホコ - Before family pattern removal:`, plant);
-                    }
-                    
                     // Remove "以上〇〇科" patterns but preserve the plant name
                     plant = plant.replace(/\(以上[^)]*科\)/g, ''); // Remove parenthetical family references
                     plant = plant.replace(/（以上[^）]*科）/g, ''); // Remove full-width parenthetical family references
-                    
-                    // Debug after removing family patterns
-                    if (mothName === 'アオバシャチホコ' && originalPlant.includes('クマノミズキ')) {
-                      console.log(`DEBUG: アオバシャチホコ - After family pattern removal:`, plant);
-                    }
                     // Clean up any remaining formatting
                     plant = plant.replace(/^\s*[\,\、\，]\s*/, ''); // Remove leading separators
                     plant = plant.replace(/\s*[\,\、\，]\s*$/, ''); // Remove trailing separators
@@ -2684,12 +2673,9 @@ function App() {
                     // Must have at least one Japanese or alphabetic character
                     if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(plant)) return;
                     
-                    if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ') {
-                      console.log(`DEBUG: ${mothName} - Processing plant:`, plant);
-                      console.log(`DEBUG: ${mothName} - isValidPlantName result:`, isValidPlantName(plant));
-                      if (plant.includes('クマノミズキ') || plant.includes('ミズキ')) {
-                        console.log(`DEBUG: ${mothName} - Found Mizuki plant:`, plant);
-                      }
+                    // Temporary debug for アオバシャチホコ - after all processing
+                    if (mothName === 'アオバシャチホコ') {
+                      console.log(`DEBUG アオバシャチホコ: After processing: "${plant}" -> valid: ${plant.length > 1 && isValidPlantName(plant)}`);
                     }
                     
                     if (plant.length > 1 && isValidPlantName(plant)) {
