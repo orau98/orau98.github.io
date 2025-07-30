@@ -3284,10 +3284,10 @@ function App() {
               console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
             }
             
-            // Create beetle-specific name mapping for image filenames
+            // Create beetle-specific name mapping for image filenames (using scientific names)
             const beetleNameMapping = new Map();
-            beetleNameMapping.set('ルイスヒラタチビタマムシ', 'ルイスヒラタチビタマムシ (3)');
-            beetleNameMapping.set('アオマダラタマムシ', 'アオマダラタマムシ');
+            beetleNameMapping.set('ルイスヒラタチビタマムシ', 'Habroloma_lewisii');
+            beetleNameMapping.set('アオマダラタマムシ', 'Nipponobuprestis_amabilis');
             
             beetleData = [];
         beetleParsed.data.forEach((row, index) => {
