@@ -225,6 +225,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   console.log('Instagram URL:', moth.instagramUrl);
   console.log('Has Instagram Post:', hasInstagramPost);
   console.log('Static Image Path:', staticImagePath);
+  
+  // Additional debug for beetles
+  if (moth.type === 'beetle') {
+    console.log('DEBUG: Beetle detail view:', {
+      name: moth.name,
+      scientificName: moth.scientificName,
+      scientificFilename: moth.scientificFilename,
+      safeFilename: safeFilename,
+      japaneseName: japaneseName,
+      imageExtensions: imageExtensions,
+      possibleImagePaths: possibleImagePaths
+    });
+  }
 
   const handleImageLoad = () => {
     setImageLoaded(true);

@@ -3414,12 +3414,13 @@ function App() {
           };
           
           // Debug log for specific species
-          if (japaneseName === 'ルイスヒラタチビタマムシ') {
-            console.log('DEBUG: ルイスヒラタチビタマムシ beetle object created:', {
+          if (japaneseName === 'ルイスヒラタチビタマムシ' || japaneseName === 'アオマダラタマムシ') {
+            console.log(`DEBUG: ${japaneseName} beetle object created:`, {
               name: japaneseName,
               scientificName: scientificName,
               scientificFilename: scientificFilenameForBeetle,
               mappingUsed: beetleNameMapping.has(japaneseName),
+              mappingValue: beetleNameMapping.get(japaneseName),
               type: 'beetle'
             });
           }
