@@ -1605,6 +1605,15 @@ function App() {
 
               const mothName = correctMothName(originalMothName);
               
+              // Debug for アオバシャチホコ CSV読み込み
+              if (mothName === 'アオバシャチホコ') {
+                console.log('=== アオバシャチホコ CSV読み込み ===');
+                console.log('行番号:', index);
+                console.log('元の食草データ:', row['食草']);
+                console.log('科情報:', row['科']);
+                console.log('大図鑑カタログNo:', row['大図鑑カタログNo']);
+              }
+              
               // Debug logging for フクラスズメ and related species (temporarily disabled)
               // if (mothName === 'フクラスズメ' || mothName === 'ホリシャキシタケンモン' || mothName === 'マルバネキシタケンモン') {
               //   console.log(`DEBUG: Processing ${mothName} at index ${index}, ID will be main-${index}`);
@@ -2579,6 +2588,18 @@ function App() {
                   };
                   
                   tempHostPlant = removeDuplicatePhrases(tempHostPlant);
+                  
+                  // Pre-process to handle "(以上〇〇科)" pattern - extract it as a separate note
+                  let familyNote = '';
+                  tempHostPlant = tempHostPlant.replace(/([^;；、，,]+)\s*[\(（]\s*以上([^）\)]*科)\s*[\)）]/g, (match, plant, family) => {
+                    familyNote = `以上${family}`;
+                    if (mothName === 'アオバシャチホコ') {
+                      console.log(`DEBUG: アオバシャチホコ - Extracted family note: "${familyNote}" from "${match}"`);
+                      console.log(`DEBUG: アオバシャチホコ - Returning plant name: "${plant.trim()}"`);
+                    }
+                    // Return just the plant name, family note will be handled separately
+                    return plant.trim();
+                  });
                   
                   // Split by various delimiters including "や" for complex entries
                   let plants = tempHostPlant.split(/[;；、，,]/);
