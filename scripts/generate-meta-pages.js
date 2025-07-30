@@ -664,7 +664,7 @@ async function generateMetaPages() {
     console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
 
     // CSVデータを読み込み
-    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_bokutou.csv'));
+    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_master.csv'));
     
     // 日本のキリガ.csvから成虫出現時期データを読み込み
     const kirigaData = loadCSV(path.join(__dirname, '../public/日本のキリガ.csv'));
@@ -843,7 +843,7 @@ function generateImageFileLists() {
       const nameMapping = new Map();
       
       // メインCSVを読み込んでマッピングを作成
-      const csvPath = path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_bokutou.csv');
+      const csvPath = path.join(__dirname, '../public/ListMJ_hostplants_master.csv');
       const csvContent = fs.readFileSync(csvPath, 'utf-8');
       const csvData = Papa.parse(csvContent, {
         header: true,

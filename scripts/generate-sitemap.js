@@ -45,7 +45,7 @@ function generateSitemap() {
   
   try {
     // CSVデータを読み込み
-    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_integrated_with_kiriga.csv'));
+    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_master.csv'));
     
     // 昆虫データの処理
     let mothCount = 0, butterflyCount = 0, beetleCount = 0, leafbeetleCount = 0;
