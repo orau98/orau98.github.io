@@ -459,18 +459,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
   return (
     <div className="space-y-4">
       
-      {/* 原文表示 */}
-      <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
-        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-          {emergenceTime}
-        </p>
-        {source && (
-          <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
-            出典: {source}
-          </p>
-        )}
-      </div>
-      
       {/* 精密ガントチャート風タイムライン */}
       <div className="space-y-3">
         {/* 月のヘッダー */}
@@ -551,6 +539,18 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         </div>
         
         
+      </div>
+      
+      {/* 原文表示 */}
+      <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+          {emergenceTime}
+        </p>
+        {source && (
+          <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+            出典: {source}
+          </p>
+        )}
       </div>
     </div>
   );
