@@ -81,14 +81,19 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                       to={`${baseUrl}${relatedMoth.id}`}
                       className="insect-card flex-shrink-0 w-32 group"
                     >
-                      <div className="bg-white dark:bg-slate-800 rounded-xl p-3 border border-slate-200/50 dark:border-slate-700/50 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:border-blue-300 dark:group-hover:border-blue-600">
+                      <div className={`bg-white dark:bg-slate-800 rounded-xl p-3 border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-105 ${
+                        relatedMoth.type === 'moth' ? 'border-blue-300 dark:border-blue-600 group-hover:border-blue-500 dark:group-hover:border-blue-400' :
+                        relatedMoth.type === 'butterfly' ? 'border-pink-300 dark:border-pink-600 group-hover:border-pink-500 dark:group-hover:border-pink-400' :
+                        relatedMoth.type === 'beetle' ? 'border-green-300 dark:border-green-600 group-hover:border-green-500 dark:group-hover:border-green-400' :
+                        'border-amber-300 dark:border-amber-600 group-hover:border-amber-500 dark:group-hover:border-amber-400'
+                      }`}>
                         {/* 昆虫画像 */}
                         <div className="insect-icon-container mb-3 flex justify-center">
                           <div className="relative">
                             <img 
                               src={getImagePath(relatedMoth)}
                               alt={relatedMothName}
-                              className="insect-icon w-20 h-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600 transition-transform duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500"
+                              className="insect-icon w-20 h-20 rounded-lg object-cover border-2 border-slate-200 dark:border-slate-600 transition-transform duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500"
                               onError={(e) => {
                                 // 最初の画像パス（学名）が失敗した場合、和名で試行
                                 if (!e.target.dataset.triedFallback) {
@@ -101,7 +106,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                                 }
                               }}
                             />
-                            <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full border-2 border-slate-200 dark:border-slate-600 items-center justify-center transition-colors duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500 hidden">
+                            <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-lg border-2 border-slate-200 dark:border-slate-600 items-center justify-center transition-colors duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500 hidden">
                               <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 01-2 2z" />
                               </svg>
@@ -115,17 +120,6 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                             {relatedMothName}
                           </h5>
                           
-                          {/* 種別バッジ */}
-                          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
-                            relatedMoth.type === 'moth' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
-                            relatedMoth.type === 'butterfly' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300' :
-                            relatedMoth.type === 'beetle' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
-                            'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
-                          }`}>
-                            {relatedMoth.type === 'moth' ? '🦋 蛾' : 
-                             relatedMoth.type === 'butterfly' ? '🦋 蝶' : 
-                             relatedMoth.type === 'beetle' ? '🪲 タマムシ' : '🐛 ハムシ'}
-                          </span>
                         </div>
                       </div>
                     </Link>
