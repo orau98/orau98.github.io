@@ -79,47 +79,45 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                     <Link
                       key={relatedMoth.id}
                       to={`${baseUrl}${relatedMoth.id}`}
-                      className="insect-card flex-shrink-0 w-32 group"
+                      className="insect-card flex-shrink-0 w-48 group"
                     >
-                      <div className={`bg-white dark:bg-slate-800 rounded-xl p-3 border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-105 ${
+                      <div className={`bg-white dark:bg-slate-800 rounded-xl overflow-hidden border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02] ${
                         relatedMoth.type === 'moth' ? 'border-blue-300 dark:border-blue-600 group-hover:border-blue-500 dark:group-hover:border-blue-400' :
                         relatedMoth.type === 'butterfly' ? 'border-pink-300 dark:border-pink-600 group-hover:border-pink-500 dark:group-hover:border-pink-400' :
                         relatedMoth.type === 'beetle' ? 'border-green-300 dark:border-green-600 group-hover:border-green-500 dark:group-hover:border-green-400' :
                         'border-amber-300 dark:border-amber-600 group-hover:border-amber-500 dark:group-hover:border-amber-400'
                       }`}>
-                        {/* 昆虫画像 */}
-                        <div className="insect-icon-container mb-3 flex justify-center">
-                          <div className="relative">
-                            <img 
-                              src={getImagePath(relatedMoth)}
-                              alt={relatedMothName}
-                              className="insect-icon w-20 h-20 rounded-lg object-cover border-2 border-slate-200 dark:border-slate-600 transition-transform duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500"
-                              onError={(e) => {
-                                // 最初の画像パス（学名）が失敗した場合、和名で試行
-                                if (!e.target.dataset.triedFallback) {
-                                  e.target.dataset.triedFallback = 'true';
-                                  e.target.src = getFallbackImagePath(relatedMoth);
-                                } else {
-                                  // 両方失敗した場合はデフォルトアイコンを表示
-                                  e.target.style.display = 'none';
-                                  e.target.nextElementSibling.style.display = 'flex';
-                                }
-                              }}
-                            />
-                            <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-lg border-2 border-slate-200 dark:border-slate-600 items-center justify-center transition-colors duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500 hidden">
-                              <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 01-2 2z" />
-                              </svg>
-                            </div>
+                        {/* 昆虫画像 - 大きくしてカードの大部分を占める */}
+                        <div className="relative w-full aspect-[4/3] overflow-hidden">
+                          <img 
+                            src={getImagePath(relatedMoth)}
+                            alt={relatedMothName}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            onError={(e) => {
+                              // 最初の画像パス（学名）が失敗した場合、和名で試行
+                              if (!e.target.dataset.triedFallback) {
+                                e.target.dataset.triedFallback = 'true';
+                                e.target.src = getFallbackImagePath(relatedMoth);
+                              } else {
+                                // 両方失敗した場合はデフォルトアイコンを表示
+                                e.target.style.display = 'none';
+                                e.target.nextElementSibling.style.display = 'flex';
+                              }
+                            }}
+                          />
+                          {/* フォールバック用のアイコン表示エリア */}
+                          <div className="absolute inset-0 bg-slate-100 dark:bg-slate-700 flex items-center justify-center hidden">
+                            <svg className="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 01-2 2z" />
+                            </svg>
                           </div>
-                        </div>
-                        
-                        {/* 昆虫名 */}
-                        <div className="text-center">
-                          <h5 className="insect-name text-sm font-medium text-slate-800 dark:text-slate-200 leading-tight mb-1 line-clamp-2">
-                            {relatedMothName}
-                          </h5>
                           
+                          {/* 画像上に昆虫名をオーバーレイ表示 */}
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3">
+                            <h5 className="text-white font-medium text-sm leading-tight line-clamp-2 drop-shadow-lg">
+                              {relatedMothName}
+                            </h5>
+                          </div>
                         </div>
                       </div>
                     </Link>
