@@ -237,11 +237,6 @@ const HostPlantListItem = ({ plant, mothNames, plantDetails = {}, plantImageFile
         
         {/* Enhanced Content section */}
         <div className="p-4">
-          <div className="mb-3">
-            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-tight">
-              {plant}
-            </h3>
-          </div>
           <div className="space-y-2">
             <div className="flex items-start space-x-2">
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 flex-shrink-0">
