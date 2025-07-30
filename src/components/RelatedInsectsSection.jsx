@@ -1,8 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
+  // 各植物の展開状態を管理
+  const [expandedPlants, setExpandedPlants] = useState(new Set());
+  
+  // 植物の展開状態をトグル
+  const togglePlantExpansion = (plant) => {
+    const newExpanded = new Set(expandedPlants);
+    if (newExpanded.has(plant)) {
+      newExpanded.delete(plant);
+    } else {
+      newExpanded.add(plant);
+    }
+    setExpandedPlants(newExpanded);
+  };
+  
+  // 種数に応じた表示レイアウトを決定
+  const getDisplayLayout = (count, isExpanded) => {
+    if (count <= 6) {
+      return 'horizontal'; // 横スクロール
+    } else if (count <= 12) {
+      return isExpanded ? 'grid-2rows' : 'horizontal-limited'; // 2行グリッドまたは制限付き横スクロール
+    } else {
+      return isExpanded ? 'grid-3rows' : 'horizontal-limited'; // 3行グリッドまたは制限付き横スクロール
+    }
+  };
+  
+  // 表示する昆虫数を決定
+  const getDisplayCount = (count, layout, isExpanded) => {
+    if (layout === 'horizontal') return count; // 全て表示
+    if (layout === 'horizontal-limited' && !isExpanded) return 6; // 制限表示
+    return count; // グリッド表示では全て表示
+  };
+
   // MothDetailと同じ画像パス構築ロジックを使用
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';
@@ -50,24 +82,60 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
       </div>
       
       <div className="p-4 space-y-6">
-        {Object.entries(relatedMothsByPlant).map(([plant, relatedMothNames]) => (
-          <div key={plant} className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Link
-                to={`/plant/${encodeURIComponent(plant)}`}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
-              >
-                🌿 {plant}
-              </Link>
-              <span className="text-sm text-slate-500 dark:text-slate-400">
-                ({relatedMothNames.length}種)
-              </span>
-            </div>
+        {Object.entries(relatedMothsByPlant).map(([plant, relatedMothNames]) => {
+          const isExpanded = expandedPlants.has(plant);
+          const layout = getDisplayLayout(relatedMothNames.length, isExpanded);
+          const displayCount = getDisplayCount(relatedMothNames.length, layout, isExpanded);
+          const showExpandButton = relatedMothNames.length > 6;
+          
+          return (
+            <div key={plant} className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Link
+                    to={`/plant/${encodeURIComponent(plant)}`}
+                    className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
+                  >
+                    🌿 {plant}
+                  </Link>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                    ({relatedMothNames.length}種)
+                  </span>
+                </div>
+                
+                {/* 展開/折りたたみボタン */}
+                {showExpandButton && (
+                  <button
+                    onClick={() => togglePlantExpansion(plant)}
+                    className="flex items-center space-x-1 px-3 py-1 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
+                  >
+                    <span>{isExpanded ? '少なく表示' : 'もっと見る'}</span>
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             
-            {/* 横スクロールコンテナ */}
-            <div className="horizontal-scroll-container overflow-x-auto pb-2">
-              <div className="flex space-x-4 min-w-max">
-                {relatedMothNames.map(relatedMothName => {
+            {/* 動的レイアウトコンテナ */}
+            <div className={`${
+              layout === 'horizontal' ? 'overflow-x-auto pb-2' :
+              layout === 'horizontal-limited' ? 'overflow-x-auto pb-2' :
+              'overflow-hidden'
+            }`}>
+              <div className={`transition-all duration-300 ${
+                layout === 'horizontal' ? 'flex space-x-4 min-w-max' :
+                layout === 'horizontal-limited' ? 'flex space-x-4 min-w-max' :
+                layout === 'grid-2rows' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4' :
+                layout === 'grid-3rows' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4' :
+                'flex space-x-4 min-w-max'
+              }`}>
+                {relatedMothNames.slice(0, displayCount).map(relatedMothName => {
                   const relatedMoth = allInsects.find(m => m.name === relatedMothName);
                   if (!relatedMoth) return null;
                   
@@ -79,7 +147,9 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                     <Link
                       key={relatedMoth.id}
                       to={`${baseUrl}${relatedMoth.id}`}
-                      className="insect-card flex-shrink-0 w-48 group"
+                      className={`insect-card group ${
+                        layout.startsWith('grid') ? 'w-full' : 'flex-shrink-0 w-48'
+                      }`}
                     >
                       <div className={`bg-white dark:bg-slate-800 rounded-xl overflow-hidden border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02] ${
                         relatedMoth.type === 'moth' ? 'border-blue-300 dark:border-blue-600 group-hover:border-blue-500 dark:group-hover:border-blue-400' :
@@ -126,7 +196,8 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
