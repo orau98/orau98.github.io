@@ -1,0 +1,2014 @@
+{
+  "scientificNameIssues": [
+    {
+      "row": 49,
+      "japaneseName": "オカボヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 50,
+      "japaneseName": "ヒメドウガネトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 51,
+      "japaneseName": "キイチゴヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 52,
+      "japaneseName": "ムギヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 53,
+      "japaneseName": "ヤマヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 54,
+      "japaneseName": "ヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 55,
+      "japaneseName": "ワタラセヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Chaetocnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Chaetocnema)"
+    },
+    {
+      "row": 56,
+      "japaneseName": "フタイロヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 57,
+      "japaneseName": "テンサイトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 58,
+      "japaneseName": "サツマイモヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 59,
+      "japaneseName": "クサイチゴトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 60,
+      "japaneseName": "カンミヤヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 61,
+      "japaneseName": "ニセテンサイトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 62,
+      "japaneseName": "アオバドウガネトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 63,
+      "japaneseName": "オオヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 64,
+      "japaneseName": "キイチゴトビハムシ",
+      "scientificName": "Chaetocnema (Tlanoma)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Tlanoma)"
+    },
+    {
+      "row": 65,
+      "japaneseName": "タイワンヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Udorpes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Udorpes)"
+    },
+    {
+      "row": 66,
+      "japaneseName": "ウミベヒサゴトビハムシ",
+      "scientificName": "Chaetocnema (Udorpes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Chaetocnema",
+      "species": "(Udorpes)"
+    },
+    {
+      "row": 73,
+      "japaneseName": "ヤハズトビハムシ",
+      "scientificName": "Dibolia (Dibolia)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Dibolia",
+      "species": "(Dibolia)"
+    },
+    {
+      "row": 93,
+      "japaneseName": "ヒメトビハムシ",
+      "scientificName": "Hermaeophaga (Orthocrepis)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Hermaeophaga",
+      "species": "(Orthocrepis)"
+    },
+    {
+      "row": 115,
+      "japaneseName": "ヒルガオトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 116,
+      "japaneseName": "クロボシトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 117,
+      "japaneseName": "ミスジアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 118,
+      "japaneseName": "ムラサキアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 119,
+      "japaneseName": "アカアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 120,
+      "japaneseName": "セアカアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 121,
+      "japaneseName": "タイワンアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 122,
+      "japaneseName": "イヌノフグリトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 123,
+      "japaneseName": "イシガキアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 124,
+      "japaneseName": "コミヤアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 125,
+      "japaneseName": "オオバコアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 126,
+      "japaneseName": "クガイソウアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 127,
+      "japaneseName": "コクロアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 128,
+      "japaneseName": "ハッカアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 129,
+      "japaneseName": "ヒヨドリバナアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 130,
+      "japaneseName": "オオアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 131,
+      "japaneseName": "チュウジョウアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 132,
+      "japaneseName": "ヒナノウスツボアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 133,
+      "japaneseName": "トウヨウアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 134,
+      "japaneseName": "マルアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 135,
+      "japaneseName": "カクムネアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 136,
+      "japaneseName": "タツナミソウアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 137,
+      "japaneseName": "オオバコトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 138,
+      "japaneseName": "ヨモギトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 139,
+      "japaneseName": "ハンゴンソウアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 140,
+      "japaneseName": "スズキアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 141,
+      "japaneseName": "トカラアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 142,
+      "japaneseName": "カクバネアシナガトビハムシ",
+      "scientificName": "Longitarsus (Longitarsus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Longitarsus",
+      "species": "(Longitarsus)"
+    },
+    {
+      "row": 159,
+      "japaneseName": "スイバトビハムシ",
+      "scientificName": "Mantura (Mantura)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Mantura",
+      "species": "(Mantura)"
+    },
+    {
+      "row": 160,
+      "japaneseName": "カタバミトビハムシ",
+      "scientificName": "Mantura (Mantura)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Mantura",
+      "species": "(Mantura)"
+    },
+    {
+      "row": 161,
+      "japaneseName": "ニホンハモグリトビハムシ",
+      "scientificName": "Mantura (Mantura)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Mantura",
+      "species": "(Mantura)"
+    },
+    {
+      "row": 162,
+      "japaneseName": "セマルトビハムシ",
+      "scientificName": "Mantura (Mantura)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Mantura",
+      "species": "(Mantura)"
+    },
+    {
+      "row": 200,
+      "japaneseName": "アサトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 201,
+      "japaneseName": "ベーリーナガスネトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 202,
+      "japaneseName": "ルリナガスネトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 203,
+      "japaneseName": "チュウジョウナガスネトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 204,
+      "japaneseName": "ナトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 205,
+      "japaneseName": "ヒロアシナガスネトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 206,
+      "japaneseName": "ダイコンナガスネトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 207,
+      "japaneseName": "ナスナガスネトビハムシ",
+      "scientificName": "Psylliodes (Psylliodes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Psylliodes)"
+    },
+    {
+      "row": 208,
+      "japaneseName": "キイロナガスネトビハムシ",
+      "scientificName": "Psylliodes (Semicnema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Psylliodes",
+      "species": "(Semicnema)"
+    },
+    {
+      "row": 255,
+      "japaneseName": "アザミオオハムシ",
+      "scientificName": "Galeruca (Galeruca)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galeruca",
+      "species": "(Galeruca)"
+    },
+    {
+      "row": 256,
+      "japaneseName": "ネギオオアラメハムシ",
+      "scientificName": "Galeruca (Galeruca)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galeruca",
+      "species": "(Galeruca)"
+    },
+    {
+      "row": 257,
+      "japaneseName": "スジグロオオハムシ",
+      "scientificName": "Galeruca (Galeruca)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galeruca",
+      "species": "(Galeruca)"
+    },
+    {
+      "row": 258,
+      "japaneseName": "スミイロオオアラメハムシ",
+      "scientificName": "Galeruca (Galeruca)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galeruca",
+      "species": "(Galeruca)"
+    },
+    {
+      "row": 259,
+      "japaneseName": "チュウジョウヒゲナガハムシ",
+      "scientificName": "Galerucella (Galerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Galerucella)"
+    },
+    {
+      "row": 260,
+      "japaneseName": "イチゴハムシ",
+      "scientificName": "Galerucella (Galerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Galerucella)"
+    },
+    {
+      "row": 261,
+      "japaneseName": "ジュンサイハムシ",
+      "scientificName": "Galerucella (Galerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Galerucella)"
+    },
+    {
+      "row": 262,
+      "japaneseName": "オオクラヒゲナガハムシ",
+      "scientificName": "Galerucella (Galerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Galerucella)"
+    },
+    {
+      "row": 263,
+      "japaneseName": "オゼタデハムシ",
+      "scientificName": "Galerucella (Galerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Galerucella)"
+    },
+    {
+      "row": 264,
+      "japaneseName": "ミソハギハムシ",
+      "scientificName": "Galerucella (Neogalerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Neogalerucella)"
+    },
+    {
+      "row": 265,
+      "japaneseName": "ハシバミハムシ",
+      "scientificName": "Galerucella (Neogalerucella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Galerucella",
+      "species": "(Neogalerucella)"
+    },
+    {
+      "row": 342,
+      "japaneseName": "アトボシハムシ",
+      "scientificName": "Paridea (Paridea)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Paridea",
+      "species": "(Paridea)"
+    },
+    {
+      "row": 343,
+      "japaneseName": "ヨツボシハムシ",
+      "scientificName": "Paridea (Paridea)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Paridea",
+      "species": "(Paridea)"
+    },
+    {
+      "row": 420,
+      "japaneseName": "ヒメアカクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 421,
+      "japaneseName": "トゲアシクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 422,
+      "japaneseName": "ササキクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 423,
+      "japaneseName": "トホシクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 424,
+      "japaneseName": "キオビクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 425,
+      "japaneseName": "スゲクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 426,
+      "japaneseName": "アカクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 427,
+      "japaneseName": "クズクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 428,
+      "japaneseName": "ネッタイアカクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 429,
+      "japaneseName": "セアカクビボソハムシ",
+      "scientificName": "Lema (Lema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Lema)"
+    },
+    {
+      "row": 430,
+      "japaneseName": "キベリクビボソハムシ",
+      "scientificName": "Lema (Petauristes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Petauristes)"
+    },
+    {
+      "row": 431,
+      "japaneseName": "ヤマイモハムシ",
+      "scientificName": "Lema (Petauristes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Petauristes)"
+    },
+    {
+      "row": 432,
+      "japaneseName": "オオクビボソハムシ",
+      "scientificName": "Lema (Petauristes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Petauristes)"
+    },
+    {
+      "row": 433,
+      "japaneseName": "ナスクビボソハムシ",
+      "scientificName": "Lema (Petauristes)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Lema",
+      "species": "(Petauristes)"
+    },
+    {
+      "row": 434,
+      "japaneseName": "セスジクビボソハムシ",
+      "scientificName": "Oulema (Oulema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oulema",
+      "species": "(Oulema)"
+    },
+    {
+      "row": 435,
+      "japaneseName": "アワクビボソハムシ",
+      "scientificName": "Oulema (Oulema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oulema",
+      "species": "(Oulema)"
+    },
+    {
+      "row": 436,
+      "japaneseName": "ムギクビボソハムシ",
+      "scientificName": "Oulema (Oulema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oulema",
+      "species": "(Oulema)"
+    },
+    {
+      "row": 437,
+      "japaneseName": "クビアカクビボソハムシ",
+      "scientificName": "Oulema (Oulema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oulema",
+      "species": "(Oulema)"
+    },
+    {
+      "row": 438,
+      "japaneseName": "イネクビボソハムシ",
+      "scientificName": "Oulema (Oulema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oulema",
+      "species": "(Oulema)"
+    },
+    {
+      "row": 439,
+      "japaneseName": "キアシクビボソハムシ",
+      "scientificName": "Oulema (Oulema)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oulema",
+      "species": "(Oulema)"
+    },
+    {
+      "row": 440,
+      "japaneseName": "ジンガサハムシ",
+      "scientificName": "Aspidimorpha (Aspidimorpha)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Aspidimorpha",
+      "species": "(Aspidimorpha)"
+    },
+    {
+      "row": 441,
+      "japaneseName": "ゴマダラジンガサハムシ",
+      "scientificName": "Aspidimorpha (Aspidimorpha)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Aspidimorpha",
+      "species": "(Aspidimorpha)"
+    },
+    {
+      "row": 442,
+      "japaneseName": "スキバジンガサハムシ",
+      "scientificName": "Aspidimorpha (Aspidimorpha)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Aspidimorpha",
+      "species": "(Aspidimorpha)"
+    },
+    {
+      "row": 443,
+      "japaneseName": "ヨツモンカメノコハムシ",
+      "scientificName": "Laccoptera (Laccopteroidea)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Laccoptera",
+      "species": "(Laccopteroidea)"
+    },
+    {
+      "row": 471,
+      "japaneseName": "タケトゲハムシ",
+      "scientificName": "Dactylispa (Platypriella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Dactylispa",
+      "species": "(Platypriella)"
+    },
+    {
+      "row": 472,
+      "japaneseName": "カタビロトゲハムシ",
+      "scientificName": "Dactylispa (Platypriella)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Dactylispa",
+      "species": "(Platypriella)"
+    },
+    {
+      "row": 473,
+      "japaneseName": "ヒメキベリトゲハムシ",
+      "scientificName": "Dactylispa (Triplispa)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Dactylispa",
+      "species": "(Triplispa)"
+    },
+    {
+      "row": 474,
+      "japaneseName": "ヒゴトゲハムシ",
+      "scientificName": "Dactylispa (Triplispa)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Dactylispa",
+      "species": "(Triplispa)"
+    },
+    {
+      "row": 477,
+      "japaneseName": "ヘリビロトゲハムシ",
+      "scientificName": "Platypria (Platypria)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Platypria",
+      "species": "(Platypria)"
+    },
+    {
+      "row": 478,
+      "japaneseName": "ツシマヘリビロトゲハムシ",
+      "scientificName": "Platypria (Platypria)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Platypria",
+      "species": "(Platypria)"
+    },
+    {
+      "row": 563,
+      "japaneseName": "ヒメツヤハムシ",
+      "scientificName": "Oomorphus (Oomorphus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Oomorphus",
+      "species": "(Oomorphus)"
+    },
+    {
+      "row": 565,
+      "japaneseName": "ヨツボシナガツツハムシ",
+      "scientificName": "Clytra (Clytra)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Clytra",
+      "species": "(Clytra)"
+    },
+    {
+      "row": 574,
+      "japaneseName": "アイヌツツハムシ",
+      "scientificName": "Cryptocephalus (Asionus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Asionus)"
+    },
+    {
+      "row": 575,
+      "japaneseName": "セメノフツツハムシ",
+      "scientificName": "Cryptocephalus (Asionus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Asionus)"
+    },
+    {
+      "row": 576,
+      "japaneseName": "フタスジツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 577,
+      "japaneseName": "チビルリツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 578,
+      "japaneseName": "エジマツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 579,
+      "japaneseName": "キアシチビツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 580,
+      "japaneseName": "ウスグロスジツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 581,
+      "japaneseName": "アカムネチビツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 582,
+      "japaneseName": "キモトツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 583,
+      "japaneseName": "タテスジキツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 584,
+      "japaneseName": "ハコネチビツツハムシ",
+      "scientificName": "Cryptocephalus (Burlinius)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Burlinius)"
+    },
+    {
+      "row": 585,
+      "japaneseName": "ルリツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 586,
+      "japaneseName": "キアシルリツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 587,
+      "japaneseName": "コヤツボシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 588,
+      "japaneseName": "ニセセスジツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 589,
+      "japaneseName": "カラフトツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 590,
+      "japaneseName": "キスジツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 591,
+      "japaneseName": "リュウキュウツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 592,
+      "japaneseName": "リュウキュウツツハムシ　宮古島亜種",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 593,
+      "japaneseName": "クロボシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 594,
+      "japaneseName": "ツヤルリツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 595,
+      "japaneseName": "ヨツモンクロツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 596,
+      "japaneseName": "ムツキボシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 597,
+      "japaneseName": "セスジツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 598,
+      "japaneseName": "ヤツボシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 599,
+      "japaneseName": "キボシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 600,
+      "japaneseName": "キボシツツハムシ　琉球亜種",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 601,
+      "japaneseName": "キボシツツハムシ　宮古島亜種",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 602,
+      "japaneseName": "キボシツツハムシ　与那国島亜種",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 603,
+      "japaneseName": "カシワツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 604,
+      "japaneseName": "ムツボシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 605,
+      "japaneseName": "ジュウシホシツツハムシ",
+      "scientificName": "Cryptocephalus (Cryptocephalus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Cryptocephalus)"
+    },
+    {
+      "row": 606,
+      "japaneseName": "ツマキクロツツハムシ",
+      "scientificName": "Cryptocephalus (Disopus)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Cryptocephalus",
+      "species": "(Disopus)"
+    },
+    {
+      "row": 626,
+      "japaneseName": "ハギツツハムシ",
+      "scientificName": "Pachybrachis (Pachybrachis)",
+      "issue": "不完全な学名（亜属名のみ）",
+      "genus": "Pachybrachis",
+      "species": "(Pachybrachis)"
+    }
+  ],
+  "plantNameIssues": [
+    {
+      "row": 2,
+      "japaneseName": "カミナリハムシ",
+      "plantName": "オオマツヨイグサなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 12,
+      "japaneseName": "スジカミナリハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 13,
+      "japaneseName": "スジカミナリハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 15,
+      "japaneseName": "アカバナカミナリハムシ",
+      "plantName": "アカバナなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 25,
+      "japaneseName": "アヤメツブノミハムシ",
+      "plantName": "アヤメ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 27,
+      "japaneseName": "ツブノミハムシ",
+      "plantName": "イヌシデなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 30,
+      "japaneseName": "ホソルリトビハムシ",
+      "plantName": "アケビ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 33,
+      "japaneseName": "ヘリグロテントウノミハムシ",
+      "plantName": "キンモクセイなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 41,
+      "japaneseName": "アカイロマルノミハムシ",
+      "plantName": "アザミ類など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 70,
+      "japaneseName": "ミドリトビハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 71,
+      "japaneseName": "スズキミドリトビハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 75,
+      "japaneseName": "タバコノミハムシ",
+      "plantName": "トマトなどナス科植物",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 90,
+      "japaneseName": "ヒゲナガルリマルノミハムシ",
+      "plantName": "テンニンソウなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 114,
+      "japaneseName": "ナガトビハムシ",
+      "plantName": "ギボウシ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 116,
+      "japaneseName": "クロボシトビハムシ",
+      "plantName": "ネズミモチ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 122,
+      "japaneseName": "イヌノフグリトビハムシ",
+      "plantName": "イヌノフグリ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 138,
+      "japaneseName": "ヨモギトビハムシ",
+      "plantName": "ヤマヨモギなどヨモギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 146,
+      "japaneseName": "クワノミハムシ",
+      "plantName": "マメ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 146,
+      "japaneseName": "クワノミハムシ",
+      "plantName": "柑橘類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 146,
+      "japaneseName": "クワノミハムシ",
+      "plantName": "サクラ類など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 159,
+      "japaneseName": "スイバトビハムシ",
+      "plantName": "ギシギシなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 169,
+      "japaneseName": "オオキイロノミハムシ",
+      "plantName": "オオバコ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 177,
+      "japaneseName": "ルリマルノミハムシ",
+      "plantName": "タンポポなどの花（成虫）",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 177,
+      "japaneseName": "ルリマルノミハムシ",
+      "plantName": "スギゴケ類（幼虫）",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 178,
+      "japaneseName": "コマルノミハムシ",
+      "plantName": "イタドリなどの花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 190,
+      "japaneseName": "キスジノミハムシ",
+      "plantName": "カブなどアブラナ科植物",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 204,
+      "japaneseName": "ナトビハムシ",
+      "plantName": "ダイコンなどアブラナ科の野菜類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 209,
+      "japaneseName": "カタクリハムシ",
+      "plantName": "ホトトギス類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 211,
+      "japaneseName": "ツマキタマノミハムシ",
+      "plantName": "ススキ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 239,
+      "japaneseName": "ガマズミトビハムシ",
+      "plantName": "ヤブウツギなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 260,
+      "japaneseName": "イチゴハムシ",
+      "plantName": "オランダイチゴなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 271,
+      "japaneseName": "ブチヒゲケブカハムシ",
+      "plantName": "ガマズミ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 273,
+      "japaneseName": "イタヤハムシ",
+      "plantName": "カエデ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 273,
+      "japaneseName": "イタヤハムシ",
+      "plantName": "ハコヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 276,
+      "japaneseName": "サンゴジュハムシ",
+      "plantName": "ガマズミ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 276,
+      "japaneseName": "サンゴジュハムシ",
+      "plantName": "ゴマギなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 277,
+      "japaneseName": "アカタデハムシ",
+      "plantName": "トサミズキなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 282,
+      "japaneseName": "ニレハムシ",
+      "plantName": "ニレ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 286,
+      "japaneseName": "ハンノキハムシ",
+      "plantName": "ヤシャブシ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 287,
+      "japaneseName": "ムナグロツヤハムシ",
+      "plantName": "イタヤカエデなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 289,
+      "japaneseName": "イタドリハムシ",
+      "plantName": "スイバなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 296,
+      "japaneseName": "イチモンジハムシ",
+      "plantName": "イタビ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 299,
+      "japaneseName": "ウリハムシモドキ",
+      "plantName": "マメ科植物など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 301,
+      "japaneseName": "ウリハムシ",
+      "plantName": "ウリ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 304,
+      "japaneseName": "クロウリハムシ",
+      "plantName": "ウリ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 305,
+      "japaneseName": "クロウリハムシ　奄美沖縄亜種",
+      "plantName": "ウリ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 306,
+      "japaneseName": "クロウリハムシ　伊豆諸島亜種",
+      "plantName": "ウリ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 308,
+      "japaneseName": "クロバヒゲナガハムシ",
+      "plantName": "ハンノキ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 311,
+      "japaneseName": "キアシヒゲナガアオハムシ",
+      "plantName": "クマヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 319,
+      "japaneseName": "クワハムシ",
+      "plantName": "ヤマノイモ類など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 331,
+      "japaneseName": "ホタルハムシ",
+      "plantName": "タデ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 331,
+      "japaneseName": "ホタルハムシ",
+      "plantName": "マメ科牧草など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 338,
+      "japaneseName": "キイロクワハムシ",
+      "plantName": "柑橘類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 338,
+      "japaneseName": "キイロクワハムシ",
+      "plantName": "ポンカン類など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 339,
+      "japaneseName": "モンキアシナガハムシ",
+      "plantName": "ウリ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 342,
+      "japaneseName": "アトボシハムシ",
+      "plantName": "カラスウリなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 343,
+      "japaneseName": "ヨツボシハムシ",
+      "plantName": "ヨメナなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 347,
+      "japaneseName": "ハラグロヒメハムシ",
+      "plantName": "ウツギなどを訪花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 348,
+      "japaneseName": "キバラヒメハムシ",
+      "plantName": "ノリウツギなどを訪花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 352,
+      "japaneseName": "キベリハムシ",
+      "plantName": "ビナンカズラなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 353,
+      "japaneseName": "カバノキハムシ",
+      "plantName": "ブナなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 355,
+      "japaneseName": "フェモラータモモブトハムシ",
+      "plantName": "柑橘類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 355,
+      "japaneseName": "フェモラータモモブトハムシ",
+      "plantName": "コーヒーなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 356,
+      "japaneseName": "イクビマメゾウムシ",
+      "plantName": "コクララの実",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 356,
+      "japaneseName": "イクビマメゾウムシ",
+      "plantName": "ミズキなどの花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 358,
+      "japaneseName": "ブラジルマメゾウムシ",
+      "plantName": "アズキなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 364,
+      "japaneseName": "サムライマメゾウムシ",
+      "plantName": "ヤマハギの実",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 364,
+      "japaneseName": "サムライマメゾウムシ",
+      "plantName": "ニセアカシアなどの花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 371,
+      "japaneseName": "ヨツモンマメゾウムシ",
+      "plantName": "アズキ類などマメ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 373,
+      "japaneseName": "サイカチマメゾウムシ",
+      "plantName": "サイカチの実",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 374,
+      "japaneseName": "エンジュマメゾウムシ",
+      "plantName": "マユミなどの花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 377,
+      "japaneseName": "ミヤコグサマメゾウムシ",
+      "plantName": "ハマエンドウの実",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 398,
+      "japaneseName": "",
+      "plantName": "水草類の水中葉",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 399,
+      "japaneseName": "",
+      "plantName": "水草類の水中葉",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 400,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 400,
+      "japaneseName": "",
+      "plantName": "カヤツリグサ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 401,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 401,
+      "japaneseName": "",
+      "plantName": "カヤツリグサ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 402,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 402,
+      "japaneseName": "",
+      "plantName": "カヤツリグサ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 403,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 403,
+      "japaneseName": "",
+      "plantName": "カヤツリグサ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 404,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 404,
+      "japaneseName": "",
+      "plantName": "ハリイ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 404,
+      "japaneseName": "",
+      "plantName": "各種の花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 405,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 405,
+      "japaneseName": "",
+      "plantName": "カヤツリグサ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 406,
+      "japaneseName": "",
+      "plantName": "スゲ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 406,
+      "japaneseName": "",
+      "plantName": "カヤツリグサ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 414,
+      "japaneseName": "",
+      "plantName": "オニドコロなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 438,
+      "japaneseName": "イネクビボソハムシ",
+      "plantName": "マコモなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 440,
+      "japaneseName": "ジンガサハムシ",
+      "plantName": "ヒルガオ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 442,
+      "japaneseName": "スキバジンガサハムシ",
+      "plantName": "ヒルガオ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 444,
+      "japaneseName": "タテスジヒメジンガサハムシ",
+      "plantName": "ハマヒルガオなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 446,
+      "japaneseName": "セモンジンガサハムシ",
+      "plantName": "ナシなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 456,
+      "japaneseName": "ミカンカメノコハムシ",
+      "plantName": "柑橘類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 456,
+      "japaneseName": "ミカンカメノコハムシ",
+      "plantName": "ケイトウなどヒユ科植物",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 457,
+      "japaneseName": "ヒメカメノコハムシ",
+      "plantName": "イヌビユなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 458,
+      "japaneseName": "アオカメノコハムシ",
+      "plantName": "アザミ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 459,
+      "japaneseName": "アオカメノコハムシ　対馬亜種",
+      "plantName": "アザミ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 468,
+      "japaneseName": "ナガヒラタハムシ",
+      "plantName": "ココヤシなどヤシ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 472,
+      "japaneseName": "カタビロトゲハムシ",
+      "plantName": "アラカシなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 473,
+      "japaneseName": "ヒメキベリトゲハムシ",
+      "plantName": "ヤマハッカなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 485,
+      "japaneseName": "アカガネサルハムシ",
+      "plantName": "ブドウなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 486,
+      "japaneseName": "アカガネサルハムシ　沖永良部島亜種",
+      "plantName": "ブドウなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 487,
+      "japaneseName": "アカガネサルハムシ　沖縄亜種",
+      "plantName": "ブドウなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 488,
+      "japaneseName": "アカガネサルハムシ　奄美亜種",
+      "plantName": "ブドウなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 489,
+      "japaneseName": "アカガネサルハムシ　吐噶喇亜種",
+      "plantName": "ブドウなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 490,
+      "japaneseName": "ブドウサルハムシ",
+      "plantName": "ノブドウ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 495,
+      "japaneseName": "クロオビカサハラハムシ",
+      "plantName": "カシワ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 496,
+      "japaneseName": "マダラアラゲサルハムシ",
+      "plantName": "カシ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 496,
+      "japaneseName": "マダラアラゲサルハムシ",
+      "plantName": "ナラ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 499,
+      "japaneseName": "カサハラハムシ",
+      "plantName": "ナラ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 508,
+      "japaneseName": "ニホンケブカサルハムシ",
+      "plantName": "ツバキ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 540,
+      "japaneseName": "ルリサルハムシ",
+      "plantName": "ウツギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 541,
+      "japaneseName": "ウスイロサルハムシ",
+      "plantName": "マツ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 541,
+      "japaneseName": "ウスイロサルハムシ",
+      "plantName": "スギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 541,
+      "japaneseName": "ウスイロサルハムシ",
+      "plantName": "クリなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 542,
+      "japaneseName": "ムネアカサルハムシ",
+      "plantName": "クリの花",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 551,
+      "japaneseName": "ムネアカキバネサルハムシ",
+      "plantName": "ハギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 565,
+      "japaneseName": "ヨツボシナガツツハムシ",
+      "plantName": "ハギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 565,
+      "japaneseName": "ヨツボシナガツツハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 565,
+      "japaneseName": "ヨツボシナガツツハムシ",
+      "plantName": "ヤマアリ類の巣材の一部（幼虫）",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 568,
+      "japaneseName": "キボシルリハムシ",
+      "plantName": "ハギなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 571,
+      "japaneseName": "キイロナガツツハムシ",
+      "plantName": "コナラなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 573,
+      "japaneseName": "ムナキルリハムシ",
+      "plantName": "カンバ類など",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 587,
+      "japaneseName": "コヤツボシツツハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 587,
+      "japaneseName": "コヤツボシツツハムシ",
+      "plantName": "ハギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 593,
+      "japaneseName": "クロボシツツハムシ",
+      "plantName": "ノイバラなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 597,
+      "japaneseName": "セスジツツハムシ",
+      "plantName": "カンバ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 597,
+      "japaneseName": "セスジツツハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 597,
+      "japaneseName": "セスジツツハムシ",
+      "plantName": "シデ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 597,
+      "japaneseName": "セスジツツハムシ",
+      "plantName": "ミズナラなど",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 599,
+      "japaneseName": "キボシツツハムシ",
+      "plantName": "シイ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 622,
+      "japaneseName": "ツツジコブハムシ",
+      "plantName": "ツツジ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 624,
+      "japaneseName": "ムシクソハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 624,
+      "japaneseName": "ムシクソハムシ",
+      "plantName": "ウツギ類",
+      "issue": "不正確な植物名記述"
+    },
+    {
+      "row": 626,
+      "japaneseName": "ハギツツハムシ",
+      "plantName": "ヤナギ類",
+      "issue": "不正確な植物名記述"
+    }
+  ],
+  "incompleteData": [],
+  "duplicateEntries": [
+    {
+      "name": "スジカミナリハムシ",
+      "count": 2
+    },
+    {
+      "name": "ムツボシニセマルトビハムシ",
+      "count": 2
+    },
+    {
+      "name": "キベリヒラタノミハムシ",
+      "count": 2
+    },
+    {
+      "name": "キイロミゾアシノミハムシ",
+      "count": 2
+    },
+    {
+      "name": "アラメクビボソトビハムシ",
+      "count": 2
+    },
+    {
+      "name": "チビカミナリハムシ",
+      "count": 2
+    },
+    {
+      "name": "クロウリハムシ",
+      "count": 3
+    },
+    {
+      "name": "ムナキホソヒゲナガハムシ",
+      "count": 2
+    },
+    {
+      "name": "アオカメノコハムシ",
+      "count": 2
+    },
+    {
+      "name": "アカガネサルハムシ",
+      "count": 5
+    },
+    {
+      "name": "オキナワトビサルハムシ",
+      "count": 2
+    },
+    {
+      "name": "オオミドリサルハムシ",
+      "count": 2
+    },
+    {
+      "name": "リュウキュウツツハムシ",
+      "count": 2
+    },
+    {
+      "name": "キボシツツハムシ",
+      "count": 4
+    }
+  ],
+  "spSpecies": []
+}
