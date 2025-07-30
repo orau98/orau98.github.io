@@ -1591,10 +1591,6 @@ function App() {
               const originalMothName = row['和名']?.trim();
               if (!originalMothName) return;
               
-              // Temporary debug: Check if we encounter アオバシャチホコ
-              if (originalMothName.includes('アオバシャチホコ')) {
-                console.log('=== Found アオバシャチホコ in originalMothName ===', originalMothName);
-              }
               
               // Debug logging for スミレモンキリガ
               if (originalMothName.includes('スミレモンキリガ')) {
@@ -1621,12 +1617,6 @@ function App() {
 
               const mothName = correctMothName(originalMothName);
               
-              // Debug for アオバシャチホコ CSV読み込み
-              if (mothName === 'アオバシャチホコ') {
-                console.log('=== アオバシャチホコ CSV読み込み ===');
-                console.log('行番号:', index);
-                console.log('元の食草データ:', row['食草']);
-                console.log('科情報:', row['科']);
                 console.log('大図鑑カタログNo:', row['大図鑑カタログNo']);
               }
               
@@ -2639,10 +2629,6 @@ function App() {
                     const originalPlant = plant;
                     plant = plant.trim();
                     
-                    // Temporary debug for アオバシャチホコ only
-                    if (mothName === 'アオバシャチホコ') {
-                      console.log(`DEBUG アオバシャチホコ: Processing plant: "${originalPlant}" -> "${plant}"`);
-                    }
                     // Remove trailing patterns like "などの農作物", "などの野菜", "につく"
                     plant = plant.replace(/など.*$/g, '').trim();
                     plant = plant.replace(/ほか.*$/g, '').trim();
@@ -2673,10 +2659,6 @@ function App() {
                     // Must have at least one Japanese or alphabetic character
                     if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(plant)) return;
                     
-                    // Temporary debug for アオバシャチホコ - after all processing
-                    if (mothName === 'アオバシャチホコ') {
-                      console.log(`DEBUG アオバシャチホコ: After processing: "${plant}" -> valid: ${plant.length > 1 && isValidPlantName(plant)}`);
-                    }
                     
                     if (plant.length > 1 && isValidPlantName(plant)) {
                       const normalizedPlant = normalizePlantName(plant);
