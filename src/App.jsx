@@ -55,7 +55,7 @@ function App() {
       let hostPlantData = {};
       let plantDetailData = {};
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
-      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_cleaned_comprehensive.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
+      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_master.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
@@ -1503,7 +1503,7 @@ function App() {
           },
           complete: (results) => {
             if (results.errors.length) {
-              console.error("PapaParse errors in ListMJ_hostplants_cleaned_comprehensive.csv:", results.errors);
+              console.error("PapaParse errors in ListMJ_hostplants_master.csv:", results.errors);
             }
             
             // Pre-scan for センモンヤガ and カバシタムクゲエダシャク
@@ -1661,12 +1661,6 @@ function App() {
               let rawRemarks = row['備考'] || '';
               const hostPlantNotes = []; // Initialize hostPlantNotes array here
               
-              // Debug logging for アオバシャチホコ processing
-              if (mothName === 'アオバシャチホコ') {
-                console.log('=== アオバシャチホコ PROCESSING DEBUG ===');
-                console.log('rawHostPlant from CSV:', rawHostPlant);
-                console.log('rawRemarks from CSV:', rawRemarks);
-              }
               
               // Debug logging for カバシタムクゲエダシャク processing
               if (mothName === 'カバシタムクゲエダシャク') {
@@ -2598,31 +2592,14 @@ function App() {
                   
                   // Pre-process to handle "(以上〇〇科)" pattern - extract it as a separate note
                   let familyNote = '';
-                  if (mothName === 'アオバシャチホコ') {
-                    console.log(`DEBUG: アオバシャチホコ - Before (以上〇〇科) processing: "${tempHostPlant}"`);
-                  }
                   tempHostPlant = tempHostPlant.replace(/([^;；、，,]+)\s*[\(（]\s*以上([^）\)]*科)\s*[\)）]/g, (match, plant, family) => {
                     familyNote = `以上${family}`;
-                    if (mothName === 'アオバシャチホコ') {
-                      console.log(`DEBUG: アオバシャチホコ - Match found: "${match}"`);
-                      console.log(`DEBUG: アオバシャチホコ - Extracted plant: "${plant}"`);
-                      console.log(`DEBUG: アオバシャチホコ - Extracted family: "${family}"`);
-                      console.log(`DEBUG: アオバシャチホコ - Family note: "${familyNote}"`);
-                      console.log(`DEBUG: アオバシャチホコ - Returning plant name: "${plant.trim()}"`);
-                    }
                     // Return just the plant name, family note will be handled separately
                     return plant.trim();
                   });
-                  if (mothName === 'アオバシャチホコ') {
-                    console.log(`DEBUG: アオバシャチホコ - After (以上〇〇科) processing: "${tempHostPlant}"`);
-                  }
                   
                   // Split by various delimiters including "や" for complex entries
                   let plants = tempHostPlant.split(/[;；、，,]/);
-                  
-                  if (mothName === 'アオバシャチホコ') {
-                    console.log(`DEBUG: アオバシャチホコ - Split plants:`, plants);
-                  }
                   
                   // Further split entries that contain "や" (e.g., "マメ類 (マメ科)やテンサイ(アカザ科)などの農作物")
                   const expandedPlants = [];
@@ -2714,22 +2691,10 @@ function App() {
                       
                       // Add the plant name if it's valid
                       if (correctedPlantName && correctedPlantName.trim()) {
-                        if (mothName === 'センモンヤガ' || mothName === 'アオバシャチホコ') {
-                          console.log(`DEBUG: ${mothName} - Adding plant to list:`, correctedPlantName);
-                        }
                         // Check if this plant has part information
                         const plantParts = allPlantParts.get(plant) || allPlantParts.get(normalizedPlant) || allPlantParts.get(correctedPlantName);
                         const plantWithParts = plantParts && plantParts.length > 0 ? 
                           `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
-                        
-                        if (mothName === 'アオバシャチホコ') {
-                          console.log(`DEBUG: アオバシャチホコ - Adding plant entry:`, {
-                            correctedPlantName,
-                            plantWithParts,
-                            familyFromMainCsv,
-                            plantParts: plantParts ? Array.from(plantParts) : null
-                          });
-                        }
                         
                         addPlantEntry(hostPlantEntries, plantWithParts, '', familyFromMainCsv);
                       }
@@ -2783,14 +2748,6 @@ function App() {
               });
               
               const hostPlantList = [...plantMap.values()].map(e => e.plant);
-              
-              // Debug logging for アオバシャチホコ hostPlantList creation
-              if (mothName === 'アオバシャチホコ') {
-                console.log('=== アオバシャチホコ hostPlantList DEBUG ===');
-                console.log('hostPlantEntries before deduplication:', hostPlantEntries);
-                console.log('plantMap after deduplication:', Array.from(plantMap.entries()));
-                console.log('Final hostPlantList:', hostPlantList);
-              }
               
               // Debug logging for カバシタムクゲエダシャク hostPlantList creation
               if (mothName === 'カバシタムクゲエダシャク') {
