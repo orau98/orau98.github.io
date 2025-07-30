@@ -3490,6 +3490,19 @@ function App() {
           const source = row['出典'];
           let scientificName = row['学名']?.trim();
           
+          // Debug log for Donacia species
+          if (japaneseName === 'ガガブタネクイハムシ' || japaneseName === 'イネネクイハムシ') {
+            console.log(`DEBUG: ${japaneseName} CSV data:`, {
+              japaneseName,
+              genus,
+              species,
+              author,
+              year,
+              scientificName,
+              fullRow: row
+            });
+          }
+          
           if (!japaneseName || !genus) {
             console.log("Skipping leafbeetle row:", { japaneseName, genus, species, rowIndex: index });
             return;
@@ -3511,8 +3524,8 @@ function App() {
             scientificName = scientificName.replace(/\(\s*([^,)]+)\s*(\d{4})\s*\)/g, '($1, $2)'); // Ensure comma between author and year
           }
           
-          // Use unified scientific name processing
-          scientificName = processScientificName(scientificName, genus, species, author, year, 'leafbeetle');
+          // ハムシデータでは既に完全な学名があるため、processScientificNameは使用しない
+          // CSVの学名フィールドが既に正しい形式（例：Donacia (Cyphogaster) lenzi Schönfeldt, 1888）のため
           
           // Validate scientific name quality
           const validationResult = validateScientificName(scientificName, japaneseName, 'leafbeetle');
