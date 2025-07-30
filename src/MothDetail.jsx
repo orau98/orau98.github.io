@@ -795,35 +795,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     return <EmergenceTimeDisplay emergenceTime="不明" source={moth.emergenceTimeSource} />;
                   })()}
                   
-                  {(() => {
-                    // 成虫発生時期がある場合の条件判定
-                    const hasExistingTime = moth.emergenceTime && moth.emergenceTime !== '不明';
-                    const { emergenceTime } = extractEmergenceTime(moth.notes || '');
-                    const normalizedTime = normalizeEmergenceTime(emergenceTime);
-                    const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
-                    
-                    return (hasExistingTime || hasExtractedTime);
-                  })() && (
-                    <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700/50">
-                      <div className="flex items-start space-x-2">
-                        <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-sm text-amber-700 dark:text-amber-300">
-                          <span className="font-medium">出典:</span> {moth.emergenceTimeSource || (moth.type === 'leafbeetle' ? 'ハムシハンドブック' : moth.type === 'beetle' ? (
-                            <a 
-                              href="https://amzn.to/4m2vPWp" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="underline hover:text-amber-600 dark:hover:text-amber-200 transition-colors"
-                            >
-                              日本産タマムシ大図鑑
-                            </a>
-                          ) : '日本のキリガ')}
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             )}
