@@ -2885,8 +2885,7 @@ function App() {
                     hostPlants: hostPlantList,
                     hostPlantDetails: hostPlantEntries,
                     hostPlantNotes: hostPlantNotes,
-                    rawHostPlant: rawHostPlant,
-                    tempHostPlant: tempHostPlant
+                    rawHostPlant: rawHostPlant
                   });
                 }
                 
