@@ -802,8 +802,9 @@ function App() {
           normalized = normalized.replace(/（[^）]*科[^）]*）/g, ''); // Remove (科名) patterns
           normalized = normalized.replace(/\([^)]*科[^)]*\)/g, ''); // Remove (family) patterns
           
-          // Remove "以上〇〇科" patterns like "以上バラ科" -> ""
-          normalized = normalized.replace(/以上[^科]*科/g, '');
+          // Remove "以上〇〇科" patterns more carefully to preserve plant names
+          normalized = normalized.replace(/\(以上[^)]*科\)/g, ''); // Remove "(以上〇〇科)"
+          normalized = normalized.replace(/（以上[^）]*科）/g, ''); // Remove "（以上〇〇科）"
           
           // Remove "ほか" and similar patterns
           normalized = normalized.replace(/ほか/g, '');
@@ -2646,8 +2647,9 @@ function App() {
                     plant = plant.replace(/など.*$/g, '').trim();
                     plant = plant.replace(/ほか.*$/g, '').trim();
                     plant = plant.replace(/につく[。．]?$/g, '').trim();
-                    // Remove "以上〇〇科" patterns
-                    plant = plant.replace(/以上[^科]*科/g, '');
+                    // Remove "以上〇〇科" patterns but preserve the plant name
+                    plant = plant.replace(/\(以上[^)]*科\)/g, ''); // Remove parenthetical family references
+                    plant = plant.replace(/（以上[^）]*科）/g, ''); // Remove full-width parenthetical family references
                     // Clean up any remaining formatting
                     plant = plant.replace(/^\s*[\,\、\，]\s*/, ''); // Remove leading separators
                     plant = plant.replace(/\s*[\,\、\，]\s*$/, ''); // Remove trailing separators
@@ -2673,6 +2675,9 @@ function App() {
                     if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ') {
                       console.log(`DEBUG: ${mothName} - Processing plant:`, plant);
                       console.log(`DEBUG: ${mothName} - isValidPlantName result:`, isValidPlantName(plant));
+                      if (plant.includes('クマノミズキ') || plant.includes('ミズキ')) {
+                        console.log(`DEBUG: ${mothName} - Found Mizuki plant:`, plant);
+                      }
                     }
                     
                     if (plant.length > 1 && isValidPlantName(plant)) {
