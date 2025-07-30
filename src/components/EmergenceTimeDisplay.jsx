@@ -423,7 +423,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         </div>
         <div className="relative">
           {/* 背景のタイムライン（旬単位） */}
-          <div className="flex h-4 bg-slate-200/50 dark:bg-slate-700/50 rounded-full overflow-hidden shadow-inner">
+          <div className="flex h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden border border-slate-200 dark:border-slate-600">
             {MONTHS.map((month) => (
               <div key={month.number} className="flex-1 flex">
                 {[1, 2, 3].map((periodNum) => {
@@ -431,35 +431,19 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
                   const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
                   const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
                   
-                  // スマートな視覚効果（コンパクト版）
-                  const periodIntensity = periodNum === 1 ? 'opacity-80' : periodNum === 2 ? 'opacity-90' : 'opacity-100';
-                  const dividerClass = periodNum < 3 ? 'border-r border-white/20 dark:border-slate-800/30' : '';
+                  const dividerClass = periodNum < 3 ? 'border-r border-white/30 dark:border-slate-600/50' : '';
                   
                   return (
                     <div
                       key={periodNum}
                       className={`
                         flex-1 
-                        ${isActive ? `${month.color} ${periodIntensity} shadow-sm` : 'bg-transparent'} 
-                        transition-all duration-300 hover:opacity-100
+                        ${isActive ? month.color : 'bg-transparent'} 
+                        transition-all duration-200
                         ${dividerClass}
-                        relative overflow-hidden
                       `}
                       title={`${month.name}${periodName} ${isActive ? '(発生期)' : ''}`}
                     >
-                      {isActive && (
-                        <>
-                          {/* 微妙なグラデーション効果 */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
-                          {/* 期間識別ライン */}
-                          <div 
-                            className={`
-                              absolute left-0 top-0 bottom-0 w-px
-                              ${periodNum === 1 ? 'bg-white/40' : periodNum === 2 ? 'bg-white/25' : 'bg-white/35'}
-                            `} 
-                          />
-                        </>
-                      )}
                     </div>
                   );
                 })}
@@ -500,20 +484,16 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         
         
         {/* メインタイムライン（旬単位） */}
-        <div className="relative bg-white/50 dark:bg-slate-900/50 rounded-xl p-2 shadow-inner border border-slate-200/50 dark:border-slate-700/50">
+        <div className="relative bg-slate-50 dark:bg-slate-800 rounded-xl p-2 border border-slate-200 dark:border-slate-600">
           {/* 背景グリッド */}
           <div className="grid grid-cols-12 gap-1 h-10">
             {MONTHS.map((month) => (
-              <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-100/80 dark:bg-slate-800/80 rounded-md p-px shadow-sm">
+              <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-200 dark:bg-slate-700 rounded-md p-px">
                 {[1, 2, 3].map((periodNum) => {
-                  // 期間による微妙な背景色の差異
-                  const bgVariation = periodNum === 1 ? 'bg-slate-50 dark:bg-slate-800' : 
-                                     periodNum === 2 ? 'bg-slate-100 dark:bg-slate-700' : 
-                                     'bg-slate-200 dark:bg-slate-600';
                   return (
                     <div
                       key={periodNum}
-                      className={`${bgVariation} rounded-sm border border-slate-200/30 dark:border-slate-600/30 transition-colors duration-200`}
+                      className="bg-white dark:bg-slate-800 rounded-sm"
                     />
                   );
                 })}
@@ -532,53 +512,19 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
                   
                   if (!isActive) return <div key={periodNum} />;
                   
-                  // スマートな視覚効果：期間による微妙な差異
-                  const periodIntensity = periodNum === 1 ? 'opacity-85' : periodNum === 2 ? 'opacity-95' : 'opacity-100';
-                  const periodPattern = periodNum === 1 ? 'bg-gradient-to-r from-white/15 to-transparent' : 
-                                       periodNum === 2 ? 'bg-gradient-to-b from-white/10 to-transparent' : 
-                                       'bg-gradient-to-br from-white/20 via-transparent to-white/5';
-                  
                   return (
                     <div
                       key={periodNum}
                       className={`
                         ${month.color} 
-                        ${periodIntensity}
                         rounded-sm 
-                        shadow-sm 
-                        border 
-                        border-white/30 
-                        dark:border-slate-800/50 
                         transition-all 
-                        duration-300 
-                        hover:scale-110 
-                        hover:shadow-lg
-                        hover:opacity-100
-                        hover:border-white/60
-                        relative
-                        overflow-hidden
+                        duration-200 
+                        hover:brightness-110
                         min-h-[32px]
-                        cursor-pointer
-                        group
                       `}
                       title={`${month.name}${periodName} - 成虫発生期`}
                     >
-                      {/* スマートな背景パターン */}
-                      <div className={`absolute inset-0 ${periodPattern}`} />
-                      
-                      {/* アクティブ時の微妙な脈動効果 */}
-                      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
-                      
-                      {/* 精密な光沢効果 */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-white/25 via-transparent to-transparent" />
-                      
-                      {/* 期間インジケーター（左端の微妙なライン） */}
-                      <div 
-                        className={`
-                          absolute left-0 top-0 bottom-0 w-0.5 
-                          ${periodNum === 1 ? 'bg-white/40' : periodNum === 2 ? 'bg-white/30' : 'bg-white/50'}
-                        `} 
-                      />
                     </div>
                   );
                 })}
@@ -591,9 +537,9 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
       </div>
       
       {/* 原文表示 */}
-      <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-4 border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+      <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
         <div className="flex items-start space-x-2">
-          <div className="flex-shrink-0 w-2 h-2 bg-blue-400 dark:bg-blue-500 rounded-full mt-1.5 shadow-sm"></div>
+          <div className="flex-shrink-0 w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-1.5"></div>
           <div className="flex-1">
             <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
               {emergenceTime}
