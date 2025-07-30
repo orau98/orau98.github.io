@@ -2642,14 +2642,26 @@ function App() {
                   }
                   
                   plants.forEach(plant => {
+                    const originalPlant = plant;
                     plant = plant.trim();
                     // Remove trailing patterns like "などの農作物", "などの野菜", "につく"
                     plant = plant.replace(/など.*$/g, '').trim();
                     plant = plant.replace(/ほか.*$/g, '').trim();
                     plant = plant.replace(/につく[。．]?$/g, '').trim();
+                    
+                    // Debug before removing family patterns
+                    if (mothName === 'アオバシャチホコ' && plant.includes('クマノミズキ')) {
+                      console.log(`DEBUG: アオバシャチホコ - Before family pattern removal:`, plant);
+                    }
+                    
                     // Remove "以上〇〇科" patterns but preserve the plant name
                     plant = plant.replace(/\(以上[^)]*科\)/g, ''); // Remove parenthetical family references
                     plant = plant.replace(/（以上[^）]*科）/g, ''); // Remove full-width parenthetical family references
+                    
+                    // Debug after removing family patterns
+                    if (mothName === 'アオバシャチホコ' && originalPlant.includes('クマノミズキ')) {
+                      console.log(`DEBUG: アオバシャチホコ - After family pattern removal:`, plant);
+                    }
                     // Clean up any remaining formatting
                     plant = plant.replace(/^\s*[\,\、\，]\s*/, ''); // Remove leading separators
                     plant = plant.replace(/\s*[\,\、\，]\s*$/, ''); // Remove trailing separators
@@ -2866,6 +2878,18 @@ function App() {
                     }
                   });
                 }
+                // Debug logging for アオバシャチホコ
+                if (mothName === 'アオバシャチホコ') {
+                  console.log('DEBUG: Creating moth data for アオバシャチホコ:', {
+                    id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
+                    hostPlants: hostPlantList,
+                    hostPlantDetails: hostPlantEntries,
+                    hostPlantNotes: hostPlantNotes,
+                    rawHostPlant: rawHostPlant,
+                    tempHostPlant: tempHostPlant
+                  });
+                }
+                
                 const mothData = { 
                   id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`, 
                   name: mothName, 
