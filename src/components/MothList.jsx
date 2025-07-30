@@ -7,7 +7,7 @@ import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx'
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 
-const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {} }) => {
+const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {} }) => {
   const [isVisible, setIsVisible] = useState(isPriority);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
@@ -332,7 +332,7 @@ const MothListItem = ({ moth, baseRoute = "/moth", isPriority = false, imageFile
       </Link>
     </li>
   );
-};
+});
 
 const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false }) => {
   const [searchParams] = useSearchParams();

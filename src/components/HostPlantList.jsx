@@ -27,7 +27,7 @@ const loadPlantImageFilenames = async () => {
   return plantImageFilenames;
 };
 
-const HostPlantListItem = ({ plant, mothNames, plantDetails = {}, plantImageFilenames: preloadedFilenames = [] }) => {
+const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, plantImageFilenames: preloadedFilenames = [] }) => {
   const [imageExists, setImageExists] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -253,7 +253,7 @@ const HostPlantListItem = ({ plant, mothNames, plantDetails = {}, plantImageFile
     </Link>
   </li>
   );
-};
+});
 
 const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false }) => {
   const [plantSearchTerm, setPlantSearchTerm] = useState('');

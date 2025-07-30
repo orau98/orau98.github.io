@@ -33,6 +33,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   
+  const isDevelopment = import.meta.env.DEV;
+  
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
@@ -263,7 +265,7 @@ function App() {
       let beetleData = [];
       let leafbeetleData = [];
 
-      console.log("Fetching CSV files...");
+      if (isDevelopment) console.log("Fetching CSV files...");
       console.log("wameiCsvPath:", wameiCsvPath);
       console.log("mainCsvPath:", mainCsvPath);
       console.log("yListCsvPath:", yListCsvPath);
@@ -297,14 +299,14 @@ function App() {
             // Debug: Check if スミレモンキリガ exists in the loaded file
             if (name === 'main moth data') {
               if (text.includes('スミレモンキリガ')) {
-                console.log('DEBUG: スミレモンキリガ found in loaded CSV');
+                if (isDevelopment) console.log('DEBUG: スミレモンキリガ found in loaded CSV');
                 const lines = text.split('\n');
                 const sumiLine = lines.find(line => line.includes('スミレモンキリガ'));
                 if (sumiLine) {
-                  console.log('DEBUG: スミレモンキリガ line:', sumiLine);
+                  if (isDevelopment) console.log('DEBUG: スミレモンキリガ line:', sumiLine);
                   // Check specific content to determine which CSV was loaded
                   if (sumiLine.includes('ツバキ類(ツバキ科)')) {
-                    console.log('DEBUG: ✅ CORRECT CSV - New kiriga data with ツバキ類(ツバキ科)');
+                    if (isDevelopment) console.log('DEBUG: ✅ CORRECT CSV - New kiriga data with ツバキ類(ツバキ科)');
                   } else if (sumiLine.includes('1990,ツバキ類(ツバキ科)')) {
                     console.error('DEBUG: ❌ OLD CSV - Bokutou data with malformed food plant');
                   } else {
@@ -313,8 +315,8 @@ function App() {
                 }
               } else {
                 console.error('DEBUG: ❌ スミレモンキリガ NOT FOUND in loaded CSV - This is the problem!');
-                console.log('DEBUG: CSV size:', text.length, 'characters');
-                console.log('DEBUG: First 500 chars:', text.substring(0, 500));
+                if (isDevelopment) console.log('DEBUG: CSV size:', text.length, 'characters');
+                if (isDevelopment) console.log('DEBUG: First 500 chars:', text.substring(0, 500));
               }
             }
             
@@ -327,8 +329,8 @@ function App() {
 
         // Load files with safe loading - prioritize essential files
         console.log("=== Starting file loading process ===");
-        console.log("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
-        console.log("DEBUG: About to load フユシャク file with safeFileLoad");
+        if (isDevelopment) console.log("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
+        if (isDevelopment) console.log("DEBUG: About to load フユシャク file with safeFileLoad");
         
         const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, fuyushakuText, emergenceTimeText] = await Promise.all([
           safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
@@ -342,10 +344,10 @@ function App() {
           safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000)
         ]);
         
-        console.log("DEBUG: File loading completed, checking results...");
+        if (isDevelopment) console.log("DEBUG: File loading completed, checking results...");
         
         // Debug フユシャク file loading
-        console.log('DEBUG: フユシャク file load result:', {
+        if (isDevelopment) console.log('DEBUG: フユシャク file load result:', {
           path: fuyushakuCsvPath,
           loaded: !!fuyushakuText,
           length: fuyushakuText ? fuyushakuText.length : 0,
@@ -372,7 +374,7 @@ function App() {
           console.warn('Wamei checklist failed to load - plant family data may be incomplete');
         }
 
-        console.log("CSV files fetched successfully. Parsing...");
+        if (isDevelopment) console.log("CSV files fetched successfully. Parsing...");
 
         // Parse キリガ CSV to create emergence time lookup table
         const emergenceTimeMap = new Map();
@@ -402,7 +404,7 @@ function App() {
               }
             });
             
-            console.log(`Loaded ${emergenceTimeParsed.data.length} emergence time records from integrated CSV`);
+            if (isDevelopment) console.log(`Loaded ${emergenceTimeParsed.data.length} emergence time records from integrated CSV`);
           } catch (error) {
             console.error("Error parsing integrated emergence time data:", error);
           }
@@ -433,8 +435,8 @@ function App() {
         if (kibaraEntry) {
           console.log('Found キバラモクメキリガ:', kibaraEntry);
         } else {
-          console.log('キバラモクメキリガ not found in parsed data');
-          console.log('Sample parsed entries:', kirigaData.slice(0, 5));
+          if (isDevelopment) console.log('キバラモクメキリガ not found in parsed data');
+          if (isDevelopment) console.log('Sample parsed entries:', kirigaData.slice(0, 5));
         }
         
         console.log("Parsed キリガ data:", kirigaData.length, "entries");
@@ -452,7 +454,7 @@ function App() {
           
           // Debug specific species
           if (japaneseName && japaneseName.includes('アズサキリガ')) {
-            console.log('DEBUG: アズサキリガ found in kiriga CSV:', {
+            if (isDevelopment) console.log('DEBUG: アズサキリガ found in kiriga CSV:', {
               japaneseName, scientificName, emergenceTime, hostPlants, remarks
             });
           }
@@ -476,7 +478,7 @@ function App() {
             
             // Debug log for target species
             if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ') || japaneseName.includes('アズサキリガ')) {
-              console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${normalizedEmergenceTime}`);
+              if (isDevelopment) console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${normalizedEmergenceTime}`);
             }
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
@@ -683,10 +685,10 @@ function App() {
           }
         });
 
-        console.log("Emergence time map created with", emergenceTimeMap.size, "entries");
-        console.log("Sample entries:", Array.from(emergenceTimeMap.entries()).slice(0, 5));
-        console.log("フユシャク host plant map size:", fuyushakuHostPlantMap.size);
-        console.log("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
+        if (isDevelopment) console.log("Emergence time map created with", emergenceTimeMap.size, "entries");
+        if (isDevelopment) console.log("Sample entries:", Array.from(emergenceTimeMap.entries()).slice(0, 5));
+        if (isDevelopment) console.log("フユシャク host plant map size:", fuyushakuHostPlantMap.size);
+        if (isDevelopment) console.log("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
         console.log("フユシャク Pachyerannis obliquaria check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria (Motschulsky, 1861)'));
         console.log("フユシャク Pachyerannis obliquaria (no author) check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria'));
         
