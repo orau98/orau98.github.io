@@ -253,6 +253,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
               <dd className="ml-4">{formatScientificNameReact(details.scientificName)}</dd>
             </>
           )}
+          {details.aliases && details.aliases.length > 0 && (
+            <>
+              <dt className="font-semibold mt-2">別名:</dt>
+              <dd className="ml-4">{details.aliases.join('、')}</dd>
+            </>
+          )}
         </dl>
       </div>
 
@@ -263,6 +269,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200/50 dark:border-emerald-700/50">
             <p className="text-emerald-700 dark:text-emerald-300 text-sm leading-relaxed">
               <span className="font-semibold">🌿 植物の特徴:</span> この植物の詳細な説明や生態学的特徴についての情報がここに表示されます。
+              {details.aliases && details.aliases.length > 0 && (
+                <>
+                  <br />
+                  <span className="font-semibold">🏷️ 別名:</span> {details.aliases.join('、')}としても知られています。
+                </>
+              )}
             </p>
           </div>
         </DetailCard>

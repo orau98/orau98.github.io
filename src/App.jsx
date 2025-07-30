@@ -1250,6 +1250,7 @@ function App() {
         // Parse 20210514YList_download.csv with error handling
         let yListPlantFamilyMap = {};
         let yListPlantScientificNameMap = {};
+        let yListPlantAliasMap = {};
         let yListPlantNames = new Set();
         
         if (yListText) {
@@ -1264,6 +1265,7 @@ function App() {
               const plantName = row['和名']?.trim();
               const familyJp = row['LAPG 科名']?.trim();
               const scientificName = row['学名']?.trim();
+              const aliases = row['別名']?.trim();
 
               if (plantName) {
                 yListPlantNames.add(plantName);
@@ -1278,9 +1280,17 @@ function App() {
               if (plantName && scientificName) {
                 yListPlantScientificNameMap[plantName] = scientificName;
               }
+              if (plantName && aliases) {
+                // Parse aliases - they can be separated by commas or Japanese comma
+                const aliasList = aliases.split(/[,，]/).map(alias => alias.trim()).filter(alias => alias.length > 0);
+                if (aliasList.length > 0) {
+                  yListPlantAliasMap[plantName] = aliasList;
+                }
+              }
             });
             console.log("20210514YList_download.csv parsed successfully. yListPlantFamilyMap size:", Object.keys(yListPlantFamilyMap).length);
             console.log("20210514YList_download.csv parsed successfully. yListPlantScientificNameMap size:", Object.keys(yListPlantScientificNameMap).length);
+            console.log("20210514YList_download.csv parsed successfully. yListPlantAliasMap size:", Object.keys(yListPlantAliasMap).length);
           } catch (error) {
             console.error("Error parsing YList data:", error);
             console.warn("Continuing without YList data - plant family information may be incomplete");
@@ -2961,6 +2971,7 @@ function App() {
                   plantDetailData[validPlant].family = yListPlantFamilyMap[validPlant] || wameiFamilyMap[validPlant] || familyFromMainCsv || plantFamilyMap[validPlant] || '不明';
                   plantDetailData[validPlant].scientificName = yListPlantScientificNameMap[validPlant] || '';
                   plantDetailData[validPlant].genus = yListPlantScientificNameMap[validPlant]?.split(' ')[0] || '';
+                  plantDetailData[validPlant].aliases = yListPlantAliasMap[validPlant] || [];
                 }
               });
             });
