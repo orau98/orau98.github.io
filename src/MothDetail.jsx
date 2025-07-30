@@ -6,6 +6,7 @@ import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
+import RelatedInsectsSection from './components/RelatedInsectsSection';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
@@ -799,85 +800,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             )}
 
-            {/* 関連種情報 - 食草ごとに表示 */}
-            {Object.keys(relatedMothsByPlant).length > 0 && (
-              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
-                <div className="p-4 bg-blue-500/10 dark:bg-blue-500/20 border-b border-blue-200/30 dark:border-blue-700/30">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-500 rounded-lg">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                      </svg>
-                    </div>
-                    <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                      同じ食草を持つ昆虫
-                    </h2>
-                  </div>
-                </div>
-                
-                <div className="p-4 space-y-6">
-                  {Object.entries(relatedMothsByPlant).map(([plant, relatedMothNames]) => (
-                    <div key={plant} className="space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <Link
-                          to={`/plant/${encodeURIComponent(plant)}`}
-                          className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
-                        >
-                          {plant}
-                        </Link>
-                        <span className="text-sm text-slate-500 dark:text-slate-400">
-                          ({relatedMothNames.length}種)
-                        </span>
-                      </div>
-                      <div className="space-y-2">
-                        {relatedMothNames.map(relatedMothName => {
-                          const relatedMoth = allInsects.find(m => m.name === relatedMothName);
-                          if (!relatedMoth) return null;
-                          
-                          const baseUrl = relatedMoth.type === 'butterfly' ? '/butterfly/' : 
-                                         relatedMoth.type === 'beetle' ? '/beetle/' : 
-                                         relatedMoth.type === 'leafbeetle' ? '/leafbeetle/' : '/moth/';
-                          
-                          return (
-                            <Link
-                              key={relatedMoth.id}
-                              to={`${baseUrl}${relatedMoth.id}`}
-                              className="flex items-center space-x-3 p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
-                            >
-                              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <svg className="w-6 h-6 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                                </svg>
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between">
-                                  <h5 className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
-                                    {relatedMothName}
-                                  </h5>
-                                  <span className={`px-2 py-1 rounded text-xs font-medium ml-2 ${
-                                    relatedMoth.type === 'moth' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                                    relatedMoth.type === 'butterfly' ? 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300' :
-                                    relatedMoth.type === 'beetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                                    'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                                  }`}>
-                                    {relatedMoth.type === 'moth' ? '蛾' : 
-                                     relatedMoth.type === 'butterfly' ? '蝶' : 
-                                     relatedMoth.type === 'beetle' ? 'タマムシ' : 'ハムシ'}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 italic">
-                                  {formatScientificNameReact(relatedMoth.scientificName)}
-                                </p>
-                              </div>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* 関連種情報 - 横スクロール式カードデザイン */}
+            <RelatedInsectsSection 
+              relatedMothsByPlant={relatedMothsByPlant} 
+              allInsects={allInsects} 
+            />
           </div>
         </div>
       </div>
