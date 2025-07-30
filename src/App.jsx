@@ -459,12 +459,24 @@ function App() {
           
           // Store emergence time data from キリガ (キリガCSVを優先 - より詳細で正確なデータ)
           if (japaneseName && emergenceTime && emergenceTime !== '不明') {
+            // アズサキリガの発生時期表記を正規化
+            let normalizedEmergenceTime = emergenceTime;
+            if (japaneseName === 'アズサキリガ' && emergenceTime.includes('低標高地では') && emergenceTime.includes('高地では')) {
+              // "低標高地では3月下旬から、高地では5月中旬まで" -> "3月下旬～5月中旬"
+              const lowAltMatch = emergenceTime.match(/低標高地では(\d+月[上中下]旬)から/);
+              const highAltMatch = emergenceTime.match(/高地では(\d+月[上中下]旬)まで/);
+              if (lowAltMatch && highAltMatch) {
+                normalizedEmergenceTime = `${lowAltMatch[1]}～${highAltMatch[1]}`;
+                console.log(`Normalized アズサキリガ emergence time: "${emergenceTime}" -> "${normalizedEmergenceTime}"`);
+              }
+            }
+            
             // キリガCSVのデータを常に優先して上書き
-            emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のキリガ' });
+            emergenceTimeMap.set(japaneseName, { time: normalizedEmergenceTime, source: '日本のキリガ' });
             
             // Debug log for target species
             if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ') || japaneseName.includes('アズサキリガ')) {
-              console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${emergenceTime}`);
+              console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${normalizedEmergenceTime}`);
             }
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
@@ -603,9 +615,17 @@ function App() {
         fuyushakuData.forEach(row => {
           const japaneseName = row['和名']?.trim();
           const scientificName = row['学名']?.trim();
-          const emergenceTime = row['成虫の発生時期']?.trim();
+          let emergenceTime = row['成虫の発生時期']?.trim();
           const hostPlants = row['食草']?.trim();
           const remarks = row['食草に関する備考']?.trim();
+          
+          // Fix for CSV parsing issue - check if real emergence time is in __parsed_extra
+          if (row.__parsed_extra && row.__parsed_extra.length > 0) {
+            const extraData = row.__parsed_extra[0]?.trim();
+            if (extraData && (extraData.includes('月') || extraData.includes('上旬') || extraData.includes('中旬') || extraData.includes('下旬'))) {
+              emergenceTime = extraData;
+            }
+          }
           
           // Debug log for カバシタムクゲエダシャク
           if (japaneseName === 'カバシタムクゲエダシャク') {
