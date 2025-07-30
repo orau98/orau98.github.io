@@ -3,18 +3,31 @@ import { Link } from 'react-router-dom';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
-  // 画像パスを構築する関数
+  // MothDetailと同じ画像パス構築ロジックを使用
+  const createSafeFilename = (scientificName) => {
+    if (!scientificName) return '';
+    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+    cleanedName = cleanedName.replace(/\s+/g, '_');
+    return cleanedName;
+  };
+
+  // 画像パスを構築する関数（MothDetailと同じロジック）
   const getImagePath = (insect) => {
-    if (insect.type === 'moth') {
-      return `${import.meta.env.BASE_URL}images/moths/${insect.scientificName.replace(/\s+/g, '_')}.jpg`;
-    } else if (insect.type === 'butterfly') {
-      return `${import.meta.env.BASE_URL}images/butterflies/${insect.scientificName.replace(/\s+/g, '_')}.jpg`;
-    } else if (insect.type === 'beetle') {
-      return `${import.meta.env.BASE_URL}images/beetles/${insect.scientificName.replace(/\s+/g, '_')}.jpg`;
-    } else if (insect.type === 'leafbeetle') {
-      return `${import.meta.env.BASE_URL}images/leafbeetles/${insect.scientificName.replace(/\s+/g, '_')}.jpg`;
-    }
-    return null;
+    const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
+    const japaneseName = insect.name;
+    
+    // MothDetailと同じ画像フォルダとパス構築を使用
+    return `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`;
+  };
+
+  // フォールバック画像パスを取得する関数
+  const getFallbackImagePath = (insect) => {
+    const japaneseName = insect.name;
+    return `${import.meta.env.BASE_URL}images/insects/${japaneseName}.jpg`;
   };
 
   if (Object.keys(relatedMothsByPlant).length === 0) {
@@ -77,9 +90,15 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                               alt={relatedMothName}
                               className="insect-icon w-20 h-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600 transition-transform duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500"
                               onError={(e) => {
-                                // 画像が見つからない場合はデフォルトアイコンを表示
-                                e.target.style.display = 'none';
-                                e.target.nextElementSibling.style.display = 'flex';
+                                // 最初の画像パス（学名）が失敗した場合、和名で試行
+                                if (!e.target.dataset.triedFallback) {
+                                  e.target.dataset.triedFallback = 'true';
+                                  e.target.src = getFallbackImagePath(relatedMoth);
+                                } else {
+                                  // 両方失敗した場合はデフォルトアイコンを表示
+                                  e.target.style.display = 'none';
+                                  e.target.nextElementSibling.style.display = 'flex';
+                                }
                               }}
                             />
                             <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full border-2 border-slate-200 dark:border-slate-600 items-center justify-center transition-colors duration-300 group-hover:border-blue-400 dark:group-hover:border-blue-500 hidden">
