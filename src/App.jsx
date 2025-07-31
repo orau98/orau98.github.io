@@ -2773,6 +2773,22 @@ function App() {
               
               const hostPlantList = [...plantMap.values()].map(e => e.plant);
               
+              // Comprehensive fix for missing important plants that should appear in host plant lists
+              // Based on original CSV data, ensure critical plants are not filtered out
+              const criticalPlantFixes = {
+                'アオバシャチホコ': ['クマノミズキ', 'ミズキ', 'ヤマボウシ']
+              };
+              
+              if (criticalPlantFixes[mothName]) {
+                const requiredPlants = criticalPlantFixes[mothName];
+                for (const requiredPlant of requiredPlants) {
+                  if (!hostPlantList.includes(requiredPlant) && yListPlantNames.has(requiredPlant)) {
+                    // Only add if the plant exists in YList to maintain data quality
+                    hostPlantList.push(requiredPlant);
+                  }
+                }
+              }
+              
               // Debug logging for カバシタムクゲエダシャク hostPlantList creation
               if (mothName === 'カバシタムクゲエダシャク') {
                 console.log('=== カバシタムクゲエダシャク hostPlantList DEBUG ===');
@@ -3253,21 +3269,6 @@ function App() {
             // Remove duplicates and final empty string check
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
             
-            // Comprehensive fix for missing important plants that should appear in host plant lists
-            // Based on original CSV data, ensure critical plants are not filtered out
-            const criticalPlantFixes = {
-              'アオバシャチホコ': ['クマノミズキ', 'ミズキ', 'ヤマボウシ']
-            };
-            
-            if (criticalPlantFixes[mothName]) {
-              const requiredPlants = criticalPlantFixes[mothName];
-              for (const requiredPlant of requiredPlants) {
-                if (!hostPlantList.includes(requiredPlant) && yListPlantNames.has(requiredPlant)) {
-                  // Only add if the plant exists in YList to maintain data quality
-                  hostPlantList.push(requiredPlant);
-                }
-              }
-            }
             
             console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
           }
