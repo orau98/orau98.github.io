@@ -4,6 +4,11 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import { RelatedPlants } from './components/RelatedLinks';
 
+// 植物の別名データ
+const plantAliases = {
+  'ソメイヨシノ': ['染井吉野']
+};
+
 const DetailCard = ({ title, children }) => (
   <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-slate-700/50">
     <h2 className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-400">{title}</h2>
@@ -244,6 +249,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-bold text-blue-600 dark:text-blue-400">{decodedPlantName}</h1>
+        {plantAliases[decodedPlantName] && (
+          <div className="text-lg text-slate-600 dark:text-slate-300 mt-2">
+            <span className="font-medium">別名:</span> {plantAliases[decodedPlantName].join('、')}
+          </div>
+        )}
         <dl className="text-xl text-slate-500 dark:text-slate-400 mt-1">
           <dt className="font-semibold">科名:</dt>
           <dd className="ml-4">{details.family}</dd>

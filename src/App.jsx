@@ -891,6 +891,8 @@ function App() {
             'ニホンクロマツ': 'クロマツ',
             // Remove common modifiers that don't change the essential plant
             'ヤマザクラ類': 'ヤマザクラ',
+            // サクラの品種名統一
+            '染井吉野': 'ソメイヨシノ',
             'サクラ類': 'サクラ',
             'カエデ類': 'カエデ',
             'ヤナギ類': 'ヤナギ'
