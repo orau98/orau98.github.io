@@ -666,8 +666,8 @@ async function generateMetaPages() {
     // CSVデータを読み込み
     const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_master.csv'));
     
-    // 日本のキリガ.csvから成虫出現時期データを読み込み
-    const kirigaData = loadCSV(path.join(__dirname, '../public/日本のキリガ.csv'));
+    // 日本の冬夜蛾.csvから成虫出現時期データを読み込み
+    const kirigaData = loadCSV(path.join(__dirname, '../public/日本の冬夜蛾.csv'));
     const emergenceTimeMap = new Map();
     
     kirigaData.forEach(row => {

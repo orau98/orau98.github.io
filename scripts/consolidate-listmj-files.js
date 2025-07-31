@@ -22,7 +22,7 @@ const FILES = {
   
   // 統合対象ファイル
   fuyushaku: path.join(PROJECT_ROOT, 'public/日本の冬尺蛾.csv'),
-  kiriga: path.join(PROJECT_ROOT, 'public/日本のキリガ.csv'),
+  kiriga: path.join(PROJECT_ROOT, 'public/日本の冬夜蛾.csv'),
   
   // 出力ファイル
   output: path.join(PROJECT_ROOT, 'public/ListMJ_hostplants_master.csv'),

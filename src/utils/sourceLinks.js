@@ -7,7 +7,7 @@ export const sourceLinks = {
   "日本産蝶類標準図鑑": "https://www.amazon.co.jp/日本産蝶類標準図鑑-白水-隆/dp/4052022963",
   "日本産タマムシ大図鑑": "https://amzn.to/4m2vPWp",
   "ハムシハンドブック": "https://amzn.to/456YVhu",
-  "日本のキリガ": "https://www.amazon.co.jp/dp/4883631958",
+  "日本の冬夜蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000506/ct6/page1/recommend/",
   "日本の冬尺蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000509/ct6/page1/recommend/"
 };
 

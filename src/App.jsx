@@ -92,7 +92,7 @@ function App() {
       const hamushiSpeciesCsvPath = `${import.meta.env.BASE_URL}hamushi_species_integrated.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
-      const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
+      const kirigaCsvPath = `${import.meta.env.BASE_URL}日本の冬夜蛾.csv`;
       const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本の冬尺蛾.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const emergenceTimeCsvPath = `${import.meta.env.BASE_URL}emergence_time_integrated.csv`;
 
@@ -509,7 +509,7 @@ function App() {
             }
             
             // キリガCSVのデータを常に優先して上書き
-            emergenceTimeMap.set(japaneseName, { time: normalizedEmergenceTime, source: '日本のキリガ' });
+            emergenceTimeMap.set(japaneseName, { time: normalizedEmergenceTime, source: '日本の冬夜蛾' });
             
             // Debug log for target species
             if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ') || japaneseName.includes('アズサキリガ')) {
@@ -518,12 +518,12 @@ function App() {
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
             // キリガCSVのデータを常に優先して上書き
-            emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のキリガ' });
+            emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本の冬夜蛾' });
             
             // Also store with author/year removed for better matching
             const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
             if (cleanedScientificName !== scientificName) {
-              emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本のキリガ' });
+              emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本の冬夜蛾' });
               
               // Debug log for target species
               if (cleanedScientificName.includes('Xylena formosa') || cleanedScientificName.includes('Diphtherocome autumnalis') || cleanedScientificName.includes('Pseudopanolis azusa')) {
@@ -2890,7 +2890,7 @@ function App() {
                 if (hasFuyushakuData) {
                   sourceToUse = '日本の冬尺蛾';
                 } else if (hasKirigaData) {
-                  sourceToUse = '日本のキリガ';
+                  sourceToUse = '日本の冬夜蛾';
                 }
                 
                 // Process as moth
