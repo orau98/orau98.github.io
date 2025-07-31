@@ -3235,6 +3235,15 @@ function App() {
             // Split by delimiters including semicolon for cases like センモンヤガ
             const plants = cleanedHostPlants.split(/[;；、，,]/);
             
+            // Debug for アオバシャチホコ
+            if (mothName.includes('アオバシャチホコ')) {
+              console.log('DEBUG アオバシャチホコ:', {
+                originalHostPlants: hostPlants,
+                cleanedHostPlants: cleanedHostPlants,
+                splitPlants: plants
+              });
+            }
+            
             hostPlantList = plants
               .map(plant => plant.trim())
               .map(plant => plant.replace(/^"(.+)"$/, '$1')) // Remove outer quotes from individual plant names
@@ -3245,8 +3254,28 @@ function App() {
               .filter(plant => !plant.endsWith('属') || /^[A-Z][a-z]+属$/.test(plant)) // Remove items ending with 属, but keep scientific genus names like "Acer属"
               .filter(plant => plant.length > 1) // Remove single character items
               .filter(plant => plant.trim() !== '') // Additional empty string check
-              .map(plant => normalizePlantName(plant)) // Normalize plant names
-              .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
+              .map(plant => {
+                const normalized = normalizePlantName(plant);
+                // Debug for アオバシャチホコ
+                if (mothName.includes('アオバシャチホコ')) {
+                  console.log('DEBUG アオバシャチホコ plant normalization:', {
+                    original: plant,
+                    normalized: normalized
+                  });
+                }
+                return normalized;
+              }) // Normalize plant names
+              .map(plant => {
+                const corrected = correctPlantName(plant);
+                // Debug for アオバシャチホコ
+                if (mothName.includes('アオバシャチホコ')) {
+                  console.log('DEBUG アオバシャチホコ plant correction:', {
+                    original: plant,
+                    corrected: corrected
+                  });
+                }
+                return corrected;
+              }) // Apply YList correction and filtering
               .filter(plant => plant && plant.trim() !== '') // Remove plants not found in YList
               .map(plant => {
                 // Add part information if available
