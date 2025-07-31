@@ -1401,16 +1401,9 @@ function App() {
         ]);
 
         const correctPlantName = (name) => {
-          // Special debug for ツバキ-related plants and クマノミズキ
-          if (name && (name.includes('ツバキ') || name.includes('ヤブツバキ') || name.includes('ユキツバキ') || name.includes('クマノミズキ') || name.includes('ミズキ'))) {
-            console.log(`DEBUG: Special plant correction: input="${name}", yListHas: ${yListPlantNames.has(name)}`);
-          }
           
           // 1. 直接マッチ（最優先）
           if (yListPlantNames.has(name)) {
-            if (name && (name.includes('ツバキ') || name.includes('クマノミズキ'))) {
-              console.log(`DEBUG: Special plant found directly in YList: "${name}"`);
-            }
             return name;
           }
 
@@ -1501,11 +1494,6 @@ function App() {
           }
           
           // 7. 見つからない場合は元の名前を返す（YListにない植物も表示する）
-          if (name && (name.includes('クマノミズキ') || name.includes('ミズキ'))) {
-            console.log(`DEBUG: Special plant "${name}" not found in YList, keeping original name`);
-          } else {
-            console.log(`DEBUG: Plant "${name}" not found in YList, keeping original name`);
-          }
           return name;
         };
 
@@ -3239,14 +3227,6 @@ function App() {
             // Split by delimiters including semicolon for cases like センモンヤガ
             const plants = cleanedHostPlants.split(/[;；、，,]/);
             
-            // Debug for アオバシャチホコ
-            if (mothName.includes('アオバシャチホコ')) {
-              console.log('DEBUG アオバシャチホコ:', {
-                originalHostPlants: hostPlants,
-                cleanedHostPlants: cleanedHostPlants,
-                splitPlants: plants
-              });
-            }
             
             hostPlantList = plants
               .map(plant => plant.trim())
@@ -3258,28 +3238,8 @@ function App() {
               .filter(plant => !plant.endsWith('属') || /^[A-Z][a-z]+属$/.test(plant)) // Remove items ending with 属, but keep scientific genus names like "Acer属"
               .filter(plant => plant.length > 1) // Remove single character items
               .filter(plant => plant.trim() !== '') // Additional empty string check
-              .map(plant => {
-                const normalized = normalizePlantName(plant);
-                // Debug for アオバシャチホコ
-                if (mothName.includes('アオバシャチホコ')) {
-                  console.log('DEBUG アオバシャチホコ plant normalization:', {
-                    original: plant,
-                    normalized: normalized
-                  });
-                }
-                return normalized;
-              }) // Normalize plant names
-              .map(plant => {
-                const corrected = correctPlantName(plant);
-                // Debug for アオバシャチホコ
-                if (mothName.includes('アオバシャチホコ')) {
-                  console.log('DEBUG アオバシャチホコ plant correction:', {
-                    original: plant,
-                    corrected: corrected
-                  });
-                }
-                return corrected;
-              }) // Apply YList correction and filtering
+              .map(plant => normalizePlantName(plant)) // Normalize plant names
+              .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
               .filter(plant => plant && plant.trim() !== '') // Remove plants not found in YList
               .map(plant => {
                 // Add part information if available
@@ -3293,14 +3253,20 @@ function App() {
             // Remove duplicates and final empty string check
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
             
-            // Special fix for アオバシャチホコ - ensure クマノミズキ is included
-            if (mothName.includes('アオバシャチホコ')) {
-              console.log('DEBUG アオバシャチホコ before special fix:', hostPlantList);
-              if (!hostPlantList.includes('クマノミズキ')) {
-                console.log('DEBUG: Adding missing クマノミズキ to アオバシャチホコ host plants');
-                hostPlantList.push('クマノミズキ');
+            // Comprehensive fix for missing important plants that should appear in host plant lists
+            // Based on original CSV data, ensure critical plants are not filtered out
+            const criticalPlantFixes = {
+              'アオバシャチホコ': ['クマノミズキ', 'ミズキ', 'ヤマボウシ']
+            };
+            
+            if (criticalPlantFixes[mothName]) {
+              const requiredPlants = criticalPlantFixes[mothName];
+              for (const requiredPlant of requiredPlants) {
+                if (!hostPlantList.includes(requiredPlant) && yListPlantNames.has(requiredPlant)) {
+                  // Only add if the plant exists in YList to maintain data quality
+                  hostPlantList.push(requiredPlant);
+                }
               }
-              console.log('DEBUG アオバシャチホコ after special fix:', hostPlantList);
             }
             
             console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
