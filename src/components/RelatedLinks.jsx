@@ -8,7 +8,7 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
   const globalJapaneseToScientificMapping = new Map([
     // 蛾類
     ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
-    ['オオマエベニトガリバ', 'Habroloma_lewisii'],
+    ['オオマエベニトガリバ', 'Tethea_consimilis'],
     ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
     ['シラオビキリガ', 'Cosmia_camptostigma'],
     ['シラホシキリガ', 'Cosmia_pyralina'],
@@ -46,7 +46,13 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
   // マッピングを最優先、次にscientificFilename、最後にフォールバック
   const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
   const safeFilename = mappedFilename || insect.scientificFilename || createSafeFilename(insect.scientificName);
-  const imageFolder = insect.type === 'butterfly' ? 'butterflies' : 'insects';
+  // Special handling for Japanese-named insects that have images in the insects folder
+  // These insects have mappings and their images are stored in the insects folder regardless of their type
+  const japaneseNamedInsects = ['アオマダラタマムシ', 'ルイスヒラタチビタマムシ', 'ウスムラサキケンモン', 'オオマエベニトガリバ', 'ショウブオオヨトウ', 'シラオビキリガ', 'シラホシキリガ', 'タカオキリガ', 'ツマベニヒメハマキ', 'ナシキリガ', 'ニッコウケンモン', 'ニッコウシャチホコ', 'ノコメセダカヨトウ', 'ハスモンヨトウ', 'マエジロシャチホコ', 'クロハナコヤガ', 'フタスジエグリアツバ', 'ベニスズメ', 'ヒメスズメ', 'マダラキボシキリガ', 'ナシイラガ', 'ヨモギオオホソハマキ'];
+  const imageFolder = japaneseNamedInsects.includes(insect.name) ? 'insects' :
+                     insect.type === 'butterfly' ? 'butterflies' : 
+                     insect.type === 'beetle' ? 'beetles' : 
+                     insect.type === 'leafbeetle' ? 'leafbeetles' : 'insects';
   
   // 動的拡張子取得（マッピング済み学名を最優先）
   const getExtension = (filename) => {

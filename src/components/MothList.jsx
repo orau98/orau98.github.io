@@ -145,7 +145,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }
   
   // Determine the correct image folder based on insect type
-  const imageFolder = moth.type === 'butterfly' ? 'butterflies' : 
+  // Special handling for Japanese-named insects that have images in the insects folder
+  // These insects have mappings and their images are stored in the insects folder regardless of their type
+  const japaneseNamedInsects = ['アオマダラタマムシ', 'ルイスヒラタチビタマムシ', 'ウスムラサキケンモン', 'オオマエベニトガリバ', 'ショウブオオヨトウ', 'シラオビキリガ', 'シラホシキリガ', 'タカオキリガ', 'ツマベニヒメハマキ', 'ナシキリガ', 'ニッコウケンモン', 'ニッコウシャチホコ', 'ノコメセダカヨトウ', 'ハスモンヨトウ', 'マエジロシャチホコ', 'クロハナコヤガ', 'フタスジエグリアツバ', 'ベニスズメ', 'ヒメスズメ', 'マダラキボシキリガ', 'ナシイラガ', 'ヨモギオオホソハマキ'];
+  const imageFolder = japaneseNamedInsects.includes(moth.name) ? 'insects' :
+                     moth.type === 'butterfly' ? 'butterflies' : 
                      moth.type === 'beetle' ? 'beetles' : 
                      moth.type === 'leafbeetle' ? 'leafbeetles' : 'insects';
   
