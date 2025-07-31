@@ -876,6 +876,41 @@ function App() {
           return Array.from(result);
         };
 
+        // Function to remove publication/reference names from food plant data
+        const removePublicationNames = (hostPlantText) => {
+          if (!hostPlantText || typeof hostPlantText !== 'string') {
+            return hostPlantText;
+          }
+          
+          // Common publication patterns to remove from food plant data
+          const publicationPatterns = [
+            /[;；]\s*日本産蛾類標準図鑑\d*/g,     // "; 日本産蛾類標準図鑑2"
+            /[;；]\s*日本の冬尺蛾/g,              // "; 日本の冬尺蛾"
+            /[;；]\s*日本の冬夜蛾/g,              // "; 日本の冬夜蛾"
+            /[;；]\s*日本のフユシャク/g,          // "; 日本のフユシャク"
+            /[;；]\s*蛾類図鑑/g,                  // "; 蛾類図鑑"
+            /[;；]\s*標準図鑑/g,                  // "; 標準図鑑"
+            /[;；]\s*図鑑\d*/g,                   // "; 図鑑1", "; 図鑑2"
+            /[;；]\s*文献\d*/g,                   // "; 文献1"
+            /[;；]\s*出典\d*/g,                   // "; 出典1"
+            /[;；]\s*参考文献/g,                  // "; 参考文献"
+            /[;；]\s*\d{4}年/g,                   // "; 1990年"
+            /[;；]\s*\([^)]*\d{4}[^)]*\)/g,       // "; (Author 1884)"
+          ];
+          
+          let cleaned = hostPlantText;
+          
+          // Apply each pattern to remove publication references
+          publicationPatterns.forEach(pattern => {
+            cleaned = cleaned.replace(pattern, '');
+          });
+          
+          // Clean up any trailing semicolons or whitespace
+          cleaned = cleaned.replace(/[;；]\s*$/, '').trim();
+          
+          return cleaned;
+        };
+
         // Centralized function to normalize plant names by removing family annotations
         const normalizePlantName = (plantName) => {
           if (!plantName || typeof plantName !== 'string') {
@@ -1754,6 +1789,9 @@ function App() {
               let rawHostPlant = row['食草'] || '';
               let rawRemarks = row['備考'] || '';
               let hostPlantRemarks = row['食草に関する備考'] || '';
+              
+              // Clean publication names from food plant data
+              rawHostPlant = removePublicationNames(rawHostPlant);
               const hostPlantNotes = []; // Initialize hostPlantNotes array here
               
               
