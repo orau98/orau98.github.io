@@ -449,6 +449,57 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   return null;
                 })()}
                 
+                {/* 備考から部位情報を抽出して食草と統合する処理 */}
+                {(() => {
+                  // 部位情報を抽出する関数
+                  const extractPlantParts = (notes) => {
+                    if (!notes || !Array.isArray(notes)) return {};
+                    
+                    const plantParts = {};
+                    const partKeywords = ['花', '実', '果実', '葉', '茎', '根', '枝', '樹皮', '蕾', '若葉'];
+                    
+                    notes.forEach(note => {
+                      partKeywords.forEach(part => {
+                        if (note.includes(part)) {
+                          // 植物名を抽出する試み
+                          // 例: "ツバキの花を食べる" -> ツバキ: [花]
+                          const plantMatch = note.match(/(\S+?)(?:の|から|で)?\s*(?:花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)/);
+                          if (plantMatch) {
+                            const plantName = plantMatch[1];
+                            if (!plantParts[plantName]) plantParts[plantName] = new Set();
+                            plantParts[plantName].add(part);
+                          }
+                          // 汎用的な部位情報も記録
+                          if (!plantParts['*']) plantParts['*'] = new Set();  
+                          plantParts['*'].add(part);
+                        }
+                      });
+                    });
+                    
+                    // SetをArrayに変換
+                    Object.keys(plantParts).forEach(key => {
+                      plantParts[key] = Array.from(plantParts[key]);
+                    });
+                    
+                    return plantParts;
+                  };
+                  
+                  // 部位情報を抽出
+                  const plantPartsInfo = extractPlantParts(moth.hostPlantNotes);
+                  
+                  // スミレモンキリガのデバッグ
+                  if (moth.id === 'catalog-6065') {
+                    console.log('DEBUG catalog-6065 plant parts extraction:', {
+                      hostPlantNotes: moth.hostPlantNotes,
+                      extractedParts: plantPartsInfo
+                    });
+                  }
+                  
+                  // グローバルに保存して食草表示時に使用
+                  window.currentPlantParts = plantPartsInfo;
+                  return null;
+                })()}
+                
                 {moth.hostPlants.length > 0 ? (
                   <div className="space-y-4">
                     {/* Display detailed host plant info if available */}
@@ -482,8 +533,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                     <div>
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                          {/* Extract plant name and parts from integrated format like "ツバキ（花）" */}
+                                          {/* Extract plant name and parts, or add parts from remarks */}
                                           {(() => {
+                                            // 既存の統合形式をチェック
                                             const plantPartsMatch = detail.plant.match(/^(.+?)（([^）]+)）$/);
                                             if (plantPartsMatch) {
                                               const [, plantName, parts] = plantPartsMatch;
@@ -498,10 +550,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                                 </>
                                               );
                                             } else {
+                                              // 備考から抽出した部位情報を統合
+                                              const plantParts = window.currentPlantParts || {};
+                                              const specificParts = plantParts[detail.plant] || [];
+                                              const generalParts = plantParts['*'] || [];
+                                              const allParts = [...new Set([...specificParts, ...generalParts])];
+                                              
                                               return (
-                                                <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                                  {detail.plant}
-                                                </span>
+                                                <>
+                                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                    {detail.plant}
+                                                  </span>
+                                                  {allParts.length > 0 && (
+                                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                                      {allParts.join('・')}
+                                                    </span>
+                                                  )}
+                                                </>
                                               );
                                             }
                                           })()}
@@ -527,8 +592,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                             <div>
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3">
-                                  {/* Extract plant name and parts from integrated format like "ツバキ（花）" */}
+                                  {/* Extract plant name and parts, or add parts from remarks */}
                                   {(() => {
+                                    // 既存の統合形式をチェック
                                     const plantPartsMatch = plant.match(/^(.+?)（([^）]+)）$/);
                                     if (plantPartsMatch) {
                                       const [, plantName, parts] = plantPartsMatch;
@@ -543,10 +609,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                         </>
                                       );
                                     } else {
+                                      // 備考から抽出した部位情報を統合
+                                      const plantParts = window.currentPlantParts || {};
+                                      const specificParts = plantParts[plant] || [];
+                                      const generalParts = plantParts['*'] || [];
+                                      const allParts = [...new Set([...specificParts, ...generalParts])];
+                                      
                                       return (
-                                        <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                          {plant}
-                                        </span>
+                                        <>
+                                          <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                            {plant}
+                                          </span>
+                                          {allParts.length > 0 && (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                              {allParts.join('・')}
+                                            </span>
+                                          )}
+                                        </>
                                       );
                                     }
                                   })()}
@@ -578,15 +657,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       const { notes: filteredNote } = extractEmergenceTime(note);
                       return filteredNote.trim();
                     })
-                    .filter(note => 
-                      note && // 空でない
-                      !note.includes('花・若い翼果') && 
-                      !note.includes('実') && 
-                      !note.includes('葉') && 
-                      !note.includes('茎') && 
-                      !note.includes('根') && 
-                      !note.includes('果実')
-                    );
+                    .filter(note => {
+                      if (!note) return false; // 空の場合は除外
+                      
+                      // 部位情報が食草に統合済みかチェック
+                      const plantParts = window.currentPlantParts || {};
+                      const allExtractedParts = Object.values(plantParts).flat();
+                      
+                      // 抽出された部位情報を含む備考は除去
+                      const hasExtractedPart = allExtractedParts.some(part => note.includes(part));
+                      if (hasExtractedPart) {
+                        // ただし、部位情報以外の重要な情報が含まれている場合は残す
+                        const hasOtherInfo = !note.match(/^[\s\S]*?(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[\s\S]*?$/);
+                        return hasOtherInfo;
+                      }
+                      
+                      // その他の一般的なフィルタリング
+                      return !note.includes('花・若い翼果');
+                    });
                   
                   // Debug logging for catalog-2604
                   if (moth.id === 'catalog-2604') {
