@@ -82,12 +82,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   
   // Try to find the actual image file that exists
   const getImageFilename = () => {
-    
-    // If imageFilenames is not loaded yet, use default
-    if (!imageFilenames || imageFilenames.size === 0) {
-      const mappedFilename = globalJapaneseToScientificMapping.get(moth.name);
-      return mappedFilename || moth.scientificFilename || createSafeFilename(moth.scientificName);
-    }
+    try {
+      // If imageFilenames is not loaded yet, use default
+      if (!imageFilenames || imageFilenames.size === 0) {
+        const mappedFilename = globalJapaneseToScientificMapping.get(moth?.name);
+        return mappedFilename || moth?.scientificFilename || createSafeFilename(moth?.scientificName);
+      }
     
     // 0. Try mapped filename first (highest priority)
     const mappedFilename = globalJapaneseToScientificMapping.get(moth.name);
@@ -166,9 +166,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     
     // Default to mapped filename, then scientific filename, then safe filename
     if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ - no match found, using default:', mappedFilename || moth.scientificFilename || safeFilename);
+      console.log('DEBUG: ルイスヒラタチビタマムシ - no match found, using default:', mappedFilename || moth?.scientificFilename || safeFilename);
     }
-    return mappedFilename || moth.scientificFilename || safeFilename;
+    return mappedFilename || moth?.scientificFilename || safeFilename;
+    } catch (error) {
+      console.error('Error in getImageFilename:', error, moth);
+      return createSafeFilename(moth?.scientificName || moth?.name || 'placeholder');
+    }
   };
   
   const imageFilename = getImageFilename();
@@ -197,9 +201,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       img.src = imageUrl;
     }
   }, [isPriority, hasImageFilename, imageUrl]);
-    
-  return (
-    <li ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
+  
+  // Error boundary for individual moth items
+  if (!moth) {
+    return null;
+  }
+  
+  try {
+    return (
+      <li ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
       <Link to={route} className="block">
         <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
@@ -329,7 +339,17 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
         </div>
       </Link>
     </li>
-  );
+    );
+  } catch (error) {
+    console.error('Error rendering MothListItem:', error, moth);
+    return (
+      <li className="group relative overflow-hidden rounded-xl bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border-2 border-red-200 dark:border-red-600 p-4">
+        <div className="text-red-600 dark:text-red-400 text-sm">
+          表示エラーが発生しました: {moth?.name || '不明な昆虫'}
+        </div>
+      </li>
+    );
+  }
 });
 
 const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false }) => {
@@ -349,49 +369,79 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   }, [classificationFilter, searchTerm]);
 
   const filteredMoths = useMemo(() => {
-    console.log('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
-    return moths.filter(moth => {
-      const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+    try {
+      console.log('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
       
-      // If there's a classification filter from URL, prioritize that
-      if (classificationFilter && !debouncedSearchTerm) {
-        const lowerClassification = classificationFilter.toLowerCase();
-        return (moth.classification.familyJapanese?.toLowerCase().includes(lowerClassification)) ||
-               (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
-               (moth.classification.tribeJapanese?.toLowerCase().includes(lowerClassification)) ||
-               (moth.classification.genus?.toLowerCase().includes(lowerClassification)) ||
-               (moth.classification.family?.toLowerCase().includes(lowerClassification)) ||
-               (moth.classification.subfamily?.toLowerCase().includes(lowerClassification)) ||
-               (moth.classification.tribe?.toLowerCase().includes(lowerClassification));
+      if (!moths || moths.length === 0) {
+        return [];
       }
       
-      // Regular search filtering
-      return moth.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-             (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.genus?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.family?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-             (moth.classification.tribe?.toLowerCase().includes(lowerCaseSearchTerm));
-    });
+      return moths.filter(moth => {
+        try {
+          if (!moth) return false;
+          
+          const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+          
+          // If there's a classification filter from URL, prioritize that
+          if (classificationFilter && !debouncedSearchTerm) {
+            const lowerClassification = classificationFilter.toLowerCase();
+            return (moth.classification?.familyJapanese?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.classification?.genus?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.classification?.family?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.classification?.subfamily?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.classification?.tribe?.toLowerCase().includes(lowerClassification));
+          }
+          
+          // Regular search filtering
+          return (moth.name?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.genus?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.family?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (moth.classification?.tribe?.toLowerCase().includes(lowerCaseSearchTerm));
+        } catch (error) {
+          console.error('Error filtering moth:', moth, error);
+          return false;
+        }
+      });
+    } catch (error) {
+      console.error('Error in filteredMoths calculation:', error);
+      return [];
+    }
   }, [moths, debouncedSearchTerm, classificationFilter]);
 
   const allSuggestions = useMemo(() => {
-    if (!searchTerm) return [];
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const uniqueSuggestions = new Set();
+    try {
+      if (!searchTerm || !moths || moths.length === 0) return [];
+      
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const uniqueSuggestions = new Set();
 
-    moths.forEach(moth => {
-      if (moth.name.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.name);
-      if (moth.scientificName && moth.scientificName.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.scientificName);
-      if (moth.classification.familyJapanese && moth.classification.familyJapanese.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.familyJapanese);
-      if (moth.classification.subfamilyJapanese && moth.classification.subfamilyJapanese.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.subfamilyJapanese);
-      if (moth.classification.tribeJapanese && moth.classification.tribeJapanese.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.tribeJapanese);
-      if (moth.classification.genus && moth.classification.genus.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.genus);
-    });
-    return Array.from(uniqueSuggestions).slice(0, 10);
+      moths.forEach(moth => {
+        try {
+          if (!moth) return;
+          
+          if (moth.name?.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.name);
+          if (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.scientificName);
+          if (moth.classification?.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.familyJapanese);
+          if (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.subfamilyJapanese);  
+          if (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.tribeJapanese);
+          if (moth.classification?.genus?.toLowerCase().includes(lowerCaseSearchTerm)) uniqueSuggestions.add(moth.classification.genus);
+        } catch (error) {
+          console.error('Error processing moth for suggestions:', moth, error);
+        }
+      });
+      
+      return Array.from(uniqueSuggestions).slice(0, 10);
+    } catch (error) {
+      console.error('Error in allSuggestions calculation:', error);
+      return [];
+    }
   }, [moths, searchTerm]);
 
   // Load image filenames list for lightweight sorting
@@ -429,12 +479,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
 
   // Sort moths to prioritize those with images (lightweight)
   const sortedMoths = useMemo(() => {
-    if (imageFilenames.size === 0) {
-      console.log('No image filenames loaded yet, returning unsorted');
-      return filteredMoths;
-    }
-    
-    const sorted = [...filteredMoths].sort((a, b) => {
+    try {
+      if (!filteredMoths || filteredMoths.length === 0) {
+        return [];
+      }
+      
+      if (imageFilenames.size === 0) {
+        console.log('No image filenames loaded yet, returning unsorted');
+        return filteredMoths;
+      }
+      
+      const sorted = [...filteredMoths].sort((a, b) => {
       // Create safe filename check function - must match the logic in generate-meta-pages.js
       const createSafeFilename = (scientificName) => {
         if (!scientificName) return '';
@@ -525,13 +580,26 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }));
     
     return sorted;
+    } catch (error) {
+      console.error('Error in sortedMoths calculation:', error);
+      return filteredMoths || [];
+    }
   }, [filteredMoths, imageFilenames]);
 
-  const totalPages = Math.ceil(sortedMoths.length / itemsPerPage);
+  const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
   const currentMoths = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return sortedMoths.slice(startIndex, endIndex);
+    try {
+      if (!sortedMoths || sortedMoths.length === 0) {
+        return [];
+      }
+      
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      return sortedMoths.slice(startIndex, endIndex);
+    } catch (error) {
+      console.error('Error calculating currentMoths:', error);
+      return [];
+    }
   }, [sortedMoths, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
@@ -612,17 +680,30 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         <div className="max-h-[800px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 dark:scrollbar-thumb-blue-600 dark:scrollbar-track-blue-900/20">
           {currentMoths.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {currentMoths.map((moth, index) => (
-                <div key={moth.id} className="animate-fadeIn" style={{ animationDelay: `${index * 0.05}s` }}>
-                  <MothListItem 
-                    moth={moth} 
-                    baseRoute={baseRoute} 
-                    isPriority={index < 12} 
-                    imageFilenames={imageFilenames}
-                    imageExtensions={imageExtensions}
-                  />
-                </div>
-              ))}
+              {currentMoths.map((moth, index) => {
+                try {
+                  return (
+                    <div key={moth?.id || `moth-${index}`} className="animate-fadeIn" style={{ animationDelay: `${index * 0.05}s` }}>
+                      <MothListItem 
+                        moth={moth} 
+                        baseRoute={baseRoute} 
+                        isPriority={index < 12} 
+                        imageFilenames={imageFilenames}
+                        imageExtensions={imageExtensions}
+                      />
+                    </div>
+                  );
+                } catch (error) {
+                  console.error('Error rendering moth item:', error, moth);
+                  return (
+                    <div key={`error-${index}`} className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-600">
+                      <div className="text-red-600 dark:text-red-400 text-sm">
+                        表示エラー: {moth?.name || `昆虫 #${index}`}
+                      </div>
+                    </div>
+                  );
+                }
+              })}
             </div>
           ) : (
             <div className="text-center py-12">
