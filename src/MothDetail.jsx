@@ -557,6 +557,22 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                                   </span>
                                                 </>
                                               );
+                                            }
+                                            
+                                            // 「植物の部位」形式をチェック（例：ツバキの花、サクラの実）
+                                            const plantPartDirectMatch = detail.plant.match(/^(.+?)(の|から|で)(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|若い翼果)(.*)$/);
+                                            if (plantPartDirectMatch) {
+                                              const [, plantName, , part, suffix] = plantPartDirectMatch;
+                                              return (
+                                                <>
+                                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                    {plantName}{suffix}
+                                                  </span>
+                                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                                    {part}
+                                                  </span>
+                                                </>
+                                              );
                                             } else {
                                               // 備考から抽出した部位情報を統合
                                               const plantParts = window.currentPlantParts || {};
@@ -613,6 +629,22 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                           </span>
                                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
                                             {parts}
+                                          </span>
+                                        </>
+                                      );
+                                    }
+                                    
+                                    // 「植物の部位」形式をチェック（例：ツバキの花、サクラの実）
+                                    const plantPartDirectMatch = plant.match(/^(.+?)(の|から|で)(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|若い翼果)(.*)$/);
+                                    if (plantPartDirectMatch) {
+                                      const [, plantName, , part, suffix] = plantPartDirectMatch;
+                                      return (
+                                        <>
+                                          <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                            {plantName}{suffix}
+                                          </span>
+                                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                            {part}
                                           </span>
                                         </>
                                       );
