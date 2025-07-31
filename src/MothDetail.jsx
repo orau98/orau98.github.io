@@ -442,6 +442,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
               
               <div className="p-4">
+                {/* 備考内容の重複を防ぐための追跡 */}
+                {(() => {
+                  // コンポーネント内で表示済み備考を追跡するSet
+                  window.displayedRemarks = new Set();
+                  return null;
+                })()}
+                
                 {moth.hostPlants.length > 0 ? (
                   <div className="space-y-4">
                     {/* Display detailed host plant info if available */}
@@ -589,13 +596,22 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     });
                   }
                   
-                  if (filteredNotes.length === 0) return null;
+                  // 重複チェック - 既に表示された内容をスキップ
+                  const uniqueNotes = filteredNotes.filter(note => {
+                    if (window.displayedRemarks && window.displayedRemarks.has(note.trim())) {
+                      return false; // 既に表示済みの場合はスキップ
+                    }
+                    window.displayedRemarks.add(note.trim());
+                    return true;
+                  });
+                  
+                  if (uniqueNotes.length === 0) return null;
                   
                   return (
                     <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
                       <div className="flex flex-wrap gap-2">
                         <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">備考:</span>
-                        {filteredNotes.map((note, noteIndex) => (
+                        {uniqueNotes.map((note, noteIndex) => (
                           <span key={noteIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
                             {note}
                           </span>
@@ -614,6 +630,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       isEcological: moth.geographicalRemarks.trim().match(/^(単食性|多食性|広食性|狭食性)$/)
                     });
                   }
+                  
+                  // 重複チェック - 生態情報（単食性等）でない場合のみチェック
+                  const content = moth.geographicalRemarks.trim();
+                  const isEcological = content.match(/^(単食性|多食性|広食性|狭食性)$/);
+                  
+                  if (!isEcological && window.displayedRemarks && window.displayedRemarks.has(content)) {
+                    return false; // 既に表示済みの場合はスキップ
+                  }
+                  
+                  if (!isEcological) {
+                    window.displayedRemarks.add(content);
+                  }
+                  
                   return true;
                 })() && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
@@ -761,7 +790,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       remaining: remainingNotes
                     });
                   }
-                  return remainingNotes.trim();
+                  
+                  // 重複チェック
+                  const trimmedNotes = remainingNotes.trim();
+                  if (window.displayedRemarks && window.displayedRemarks.has(trimmedNotes)) {
+                    return false; // 既に表示済みの場合はスキップ
+                  }
+                  
+                  if (trimmedNotes) {
+                    window.displayedRemarks.add(trimmedNotes);
+                  }
+                  
+                  return trimmedNotes;
                 })() && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
                     <div className="flex items-start space-x-2">
