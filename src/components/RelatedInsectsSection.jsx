@@ -131,8 +131,8 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
               <div className={`transition-all duration-300 ${
                 layout === 'horizontal' ? 'flex space-x-4 min-w-max' :
                 layout === 'horizontal-limited' ? 'flex space-x-4 min-w-max' :
-                layout === 'grid-2rows' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4' :
-                layout === 'grid-3rows' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4' :
+                layout === 'grid-2rows' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6' :
+                layout === 'grid-3rows' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-6' :
                 'flex space-x-4 min-w-max'
               }`}>
                 {relatedMothNames.slice(0, displayCount).map(relatedMothName => {
@@ -184,7 +184,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                           
                           {/* 画像上に昆虫名をオーバーレイ表示 */}
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3">
-                            <h5 className="text-white font-medium text-sm leading-tight line-clamp-2 drop-shadow-lg">
+                            <h5 className="text-white font-medium text-base leading-tight line-clamp-2 drop-shadow-lg">
                               {relatedMothName}
                             </h5>
                           </div>
