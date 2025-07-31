@@ -581,6 +581,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       !note.includes('果実')
                     );
                   
+                  // Debug logging for catalog-2604
+                  if (moth.id === 'catalog-2604') {
+                    console.log('DEBUG catalog-2604 hostPlantNotes section:', {
+                      original: moth.hostPlantNotes,
+                      filtered: filteredNotes
+                    });
+                  }
+                  
                   if (filteredNotes.length === 0) return null;
                   
                   return (
@@ -598,7 +606,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 })()}
                 
                 {/* 地理的備考・生態学的特徴 */}
-                {moth.geographicalRemarks && typeof moth.geographicalRemarks === 'string' && moth.geographicalRemarks.trim() && (
+                {moth.geographicalRemarks && typeof moth.geographicalRemarks === 'string' && moth.geographicalRemarks.trim() && (() => {
+                  // Debug logging for catalog-2604
+                  if (moth.id === 'catalog-2604') {
+                    console.log('DEBUG catalog-2604 geographicalRemarks section:', {
+                      content: moth.geographicalRemarks,
+                      isEcological: moth.geographicalRemarks.trim().match(/^(単食性|多食性|広食性|狭食性)$/)
+                    });
+                  }
+                  return true;
+                })() && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
                     <div className="flex flex-wrap gap-2">
                       {/* 生態学的特徴（単食性、多食性など）か地域情報かを判断 */}
@@ -737,6 +754,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 {/* 成虫発生時期を除去した備考情報 */}
                 {moth.notes && (() => {
                   const { notes: remainingNotes } = extractEmergenceTime(moth.notes);
+                  // Debug logging for catalog-2604
+                  if (moth.id === 'catalog-2604') {
+                    console.log('DEBUG catalog-2604 notes section:', {
+                      original: moth.notes,
+                      remaining: remainingNotes
+                    });
+                  }
                   return remainingNotes.trim();
                 })() && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
