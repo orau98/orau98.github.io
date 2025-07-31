@@ -22,6 +22,20 @@ const plantFamilyMap = {
   'ガマズミ': 'スイカズラ科', 'クズ': 'マメ科', 'ハギ': 'マメ科', 'フジ': 'マメ科',
 };
 
+// 植物の学名マッピング（手動補完）
+const plantScientificNameMap = {
+  'サクラ': 'Cerasus',
+  'ソメイヨシノ': 'Cerasus × yedoensis',
+  'ヤマザクラ': 'Cerasus serrulata',
+  'リンゴ': 'Malus domestica',
+  'マツ': 'Pinus',
+  'アカマツ': 'Pinus densiflora',
+  'スギ': 'Cryptomeria japonica',
+  'クリ': 'Castanea crenata',
+  'クヌギ': 'Quercus acutissima',
+  'コナラ': 'Quercus serrata',
+};
+
 function App() {
   const location = useLocation();
   const [moths, setMoths] = useState([]);
@@ -3035,9 +3049,9 @@ function App() {
                   }
 
                   if (!plantDetailData[validPlant]) plantDetailData[validPlant] = {}; // Ensure it's an object
-                  plantDetailData[validPlant].family = yListPlantFamilyMap[validPlant] || wameiFamilyMap[validPlant] || familyFromMainCsv || plantFamilyMap[validPlant] || '不明';
-                  plantDetailData[validPlant].scientificName = yListPlantScientificNameMap[validPlant] || '';
-                  plantDetailData[validPlant].genus = yListPlantScientificNameMap[validPlant]?.split(' ')[0] || '';
+                  plantDetailData[validPlant].family = yListPlantFamilyMap[validPlant] || wameiFamilyMap[validPlant] || plantFamilyMap[validPlant] || '不明';
+                  plantDetailData[validPlant].scientificName = yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '';
+                  plantDetailData[validPlant].genus = (yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '').split(' ')[0] || '';
                   plantDetailData[validPlant].aliases = yListPlantAliasMap[validPlant] || [];
                 }
               });
