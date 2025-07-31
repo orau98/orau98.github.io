@@ -18,6 +18,21 @@ const Footer = () => {
         <p className="text-xs mt-2">
           Built with React and Tailwind CSS. 
         </p>
+        <div className="text-xs mt-3 space-x-4">
+          <a 
+            href={`${import.meta.env.BASE_URL}privacy-policy.html`}
+            className="text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            プライバシーポリシー
+          </a>
+          <span className="text-neutral-400">|</span>
+          <a 
+            href={`${import.meta.env.BASE_URL}terms-of-service.html`}
+            className="text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            利用規約
+          </a>
+        </div>
       </div>
     </footer>
   );
