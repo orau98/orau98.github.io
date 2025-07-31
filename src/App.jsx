@@ -1001,7 +1001,7 @@ function App() {
           }
           
           // Reject taxonomic/descriptive phrases that are not plant names
-          if (/次種が分離される前の情報として|従来の記録は次種と混同|本種か次種|次種との区別/.test(trimmed)) {
+          if (/次種が分離される前の情報として|従来の記録は次種と混同|本種か次種|次種との区別|次種を参照|参照されたい/.test(trimmed)) {
             return false;
           }
           
@@ -1012,6 +1012,11 @@ function App() {
           
           // Reject if it's a long sentence (likely a description, not a plant name)
           if (trimmed.length > 50 && (trimmed.includes('野外で') || trimmed.includes('から記録') || trimmed.includes('飼育下で'))) {
+            return false;
+          }
+          
+          // Reject long descriptive text that mentions other species or references
+          if (trimmed.length > 30 && (/思われる|と思われ|ではないか|可能性|おそらく|参照|本種も/.test(trimmed))) {
             return false;
           }
           
