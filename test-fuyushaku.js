@@ -3,7 +3,7 @@ const fs = require('fs');
 const Papa = require('papaparse');
 
 // Read the フユシャク CSV
-const fuyushakuText = fs.readFileSync('public/日本のフユシャク.csv', 'utf-8');
+const fuyushakuText = fs.readFileSync('public/日本の冬尺蛾.csv', 'utf-8');
 
 console.log('フユシャク CSV loaded, length:', fuyushakuText.length);
 console.log('First 200 chars:', fuyushakuText.substring(0, 200));

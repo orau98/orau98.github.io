@@ -460,6 +460,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     
                     notes.forEach(note => {
                       partKeywords.forEach(part => {
+                        // 基本的な部位情報チェック（「の花」「花」など）
                         if (note.includes(part)) {
                           // 植物名を抽出する試み
                           // 例: "ツバキの花を食べる" -> ツバキ: [花]
@@ -470,6 +471,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                             plantParts[plantName].add(part);
                           }
                           // 汎用的な部位情報も記録
+                          if (!plantParts['*']) plantParts['*'] = new Set();  
+                          plantParts['*'].add(part);
+                        }
+                        
+                        // 「などの花」「など花」形式もチェック
+                        const extendedPattern = new RegExp(`(など|等)の?${part}`, 'g');
+                        if (extendedPattern.test(note)) {
                           if (!plantParts['*']) plantParts['*'] = new Set();  
                           plantParts['*'].add(part);
                         }
@@ -665,19 +673,39 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       
                       // hostPlants から既存の部位情報を抽出
                       moth.hostPlants.forEach(plant => {
+                        // 括弧内の部位情報
                         const match = plant.match(/（([^）]+)）$/);
                         if (match) {
                           match[1].split('・').forEach(part => existingParts.add(part.trim()));
                         }
+                        
+                        // 「などの花」「など花」形式の部位情報
+                        const partKeywords = ['花', '実', '果実', '葉', '茎', '根', '枝', '樹皮', '蕾', '若葉'];
+                        partKeywords.forEach(part => {
+                          const extendedPattern = new RegExp(`(など|等)の?${part}`, 'g');
+                          if (extendedPattern.test(plant)) {
+                            existingParts.add(part);
+                          }
+                        });
                       });
                       
                       // hostPlantDetails から既存の部位情報を抽出
                       if (moth.hostPlantDetails) {
                         moth.hostPlantDetails.forEach(detail => {
+                          // 括弧内の部位情報
                           const match = detail.plant.match(/（([^）]+)）$/);
                           if (match) {
                             match[1].split('・').forEach(part => existingParts.add(part.trim()));
                           }
+                          
+                          // 「などの花」「など花」形式の部位情報
+                          const partKeywords = ['花', '実', '果実', '葉', '茎', '根', '枝', '樹皮', '蕾', '若葉'];
+                          partKeywords.forEach(part => {
+                            const extendedPattern = new RegExp(`(など|等)の?${part}`, 'g');
+                            if (extendedPattern.test(detail.plant)) {
+                              existingParts.add(part);
+                            }
+                          });
                         });
                       }
                       
@@ -685,21 +713,28 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       const plantParts = window.currentPlantParts || {};
                       Object.values(plantParts).flat().forEach(part => existingParts.add(part));
                       
-                      // catalog-2604のデバッグ
+                      // catalog-2604特別対応：「などの花」「の花」を含む備考は完全除去
                       if (moth.id === 'catalog-2604') {
-                        console.log('DEBUG catalog-2604 parts check:', {
-                          note,
-                          existingParts: Array.from(existingParts),
-                          hasExistingPart: Array.from(existingParts).some(part => note.includes(part))
-                        });
+                        console.log('DEBUG catalog-2604 filtering note:', note);
+                        // 「の花」「などの花」が含まれる場合は無条件で除去
+                        if (note.includes('の花') || note.includes('など花') || note.includes('などの花')) {
+                          console.log('DEBUG catalog-2604: Filtering out flower note:', note);
+                          return false;
+                        }
                       }
                       
                       // 既に統合済みの部位情報を含む備考は除去
                       const hasExistingPart = Array.from(existingParts).some(part => note.includes(part));
                       if (hasExistingPart) {
-                        // 部位情報のみの備考（「の花」「の実」など）は完全に除去
-                        const isOnlyPartInfo = note.match(/^[\s\S]*?の?(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[\s\S]*?$/);
-                        if (isOnlyPartInfo) {
+                        // 部位情報のみの備考は除去（強化版）
+                        // パターン1: 「の花」「の実」「から花」「で花」など
+                        const simplePartPattern = /^[^、；;]*?(の|から|で)(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[^、；;]*?[。．]?$/;
+                        // パターン2: 「などの花」「など花」「等の花」「等花」など
+                        const extendedPartPattern = /^[^、；;]*?(など|等)(の)?(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[^、；;]*?[。．]?$/;
+                        // パターン3: 単純な部位のみ「花」「実」など
+                        const singlePartPattern = /^[^、；;]*?(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[^、；;]*?[。．]?$/;
+                        
+                        if (simplePartPattern.test(note) || extendedPartPattern.test(note) || singlePartPattern.test(note)) {
                           return false; // 部位情報のみの場合は除去
                         }
                         
@@ -906,13 +941,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
                 {/* 成虫発生時期を除去した備考情報 */}
                 {moth.notes && (() => {
-                  const { notes: remainingNotes } = extractEmergenceTime(moth.notes);
-                  // Debug logging for catalog-2604
+                  let { notes: remainingNotes } = extractEmergenceTime(moth.notes);
+                  
+                  // catalog-2604特別対応：「などの花」「の花」を含む備考は完全除去
                   if (moth.id === 'catalog-2604') {
                     console.log('DEBUG catalog-2604 notes section:', {
                       original: moth.notes,
                       remaining: remainingNotes
                     });
+                    if (remainingNotes.includes('の花') || remainingNotes.includes('など花') || remainingNotes.includes('などの花')) {
+                      console.log('DEBUG catalog-2604: Filtering out flower note in condition check:', remainingNotes);
+                      remainingNotes = '';
+                    }
                   }
                   
                   // 重複チェック
@@ -935,7 +975,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       <div className="text-sm text-slate-600 dark:text-slate-300">
                         <span className="font-medium">備考:</span>{' '}
                         {(() => {
-                          const { notes: remainingNotes } = extractEmergenceTime(moth.notes);
+                          let { notes: remainingNotes } = extractEmergenceTime(moth.notes);
+                          
+                          // catalog-2604特別対応：「などの花」「の花」を含む備考は完全除去
+                          if (moth.id === 'catalog-2604') {
+                            console.log('DEBUG catalog-2604 filtering remainingNotes:', remainingNotes);
+                            if (remainingNotes.includes('の花') || remainingNotes.includes('など花') || remainingNotes.includes('などの花')) {
+                              console.log('DEBUG catalog-2604: Filtering out flower note in remaining notes:', remainingNotes);
+                              remainingNotes = '';
+                            }
+                          }
+                          
                           return remainingNotes.trim();
                         })()}
                       </div>

@@ -4,18 +4,18 @@
     <meta charset="utf-8">
     <title>昆虫食草図鑑</title>
     <script type="text/javascript">
-      // GitHub Pages hack for SPAs
-      // https://github.com/rafgraph/spa-github-pages
-      var pathSegmentsToKeep = 1;
+      // GitHub Pages SPA redirect
       var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + 
-        '/?/' + 
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      // Only redirect if not already on the homepage with parameters
+      if (l.pathname !== '/' && !l.search.includes('?/')) {
+        l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          '/?/' + 
+          l.pathname.slice(1).replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      }
     </script>
   </head>
   <body>

@@ -23,25 +23,25 @@ const InstagramEmbed = ({ className = "" }) => {
 
   return (
     <div className={`instagram-embed-container ${className} w-full`} ref={embedRef}>
-      <div className="space-y-4">
+      <div className="w-full flex justify-center px-4">
         {/* Instagram Timeline Embed */}
         <blockquote 
-          className="instagram-media" 
+          className="instagram-media mx-auto" 
           data-instgrm-permalink="https://www.instagram.com/onychodactylus_nipponoborealis/" 
           data-instgrm-version="14"
           style={{
             background: '#FFF',
-            border: '0',
-            borderRadius: '3px',
-            boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)',
-            margin: '1px',
+            border: '1px solid #dbdbdb',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            margin: '0 auto',
             maxWidth: '540px',
-            minWidth: '326px',
+            minWidth: '320px',
             padding: '0',
             width: '100%'
           }}
         >
-          <div style={{ padding: '16px' }}>
+          <div style={{ padding: '8px 10px' }}>
             <a 
               href="https://www.instagram.com/onychodactylus_nipponoborealis/" 
               style={{
@@ -50,41 +50,44 @@ const InstagramEmbed = ({ className = "" }) => {
                 padding: '0 0',
                 textAlign: 'center',
                 textDecoration: 'none',
-                width: '100%'
+                width: '100%',
+                display: 'block'
               }} 
               target="_blank"
               rel="noopener noreferrer"
             >
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
                 <div style={{
                   backgroundColor: '#F4F4F4',
                   borderRadius: '50%',
-                  flexGrow: '0',
-                  height: '40px',
-                  marginRight: '14px',
-                  width: '40px'
+                  flexShrink: '0',
+                  height: '28px',
+                  marginRight: '8px',
+                  width: '28px'
                 }}></div>
-                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: '1', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: '1', justifyContent: 'center', minWidth: '0', overflow: 'hidden' }}>
                   <div style={{
                     backgroundColor: '#F4F4F4',
                     borderRadius: '4px',
                     flexGrow: '0',
-                    height: '14px',
-                    marginBottom: '6px',
-                    width: '100px'
+                    height: '10px',
+                    marginBottom: '3px',
+                    width: '70px',
+                    maxWidth: '50%'
                   }}></div>
                   <div style={{
                     backgroundColor: '#F4F4F4',
                     borderRadius: '4px',
                     flexGrow: '0',
-                    height: '14px',
-                    width: '60px'
+                    height: '10px',
+                    width: '45px',
+                    maxWidth: '35%'
                   }}></div>
                 </div>
               </div>
-              <div style={{ padding: '19% 0' }}></div>
-              <div style={{ display: 'block', height: '50px', margin: '0 auto 12px', width: '50px' }}>
-                <svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <div style={{ padding: '15% 0' }}></div>
+              <div style={{ display: 'block', height: '40px', margin: '0 auto 8px', width: '40px' }}>
+                <svg width="40px" height="40px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-511.000000, -20.000000)" fill="#000000">
                       <g>
@@ -94,14 +97,14 @@ const InstagramEmbed = ({ className = "" }) => {
                   </g>
                 </svg>
               </div>
-              <div style={{ paddingTop: '8px' }}>
+              <div style={{ paddingTop: '6px' }}>
                 <div style={{
                   color: '#3897f0',
                   fontFamily: 'Arial,sans-serif',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontStyle: 'normal',
                   fontWeight: '550',
-                  lineHeight: '18px'
+                  lineHeight: '16px'
                 }}>
                   Instagramでこの投稿をみる
                 </div>
@@ -110,12 +113,12 @@ const InstagramEmbed = ({ className = "" }) => {
             <p style={{
               color: '#c9c8cd',
               fontFamily: 'Arial,sans-serif',
-              fontSize: '14px',
-              lineHeight: '17px',
+              fontSize: '11px',
+              lineHeight: '14px',
               marginBottom: '0',
-              marginTop: '8px',
+              marginTop: '4px',
               overflow: 'hidden',
-              padding: '8px 0 7px',
+              padding: '4px 8px 3px',
               textAlign: 'center',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap'
@@ -125,10 +128,10 @@ const InstagramEmbed = ({ className = "" }) => {
                 style={{
                   color: '#c9c8cd',
                   fontFamily: 'Arial,sans-serif',
-                  fontSize: '14px',
+                  fontSize: '11px',
                   fontStyle: 'normal',
                   fontWeight: 'normal',
-                  lineHeight: '17px',
+                  lineHeight: '14px',
                   textDecoration: 'none'
                 }} 
                 target="_blank"
@@ -142,10 +145,10 @@ const InstagramEmbed = ({ className = "" }) => {
                 style={{
                   color: '#c9c8cd',
                   fontFamily: 'Arial,sans-serif',
-                  fontSize: '14px',
+                  fontSize: '11px',
                   fontStyle: 'normal',
                   fontWeight: 'normal',
-                  lineHeight: '17px',
+                  lineHeight: '14px',
                   textDecoration: 'none'
                 }} 
                 target="_blank"

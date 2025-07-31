@@ -29,7 +29,9 @@ const getInsectImagePath = (insect, imageExtensions = {}) => {
     ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
     // タマムシ科
     ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
-    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii']
+    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
+    // シジミチョウ科
+    ['クロマダラソテツシジミ', 'Chilades_pandava']
   ]);
 
   const createSafeFilename = (scientificName) => {

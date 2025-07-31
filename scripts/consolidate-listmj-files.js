@@ -21,7 +21,7 @@ const FILES = {
   base: path.join(PROJECT_ROOT, 'ListMJ_hostplants_integrated_with_bokutou.csv'),
   
   // 統合対象ファイル
-  fuyushaku: path.join(PROJECT_ROOT, 'public/日本のフユシャク.csv'),
+  fuyushaku: path.join(PROJECT_ROOT, 'public/日本の冬尺蛾.csv'),
   kiriga: path.join(PROJECT_ROOT, 'public/日本のキリガ.csv'),
   
   // 出力ファイル

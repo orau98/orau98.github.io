@@ -8,7 +8,7 @@ export const sourceLinks = {
   "日本産タマムシ大図鑑": "https://amzn.to/4m2vPWp",
   "ハムシハンドブック": "https://amzn.to/456YVhu",
   "日本のキリガ": "https://www.amazon.co.jp/dp/4883631958",
-  "日本のフユシャク": "https://www.amazon.co.jp/dp/4886391001"
+  "日本の冬尺蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000509/ct6/page1/recommend/"
 };
 
 // 出典から参考リンクを取得する関数

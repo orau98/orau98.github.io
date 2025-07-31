@@ -2,7 +2,7 @@ const fs = require('fs');
 const Papa = require('papaparse');
 
 // Read the actual CSV file
-let csvText = fs.readFileSync('public/日本のフユシャク.csv', 'utf-8');
+let csvText = fs.readFileSync('public/日本の冬尺蛾.csv', 'utf-8');
 
 // Remove BOM if present
 if (csvText.charCodeAt(0) === 0xFEFF) {

@@ -272,22 +272,22 @@ function generateInsectHTML(insect, type) {
   <title>${insect.name} (${scientificName}) - ${typeNames[type]}図鑑</title>
   <meta name="description" content="${insect.name}の詳細情報、分類、食草について。${hostPlantsArray.length > 0 ? `食草: ${hostPlantsArray.slice(0, 3).join('、')}など` : ''}">
   <meta name="keywords" content="${insect.name},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
-  <link rel="canonical" href="https://h-amoto.github.io/insects-host-plant-explorer-/${type}/${insect.id}">
+  <link rel="canonical" href="https://orau98.github.io/${type}/${insect.id}">
   <link rel="stylesheet" href="/insects-host-plant-explorer-/assets/meta-styles.css">
   
   <!-- Open Graph -->
   <meta property="og:title" content="${insect.name} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta property="og:description" content="${insect.name}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://h-amoto.github.io/insects-host-plant-explorer-/${type}/${insect.id}">
-  ${imageUrl ? `<meta property="og:image" content="https://h-amoto.github.io${imageUrl}">` : ''}
+  <meta property="og:url" content="https://orau98.github.io/${type}/${insect.id}">
+  ${imageUrl ? `<meta property="og:image" content="https://orau98.github.io${imageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${insect.name} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta property="twitter:description" content="${insect.name}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
-  ${imageUrl ? `<meta property="twitter:image" content="https://h-amoto.github.io${imageUrl}">` : ''}
+  ${imageUrl ? `<meta property="twitter:image" content="https://orau98.github.io${imageUrl}">` : ''}
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -312,10 +312,10 @@ function generateInsectHTML(insect, type) {
       }
     },
     "description": "${insect.name}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}",
-    "url": "https://h-amoto.github.io/insects-host-plant-explorer-/${type}/${insect.id}",
+    "url": "https://orau98.github.io/${type}/${insect.id}",
     ${imageUrl ? `"image": {
       "@type": "ImageObject",
-      "url": "https://h-amoto.github.io${imageUrl}",
+      "url": "https://orau98.github.io${imageUrl}",
       "caption": "${insect.name}（${scientificName}）の写真"
     },` : ''}
     "inLanguage": "ja",
@@ -471,22 +471,22 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
   <title>${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
   <meta name="description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${plantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.name).join(',')}">
-  <link rel="canonical" href="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html">
+  <link rel="canonical" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html">
   <link rel="stylesheet" href="/insects-host-plant-explorer-/assets/meta-styles.css">
   
   <!-- Open Graph -->
   <meta property="og:title" content="${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
   <meta property="og:description" content="${plantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html">
-  ${mainImageUrl ? `<meta property="og:image" content="https://h-amoto.github.io${mainImageUrl}">` : ''}
+  <meta property="og:url" content="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html">
+  ${mainImageUrl ? `<meta property="og:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${plantName} - 食草図鑑">
   <meta property="twitter:description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫情報">
-  ${mainImageUrl ? `<meta property="twitter:image" content="https://h-amoto.github.io${mainImageUrl}">` : ''}
+  ${mainImageUrl ? `<meta property="twitter:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -500,8 +500,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
       "value": "${plantName}"
     },
     "description": "${plantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
-    "url": "https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(safePlantName)}.html",
-    ${mainImageUrl ? `"image": "https://h-amoto.github.io${mainImageUrl}",` : ''}
+    "url": "https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html",
+    ${mainImageUrl ? `"image": "https://orau98.github.io${mainImageUrl}",` : ''}
     "inLanguage": "ja",
     "hasEcologicalInteraction": [
       ${relatedInsects.map(insect => `{
@@ -688,8 +688,8 @@ async function generateMetaPages() {
       }
     });
     
-    // 日本のフユシャク.csvからも成虫出現時期データを読み込み
-    const fuyushakuCsvPath = path.join(__dirname, '../public/日本のフユシャク.csv');
+    // 日本の冬尺蛾.csvからも成虫出現時期データを読み込み
+    const fuyushakuCsvPath = path.join(__dirname, '../public/日本の冬尺蛾.csv');
     if (fs.existsSync(fuyushakuCsvPath)) {
       const fuyushakuData = loadCSV(fuyushakuCsvPath);
       

@@ -44,10 +44,10 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
               
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 leading-tight">
                 <span className="block bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl">
-                  "繋がり"が見える
+                  昆虫 食草
                 </span>
                 <span className="block bg-gradient-to-r from-blue-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl">
-                  昆虫図鑑
+                  "繋がり"が見える図鑑
                 </span>
               </h1>
               
@@ -294,7 +294,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                   
                   {/* Instagram埋め込み - 個別投稿表示 */}
                   <div className="space-y-4">
-                    <div className="instagram-wrapper border-2 border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-xl p-3 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
+                    <div className="instagram-wrapper border-2 border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-xl p-1 sm:p-2 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
                       <InstagramEmbed />
                     </div>
                   </div>

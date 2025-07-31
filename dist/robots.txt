@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # サイトマップ
-Sitemap: https://h-amoto.github.io/insects-host-plant-explorer-/sitemap.xml
+Sitemap: https://orau98.github.io/sitemap.xml
 
 # 画像ディレクトリを許可
 Allow: /images/

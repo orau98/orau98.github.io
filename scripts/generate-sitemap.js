@@ -30,7 +30,7 @@ function loadCSV(filePath) {
 function generateSitemap() {
   console.log('サイトマップ生成を開始します...');
   
-  const baseUrl = 'https://h-amoto.github.io/insects-host-plant-explorer-';
+  const baseUrl = 'https://orau98.github.io';
   const currentDate = new Date().toISOString().split('T')[0];
   
   let urls = [];

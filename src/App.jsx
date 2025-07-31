@@ -60,7 +60,9 @@ function App() {
     ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
     // タマムシ科
     ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
-    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii']
+    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
+    // シジミチョウ科
+    ['クロマダラソテツシジミ', 'Chilades_pandava']
   ]);
   
   const isHomePage = location.pathname === '/';
@@ -91,7 +93,7 @@ function App() {
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本のキリガ.csv`;
-      const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本のフユシャク.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
+      const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本の冬尺蛾.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const emergenceTimeCsvPath = `${import.meta.env.BASE_URL}emergence_time_integrated.csv`;
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
@@ -676,16 +678,16 @@ function App() {
           // Store emergence time data from フユシャク (フユシャクCSVを優先 - より詳細で正確なデータ)
           if (japaneseName && emergenceTime && emergenceTime !== '不明') {
             // フユシャクCSVのデータを常に優先して上書き
-            emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本のフユシャク' });
+            emergenceTimeMap.set(japaneseName, { time: emergenceTime, source: '日本の冬尺蛾' });
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
             // フユシャクCSVのデータを常に優先して上書き
-            emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本のフユシャク' });
+            emergenceTimeMap.set(scientificName, { time: emergenceTime, source: '日本の冬尺蛾' });
             
             // Also store with author/year removed for better matching
             const cleanedScientificName = scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim();
             if (cleanedScientificName !== scientificName) {
-              emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本のフユシャク' });
+              emergenceTimeMap.set(cleanedScientificName, { time: emergenceTime, source: '日本の冬尺蛾' });
             }
           }
           
@@ -1913,7 +1915,7 @@ function App() {
                 
                 // Also force emergence time data for カバシタムクゲエダシャク
                 const forcedEmergenceTime = '3月上旬~3月下旬';
-                emergenceTimeMap.set(mothName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
+                emergenceTimeMap.set(mothName, { time: forcedEmergenceTime, source: '日本の冬尺蛾' });
                 emergenceTimeMap.set(scientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
                 emergenceTimeMap.set(cleanedScientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
                 
@@ -2870,7 +2872,7 @@ function App() {
                 // フユシャクデータを最優先にする
                 let sourceToUse = row['出典'] || '不明';
                 if (hasFuyushakuData) {
-                  sourceToUse = '日本のフユシャク';
+                  sourceToUse = '日本の冬尺蛾';
                 } else if (hasKirigaData) {
                   sourceToUse = '日本のキリガ';
                 }
@@ -2970,7 +2972,7 @@ function App() {
                   emergenceTimeSource: (() => {
                     // Special override for カバシタムクゲエダシャク
                     if (mothName === 'カバシタムクゲエダシャク') {
-                      return '日本のフユシャク';
+                      return '日本の冬尺蛾';
                     }
                     
                     const emergenceData = emergenceTimeMap.get(mothName) || 

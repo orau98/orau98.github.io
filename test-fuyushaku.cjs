@@ -3,7 +3,7 @@ const fs = require('fs');
 const Papa = require('papaparse');
 
 // Read the フユシャク CSV
-let fuyushakuText = fs.readFileSync('public/日本のフユシャク.csv', 'utf-8');
+let fuyushakuText = fs.readFileSync('public/日本の冬尺蛾.csv', 'utf-8');
 // Remove BOM if present
 if (fuyushakuText.charCodeAt(0) === 0xFEFF) {
   fuyushakuText = fuyushakuText.substring(1);

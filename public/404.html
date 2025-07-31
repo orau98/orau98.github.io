@@ -4,23 +4,18 @@
   <meta charset="utf-8">
   <title>昆虫と食草の図鑑</title>
   <script type="text/javascript">
-    // GitHub Pages SPA redirect script
-    // This script takes the current url and converts the path and query
-    // string into just a query string, and then redirects the browser
-    // to the new url with only a query string and hash fragment,
-    // e.g. https://www.foo.tld/one/two?a=b&c=d#qwe, becomes
-    // https://www.foo.tld/?/one/two&a=b~and~c=d#qwe
-    var pathSegments = location.pathname.slice(1).split('/');
-    if (pathSegments[0] === 'insects-host-plant-explorer-') {
-      pathSegments.shift(); // remove the repository name from the path
+    // GitHub Pages SPA redirect
+    var l = window.location;
+    // Only redirect if not already on the homepage with parameters
+    if (l.pathname !== '/' && !l.search.includes('?/')) {
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        '/?/' + 
+        l.pathname.slice(1).replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
     }
-    
-    location.replace(
-      location.protocol + '//' + location.hostname + location.port.replace(/^(?=:)/, '') +
-      '/insects-host-plant-explorer-/?/' + pathSegments.join('/').replace(/&/g, '~and~') +
-      (location.search ? '&' + location.search.slice(1).replace(/&/g, '~and~') : '') +
-      location.hash
-    );
   </script>
 </head>
 <body>

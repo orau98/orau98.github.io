@@ -84,7 +84,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
             </div>
             <div className="hidden sm:block">
               <h1 className="text-2xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent group-hover:from-blue-200 group-hover:to-emerald-200 transition-all duration-300">
-                "繋がり"が見える昆虫図鑑
+                昆虫 食草 - "繋がり"が見える図鑑
               </h1>
               <p className="text-xs text-slate-400 font-medium tracking-wide -mt-1">
                 Insect Host Plant Explorer
@@ -92,7 +92,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
             </div>
             <div className="sm:hidden">
               <h1 className="text-xl font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                "繋がり"が見える昆虫図鑑
+                昆虫 食草図鑑
               </h1>
             </div>
           </Link>

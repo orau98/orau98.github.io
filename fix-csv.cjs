@@ -2,7 +2,7 @@
 const fs = require('fs');
 
 // Read the malformed CSV
-let csvText = fs.readFileSync('public/日本のフユシャク.csv', 'utf-8');
+let csvText = fs.readFileSync('public/日本の冬尺蛾.csv', 'utf-8');
 
 // Remove BOM if present
 if (csvText.charCodeAt(0) === 0xFEFF) {
@@ -40,7 +40,7 @@ for (let i = 1; i < lines.length; i++) {
 
 // Join and write the fixed CSV
 const fixedCsv = fixedLines.join('\n');
-fs.writeFileSync('public/日本のフユシャク.csv', fixedCsv, 'utf-8');
+fs.writeFileSync('public/日本の冬尺蛾.csv', fixedCsv, 'utf-8');
 
 console.log('Fixed CSV written successfully');
 console.log('Original lines:', lines.length);
