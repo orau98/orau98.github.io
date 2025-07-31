@@ -40,6 +40,34 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
      moth.type === 'leafbeetle' ? `/leafbeetle/${moth.id}` : `/moth/${moth.id}`) : 
     `${baseRoute}/${moth.id}`;
   
+  // 和名→学名ファイル名マッピング（App.jsxと同期）
+  const globalJapaneseToScientificMapping = new Map([
+    // 蛾類
+    ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
+    ['オオマエベニトガリバ', 'Habroloma_lewisii'],
+    ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
+    ['シラオビキリガ', 'Cosmia_camptostigma'],
+    ['シラホシキリガ', 'Cosmia_pyralina'],
+    ['タカオキリガ', 'Pseudopanolis_takao'],
+    ['ツマベニヒメハマキ', 'Phaecasiophora_roseana_2'],
+    ['ナシキリガ', 'Cosmia_restituta_Walker_1857'],
+    ['ニッコウケンモン', 'Craniophora_praeclara'],
+    ['ニッコウシャチホコ', 'Shachia_circumscripta'],
+    ['ノコメセダカヨトウ', 'Orthogonia_sera'],
+    ['ハスモンヨトウ', 'Spodoptera_litura'],
+    ['マエジロシャチホコ', 'Notodonta_albicosta'],
+    ['クロハナコヤガ', 'Aventiola_pusilla'],
+    ['フタスジエグリアツバ', 'Gonepatica_opalina'],
+    ['ベニスズメ', 'Deilephila_elpenor'],
+    ['ヒメスズメ', 'Deilephila_askoldensis'],
+    ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
+    ['ナシイラガ', 'Narosoideus_flavidorsalis'],
+    ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
+    // タマムシ科
+    ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
+    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii']
+  ]);
+
   // Create safe filename for image checking
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';
@@ -54,44 +82,27 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   
   // Try to find the actual image file that exists
   const getImageFilename = () => {
-    // Debug log for specific species
-    const isDebugTarget = moth.name === 'ルイスヒラタチビタマムシ';
-    
-    if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ image filename detection:', {
-        mothName: moth.name,
-        scientificName: moth.scientificName,
-        scientificFilename: moth.scientificFilename,
-        imageFilenamesSize: imageFilenames.size,
-        imageFilenamesLoaded: imageFilenames.size > 0
-      });
-    }
     
     // If imageFilenames is not loaded yet, use default
     if (!imageFilenames || imageFilenames.size === 0) {
-      if (isDebugTarget) {
-        console.log('DEBUG: ルイスヒラタチビタマムシ - imageFilenames not loaded, using default');
-      }
-      return moth.scientificFilename || createSafeFilename(moth.scientificName);
+      const mappedFilename = globalJapaneseToScientificMapping.get(moth.name);
+      return mappedFilename || moth.scientificFilename || createSafeFilename(moth.scientificName);
+    }
+    
+    // 0. Try mapped filename first (highest priority)
+    const mappedFilename = globalJapaneseToScientificMapping.get(moth.name);
+    if (mappedFilename && imageFilenames.has(mappedFilename)) {
+      return mappedFilename;
     }
     
     // 1. Try scientific filename directly
     if (moth.scientificFilename && imageFilenames.has(moth.scientificFilename)) {
-      if (isDebugTarget) {
-        console.log('DEBUG: ルイスヒラタチビタマムシ - found with scientificFilename:', moth.scientificFilename);
-      }
       return moth.scientificFilename;
     }
     
     // 2. Try generated safe filename
     const safeFilename = createSafeFilename(moth.scientificName);
-    if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ - generated safeFilename:', safeFilename);
-    }
     if (imageFilenames.has(safeFilename)) {
-      if (isDebugTarget) {
-        console.log('DEBUG: ルイスヒラタチビタマムシ - found with safeFilename:', safeFilename);
-      }
       return safeFilename;
     }
     
@@ -153,11 +164,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       }
     }
     
-    // Default to safe filename
+    // Default to mapped filename, then scientific filename, then safe filename
     if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ - no match found, using default safeFilename:', safeFilename);
+      console.log('DEBUG: ルイスヒラタチビタマムシ - no match found, using default:', mappedFilename || moth.scientificFilename || safeFilename);
     }
-    return safeFilename;
+    return mappedFilename || moth.scientificFilename || safeFilename;
   };
   
   const imageFilename = getImageFilename();
@@ -178,19 +189,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   // Check if we have an actual match in imageFilenames
   const hasImageFilename = imageFilenames.size > 0 ? imageFilenames.has(imageFilename) : true;
   
-  // Debug log for specific species
-  if (moth.name === 'ルイスヒラタチビタマムシ' || moth.name === 'アオマダラタマムシ') {
-    console.log(`DEBUG: ${moth.name} final image check:`, {
-      selectedImageFilename: imageFilename,
-      imageUrl: imageUrl,
-      hasImageFilename: hasImageFilename,
-      imageFilenamesContainsSelectedFilename: imageFilenames.has(imageFilename),
-      encodedImageFilename: encodeURIComponent(imageFilename),
-      type: moth.type,
-      imageFolder: imageFolder,
-      imageExtension: imageExtension
-    });
-  }
   
   // Preload priority images
   useEffect(() => {

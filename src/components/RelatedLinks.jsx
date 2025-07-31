@@ -101,15 +101,6 @@ const InsectImage = ({ insect, large = false }) => {
   const loadingSize = large ? "w-8 h-8" : "w-6 h-6";
   const iconSize = large ? "w-12 h-12" : "w-8 h-8";
   
-  // アオマダラタマムシのデバッグ
-  if (insect.name === 'アオマダラタマムシ') {
-    console.log('DEBUG: アオマダラタマムシ画像パス:', {
-      insect: insect,
-      imageExtensions: imageExtensions,
-      imagePaths: imagePaths,
-      currentIndex: imageIndex
-    });
-  }
   
   const handleImageError = () => {
     if (imageIndex < imagePaths.length - 1) {

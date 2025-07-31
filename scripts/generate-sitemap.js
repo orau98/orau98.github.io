@@ -46,6 +46,7 @@ function generateSitemap() {
   try {
     // CSVデータを読み込み
     const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_master.csv'));
+    const beetleData = loadCSV(path.join(__dirname, '../public/buprestidae_host.csv'));
     
     // 昆虫データの処理
     let mothCount = 0, butterflyCount = 0, beetleCount = 0, leafbeetleCount = 0;
@@ -96,6 +97,32 @@ function generateSitemap() {
       }
     });
     
+    // 専用beetle CSVデータの処理
+    beetleData.forEach((row, index) => {
+      const insectName = row['和名'] || '';
+      const hostPlants = row['食草'] || '';
+      
+      if (!insectName) return;
+      
+      // beetle URLを生成 (0ベースのインデックス)
+      urls.push({
+        loc: `${baseUrl}/beetle/beetle-${index}`,
+        lastmod: currentDate,
+        changefreq: 'monthly',
+        priority: '0.8'
+      });
+      
+      // 食草データを収集
+      if (hostPlants && hostPlants !== '不明') {
+        const plants = hostPlants.split(/[、,，]/).map(p => p.trim()).filter(p => p);
+        plants.forEach(plant => {
+          if (plant) {
+            hostPlantsSet.add(plant);
+          }
+        });
+      }
+    });
+    
     // 植物ページのURL
     hostPlantsSet.forEach(plantName => {
       urls.push({
@@ -128,7 +155,7 @@ function generateSitemap() {
     console.log(`サイトマップ生成完了: ${urls.length} URLs`);
     console.log(`- 蛾: ${mothCount}種`);
     console.log(`- 蝶: ${butterflyCount}種`);
-    console.log(`- タマムシ: ${beetleCount}種`);
+    console.log(`- タマムシ: ${beetleCount + beetleData.length}種 (メイン: ${beetleCount}, 専用CSV: ${beetleData.length})`);
     console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- 食草: ${hostPlantsSet.size}種`);
     
