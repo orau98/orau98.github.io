@@ -1701,6 +1701,7 @@ function App() {
               // Improved host plant parsing with validation
               let rawHostPlant = row['食草'] || '';
               let rawRemarks = row['備考'] || '';
+              let hostPlantRemarks = row['食草に関する備考'] || '';
               const hostPlantNotes = []; // Initialize hostPlantNotes array here
               
               
@@ -2055,8 +2056,13 @@ function App() {
                 hostPlantNotes.push('広食性（多食性）');
               }
               
-              // Special handling for "広食性" - add explanatory note for オオノコバヨトウ
-              if (rawHostPlant === '広食性' && mothName === 'オオノコバヨトウ') {
+              // Add host plant remarks from CSV if available
+              if (hostPlantRemarks && hostPlantRemarks.trim()) {
+                hostPlantNotes.push(hostPlantRemarks.trim());
+              }
+              
+              // Special handling for "広食性" - add explanatory note for オオノコバヨトウ (legacy support)
+              if (rawHostPlant === '広食性' && mothName === 'オオノコバヨトウ' && !hostPlantRemarks) {
                 hostPlantNotes.push('おそらく多種の植物を食べるのではないかと思われる');
               }
               
