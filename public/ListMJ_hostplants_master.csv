@@ -360,7 +360,7 @@
 ,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,citima,,Seksjaeva,1989,,クロツバラチビガ,,,,,,,,,
 ,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,armata,,Seksjaeva,1989,,シナノキチビガ,,,,,,,,,
 ,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,univoca,,Meyrick,1918,,ノアサガオチビガ,,,,,,,,,
-,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,demaryella,,"(Duponchel) ",1840,,クリチビガ,,,,,,,,,
+,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,demaryella,,(Duponchel) ,1840,,クリチビガ,,,,,,,,,
 ,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,serratella,,"Kobayashi, Hirowatari & Kuroko",2010,,ケヤキチビガ,,,,,,,,,
 ,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,kogii,,"Kobayashi, Hirowatari & Kuroko",2010,,コギチビガ,,,,,,,,,
 ,Bucculatricidae,チビガ科,,,,,,,Bucculatrix,,thoracella,,(Thunberg),1794,,ヤマブキトラチビガ,,,,,,,,,
@@ -640,7 +640,7 @@
 972,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Zelleria,,japonicella,,Moriuti,1977,,ニセイボタコスガ,,,,,,,"Zelleria japonicella Moriuti, 1977",エゾイボタ（モクセイ科）,日本産蛾類標準図鑑3
 973,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Zelleria,,silvicolella,,Moriuti,1977,,ハシドイコスガ,,,,,,,"Zelleria silvicolella Moriuti, 1977",ハシドイ（モクセイ科）,日本産蛾類標準図鑑3
 974,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Xyrosaris,,lichneuta,,Meyrick,1918,,ホソバコスガ,,,,,,,"Xyrosaris lichneuta Meyrick, 1918",ツルウメモドキ; ニシキギ; マユミ; ツリバナ（以上ニシキギ科）,日本産蛾類標準図鑑3
-,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Xyrosaris,,"sp. 1 of Oku, 2003",,,," [nr lichneuta Meyrick]",ウスモンホソバコスガ,,,,,非掲載,,,,
+,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Xyrosaris,,"sp. 1 of Oku, 2003",,,, [nr lichneuta Meyrick],ウスモンホソバコスガ,,,,,非掲載,,,,
 ,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Xyrosaris,,"sp. 2 of Oku, 2003",,,,,ヒメホソバコスガ,,,,,非掲載,,,,
 976,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Klausius,,minor,,Moriuti,1977,,ヒメシロジスガ,,,,,,,"Klausius minor Moriuti, 1977",不明,日本産蛾類標準図鑑3
 977,Yponomeutidae,スガ科,Yponomeutinae,スガ亜科,,,,,Klausius,,major,,Moriuti,1977,,オオシロジスガ,,,,,,,"Klausius major Moriuti, 1977",不明,日本産蛾類標準図鑑3
@@ -1228,7 +1228,7 @@
 1225,Cosmopterigidae,カザリバガ科,Cosmopteriginae,カザリバガ亜科,,,,,Cosmopterix,,phyllostachysea,,Kuroko,1975,,マダケカザリバ,,,,,,,,,
 ,Cosmopterigidae,カザリバガ科,Cosmopteriginae,カザリバガ亜科,,,,,Cosmopterix,,"sp. 1 of Oku, 2003",,,,,オオホソカザリバ,,,,,非掲載,,,,
 1155,Cosmopterigidae,カザリバガ科,Cosmopteriginae,カザリバガ亜科,,,,,Macrobathra,,quercea,,Moriuti,1973,,キオビキバガ,,,,,掲載漏れ,,,,
-,Cosmopterigidae,カザリバガ科,Cosmopteriginae,カザリバガ亜科,,,,,Macrobathra,,"sp. 1 of Oku, 2003",,,," [nr nomaea Meyrick]",ヨツモンホソマルハキバガ,,,,,非掲載,,,,
+,Cosmopterigidae,カザリバガ科,Cosmopteriginae,カザリバガ亜科,,,,,Macrobathra,,"sp. 1 of Oku, 2003",,,, [nr nomaea Meyrick],ヨツモンホソマルハキバガ,,,,,非掲載,,,,
 ,Cosmopterigidae,カザリバガ科,Cosmopteriginae,カザリバガ亜科,,,,,Macrobathra,,"sp. 2 of Oku, 2003",,,,,ミツモンホソマルハキバガ,,,,,非掲載,,,,
 ,Chrysopeleiidae,コブカザリバガ科,,,,,,,Gisilia,,melanobasis,,Sohn & Park,2018,,ズグロコブカザリバ,,,,,,学名決定,,,
 ,Chrysopeleiidae,コブカザリバガ科,,,,,,,Gisilia,,tamrae,,Sohn & Park,2018,,ホソバネコブカザリバ,,,,,出版後の追加,新記録・再分類等,,,
@@ -1416,7 +1416,7 @@
 1303,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,tostella,,Stringer,1930,,ムモンフサキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,lespedezae,,Park,1994,,ハギフサキバガ,,,,,,,,,
 1301,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,praevacua,,Meyrick,1922,,ウスボシフサキバガ,,,,,,,,,
-,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,"sp. 1 of Ueda, 2013",,,," [nr quercicola Meyrick]",オオウスホシフサキバガ,,,,,,,,,
+,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,"sp. 1 of Ueda, 2013",,,, [nr quercicola Meyrick],オオウスホシフサキバガ,,,,,,,,,
 1302+1308,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,acuminata,,(Staudinger),1876,,コフサキバガ,,,,,,,,,
 1297,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,ferruginosa,,Meyrick,1913,,ヒメフサキバガ,,,,,,,,,
 1298,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,consertella,,(Christoph),1882,,コカバフサキバガ,,,,,,,,,
@@ -1430,7 +1430,7 @@
 1307,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,junisonis,,Matsumura,1931,,ジュウニソウキバガ,,,,,見出し無,,,,
 1313,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,heriguronis,,(Matsumura),1931,,カバイロキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,minutia,,Park,1994,,ミニフサキバガ,,,,,,,,,
-,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,"sp. 2 of Ueda, 2013",,,," [nr qinlingensis (Li & Zheng)]",クロフサキバガ,,,,,,,,,
+,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,"sp. 2 of Ueda, 2013",,,, [nr qinlingensis (Li & Zheng)],クロフサキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,beljaevi,,(Ponomarenko),1998,,コクロフサキバガ,,,,,,,,,
 1314,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,rasilella,,(Herrich-Schäffer),1854,,ウスグロキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dichomeris,,mitteri,,Park,1994,,アカマダラフサキバガ,,,,,,,,,
@@ -1454,7 +1454,7 @@
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Anarsia,,tortuosa,,(Meyrick),1913,,チャイロスジキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Neofaculta,,taigana,,Ponomarenko,1998,,ミヤマオオクロキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Faristenia,,acerella,,Ponomarenko,1993,,カラコギカエデキバガ,,,,,,,,,
-,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Faristenia,,"sp. of Ueda, 2013",,,," [nr acerella Ponomarenko]",ニセカラコギカエデキバガ,,ガマズミキバガ,,,,,,,
+,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Faristenia,,"sp. of Ueda, 2013",,,, [nr acerella Ponomarenko],ニセカラコギカエデキバガ,,ガマズミキバガ,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Faristenia,,jumbongae,,Park,1993,,カワリノコメキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Faristenia,,furtumella,,Ponomarenko,1991,,ハイイロマダラノコメキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Faristenia,,hirowatarii,,Ueda,2012,,ヒロワタリシロノコメキバガ,,,,,,,,,
@@ -1473,7 +1473,7 @@
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Empalactis,,mediofasciana,,(Park),1991,,ナカオビキバガ,,,,,,,,,
 1289,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Empalactis,,petrinopis,,(Meyrick),1935,,ハイイロチビキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Empalactis,,hiranoi,,Ueda,2015,,ヒラノウスキキバガ,,,,,出版後の追加,新記録・再分類等,,,
-,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dendrophilia,,"sp. 3 of Oku, 2003",,,," [nr neotaphronoma Ponomarenko]",キガシラキバガ,,,,,非掲載,,,,
+,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Dendrophilia,,"sp. 3 of Oku, 2003",,,, [nr neotaphronoma Ponomarenko],キガシラキバガ,,,,,非掲載,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Bagdadia,,claviformis,,(Park),1993,,ワモンキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Bagdadia,,eucalla,,(Li & Zheng),1998,,ニセワモンキバガ,,,,,,,,,
 ,Gelechiidae,キバガ科,Dichomeridinae,フサキバガ亜科,,,,,Bagdadia,,gnomia,,(Ponomarenko),1995,,ホソバワモンキバガ,,,,,,,,,
@@ -3477,7 +3477,7 @@
 2107,Drepanidae,カギバガ科,Drepaninae,カギバガ亜科,,,,,Oreta,,turpis,,Butler,1877,,クロスジカギバ,,,,,,,"Oreta turpis Butler, 1877",ガマズミ; オオカメノキ; カンボク; テマリカンボク; ゴマギ (レンプクソウ科); チドリノキ (ムクロジ科); ゴマギ(以上レンプクソウ科); チドリノキ (ムクロジ科)の葉を巻いて蛹化するのが観察されている,日本産蛾類標準図鑑1
 2106,Drepanidae,カギバガ科,Drepaninae,カギバガ亜科,,,,,Oreta,,loochooana,,Swinhoe,1902,,オキナワカギバ,オキナワカギバ,,,,,,"Oreta loochooana Swinhoe, 1902",ハクサンボク; サンゴジュ (レンプクソウ科); サンゴジュ(以上レンプクソウ科),日本産蛾類標準図鑑1
 2108,Drepanidae,カギバガ科,Drepaninae,カギバガ亜科,,,,,Oreta,,fuscopurpurea,,Inoue,1956,,オオフトカギバ,,,,,,,"Oreta fuscopurpurea Inoue, 1956",モチノキ (モチノキ科),日本産蛾類標準図鑑1
-,Drepanidae,カギバガ科,Drepaninae,カギバガ亜科,,,,,Oreta,,"extensa ",,Walker,1855,,ヤエヤマフトカギバ,,,,,,,"Oreta extensa Walker, 1855",不明,日本産蛾類標準図鑑1
+,Drepanidae,カギバガ科,Drepaninae,カギバガ亜科,,,,,Oreta,,extensa ,,Walker,1855,,ヤエヤマフトカギバ,,,,,,,"Oreta extensa Walker, 1855",不明,日本産蛾類標準図鑑1
 2109,Drepanidae,カギバガ科,Drepaninae,カギバガ亜科,,,,,Hypsomadius,,insignis,,Butler,1877,,アカウラカギバ,,,,,,,"Hypsomadius insignis Butler, 1877",ユズリハ（単食性）,日本産蛾類標準図鑑1
 2110,Drepanidae,カギバガ科,Cyclidiinae,オオカギバガ亜科,,,,,Cyclidia,,substigmaria,,(Hübner),[1831],,オオカギバ,オオカギバ,,,,,,"Cyclidia substigmaria (Hübner, 1831)",ウリノキ（単食性）,日本産蛾類標準図鑑1
 2111,Drepanidae,カギバガ科,Cyclidiinae,オオカギバガ亜科,,,,,Mimozethes,,argentilinearia,,(Leech),1897,,ギンスジカギバ,,,,,,,"Mimozethes argentilinearia (Leech, 1897)",ウリノキ（単食性）,日本産蛾類標準図鑑1
@@ -4468,7 +4468,7 @@
 2978,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Kunugia,,yamadai,,Nagano,1917,,ヤマダカレハ,,,,,,,,クヌギ; コナラ; アベマキ; クリ; カシ類 (以上ブナ科),日本産蛾類標準図鑑1
 ,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Lebeda,,nobilis,,Walker,1855,,ムラクモカレハ,ムラクモカレハ,オオカレハ,,,,,,コナラ; アラカシ; アベマキ (以上ブナ科)。名義タイプ亜種はマツ類 (マツ科) など針葉樹を食すようである。,日本産蛾類標準図鑑1
 ,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Metanastria,,hyrtaca,,(Cramer),1779,,モンクロカレハ,,,,,出版後の追加,新記録・再分類等,,,
-2979,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Takanea," ",miyakei,,Wileman,1915,,ミヤケカレハ,,,,,,,,コメツガ (マツ科),日本産蛾類標準図鑑1
+2979,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Takanea, ,miyakei,,Wileman,1915,,ミヤケカレハ,,,,,,,,コメツガ (マツ科),日本産蛾類標準図鑑1
 ,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Takanea,,excisa,,(Wileman),1910,,オオミヤケカレハ,オオミヤケカレハ,,,,,,,,
 2980,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Poecilocampa,,tamanukii,,Matsumura,1928,,ウスズミカレハ,,,,,,,"Poecilocampa takamukui Matsumura, 1928",カシワ; ミズナラ; クヌギ (ブナ科); ヤマナラシ (ヤナギ科); ヤマハンノキ (カバノキ科); クヌギ (以上ブナ科); カラマツ (マツ科),日本産蛾類標準図鑑1
 2981,Lasiocampidae,カレハガ科,Lasiocampinae,マツカレハ亜科,,,,,Malacosoma,,neustrium,,(Linnaeus),1758,,オビカレハ,オビカレハ,,,,,,"Malacosoma neustrium (Linnaeus, 1758)",サクラ; モモ; ウメ; リンゴ (バラ科); コヤナギ; イヌコリヤナギ; セイヨウハコヤナギ (ヤナギ科); ミズナラ; カシワ; クヌギ (ブナ科); ハンノキ (カバノキ科); サクラ類; リンゴ (以上バラ科); ネコヤナギ; セイヨウハコヤナギ (以上ヤナギ科); クヌギ (以上ブナ科); ハンノキ (カバノキ科) などの多くの植物を食す。幼虫は「テンマクケムシ (天幕毛虫)」とよばれる。,日本産蛾類標準図鑑1
@@ -4641,62 +4641,62 @@
 3090,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Dicranurini,モクメシャチホコ族,,,Cerura,,felina,,(Butler),1877,,モクメシャチホコ,,,,,,,"Cerura felina (Butler, 1877)",ヤマナラシ; ドロヤナギ; 各種ヤナギ属 (ヤナギ科),日本産蛾類標準図鑑2
 3091,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Dicranurini,モクメシャチホコ族,,,Cerura,,erminea,,(Esper),[1783],,オオモクメシャチホコ,オオモクメシャチホコ,,,,,,"Cerura erminea (Esper, 1783)",ヤナギ科の各種,日本産蛾類標準図鑑2
 3092,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Dicranurini,モクメシャチホコ族,,,Kamalia,,tattakana,,(Matsumura),1927,,タッタカモクメシャチホコ,,,,,,,"Kamalia tattakana (Matsumura, 1927)",イイギリ (ヤナギ科),日本産蛾類標準図鑑2
-3157,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hiradonta,,takaonis,,Matsumura,1924,,タカオシャチホコ,,オオウスグロシャチホコ,,,,,"Hiradonta takaonis (Matsumura, 1924)",エノキ (アサ科),日本産蛾類標準図鑑2
-,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hiradonta,,ohashii,,Nakatomi,2000,,ミナミノクロシャチホコ,,,,,,,"Hiradonta ohashii (Nakatomi, 2000)",エノキ; クワノハエノキ(以上アサ科),日本産蛾類標準図鑑2
-,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hiradonta,,owadai,,Kobayashi,2021,,トカラシャチホコ,,,,,出版後の追加,新記録・再分類等,,,
-3153,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Semidonta,,biloba,,(Oberthür),1880,,カエデシャチホコ,,クヌギシャチホコ,,,,,"Semidonta biloba (Oberthür, 1880)",カエデ属; トチノキ(ムクロジ科),日本産蛾類標準図鑑2
-3126,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Euhampsonia,,cristata,,(Butler),1877,,セダカシャチホコ,,,,,,,"Euhampsonia cristata (Butler, 1877)",ミズナラ; コナラ; クヌギ; カシ類(以上ブナ科),日本産蛾類標準図鑑2
-3127,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Euhampsonia,,splendida,,(Oberthür),1880,,アオセダカシャチホコ,,,,,,,"Euhampsonia splendida (Oberthür, 1880)",ミズナラ; コナラ; クヌギ; カシ類(以上ブナ科),日本産蛾類標準図鑑2
-3125,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Lophocosma,,sarantuja,,Schintlmeister & Kinoshita,1984,,クロスジシャチホコ,,,,,,,"Lophocosma sarantuja (Schintlmeister & Kinoshita, 1984)",ヤシャブシ; ヒメヤシャブシ; オオバヤシャブシ; ツノハシバミ; アサダ; サワシバ; クマシデ; イヌシデ; アカシデ(以上カバノキ科),日本産蛾類標準図鑑2
-3119,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Gangaridopsis,,citrina,,(Wileman),1911,,アカシャチホコ,,,,,,,"Gangaridopsis citrina (Wileman, 1911)",マンサク (マンサク科),日本産蛾類標準図鑑2
-3117,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Nerice,,bipartita,,Butler,1885,,ナカスジシャチホコ,,,,,,,"Nerice bipartita (Butler, 1885)",ナナカマド; マメザクラ(以上バラ科),日本産蛾類標準図鑑2
-3118,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Nerice,,shigerosugii,,Schintlmeister,2008,,シロスジシャチホコ,,,,,,,"Nerice shigerosugii (Schintlmeister, 2008)",ハルニレ(ニレ科),日本産蛾類標準図鑑2
-3176,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Togepteryx,,velutina,,(Oberthür),1880,,タテスジシャチホコ,,,,,,,"Togepteryx velutina (Oberthür, 1880)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
-3155,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Epodonta,,lineata,,(Oberthür),1880,,ヤスジシャチホコ,,,,,,,"Epodonta lineata (Oberthür, 1880)",ハリギリ (ウコギ科),日本産蛾類標準図鑑2
-3149,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Drymonia,,dodonides,,(Staudinger),1887,,トビモンシャチホコ,トビモンシャチホコ,,,,,,"Drymonia dodonides (Staudinger, 1887)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
-3150,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Drymonia,,japonica,,(Wileman),1911,,コトビモンシャチホコ,,,,,,,"Drymonia japonica (Wileman, 1911)",ミズナラ; コナラ; クヌギ(以上ブナ科),日本産蛾類標準図鑑2
-3151,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Drymonia,,basalis,,Wileman & South,1917,,ノヒラトビモンシャチホコ,,,,,,,"Drymonia basalis (Wileman & South, 1917)",クヌギ(ブナ科),日本産蛾類標準図鑑2
-3146,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Pheosiopsis,,cinerea,,(Butler),1879,,スズキシャチホコ,スズキシャチホコ,オオウグイスシャチホコ,,,,,"Pheosiopsis cinerea (Butler, 1879)",コナラ; クヌギ; ミズナラ; ナラガシワ(以上ブナ科),日本産蛾類標準図鑑2
-3147,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Pheosiopsis,,olivacea,,(Matsumura),1920,,ウグイスシャチホコ,,,,,,,"Pheosiopsis olivacea (Matsumura, 1920)",ブナ; イヌブナ(以上ブナ科),日本産蛾類標準図鑑2
-3145,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Fusadonta,,basilinea,,(Wileman),1911,,ネスジシャチホコ,,,,,,,"Fusadonta basilinea (Wileman, 1911)",クヌギ (ブナ科),日本産蛾類標準図鑑2
-3143,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,graeseri,,(Staudinger),1892,,イシダシャチホコ,イシダシャチホコ,,,,,,"Peridea graeseri (Staudinger, 1892)",ハルニレ; ケヤキ(ニレ科),日本産蛾類標準図鑑2
-3141,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,elzet,,Kiriakoff,1963,,シノノメシャチホコ,,,,,,,"Peridea elzet (Kiriakoff, 1963)",クヌギ(ブナ科),日本産蛾類標準図鑑2
-3144,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,aliena,,(Staudinger),1892,,ニトベシャチホコ,,,,,,,"Peridea aliena (Staudinger, 1892)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
-3138,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,lativitta,,(Wileman),1911,,アカネシャチホコ,,,,,,,"Peridea lativitta (Wileman, 1911)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
-3139,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,gigantea,,Butler,1877,,ナカキシャチホコ,,,,,,,"Peridea gigantea (Butler, 1877)",ミズナラ; コナラ; クヌギ; クリ(以上ブナ科),日本産蛾類標準図鑑2
-3140,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,oberthueri,,(Staudinger),1892,,ルリモンシャチホコ,ルリモンシャチホコ,,,,,,"Peridea oberthueri (Staudinger, 1892)",ハンノキ; ヤマハンノキ; ヤシャブシ(以上カバノキ科),日本産蛾類標準図鑑2
-3142,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Peridea,,rotundata,,(Matsumura),1920,,マルモンシャチホコ,,,,,,,"Peridea rotundata (Matsumura, 1920)",ブナ; イヌブナ(以上ブナ科),日本産蛾類標準図鑑2
-3124,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Shaka,,atrovittatus,,(Bremer),1861,,クビワシャチホコ,クビワシャチホコ,,,,,,"Shaka atrovittatus (Bremer, 1861)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
-3156,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Phalerodonta,,manleyi,,(Leech),[1889],,オオトビモンシャチホコ,オオトビモンシャチホコ,,,,,,"Phalerodonta manleyi (Leech, 1889)",ミズナラ; コナラ; クヌギ; カシ類(以上ブナ科),日本産蛾類標準図鑑2
-3148,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Eriodonta,,amagisana,,(Marumo),1933,,アマギシャチホコ,,,,,,,"Eriodonta amagisana (Marumo, 1933)",ブナ(ブナ科),日本産蛾類標準図鑑2
-3168,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Fusapteryx,,ladislai,,(Oberthür),1880,,シロスジエグリシャチホコ,,,,,,,"Fusapteryx ladislai (Oberthür, 1880)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
-3152,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Leucodonta,,bicoloria,,(Denis & Schiffermüller),1775,,モンキシロシャチホコ,,,,,,,,,
-3160,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Epinotodonta,,fumosa,,Matsumura,1919,,ウスグロシャチホコ,,,,,,,"Epinotodonta fumosa (Matsumura, 1919)",ダケカンバ; ウダイカンバ; ヤシャブシ(以上カバノキ科); シナノキ(アオイ科),日本産蛾類標準図鑑2
-3158,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hexafrenum,,leucodera,,(Staudinger),1892,,ツマジロシャチホコ,ツマジロシャチホコ,,,,,,"Hexafrenum leucodera (Staudinger, 1892)",クリ; コナラ(以上ブナ科); クマシデ; サワシバ; イヌシデ; シラカンバ; ミズメ; ツノハシバミ(以上カバノキ科)など; 広食性（多食性）,日本産蛾類標準図鑑2
-3159,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Takadonta,,takamukui,,Matsumura,1920,,タカムクシャチホコ,,,,,,,"Takadonta takamukui (Matsumura, 1920)",ブナ; イヌブナ(ブナ科),日本産蛾類標準図鑑2
-3175,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Himeropteryx,,miraculosa,,Staudinger,1887,,キエグリシャチホコ,キエグリシャチホコ,,,,,,"Himeropteryx miraculosa (Staudinger, 1887)",トチノキ; カエデ(以上ムクロジ科); クマシデ; サワシバ(以上カバノキ科),日本産蛾類標準図鑑2
-3132,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Nephodonta,,tsushimensis,,Sugi,1980,,トビネシャチホコ,トビネシャチホコ,,,,,,"Nephodonta tsushimensis (Sugi, 1980)",クヌギ; カシワ; アラカシ; アベマキ; コナラ(以上ブナ科),日本産蛾類標準図鑑2
-3133,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Pheosia,,rimosa,,Packard,1864,,シロジマシャチホコ,シロジマシャチホコ,,,,,,"Pheosia rimosa (Packard, 1864)",ヤマナラシ(ヤナギ科); シラカンバ; ダケカンバ(以上カバノキ科),日本産蛾類標準図鑑2
-3154,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Microphalera,,grisea,,Butler,1885,,ハイイロシャチホコ,ハイイロシャチホコ,,,,,,"Microphalera grisea (Butler, 1885)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
-3161,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hagapteryx,,admirabilis,,(Staudinger),1887,,ハガタエグリシャチホコ,,,,,,,"Hagapteryx admirabilis (Staudinger, 1887)",多食性。ヤシャブシ; ハンノキ; ヤマハンノキ; クマシデ; サワシバ; ミズメ; ハシバミ; ツノハシバミ; アサダ(以上カバノキ科); オニグルミ; サワグルミ(以上クルミ科); ケヤキ(ニレ科); シナノキ(アオイ科)など,日本産蛾類標準図鑑2
-3162,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hagapteryx,,kishidai,,Nakamura,1978,,ゲンカイハガタシャチホコ,,,,,,,,,
-,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Hagapteryx,,satomiae,,Kobayashi,2011,,クレナイハガタシャチホコ,,,,,出版後の追加,新記録・再分類等,,,
-3171,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Odontosia,,marumoi,,Inoue,1955,,コクシエグリシャチホコ,,キテンエグリシャチホコ,,,,,,,
-3172,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Odontosia,,sieversii,,(Ménétriès),1856,,シーベルスシャチホコ,シーベルスシャチホコ,,,,,,"Odontosia sieversii (Ménétriès, 1856)",ダケカンバ; シラカンバ; ウダイカンパ; ヤシャブシ(以上カバノキ科),日本産蛾類標準図鑑2
-,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Odontosia,,walakui,,Kobayashi,2006,,ホッカイエグリシャチホコ,,,,,,,,,
-3174,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilophora,,jezoensis,,(Matsumura),1920,,エゾクシヒゲシャチホコ,エゾクシヒゲシャチホコ,,,,,,"Ptilophora jezoensis (Matsumura, 1920)",カエデ (ムクロジ科),日本産蛾類標準図鑑2
-3173,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilophora,,nohirae,,(Matsumura),1920,,クシヒゲシャチホコ,,,,,,,"Ptilophora nohirae (Matsumura, 1920)",カエデ類(ムクロジ科),日本産蛾類標準図鑑2
-3137,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Notodonta,,torva,,(Hübner),[1803],,トビマダラシャチホコ,トビマダラシャチホコ,,,,,,"Notodonta torva (Hübner, 1803)",ドロヤナギ; ヤナギ (以上ヤナギ科),日本産蛾類標準図鑑2
-3134,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Notodonta,,albicosta,,(Matsumura),1920,,マエジロシャチホコ,,,,,,,"Notodonta albicosta (Matsumura, 1920)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
-3135,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Notodonta,,stigmatica,,Matsumura,1920,,トビスジシャチホコ,,,,,,,"Notodonta stigmatica (Matsumura, 1920)",シラカンバ; ダケカンバ; ヤマハンノキ; ヤシャブシ(以上カバノキ科),日本産蛾類標準図鑑2
-3136,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Notodonta,,dembowskii,,Oberthür,1879,,ウチキシャチホコ,,,,,,,"Notodonta dembowskii (Oberthür, 1879)",ダケカンバ; シラカンバ(以上カバノキ科),日本産蛾類標準図鑑2
-3169,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Lophontosia,,cuculus,,(Staudinger),1887,,ウスヅマシャチホコ,,,,,,,"Lophontosia cucullus (Bang-Haas, 1927)",ハルニレ(ニレ科),日本産蛾類標準図鑑2
-3170,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Lophontosia,,pryeri,,(Butler),1879,,プライヤエグリシャチホコ,,,,,,,"Lophontosia pryeri (Butler, 1879)",ケヤキ (ニレ科),日本産蛾類標準図鑑2
-3164,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilodon,,jezoensis,,(Matsumura),1919,,エゾエグリシャチホコ,,,,,,,"Ptilodon jezoensis (Matsumura, 1919)",アズキナシ; ナナカマド(以上バラ科); トチノキ(ムクロジ科); ミズナラ; ブナ(以上ブナ科); シナノキ(アオイ科),日本産蛾類標準図鑑2
-3167,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilodon,,hoegei,,(Graeser),1888,,スジエグリシャチホコ,,,,,,,"Ptilodon hoegei (Graeser, 1888)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
-3166,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilodon,,okanoi,,(Inoue),1958,,クロエグリシャチホコ,,,,,,,"Ptilodon okanoi (Inoue, 1958)",カエデ類; トチノキ(以上ムクロジ科),日本産蛾類標準図鑑2
-3163,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilodon,,kuwayamae,,(Matsumura),1919,,クワヤマエグリシャチホコ,,,,,,,"Ptilodon kuwayamae (Matsumura, 1919)",ヤマハギ(マメ科),日本産蛾類標準図鑑2
-3165,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,"Notodontini ",ウチキシャチホコ族,,,Ptilodon,,robusta,,(Matsumura),1924,,エグリシャチホコ,,,,,,,"Ptilodon robusta (Matsumura, 1924)",ヤシャブシ; ヒメヤシャブシ(以上カバノキ科); ヤナギ類(ヤナギ科); カツラ(カツラ科),日本産蛾類標準図鑑2
+3157,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hiradonta,,takaonis,,Matsumura,1924,,タカオシャチホコ,,オオウスグロシャチホコ,,,,,"Hiradonta takaonis (Matsumura, 1924)",エノキ (アサ科),日本産蛾類標準図鑑2
+,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hiradonta,,ohashii,,Nakatomi,2000,,ミナミノクロシャチホコ,,,,,,,"Hiradonta ohashii (Nakatomi, 2000)",エノキ; クワノハエノキ(以上アサ科),日本産蛾類標準図鑑2
+,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hiradonta,,owadai,,Kobayashi,2021,,トカラシャチホコ,,,,,出版後の追加,新記録・再分類等,,,
+3153,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Semidonta,,biloba,,(Oberthür),1880,,カエデシャチホコ,,クヌギシャチホコ,,,,,"Semidonta biloba (Oberthür, 1880)",カエデ属; トチノキ(ムクロジ科),日本産蛾類標準図鑑2
+3126,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Euhampsonia,,cristata,,(Butler),1877,,セダカシャチホコ,,,,,,,"Euhampsonia cristata (Butler, 1877)",ミズナラ; コナラ; クヌギ; カシ類(以上ブナ科),日本産蛾類標準図鑑2
+3127,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Euhampsonia,,splendida,,(Oberthür),1880,,アオセダカシャチホコ,,,,,,,"Euhampsonia splendida (Oberthür, 1880)",ミズナラ; コナラ; クヌギ; カシ類(以上ブナ科),日本産蛾類標準図鑑2
+3125,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Lophocosma,,sarantuja,,Schintlmeister & Kinoshita,1984,,クロスジシャチホコ,,,,,,,"Lophocosma sarantuja (Schintlmeister & Kinoshita, 1984)",ヤシャブシ; ヒメヤシャブシ; オオバヤシャブシ; ツノハシバミ; アサダ; サワシバ; クマシデ; イヌシデ; アカシデ(以上カバノキ科),日本産蛾類標準図鑑2
+3119,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Gangaridopsis,,citrina,,(Wileman),1911,,アカシャチホコ,,,,,,,"Gangaridopsis citrina (Wileman, 1911)",マンサク (マンサク科),日本産蛾類標準図鑑2
+3117,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Nerice,,bipartita,,Butler,1885,,ナカスジシャチホコ,,,,,,,"Nerice bipartita (Butler, 1885)",ナナカマド; マメザクラ(以上バラ科),日本産蛾類標準図鑑2
+3118,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Nerice,,shigerosugii,,Schintlmeister,2008,,シロスジシャチホコ,,,,,,,"Nerice shigerosugii (Schintlmeister, 2008)",ハルニレ(ニレ科),日本産蛾類標準図鑑2
+3176,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Togepteryx,,velutina,,(Oberthür),1880,,タテスジシャチホコ,,,,,,,"Togepteryx velutina (Oberthür, 1880)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
+3155,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Epodonta,,lineata,,(Oberthür),1880,,ヤスジシャチホコ,,,,,,,"Epodonta lineata (Oberthür, 1880)",ハリギリ (ウコギ科),日本産蛾類標準図鑑2
+3149,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Drymonia,,dodonides,,(Staudinger),1887,,トビモンシャチホコ,トビモンシャチホコ,,,,,,"Drymonia dodonides (Staudinger, 1887)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
+3150,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Drymonia,,japonica,,(Wileman),1911,,コトビモンシャチホコ,,,,,,,"Drymonia japonica (Wileman, 1911)",ミズナラ; コナラ; クヌギ(以上ブナ科),日本産蛾類標準図鑑2
+3151,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Drymonia,,basalis,,Wileman & South,1917,,ノヒラトビモンシャチホコ,,,,,,,"Drymonia basalis (Wileman & South, 1917)",クヌギ(ブナ科),日本産蛾類標準図鑑2
+3146,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Pheosiopsis,,cinerea,,(Butler),1879,,スズキシャチホコ,スズキシャチホコ,オオウグイスシャチホコ,,,,,"Pheosiopsis cinerea (Butler, 1879)",コナラ; クヌギ; ミズナラ; ナラガシワ(以上ブナ科),日本産蛾類標準図鑑2
+3147,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Pheosiopsis,,olivacea,,(Matsumura),1920,,ウグイスシャチホコ,,,,,,,"Pheosiopsis olivacea (Matsumura, 1920)",ブナ; イヌブナ(以上ブナ科),日本産蛾類標準図鑑2
+3145,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Fusadonta,,basilinea,,(Wileman),1911,,ネスジシャチホコ,,,,,,,"Fusadonta basilinea (Wileman, 1911)",クヌギ (ブナ科),日本産蛾類標準図鑑2
+3143,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,graeseri,,(Staudinger),1892,,イシダシャチホコ,イシダシャチホコ,,,,,,"Peridea graeseri (Staudinger, 1892)",ハルニレ; ケヤキ(ニレ科),日本産蛾類標準図鑑2
+3141,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,elzet,,Kiriakoff,1963,,シノノメシャチホコ,,,,,,,"Peridea elzet (Kiriakoff, 1963)",クヌギ(ブナ科),日本産蛾類標準図鑑2
+3144,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,aliena,,(Staudinger),1892,,ニトベシャチホコ,,,,,,,"Peridea aliena (Staudinger, 1892)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
+3138,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,lativitta,,(Wileman),1911,,アカネシャチホコ,,,,,,,"Peridea lativitta (Wileman, 1911)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
+3139,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,gigantea,,Butler,1877,,ナカキシャチホコ,,,,,,,"Peridea gigantea (Butler, 1877)",ミズナラ; コナラ; クヌギ; クリ(以上ブナ科),日本産蛾類標準図鑑2
+3140,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,oberthueri,,(Staudinger),1892,,ルリモンシャチホコ,ルリモンシャチホコ,,,,,,"Peridea oberthueri (Staudinger, 1892)",ハンノキ; ヤマハンノキ; ヤシャブシ(以上カバノキ科),日本産蛾類標準図鑑2
+3142,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Peridea,,rotundata,,(Matsumura),1920,,マルモンシャチホコ,,,,,,,"Peridea rotundata (Matsumura, 1920)",ブナ; イヌブナ(以上ブナ科),日本産蛾類標準図鑑2
+3124,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Shaka,,atrovittatus,,(Bremer),1861,,クビワシャチホコ,クビワシャチホコ,,,,,,"Shaka atrovittatus (Bremer, 1861)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
+3156,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Phalerodonta,,manleyi,,(Leech),[1889],,オオトビモンシャチホコ,オオトビモンシャチホコ,,,,,,"Phalerodonta manleyi (Leech, 1889)",ミズナラ; コナラ; クヌギ; カシ類(以上ブナ科),日本産蛾類標準図鑑2
+3148,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Eriodonta,,amagisana,,(Marumo),1933,,アマギシャチホコ,,,,,,,"Eriodonta amagisana (Marumo, 1933)",ブナ(ブナ科),日本産蛾類標準図鑑2
+3168,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Fusapteryx,,ladislai,,(Oberthür),1880,,シロスジエグリシャチホコ,,,,,,,"Fusapteryx ladislai (Oberthür, 1880)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
+3152,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Leucodonta,,bicoloria,,(Denis & Schiffermüller),1775,,モンキシロシャチホコ,,,,,,,,,
+3160,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Epinotodonta,,fumosa,,Matsumura,1919,,ウスグロシャチホコ,,,,,,,"Epinotodonta fumosa (Matsumura, 1919)",ダケカンバ; ウダイカンバ; ヤシャブシ(以上カバノキ科); シナノキ(アオイ科),日本産蛾類標準図鑑2
+3158,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hexafrenum,,leucodera,,(Staudinger),1892,,ツマジロシャチホコ,ツマジロシャチホコ,,,,,,"Hexafrenum leucodera (Staudinger, 1892)",クリ; コナラ(以上ブナ科); クマシデ; サワシバ; イヌシデ; シラカンバ; ミズメ; ツノハシバミ(以上カバノキ科)など; 広食性（多食性）,日本産蛾類標準図鑑2
+3159,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Takadonta,,takamukui,,Matsumura,1920,,タカムクシャチホコ,,,,,,,"Takadonta takamukui (Matsumura, 1920)",ブナ; イヌブナ(ブナ科),日本産蛾類標準図鑑2
+3175,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Himeropteryx,,miraculosa,,Staudinger,1887,,キエグリシャチホコ,キエグリシャチホコ,,,,,,"Himeropteryx miraculosa (Staudinger, 1887)",トチノキ; カエデ(以上ムクロジ科); クマシデ; サワシバ(以上カバノキ科),日本産蛾類標準図鑑2
+3132,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Nephodonta,,tsushimensis,,Sugi,1980,,トビネシャチホコ,トビネシャチホコ,,,,,,"Nephodonta tsushimensis (Sugi, 1980)",クヌギ; カシワ; アラカシ; アベマキ; コナラ(以上ブナ科),日本産蛾類標準図鑑2
+3133,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Pheosia,,rimosa,,Packard,1864,,シロジマシャチホコ,シロジマシャチホコ,,,,,,"Pheosia rimosa (Packard, 1864)",ヤマナラシ(ヤナギ科); シラカンバ; ダケカンバ(以上カバノキ科),日本産蛾類標準図鑑2
+3154,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Microphalera,,grisea,,Butler,1885,,ハイイロシャチホコ,ハイイロシャチホコ,,,,,,"Microphalera grisea (Butler, 1885)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
+3161,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hagapteryx,,admirabilis,,(Staudinger),1887,,ハガタエグリシャチホコ,,,,,,,"Hagapteryx admirabilis (Staudinger, 1887)",多食性。ヤシャブシ; ハンノキ; ヤマハンノキ; クマシデ; サワシバ; ミズメ; ハシバミ; ツノハシバミ; アサダ(以上カバノキ科); オニグルミ; サワグルミ(以上クルミ科); ケヤキ(ニレ科); シナノキ(アオイ科)など,日本産蛾類標準図鑑2
+3162,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hagapteryx,,kishidai,,Nakamura,1978,,ゲンカイハガタシャチホコ,,,,,,,,,
+,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Hagapteryx,,satomiae,,Kobayashi,2011,,クレナイハガタシャチホコ,,,,,出版後の追加,新記録・再分類等,,,
+3171,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Odontosia,,marumoi,,Inoue,1955,,コクシエグリシャチホコ,,キテンエグリシャチホコ,,,,,,,
+3172,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Odontosia,,sieversii,,(Ménétriès),1856,,シーベルスシャチホコ,シーベルスシャチホコ,,,,,,"Odontosia sieversii (Ménétriès, 1856)",ダケカンバ; シラカンバ; ウダイカンパ; ヤシャブシ(以上カバノキ科),日本産蛾類標準図鑑2
+,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Odontosia,,walakui,,Kobayashi,2006,,ホッカイエグリシャチホコ,,,,,,,,,
+3174,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilophora,,jezoensis,,(Matsumura),1920,,エゾクシヒゲシャチホコ,エゾクシヒゲシャチホコ,,,,,,"Ptilophora jezoensis (Matsumura, 1920)",カエデ (ムクロジ科),日本産蛾類標準図鑑2
+3173,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilophora,,nohirae,,(Matsumura),1920,,クシヒゲシャチホコ,,,,,,,"Ptilophora nohirae (Matsumura, 1920)",カエデ類(ムクロジ科),日本産蛾類標準図鑑2
+3137,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Notodonta,,torva,,(Hübner),[1803],,トビマダラシャチホコ,トビマダラシャチホコ,,,,,,"Notodonta torva (Hübner, 1803)",ドロヤナギ; ヤナギ (以上ヤナギ科),日本産蛾類標準図鑑2
+3134,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Notodonta,,albicosta,,(Matsumura),1920,,マエジロシャチホコ,,,,,,,"Notodonta albicosta (Matsumura, 1920)",ミズナラ(ブナ科),日本産蛾類標準図鑑2
+3135,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Notodonta,,stigmatica,,Matsumura,1920,,トビスジシャチホコ,,,,,,,"Notodonta stigmatica (Matsumura, 1920)",シラカンバ; ダケカンバ; ヤマハンノキ; ヤシャブシ(以上カバノキ科),日本産蛾類標準図鑑2
+3136,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Notodonta,,dembowskii,,Oberthür,1879,,ウチキシャチホコ,,,,,,,"Notodonta dembowskii (Oberthür, 1879)",ダケカンバ; シラカンバ(以上カバノキ科),日本産蛾類標準図鑑2
+3169,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Lophontosia,,cuculus,,(Staudinger),1887,,ウスヅマシャチホコ,,,,,,,"Lophontosia cucullus (Bang-Haas, 1927)",ハルニレ(ニレ科),日本産蛾類標準図鑑2
+3170,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Lophontosia,,pryeri,,(Butler),1879,,プライヤエグリシャチホコ,,,,,,,"Lophontosia pryeri (Butler, 1879)",ケヤキ (ニレ科),日本産蛾類標準図鑑2
+3164,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilodon,,jezoensis,,(Matsumura),1919,,エゾエグリシャチホコ,,,,,,,"Ptilodon jezoensis (Matsumura, 1919)",アズキナシ; ナナカマド(以上バラ科); トチノキ(ムクロジ科); ミズナラ; ブナ(以上ブナ科); シナノキ(アオイ科),日本産蛾類標準図鑑2
+3167,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilodon,,hoegei,,(Graeser),1888,,スジエグリシャチホコ,,,,,,,"Ptilodon hoegei (Graeser, 1888)",カエデ属(ムクロジ科),日本産蛾類標準図鑑2
+3166,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilodon,,okanoi,,(Inoue),1958,,クロエグリシャチホコ,,,,,,,"Ptilodon okanoi (Inoue, 1958)",カエデ類; トチノキ(以上ムクロジ科),日本産蛾類標準図鑑2
+3163,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilodon,,kuwayamae,,(Matsumura),1919,,クワヤマエグリシャチホコ,,,,,,,"Ptilodon kuwayamae (Matsumura, 1919)",ヤマハギ(マメ科),日本産蛾類標準図鑑2
+3165,Notodontidae,シャチホコガ科,Notodontinae,ウチキシャチホコ亜科,Notodontini ,ウチキシャチホコ族,,,Ptilodon,,robusta,,(Matsumura),1924,,エグリシャチホコ,,,,,,,"Ptilodon robusta (Matsumura, 1924)",ヤシャブシ; ヒメヤシャブシ(以上カバノキ科); ヤナギ類(ヤナギ科); カツラ(カツラ科),日本産蛾類標準図鑑2
 3191,Lymantriidae,ドクガ科,,,,,,,Calliteara,,argentata,,(Butler),1881,,スギドクガ,,,,,,,"Calliteara argentata (Butler, 1881)",スギ; ヒノキ; コノテガシワ; サワラ(以上ヒノキ科); ヒマラヤスギ(マツ科),日本産蛾類標準図鑑2
 3192,Lymantriidae,ドクガ科,,,,,,,Calliteara,,pseudabietis,,Butler,1885,,リンゴドクガ,リンゴドクガ,,,,,,"Calliteara pseudabietis (Butler, 1885)",リンゴ; ナシ; サクラ類(以上バラ科); ヤナギ類(ヤナギ科); クヌギ; アベマキ; コナラ(以上ブナ科); イタドリ(タデ科); カキノキ(カキノキ科); サンゴジュ (レンプクソウ科); ハリエンジュ(マメ科); オニグルミ(クルミ科),日本産蛾類標準図鑑2
 3193,Lymantriidae,ドクガ科,,,,,,,Calliteara,,lunulata,,(Butler),1877,,アカヒゲドクガ,アカヒゲドクガ,,,,,,"Calliteara lunulata (Butler, 1877)",クヌギ; コナラ; クリ; カシワ(以上ブナ科),日本産蛾類標準図鑑2
@@ -5050,19 +5050,19 @@
 4428,Noctuidae,ヤガ科,Boletobiinae,ムラサキアツバ亜科,,,,,Hypenomorpha,,falcipennis,,(Inoue),1958,,チビトガリアツバ,,,,,,,"Hypenomorpha falcipennis (Inoue, 1958)",不明,日本産蛾類標準図鑑2
 ,Noctuidae,ヤガ科,Boletobiinae,ムラサキアツバ亜科,,,,,Hypenagonia,,longipalpis,,Hampson,1912,,コガタモクメアツバ,,,,,出版後の追加,新記録・再分類等,,,
 ,Noctuidae,ヤガ科,Boletobiinae,ムラサキアツバ亜科,,,,,Hypenagonia,,aokii,,Eda & Kishida,2020,,ウスイロモクメアツバ,,,,,出版後の追加,新記録・再分類等,,,
-4407,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Prolophota,,trigonifera,,Hampson,1896,,マエフタモンアツバ,,,,,,,"Prolophota trigonifera (Hampson, 1896)",不明,日本産蛾類標準図鑑2
-4408,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Micreremites,,pyraloides,,Sugi,1982,,ウラモンチビアツバ,,,,,,,"Micreremites pyraloides (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-4409,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Micreremites,,japonica,,Sugi,1982,,ウスクモチビアツバ,,,,,,,"Micreremites japonica (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Micreremites,,pallens,,Sugi,1987,,ニセウスクモチビアツバ,,,,,,,"Micreremites pallens (Sugi, 1987)",不明,日本産蛾類標準図鑑2
-4410,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Micreremites,,azumai,,Sugi,1982,,コウスクモチビアツバ,,,,,,,"Micreremites azumai (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-4411,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Anachrostis,,nigripunctalis,,(Wileman),1911,,クロテンカバアツバ,,,,,,,"Anachrostis nigripunctalis (Wileman, 1911)",ズミ(バラ科),日本産蛾類標準図鑑2
-4412,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Anachrostis,,minutissima,,Sugi,1982,,ホソバカバアツバ,,,,,,,"Anachrostis minutissima (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-4413,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Anachrostis,,amamiana,,Sugi,1982,,アマミカバアツバ,,,,,,,"Anachrostis amamiana (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-4414,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Neachrostia,,bipuncta,,Sugi,1982,,フタテンチビアツバ,,,,,,,"Neachrostia bipuncta (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-4415,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Neachrostia,,purpureoflava,,Sugi,1982,,キイロチビアツバ,,,,,,,"Neachrostia purpureoflava (Sugi, 1982)",不明,日本産蛾類標準図鑑2
-4430,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Naarda,,maculifera,,(Staudinger),1892,,フタキボシアツバ,,,,,出版後の追加,名前変更,,,
-4431,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Naarda,,punctirena,,(Sugi),1982,,ミナミフタキボシアツバ,,,,,,,,,
-4432,Noctuidae,ヤガ科,"incertae sedis ",ヤガ科 亜科所属不明,,,,,Naarda,,pectinata,,Sugi,1982,,エダヒゲキボシアツバ,,,,,,,,,
+4407,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Prolophota,,trigonifera,,Hampson,1896,,マエフタモンアツバ,,,,,,,"Prolophota trigonifera (Hampson, 1896)",不明,日本産蛾類標準図鑑2
+4408,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Micreremites,,pyraloides,,Sugi,1982,,ウラモンチビアツバ,,,,,,,"Micreremites pyraloides (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+4409,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Micreremites,,japonica,,Sugi,1982,,ウスクモチビアツバ,,,,,,,"Micreremites japonica (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Micreremites,,pallens,,Sugi,1987,,ニセウスクモチビアツバ,,,,,,,"Micreremites pallens (Sugi, 1987)",不明,日本産蛾類標準図鑑2
+4410,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Micreremites,,azumai,,Sugi,1982,,コウスクモチビアツバ,,,,,,,"Micreremites azumai (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+4411,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Anachrostis,,nigripunctalis,,(Wileman),1911,,クロテンカバアツバ,,,,,,,"Anachrostis nigripunctalis (Wileman, 1911)",ズミ(バラ科),日本産蛾類標準図鑑2
+4412,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Anachrostis,,minutissima,,Sugi,1982,,ホソバカバアツバ,,,,,,,"Anachrostis minutissima (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+4413,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Anachrostis,,amamiana,,Sugi,1982,,アマミカバアツバ,,,,,,,"Anachrostis amamiana (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+4414,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Neachrostia,,bipuncta,,Sugi,1982,,フタテンチビアツバ,,,,,,,"Neachrostia bipuncta (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+4415,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Neachrostia,,purpureoflava,,Sugi,1982,,キイロチビアツバ,,,,,,,"Neachrostia purpureoflava (Sugi, 1982)",不明,日本産蛾類標準図鑑2
+4430,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Naarda,,maculifera,,(Staudinger),1892,,フタキボシアツバ,,,,,出版後の追加,名前変更,,,
+4431,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Naarda,,punctirena,,(Sugi),1982,,ミナミフタキボシアツバ,,,,,,,,,
+4432,Noctuidae,ヤガ科,incertae sedis ,ヤガ科 亜科所属不明,,,,,Naarda,,pectinata,,Sugi,1982,,エダヒゲキボシアツバ,,,,,,,,,
 4438,Noctuidae,ヤガ科,Hypenodinae,ミジンアツバ亜科,,,,,Schrankia,,costaestrigalis,,(Stephens),1834,,クロスジヒメアツバ,,,,,,,,,
 4439,Noctuidae,ヤガ科,Hypenodinae,ミジンアツバ亜科,,,,,Schrankia,,seinoi,,Inoue,1979,,アマミヒメアツバ,,,,,,,,,
 4440,Noctuidae,ヤガ科,Hypenodinae,ミジンアツバ亜科,,,,,Schrankia,,separatalis,,(Herz),1905,,ハスオビヒメアツバ,,,,,,,,,
@@ -6161,7 +6161,7 @@
 3608,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,,,Orthosia,,carnipennis,,(Butler),1878,,アカバキリガ,,,,,,,"Orthosia carnipennis (Butler, 1878)",リンゴ; モモ; サクラ類 (以上バラ科); クリ類; コナラ; クヌギ; カシワ; アベマキ; アラカシ(以上ブナ科),日本産蛾類標準図鑑2
 3604,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,,,Dioszeghyana,,mirabilis,,(Sugi),1955,,アトジロキリガ,,,,,,,"Dioszeghyana mirabilis (Sugi, 1955)",カシワ (ブナ科); サクラ類 (バラ科)を与えてもうまく飼育できるという。,日本産蛾類標準図鑑2
 ,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,,,Protegira,,songi,,(Chen & Zhang),1995,,トチュウウスクモヨトウ,,,,,出版後の追加,新記録・再分類等,,,
-3609,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Tiracola,,aureata,,Holloway,1989,,オオノコバヨトウ,,ヤクシマヨトウ,,,,,"Tiracola aureata Holloway, 1989",次種を参照されたいが; 本種もおそらく多種の植物を食べるのではないかと思われる。,日本産蛾類標準図鑑2
+3609,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Tiracola,,aureata,,Holloway,1989,,オオノコバヨトウ,,ヤクシマヨトウ,,,,,"Tiracola aureata Holloway, 1989",広食性,日本産蛾類標準図鑑2
 ,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Tiracola,,plagiata,,(Walker),1857,,ノコバヨトウ,,,,,,,"Tiracola plagiata (Walker, 1857)",ノアサガオ (ヒルガオ科); ソクズ (レンプクソウ科); シマイズセンリョウ (サクラソウ科); ヤマグワ (クワ科); Holloway (1989) によると12科17属の植物が本種の食草として取り上げられているが; これらにはオオノコバヨトウの食草も混じっており; 両者を識別するのは非常に困難である。,日本産蛾類標準図鑑2
 3551,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Anarta,Calocestra,melanopa,,(Thunberg),1791,,コイズミヨトウ,コイズミヨトウ,,,,,,Anarta (Calocestra) melanopa (Thunberg,"1791)""","ガンコウラン; コケモモ; ウラシマツツジ(別名クマコケモモ); クロマメノキ (以上ツツジ科)"""
 3571,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Hadenini,ヨトウガ族,,,Anarta,Calocestra,trifolii,,(Hufnagel),1766,,タイリクウスイロヨトウ,,,,,,,Anarta (Calocestra) trifolii (Hufnagel,"1766)""","タマネギ(ネギ科); ミチヤナギ(タデ科); イワナズナ(アブラナ科)などが知られており; 草本類を広く食する。"""

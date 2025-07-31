@@ -2055,6 +2055,11 @@ function App() {
                 hostPlantNotes.push('広食性（多食性）');
               }
               
+              // Special handling for "広食性" - add explanatory note for オオノコバヨトウ
+              if (rawHostPlant === '広食性' && mothName === 'オオノコバヨトウ') {
+                hostPlantNotes.push('おそらく多種の植物を食べるのではないかと思われる');
+              }
+              
               // Extract notes from both （）and () parentheses
               const noteMatches = rawHostPlant.match(/[（(]([^）)]+)[）)]/g);
               if (noteMatches) {
