@@ -818,26 +818,62 @@ function App() {
           };
         };
 
-        // Function to deduplicate moths by scientific name
+        // Function to deduplicate moths by scientific name and Japanese name
         const deduplicateMoths = (moths) => {
           const scientificNameMap = new Map();
+          const japaneseNameMap = new Map();
           
           moths.forEach(moth => {
             const cleanScientificName = cleanScientificNameForComparison(moth.scientificName);
-            if (!cleanScientificName) {
-              // Keep entries without scientific names as-is
-              scientificNameMap.set(moth.id, moth);
-            } else if (scientificNameMap.has(cleanScientificName)) {
-              // Merge with existing entry
+            const cleanJapaneseName = moth.name ? moth.name.trim() : '';
+            
+            let duplicateFound = false;
+            
+            // Check for scientific name duplication
+            if (cleanScientificName && scientificNameMap.has(cleanScientificName)) {
               const existing = scientificNameMap.get(cleanScientificName);
               const merged = mergeMoths(existing, moth);
               scientificNameMap.set(cleanScientificName, merged);
-            } else {
-              scientificNameMap.set(cleanScientificName, moth);
+              // Update Japanese name map as well
+              if (cleanJapaneseName) {
+                japaneseNameMap.set(cleanJapaneseName, merged);
+              }
+              duplicateFound = true;
+            }
+            // Check for Japanese name duplication (fallback for entries without scientific names)
+            else if (cleanJapaneseName && japaneseNameMap.has(cleanJapaneseName)) {
+              const existing = japaneseNameMap.get(cleanJapaneseName);
+              const merged = mergeMoths(existing, moth);
+              japaneseNameMap.set(cleanJapaneseName, merged);
+              // Update scientific name map if the merged entry has a scientific name
+              const mergedScientificName = cleanScientificNameForComparison(merged.scientificName);
+              if (mergedScientificName) {
+                scientificNameMap.set(mergedScientificName, merged);
+              }
+              duplicateFound = true;
+            }
+            
+            if (!duplicateFound) {
+              // Add new entry to both maps
+              if (cleanScientificName) {
+                scientificNameMap.set(cleanScientificName, moth);
+              }
+              if (cleanJapaneseName) {
+                japaneseNameMap.set(cleanJapaneseName, moth);
+              }
+              // For entries without both names, use ID as fallback
+              if (!cleanScientificName && !cleanJapaneseName) {
+                scientificNameMap.set(moth.id, moth);
+              }
             }
           });
           
-          return Array.from(scientificNameMap.values());
+          // Create a set to avoid returning the same moth multiple times
+          const result = new Set();
+          scientificNameMap.forEach(moth => result.add(moth));
+          japaneseNameMap.forEach(moth => result.add(moth));
+          
+          return Array.from(result);
         };
 
         // Centralized function to normalize plant names by removing family annotations
