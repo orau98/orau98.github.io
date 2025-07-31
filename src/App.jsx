@@ -39,7 +39,7 @@ function App() {
   const globalJapaneseToScientificMapping = new Map([
     // 蛾類
     ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
-    ['オオマエベニトガリバ', 'Habroloma_lewisii'],
+    ['オオマエベニトガリバ', 'Tethea_consimilis'],
     ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
     ['シラオビキリガ', 'Cosmia_camptostigma'],
     ['シラホシキリガ', 'Cosmia_pyralina'],

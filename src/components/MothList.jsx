@@ -44,7 +44,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const globalJapaneseToScientificMapping = new Map([
     // 蛾類
     ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
-    ['オオマエベニトガリバ', 'Habroloma_lewisii'],
+    ['オオマエベニトガリバ', 'Tethea_consimilis'],
     ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
     ['シラオビキリガ', 'Cosmia_camptostigma'],
     ['シラホシキリガ', 'Cosmia_pyralina'],
@@ -107,43 +107,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     }
     
     // 3. Try Japanese name directly
-    if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ - checking Japanese name directly:', moth.name);
-      console.log('DEBUG: ルイスヒラタチビタマムシ - imageFilenames.has(moth.name):', imageFilenames.has(moth.name));
-    }
     if (imageFilenames.has(moth.name)) {
-      if (isDebugTarget) {
-        console.log('DEBUG: ルイスヒラタチビタマムシ - found with Japanese name:', moth.name);
-      }
       return moth.name;
     }
     
     // 4. Try to find any filename containing the Japanese name
-    if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ - searching for filenames containing:', moth.name);
-      console.log('DEBUG: ルイスヒラタチビタマムシ - first 10 imageFilenames:', Array.from(imageFilenames).slice(0, 10));
-      console.log('DEBUG: ルイスヒラタチビタマムシ - last 10 imageFilenames:', Array.from(imageFilenames).slice(-10));
-      console.log('DEBUG: ルイスヒラタチビタマムシ - target string chars:', moth.name.split('').map(c => `${c}(${c.charCodeAt(0)})`));
-      
-      // Check if the specific filename exists
-      const targetFilename = 'ルイスヒラタチビタマムシ (3)';
-      console.log('DEBUG: ルイスヒラタチビタマムシ - target filename exists:', imageFilenames.has(targetFilename));
-      console.log('DEBUG: ルイスヒラタチビタマムシ - target filename chars:', targetFilename.split('').map(c => `${c}(${c.charCodeAt(0)})`));
-      
-      // Manual search for debugging
-      let foundMatches = [];
-      for (const filename of imageFilenames) {
-        if (filename.includes('ルイス')) {
-          foundMatches.push(filename);
-        }
-      }
-      console.log('DEBUG: ルイスヒラタチビタマムシ - files containing "ルイス":', foundMatches);
-    }
     for (const filename of imageFilenames) {
       if (filename.includes(moth.name)) {
-        if (isDebugTarget) {
-          console.log('DEBUG: ルイスヒラタチビタマムシ - found containing filename:', filename);
-        }
         return filename;
       }
     }
@@ -151,23 +121,14 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     // 5. Try to find any filename containing the scientific name parts
     if (moth.scientificName) {
       const scientificParts = moth.scientificName.split(' ').slice(0, 2).join(' ');
-      if (isDebugTarget) {
-        console.log('DEBUG: ルイスヒラタチビタマムシ - searching for scientific parts:', scientificParts);
-      }
       for (const filename of imageFilenames) {
         if (filename.includes(scientificParts)) {
-          if (isDebugTarget) {
-            console.log('DEBUG: ルイスヒラタチビタマムシ - found with scientific parts:', filename);
-          }
           return filename;
         }
       }
     }
     
     // Default to mapped filename, then scientific filename, then safe filename
-    if (isDebugTarget) {
-      console.log('DEBUG: ルイスヒラタチビタマムシ - no match found, using default:', mappedFilename || moth?.scientificFilename || safeFilename);
-    }
     return mappedFilename || moth?.scientificFilename || safeFilename;
     } catch (error) {
       console.error('Error in getImageFilename:', error, moth);

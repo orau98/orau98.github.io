@@ -872,7 +872,7 @@ function generateImageFileLists() {
       
       // 手動で追加する必要のあるマッピング（ファイル名変更対応）
       nameMapping.set('ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura');
-      nameMapping.set('オオマエベニトガリバ', 'Habroloma_lewisii');
+      nameMapping.set('オオマエベニトガリバ', 'Tethea_consimilis');
       nameMapping.set('ショウブオオヨトウ', 'Helotropha_leucostigma');
       nameMapping.set('シラオビキリガ', 'Cosmia_camptostigma');
       nameMapping.set('シラホシキリガ', 'Cosmia_pyralina');
