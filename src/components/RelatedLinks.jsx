@@ -257,59 +257,16 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
                 <div className="relative w-full h-56 lg:h-64">
                   <InsectImage insect={insect} large={true} />
                   
-                  {/* 画像上の半透明オーバーレイと名前表示 */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  {/* 画像上の和名表示（常時表示） */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="text-base lg:text-lg font-bold text-white drop-shadow-lg mb-1 overflow-hidden" style={{
+                      <h4 className="text-base lg:text-lg font-bold text-white drop-shadow-lg overflow-hidden" style={{
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical'
                       }}>
                         {insect.name}
                       </h4>
-                      <p className="text-sm lg:text-base text-white/90 drop-shadow-md leading-relaxed overflow-hidden" style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 1,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
-                        {formatScientificNameReact(insect.scientificName)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-5 lg:p-6 relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
-                  <div className="space-y-3">
-                    {/* 和名 - より大きく目立つように */}
-                    <div>
-                      <h4 className="text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors overflow-hidden leading-tight" style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
-                        {insect.name}
-                      </h4>
-                    </div>
-                    
-                    
-                    {/* 学名 - 十分な間隔を空けて配置 */}
-                    <div className="pt-2 border-t border-slate-200/50 dark:border-slate-600/50">
-                      <p className="text-sm lg:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-medium overflow-hidden" style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
-                        {formatScientificNameReact(insect.scientificName)}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* ホバー時に表示される矢印アイコン */}
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-emerald-500 dark:bg-emerald-600 rounded-full p-2 lg:p-2.5 shadow-lg">
-                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
                     </div>
                   </div>
                 </div>
