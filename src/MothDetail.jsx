@@ -660,16 +660,52 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     .filter(note => {
                       if (!note) return false; // 空の場合は除外
                       
-                      // 部位情報が食草に統合済みかチェック
-                      const plantParts = window.currentPlantParts || {};
-                      const allExtractedParts = Object.values(plantParts).flat();
+                      // 既存の食草データから部位情報を抽出
+                      const existingParts = new Set();
                       
-                      // 抽出された部位情報を含む備考は除去
-                      const hasExtractedPart = allExtractedParts.some(part => note.includes(part));
-                      if (hasExtractedPart) {
-                        // ただし、部位情報以外の重要な情報が含まれている場合は残す
-                        const hasOtherInfo = !note.match(/^[\s\S]*?(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[\s\S]*?$/);
-                        return hasOtherInfo;
+                      // hostPlants から既存の部位情報を抽出
+                      moth.hostPlants.forEach(plant => {
+                        const match = plant.match(/（([^）]+)）$/);
+                        if (match) {
+                          match[1].split('・').forEach(part => existingParts.add(part.trim()));
+                        }
+                      });
+                      
+                      // hostPlantDetails から既存の部位情報を抽出
+                      if (moth.hostPlantDetails) {
+                        moth.hostPlantDetails.forEach(detail => {
+                          const match = detail.plant.match(/（([^）]+)）$/);
+                          if (match) {
+                            match[1].split('・').forEach(part => existingParts.add(part.trim()));
+                          }
+                        });
+                      }
+                      
+                      // 新たに抽出された部位情報も追加
+                      const plantParts = window.currentPlantParts || {};
+                      Object.values(plantParts).flat().forEach(part => existingParts.add(part));
+                      
+                      // catalog-2604のデバッグ
+                      if (moth.id === 'catalog-2604') {
+                        console.log('DEBUG catalog-2604 parts check:', {
+                          note,
+                          existingParts: Array.from(existingParts),
+                          hasExistingPart: Array.from(existingParts).some(part => note.includes(part))
+                        });
+                      }
+                      
+                      // 既に統合済みの部位情報を含む備考は除去
+                      const hasExistingPart = Array.from(existingParts).some(part => note.includes(part));
+                      if (hasExistingPart) {
+                        // 部位情報のみの備考（「の花」「の実」など）は完全に除去
+                        const isOnlyPartInfo = note.match(/^[\s\S]*?の?(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉)[\s\S]*?$/);
+                        if (isOnlyPartInfo) {
+                          return false; // 部位情報のみの場合は除去
+                        }
+                        
+                        // その他の重要な情報が含まれている場合のみ残す
+                        const hasOtherImportantInfo = note.match(/生態|習性|時期|条件|環境|地域|分布/);
+                        return hasOtherImportantInfo;
                       }
                       
                       // その他の一般的なフィルタリング
