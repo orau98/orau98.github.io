@@ -2785,6 +2785,12 @@ function App() {
                   if (!hostPlantList.includes(requiredPlant) && yListPlantNames.has(requiredPlant)) {
                     // Only add if the plant exists in YList to maintain data quality
                     hostPlantList.push(requiredPlant);
+                    // Also add to hostPlantEntries for detailed display
+                    hostPlantEntries.push({
+                      plant: requiredPlant,
+                      condition: '',
+                      notes: '補完データ'
+                    });
                   }
                 }
               }
