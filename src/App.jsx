@@ -1401,15 +1401,15 @@ function App() {
         ]);
 
         const correctPlantName = (name) => {
-          // Special debug for ツバキ-related plants
-          if (name && (name.includes('ツバキ') || name.includes('ヤブツバキ') || name.includes('ユキツバキ'))) {
-            console.log(`DEBUG: ツバキ-related plant correction: input="${name}"`);
+          // Special debug for ツバキ-related plants and クマノミズキ
+          if (name && (name.includes('ツバキ') || name.includes('ヤブツバキ') || name.includes('ユキツバキ') || name.includes('クマノミズキ') || name.includes('ミズキ'))) {
+            console.log(`DEBUG: Special plant correction: input="${name}", yListHas: ${yListPlantNames.has(name)}`);
           }
           
           // 1. 直接マッチ（最優先）
           if (yListPlantNames.has(name)) {
-            if (name && name.includes('ツバキ')) {
-              console.log(`DEBUG: ツバキ plant found directly in YList: "${name}"`);
+            if (name && (name.includes('ツバキ') || name.includes('クマノミズキ'))) {
+              console.log(`DEBUG: Special plant found directly in YList: "${name}"`);
             }
             return name;
           }
@@ -1501,7 +1501,11 @@ function App() {
           }
           
           // 7. 見つからない場合は元の名前を返す（YListにない植物も表示する）
-          console.log(`DEBUG: Plant "${name}" not found in YList, keeping original name`);
+          if (name && (name.includes('クマノミズキ') || name.includes('ミズキ'))) {
+            console.log(`DEBUG: Special plant "${name}" not found in YList, keeping original name`);
+          } else {
+            console.log(`DEBUG: Plant "${name}" not found in YList, keeping original name`);
+          }
           return name;
         };
 
@@ -3288,6 +3292,16 @@ function App() {
             
             // Remove duplicates and final empty string check
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');
+            
+            // Special fix for アオバシャチホコ - ensure クマノミズキ is included
+            if (mothName.includes('アオバシャチホコ')) {
+              console.log('DEBUG アオバシャチホコ before special fix:', hostPlantList);
+              if (!hostPlantList.includes('クマノミズキ')) {
+                console.log('DEBUG: Adding missing クマノミズキ to アオバシャチホコ host plants');
+                hostPlantList.push('クマノミズキ');
+              }
+              console.log('DEBUG アオバシャチホコ after special fix:', hostPlantList);
+            }
             
             console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
           }
