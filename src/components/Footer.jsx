@@ -7,7 +7,7 @@ const Footer = () => {
         <p className="text-sm">
           Private collection data. Open source on {' '}
           <a 
-            href="https://github.com/H-Amoto/insects-host-plant-explorer-" 
+            href="https://github.com/orau98/orau98.github.io" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-primary-600 dark:text-primary-400 hover:underline"

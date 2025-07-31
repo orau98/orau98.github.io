@@ -102,7 +102,7 @@ window.addEventListener('unhandledrejection', (event) => {
 }(window.location))
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename="/insects-host-plant-explorer-">
+  <BrowserRouter>
     <App />
   </BrowserRouter>
 );
