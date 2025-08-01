@@ -1906,6 +1906,18 @@ function App() {
                 console.log('DEBUG: Added special remark for catalog-676 (シロテンチビミノガ)');
               }
 
+              // Debug for main-3961 (スジツバメアオシャク)
+              if (index === 3961 || mothName === 'スジツバメアオシャク') {
+                console.log('DEBUG main-3961 スジツバメアオシャク:', {
+                  index,
+                  mothName,
+                  rawHostPlant,
+                  hostPlantNotes,
+                  remarks: rawRemarks,
+                  row
+                });
+              }
+
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
                 console.log(`DEBUG: Processing センモンヤガ host plants:`, {
@@ -3139,6 +3151,16 @@ function App() {
                   });
                 }
                 
+                // Final debug for main-3961
+                if (index === 3961 || mothName === 'スジツバメアオシャク') {
+                  console.log('FINAL DATA main-3961 スジツバメアオシャク:', {
+                    id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
+                    cleanedHostPlants,
+                    hostPlantNotes,
+                    remarks
+                  });
+                }
+
                 const mothData = { 
                   id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`, 
                   name: mothName, 
