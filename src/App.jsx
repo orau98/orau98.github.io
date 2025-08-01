@@ -1204,6 +1204,24 @@ function App() {
             return false;
           }
           
+          // Reject taxonomic/temporal reference terms that are not plant names
+          const referencePatterns = [
+            /^従来$/,                          // "従来"
+            /^古来$/,                          // "古来" 
+            /^以前$/,                          // "以前"
+            /^過去$/,                          // "過去"
+            /^現在$/,                          // "現在"
+            /^今後$/,                          // "今後"
+            /^将来$/,                          // "将来"
+            /^従来の.*$/,                      // "従来の〇〇"
+            /^古来の.*$/,                      // "古来の〇〇"
+            /の記録$/                          // "〇〇の記録"
+          ];
+          
+          if (referencePatterns.some(pattern => pattern.test(trimmed))) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -2557,6 +2575,24 @@ function App() {
                       return false;
                     }
                     
+                    // Reject taxonomic/temporal reference terms that are not plant names
+                    const referencePatterns = [
+                      /^従来$/,                          // "従来"
+                      /^古来$/,                          // "古来" 
+                      /^以前$/,                          // "以前"
+                      /^過去$/,                          // "過去"
+                      /^現在$/,                          // "現在"
+                      /^今後$/,                          // "今後"
+                      /^将来$/,                          // "将来"
+                      /^従来の.*$/,                      // "従来の〇〇"
+                      /^古来の.*$/,                      // "古来の〇〇"
+                      /の記録$/                          // "〇〇の記録"
+                    ];
+                    
+                    if (referencePatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2868,6 +2904,24 @@ function App() {
                     ];
                     
                     if (climaticPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
+                    // Reject taxonomic/temporal reference terms that are not plant names
+                    const referencePatterns = [
+                      /^従来$/,                          // "従来"
+                      /^古来$/,                          // "古来" 
+                      /^以前$/,                          // "以前"
+                      /^過去$/,                          // "過去"
+                      /^現在$/,                          // "現在"
+                      /^今後$/,                          // "今後"
+                      /^将来$/,                          // "将来"
+                      /^従来の.*$/,                      // "従来の〇〇"
+                      /^古来の.*$/,                      // "古来の〇〇"
+                      /の記録$/                          // "〇〇の記録"
+                    ];
+                    
+                    if (referencePatterns.some(pattern => pattern.test(trimmed))) {
                       return false;
                     }
                     
