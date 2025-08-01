@@ -1161,6 +1161,20 @@ function App() {
             return false;
           }
           
+          // Reject taxonomic comparison phrases that are not plant names
+          const taxonomicComparisonPatterns = [
+            /^同じ.*属$/,                      // "同じ〇〇属"
+            /^同じ.*科$/,                      // "同じ〇〇科"
+            /^同.*属の.*からは/,               // "同〇属の〇〇からは"
+            /からは未発見$/,                   // "〇〇からは未発見"
+            /からは確認されていない$/,         // "〇〇からは確認されていない"  
+            /からのみ.*が得られ/               // "〇〇からのみ〇〇が得られ"
+          ];
+          
+          if (taxonomicComparisonPatterns.some(pattern => pattern.test(trimmed))) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -2471,6 +2485,20 @@ function App() {
                       return false;
                     }
                     
+                    // Reject taxonomic comparison phrases that are not plant names
+                    const taxonomicComparisonPatterns = [
+                      /^同じ.*属$/,                      // "同じ〇〇属"
+                      /^同じ.*科$/,                      // "同じ〇〇科"
+                      /^同.*属の.*からは/,               // "同〇属の〇〇からは"
+                      /からは未発見$/,                   // "〇〇からは未発見"
+                      /からは確認されていない$/,         // "〇〇からは確認されていない"  
+                      /からのみ.*が得られ/               // "〇〇からのみ〇〇が得られ"
+                    ];
+                    
+                    if (taxonomicComparisonPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2739,6 +2767,20 @@ function App() {
                     ];
                     
                     if (tashuPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
+                    // Reject taxonomic comparison phrases that are not plant names
+                    const taxonomicComparisonPatterns = [
+                      /^同じ.*属$/,                      // "同じ〇〇属"
+                      /^同じ.*科$/,                      // "同じ〇〇科"
+                      /^同.*属の.*からは/,               // "同〇属の〇〇からは"
+                      /からは未発見$/,                   // "〇〇からは未発見"
+                      /からは確認されていない$/,         // "〇〇からは確認されていない"  
+                      /からのみ.*が得られ/               // "〇〇からのみ〇〇が得られ"
+                    ];
+                    
+                    if (taxonomicComparisonPatterns.some(pattern => pattern.test(trimmed))) {
                       return false;
                     }
                     
