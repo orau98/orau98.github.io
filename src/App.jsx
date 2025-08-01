@@ -1273,7 +1273,8 @@ function App() {
             /^に関して$/,
             /^に対して$/,
             /^によれば$/,
-            /^によると$/
+            /^によると$/,
+            /^不明$/  // Reject "不明" to prevent blank plant pages
           ];
           
           return !invalidPatterns.some(pattern => pattern.test(trimmed));
@@ -2440,7 +2441,8 @@ function App() {
                       /^に関して$/,
                       /^に対して$/,
                       /^によれば$/,
-                      /^によると$/
+                      /^によると$/,
+                      /^不明$/  // Reject "不明" to prevent blank plant pages
                     ];
                     
                     return !invalidPatterns.some(pattern => pattern.test(trimmed));
@@ -2657,7 +2659,8 @@ function App() {
                       /^は$/,
                       /^と$/,
                       /^や$/,
-                      /^も$/
+                      /^も$/,
+                      /^不明$/  // Reject "不明" to prevent blank plant pages
                     ];
                     
                     return !invalidPatterns.some(pattern => pattern.test(trimmed));
