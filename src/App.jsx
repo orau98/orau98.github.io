@@ -1911,11 +1911,10 @@ function App() {
                 hostPlantNotes.push('北アメリカでは、マンテマ属の種子鞘を食べる');
               }
 
-              // Special handling for main-3603 (ニッコウキエダシャク) - REMOVED
-              // CSV has been cleaned, no longer need to add duplicate remarks
-              // if ((index === 3603 && !row['大図鑑カタログNo']) || mothName === 'ニッコウキエダシャク') {
-              //   hostPlantNotes.push('古くズミの記録もあるが再確認されていない');
-              // }
+              // Special handling for ニッコウキエダシャク - Add historical record as remark
+              if (mothName === 'ニッコウキエダシャク') {
+                hostPlantNotes.push('古くズミ (バラ科)の記録もあるが再確認されていない');
+              }
 
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
