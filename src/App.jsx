@@ -2875,7 +2875,10 @@ function App() {
                     plant = plant.trim();
                     
                     // Remove trailing patterns like "などの農作物", "などの野菜", "につく"
-                    plant = plant.replace(/など.*$/g, '').trim();
+                    // But preserve "科野菜" patterns
+                    if (!plant.includes('科野菜')) {
+                      plant = plant.replace(/など.*$/g, '').trim();
+                    }
                     plant = plant.replace(/ほか.*$/g, '').trim();
                     plant = plant.replace(/につく[。．]?$/g, '').trim();
                     
@@ -2889,7 +2892,8 @@ function App() {
                     // Remove brackets but keep parentheses for family names
                     plant = plant.replace(/[\[\]\{\}]/g, ''); // Remove brackets only
                     // Only remove parentheses if they don't contain family names (科)
-                    if (!plant.match(/[（(][^）)]*科[）)]/)) {
+                    // Also preserve "科野菜" patterns (e.g., アブラナ科野菜)
+                    if (!plant.match(/[（(][^）)]*科[）)]/) && !plant.includes('科野菜')) {
                       plant = plant.replace(/[\(\)（）]/g, ''); // Remove parentheses only if not family names
                     }
                     plant = plant.replace(/[\-\u2010-\u2015_=+|\\\\;:<>/?~`!@#$%^&*]/g, ''); // Remove symbols
