@@ -1175,6 +1175,16 @@ function App() {
             return false;
           }
           
+          // Reject bare genus names (scientific Latin genus names)
+          const genusPatterns = [
+            /^[A-Z][a-z]+ 属$/,                // "Vicia 属", "Quercus 属" etc.
+            /^[A-Z][a-z]+属$/                  // "Vicia属", "Quercus属" etc.
+          ];
+          
+          if (genusPatterns.some(pattern => pattern.test(trimmed))) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -2499,6 +2509,16 @@ function App() {
                       return false;
                     }
                     
+                    // Reject bare genus names (scientific Latin genus names)
+                    const genusPatterns = [
+                      /^[A-Z][a-z]+ 属$/,                // "Vicia 属", "Quercus 属" etc.
+                      /^[A-Z][a-z]+属$/                  // "Vicia属", "Quercus属" etc.
+                    ];
+                    
+                    if (genusPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2781,6 +2801,16 @@ function App() {
                     ];
                     
                     if (taxonomicComparisonPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
+                    // Reject bare genus names (scientific Latin genus names)
+                    const genusPatterns = [
+                      /^[A-Z][a-z]+ 属$/,                // "Vicia 属", "Quercus 属" etc.
+                      /^[A-Z][a-z]+属$/                  // "Vicia属", "Quercus属" etc.
+                    ];
+                    
+                    if (genusPatterns.some(pattern => pattern.test(trimmed))) {
                       return false;
                     }
                     
