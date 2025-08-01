@@ -1031,6 +1031,61 @@ function App() {
           });
         };
         
+        // Function to detect cultivation conditions in host plant text
+        const detectCultivationConditions = (hostPlantText) => {
+          if (!hostPlantText || typeof hostPlantText !== 'string') {
+            return { cultivatedPlants: [], wildPlants: [], remarks: '' };
+          }
+          
+          const cultivatedPlants = [];
+          const wildPlants = [];
+          let remarks = '';
+          
+          // Pattern 1: "飼育下で...の記録があり" pattern (catalog-2294 style)
+          const cultivationPattern = /飼育下で([^。；;]+?)の記録があり/g;
+          let match;
+          while ((match = cultivationPattern.exec(hostPlantText)) !== null) {
+            const plantsText = match[1];
+            // Split by delimiters and extract plant names
+            const plants = plantsText.split(/[;；、，,]/).map(p => p.trim()).filter(p => p.length > 0);
+            plants.forEach(plant => {
+              // Clean plant name
+              plant = plant.replace(/\s*\([^)]*\)$/g, ''); // Remove family info at end
+              if (plant && plant.length > 1) {
+                cultivatedPlants.push(plant);
+              }
+            });
+          }
+          
+          // Pattern 2: "飼育条件下では...を食べる" pattern
+          const cultivationPattern2 = /飼育条件下では([^。；;]+?)を?食べる?/g;
+          while ((match = cultivationPattern2.exec(hostPlantText)) !== null) {
+            const plantsText = match[1];
+            const plants = plantsText.split(/[;；、，,]/).map(p => p.trim()).filter(p => p.length > 0);
+            plants.forEach(plant => {
+              plant = plant.replace(/\s*\([^)]*\)$/g, '');
+              if (plant && plant.length > 1) {
+                cultivatedPlants.push(plant);
+              }
+            });
+          }
+          
+          // Pattern 3: "名義タイプ亜種の幼虫は...を食すという" pattern for wild plants  
+          const wildPattern = /名義タイプ亜種の幼虫は([^。；;]+?)を食すという/g;
+          while ((match = wildPattern.exec(hostPlantText)) !== null) {
+            const plantsText = match[1];
+            const plants = plantsText.split(/[;；、，,]/).map(p => p.trim()).filter(p => p.length > 0);
+            plants.forEach(plant => {
+              plant = plant.replace(/\s*\([^)]*\)$/g, '');
+              if (plant && plant.length > 1) {
+                wildPlants.push(plant);
+              }
+            });
+          }
+          
+          return { cultivatedPlants, wildPlants, remarks };
+        };
+
         // Helper function to add entry to hostPlantEntries with duplicate checking
         const addPlantEntry = (hostPlantEntries, plant, condition = '', familyFromMainCsv = '') => {
           const newEntry = {
@@ -2574,6 +2629,15 @@ function App() {
                   };
                   
                   // Standard parsing for normal plant lists
+                  // First, detect cultivation conditions before processing
+                  const cultivationInfo = detectCultivationConditions(rawHostPlant);
+                  console.log('DEBUG: Cultivation detection for', mothName, ':', cultivationInfo);
+                  
+                  // Add cultivation-specific remarks to hostPlantNotes
+                  if (cultivationInfo.remarks) {
+                    hostPlantNotes.push(cultivationInfo.remarks);
+                  }
+                  
                   // First, extract and temporarily store the notes
                   let tempHostPlant = rawHostPlant;
                   const extractedNotes = [];
@@ -2828,7 +2892,21 @@ function App() {
                         const plantWithParts = plantParts && plantParts.length > 0 ? 
                           `${correctedPlantName}（${plantParts.join('・')}）` : correctedPlantName;
                         
-                        addPlantEntry(hostPlantEntries, plantWithParts, '', familyFromMainCsv);
+                        // Determine cultivation condition for this plant
+                        let condition = '';
+                        if (cultivationInfo.cultivatedPlants.some(cp => 
+                          normalizePlantName(cp) === normalizedPlant || 
+                          cp.includes(correctedPlantName) || 
+                          correctedPlantName.includes(cp))) {
+                          condition = '飼育条件下';
+                        } else if (cultivationInfo.wildPlants.some(wp => 
+                          normalizePlantName(wp) === normalizedPlant || 
+                          wp.includes(correctedPlantName) || 
+                          correctedPlantName.includes(wp))) {
+                          condition = '自然状態';
+                        }
+                        
+                        addPlantEntry(hostPlantEntries, plantWithParts, condition, familyFromMainCsv);
                       }
                     }
                   });
@@ -3320,8 +3398,12 @@ function App() {
             // Remove outer quotes and inner quotes
             let cleanedHostPlants = hostPlants;
             
-            // Remove outer double quotes if present
-            if (cleanedHostPlants.startsWith('""') && cleanedHostPlants.endsWith('""')) {
+            // Remove outer quotes (handle both double and triple quote patterns)
+            if (cleanedHostPlants.startsWith('"""') && cleanedHostPlants.endsWith('"""')) {
+              // Handle triple quotes like """content"""
+              cleanedHostPlants = cleanedHostPlants.slice(3, -3);
+            } else if (cleanedHostPlants.startsWith('""') && cleanedHostPlants.endsWith('""')) {
+              // Handle double quotes like ""content""
               cleanedHostPlants = cleanedHostPlants.slice(2, -2);
             }
             

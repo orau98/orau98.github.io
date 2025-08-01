@@ -527,7 +527,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                       ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
                                       : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
                                   }`}>
-                                    {condition}での観察
+                                    {condition === '飼育条件下' ? '🏠' : '🌿'} {condition}での観察
                                   </span>
                                 </div>
                               )}
@@ -555,6 +555,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
                                                     {parts}
                                                   </span>
+                                                  {detail.condition && (
+                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
+                                                      detail.condition === '自然状態' 
+                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                    }`}>
+                                                      {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
+                                                    </span>
+                                                  )}
                                                 </>
                                               );
                                             }
@@ -571,6 +580,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
                                                     {part}
                                                   </span>
+                                                  {detail.condition && (
+                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
+                                                      detail.condition === '自然状態' 
+                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                    }`}>
+                                                      {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
+                                                    </span>
+                                                  )}
                                                 </>
                                               );
                                             } else {
@@ -588,6 +606,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                                                   {allParts.length > 0 && (
                                                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
                                                       {allParts.join('・')}
+                                                    </span>
+                                                  )}
+                                                  {detail.condition && (
+                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
+                                                      detail.condition === '自然状態' 
+                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                    }`}>
+                                                      {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
                                                     </span>
                                                   )}
                                                 </>

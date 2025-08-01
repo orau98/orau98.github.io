@@ -157,6 +157,65 @@ function isValidPlantName(plantName) {
   return true;
 }
 
+// 備考欄から食草情報を抽出する関数
+function extractHostPlantsFromRemarks(remarks) {
+  if (!remarks || typeof remarks !== 'string') {
+    return [];
+  }
+  
+  const hostPlants = [];
+  const trimmed = remarks.trim();
+  
+  // パターン1: "名義タイプ亜種の幼虫は...を食すという"
+  const nominalSubspeciesMatch = trimmed.match(/名義タイプ亜種の幼虫は([^。]+)を食すという/);
+  if (nominalSubspeciesMatch) {
+    const plantText = nominalSubspeciesMatch[1];
+    const plants = plantText.split(/[;；、，,]/)
+      .map(p => p.trim())
+      .filter(p => p && (p.includes('科') || p.includes('属') || isValidPlantName(p)));
+    hostPlants.push(...plants);
+  }
+  
+  // パターン2: "飼育下で...の記録があり"
+  const culturingMatch = trimmed.match(/飼育下で([^。]+)の記録があり?/);
+  if (culturingMatch) {
+    const plantText = culturingMatch[1];
+    const plants = plantText.split(/[;；、，,]/)
+      .map(p => p.trim())
+      .filter(p => p && (p.includes('科') || p.includes('属') || isValidPlantName(p)));
+    hostPlants.push(...plants);
+  }
+  
+  // パターン3: "飼育条件下では...を食べる"  
+  const culturingConditionMatch = trimmed.match(/飼育条件下では([^。]+)を食べる/);
+  if (culturingConditionMatch) {
+    const plantText = culturingConditionMatch[1];
+    const plants = plantText.split(/[;；、，,]/)
+      .map(p => p.trim())
+      .filter(p => p && (p.includes('科') || p.includes('属') || isValidPlantName(p)));
+    hostPlants.push(...plants);
+  }
+  
+  // パターン4: 文頭の植物名パターン（例："ショウロウクサギ (シソ科); ノアサガオ (ヒルガオ科)。"）
+  const directPlantMatch = trimmed.match(/^([^。]+(?:\([^)]+\)[^。]*)*)[。；]/);
+  if (directPlantMatch && !trimmed.includes('名義タイプ亜種') && !trimmed.includes('飼育下で')) {
+    const plantText = directPlantMatch[1];
+    // 科名を含む植物名パターンをより正確に抽出
+    const plantPatterns = plantText.split(/[;；、，,]/)
+      .map(p => p.trim())
+      .filter(p => p && (p.includes('科') || isValidPlantName(p)));
+    hostPlants.push(...plantPatterns);
+  }
+  
+  // パターン5: "広食性"を検出
+  if (trimmed.includes('広食性')) {
+    hostPlants.push('広食性');
+  }
+  
+  // 重複を除去して返す
+  return [...new Set(hostPlants)];
+}
+
 // 学名を正しく構築する関数 - SPAと同じロジック
 function processScientificName(existingScientificName, genusName, speciesName, authorName, yearName) {
   // Clean up inputs
@@ -751,10 +810,28 @@ async function generateMetaPages() {
       
       const scientificName = processScientificName(existingScientificName, genus, species, author, year);
       
-      const hostPlants = row['食草'] || '不明';
+      let hostPlants = row['食草'] || '不明';
+      const remarks = row['食草に関する備考'] || '';
       const source = row['出典'] || row['出典\r'] || '不明';
-      
       const catalogNo = row['大図鑑カタログNo'] || '';
+      
+      // 食草欄に説明文が含まれている場合、正しい食草情報を抽出
+      if (hostPlants && hostPlants.includes('名義タイプ亜種')) {
+        const extractedPlantsFromHostField = extractHostPlantsFromRemarks(hostPlants);
+        if (extractedPlantsFromHostField.length > 0) {
+          hostPlants = extractedPlantsFromHostField.join('; ');
+          console.log(`食草欄から正しい食草情報を抽出: ${insectName} (${catalogNo}) -> ${hostPlants}`);
+        }
+      }
+      // 食草欄が空白の場合、備考欄から食草情報を抽出
+      else if ((!hostPlants || hostPlants === '不明') && remarks) {
+        const extractedPlants = extractHostPlantsFromRemarks(remarks);
+        if (extractedPlants.length > 0) {
+          hostPlants = extractedPlants.join('; ');
+          console.log(`備考欄から食草情報を抽出: ${insectName} (${catalogNo}) -> ${hostPlants}`);
+        }
+      }
+      
       const insectId = catalogNo ? `catalog-${catalogNo}` : `main-${index}`;
       const type = 'moth';
       
