@@ -1139,6 +1139,28 @@ function App() {
             return false;
           }
           
+          // Reject "多種" patterns that should be filtered out
+          const tashuPatterns = [
+            /^多種$/,                          // Standalone "多種"
+            /^多種の植物$/,                    // "多種の植物"
+            /^多種の草本$/,                    // "多種の草本"
+            /^多種の広葉樹$/,                  // "多種の広葉樹"
+            /^多種の落葉広葉樹$/,              // "多種の落葉広葉樹"
+            /^多種の草本類$/,                  // "多種の草本類"
+            /など多種にわたる$/,               // "など多種にわたる"
+            /など多種の/,                      // "など多種の..."
+            /多種の.*を食べる$/,               // "多種の〇〇を食べる"
+            /多種の.*を摂食する$/,             // "多種の〇〇を摂食する"
+            /多種の.*につく$/,                 // "多種の〇〇につく"
+            /おそらく多種の/,                  // "おそらく多種の..."
+            /多食性で多種の/,                  // "多食性で多種の..."
+            /多種の.*を食草とする$/            // "多種の〇〇を食草とする"
+          ];
+          
+          if (tashuPatterns.some(pattern => pattern.test(trimmed))) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -2427,6 +2449,28 @@ function App() {
                       return false;
                     }
                     
+                    // Reject "多種" patterns that should be filtered out
+                    const tashuPatterns = [
+                      /^多種$/,                          // Standalone "多種"
+                      /^多種の植物$/,                    // "多種の植物"
+                      /^多種の草本$/,                    // "多種の草本"
+                      /^多種の広葉樹$/,                  // "多種の広葉樹"
+                      /^多種の落葉広葉樹$/,              // "多種の落葉広葉樹"
+                      /^多種の草本類$/,                  // "多種の草本類"
+                      /など多種にわたる$/,               // "など多種にわたる"
+                      /など多種の/,                      // "など多種の..."
+                      /多種の.*を食べる$/,               // "多種の〇〇を食べる"
+                      /多種の.*を摂食する$/,             // "多種の〇〇を摂食する"
+                      /多種の.*につく$/,                 // "多種の〇〇につく"
+                      /おそらく多種の/,                  // "おそらく多種の..."
+                      /多食性で多種の/,                  // "多食性で多種の..."
+                      /多種の.*を食草とする$/            // "多種の〇〇を食草とする"
+                    ];
+                    
+                    if (tashuPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2673,6 +2717,28 @@ function App() {
                         trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
                         trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ') ||
                         trimmed.includes('海外'))) {
+                      return false;
+                    }
+                    
+                    // Reject "多種" patterns that should be filtered out
+                    const tashuPatterns = [
+                      /^多種$/,                          // Standalone "多種"
+                      /^多種の植物$/,                    // "多種の植物"
+                      /^多種の草本$/,                    // "多種の草本"
+                      /^多種の広葉樹$/,                  // "多種の広葉樹"
+                      /^多種の落葉広葉樹$/,              // "多種の落葉広葉樹"
+                      /^多種の草本類$/,                  // "多種の草本類"
+                      /など多種にわたる$/,               // "など多種にわたる"
+                      /など多種の/,                      // "など多種の..."
+                      /多種の.*を食べる$/,               // "多種の〇〇を食べる"
+                      /多種の.*を摂食する$/,             // "多種の〇〇を摂食する"
+                      /多種の.*につく$/,                 // "多種の〇〇につく"
+                      /おそらく多種の/,                  // "おそらく多種の..."
+                      /多食性で多種の/,                  // "多食性で多種の..."
+                      /多種の.*を食草とする$/            // "多種の〇〇を食草とする"
+                    ];
+                    
+                    if (tashuPatterns.some(pattern => pattern.test(trimmed))) {
                       return false;
                     }
                     
