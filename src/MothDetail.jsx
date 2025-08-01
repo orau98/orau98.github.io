@@ -513,123 +513,210 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     {/* Display detailed host plant info if available */}
                     {moth.hostPlantDetails && moth.hostPlantDetails.length > 0 ? (
                       <div>
-                        {/* Group by condition */}
-                        {['自然状態', '飼育条件下', ''].map(condition => {
-                          const plantsForCondition = moth.hostPlantDetails.filter(detail => detail.condition === condition);
-                          if (plantsForCondition.length === 0) return null;
+                        {/* Separate domestic and overseas host plants */}
+                        {(() => {
+                          const domesticPlants = [];
+                          const overseasPlants = [];
+                          
+                          moth.hostPlantDetails.forEach(detail => {
+                            // Check if this is overseas information based on common patterns
+                            const overseasPatterns = /海外では|ヨーロッパでは|アメリカでは|中国では|韓国では|台湾では|北米では|カナダでは|ロシアでは|インドでは|東南アジアでは|オーストラリアでは|ニュージーランドでは|南米では|ブラジルでは|アルゼンチンでは|チリでは|アフリカでは|エジプトでは|南アフリカでは|モロッコでは|ケニアでは|タンザニアでは|ナイジェリアでは|ガーナでは/;
+                            
+                            if (overseasPatterns.test(detail.plant)) {
+                              overseasPlants.push(detail);
+                            } else {
+                              domesticPlants.push(detail);
+                            }
+                          });
+                          
+                          return { domesticPlants, overseasPlants };
+                        })()}
+
+                        {/* Display domestic plants first */}
+                        {(() => {
+                          const { domesticPlants } = (() => {
+                            const domesticPlants = [];
+                            const overseasPlants = [];
+                            
+                            moth.hostPlantDetails.forEach(detail => {
+                              const overseasPatterns = /海外では|ヨーロッパでは|アメリカでは|中国では|韓国では|台湾では|北米では|カナダでは|ロシアでは|インドでは|東南アジアでは|オーストラリアでは|ニュージーランドでは|南米では|ブラジルでは|アルゼンチンでは|チリでは|アフリカでは|エジプトでは|南アフリカでは|モロッコでは|ケニアでは|タンザニアでは|ナイジェリアでは|ガーナでは/;
+                              
+                              if (overseasPatterns.test(detail.plant)) {
+                                overseasPlants.push(detail);
+                              } else {
+                                domesticPlants.push(detail);
+                              }
+                            });
+                            
+                            return { domesticPlants, overseasPlants };
+                          })();
+                          
+                          if (domesticPlants.length === 0) return null;
                           
                           return (
-                            <div key={condition} className="mb-4">
-                              {condition && (
-                                <div className="mb-2">
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                    condition === '自然状態' 
-                                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                                      : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                                  }`}>
-                                    {condition === '飼育条件下' ? '🏠' : '🌿'} {condition}での観察
-                                  </span>
-                                </div>
-                              )}
-                              <div className="grid grid-cols-1 gap-2">
-                                {plantsForCondition.map((detail, index) => (
-                                  <Link
-                                    key={`${condition}-${detail.plant}-${index}`}
-                                    to={`/plant/${encodeURIComponent(detail.plant)}`}
-                                    className="group bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md"
-                                  >
-                                    <div>
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-3">
-                                          {/* Extract plant name and parts, or add parts from remarks */}
-                                          {(() => {
-                                            // 既存の統合形式をチェック
-                                            const plantPartsMatch = detail.plant.match(/^(.+?)（([^）]+)）$/);
-                                            if (plantPartsMatch) {
-                                              const [, plantName, parts] = plantPartsMatch;
-                                              return (
-                                                <>
-                                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {plantName}
-                                                  </span>
-                                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
-                                                    {parts}
-                                                  </span>
-                                                  {detail.condition && (
-                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
-                                                      detail.condition === '自然状態' 
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                                                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                                                    }`}>
-                                                      {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
-                                                    </span>
-                                                  )}
-                                                </>
-                                              );
-                                            }
-                                            
-                                            // 「植物の部位」形式をチェック（例：ツバキの花、サクラの実）
-                                            const plantPartDirectMatch = detail.plant.match(/^(.+?)(の|から|で)(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|若い翼果)(.*)$/);
-                                            if (plantPartDirectMatch) {
-                                              const [, plantName, , part, suffix] = plantPartDirectMatch;
-                                              return (
-                                                <>
-                                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {plantName}{suffix}
-                                                  </span>
-                                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
-                                                    {part}
-                                                  </span>
-                                                  {detail.condition && (
-                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
-                                                      detail.condition === '自然状態' 
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                                                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                                                    }`}>
-                                                      {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
-                                                    </span>
-                                                  )}
-                                                </>
-                                              );
-                                            } else {
-                                              // 備考から抽出した部位情報を統合
-                                              const plantParts = window.currentPlantParts || {};
-                                              const specificParts = plantParts[detail.plant] || [];
-                                              const generalParts = plantParts['*'] || [];
-                                              const allParts = [...new Set([...specificParts, ...generalParts])];
-                                              
-                                              return (
-                                                <>
-                                                  <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                                                    {detail.plant}
-                                                  </span>
-                                                  {allParts.length > 0 && (
-                                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
-                                                      {allParts.join('・')}
-                                                    </span>
-                                                  )}
-                                                  {detail.condition && (
-                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
-                                                      detail.condition === '自然状態' 
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                                                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                                                    }`}>
-                                                      {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
-                                                    </span>
-                                                  )}
-                                                </>
-                                              );
-                                            }
-                                          })()}
-                                        </div>
+                            <div>
+                              {/* Group domestic plants by condition */}
+                              {['自然状態', '飼育条件下', ''].map(condition => {
+                                const plantsForCondition = domesticPlants.filter(detail => detail.condition === condition);
+                                if (plantsForCondition.length === 0) return null;
+                                
+                                return (
+                                  <div key={condition} className="mb-4">
+                                    {condition && (
+                                      <div className="mb-2">
+                                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                          condition === '自然状態' 
+                                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                            : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                        }`}>
+                                          {condition === '飼育条件下' ? '🏠' : '🌿'} {condition}での観察
+                                        </span>
                                       </div>
+                                    )}
+                                    <div className="grid grid-cols-1 gap-2">
+                                      {plantsForCondition.map((detail, index) => (
+                                        <Link
+                                          key={`${condition}-${detail.plant}-${index}`}
+                                          to={`/plant/${encodeURIComponent(detail.plant)}`}
+                                          className="group bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md"
+                                        >
+                                          <div>
+                                            <div className="flex items-center justify-between">
+                                              <div className="flex items-center space-x-3">
+                                                {/* Extract plant name and parts, or add parts from remarks */}
+                                                {(() => {
+                                                  // 既存の統合形式をチェック
+                                                  const plantPartsMatch = detail.plant.match(/^(.+?)（([^）]+)）$/);
+                                                  if (plantPartsMatch) {
+                                                    const [, plantName, parts] = plantPartsMatch;
+                                                    return (
+                                                      <>
+                                                        <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                          {plantName}
+                                                        </span>
+                                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                                          {parts}
+                                                        </span>
+                                                        {detail.condition && (
+                                                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
+                                                            detail.condition === '自然状態' 
+                                                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                          }`}>
+                                                            {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
+                                                          </span>
+                                                        )}
+                                                      </>
+                                                    );
+                                                  }
+                                                  
+                                                  // 「植物の部位」形式をチェック（例：ツバキの花、サクラの実）
+                                                  const plantPartDirectMatch = detail.plant.match(/^(.+?)(の|から|で)(花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|若い翼果)(.*)$/);
+                                                  if (plantPartDirectMatch) {
+                                                    const [, plantName, , part, suffix] = plantPartDirectMatch;
+                                                    return (
+                                                      <>
+                                                        <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                          {plantName}{suffix}
+                                                        </span>
+                                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                                          {part}
+                                                        </span>
+                                                        {detail.condition && (
+                                                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
+                                                            detail.condition === '自然状態' 
+                                                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                          }`}>
+                                                            {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
+                                                          </span>
+                                                        )}
+                                                      </>
+                                                    );
+                                                  } else {
+                                                    // 備考から抽出した部位情報を統合
+                                                    const plantParts = window.currentPlantParts || {};
+                                                    const specificParts = plantParts[detail.plant] || [];
+                                                    const generalParts = plantParts['*'] || [];
+                                                    const allParts = [...new Set([...specificParts, ...generalParts])];
+                                                    
+                                                    return (
+                                                      <>
+                                                        <span className="text-slate-800 dark:text-slate-200 font-medium group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                                          {detail.plant}
+                                                        </span>
+                                                        {allParts.length > 0 && (
+                                                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 ml-2">
+                                                            {allParts.join('・')}
+                                                          </span>
+                                                        )}
+                                                        {detail.condition && (
+                                                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-1 ${
+                                                            detail.condition === '自然状態' 
+                                                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                                          }`}>
+                                                            {detail.condition === '飼育条件下' ? '🏠' : '🌿'}
+                                                          </span>
+                                                        )}
+                                                      </>
+                                                    );
+                                                  }
+                                                })()}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </Link>
+                                      ))}
                                     </div>
-                                  </Link>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+                        })()}
+
+                        {/* Display overseas host plant information in remarks section */}
+                        {(() => {
+                          const { overseasPlants } = (() => {
+                            const domesticPlants = [];
+                            const overseasPlants = [];
+                            
+                            moth.hostPlantDetails.forEach(detail => {
+                              const overseasPatterns = /海外では|ヨーロッパでは|アメリカでは|中国では|韓国では|台湾では|北米では|カナダでは|ロシアでは|インドでは|東南アジアでは|オーストラリアでは|ニュージーランドでは|南米では|ブラジルでは|アルゼンチンでは|チリでは|アフリカでは|エジプトでは|南アフリカでは|モロッコでは|ケニアでは|タンザニアでは|ナイジェリアでは|ガーナでは/;
+                              
+                              if (overseasPatterns.test(detail.plant)) {
+                                overseasPlants.push(detail);
+                              } else {
+                                domesticPlants.push(detail);
+                              }
+                            });
+                            
+                            return { domesticPlants, overseasPlants };
+                          })();
+                          
+                          if (overseasPlants.length === 0) return null;
+                          
+                          return (
+                            <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
+                              <div className="flex items-center space-x-2 mb-3">
+                                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400">海外での食草情報</h4>
+                              </div>
+                              <div className="space-y-2">
+                                {overseasPlants.map((detail, index) => (
+                                  <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50 dark:border-blue-700/50">
+                                    <p className="text-sm text-slate-700 dark:text-slate-300">
+                                      <span className="font-medium text-blue-700 dark:text-blue-400">備考:</span> {detail.plant}
+                                    </p>
+                                  </div>
                                 ))}
                               </div>
                             </div>
                           );
-                        })}
+                        })()}
                       </div>
                     ) : (
                       /* Fallback to simple display */
