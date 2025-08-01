@@ -64,6 +64,16 @@ function isValidPlantName(plantName) {
   
   const trimmed = plantName.trim();
   
+  // 空文字列や空白のみの文字列を除外
+  if (trimmed === '' || trimmed.length === 0) {
+    return false;
+  }
+  
+  // 「不明」を除外
+  if (trimmed === '不明') {
+    return false;
+  }
+  
   // 基本的な長さチェック
   if (trimmed.length < 2 || trimmed.length > 50) {
     return false;
@@ -76,6 +86,21 @@ function isValidPlantName(plantName) {
   
   // 括弧付き年号を除外
   if (/^[（(]\d{4}[）)]?$/.test(trimmed)) {
+    return false;
+  }
+  
+  // 文章的なパターンを除外（句点や説明文）
+  if (/[。．]/.test(trimmed) || /で(飼育|採卵|得られ|記録)/.test(trimmed) || /による/.test(trimmed) || /からの/.test(trimmed)) {
+    return false;
+  }
+  
+  // ハイフンで始まる植物名を除外
+  if (/^[-ー]/.test(trimmed)) {
+    return false;
+  }
+  
+  // 括弧内の説明だけの場合を除外
+  if (/^\([^)]*\)$/.test(trimmed)) {
     return false;
   }
   
@@ -290,6 +315,7 @@ function generateInsectHTML(insect, type) {
   const hostPlantsArray = hostPlants !== '不明' ? 
     [...new Set(hostPlants.split(/[;；、,，]/)
       .map(p => p.trim())
+      .filter(p => p && p !== '' && p !== '不明')
       .map(p => p.replace(/につく[。．]?$/g, '').trim()) // Remove "につく。"
       .flatMap(p => {
         // Handle patterns like "クマノミズキ (以上ミズキ科)" - extract individual plant names
@@ -865,7 +891,7 @@ async function generateMetaPages() {
       mothCount++;
       
       if (hostPlants && hostPlants !== '不明') {
-        const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p))];
+        const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
           if (isValidPlantName(plant)) {
             if (!hostPlantsMap.has(plant)) {
