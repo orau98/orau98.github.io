@@ -295,6 +295,37 @@ function processScientificName(existingScientificName, genusName, speciesName, a
   return cleanExisting || '未同定';
 }
 
+// 植物の別名を取得する関数
+function getPlantAliases(plantName) {
+  // App.jsxと同じ別名マップを定義
+  const aliasToMainMap = {
+    'セイヨウリンゴ': 'リンゴ',
+    'ヨーロッパリンゴ': 'リンゴ',
+    'セイヨウナシ': 'ナシ',
+    'ヨーロッパナシ': 'ナシ',
+    'セイヨウカラシナ': 'カラシナ',
+    'セイヨウタンポポ': 'タンポポ',
+    'セイヨウミザクラ': 'ミザクラ',
+    'セイヨウアブラナ': 'アブラナ',
+    'セイヨウハコヤナギ': 'ハコヤナギ'
+  };
+  
+  // 逆引きマップ（メイン名から別名のリストへ）
+  const mainToAliasesMap = {};
+  for (const [alias, main] of Object.entries(aliasToMainMap)) {
+    if (!mainToAliasesMap[main]) {
+      mainToAliasesMap[main] = [];
+    }
+    mainToAliasesMap[main].push(alias);
+  }
+  
+  // 植物名から基本名を抽出（科名などを除去）
+  const basePlantName = plantName.split(/[（(]/)[0].trim();
+  
+  // この植物の別名を返す
+  return mainToAliasesMap[basePlantName] || [];
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
 function generateInsectHTML(insect, type) {
   const typeNames = {
@@ -526,6 +557,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
   const insectsList = relatedInsects.map(insect => insect.name).join(', ');
   const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
 
+  // 植物の別名を取得
+  const plantAliases = getPlantAliases(plantName);
+
   // この植物に関連する画像を探す
   const basePlantName = plantName.split(' ')[0]; // "タケニグサ (ケシ科)" -> "タケニグサ"
   const plantImageFiles = plantImages.filter(img => img.startsWith(basePlantName));
@@ -631,6 +665,10 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
         <dl>
           <dt>植物名</dt>
           <dd>${plantName}</dd>
+          ${plantAliases.length > 0 ? `
+          <dt>別名</dt>
+          <dd>${plantAliases.join('、')}</dd>
+          ` : ''}
           <dt>利用昆虫数</dt>
           <dd>${relatedInsects.length}種</dd>
           <dt>昆虫の種類</dt>
