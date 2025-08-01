@@ -1903,19 +1903,6 @@ function App() {
               if (row['大図鑑カタログNo'] === '676' || mothName === 'シロテンチビミノガ') {
                 // Add specific remark for catalog-676
                 hostPlantNotes.push('岩石表面上の白色緑色の粉状地衣類など');
-                console.log('DEBUG: Added special remark for catalog-676 (シロテンチビミノガ)');
-              }
-
-              // Debug for main-3961 (スジツバメアオシャク)
-              if (index === 3961 || mothName === 'スジツバメアオシャク') {
-                console.log('DEBUG main-3961 スジツバメアオシャク:', {
-                  index,
-                  mothName,
-                  rawHostPlant,
-                  hostPlantNotes,
-                  remarks: rawRemarks,
-                  row
-                });
               }
 
               // Debug logging for センモンヤガ host plant processing
@@ -3151,15 +3138,6 @@ function App() {
                   });
                 }
                 
-                // Final debug for main-3961
-                if (index === 3961 || mothName === 'スジツバメアオシャク') {
-                  console.log('FINAL DATA main-3961 スジツバメアオシャク:', {
-                    id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
-                    cleanedHostPlants,
-                    hostPlantNotes,
-                    remarks
-                  });
-                }
 
                 const mothData = { 
                   id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`, 
