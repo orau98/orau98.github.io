@@ -513,24 +513,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     {/* Display detailed host plant info if available */}
                     {moth.hostPlantDetails && moth.hostPlantDetails.length > 0 ? (
                       <div>
-                        {/* Separate domestic and overseas host plants */}
-                        {(() => {
-                          const domesticPlants = [];
-                          const overseasPlants = [];
-                          
-                          moth.hostPlantDetails.forEach(detail => {
-                            // Check if this is overseas information based on common patterns
-                            const overseasPatterns = /海外では|ヨーロッパでは|アメリカでは|中国では|韓国では|台湾では|北米では|カナダでは|ロシアでは|インドでは|東南アジアでは|オーストラリアでは|ニュージーランドでは|南米では|ブラジルでは|アルゼンチンでは|チリでは|アフリカでは|エジプトでは|南アフリカでは|モロッコでは|ケニアでは|タンザニアでは|ナイジェリアでは|ガーナでは/;
-                            
-                            if (overseasPatterns.test(detail.plant)) {
-                              overseasPlants.push(detail);
-                            } else {
-                              domesticPlants.push(detail);
-                            }
-                          });
-                          
-                          return { domesticPlants, overseasPlants };
-                        })()}
 
                         {/* Display domestic plants first */}
                         {(() => {
