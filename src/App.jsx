@@ -1185,6 +1185,25 @@ function App() {
             return false;
           }
           
+          // Reject geographic/climatic descriptors that are not plant names
+          const climaticPatterns = [
+            /^寒冷地$/,                        // "寒冷地"
+            /^温暖地$/,                        // "温暖地"
+            /^高地$/,                          // "高地"
+            /^低地$/,                          // "低地"
+            /^山地$/,                          // "山地"
+            /^平地$/,                          // "平地"
+            /^亜高山帯$/,                      // "亜高山帯"
+            /^高山帯$/,                        // "高山帯"
+            /^沿海地$/,                        // "沿海地"
+            /^内陸部$/,                        // "内陸部"
+            /では.*$/                          // "寒冷地では〇〇", "温暖地では〇〇" etc.
+          ];
+          
+          if (climaticPatterns.some(pattern => pattern.test(trimmed))) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -2519,6 +2538,25 @@ function App() {
                       return false;
                     }
                     
+                    // Reject geographic/climatic descriptors that are not plant names
+                    const climaticPatterns = [
+                      /^寒冷地$/,                        // "寒冷地"
+                      /^温暖地$/,                        // "温暖地"
+                      /^高地$/,                          // "高地"
+                      /^低地$/,                          // "低地"
+                      /^山地$/,                          // "山地"
+                      /^平地$/,                          // "平地"
+                      /^亜高山帯$/,                      // "亜高山帯"
+                      /^高山帯$/,                        // "高山帯"
+                      /^沿海地$/,                        // "沿海地"
+                      /^内陸部$/,                        // "内陸部"
+                      /では.*$/                          // "寒冷地では〇〇", "温暖地では〇〇" etc.
+                    ];
+                    
+                    if (climaticPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2811,6 +2849,25 @@ function App() {
                     ];
                     
                     if (genusPatterns.some(pattern => pattern.test(trimmed))) {
+                      return false;
+                    }
+                    
+                    // Reject geographic/climatic descriptors that are not plant names
+                    const climaticPatterns = [
+                      /^寒冷地$/,                        // "寒冷地"
+                      /^温暖地$/,                        // "温暖地"
+                      /^高地$/,                          // "高地"
+                      /^低地$/,                          // "低地"
+                      /^山地$/,                          // "山地"
+                      /^平地$/,                          // "平地"
+                      /^亜高山帯$/,                      // "亜高山帯"
+                      /^高山帯$/,                        // "高山帯"
+                      /^沿海地$/,                        // "沿海地"
+                      /^内陸部$/,                        // "内陸部"
+                      /では.*$/                          // "寒冷地では〇〇", "温暖地では〇〇" etc.
+                    ];
+                    
+                    if (climaticPatterns.some(pattern => pattern.test(trimmed))) {
                       return false;
                     }
                     
