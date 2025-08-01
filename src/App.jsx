@@ -1132,9 +1132,10 @@ function App() {
           }
           
           // Reject geographic region information (地域名)
-          if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア)では/.test(trimmed) ||
+          if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア|海外)では/.test(trimmed) ||
               trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
-              trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ'))) {
+              trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ') ||
+              trimmed.includes('海外'))) {
             return false;
           }
           
@@ -2419,9 +2420,10 @@ function App() {
                     }
                     
                     // Reject geographic region information (地域名)
-                    if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア)では/.test(trimmed) ||
+                    if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア|海外)では/.test(trimmed) ||
                         trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
-                        trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ'))) {
+                        trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ') ||
+                        trimmed.includes('海外'))) {
                       return false;
                     }
                     
@@ -2667,9 +2669,10 @@ function App() {
                     }
                     
                     // Reject geographic region information (地域名)
-                    if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア)では/.test(trimmed) ||
+                    if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア|海外)では/.test(trimmed) ||
                         trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
-                        trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ'))) {
+                        trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ') ||
+                        trimmed.includes('海外'))) {
                       return false;
                     }
                     
