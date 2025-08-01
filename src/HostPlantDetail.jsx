@@ -257,17 +257,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         <dl className="text-xl text-slate-500 dark:text-slate-400 mt-1">
           <dt className="font-semibold">科名:</dt>
           <dd className="ml-4">
-            {details.genusFamily ? `${details.genusFamily}` : details.family}
-            {details.genusScientificName && (
-              <span className="text-lg ml-2 italic text-slate-400 dark:text-slate-500">
-                ({details.genusScientificName})
-              </span>
-            )}
+            {details.genusFamily || details.family}
           </dd>
-          {details.scientificName && (
+          {(details.genusScientificName || details.scientificName) && (
             <>
               <dt className="font-semibold mt-2">学名:</dt>
-              <dd className="ml-4">{formatScientificNameReact(details.scientificName)}</dd>
+              <dd className="ml-4 italic">
+                {details.genusScientificName 
+                  ? formatScientificNameReact(details.genusScientificName)
+                  : formatScientificNameReact(details.scientificName)
+                }
+              </dd>
             </>
           )}
           {details.aliases && details.aliases.length > 0 && (
