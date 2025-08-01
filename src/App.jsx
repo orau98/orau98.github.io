@@ -1125,6 +1125,12 @@ function App() {
             return false;
           }
           
+          // Reject source publication names (出典名)
+          if (/^日本産.*図鑑/.test(trimmed) || /^標準図鑑/.test(trimmed) || 
+              trimmed.includes('標準図鑑') || trimmed.includes('大図鑑')) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -2394,6 +2400,12 @@ function App() {
                       return false;
                     }
                     
+                    // Reject source publication names (出典名)
+                    if (/^日本産.*図鑑/.test(trimmed) || /^標準図鑑/.test(trimmed) || 
+                        trimmed.includes('標準図鑑') || trimmed.includes('大図鑑')) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2626,6 +2638,12 @@ function App() {
                     
                     // Reject catalog numbers with special characters like "10+12"
                     if (/^[0-9+\-]+$/.test(trimmed)) {
+                      return false;
+                    }
+                    
+                    // Reject source publication names (出典名)
+                    if (/^日本産.*図鑑/.test(trimmed) || /^標準図鑑/.test(trimmed) || 
+                        trimmed.includes('標準図鑑') || trimmed.includes('大図鑑')) {
                       return false;
                     }
                     
