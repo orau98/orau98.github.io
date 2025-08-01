@@ -256,7 +256,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         )}
         <dl className="text-xl text-slate-500 dark:text-slate-400 mt-1">
           <dt className="font-semibold">科名:</dt>
-          <dd className="ml-4">{details.family}</dd>
+          <dd className="ml-4">
+            {details.genusFamily ? `${details.genusFamily}` : details.family}
+            {details.genusScientificName && (
+              <span className="text-lg ml-2 italic text-slate-400 dark:text-slate-500">
+                ({details.genusScientificName})
+              </span>
+            )}
+          </dd>
           {details.scientificName && (
             <>
               <dt className="font-semibold mt-2">学名:</dt>

@@ -109,6 +109,7 @@ function App() {
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本の冬夜蛾.csv`;
       const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本の冬尺蛾.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
       const emergenceTimeCsvPath = `${import.meta.env.BASE_URL}emergence_time_integrated.csv`;
+      const genusMappingCsvPath = `${import.meta.env.BASE_URL}genus_mapping.csv`;
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
       const processScientificName = (existingScientificName, genusName, speciesName, authorName, yearName, insectType = 'moth') => {
@@ -381,7 +382,7 @@ function App() {
         if (isDevelopment) console.log("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
         if (isDevelopment) console.log("DEBUG: About to load フユシャク file with safeFileLoad");
         
-        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, fuyushakuText, emergenceTimeText] = await Promise.all([
+        const [wameiText, mainText, yListText, hamushiSpeciesText, butterflyText, beetleText, kirigaText, fuyushakuText, emergenceTimeText, genusMappingText] = await Promise.all([
           safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
           safeFileLoad(mainCsvPath, 'main moth data', 20000),
           safeFileLoad(yListCsvPath, 'YList data', 30000), // Longer timeout for large file
@@ -390,7 +391,8 @@ function App() {
           safeFileLoad(beetleCsvPath, 'beetle data', 15000),
           safeFileLoad(kirigaCsvPath, 'kiriga data', 10000),
           safeFileLoad(fuyushakuCsvPath, 'fuyushaku data', 10000),
-          safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000)
+          safeFileLoad(emergenceTimeCsvPath, 'emergence time data', 10000),
+          safeFileLoad(genusMappingCsvPath, 'genus mapping data', 10000)
         ]);
         
         if (isDevelopment) console.log("DEBUG: File loading completed, checking results...");
@@ -412,7 +414,8 @@ function App() {
           beetle: beetleText ? 'SUCCESS' : 'FAILED',
           kiriga: kirigaText ? 'SUCCESS' : 'FAILED',
           fuyushaku: fuyushakuText ? 'SUCCESS' : 'FAILED',
-          emergenceTime: emergenceTimeText ? 'SUCCESS' : 'FAILED'
+          emergenceTime: emergenceTimeText ? 'SUCCESS' : 'FAILED',
+          genusMapping: genusMappingText ? 'SUCCESS' : 'FAILED'
         });
 
         // Check if essential files loaded
@@ -1482,6 +1485,38 @@ function App() {
           }
         } else {
           console.warn("YList data not available - plant family information will be limited");
+        }
+
+        // Process genus mapping data
+        let genusMapping = {};
+        if (genusMappingText) {
+          try {
+            console.log("Parsing genus mapping data...");
+            const genusMappingParsed = Papa.parse(genusMappingText, { header: true, skipEmptyLines: true, delimiter: ',' });
+            if (genusMappingParsed.errors.length) {
+              console.error("PapaParse errors in genus_mapping.csv:", genusMappingParsed.errors);
+            }
+            
+            genusMappingParsed.data.forEach(row => {
+              const genusJp = row['属和名']?.trim();
+              const familyJp = row['科名']?.trim();
+              const genusLatin = row['属学名']?.trim();
+              
+              if (genusJp && familyJp && genusLatin) {
+                genusMapping[genusJp] = {
+                  family: familyJp,
+                  scientificName: genusLatin
+                };
+                console.log(`Genus mapping added: ${genusJp} -> ${familyJp}, ${genusLatin}`);
+              }
+            });
+            console.log("genus_mapping.csv parsed successfully. genusMapping size:", Object.keys(genusMapping).length);
+          } catch (error) {
+            console.error("Error parsing genus mapping data:", error);
+            console.warn("Continuing without genus mapping data");
+          }
+        } else {
+          console.warn("Genus mapping data not available");
         }
 
         // 非維管束植物のリスト
@@ -3205,6 +3240,12 @@ function App() {
                   plantDetailData[validPlant].scientificName = yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '';
                   plantDetailData[validPlant].genus = (yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '').split(' ')[0] || '';
                   plantDetailData[validPlant].aliases = yListPlantAliasMap[validPlant] || [];
+                  
+                  // Add genus mapping information if available
+                  if (genusMapping[validPlant]) {
+                    plantDetailData[validPlant].genusFamily = genusMapping[validPlant].family;
+                    plantDetailData[validPlant].genusScientificName = genusMapping[validPlant].scientificName;
+                  }
                 }
               });
             });
