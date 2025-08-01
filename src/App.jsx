@@ -1912,7 +1912,7 @@ function App() {
               }
 
               // Special handling for main-3603 (ニッコウキエダシャク)
-              if ((index === 3603 && !catalogNo) || mothName === 'ニッコウキエダシャク') {
+              if ((index === 3603 && !row['大図鑑カタログNo']) || mothName === 'ニッコウキエダシャク') {
                 // Add specific remark for main-3603
                 hostPlantNotes.push('古くズミの記録もあるが再確認されていない');
               }
