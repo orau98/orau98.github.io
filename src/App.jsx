@@ -1905,6 +1905,12 @@ function App() {
                 hostPlantNotes.push('岩石表面上の白色緑色の粉状地衣類など');
               }
 
+              // Special handling for catalog-3575 (コグレヨトウ)
+              if (row['大図鑑カタログNo'] === '3575' || mothName === 'コグレヨトウ') {
+                // Add specific remark for catalog-3575
+                hostPlantNotes.push('北アメリカでは、マンテマ属の種子鞘を食べる');
+              }
+
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
                 console.log(`DEBUG: Processing センモンヤガ host plants:`, {
