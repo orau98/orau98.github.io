@@ -1131,6 +1131,13 @@ function App() {
             return false;
           }
           
+          // Reject geographic region information (地域名)
+          if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア)では/.test(trimmed) ||
+              trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
+              trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ'))) {
+            return false;
+          }
+          
           // Reject if it contains time period information (月旬, 月頃, etc.)
           if (/[0-9０-９]月[上中下]旬/.test(trimmed) || /[0-9０-９]月頃/.test(trimmed)) {
             return false;
@@ -1922,6 +1929,11 @@ function App() {
                 hostPlantNotes.push('古くズミ (バラ科)の記録もあるが再確認されていない');
               }
 
+              // Special handling for チョウセンネグロシャチホコ - Add geographic record as remark
+              if (mothName === 'チョウセンネグロシャチホコ') {
+                hostPlantNotes.push('朝鮮半島ではサワフタギが確認されている');
+              }
+
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
                 console.log(`DEBUG: Processing センモンヤガ host plants:`, {
@@ -2406,6 +2418,13 @@ function App() {
                       return false;
                     }
                     
+                    // Reject geographic region information (地域名)
+                    if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア)では/.test(trimmed) ||
+                        trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
+                        trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ'))) {
+                      return false;
+                    }
+                    
                     // Allow family names (ending with '科') as valid plant names
                     if (trimmed.endsWith('科')) {
                       return true;
@@ -2644,6 +2663,13 @@ function App() {
                     // Reject source publication names (出典名)
                     if (/^日本産.*図鑑/.test(trimmed) || /^標準図鑑/.test(trimmed) || 
                         trimmed.includes('標準図鑑') || trimmed.includes('大図鑑')) {
+                      return false;
+                    }
+                    
+                    // Reject geographic region information (地域名)
+                    if (/^(朝鮮半島|中国|台湾|韓国|ヨーロッパ|北米|アメリカ|インド|東南アジア)では/.test(trimmed) ||
+                        trimmed.includes('では') && (trimmed.includes('朝鮮') || trimmed.includes('中国') || 
+                        trimmed.includes('台湾') || trimmed.includes('ヨーロッパ') || trimmed.includes('アメリカ'))) {
                       return false;
                     }
                     
