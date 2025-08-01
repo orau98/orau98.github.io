@@ -1899,6 +1899,13 @@ function App() {
                 });
               }
               
+              // Special handling for catalog-676 (シロテンチビミノガ)
+              if (row['大図鑑カタログNo'] === '676' || mothName === 'シロテンチビミノガ') {
+                // Add specific remark for catalog-676
+                hostPlantNotes.push('岩石表面上の白色緑色の粉状地衣類など');
+                console.log('DEBUG: Added special remark for catalog-676 (シロテンチビミノガ)');
+              }
+
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
                 console.log(`DEBUG: Processing センモンヤガ host plants:`, {
