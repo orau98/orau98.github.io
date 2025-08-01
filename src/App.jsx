@@ -3449,6 +3449,17 @@ function App() {
                   });
                 }
                 
+                // Debug logging for シロオビオエダシャク
+                if (mothName === 'シロオビオエダシャク') {
+                  console.log('DEBUG: Creating moth data for シロオビオエダシャク:', {
+                    id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
+                    geographicalRemarks: String(row['備考'] || '').trim(),
+                    備考Raw: row['備考'],
+                    rowKeys: Object.keys(row),
+                    fullRow: row
+                  });
+                }
+                
 
                 const mothData = { 
                   id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`, 
