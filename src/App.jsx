@@ -920,6 +920,11 @@ function App() {
             return plantName;
           }
           
+          // If the plant name is just a family name (ends with "科"), keep it as is
+          if (plantName.match(/^[^（(]+科$/)) {
+            return plantName;
+          }
+          
           // Remove family prefixes like "アカネ科ミサオノキ" -> "ミサオノキ", "ウマノスズクサ科ウマノスズクサ" -> "ウマノスズクサ"
           let normalized = plantName.replace(/^[^科]*科([のに]?)/g, ''); // Remove family prefixes like "科名の", "科名に", or just "科名"
           
@@ -1619,6 +1624,14 @@ function App() {
 
         // 非維管束植物のリスト
         const nonVascularPlants = new Set([
+          // 科名のみの場合（シモフリスズメなど）
+          'ゴマ科', 'モクセイ科', 'シソ科', 'クマツヅラ科', 'ゴマノハグサ科', 'ノウゼンカズラ科', 'スイカズラ科',
+          'イネ科', 'カヤツリグサ科', 'ヤナギ科', 'ブナ科', 'ニシキギ科', 'ツツジ科', 
+          'カバノキ科', 'クルミ科', 'ニレ科', 'ムクロジ科', 'バラ科', 'カキノキ科',
+          'タデ科', 'キク科', 'アオイ科', 'ミズキ科', 'ツゲ科', 'ミソハギ科',
+          'ノボタン科', 'アカバナ科', 'アジサイ科', 'マンサク科', 'マメ科',
+          'クワ科', 'アサ科', 'イラクサ科', 'アヤメ科', 'アブラナ科',
+          
           // 地衣類一般
           '地衣類', '粉状地衣類', '葉状地衣類', '殻状地衣類',
           
@@ -3449,7 +3462,7 @@ function App() {
                   });
                 }
                 
-                // Debug logging for シロオビオエダシャク
+                // Debug logging for シロオビオエダシャク and シモフリスズメ
                 if (mothName === 'シロオビオエダシャク') {
                   console.log('DEBUG: Creating moth data for シロオビオエダシャク:', {
                     id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
@@ -3457,6 +3470,16 @@ function App() {
                     備考Raw: row['備考'],
                     rowKeys: Object.keys(row),
                     fullRow: row
+                  });
+                }
+                
+                if (mothName === 'シモフリスズメ') {
+                  console.log('DEBUG: Creating moth data for シモフリスズメ:', {
+                    id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
+                    rawHostPlant,
+                    hostPlants: finalHostPlantList,
+                    hostPlantEntries: finalHostPlantEntries,
+                    hostPlantsLength: finalHostPlantList.length
                   });
                 }
                 
@@ -3654,14 +3677,24 @@ function App() {
           
           // Create butterfly object if we have enough parts
           if (parts.length >= 7) {
+            // Remove quotes from each field
+            const cleanField = (field) => {
+              if (!field) return field;
+              // Remove surrounding quotes if present
+              if (field.startsWith('"') && field.endsWith('"')) {
+                return field.slice(1, -1);
+              }
+              return field;
+            };
+            
             const row = {
-              '文献名': parts[0],
-              '科': parts[1],
-              '亜科': parts[2],
-              '属': parts[3],
-              '種小名': parts[4],
-              '和名': parts[5],
-              '食草': parts[6]
+              '文献名': cleanField(parts[0]),
+              '科': cleanField(parts[1]),
+              '亜科': cleanField(parts[2]),
+              '属': cleanField(parts[3]),
+              '種小名': cleanField(parts[4]),
+              '和名': cleanField(parts[5]),
+              '食草': cleanField(parts[6])
             };
             butterflyParsedData.push(row);
           }
@@ -3704,6 +3737,14 @@ function App() {
           
           console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants, author, year });
           
+          // Special debug for ヤクシマルリシジミ
+          if (japaneseName === 'ヤクシマルリシジミ') {
+            console.log('DEBUG: ヤクシマルリシジミ found!');
+            console.log('  Raw hostPlants:', hostPlants);
+            console.log('  hostPlants type:', typeof hostPlants);
+            console.log('  hostPlants length:', hostPlants ? hostPlants.length : 0);
+          }
+          
           if (!japaneseName || !genus || !species) {
             console.log("Skipping butterfly row:", { japaneseName, genus, species, rowIndex: index });
             return;
@@ -3721,6 +3762,19 @@ function App() {
           let hostPlantList = [];
           if (hostPlants) {
             console.log("Raw host plants for", japaneseName, ":", hostPlants);
+            
+            // Special debug for ヤクシマルリシジミ
+            if (japaneseName === 'ヤクシマルリシジミ') {
+              console.log('DEBUG: Processing ヤクシマルリシジミ host plants');
+              console.log('  hostPlants before processing:', hostPlants);
+              console.log('  hostPlants includes semicolon:', hostPlants.includes(';'));
+            }
+            
+            // Special debug for シモフリスズメ (need to check moth data too)
+            if (japaneseName === 'シモフリスズメ') {
+              console.log('DEBUG: Processing シモフリスズメ host plants in butterfly data');
+              console.log('  hostPlants before processing:', hostPlants);
+            }
             
             // Extract plant parts information from hostPlants field
             const extractPlantParts = (text) => {
@@ -3812,28 +3866,51 @@ function App() {
             // Split by delimiters including semicolon for cases like センモンヤガ
             const plants = cleanedHostPlants.split(/[;；、，,]/);
             
+            // Debug for ヤクシマルリシジミ
+            if (japaneseName === 'ヤクシマルリシジミ') {
+              console.log('DEBUG: Split plants:', plants);
+              console.log('  Number of plants:', plants.length);
+              console.log('  First 10 plants:', plants.slice(0, 10));
+            }
             
-            hostPlantList = plants
-              .map(plant => plant.trim())
+            
+            let plantsAfterTrim = plants.map(plant => plant.trim());
+            let plantsAfterQuotes = plantsAfterTrim
               .map(plant => plant.replace(/^"(.+)"$/, '$1')) // Remove outer quotes from individual plant names
               .map(plant => plant.replace(/^"(.+)$/, '$1')) // Remove unclosed quotes at beginning
-              .map(plant => plant.replace(/^(.+)"$/, '$1')) // Remove unclosed quotes at end
-              .filter(plant => plant && plant.length > 0) // Remove empty strings
+              .map(plant => plant.replace(/^(.+)"$/, '$1')); // Remove unclosed quotes at end
+            let plantsAfterEmptyFilter = plantsAfterQuotes.filter(plant => plant && plant.length > 0); // Remove empty strings
+            let plantsAfterScienceFilter = plantsAfterEmptyFilter
               .filter(plant => plant !== '科' && plant !== '属')
               .filter(plant => !plant.endsWith('属') || /^[A-Z][a-z]+属$/.test(plant)) // Remove items ending with 属, but keep scientific genus names like "Acer属"
               .filter(plant => plant.length > 1) // Remove single character items
-              .filter(plant => plant.trim() !== '') // Additional empty string check
-              .map(plant => normalizePlantName(plant)) // Normalize plant names
-              .map(plant => correctPlantName(plant)) // Apply YList correction and filtering
-              .filter(plant => plant && plant.trim() !== '') // Remove plants not found in YList
-              .map(plant => {
-                // Add part information if available
-                const plantParts = butterflyPlantParts.get(plant);
-                if (plantParts && plantParts.length > 0) {
-                  return `${plant}（${plantParts.join('・')}）`;
-                }
-                return plant;
-              });
+              .filter(plant => plant.trim() !== ''); // Additional empty string check
+            let plantsAfterNormalize = plantsAfterScienceFilter.map(plant => normalizePlantName(plant)); // Normalize plant names
+            let plantsAfterCorrection = plantsAfterNormalize.map(plant => correctPlantName(plant)); // Apply YList correction and filtering
+            let plantsAfterYListFilter = plantsAfterCorrection.filter(plant => plant && plant.trim() !== ''); // Remove plants not found in YList
+            
+            hostPlantList = plantsAfterYListFilter.map(plant => {
+              // Add part information if available
+              const plantParts = butterflyPlantParts.get(plant);
+              if (plantParts && plantParts.length > 0) {
+                return `${plant}（${plantParts.join('・')}）`;
+              }
+              return plant;
+            });
+            
+            // Debug filtering steps for ヤクシマルリシジミ
+            if (japaneseName === 'ヤクシマルリシジミ') {
+              console.log('DEBUG: Filter steps for ヤクシマルリシジミ:');
+              console.log('  After trim:', plantsAfterTrim.length, 'plants');
+              console.log('  After quotes:', plantsAfterQuotes.length, 'plants');
+              console.log('  After empty filter:', plantsAfterEmptyFilter.length, 'plants');
+              console.log('  After science filter:', plantsAfterScienceFilter.length, 'plants');
+              console.log('  After normalize:', plantsAfterNormalize.length, 'plants');
+              console.log('  After correction:', plantsAfterCorrection.length, 'plants');
+              console.log('  After YList filter:', plantsAfterYListFilter.length, 'plants');
+              console.log('  Sample plants after correction:', plantsAfterCorrection.slice(0, 5));
+              console.log('  Sample plants after YList filter:', plantsAfterYListFilter.slice(0, 5));
+            }
             
             // Remove duplicates and final empty string check
             hostPlantList = [...new Set(hostPlantList)].filter(plant => plant && plant.trim() !== '');

@@ -3601,7 +3601,7 @@
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Nadagara,,subnubila,,Inoue,1967,,ミナミトガリエダシャク,,,,,,,"Nadagara subnubila Inoue, 1967",不明,日本産蛾類標準図鑑1,
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Boninnadagara,,crinomorpha,,Inoue,1994,,マルバエダシャク,,,,,,,"Boninnadagara crinomorpha Inoue, 1994",不明,日本産蛾類標準図鑑1,
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Pseudepione,,magnaria,,(Wileman),1911,,ニッコウキエダシャク,,,,,,,"Pseudepione magnaria (Wileman, 1911)",サワフタギ (ハイノキ科),日本産蛾類標準図鑑1,
-,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Pseudepione,,shiraii,,Inoue,1943,,フタテンソトグロキエダシャク,,,,,,,"Pseudepione shiraii Inoue, 1943",ヒメシャラ(ツバキ科); 分布域から推定すると; 同属のナツツバキ(ツバキ科)にもつく可能性は大きいが未確認である,日本産蛾類標準図鑑1,
+,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Pseudepione,,shiraii,,Inoue,1943,,フタテンソトグロキエダシャク,,,,,,,"Pseudepione shiraii Inoue, 1943",ヒメシャラ(ツバキ科),日本産蛾類標準図鑑1,分布域から推定すると、同属のナツツバキ(ツバキ科)にもつく可能性は大きいが未確認である
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Euchristophia,,cumulata,,(Christoph),1881,,ウスオビヒメエダシャク,ウスオビヒメエダシャク,,,,,,"Euchristophia cumulata (Christoph, 1881)",ウリハダカエデ; ウリカエデ; オガラバナ(以上ムクロジ科); カエデ属に固有,日本産蛾類標準図鑑1,
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Synegia,,hadassa,,(Butler),1878,,ハグルマエダシャク,ハグルマエダシャク,,,,,,"Synegia hadassa (Butler, 1878)",アオハダ; ソヨゴ; イヌツゲ (以上モチノキ科)。モチノキ属に固有,日本産蛾類標準図鑑1,
 ,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,,,Synegia,,pallens,,Inoue,1982,,アベリアハグルマエダシャク,アベリアハグルマエダシャク,,,,,,"Synegia pallens Inoue, 1982",ウゴツクバネウツギ; コツクバネウツギ,日本産蛾類標準図鑑1,
@@ -4499,7 +4499,7 @@
 3002,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Acherontia,,lachesis,,(Fabricius),1798,,クロメンガタスズメ,,,,,,,"Acherontia lachesis (Fabricius, 1798)",ゴマ; クコ (ゴマ科); ナス; トマト; チョウセンアサガオ; タバコ (ナス科); キリ (キリ科); ノウゼンカズラ; キササゲ (ノウゼンカズラ科); クワ (クワ科); ソケイ (モクセイ科); クコ (以上ゴマ科); タバコ (以上ナス科); ソケイ (モクセイ科) などが記録されている。,日本産蛾類標準図鑑1,
 3003,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Acherontia,,styx,,(Westwood),1847,,メンガタスズメ,メンガタスズメ,,,,,,"Acherontia styx (Westwood, 1847)",ゴマ (ゴマ科); ナス; チョウセンアサガオ; タバコ; ジャガイモ (ナス科); ジャガイモ (以上ナス科),日本産蛾類標準図鑑1,
 3004,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Meganoton,,analis,,(Felder),1874,,エゾシモフリスズメ,エゾシモフリスズメ,,,,,,"Meganoton analis (Felder, 1874)",ホオノキ; オオヤマレンゲ; コブシ (モクレン科); コブシ (以上モクレン科),日本産蛾類標準図鑑1,
-3005,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Psilogramma,,increta,,(Walker),1865,,シモフリスズメ,,,,,,,"Psilogramma increta (Walker, 1865)",ゴマ; モクセイ科; シソ科; クマツヅラ科; ゴマノハグサ科; ノウゼンカズラ科; スイカズラ科; 国内では; ゴマ科; スイカズラ科などが記録されている。,日本産蛾類標準図鑑1,
+3005,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Psilogramma,,increta,,(Walker),1865,,シモフリスズメ,,,,,,,"Psilogramma increta (Walker, 1865)",ゴマ科; モクセイ科; シソ科; クマツヅラ科; ゴマノハグサ科; ノウゼンカズラ科; スイカズラ科,日本産蛾類標準図鑑1,
 3006,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Sphinx,,ligustri,,Linnaeus,1758,,エゾコエビガラスズメ,エゾコエビガラスズメ,,,,,,"Sphinx ligustri Linnaeus, 1758",ホザキシモツケ (バラ科); ホザキシモツケ (バラ科) が知られている。,日本産蛾類標準図鑑1,
 ,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Sphinx,,constricta,,Butler,1885,,コエビガラスズメ,,,,,,,"Sphinx constricta Butler, 1885",イヌツゲ (モチノキ科); ユキヤナギ; シジミハナ (バラ科); タニウツギ; ツクバネウツギ (スイカズラ科); ツツジ (ツツジ科); シジミバナ (以上バラ科); ツクバネウツギ (以上スイカズラ科); ツツジ類 (ツツジ科),日本産蛾類標準図鑑1,
 3007,Sphingidae,スズメガ科,Sphinginae,スズメガ亜科,,,,,Sphinx,,morio,,(Rothschild & Jordan),1903,,マツクロスズメ,マツクロスズメ,,,,,,"Sphinx morio (Rothschild & Jordan, 1903)",カラマツ (マツ科); アカマツ (マツ科); 本州中部地方ではカラマツ (マツ科) が記録されているが; アカマツ (マツ科) を食す場合もある。,日本産蛾類標準図鑑1,
