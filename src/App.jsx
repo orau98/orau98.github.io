@@ -3847,7 +3847,19 @@ function App() {
               console.log('  Starts with:', cleanedHostPlants.substring(0, 100));
             }
             
-            // Check if this has the pattern "科名（植物名、植物名）"
+            // Special handling for complex butterfly data like ヤクシマルリシジミ
+            if (japaneseName === 'ヤクシマルリシジミ' && cleanedHostPlants.includes('以上')) {
+              console.log('DEBUG: ヤクシマルリシジミ special handling - complex data detected');
+              // For complex butterfly data, don't try to extract from parentheses
+              // Just clean up family annotations but preserve the full plant list
+              cleanedHostPlants = cleanedHostPlants
+                .replace(/（[^）]*科[^）]*）/g, '') // Remove family annotations like （ヤマモモ科）、（以上ブナ科）
+                .replace(/\([^)]*科[^)]*\)/g, '') // Remove family annotations with regular parentheses
+                .replace(/。[^。]*$/g, '') // Remove final sentence about behavior
+                .trim();
+              console.log('DEBUG: ヤクシマルリシジミ after cleaning:', cleanedHostPlants);
+            } else {
+              // Check if this has the pattern "科名（植物名、植物名）"
             const familyWithParenthesesMatch = cleanedHostPlants.match(/(.+科)\s*[（(]([^）)]+)[）)]/);
             if (familyWithParenthesesMatch) {
               // If it's like "イネ科（チヂミザサ、ノガリヤス）", include both family and plants
@@ -3877,7 +3889,9 @@ function App() {
                   .replace(/の/g, '') // Remove remaining "の" particles
                   .replace(/^[、，,]+|[、，,]+$/g, '') // Remove leading/trailing delimiters
                   .replace(/[、，,]+/g, '、'); // Normalize delimiters
+                console.log("Cleaned up:", cleanedHostPlants);
               }
+            }
             }
             
             // Split by delimiters including semicolon for cases like センモンヤガ
