@@ -1789,6 +1789,10 @@ function App() {
           }
           
           // 7. 見つからない場合は元の名前を返す（YListにない植物も表示する）
+          // Special debug for common plants that might be getting filtered
+          if (name === 'ヤマモモ' || name === 'コナラ' || name === 'カシワ' || name === 'クヌギ') {
+            console.log(`DEBUG: Plant "${name}" not found in YList, returning as-is`);
+          }
           return name;
         };
 
@@ -3836,6 +3840,13 @@ function App() {
             
             console.log("After removing quotes:", cleanedHostPlants);
             
+            // Debug for ヤクシマルリシジミ specifically
+            if (japaneseName === 'ヤクシマルリシジミ') {
+              console.log('DEBUG: ヤクシマルリシジミ cleanedHostPlants after quote removal:', cleanedHostPlants);
+              console.log('  Length:', cleanedHostPlants.length);
+              console.log('  Starts with:', cleanedHostPlants.substring(0, 100));
+            }
+            
             // Check if this has the pattern "科名（植物名、植物名）"
             const familyWithParenthesesMatch = cleanedHostPlants.match(/(.+科)\s*[（(]([^）)]+)[）)]/);
             if (familyWithParenthesesMatch) {
@@ -3851,6 +3862,12 @@ function App() {
                 // If there's content in parentheses, use that
                 cleanedHostPlants = parenthesesMatch[1];
                 console.log("Extracted from parentheses:", cleanedHostPlants);
+                
+                // Debug for ヤクシマルリシジミ
+                if (japaneseName === 'ヤクシマルリシジミ') {
+                  console.log('DEBUG: ヤクシマルリシジミ - parentheses found, extracting content');
+                  console.log('  parenthesesMatch[1]:', parenthesesMatch[1]);
+                }
               } else {
                 // Otherwise, clean up the whole string - be more careful with scientific terms
                 cleanedHostPlants = cleanedHostPlants
