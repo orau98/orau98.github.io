@@ -104,7 +104,11 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
       };
     }
     if (record.observationType) acc[key].observationTypes.add(record.observationType);
-    if (record.reference) acc[key].references.add(record.reference);
+    if (record.reference) {
+      // セミコロンで区切られた複数の出典を分割
+      const refs = record.reference.split(';').map(r => r.trim()).filter(r => r);
+      refs.forEach(ref => acc[key].references.add(ref));
+    }
     if (record.notes) acc[key].notes.add(record.notes);
     return acc;
   }, {});
