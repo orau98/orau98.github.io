@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
 /**
- * 観察タイプ別のアイコンとスタイルを取得
+ * 観察タイプ別のスタイルを取得
  */
 const getObservationTypeStyle = (observationType) => {
   switch (observationType) {
     case '飼育':
       return {
-        icon: '🔬',
         label: '飼育',
         bgColor: 'bg-blue-50 dark:bg-blue-900/20',
         textColor: 'text-blue-700 dark:text-blue-300',
@@ -15,7 +14,6 @@ const getObservationTypeStyle = (observationType) => {
       };
     case '野外（国内）':
       return {
-        icon: '🌿',
         label: '野外',
         bgColor: 'bg-green-50 dark:bg-green-900/20',
         textColor: 'text-green-700 dark:text-green-300',
@@ -23,7 +21,6 @@ const getObservationTypeStyle = (observationType) => {
       };
     case '海外':
       return {
-        icon: '🌍',
         label: '海外',
         bgColor: 'bg-purple-50 dark:bg-purple-900/20',
         textColor: 'text-purple-700 dark:text-purple-300',
@@ -31,43 +28,11 @@ const getObservationTypeStyle = (observationType) => {
       };
     default:
       return {
-        icon: '📝',
         label: '記録',
         bgColor: 'bg-gray-50 dark:bg-gray-900/20',
         textColor: 'text-gray-700 dark:text-gray-300',
         borderColor: 'border-gray-200 dark:border-gray-700'
       };
-  }
-};
-
-/**
- * 利用部位のアイコンを取得
- */
-const getPlantPartIcon = (plantPart) => {
-  switch (plantPart) {
-    case '葉': return '🍃';
-    case '花': return '🌸';
-    case '果実': return '🍓';
-    case '樹皮': return '🌳';
-    case '根': return '🌱';
-    case '全体': return '🌿';
-    case '枯葉': return '🍂';
-    case '新芽': return '🌿';
-    case '落果': return '🍎';
-    case '菌類': return '🍄';
-    default: return '🍃';
-  }
-};
-
-/**
- * 利用ステージのアイコンを取得
- */
-const getLifeStageIcon = (lifeStage) => {
-  switch (lifeStage) {
-    case '成虫': return '🦋';
-    case '幼虫': return '🐛';
-    case '両方': return '🔄';
-    default: return '🐛';
   }
 };
 
@@ -124,8 +89,6 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   
   const obsStyle = getObservationTypeStyle(primaryRecord.observationType);
   const isDomesticWild = primaryRecord.observationType === '野外（国内）';
-  const cardOpacity = isDomesticWild ? 'opacity-100' : 'opacity-75';
-  const cardFilter = isDomesticWild ? '' : 'saturate-75';
   
   // 利用情報をグループ化
   const usageInfo = plantGroup.records.reduce((acc, record) => {
@@ -149,130 +112,81 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   const hasMultipleUsages = usageInfoArray.length > 1;
   
   return (
-    <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200 ${cardOpacity} ${cardFilter}`}>
+    <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
       {/* 基本情報行 */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 flex-1 min-w-0">
-          <span className="text-lg">{obsStyle.icon}</span>
-          <div className="flex-1 min-w-0">
+        <div className="flex items-center space-x-3 flex-1">
+          <div className="flex-1">
             <span className={`font-medium ${isDomesticWild ? 'text-slate-800 dark:text-slate-200' : 'text-slate-600 dark:text-slate-400'}`}>
               {plantGroup.name}
             </span>
             {plantGroup.family && (
-              <span className={`text-sm ml-1 ${isDomesticWild ? 'text-slate-600 dark:text-slate-400' : 'text-slate-500 dark:text-slate-500'}`}>
-                （{plantGroup.family}）
+              <span className={`text-sm ml-2 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
+                {plantGroup.family}
               </span>
             )}
           </div>
           
-          <span className={`text-xs px-2 py-1 rounded-full ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
+          <span className={`text-xs px-2 py-0.5 rounded ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
             {obsStyle.label}
           </span>
         </div>
-        
-        {/* 詳細情報がある場合のトグルボタン - 複数利用がある場合のみ表示 */}
-        {hasMultipleUsages && (
-          <button
-            onClick={onToggle}
-            className="ml-2 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-            aria-label={isExpanded ? "詳細を閉じる" : "詳細を表示"}
-          >
-            <svg 
-              className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        )}
       </div>
       
-      {/* 単一利用の場合は直接詳細を表示 */}
-      {!hasMultipleUsages && usageInfoArray.length > 0 && (
-        <div className="mt-2 flex items-center space-x-4 text-sm text-slate-600 dark:text-slate-400">
-          {usageInfoArray[0].lifeStage && (
-            <div className="flex items-center space-x-1">
-              <span>{getLifeStageIcon(usageInfoArray[0].lifeStage)}</span>
-              <span>{usageInfoArray[0].lifeStage}</span>
-            </div>
-          )}
-          {usageInfoArray[0].plantPart && (
-            <div className="flex items-center space-x-1">
-              <span>{getPlantPartIcon(usageInfoArray[0].plantPart)}</span>
-              <span>{usageInfoArray[0].plantPart}</span>
-            </div>
-          )}
-        </div>
-      )}
-      
-      {/* 複数利用の詳細情報（常に表示） */}
-      {hasMultipleUsages && (
-        <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-600 space-y-2">
-          <div className="space-y-2">
-            {usageInfoArray.map((usage, index) => (
-              <div key={index} className="bg-slate-50 dark:bg-slate-800/50 rounded-md p-2 text-sm">
-                <div className="flex items-center space-x-4">
+      {/* 利用情報 - 横並びまたは単一表示 */}
+      {usageInfoArray.length > 0 && (
+        <div className="mt-2">
+          {hasMultipleUsages ? (
+            // 複数利用の場合 - 横並び表示
+            <div className="flex flex-wrap gap-3 text-sm">
+              {usageInfoArray.map((usage, index) => (
+                <div key={index} className="flex items-center space-x-2 px-2 py-1 bg-white/50 dark:bg-slate-900/30 rounded">
                   {usage.lifeStage && (
-                    <div className="flex items-center space-x-1">
-                      <span>{getLifeStageIcon(usage.lifeStage)}</span>
-                      <span className="text-slate-600 dark:text-slate-400">段階:</span>
-                      <span className="font-medium">{usage.lifeStage}</span>
-                    </div>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">
+                      {usage.lifeStage}
+                    </span>
+                  )}
+                  {usage.lifeStage && usage.plantPart && (
+                    <span className="text-slate-400 dark:text-slate-500">•</span>
                   )}
                   {usage.plantPart && (
-                    <div className="flex items-center space-x-1">
-                      <span>{getPlantPartIcon(usage.plantPart)}</span>
-                      <span className="text-slate-600 dark:text-slate-400">部位:</span>
-                      <span className="font-medium">{usage.plantPart}</span>
-                    </div>
+                    <span className="text-slate-600 dark:text-slate-400">
+                      {usage.plantPart}
+                    </span>
                   )}
                 </div>
-                
-                {/* 観察タイプ */}
-                {usage.observationTypes.size > 0 && (
-                  <div className="mt-1 flex items-center space-x-1">
-                    <span className="text-slate-600 dark:text-slate-400">記録:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {Array.from(usage.observationTypes).map(obsType => {
-                        const style = getObservationTypeStyle(obsType);
-                        return (
-                          <span key={obsType} className={`text-xs px-1.5 py-0.5 rounded ${style.bgColor} ${style.textColor}`}>
-                            {style.label}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-                
-                {/* 参考文献 */}
-                {usage.references.size > 0 && (
-                  <div className="mt-1 flex items-center space-x-1">
-                    <span className="text-slate-600 dark:text-slate-400">出典:</span>
-                    <span className="text-slate-700 dark:text-slate-300">
-                      {Array.from(usage.references).join(', ')}
-                    </span>
-                  </div>
-                )}
-                
-                {/* 備考 */}
-                {usage.notes.size > 0 && (
-                  <div className="mt-1">
-                    <span className="text-slate-600 dark:text-slate-400">備考:</span>
-                    <div className="mt-1">
-                      {Array.from(usage.notes).map(note => (
-                        <div key={note} className="text-slate-700 dark:text-slate-300 text-xs">
-                          {note}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            // 単一利用の場合 - インライン表示
+            <div className="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+              {usageInfoArray[0].lifeStage && (
+                <span className="font-medium">{usageInfoArray[0].lifeStage}</span>
+              )}
+              {usageInfoArray[0].lifeStage && usageInfoArray[0].plantPart && (
+                <span className="text-slate-400 dark:text-slate-500">•</span>
+              )}
+              {usageInfoArray[0].plantPart && (
+                <span>{usageInfoArray[0].plantPart}</span>
+              )}
+            </div>
+          )}
+          
+          {/* 出典情報 - 統合表示 */}
+          {(() => {
+            const allReferences = new Set();
+            usageInfoArray.forEach(usage => {
+              usage.references.forEach(ref => allReferences.add(ref));
+            });
+            if (allReferences.size > 0) {
+              return (
+                <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                  出典: {Array.from(allReferences).join(', ')}
+                </div>
+              );
+            }
+            return null;
+          })()}
         </div>
       )}
     </div>
@@ -375,22 +289,6 @@ const EnhancedHostPlantDisplay = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-        </div>
-      )}
-      
-      {/* 統計情報 */}
-      {sortedGroups.length > 1 && (
-        <div className="text-xs text-slate-500 dark:text-slate-400 text-center pt-2 border-t border-slate-200 dark:border-slate-700">
-          合計 {sortedGroups.length} 種の食草
-          {(() => {
-            const totalRecords = sortedGroups.reduce((sum, group) => sum + group.records.length, 0);
-            return totalRecords > sortedGroups.length && (
-              <span className="ml-2 text-slate-400 dark:text-slate-500">({totalRecords} 件の記録)</span>
-            );
-          })()} 
-          {hostPlantsDetailed && hostPlantsDetailed.length > 0 && (
-            <span className="ml-2 text-emerald-600 dark:text-emerald-400">詳細情報あり</span>
-          )}
         </div>
       )}
     </div>

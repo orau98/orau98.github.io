@@ -7,7 +7,7 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
-import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
+// import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 
@@ -1061,7 +1061,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                             href={getSourceLink(moth.source)} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200 font-medium"
+                            className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
                           >
                             {moth.source}
                             <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1155,11 +1155,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       });
                     }
                     
+                    // 最初のデータを使用してEmergenceTimeDisplayに渡す
+                    const primaryEmergenceTime = allEmergenceTimeData.length > 0 
+                      ? allEmergenceTimeData[0].period 
+                      : '不明';
+                    const primarySource = allEmergenceTimeData.length > 0 
+                      ? allEmergenceTimeData[0].source 
+                      : '';
+                    
                     return (
-                      <EnhancedEmergenceTimeDisplay
-                        emergenceTime={allEmergenceTimeData.length > 0 ? allEmergenceTimeData[0].period : '不明'}
-                        emergenceTimeDetailed={allEmergenceTimeData}
-                        showDetailsByDefault={false}
+                      <EmergenceTimeDisplay
+                        emergenceTime={primaryEmergenceTime}
+                        source={primarySource}
+                        compact={false}
                       />
                     );
                   })()}

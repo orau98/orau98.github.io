@@ -9,7 +9,6 @@ const EmergenceTimeDetailCard = ({ emergenceData, isExpanded, onToggle }) => {
       {/* 基本情報行 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2 flex-1 min-w-0">
-          <span className="text-lg">📅</span>
           <div className="flex-1 min-w-0">
             <span className="font-medium text-slate-800 dark:text-slate-200">
               {emergenceData.period}
@@ -46,27 +45,21 @@ const EmergenceTimeDetailCard = ({ emergenceData, isExpanded, onToggle }) => {
         <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-600 space-y-2">
           {/* 出典情報 */}
           {emergenceData.source && (
-            <div className="flex items-start space-x-1 text-sm">
-              <span className="text-slate-600 dark:text-slate-400 mt-0.5">📚</span>
-              <div>
-                <span className="text-slate-600 dark:text-slate-400">出典:</span>
-                <span className="ml-1 font-medium text-slate-700 dark:text-slate-300">
-                  {emergenceData.source}
-                </span>
-              </div>
+            <div className="text-sm">
+              <span className="text-slate-600 dark:text-slate-400">出典:</span>
+              <span className="ml-1 font-medium text-slate-700 dark:text-slate-300">
+                {emergenceData.source}
+              </span>
             </div>
           )}
           
           {/* 備考 */}
           {emergenceData.notes && (
-            <div className="flex items-start space-x-1 text-sm">
-              <span className="text-slate-600 dark:text-slate-400 mt-0.5">💬</span>
-              <div>
-                <span className="text-slate-600 dark:text-slate-400">備考:</span>
-                <span className="ml-1 text-slate-700 dark:text-slate-300">
-                  {emergenceData.notes}
-                </span>
-              </div>
+            <div className="text-sm">
+              <span className="text-slate-600 dark:text-slate-400">備考:</span>
+              <span className="ml-1 text-slate-700 dark:text-slate-300">
+                {emergenceData.notes}
+              </span>
             </div>
           )}
         </div>

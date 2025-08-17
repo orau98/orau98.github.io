@@ -541,7 +541,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         
         {/* 出典情報 */}
         {source && (
-          <div className="mt-3 pt-3 border-t border-slate-200/30 dark:border-slate-700/30">
+          <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
             <div className="flex items-start space-x-2">
               <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -651,7 +651,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
       
       {/* 原文表示 - 食草セクションと同じ構造で色違い */}
       <div>
-        <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-orange-200/50 dark:border-orange-700/50">
+        <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-emerald-200/50 dark:border-emerald-700/50">
           <div className="flex items-center space-x-3">
             <span className="font-medium text-slate-700 dark:text-slate-300">
               {emergenceTime}
@@ -659,7 +659,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
           </div>
         </div>
         {source && (
-          <div className="mt-4 pt-4 border-t border-orange-200/30 dark:border-orange-700/30">
+          <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
             <div className="flex items-start space-x-2">
               <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />

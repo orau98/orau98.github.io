@@ -351,16 +351,20 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       // セミコロン、カンマで分割して各食草を取得
                       plantNames = moth.hostPlants.split(/[;；、,]/)
                         .map(plant => plant.trim())
-                        .filter(plant => plant && plant !== '不明')
+                        .filter(plant => plant)
                         .map(plant => {
+                          // 不明の場合はそのまま返す
+                          if (plant === '不明') return '不明';
                           // 科名を除去: （○○科）や (○○科) のパターンを削除
                           return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
                         })
                         .filter(plant => plant && !plant.includes('以上'));
                     } else if (Array.isArray(moth.hostPlants)) {
                       plantNames = moth.hostPlants
-                        .filter(plant => plant && plant !== '不明')
+                        .filter(plant => plant)
                         .map(plant => {
+                          // 不明の場合はそのまま返す
+                          if (plant === '不明') return '不明';
                           // 科名を除去
                           return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
                         })
@@ -369,7 +373,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       return '情報なし';
                     }
                     
-                    return plantNames.length > 0 ? plantNames.join('、') : '情報なし';
+                    // 重複を除去
+                    const uniquePlantNames = [...new Set(plantNames)];
+                    return uniquePlantNames.length > 0 ? uniquePlantNames.join('、') : '情報なし';
                   })()}
                 </div>
               </div>
