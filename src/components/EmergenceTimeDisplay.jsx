@@ -82,16 +82,93 @@ const parseEmergenceTime = (emergenceTime) => {
     textToProcess = monthPatterns.join(' ') + ' ' + emergenceTime;
   }
   
-  // 旬単位のパターンを検出（例：3月上旬、4月中旬、5月下旬）
-  const periodPattern = /(\d{1,2})月(上旬|中旬|下旬)/g;
+  // 「〜から」と「〜まで」を個別に検出して期間を作成
+  const fromPattern = /(\d{1,2})月(上旬|中旬|下旬)?から/g;
+  const toPattern = /(\d{1,2})月(上旬|中旬|下旬)?まで/g;
+  
+  let fromMonth = null, fromPeriod = null;
+  let toMonth = null, toPeriod = null;
+  
+  // 「〜から」を検出
   let match;
-  while ((match = periodPattern.exec(textToProcess)) !== null) {
-    const month = parseInt(match[1]);
-    const period = match[2];
-    if (month >= 1 && month <= 12) {
-      activeMonths.add(month);
-      const periodNum = period === '上旬' ? 1 : period === '中旬' ? 2 : 3;
-      activePeriods.add(month + periodNum * 0.1);
+  while ((match = fromPattern.exec(emergenceTime)) !== null) {
+    fromMonth = parseInt(match[1]);
+    fromPeriod = match[2];
+  }
+  
+  // 「〜まで」を検出
+  while ((match = toPattern.exec(emergenceTime)) !== null) {
+    toMonth = parseInt(match[1]);
+    toPeriod = match[2];
+  }
+  
+  // 「から」と「まで」の両方がある場合、期間として処理
+  if (fromMonth !== null && toMonth !== null) {
+    const startPeriodNum = fromPeriod ? (fromPeriod === '上旬' ? 1 : fromPeriod === '中旬' ? 2 : 3) : 1;
+    const endPeriodNum = toPeriod ? (toPeriod === '上旬' ? 1 : toPeriod === '中旬' ? 2 : 3) : 3;
+    
+    if (fromMonth <= toMonth) {
+      for (let m = fromMonth; m <= toMonth; m++) {
+        if (m > 12) break;
+        activeMonths.add(m);
+        
+        if (m === fromMonth && fromPeriod) {
+          // 開始月：指定された旬から月末まで
+          for (let p = startPeriodNum; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        } else if (m === toMonth && toPeriod) {
+          // 終了月：月初から指定された旬まで
+          for (let p = 1; p <= endPeriodNum; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        } else {
+          // 中間月または旬指定なし：全旬
+          for (let p = 1; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        }
+      }
+    } else {
+      // 年をまたぐ場合
+      for (let m = fromMonth; m <= 12; m++) {
+        activeMonths.add(m);
+        if (m === fromMonth && fromPeriod) {
+          for (let p = startPeriodNum; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        } else {
+          for (let p = 1; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        }
+      }
+      for (let m = 1; m <= toMonth; m++) {
+        activeMonths.add(m);
+        if (m === toMonth && toPeriod) {
+          for (let p = 1; p <= endPeriodNum; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        } else {
+          for (let p = 1; p <= 3; p++) {
+            activePeriods.add(m + p * 0.1);
+          }
+        }
+      }
+    }
+  }
+  
+  // 旬単位のパターンを検出（例：3月上旬、4月中旬、5月下旬）- 「から」「まで」がない場合のみ
+  if (fromMonth === null && toMonth === null) {
+    const periodPattern = /(\d{1,2})月(上旬|中旬|下旬)/g;
+    while ((match = periodPattern.exec(textToProcess)) !== null) {
+      const month = parseInt(match[1]);
+      const period = match[2];
+      if (month >= 1 && month <= 12) {
+        activeMonths.add(month);
+        const periodNum = period === '上旬' ? 1 : period === '中旬' ? 2 : 3;
+        activePeriods.add(month + periodNum * 0.1);
+      }
     }
   }
 
