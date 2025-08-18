@@ -250,6 +250,30 @@ function isValidPlantName(plantName) {
   return true;
 }
 
+// 植物名を正規化する関数
+function normalizePlantName(plantName) {
+  if (!plantName || typeof plantName !== 'string') {
+    return plantName;
+  }
+  
+  // 全角スペースを半角スペースに統一
+  let normalized = plantName.replace(/　/g, ' ');
+  
+  // 科名の前後のスペースを統一（スペースなしに）
+  normalized = normalized.replace(/\s*\(\s*([^)]+科)\s*\)\s*/g, '($1)');
+  
+  // 「からの羽化例がある」などの余分なテキストを削除
+  normalized = normalized.replace(/\s*(から|での|における).*$/g, '');
+  
+  // 連続するスペースを1つに
+  normalized = normalized.replace(/\s+/g, ' ');
+  
+  // 前後の空白を削除
+  normalized = normalized.trim();
+  
+  return normalized;
+}
+
 // 備考欄から食草情報を抽出する関数
 function extractHostPlantsFromRemarks(remarks) {
   if (!remarks || typeof remarks !== 'string') {
@@ -1023,11 +1047,12 @@ async function generateMetaPages() {
       if (hostPlants && hostPlants !== '不明') {
         const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          if (isValidPlantName(plant)) {
-            if (!hostPlantsMap.has(plant)) {
-              hostPlantsMap.set(plant, []);
+          const normalizedPlant = normalizePlantName(plant);
+          if (isValidPlantName(normalizedPlant)) {
+            if (!hostPlantsMap.has(normalizedPlant)) {
+              hostPlantsMap.set(normalizedPlant, []);
             }
-            hostPlantsMap.get(plant).push(insect);
+            hostPlantsMap.get(normalizedPlant).push(insect);
           }
         });
       }
@@ -1077,11 +1102,12 @@ async function generateMetaPages() {
       if (hostPlants && hostPlants !== '不明') {
         const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          if (isValidPlantName(plant)) {
-            if (!hostPlantsMap.has(plant)) {
-              hostPlantsMap.set(plant, []);
+          const normalizedPlant = normalizePlantName(plant);
+          if (isValidPlantName(normalizedPlant)) {
+            if (!hostPlantsMap.has(normalizedPlant)) {
+              hostPlantsMap.set(normalizedPlant, []);
             }
-            hostPlantsMap.get(plant).push(insect);
+            hostPlantsMap.get(normalizedPlant).push(insect);
           }
         });
       }
@@ -1127,11 +1153,12 @@ async function generateMetaPages() {
       if (hostPlants && hostPlants !== '不明') {
         const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          if (isValidPlantName(plant)) {
-            if (!hostPlantsMap.has(plant)) {
-              hostPlantsMap.set(plant, []);
+          const normalizedPlant = normalizePlantName(plant);
+          if (isValidPlantName(normalizedPlant)) {
+            if (!hostPlantsMap.has(normalizedPlant)) {
+              hostPlantsMap.set(normalizedPlant, []);
             }
-            hostPlantsMap.get(plant).push(insect);
+            hostPlantsMap.get(normalizedPlant).push(insect);
           }
         });
       }
