@@ -1178,6 +1178,17 @@ async function generateMetaPages() {
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
       const filename = path.join(__dirname, `../public/meta/plant/${safePlantName}.html`);
       fs.writeFileSync(filename, html);
+      
+      // 科名を含む植物名の場合、科名なしバージョンも生成（エイリアス）
+      const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
+      if (familyMatch) {
+        const plantNameWithoutFamily = familyMatch[1];
+        const safeAliasName = plantNameWithoutFamily.replace(/[/\\?%*:|"<>]/g, '-');
+        const aliasFilename = path.join(__dirname, `../public/meta/plant/${safeAliasName}.html`);
+        // 同じHTMLを科名なしファイル名でも保存
+        fs.writeFileSync(aliasFilename, html);
+        console.log(`エイリアス作成: ${plantNameWithoutFamily} -> ${plantName}`);
+      }
     });
     
     console.log(`メタページ生成完了:`);
