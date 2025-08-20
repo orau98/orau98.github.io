@@ -11,13 +11,6 @@ const plantAliases = {
   'リンゴ': ['セイヨウリンゴ', 'ヨーロッパリンゴ']
 };
 
-const DetailCard = ({ title, children }) => (
-  <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-slate-700/50">
-    <h2 className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-400">{title}</h2>
-    {children}
-  </div>
-);
-
 const ImageModal = ({ image, isOpen, onClose }) => {
   if (!isOpen || !image) return null;
 
@@ -70,7 +63,7 @@ const PlantImageGallery = ({ images }) => {
           } else if (responses[1].status === 'fulfilled' && responses[1].value.ok) {
             available.push({ ...image, finalSrc: image.srcJPG });
           }
-        } catch (error) {
+        } catch {
           // Image doesn't exist, skip it
         }
       }
@@ -202,8 +195,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   console.log('HostPlantDetail - decodedPlantName:', decodedPlantName);
   console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
-  const mothsOnThisPlant = hostPlants[decodedPlantName] || [];
   const details = plantDetails[decodedPlantName] || { family: '不明' };
+  
+  // この植物を利用する昆虫のリストを作成
+  const relatedInsects = allInsects.filter(insect => {
+    if (!insect.hostPlants) return false;
+    
+    // 食草リストを正規化して検索
+    const hostPlantsList = insect.hostPlants.split(/[、,；;]/).map(p => p.trim());
+    return hostPlantsList.some(plant => {
+      // 括弧を除いた植物名でも一致を確認
+      const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
+      return plant === decodedPlantName || cleanPlant === decodedPlantName;
+    });
+  });
   
   // Get all available images for this plant
   const getPlantImages = (plantName) => {

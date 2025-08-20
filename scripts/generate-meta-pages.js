@@ -259,11 +259,24 @@ function normalizePlantName(plantName) {
   // 全角スペースを半角スペースに統一
   let normalized = plantName.replace(/　/g, ' ');
   
-  // 科名の前後のスペースを統一（スペースなしに）
-  normalized = normalized.replace(/\s*\(\s*([^)]+科)\s*\)\s*/g, '($1)');
+  // 全角括弧を半角括弧に統一
+  normalized = normalized.replace(/（/g, '(').replace(/）/g, ')');
   
-  // 「からの羽化例がある」などの余分なテキストを削除
-  normalized = normalized.replace(/\s*(から|での|における).*$/g, '');
+  // 「科名の植物名」形式を「植物名(科名)」形式に変換
+  normalized = normalized.replace(/^([^の]+科)の(.+)$/g, '$2($1)');
+  
+  // 「以上」を削除（例：「(以上クルミ科)」→「(クルミ科)」）
+  normalized = normalized.replace(/\(以上([^)]+)\)/g, '($1)');
+  
+  // 科名の前後のスペースを統一（スペースなしに）
+  normalized = normalized.replace(/\s*\(\s*([^)]+科)\s*\)/g, '($1)');
+  
+  // 「によって」「による」「からの」「での」「における」などの余分なテキストを削除
+  normalized = normalized.replace(/\s*(によって|による|から|での|における|羽化|採卵|飼育|記録|例が|ある).*$/g, '');
+  
+  // 括弧内の余分なテキストも削除（科名以外）
+  normalized = normalized.replace(/\s*\([^)]*によって[^)]*\)/g, '');
+  normalized = normalized.replace(/\s*\([^)]*による[^)]*\)/g, '');
   
   // 連続するスペースを1つに
   normalized = normalized.replace(/\s+/g, ' ');
@@ -313,7 +326,27 @@ function extractHostPlantsFromRemarks(remarks) {
     hostPlants.push(...plants);
   }
   
-  // パターン4: 文頭の植物名パターン（例："ショウロウクサギ (シソ科); ノアサガオ (ヒルガオ科)。"）
+  // パターン4: "...によって採卵飼育の記録がある"パターン
+  const eggRearingMatch = trimmed.match(/(.+?)[\s　]*[にに]よって採卵飼育の記録がある/);
+  if (eggRearingMatch) {
+    const plantText = eggRearingMatch[1];
+    const plants = plantText.split(/[;；、，,]/)
+      .map(p => p.trim())
+      .filter(p => p && (p.includes('科') || p.includes('属') || isValidPlantName(p)));
+    hostPlants.push(...plants);
+  }
+  
+  // パターン5: "採卵により...で飼育記録がある"パターン  
+  const eggCollectionMatch = trimmed.match(/採卵により(.+?)で飼育記録がある/);
+  if (eggCollectionMatch) {
+    const plantText = eggCollectionMatch[1];
+    const plants = plantText.split(/[;；、，,]/)
+      .map(p => p.trim())
+      .filter(p => p && (p.includes('科') || p.includes('属') || isValidPlantName(p)));
+    hostPlants.push(...plants);
+  }
+  
+  // パターン6: 文頭の植物名パターン（例："ショウロウクサギ (シソ科); ノアサガオ (ヒルガオ科)。"）
   const directPlantMatch = trimmed.match(/^([^。]+(?:\([^)]+\)[^。]*)*)[。；]/);
   if (directPlantMatch && !trimmed.includes('名義タイプ亜種') && !trimmed.includes('飼育下で')) {
     const plantText = directPlantMatch[1];
@@ -324,7 +357,7 @@ function extractHostPlantsFromRemarks(remarks) {
     hostPlants.push(...plantPatterns);
   }
   
-  // パターン5: "広食性"を検出
+  // パターン7: "広食性"を検出
   if (trimmed.includes('広食性')) {
     hostPlants.push('広食性');
   }
@@ -651,15 +684,21 @@ function generateInsectHTML(insect, type) {
 }
 
 // Enhanced 植物のHTMLテンプレートを生成する関数 - フルコンテンツバージョン
-function generatePlantHTML(plantName, relatedInsects, plantImages) {
+// originalPlantName: エイリアス生成時に元の植物名（科名付き）を渡すため
+function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlantName = null) {
+  // originalPlantNameが指定されている場合は、それが実際のデータの植物名
+  // plantNameは表示用の名前（エイリアスの場合は科名なし）
+  const dataPlantName = originalPlantName || plantName;
+  const displayPlantName = plantName;
+  
   const insectsList = relatedInsects.map(insect => insect.japaneseName).join(', ');
-  const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+  const safePlantName = displayPlantName.replace(/[/\\?%*:|"<>]/g, '-');
 
-  // 植物の別名を取得
-  const plantAliases = getPlantAliases(plantName);
+  // 植物の別名を取得（データ用の名前で取得）
+  const plantAliases = getPlantAliases(dataPlantName);
 
-  // この植物に関連する画像を探す
-  const basePlantName = plantName.split(' ')[0]; // "タケニグサ (ケシ科)" -> "タケニグサ"
+  // この植物に関連する画像を探す（表示名から基本名を取得）
+  const basePlantName = displayPlantName.split(/[\s(（]/)[0]; // "タケニグサ (ケシ科)" -> "タケニグサ"
   const plantImageFiles = plantImages.filter(img => img.startsWith(basePlantName));
   const mainImageUrl = plantImageFiles.length > 0 
     ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
@@ -685,15 +724,15 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
-  <meta name="description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
-  <meta name="keywords" content="${plantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.name).join(',')}">
+  <title>${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
+  <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
+  <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html">
   <link rel="stylesheet" href="/assets/meta-styles.css">
   
   <!-- Open Graph -->
-  <meta property="og:title" content="${plantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
-  <meta property="og:description" content="${plantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
+  <meta property="og:title" content="${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
+  <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html">
   ${mainImageUrl ? `<meta property="og:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
@@ -701,8 +740,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${plantName} - 食草図鑑">
-  <meta property="twitter:description" content="${plantName}を食草とする${relatedInsects.length}種の昆虫情報">
+  <meta property="twitter:title" content="${displayPlantName} - 食草図鑑">
+  <meta property="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
   ${mainImageUrl ? `<meta property="twitter:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
   
   <!-- Enhanced Structured Data -->
@@ -710,13 +749,13 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
   {
     "@context": "https://schema.org",
     "@type": ["Plant", "Species"],
-    "name": "${plantName}",
+    "name": "${displayPlantName}",
     "identifier": {
       "@type": "PropertyValue",
       "propertyID": "plant_name",
-      "value": "${plantName}"
+      "value": "${displayPlantName}"
     },
-    "description": "${plantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
+    "description": "${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
     "url": "https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html",
     ${mainImageUrl ? `"image": "https://orau98.github.io${mainImageUrl}",` : ''}
     "inLanguage": "ja",
@@ -749,11 +788,11 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
       <span>></span>
       <a href="/plant">植物</a>
       <span>></span>
-      <span>${plantName}</span>
+      <span>${displayPlantName}</span>
     </nav>
     
     <header class="meta-header">
-      <h1>${plantName}</h1>
+      <h1>${displayPlantName}</h1>
       <h2>食草植物の詳細情報</h2>
     </header>
     
@@ -762,7 +801,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
         <h3>基本情報</h3>
         <dl>
           <dt>植物名</dt>
-          <dd>${plantName}</dd>
+          <dd>${displayPlantName}</dd>
           ${plantAliases.length > 0 ? `
           <dt>別名</dt>
           <dd>${plantAliases.join('、')}</dd>
@@ -781,12 +820,12 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
 
       ${plantImageFiles.length > 0 ? `
       <section class="image-gallery">
-        <h3>${plantName}の写真</h3>
+        <h3>${displayPlantName}の写真</h3>
         <div class="gallery-container">
           ${plantImageFiles.map(img => `
             <div class="gallery-item">
               <a href="/images/plants/${encodeURIComponent(img)}" target="_blank" title="画像を拡大表示">
-                <img src="/images/plants/${encodeURIComponent(img)}" alt="${plantName}の写真 - ${img.replace(/\.[^/.]+$/, '')}" loading="lazy">
+                <img src="/images/plants/${encodeURIComponent(img)}" alt="${displayPlantName}の写真 - ${img.replace(/\.[^/.]+$/, '')}" loading="lazy">
               </a>
               <div class="image-caption">${img.replace(/\.[^/.]+$/, '').replace(/_/g, ' ')}</div>
             </div>
@@ -797,12 +836,12 @@ function generatePlantHTML(plantName, relatedInsects, plantImages) {
       
       <section class="description">
         <h3>生態系での役割</h3>
-        <p>${plantName}は、昆虫の食草として重要な役割を果たしている植物です。</p>
+        <p>${displayPlantName}は、昆虫の食草として重要な役割を果たしている植物です。</p>
         <p>この植物を食草として利用する昆虫は${relatedInsects.length}種確認されており、生態系において多様な昆虫の生活を支える重要な植物資源となっています。</p>
         ${Object.entries(insectsByType)
           .filter(([type, insects]) => insects.length > 0)
           .map(([type, insects]) => 
-            `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => i.name).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
+            `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => i.japaneseName).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
           ).join('')}
       </section>
       
@@ -1045,7 +1084,25 @@ async function generateMetaPages() {
       mothCount++;
       
       if (hostPlants && hostPlants !== '不明') {
-        const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
+        // 「(以上...科)」パターンを処理
+        let processedHostPlants = hostPlants;
+        const familySuffixMatch = hostPlants.match(/[\(（]以上([^)）]+科)[\)）]$/);
+        if (familySuffixMatch) {
+          const familyName = familySuffixMatch[1];
+          // 「(以上...科)」を一旦削除
+          const plantsWithoutSuffix = hostPlants.replace(/\s*[\(（]以上[^)）]+[\)）]$/, '');
+          // 各植物に科名を追加
+          const plantsList = plantsWithoutSuffix.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
+          processedHostPlants = plantsList.map(p => {
+            // すでに科名がついている場合はそのまま
+            if (p.includes('科)') || p.includes('科）')) {
+              return p;
+            }
+            return `${p}(${familyName})`;
+          }).join('; ');
+        }
+        
+        const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
           const normalizedPlant = normalizePlantName(plant);
           if (isValidPlantName(normalizedPlant)) {
@@ -1100,7 +1157,25 @@ async function generateMetaPages() {
       butterflyCount++;
       
       if (hostPlants && hostPlants !== '不明') {
-        const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
+        // 「(以上...科)」パターンを処理
+        let processedHostPlants = hostPlants;
+        const familySuffixMatch = hostPlants.match(/[\(（]以上([^)）]+科)[\)）]$/);
+        if (familySuffixMatch) {
+          const familyName = familySuffixMatch[1];
+          // 「(以上...科)」を一旦削除
+          const plantsWithoutSuffix = hostPlants.replace(/\s*[\(（]以上[^)）]+[\)）]$/, '');
+          // 各植物に科名を追加
+          const plantsList = plantsWithoutSuffix.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
+          processedHostPlants = plantsList.map(p => {
+            // すでに科名がついている場合はそのまま
+            if (p.includes('科)') || p.includes('科）')) {
+              return p;
+            }
+            return `${p}(${familyName})`;
+          }).join('; ');
+        }
+        
+        const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
           const normalizedPlant = normalizePlantName(plant);
           if (isValidPlantName(normalizedPlant)) {
@@ -1151,7 +1226,25 @@ async function generateMetaPages() {
       leafbeetleCount++;
       
       if (hostPlants && hostPlants !== '不明') {
-        const plants = [...new Set(hostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
+        // 「(以上...科)」パターンを処理
+        let processedHostPlants = hostPlants;
+        const familySuffixMatch = hostPlants.match(/[\(（]以上([^)）]+科)[\)）]$/);
+        if (familySuffixMatch) {
+          const familyName = familySuffixMatch[1];
+          // 「(以上...科)」を一旦削除
+          const plantsWithoutSuffix = hostPlants.replace(/\s*[\(（]以上[^)）]+[\)）]$/, '');
+          // 各植物に科名を追加
+          const plantsList = plantsWithoutSuffix.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
+          processedHostPlants = plantsList.map(p => {
+            // すでに科名がついている場合はそのまま
+            if (p.includes('科)') || p.includes('科）')) {
+              return p;
+            }
+            return `${p}(${familyName})`;
+          }).join('; ');
+        }
+        
+        const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
           const normalizedPlant = normalizePlantName(plant);
           if (isValidPlantName(normalizedPlant)) {
@@ -1183,11 +1276,17 @@ async function generateMetaPages() {
       const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
       if (familyMatch) {
         const plantNameWithoutFamily = familyMatch[1];
+        // デバッグ: オニグルミの場合の昆虫数を確認
+        if (plantNameWithoutFamily === 'オニグルミ') {
+          console.log(`DEBUG: オニグルミ(クルミ科)の昆虫数: ${insects.length}`);
+          console.log(`DEBUG: 最初の3種: ${insects.slice(0, 3).map(i => i.japaneseName).join(', ')}`);
+        }
+        // エイリアス用のHTMLを生成（科名なしの植物名で表示、元の植物名のデータを使用）
+        const aliasHtml = generatePlantHTML(plantNameWithoutFamily, insects, allPlantImages, plantName);
         const safeAliasName = plantNameWithoutFamily.replace(/[/\\?%*:|"<>]/g, '-');
         const aliasFilename = path.join(__dirname, `../public/meta/plant/${safeAliasName}.html`);
-        // 同じHTMLを科名なしファイル名でも保存
-        fs.writeFileSync(aliasFilename, html);
-        console.log(`エイリアス作成: ${plantNameWithoutFamily} -> ${plantName}`);
+        fs.writeFileSync(aliasFilename, aliasHtml);
+        console.log(`エイリアス作成: ${plantNameWithoutFamily} -> ${plantName} (昆虫数: ${insects.length})`);
       }
     });
     

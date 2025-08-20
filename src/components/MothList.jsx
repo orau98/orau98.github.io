@@ -622,6 +622,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         return [];
       }
       
+      // Wait for imageFilenames to load before sorting - return unsorted on first render
+      // This is better than showing wrong order initially
       if (imageFilenames.size === 0) {
         console.log('No image filenames loaded yet, returning unsorted');
         return filteredMoths;
@@ -755,7 +757,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       console.error('Error in sortedMoths calculation:', error);
       return filteredMoths || [];
     }
-  }, [filteredMoths, imageFilenames]);
+  }, [filteredMoths, imageFilenames, debouncedSearchTerm, classificationFilter]);;
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
   const currentMoths = useMemo(() => {

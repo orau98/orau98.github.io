@@ -1,9 +1,6 @@
 Acanthoplusia_ichinosei
 Acherontia_lachesis
-Achlya
-longipennis
-longipennis
-Inoue
+Achlya longipennis longipennis Inoue
 Acronicta_subpurpurea_Matsumura
 Acronicta_subpurpurea
 Agrilus_spinipennis
@@ -14,13 +11,8 @@ Agrotis_exclamationis
 Aloa_lactinea
 Ambulyx_japonica
 Amphitrogia_amphidecta
-Amraica
-superans
-superans
-Butler
-Anacronicta
-nitida
-Butler
+Amraica superans superans Butler
+Anacronicta nitida Butler
 Archiearis_parthenias
 Aroga_mesostrepta
 Artena_dotata
@@ -41,18 +33,10 @@ Chariaspilates_formosaria
 Chasminodes_nervosus
 Chilades_pandava
 Chilodes_pacifica
-Chrysorithrum
-amatum
-Bremer
-&
-Grey
-Chrysoteuchia
-diplogramma
-Zeller
+Chrysorithrum amatum Bremer & Grey
+Chrysoteuchia diplogramma Zeller
 Circobotys_heterogenalis
-Conistra
-castaneofasciata
-Motschulsky
+Conistra castaneofasciata Motschulsky
 Conistra_flammatra
 Coraebus_daisenensis
 Corgatha_nitens
@@ -63,12 +47,9 @@ Cosmia_pyralina_backup
 Cosmia_pyralina
 Cosmia_restituta_Walker_1857
 Cosmia_restituta
-Crambus
-argyrophorus
-Butler
+Crambus argyrophorus Butler
 Crambus_humidellus
-Craniophora
-ligustri
+Craniophora ligustri
 Craniophora_ligustri
 Craniophora_praeclara_Graeser
 Craniophora_praeclara
@@ -76,33 +57,26 @@ Cryphia_mitsuhashi
 Cucullia_argentea
 Cucullia_kurilullia
 Cucullia_pustulata
-Cyrestis
-thyodamas
+Cyrestis thyodamas
 Deilephila_askoldensis_backup
 Deilephila_askoldensis
 Deilephila_elpenor_backup
 Deilephila_elpenor
 Diarsia_deparca
-Dichomeris
-heriguronis
-Matsumura
+Dichomeris heriguronis Matsumura
 Dimorphicosmia_variegata_backup
 Dimorphicosmia_variegata
 Diphtherocome_autumnalis
 Dypterygia_caliginosa
 Eligma_narcissus
 Endotricha_minialis
-Eriodonta
-amagisana
-Marumo
+Eriodonta amagisana Marumo
 Eriodonta_amagisana
 Etielloides_bipartitella
 Eupithecia_virgaureata
 Euplexidia_angusta
 Eupsilia_strigifera
-Flavocrambus
-striatellus
-Leech
+Flavocrambus striatellus Leech
 Gabala_argentata
 Gonepatica_opalina_backup
 Gonepatica_opalina
@@ -112,9 +86,7 @@ Habroloma_lewisii
 Helicoverpa_armigera
 Helotropha_leucostigma_backup
 Helotropha_leucostigma
-Hemipsectra
-fallax
-Butler
+Hemipsectra fallax Butler
 Herculia_orthogramma
 Hypephyra_terrosa
 Hypocala_deflorata
@@ -124,9 +96,7 @@ Kawabeia_razowskii_2
 Kawabeia_razowskii
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
-Lecitholaxa
-thiodora
-Meyrick
+Lecitholaxa thiodora Meyrick
 Lithomoia_solidaginis
 Lithophane_lamda
 Lithophane_nagaii_2
@@ -136,16 +106,11 @@ Lithophane_pruinosa
 Lithophane_socia
 Lithophane_venusta
 Loepa_sakaei
-Lophomilia
-polybapta
-Butler
+Lophomilia polybapta Butler
 Lophontosia_pryeri
 Lophoptera_hayesi
 Lygephila_nigricostata
-Macrobrochis
-staudingeri
-staudingeri
-Alphéraky
+Macrobrochis staudingeri staudingeri Alphéraky
 Maikona_jezoensis
 Martania_fulvida
 Maruca_vitrata
@@ -160,8 +125,7 @@ Mimas_christophi
 Mimopsestis_basalis
 Mythimna_conigera
 Naganoella_timandra
-Narathura
-japonica
+Narathura japonica
 Narosoideus_flavidorsalis_backup
 Narosoideus_flavidorsalis
 Negritothripa_hampsoni
@@ -180,15 +144,11 @@ Orthosia_lizetta
 Orthosia_satoi
 Pachyerannis_obliquaria
 Pangrapta_costinotata
-Papilio
-bianor
-okinawensis
+Papilio bianor okinawensis
 Paracolax_albinotata
 Paracolax_fentoni
 Paragona_cleorides
-Parum
-colligata
-Walker
+Parum colligata Walker
 Pennithera_comis
 Peridea_gigantea
 Perigrapha_circumducta
@@ -228,9 +188,7 @@ Shachia_circumscripta
 Siccia_obscura
 Spatulipalpia_albistrialis
 Spilarctia_seriatopunctata
-Spilosoma
-punctarium
-Stoll
+Spilosoma punctarium Stoll
 Spirama_retorta
 Spodoptera_litura_backup
 Spodoptera_litura
@@ -238,15 +196,9 @@ Stericta_kogii
 Sugitania_akirai
 Sugitaniella_kuramana
 Synanthedon_hector
-Tanaorhinus
-reciprocata
-confuciaria
-Walker
+Tanaorhinus reciprocata confuciaria Walker
 Telorta_divergens
-Tethea
-ampliata
-ampliata
-Butler
+Tethea ampliata ampliata Butler
 Tethea_consimilis_backup
 Tethea_consimilis
 Thysanoplusia_intermixta
@@ -263,11 +215,7 @@ Xestia_c
 Xestia_efflorescens
 Xylena_changi
 Xylena_formosa
-Zanclognatha
-griselda
-Butler
-Zanclognatha
-yaeyamalis
-Owada
+Zanclognatha griselda Butler
+Zanclognatha yaeyamalis Owada
 Zanclognatha_yaeyamalis_2
 Zaranga_permagna
