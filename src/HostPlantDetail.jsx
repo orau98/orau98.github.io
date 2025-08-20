@@ -249,9 +249,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const plantImages = getPlantImages(decodedPlantName);
   
-  const insectsOnThisPlant = allInsects.filter(insect => 
-    insect.hostPlants.includes(decodedPlantName)
-  );
+  const insectsOnThisPlant = allInsects.filter(insect => {
+    if (!insect.hostPlants) return false;
+    const hostPlantsList = insect.hostPlants.split(/[、,；;]/).map(p => p.trim());
+    return hostPlantsList.some(plant => {
+      const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
+      return plant === decodedPlantName || cleanPlant === decodedPlantName;
+    });
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
