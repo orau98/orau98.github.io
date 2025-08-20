@@ -218,6 +218,19 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
       return plant === decodedPlantName || cleanPlant === decodedPlantName;
     });
+  }).map(insect => {
+    // pathプロパティを追加
+    let path = '';
+    if (moths.includes(insect)) {
+      path = `/moth/${insect.id}`;
+    } else if (butterflies.includes(insect)) {
+      path = `/butterfly/${insect.id}`;
+    } else if (beetles.includes(insect)) {
+      path = `/beetle/${insect.id}`;
+    } else if (leafbeetles.includes(insect)) {
+      path = `/leafbeetle/${insect.id}`;
+    }
+    return { ...insect, path };
   });
   
   // Get all available images for this plant
