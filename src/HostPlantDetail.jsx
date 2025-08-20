@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
-import DetailCard from './components/DetailCard';
 import { PlantStructuredData } from './components/StructuredData';
 import { RelatedPlants } from './components/RelatedLinks';
+
+// DetailCard component
+const DetailCard = ({ title, children }) => (
+  <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 mb-6">
+    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">{title}</h2>
+    {children}
+  </div>
+);
 
 // 植物の別名データ
 const plantAliases = {
@@ -197,6 +204,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
   
+  // All insects for RelatedPlants component
+  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
+  
   // この植物を利用する昆虫のリストを作成
   const relatedInsects = allInsects.filter(insect => {
     if (!insect.hostPlants) return false;
@@ -239,8 +249,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const plantImages = getPlantImages(decodedPlantName);
   
-  // All insects for RelatedPlants component
-  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   const insectsOnThisPlant = allInsects.filter(insect => 
     insect.hostPlants.includes(decodedPlantName)
   );
