@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
+import DetailCard from './components/DetailCard';
 import { PlantStructuredData } from './components/StructuredData';
 import { RelatedPlants } from './components/RelatedLinks';
 
@@ -311,6 +312,41 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         </DetailCard>
 
         
+        {/* この植物を利用する昆虫一覧 */}
+        <DetailCard title={`${decodedPlantName}を利用する昆虫`}>
+          <div className="space-y-2">
+            {relatedInsects.length > 0 ? (
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  {relatedInsects.length}種の昆虫がこの植物を利用しています
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {relatedInsects.map((insect, index) => (
+                    <Link 
+                      key={index}
+                      to={insect.path}
+                      className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="font-medium text-emerald-700 dark:text-emerald-400">
+                        {insect.japaneseName}
+                      </div>
+                      {insect.scientificName && (
+                        <div className="text-sm text-gray-600 dark:text-gray-400 italic">
+                          {insect.scientificName}
+                        </div>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">
+                この植物を利用する昆虫のデータはまだありません
+              </p>
+            )}
+          </div>
+        </DetailCard>
+
         {/* 関連する植物と昆虫のリンク */}
         <RelatedPlants 
           currentPlant={decodedPlantName} 
