@@ -84,9 +84,55 @@
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293"
      crossorigin="anonymous"></script>
+  <!-- SPA深いURL復元スクリプト（404.htmlからのリダイレクト対応） -->
+  <script>
+  (function () {
+    // ===== GitHub Pages SPA深いURL復元スクリプト =====
+    // 404.html から index.html?redirect=... で到達した場合、
+    // 元の深いURLをアドレスバーに復元します
+    
+    // index.html?redirect=... で到達したとき、元の深いURLを復元する
+    var params = new URLSearchParams(location.search);
+    var redirectUrl = params.get('redirect');
+    
+    // リダイレクトパラメータがない場合は通常アクセスなので何もしない
+    if (!redirectUrl) {
+      // デバッグログ（本番環境では削除可能）
+      console.log('[SPA Restore] 通常アクセスのため処理をスキップ');
+      return;
+    }
+    
+    // デバッグログ（本番環境では削除可能）
+    console.log('[SPA Restore] URL復元処理開始');
+    console.log('[SPA Restore] 復元対象URL:', redirectUrl);
+    
+    try {
+      // デコードして元のURL（パス + クエリ + ハッシュ）に戻す
+      var originalUrl = decodeURIComponent(redirectUrl);
+      
+      console.log('[SPA Restore] デコード後URL:', originalUrl);
+      console.log('[SPA Restore] history.replaceState()を実行中...');
+      
+      // アドレスバーだけを書き換える（ページリロードは行わない）
+      // これにより、?redirect= パラメータがアドレスバーから消える
+      history.replaceState(null, '', originalUrl);
+      
+      console.log('[SPA Restore] URL復元完了。SPAルーターが処理を引き継ぎます。');
+      
+      // 以降はSPAのルーター（React Router等）がこのURLを見て画面を描画する
+    } catch (error) {
+      // デコードエラーなどが発生した場合のフォールバック
+      console.error('[SPA Restore] URL復元中にエラーが発生:', error);
+      console.log('[SPA Restore] ホームページにフォールバック');
+      history.replaceState(null, '', '/');
+    }
+  })();
+  </script>
+
+  <script type="module" crossorigin src="/assets/index-eyppu-e_.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-C4pXVsDP.css">
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

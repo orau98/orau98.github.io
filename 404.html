@@ -1,23 +1,92 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>昆虫食草図鑑</title>
-    <script type="text/javascript">
-      // GitHub Pages SPA redirect
-      var l = window.location;
-      // Only redirect if not already on the homepage with parameters
-      if (l.pathname !== '/' && !l.search.includes('?/')) {
-        l.replace(
-          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-          '/?/' + 
-          l.pathname.slice(1).replace(/&/g, '~and~') +
-          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-          l.hash
-        );
-      }
-    </script>
-  </head>
-  <body>
-  </body>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>ページが見つかりません - 昆虫と食草の図鑑</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="お探しのページが見つかりません。自動的に正しいページにリダイレクトします。">
+  
+  <!-- 基本的なスタイル（ユーザーが見える場合のため） -->
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+    }
+    .container {
+      text-align: center;
+      max-width: 500px;
+      padding: 2rem;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ユーザーに表示するフォールバック画面 -->
+  <div class="container">
+    <div class="spinner"></div>
+    <h1>ページを読み込み中...</h1>
+    <p>お探しのページに自動的にリダイレクトしています。<br>
+    しばらくお待ちください。</p>
+    <p><small>このページは数秒で自動的に切り替わります。</small></p>
+  </div>
+
+  <!-- SPA深いURL直アクセス対応リダイレクトスクリプト -->
+  <script>
+  (function () {
+    // ===== GitHub Pages SPA深いURL対応リダイレクトハック =====
+    // このスクリプトは、直接アクセスされた深いURL（例: /plant/ノイバラ）を
+    // index.html に転送し、元のURLを復元できるように保存します
+    
+    // GitHub Pages ユーザー/Orgサイトの場合は '/' 
+    // プロジェクトページなら '/repo-name/' に変更してください
+    var BASE_PATH = '/';
+    
+    // 現在のURL（パス + クエリ + ハッシュ）を丸ごと保持
+    var original = location.pathname + location.search + location.hash;
+    
+    // デバッグログ（本番環境では削除可能）
+    console.log('[SPA Redirect] 404ページでリダイレクト処理開始');
+    console.log('[SPA Redirect] 元のURL:', original);
+    
+    // すでに index.html?redirect=... にいる場合は何もしない（無限ループ防止）
+    if (location.search.indexOf('redirect=') !== -1) {
+      console.log('[SPA Redirect] 既にredirectパラメータが存在するため処理をスキップ');
+      return;
+    }
+    
+    // ルートパス（/）の場合は通常の404エラーとして扱う
+    if (location.pathname === BASE_PATH) {
+      console.log('[SPA Redirect] ルートパスのため処理をスキップ');
+      return;
+    }
+    
+    // index.html に「元URL」を渡して置換遷移（404を履歴に残さない）
+    var dest = BASE_PATH + 'index.html?redirect=' + encodeURIComponent(original);
+    
+    console.log('[SPA Redirect] リダイレクト先:', dest);
+    console.log('[SPA Redirect] location.replace()を実行中...');
+    
+    // location.replace() を使うことで、ブラウザの履歴に404ページが残らない
+    location.replace(dest);
+  })();
+  </script>
+</body>
 </html>
