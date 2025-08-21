@@ -1,8 +1,19 @@
 User-agent: *
 Allow: /
 
-# サイトマップ
+# サイトマップ（分割サイトマップを含む）
 Sitemap: https://orau98.github.io/sitemap.xml
+Sitemap: https://orau98.github.io/sitemap-main.xml
+Sitemap: https://orau98.github.io/sitemap-moth.xml
+Sitemap: https://orau98.github.io/sitemap-butterfly.xml
+Sitemap: https://orau98.github.io/sitemap-leafbeetle.xml
+Sitemap: https://orau98.github.io/sitemap-plant.xml
+
+# SPAルートを明示的に許可
+Allow: /moth/
+Allow: /butterfly/
+Allow: /leafbeetle/
+Allow: /plant/
 
 # 画像ディレクトリを許可
 Allow: /images/
@@ -17,5 +28,11 @@ Disallow: /node_modules/
 Disallow: /src/
 Disallow: /scripts/
 
-# クロール頻度の調整
+# Googlebot用の特別設定
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+# その他のクローラー
+User-agent: *
 Crawl-delay: 1

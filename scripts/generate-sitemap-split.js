@@ -30,6 +30,103 @@ function generateSplitSitemaps() {
     priority: '1.0'
   });
   
+  // CSVデータからSPAルートを追加
+  const addSpaRoutes = () => {
+    try {
+      let plantCount = 0;
+      
+      // 蛾のSPAルートを追加
+      const mothCsvPath = path.join(__dirname, '../public/insects_integrated_master.csv');
+      if (fs.existsSync(mothCsvPath)) {
+        const mothData = fs.readFileSync(mothCsvPath, 'utf-8');
+        const mothLines = mothData.split('\n').slice(1); // ヘッダー行を除く
+        
+        mothLines.forEach(line => {
+          if (line.trim()) {
+            const columns = line.split(',');
+            const mothId = columns[0]?.trim();
+            if (mothId && mothId !== '昆虫ID') {
+              sitemaps.moth.push({
+                loc: `${baseUrl}/moth/${encodeURIComponent(mothId)}`,
+                lastmod: currentDate,
+                changefreq: 'monthly',
+                priority: '0.8'
+              });
+            }
+          }
+        });
+      }
+      
+      // ハムシのSPAルートを追加
+      const leafbeetleCsvPath = path.join(__dirname, '../public/hamushi_integrated_master.csv');
+      if (fs.existsSync(leafbeetleCsvPath)) {
+        const leafbeetleData = fs.readFileSync(leafbeetleCsvPath, 'utf-8');
+        const leafbeetleLines = leafbeetleData.split('\n').slice(1); // ヘッダー行を除く
+        
+        leafbeetleLines.forEach(line => {
+          if (line.trim()) {
+            const columns = line.split(',');
+            const leafbeetleId = columns[0]?.trim();
+            if (leafbeetleId && leafbeetleId !== '大図鑑カタログNo') {
+              sitemaps.leafbeetle.push({
+                loc: `${baseUrl}/leafbeetle/${encodeURIComponent(leafbeetleId)}`,
+                lastmod: currentDate,
+                changefreq: 'monthly',
+                priority: '0.8'
+              });
+            }
+          }
+        });
+      }
+      
+      // 植物のSPAルートを追加
+      const hostPlantCsvPath = path.join(__dirname, '../public/ListMJ_hostplants_master.csv');
+      if (fs.existsSync(hostPlantCsvPath)) {
+        const hostPlantData = fs.readFileSync(hostPlantCsvPath, 'utf-8');
+        const hostPlantLines = hostPlantData.split('\n').slice(1); // ヘッダー行を除く
+        
+        const uniquePlants = new Set();
+        
+        hostPlantLines.forEach(line => {
+          if (line.trim()) {
+            const columns = line.split(',');
+            const hostPlant = columns[24]?.trim(); // 食草列
+            
+            if (hostPlant && hostPlant !== '食草' && hostPlant !== '不明') {
+              // 植物名を抽出（科名を除く）
+              const plantMatch = hostPlant.match(/^([^（(]+)(?:[（(][^）)]*[）)])?/);
+              if (plantMatch && plantMatch[1]) {
+                const plantName = plantMatch[1].trim();
+                if (plantName && !plantName.includes('科が') && !plantName.includes('記録')) {
+                  uniquePlants.add(plantName);
+                }
+              }
+            }
+          }
+        });
+        
+        uniquePlants.forEach(plantName => {
+          sitemaps.plant.push({
+            loc: `${baseUrl}/plant/${encodeURIComponent(plantName)}`,
+            lastmod: currentDate,
+            changefreq: 'monthly',
+            priority: '0.7'
+          });
+        });
+        
+        plantCount = uniquePlants.size;
+      }
+      
+      console.log(`SPAルート追加: 蛾=${sitemaps.moth.length}, ハムシ=${sitemaps.leafbeetle.length}, 植物=${plantCount}`);
+      
+    } catch (error) {
+      console.error('SPAルート追加エラー:', error);
+    }
+  };
+  
+  // SPAルートを追加
+  addSpaRoutes();
+  
   // メタページディレクトリから実際のファイルを読み取る
   const metaDir = path.join(__dirname, '../public/meta');
   
@@ -66,11 +163,11 @@ function generateSplitSitemaps() {
   };
   
   // 各タイプのメタページを追加
-  const mothCount = addMetaPages(metaDir, 'moth', sitemaps.moth, '0.8');
-  const butterflyCount = addMetaPages(metaDir, 'butterfly', sitemaps.butterfly, '0.8');
+  const mothMetaCount = addMetaPages(metaDir, 'moth', sitemaps.moth, '0.8');
+  const butterflyMetaCount = addMetaPages(metaDir, 'butterfly', sitemaps.butterfly, '0.8');
   addMetaPages(metaDir, 'beetle', sitemaps.main, '0.8'); // beetleは少ないのでmainに含める
-  const leafbeetleCount = addMetaPages(metaDir, 'leafbeetle', sitemaps.leafbeetle, '0.8');
-  const plantCount = addMetaPages(metaDir, 'plant', sitemaps.plant, '0.7');
+  const leafbeetleMetaCount = addMetaPages(metaDir, 'leafbeetle', sitemaps.leafbeetle, '0.8');
+  const plantMetaCount = addMetaPages(metaDir, 'plant', sitemaps.plant, '0.7');
   
   // XMLを生成する関数
   const generateXML = (urls) => {
@@ -149,10 +246,13 @@ function generateSplitSitemaps() {
   });
   
   console.log('\n統計:');
-  console.log(`- 蛾: ${mothCount}種`);
-  console.log(`- 蝶: ${butterflyCount}種`);
-  console.log(`- ハムシ: ${leafbeetleCount}種`);
-  console.log(`- 食草: ${plantCount}種`);
+  console.log(`- 蛾SPA: ${sitemaps.moth.filter(u => u.loc.includes('/moth/')).length}種`);
+  console.log(`- 蛾メタ: ${mothMetaCount}種`);
+  console.log(`- 蝶メタ: ${butterflyMetaCount}種`);
+  console.log(`- ハムシSPA: ${sitemaps.leafbeetle.filter(u => u.loc.includes('/leafbeetle/')).length}種`);
+  console.log(`- ハムシメタ: ${leafbeetleMetaCount}種`);
+  console.log(`- 植物SPA: ${sitemaps.plant.filter(u => u.loc.includes('/plant/')).length}種`);
+  console.log(`- 植物メタ: ${plantMetaCount}種`);
   console.log(`- 合計: ${Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0)} URLs`);
 }
 
