@@ -147,7 +147,7 @@ const getObservationTypeStyle = (observationType) => {
       };
     case '野外（国内）':
       return {
-        label: '野外観察',
+        label: '野外',
         bgColor: 'bg-green-50 dark:bg-green-900/20',
         textColor: 'text-green-700 dark:text-green-300',
         borderColor: 'border-green-200 dark:border-green-700'
