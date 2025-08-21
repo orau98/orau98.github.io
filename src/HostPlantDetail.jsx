@@ -310,7 +310,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{ name: decodedPlantName }} 

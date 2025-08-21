@@ -373,42 +373,12 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                   </div>
                 </div>
                 
-                {/* 右側：サイト管理者について & Instagram */}
+                {/* 右側：Instagram */}
                 <div className="lg:flex lg:flex-col">
                   <div className="flex-grow flex flex-col">
-                    {/* サイト管理者について */}
-                    <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
-                        サイト管理者について
-                      </h3>
-                      <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
-                        <div className="space-y-3">
-                          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
-                            フィールド好きの大学院生
-                          </p>
-                          <div>
-                            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">専門分野：行動生態学、化学生態学</p>
-                            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                              ※分類学は専門ではありません
-                            </p>
-                          </div>
-                          <p className="text-sm text-slate-700 dark:text-slate-300">
-                            詳しいプロフィールは
-                            <a 
-                              href="https://researchmap.jp/HAkimoto" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 underline decoration-emerald-300 hover:decoration-emerald-500 transition-colors ml-1"
-                            >
-                              こちら
-                            </a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
 
                     {/* Instagram最新投稿 */}
-                    <div className="flex-grow flex flex-col max-h-[450px] sm:max-h-[500px] lg:max-h-none">
+                    <div className="flex-grow flex flex-col max-h-[450px] sm:max-h-[500px] lg:max-h-none mt-4">
                       <div className="mb-3">
                         <div className="flex items-center space-x-3 mb-2">
                           <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0">

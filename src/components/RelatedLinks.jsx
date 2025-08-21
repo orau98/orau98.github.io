@@ -270,7 +270,7 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
   const relatedPlants = Array.isArray(hostPlants) ? hostPlants.filter(plant => 
     plant.name !== currentPlant &&
     plant.name !== '不明' &&
-    // 同じ文字パターンを持つ植物（例：～ノキ、～ガシなど）
+    // 同じ文字パターンを持つ植物（例：〜ノキ、〜ガシなど）
     (plant.name.includes('ノキ') && currentPlant.includes('ノキ') ||
      plant.name.includes('ガシ') && currentPlant.includes('ガシ') ||
      plant.name.includes('カエデ') && currentPlant.includes('カエデ') ||
@@ -283,33 +283,34 @@ export const RelatedPlants = ({ currentPlant, allInsects, hostPlants }) => {
       {/* この植物を食べる昆虫 */}
       {insectsOnThisPlant.length > 0 && (
         <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-slate-700/50">
-          <h3 className="text-lg font-bold mb-6 text-blue-600 dark:text-blue-400">
+          <h3 className="text-lg font-bold mb-6 text-blue-600 dark:text-blue-400 text-center">
             {currentPlant}を食草とする昆虫
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-            {insectsOnThisPlant.map(insect => (
-              <Link
-                key={insect.id}
-                to={`/${insect.type}/${insect.id}`}
-                className="group bg-gradient-to-br from-white to-emerald-50 dark:from-slate-700 dark:to-emerald-900/20 rounded-xl overflow-hidden hover:shadow-xl hover:shadow-emerald-200/50 dark:hover:shadow-emerald-900/30 transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-400 dark:hover:border-emerald-500 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer"
-              >
-                <div className="relative w-full h-56 lg:h-64">
-                  <InsectImage insect={insect} large={true} />
-                  
-                  {/* 画像上の和名表示（常時表示） */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="text-base lg:text-lg font-bold text-white drop-shadow-lg overflow-hidden" style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
-                        {insect.name}
-                      </h4>
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-6xl">
+              {insectsOnThisPlant.map(insect => (
+                <Link
+                  key={insect.id}
+                  to={`/${insect.type}/${insect.id}`}
+                  className="group bg-gradient-to-br from-white to-emerald-50 dark:from-slate-700 dark:to-emerald-900/20 rounded-xl overflow-hidden hover:shadow-xl hover:shadow-emerald-200/50 dark:hover:shadow-emerald-900/30 transition-all duration-300 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-400 dark:hover:border-emerald-500 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer"
+                >
+                  <div className="relative w-full h-56 lg:h-64">
+                    <InsectImage insect={insect} large={true} />
+                    
+                    {/* 画像上の和名表示（常時表示） */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <h4 className="text-base lg:text-lg font-bold text-white drop-shadow-lg overflow-hidden" style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical'
+                        }}>
+                          {insect.name}
+                        </h4>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
             ))}
           </div>
         </div>
