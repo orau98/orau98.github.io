@@ -149,6 +149,21 @@ function isValidPlantName(plantName) {
     return false;
   }
   
+  // 不正な植物名パターンを除外（「キョウチクトウ科が」「記録）」等）
+  const invalidPatterns = [
+    /科が$/,           // 「科が」で終わる
+    /^記録[）)]?$/,    // 「記録」「記録）」
+    /^が記録[）)]?$/,  // 「が記録」「が記録）」
+    /^\)[^(]*$/,       // 「）」で始まる（括弧の後半のみ）
+    /^[（(][^）)]*$/   // 「（」で始まり「）」で終わらない（括弧の前半のみ）
+  ];
+  
+  for (const pattern of invalidPatterns) {
+    if (pattern.test(trimmed)) {
+      return false;
+    }
+  }
+  
   // 文章的なパターンを除外（句点や説明文）
   if (/[。．]/.test(trimmed) || /で(飼育|採卵|得られ|記録)/.test(trimmed) || /による/.test(trimmed) || /からの/.test(trimmed)) {
     return false;
@@ -166,14 +181,14 @@ function isValidPlantName(plantName) {
   
   // 学名記号を除外
   const taxonomicPatterns = [
-    /^comb\.\s*nov\.?$/i,
+    /^comb\.\\s*nov\.?$/i,
     /^sp\.?$/i,
     /^spp\.?$/i,
     /^var\.?$/i,
     /^subsp\.?$/i,
     /^f\.?$/i,
     /^emend\.?$/i,
-    /^nom\.\s*nud\.?$/i,
+    /^nom\.\\s*nud\.?$/i,
     /^auct\.?$/i,
     /^non$/i,
     /^sensu$/i,
@@ -238,12 +253,12 @@ function isValidPlantName(plantName) {
   }
   
   // 最低限日本語文字を含むこと
-  if (!/[ぁ-んァ-ヶー一-龯]/.test(trimmed)) {
+  if (!/[あ-ん ア-ヶー一-龯]/.test(trimmed)) {
     return false;
   }
   
   // 著者名パターンを除外
-  if (/^[A-Z][a-z]+[,\s]+\d{4}/.test(trimmed)) {
+  if (/^[A-Z][a-z]+[,\\s]+\\d{4}/.test(trimmed)) {
     return false;
   }
   

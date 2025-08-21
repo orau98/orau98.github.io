@@ -13,14 +13,39 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
-  const insectId = mothId || butterflyId || beetleId || leafbeetleId;
+  let insectId = mothId || butterflyId || beetleId || leafbeetleId;
+  
+  // ID mapping for compatibility between different data sources
+  // Maps species-IDs to catalog-IDs when they refer to the same species
+  const idMapping = {
+    'species-4601': 'catalog-3123', // アオバシャチホコ (Zaranga permagna)
+    'species-6115': 'catalog-3586', // アズサキリガ (Pseudopanolis azusa)
+    // Add more mappings as needed
+  };
+  
+  // Apply ID mapping if needed
+  const mappedInsectId = idMapping[insectId] || insectId;
+  
+  // species-6115のIDマッピングデバッグ
+  if (insectId === 'species-6115') {
+    console.log('DEBUG species-6115 ID mapping:', {
+      originalId: insectId,
+      mappedId: mappedInsectId,
+      hasMapping: !!idMapping[insectId]
+    });
+  }
   
   // Combine all insects for searching
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
-  const moth = allInsects.find(m => m.id === insectId);
+  const moth = allInsects.find(m => m.id === mappedInsectId);
+  
+  // Debug logging for ID mapping
+  if (insectId !== mappedInsectId) {
+    console.log(`ID mapped: ${insectId} -> ${mappedInsectId}`);
+  }
   
   // Debug for catalog-2090 (ヒメウコンカギバ)
-  if (insectId === 'catalog-2090') {
+  if (mappedInsectId === 'catalog-2090') {
     console.log('DEBUG MothDetail: catalog-2090 (ヒメウコンカギバ) display:', {
       id: moth?.id,
       name: moth?.name,
@@ -34,9 +59,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
   
   // Debug logging for オオゴマシジミ
-  if (insectId === 'butterfly-csv-131' || (moth && moth.name === 'オオゴマシジミ')) {
+  if (mappedInsectId === 'butterfly-csv-131' || (moth && moth.name === 'オオゴマシジミ')) {
     console.log('=== DEBUG オオゴマシジミ SEARCH ===');
     console.log('  insectId:', insectId);
+    console.log('  mappedInsectId:', mappedInsectId);
     console.log('  found moth:', moth);
     if (moth) {
       console.log('  moth.name:', moth.name);
@@ -49,7 +75,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
   
   // Debug logging for catalog-6065 (スミレモンキリガ)
-  if (insectId === 'catalog-6065') {
+  if (mappedInsectId === 'catalog-6065') {
     console.log('DEBUG catalog-6065: Found moth:', moth);
     if (moth) {
       console.log('DEBUG catalog-6065: hostPlants:', moth.hostPlants);
@@ -70,8 +96,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   
   // Debug logging for センモンヤガ
-  if (insectId === 'catalog-3489' || insectId === 'main-6519') {
-    console.log('DEBUG: Looking for センモンヤガ with ID:', insectId);
+  if (mappedInsectId === 'catalog-3489' || mappedInsectId === 'main-6519') {
+    console.log('DEBUG: Looking for センモンヤガ with ID:', mappedInsectId);
     console.log('DEBUG: Found moth:', moth);
     if (moth) {
       console.log('DEBUG: センモンヤガ hostPlants:', moth.hostPlants);

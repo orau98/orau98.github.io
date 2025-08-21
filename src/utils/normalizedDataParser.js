@@ -28,6 +28,18 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       displayName += `（${hp.plant_family}）`;
     }
     
+    // species-6115のデバッグログ
+    if (hp.insect_id === 'species-6115') {
+      console.log('DEBUG species-6115 hostplant data:', {
+        plant_name: hp.plant_name,
+        observation_type: hp.observation_type,
+        plant_part: hp.plant_part,
+        life_stage: hp.life_stage,
+        reference: hp.reference,
+        notes: hp.notes
+      });
+    }
+    
     hostPlantsByInsect[hp.insect_id].push({
       name: hp.plant_name,
       family: hp.plant_family || '',
@@ -68,6 +80,24 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       // 食草データを取得
       const hostPlants = hostPlantsByInsect[insectId] || [];
       const generalNotes = generalNotesByInsect[insectId] || [];
+      
+      // species-6115のデバッグログ
+      if (insectId === 'species-6115') {
+        console.log('DEBUG species-6115 processing:', {
+          insectId: insectId,
+          hostPlants: hostPlants,
+          hostPlantsCount: hostPlants.length
+        });
+        
+        hostPlants.forEach((hp, idx) => {
+          console.log(`DEBUG species-6115 hostPlant[${idx}]:`, {
+            name: hp.name,
+            observationType: hp.observationType,
+            plantPart: hp.plantPart,
+            lifeStage: hp.lifeStage
+          });
+        });
+      }
 
       // 基本昆虫データを構築
       const insectData = {
@@ -134,7 +164,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
   });
 
   return result;
-};
+};;
 
 /**
  * 昆虫の分類群を判定

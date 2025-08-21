@@ -207,12 +207,38 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   
+  // Debug: オニグルミを含む昆虫を探す
+  if (decodedPlantName === 'オニグルミ') {
+    console.log('DEBUG: Searching for オニグルミ in all insects...');
+    console.log('Total insects:', allInsects.length);
+    const onigurumiInsects = allInsects.filter(insect => {
+      if (!insect.hostPlants) return false;
+      const hostPlantsStr = String(insect.hostPlants);
+      return hostPlantsStr.includes('オニグルミ');
+    });
+    console.log('Found insects with オニグルミ:', onigurumiInsects.length);
+    onigurumiInsects.forEach(insect => {
+      console.log(`- ${insect.japaneseName}: hostPlants type=${typeof insect.hostPlants}, value="${insect.hostPlants}"`);
+    });
+  }
+  
   // この植物を利用する昆虫のリストを作成
   const relatedInsects = allInsects.filter(insect => {
     if (!insect.hostPlants) return false;
     
+    // hostPlantsを文字列に変換（配列の場合も考慮）
+    let hostPlantsStr;
+    if (typeof insect.hostPlants === 'string') {
+      hostPlantsStr = insect.hostPlants;
+    } else if (Array.isArray(insect.hostPlants)) {
+      hostPlantsStr = insect.hostPlants.join('、');
+    } else {
+      // その他の型の場合はStringに変換を試みる
+      hostPlantsStr = String(insect.hostPlants);
+    }
+    
     // 食草リストを正規化して検索
-    const hostPlantsList = insect.hostPlants.split(/[、,；;]/).map(p => p.trim());
+    const hostPlantsList = hostPlantsStr.split(/[、,；;]/).map(p => p.trim());
     return hostPlantsList.some(plant => {
       // 括弧を除いた植物名でも一致を確認
       const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
@@ -264,7 +290,19 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const insectsOnThisPlant = allInsects.filter(insect => {
     if (!insect.hostPlants) return false;
-    const hostPlantsList = insect.hostPlants.split(/[、,；;]/).map(p => p.trim());
+    
+    // hostPlantsを文字列に変換（配列の場合も考慮）
+    let hostPlantsStr;
+    if (typeof insect.hostPlants === 'string') {
+      hostPlantsStr = insect.hostPlants;
+    } else if (Array.isArray(insect.hostPlants)) {
+      hostPlantsStr = insect.hostPlants.join('、');
+    } else {
+      // その他の型の場合はStringに変換を試みる
+      hostPlantsStr = String(insect.hostPlants);
+    }
+    
+    const hostPlantsList = hostPlantsStr.split(/[、,；;]/).map(p => p.trim());
     return hostPlantsList.some(plant => {
       const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
       return plant === decodedPlantName || cleanPlant === decodedPlantName;
@@ -345,27 +383,63 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         
         {/* この植物を利用する昆虫一覧 */}
         <DetailCard title={`${decodedPlantName}を利用する昆虫`}>
-          <div className="space-y-2">
+          <div className="space-y-4">
             {relatedInsects.length > 0 ? (
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   {relatedInsects.length}種の昆虫がこの植物を利用しています
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {relatedInsects.map((insect, index) => (
                     <Link 
                       key={index}
                       to={insect.path}
-                      className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className="block bg-slate-50 dark:bg-slate-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200 dark:border-slate-700 group hover:bg-white dark:hover:bg-slate-750"
                     >
-                      <div className="font-medium text-emerald-700 dark:text-emerald-400">
-                        {insect.japaneseName}
-                      </div>
-                      {insect.scientificName && (
-                        <div className="text-sm text-gray-600 dark:text-gray-400 italic">
-                          {insect.scientificName}
+                      <div className="p-4">
+                        {/* 昆虫の種類バッジ */}
+                        <div className="flex items-center justify-between mb-2">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            insect.type === 'butterfly' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300' :
+                            insect.type === 'beetle' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
+                            insect.type === 'leafbeetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                            'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                          }`}>
+                            {insect.type === 'butterfly' ? '蝶' :
+                             insect.type === 'beetle' ? 'タマムシ' :
+                             insect.type === 'leafbeetle' ? 'ハムシ' :
+                             '蛾'}
+                          </span>
                         </div>
-                      )}
+                        
+                        {/* 和名 */}
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                          {insect.japaneseName || insect.name}
+                        </h3>
+                        
+                        {/* 分類情報 */}
+                        {insect.classification && (
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {insect.classification.familyJapanese && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white dark:bg-slate-700/50 text-slate-600 dark:text-slate-300">
+                                {insect.classification.familyJapanese}
+                              </span>
+                            )}
+                            {insect.classification.subfamilyJapanese && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white dark:bg-slate-700/50 text-slate-600 dark:text-slate-300">
+                                {insect.classification.subfamilyJapanese}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* 矢印アイコン */}
+                        <div className="flex justify-end mt-3">
+                          <svg className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>

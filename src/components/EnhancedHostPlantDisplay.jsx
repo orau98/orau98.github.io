@@ -138,6 +138,7 @@ const getPlantPartIcon = (plantPart) => {
 const getObservationTypeStyle = (observationType) => {
   switch (observationType) {
     case '飼育':
+    case '飼育記録':
       return {
         label: '飼育',
         bgColor: 'bg-blue-50 dark:bg-blue-900/20',
@@ -146,12 +147,14 @@ const getObservationTypeStyle = (observationType) => {
       };
     case '野外（国内）':
       return {
-        label: '野外',
+        label: '野外観察',
         bgColor: 'bg-green-50 dark:bg-green-900/20',
         textColor: 'text-green-700 dark:text-green-300',
         borderColor: 'border-green-200 dark:border-green-700'
       };
     case '海外':
+    case '国外':
+    case '野外（海外）':
       return {
         label: '海外',
         bgColor: 'bg-purple-50 dark:bg-purple-900/20',
@@ -160,7 +163,7 @@ const getObservationTypeStyle = (observationType) => {
       };
     default:
       return {
-        label: '記録',
+        label: 'その他',
         bgColor: 'bg-gray-50 dark:bg-gray-900/20',
         textColor: 'text-gray-700 dark:text-gray-300',
         borderColor: 'border-gray-200 dark:border-gray-700'
@@ -174,9 +177,11 @@ const getObservationTypeStyle = (observationType) => {
 const getObservationTypePriority = (observationType) => {
   switch (observationType) {
     case '野外（国内）': return 1; // 最優先
-    case '飼育': return 2;
+    case '飼育':
+    case '飼育記録': return 2;
     case '野外（海外）':
-    case '海外': return 3;
+    case '海外':
+    case '国外': return 3;
     default: return 4; // その他は最後
   }
 };
@@ -218,6 +223,26 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
     const currentPriority = getObservationTypePriority(current.observationType);
     return currentPriority < prevPriority ? current : prev;
   });
+  
+  // species-6115関連のデバッグ - ゴヨウマツまたは不明の植物
+  if (plantGroup.name === 'ゴヨウマツ' || plantGroup.name === '不明') {
+    console.log(`DEBUG ${plantGroup.name} observation processing:`, {
+      plantName: plantGroup.name,
+      records: plantGroup.records,
+      primaryRecord: primaryRecord,
+      primaryObservationType: primaryRecord.observationType
+    });
+    
+    plantGroup.records.forEach((record, idx) => {
+      console.log(`DEBUG ${plantGroup.name} record[${idx}]:`, {
+        observationType: record.observationType,
+        plantPart: record.plantPart,
+        lifeStage: record.lifeStage,
+        reference: record.reference,
+        notes: record.notes
+      });
+    });
+  }
   
   const obsStyle = getObservationTypeStyle(primaryRecord.observationType);
   const isDomesticWild = primaryRecord.observationType === '野外（国内）';

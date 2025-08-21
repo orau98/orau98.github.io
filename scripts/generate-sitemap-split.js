@@ -10,7 +10,8 @@ function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
   
   const baseUrl = 'https://orau98.github.io';
-  const currentDate = '2025-08-12';
+  // 現在の日付を動的に取得
+  const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD形式
   
   // 各カテゴリごとのサイトマップを格納
   const sitemaps = {
@@ -45,6 +46,12 @@ function generateSplitSitemaps() {
     
     files.forEach(file => {
       if (file.endsWith('.html')) {
+        // ファイル名が無効（ハイフンで始まる等）でないかチェック
+        if (file.startsWith('-') || file.startsWith('_')) {
+          console.log(`無効なファイル名をスキップ: ${file}`);
+          return;
+        }
+        
         targetSitemap.push({
           loc: `${baseUrl}/meta/${baseType}/${file}`,
           lastmod: currentDate,
