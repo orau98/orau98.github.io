@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
-import { RelatedPlants } from './components/RelatedLinks';
+// import { RelatedPlants } from './components/RelatedLinks';
 
 // DetailCard component
 const DetailCard = ({ title, children }) => (
@@ -453,11 +453,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         </DetailCard>
 
         {/* 関連する植物と昆虫のリンク */}
-        <RelatedPlants 
+        {/* <RelatedPlants 
           currentPlant={decodedPlantName} 
           allInsects={allInsects} 
           hostPlants={hostPlants} 
-        />
+        /> */}
       </div>
     </div>
   );

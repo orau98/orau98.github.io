@@ -12,8 +12,14 @@ import RelatedInsectsSection from './components/RelatedInsectsSection';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
+  // 🔍 デバッグ：コンポーネント呼び出し確認
+  console.log('🔍 MothDetail component called');
+  
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
   let insectId = mothId || butterflyId || beetleId || leafbeetleId;
+  
+  // 🔍 デバッグ：URLパラメータ確認
+  console.log('🔍 URL params:', { mothId, butterflyId, beetleId, leafbeetleId, insectId });
   
   // ID mapping for compatibility between different data sources
   // Maps species-IDs to catalog-IDs when they refer to the same species
@@ -25,6 +31,31 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Apply ID mapping if needed
   const mappedInsectId = idMapping[insectId] || insectId;
+  
+  // 🔍 デバッグ：データ配列の状況確認
+  console.log('🔍 Data arrays status:', {
+    mothsLength: moths.length,
+    butterfliesLength: butterflies.length,
+    beetlesLength: beetles.length,
+    leafbeetlesLength: leafbeetles.length,
+    totalDataLoaded: moths.length + butterflies.length + beetles.length + leafbeetles.length
+  });
+  
+  // Check if data is still loading
+  const totalDataLoaded = moths.length + butterflies.length + beetles.length + leafbeetles.length;
+  const isDataLoading = totalDataLoaded === 0;
+  
+  // Add debug logging for アオバシャチホコ
+  if (insectId === 'species-4601') {
+    console.log('🔍 DEBUG species-4601 (アオバシャチホコ) ID mapping:', {
+      originalId: insectId,
+      mappedId: mappedInsectId,
+      hasMapping: !!idMapping[insectId],
+      idMappingTable: idMapping,
+      isDataLoading: isDataLoading,
+      totalDataLoaded: totalDataLoaded
+    });
+  }
   
   // species-6115のIDマッピングデバッグ
   if (insectId === 'species-6115') {
@@ -42,6 +73,27 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
     console.log(`ID mapped: ${insectId} -> ${mappedInsectId}`);
+  }
+  
+  // Add specific debug for アオバシャチホコ search
+  if (insectId === 'species-4601' || mappedInsectId === 'catalog-3123') {
+    console.log('🔍 DEBUG アオバシャチホコ search:', {
+      originalId: insectId,
+      mappedId: mappedInsectId,
+      allInsectsLength: allInsects.length,
+      mothsLength: moths.length,
+      foundMoth: moth,
+      foundMothId: moth?.id,
+      foundMothName: moth?.name,
+      isDataLoading: isDataLoading
+    });
+    
+    // Search manually to see if catalog-3123 exists
+    const manualSearch = allInsects.find(m => m.id === 'catalog-3123');
+    console.log('🔍 Manual search for catalog-3123:', manualSearch);
+    
+    // Show first few moths for debugging
+    console.log('🔍 First 5 moths:', moths.slice(0, 5).map(m => ({ id: m.id, name: m.name })));
   }
   
   // Debug for catalog-2090 (ヒメウコンカギバ)
@@ -94,7 +146,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     }
   }
   
-  
+
   // Debug logging for センモンヤガ
   if (mappedInsectId === 'catalog-3489' || mappedInsectId === 'main-6519') {
     console.log('DEBUG: Looking for センモンヤガ with ID:', mappedInsectId);
@@ -176,6 +228,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     };
   }, [moth]);
 
+  // Show loading state if data is still loading
+  if (isDataLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <div className="text-center p-8">
+          <div className="w-20 h-20 mx-auto mb-6 bg-blue-400 rounded-full flex items-center justify-center animate-pulse">
+            <svg className="w-10 h-10 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">データを読み込んでいます...</h1>
+          <p className="text-slate-600 dark:text-slate-400">昆虫データベースを読み込んでいます。しばらくお待ちください。</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!moth) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
@@ -198,6 +267,75 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
           </Link>
         </div>
       </div>
+    );
+  }
+
+  // Group related moths by host plant
+  const relatedMothsByPlant = {};
+  
+  // Get plant names from current moth - handle both string and array formats
+  let currentMothPlants = [];
+  if (moth.hostPlantsDetailed && moth.hostPlantsDetailed.length > 0) {
+    // Use new detailed format
+    currentMothPlants = moth.hostPlantsDetailed.map(plant => plant.name).filter(name => name);
+  } else if (moth.hostPlants) {
+    // Handle old format - could be string or array
+    if (typeof moth.hostPlants === 'string') {
+      // Split by common delimiters and clean up
+      currentMothPlants = moth.hostPlants.split(/[;；、,]/)
+        .map(plant => plant.trim())
+        .filter(plant => plant && plant !== '不明')
+        .map(plant => {
+          // Remove family annotations like （〇〇科）
+          return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+        })
+        .filter(plant => plant);
+    } else if (Array.isArray(moth.hostPlants)) {
+      currentMothPlants = moth.hostPlants.filter(plant => plant && plant !== '不明');
+    }
+  }
+
+  currentMothPlants.forEach(plant => {
+    // Extract base plant name for matching (e.g., "フジの花蕾" -> "フジ")
+    let basePlantName = plant;
+    const partMatch = plant.match(/^([^の]+)の/);
+    if (partMatch) {
+      basePlantName = partMatch[1];
+    }
+    
+    // Try both full plant name and base plant name
+    const plantsToCheck = [plant, basePlantName];
+    
+    plantsToCheck.forEach(checkPlant => {
+      if (hostPlants[checkPlant]) {
+        const relatedMoths = hostPlants[checkPlant].filter(mothName => mothName !== moth.name);
+        if (relatedMoths.length > 0) {
+          // Use base plant name for display (without parts like "の花蕾")
+          if (!relatedMothsByPlant[basePlantName]) {
+            relatedMothsByPlant[basePlantName] = [];
+          }
+          // Add unique moths only
+          relatedMoths.forEach(mothName => {
+            if (!relatedMothsByPlant[basePlantName].includes(mothName)) {
+              relatedMothsByPlant[basePlantName].push(mothName);
+            }
+          });
+        }
+      }
+    });
+  });
+
+  // Debug logging for アオバシャチホコ
+  if (moth.name === 'アオバシャチホコ') {
+    console.log('DEBUG アオバシャチホコ関連昆虫:', {
+      currentMothPlants,
+      relatedMothsByPlant,
+      hostPlantsKeys: Object.keys(hostPlants),
+      hostPlantsForヤマボウシ: hostPlants['ヤマボウシ'],
+      hostPlantsForミズキ: hostPlants['ミズキ'],
+      hostPlantsForクマノミズキ: hostPlants['クマノミズキ']
+    });
+  }
     );
   }
 

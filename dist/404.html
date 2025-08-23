@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>昆虫と食草の図鑑</title>
+  <!-- Updated: 2025-08-21 16:29 -->
   <script type="text/javascript">
-    // GitHub Pages SPA redirect
-    var l = window.location;
-    // Only redirect if not already on the homepage with parameters
-    if (l.pathname !== '/' && !l.search.includes('?/')) {
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        '/?/' + 
-        l.pathname.slice(1).replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+    // GitHub Pages SPA redirect - Updated to use ?redirect= format
+    var BASE_PATH = '/';
+    
+    // Capture the original URL
+    var original = location.pathname + location.search + location.hash;
+    
+    // Only redirect if not already on the homepage or if not already a redirect
+    if (location.pathname !== BASE_PATH && !location.search.includes('redirect=')) {
+      // Redirect to index.html with the original URL as a parameter
+      var dest = BASE_PATH + 'index.html?redirect=' + encodeURIComponent(original);
+      location.replace(dest);
     }
   </script>
 </head>
