@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
+import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import { RelatedPlants } from './components/RelatedLinks';
 
 // DetailCard component
@@ -192,7 +193,6 @@ const PlantImageGallery = ({ images }) => {
   );
 };
 
-
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
@@ -206,6 +206,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
+  
+  // 植物名を正規化する関数（App.jsxと同じロジック）
+  const normalizePlantName = (plantName) => {
+    if (!plantName) return '';
+    return plantName
+      .replace(/（[^）]*科[^）]*）/g, '') // 全角括弧の科名
+      .replace(/\([^)]*科[^)]*\)/g, '') // 半角括弧の科名
+      .replace(/（[^）]*）/g, '') // その他の全角括弧
+      .replace(/\([^)]*\)/g, '') // その他の半角括弧
+      .trim();
+  };
   
   // Debug: オニグルミを含む昆虫を探す
   if (decodedPlantName === 'オニグルミ') {
@@ -222,7 +233,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     });
   }
   
-  // この植物を利用する昆虫のリストを作成
+  // この植物を利用する昆虫のリストを作成（改善されたマッチングロジック）
   const relatedInsects = allInsects.filter(insect => {
     if (!insect.hostPlants) return false;
     
@@ -239,10 +250,29 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     
     // 食草リストを正規化して検索
     const hostPlantsList = hostPlantsStr.split(/[、,；;]/).map(p => p.trim());
+    
+    // 検索対象の植物名を正規化
+    const normalizedTarget = normalizePlantName(decodedPlantName);
+    
     return hostPlantsList.some(plant => {
-      // 括弧を除いた植物名でも一致を確認
+      // 元の植物名での完全一致
+      if (plant === decodedPlantName) return true;
+      
+      // 正規化した植物名での一致
+      const normalizedPlant = normalizePlantName(plant);
+      if (normalizedPlant === normalizedTarget) return true;
+      
+      // 括弧を除いた植物名での一致（従来のロジック）
       const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
-      return plant === decodedPlantName || cleanPlant === decodedPlantName;
+      if (cleanPlant === decodedPlantName) return true;
+      
+      // App.jsxのhostPlantDataとの一貫性を保つため、
+      // hostPlantsに登録されている昆虫名リストもチェック
+      if (hostPlants[decodedPlantName] && hostPlants[decodedPlantName].includes(insect.name || insect.japaneseName)) {
+        return true;
+      }
+      
+      return false;
     });
   }).map(insect => {
     // pathプロパティを追加
@@ -259,6 +289,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     return { ...insect, path };
   });
   
+  // Debug logging for オニグルミ
+  if (decodedPlantName === 'オニグルミ') {
+    console.log('DEBUG: Related insects found for オニグルミ:', relatedInsects.length);
+    console.log('DEBUG: hostPlants[オニグルミ]:', hostPlants['オニグルミ']);
+    console.log('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
+  }
+  
   // Get all available images for this plant
   const getPlantImages = (plantName) => {
     const commonImages = [
@@ -273,7 +310,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       { suffix: '_花', label: '花' },
       { suffix: '_蕾', label: '蕾' },
       { suffix: '_若葉', label: '若葉' },
-      { suffix: '_茎', label: '茎' },
+      { suffix: '_芽', label: '芽' },
       { suffix: '_枝', label: '枝' },
       { suffix: '_断面', label: '断面' }
     ];
@@ -287,178 +324,59 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   };
   
   const plantImages = getPlantImages(decodedPlantName);
-  
-  const insectsOnThisPlant = allInsects.filter(insect => {
-    if (!insect.hostPlants) return false;
-    
-    // hostPlantsを文字列に変換（配列の場合も考慮）
-    let hostPlantsStr;
-    if (typeof insect.hostPlants === 'string') {
-      hostPlantsStr = insect.hostPlants;
-    } else if (Array.isArray(insect.hostPlants)) {
-      hostPlantsStr = insect.hostPlants.join('、');
-    } else {
-      // その他の型の場合はStringに変換を試みる
-      hostPlantsStr = String(insect.hostPlants);
-    }
-    
-    const hostPlantsList = hostPlantsStr.split(/[、,；;]/).map(p => p.trim());
-    return hostPlantsList.some(plant => {
-      const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
-      return plant === decodedPlantName || cleanPlant === decodedPlantName;
-    });
-  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{ name: decodedPlantName }} 
-        relatedInsects={insectsOnThisPlant} 
+        details={details} 
+        insects={relatedInsects}
+        images={plantImages}
       />
-      <Link to="/" className="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-block">← リストに戻る</Link>
       
+      {/* ヘッダー */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-slate-800 dark:text-white mb-4">
+          植物詳細: {decodedPlantName}
+        </h1>
+        <div className="flex flex-wrap justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+          {details.family && (
+            <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full">
+              {details.family}
+            </span>
+          )}
+          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+            {relatedInsects.length}種の昆虫が利用
+          </span>
+        </div>
+      </div>
+
+      {/* 植物画像ギャラリー */}
+      <PlantImageGallery images={plantImages} plantName={decodedPlantName} />
+
+      {/* この植物を利用する昆虫一覧 */}
       <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-blue-600 dark:text-blue-400">{decodedPlantName}</h1>
-        <dl className="text-xl text-slate-500 dark:text-slate-400 mt-1">
-          <dt className="font-semibold">科名:</dt>
-          <dd className="ml-4">
-            {details.genusFamily || details.family}
-          </dd>
-          {details.genusScientificName && (
-            <>
-              <dt className="font-semibold mt-2">属名 (学名):</dt>
-              <dd className="ml-4 italic">
-                {formatScientificNameReact(details.genusScientificName)}属
-              </dd>
-            </>
-          )}
-          {details.scientificName && !details.genusScientificName && (
-            <>
-              <dt className="font-semibold mt-2">学名:</dt>
-              <dd className="ml-4 italic">
-                {formatScientificNameReact(details.scientificName)}
-              </dd>
-            </>
-          )}
-          {(() => {
-            const allAliases = [];
-            if (plantAliases[decodedPlantName]) {
-              allAliases.push(...plantAliases[decodedPlantName]);
-            }
-            if (details.aliases && details.aliases.length > 0) {
-              // Add CSV aliases but avoid duplicates and current plant name
-              details.aliases.forEach(alias => {
-                if (!allAliases.includes(alias) && alias !== decodedPlantName) {
-                  allAliases.push(alias);
-                }
-              });
-            }
-            // Filter out the current plant name from hardcoded aliases too
-            const filteredAliases = allAliases.filter(alias => alias !== decodedPlantName);
-            
-            // Only show aliases section if there are actually aliases to display
-            return filteredAliases.length > 0 ? (
-              <>
-                <dt className="font-semibold mt-2">別名:</dt>
-                <dd className="ml-4">{filteredAliases.join('、')}</dd>
-              </>
-            ) : null;
-          })()}
-        </dl>
-      </div>
-
-      <div className="space-y-8">
-        {/* Full-width photo gallery */}
-        <DetailCard title="植物写真ギャラリー">
-          <PlantImageGallery images={plantImages} />
-          <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200/50 dark:border-emerald-700/50">
-            <p className="text-emerald-700 dark:text-emerald-300 text-sm leading-relaxed">
-              <span className="font-semibold">植物の特徴:</span> この植物の詳細な説明や生態学的特徴についての情報がここに表示されます。
-
-            </p>
-          </div>
-        </DetailCard>
-
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+          <svg className="w-8 h-8 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          同じ食草を利用する昆虫 ({relatedInsects.length}種)
+        </h2>
         
-        {/* この植物を利用する昆虫一覧 */}
-        <DetailCard title={`${decodedPlantName}を利用する昆虫`}>
-          <div className="space-y-4">
-            {relatedInsects.length > 0 ? (
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {relatedInsects.length}種の昆虫がこの植物を利用しています
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {relatedInsects.map((insect, index) => (
-                    <Link 
-                      key={index}
-                      to={insect.path}
-                      className="block bg-slate-50 dark:bg-slate-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200 dark:border-slate-700 group hover:bg-white dark:hover:bg-slate-750"
-                    >
-                      <div className="p-4">
-                        {/* 昆虫の種類バッジ */}
-                        <div className="flex items-center justify-between mb-2">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            insect.type === 'butterfly' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300' :
-                            insect.type === 'beetle' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
-                            insect.type === 'leafbeetle' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                            'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                          }`}>
-                            {insect.type === 'butterfly' ? '蝶' :
-                             insect.type === 'beetle' ? 'タマムシ' :
-                             insect.type === 'leafbeetle' ? 'ハムシ' :
-                             '蛾'}
-                          </span>
-                        </div>
-                        
-                        {/* 和名 */}
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                          {insect.japaneseName || insect.name}
-                        </h3>
-                        
-                        {/* 分類情報 */}
-                        {insect.classification && (
-                          <div className="flex flex-wrap gap-1.5 mt-2">
-                            {insect.classification.familyJapanese && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white dark:bg-slate-700/50 text-slate-600 dark:text-slate-300">
-                                {insect.classification.familyJapanese}
-                              </span>
-                            )}
-                            {insect.classification.subfamilyJapanese && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white dark:bg-slate-700/50 text-slate-600 dark:text-slate-300">
-                                {insect.classification.subfamilyJapanese}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                        
-                        {/* 矢印アイコン */}
-                        <div className="flex justify-end mt-3">
-                          <svg className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400">
-                この植物を利用する昆虫のデータはまだありません
-              </p>
-            )}
-          </div>
-        </DetailCard>
-
-        {/* 関連する植物と昆虫のリンク */}
-        {/* <RelatedPlants 
-          currentPlant={decodedPlantName} 
-          allInsects={allInsects} 
-          hostPlants={hostPlants} 
-        /> */}
+        <EnhancedHostPlantDisplay insects={relatedInsects} />
       </div>
+
+      {/* 関連する他の植物 - 一時的にコメントアウト */}
+      {/* 
+      <div className="mb-8">
+        <RelatedPlants 
+          currentPlant={decodedPlantName} 
+          currentFamily={details.family}
+          allInsects={allInsects}
+        />
+      </div>
+      */}
     </div>
   );
 };

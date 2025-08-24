@@ -373,6 +373,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       return '情報なし';
                     }
                     
+                    // 「不明」植物のフィルタリング：具体的な食草情報がある場合は「不明」を除外
+                    const hasSpecificPlants = plantNames.some(plant => 
+                      plant && plant !== '不明'
+                    );
+                    
+                    if (hasSpecificPlants) {
+                      plantNames = plantNames.filter(plant => plant !== '不明');
+                    }
+                    
                     // 重複を除去
                     const uniquePlantNames = [...new Set(plantNames)];
                     return uniquePlantNames.length > 0 ? uniquePlantNames.join('、') : '情報なし';

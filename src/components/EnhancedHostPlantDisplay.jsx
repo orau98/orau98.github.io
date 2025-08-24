@@ -456,6 +456,16 @@ const EnhancedHostPlantDisplay = ({
         isDetailed: false
       }));
 
+  // 「不明」植物のフィルタリング：野外食草情報がある場合は「不明」を除外
+  const hasWildPlants = plantsToDisplay.some(plant => 
+    plant.name && plant.name !== '不明' && 
+    plant.observationType && plant.observationType.includes('野外')
+  );
+  
+  if (hasWildPlants) {
+    plantsToDisplay = plantsToDisplay.filter(plant => plant.name !== '不明');
+  }
+
   // 同じ植物名の記録をグループ化
   const groupedPlants = groupPlantsByName(plantsToDisplay);
 

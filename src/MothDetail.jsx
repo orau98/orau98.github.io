@@ -22,10 +22,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   console.log('🔍 URL params:', { mothId, butterflyId, beetleId, leafbeetleId, insectId });
   
   // ID mapping for compatibility between different data sources
-  // Maps species-IDs to catalog-IDs when they refer to the same species
+  // Since moths array is built from insects.csv (species-XXX format)
+  // We need to map catalog-XXX to species-XXX, not the other way around
   const idMapping = {
-    'species-4601': 'catalog-3123', // アオバシャチホコ (Zaranga permagna)
-    'species-6115': 'catalog-3586', // アズサキリガ (Pseudopanolis azusa)
+    'catalog-3123': 'species-4601', // アオバシャチホコ (Zaranga permagna)
+    'catalog-3586': 'species-6115', // アズサキリガ (Pseudopanolis azusa)
     // Add more mappings as needed
   };
   
@@ -46,8 +47,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const isDataLoading = totalDataLoaded === 0;
   
   // Add debug logging for アオバシャチホコ
-  if (insectId === 'species-4601') {
-    console.log('🔍 DEBUG species-4601 (アオバシャチホコ) ID mapping:', {
+  if (insectId === 'species-4601' || insectId === 'catalog-3123') {
+    console.log('🔍 DEBUG アオバシャチホコ ID mapping:', {
       originalId: insectId,
       mappedId: mappedInsectId,
       hasMapping: !!idMapping[insectId],
@@ -76,7 +77,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
   
   // Add specific debug for アオバシャチホコ search
-  if (insectId === 'species-4601' || mappedInsectId === 'catalog-3123') {
+  if (insectId === 'species-4601' || insectId === 'catalog-3123' || mappedInsectId === 'species-4601') {
     console.log('🔍 DEBUG アオバシャチホコ search:', {
       originalId: insectId,
       mappedId: mappedInsectId,
@@ -88,9 +89,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       isDataLoading: isDataLoading
     });
     
-    // Search manually to see if catalog-3123 exists
-    const manualSearch = allInsects.find(m => m.id === 'catalog-3123');
-    console.log('🔍 Manual search for catalog-3123:', manualSearch);
+    // Search manually to see if species-4601 exists
+    const manualSearch = allInsects.find(m => m.id === 'species-4601');
+    console.log('🔍 Manual search for species-4601:', manualSearch);
     
     // Show first few moths for debugging
     console.log('🔍 First 5 moths:', moths.slice(0, 5).map(m => ({ id: m.id, name: m.name })));
@@ -336,14 +337,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       hostPlantsForクマノミズキ: hostPlants['クマノミズキ']
     });
   }
-    );
-  }
 
-  // Group related moths by host plant
-  const relatedMothsByPlant = {};
-  
   // Get plant names from current moth - handle both string and array formats
-  let currentMothPlants = [];
+  // (reusing existing relatedMothsByPlant and currentMothPlants from above)
   if (moth.hostPlantsDetailed && moth.hostPlantsDetailed.length > 0) {
     // Use new detailed format
     currentMothPlants = moth.hostPlantsDetailed.map(plant => plant.name).filter(name => name);

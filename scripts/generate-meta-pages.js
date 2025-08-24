@@ -938,10 +938,75 @@ async function generateMetaPages() {
       : [];
     console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
 
-    // CSVデータを読み込み
-    const csvData = loadCSV(path.join(__dirname, '../public/ListMJ_hostplants_master.csv'));
+    // 正規化された3つのCSVファイルを読み込み
+    const insectsData = loadCSV(path.join(__dirname, '../public/insects.csv'));
+    const hostplantsData = loadCSV(path.join(__dirname, '../public/hostplants.csv'));
+    const generalNotesData = loadCSV(path.join(__dirname, '../public/general_notes.csv'));
+    
+    // バタフライとハムシの従来データも読み込み
     const butterflyData = loadCSV(path.join(__dirname, '../public/butterfly_host.csv'));
     const hamushiData = loadCSV(path.join(__dirname, '../public/hamushi_integrated_master.csv'));
+    
+    // 昆虫IDをキーとした食草マップを作成
+    const hostPlantsMapByInsectId = new Map();
+    hostplantsData.forEach(row => {
+      const insectId = row.insect_id;
+      const plantName = row.plant_name;
+      const plantFamily = row.plant_family || '';
+      const observationType = row.observation_type || '野外（国内）';
+      const plantPart = row.plant_part || '葉';
+      const lifeStage = row.life_stage || '幼虫';
+      const reference = row.reference || '';
+      const notes = row.notes || '';
+      
+      if (insectId && plantName) {
+        if (!hostPlantsMapByInsectId.has(insectId)) {
+          hostPlantsMapByInsectId.set(insectId, []);
+        }
+        
+        // 植物名に科名を付加（必要に応じて）
+        let displayPlantName = plantName;
+        if (plantFamily && !plantName.includes('(') && !plantName.includes('（')) {
+          displayPlantName = `${plantName}(${plantFamily})`;
+        }
+        
+        hostPlantsMapByInsectId.get(insectId).push({
+          name: plantName,
+          family: plantFamily,
+          displayName: displayPlantName,
+          observationType,
+          plantPart,
+          lifeStage,
+          reference,
+          notes,
+          isDetailed: true
+        });
+      }
+    });
+    
+    // 昆虫IDをキーとした一般備考マップを作成
+    const generalNotesMapByInsectId = new Map();
+    generalNotesData.forEach(row => {
+      const insectId = row.insect_id;
+      const noteType = row.note_type;
+      const content = row.content;
+      const reference = row.reference || '';
+      const page = row.page || '';
+      const year = row.year || '';
+      
+      if (insectId && content) {
+        if (!generalNotesMapByInsectId.has(insectId)) {
+          generalNotesMapByInsectId.set(insectId, []);
+        }
+        generalNotesMapByInsectId.get(insectId).push({
+          type: noteType,
+          content,
+          reference,
+          page,
+          year
+        });
+      }
+    });
     
     // 日本の冬夜蛾.csvから成虫出現時期データを読み込み
     const kirigaData = loadCSV(path.join(__dirname, '../public/日本の冬夜蛾.csv'));
@@ -1000,96 +1065,66 @@ async function generateMetaPages() {
     
     console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました`);
     
-    // カシワキボシキリガの検索
-    const kashiwaData = emergenceTimeMap.get('カシワキボシキリガ') || 
-                        emergenceTimeMap.get('Lithophane pruinosa (Butler, 1878)') || 
-                        emergenceTimeMap.get('Lithophane pruinosa');
-    if (kashiwaData) {
-      console.log(`カシワキボシキリガの成虫出現時期: ${kashiwaData}`);
-    } else {
-      console.log('カシワキボシキリガの成虫出現時期データが見つかりません');
-    }
-    
-    // 昆虫データの処理
+    // 昆虫データの処理（正規化データを使用）
     let mothCount = 0;
     const hostPlantsMap = new Map();
     
-    csvData.forEach((row, index) => {
-      const insectName = row['和名'] || row['属名'] || row['種名'] || '';
-      if (!insectName) return;
+    insectsData.forEach((row, index) => {
+      const insectId = row.insect_id;
+      const japaneseName = row.japanese_name || '';
+      const scientificName = row.scientific_name || '';
+      const familyJapanese = row.family_jp || row.family || '';
+      const subfamily = row.subfamily_jp || row.subfamily || '';
+      const genus = row.genus || '';
+      const species = row.species || '';
+      const author = row.author || '';
+      const year = row.year || '';
+      const notes = row.notes || '';
+      const alternativeNames = row.alternative_name || '';
+      
+      if (!japaneseName || !insectId) return;
       
       // プレースホルダーや無効な昆虫名を除外
-      if (insectName === '和名' || insectName === '種名' || insectName === '不明' || insectName.trim().length < 2) {
+      if (japaneseName === '和名' || japaneseName === '種名' || japaneseName === '不明' || japaneseName.trim().length < 2) {
         return;
       }
       
+      // 食草データを取得
+      const insectHostPlants = hostPlantsMapByInsectId.get(insectId) || [];
+      const hostPlantsString = insectHostPlants.map(hp => hp.displayName).join('; ') || '不明';
       
-      const familyJapanese = row['科和名'] || row['科名'] || '';
+      // 一般備考データを取得
+      const generalNotes = generalNotesMapByInsectId.get(insectId) || [];
       
-      const existingScientificName = (row['学名'] || '').trim();
-      const genus = row['属名'] || '';
-      const species = row['種小名'] || '';
-      const author = row['著者'] || '';
-      const year = row['公表年'] || '';
-      
-      const scientificName = processScientificName(existingScientificName, genus, species, author, year);
-      
-      // 無効な学名を除外
-      if (scientificName === '学名' || scientificName === '不明' || scientificName.trim().length < 3) {
-        return;
-      }
-      
-      let hostPlants = row['食草'] || '不明';
-      const remarks = row['備考'] || row['食草に関する備考'] || '';
-      const source = row['出典'] || row['出典\r'] || '不明';
-      const catalogNo = row['大図鑑カタログNo'] || '';
-      const alternativeNames = row['別名'] || '';
-      
-      // 食草欄に説明文が含まれている場合、正しい食草情報を抽出
-      if (hostPlants && hostPlants.includes('名義タイプ亜種')) {
-        const extractedPlantsFromHostField = extractHostPlantsFromRemarks(hostPlants);
-        if (extractedPlantsFromHostField.length > 0) {
-          hostPlants = extractedPlantsFromHostField.join('; ');
-          console.log(`食草欄から正しい食草情報を抽出: ${insectName} (${catalogNo}) -> ${hostPlants}`);
-        }
-      }
-      // 食草欄が空白の場合、備考欄から食草情報を抽出
-      else if ((!hostPlants || hostPlants === '不明') && remarks) {
-        const extractedPlants = extractHostPlantsFromRemarks(remarks);
-        if (extractedPlants.length > 0) {
-          hostPlants = extractedPlants.join('; ');
-          console.log(`備考欄から食草情報を抽出: ${insectName} (${catalogNo}) -> ${hostPlants}`);
-        }
-      }
-      
-      const insectId = catalogNo ? `catalog-${catalogNo}` : `main-${index}`;
       const type = 'moth';
       
       // 成虫出現時期の検索
-      const emergenceTime = emergenceTimeMap.get(insectName) || 
+      const emergenceTime = emergenceTimeMap.get(japaneseName) || 
                            emergenceTimeMap.get(scientificName) ||
                            emergenceTimeMap.get(scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim()) ||
                            null;
       
-      
       const insect = {
         id: insectId,
-        name: insectName,
-        japaneseName: insectName,
+        name: japaneseName,
+        japaneseName: japaneseName,
         scientificName: scientificName,
-        hostPlants: hostPlants,
-        source: source,
-        remarks: remarks,
+        hostPlants: hostPlantsString,
+        hostPlantsDetailed: insectHostPlants,
+        generalNotes: generalNotes,
+        source: 'insects.csv + hostplants.csv',
+        remarks: notes,
         alternativeNames: alternativeNames,
         emergenceTime: emergenceTime,
         scientificFilename: (() => {
           // Extract binomial name (genus + species) from scientific name for filename
           const binomialMatch = scientificName.match(/^([A-Z][a-z]+)\s+([a-z]+)/);
           const binomialName = binomialMatch ? `${binomialMatch[1]} ${binomialMatch[2]}` : scientificName;
-          return binomialName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_()\,]/g, '');
+          return binomialName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_(),]/g, '');
         })(),
         family: familyJapanese,
         familyJapanese: familyJapanese,
+        subfamily: subfamily,
         type: type
       };
       
@@ -1098,39 +1133,21 @@ async function generateMetaPages() {
       fs.writeFileSync(filename, html);
       mothCount++;
       
-      if (hostPlants && hostPlants !== '不明') {
-        // 「(以上...科)」パターンを処理
-        let processedHostPlants = hostPlants;
-        const familySuffixMatch = hostPlants.match(/[\(（]以上([^)）]+科)[\)）]$/);
-        if (familySuffixMatch) {
-          const familyName = familySuffixMatch[1];
-          // 「(以上...科)」を一旦削除
-          const plantsWithoutSuffix = hostPlants.replace(/\s*[\(（]以上[^)）]+[\)）]$/, '');
-          // 各植物に科名を追加
-          const plantsList = plantsWithoutSuffix.split(/[、,，;；]/).map(p => p.trim()).filter(p => p);
-          processedHostPlants = plantsList.map(p => {
-            // すでに科名がついている場合はそのまま
-            if (p.includes('科)') || p.includes('科）')) {
-              return p;
-            }
-            return `${p}(${familyName})`;
-          }).join('; ');
-        }
+      // 食草マップに追加（植物ページ生成用）
+      insectHostPlants.forEach(hostPlant => {
+        const plantName = hostPlant.displayName;
+        const normalizedPlant = normalizePlantName(plantName);
         
-        const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
-        plants.forEach(plant => {
-          const normalizedPlant = normalizePlantName(plant);
-          if (isValidPlantName(normalizedPlant)) {
-            if (!hostPlantsMap.has(normalizedPlant)) {
-              hostPlantsMap.set(normalizedPlant, []);
-            }
-            hostPlantsMap.get(normalizedPlant).push(insect);
+        if (isValidPlantName(normalizedPlant)) {
+          if (!hostPlantsMap.has(normalizedPlant)) {
+            hostPlantsMap.set(normalizedPlant, []);
           }
-        });
-      }
+          hostPlantsMap.get(normalizedPlant).push(insect);
+        }
+      });
     });
     
-    // バタフライデータの処理
+    // バタフライデータの処理（従来通り）
     let butterflyCount = 0;
     
     butterflyData.forEach((row, index) => {
@@ -1203,7 +1220,7 @@ async function generateMetaPages() {
       }
     });
     
-    // ハムシデータの処理
+    // ハムシデータの処理（従来通り）
     let leafbeetleCount = 0;
     
     hamushiData.forEach((row, index) => {
