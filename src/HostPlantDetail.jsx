@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
@@ -203,6 +203,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
+  const familyLabel = details.family || details.familyName || '不明';
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
@@ -325,8 +326,40 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const plantImages = getPlantImages(decodedPlantName);
 
+  // Sticky header tabs
+  const [activeTab, setActiveTab] = useState('overview');
+  const overviewRef = useRef(null);
+  const insectsRef = useRef(null);
+  const scrollToSection = (section) => {
+    setActiveTab(section);
+    const el = section === 'overview' ? overviewRef.current : insectsRef.current;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Sticky top header */}
+      <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-white/85 dark:bg-slate-900/85 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">{decodedPlantName}</span>
+            {familyLabel && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700">
+                <span className="font-semibold">科</span>
+                <span>{familyLabel}</span>
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200 border border-blue-200 dark:border-blue-700">
+              <span className="font-semibold">関連昆虫種</span>
+              <span>{relatedInsects.length}種</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => scrollToSection('overview')} className={`px-3 py-1 rounded-lg text-sm font-medium ${activeTab==='overview' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'}`}>概要</button>
+            <button onClick={() => scrollToSection('insects')} className={`px-3 py-1 rounded-lg text-sm font-medium ${activeTab==='insects' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'}`}>関連昆虫</button>
+          </div>
+        </div>
+      </div>
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{ name: decodedPlantName }} 
@@ -335,20 +368,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         images={plantImages}
       />
       
-      {/* ヘッダー */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-slate-800 dark:text-white mb-4">
-          植物詳細: {decodedPlantName}
-        </h1>
-        <div className="flex flex-wrap justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          {details.family && (
-            <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full">
-              {details.family}
+      {/* 概要セクション */}
+      <div ref={overviewRef} className="mt-6">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white">{decodedPlantName}</h1>
+          <div className="mt-3 flex flex-wrap justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+            {familyLabel && (
+              <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full">
+                {familyLabel}
+              </span>
+            )}
+            <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+              {relatedInsects.length}種の昆虫が利用
             </span>
-          )}
-          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-            {relatedInsects.length}種の昆虫が利用
-          </span>
+          </div>
         </div>
       </div>
 
@@ -356,7 +389,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       <PlantImageGallery images={plantImages} plantName={decodedPlantName} />
 
       {/* この植物を利用する昆虫一覧 */}
-      <div className="mb-8">
+      <div ref={insectsRef} className="mb-8">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
           <svg className="w-8 h-8 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
