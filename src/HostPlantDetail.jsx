@@ -375,7 +375,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           const familyEn = hit['LAPGII::LAPG Family狭義'] || hit['LAPGII::LAPG Family広義'] || hit['LAPG Family'] || hit['Cronquist family'] || hit['Engler family'] || '';
           const orderJp  = hit['LAPGII::LAPG 目'] || hit['LAPGII::LAPG Order'] || '';
           const orderEn  = hit['LAPGII::LAPG Order'] || '';
-          setTaxonomy({ familyJp: (familyJp||'').trim(), familyEn: (familyEn||'').trim(), orderJp: (orderJp||'').trim(), orderEn: (orderEn||'').trim() });
+          // Genus from 学名 (first token)
+          let genus = (hit['学名'] || '').trim();
+          if (genus) genus = genus.split(/\s+/)[0] || '';
+          if (!genus) {
+            const withAuthor = (hit['学名 withAuthor'] || '').trim();
+            if (withAuthor) genus = (withAuthor.split(/\s+/)[0] || '').trim();
+          }
+          setTaxonomy({ familyJp: (familyJp||'').trim(), familyEn: (familyEn||'').trim(), orderJp: (orderJp||'').trim(), orderEn: (orderEn||'').trim(), genus });
         }
       })
       .catch(() => { /* ignore */ });
@@ -395,6 +402,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           ホームに戻る
         </Link>
         <div className="flex flex-wrap gap-2">
+          {taxonomy.orderJp && (
+            <span
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
+            >
+              <span className="font-medium">{taxonomy.orderJp}</span>
+              {taxonomy.orderEn && (
+                <span className="ml-1 text-xs italic opacity-80">{taxonomy.orderEn}</span>
+              )}
+            </span>
+          )}
           {familyLabel && (
             <span
               className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
@@ -405,14 +422,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
               )}
             </span>
           )}
-          {taxonomy.orderJp && (
+          {taxonomy.genus && (
             <span
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50"
             >
-              <span className="font-medium">{taxonomy.orderJp}</span>
-              {taxonomy.orderEn && (
-                <span className="ml-1 text-xs italic opacity-80">{taxonomy.orderEn}</span>
-              )}
+              <span className="font-medium italic">{taxonomy.genus}</span>
             </span>
           )}
         </div>
