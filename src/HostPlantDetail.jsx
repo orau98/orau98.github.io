@@ -445,16 +445,39 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       {/* 植物画像ギャラリー */}
       <PlantImageGallery images={plantImages} plantName={decodedPlantName} />
 
-      {/* この植物を利用する昆虫一覧 */}
-      <div ref={insectsRef} className="mb-8">
+      {/* この植物を利用する昆虫一覧（カード表示） */}
+      <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
           <svg className="w-8 h-8 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
           同じ食草を利用する昆虫 ({relatedInsects.length}種)
         </h2>
-        
-        <EnhancedHostPlantDisplay insects={relatedInsects} />
+        {relatedInsects.length === 0 ? (
+          <div className="text-slate-500 dark:text-slate-400">関連する昆虫が見つかりませんでした。</div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {relatedInsects.map((insect, idx) => (
+              <a key={insect.id || idx} href={insect.path || '#'} className="block bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-0.5 transition">
+                <div className="mb-3">
+                  <img
+                    src={`/${'images/insects/'}${(insect.scientificName || '').replace(/\s+/g, '_')}.jpg`}
+                    alt={insect.name || insect.japaneseName || 'insect'}
+                    className="w-full h-44 object-cover rounded-lg"
+                    onError={(e) => { e.currentTarget.src = '/images/placeholder.jpg'; }}
+                  />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">{insect.name || insect.japaneseName || '（名称不明）'}</h3>
+                {insect.scientificName && (
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-1">学名: {insect.scientificName}</p>
+                )}
+                {(insect.classification?.familyJapanese || insect.family_jp) && (
+                  <p className="text-sm text-slate-600 dark:text-slate-300">科: {insect.classification?.familyJapanese || insect.family_jp}</p>
+                )}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 関連する他の植物 - 一時的にコメントアウト */}
