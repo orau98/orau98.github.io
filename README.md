@@ -25,6 +25,16 @@ https://orau98.github.io/
 - **データ**: CSV形式の昆虫・植物データベース
 - **スタイリング**: Tailwind CSS
 
+## 🚀 デプロイ
+
+このプロジェクトは GitHub Actions で自動デプロイされます。
+
+- トリガー: `main` ブランチへの push（`.github/workflows/deploy.yml`）
+- 流れ: `npm ci` → `npm run build` → `dist/` を Pages へ公開
+- 手動実行: Actions 画面から「Deploy with GitHub Actions Pages」を `workflow_dispatch` で実行可能
+
+ローカルから `npm run deploy` を実行してもデプロイは行いません（Actions を利用してください）。
+
 ## 🚀 SPA深いURL直アクセス対応について
 
 ### 問題の背景

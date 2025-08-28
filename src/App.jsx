@@ -499,8 +499,7 @@ function App() {
             const hostplantsParsed = Papa.parse(normalizedHostplantsText, {
               header: true,
               skipEmptyLines: true,
-              transformHeader: (header) => header.trim(),
-              transform: (value) => value?.trim() || ''
+              transformHeader: (header) => header.trim()
             });
             
             const notesParsed = Papa.parse(normalizedNotesText, {

@@ -1,0 +1,28 @@
+{
+  "entries": {
+    "lb-before": {
+      "v1": {
+        "path": "lb-before/v1.json",
+        "savedAt": "2025-08-28T16:48:16.928Z"
+      }
+    },
+    "lb-after": {
+      "v1": {
+        "path": "lb-after/v1.json",
+        "savedAt": "2025-08-28T16:48:16.992Z"
+      }
+    },
+    "lb-changes": {
+      "v1": {
+        "path": "lb-changes/v1.json",
+        "savedAt": "2025-08-28T16:48:16.992Z"
+      }
+    },
+    "insects-csv": {
+      "v1": {
+        "path": "insects-csv/v1.csv",
+        "savedAt": "2025-08-28T16:48:16.994Z"
+      }
+    }
+  }
+}
