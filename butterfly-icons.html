@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蝶のアイコン集</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .icon-box {
+            text-align: center;
+            padding: 2.5rem;
+            border: 2px solid #e8e8e8;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .icon-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .icon-box:hover::before {
+            opacity: 1;
+        }
+        .icon-box:hover {
+            border-color: #4ecdc4;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(78, 205, 196, 0.15);
+        }
+        .icon-box svg {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .icon-box:hover svg {
+            transform: scale(1.1);
+        }
+        .icon-box h3 {
+            margin: 1rem 0 0.5rem;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .icon-box p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .section {
+            margin: 4rem 0;
+        }
+        .section-title {
+            text-align: center;
+            color: #444;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦋 蝶のアイコン集</h1>
+        
+        <div class="section">
+            <h2 class="section-title">クラシックスタイル</h2>
+            <div class="icon-grid">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="1.5">
+                        <!-- 対称的な蝶 -->
+                        <path d="M12 6v12" stroke-linecap="round"/>
+                        <!-- 上翅 -->
+                        <path d="M12 8c-3-2-6-1-6 2s2 4 6 2" fill="none"/>
+                        <path d="M12 8c3-2 6-1 6 2s-2 4-6 2" fill="none"/>
+                        <!-- 下翅 -->
+                        <path d="M12 12c-2 1-4 3-3 5s3 1 3-1" fill="none"/>
+                        <path d="M12 12c2 1 4 3 3 5s-3 1-3-1" fill="none"/>
+                        <!-- 触角 -->
+                        <path d="M11 6c-0.5-1-1-2-1-2" stroke-linecap="round"/>
+                        <path d="M13 6c0.5-1 1-2 1-2" stroke-linecap="round"/>
+                        <!-- 斑点 -->
+                        <circle cx="9" cy="9" r="0.5" fill="#4a5568"/>
+                        <circle cx="15" cy="9" r="0.5" fill="#4a5568"/>
+                    </svg>
+                    <h3>シンプル蝶</h3>
+                    <p>基本的な蝶の形状</p>
+                </div>
+                
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#e53e3e" stroke-width="1.5">
+                        <!-- モナーク蝶風 -->
+                        <path d="M12 5v14" stroke-linecap="round"/>
+                        <!-- 上翅（より大きく） -->
+                        <path d="M12 7c-4-3-8-1-8 3s3 5 8 2" fill="rgba(229, 62, 62, 0.1)"/>
+                        <path d="M12 7c4-3 8-1 8 3s-3 5-8 2" fill="rgba(229, 62, 62, 0.1)"/>
+                        <!-- 下翅 -->
+                        <path d="M12 13c-3 0-5 2-4 4s4 1 4-2" fill="rgba(229, 62, 62, 0.1)"/>
+                        <path d="M12 13c3 0 5 2 4 4s-4 1-4-2" fill="rgba(229, 62, 62, 0.1)"/>
+                        <!-- 触角 -->
+                        <path d="M11 5c-0.5-1.5-1-2.5-1-2.5" stroke-linecap="round"/>
+                        <path d="M13 5c0.5-1.5 1-2.5 1-2.5" stroke-linecap="round"/>
+                        <!-- 斑点と線 -->
+                        <circle cx="8" cy="8" r="0.8" fill="#e53e3e"/>
+                        <circle cx="16" cy="8" r="0.8" fill="#e53e3e"/>
+                        <path d="M6 10c2 0 4 0 6 0m0 0c2 0 4 0 6 0" stroke-width="1"/>
+                    </svg>
+                    <h3>モナーク風</h3>
+                    <p>オレンジ色の大型蝶</p>
+                </div>
+                
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#3182ce" stroke-width="1.5">
+                        <!-- アゲハ蝶風 -->
+                        <path d="M12 6v12" stroke-linecap="round"/>
+                        <!-- 上翅（アゲハ特有の形） -->
+                        <path d="M12 8c-4-3-7-1-6 2c1 3 3 4 6 2" fill="rgba(49, 130, 206, 0.1)"/>
+                        <path d="M12 8c4-3 7-1 6 2c-1 3-3 4-6 2" fill="rgba(49, 130, 206, 0.1)"/>
+                        <!-- 下翅（尾状突起付き） -->
+                        <path d="M12 13c-3 0-5 2-4 4c1 2 3 1 4-1" fill="rgba(49, 130, 206, 0.1)"/>
+                        <path d="M12 13c3 0 5 2 4 4c-1 2-3 1-4-1" fill="rgba(49, 130, 206, 0.1)"/>
+                        <!-- 尾状突起 -->
+                        <path d="M9 16c-1 2-2 3-2 3" stroke-linecap="round"/>
+                        <path d="M15 16c1 2 2 3 2 3" stroke-linecap="round"/>
+                        <!-- 触角 -->
+                        <path d="M11 6c-0.5-1-1-2-1-2" stroke-linecap="round"/>
+                        <path d="M13 6c0.5-1 1-2 1-2" stroke-linecap="round"/>
+                        <!-- 模様 -->
+                        <path d="M8 9c1 0 2 1 2 1M16 9c-1 0-2 1-2 1" stroke-linecap="round"/>
+                    </svg>
+                    <h3>アゲハ風</h3>
+                    <p>尾状突起のある大型蝶</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">モダンスタイル</h2>
+            <div class="icon-grid">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#805ad5" stroke-width="2">
+                        <!-- ミニマル蝶 -->
+                        <path d="M12 8v8" stroke-linecap="round"/>
+                        <!-- 幾何学的な翅 -->
+                        <path d="M12 10l-4-2l-2 2l2 4l4-2" fill="rgba(128, 90, 213, 0.1)"/>
+                        <path d="M12 10l4-2l2 2l-2 4l-4-2" fill="rgba(128, 90, 213, 0.1)"/>
+                        <path d="M12 12l-3 1l-1 3l1 2l3-1" fill="rgba(128, 90, 213, 0.1)"/>
+                        <path d="M12 12l3 1l1 3l-1 2l-3-1" fill="rgba(128, 90, 213, 0.1)"/>
+                        <!-- 触角 -->
+                        <circle cx="11" cy="7" r="0.5" fill="#805ad5"/>
+                        <circle cx="13" cy="7" r="0.5" fill="#805ad5"/>
+                        <path d="M11 7l-1-2M13 7l1-2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>ジオメトリック</h3>
+                    <p>幾何学的なデザイン</p>
+                </div>
+                
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#38a169" stroke-width="1.8">
+                        <!-- ファセット蝶 -->
+                        <path d="M12 7v10" stroke-linecap="round"/>
+                        <!-- 多面体風の翅 -->
+                        <path d="M12 9l-3-1l-2 1l-1 2l1 3l2 1l3-2z" fill="rgba(56, 161, 105, 0.1)"/>
+                        <path d="M12 9l3-1l2 1l1 2l-1 3l-2 1l-3-2z" fill="rgba(56, 161, 105, 0.1)"/>
+                        <path d="M12 13l-2 1l-1 2l0 2l1 1l2-1z" fill="rgba(56, 161, 105, 0.1)"/>
+                        <path d="M12 13l2 1l1 2l0 2l-1 1l-2-1z" fill="rgba(56, 161, 105, 0.1)"/>
+                        <!-- 内部線 -->
+                        <path d="M9 10l3 3l3-3M9 14l3 0l3 0" stroke-width="1"/>
+                        <!-- 触角 -->
+                        <path d="M11 7c-0.5-1-1-1.5-1-1.5M13 7c0.5-1 1-1.5 1-1.5" stroke-linecap="round"/>
+                    </svg>
+                    <h3>ファセット</h3>
+                    <p>多面体的なスタイル</p>
+                </div>
+                
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#d69e2e" stroke-width="1.6">
+                        <!-- オリガミ蝶 -->
+                        <path d="M12 8v8" stroke-linecap="round"/>
+                        <!-- 折り紙風の翅 -->
+                        <path d="M12 10l-5-2v4l2 2l3-2z" fill="rgba(214, 158, 46, 0.1)"/>
+                        <path d="M12 10l5-2v4l-2 2l-3-2z" fill="rgba(214, 158, 46, 0.1)"/>
+                        <path d="M12 12l-3 2v3l1 1l2-2z" fill="rgba(214, 158, 46, 0.1)"/>
+                        <path d="M12 12l3 2v3l-1 1l-2-2z" fill="rgba(214, 158, 46, 0.1)"/>
+                        <!-- 折り目 -->
+                        <path d="M7 8l5 2l5-2M9 14l3-2l3 2" stroke-width="1" opacity="0.5"/>
+                        <!-- 触角 -->
+                        <path d="M11 8l-1-3M13 8l1-3" stroke-linecap="round"/>
+                    </svg>
+                    <h3>オリガミ</h3>
+                    <p>折り紙風のデザイン</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">アーティスティック</h2>
+            <div class="icon-grid">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#e53e3e" stroke-width="1.4">
+                        <!-- ステンドグラス風 -->
+                        <path d="M12 6v12" stroke-linecap="round"/>
+                        <!-- 複雑な翅のパターン -->
+                        <path d="M12 8c-2-1-4-1-5 1c-1 2 0 3 2 3c1 0 2 0 3-1" fill="rgba(229, 62, 62, 0.2)"/>
+                        <path d="M12 8c2-1 4-1 5 1c1 2 0 3-2 3c-1 0-2 0-3-1" fill="rgba(229, 62, 62, 0.2)"/>
+                        <path d="M12 11c-1 0-3 0-4 2c-1 2 1 3 2 2c1-1 1-2 2-2" fill="rgba(229, 62, 62, 0.15)"/>
+                        <path d="M12 11c1 0 3 0 4 2c1 2-1 3-2 2c-1-1-1-2-2-2" fill="rgba(229, 62, 62, 0.15)"/>
+                        <path d="M12 14c-1 1-2 2-2 4c0 1 1 1 2 0" fill="rgba(229, 62, 62, 0.1)"/>
+                        <path d="M12 14c1 1 2 2 2 4c0 1-1 1-2 0" fill="rgba(229, 62, 62, 0.1)"/>
+                        <!-- 装飾 -->
+                        <circle cx="9" cy="9" r="0.5" fill="#e53e3e"/>
+                        <circle cx="15" cy="9" r="0.5" fill="#e53e3e"/>
+                        <circle cx="10" cy="12" r="0.3" fill="#e53e3e"/>
+                        <circle cx="14" cy="12" r="0.3" fill="#e53e3e"/>
+                        <!-- 触角 -->
+                        <path d="M11 6c-0.5-2-1-3-1-3M13 6c0.5-2 1-3 1-3" stroke-linecap="round"/>
+                    </svg>
+                    <h3>ステンドグラス</h3>
+                    <p>装飾的なパターン</p>
+                </div>
+                
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#553c9a" stroke-width="1.3">
+                        <!-- 曼荼羅風 -->
+                        <circle cx="12" cy="12" r="8" fill="rgba(85, 60, 154, 0.05)"/>
+                        <path d="M12 6v12" stroke-linecap="round"/>
+                        <!-- 放射状のパターン -->
+                        <path d="M12 8c-3-2-6 0-6 4s3 6 6 4" fill="rgba(85, 60, 154, 0.1)"/>
+                        <path d="M12 8c3-2 6 0 6 4s-3 6-6 4" fill="rgba(85, 60, 154, 0.1)"/>
+                        <!-- 内部の円形パターン -->
+                        <circle cx="8" cy="10" r="1.5" fill="none"/>
+                        <circle cx="16" cy="10" r="1.5" fill="none"/>
+                        <circle cx="9" cy="14" r="1" fill="none"/>
+                        <circle cx="15" cy="14" r="1" fill="none"/>
+                        <!-- 中心の装飾 -->
+                        <circle cx="12" cy="12" r="1" fill="rgba(85, 60, 154, 0.2)"/>
+                        <!-- 触角 -->
+                        <path d="M11 6c-0.5-1.5-1-2.5-1-2.5M13 6c0.5-1.5 1-2.5 1-2.5" stroke-linecap="round"/>
+                    </svg>
+                    <h3>マンダラ</h3>
+                    <p>円形の装飾パターン</p>
+                </div>
+                
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#2d3748" stroke-width="1.5">
+                        <!-- 水彩風 -->
+                        <path d="M12 7v10" stroke-linecap="round"/>
+                        <!-- ぼんやりした翅 -->
+                        <ellipse cx="8" cy="10" rx="4" ry="3" fill="rgba(45, 55, 72, 0.1)" opacity="0.7"/>
+                        <ellipse cx="16" cy="10" rx="4" ry="3" fill="rgba(45, 55, 72, 0.1)" opacity="0.7"/>
+                        <ellipse cx="9" cy="15" rx="3" ry="2.5" fill="rgba(45, 55, 72, 0.08)" opacity="0.7"/>
+                        <ellipse cx="15" cy="15" rx="3" ry="2.5" fill="rgba(45, 55, 72, 0.08)" opacity="0.7"/>
+                        <!-- 輪郭 -->
+                        <path d="M12 9c-2-1-4-1-4 1s1 3 4 2" stroke-width="1" opacity="0.6"/>
+                        <path d="M12 9c2-1 4-1 4 1s-1 3-4 2" stroke-width="1" opacity="0.6"/>
+                        <path d="M12 13c-2 0-3 1-3 3s1 2 3 1" stroke-width="1" opacity="0.6"/>
+                        <path d="M12 13c2 0 3 1 3 3s-1 2-3 1" stroke-width="1" opacity="0.6"/>
+                        <!-- 触角 -->
+                        <path d="M11 7c-0.5-1-1-2-1-2M13 7c0.5-1 1-2 1-2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>水彩</h3>
+                    <p>柔らかな水彩タッチ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

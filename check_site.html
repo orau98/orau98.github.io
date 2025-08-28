@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>サイトデータ確認</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .status { padding: 15px; background: #f0f0f0; border-radius: 5px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .data-section { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>昆虫データ確認</h1>
+    <div id="results"></div>
+
+    <script>
+        // アプリケーションと同じ方法でデータをロード
+        async function checkData() {
+            const results = document.getElementById('results');
+            
+            try {
+                // Reactアプリケーションにアクセスしてデータを取得
+                const response = await fetch('http://localhost:5173/');
+                const html = await response.text();
+                
+                // HTMLから昆虫数を抽出（実際の表示を確認）
+                const mothMatch = html.match(/(\d+)種.*蛾/);
+                const butterflyMatch = html.match(/(\d+)種.*チョウ/);
+                const beetleMatch = html.match(/(\d+)種.*タマムシ/);
+                const leafbeetleMatch = html.match(/(\d+)種.*ハムシ/);
+                const totalMatch = html.match(/昆虫.*?(\d+)種/);
+                
+                let statusHtml = '<div class="status">';
+                statusHtml += '<h2>サイト上の表示</h2>';
+                
+                if (totalMatch) {
+                    statusHtml += `<p><strong>総昆虫数: ${totalMatch[1]}種</strong></p>`;
+                }
+                
+                statusHtml += '<ul>';
+                if (mothMatch) statusHtml += `<li>蛾: ${mothMatch[1]}種</li>`;
+                if (butterflyMatch) statusHtml += `<li>チョウ: ${butterflyMatch[1]}種</li>`;
+                if (beetleMatch) statusHtml += `<li>タマムシ: ${beetleMatch[1]}種</li>`;
+                if (leafbeetleMatch) statusHtml += `<li>ハムシ: ${leafbeetleMatch[1]}種</li>`;
+                statusHtml += '</ul>';
+                statusHtml += '</div>';
+                
+                // 期待値との比較
+                statusHtml += '<div class="status">';
+                statusHtml += '<h2>期待値</h2>';
+                statusHtml += '<p>データベース内の総ユニーク種数: 6852種</p>';
+                statusHtml += '<ul>';
+                statusHtml += '<li>蛾（ハムシ込み）: 6415種</li>';
+                statusHtml += '<li>チョウ: 270種</li>';
+                statusHtml += '<li>タマムシ: 167種</li>';
+                statusHtml += '<li>ハムシ: 78種</li>';
+                statusHtml += '</ul>';
+                statusHtml += '</div>';
+                
+                results.innerHTML = statusHtml;
+                
+                // コンソールログ確認用
+                console.log('Site HTML sample:', html.substring(0, 1000));
+                
+            } catch (error) {
+                results.innerHTML = `<div class="status error">エラー: ${error.message}</div>`;
+            }
+        }
+        
+        checkData();
+    </script>
+</body>
+</html>
