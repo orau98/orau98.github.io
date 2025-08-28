@@ -194,6 +194,64 @@ const PlantImageGallery = ({ images }) => {
   );
 };
 
+// カードコンポーネント（昆虫詳細ページのデザインに近い表現）
+const InsectCard = ({ insect, idx }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const scientificSlug = (insect.scientificName || '').replace(/\s+/g, '_');
+  const imgSrc = `${import.meta.env.BASE_URL}images/insects/${scientificSlug}.jpg`;
+  const href = insect.path || '#';
+  const name = insect.name || insect.japaneseName || '（名称不明）';
+  const family = insect.classification?.familyJapanese || insect.family_jp || '';
+
+  return (
+    <a href={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition">
+      <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
+        {!imgError ? (
+          <div className="relative h-full w-full">
+            <img
+              src={imgSrc}
+              alt={name}
+              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+              onError={() => setImgError(true)}
+              loading="lazy"
+              decoding="async"
+            />
+            {/* Hover gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            {/* Name overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+              <h3 className="text-white font-bold text-lg drop-shadow-lg">{name}</h3>
+              {insect.scientificName && (
+                <p className="text-white/90 text-sm drop-shadow-md italic">{insect.scientificName}</p>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
+            <div className="text-center p-6">
+              <div className="w-16 h-16 mx-auto mb-3 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">画像が見つかりません</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">{name}</h3>
+        {insect.scientificName && (
+          <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 italic">{insect.scientificName}</p>
+        )}
+        {family && (
+          <p className="text-sm text-slate-600 dark:text-slate-300">科: {family}</p>
+        )}
+      </div>
+    </a>
+  );
+};
+
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
@@ -472,23 +530,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {relatedInsects.map((insect, idx) => (
-              <a key={insect.id || idx} href={insect.path || '#'} className="block bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-0.5 transition">
-                <div className="mb-3">
-                  <img
-                    src={`/${'images/insects/'}${(insect.scientificName || '').replace(/\s+/g, '_')}.jpg`}
-                    alt={insect.name || insect.japaneseName || 'insect'}
-                    className="w-full h-44 object-cover rounded-lg"
-                    onError={(e) => { e.currentTarget.src = '/images/placeholder.jpg'; }}
-                  />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">{insect.name || insect.japaneseName || '（名称不明）'}</h3>
-                {insect.scientificName && (
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-1">学名: {insect.scientificName}</p>
-                )}
-                {(insect.classification?.familyJapanese || insect.family_jp) && (
-                  <p className="text-sm text-slate-600 dark:text-slate-300">科: {insect.classification?.familyJapanese || insect.family_jp}</p>
-                )}
-              </a>
+              <InsectCard key={insect.id || idx} insect={insect} idx={idx} />
             ))}
           </div>
         )}
