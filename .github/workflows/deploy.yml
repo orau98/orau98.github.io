@@ -1,34 +1,67 @@
-name: Deploy to GitHub Pages
+name: Deploy with GitHub Actions Pages
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      TZ: UTC
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
-          
-      - name: Install dependencies
-        run: npm ci
-        
+
+      - name: Install dependencies (npm ci)
+        run: npm ci --prefer-offline --no-audit --no-fund
+
       - name: Build
         run: npm run build
-        
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+
+      - name: Add .nojekyll
+        run: |
+          echo > dist/.nojekyll
+
+      - name: Smoke check
+        run: |
+          test -f dist/index.html
+          ls -lah dist/assets || true
+          test -n "$(ls dist/assets/index-*.js 2>/dev/null | head -n1)"
+          test -n "$(ls dist/assets/index-*.css 2>/dev/null | head -n1)"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
