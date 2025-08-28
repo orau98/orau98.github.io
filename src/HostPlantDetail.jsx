@@ -262,7 +262,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
-  const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '' });
+  const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   
   // All insects for RelatedPlants component
@@ -433,14 +433,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           const familyEn = hit['LAPGII::LAPG Family狭義'] || hit['LAPGII::LAPG Family広義'] || hit['LAPG Family'] || hit['Cronquist family'] || hit['Engler family'] || '';
           const orderJp  = hit['LAPGII::LAPG 目'] || hit['LAPGII::LAPG Order'] || '';
           const orderEn  = hit['LAPGII::LAPG Order'] || '';
-          // Genus from 学名 (first token)
-          let genus = (hit['学名'] || '').trim();
-          if (genus) genus = genus.split(/\s+/)[0] || '';
-          if (!genus) {
-            const withAuthor = (hit['学名 withAuthor'] || '').trim();
-            if (withAuthor) genus = (withAuthor.split(/\s+/)[0] || '').trim();
-          }
-          setTaxonomy({ familyJp: (familyJp||'').trim(), familyEn: (familyEn||'').trim(), orderJp: (orderJp||'').trim(), orderEn: (orderEn||'').trim(), genus });
+          let sci = (hit['学名'] || '').trim();
+          if (!sci) sci = (hit['学名 withAuthor'] || '').trim();
+          let genus = '';
+          if (sci) genus = (sci.split(/\s+/)[0] || '').trim();
+          setTaxonomy({ familyJp: (familyJp||'').trim(), familyEn: (familyEn||'').trim(), orderJp: (orderJp||'').trim(), orderEn: (orderEn||'').trim(), genus, scientificName: sci });
         }
       })
       .catch(() => { /* ignore */ });
@@ -497,20 +494,15 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         images={plantImages}
       />
       
-      {/* 概要セクション */}
-      <div ref={overviewRef} className="mt-6">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white">{decodedPlantName}</h1>
-          <div className="mt-3 flex flex-wrap justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-            {familyLabel && (
-              <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full">
-                {familyLabel}
-              </span>
-            )}
-            <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-              {relatedInsects.length}種の昆虫が利用
-            </span>
-          </div>
+      {/* 概要セクション（和名＋学名のみ） */}
+      <div className="mt-6">
+        <div className="mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">{decodedPlantName}</h1>
+          {taxonomy.scientificName && (
+            <div className="mt-1 text-left text-slate-600 dark:text-slate-300 text-lg">
+              {formatScientificNameReact(taxonomy.scientificName)}
+            </div>
+          )}
         </div>
       </div>
 
