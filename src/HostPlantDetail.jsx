@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
@@ -204,7 +204,7 @@ const InsectCard = ({ insect, idx }) => {
   const family = insect.classification?.familyJapanese || insect.family_jp || '';
 
   return (
-    <a href={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition">
+    <Link to={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition">
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
         {!imgError ? (
           <div className="relative h-full w-full">
@@ -248,7 +248,7 @@ const InsectCard = ({ insect, idx }) => {
           <p className="text-sm text-slate-600 dark:text-slate-300">科: {family}</p>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 
@@ -386,15 +386,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const plantImages = getPlantImages(decodedPlantName);
 
-  // Sticky header tabs
-  const [activeTab, setActiveTab] = useState('overview');
-  const overviewRef = useRef(null);
-  const insectsRef = useRef(null);
-  const scrollToSection = (section) => {
-    setActiveTab(section);
-    const el = section === 'overview' ? overviewRef.current : insectsRef.current;
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  // (no sticky tabs; aligns with insect page)
 
   // Load classification from public/20210514YList_download.csv
   useEffect(() => {
@@ -444,7 +436,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   }, [decodedPlantName]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Top row: back link + classification chips (unified with insect detail) */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
         <Link 
@@ -495,7 +488,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       />
       
       {/* 概要セクション（和名＋学名のみ） */}
-      <div className="mt-6">
+      <div className="mt-4 md:mt-6">
         <div className="mb-6">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">{decodedPlantName}</h1>
           {taxonomy.scientificName && (
@@ -540,6 +533,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         />
       </div>
       */}
+      </div>
     </div>
   );
 };
