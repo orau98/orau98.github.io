@@ -5013,8 +5013,8 @@ function App() {
     fetchData(); // Call fetchData
   }, []); // Close useEffect and add dependency array
 
-  // Content protection measures
-  useEffect(() => {
+  // Content protection measures (removed to improve UX/performance)
+  /*useEffect(() => {
     // Disable right-click context menu
     const handleContextMenu = (e) => {
       e.preventDefault();
@@ -5106,7 +5106,7 @@ function App() {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('dragstart', handleDragStart);
     };
-  }, []);
+  }, []);*/
 
   console.log("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
   
