@@ -284,7 +284,21 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   const [plantSearchTerm, setPlantSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [plantImageFilenames, setPlantImageFilenames] = useState([]);
-  const itemsPerPage = 50;
+  // Responsive items-per-page to avoid empty grid slots on last row
+  const getCols = () => {
+    if (typeof window === 'undefined') return 1;
+    const w = window.innerWidth;
+    if (w >= 1280) return 4; // xl
+    if (w >= 1024) return 3; // lg
+    if (w >= 768) return 2;  // md
+    return 1;                // base
+  };
+  const computeItemsPerPage = () => {
+    const cols = getCols();
+    const rows = 12; // show 12 rows to fill grid nicely
+    return cols * rows;
+  };
+  const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
 
   // ひらがなをカタカナに変換する関数
   const hiraganaToKatakana = (str) => {
@@ -299,6 +313,19 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
     loadPlantImageFilenames().then(filenames => {
       setPlantImageFilenames(filenames);
     });
+  }, []);
+
+  // Update itemsPerPage on resize to keep pages filling complete rows
+  useEffect(() => {
+    const onResize = () => {
+      const next = computeItemsPerPage();
+      setItemsPerPage(prev => (prev === next ? prev : next));
+      setCurrentPage(1);
+    };
+    window.addEventListener('resize', onResize);
+    // Ensure correct initial calculation
+    onResize();
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
