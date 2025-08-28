@@ -4947,11 +4947,38 @@ function App() {
           }
         }
         
+        // Unify host plant mapping with normalized/integrated data to avoid discrepancies
+        const unifiedHostPlantMap = { ...cleanedHostPlantData };
+        const addInsectPlants = (insect) => {
+          if (!insect) return;
+          let plants = [];
+          if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
+            plants = insect.hostPlantsDetailed.map(p => p && p.name ? String(p.name).trim() : '').filter(Boolean);
+          } else if (Array.isArray(insect.hostPlants)) {
+            plants = insect.hostPlants.filter(p => typeof p === 'string' && p.trim()).map(p => p.trim());
+          } else if (typeof insect.hostPlants === 'string') {
+            plants = insect.hostPlants.split(/[;；、，,]/).map(p => p.trim()).filter(Boolean);
+          }
+          plants.forEach(raw => {
+            if (!raw) return;
+            const normalized = normalizePlantName(raw);
+            if (!normalized || normalized === '不明') return;
+            if (!unifiedHostPlantMap[normalized]) unifiedHostPlantMap[normalized] = [];
+            if (!unifiedHostPlantMap[normalized].includes(insect.name)) unifiedHostPlantMap[normalized].push(insect.name);
+          });
+        };
+        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLeafbeetleData].forEach(addInsectPlants);
+
+        // Debug specific plant like キョウチクトウ to ensure expected insects are present
+        if (unifiedHostPlantMap['キョウチクトウ']) {
+          console.log('UNIFIED HOST MAP: キョウチクトウ ->', unifiedHostPlantMap['キョウチクトウ']);
+        }
+
         setMoths(finalMothData);
         setButterflies(finalButterflyData);
         setBeetles(finalBeetleData);
         setLeafbeetles(finalLeafbeetleData);
-        setHostPlants(cleanedHostPlantData);
+        setHostPlants(unifiedHostPlantMap);
         setPlantDetails(cleanedPlantDetailData);
         setLoading(false); // Set loading to false after data is loaded
         
