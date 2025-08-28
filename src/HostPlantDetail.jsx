@@ -383,32 +383,38 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Sticky top header */}
-      <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-white/85 dark:bg-slate-900/85 backdrop-blur border-b border-slate-200 dark:border-slate-700">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">{decodedPlantName}</span>
-            {familyLabel && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700">
-                <span className="font-semibold">科</span>
-                <span>{familyLabel}</span>
-              </span>
-            )}
-            {taxonomy.orderJp && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200 border border-sky-200 dark:border-sky-700">
-                <span className="font-semibold">目</span>
-                <span>{taxonomy.orderJp}</span>
-              </span>
-            )}
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200 border border-blue-200 dark:border-blue-700">
-              <span className="font-semibold">関連昆虫種</span>
-              <span>{relatedInsects.length}種</span>
+      {/* Top row: back link + classification chips (unified with insect detail) */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
+        <Link 
+          to="/" 
+          className="inline-flex items-center px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-xl hover:bg-white/90 dark:hover:bg-slate-800/90 transition-all duration-200 shadow-sm hover:shadow-md text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
+        >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          ホームに戻る
+        </Link>
+        <div className="flex flex-wrap gap-2">
+          {familyLabel && (
+            <span
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
+            >
+              <span className="font-medium">{familyLabel}</span>
+              {taxonomy.familyEn && (
+                <span className="ml-1 text-xs italic opacity-80">{taxonomy.familyEn}</span>
+              )}
             </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => scrollToSection('overview')} className={`px-3 py-1 rounded-lg text-sm font-medium ${activeTab==='overview' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'}`}>概要</button>
-            <button onClick={() => scrollToSection('insects')} className={`px-3 py-1 rounded-lg text-sm font-medium ${activeTab==='insects' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200'}`}>関連昆虫</button>
-          </div>
+          )}
+          {taxonomy.orderJp && (
+            <span
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
+            >
+              <span className="font-medium">{taxonomy.orderJp}</span>
+              {taxonomy.orderEn && (
+                <span className="ml-1 text-xs italic opacity-80">{taxonomy.orderEn}</span>
+              )}
+            </span>
+          )}
         </div>
       </div>
       {/* 構造化データ */}
