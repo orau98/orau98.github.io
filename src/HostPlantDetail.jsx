@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Papa from 'papaparse';
 import { useParams, Link } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
@@ -203,7 +204,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
-  const familyLabel = details.family || details.familyName || '不明';
+  const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '' });
+  const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
@@ -336,6 +338,49 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  // Load classification from public/20210514YList_download.csv
+  useEffect(() => {
+    const url = `${import.meta.env.BASE_URL}20210514YList_download.csv`;
+    fetch(url)
+      .then(r => r.text())
+      .then(text => {
+        const res = Papa.parse(text, { header: true, skipEmptyLines: true });
+        const rows = res.data || [];
+        // Normalize column keys to trim BOM or spaces
+        const normalizeKeys = (obj) => {
+          const out = {};
+          Object.keys(obj).forEach(k => {
+            const nk = k.replace(/^\ufeff/, '').trim();
+            out[nk] = obj[k];
+          });
+          return out;
+        };
+
+        const target = decodedPlantName;
+        // Try exact match on 和名, then fallback to 別名に含む
+        let hit = null;
+        for (const row0 of rows) {
+          const row = normalizeKeys(row0);
+          if ((row['和名'] || '').trim() === target) { hit = row; break; }
+        }
+        if (!hit) {
+          for (const row0 of rows) {
+            const row = normalizeKeys(row0);
+            const aliases = (row['別名'] || '').split(/[、,]/).map(s => s.trim()).filter(Boolean);
+            if (aliases.includes(target)) { hit = row; break; }
+          }
+        }
+        if (hit) {
+          const familyJp = hit['LAPGII::LAPG科名'] || hit['LAPG 科名'] || hit['Cronquist 科名'] || hit['Engler 科名'] || '';
+          const familyEn = hit['LAPGII::LAPG Family狭義'] || hit['LAPGII::LAPG Family広義'] || hit['LAPG Family'] || hit['Cronquist family'] || hit['Engler family'] || '';
+          const orderJp  = hit['LAPGII::LAPG 目'] || hit['LAPGII::LAPG Order'] || '';
+          const orderEn  = hit['LAPGII::LAPG Order'] || '';
+          setTaxonomy({ familyJp: (familyJp||'').trim(), familyEn: (familyEn||'').trim(), orderJp: (orderJp||'').trim(), orderEn: (orderEn||'').trim() });
+        }
+      })
+      .catch(() => { /* ignore */ });
+  }, [decodedPlantName]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Sticky top header */}
@@ -347,6 +392,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700">
                 <span className="font-semibold">科</span>
                 <span>{familyLabel}</span>
+              </span>
+            )}
+            {taxonomy.orderJp && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200 border border-sky-200 dark:border-sky-700">
+                <span className="font-semibold">目</span>
+                <span>{taxonomy.orderJp}</span>
               </span>
             )}
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200 border border-blue-200 dark:border-blue-700">
