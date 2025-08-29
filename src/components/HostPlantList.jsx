@@ -355,6 +355,11 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       const detail = safePlantDetails[plantName] || {};
       const family = detail.family ? detail.family.toLowerCase() : '';
       const genus = detail.genus ? detail.genus.toLowerCase() : '';
+      const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
+      const aliasHit = aliases.some(a => {
+        const aLower = (a || '').toLowerCase();
+        return aLower.includes(lowerCaseSearchTerm) || aLower.includes(katakanaSearchTerm);
+      });
       
       // オリジナルの検索条件に加えて、カタカナ変換後の検索も追加
       return plantName.toLowerCase().includes(lowerCaseSearchTerm) ||
@@ -362,7 +367,8 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
              family.includes(lowerCaseSearchTerm) ||
              family.includes(katakanaSearchTerm) ||
              genus.includes(lowerCaseSearchTerm) ||
-             genus.includes(katakanaSearchTerm);
+             genus.includes(katakanaSearchTerm) ||
+             aliasHit;
     });
     
     // Sort with plants with images first, then "不明" at the end
@@ -489,6 +495,15 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       if (detail.genus?.toLowerCase().includes(lowerCaseSearchTerm) ||
           detail.genus?.toLowerCase().includes(katakanaSearchTerm)) {
         suggestions.add(detail.genus);
+      }
+      if (Array.isArray(detail.aliases)) {
+        detail.aliases.forEach(a => {
+          if (!a) return;
+          const lower = a.toLowerCase();
+          if (lower.includes(lowerCaseSearchTerm) || lower.includes(katakanaSearchTerm)) {
+            suggestions.add(a);
+          }
+        });
       }
     });
     return Array.from(suggestions).slice(0, 10);
