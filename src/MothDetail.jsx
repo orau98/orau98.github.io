@@ -782,12 +782,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   return null;
                 })()}
                 
-                <EnhancedHostPlantDisplay 
-                  hostPlants={moth.hostPlants || []}
-                  hostPlantsDetailed={moth.hostPlantsDetailed || moth.hostPlantDetails || []}
-                  showDetailsByDefault={false}
-                  maxDisplayCount={10}
-                />
+                {(() => {
+                  const hostPlantsArray = Array.isArray(moth.hostPlants)
+                    ? moth.hostPlants
+                    : (typeof moth.hostPlants === 'string' && moth.hostPlants.trim()
+                        ? moth.hostPlants.split(/[;；、,]/).map(p => p.trim()).filter(Boolean)
+                        : []);
+                  const hostPlantsDetailedArray = Array.isArray(moth.hostPlantsDetailed)
+                    ? moth.hostPlantsDetailed
+                    : (Array.isArray(moth.hostPlantDetails) ? moth.hostPlantDetails : []);
+                  return (
+                    <EnhancedHostPlantDisplay 
+                      hostPlants={hostPlantsArray}
+                      hostPlantsDetailed={hostPlantsDetailedArray}
+                      showDetailsByDefault={false}
+                      maxDisplayCount={10}
+                    />
+                  );
+                })()}
 
                 {/* 食草備考表示 */}
                 {moth.hostPlantNotes && moth.hostPlantNotes.length > 0 && (() => {
