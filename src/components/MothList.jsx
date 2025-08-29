@@ -609,6 +609,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
 
   // Load image filenames list for lightweight sorting
   const [imageFilenames, setImageFilenames] = useState(new Set());
+  const [imageFilenamesNormalized, setImageFilenamesNormalized] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
   
   useEffect(() => {
@@ -617,8 +618,24 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         // Load filenames
         const filenamesResponse = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
         const filenamesText = await filenamesResponse.text();
-        const filenames = new Set(filenamesText.trim().split('\n').filter(Boolean));
+        const rawList = filenamesText.trim().split('\n').filter(Boolean);
+        const filenames = new Set(rawList);
         setImageFilenames(filenames);
+        // Build normalized base names (Genus_species)
+        const normSet = new Set();
+        rawList.forEach(base => {
+          const m1 = base.match(/^([A-Z][a-z]+)\s+([a-z]+)/);
+          if (m1) {
+            normSet.add(`${m1[1]}_${m1[2]}`);
+            return;
+          }
+          const m2 = base.match(/^([A-Z][a-z]+)_([a-z]+)/);
+          if (m2) {
+            normSet.add(`${m2[1]}_${m2[2]}`);
+            return;
+          }
+        });
+        setImageFilenamesNormalized(normSet);
         
         // Load extension mapping
         try {
@@ -649,8 +666,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       
       // Wait for imageFilenames to load before sorting - return unsorted on first render
       // This is better than showing wrong order initially
-      if (imageFilenames.size === 0) {
-        console.log('No image filenames loaded yet, returning unsorted');
+      const hasAnyImageIndex = (imageFilenames && imageFilenames.size > 0) || (imageExtensions && Object.keys(imageExtensions).length > 0);
+      if (!hasAnyImageIndex) {
+        console.log('No image index loaded yet, returning unsorted');
         return filteredMoths;
       }
       
@@ -704,8 +722,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
           const filenameA = a.scientificFilename || createSafeFilename(a.scientificName);
           const filenameB = b.scientificFilename || createSafeFilename(b.scientificName);
           
-          const hasImageA = imageFilenames.has(filenameA);
-          const hasImageB = imageFilenames.has(filenameB);
+          const hasImageA = imageFilenames.has(filenameA) || imageFilenamesNormalized.has(filenameA) || !!imageExtensions[filenameA];
+          const hasImageB = imageFilenames.has(filenameB) || imageFilenamesNormalized.has(filenameB) || !!imageExtensions[filenameB];
       
       // Debug logging for specific moths
       const debugMoths = ['キノコヨトウ', 'キグチヨトウ', 'アズサキリガ', 'イセキリガ', 'クモガタキリガ', 'ヒロバモクメキリガ', 'ベニモントガリホソガ'];
@@ -750,7 +768,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         cleanedName = cleanedName.replace(/\s+/g, '_');
         return cleanedName;
       };
-      return imageFilenames.has(m.scientificFilename || createSafeFilename(m.scientificName));
+      const fn = m.scientificFilename || createSafeFilename(m.scientificName);
+      return imageFilenames.has(fn) || imageFilenamesNormalized.has(fn) || !!imageExtensions[fn];
     });
     
     // Log the first few sorted moths to see if images are prioritized
