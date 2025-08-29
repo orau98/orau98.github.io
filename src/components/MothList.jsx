@@ -197,7 +197,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   
   // Check if we have an actual match in imageFilenames
   // Do not request image until filenames mapping is loaded
-  const hasImageFilename = imageFilenames.size > 0 ? imageFilenames.has(imageFilename) : false;
+  // Consider image present if:
+  // - filenames list contains it, or
+  // - extensions mapping contains it (we know exact extension), or
+  // - filenames list is not loaded (optimistic render; onError hides)
+  const hasImageFilename = (
+    (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(imageFilename)) ||
+    (imageExtensions && !!imageExtensions[imageFilename]) ||
+    (imageFilenames && imageFilenames.size === 0)
+  );
   
   
   // Preload priority images with better performance
