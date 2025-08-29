@@ -69,20 +69,24 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
       
       // Try to find matching image in the preloaded list, prioritizing 葉表 (leaf surface)
       const getMatchingImages = () => {
+        // Build candidate bases: self + aliases
+        const aliases = Array.isArray(plantDetails[plant]?.aliases) ? plantDetails[plant].aliases : [];
+        const candidates = new Set([
+          plant,
+          ...aliases
+        ].filter(Boolean).flatMap(name => {
+          const base = (name || '').split(' ')[0];
+          const cleaned = createSafePlantFilename(name);
+          const cleanedBase = createSafePlantFilename(base);
+          return [name, base, cleaned, cleanedBase];
+        }));
+
         const matches = preloadedFilenames.filter(filename => {
           // Extract the base name from the filename (remove extension, then part before underscore)
           const withoutExt = filename.replace(/\.[^.]+$/, '');
           const filenameBase = withoutExt.split('_')[0];
-          
-          // First, try exact match with safePlantName
-          if (filenameBase === safePlantName) {
-            return true;
-          }
-          // Also try with original plant name (first part before space)
-          const basePlantName = plant.split(' ')[0];
-          const baseNameCleaned = createSafePlantFilename(basePlantName);
-          // Use exact match to avoid "タケ" matching "タケニグサ"
-          return filenameBase === basePlantName || filenameBase === baseNameCleaned;
+          // Exact match against any candidate
+          return candidates.has(filenameBase);
         });
         
         // Sort matches to prioritize 葉表 (leaf surface)
@@ -387,15 +391,24 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       // Check if images exist using the preloaded image list
       const checkHasImage = (plantName) => {
         if (!plantName || plantName === '不明' || plantName.endsWith('科')) return false;
-        const safeName = createSafePlantFilename(plantName);
-        const baseName = plantName.split(' ')[0];
-        const baseNameCleaned = createSafePlantFilename(baseName);
+        const detail = safePlantDetails[plantName] || {};
+        const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
+        const candidates = new Set([
+          plantName,
+          plantName.split(' ')[0],
+          createSafePlantFilename(plantName),
+          createSafePlantFilename(plantName.split(' ')[0]),
+          ...aliases.flatMap(name => {
+            const base = (name || '').split(' ')[0];
+            const cleaned = createSafePlantFilename(name);
+            const cleanedBase = createSafePlantFilename(base);
+            return [name, base, cleaned, cleanedBase];
+          })
+        ].filter(Boolean));
         return plantImageFilenames.some(filename => {
-          // Extract the base name from the filename (remove extension, then part before underscore)
           const withoutExt = filename.replace(/\.[^.]+$/, '');
           const filenameBase = withoutExt.split('_')[0];
-          // Use exact match to avoid "タケ" matching "タケニグサ"
-          return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
+          return candidates.has(filenameBase);
         });
       };
       
