@@ -520,8 +520,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
           }
           
           // Regular search filtering - check both original and katakana converted search terms
+          const alt = (moth.alternativeNames || '').toLowerCase();
           return (moth.name?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.name?.toLowerCase().includes(katakanaSearchTerm)) ||
+                 (alt && (alt.includes(lowerCaseSearchTerm) || alt.includes(katakanaSearchTerm))) ||
                  (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.classification?.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.classification?.familyJapanese?.toLowerCase().includes(katakanaSearchTerm)) ||
@@ -562,8 +564,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
               moth.name?.toLowerCase().includes(katakanaSearchTerm)) {
             uniqueSuggestions.add(moth.name);
           }
+          const alt = (moth.alternativeNames || '').toLowerCase();
           if (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) {
             uniqueSuggestions.add(moth.scientificName);
+          }
+          if (alt && (alt.includes(lowerCaseSearchTerm) || alt.includes(katakanaSearchTerm))) {
+            // 別名は「、」区切りで複数含む可能性
+            (moth.alternativeNames.split(/[、,，]/).map(s => s.trim()).filter(Boolean)).forEach(a => uniqueSuggestions.add(a));
           }
           if (moth.classification?.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm) ||
               moth.classification?.familyJapanese?.toLowerCase().includes(katakanaSearchTerm)) {

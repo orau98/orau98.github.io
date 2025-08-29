@@ -4632,6 +4632,16 @@ function App() {
             scientificName,
             scientificFilename: scientificFilenameForBeetle,
             type: 'beetle',
+            alternativeNames: (() => {
+              const names = [];
+              const oldName = (row['旧和名'] || '').trim();
+              const alias = (row['別名'] || '').trim();
+              const others = (row['その他の和名'] || '').trim();
+              if (oldName) names.push(oldName);
+              if (alias) names.push(...alias.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+              if (others) names.push(...others.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+              return names.join('、');
+            })(),
             classification: {
               family: family,
               familyJapanese: row['科和名'] || family,
@@ -4761,6 +4771,16 @@ function App() {
             scientificName,
             scientificFilename: formatScientificNameForFilename(scientificName),
             type: 'leafbeetle',
+            alternativeNames: (() => {
+              const names = [];
+              const oldName = (row['旧和名'] || '').trim();
+              const alias = (row['別名'] || '').trim();
+              const others = (row['その他の和名'] || '').trim();
+              if (oldName) names.push(oldName);
+              if (alias) names.push(...alias.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+              if (others) names.push(...others.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+              return names.join('、');
+            })(),
             classification: {
               family: familyLatin || 'Chrysomelidae',
               familyJapanese: familyJapanese || 'ハムシ科',
