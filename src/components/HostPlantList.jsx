@@ -69,11 +69,17 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
       
       // Try to find matching image in the preloaded list, prioritizing 葉表 (leaf surface)
       const getMatchingImages = () => {
-        // Build candidate bases: self + aliases
+        // Build candidate bases: self + aliases + manual synonyms fallback
         const aliases = Array.isArray(plantDetails[plant]?.aliases) ? plantDetails[plant].aliases : [];
+        const synonymPairs = {
+          'ビナンカズラ': ['サネカズラ'],
+          'サネカズラ': ['ビナンカズラ']
+        };
+        const fallbackSyns = synonymPairs[plant] || [];
         const candidates = new Set([
           plant,
-          ...aliases
+          ...aliases,
+          ...fallbackSyns
         ].filter(Boolean).flatMap(name => {
           const base = (name || '').split(' ')[0];
           const cleaned = createSafePlantFilename(name);
