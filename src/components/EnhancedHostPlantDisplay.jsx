@@ -2,47 +2,31 @@ import React, { useState } from 'react';
 import { getSourceLink } from '../utils/sourceLinks';
 
 /**
- * 生活史段階のアイコンとスタイル
+ * 生活史段階のスタイル（アイコンは使用しない）
  */
 const getLifeStageIcon = (lifeStage) => {
   switch (lifeStage) {
     case '幼虫':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm0 2c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-green-600 dark:text-green-400',
         bgColor: 'bg-green-100 dark:bg-green-900/30'
       };
     case '成虫':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L7 7l5 5 5-5-5-5zm0 3.8L14.2 8 12 10.2 9.8 8 12 5.8zM6 12l-4 4 4 4 4-4-4-4zm0 3.8L7.2 17 6 18.2 4.8 17 6 15.8zm12 0L19.2 17 18 18.2 16.8 17 18 15.8zm0-3.8l-4 4 4 4 4-4-4-4z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-purple-600 dark:text-purple-400',
         bgColor: 'bg-purple-100 dark:bg-purple-900/30'
       };
     case '蛹':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C9.8 2 8 3.8 8 6v12c0 2.2 1.8 4 4 4s4-1.8 4-4V6c0-2.2-1.8-4-4-4zm0 2c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2s-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-amber-600 dark:text-amber-400',
         bgColor: 'bg-amber-100 dark:bg-amber-900/30'
       };
     case '卵':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="8"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-yellow-600 dark:text-yellow-400',
         bgColor: 'bg-yellow-100 dark:bg-yellow-900/30'
       };
@@ -56,70 +40,46 @@ const getLifeStageIcon = (lifeStage) => {
 };
 
 /**
- * 植物部位のアイコンとスタイル
+ * 植物部位のスタイル（アイコンは使用しない）
  */
 const getPlantPartIcon = (plantPart) => {
   switch (plantPart) {
     case '葉':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-emerald-600 dark:text-emerald-400',
         bgColor: 'bg-emerald-100 dark:bg-emerald-900/30'
       };
     case '花':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2M12,9A1,1 0 0,1 13,10V22A1,1 0 0,1 12,23A1,1 0 0,1 11,22V10A1,1 0 0,1 12,9M8,12A3,3 0 0,1 5,15A3,3 0 0,1 2,12A3,3 0 0,1 5,9A3,3 0 0,1 8,12M16,12A3,3 0 0,1 19,9A3,3 0 0,1 22,12A3,3 0 0,1 19,15A3,3 0 0,1 16,12Z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-pink-600 dark:text-pink-400',
         bgColor: 'bg-pink-100 dark:bg-pink-900/30'
       };
     case '実':
     case '果実':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12,20A8,8 0 0,1 4,12C4,7.58 7.58,4 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,3L13.5,5.5L16.5,6L14.5,8.5L15,11.5L12,10L9,11.5L9.5,8.5L7.5,6L10.5,5.5L12,3Z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-red-600 dark:text-red-400',
         bgColor: 'bg-red-100 dark:bg-red-900/30'
       };
     case '樹皮':
     case '茎':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12,1L8,5V11H16V5M12,11L8,15V21H16V15M12,11Z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-orange-600 dark:text-orange-400',
         bgColor: 'bg-orange-100 dark:bg-orange-900/30'
       };
     case '根':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12,2V12L8,16V22H10V18L12,16L14,18V22H16V16L12,12V2H12Z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-yellow-700 dark:text-yellow-500',
         bgColor: 'bg-yellow-100 dark:bg-yellow-900/30'
       };
     case '新芽':
     case '芽':
       return {
-        icon: (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12,2C9.24,2 7,4.24 7,7C7,9.05 7.9,10.88 9.29,12C7.9,13.12 7,14.95 7,17C7,19.76 9.24,22 12,22C14.76,22 17,19.76 17,17C17,14.95 16.1,13.12 14.71,12C16.1,10.88 17,9.05 17,7C17,4.24 14.76,2 12,2Z"/>
-          </svg>
-        ),
+        icon: null,
         color: 'text-lime-600 dark:text-lime-400',
         bgColor: 'bg-lime-100 dark:bg-lime-900/30'
       };
@@ -272,159 +232,105 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   const usageInfoArray = Object.values(usageInfo);
   const hasMultipleUsages = usageInfoArray.length > 1;
   
+  // インライン用バッジを事前計算（上限2件 + 余剰表示）
+  const badges = usageInfoArray.map((usage) => {
+    const ls = usage.lifeStage ? getLifeStageIcon(usage.lifeStage) : null;
+    const pp = usage.plantPart ? getPlantPartIcon(usage.plantPart) : null;
+    const label = [usage.lifeStage, usage.plantPart].filter(Boolean).join('・') || '';
+    return { label, ls, pp };
+  }).filter(b => b.label);
+  const maxBadges = 2;
+  const shownBadges = badges.slice(0, maxBadges);
+  const extra = badges.length - shownBadges.length;
+
   return (
     <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
-      {/* 基本情報行 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3 flex-1">
-          <div className="flex-1">
-            <span className={`font-medium ${isDomesticWild ? 'text-slate-800 dark:text-slate-200' : 'text-slate-600 dark:text-slate-400'}`}>
-              {plantGroup.name}
-            </span>
-            {plantGroup.family && (
-              <span className={`text-sm ml-2 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
-                {plantGroup.family}
-              </span>
-            )}
-          </div>
-          
-          <span className={`text-xs px-2 py-0.5 rounded ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
-            {obsStyle.label}
+      {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示） */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <span className={`font-medium truncate ${isDomesticWild ? 'text-slate-800 dark:text-slate-200' : 'text-slate-600 dark:text-slate-400'}`}>
+            {plantGroup.name}
           </span>
-        </div>
-      </div>
-      
-      {/* 利用情報 - 横並びまたは単一表示 */}
-      {usageInfoArray.length > 0 && (
-        <div className="mt-2">
-          {hasMultipleUsages ? (
-            // 複数利用の場合 - 横並び表示
-            <div className="flex flex-wrap gap-3 text-sm">
-              {usageInfoArray.map((usage, index) => {
-                const lifeStageInfo = usage.lifeStage ? getLifeStageIcon(usage.lifeStage) : null;
-                const plantPartInfo = usage.plantPart ? getPlantPartIcon(usage.plantPart) : null;
-                
-                return (
-                  <div key={index} className="flex items-center space-x-2 px-2 py-1 bg-white/50 dark:bg-slate-900/30 rounded">
-                    {lifeStageInfo && (
-                      <div className="flex items-center space-x-1">
-                        <span className={lifeStageInfo.color}>
-                          {lifeStageInfo.icon}
-                        </span>
-                        <span className={`font-medium ${lifeStageInfo.color}`}>
-                          {usage.lifeStage}
-                        </span>
-                      </div>
-                    )}
-                    {usage.lifeStage && usage.plantPart && (
-                      <span className="text-slate-400 dark:text-slate-500">•</span>
-                    )}
-                    {plantPartInfo && (
-                      <div className="flex items-center space-x-1">
-                        <span className={plantPartInfo.color}>
-                          {plantPartInfo.icon}
-                        </span>
-                        <span className={plantPartInfo.color}>
-                          {usage.plantPart}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            // 単一利用の場合 - インライン表示
-            <div className="flex items-center space-x-2 text-sm">
-              {(() => {
-                const usage = usageInfoArray[0];
-                const lifeStageInfo = usage.lifeStage ? getLifeStageIcon(usage.lifeStage) : null;
-                const plantPartInfo = usage.plantPart ? getPlantPartIcon(usage.plantPart) : null;
-                
-                return (
-                  <>
-                    {lifeStageInfo && (
-                      <div className="flex items-center space-x-1">
-                        <span className={lifeStageInfo.color}>
-                          {lifeStageInfo.icon}
-                        </span>
-                        <span className={`font-medium ${lifeStageInfo.color}`}>
-                          {usage.lifeStage}
-                        </span>
-                      </div>
-                    )}
-                    {usage.lifeStage && usage.plantPart && (
-                      <span className="text-slate-400 dark:text-slate-500">•</span>
-                    )}
-                    {plantPartInfo && (
-                      <div className="flex items-center space-x-1">
-                        <span className={plantPartInfo.color}>
-                          {plantPartInfo.icon}
-                        </span>
-                        <span className={plantPartInfo.color}>
-                          {usage.plantPart}
-                        </span>
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
+          {plantGroup.family && (
+            <span className={`text-sm shrink-0 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
+              {plantGroup.family}
+            </span>
+          )}
+          {/* 利用バッジ（極小・横並び・折り返さない） */}
+          {shownBadges.length > 0 && (
+            <div className="flex items-center gap-1 overflow-hidden">
+              {shownBadges.map((b, i) => (
+                <span
+                  key={i}
+                  className={`inline-flex items-center gap-1 text-[11px] leading-5 px-1.5 py-[1px] rounded border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 ${b.ls ? b.ls.color : ''}`}
+                  title={b.label}
+                >
+                  <span className="truncate max-w-[8rem]">{b.label}</span>
+                </span>
+              ))}
+              {extra > 0 && (
+                <span className="text-[11px] leading-5 px-1 py-[1px] rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  他+{extra}
+                </span>
+              )}
             </div>
           )}
-          
-          {/* 出典情報 - 統合表示 */}
-          {(() => {
-            const allReferences = new Set();
-            usageInfoArray.forEach(usage => {
-              usage.references.forEach(ref => allReferences.add(ref));
-            });
-            if (allReferences.size > 0) {
-              return (
-                <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
-                  <div className="flex items-start space-x-2">
-                    <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                      <span className="font-medium">出典:</span>{' '}
-                      {Array.from(allReferences).map((ref, index) => {
-                        const sourceLink = getSourceLink(ref);
-                        const separator = index > 0 ? ', ' : '';
-                        
-                        if (sourceLink) {
-                          return (
-                            <React.Fragment key={index}>
-                              {separator}
-                              <a 
-                                href={sourceLink} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
-                              >
-                                {ref}
-                                <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                              </a>
-                            </React.Fragment>
-                          );
-                        }
-                        return (
-                          <React.Fragment key={index}>
-                            {separator}
-                            <span className="font-medium">{ref}</span>
-                          </React.Fragment>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })()}
         </div>
-      )}
+        <span className={`text-xs px-2 py-0.5 rounded shrink-0 ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
+          {obsStyle.label}
+        </span>
+      </div>
+
+      {/* 出典情報（必要時のみ下段に表示） */}
+      {(() => {
+        const allReferences = new Set();
+        usageInfoArray.forEach(usage => {
+          usage.references.forEach(ref => allReferences.add(ref));
+        });
+        if (allReferences.size > 0) {
+          return (
+            <div className="mt-2 pt-2 border-t border-emerald-200/30 dark:border-emerald-700/30">
+              <div className="flex items-start space-x-2">
+                <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <div className="text-sm text-slate-500 dark:text-slate-400">
+                  <span className="font-medium">出典:</span>{' '}
+                  {Array.from(allReferences).map((ref, index) => {
+                    const sourceLink = getSourceLink(ref);
+                    const separator = index > 0 ? ', ' : '';
+                    if (sourceLink) {
+                      return (
+                        <React.Fragment key={index}>
+                          {separator}
+                          <a 
+                            href={sourceLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
+                          >
+                            {ref}
+                            <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        </React.Fragment>
+                      );
+                    }
+                    return (
+                      <React.Fragment key={index}>
+                        {separator}
+                        <span className="font-medium">{ref}</span>
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return null;
+      })()}
     </div>
   );
 };
