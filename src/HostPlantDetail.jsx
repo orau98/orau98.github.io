@@ -561,7 +561,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
             {/^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
               ? decodedPlantName
-              : formatScientificNameReact(displayLatin)}
+              : (<span className="whitespace-nowrap break-keep">{formatScientificNameReact(displayLatin)}</span>)}
           </h1>
           {aliasNames.length > 0 && (
             <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
