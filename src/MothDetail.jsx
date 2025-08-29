@@ -1246,10 +1246,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               const normalizedTime = normalizeEmergenceTime(emergenceTime);
               const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
               
-              // generalNotesから出現時期を抽出
-              const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(note => 
-                note.type === '出現時期' && note.content && note.content.trim()
-              );
+              // generalNotesから出現時期を抽出（note_typeは固定ではないため柔軟に判定）
+              const isEmergenceNote = (note) => {
+                const t = (note?.type || '').trim();
+                const c = (note?.content || '').trim();
+                if (!c) return false;
+                // 型名に含まれる代表的キーワード
+                const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
+                  .some(k => t.includes(k));
+                // 内容に含まれるパターン（最低限）
+                const contentHit = /\d+\s*月|成虫|発生/.test(c);
+                return typeHit || (!t && contentHit);
+              };
+              const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
               const hasGeneralNotesTime = emergenceFromGeneralNotes && emergenceFromGeneralNotes.content !== '不明';
               
               return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime;
@@ -1302,10 +1311,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       });
                     }
                     
-                    // generalNotesから出現時期を追加
-                    const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(note => 
-                      note.type === '出現時期' && note.content && note.content.trim()
-                    );
+                    // generalNotesから出現時期を追加（柔軟判定）
+                    const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
                     if (emergenceFromGeneralNotes && emergenceFromGeneralNotes.content !== '不明') {
                       allEmergenceTimeData.push({
                         period: emergenceFromGeneralNotes.content,
