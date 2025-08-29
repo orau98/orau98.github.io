@@ -151,6 +151,9 @@ function App() {
       const normalizedInsectsCsvPath = `${import.meta.env.BASE_URL}insects.csv?v=${Date.now()}`;
       const normalizedHostplantsCsvPath = `${import.meta.env.BASE_URL}hostplants.csv?v=${Date.now()}`;
       const normalizedNotesCsvPath = `${import.meta.env.BASE_URL}general_notes.csv?v=${Date.now()}`;
+      
+      // 正規化データのみを優先的に使う運用フラグ
+      const useNormalizedOnly = import.meta.env.VITE_USE_NORMALIZED_ONLY === 'true';
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
       const processScientificName = (existingScientificName, genusName, speciesName, authorName, yearName, insectType = 'moth') => {
@@ -540,7 +543,8 @@ function App() {
         }
 
         // Check if essential files loaded
-        if (!mainText) {
+        // 正規化データのみ運用時は旧メインCSVの欠落を許容
+        if (!mainText && !useNormalizedOnly) {
           throw new Error('Main moth data file failed to load - cannot continue');
         }
         if (!wameiText) {
