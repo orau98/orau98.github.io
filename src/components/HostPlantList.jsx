@@ -141,7 +141,8 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
           }
           
           const ext = extensions[extensionIndex];
-          const url = `${baseUrl}${matchingImage}.${ext}`;
+          const encodedName = encodeURIComponent(matchingImage);
+          const url = `${baseUrl}${encodedName}.${ext}`;
           const img = new Image();
           
           img.onload = () => {
