@@ -46,7 +46,7 @@ const EmergenceTimeDetailCard = ({ emergenceData, isExpanded, onToggle }) => {
           {/* 出典情報 */}
           {emergenceData.source && (
             <div className="text-sm">
-              <span className="font-normal text-slate-400 dark:text-slate-500">出典:</span>
+              <span className="font-medium text-slate-500 dark:text-slate-400">出典:</span>
               <span className="ml-1 font-medium text-slate-700 dark:text-slate-300">
                 {emergenceData.source}
               </span>
