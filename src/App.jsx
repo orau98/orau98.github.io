@@ -4954,6 +4954,55 @@ function App() {
           }
         });
 
+        // Normalized-only: build plant detail data from YList for all plants in the unified map
+        if (useNormalizedOnly) {
+          // Build alias -> canonical map from YList aliases
+          const aliasToCanonical = {};
+          if (yListPlantAliasMap) {
+            Object.entries(yListPlantAliasMap).forEach(([canonical, aliases]) => {
+              if (!Array.isArray(aliases)) return;
+              aliases.forEach(a => {
+                const k = (a || '').trim();
+                if (k) aliasToCanonical[k] = canonical;
+              });
+            });
+          }
+
+          Object.keys(cleanedHostPlantData).forEach(plant => {
+            if (!plant || plant === '不明') return;
+            const canonical = aliasToCanonical[plant] || plant;
+            const aliases = new Set();
+            // Add YList aliases of canonical
+            if (yListPlantAliasMap && yListPlantAliasMap[canonical]) {
+              yListPlantAliasMap[canonical].forEach(a => a && aliases.add(a));
+            }
+            // If current key is alias, include canonical as alias for search/image matching
+            if (canonical !== plant) aliases.add(canonical);
+
+            // Compose detail
+            const family = (yListPlantFamilyMap && (yListPlantFamilyMap[plant] || yListPlantFamilyMap[canonical])) || '不明';
+            const scientificName = (yListPlantScientificNameMap && (yListPlantScientificNameMap[plant] || yListPlantScientificNameMap[canonical])) || '';
+            const genus = scientificName ? scientificName.split(' ')[0] : '';
+
+            if (!cleanedPlantDetailData[plant]) {
+              cleanedPlantDetailData[plant] = {
+                family,
+                scientificName,
+                genus,
+                aliases: Array.from(aliases)
+              };
+            } else {
+              // Merge aliases and fill blanks
+              const existing = cleanedPlantDetailData[plant];
+              existing.family = existing.family && existing.family !== '不明' ? existing.family : family;
+              existing.scientificName = existing.scientificName || scientificName;
+              existing.genus = existing.genus || genus;
+              const aliasSet = new Set([...(existing.aliases || []), ...aliases]);
+              existing.aliases = Array.from(aliasSet);
+            }
+          });
+        }
+
         console.log("Final butterfly data:", butterflyData.length, "butterflies");
         console.log("Final beetle data:", combinedBeetleData.length, "beetles");
         console.log("Final leafbeetle data:", combinedLeafbeetleData.length, "leafbeetles");
