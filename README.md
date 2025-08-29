@@ -25,6 +25,22 @@ https://orau98.github.io/
 - **データ**: CSV形式の昆虫・植物データベース
 - **スタイリング**: Tailwind CSS
 
+## 📸 Instagram埋め込みの設定
+
+トップページ右側の「Instagram 最新投稿」には、投稿のパーマリンクを1件埋め込み表示します。
+
+- 表示方法は次のどちらかを設定してください。
+  - `public/instagram_latest.txt` に最新投稿のURLを1行で記載
+  - もしくは環境変数 `VITE_INSTAGRAM_URL` に投稿URLを設定
+
+例: `public/instagram_latest.txt`
+
+```
+https://www.instagram.com/p/XXXXXXXXXXX/
+```
+
+注意: Instagram公式は「アカウントのタイムライン埋め込み」を提供していません。複数投稿を並べたい場合は、`public/instagram_posts.txt` などに複数URLを用意しコンポーネント拡張で対応してください（要望があれば実装します）。
+
 ## 🚀 デプロイ
 
 このプロジェクトは GitHub Actions で自動デプロイされます。

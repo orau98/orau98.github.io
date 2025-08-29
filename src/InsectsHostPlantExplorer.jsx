@@ -8,6 +8,7 @@ import { MainStructuredData } from './components/StructuredData';
 const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
+  const [instagramUrl, setInstagramUrl] = useState('');
   const scrollPositionRef = useRef(0);
   
   // DEBUG: Log the actual data received
@@ -65,6 +66,30 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
     img.fetchPriority = 'high';
     img.onload = () => setHeroImageLoaded(true);
     img.src = heroImageUrl;
+  }, []);
+
+  // Try to load latest Instagram permalink from a public text file
+  React.useEffect(() => {
+    const loadInstagram = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}instagram_latest.txt`, { cache: 'no-store' });
+        if (res.ok) {
+          const text = (await res.text()).trim();
+          // Basic validation for permalink
+          if (/^https?:\/\/www\.instagram\.com\//.test(text)) {
+            setInstagramUrl(text);
+            return;
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+      // Fallback to env var if provided
+      if (import.meta.env.VITE_INSTAGRAM_URL) {
+        setInstagramUrl(import.meta.env.VITE_INSTAGRAM_URL);
+      }
+    };
+    loadInstagram();
   }, []);
 
 
@@ -396,7 +421,13 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                       {/* Instagram埋め込み */}
                       <div className="flex-grow overflow-hidden flex items-center justify-center">
                         <div className="instagram-wrapper w-full h-full max-h-[380px] sm:max-h-[430px] lg:max-h-none overflow-y-auto border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
-                      {/* Instagram embed hidden on home unless URL is provided */}
+                          {instagramUrl ? (
+                            <InstagramEmbed url={instagramUrl} />
+                          ) : (
+                            <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8">
+                              Instagramの最新投稿URLが未設定です（public/instagram_latest.txt または VITE_INSTAGRAM_URL を設定）。
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

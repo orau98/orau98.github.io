@@ -408,8 +408,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     console.log('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
   }
   
-  // Get all available images for this plant
-  const getPlantImages = (plantName) => {
+  // Get all available images for this plant (try canonical + aliases)
+  const getPlantImages = (plantName, altNames = []) => {
     const commonImages = [
       { suffix: '', label: '全体' },
       { suffix: '_葉表', label: '葉表' },
@@ -426,16 +426,22 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       { suffix: '_枝', label: '枝' },
       { suffix: '_断面', label: '断面' }
     ];
-    
-    return commonImages.map(({ suffix, label }) => ({
-      src: `${import.meta.env.BASE_URL}images/plants/${plantName}${suffix}.jpg`,
-      srcJPG: `${import.meta.env.BASE_URL}images/plants/${plantName}${suffix}.JPG`,
-      label,
-      alt: `${plantName}${suffix ? ` (${label})` : ''}`
-    }));
+    const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
+    const images = [];
+    bases.forEach(base => {
+      commonImages.forEach(({ suffix, label }) => {
+        images.push({
+          src: `${import.meta.env.BASE_URL}images/plants/${base}${suffix}.jpg`,
+          srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${suffix}.JPG`,
+          label,
+          alt: `${base}${suffix ? ` (${label})` : ''}`
+        });
+      });
+    });
+    return images;
   };
   
-  const plantImages = getPlantImages(decodedPlantName);
+  const plantImages = getPlantImages(decodedPlantName, aliasNames);
 
   // (no sticky tabs; aligns with insect page)
 

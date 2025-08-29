@@ -8,19 +8,21 @@ const InstagramEmbed = ({ url, className = "" }) => {
     if (!url) return; // Do not load script if no URL provided
     // Load Instagram embed script
     if (window.instgrm) {
-      window.instgrm.Embeds.process();
+      try {
+        window.instgrm.Embeds.process();
+      } catch {}
     } else {
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://www.instagram.com/embed.js';
       script.onload = () => {
         if (window.instgrm) {
-          window.instgrm.Embeds.process();
+          try { window.instgrm.Embeds.process(); } catch {}
         }
       };
       document.body.appendChild(script);
     }
-  }, []);
+  }, [url]);
 
   if (!url) return null;
 

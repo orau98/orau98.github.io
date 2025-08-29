@@ -4864,14 +4864,48 @@ function App() {
         console.log('DEBUG: After cleanup. Cleaned entries:', Object.keys(cleanedHostPlantData).length);
         
         // Clean up plantDetailData as well
+        // Merge entries that normalize to the same key (preserve and union aliases)
         const cleanedPlantDetailData = {};
         Object.entries(plantDetailData).forEach(([plantName, details]) => {
-          if (isValidPlantName(plantName)) {
-            const normalizedName = normalizePlantName(plantName);
-            // Use the first occurrence details for the normalized name
-            if (!cleanedPlantDetailData[normalizedName]) {
-              cleanedPlantDetailData[normalizedName] = details;
+          if (!isValidPlantName(plantName)) return;
+          const normalizedName = normalizePlantName(plantName);
+
+          // Ensure we don't lose alias information (e.g., サネカズラ ↔ ビナンカズラ)
+          const incoming = { ...details };
+          const incomingAliases = new Set([...(incoming.aliases || [])]);
+          // Add YList aliases keyed by the original name, if any
+          if (yListPlantAliasMap && yListPlantAliasMap[plantName]) {
+            yListPlantAliasMap[plantName].forEach(a => incomingAliases.add(a));
+          }
+          // Add the original plant name itself as an alias if it differs from normalized
+          if (plantName !== normalizedName) incomingAliases.add(plantName);
+          incoming.aliases = Array.from(incomingAliases);
+
+          if (!cleanedPlantDetailData[normalizedName]) {
+            cleanedPlantDetailData[normalizedName] = incoming;
+          } else {
+            // Merge into existing entry
+            const existing = cleanedPlantDetailData[normalizedName];
+            // Prefer existing non-unknown family; otherwise use incoming
+            if (!existing.family || existing.family === '不明') {
+              existing.family = incoming.family || existing.family;
             }
+            // Fill missing core fields
+            if (!existing.scientificName && incoming.scientificName) {
+              existing.scientificName = incoming.scientificName;
+            }
+            if (!existing.genus && incoming.genus) {
+              existing.genus = incoming.genus;
+            }
+            if (!existing.genusFamily && incoming.genusFamily) {
+              existing.genusFamily = incoming.genusFamily;
+            }
+            if (!existing.genusScientificName && incoming.genusScientificName) {
+              existing.genusScientificName = incoming.genusScientificName;
+            }
+            // Union aliases
+            const aliasSet = new Set([...(existing.aliases || []), ...(incoming.aliases || [])]);
+            existing.aliases = Array.from(aliasSet);
           }
         });
 

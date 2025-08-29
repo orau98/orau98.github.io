@@ -70,8 +70,9 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
       // Try to find matching image in the preloaded list, prioritizing 葉表 (leaf surface)
       const getMatchingImages = () => {
         const matches = preloadedFilenames.filter(filename => {
-          // Extract the base name from the filename (part before underscore)
-          const filenameBase = filename.split('_')[0];
+          // Extract the base name from the filename (remove extension, then part before underscore)
+          const withoutExt = filename.replace(/\.[^.]+$/, '');
+          const filenameBase = withoutExt.split('_')[0];
           
           // First, try exact match with safePlantName
           if (filenameBase === safePlantName) {
@@ -390,8 +391,9 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         const baseName = plantName.split(' ')[0];
         const baseNameCleaned = createSafePlantFilename(baseName);
         return plantImageFilenames.some(filename => {
-          // Extract the base name from the filename (part before underscore)
-          const filenameBase = filename.split('_')[0];
+          // Extract the base name from the filename (remove extension, then part before underscore)
+          const withoutExt = filename.replace(/\.[^.]+$/, '');
+          const filenameBase = withoutExt.split('_')[0];
           // Use exact match to avoid "タケ" matching "タケニグサ"
           return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
         });

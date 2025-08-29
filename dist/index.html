@@ -97,8 +97,7 @@
     
     // リダイレクトパラメータがない場合は通常アクセスなので何もしない
     if (!redirectUrl) {
-      // デバッグログ（本番環境では削除可能）
-      console.log('[SPA Restore] 通常アクセスのため処理をスキップ');
+      // 通常アクセス時は何もしない（本番はログ出力もしない）
       return;
     }
     
@@ -109,28 +108,22 @@
     try {
       // デコードして元のURL（パス + クエリ + ハッシュ）に戻す
       var originalUrl = decodeURIComponent(redirectUrl);
-      
-      console.log('[SPA Restore] デコード後URL:', originalUrl);
-      console.log('[SPA Restore] history.replaceState()を実行中...');
-      
+
       // アドレスバーだけを書き換える（ページリロードは行わない）
       // これにより、?redirect= パラメータがアドレスバーから消える
       history.replaceState(null, '', originalUrl);
-      
-      console.log('[SPA Restore] URL復元完了。SPAルーターが処理を引き継ぎます。');
-      
+
       // 以降はSPAのルーター（React Router等）がこのURLを見て画面を描画する
     } catch (error) {
       // デコードエラーなどが発生した場合のフォールバック
-      console.error('[SPA Restore] URL復元中にエラーが発生:', error);
-      console.log('[SPA Restore] ホームページにフォールバック');
+      // 本番ではユーザーに見えないようログを抑制
       history.replaceState(null, '', '/');
     }
   })();
   </script>
 
-    <script type="module" crossorigin src="/assets/index-DfwwPcGH.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DUAcT9ld.css">
+    <script type="module" crossorigin src="/assets/index-DbWBxsRv.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BRm_d5JY.css">
   </head>
   <body>
     <div id="root"></div>
