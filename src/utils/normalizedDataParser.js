@@ -100,6 +100,16 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       }
 
       // 基本昆虫データを構築
+      // 別名の統合（旧和名・別名・その他の和名）
+      const altNames = [];
+      const oldName = (insect.old_japanese_name || '').trim();
+      const altName = (insect.alternative_name || '').trim();
+      const otherNames = (insect.other_names || '').trim();
+      if (oldName) altNames.push(oldName);
+      if (altName) altNames.push(...altName.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+      if (otherNames) altNames.push(...otherNames.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+      const alternativeNames = altNames.join('、');
+
       const insectData = {
         id: insectId,
         name: insect.japanese_name?.trim() || '不明',
@@ -126,6 +136,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         generalNotes: generalNotes,
         dataSource: 'normalized_csv',
         notes: insect.notes?.trim() || '',
+        alternativeNames,
         // 分類用フィールド
         type: getInsectTypeFromFamily(insect.family_jp || insect.family || '')
       };
