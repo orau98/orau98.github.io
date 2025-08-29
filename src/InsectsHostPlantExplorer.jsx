@@ -75,8 +75,8 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
         const res = await fetch(`${import.meta.env.BASE_URL}instagram_latest.txt`, { cache: 'no-store' });
         if (res.ok) {
           const text = (await res.text()).trim();
-          // Basic validation for permalink
-          if (/^https?:\/\/www\.instagram\.com\//.test(text)) {
+          // Basic validation for instagram url
+          if (/^https?:\/\/(www\.)?instagram\.com\//.test(text)) {
             setInstagramUrl(text);
             return;
           }
@@ -421,13 +421,37 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                       {/* Instagram埋め込み */}
                       <div className="flex-grow overflow-hidden flex items-center justify-center">
                         <div className="instagram-wrapper w-full h-full max-h-[380px] sm:max-h-[430px] lg:max-h-none overflow-y-auto border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
-                          {instagramUrl ? (
-                            <InstagramEmbed url={instagramUrl} />
-                          ) : (
-                            <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8">
-                              Instagramの最新投稿URLが未設定です（public/instagram_latest.txt または VITE_INSTAGRAM_URL を設定）。
-                            </div>
-                          )}
+                          {(() => {
+                            if (!instagramUrl) {
+                              return (
+                                <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8">
+                                  Instagramの最新投稿URLが未設定です（public/instagram_latest.txt または VITE_INSTAGRAM_URL を設定）。
+                                </div>
+                              );
+                            }
+                            const isPostPermalink = /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(instagramUrl);
+                            if (isPostPermalink) {
+                              return <InstagramEmbed url={instagramUrl} />;
+                            }
+                            // Profile URL fallback: show a nice link card
+                            return (
+                              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="block w-full">
+                                <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl p-4 sm:p-6 border border-white/30 dark:border-slate-700/50 shadow">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="p-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg">
+                                      <InstagramIcon className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">Instagramプロフィール</p>
+                                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{instagramUrl.replace(/^https?:\/\//,'')}</p>
+                                    </div>
+                                    <span className="text-xs text-white bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 px-2 py-1 rounded">Open</span>
+                                  </div>
+                                  <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">Instagramは公式のタイムライン埋め込みを提供していないため、プロフィールへのリンクを表示しています。個別投稿のパーマリンクを指定すると埋め込み表示されます。</p>
+                                </div>
+                              </a>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
