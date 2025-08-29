@@ -67,7 +67,7 @@ function loadCSV(filePath) {
       console.error(`CSVファイルが見つかりません: ${filePath}`);
       console.error(`現在のディレクトリ: ${process.cwd()}`);
       console.error(`スクリプトのディレクトリ: ${__dirname}`);
-      process.exit(1);
+      throw new Error(`Missing CSV: ${filePath}`);
     }
     let csvContent = fs.readFileSync(filePath, 'utf-8');
     
@@ -113,6 +113,20 @@ function loadCSV(filePath) {
   } catch (error) {
     console.error(`CSVファイルの読み込みエラー: ${error.message}`);
     process.exit(1);
+  }
+}
+
+// 任意CSV（存在しなければ空配列で続行）
+function loadCSVOptional(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) {
+      console.log(`Optional CSV not found (skipping): ${filePath}`);
+      return [];
+    }
+    return loadCSV(filePath);
+  } catch (e) {
+    console.log(`Optional CSV load error (skipping): ${filePath} -> ${e.message}`);
+    return [];
   }
 }
 
@@ -944,8 +958,8 @@ async function generateMetaPages() {
     const generalNotesData = loadCSV(path.join(__dirname, '../public/general_notes.csv'));
     
     // バタフライとハムシの従来データも読み込み
-    const butterflyData = loadCSV(path.join(__dirname, '../public/butterfly_host.csv'));
-    const hamushiData = loadCSV(path.join(__dirname, '../public/hamushi_integrated_master.csv'));
+    const butterflyData = loadCSVOptional(path.join(__dirname, '../public/butterfly_host.csv'));
+    const hamushiData = loadCSVOptional(path.join(__dirname, '../public/hamushi_integrated_master.csv'));
     
     // 昆虫IDをキーとした食草マップを作成
     const hostPlantsMapByInsectId = new Map();
@@ -1009,7 +1023,7 @@ async function generateMetaPages() {
     });
     
     // 日本の冬夜蛾.csvから成虫出現時期データを読み込み
-    const kirigaData = loadCSV(path.join(__dirname, '../public/日本の冬夜蛾.csv'));
+    const kirigaData = loadCSVOptional(path.join(__dirname, '../public/日本の冬夜蛾.csv'));
     const emergenceTimeMap = new Map();
     
     kirigaData.forEach(row => {
@@ -1033,7 +1047,7 @@ async function generateMetaPages() {
     // 日本の冬尺蛾.csvからも成虫出現時期データを読み込み
     const fuyushakuCsvPath = path.join(__dirname, '../public/日本の冬尺蛾.csv');
     if (fs.existsSync(fuyushakuCsvPath)) {
-      const fuyushakuData = loadCSV(fuyushakuCsvPath);
+      const fuyushakuData = loadCSVOptional(fuyushakuCsvPath);
       
       fuyushakuData.forEach(row => {
         const japaneseName = row['和名']?.trim();
