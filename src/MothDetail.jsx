@@ -134,7 +134,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       console.log('DEBUG catalog-6065: hostPlants:', moth.hostPlants);
       console.log('DEBUG catalog-6065: hostPlantDetails:', moth.hostPlantDetails);
       // Log the actual plant names
-      if (moth.hostPlants && moth.hostPlants.length > 0) {
+      if (Array.isArray(moth.hostPlants) && moth.hostPlants.length > 0) {
         moth.hostPlants.forEach((plant, index) => {
           console.log(`DEBUG catalog-6065: hostPlant[${index}] = "${plant}"`);
         });
@@ -798,7 +798,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       const existingParts = new Set();
                       
                       // hostPlants から既存の部位情報を抽出
-                      moth.hostPlants.forEach(plant => {
+                      Array.isArray(moth.hostPlants) && moth.hostPlants.forEach(plant => {
                         // 括弧内の部位情報
                         const match = plant.match(/（([^）]+)）$/);
                         if (match) {
