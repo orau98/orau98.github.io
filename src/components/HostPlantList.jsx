@@ -393,12 +393,24 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         if (!plantName || plantName === '不明' || plantName.endsWith('科')) return false;
         const detail = safePlantDetails[plantName] || {};
         const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
+        // Manual synonym pairs as fallback (robustness)
+        const synonymPairs = {
+          'ビナンカズラ': ['サネカズラ'],
+          'サネカズラ': ['ビナンカズラ']
+        };
+        const extraSynonyms = synonymPairs[plantName] || [];
         const candidates = new Set([
           plantName,
           plantName.split(' ')[0],
           createSafePlantFilename(plantName),
           createSafePlantFilename(plantName.split(' ')[0]),
           ...aliases.flatMap(name => {
+            const base = (name || '').split(' ')[0];
+            const cleaned = createSafePlantFilename(name);
+            const cleanedBase = createSafePlantFilename(base);
+            return [name, base, cleaned, cleanedBase];
+          }),
+          ...extraSynonyms.flatMap(name => {
             const base = (name || '').split(' ')[0];
             const cleaned = createSafePlantFilename(name);
             const cleanedBase = createSafePlantFilename(base);

@@ -1096,7 +1096,9 @@ async function generateMetaPages() {
       const notes = row.notes || '';
       const alternativeNames = row.alternative_name || '';
       
-      if (!japaneseName || !insectId) return;
+    if (!japaneseName || !insectId) return;
+    // Skip malformed IDs like "species-" (missing suffix)
+    if (/^species-$/.test(insectId)) return;
       
       // プレースホルダーや無効な昆虫名を除外
       if (japaneseName === '和名' || japaneseName === '種名' || japaneseName === '不明' || japaneseName.trim().length < 2) {
