@@ -441,25 +441,40 @@ function App() {
         if (isDevelopment) console.log("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
         if (isDevelopment) console.log("DEBUG: About to load フユシャク file with safeFileLoad");
         
-        const [wameiText, mainText, yListText, hamushiIntegratedText, butterflyText, beetleText, kirigaText, fuyushakuText, genusMappingText, normalizedInsectsText, normalizedHostplantsText, normalizedNotesText] = await Promise.all([
-          safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
-          safeFileLoad(mainCsvPath, 'main moth data', 20000),
-          safeFileLoad(yListCsvPath, 'YList data', 30000), // Longer timeout for large file
-          safeFileLoad(hamushiIntegratedCsvPath, 'hamushi integrated data', 20000),
-          safeFileLoad(butterflyCsvPath, 'butterfly data', 15000),
-          safeFileLoad(beetleCsvPath, 'beetle data', 15000),
-          safeFileLoad(kirigaCsvPath, 'kiriga data', 10000),
-          safeFileLoad(fuyushakuCsvPath, 'fuyushaku data', 10000),
-          safeFileLoad(genusMappingCsvPath, 'genus mapping data', 10000),
-          safeFileLoad(normalizedInsectsCsvPath, 'normalized insects data', 15000),
-          safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
-          safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
-        ]);
+        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null;
+
+        if (useNormalizedOnly) {
+          // Load only normalized data + optional plant helpers
+          [wameiText, yListText, genusMappingText, normalizedInsectsText, normalizedHostplantsText, normalizedNotesText] = await Promise.all([
+            safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
+            safeFileLoad(yListCsvPath, 'YList data', 30000),
+            safeFileLoad(genusMappingCsvPath, 'genus mapping data', 10000),
+            safeFileLoad(normalizedInsectsCsvPath, 'normalized insects data', 15000),
+            safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
+            safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
+          ]);
+        } else {
+          // Load everything (legacy compatibility)
+          [wameiText, mainText, yListText, hamushiIntegratedText, butterflyText, beetleText, kirigaText, fuyushakuText, genusMappingText, normalizedInsectsText, normalizedHostplantsText, normalizedNotesText] = await Promise.all([
+            safeFileLoad(wameiCsvPath, 'wamei checklist', 20000),
+            safeFileLoad(mainCsvPath, 'main moth data', 20000),
+            safeFileLoad(yListCsvPath, 'YList data', 30000), // Longer timeout for large file
+            safeFileLoad(hamushiIntegratedCsvPath, 'hamushi integrated data', 20000),
+            safeFileLoad(butterflyCsvPath, 'butterfly data', 15000),
+            safeFileLoad(beetleCsvPath, 'beetle data', 15000),
+            safeFileLoad(kirigaCsvPath, 'kiriga data', 10000),
+            safeFileLoad(fuyushakuCsvPath, 'fuyushaku data', 10000),
+            safeFileLoad(genusMappingCsvPath, 'genus mapping data', 10000),
+            safeFileLoad(normalizedInsectsCsvPath, 'normalized insects data', 15000),
+            safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
+            safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
+          ]);
+        }
         
         if (isDevelopment) console.log("DEBUG: File loading completed, checking results...");
         
-        // Debug フユシャク file loading
-        if (isDevelopment) console.log('DEBUG: フユシャク file load result:', {
+        // Debug フユシャク file loading（legacy時のみ）
+        if (!useNormalizedOnly && isDevelopment) console.log('DEBUG: フユシャク file load result:', {
           path: fuyushakuCsvPath,
           loaded: !!fuyushakuText,
           length: fuyushakuText ? fuyushakuText.length : 0,
@@ -473,8 +488,8 @@ function App() {
           hamushiIntegrated: hamushiIntegratedText ? 'SUCCESS' : 'FAILED',
           butterfly: butterflyText ? 'SUCCESS' : 'FAILED',
           beetle: beetleText ? 'SUCCESS' : 'FAILED',
-          kiriga: kirigaText ? 'SUCCESS' : 'FAILED',
-          fuyushaku: fuyushakuText ? 'SUCCESS' : 'FAILED',
+          kiriga: useNormalizedOnly ? 'SKIPPED' : (kirigaText ? 'SUCCESS' : 'FAILED'),
+          fuyushaku: useNormalizedOnly ? 'SKIPPED' : (fuyushakuText ? 'SUCCESS' : 'FAILED'),
           // emergenceTime: 統合済みのためhamushiIntegratedTextに含まれる
           genusMapping: genusMappingText ? 'SUCCESS' : 'FAILED',
           normalizedInsects: normalizedInsectsText ? 'SUCCESS' : 'FAILED',
