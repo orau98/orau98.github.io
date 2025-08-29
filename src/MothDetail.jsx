@@ -167,7 +167,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     if (moth) {
       const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? 'タマムシ' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾';
       const title = `${moth.name} (${moth.scientificName}) | ${insectType}の詳細 - 昆虫食草図鑑`;
-      const description = `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${moth.hostPlants.join('、') || '不明'}。昆虫食草図鑑で${insectType}と植物の関係を詳しく学ぼう。`;
+      const hostPlantsText = Array.isArray(moth.hostPlants)
+        ? (moth.hostPlants.length ? moth.hostPlants.join('、') : '不明')
+        : (typeof moth.hostPlants === 'string' && moth.hostPlants.trim()
+            ? moth.hostPlants
+            : '不明');
+      const description = `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectType}と植物の関係を詳しく学ぼう。`;
       
       document.title = title;
       
