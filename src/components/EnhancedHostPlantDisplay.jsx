@@ -315,7 +315,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
                             href={sourceLink} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline hover:no-underline transition-colors duration-200"
+                            className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
                           >
                             {ref}
                             <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
