@@ -3,12 +3,14 @@ import MothList from './components/MothList';
 import HostPlantList from './components/HostPlantList';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
+import InstagramTimeline from './components/InstagramTimeline';
 import { MainStructuredData } from './components/StructuredData';
 
 const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
   const [instagramUrl, setInstagramUrl] = useState('');
+  const [instagramPosts, setInstagramPosts] = useState([]);
   const scrollPositionRef = useRef(0);
   
   // DEBUG: Log the actual data received
@@ -90,6 +92,25 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
       }
     };
     loadInstagram();
+  }, []);
+
+  // Load Instagram timeline (multiple recent posts)
+  React.useEffect(() => {
+    const loadTimeline = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}instagram_posts.txt`, { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          const urls = text.split(/\r?\n/)
+            .map(s => s.trim())
+            .filter(s => /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(s));
+          setInstagramPosts(urls.slice(0, 10)); // cap to 10 posts
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    loadTimeline();
   }, []);
 
 
@@ -429,10 +450,12 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                                 </div>
                               );
                             }
-                            const isPostPermalink = /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(instagramUrl);
-                            if (isPostPermalink) {
-                              return <InstagramEmbed url={instagramUrl} />;
+                            // If multiple posts configured, show timeline
+                            if (instagramPosts && instagramPosts.length > 0) {
+                              return <InstagramTimeline urls={instagramPosts} />;
                             }
+                            const isPostPermalink = /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(instagramUrl);
+                            if (isPostPermalink) return <InstagramEmbed url={instagramUrl} />;
                             // Profile URL fallback: show a nice link card
                             return (
                               <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="block w-full">
@@ -447,7 +470,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                                     </div>
                                     <span className="text-xs text-white bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 px-2 py-1 rounded">Open</span>
                                   </div>
-                                  <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">Instagramは公式のタイムライン埋め込みを提供していないため、プロフィールへのリンクを表示しています。個別投稿のパーマリンクを指定すると埋め込み表示されます。</p>
+                                  <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">最近の投稿は `public/instagram_posts.txt` にパーマリンクを列挙するとタイムライン表示されます。</p>
                                 </div>
                               </a>
                             );
