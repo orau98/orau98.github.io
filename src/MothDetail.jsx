@@ -162,6 +162,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [imageError, setImageError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // General-notes emergence-time detector (type is not fixed)
+  const isEmergenceNote = (note) => {
+    const t = (note?.type || '').trim();
+    const c = (note?.content || '').trim();
+    if (!c) return false;
+    const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
+      .some(k => t.includes(k));
+    const contentHit = /\d+\s*月|成虫|発生/.test(c);
+    return typeHit || (!t && contentHit);
+  };
+
   // SEO optimization: Update page title and meta tags
   useEffect(() => {
     if (moth) {
@@ -1263,18 +1274,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               const normalizedTime = normalizeEmergenceTime(emergenceTime);
               const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
               
-              // generalNotesから出現時期を抽出（note_typeは固定ではないため柔軟に判定）
-              const isEmergenceNote = (note) => {
-                const t = (note?.type || '').trim();
-                const c = (note?.content || '').trim();
-                if (!c) return false;
-                // 型名に含まれる代表的キーワード
-                const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
-                  .some(k => t.includes(k));
-                // 内容に含まれるパターン（最低限）
-                const contentHit = /\d+\s*月|成虫|発生/.test(c);
-                return typeHit || (!t && contentHit);
-              };
+              // generalNotesから出現時期を抽出（共通関数で柔軟に判定）
               const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
               const hasGeneralNotesTime = emergenceFromGeneralNotes && emergenceFromGeneralNotes.content !== '不明';
               
