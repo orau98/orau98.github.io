@@ -481,6 +481,11 @@ function App() {
           firstChars: fuyushakuText ? fuyushakuText.substring(0, 100) : 'N/A'
         });
 
+        // Ensure legacy mainText is an empty string when using normalized-only to avoid null parsing
+        if (useNormalizedOnly && !mainText) {
+          mainText = '';
+        }
+
         console.log("File loading results:", {
           wamei: wameiText ? 'SUCCESS' : 'FAILED',
           main: mainText ? 'SUCCESS' : 'FAILED',
@@ -568,29 +573,28 @@ function App() {
 
         if (isDevelopment) console.log("CSV files fetched successfully. Parsing...");
 
-        // Parse キリガ CSV to create emergence time lookup table
+        // Parse キリガ CSV to create emergence time lookup table（normalizedOnly時はスキップ）
         const emergenceTimeMap = new Map();
-        
-        // emergence_time_integrated.csvはhamushi_integrated_master.csvに統合済み
-        
-        // Use Papa.parse for proper CSV parsing - handle empty kirigaText gracefully
         let kirigaData = [];
-        if (kirigaText && kirigaText.trim()) {
-          try {
-            const kirigaParsed = Papa.parse(kirigaText, {
-              header: true,
-              skipEmptyLines: 'greedy',
-              delimiter: ',',
-              quoteChar: '"',
-              escapeChar: '"'
-            });
-            kirigaData = kirigaParsed.data;
-          } catch (error) {
-            console.warn('Failed to parse キリガ CSV:', error);
-            kirigaData = [];
+        if (!useNormalizedOnly) {
+          // emergence_time_integrated.csvはhamushi_integrated_master.csvに統合済み
+          if (kirigaText && kirigaText.trim()) {
+            try {
+              const kirigaParsed = Papa.parse(kirigaText, {
+                header: true,
+                skipEmptyLines: 'greedy',
+                delimiter: ',',
+                quoteChar: '"',
+                escapeChar: '"'
+              });
+              kirigaData = kirigaParsed.data;
+            } catch (error) {
+              console.warn('Failed to parse キリガ CSV:', error);
+              kirigaData = [];
+            }
+          } else {
+            console.warn('キリガ CSV data is empty or failed to load');
           }
-        } else {
-          console.warn('キリガ CSV data is empty or failed to load');
         }
         
         // Debug log for キバラモクメキリガ
@@ -4998,26 +5002,33 @@ function App() {
           
         } else {
           console.log("レガシーデータを使用します（正規化データが利用不可）");
-          
-          // Fallback to legacy data
-          finalMothData = deduplicatedMoths;
-          finalButterflyData = butterflyData;
-          finalBeetleData = combinedBeetleData;
-          finalLeafbeetleData = combinedLeafbeetleData;
-          
-          // Enhance legacy data with integrated format for compatibility
-          try {
-            const { convertLegacyToIntegratedFormat } = await import('./utils/integratedDataParser.js');
+          if (useNormalizedOnly) {
+            // 正規化のみ運用時は、旧データにフォールバックしない
+            finalMothData = [];
+            finalButterflyData = [];
+            finalBeetleData = [];
+            finalLeafbeetleData = [];
+          } else {
+            // Fallback to legacy data
+            finalMothData = deduplicatedMoths;
+            finalButterflyData = butterflyData;
+            finalBeetleData = combinedBeetleData;
+            finalLeafbeetleData = combinedLeafbeetleData;
             
-            finalMothData = convertLegacyToIntegratedFormat(finalMothData, 'moth');
-            finalButterflyData = convertLegacyToIntegratedFormat(finalButterflyData, 'butterfly');
-            finalBeetleData = convertLegacyToIntegratedFormat(finalBeetleData, 'beetle');
-            finalLeafbeetleData = convertLegacyToIntegratedFormat(finalLeafbeetleData, 'leafbeetle');
-            
-            console.log("レガシーデータを統合形式に変換完了");
-          } catch (error) {
-            console.warn("レガシーデータ変換エラー:", error);
-            // Continue with original data if conversion fails
+            // Enhance legacy data with integrated format for compatibility
+            try {
+              const { convertLegacyToIntegratedFormat } = await import('./utils/integratedDataParser.js');
+              
+              finalMothData = convertLegacyToIntegratedFormat(finalMothData, 'moth');
+              finalButterflyData = convertLegacyToIntegratedFormat(finalButterflyData, 'butterfly');
+              finalBeetleData = convertLegacyToIntegratedFormat(finalBeetleData, 'beetle');
+              finalLeafbeetleData = convertLegacyToIntegratedFormat(finalLeafbeetleData, 'leafbeetle');
+              
+              console.log("レガシーデータを統合形式に変換完了");
+            } catch (error) {
+              console.warn("レガシーデータ変換エラー:", error);
+              // Continue with original data if conversion fails
+            }
           }
         }
         
