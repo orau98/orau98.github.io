@@ -4,6 +4,13 @@ import React from 'react';
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
 
+  // Normalize hostPlants to an array for safe operations
+  const hostPlantsList = Array.isArray(moth.hostPlants)
+    ? moth.hostPlants
+    : (typeof moth.hostPlants === 'string'
+        ? moth.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
+        : []);
+
   // Create comprehensive species schema with detailed taxonomic information
   const structuredData = {
     "@context": "https://schema.org",
@@ -42,7 +49,7 @@ export const MothStructuredData = ({ moth }) => {
         }
       ]
     },
-    "description": `${moth.name}（${moth.scientificName}）は${moth.classification?.familyJapanese || moth.family || '蛾科'}に属する蛾の一種です。${moth.hostPlants?.length ? `主な食草：${moth.hostPlants.slice(0, 3).join('、')}など${moth.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    "description": `${moth.name}（${moth.scientificName}）は${moth.classification?.familyJapanese || moth.family || '蛾科'}に属する蛾の一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
     "url": `https://h-amoto.github.io/insects-host-plant-explorer-/moth/${moth.id}`,
     "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/moth/${moth.id}`,
     "inLanguage": "ja",
@@ -82,8 +89,8 @@ export const MothStructuredData = ({ moth }) => {
   }
 
   // Enhanced host plant interactions
-  if (moth.hostPlants?.length) {
-    structuredData.hasEcologicalInteraction = moth.hostPlants.map(plant => ({
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map(plant => ({
       "@type": "EcologicalInteraction",
       "interactionType": "herbivory",
       "participantOrganism": {
@@ -132,6 +139,12 @@ export const MothStructuredData = ({ moth }) => {
 export const ButterflyStructuredData = ({ butterfly }) => {
   if (!butterfly) return null;
 
+  const hostPlantsList = Array.isArray(butterfly.hostPlants)
+    ? butterfly.hostPlants
+    : (typeof butterfly.hostPlants === 'string'
+        ? butterfly.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
+        : []);
+
   // Create comprehensive species schema with detailed taxonomic information
   const structuredData = {
     "@context": "https://schema.org",
@@ -170,7 +183,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         }
       ]
     },
-    "description": `${butterfly.name}（${butterfly.scientificName}）は${butterfly.classification?.familyJapanese || butterfly.family || '蝶科'}に属する蝶の一種です。${butterfly.hostPlants?.length ? `主な食草：${butterfly.hostPlants.slice(0, 3).join('、')}など${butterfly.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    "description": `${butterfly.name}（${butterfly.scientificName}）は${butterfly.classification?.familyJapanese || butterfly.family || '蝶科'}に属する蝶の一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
     "url": `https://h-amoto.github.io/insects-host-plant-explorer-/butterfly/${butterfly.id}`,
     "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/butterfly/${butterfly.id}`,
     "inLanguage": "ja",
@@ -210,8 +223,8 @@ export const ButterflyStructuredData = ({ butterfly }) => {
   }
 
   // Enhanced host plant interactions
-  if (butterfly.hostPlants?.length) {
-    structuredData.hasEcologicalInteraction = butterfly.hostPlants.map(plant => ({
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map(plant => ({
       "@type": "EcologicalInteraction",
       "interactionType": "herbivory",
       "participantOrganism": {
@@ -260,6 +273,12 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 export const BeetleStructuredData = ({ beetle }) => {
   if (!beetle) return null;
 
+  const hostPlantsList = Array.isArray(beetle.hostPlants)
+    ? beetle.hostPlants
+    : (typeof beetle.hostPlants === 'string'
+        ? beetle.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
+        : []);
+
   // Create comprehensive species schema with detailed taxonomic information
   const structuredData = {
     "@context": "https://schema.org",
@@ -298,7 +317,7 @@ export const BeetleStructuredData = ({ beetle }) => {
         }
       ]
     },
-    "description": `${beetle.name}（${beetle.scientificName}）は${beetle.classification?.family || 'タマムシ科'}に属するタマムシの一種です。${beetle.hostPlants?.length ? `主な食草：${beetle.hostPlants.slice(0, 3).join('、')}など${beetle.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    "description": `${beetle.name}（${beetle.scientificName}）は${beetle.classification?.family || 'タマムシ科'}に属するタマムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
     "url": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
     "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
     "inLanguage": "ja",
@@ -338,8 +357,8 @@ export const BeetleStructuredData = ({ beetle }) => {
   }
 
   // Enhanced host plant interactions
-  if (beetle.hostPlants?.length) {
-    structuredData.hasEcologicalInteraction = beetle.hostPlants.map(plant => ({
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map(plant => ({
       "@type": "EcologicalInteraction",
       "interactionType": "herbivory",
       "participantOrganism": {
@@ -388,6 +407,12 @@ export const BeetleStructuredData = ({ beetle }) => {
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
 
+  const hostPlantsList = Array.isArray(leafbeetle.hostPlants)
+    ? leafbeetle.hostPlants
+    : (typeof leafbeetle.hostPlants === 'string'
+        ? leafbeetle.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
+        : []);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": ["Animal", "Species"],
@@ -420,7 +445,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         }
       ]
     },
-    "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属するハムシの一種です。${leafbeetle.hostPlants?.length ? `主な食草：${leafbeetle.hostPlants.slice(0, 3).join('、')}など${leafbeetle.hostPlants.length}種の植物を利用します。` : '食草情報は現在調査中です。'}${leafbeetle.emergenceTime && leafbeetle.emergenceTime !== '不明' ? ` 成虫発生時期：${leafbeetle.emergenceTime}` : ''}`,
+    "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属するハムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}${leafbeetle.emergenceTime && leafbeetle.emergenceTime !== '不明' ? ` 成虫発生時期：${leafbeetle.emergenceTime}` : ''}`,
     "url": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
     "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
     "inLanguage": "ja",
@@ -485,8 +510,8 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   }
 
   // Enhanced host plant interactions
-  if (leafbeetle.hostPlants?.length) {
-    structuredData.hasEcologicalInteraction = leafbeetle.hostPlants.map(plant => ({
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map(plant => ({
       "@type": "EcologicalInteraction",
       "interactionType": "herbivory",
       "participantOrganism": {
