@@ -4665,7 +4665,9 @@ function App() {
               if (oldName) names.push(oldName);
               if (alias) names.push(...alias.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
               if (others) names.push(...others.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
-              return names.join('、');
+              // remove duplicates and same as primary name
+              const filtered = Array.from(new Set(names.filter(n => n && n !== japaneseName)));
+              return filtered.join('、');
             })(),
             classification: {
               family: family,

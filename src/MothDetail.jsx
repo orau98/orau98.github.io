@@ -162,6 +162,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [imageError, setImageError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // Filter alternative names to exclude duplicates of the primary name
+  const alternativeNamesFiltered = React.useMemo(() => {
+    const raw = (moth?.alternativeNames || '').trim();
+    if (!raw) return '';
+    const items = raw.split(/[、,，]/).map(s => s.trim()).filter(Boolean);
+    const filtered = Array.from(new Set(items.filter(n => n !== moth?.name)));
+    return filtered.join('、');
+  }, [moth?.alternativeNames, moth?.name]);
+
   // General-notes emergence-time detector (type is not fixed)
   const isEmergenceNote = (note) => {
     const t = (note?.type || '').trim();
@@ -696,9 +705,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
                 {moth.name}
               </h1>
-              {moth.alternativeNames && moth.alternativeNames.trim() && (
+              {alternativeNamesFiltered && (
                 <p className="text-lg text-slate-600 dark:text-slate-400 mb-2">
-                  別名: {moth.alternativeNames}
+                  別名: {alternativeNamesFiltered}
                 </p>
               )}
               <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
