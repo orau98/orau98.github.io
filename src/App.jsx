@@ -1061,6 +1061,8 @@ function App() {
           
           // Handle synonyms and variations - consolidate different names for the same plant
           const synonymMap = {
+            // 同種の異名を統一（例: サネカズラ=ビナンカズラ）
+            'サネカズラ': 'ビナンカズラ',
             'セイヨウリンゴ': 'リンゴ',
             'セイヨウナシ': 'ナシ',
             'セイヨウカラシナ': 'カラシナ',

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
@@ -258,6 +258,15 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
+
+  // If URL provides Latin binomial without a space (e.g., Capparisheyncana), repair for display only
+  const isLikelyLatin = (s) => /^[A-Za-z]+$/.test(s);
+  const repairLatinBinomial = (s) => {
+    if (!isLikelyLatin(s) || s.includes(' ')) return s;
+    const m = s.match(/^([A-Z][a-z]+)([a-z-].*)$/);
+    return m ? `${m[1]} ${m[2]}` : s;
+  };
+  const displayLatin = repairLatinBinomial(decodedPlantName);
   const [imageFilenames, setImageFilenames] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
   
@@ -292,6 +301,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
+  const [canonicalName, setCanonicalName] = useState('');
+  const [aliasNames, setAliasNames] = useState([]);
+  const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   
   // All insects for RelatedPlants component
@@ -343,14 +355,22 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     
     // 検索対象の植物名を正規化
     const normalizedTarget = normalizePlantName(decodedPlantName);
+    const additionalTargets = new Set([
+      normalizedTarget,
+      ...aliasNames.map(normalizePlantName),
+      normalizePlantName(canonicalName)
+    ].filter(Boolean));
     
     return hostPlantsList.some(plant => {
       // 元の植物名での完全一致
       if (plant === decodedPlantName) return true;
+      if (canonicalName && plant === canonicalName) return true;
+      if (aliasNames.includes(plant)) return true;
       
       // 正規化した植物名での一致
       const normalizedPlant = normalizePlantName(plant);
       if (normalizedPlant === normalizedTarget) return true;
+      if (additionalTargets.has(normalizedPlant)) return true;
       
       // 括弧を除いた植物名での一致（従来のロジック）
       const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
@@ -358,7 +378,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       
       // App.jsxのhostPlantDataとの一貫性を保つため、
       // hostPlantsに登録されている昆虫名リストもチェック
-      if (hostPlants[decodedPlantName] && hostPlants[decodedPlantName].includes(insect.name || insect.japaneseName)) {
+      if ((hostPlants[decodedPlantName] && hostPlants[decodedPlantName].includes(insect.name || insect.japaneseName)) ||
+          (canonicalName && hostPlants[canonicalName] && hostPlants[canonicalName].includes(insect.name || insect.japaneseName)) ||
+          aliasNames.some(a => hostPlants[a] && hostPlants[a].includes(insect.name || insect.japaneseName))) {
         return true;
       }
       
@@ -459,10 +481,21 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           let genus = '';
           if (sci) genus = (sci.split(/\s+/)[0] || '').trim();
           setTaxonomy({ familyJp: (familyJp||'').trim(), familyEn: (familyEn||'').trim(), orderJp: (orderJp||'').trim(), orderEn: (orderEn||'').trim(), genus, scientificName: sci });
+
+          // 別名を保持して正規化に利用
+          const canonical = (hit['和名'] || '').trim();
+          const aliases = (hit['別名'] || '').split(/[、,]/).map(s => s.trim()).filter(Boolean);
+          setCanonicalName(canonical);
+          setAliasNames(aliases);
+
+          // もし別名で到達していたら正規の和名へリダイレクト（URL統一）
+          if (canonical && canonical !== decodedPlantName) {
+            navigate(`/plant/${encodeURIComponent(canonical)}`, { replace: true });
+          }
         }
       })
       .catch(() => { /* ignore */ });
-  }, [decodedPlantName]);
+  }, [decodedPlantName, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -510,7 +543,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       </div>
       {/* 構造化データ */}
       <PlantStructuredData 
-        plant={{ name: decodedPlantName }} 
+        plant={{ name: decodedPlantName, scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined }} 
         details={details} 
         insects={relatedInsects}
         images={plantImages}
@@ -519,7 +552,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       {/* 概要セクション（和名＋学名のみ） */}
       <div className="mt-4 md:mt-6">
         <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">{decodedPlantName}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
+            {/^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
+              ? decodedPlantName
+              : formatScientificNameReact(displayLatin)}
+          </h1>
+          {aliasNames.length > 0 && (
+            <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              <span className="font-medium">別名:</span> {aliasNames.join('、')}
+            </div>
+          )}
           {taxonomy.scientificName && (
             <div className="mt-1 text-left text-slate-600 dark:text-slate-300 text-lg">
               {formatScientificNameReact(taxonomy.scientificName)}

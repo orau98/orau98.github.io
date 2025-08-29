@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getSourceLink } from '../utils/sourceLinks';
 
 /**
@@ -248,9 +249,13 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
       {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示） */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          <span className={`font-medium truncate ${isDomesticWild ? 'text-slate-800 dark:text-slate-200' : 'text-slate-600 dark:text-slate-400'}`}>
+          <Link
+            to={`/plant/${encodeURIComponent(plantGroup.name)}`}
+            className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
+            title={`${plantGroup.name} の詳細へ`}
+          >
             {plantGroup.name}
-          </span>
+          </Link>
           {plantGroup.family && (
             <span className={`text-sm shrink-0 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
               {plantGroup.family}
