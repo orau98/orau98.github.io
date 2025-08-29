@@ -106,7 +106,7 @@ export const formatScientificNameReact = (scientificName) => {
       
       return (
         <>
-          <em>{binomialName}</em>
+          <em className="whitespace-nowrap">{binomialName}</em>
           {extraInfo && ` ${extraInfo}`}
           {` ${bracketInfo}`}
         </>
@@ -124,7 +124,7 @@ export const formatScientificNameReact = (scientificName) => {
     
     return (
       <>
-        <em>{binomialName}</em>
+        <em className="whitespace-nowrap">{binomialName}</em>
         {` ${authorYear}`}
       </>
     );
@@ -140,7 +140,7 @@ export const formatScientificNameReact = (scientificName) => {
     
     return (
       <>
-        <em>{binomialName}</em>
+        <em className="whitespace-nowrap">{binomialName}</em>
         {extraInfo}
       </>
     );
@@ -169,7 +169,7 @@ export const formatScientificNameReact = (scientificName) => {
     
     return (
       <>
-        <em>{binomialName}</em>
+        <em className="whitespace-nowrap">{binomialName}</em>
         {remaining && ` ${remaining}`}
       </>
     );
