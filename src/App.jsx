@@ -706,7 +706,7 @@ function App() {
         
         // Use Papa.parse for proper CSV parsing - handle empty fuyushakuText gracefully
         let fuyushakuData = [];
-        if (fuyushakuText && fuyushakuText.trim()) {
+        if (!useNormalizedOnly && fuyushakuText && fuyushakuText.trim()) {
           try {
             // Remove BOM if present
             let cleanedText = fuyushakuText;
@@ -764,14 +764,14 @@ function App() {
             console.warn('Failed to parse フユシャク CSV:', error);
             fuyushakuData = [];
           }
-        } else {
+        } else if (!useNormalizedOnly) {
           console.warn('フユシャク CSV data is empty or failed to load');
         }
         
         console.log("Parsed フユシャク data:", fuyushakuData.length, "entries");
         
         // Debug: Show first few entries of フユシャク data
-        if (fuyushakuData.length > 0) {
+        if (!useNormalizedOnly && fuyushakuData.length > 0) {
           console.log('DEBUG: フユシャク.csv first few entries:', fuyushakuData.slice(0, 3));
           // Check if カバシタムクゲエダシャク exists
           const kabaShitaEntry = fuyushakuData.find(row => row['和名']?.trim() === 'カバシタムクゲエダシャク');
@@ -788,7 +788,7 @@ function App() {
         }
         
         // Create comprehensive data maps from フユシャク data
-        fuyushakuData.forEach(row => {
+        if (!useNormalizedOnly) fuyushakuData.forEach(row => {
           const japaneseName = row['和名']?.trim();
           const scientificName = row['学名']?.trim();
           let emergenceTime = row['成虫の発生時期']?.trim();
@@ -3863,7 +3863,7 @@ function App() {
 
         // Parse butterfly_host.csv - Use Papa Parse with proper configuration
         let butterflyParsedData = [];
-        if (butterflyText) {
+        if (!useNormalizedOnly && butterflyText) {
           try {
             console.log("Parsing butterfly data with Papa Parse...");
             const butterfliesResult = Papa.parse(butterflyText, { 
@@ -3887,7 +3887,7 @@ function App() {
         console.log("Total butterflies available:", butterflyParsedData.length);
         
         // Check if オオゴマシジミ is in parsed data
-        const oogomashijimi = butterflyParsedData.find(b => b['和名'] === 'オオゴマシジミ');
+        const oogomashijimi = (!useNormalizedOnly && butterflyParsedData.length > 0) ? butterflyParsedData.find(b => b['和名'] === 'オオゴマシジミ') : null;
         console.log("オオゴマシジミ found in parsed data:", oogomashijimi ? 'YES' : 'NO');
         if (oogomashijimi) {
           console.log("オオゴマシジミ raw data:", oogomashijimi);
@@ -3900,8 +3900,9 @@ function App() {
         // Process CSV data and add to butterflyData
         let processedCount = 0;
         let skippedCount = 0;
-        console.log(`About to process ${butterflyParsedData.length} parsed butterfly rows...`);
-        butterflyParsedData.forEach((row, index) => {
+        if (!useNormalizedOnly) {
+          console.log(`About to process ${butterflyParsedData.length} parsed butterfly rows...`);
+          butterflyParsedData.forEach((row, index) => {
           const source = row['文献名'];
           const family = row['科'];
           const subfamily = row['亜科'];
@@ -4520,7 +4521,8 @@ function App() {
               }
             }
           });
-        });
+          });
+        }
         
         console.log("=== BUTTERFLY DATA FINAL SUMMARY ===");
         console.log("- Original CSV rows:", butterflyParsedData.length);
@@ -4538,7 +4540,7 @@ function App() {
 
         // Parse beetle CSV data with error handling
         beetleData = [];
-        if (beetleText) {
+        if (!useNormalizedOnly && beetleText) {
           try {
             console.log("Parsing beetle data...");
             console.log("Beetle CSV text length:", beetleText.length);
@@ -4711,13 +4713,13 @@ function App() {
           console.error("Error parsing beetle data:", error);
           console.warn("Continuing without beetle data - beetle information may be incomplete");
         }
-        } else {
+        } else if (!useNormalizedOnly) {
           console.warn("Beetle data not available - beetle information will be limited");
         }
 
         // Process integrated hamushi data to create leafbeetle data  
         leafbeetleData = [];
-        if (hamushiParsedData.length > 0) {
+        if (!useNormalizedOnly && hamushiParsedData.length > 0) {
           try {
             console.log("Processing leafbeetle data from integrated hamushi file...");
             let processedCount = 0;
