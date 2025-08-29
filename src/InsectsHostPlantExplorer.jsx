@@ -396,7 +396,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                       {/* Instagram埋め込み */}
                       <div className="flex-grow overflow-hidden flex items-center justify-center">
                         <div className="instagram-wrapper w-full h-full max-h-[380px] sm:max-h-[430px] lg:max-h-none overflow-y-auto border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
-                          <InstagramEmbed />
+                      {/* Instagram embed hidden on home unless URL is provided */}
                         </div>
                       </div>
                     </div>

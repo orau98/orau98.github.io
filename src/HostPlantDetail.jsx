@@ -195,10 +195,13 @@ const PlantImageGallery = ({ images }) => {
 };
 
 // カードコンポーネント（昆虫詳細ページのデザインに近い表現）
-const InsectCard = ({ insect, idx }) => {
+const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions = {} }) => {
   const [imgError, setImgError] = React.useState(false);
   const scientificSlug = (insect.scientificName || '').replace(/\s+/g, '_');
-  const imgSrc = `${import.meta.env.BASE_URL}images/insects/${scientificSlug}.jpg`;
+  const filename = insect.scientificFilename || scientificSlug;
+  const hasImage = imageFilenames.size > 0 && imageFilenames.has(filename);
+  const ext = imageExtensions[filename] || '.jpg';
+  const imgSrc = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(filename)}${ext}`;
   const href = insect.path || '#';
   const name = insect.name || insect.japaneseName || '（名称不明）';
   const family = insect.classification?.familyJapanese || insect.family_jp || '';
@@ -206,7 +209,7 @@ const InsectCard = ({ insect, idx }) => {
   return (
     <Link to={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition">
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
-        {!imgError ? (
+        {!imgError && hasImage ? (
           <div className="relative h-full w-full">
             <img
               src={imgSrc}
@@ -255,9 +258,35 @@ const InsectCard = ({ insect, idx }) => {
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
   const decodedPlantName = decodeURIComponent(plantName);
+  const [imageFilenames, setImageFilenames] = useState(new Set());
+  const [imageExtensions, setImageExtensions] = useState({});
   
   // Debug logging for plant detail
   console.log('HostPlantDetail - plantName param:', plantName);
+
+  // Load image filenames and extension mapping for insect cards (avoid 404s)
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const base = import.meta.env.BASE_URL || '/';
+        const [fnRes, extRes] = await Promise.allSettled([
+          fetch(`${base}image_filenames.txt`),
+          fetch(`${base}image_extensions.json`)
+        ]);
+        if (fnRes.status === 'fulfilled' && fnRes.value.ok) {
+          const text = await fnRes.value.text();
+          setImageFilenames(new Set(text.trim().split('\n').filter(Boolean)));
+        }
+        if (extRes.status === 'fulfilled' && extRes.value.ok) {
+          const json = await extRes.value.json();
+          setImageExtensions(json);
+        }
+      } catch (e) {
+        // silent
+      }
+    };
+    load();
+  }, []);
   console.log('HostPlantDetail - decodedPlantName:', decodedPlantName);
   console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
@@ -517,7 +546,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {relatedInsects.map((insect, idx) => (
-              <InsectCard key={insect.id || idx} insect={insect} idx={idx} />
+              <InsectCard key={insect.id || idx} insect={insect} idx={idx} imageFilenames={imageFilenames} imageExtensions={imageExtensions} />
             ))}
           </div>
         )}

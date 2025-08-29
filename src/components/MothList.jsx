@@ -196,7 +196,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}`;
   
   // Check if we have an actual match in imageFilenames
-  const hasImageFilename = imageFilenames.size > 0 ? imageFilenames.has(imageFilename) : true;
+  // Do not request image until filenames mapping is loaded
+  const hasImageFilename = imageFilenames.size > 0 ? imageFilenames.has(imageFilename) : false;
   
   
   // Preload priority images with better performance

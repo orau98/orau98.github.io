@@ -465,18 +465,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     loadImageExtensions();
   }, []);
 
-  // 拡張子を動的に取得
-  const getExtension = (filename) => {
-    return imageExtensions[filename] || '.jpg';
-  };
-
-  // Try multiple image paths with dynamic extensions
-  const possibleImagePaths = [
-    `${import.meta.env.BASE_URL}images/insects/${safeFilename}${getExtension(safeFilename)}`,
-    `${import.meta.env.BASE_URL}images/insects/${japaneseName}${getExtension(japaneseName)}`,
-    `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`,
-    `${import.meta.env.BASE_URL}images/insects/${japaneseName}.jpg`
-  ];
+  // 画像候補（拡張子マップにあるものだけ）
+  const possibleImagePaths = React.useMemo(() => {
+    const exts = imageExtensions || {};
+    const paths = [];
+    if (exts[safeFilename]) {
+      paths.push(`${import.meta.env.BASE_URL}images/insects/${safeFilename}${exts[safeFilename]}`);
+    }
+    if (exts[japaneseName]) {
+      paths.push(`${import.meta.env.BASE_URL}images/insects/${japaneseName}${exts[japaneseName]}`);
+    }
+    return paths;
+  }, [imageExtensions, safeFilename, japaneseName]);
   
   const staticImagePath = possibleImagePaths[0]; // Default to scientific name
   
@@ -590,7 +590,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   </div>
                 ) : (
                   <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
-                    {!imageError ? (
+                    {!imageError && possibleImagePaths.length > 0 ? (
                       <div className="relative h-full w-full">
                         <img 
                           src={possibleImagePaths[currentImageIndex]} 
@@ -621,7 +621,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       </div>
                     )}
                     
-                    {!imageLoaded && !imageError && (
+                    {!imageLoaded && !imageError && possibleImagePaths.length > 0 && (
                       <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 dark:bg-blue-900/40">
                         <div className="relative">
                           <div className="w-16 h-16 border-4 border-blue-200 dark:border-blue-700 rounded-full"></div>

@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 
-// Instagram Embed Component with actual timeline
-const InstagramEmbed = ({ className = "" }) => {
+// Instagram Embed Component (render only when a permalink URL is provided)
+const InstagramEmbed = ({ url, className = "" }) => {
   const embedRef = useRef(null);
 
   useEffect(() => {
+    if (!url) return; // Do not load script if no URL provided
     // Load Instagram embed script
     if (window.instgrm) {
       window.instgrm.Embeds.process();
@@ -21,13 +22,15 @@ const InstagramEmbed = ({ className = "" }) => {
     }
   }, []);
 
+  if (!url) return null;
+
   return (
     <div className={`instagram-embed-container ${className} w-full`} ref={embedRef}>
       <div className="w-full flex justify-center px-0 sm:px-2 md:px-4">
         {/* Instagram Timeline Embed */}
         <blockquote 
           className="instagram-media mx-auto" 
-          data-instgrm-permalink="https://www.instagram.com/onychodactylus_nipponoborealis/" 
+          data-instgrm-permalink={url}
           data-instgrm-version="14"
           style={{
             background: '#FFF',
@@ -43,7 +46,7 @@ const InstagramEmbed = ({ className = "" }) => {
         >
           <div style={{ padding: '12px 12px 8px' }}>
             <a 
-              href="https://www.instagram.com/onychodactylus_nipponoborealis/" 
+              href={url}
               style={{
                 background: '#FFFFFF',
                 lineHeight: '0',
@@ -125,7 +128,7 @@ const InstagramEmbed = ({ className = "" }) => {
               borderTop: '1px solid #efefef'
             }}>
               <a 
-                href="https://www.instagram.com/onychodactylus_nipponoborealis/" 
+                href={url}
                 style={{
                   color: '#c9c8cd',
                   fontFamily: 'Arial,sans-serif',
@@ -138,11 +141,11 @@ const InstagramEmbed = ({ className = "" }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                onychodactylus_nipponoborealis
+                Instagram post
               </a>
               さん(@
               <a 
-                href="https://www.instagram.com/onychodactylus_nipponoborealis/" 
+                href={url}
                 style={{
                   color: '#c9c8cd',
                   fontFamily: 'Arial,sans-serif',
@@ -155,7 +158,7 @@ const InstagramEmbed = ({ className = "" }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                onychodactylus_nipponoborealis
+                Instagram
               </a>
               )がシェアした投稿
             </p>
