@@ -24,7 +24,9 @@ export const formatScientificNameHTML = (scientificName) => {
     // 属名と種小名を分離（最初の2語のみを取得）
     const nameParts = nameWithoutBracket.split(/\s+/);
     if (nameParts.length >= 2) {
-      const binomialName = `${nameParts[0]} ${nameParts[1]}`;
+      const genus = nameParts[0];
+      const species = nameParts[1];
+      const binomialName = `${genus}\u00A0${species}`; // ノーブレークスペース
       const extraInfo = nameParts.slice(2).join(' ');
       
       // イタリック体の学名 + 通常体の著者情報
@@ -37,7 +39,8 @@ export const formatScientificNameHTML = (scientificName) => {
   const authorYearMatch = trimmed.match(authorYearPattern);
   
   if (authorYearMatch) {
-    const binomialName = authorYearMatch[1];
+    const [genus, species] = authorYearMatch[1].split(/\s+/);
+    const binomialName = `${genus}\u00A0${species}`; // ノーブレークスペース
     const authorYear = authorYearMatch[2];
     
     return `<em>${binomialName}</em> ${authorYear}`;
@@ -48,7 +51,8 @@ export const formatScientificNameHTML = (scientificName) => {
   const binomialMatch = trimmed.match(binomialPattern);
   
   if (binomialMatch) {
-    const binomialName = binomialMatch[1];
+    const [genus, species] = binomialMatch[1].split(/\s+/);
+    const binomialName = `${genus}\u00A0${species}`; // ノーブレークスペース
     const extraInfo = binomialMatch[2] || '';
     
     return `<em>${binomialName}</em>${extraInfo}`;
@@ -68,7 +72,7 @@ export const formatScientificNameHTML = (scientificName) => {
   // フォールバック: 最初の2語のみをイタリック体にする
   const parts = trimmed.split(/\s+/);
   if (parts.length >= 2) {
-    const binomialName = `${parts[0]} ${parts[1]}`;
+    const binomialName = `${parts[0]}\u00A0${parts[1]}`; // ノーブレークスペース
     const remaining = parts.slice(2).join(' ');
     
     return `<em>${binomialName}</em>${remaining ? ' ' + remaining : ''}`;
@@ -101,12 +105,13 @@ export const formatScientificNameReact = (scientificName) => {
     // 属名と種小名を分離（最初の2語のみを取得）
     const nameParts = nameWithoutBracket.split(/\s+/);
     if (nameParts.length >= 2) {
-      const binomialName = `${nameParts[0]} ${nameParts[1]}`;
+      const genus = nameParts[0];
+      const species = nameParts[1];
       const extraInfo = nameParts.slice(2).join(' ');
       
       return (
         <>
-          <em className="whitespace-nowrap">{binomialName}</em>
+          <em className="whitespace-nowrap">{genus}{'\u00A0'}{species}</em>
           {extraInfo && ` ${extraInfo}`}
           {` ${bracketInfo}`}
         </>
@@ -119,12 +124,12 @@ export const formatScientificNameReact = (scientificName) => {
   const authorYearMatch = trimmed.match(authorYearPattern);
   
   if (authorYearMatch) {
-    const binomialName = authorYearMatch[1];
+    const [genus, species] = authorYearMatch[1].split(/\s+/);
     const authorYear = authorYearMatch[2];
     
     return (
       <>
-        <em className="whitespace-nowrap">{binomialName}</em>
+        <em className="whitespace-nowrap">{genus}{'\u00A0'}{species}</em>
         {` ${authorYear}`}
       </>
     );
@@ -135,12 +140,12 @@ export const formatScientificNameReact = (scientificName) => {
   const binomialMatch = trimmed.match(binomialPattern);
   
   if (binomialMatch) {
-    const binomialName = binomialMatch[1];
+    const [genus, species] = binomialMatch[1].split(/\s+/);
     const extraInfo = binomialMatch[2] || '';
     
     return (
       <>
-        <em className="whitespace-nowrap">{binomialName}</em>
+        <em className="whitespace-nowrap">{genus}{'\u00A0'}{species}</em>
         {extraInfo}
       </>
     );
@@ -164,12 +169,13 @@ export const formatScientificNameReact = (scientificName) => {
   // フォールバック: 最初の2語のみをイタリック体にする
   const parts = trimmed.split(/\s+/);
   if (parts.length >= 2) {
-    const binomialName = `${parts[0]} ${parts[1]}`;
+    const genus = parts[0];
+    const species = parts[1];
     const remaining = parts.slice(2).join(' ');
     
     return (
       <>
-        <em className="whitespace-nowrap">{binomialName}</em>
+        <em className="whitespace-nowrap">{genus}{'\u00A0'}{species}</em>
         {remaining && ` ${remaining}`}
       </>
     );
