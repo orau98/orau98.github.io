@@ -1,8 +1,8 @@
 Acanthoplusia_ichinosei
 Acherontia_lachesis
 Achlya longipennis longipennis Inoue
-Acronicta_subpurpurea_Matsumura
 Acronicta_subpurpurea
+Acronicta_subpurpurea_2
 Agrilus_spinipennis
 Agrius_convolvuli
 Agrochola_sakabei
@@ -16,16 +16,20 @@ Anacronicta nitida Butler
 Archiearis_parthenias
 Aroga_mesostrepta
 Artena_dotata
+Atacira_grabczewskii
 Atkinsonia_ignipicta
 Atrachya_menetriesi
-Aventiola_pusilla_backup
 Aventiola_pusilla
+Aventiola_pusilla_2
 Bomolocha_nigrobasalis
 Brahmaea_japonica
+Brithys_crini
 Cabera_purus
 Callopistria_argyrosticta
 Capua_vulgana
 Cassida_lineola
+Catocala_bella
+Catocala_bella
 Cerastis_leucographa
 Cerastis_rubricosa
 Ceroprepes_ophthalmicella
@@ -36,36 +40,37 @@ Chilodes_pacifica
 Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
 Circobotys_heterogenalis
+Clanis_bilineata
 Conistra castaneofasciata Motschulsky
 Conistra_flammatra
 Coraebus_daisenensis
 Corgatha_nitens
 Cosmia_affinis
-Cosmia_camptostigma_backup
 Cosmia_camptostigma
-Cosmia_pyralina_backup
+Cosmia_camptostigma_2
 Cosmia_pyralina
-Cosmia_restituta_Walker_1857
+Cosmia_pyralina_2
 Cosmia_restituta
+Cosmia_restituta_2
 Crambus argyrophorus Butler
 Crambus_humidellus
 Craniophora ligustri
 Craniophora_ligustri
-Craniophora_praeclara_Graeser
 Craniophora_praeclara
+Craniophora_praeclara_2
 Cryphia_mitsuhashi
 Cucullia_argentea
 Cucullia_kurilullia
 Cucullia_pustulata
 Cyrestis thyodamas
-Deilephila_askoldensis_backup
 Deilephila_askoldensis
-Deilephila_elpenor_backup
+Deilephila_askoldensis_2
 Deilephila_elpenor
+Deilephila_elpenor_2
 Diarsia_deparca
 Dichomeris heriguronis Matsumura
-Dimorphicosmia_variegata_backup
 Dimorphicosmia_variegata
+Dimorphicosmia_variegata_2
 Diphtherocome_autumnalis
 Dypterygia_caliginosa
 Eligma_narcissus
@@ -78,29 +83,30 @@ Euplexidia_angusta
 Eupsilia_strigifera
 Flavocrambus striatellus Leech
 Gabala_argentata
-Gonepatica_opalina_backup
 Gonepatica_opalina
+Gonepatica_opalina_2
 Gonitis_mesogona
-Habroloma_lewisii_backup
 Habroloma_lewisii
+Habroloma_lewisii_2
 Helicoverpa_armigera
-Helotropha_leucostigma_backup
 Helotropha_leucostigma
+Helotropha_leucostigma_2
 Hemipsectra fallax Butler
 Herculia_orthogramma
 Hypephyra_terrosa
 Hypocala_deflorata
+IMG_4738
 Iragaodes_nobilis
 Jocheaera_alni
-Kawabeia_razowskii_2
 Kawabeia_razowskii
+Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
 Lithomoia_solidaginis
 Lithophane_lamda
-Lithophane_nagaii_2
 Lithophane_nagaii
+Lithophane_nagaii_3
 Lithophane_plumbealis
 Lithophane_pruinosa
 Lithophane_socia
@@ -116,9 +122,10 @@ Martania_fulvida
 Maruca_vitrata
 Meganola_fumosa
 Mesoplectra_griselda
-Micromelalopha_troglodyta_1
-Micromelalopha_troglodyta_3
+Mesorhynchaglaea_pacifica
 Micromelalopha_troglodyta
+Micromelalopha_troglodyta_2
+Micromelalopha_troglodyta_4
 Microxyla_confusa
 Mimachrostia_fasciata
 Mimas_christophi
@@ -126,18 +133,21 @@ Mimopsestis_basalis
 Mythimna_conigera
 Naganoella_timandra
 Narathura japonica
-Narosoideus_flavidorsalis_backup
 Narosoideus_flavidorsalis
+Narosoideus_flavidorsalis_2
 Negritothripa_hampsoni
 Nemophora_staudingerella
 Nephopterix_angustella
-Notodonta_albicosta_backup
+Nipponobuprestis_amabilis
+Nipponobuprestis_amabilis_2
 Notodonta_albicosta
+Notodonta_albicosta_2
+Nyssiodes_lefuarius
 Oides_bowringii
 Organopoda_carnearia
 Orgyia_postica
-Orthogonia_sera_Felder__Felder_1862
 Orthogonia_sera
+Orthogonia_sera_2
 Orthosia_ijimai
 Orthosia_incerta
 Orthosia_lizetta
@@ -152,16 +162,16 @@ Parum colligata Walker
 Pennithera_comis
 Peridea_gigantea
 Perigrapha_circumducta
-Phaecasiophora_roseana_2
 Phaecasiophora_roseana
+Phaecasiophora_roseana_3
 Phalerodonta_manleyi
 Phalga_clarirena
 Phazaca_alikangensis
 Phlogophora_albovittata
 Phlogophora_beatrix
 Phragmataecia_castaneae
-Phtheochroides_clandestina_backup
 Phtheochroides_clandestina
+Phtheochroides_clandestina_2
 Phthonoloba_viridifasciata
 Piletocera_aegimiusalis
 Plutella_xylostella
@@ -171,8 +181,8 @@ Protomiselia_bilinea
 Pseuderannis_lomozemia
 Pseudoips_sylpha
 Pseudopanolis_azusa
-Pseudopanolis_takao_Inaba_1927
 Pseudopanolis_takao
+Pseudopanolis_takao_2
 Pyralis_regalis
 Pyrosis_idiota
 Rhadinosa_nigrocyanea
@@ -183,15 +193,15 @@ Schiffermuelleria_zelleri
 Scoliopteryx_libatrix
 Sebastosema_bubonaria
 Semidonta_biloba
-Shachia_circumscripta_backup
 Shachia_circumscripta
+Shachia_circumscripta_2
 Siccia_obscura
 Spatulipalpia_albistrialis
 Spilarctia_seriatopunctata
 Spilosoma punctarium Stoll
 Spirama_retorta
-Spodoptera_litura_backup
 Spodoptera_litura
+Spodoptera_litura_2
 Stericta_kogii
 Sugitania_akirai
 Sugitaniella_kuramana
@@ -199,8 +209,8 @@ Synanthedon_hector
 Tanaorhinus reciprocata confuciaria Walker
 Telorta_divergens
 Tethea ampliata ampliata Butler
-Tethea_consimilis_backup
 Tethea_consimilis
+Tethea_consimilis_2
 Thysanoplusia_intermixta
 Tiracola_aureata
 Togepteryx_velutina
@@ -208,6 +218,7 @@ Trachys_auricollis
 Trichopteryx_miracula
 Trichopteryx_muscigera
 Trigonodes_hyppasia
+Triphosa_sericata
 Xanthia_icteritia
 Xanthia_togata
 Xenotrachea_niphonica
@@ -217,9 +228,7 @@ Xylena_changi
 Xylena_formosa
 Zanclognatha griselda Butler
 Zanclognatha yaeyamalis Owada
-Zanclognatha_yaeyamalis_2
+Zanclognatha_yaeyamalis
 Zaranga_permagna
-Catocala_bella
-Nyssiodes_lefuarius
-Triphosa_sericata
-Brithys_crini
+マエホシヨトウ
+マルモンキノコヨトウ

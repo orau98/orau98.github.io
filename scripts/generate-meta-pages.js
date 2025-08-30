@@ -1359,41 +1359,34 @@ async function generateMetaPages() {
 function generateImageFileLists() {
   console.log('\n画像ファイルリストを生成中...');
   
+  // 昆虫画像ファイルリストの生成（和名から学名への変換を含む）
   try {
-    // 昆虫画像ファイルリストの生成（和名から学名への変換を含む）
     const mothImagesDir = path.join(__dirname, '../public/images/insects');
     if (fs.existsSync(mothImagesDir)) {
-      // 和名と学名の対応表を作成
       const nameMapping = new Map();
-      
-      // メインCSVを読み込んでマッピングを作成
-      const csvPath = path.join(__dirname, '../public/ListMJ_hostplants_master.csv');
-      const csvContent = fs.readFileSync(csvPath, 'utf-8');
-      const csvData = Papa.parse(csvContent, {
-        header: true,
-        skipEmptyLines: true
-      }).data;
-      
-      csvData.forEach(row => {
-        const japaneseName = row['和名'] || row['属名'];
-        const scientificName = row['学名'];
-        const genus = row['属名'];
-        const species = row['種小名'];
-        
-        if (japaneseName && scientificName) {
-          // 学名をファイル名形式（アンダースコア）に変換
-          const scientificFilename = scientificName
-            .replace(/\s*\([^)]*\)\s*/g, '') // 著者情報を除去
-            .replace(/\s+/g, '_') // スペースをアンダースコアに
-            .replace(/[,\.]/g, ''); // カンマやピリオドを除去
-          nameMapping.set(japaneseName, scientificFilename);
-        } else if (japaneseName && genus && species) {
-          // 学名がない場合は属名と種名から構築
-          const scientificFilename = `${genus}_${species}`;
-          nameMapping.set(japaneseName, scientificFilename);
-        }
-      });
-      
+      try {
+        // メインCSV（任意）を読み込んでマッピングを作成（無ければスキップ）
+        const csvPath = path.join(__dirname, '../public/ListMJ_hostplants_master.csv');
+        const csvContent = fs.readFileSync(csvPath, 'utf-8');
+        const csvData = Papa.parse(csvContent, { header: true, skipEmptyLines: true }).data;
+        csvData.forEach(row => {
+          const japaneseName = row['和名'] || row['属名'];
+          const scientificName = row['学名'];
+          const genus = row['属名'];
+          const species = row['種小名'];
+          if (japaneseName && scientificName) {
+            const scientificFilename = scientificName
+              .replace(/\s*\([^)]*\)\s*/g, '')
+              .replace(/\s+/g, '_')
+              .replace(/[,\.]/g, '');
+            nameMapping.set(japaneseName, scientificFilename);
+          } else if (japaneseName && genus && species) {
+            nameMapping.set(japaneseName, `${genus}_${species}`);
+          }
+        });
+      } catch (e) {
+        console.warn('ListMJ_hostplants_master.csv が無いため、昆虫画像の和名→学名マッピングは手動追加分のみ使用します');
+      }
       // 手動で追加する必要のあるマッピング（ファイル名変更対応）
       nameMapping.set('ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura');
       nameMapping.set('オオマエベニトガリバ', 'Tethea_consimilis');
@@ -1417,50 +1410,40 @@ function generateImageFileLists() {
       nameMapping.set('ヨモギオオホソハマキ', 'Phtheochroides_clandestina');
       nameMapping.set('アオマダラタマムシ', 'Nipponobuprestis_amabilis');
       nameMapping.set('ルイスヒラタチビタマムシ', 'Habroloma_lewisii');
-      
-      console.log(`和名-学名マッピング作成: ${nameMapping.size}件`);
-      
+
       const mothImageFiles = fs.readdirSync(mothImagesDir)
         .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i));
-      
-      const mothImages = mothImageFiles
-        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去したファイル名
-        .sort();
-      
-      // 拡張子マッピングを作成
+      const mothImages = mothImageFiles.map(file => file.replace(/\.[^.]+$/, '')).sort();
       const extensionMapping = {};
       mothImageFiles.forEach(file => {
         const nameWithoutExt = file.replace(/\.[^.]+$/, '');
         const extension = file.match(/\.[^.]+$/)[0];
         extensionMapping[nameWithoutExt] = extension;
       });
-      
-      const imageListPath = path.join(__dirname, '../public/image_filenames.txt');
-      fs.writeFileSync(imageListPath, mothImages.join('\n') + '\n');
-      
-      // 拡張子マッピングをJSONファイルとして保存
-      const extensionMappingPath = path.join(__dirname, '../public/image_extensions.json');
-      fs.writeFileSync(extensionMappingPath, JSON.stringify(extensionMapping, null, 2));
-      
+      fs.writeFileSync(path.join(__dirname, '../public/image_filenames.txt'), mothImages.join('\n') + '\n');
+      fs.writeFileSync(path.join(__dirname, '../public/image_extensions.json'), JSON.stringify(extensionMapping, null, 2));
       console.log(`- 昆虫画像リスト生成完了: ${mothImages.length}件`);
       console.log(`- 画像拡張子マッピング生成完了: ${Object.keys(extensionMapping).length}件`);
     }
-    
-    // 植物画像ファイルリストの生成
+  } catch (error) {
+    console.error('昆虫画像ファイルリスト生成時にエラー:', error);
+  }
+
+  // 植物画像ファイルリストの生成（昆虫の失敗に関わらず続行）
+  try {
     const plantImagesDir = path.join(__dirname, '../public/images/plants');
     if (fs.existsSync(plantImagesDir)) {
       const plantImages = fs.readdirSync(plantImagesDir)
         .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
-        .map(file => file.replace(/\.[^.]+$/, '')) // 拡張子を除去
+        .map(file => file.replace(/\.[^.]+$/, ''))
         .sort();
-      
-      const plantImageListPath = path.join(__dirname, '../public/plant_image_filenames.txt');
-      fs.writeFileSync(plantImageListPath, plantImages.join('\n') + '\n');
+      fs.writeFileSync(path.join(__dirname, '../public/plant_image_filenames.txt'), plantImages.join('\n') + '\n');
       console.log(`- 植物画像リスト生成完了: ${plantImages.length}件`);
+    } else {
+      console.log('植物画像ディレクトリが見つかりませんでした（skipping）。');
     }
-    
   } catch (error) {
-    console.error('画像ファイルリスト生成中にエラーが発生しました:', error);
+    console.error('植物画像ファイルリスト生成時にエラー:', error);
   }
 }
 
