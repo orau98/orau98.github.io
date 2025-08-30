@@ -415,6 +415,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const commonImages = [
       { suffix: '', label: '全体' },
       { suffix: '_葉表', label: '葉表' },
+      { suffix: '_葉', label: '葉' },
       { suffix: '_葉裏', label: '葉裏' },
       { suffix: '_葉表白化', label: '葉表白化' },
       { suffix: '_羽状複葉', label: '羽状複葉' },
