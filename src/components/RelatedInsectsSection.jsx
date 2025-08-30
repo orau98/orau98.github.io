@@ -103,14 +103,14 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   const getImagePath = (insect) => {
     const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
     const ext = imageExtensions[safeFilename] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}`;
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}?v=${Date.now()}`;
   };
 
   // フォールバック画像パスを取得する関数
   const getFallbackImagePath = (insect) => {
     const japaneseName = insect.name;
     const ext = imageExtensions[japaneseName] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}`;
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}?v=${Date.now()}`;
   };
 
   if (Object.keys(relatedMothsByPlant).length === 0) {

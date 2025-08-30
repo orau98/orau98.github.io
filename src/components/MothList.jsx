@@ -195,7 +195,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   // All insect images are in the insects folder
   const imageFolder = 'insects';
   
-  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}`;
+  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}?v=${Date.now()}`;
   
   // Check if we have an actual match in imageFilenames
   // Do not request image until filenames mapping is loaded
@@ -275,7 +275,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       // Try fallback paths for beetles in insects directory
                       if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
                         e.target.dataset.fallbackAttempted = 'true';
-                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}`;
+                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}?v=${Date.now()}`;
                         e.target.src = fallbackUrl;
                       } else {
                         // Safely hide the image and show fallback
