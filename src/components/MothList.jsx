@@ -71,6 +71,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
     ['ナシイラガ', 'Narosoideus_flavidorsalis'],
     ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
+    ['ハマオモトヨトウ', 'Brithys_crini'],
     // タマムシ科
     ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
     ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
@@ -616,7 +617,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     const loadImageData = async () => {
       try {
         // Load filenames
-        const filenamesResponse = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt`);
+        const filenamesResponse = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`);
         const filenamesText = await filenamesResponse.text();
         const rawList = filenamesText.trim().split('\n').filter(Boolean);
         const filenames = new Set(rawList);
@@ -639,7 +640,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         
         // Load extension mapping
         try {
-          const extensionsResponse = await fetch(`${import.meta.env.BASE_URL}image_extensions.json`);
+          const extensionsResponse = await fetch(`${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`);
           const extensionsData = await extensionsResponse.json();
           setImageExtensions(extensionsData);
           console.log('Loaded image extensions:', Object.keys(extensionsData).length, 'files');

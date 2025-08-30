@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
@@ -34,6 +34,21 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
     if (layout === 'horizontal-limited' && !isExpanded) return 6; // 制限表示
     return count; // グリッド表示では全て表示
   };
+
+  // 画像拡張子マッピングを読み込む
+  const [imageExtensions, setImageExtensions] = useState({});
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setImageExtensions(data || {});
+        }
+      } catch (_) {}
+    };
+    load();
+  }, []);
 
   // MothDetailと同じ画像パス構築ロジックを使用
   // 和名→学名ファイル名マッピング（App.jsxと同期）
@@ -87,16 +102,15 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   // 画像パスを構築する関数（MothDetailと同じロジック）
   const getImagePath = (insect) => {
     const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
-    const japaneseName = insect.name;
-    
-    // MothDetailと同じ画像フォルダとパス構築を使用
-    return `${import.meta.env.BASE_URL}images/insects/${safeFilename}.jpg`;
+    const ext = imageExtensions[safeFilename] || '.jpg';
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}`;
   };
 
   // フォールバック画像パスを取得する関数
   const getFallbackImagePath = (insect) => {
     const japaneseName = insect.name;
-    return `${import.meta.env.BASE_URL}images/insects/${japaneseName}.jpg`;
+    const ext = imageExtensions[japaneseName] || '.jpg';
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}`;
   };
 
   if (Object.keys(relatedMothsByPlant).length === 0) {

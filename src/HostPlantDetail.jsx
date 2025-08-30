@@ -280,7 +280,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         const base = import.meta.env.BASE_URL || '/';
         const [fnRes, extRes] = await Promise.allSettled([
           fetch(`${base}image_filenames.txt`),
-          fetch(`${base}image_extensions.json`)
+          fetch(`${base}image_extensions.json?v=${Date.now()}`)
         ]);
         if (fnRes.status === 'fulfilled' && fnRes.value.ok) {
           const text = await fnRes.value.text();
