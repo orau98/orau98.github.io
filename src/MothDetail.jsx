@@ -490,17 +490,26 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     loadImageExtensions();
   }, []);
 
-  // 画像候補（拡張子マップにあるものだけ）
+  // 画像候補（拡張子マップ + フォールバック拡張子を試行）
   const possibleImagePaths = React.useMemo(() => {
     const exts = imageExtensions || {};
-    const paths = [];
-    if (exts[safeFilename]) {
-      paths.push(`${import.meta.env.BASE_URL}images/insects/${safeFilename}${exts[safeFilename]}`);
-    }
-    if (exts[japaneseName]) {
-      paths.push(`${import.meta.env.BASE_URL}images/insects/${japaneseName}${exts[japaneseName]}`);
-    }
-    return paths;
+    const v = `?v=${Date.now()}`; // cache-buster to avoid stale CDN responses
+    const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${v}`;
+    const uniq = new Set();
+    const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
+    const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
+
+    // 1) mapping-priority
+    if (exts[safeFilename]) push(build(safeFilename, exts[safeFilename]));
+    if (exts[japaneseName]) push(build(japaneseName, exts[japaneseName]));
+
+    // 2) fallback exts for scientific filename
+    tryExts.forEach(ext => push(build(safeFilename, ext)));
+
+    // 3) fallback exts for Japanese filename
+    tryExts.forEach(ext => push(build(japaneseName, ext)));
+
+    return Array.from(uniq);
   }, [imageExtensions, safeFilename, japaneseName]);
   
   const staticImagePath = possibleImagePaths[0]; // Default to scientific name
