@@ -566,9 +566,10 @@ function App() {
         }
 
         // Check if essential files loaded
-        // 正規化データのみ運用時は旧メインCSVの欠落を許容
+        // 正規化データがある場合は旧メインCSVが無くても続行（GitHub Pagesで未配置でも白画面にしない）
         if (!mainText && !useNormalizedOnly) {
-          throw new Error('Main moth data file failed to load - cannot continue');
+          console.warn('Main moth data file missing. Proceeding with normalized CSVs only.');
+          mainText = '';
         }
         if (!wameiText) {
           console.warn('Wamei checklist failed to load - plant family data may be incomplete');
