@@ -677,8 +677,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   const hasAnyImageForMoth = useCallback((insect) => {
     try {
       if (!insect) return false;
-      const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
-
       const createSafeFilename = (scientificName) => {
         if (!scientificName) return '';
         let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
@@ -689,13 +687,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         cleanedName = cleanedName.replace(/\s+/g, '_');
         return cleanedName;
       };
-
-      const byMapped = mappedFilename && (
-        imageFilenames.has(mappedFilename) ||
-        imageFilenamesNormalized.has(mappedFilename) ||
-        !!imageExtensions[mappedFilename]
-      );
-      if (byMapped) return true;
 
       const sciFile = insect.scientificFilename || createSafeFilename(insect.scientificName);
       if (sciFile) {
@@ -725,7 +716,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     } catch {
       return false;
     }
-  }, [globalJapaneseToScientificMapping, imageExtensions, imageFilenames, imageFilenamesNormalized]);
+  }, [imageExtensions, imageFilenames, imageFilenamesNormalized]);
 
   // Sort moths to prioritize those with images (lightweight)
   const sortedMoths = useMemo(() => {
