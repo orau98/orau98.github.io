@@ -470,8 +470,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
   const japaneseName = moth.name;
   
-  // 画像拡張子を動的に取得するための処理を追加
+  // 画像拡張子・ファイル名リスト（詳細でも堅牢に解決）
   const [imageExtensions, setImageExtensions] = useState({});
+  const [imageBases, setImageBases] = useState([]);
   
   useEffect(() => {
     const loadImageExtensions = async () => {
@@ -486,14 +487,27 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         setImageExtensions({});
       }
     };
-    
+    const loadImageFilenames = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`);
+        if (res.ok) {
+          const text = await res.text();
+          const list = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+          setImageBases(list);
+        }
+      } catch (e) {
+        console.debug('Failed to load image_filenames.txt:', e);
+      }
+    };
+
     loadImageExtensions();
+    loadImageFilenames();
   }, []);
 
   // 画像候補（拡張子マップ + フォールバック拡張子を試行）
   const possibleImagePaths = React.useMemo(() => {
     const exts = imageExtensions || {};
-    const v = `?v=${Date.now()}`; // cache-buster to avoid stale CDN responses
+    const v = `?v=${Date.now()}`;
     const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${v}`;
     const uniq = new Set();
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
@@ -509,8 +523,27 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     // 3) fallback exts for Japanese filename
     tryExts.forEach(ext => push(build(japaneseName, ext)));
 
+    // 4) filename list-based matching (e.g., "Amraica superans superans Butler")
+    try {
+      if (imageBases && imageBases.length > 0 && moth?.scientificName) {
+        const sci = moth.scientificName.replace(/\s*\(.*$/, '').trim(); // "Genus species"
+        const [genus, species] = sci.split(/\s+/);
+        if (genus && species) {
+          const candidates = imageBases.filter(base => base.includes(genus) && base.includes(species));
+          // Prefer the shortest matching base (likely closest to binomial)
+          candidates.sort((a, b) => a.length - b.length);
+          for (const base of candidates) {
+            if (exts[base]) push(build(base, exts[base]));
+            else {
+              tryExts.forEach(ext => push(build(base, ext)));
+            }
+          }
+        }
+      }
+    } catch (_) {}
+
     return Array.from(uniq);
-  }, [imageExtensions, safeFilename, japaneseName]);
+  }, [imageExtensions, imageBases, safeFilename, japaneseName, moth?.scientificName]);
   
   const staticImagePath = possibleImagePaths[0]; // Default to scientific name
   
