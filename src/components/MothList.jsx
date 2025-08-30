@@ -71,6 +71,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
     ['ナシイラガ', 'Narosoideus_flavidorsalis'],
     ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
+    ['ノコメキシタバ', 'Catocala_bella'],
     ['ハマオモトヨトウ', 'Brithys_crini'],
     // タマムシ科
     ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],

@@ -59,6 +59,8 @@ const globalJapaneseToScientificMapping = new Map([
     ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
     ['ナシイラガ', 'Narosoideus_flavidorsalis'],
     ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
+    // 画像整備（学名ファイル）
+    ['ノコメキシタバ', 'Catocala_bella'],
     ['ハマオモトヨトウ', 'Brithys_crini'],
     // 今回リネームした画像のマッピング追加
     ['クロモクメヨトウ', 'Dypterygia_caliginosa'],
