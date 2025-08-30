@@ -11,6 +11,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
   const [instagramUrl, setInstagramUrl] = useState('');
   const [instagramPosts, setInstagramPosts] = useState([]);
+  const [instagramWidgetHtml, setInstagramWidgetHtml] = useState('');
   const scrollPositionRef = useRef(0);
   
   // DEBUG: Log the actual data received
@@ -111,6 +112,24 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
       }
     };
     loadTimeline();
+  }, []);
+
+  // Load optional third-party widget (e.g., SnapWidget/LightWidget embed code)
+  React.useEffect(() => {
+    const loadWidget = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}instagram_widget.html`, { cache: 'no-store' });
+        if (res.ok) {
+          const html = await res.text();
+          if (html && html.trim().length > 0) {
+            setInstagramWidgetHtml(html);
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    loadWidget();
   }, []);
 
 
@@ -443,17 +462,18 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                       <div className="flex-grow overflow-hidden flex items-center justify-center">
                         <div className="instagram-wrapper w-full h-full max-h-[380px] sm:max-h-[430px] lg:max-h-none overflow-y-auto border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
                           {(() => {
-                            if (!instagramUrl) {
-                              return (
-                                <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8">
-                                  Instagramの最新投稿URLが未設定です（public/instagram_latest.txt または VITE_INSTAGRAM_URL を設定）。
-                                </div>
-                              );
-                            }
-                            // If multiple posts configured, show timeline
+                            // 1) timeline from file
                             if (instagramPosts && instagramPosts.length > 0) {
                               return <InstagramTimeline urls={instagramPosts} />;
                             }
+                            // 2) third-party widget
+                            if (instagramWidgetHtml) {
+                              return (
+                                <div className="bg-white/70 dark:bg-slate-800/70 rounded-xl overflow-hidden p-0" dangerouslySetInnerHTML={{ __html: instagramWidgetHtml }} />
+                              );
+                            }
+                            // 3) single post permalink
+                            if (instagramUrl) {
                             const isPostPermalink = /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(instagramUrl);
                             if (isPostPermalink) return <InstagramEmbed url={instagramUrl} />;
                             // Profile URL fallback: show a nice link card
@@ -473,6 +493,13 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                                   <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">最近の投稿は `public/instagram_posts.txt` にパーマリンクを列挙するとタイムライン表示されます。</p>
                                 </div>
                               </a>
+                            );
+                            }
+                            // 4) nothing configured
+                            return (
+                              <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8">
+                                Instagramの最新投稿が未設定です（public/instagram_posts.txt、instagram_widget.html、instagram_latest.txt のいずれかを設定）。
+                              </div>
                             );
                           })()}
                         </div>
