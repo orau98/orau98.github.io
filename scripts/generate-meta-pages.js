@@ -493,7 +493,7 @@ function generateInsectHTML(insect, type) {
   const scientificName = insect.scientificName || '';
   const source = insect.source || '不明';
   const imageUrl = insect.scientificFilename ? 
-    `/images/moths/${insect.scientificFilename}.jpg` : '';
+    `/images/insects/${insect.scientificFilename}.jpg` : '';
   
   // 食草リストを配列として処理
   // セミコロン区切りも処理する（例：センモンヤガの場合）
@@ -1361,7 +1361,7 @@ function generateImageFileLists() {
   
   try {
     // 昆虫画像ファイルリストの生成（和名から学名への変換を含む）
-    const mothImagesDir = path.join(__dirname, '../public/images/moths');
+    const mothImagesDir = path.join(__dirname, '../public/images/insects');
     if (fs.existsSync(mothImagesDir)) {
       // 和名と学名の対応表を作成
       const nameMapping = new Map();

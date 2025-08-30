@@ -147,6 +147,19 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     if (imageFilenames.has(safeFilename)) {
       return safeFilename;
     }
+    // 2a. Try filename variants that start with the safe binomial (e.g., Genus_species_2)
+    for (const filename of imageFilenames) {
+      if (filename === safeFilename || filename.startsWith(`${safeFilename}_`)) {
+        return filename;
+      }
+    }
+    // 2b. If we only have the extensions map, try to find a key that starts with the safe binomial
+    if (imageExtensions && Object.keys(imageExtensions).length > 0) {
+      const extKey = Object.keys(imageExtensions).find(key => key === safeFilename || key.startsWith(`${safeFilename}_`));
+      if (extKey) {
+        return extKey;
+      }
+    }
     
     // 3. Try Japanese name directly
     if (imageFilenames.has(moth.name)) {
@@ -163,8 +176,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     // 5. Try to find any filename containing the scientific name parts
     if (moth.scientificName) {
       const scientificParts = moth.scientificName.split(' ').slice(0, 2).join(' ');
+      const scientificUnderscore = scientificParts.replace(/\s+/g, '_');
       for (const filename of imageFilenames) {
-        if (filename.includes(scientificParts)) {
+        if (filename.includes(scientificParts) || filename.includes(scientificUnderscore)) {
           return filename;
         }
       }
