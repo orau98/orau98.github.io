@@ -679,6 +679,25 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       
       const sorted = [...filteredMoths].sort((a, b) => {
         if (isSearching) {
+          // 検索時でも「画像あり」を優先。その上で分類優先の並びにする。
+          const createSafeFilename = (scientificName) => {
+        if (!scientificName) return '';
+        // Extract genus and species only
+        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+        cleanedName = cleanedName.replace(/\s+/g, '_');
+        return cleanedName;
+      };
+      const filenameA = a.scientificFilename || createSafeFilename(a.scientificName);
+      const filenameB = b.scientificFilename || createSafeFilename(b.scientificName);
+      const hasImageA = imageFilenames.has(filenameA) || imageFilenamesNormalized.has(filenameA) || !!imageExtensions[filenameA];
+      const hasImageB = imageFilenames.has(filenameB) || imageFilenamesNormalized.has(filenameB) || !!imageExtensions[filenameB];
+      if (hasImageA && !hasImageB) return -1;
+      if (!hasImageA && hasImageB) return 1;
+
           // 検索時：分類階層順（科→亜科→族→属→種）+ あいうえお順
           const getClassificationPriority = (insect) => {
             const classification = insect.classification;
