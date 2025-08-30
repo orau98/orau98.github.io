@@ -673,6 +673,60 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     loadImageData();
   }, []);
 
+  // Helper to check if any image exists for a moth (JP or scientific filenames)
+  const hasAnyImageForMoth = useCallback((insect) => {
+    try {
+      if (!insect) return false;
+      const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
+
+      const createSafeFilename = (scientificName) => {
+        if (!scientificName) return '';
+        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
+        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
+        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
+        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
+        cleanedName = cleanedName.replace(/\s+/g, '_');
+        return cleanedName;
+      };
+
+      const byMapped = mappedFilename && (
+        imageFilenames.has(mappedFilename) ||
+        imageFilenamesNormalized.has(mappedFilename) ||
+        !!imageExtensions[mappedFilename]
+      );
+      if (byMapped) return true;
+
+      const sciFile = insect.scientificFilename || createSafeFilename(insect.scientificName);
+      if (sciFile) {
+        if (imageFilenames.has(sciFile) || imageFilenamesNormalized.has(sciFile) || !!imageExtensions[sciFile]) return true;
+        // Genus_species_* variants
+        for (const fname of imageFilenames) {
+          if (fname === sciFile || fname.startsWith(`${sciFile}_`)) return true;
+        }
+        if (Object.keys(imageExtensions).some(k => k === sciFile || k.startsWith(`${sciFile}_`))) return true;
+      }
+
+      // Japanese name file
+      if (insect.name) {
+        if (imageFilenames.has(insect.name) || !!imageExtensions[insect.name]) return true;
+      }
+
+      // Scientific parts containment (space and underscore versions)
+      if (insect.scientificName) {
+        const parts = insect.scientificName.split(' ').slice(0, 2).join(' ');
+        const partsUS = parts.replace(/\s+/g, '_');
+        for (const fname of imageFilenames) {
+          if (fname.includes(parts) || fname.includes(partsUS)) return true;
+        }
+      }
+
+      return false;
+    } catch {
+      return false;
+    }
+  }, [globalJapaneseToScientificMapping, imageExtensions, imageFilenames, imageFilenamesNormalized]);
+
   // Sort moths to prioritize those with images (lightweight)
   const sortedMoths = useMemo(() => {
     try {
@@ -705,12 +759,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         cleanedName = cleanedName.replace(/\s+/g, '_');
         return cleanedName;
       };
-      const filenameA = a.scientificFilename || createSafeFilename(a.scientificName);
-      const filenameB = b.scientificFilename || createSafeFilename(b.scientificName);
-      const hasImageA = imageFilenames.has(filenameA) || imageFilenamesNormalized.has(filenameA) || !!imageExtensions[filenameA];
-      const hasImageB = imageFilenames.has(filenameB) || imageFilenamesNormalized.has(filenameB) || !!imageExtensions[filenameB];
-      if (hasImageA && !hasImageB) return -1;
-      if (!hasImageA && hasImageB) return 1;
+          const hasImageA = hasAnyImageForMoth(a);
+          const hasImageB = hasAnyImageForMoth(b);
+          if (hasImageA && !hasImageB) return -1;
+          if (!hasImageA && hasImageB) return 1;
 
           // 検索時：分類階層順（科→亜科→族→属→種）+ あいうえお順
           const getClassificationPriority = (insect) => {
@@ -754,11 +806,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       };
       
           // Check if species has a static image file (based on preloaded filename list)
-          const filenameA = a.scientificFilename || createSafeFilename(a.scientificName);
-          const filenameB = b.scientificFilename || createSafeFilename(b.scientificName);
-          
-          const hasImageA = imageFilenames.has(filenameA) || imageFilenamesNormalized.has(filenameA) || !!imageExtensions[filenameA];
-          const hasImageB = imageFilenames.has(filenameB) || imageFilenamesNormalized.has(filenameB) || !!imageExtensions[filenameB];
+          const hasImageA = hasAnyImageForMoth(a);
+          const hasImageB = hasAnyImageForMoth(b);
       
       // Debug logging for specific moths
       const debugMoths = ['キノコヨトウ', 'キグチヨトウ', 'アズサキリガ', 'イセキリガ', 'クモガタキリガ', 'ヒロバモクメキリガ', 'ベニモントガリホソガ'];
