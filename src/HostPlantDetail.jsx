@@ -59,18 +59,20 @@ const PlantImageGallery = ({ images }) => {
     const checkImages = async () => {
       const available = [];
       
+      // cache-buster to avoid stale 404s on Pages/CDN
+      const v = `?v=${Date.now()}`;
       for (const image of images) {
         try {
           // Try both .jpg and .JPG
           const responses = await Promise.allSettled([
-            fetch(image.src, { method: 'HEAD' }),
-            fetch(image.srcJPG, { method: 'HEAD' })
+            fetch(image.src + v, { method: 'HEAD' }),
+            fetch(image.srcJPG + v, { method: 'HEAD' })
           ]);
           
           if (responses[0].status === 'fulfilled' && responses[0].value.ok) {
-            available.push({ ...image, finalSrc: image.src });
+            available.push({ ...image, finalSrc: image.src + v });
           } else if (responses[1].status === 'fulfilled' && responses[1].value.ok) {
-            available.push({ ...image, finalSrc: image.srcJPG });
+            available.push({ ...image, finalSrc: image.srcJPG + v });
           }
         } catch {
           // Image doesn't exist, skip it
@@ -424,6 +426,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       { suffix: '_若葉', label: '若葉' },
       { suffix: '_芽', label: '芽' },
       { suffix: '_枝', label: '枝' },
+      { suffix: '_枝先', label: '枝先' },
       { suffix: '_断面', label: '断面' }
     ];
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
