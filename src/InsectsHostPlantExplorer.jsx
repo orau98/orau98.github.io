@@ -12,6 +12,12 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   const [instagramUrl, setInstagramUrl] = useState('');
   const [instagramPosts, setInstagramPosts] = useState([]);
   const [instagramWidgetHtml, setInstagramWidgetHtml] = useState('');
+  
+  // Helper: detect profile URL (not a single post permalink)
+  const isInstagramProfileUrl = (url) => {
+    if (!url) return false;
+    return /^https?:\/\/(www\.)?instagram\.com\//.test(url) && !/\/(p|reel|tv)\//.test(url);
+  };
   const scrollPositionRef = useRef(0);
   
   // DEBUG: Log the actual data received
@@ -504,6 +510,24 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                           })()}
                         </div>
                       </div>
+
+                      {/* アカウントリンク（プロフィールURLがある場合は下部に配置） */}
+                      {isInstagramProfileUrl(instagramUrl) && (
+                        <div className="mt-2 flex justify-end">
+                          <a
+                            href={instagramUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-white/40 dark:border-slate-700/50 bg-white/70 dark:bg-slate-800/70 text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-800/90 transition-colors shadow-sm"
+                            aria-label="Instagramプロフィールへ"
+                          >
+                            <span className="p-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded">
+                              <InstagramIcon className="w-3.5 h-3.5 text-white" />
+                            </span>
+                            <span className="font-medium">Instagramプロフィールへ</span>
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
