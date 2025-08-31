@@ -328,10 +328,30 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     }
     const safePlantName = decodedPlantName;
     canon.href = `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html`;
+    // BreadcrumbList (JSON-LD)
+    const breadcrumb = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
+        { "@type": "ListItem", "position": 2, "name": "植物", "item": "https://orau98.github.io/plant" },
+        { "@type": "ListItem", "position": 3, "name": decodedPlantName, "item": `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html` }
+      ]
+    };
+    let breadcrumbScript = document.querySelector('#breadcrumb-structured-data');
+    if (!breadcrumbScript) {
+      breadcrumbScript = document.createElement('script');
+      breadcrumbScript.id = 'breadcrumb-structured-data';
+      breadcrumbScript.type = 'application/ld+json';
+      document.head.appendChild(breadcrumbScript);
+    }
+    breadcrumbScript.textContent = JSON.stringify(breadcrumb);
     return () => {
       // restore index canonical
       const c = document.querySelector('link[rel="canonical"]');
       if (c) c.href = 'https://orau98.github.io/';
+      const b = document.querySelector('#breadcrumb-structured-data');
+      if (b) b.remove();
     };
   }, [decodedPlantName, familyLabel]);
   

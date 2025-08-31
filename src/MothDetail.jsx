@@ -252,6 +252,25 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         document.head.appendChild(structuredDataScript);
       }
       structuredDataScript.textContent = JSON.stringify(structuredData);
+
+      // BreadcrumbList (JSON-LD)
+      const breadcrumb = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? 'タマムシ' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾', "item": `https://orau98.github.io/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}` },
+          { "@type": "ListItem", "position": 3, "name": moth.name, "item": `https://orau98.github.io/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html` }
+        ]
+      };
+      let breadcrumbScript = document.querySelector('#breadcrumb-structured-data');
+      if (!breadcrumbScript) {
+        breadcrumbScript = document.createElement('script');
+        breadcrumbScript.id = 'breadcrumb-structured-data';
+        breadcrumbScript.type = 'application/ld+json';
+        document.head.appendChild(breadcrumbScript);
+      }
+      breadcrumbScript.textContent = JSON.stringify(breadcrumb);
     }
     
     // Cleanup function to restore original title
@@ -264,6 +283,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       const structuredDataScript = document.querySelector('#insect-structured-data');
       if (structuredDataScript) {
         structuredDataScript.remove();
+      }
+      const breadcrumbScript = document.querySelector('#breadcrumb-structured-data');
+      if (breadcrumbScript) {
+        breadcrumbScript.remove();
       }
     };
   }, [moth]);
