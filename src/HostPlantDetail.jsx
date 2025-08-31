@@ -210,44 +210,53 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
 
   return (
     <Link to={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition">
-      <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
+      <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
             <img
               src={imgSrc}
               alt={name}
-              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
               onError={() => setImgError(true)}
               loading="lazy"
               decoding="async"
             />
             {/* Hover gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent hidden"></div>
             {/* Name overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 ">
               <h3 className="text-white font-bold text-lg drop-shadow-lg">{name}</h3>
               {insect.scientificName && (
-                <p className="text-white/90 text-sm drop-shadow-md italic">{insect.scientificName}</p>
+                <p className="text-white/90 text-sm drop-shadow-md italic">{formatScientificNameReact(insect.scientificName)}</p>
               )}
             </div>
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
-            <div className="text-center p-6">
+            <div className="flex-shrink-0 mb-4">
+              <svg className="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="text-center">
+              <h3 className="text-slate-800 dark:text-slate-200 font-bold text-lg mb-1 leading-tight tracking-tight">{name}</h3>
+              {insect.scientificName && (
+                <p className="text-slate-600 dark:text-slate-300 text-sm italic">{formatScientificNameReact(insect.scientificName)}</p>
+              )}
+            </div>
               <div className="w-16 h-16 mx-auto mb-3 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
               <p className="text-slate-500 dark:text-slate-400 font-medium">画像が見つかりません</p>
-            </div>
           </div>
         )}
-      </div>
+        </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">{name}</h3>
         {insect.scientificName && (
-          <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 italic">{insect.scientificName}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 italic">{formatScientificNameReact(insect.scientificName)}</p>
         )}
         {family && (
           <p className="text-sm text-slate-600 dark:text-slate-300">科: {family}</p>

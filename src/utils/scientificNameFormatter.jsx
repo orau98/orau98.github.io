@@ -21,6 +21,16 @@ export const formatScientificNameHTML = (scientificName) => {
     const nameWithoutBracket = bracketMatch[1].trim();
     const bracketInfo = bracketMatch[2];
     
+    // 亜属を含む形式: Genus (Subgenus) species [...]
+    const gss = nameWithoutBracket.match(/^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/);
+    if (gss) {
+      const genus = gss[1];
+      const subgenus = gss[2];
+      const species = gss[3];
+      const extraInfo = (gss[4] || '').trim();
+      return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extraInfo ? ' ' + extraInfo : ''} ${bracketInfo}`;
+    }
+
     // 属名と種小名を分離（最初の2語のみを取得）
     const nameParts = nameWithoutBracket.split(/\s+/);
     if (nameParts.length >= 2) {
@@ -58,6 +68,17 @@ export const formatScientificNameHTML = (scientificName) => {
     return `<em>${binomialName}</em>${extraInfo}`;
   }
   
+  // 属名 (亜属) 種小名 の場合（例：Genus (Subgenus) amabilis）
+  const genusSubgenusSpeciesPattern = /^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/;
+  const genusSubgenusSpeciesMatch = trimmed.match(genusSubgenusSpeciesPattern);
+  if (genusSubgenusSpeciesMatch) {
+    const genus = genusSubgenusSpeciesMatch[1];
+    const subgenus = genusSubgenusSpeciesMatch[2];
+    const species = genusSubgenusSpeciesMatch[3];
+    const extra = genusSubgenusSpeciesMatch[4] || '';
+    return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extra}`;
+  }
+
   // 属名のみで亜属名が括弧内にある場合（例：Paridea (Paridea)）
   const genusSubgenusPattern = /^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s*$/;
   const genusSubgenusMatch = trimmed.match(genusSubgenusPattern);
@@ -102,6 +123,22 @@ export const formatScientificNameReact = (scientificName) => {
     const nameWithoutBracket = bracketMatch[1].trim();
     const bracketInfo = bracketMatch[2];
     
+    // 亜属を含む形式: Genus (Subgenus) species [...]
+    const gss = nameWithoutBracket.match(/^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/);
+    if (gss) {
+      const genus = gss[1];
+      const subgenus = gss[2];
+      const species = gss[3];
+      const extraInfo = (gss[4] || '').trim();
+      return (
+        <>
+          <em>{genus}</em> (<em>{subgenus}</em>) <em>{species}</em>
+          {extraInfo && ` ${extraInfo}`}
+          {` ${bracketInfo}`}
+        </>
+      );
+    }
+
     // 属名と種小名を分離（最初の2語のみを取得）
     const nameParts = nameWithoutBracket.split(/\s+/);
     if (nameParts.length >= 2) {
@@ -151,6 +188,22 @@ export const formatScientificNameReact = (scientificName) => {
     );
   }
   
+  // 属名 (亜属) 種小名 の場合（例：Genus (Subgenus) amabilis）
+  const genusSubgenusSpeciesPattern = /^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/;
+  const genusSubgenusSpeciesMatch = trimmed.match(genusSubgenusSpeciesPattern);
+  if (genusSubgenusSpeciesMatch) {
+    const genus = genusSubgenusSpeciesMatch[1];
+    const subgenus = genusSubgenusSpeciesMatch[2];
+    const species = genusSubgenusSpeciesMatch[3];
+    const extra = genusSubgenusSpeciesMatch[4] || '';
+    return (
+      <>
+        <em>{genus}</em> (<em>{subgenus}</em>) <em>{species}</em>
+        {extra}
+      </>
+    );
+  }
+
   // 属名のみで亜属名が括弧内にある場合（例：Paridea (Paridea)）
   const genusSubgenusPattern = /^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s*$/;
   const genusSubgenusMatch = trimmed.match(genusSubgenusPattern);
