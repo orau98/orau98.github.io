@@ -752,6 +752,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                         <img 
                           src={possibleImagePaths[currentImageIndex]} 
                           alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
+                          width="1200"
+                          height="900"
                           className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                           onLoad={handleImageLoad}
                           onError={handleImageError}
