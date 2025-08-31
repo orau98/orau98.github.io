@@ -232,12 +232,41 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       }
       linkCanonical.href = canonicalHref;
       
-      // Update OG tags
-      let ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) ogTitle.content = title;
-      
-      let ogDescription = document.querySelector('meta[property="og:description"]');
-      if (ogDescription) ogDescription.content = description;
+      // Update OG/Twitter tags
+      const ensureMeta = (selector, attrs) => {
+        let el = document.querySelector(selector);
+        if (!el) {
+          el = document.createElement('meta');
+          Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
+          document.head.appendChild(el);
+        }
+        return el;
+      };
+      const setMetaContent = (selector, content) => {
+        const el = document.querySelector(selector);
+        if (el) el.setAttribute('content', content);
+      };
+      ensureMeta('meta[property="og:title"]', { property: 'og:title' });
+      setMetaContent('meta[property="og:title"]', title);
+      ensureMeta('meta[property="og:description"]', { property: 'og:description' });
+      setMetaContent('meta[property="og:description"]', description);
+      ensureMeta('meta[property="og:type"]', { property: 'og:type' });
+      setMetaContent('meta[property="og:type"]', 'article');
+      ensureMeta('meta[property="og:url"]', { property: 'og:url' });
+      setMetaContent('meta[property="og:url"]', canonicalHref);
+      // Set image if available (prefer current image path if rendered)
+      try {
+        const ogImageEl = document.querySelector('img[alt*="写真"]');
+        const imageUrl = ogImageEl?.getAttribute('src');
+        if (imageUrl) {
+          ensureMeta('meta[property="og:image"]', { property: 'og:image' });
+          setMetaContent('meta[property="og:image"]', imageUrl);
+          ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });
+          setMetaContent('meta[name="twitter:image"]', imageUrl);
+          ensureMeta('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' });
+          setMetaContent('meta[name="twitter:image:alt"]', `${moth.name}（${moth.scientificName}）の写真`);
+        }
+      } catch {}
       
       // Add structured data for the specific insect
       const structuredData = {
@@ -297,6 +326,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       if (linkCanonical) {
         linkCanonical.href = 'https://orau98.github.io/';
       }
+      ['meta[property="og:image"]','meta[name="twitter:image"]','meta[name="twitter:image:alt"]','meta[property="og:url"]'].forEach(sel => {
+        const el = document.querySelector(sel);
+        if (el) el.parentElement.removeChild(el);
+      });
       const structuredDataScript = document.querySelector('#insect-structured-data');
       if (structuredDataScript) {
         structuredDataScript.remove();

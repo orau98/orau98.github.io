@@ -402,6 +402,35 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       meta.content = desc;
     } catch {}
   }, [embedded, safeHostPlants]);
+
+  // ItemList JSON-LD for plant list (first 10)
+  useEffect(() => {
+    if (embedded) return;
+    try {
+      const items = Object.keys(filteredHostPlants || {}).slice(0, 10).map((name, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        url: `https://orau98.github.io/meta/plant/${encodeURIComponent(name)}.html`
+      }));
+      const id = 'itemlist-plant';
+      let s = document.querySelector('#' + id);
+      if (!s) {
+        s = document.createElement('script');
+        s.id = id;
+        s.type = 'application/ld+json';
+        document.head.appendChild(s);
+      }
+      s.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        itemListElement: items
+      });
+    } catch {}
+    return () => {
+      const s = document.querySelector('#itemlist-plant');
+      if (s) s.remove();
+    };
+  }, [embedded, filteredHostPlants]);
   const filteredHostPlants = useMemo(() => {
     console.log('DEBUG: Filtering plants, total count:', Object.keys(safeHostPlants).length, 'search term:', debouncedPlantSearch);
     if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {

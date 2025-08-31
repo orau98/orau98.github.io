@@ -320,6 +320,40 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       document.head.appendChild(meta);
     }
     meta.content = desc;
+    // Open Graph / Twitter
+    const ensureMeta = (selector, attrs) => {
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
+        document.head.appendChild(el);
+      }
+      return el;
+    };
+    const setMetaContent = (selector, content) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute('content', content);
+    };
+    ensureMeta('meta[property="og:title"]', { property: 'og:title' });
+    setMetaContent('meta[property="og:title"]', title);
+    ensureMeta('meta[property="og:description"]', { property: 'og:description' });
+    setMetaContent('meta[property="og:description"]', desc);
+    ensureMeta('meta[property="og:type"]', { property: 'og:type' });
+    setMetaContent('meta[property="og:type"]', 'article');
+    ensureMeta('meta[property="og:url"]', { property: 'og:url' });
+    setMetaContent('meta[property="og:url"]', canon.href);
+    try {
+      const mainImg = document.querySelector('section[aria-labelledby="plant-photos"] img');
+      const imgUrl = mainImg?.getAttribute('src');
+      if (imgUrl) {
+        ensureMeta('meta[property="og:image"]', { property: 'og:image' });
+        setMetaContent('meta[property="og:image"]', imgUrl);
+        ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });
+        setMetaContent('meta[name="twitter:image"]', imgUrl);
+        ensureMeta('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' });
+        setMetaContent('meta[name="twitter:image:alt"]', `${decodedPlantName}の写真`);
+      }
+    } catch {}
     let canon = document.querySelector('link[rel="canonical"]');
     if (!canon) {
       canon = document.createElement('link');
@@ -350,6 +384,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       // restore index canonical
       const c = document.querySelector('link[rel="canonical"]');
       if (c) c.href = 'https://orau98.github.io/';
+      ['meta[property="og:image"]','meta[name="twitter:image"]','meta[name="twitter:image:alt"]','meta[property="og:url"]'].forEach(sel => {
+        const el = document.querySelector(sel);
+        if (el) el.parentElement.removeChild(el);
+      });
       const b = document.querySelector('#breadcrumb-structured-data');
       if (b) b.remove();
     };

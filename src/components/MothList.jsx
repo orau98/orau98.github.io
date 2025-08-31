@@ -551,6 +551,35 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     } catch {}
   }, [embedded, moths?.length]);
 
+  // ItemList JSON-LD for top items (first 10)
+  useEffect(() => {
+    if (embedded) return;
+    try {
+      const items = (sortedMoths || []).slice(0, 10).map((m, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        url: `https://orau98.github.io/meta/moth/${m.id || ''}.html`
+      }));
+      const scriptElId = 'itemlist-moth';
+      let s = document.querySelector('#' + scriptElId);
+      if (!s) {
+        s = document.createElement('script');
+        s.id = scriptElId;
+        s.type = 'application/ld+json';
+        document.head.appendChild(s);
+      }
+      s.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        itemListElement: items
+      });
+    } catch {}
+    return () => {
+      const s = document.querySelector('#itemlist-moth');
+      if (s) s.remove();
+    };
+  }, [embedded, sortedMoths]);
+
   // ひらがなをカタカナに変換する関数
   const hiraganaToKatakana = (str) => {
     if (!str) return '';
