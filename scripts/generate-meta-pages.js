@@ -559,6 +559,7 @@ function generateInsectHTML(insect, type) {
   <meta property="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta property="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   ${imageUrl ? `<meta property="twitter:image" content="https://orau98.github.io${imageUrl}">` : ''}
+  ${imageUrl ? `<meta name="twitter:image:alt" content="${insect.japaneseName}（${scientificName}）の写真">` : ''}
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -583,7 +584,7 @@ function generateInsectHTML(insect, type) {
       }
     },
     "description": "${insect.japaneseName}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}",
-    "url": "https://orau98.github.io/${type}/${insect.id}",
+    "url": "https://orau98.github.io/meta/${type}/${insect.id}.html",
     ${imageUrl ? `"image": {
       "@type": "ImageObject",
       "url": "https://orau98.github.io${imageUrl}",
@@ -598,6 +599,28 @@ function generateInsectHTML(insect, type) {
       "@type": "Organization",
       "name": "昆虫と食草の図鑑"
     }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/"},
+      {"@type": "ListItem", "position": 2, "name": "植物", "item": "https://orau98.github.io/plant"},
+      {"@type": "ListItem", "position": 3, "name": "${displayPlantName}", "item": "https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/"},
+      {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "https://orau98.github.io/${type}"},
+      {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "https://orau98.github.io/meta/${type}/${insect.id}.html"}
+    ]
   }
   </script>
 </head>
@@ -787,7 +810,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       "value": "${displayPlantName}"
     },
     "description": "${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
-    "url": "https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}.html",
+    "url": "https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html",
     ${mainImageUrl ? `"image": "https://orau98.github.io${mainImageUrl}",` : ''}
     "inLanguage": "ja",
     "hasEcologicalInteraction": [
