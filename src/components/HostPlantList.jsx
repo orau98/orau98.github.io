@@ -400,6 +400,30 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         document.head.appendChild(meta);
       }
       meta.content = desc;
+      // OG/Twitter for plant list page
+      const ensureMeta = (selector, attrs) => {
+        let el = document.querySelector(selector);
+        if (!el) {
+          el = document.createElement('meta');
+          Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
+          document.head.appendChild(el);
+        }
+        return el;
+      };
+      const setMeta = (selector, content) => {
+        const el = document.querySelector(selector);
+        if (el) el.setAttribute('content', content);
+      };
+      ensureMeta('meta[property="og:title"]', { property: 'og:title' });
+      setMeta('meta[property="og:title"]', `植物（食草）一覧 | 昆虫食草図鑑`);
+      ensureMeta('meta[property="og:description"]', { property: 'og:description' });
+      setMeta('meta[property="og:description"]', desc);
+      ensureMeta('meta[property="og:type"]', { property: 'og:type' });
+      setMeta('meta[property="og:type"]', 'website');
+      ensureMeta('meta[property="og:url"]', { property: 'og:url' });
+      setMeta('meta[property="og:url"]', 'https://orau98.github.io/plant');
+      ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card' });
+      setMeta('meta[name="twitter:card"]', 'summary');
     } catch {}
   }, [embedded, safeHostPlants]);
 
