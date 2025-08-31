@@ -550,6 +550,7 @@ function generateInsectHTML(insect, type) {
   <meta property="og:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta property="og:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   <meta property="og:type" content="article">
+  <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="https://orau98.github.io/meta/${type}/${insect.id}.html">
   ${imageUrl ? `<meta property="og:image" content="https://orau98.github.io${imageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
@@ -777,6 +778,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta property="og:title" content="${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
   <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
+  <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html">
   ${mainImageUrl ? `<meta property="og:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
