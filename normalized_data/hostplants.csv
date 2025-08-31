@@ -1,4 +1,9 @@
 record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
+hostplant-900001,species-CR020,ツユクサ,ツユクサ科,野外（国内）,葉,成虫・幼虫,日本産ハムシ科生態覚書,
+hostplant-900002,species-CR024,ツユクサ,ツユクサ科,野外（国内）,葉,成虫・幼虫,日本産ハムシ科生態覚書,
+hostplant-900003,species-CR025,ヤマノイモ類,ヤマノイモ科,野外（国内）,葉,成虫・幼虫,日本産ハムシ科生態覚書,
+hostplant-900004,species-CR027,ヤマノイモ類,ヤマノイモ科,野外（国内）,葉,成虫・幼虫,日本産ハムシ科生態覚書,
+hostplant-900005,species-CR036,イボクサ,ツユクサ科,野外（国内）,葉,成虫・幼虫,日本産ハムシ科生態覚書,
 hostplant-000001,species-0002,マキノゴケ,マキノゴケ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑3,
 hostplant-000002,species-0003,マキノゴケ,マキノゴケ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑3,
 hostplant-000003,species-0003,オオウロコゴケ,ウロコゴケ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑3,
