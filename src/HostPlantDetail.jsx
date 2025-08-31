@@ -249,10 +249,6 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
         )}
         </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">{name}</h3>
-        {insect.scientificName && (
-          <p className="text-sm text-slate-600 dark:text-slate-300 mb-1 italic">{formatScientificNameReact(insect.scientificName)}</p>
-        )}
         {family && (
           <p className="text-sm text-slate-600 dark:text-slate-300">科: {family}</p>
         )}
