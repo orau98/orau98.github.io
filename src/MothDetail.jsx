@@ -204,6 +204,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         document.head.appendChild(metaDescription);
       }
       metaDescription.content = description;
+
+      // Update canonical to static meta page for better SEO crawling
+      const canonicalHref = `https://orau98.github.io/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`;
+      let linkCanonical = document.querySelector('link[rel="canonical"]');
+      if (!linkCanonical) {
+        linkCanonical = document.createElement('link');
+        linkCanonical.rel = 'canonical';
+        document.head.appendChild(linkCanonical);
+      }
+      linkCanonical.href = canonicalHref;
       
       // Update OG tags
       let ogTitle = document.querySelector('meta[property="og:title"]');
@@ -247,6 +257,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     // Cleanup function to restore original title
     return () => {
       document.title = '昆虫食草図鑑 - 蛾と食草の繋がりを探る | 7000種以上の昆虫データベース';
+      const linkCanonical = document.querySelector('link[rel="canonical"]');
+      if (linkCanonical) {
+        linkCanonical.href = 'https://orau98.github.io/';
+      }
       const structuredDataScript = document.querySelector('#insect-structured-data');
       if (structuredDataScript) {
         structuredDataScript.remove();

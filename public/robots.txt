@@ -4,6 +4,9 @@ Allow: /
 # サイトマップ（インデックスのみを提示）
 Sitemap: https://orau98.github.io/sitemap.xml
 Sitemap: https://orau98.github.io/sitemap_index.xml
+Sitemap: https://orau98.github.io/sitemap-main.xml
+Sitemap: https://orau98.github.io/sitemap-moth.xml
+Sitemap: https://orau98.github.io/sitemap-plant.xml
 
 # SPAルートを明示的に許可
 Allow: /moth/

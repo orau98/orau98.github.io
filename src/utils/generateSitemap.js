@@ -1,6 +1,6 @@
 // サイトマップ生成ユーティリティ
 export const generateSitemap = (moths, butterflies, beetles, leafbeetles, hostPlants) => {
-  const baseUrl = 'https://h-amoto.github.io/insects-host-plant-explorer-';
+  const baseUrl = 'https://orau98.github.io';
   const currentDate = new Date().toISOString().split('T')[0];
   
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>

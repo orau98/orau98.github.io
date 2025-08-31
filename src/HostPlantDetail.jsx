@@ -308,6 +308,33 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   
+  // SEO: update title/description/canonical to static meta page
+  useEffect(() => {
+    const title = `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
+    const desc = `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
+    document.title = title;
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'description';
+      document.head.appendChild(meta);
+    }
+    meta.content = desc;
+    let canon = document.querySelector('link[rel="canonical"]');
+    if (!canon) {
+      canon = document.createElement('link');
+      canon.rel = 'canonical';
+      document.head.appendChild(canon);
+    }
+    const safePlantName = decodedPlantName;
+    canon.href = `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html`;
+    return () => {
+      // restore index canonical
+      const c = document.querySelector('link[rel="canonical"]');
+      if (c) c.href = 'https://orau98.github.io/';
+    };
+  }, [decodedPlantName, familyLabel]);
+  
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
   

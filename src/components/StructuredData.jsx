@@ -50,8 +50,8 @@ export const MothStructuredData = ({ moth }) => {
       ]
     },
     "description": `${moth.name}（${moth.scientificName}）は${moth.classification?.familyJapanese || moth.family || '蛾科'}に属する蛾の一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/moth/${moth.id}`,
-    "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/moth/${moth.id}`,
+    "url": `https://orau98.github.io/moth/${moth.id}`,
+    "sameAs": `https://orau98.github.io/moth/${moth.id}`,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -82,7 +82,7 @@ export const MothStructuredData = ({ moth }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
+      "url": `https://orau98.github.io/images/insects/${safeFilename}.jpg`,
       "caption": `${moth.name}（${moth.scientificName}）の写真`,
       "description": `${moth.name}の生態写真`
     };
@@ -110,19 +110,19 @@ export const MothStructuredData = ({ moth }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/"
+        "item": "https://orau98.github.io/"
       },
       {
         "@type": "ListItem", 
         "position": 2,
         "name": "蛾",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/moth"
+        "item": "https://orau98.github.io/moth"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": moth.name,
-        "item": `https://h-amoto.github.io/insects-host-plant-explorer-/moth/${moth.id}`
+        "item": `https://orau98.github.io/moth/${moth.id}`
       }
     ]
   };
@@ -184,8 +184,8 @@ export const ButterflyStructuredData = ({ butterfly }) => {
       ]
     },
     "description": `${butterfly.name}（${butterfly.scientificName}）は${butterfly.classification?.familyJapanese || butterfly.family || '蝶科'}に属する蝶の一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/butterfly/${butterfly.id}`,
-    "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/butterfly/${butterfly.id}`,
+    "url": `https://orau98.github.io/butterfly/${butterfly.id}`,
+    "sameAs": `https://orau98.github.io/butterfly/${butterfly.id}`,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -216,7 +216,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
+      "url": `https://orau98.github.io/images/insects/${safeFilename}.jpg`,
       "caption": `${butterfly.name}（${butterfly.scientificName}）の写真`,
       "description": `${butterfly.name}の生態写真`
     };
@@ -244,19 +244,19 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/"
+        "item": "https://orau98.github.io/"
       },
       {
         "@type": "ListItem", 
         "position": 2,
         "name": "蝶",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/butterfly"
+        "item": "https://orau98.github.io/butterfly"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": butterfly.name,
-        "item": `https://h-amoto.github.io/insects-host-plant-explorer-/butterfly/${butterfly.id}`
+        "item": `https://orau98.github.io/butterfly/${butterfly.id}`
       }
     ]
   };
@@ -318,8 +318,8 @@ export const BeetleStructuredData = ({ beetle }) => {
       ]
     },
     "description": `${beetle.name}（${beetle.scientificName}）は${beetle.classification?.family || 'タマムシ科'}に属するタマムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
-    "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`,
+    "url": `https://orau98.github.io/beetle/${beetle.id}`,
+    "sameAs": `https://orau98.github.io/beetle/${beetle.id}`,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -350,7 +350,7 @@ export const BeetleStructuredData = ({ beetle }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
+      "url": `https://orau98.github.io/images/insects/${safeFilename}.jpg`,
       "caption": `${beetle.name}（${beetle.scientificName}）の写真`,
       "description": `${beetle.name}の生態写真`
     };
@@ -378,19 +378,19 @@ export const BeetleStructuredData = ({ beetle }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/"
+        "item": "https://orau98.github.io/"
       },
       {
         "@type": "ListItem", 
         "position": 2,
         "name": "タマムシ",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/beetle"
+        "item": "https://orau98.github.io/beetle"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": beetle.name,
-        "item": `https://h-amoto.github.io/insects-host-plant-explorer-/beetle/${beetle.id}`
+        "item": `https://orau98.github.io/beetle/${beetle.id}`
       }
     ]
   };
@@ -446,8 +446,8 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
       ]
     },
     "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属するハムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}${leafbeetle.emergenceTime && leafbeetle.emergenceTime !== '不明' ? ` 成虫発生時期：${leafbeetle.emergenceTime}` : ''}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
-    "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`,
+    "url": `https://orau98.github.io/leafbeetle/${leafbeetle.id}`,
+    "sameAs": `https://orau98.github.io/leafbeetle/${leafbeetle.id}`,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -503,7 +503,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (safeFilename) {
     structuredData.image = {
       "@type": "ImageObject",
-      "url": `https://h-amoto.github.io/insects-host-plant-explorer-/images/insects/${safeFilename}.jpg`,
+      "url": `https://orau98.github.io/images/insects/${safeFilename}.jpg`,
       "caption": `${leafbeetle.name}（${leafbeetle.scientificName}）の写真`,
       "description": `${leafbeetle.name}の生態写真`
     };
@@ -531,19 +531,19 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/"
+        "item": "https://orau98.github.io/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "ハムシ",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle"
+        "item": "https://orau98.github.io/leafbeetle"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": leafbeetle.name,
-        "item": `https://h-amoto.github.io/insects-host-plant-explorer-/leafbeetle/${leafbeetle.id}`
+        "item": `https://orau98.github.io/leafbeetle/${leafbeetle.id}`
       }
     ]
   };
@@ -589,8 +589,8 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
       ]
     },
     "description": `${plant.name}${plant.scientificName ? `（${plant.scientificName}）` : ''}${plant.family ? `は${plant.family}に属する植物です。` : 'の詳細情報。'}${relatedInsects?.length ? `この植物を食草とする昆虫：${relatedInsects.slice(0, 3).map(i => i.name).join('、')}など${relatedInsects.length}種の昆虫が利用します。` : ''}`,
-    "url": `https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plant.name)}`,
-    "sameAs": `https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plant.name)}`,
+    "url": `https://orau98.github.io/plant/${encodeURIComponent(plant.name)}`,
+    "sameAs": `https://orau98.github.io/plant/${encodeURIComponent(plant.name)}`,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -649,19 +649,19 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/"
+        "item": "https://orau98.github.io/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "植物",
-        "item": "https://h-amoto.github.io/insects-host-plant-explorer-/plant"
+        "item": "https://orau98.github.io/plant"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": plant.name,
-        "item": `https://h-amoto.github.io/insects-host-plant-explorer-/plant/${encodeURIComponent(plant.name)}`
+        "item": `https://orau98.github.io/plant/${encodeURIComponent(plant.name)}`
       }
     ]
   };
@@ -681,7 +681,7 @@ export const MainStructuredData = () => {
     "@type": "WebSite",
     "name": "昆虫食草図鑑",
     "alternateName": "昆虫と食草の美しい関係を探る図鑑",
-    "url": "https://h-amoto.github.io/insects-host-plant-explorer-/",
+    "url": "https://orau98.github.io/",
     "description": "昆虫と食草の美しい関係を探る、自然界の意外な繋がりを発見しよう。蛾、蝶、甲虫、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
     "inLanguage": "ja",
     "author": {
@@ -690,7 +690,7 @@ export const MainStructuredData = () => {
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://h-amoto.github.io/insects-host-plant-explorer-/?q={search_term_string}",
+      "target": "https://orau98.github.io/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     },
     "mainEntity": {

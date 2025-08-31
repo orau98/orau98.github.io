@@ -120,6 +120,25 @@ function App() {
   
   const isHomePage = location.pathname === '/';
 
+  // SEO: avoid indexing search result pages (with query params)
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(location.search);
+      const hasSearch = params.has('q') || params.has('search') || params.has('term');
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) {
+        robots = document.createElement('meta');
+        robots.name = 'robots';
+        document.head.appendChild(robots);
+      }
+      if (hasSearch) {
+        robots.content = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+      } else {
+        robots.content = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+      }
+    } catch {}
+  }, [location.search]);
+
   useEffect(() => {
     try {
       if (theme === 'dark') {
