@@ -579,10 +579,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   useEffect(() => {
     if (embedded) return;
     try {
-      const items = (sortedMoths || []).slice(0, 10).map((m, idx) => ({
+      const source = (filteredMoths || []).slice(0, 10);
+      const items = source.map((m, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
-        url: `https://orau98.github.io/meta/moth/${m.id || ''}.html`
+        url: `https://orau98.github.io/meta/moth/${m.id}.html`
       }));
       const scriptElId = 'itemlist-moth';
       let s = document.querySelector('#' + scriptElId);

@@ -431,7 +431,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   useEffect(() => {
     if (embedded) return;
     try {
-      const items = Object.keys(filteredHostPlants || {}).slice(0, 10).map((name, idx) => ({
+      const items = (filteredHostPlants || []).slice(0, 10).map(([name], idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         url: `https://orau98.github.io/meta/plant/${encodeURIComponent(name)}.html`
