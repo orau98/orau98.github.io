@@ -124,7 +124,7 @@ function App() {
   useEffect(() => {
     try {
       const params = new URLSearchParams(location.search);
-      const hasSearch = params.has('q') || params.has('search') || params.has('term');
+      const hasSearch = params.has('q') || params.has('search') || params.has('term') || params.has('classification') || params.has('page');
       let robots = document.querySelector('meta[name="robots"]');
       if (!robots) {
         robots = document.createElement('meta');
