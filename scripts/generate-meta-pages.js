@@ -607,17 +607,6 @@ function generateInsectHTML(insect, type) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/"},
-      {"@type": "ListItem", "position": 2, "name": "植物", "item": "https://orau98.github.io/plant"},
-      {"@type": "ListItem", "position": 3, "name": "${displayPlantName}", "item": "https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html"}
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/"},
       {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "https://orau98.github.io/${type}"},
       {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "https://orau98.github.io/meta/${type}/${insect.id}.html"}
     ]
