@@ -29,6 +29,8 @@ export default defineConfig(({ command, mode }) => ({
     },
   },
   esbuild: {
-    drop: mode === 'production' ? ['console', 'debugger'] : []
+    drop: mode === 'production' ? ['console', 'debugger'] : [],
+    // Avoid identifier minification to prevent TDZ collisions on Pages
+    minifyIdentifiers: false
   }
 }))
