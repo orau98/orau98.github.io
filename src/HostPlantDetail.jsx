@@ -248,11 +248,6 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
           </div>
         )}
         </div>
-      <div className="p-4">
-        {family && (
-          <p className="text-sm text-slate-600 dark:text-slate-300">科: {family}</p>
-        )}
-      </div>
     </Link>
   );
 };
