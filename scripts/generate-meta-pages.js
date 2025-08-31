@@ -615,12 +615,12 @@ function generateInsectHTML(insect, type) {
 </head>
 <body>
   <div class="meta-page">
-    <nav class="breadcrumb">
-      <a href="/">昆虫食草図鑑</a>
-      <span>></span>
-      <a href="/${type}">${typeNames[type]}</a>
-      <span>></span>
-      <span>${insect.japaneseName}</span>
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/">昆虫食草図鑑</a></li>
+        <li><a href="/${type}">${typeNames[type]}</a></li>
+        <li aria-current="page">${insect.japaneseName}</li>
+      </ol>
     </nav>
     
     <header class="meta-header">
@@ -826,12 +826,12 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 </head>
 <body>
   <div class="meta-page">
-    <nav class="breadcrumb">
-      <a href="/">昆虫食草図鑑</a>
-      <span>></span>
-      <a href="/plant">植物</a>
-      <span>></span>
-      <span>${displayPlantName}</span>
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/">昆虫食草図鑑</a></li>
+        <li><a href="/plant">植物</a></li>
+        <li aria-current="page">${displayPlantName}</li>
+      </ol>
     </nav>
     
     <header class="meta-header">

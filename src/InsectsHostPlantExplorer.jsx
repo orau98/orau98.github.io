@@ -155,6 +155,8 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
           <img 
             src={`${import.meta.env.BASE_URL}images/insects/Cucullia_argentea.jpg`} 
             alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）" 
+            width="1600"
+            height="900"
             className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
               heroImageLoaded ? 'opacity-100' : 'opacity-0'
             }`}

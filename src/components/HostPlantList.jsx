@@ -384,6 +384,22 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
 
   const safeHostPlants = hostPlants || {};
   const safePlantDetails = plantDetails || {};
+
+  // Meta description for plant list page
+  useEffect(() => {
+    try {
+      if (embedded) return;
+      const plantCount = Object.keys(safeHostPlants || {}).length;
+      const desc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'description';
+        document.head.appendChild(meta);
+      }
+      meta.content = desc;
+    } catch {}
+  }, [embedded, safeHostPlants]);
   const filteredHostPlants = useMemo(() => {
     console.log('DEBUG: Filtering plants, total count:', Object.keys(safeHostPlants).length, 'search term:', debouncedPlantSearch);
     if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {

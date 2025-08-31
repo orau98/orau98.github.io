@@ -534,6 +534,21 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, [classificationFilter, searchTerm]);
 
+  // Meta description for list page (CTR向上の短文)
+  useEffect(() => {
+    try {
+      if (embedded) return;
+      const desc = `蛾の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'description';
+        document.head.appendChild(meta);
+      }
+      meta.content = desc;
+    } catch {}
+  }, [embedded, moths?.length]);
+
   // ひらがなをカタカナに変換する関数
   const hiraganaToKatakana = (str) => {
     if (!str) return '';
