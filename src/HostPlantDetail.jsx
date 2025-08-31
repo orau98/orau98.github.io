@@ -340,8 +340,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     setMetaContent('meta[property="og:description"]', desc);
     ensureMeta('meta[property="og:type"]', { property: 'og:type' });
     setMetaContent('meta[property="og:type"]', 'article');
+    // Prepare canonical URL first, then set og:url and link[rel=canonical]
+    const safePlantName = decodedPlantName;
+    const canonicalHref = `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html`;
     ensureMeta('meta[property="og:url"]', { property: 'og:url' });
-    setMetaContent('meta[property="og:url"]', canon.href);
+    setMetaContent('meta[property="og:url"]', canonicalHref);
     try {
       const mainImg = document.querySelector('section[aria-labelledby="plant-photos"] img');
       const imgUrl = mainImg?.getAttribute('src');
@@ -360,8 +363,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       canon.rel = 'canonical';
       document.head.appendChild(canon);
     }
-    const safePlantName = decodedPlantName;
-    canon.href = `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html`;
+    canon.href = canonicalHref;
     // BreadcrumbList (JSON-LD)
     const breadcrumb = {
       "@context": "https://schema.org",
@@ -647,16 +649,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       {/* 概要セクション（和名＋学名のみ） */}
       <div className="mt-4 md:mt-6">
       <div className="mb-6">
-        {/* Breadcrumb */}
-        <nav className="mb-3" aria-label="breadcrumb">
-          <ol className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-            <li><Link to="/" className="hover:underline">昆虫食草図鑑</Link></li>
-            <li>/</li>
-            <li><Link to="/plant" className="hover:underline">植物</Link></li>
-            <li>/</li>
-            <li aria-current="page" className="text-slate-800 dark:text-slate-100">{decodedPlantName}</li>
-          </ol>
-        </nav>
+        {/* Breadcrumb UI removed per request */}
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
             {/^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
               ? decodedPlantName
