@@ -223,6 +223,23 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
             </button>
           </div>
         </div>
+
+        {/* 主要カテゴリ導線（内部リンク強化） */}
+        <section className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="/moth" className="block rounded-2xl p-5 bg-white/80 dark:bg-slate-800/80 border border-white/30 dark:border-slate-700/40 shadow hover:shadow-lg transition-all">
+            <h3 className="text-lg font-bold text-blue-600 dark:text-blue-400 mb-1">蛾（リスト）</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">7000種以上から検索・絞り込み</p>
+          </a>
+          <a href="/plant" className="block rounded-2xl p-5 bg-white/80 dark:bg-slate-800/80 border border-white/30 dark:border-slate-700/40 shadow hover:shadow-lg transition-all">
+            <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mb-1">植物（リスト）</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">食草から昆虫を辿る</p>
+          </a>
+          <a href="/leafbeetle" className="block rounded-2xl p-5 bg-white/80 dark:bg-slate-800/80 border border-white/30 dark:border-slate-700/40 shadow hover:shadow-lg transition-all">
+            <h3 className="text-lg font-bold text-amber-600 dark:text-amber-400 mb-1">ハムシ（リスト）</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">ハムシ類の食草情報</p>
+          </a>
+        </section>
+
         {/* タブナビゲーション */}
         <div className="bg-gradient-to-br from-white/90 to-white/80 dark:from-slate-800/90 dark:to-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
             {/* タブヘッダー */}
