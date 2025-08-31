@@ -431,7 +431,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   useEffect(() => {
     if (embedded) return;
     try {
-      const items = (filteredHostPlants || []).slice(0, 10).map(([name], idx) => ({
+      const items = Object.keys(safeHostPlants || {}).slice(0, 10).map((name, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
         url: `https://orau98.github.io/meta/plant/${encodeURIComponent(name)}.html`
@@ -454,7 +454,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       const s = document.querySelector('#itemlist-plant');
       if (s) s.remove();
     };
-  }, [embedded, filteredHostPlants]);
+  }, [embedded, safeHostPlants]);
   const filteredHostPlants = useMemo(() => {
     console.log('DEBUG: Filtering plants, total count:', Object.keys(safeHostPlants).length, 'search term:', debouncedPlantSearch);
     if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {
