@@ -238,10 +238,10 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <div className="text-center">
-              <h3 className="text-slate-800 dark:text-slate-200 font-bold text-lg mb-1 leading-tight tracking-tight">{name}</h3>
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
+              <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg tracking-tight">{name}</h3>
               {insect.scientificName && (
-                <p className="text-slate-600 dark:text-slate-300 text-sm italic">{formatScientificNameReact(insect.scientificName)}</p>
+                <p className="text-white/90 text-sm drop-shadow-md italic">{formatScientificNameReact(insect.scientificName)}</p>
               )}
             </div>
               <div className="w-16 h-16 mx-auto mb-3 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
