@@ -603,7 +603,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const s = document.querySelector('#itemlist-moth');
       if (s) s.remove();
     };
-  }, [embedded, sortedMoths]);
+  }, [embedded, filteredMoths]);
 
   // ひらがなをカタカナに変換する関数
   const hiraganaToKatakana = (str) => {
