@@ -660,7 +660,7 @@ function generateInsectHTML(insect, type) {
         <ul>
           ${hostPlantsArray.map(plant => {
             const safePlantName = plant.replace(/[/\\?%*:|"<>]/g, '-');
-            return `<li><a href="/plant/${encodeURIComponent(safePlantName)}.html">${plant}</a></li>`;
+            return `<li><a href="/meta/plant/${encodeURIComponent(safePlantName)}.html">${plant}</a></li>`;
           }).join('')}
         </ul>` : `
         <p>食草情報は現在調査中です。</p>`}
@@ -827,6 +827,15 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       <h2>食草植物の詳細情報</h2>
     </header>
     
+    <section class="quick-links">
+      <h3>代表的な関連昆虫</h3>
+      <ul>
+        ${relatedInsects.slice(0, 3).map(insect => `
+          <li><a href="/meta/${insect.type}/${insect.id}.html">${insect.japaneseName}</a>（${insect.scientificName}）</li>
+        `).join('')}
+      </ul>
+    </section>
+    
     <main class="meta-content">
       <section class="basic-info">
         <h3>基本情報</h3>
@@ -872,7 +881,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         ${Object.entries(insectsByType)
           .filter(([type, insects]) => insects.length > 0)
           .map(([type, insects]) => 
-            `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => i.japaneseName).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
+            `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => `<a href=\"/meta/${type}/${i.id}.html\">${i.japaneseName}</a>`).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
           ).join('')}
       </section>
       
@@ -886,7 +895,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
           ${insects.map(insect => `
           <li>
             <div class="insect-name">
-              <a href="/${type}/${insect.id}">${insect.japaneseName}</a>
+              <a href="/meta/${type}/${insect.id}.html">${insect.japaneseName}</a>
             </div>
             <div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>
           </li>`).join('')}
