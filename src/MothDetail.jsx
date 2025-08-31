@@ -111,22 +111,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     });
   }
   
-  // Simple breadcrumb nav (HTML) for SEO + UX
-  const Breadcrumb = () => {
-    const baseType = moth?.type === 'butterfly' ? 'butterfly' : moth?.type === 'beetle' ? 'beetle' : moth?.type === 'leafbeetle' ? 'leafbeetle' : 'moth';
-    const typeLabel = baseType === 'butterfly' ? '蝶' : baseType === 'beetle' ? 'タマムシ' : baseType === 'leafbeetle' ? 'ハムシ' : '蛾';
-    return (
-      <nav className="mb-4" aria-label="breadcrumb">
-        <ol className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-          <li><Link to="/" className="hover:underline">昆虫食草図鑑</Link></li>
-          <li>/</li>
-          <li><Link to={`/${baseType}`} className="hover:underline">{typeLabel}</Link></li>
-          <li>/</li>
-          <li aria-current="page" className="text-slate-800 dark:text-slate-100">{moth?.name || '詳細'}</li>
-        </ol>
-      </nav>
-    );
-  };
+  // Breadcrumb UI removed per request
 
   // Debug logging for オオゴマシジミ
   if (mappedInsectId === 'butterfly-csv-131' || (moth && moth.name === 'オオゴマシジミ')) {
@@ -671,9 +656,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-6xl mx-auto px-4 pt-6">
-        <Breadcrumb />
-      </div>
+      <div className="max-w-6xl mx-auto px-4 pt-6"></div>
       {/* 構造化データ */}
       {mothId && moth && <MothStructuredData moth={moth} />}
       {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
