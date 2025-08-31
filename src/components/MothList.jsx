@@ -13,7 +13,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const imgRef = useRef(null);
 
   const handleIntersection = useCallback((entries) => {
-    const [entry] = entries;
+    const entry = entries && entries[0];
+    if (!entry) return;
     if (entry.isIntersecting && !isVisible) {
       // Use requestIdleCallback for non-critical image loading
       if ('requestIdleCallback' in window && !isPriority) {
