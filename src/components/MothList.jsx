@@ -898,6 +898,32 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     setCurrentPage(page);
   };
 
+  // Add rel=prev/next for crawlers (hint)
+  useEffect(() => {
+    try {
+      // Remove existing
+      document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(n => n.remove());
+      const url = new URL(window.location.href);
+      url.searchParams.delete('page');
+      if (currentPage > 1) {
+        const prev = document.createElement('link');
+        prev.rel = 'prev';
+        const prevUrl = new URL(url.href);
+        prevUrl.searchParams.set('page', String(currentPage - 1));
+        prev.href = prevUrl.toString();
+        document.head.appendChild(prev);
+      }
+      if (currentPage < totalPages) {
+        const next = document.createElement('link');
+        next.rel = 'next';
+        const nextUrl = new URL(url.href);
+        nextUrl.searchParams.set('page', String(currentPage + 1));
+        next.href = nextUrl.toString();
+        document.head.appendChild(next);
+      }
+    } catch {}
+  }, [currentPage, totalPages]);
+
   React.useEffect(() => {
     setCurrentPage(1);
   }, [debouncedSearchTerm]);
