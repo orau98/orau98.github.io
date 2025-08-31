@@ -579,7 +579,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   useEffect(() => {
     if (embedded) return;
     try {
-      const source = (filteredMoths || []).slice(0, 10);
+      const source = (moths || []).slice(0, 10);
       const items = source.map((m, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
@@ -603,7 +603,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const s = document.querySelector('#itemlist-moth');
       if (s) s.remove();
     };
-  }, [embedded, filteredMoths]);
+  }, [embedded, moths]);
 
   // ひらがなをカタカナに変換する関数
   const hiraganaToKatakana = (str) => {
