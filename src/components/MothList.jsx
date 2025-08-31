@@ -460,6 +460,43 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
 });
 
 const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false }) => {
+  // Canonical と Breadcrumb（一覧ページ用）
+  useEffect(() => {
+    if (embedded) return;
+    try {
+      // canonical を /moth に固定し、クエリ付きURLの重複を回避
+      let canon = document.querySelector('link[rel="canonical"]');
+      if (!canon) {
+        canon = document.createElement('link');
+        canon.rel = 'canonical';
+        document.head.appendChild(canon);
+      }
+      const base = new URL(window.location.origin + '/moth');
+      canon.href = base.toString();
+
+      // BreadcrumbList を注入
+      const breadcrumb = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "蛾", "item": "https://orau98.github.io/moth" }
+        ]
+      };
+      let breadcrumbScript = document.querySelector('#breadcrumb-list-moth');
+      if (!breadcrumbScript) {
+        breadcrumbScript = document.createElement('script');
+        breadcrumbScript.id = 'breadcrumb-list-moth';
+        breadcrumbScript.type = 'application/ld+json';
+        document.head.appendChild(breadcrumbScript);
+      }
+      breadcrumbScript.textContent = JSON.stringify(breadcrumb);
+    } catch {}
+    return () => {
+      const s = document.querySelector('#breadcrumb-list-moth');
+      if (s) s.remove();
+    };
+  }, [embedded]);
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);

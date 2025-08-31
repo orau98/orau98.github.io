@@ -298,6 +298,44 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   const [plantSearchTerm, setPlantSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [plantImageFilenames, setPlantImageFilenames] = useState([]);
+  
+  // Canonical と Breadcrumb（植物一覧用）
+  useEffect(() => {
+    if (embedded) return;
+    try {
+      // canonical を /plant に固定
+      let canon = document.querySelector('link[rel="canonical"]');
+      if (!canon) {
+        canon = document.createElement('link');
+        canon.rel = 'canonical';
+        document.head.appendChild(canon);
+      }
+      const base = new URL(window.location.origin + '/plant');
+      canon.href = base.toString();
+
+      // BreadcrumbList を注入
+      const breadcrumb = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
+          { "@type": "ListItem", "position": 2, "name": "植物", "item": "https://orau98.github.io/plant" }
+        ]
+      };
+      let breadcrumbScript = document.querySelector('#breadcrumb-list-plant');
+      if (!breadcrumbScript) {
+        breadcrumbScript = document.createElement('script');
+        breadcrumbScript.id = 'breadcrumb-list-plant';
+        breadcrumbScript.type = 'application/ld+json';
+        document.head.appendChild(breadcrumbScript);
+      }
+      breadcrumbScript.textContent = JSON.stringify(breadcrumb);
+    } catch {}
+    return () => {
+      const s = document.querySelector('#breadcrumb-list-plant');
+      if (s) s.remove();
+    };
+  }, [embedded]);
   // Responsive items-per-page to avoid empty grid slots on last row
   const getCols = () => {
     if (typeof window === 'undefined') return 1;
