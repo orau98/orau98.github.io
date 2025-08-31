@@ -608,7 +608,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       
       {/* 概要セクション（和名＋学名のみ） */}
       <div className="mt-4 md:mt-6">
-        <div className="mb-6">
+      <div className="mb-6">
+        {/* Breadcrumb */}
+        <nav className="mb-3" aria-label="breadcrumb">
+          <ol className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+            <li><Link to="/" className="hover:underline">昆虫食草図鑑</Link></li>
+            <li>/</li>
+            <li><Link to="/plant" className="hover:underline">植物</Link></li>
+            <li>/</li>
+            <li aria-current="page" className="text-slate-800 dark:text-slate-100">{decodedPlantName}</li>
+          </ol>
+        </nav>
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
             {/^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
               ? decodedPlantName

@@ -273,6 +273,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   <img
                     src={imageUrl}
                     alt={`${moth.name}（${moth.scientificName}）の写真`}
+                    width="800"
+                    height="600"
                     className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 gpu-accelerated ${
                       imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
                     }`}

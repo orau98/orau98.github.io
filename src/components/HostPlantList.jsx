@@ -187,6 +187,8 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
               <img
                 src={plantImageUrl}
                 alt={`${plant}の写真`}
+                width="800"
+                height="600"
                 className={`w-full h-full object-cover transition-opacity duration-500 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}

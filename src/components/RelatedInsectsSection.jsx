@@ -213,6 +213,8 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                           <img 
                             src={getImagePath(relatedMoth)}
                             alt={`${relatedMothName}（${relatedMoth.scientificName}）の写真`}
+                            width="600"
+                            height="400"
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             onError={(e) => {
                               // 最初の画像パス（学名）が失敗した場合、和名で試行
