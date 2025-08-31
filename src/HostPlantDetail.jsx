@@ -131,7 +131,7 @@ const PlantImageGallery = ({ images }) => {
               <div className="relative bg-emerald-50 dark:bg-emerald-900/20 overflow-hidden aspect-[16/10] min-h-[200px] md:min-h-[300px] lg:min-h-[400px]">
                 <img 
                   src={mainImage.finalSrc}
-                  alt={mainImage.alt}
+                  alt={`${mainImage.alt}の写真`}
                   className="w-full h-full object-cover"
                 />
                 
@@ -168,7 +168,7 @@ const PlantImageGallery = ({ images }) => {
                   <div className="relative aspect-square bg-emerald-50 dark:bg-emerald-900/20">
                     <img 
                       src={image.finalSrc}
-                      alt={image.alt}
+                      alt={`${image.alt}の写真`}
                       className="w-full h-full object-cover"
                     />
                     {mainImage?.finalSrc === image.finalSrc && (
