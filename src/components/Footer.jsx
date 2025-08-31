@@ -32,6 +32,13 @@ const Footer = () => {
           >
             利用規約
           </a>
+          <span className="text-neutral-400">|</span>
+          <a 
+            href={`${import.meta.env.BASE_URL}sitemap.html`}
+            className="text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            サイトマップ
+          </a>
         </div>
       </div>
     </footer>
