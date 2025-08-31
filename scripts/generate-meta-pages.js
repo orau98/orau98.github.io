@@ -44,7 +44,17 @@ function formatScientificNameHTML(scientificName) {
   if (authorMatch) {
     const nameWithoutAuthor = authorMatch[1].trim();
     const authorInfo = authorMatch[2] || '';
-    
+
+    // 亜属を含む形式: Genus (Subgenus) species [...]
+    const gss = nameWithoutAuthor.match(/^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/);
+    if (gss) {
+      const genus = gss[1];
+      const subgenus = gss[2];
+      const species = gss[3];
+      const extraInfo = (gss[4] || '').trim();
+      return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extraInfo ? ' ' + extraInfo : ''}${authorInfo ? ' ' + authorInfo : ''}`;
+    }
+
     // 属名と種小名を分離（最初の2語のみを取得）
     const nameParts = nameWithoutAuthor.split(/\s+/);
     if (nameParts.length >= 2) {
@@ -544,7 +554,7 @@ function generateInsectHTML(insect, type) {
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
   <link rel="canonical" href="https://orau98.github.io/meta/${type}/${insect.id}.html">
   <link rel="alternate" href="https://orau98.github.io/${type}/${insect.id}">
-  <link rel="stylesheet" href="/assets/meta-styles.css">
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
   
   <!-- Open Graph -->
   <meta property="og:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
@@ -772,7 +782,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html">
   <link rel="alternate" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}">
-  <link rel="stylesheet" href="/assets/meta-styles.css">
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
   
   <!-- Open Graph -->
   <meta property="og:title" content="${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
