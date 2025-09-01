@@ -1092,22 +1092,34 @@ function App() {
           
           normalized = normalized.trim();
 
-          // Preserve and repair Latin binomial spacing (e.g., "Capparisheyncana" -> "Capparis heyncana")
-          // Only applies when the string contains Latin letters/hyphens/spaces and no Japanese characters
+          // Preserve and robustly repair Latin binomial spacing (e.g., "Capparisheyncana" -> "Capparis heyncana")
+          // Only applies when the string contains no Japanese characters
           const hasCJK = /[\u3040-\u30FF\u3400-\u9FFF]/.test(normalized);
           if (!hasCJK) {
-            // If looks like a collapsed or loosely spaced binomial, normalize to a single space between genus and species
-            // 1) Collapsed pattern: Genusspecies
-            const collapsed = normalized.match(/^([A-Z][a-z]+)([a-z-]{2,})(.*)$/);
-            if (collapsed) {
-              normalized = `${collapsed[1]} ${collapsed[2]}${collapsed[3] || ''}`.trim();
-            } else {
-              // 2) Already spaced: ensure exactly one space between genus and species
-              const spaced = normalized.match(/^([A-Z][a-z]+)\s+([a-z-]{2,})(.*)$/);
-              if (spaced) {
-                normalized = `${spaced[1]} ${spaced[2]}${spaced[3] || ''}`.trim();
+            const repairLatinFromCompact = (s) => {
+              if (!s) return s;
+              const compact = s.replace(/\s+/g, '');
+              // Require initial capitalized genus start
+              if (!/^([A-Z][a-z]+)/.test(compact)) return s.trim().replace(/\s+/g, ' ');
+              const endings = ['ius','ium','is','us','um','a','ae','os','es','ix','ia','ea','or','er'];
+              let best = null;
+              for (let i = compact.length - 3; i >= 3; i--) {
+                const g = compact.slice(0, i);
+                const sp = compact.slice(i);
+                if (/^[A-Z][a-z]+$/.test(g) && /^[a-z-]{3,}$/.test(sp)) {
+                  if (endings.some(e => g.endsWith(e))) {
+                    best = `${g} ${sp}`;
+                    break; // prefer the longest genus that matches typical Latin ending
+                  }
+                  if (!best) best = `${g} ${sp}`;
+                }
               }
-            }
+              if (best) return best;
+              // Fallback simple split after genus run
+              const m = compact.match(/^([A-Z][a-z]{2,})([a-z-]{3,})$/);
+              return m ? `${m[1]} ${m[2]}` : s.trim().replace(/\s+/g, ' ');
+            };
+            normalized = repairLatinFromCompact(normalized);
           }
           
           // Comprehensive normalization for duplicate prevention
