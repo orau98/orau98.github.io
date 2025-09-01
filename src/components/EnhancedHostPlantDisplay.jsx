@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logger from '../utils/logger';
 import { Link } from 'react-router-dom';
 import { getSourceLink } from '../utils/sourceLinks';
 
@@ -187,7 +188,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   
   // species-6115関連のデバッグ - ゴヨウマツまたは不明の植物
   if (plantGroup.name === 'ゴヨウマツ' || plantGroup.name === '不明') {
-    console.log(`DEBUG ${plantGroup.name} observation processing:`, {
+    logger.debug(`DEBUG ${plantGroup.name} observation processing:`, {
       plantName: plantGroup.name,
       records: plantGroup.records,
       primaryRecord: primaryRecord,
@@ -195,7 +196,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
     });
     
     plantGroup.records.forEach((record, idx) => {
-      console.log(`DEBUG ${plantGroup.name} record[${idx}]:`, {
+      logger.debug(`DEBUG ${plantGroup.name} record[${idx}]:`, {
         observationType: record.observationType,
         plantPart: record.plantPart,
         lifeStage: record.lifeStage,

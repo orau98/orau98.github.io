@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from './utils/logger';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
@@ -13,13 +14,13 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
-  console.log('🔍 MothDetail component called');
+  logger.debug('🔍 MothDetail component called');
   
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
   let insectId = mothId || butterflyId || beetleId || leafbeetleId;
   
   // 🔍 デバッグ：URLパラメータ確認
-  console.log('🔍 URL params:', { mothId, butterflyId, beetleId, leafbeetleId, insectId });
+  logger.debug('🔍 URL params:', { mothId, butterflyId, beetleId, leafbeetleId, insectId });
   
   // ID mapping for compatibility between different data sources
   // Since moths array is built from insects.csv (species-XXX format)
@@ -34,7 +35,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const mappedInsectId = idMapping[insectId] || insectId;
   
   // 🔍 デバッグ：データ配列の状況確認
-  console.log('🔍 Data arrays status:', {
+  logger.debug('🔍 Data arrays status:', {
     mothsLength: moths.length,
     butterfliesLength: butterflies.length,
     beetlesLength: beetles.length,
@@ -48,7 +49,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Add debug logging for アオバシャチホコ
   if (insectId === 'species-4601' || insectId === 'catalog-3123') {
-    console.log('🔍 DEBUG アオバシャチホコ ID mapping:', {
+    logger.debug('🔍 DEBUG アオバシャチホコ ID mapping:', {
       originalId: insectId,
       mappedId: mappedInsectId,
       hasMapping: !!idMapping[insectId],
@@ -60,7 +61,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // species-6115のIDマッピングデバッグ
   if (insectId === 'species-6115') {
-    console.log('DEBUG species-6115 ID mapping:', {
+    logger.debug('DEBUG species-6115 ID mapping:', {
       originalId: insectId,
       mappedId: mappedInsectId,
       hasMapping: !!idMapping[insectId]
@@ -73,12 +74,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
-    console.log(`ID mapped: ${insectId} -> ${mappedInsectId}`);
+    logger.debug(`ID mapped: ${insectId} -> ${mappedInsectId}`);
   }
   
   // Add specific debug for アオバシャチホコ search
   if (insectId === 'species-4601' || insectId === 'catalog-3123' || mappedInsectId === 'species-4601') {
-    console.log('🔍 DEBUG アオバシャチホコ search:', {
+    logger.debug('🔍 DEBUG アオバシャチホコ search:', {
       originalId: insectId,
       mappedId: mappedInsectId,
       allInsectsLength: allInsects.length,
@@ -91,15 +92,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     
     // Search manually to see if species-4601 exists
     const manualSearch = allInsects.find(m => m.id === 'species-4601');
-    console.log('🔍 Manual search for species-4601:', manualSearch);
+    logger.debug('🔍 Manual search for species-4601:', manualSearch);
     
     // Show first few moths for debugging
-    console.log('🔍 First 5 moths:', moths.slice(0, 5).map(m => ({ id: m.id, name: m.name })));
+    logger.debug('🔍 First 5 moths:', moths.slice(0, 5).map(m => ({ id: m.id, name: m.name })));
   }
   
   // Debug for catalog-2090 (ヒメウコンカギバ)
   if (mappedInsectId === 'catalog-2090') {
-    console.log('DEBUG MothDetail: catalog-2090 (ヒメウコンカギバ) display:', {
+    logger.debug('DEBUG MothDetail: catalog-2090 (ヒメウコンカギバ) display:', {
       id: moth?.id,
       name: moth?.name,
       remarks: moth?.remarks,
@@ -115,35 +116,35 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   // Debug logging for オオゴマシジミ
   if (mappedInsectId === 'butterfly-csv-131' || (moth && moth.name === 'オオゴマシジミ')) {
-    console.log('=== DEBUG オオゴマシジミ SEARCH ===');
-    console.log('  insectId:', insectId);
-    console.log('  mappedInsectId:', mappedInsectId);
-    console.log('  found moth:', moth);
+    logger.debug('=== DEBUG オオゴマシジミ SEARCH ===');
+    logger.debug('  insectId:', insectId);
+    logger.debug('  mappedInsectId:', mappedInsectId);
+    logger.debug('  found moth:', moth);
     if (moth) {
-      console.log('  moth.name:', moth.name);
-      console.log('  moth.geographicalRemarks:', moth.geographicalRemarks);
-      console.log('  moth.type:', moth.type);
+      logger.debug('  moth.name:', moth.name);
+      logger.debug('  moth.geographicalRemarks:', moth.geographicalRemarks);
+      logger.debug('  moth.type:', moth.type);
     }
-    console.log('  butterflies array length:', butterflies.length);
+    logger.debug('  butterflies array length:', butterflies.length);
     const ogomaButterfly = butterflies.find(b => b.name === 'オオゴマシジミ');
-    console.log('  direct search for オオゴマシジミ in butterflies:', ogomaButterfly);
+    logger.debug('  direct search for オオゴマシジミ in butterflies:', ogomaButterfly);
   }
   
   // Debug logging for catalog-6065 (スミレモンキリガ)
   if (mappedInsectId === 'catalog-6065') {
-    console.log('DEBUG catalog-6065: Found moth:', moth);
+    logger.debug('DEBUG catalog-6065: Found moth:', moth);
     if (moth) {
-      console.log('DEBUG catalog-6065: hostPlants:', moth.hostPlants);
-      console.log('DEBUG catalog-6065: hostPlantDetails:', moth.hostPlantDetails);
+      logger.debug('DEBUG catalog-6065: hostPlants:', moth.hostPlants);
+      logger.debug('DEBUG catalog-6065: hostPlantDetails:', moth.hostPlantDetails);
       // Log the actual plant names
       if (Array.isArray(moth.hostPlants) && moth.hostPlants.length > 0) {
         moth.hostPlants.forEach((plant, index) => {
-          console.log(`DEBUG catalog-6065: hostPlant[${index}] = "${plant}"`);
+          logger.debug(`DEBUG catalog-6065: hostPlant[${index}] = "${plant}"`);
         });
       }
       if (moth.hostPlantDetails && moth.hostPlantDetails.length > 0) {
         moth.hostPlantDetails.forEach((detail, index) => {
-          console.log(`DEBUG catalog-6065: hostPlantDetail[${index}] = `, detail);
+          logger.debug(`DEBUG catalog-6065: hostPlantDetail[${index}] = `, detail);
         });
       }
     }
@@ -152,11 +153,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   // Debug logging for センモンヤガ
   if (mappedInsectId === 'catalog-3489' || mappedInsectId === 'main-6519') {
-    console.log('DEBUG: Looking for センモンヤガ with ID:', mappedInsectId);
-    console.log('DEBUG: Found moth:', moth);
+    logger.debug('DEBUG: Looking for センモンヤガ with ID:', mappedInsectId);
+    logger.debug('DEBUG: Found moth:', moth);
     if (moth) {
-      console.log('DEBUG: センモンヤガ hostPlants:', moth.hostPlants);
-      console.log('DEBUG: センモンヤガ hostPlantDetails:', moth.hostPlantDetails);
+      logger.debug('DEBUG: センモンヤガ hostPlants:', moth.hostPlants);
+      logger.debug('DEBUG: センモンヤガ hostPlantDetails:', moth.hostPlantDetails);
     }
   }
   
@@ -425,7 +426,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   // Debug logging for アオバシャチホコ
   if (moth.name === 'アオバシャチホコ') {
-    console.log('DEBUG アオバシャチホコ関連昆虫:', {
+    logger.debug('DEBUG アオバシャチホコ関連昆虫:', {
       currentMothPlants,
       relatedMothsByPlant,
       hostPlantsKeys: Object.keys(hostPlants),
@@ -489,7 +490,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   // Debug logging for アオバシャチホコ
   if (moth.name === 'アオバシャチホコ') {
-    console.log('DEBUG アオバシャチホコ関連昆虫:', {
+    logger.debug('DEBUG アオバシャチホコ関連昆虫:', {
       currentMothPlants,
       relatedMothsByPlant,
       hostPlantsKeys: Object.keys(hostPlants),
@@ -555,7 +556,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
           setImageExtensions(extensions);
         }
       } catch (error) {
-        console.warn('Failed to load image extensions:', error);
+        logger.warn('Failed to load image extensions:', error);
         setImageExtensions({});
       }
     };
@@ -568,7 +569,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
           setImageBases(list);
         }
       } catch (e) {
-        console.debug('Failed to load image_filenames.txt:', e);
+        logger.debug('Failed to load image_filenames.txt:', e);
       }
     };
 
@@ -620,10 +621,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const staticImagePath = possibleImagePaths[0]; // Default to scientific name
   
   // Debug logging
-  console.log('Moth ID:', moth.id);
-  console.log('Instagram URL:', moth.instagramUrl);
-  console.log('Has Instagram Post:', hasInstagramPost);
-  console.log('Static Image Path:', staticImagePath);
+  logger.debug('Moth ID:', moth.id);
+  logger.debug('Instagram URL:', moth.instagramUrl);
+  logger.debug('Has Instagram Post:', hasInstagramPost);
+  logger.debug('Static Image Path:', staticImagePath);
   
   // Additional debug for beetles
   if (moth.type === 'beetle') {

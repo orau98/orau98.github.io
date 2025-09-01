@@ -5,6 +5,7 @@ import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import InstagramTimeline from './components/InstagramTimeline';
 import { MainStructuredData } from './components/StructuredData';
+import logger from './utils/logger';
 
 const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
@@ -20,8 +21,8 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   };
   const scrollPositionRef = useRef(0);
   
-  // DEBUG: Log the actual data received
-  console.log("DEBUG InsectsHostPlantExplorer received:", {
+  // DEBUG: Log the actual data received (dev only)
+  if (import.meta && import.meta.env && import.meta.env.DEV) logger.debug("DEBUG InsectsHostPlantExplorer received:", {
     moths: moths.length,
     butterflies: butterflies.length,
     beetles: beetles.length,
@@ -170,7 +171,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
             fetchpriority="high"
             onLoad={() => setHeroImageLoaded(true)}
             onError={(e) => { 
-              console.error('Hero image failed to load:', e.target.src);
+              logger.warn('Hero image failed to load:', e.target.src);
               e.target.onerror = null; 
               e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; 
               e.target.alt='画像が見つかりません';

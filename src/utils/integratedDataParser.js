@@ -77,6 +77,8 @@ export const parseIntegratedEmergenceTime = (row) => {
  * @param {Array} csvData - 統合CSVの解析済みデータ
  * @returns {Object} - 分類群別に整理されたデータ
  */
+import logger from './logger';
+
 export const convertIntegratedDataToStandardFormat = (csvData) => {
   const result = {
     moths: [],
@@ -91,7 +93,7 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
       const insectId = row['昆虫ID']?.trim();
       
       if (!classification || !insectId) {
-        console.warn(`統合データ警告: 行${index + 1}で分類群または昆虫IDが不明`);
+        logger.warn(`統合データ警告: 行${index + 1}で分類群または昆虫IDが不明`);
         return;
       }
       
@@ -145,15 +147,15 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
           result.leafbeetles.push(insectData);
           break;
         default:
-          console.warn(`未知の分類群: ${classification} (昆虫ID: ${insectId})`);
+          logger.warn(`未知の分類群: ${classification} (昆虫ID: ${insectId})`);
       }
       
     } catch (error) {
-      console.error(`統合データ処理エラー (行${index + 1}):`, error, row);
+      logger.error(`統合データ処理エラー (行${index + 1}):`, error, row);
     }
   });
   
-  console.log('統合データ変換完了:', {
+  logger.debug('統合データ変換完了:', {
     moths: result.moths.length,
     butterflies: result.butterflies.length,
     beetles: result.beetles.length,

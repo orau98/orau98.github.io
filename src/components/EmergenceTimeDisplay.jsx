@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import logger from '../utils/logger';
 import { getSourceLink } from '../utils/sourceLinks';
 
 // 月名と色のマッピング - 薄い色で統一
@@ -52,7 +53,7 @@ const parseEmergenceTime = (emergenceTime) => {
   // Debug log for specific species
   const isDebugSpecies = emergenceTime.includes('3月') || emergenceTime.includes('丘陵地') || emergenceTime.includes('山地') || emergenceTime.includes('10-12、1-5月');
   if (isDebugSpecies) {
-    console.log('DEBUG: parseEmergenceTime input:', emergenceTime);
+    logger.debug('DEBUG: parseEmergenceTime input:', emergenceTime);
   }
   
   const activeMonths = new Set();
@@ -297,7 +298,7 @@ const parseEmergenceTime = (emergenceTime) => {
   while ((match = commaSeparatedPattern.exec(emergenceTime)) !== null) {
     hasCommaSeparatedPattern = true;
     if (isDebugSpecies) {
-      console.log('DEBUG: commaSeparatedPattern match:', match, 'input:', emergenceTime);
+      logger.debug('DEBUG: commaSeparatedPattern match:', match, 'input:', emergenceTime);
     }
     const firstStart = parseInt(match[1]);
     const firstEnd = parseInt(match[2]);
@@ -305,7 +306,7 @@ const parseEmergenceTime = (emergenceTime) => {
     const secondEnd = parseInt(match[4]);
     
     if (isDebugSpecies) {
-      console.log('DEBUG: Processing ranges:', firstStart, '-', firstEnd, 'and', secondStart, '-', secondEnd);
+      logger.debug('DEBUG: Processing ranges:', firstStart, '-', firstEnd, 'and', secondStart, '-', secondEnd);
     }
     
     // 最初の範囲を処理
@@ -348,7 +349,7 @@ const parseEmergenceTime = (emergenceTime) => {
     const rangePattern = /(\d{1,2})月?[～〜~\-－](\d{1,2})月(?![上中下])/g;
     while ((match = rangePattern.exec(emergenceTime)) !== null) {
       if (isDebugSpecies) {
-        console.log('DEBUG: rangePattern match:', match, 'input:', emergenceTime);
+        logger.debug('DEBUG: rangePattern match:', match, 'input:', emergenceTime);
       }
       const start = parseInt(match[1]);
       const end = parseInt(match[2]);
@@ -513,7 +514,7 @@ const parseEmergenceTime = (emergenceTime) => {
   
   // Debug log for specific species
   if (isDebugSpecies) {
-    console.log('DEBUG: parseEmergenceTime result:', {
+    logger.debug('DEBUG: parseEmergenceTime result:', {
       activeMonths: Array.from(activeMonths).sort((a, b) => a - b),
       activePeriods: Array.from(activePeriods).sort((a, b) => a - b)
     });

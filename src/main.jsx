@@ -1,8 +1,21 @@
 import React from 'react';
+import logger from './utils/logger';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
+
+// Silence verbose logs in production while keeping errors/warnings
+if (import.meta && import.meta.env && import.meta.env.PROD && typeof window !== 'undefined' && !window.DEBUG_LOGS) {
+  try {
+    const noop = () => {};
+    console.log = noop;
+    console.debug = noop;
+    console.info = noop;
+  } catch (_) {
+    // Ignore if console is not writable
+  }
+}
 
 // Bot detection and anti-scraping measures
 (function() {
@@ -24,7 +37,7 @@ import './index.css';
   ];
 
   if (suspiciousFeatures.some(feature => feature)) {
-    console.warn('Bot detection triggered, but allowing access for debugging');
+    logger.warn('Bot detection triggered, but allowing access for debugging');
     // TEMPORARILY DISABLED: document.body.innerHTML = '<div style="text-align:center;padding:50px;">Access Restricted</div>';
     // TEMPORARILY DISABLED: throw new Error('Automated access detected');
   }
@@ -41,7 +54,7 @@ import './index.css';
   
   if (lastAccess && (currentTime - parseInt(lastAccess)) < timeWindow) {
     if (accessCount > maxRequests) {
-      console.warn('Rate limit would be triggered, but allowing access for debugging');
+      logger.warn('Rate limit would be triggered, but allowing access for debugging');
       // TEMPORARILY DISABLED: document.body.innerHTML = '<div style="text-align:center;padding:50px;">Rate limit exceeded</div>';
       // TEMPORARILY DISABLED: throw new Error('Rate limit exceeded');
     }
@@ -58,7 +71,7 @@ window.addEventListener('error', (event) => {
   
   // Suppress removeChild errors
   if (errorMessage.includes('removeChild') && errorMessage.includes('not a child of this node')) {
-    console.debug('Suppressed removeChild error (harmless):', errorMessage);
+    logger.debug('Suppressed removeChild error (harmless):', errorMessage);
     event.preventDefault();
     return false;
   }
@@ -67,7 +80,7 @@ window.addEventListener('error', (event) => {
   if (errorMessage.includes('startContainer') || 
       event.filename?.includes('content.js') ||
       event.filename?.includes('extension')) {
-    console.debug('Suppressed browser extension error (harmless):', errorMessage);
+    logger.debug('Suppressed browser extension error (harmless):', errorMessage);
     event.preventDefault();
     return false;
   }
@@ -78,14 +91,14 @@ window.addEventListener('unhandledrejection', (event) => {
   const reasonMessage = event.reason?.message || '';
   
   if (reasonMessage.includes('removeChild') && reasonMessage.includes('not a child of this node')) {
-    console.debug('Suppressed removeChild promise rejection (harmless):', reasonMessage);
+    logger.debug('Suppressed removeChild promise rejection (harmless):', reasonMessage);
     event.preventDefault();
     return false;
   }
   
   // Suppress extension-related promise rejections
   if (reasonMessage.includes('startContainer') || reasonMessage.includes('extension')) {
-    console.debug('Suppressed extension promise rejection (harmless):', reasonMessage);
+    logger.debug('Suppressed extension promise rejection (harmless):', reasonMessage);
     event.preventDefault();
     return false;
   }

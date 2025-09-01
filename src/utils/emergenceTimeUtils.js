@@ -5,6 +5,8 @@
  * @param {string} notes - 備考文字列
  * @returns {object} - { emergenceTime: string, notes: string }
  */
+import logger from './logger';
+
 export const extractEmergenceTime = (notes) => {
   if (!notes || typeof notes !== 'string') {
     return { emergenceTime: '', notes: notes || '' };
@@ -77,11 +79,11 @@ export const testExtraction = () => {
     "夏に発生。成虫は7月頃出現する"
   ];
 
-  console.log('成虫発生時期抽出テスト:');
+  logger.debug('成虫発生時期抽出テスト:');
   testCases.forEach((testCase, index) => {
     const result = extractEmergenceTime(testCase);
     const normalized = normalizeEmergenceTime(result.emergenceTime);
-    console.log(`テスト${index + 1}:`, {
+    logger.debug(`テスト${index + 1}:`, {
       original: testCase,
       extracted: result.emergenceTime,
       normalized: normalized,

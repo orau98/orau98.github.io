@@ -23,4 +23,3 @@ const InstagramTimeline = ({ urls = [], className = '' }) => {
 };
 
 export default InstagramTimeline;
-

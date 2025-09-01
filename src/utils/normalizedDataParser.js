@@ -7,6 +7,8 @@
  * @param {Array} generalNotesData - general_notes.csvの解析済みデータ
  * @returns {Object} - 分類群別に整理されたデータ
  */
+import logger from './logger';
+
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = {
     moths: [],
@@ -30,7 +32,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     
     // species-6115のデバッグログ
     if (hp.insect_id === 'species-6115') {
-      console.log('DEBUG species-6115 hostplant data:', {
+      logger.debug('DEBUG species-6115 hostplant data:', {
         plant_name: hp.plant_name,
         observation_type: hp.observation_type,
         plant_part: hp.plant_part,
@@ -73,7 +75,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     try {
       const insectId = insect.insect_id?.trim();
       if (!insectId) {
-        console.warn(`正規化データ警告: 行${index + 1}で昆虫IDが不明`);
+        logger.warn(`正規化データ警告: 行${index + 1}で昆虫IDが不明`);
         return;
       }
 
@@ -83,14 +85,14 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       
       // species-6115のデバッグログ
       if (insectId === 'species-6115') {
-        console.log('DEBUG species-6115 processing:', {
+        logger.debug('DEBUG species-6115 processing:', {
           insectId: insectId,
           hostPlants: hostPlants,
           hostPlantsCount: hostPlants.length
         });
         
         hostPlants.forEach((hp, idx) => {
-          console.log(`DEBUG species-6115 hostPlant[${idx}]:`, {
+          logger.debug(`DEBUG species-6115 hostPlant[${idx}]:`, {
             name: hp.name,
             observationType: hp.observationType,
             plantPart: hp.plantPart,
@@ -165,11 +167,11 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       }
 
     } catch (error) {
-      console.error(`正規化データ処理エラー (行${index + 1}):`, error, insect);
+      logger.error(`正規化データ処理エラー (行${index + 1}):`, error, insect);
     }
   });
 
-  console.log('正規化データ変換完了:', {
+  logger.debug('正規化データ変換完了:', {
     moths: result.moths.length,
     butterflies: result.butterflies.length,
     beetles: result.beetles.length,

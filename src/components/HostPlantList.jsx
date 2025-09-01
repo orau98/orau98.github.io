@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import logger from '../utils/logger';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
@@ -29,7 +30,7 @@ const loadPlantImageFilenames = async () => {
       plantImageFilenamesLoaded = true;
     }
   } catch (error) {
-    console.error('植物画像リストの読み込みに失敗しました:', error);
+    logger.warn('植物画像リストの読み込みに失敗しました:', error);
   }
   
   return plantImageFilenames;
@@ -123,7 +124,7 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
       
       // Debug logging for オニグルミ
       if (plant === 'オニグルミ') {
-        console.log('オニグルミ image matching debug:', {
+        logger.debug('オニグルミ image matching debug:', {
           plant,
           safePlantName,
           preloadedFilenamesLength: preloadedFilenames.length,
@@ -456,9 +457,9 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
     };
   }, [embedded, safeHostPlants]);
   const filteredHostPlants = useMemo(() => {
-    console.log('DEBUG: Filtering plants, total count:', Object.keys(safeHostPlants).length, 'search term:', debouncedPlantSearch);
+    logger.debug('DEBUG: Filtering plants, total count:', Object.keys(safeHostPlants).length, 'search term:', debouncedPlantSearch);
     if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {
-      console.log('DEBUG: No host plants available');
+      logger.debug('DEBUG: No host plants available');
       return [];
     }
     const lowerCaseSearchTerm = debouncedPlantSearch.toLowerCase();
@@ -468,11 +469,11 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
     const filtered = Object.entries(safeHostPlants).filter(([plantName]) => {
       // Explicitly exclude empty, undefined, or invalid plant names
       if (!plantName || plantName.trim() === '' || plantName === 'undefined' || plantName === 'null') {
-        console.log("DEBUG: Excluding invalid plant name:", JSON.stringify(plantName));
+        logger.debug("DEBUG: Excluding invalid plant name:", JSON.stringify(plantName));
         return false;
       }
       
-      console.log("Filtering plant:", plantName, "Details:", safePlantDetails[plantName]);
+      logger.debug("Filtering plant:", plantName, "Details:", safePlantDetails[plantName]);
       const detail = safePlantDetails[plantName] || {};
       const family = detail.family ? detail.family.toLowerCase() : '';
       const genus = detail.genus ? detail.genus.toLowerCase() : '';
@@ -584,8 +585,8 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       });
     });
     
-    console.log(`Plant image prioritization: ${plantsWithImages.length} plants have images out of ${sorted.length} total`);
-    console.log('First 10 sorted plants:', sorted.slice(0, 10).map(([plant]) => {
+    logger.debug(`Plant image prioritization: ${plantsWithImages.length} plants have images out of ${sorted.length} total`);
+    logger.debug('First 10 sorted plants:', sorted.slice(0, 10).map(([plant]) => {
       const createSafePlantFilename = (plantName) => {
         if (!plantName) return '';
         let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');

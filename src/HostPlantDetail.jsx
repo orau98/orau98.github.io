@@ -3,6 +3,7 @@ import Papa from 'papaparse';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
+import logger from './utils/logger';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import { RelatedPlants } from './components/RelatedLinks';
 
@@ -268,7 +269,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const [imageExtensions, setImageExtensions] = useState({});
   
   // Debug logging for plant detail
-  console.log('HostPlantDetail - plantName param:', plantName);
+  logger.debug('HostPlantDetail - plantName param:', plantName);
 
   // Load image filenames and extension mapping for insect cards (avoid 404s)
   useEffect(() => {
@@ -293,8 +294,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     };
     load();
   }, []);
-  console.log('HostPlantDetail - decodedPlantName:', decodedPlantName);
-  console.log('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
+  logger.debug('HostPlantDetail - decodedPlantName:', decodedPlantName);
+  logger.debug('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
@@ -406,16 +407,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   // Debug: オニグルミを含む昆虫を探す
   if (decodedPlantName === 'オニグルミ') {
-    console.log('DEBUG: Searching for オニグルミ in all insects...');
-    console.log('Total insects:', allInsects.length);
+    logger.debug('DEBUG: Searching for オニグルミ in all insects...');
+    logger.debug('Total insects:', allInsects.length);
     const onigurumiInsects = allInsects.filter(insect => {
       if (!insect.hostPlants) return false;
       const hostPlantsStr = String(insect.hostPlants);
       return hostPlantsStr.includes('オニグルミ');
     });
-    console.log('Found insects with オニグルミ:', onigurumiInsects.length);
+    logger.debug('Found insects with オニグルミ:', onigurumiInsects.length);
     onigurumiInsects.forEach(insect => {
-      console.log(`- ${insect.japaneseName}: hostPlants type=${typeof insect.hostPlants}, value="${insect.hostPlants}"`);
+      logger.debug(`- ${insect.japaneseName}: hostPlants type=${typeof insect.hostPlants}, value="${insect.hostPlants}"`);
     });
   }
   
@@ -487,9 +488,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   // Debug logging for オニグルミ
   if (decodedPlantName === 'オニグルミ') {
-    console.log('DEBUG: Related insects found for オニグルミ:', relatedInsects.length);
-    console.log('DEBUG: hostPlants[オニグルミ]:', hostPlants['オニグルミ']);
-    console.log('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
+    logger.debug('DEBUG: Related insects found for オニグルミ:', relatedInsects.length);
+    logger.debug('DEBUG: hostPlants[オニグルミ]:', hostPlants['オニグルミ']);
+    logger.debug('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
   }
   
   // Get all available images for this plant (try canonical + aliases)

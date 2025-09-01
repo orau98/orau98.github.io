@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Papa from 'papaparse';
+import logger from './utils/logger';
 import InsectsHostPlantExplorer from './InsectsHostPlantExplorer';
 import MothDetail from './MothDetail';
 import HostPlantDetail from './HostPlantDetail';
@@ -148,7 +149,7 @@ function App() {
       }
       localStorage.setItem('theme', theme);
     } catch (error) {
-      console.debug('Theme change error (harmless):', error);
+      logger.debug('Theme change error (harmless):', error);
     }
   }, [theme]);
 
@@ -396,14 +397,14 @@ function App() {
       let beetleData = [];
       let leafbeetleData = [];
 
-      if (isDevelopment) console.log("Fetching CSV files...");
-      console.log("wameiCsvPath:", wameiCsvPath);
-      console.log("mainCsvPath:", mainCsvPath);
-      console.log("yListCsvPath:", yListCsvPath);
-      console.log("hamushiIntegratedCsvPath:", hamushiIntegratedCsvPath);
-      console.log("butterflyCsvPath:", butterflyCsvPath);
-      console.log("beetleCsvPath:", beetleCsvPath);
-      console.log("BASE_URL:", import.meta.env.BASE_URL);
+      if (isDevelopment) logger.debug("Fetching CSV files...");
+      logger.debug("wameiCsvPath:", wameiCsvPath);
+      logger.debug("mainCsvPath:", mainCsvPath);
+      logger.debug("yListCsvPath:", yListCsvPath);
+      logger.debug("hamushiIntegratedCsvPath:", hamushiIntegratedCsvPath);
+      logger.debug("butterflyCsvPath:", butterflyCsvPath);
+      logger.debug("beetleCsvPath:", beetleCsvPath);
+      logger.debug("BASE_URL:", import.meta.env.BASE_URL);
 
       try {
         // Fetch with timeout for all files to prevent hanging
@@ -418,50 +419,50 @@ function App() {
 
         const safeFileLoad = async (path, name, timeout = 15000) => {
           try {
-            console.log(`Loading ${name} from ${path}`);
+            logger.debug(`Loading ${name} from ${path}`);
             const res = await fetchWithTimeout(path, timeout);
             if (!res.ok) {
-              console.error(`Failed to fetch ${name}: ${res.statusText}`);
+              logger.error(`Failed to fetch ${name}: ${res.statusText}`);
               return null;
             }
             const text = await res.text();
-            console.log(`Successfully loaded ${name} (${text.length} characters)`);
+            logger.debug(`Successfully loaded ${name} (${text.length} characters)`);
             
             // Debug: Check if スミレモンキリガ exists in the loaded file
             if (name === 'main moth data') {
               if (text.includes('スミレモンキリガ')) {
-                if (isDevelopment) console.log('DEBUG: スミレモンキリガ found in loaded CSV');
+                if (isDevelopment) logger.debug('DEBUG: スミレモンキリガ found in loaded CSV');
                 const lines = text.split('\n');
                 const sumiLine = lines.find(line => line.includes('スミレモンキリガ'));
                 if (sumiLine) {
-                  if (isDevelopment) console.log('DEBUG: スミレモンキリガ line:', sumiLine);
+                  if (isDevelopment) logger.debug('DEBUG: スミレモンキリガ line:', sumiLine);
                   // Check specific content to determine which CSV was loaded
                   if (sumiLine.includes('ツバキ類(ツバキ科)')) {
-                    if (isDevelopment) console.log('DEBUG: ✅ CORRECT CSV - New kiriga data with ツバキ類(ツバキ科)');
+                    if (isDevelopment) logger.debug('DEBUG: ✅ CORRECT CSV - New kiriga data with ツバキ類(ツバキ科)');
                   } else if (sumiLine.includes('1990,ツバキ類(ツバキ科)')) {
-                    console.error('DEBUG: ❌ OLD CSV - Bokutou data with malformed food plant');
+                    logger.error('DEBUG: ❌ OLD CSV - Bokutou data with malformed food plant');
                   } else {
-                    console.warn('DEBUG: ⚠️ UNKNOWN CSV FORMAT for スミレモンキリガ');
+                    logger.warn('DEBUG: ⚠️ UNKNOWN CSV FORMAT for スミレモンキリガ');
                   }
                 }
               } else {
-                console.error('DEBUG: ❌ スミレモンキリガ NOT FOUND in loaded CSV - This is the problem!');
-                if (isDevelopment) console.log('DEBUG: CSV size:', text.length, 'characters');
-                if (isDevelopment) console.log('DEBUG: First 500 chars:', text.substring(0, 500));
+                logger.error('DEBUG: ❌ スミレモンキリガ NOT FOUND in loaded CSV - This is the problem!');
+                if (isDevelopment) logger.debug('DEBUG: CSV size:', text.length, 'characters');
+                if (isDevelopment) logger.debug('DEBUG: First 500 chars:', text.substring(0, 500));
               }
             }
             
             return text;
           } catch (error) {
-            console.error(`Error loading ${name}:`, error);
+            logger.error(`Error loading ${name}:`, error);
             return null;
           }
         };
 
         // Load files with safe loading - prioritize essential files
-        console.log("=== Starting file loading process ===");
-        if (isDevelopment) console.log("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
-        if (isDevelopment) console.log("DEBUG: About to load フユシャク file with safeFileLoad");
+        logger.debug("=== Starting file loading process ===");
+        if (isDevelopment) logger.debug("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
+        if (isDevelopment) logger.debug("DEBUG: About to load フユシャク file with safeFileLoad");
         
         let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null;
 
@@ -493,10 +494,10 @@ function App() {
           ]);
         }
         
-        if (isDevelopment) console.log("DEBUG: File loading completed, checking results...");
+        if (isDevelopment) logger.debug("DEBUG: File loading completed, checking results...");
         
         // Debug フユシャク file loading（legacy時のみ）
-        if (!useNormalizedOnly && isDevelopment) console.log('DEBUG: フユシャク file load result:', {
+        if (!useNormalizedOnly && isDevelopment) logger.debug('DEBUG: フユシャク file load result:', {
           path: fuyushakuCsvPath,
           loaded: !!fuyushakuText,
           length: fuyushakuText ? fuyushakuText.length : 0,
@@ -508,7 +509,7 @@ function App() {
           mainText = '';
         }
 
-        console.log("File loading results:", {
+        logger.debug("File loading results:", {
           wamei: wameiText ? 'SUCCESS' : 'FAILED',
           main: mainText ? 'SUCCESS' : 'FAILED',
           yList: yListText ? 'SUCCESS' : 'FAILED',
@@ -528,7 +529,7 @@ function App() {
         let normalizedData = null;
         if (normalizedInsectsText && normalizedHostplantsText && normalizedNotesText) {
           try {
-            console.log("正規化CSVファイルを処理中...");
+            logger.debug("正規化CSVファイルを処理中...");
             
             // Import normalized data parser
             const { convertNormalizedDataToStandardFormat, validateNormalizedData } = await import('./utils/normalizedDataParser.js');
@@ -558,7 +559,7 @@ function App() {
             [insectsParsed, hostplantsParsed, notesParsed].forEach((parsed, index) => {
               const names = ['insects', 'hostplants', 'notes'];
               if (parsed.errors?.length > 0) {
-                console.warn(`正規化CSV解析警告 (${names[index]}):`, parsed.errors);
+                logger.warn(`正規化CSV解析警告 (${names[index]}):`, parsed.errors);
               }
             });
             
@@ -571,15 +572,15 @@ function App() {
             
             // Validate data quality
             const qualityReport = validateNormalizedData(normalizedData);
-            console.log("正規化データ品質レポート:", qualityReport);
+            logger.debug("正規化データ品質レポート:", qualityReport);
             
             // Log first few entries for verification
             if (normalizedData.moths?.length > 0) {
-              console.log("正規化データサンプル (蛾類):", normalizedData.moths.slice(0, 2));
+              logger.debug("正規化データサンプル (蛾類):", normalizedData.moths.slice(0, 2));
             }
             
           } catch (error) {
-            console.error("正規化CSV処理エラー:", error);
+            logger.error("正規化CSV処理エラー:", error);
             normalizedData = null;
           }
         }
@@ -587,14 +588,14 @@ function App() {
         // Check if essential files loaded
         // 正規化データがある場合は旧メインCSVが無くても続行（GitHub Pagesで未配置でも白画面にしない）
         if (!mainText && !useNormalizedOnly) {
-          console.warn('Main moth data file missing. Proceeding with normalized CSVs only.');
+          logger.warn('Main moth data file missing. Proceeding with normalized CSVs only.');
           mainText = '';
         }
         if (!wameiText) {
-          console.warn('Wamei checklist failed to load - plant family data may be incomplete');
+          logger.warn('Wamei checklist failed to load - plant family data may be incomplete');
         }
 
-        if (isDevelopment) console.log("CSV files fetched successfully. Parsing...");
+        if (isDevelopment) logger.debug("CSV files fetched successfully. Parsing...");
 
         // Parse キリガ CSV to create emergence time lookup table（normalizedOnly時はスキップ）
         const emergenceTimeMap = new Map();
@@ -612,24 +613,24 @@ function App() {
               });
               kirigaData = kirigaParsed.data;
             } catch (error) {
-              console.warn('Failed to parse キリガ CSV:', error);
+              logger.warn('Failed to parse キリガ CSV:', error);
               kirigaData = [];
             }
           } else {
-            console.warn('キリガ CSV data is empty or failed to load');
+            logger.warn('キリガ CSV data is empty or failed to load');
           }
         }
         
         // Debug log for キバラモクメキリガ
         const kibaraEntry = kirigaData.find(row => row['和名'] && row['和名'].includes('キバラモクメキリガ'));
         if (kibaraEntry) {
-          console.log('Found キバラモクメキリガ:', kibaraEntry);
+          logger.debug('Found キバラモクメキリガ:', kibaraEntry);
         } else {
-          if (isDevelopment) console.log('キバラモクメキリガ not found in parsed data');
-          if (isDevelopment) console.log('Sample parsed entries:', kirigaData.slice(0, 5));
+          if (isDevelopment) logger.debug('キバラモクメキリガ not found in parsed data');
+          if (isDevelopment) logger.debug('Sample parsed entries:', kirigaData.slice(0, 5));
         }
         
-        console.log("Parsed キリガ data:", kirigaData.length, "entries");
+        logger.debug("Parsed キリガ data:", kirigaData.length, "entries");
         
         // Create comprehensive data maps from キリガ data
         const kirigaHostPlantMap = new Map();
@@ -782,31 +783,31 @@ function App() {
               return row;
             });
             
-            console.log('フユシャク CSV parsing successful, entries:', fuyushakuData.length);
+            logger.debug('フユシャク CSV parsing successful, entries:', fuyushakuData.length);
           } catch (error) {
-            console.warn('Failed to parse フユシャク CSV:', error);
+            logger.warn('Failed to parse フユシャク CSV:', error);
             fuyushakuData = [];
           }
         } else if (!useNormalizedOnly) {
-          console.warn('フユシャク CSV data is empty or failed to load');
+          logger.warn('フユシャク CSV data is empty or failed to load');
         }
         
-        console.log("Parsed フユシャク data:", fuyushakuData.length, "entries");
+        logger.debug("Parsed フユシャク data:", fuyushakuData.length, "entries");
         
         // Debug: Show first few entries of フユシャク data
         if (!useNormalizedOnly && fuyushakuData.length > 0) {
-          console.log('DEBUG: フユシャク.csv first few entries:', fuyushakuData.slice(0, 3));
+          logger.debug('DEBUG: フユシャク.csv first few entries:', fuyushakuData.slice(0, 3));
           // Check if カバシタムクゲエダシャク exists
           const kabaShitaEntry = fuyushakuData.find(row => row['和名']?.trim() === 'カバシタムクゲエダシャク');
           if (kabaShitaEntry) {
-            console.log('DEBUG: カバシタムクゲエダシャク found in フユシャク.csv raw data:', kabaShitaEntry);
-            console.log('DEBUG: カバシタムクゲエダシャク scientific name length:', kabaShitaEntry['学名']?.length);
-            console.log('DEBUG: カバシタムクゲエダシャク scientific name charCodes:', 
+            logger.debug('DEBUG: カバシタムクゲエダシャク found in フユシャク.csv raw data:', kabaShitaEntry);
+            logger.debug('DEBUG: カバシタムクゲエダシャク scientific name length:', kabaShitaEntry['学名']?.length);
+            logger.debug('DEBUG: カバシタムクゲエダシャク scientific name charCodes:', 
               kabaShitaEntry['学名']?.split('').map(c => c.charCodeAt(0)).join(', '));
           } else {
-            console.log('DEBUG: カバシタムクゲエダシャク NOT found in フユシャク.csv');
+            logger.debug('DEBUG: カバシタムクゲエダシャク NOT found in フユシャク.csv');
             // Debug: show all 和名 in the data
-            console.log('DEBUG: All 和名 in フユシャク data:', fuyushakuData.map(row => row['和名']).filter(Boolean));
+            logger.debug('DEBUG: All 和名 in フユシャク data:', fuyushakuData.map(row => row['和名']).filter(Boolean));
           }
         }
         
@@ -882,21 +883,21 @@ function App() {
           }
         });
 
-        if (isDevelopment) console.log("Emergence time map created with", emergenceTimeMap.size, "entries");
-        if (isDevelopment) console.log("Sample entries:", Array.from(emergenceTimeMap.entries()).slice(0, 5));
-        if (isDevelopment) console.log("フユシャク host plant map size:", fuyushakuHostPlantMap.size);
-        if (isDevelopment) console.log("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
-        console.log("フユシャク Pachyerannis obliquaria check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria (Motschulsky, 1861)'));
-        console.log("フユシャク Pachyerannis obliquaria (no author) check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria'));
+        if (isDevelopment) logger.debug("Emergence time map created with", emergenceTimeMap.size, "entries");
+        if (isDevelopment) logger.debug("Sample entries:", Array.from(emergenceTimeMap.entries()).slice(0, 5));
+        if (isDevelopment) logger.debug("フユシャク host plant map size:", fuyushakuHostPlantMap.size);
+        if (isDevelopment) logger.debug("フユシャク クロスジフユエダシャク check:", fuyushakuHostPlantMap.get('クロスジフユエダシャク'));
+        logger.debug("フユシャク Pachyerannis obliquaria check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria (Motschulsky, 1861)'));
+        logger.debug("フユシャク Pachyerannis obliquaria (no author) check:", fuyushakuHostPlantMap.get('Pachyerannis obliquaria'));
         
         // Debug: Check if カバシタムクゲエダシャク is in the maps
-        console.log("DEBUG: カバシタムクゲエダシャク in fuyushakuHostPlantMap:", fuyushakuHostPlantMap.get('カバシタムクゲエダシャク'));
-        console.log("DEBUG: カバシタムクゲエダシャク in emergenceTimeMap:", emergenceTimeMap.get('カバシタムクゲエダシャク'));
-        console.log("DEBUG: カバシタムクゲエダシャク in fuyushakuRemarksMap:", fuyushakuRemarksMap.get('カバシタムクゲエダシャク'));
+        logger.debug("DEBUG: カバシタムクゲエダシャク in fuyushakuHostPlantMap:", fuyushakuHostPlantMap.get('カバシタムクゲエダシャク'));
+        logger.debug("DEBUG: カバシタムクゲエダシャク in emergenceTimeMap:", emergenceTimeMap.get('カバシタムクゲエダシャク'));
+        logger.debug("DEBUG: カバシタムクゲエダシャク in fuyushakuRemarksMap:", fuyushakuRemarksMap.get('カバシタムクゲエダシャク'));
         
         // Show all keys that contain カバシタ
         const kabaKeys = Array.from(fuyushakuHostPlantMap.keys()).filter(k => k && k.includes('カバシタ'));
-        console.log("DEBUG: All keys containing カバシタ in fuyushakuHostPlantMap:", kabaKeys);
+        logger.debug("DEBUG: All keys containing カバシタ in fuyushakuHostPlantMap:", kabaKeys);
 
         // Function to clean and normalize scientific names for comparison
         const cleanScientificNameForComparison = (scientificName) => {
@@ -4864,42 +4865,42 @@ function App() {
           });
         });
         
-        console.log("Leafbeetle data processed successfully. leafbeetleData count:", leafbeetleData.length);
+        logger.debug("Leafbeetle data processed successfully. leafbeetleData count:", leafbeetleData.length);
         } catch (error) {
-          console.error("Error processing leafbeetle data:", error);
-          console.warn("Continuing without leafbeetle data - leafbeetle information may be incomplete");
+          logger.error("Error processing leafbeetle data:", error);
+          logger.warn("Continuing without leafbeetle data - leafbeetle information may be incomplete");
         }
         } else {
-          console.warn("Integrated hamushi data not available - leafbeetle information will be limited");
+          logger.warn("Integrated hamushi data not available - leafbeetle information will be limited");
         }
 
         // Combine all moth data after all parsing is complete
         const combinedMothData = [...mainMothData];
-        console.log("DEBUG: mainBeetleData length:", mainBeetleData.length);
-        console.log("DEBUG: beetleData length:", beetleData.length);
+        logger.debug("DEBUG: mainBeetleData length:", mainBeetleData.length);
+        logger.debug("DEBUG: beetleData length:", beetleData.length);
         // Combine beetle data from integrated file and separate CSV
         combinedBeetleData = [...mainBeetleData, ...beetleData];
-        console.log("DEBUG: combinedBeetleData length:", combinedBeetleData.length);
+        logger.debug("DEBUG: combinedBeetleData length:", combinedBeetleData.length);
         if (combinedBeetleData.length > 0) {
-          console.log("DEBUG: Sample beetle data:", combinedBeetleData[0]);
+          logger.debug("DEBUG: Sample beetle data:", combinedBeetleData[0]);
         }
         // Add leafbeetle data
         combinedLeafbeetleData = [...leafbeetleData];
-        console.log("DEBUG: combinedLeafbeetleData length:", combinedLeafbeetleData.length);
+        logger.debug("DEBUG: combinedLeafbeetleData length:", combinedLeafbeetleData.length);
 
         // Clean up hostPlantData to remove any invalid plant names and normalize duplicates
         const cleanedHostPlantData = {};
-        console.log('DEBUG: Starting hostPlantData cleanup. Total entries:', Object.keys(hostPlantData).length);
+        logger.debug('DEBUG: Starting hostPlantData cleanup. Total entries:', Object.keys(hostPlantData).length);
         
         Object.entries(hostPlantData).forEach(([plantName, mothList]) => {
           // Debug logging for empty or suspicious plant names
           if (!plantName || plantName.trim() === '' || plantName === 'undefined' || plantName === 'null') {
-            console.log("DEBUG: Found problematic plant name:", JSON.stringify(plantName), "with moths:", mothList);
+            logger.debug("DEBUG: Found problematic plant name:", JSON.stringify(plantName), "with moths:", mothList);
           }
           
           // Debug logging for ソメイヨシノ
           if (plantName && (plantName.includes('ソメイヨシノ') || plantName.includes('染井吉野'))) {
-            console.log("DEBUG: Found ソメイヨシノ-related plant name:", JSON.stringify(plantName), "moths:", mothList);
+            logger.debug("DEBUG: Found ソメイヨシノ-related plant name:", JSON.stringify(plantName), "moths:", mothList);
           }
           
           // Explicit check for empty/invalid plant names before calling isValidPlantName
@@ -4909,7 +4910,7 @@ function App() {
               plantName === 'undefined' || 
               plantName === 'null' ||
               plantName.length === 0) {
-            console.log("DEBUG: Explicitly excluding empty/invalid plant name:", JSON.stringify(plantName));
+            logger.debug("DEBUG: Explicitly excluding empty/invalid plant name:", JSON.stringify(plantName));
             return; // Skip this entry entirely
           }
           
@@ -4917,7 +4918,7 @@ function App() {
             const normalizedName = normalizePlantName(plantName);
             // Additional check after normalization
             if (!normalizedName || normalizedName.trim() === '') {
-              console.log("DEBUG: Normalized plant name is empty, skipping:", JSON.stringify(plantName), "->", JSON.stringify(normalizedName));
+              logger.debug("DEBUG: Normalized plant name is empty, skipping:", JSON.stringify(plantName), "->", JSON.stringify(normalizedName));
               return;
             }
             
@@ -4927,11 +4928,11 @@ function App() {
             // Merge moth lists for the same normalized plant name
             cleanedHostPlantData[normalizedName] = [...new Set([...cleanedHostPlantData[normalizedName], ...mothList])];
           } else {
-            console.log("DEBUG: Removed invalid plant name:", JSON.stringify(plantName), "Length:", plantName?.length, "Type:", typeof plantName);
+            logger.debug("DEBUG: Removed invalid plant name:", JSON.stringify(plantName), "Length:", plantName?.length, "Type:", typeof plantName);
           }
         });
         
-        console.log('DEBUG: After cleanup. Cleaned entries:', Object.keys(cleanedHostPlantData).length);
+        logger.debug('DEBUG: After cleanup. Cleaned entries:', Object.keys(cleanedHostPlantData).length);
         
         // Clean up plantDetailData as well
         // Merge entries that normalize to the same key (preserve and union aliases)
@@ -5028,24 +5029,24 @@ function App() {
           });
         }
 
-        console.log("Final butterfly data:", butterflyData.length, "butterflies");
-        console.log("Final beetle data:", combinedBeetleData.length, "beetles");
-        console.log("Final leafbeetle data:", combinedLeafbeetleData.length, "leafbeetles");
-        console.log("Sample butterfly:", butterflyData[0]);
-        console.log("All butterflies:", butterflyData.map(b => b.name));
-        console.log("Host Plants data set:", Object.keys(cleanedHostPlantData).length);
-        console.log("plantDetailData before setting state:", cleanedPlantDetailData);
-        console.log("Plant Details data set:", Object.keys(cleanedPlantDetailData).length);
+        logger.debug("Final butterfly data:", butterflyData.length, "butterflies");
+        logger.debug("Final beetle data:", combinedBeetleData.length, "beetles");
+        logger.debug("Final leafbeetle data:", combinedLeafbeetleData.length, "leafbeetles");
+        logger.debug("Sample butterfly:", butterflyData[0]);
+        logger.debug("All butterflies:", butterflyData.map(b => b.name));
+        logger.debug("Host Plants data set:", Object.keys(cleanedHostPlantData).length);
+        logger.debug("plantDetailData before setting state:", cleanedPlantDetailData);
+        logger.debug("Plant Details data set:", Object.keys(cleanedPlantDetailData).length);
         
-        console.log("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Leafbeetles count:", combinedLeafbeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
-        console.log("Removed", Object.keys(hostPlantData).length - Object.keys(cleanedHostPlantData).length, "invalid host plant entries");
+        logger.debug("All CSVs parsed. Moths count:", combinedMothData.length, "Butterflies count:", butterflyData.length, "Beetles count:", combinedBeetleData.length, "Leafbeetles count:", combinedLeafbeetleData.length, "Host Plants count:", Object.keys(cleanedHostPlantData).length);
+        logger.debug("Removed", Object.keys(hostPlantData).length - Object.keys(cleanedHostPlantData).length, "invalid host plant entries");
         
         // Deduplicate moths by scientific name
         const deduplicatedMoths = deduplicateMoths(combinedMothData);
-        console.log("Deduplicated moths:", combinedMothData.length, "->", deduplicatedMoths.length, "(removed", combinedMothData.length - deduplicatedMoths.length, "duplicates)");
+        logger.debug("Deduplicated moths:", combinedMothData.length, "->", deduplicatedMoths.length, "(removed", combinedMothData.length - deduplicatedMoths.length, "duplicates)");
         
         // CRITICAL DEBUG: Log actual data before setting state
-        console.log("CRITICAL DEBUG - About to set state with:", {
+        logger.debug("CRITICAL DEBUG - About to set state with:", {
           deduplicatedMoths: deduplicatedMoths.length,
           butterflyData: butterflyData.length,
           combinedBeetleData: combinedBeetleData.length,
@@ -5060,7 +5061,7 @@ function App() {
         let finalMothData, finalButterflyData, finalBeetleData, finalLeafbeetleData;
         
         if (normalizedData && normalizedData.moths?.length > 0) {
-          console.log("正規化データを使用します");
+          logger.debug("正規化データを使用します");
           
           // Use normalized data as primary source
           finalMothData = normalizedData.moths;
@@ -5068,7 +5069,7 @@ function App() {
           finalBeetleData = normalizedData.beetles;
           finalLeafbeetleData = normalizedData.leafbeetles;
           
-          console.log("正規化データ使用状況:", {
+              logger.debug("正規化データ使用状況:", {
             moths: finalMothData.length,
             butterflies: finalButterflyData.length,
             beetles: finalBeetleData.length,
@@ -5077,7 +5078,7 @@ function App() {
           });
           
         } else {
-          console.log("レガシーデータを使用します（正規化データが利用不可）");
+          logger.debug("レガシーデータを使用します（正規化データが利用不可）");
           if (useNormalizedOnly) {
             // 正規化のみ運用時は、旧データにフォールバックしない
             finalMothData = [];
@@ -5100,9 +5101,9 @@ function App() {
               finalBeetleData = convertLegacyToIntegratedFormat(finalBeetleData, 'beetle');
               finalLeafbeetleData = convertLegacyToIntegratedFormat(finalLeafbeetleData, 'leafbeetle');
               
-              console.log("レガシーデータを統合形式に変換完了");
+              logger.debug("レガシーデータを統合形式に変換完了");
             } catch (error) {
-              console.warn("レガシーデータ変換エラー:", error);
+              logger.warn("レガシーデータ変換エラー:", error);
               // Continue with original data if conversion fails
             }
           }
@@ -5132,7 +5133,7 @@ function App() {
 
         // Debug specific plant like キョウチクトウ to ensure expected insects are present
         if (unifiedHostPlantMap['キョウチクトウ']) {
-          console.log('UNIFIED HOST MAP: キョウチクトウ ->', unifiedHostPlantMap['キョウチクトウ']);
+          logger.debug('UNIFIED HOST MAP: キョウチクトウ ->', unifiedHostPlantMap['キョウチクトウ']);
         }
 
         setMoths(finalMothData);
@@ -5144,9 +5145,9 @@ function App() {
         setLoading(false); // Set loading to false after data is loaded
         
         // DEBUG: Check actual state after setting
-        console.log("DEBUG: Expected total species:", deduplicatedMoths.length + butterflyData.length + combinedBeetleData.length + combinedLeafbeetleData.length);
+        logger.debug("DEBUG: Expected total species:", deduplicatedMoths.length + butterflyData.length + combinedBeetleData.length + combinedLeafbeetleData.length);
         
-        console.log("CRITICAL DEBUG - State set. Loading set to false. Final data counts:", {
+        logger.debug("CRITICAL DEBUG - State set. Loading set to false. Final data counts:", {
           moths: deduplicatedMoths.length,
           butterflies: butterflyData.length, 
           beetles: combinedBeetleData.length,
@@ -5155,8 +5156,8 @@ function App() {
           plantDetails: Object.keys(cleanedPlantDetailData).length
         });
       } catch (error) {
-        console.error("Error fetching or parsing CSVs:", error);
-        console.error("Error details:", {
+        logger.error("Error fetching or parsing CSVs:", error);
+        logger.error("Error details:", {
           message: error.message,
           stack: error.stack,
           name: error.name
@@ -5269,7 +5270,7 @@ function App() {
     };
   }, []);*/
 
-  console.log("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
+  logger.debug("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
   
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>

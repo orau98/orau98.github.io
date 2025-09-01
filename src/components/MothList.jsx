@@ -5,6 +5,7 @@ import SearchInput from './SearchInput';
 import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
+import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {}, currentPage = 1 }) => {
@@ -187,7 +188,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     // Default to mapped filename, then scientific filename, then safe filename
     return mappedFilename || moth?.scientificFilename || safeFilename;
     } catch (error) {
-      console.error('Error in getImageFilename:', error, moth);
+      logger.error('Error in getImageFilename:', error, moth);
       return createSafeFilename(moth?.scientificName || moth?.name || 'placeholder');
     }
   };
@@ -450,7 +451,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     </li>
     );
   } catch (error) {
-    console.error('Error rendering MothListItem:', error, moth);
+    logger.error('Error rendering MothListItem:', error, moth);
     return (
       <li className="group relative overflow-hidden rounded-xl bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border-2 border-red-200 dark:border-red-600 p-4">
         <div className="text-red-600 dark:text-red-400 text-sm">
@@ -616,7 +617,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
 
   const filteredMoths = useMemo(() => {
     try {
-      console.log('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
+      logger.debug('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
       
       if (!moths || moths.length === 0) {
         return [];
@@ -668,12 +669,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
                  (moth.classification?.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.classification?.tribe?.toLowerCase().includes(lowerCaseSearchTerm));
         } catch (error) {
-          console.error('Error filtering moth:', moth, error);
+          logger.error('Error filtering moth:', moth, error);
           return false;
         }
       });
     } catch (error) {
-      console.error('Error in filteredMoths calculation:', error);
+      logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
   }, [moths, debouncedSearchTerm, classificationFilter]);
@@ -720,13 +721,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
             uniqueSuggestions.add(moth.classification.genus);
           }
         } catch (error) {
-          console.error('Error processing moth for suggestions:', moth, error);
+          logger.error('Error processing moth for suggestions:', moth, error);
         }
       });
       
       return Array.from(uniqueSuggestions).slice(0, 10);
     } catch (error) {
-      console.error('Error in allSuggestions calculation:', error);
+      logger.error('Error in allSuggestions calculation:', error);
       return [];
     }
   }, [moths, searchTerm]);
@@ -766,16 +767,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
           const extensionsResponse = await fetch(`${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`);
           const extensionsData = await extensionsResponse.json();
           setImageExtensions(extensionsData);
-          console.log('Loaded image extensions:', Object.keys(extensionsData).length, 'files');
+          logger.debug('Loaded image extensions:', Object.keys(extensionsData).length, 'files');
         } catch (extError) {
-          console.debug('Could not load image extensions mapping:', extError);
+          logger.debug('Could not load image extensions mapping:', extError);
         }
         
-        console.log('Loaded image filenames:', filenames.size, 'files');
-        console.log('Has Cryphia_mitsuhashi:', filenames.has('Cryphia_mitsuhashi'));
-        console.log('First 10 filenames:', Array.from(filenames).slice(0, 10));
+        logger.debug('Loaded image filenames:', filenames.size, 'files');
+        logger.debug('Has Cryphia_mitsuhashi:', filenames.has('Cryphia_mitsuhashi'));
+        logger.debug('First 10 filenames:', Array.from(filenames).slice(0, 10));
       } catch (error) {
-        console.debug('Could not load image filenames:', error);
+        logger.debug('Could not load image filenames:', error);
       }
     };
     loadImageData();
@@ -837,7 +838,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       // This is better than showing wrong order initially
       const hasAnyImageIndex = (imageFilenames && imageFilenames.size > 0) || (imageExtensions && Object.keys(imageExtensions).length > 0);
       if (!hasAnyImageIndex) {
-        console.log('No image index loaded yet, returning unsorted');
+        logger.debug('No image index loaded yet, returning unsorted');
         return filteredMoths;
       }
       
@@ -912,7 +913,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const debugMoths = ['キノコヨトウ', 'キグチヨトウ', 'アズサキリガ', 'イセキリガ', 'クモガタキリガ', 'ヒロバモクメキリガ', 'ベニモントガリホソガ'];
       if (debugMoths.includes(a.name) || debugMoths.includes(b.name)) {
         const targetMoth = debugMoths.find(moth => a.name === moth || b.name === moth);
-        console.log(`Sorting ${targetMoth}:`, {
+        logger.debug(`Sorting ${targetMoth}:`, {
           mothA: a.name,
           mothB: b.name,
           filenameA,
@@ -956,8 +957,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     });
     
     // Log the first few sorted moths to see if images are prioritized
-    console.log(`Image prioritization: ${mothsWithImages.length} moths have images out of ${sorted.length} total`);
-    console.log('First 20 sorted moths:', sorted.slice(0, 20).map(m => {
+    logger.debug(`Image prioritization: ${mothsWithImages.length} moths have images out of ${sorted.length} total`);
+    logger.debug('First 20 sorted moths:', sorted.slice(0, 20).map(m => {
       const createSafeFilename = (scientificName) => {
         if (!scientificName) return '';
         let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
@@ -981,7 +982,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     
     return sorted;
     } catch (error) {
-      console.error('Error in sortedMoths calculation:', error);
+      logger.error('Error in sortedMoths calculation:', error);
       return filteredMoths || [];
     }
   }, [filteredMoths, imageFilenames, debouncedSearchTerm, classificationFilter]);;
@@ -997,7 +998,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const endIndex = startIndex + itemsPerPage;
       return sortedMoths.slice(startIndex, endIndex);
     } catch (error) {
-      console.error('Error calculating currentMoths:', error);
+      logger.error('Error calculating currentMoths:', error);
       return [];
     }
   }, [sortedMoths, currentPage, itemsPerPage]);
@@ -1121,7 +1122,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
                     </div>
                   );
                 } catch (error) {
-                  console.error('Error rendering moth item:', error, moth);
+                  logger.error('Error rendering moth item:', error, moth);
                   return (
                     <div key={`error-${index}`} className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-600">
                       <div className="text-red-600 dark:text-red-400 text-sm">
