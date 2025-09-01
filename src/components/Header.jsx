@@ -129,7 +129,16 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
                       {speciesInfo.family && (
-                        <span className="text-slate-300 ml-2">({speciesInfo.family})</span>
+                        <>
+                          {' '}
+                          <Link
+                            to={`/?classification=${encodeURIComponent(speciesInfo.family)}&tab=plants`}
+                            className="text-slate-300 ml-2 underline decoration-emerald-300/60 hover:decoration-emerald-400"
+                            aria-label={`${speciesInfo.family} の植物を検索`}
+                          >
+                            ({speciesInfo.family})
+                          </Link>
+                        </>
                       )}
                     </div>
                   </div>

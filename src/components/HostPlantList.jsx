@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import logger from '../utils/logger';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
@@ -401,6 +402,15 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   }, []);
 
   const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
+  const [searchParams] = useSearchParams();
+  const classificationFilter = searchParams.get('classification');
+
+  // Initialize plant search term from URL (classification=...)
+  useEffect(() => {
+    if (classificationFilter && !plantSearchTerm) {
+      setPlantSearchTerm(classificationFilter);
+    }
+  }, [classificationFilter, plantSearchTerm]);
 
   const safeHostPlants = hostPlants || {};
   const safePlantDetails = plantDetails || {};

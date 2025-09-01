@@ -715,31 +715,37 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         </Link>
         <div className="flex flex-wrap gap-2">
           {taxonomy.orderJp && (
-            <span
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
+            <Link
+              to={`/?classification=${encodeURIComponent(taxonomy.orderJp)}&tab=plants`}
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:bg-emerald-200/70 dark:hover:bg-emerald-900/50"
+              aria-label={`${taxonomy.orderJp} の植物を検索`}
             >
               <span className="font-medium">{taxonomy.orderJp}</span>
               {taxonomy.orderEn && (
                 <span className="ml-1 text-xs italic opacity-80">{taxonomy.orderEn}</span>
               )}
-            </span>
+            </Link>
           )}
           {familyLabel && (
-            <span
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
+            <Link
+              to={`/?classification=${encodeURIComponent(familyLabel)}&tab=plants`}
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50 hover:bg-blue-200/70 dark:hover:bg-blue-900/50"
+              aria-label={`${familyLabel} の植物を検索`}
             >
               <span className="font-medium">{familyLabel}</span>
               {taxonomy.familyEn && (
                 <span className="ml-1 text-xs italic opacity-80">{taxonomy.familyEn}</span>
               )}
-            </span>
+            </Link>
           )}
           {taxonomy.genus && (
-            <span
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50"
+            <Link
+              to={`/?classification=${encodeURIComponent(taxonomy.genus)}&tab=plants`}
+              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50 hover:bg-slate-200/70 dark:hover:bg-slate-900/50"
+              aria-label={`${taxonomy.genus} の植物を検索`}
             >
               <span className="font-medium italic">{taxonomy.genus}</span>
-            </span>
+            </Link>
           )}
         </div>
       </div>

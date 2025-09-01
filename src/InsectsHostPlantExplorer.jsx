@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MothList from './components/MothList';
 import HostPlantList from './components/HostPlantList';
 import InstagramIcon from './components/InstagramIcon';
@@ -32,6 +33,7 @@ const formatCitationJp = (b) => {
 
 const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
+  const [searchParams] = useSearchParams();
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
   const [instagramUrl, setInstagramUrl] = useState('');
   const [instagramPosts, setInstagramPosts] = useState([]);
@@ -90,6 +92,13 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
       sessionStorage.removeItem('insectExplorerScrollPosition');
     }
   }, []);
+
+  // Initialize tab from URL (e.g., tab=plants to open plant list)
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'plants') setActiveTab('plants');
+    else if (tab === 'insects') setActiveTab('insects');
+  }, [searchParams]);
 
   // Preload hero image on component mount
   React.useEffect(() => {
