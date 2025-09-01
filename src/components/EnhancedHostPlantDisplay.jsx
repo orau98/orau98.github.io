@@ -306,7 +306,8 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
                 <div className="text-sm text-slate-600 dark:text-slate-300">
                   <span className="font-medium text-slate-500 dark:text-slate-400">出典:</span>{' '}
                   {Array.from(allReferences).map((ref, index) => {
-                    const sourceLink = getSourceLink(ref);
+                    const displayRef = normalizeReference(ref);
+                    const sourceLink = getSourceLink(displayRef);
                     const separator = index > 0 ? ', ' : '';
                     if (sourceLink) {
                       return (
@@ -318,7 +319,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
                             rel="noopener noreferrer"
                             className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
                           >
-                            {ref}
+                            {displayRef}
                             <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
@@ -329,7 +330,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
                     return (
                       <React.Fragment key={index}>
                         {separator}
-                        <span className="font-medium">{ref}</span>
+                        <span className="font-medium">{displayRef}</span>
                       </React.Fragment>
                     );
                   })}

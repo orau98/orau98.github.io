@@ -24,3 +24,22 @@ export const getSourceLink = (source) => {
   
   return null;
 };
+
+// 出典表記を正規化（余計な書誌情報を除去して短縮名に）
+export const normalizeReference = (source) => {
+  if (!source || typeof source !== 'string') return source || '';
+  let s = source.trim();
+
+  // 既知タイトルが含まれていれば、その短縮名に統一
+  for (const key of Object.keys(sourceLinks)) {
+    if (s.includes(key)) return key;
+  }
+
+  // よくある書誌情報の除去（著者・出版社・発行年・ページなど）
+  s = s.replace(/著者\s*[:：][^,，。]+/g, '').replace(/出版社\s*[:：][^,，。]+/g, '')
+       .replace(/発行年\s*[:：][^,，。]+/g, '').replace(/\bpp?\.\s*\d+(-\d+)?/gi, '')
+       .replace(/\(.*?\)/g, '');
+  // 記号の余剰除去
+  s = s.replace(/[，,。\s]+$/g, '').replace(/\s{2,}/g, ' ').trim();
+  return s;
+};
