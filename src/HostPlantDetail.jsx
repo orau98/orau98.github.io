@@ -324,10 +324,21 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   
-  // SEO: update title/description/canonical to static meta page
+  // SEO: update title/description/canonical to static meta page（科・目ページにも最適化）
   useEffect(() => {
-    const title = `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
-    const desc = `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
+    const isFamily = /科$/.test(decodedPlantName);
+    const isOrder = /目$/.test(decodedPlantName);
+    const title = isFamily
+      ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+      : isOrder
+      ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+      : `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
+    const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
+    const desc = isFamily
+      ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
+      : isOrder
+      ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
+      : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
     document.title = title;
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
@@ -409,7 +420,30 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       const b = document.querySelector('#breadcrumb-structured-data');
       if (b) b.remove();
     };
-  }, [decodedPlantName, familyLabel]);
+    // ItemList JSON-LD（科・目ページ）
+    try {
+      const id = 'itemlist-classification';
+      let s = document.querySelector('#' + id);
+      if (s) s.remove();
+      if (isFamily || isOrder) {
+        const items = (classificationMembers || []).slice(0, 10).map((name, idx) => ({
+          "@type": "ListItem",
+          position: idx + 1,
+          url: `https://orau98.github.io/meta/plant/${encodeURIComponent(name)}.html`
+        }));
+        s = document.createElement('script');
+        s.id = id;
+        s.type = 'application/ld+json';
+        s.textContent = JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: `${decodedPlantName} 植物一覧`,
+          itemListElement: items
+        });
+        document.head.appendChild(s);
+      }
+    } catch {}
+  }, [decodedPlantName, familyLabel, classificationMembers]);
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
@@ -750,22 +784,41 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6">
             {/科$/.test(decodedPlantName) ? 'この科に属する植物一覧' : 'この目に属する植物一覧'}（{classificationMembers.length}種）
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {(showAllMembers ? classificationMembers : classificationMembers.slice(0, 48)).map((name) => (
-              <Link key={name} to={`/plant/${encodeURIComponent(name)}`} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
-                <span className="truncate">{name}</span>
-              </Link>
-            ))}
-          </div>
-          {classificationMembers.length > 48 && (
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => setShowAllMembers(s => !s)}
-                className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
-              >
-                {showAllMembers ? '簡略表示' : `他${classificationMembers.length - 48}種を表示`}
-              </button>
+          {(/目$/.test(decodedPlantName) && classificationGroups && classificationGroups.length > 0) ? (
+            <div className="space-y-6">
+              {classificationGroups.map(group => (
+                <div key={group.family}>
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">{group.family}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {group.members.map(name => (
+                      <Link key={group.family + ':' + name} to={`/plant/${encodeURIComponent(name)}`} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                        <span className="truncate">{name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {(showAllMembers ? classificationMembers : classificationMembers.slice(0, 48)).map((name) => (
+                  <Link key={name} to={`/plant/${encodeURIComponent(name)}`} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                    <span className="truncate">{name}</span>
+                  </Link>
+                ))}
+              </div>
+              {classificationMembers.length > 48 && (
+                <div className="mt-4 text-center">
+                  <button
+                    onClick={() => setShowAllMembers(s => !s)}
+                    className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
+                  >
+                    {showAllMembers ? '簡略表示' : `他${classificationMembers.length - 48}種を表示`}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
       )}
