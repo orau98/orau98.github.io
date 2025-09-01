@@ -245,28 +245,19 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   const shownBadges = badges.slice(0, maxBadges);
   const extra = badges.length - shownBadges.length;
 
-  // Repair Latin binomials robustly for display (handles extra/missing spaces)
+  // Repair Latin binomials for display (only when needed)
   const repairPlantLatinBinomial = (plant) => {
     if (!plant || typeof plant !== 'string') return plant;
     const t = plant.trim();
     if (!t) return t;
     // Skip when Japanese present
     if (/[\u3040-\u30FF\u3400-\u9FFF]/.test(t)) return t;
-    const compact = t.replace(/\s+/g, '');
-    if (!/^([A-Z][a-z]+)/.test(compact)) return t;
-    const endings = ['ius','ium','is','us','um','a','ae','os','es','ix','ia','ea','or','er'];
-    let best = null;
-    for (let i = compact.length - 3; i >= 3; i--) {
-      const g = compact.slice(0, i);
-      const sp = compact.slice(i);
-      if (/^[A-Z][a-z]+$/.test(g) && /^[a-z-]{3,}$/.test(sp)) {
-        if (endings.some(e => g.endsWith(e))) { best = `${g} ${sp}`; break; }
-        if (!best) best = `${g} ${sp}`;
-      }
-    }
-    if (best) return best;
-    const m = compact.match(/^([A-Z][a-z]{2,})([a-z-]{3,})$/);
-    return m ? `${m[1]} ${m[2]}` : t;
+    // If already a binomial, normalize to a single space
+    const spaced = t.match(/^([A-Z][a-z]+)\s+([a-z-]{3,})(.*)$/);
+    if (spaced) return `${spaced[1]} ${spaced[2]}${spaced[3] || ''}`.trim();
+    // Otherwise, repair compact form
+    const m = t.replace(/\s+/g, '').match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
+    return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
   };
   const displayPlantName = repairPlantLatinBinomial(plantGroup.name);
 
