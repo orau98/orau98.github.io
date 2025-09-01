@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logger from '../utils/logger';
 import { Link } from 'react-router-dom';
-import { getSourceLink } from '../utils/sourceLinks';
+import { getSourceLink, normalizeReference } from '../utils/sourceLinks';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
