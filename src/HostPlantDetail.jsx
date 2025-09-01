@@ -259,9 +259,27 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   // If URL provides Latin binomial without a space (e.g., Capparisheyncana), repair for display only
   const isLikelyLatin = (s) => /^[A-Za-z]+$/.test(s);
+  // Heuristic: insert a space between genus and species when URL param has no space
+  // Prefer boundaries where genus ends with common Latin endings (e.g., -is, -us, -um, -a, -os, -es, -ix, -ia)
   const repairLatinBinomial = (s) => {
     if (!isLikelyLatin(s) || s.includes(' ')) return s;
-    const m = s.match(/^([A-Z][a-z]+)([a-z-].*)$/);
+    const endings = ['ius', 'ium', 'ium', 'is', 'us', 'um', 'a', 'os', 'es', 'ix', 'ia', 'ea', 'or', 'er'];
+    let best = null;
+    for (let i = s.length - 3; i >= 3; i--) {
+      const genus = s.slice(0, i);
+      const species = s.slice(i);
+      if (/^[A-Z][a-z]+$/.test(genus) && /^[a-z-]{3,}$/.test(species)) {
+        if (endings.some(e => genus.endsWith(e))) {
+          best = `${genus} ${species}`;
+          break; // prefer the longest genus that matches an ending
+        }
+        // fallback candidate if no ending matched at all
+        if (!best) best = `${genus} ${species}`;
+      }
+    }
+    if (best) return best;
+    // ultimate fallback: split after first capitalized-lowercase run leaving >=3 chars
+    const m = s.match(/^([A-Z][a-z]{2,})([a-z-]{3,})$/);
     return m ? `${m[1]} ${m[2]}` : s;
   };
   const displayLatin = repairLatinBinomial(decodedPlantName);
