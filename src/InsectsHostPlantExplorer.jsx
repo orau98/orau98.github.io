@@ -19,12 +19,12 @@ const formatCitationJp = (b) => {
   const namePart = authors || (editors ? `${editors}（編）` : '');
   const yearPart = b.year ? `（${b.year}）` : '';
   const titlePart = b.title ? `『${b.title}${b.note ? ' ' + b.note : ''}』` : '';
-  const publisherPart = b.publisher || '';
+  const placePublisher = b.place && b.publisher ? `${b.place}：${b.publisher}` : (b.publisher || '');
   const isbnPart = b.isbn13 ? `ISBN: ${b.isbn13}` : (b.isbn10 ? `ISBN-10: ${b.isbn10}` : '');
   const parts = [];
   if (namePart || yearPart) parts.push(`${namePart}${yearPart}`.trim());
   if (titlePart) parts.push(titlePart);
-  if (publisherPart) parts.push(publisherPart);
+  if (placePublisher) parts.push(placePublisher);
   if (isbnPart) parts.push(isbnPart);
   const body = parts.filter(Boolean).join('，');
   return body ? `${body}。` : '';
