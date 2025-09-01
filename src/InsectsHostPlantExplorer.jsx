@@ -432,49 +432,59 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                         <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
                           {bibliography.map((b) => {
                             const href = b.url || getSourceLink(b.title) || undefined;
-                            const joinNames = (arr) => Array.isArray(arr) ? arr.filter(Boolean).join('・') : (typeof arr === 'string' ? arr : '');
-                            const authors = joinNames(b.authors);
-                            const editors = joinNames(b.editors);
-                            const namePart = (authors || (editors ? `${editors}（編）` : '')).trim();
-                            const yearPart = b.year ? `（${b.year}）` : '';
-                            const titleStr = b.title ? `『${b.title}${b.note ? ' ' + b.note : ''}』` : '';
-                            const placePublisher = b.place && b.publisher ? `${b.place}：${b.publisher}` : (b.publisher || '');
-                            const isbnPart = b.isbn13 ? `ISBN: ${b.isbn13}` : (b.isbn10 ? `ISBN-10: ${b.isbn10}` : '');
+                            const joinNames = (arr) => Array.isArray(arr) ? arr.filter(Boolean).join(', ') : (typeof arr === 'string' ? arr : '');
+                            const authorStr = joinNames(b.authors) || (b.editors ? `${joinNames(b.editors)}（編）` : '');
+                            const titlePlain = b.title ? `${b.title}${b.note ? ' ' + b.note : ''}` : '';
+                            const publisherStr = b.publisher || '';
+                            const yearStr = b.year || '';
+                            const isArticle = b.type === 'article' || (!!b.journal);
+                            const journalStr = b.journal || '';
+                            const volStr = b.volume || '';
+                            const issueStr = b.issue || '';
+                            const pagesStr = b.pages || '';
 
-                            const segments = [];
-                            const first = `${namePart}${yearPart}`.trim();
-                            if (first) segments.push(first);
-                            if (titleStr) {
-                              const titleNode = href ? (
-                                <a
-                                  href={href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline decoration-blue-300 hover:decoration-blue-500"
-                                >
-                                  {titleStr}
-                                </a>
-                              ) : titleStr;
-                              segments.push(titleNode);
-                            }
-                            if (placePublisher) segments.push(placePublisher);
-                            if (isbnPart) segments.push(isbnPart);
-
+                            // Books: 著者名. 図書名. 出版社, 出版年.
+                            // Articles: 著者名(年)論文名. 誌名, 巻(号): 頁.
                             return (
                               <li key={b.key} className="flex items-start">
                                 <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
                                 <div className="text-slate-700 dark:text-slate-200">
-                                  {segments.length > 0 ? (
+                                  {isArticle ? (
+                                    // 著者名(年)論文名. 誌名, 巻(号): 頁.
                                     <>
-                                      {segments.map((seg, idx) => (
-                                        <React.Fragment key={idx}>
-                                          {idx > 0 && '，'}{seg}
-                                        </React.Fragment>
-                                      ))}
-                                      {'。'}
+                                      {authorStr && <span>{authorStr}</span>}
+                                      {yearStr && <span>（{yearStr}）</span>}
+                                      {' '}
+                                      {titlePlain ? (
+                                        href ? (
+                                          <a href={href} target="_blank" rel="noopener noreferrer" className="underline decoration-blue-300 hover:decoration-blue-500">{titlePlain}</a>
+                                        ) : <span>{titlePlain}</span>
+                                      ) : null}
+                                      {'. '}
+                                      {journalStr && <span>{journalStr}</span>}
+                                      { (volStr || issueStr) && <span>{', '}</span>}
+                                      {volStr && <span>{volStr}</span>}
+                                      {issueStr && <span>{volStr ? `(${issueStr})` : `(${issueStr})`}</span>}
+                                      {pagesStr && <span>{`: ${pagesStr}`}</span>}
+                                      {'.'}
                                     </>
                                   ) : (
-                                    b.title
+                                    // 著者名. 図書名. 出版社, 出版年.
+                                    <>
+                                      {authorStr && (<><span>{authorStr}</span>{'. '}</>)}
+                                      {titlePlain && (
+                                        <>
+                                          {href ? (
+                                            <a href={href} target="_blank" rel="noopener noreferrer" className="underline decoration-blue-300 hover:decoration-blue-500">{titlePlain}</a>
+                                          ) : <span>{titlePlain}</span>}
+                                          {'. '}
+                                        </>
+                                      )}
+                                      {publisherStr && <span>{publisherStr}</span>}
+                                      {publisherStr && yearStr && <span>{', '}</span>}
+                                      {yearStr && <span>{yearStr}</span>}
+                                      { (publisherStr || yearStr) && '.'}
+                                    </>
                                   )}
                                 </div>
                               </li>

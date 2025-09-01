@@ -317,6 +317,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
+  const [classificationMembers, setClassificationMembers] = useState([]); // 科/目ページ用の構成員（植物名）
+  const [showAllMembers, setShowAllMembers] = useState(false);
   const [canonicalName, setCanonicalName] = useState('');
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
@@ -582,6 +584,61 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
             if (aliases.includes(target)) { hit = row; break; }
           }
         }
+
+        // Support family/order pages when no exact plant hit (e.g., アカネ科, アブラナ目)
+        if (!hit) {
+          const findFamilyRow = (famJp) => {
+            for (const row0 of rows) {
+              const row = normalizeKeys(row0);
+              const fam = (row['LAPGII::LAPG科名'] || row['LAPG 科名'] || row['Cronquist 科名'] || row['Engler 科名'] || '').trim();
+              if (fam && fam === famJp) return row;
+            }
+            return null;
+          };
+          const findOrderRow = (ordJp) => {
+            for (const row0 of rows) {
+              const row = normalizeKeys(row0);
+              const ord = (row['LAPGII::LAPG 目'] || row['LAPGII::LAPG Order'] || '').trim();
+              if (ord && ord === ordJp) return row;
+            }
+            return null;
+          };
+          if (/科$/.test(target)) {
+            const famRow = findFamilyRow(target);
+            if (famRow) {
+              const familyJp = target;
+              const familyEn = (famRow['LAPGII::LAPG Family狭義'] || famRow['LAPGII::LAPG Family広義'] || famRow['LAPG Family'] || famRow['Cronquist family'] || famRow['Engler family'] || '').trim();
+              const orderJp  = (famRow['LAPGII::LAPG 目'] || famRow['LAPGII::LAPG Order'] || '').trim();
+              const orderEn  = (famRow['LAPGII::LAPG Order'] || '').trim();
+              setTaxonomy({ familyJp, familyEn, orderJp, orderEn, genus: '', scientificName: '' });
+
+              // Collect all plants in this family
+              const members = Array.from(new Set(rows
+                .map(normalizeKeys)
+                .filter(r => ((r['LAPGII::LAPG科名'] || r['LAPG 科名'] || r['Cronquist 科名'] || r['Engler 科名'] || '').trim()) === familyJp)
+                .map(r => (r['和名'] || '').trim())
+                .filter(Boolean))
+              ).sort((a,b) => a.localeCompare(b, 'ja'));
+              setClassificationMembers(members);
+            }
+          } else if (/目$/.test(target)) {
+            const ordRow = findOrderRow(target);
+            if (ordRow) {
+              const orderJp = target;
+              const orderEn = (ordRow['LAPGII::LAPG Order'] || '').trim();
+              setTaxonomy({ familyJp: '', familyEn: '', orderJp, orderEn, genus: '', scientificName: '' });
+
+              // Collect all plants in this order
+              const members = Array.from(new Set(rows
+                .map(normalizeKeys)
+                .filter(r => ((r['LAPGII::LAPG 目'] || r['LAPGII::LAPG Order'] || '').trim()) === orderJp)
+                .map(r => (r['和名'] || '').trim())
+                .filter(Boolean))
+              ).sort((a,b) => a.localeCompare(b, 'ja'));
+              setClassificationMembers(members);
+            }
+          }
+        }
         if (hit) {
           const familyJp = hit['LAPGII::LAPG科名'] || hit['LAPG 科名'] || hit['Cronquist 科名'] || hit['Engler 科名'] || '';
           const familyEn = hit['LAPGII::LAPG Family狭義'] || hit['LAPGII::LAPG Family広義'] || hit['LAPG Family'] || hit['Cronquist family'] || hit['Engler family'] || '';
@@ -600,7 +657,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           setAliasNames(aliases);
 
           // もし別名で到達していたら正規の和名へリダイレクト（URL統一）
-          if (canonical && canonical !== decodedPlantName) {
+          if (canonical && canonical !== decodedPlantName && !/科$/.test(target) && !/目$/.test(target)) {
             navigate(`/plant/${encodeURIComponent(canonical)}`, { replace: true });
           }
         }
@@ -686,6 +743,32 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       <section aria-labelledby="plant-photos" className="mb-12 md:mb-16 lg:mb-20">
         <PlantImageGallery images={plantImages} plantName={decodedPlantName} />
       </section>
+
+      {/* 科／目ページ用：この分類に属する植物一覧 */}
+      {classificationMembers && classificationMembers.length > 0 && (
+        <section className="mb-12 md:mb-16 lg:mb-20">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+            {/科$/.test(decodedPlantName) ? 'この科に属する植物一覧' : 'この目に属する植物一覧'}（{classificationMembers.length}種）
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {(showAllMembers ? classificationMembers : classificationMembers.slice(0, 48)).map((name) => (
+              <Link key={name} to={`/plant/${encodeURIComponent(name)}`} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                <span className="truncate">{name}</span>
+              </Link>
+            ))}
+          </div>
+          {classificationMembers.length > 48 && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setShowAllMembers(s => !s)}
+                className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
+              >
+                {showAllMembers ? '簡略表示' : `他${classificationMembers.length - 48}種を表示`}
+              </button>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* この植物を利用する昆虫一覧（カード表示） */}
       <div className="mt-12 md:mt-16 mb-10">

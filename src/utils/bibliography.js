@@ -13,6 +13,36 @@ export const bibliography = [
     note: '第1巻'
   },
   {
+    key: 'hamushi-notes-1',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (1)',
+    authors: ['滝沢 春雄'],
+    year: '2006',
+    journal: '神奈川虫報',
+    issue: '156',
+    pages: '1-8'
+  },
+  {
+    key: 'hamushi-notes-2',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (2)',
+    authors: ['滝沢 春雄'],
+    year: '2007',
+    journal: '神奈川虫報',
+    issue: '157',
+    pages: '17-26'
+  },
+  {
+    key: 'hamushi-notes-3',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (3)',
+    authors: ['滝沢 春雄'],
+    year: '2007',
+    journal: '神奈川虫報',
+    issue: '158',
+    pages: '37-48'
+  },
+  {
     key: 'nihonsan-garui-hyojun-2',
     title: '日本産蛾類標準図鑑 2',
     authors: ['岸田 泰則'],
