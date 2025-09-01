@@ -432,25 +432,49 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                         <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
                           {bibliography.map((b) => {
                             const href = b.url || getSourceLink(b.title) || undefined;
-                            const citation = formatCitationJp(b);
+                            const joinNames = (arr) => Array.isArray(arr) ? arr.filter(Boolean).join('・') : (typeof arr === 'string' ? arr : '');
+                            const authors = joinNames(b.authors);
+                            const editors = joinNames(b.editors);
+                            const namePart = (authors || (editors ? `${editors}（編）` : '')).trim();
+                            const yearPart = b.year ? `（${b.year}）` : '';
+                            const titleStr = b.title ? `『${b.title}${b.note ? ' ' + b.note : ''}』` : '';
+                            const placePublisher = b.place && b.publisher ? `${b.place}：${b.publisher}` : (b.publisher || '');
+                            const isbnPart = b.isbn13 ? `ISBN: ${b.isbn13}` : (b.isbn10 ? `ISBN-10: ${b.isbn10}` : '');
+
+                            const segments = [];
+                            const first = `${namePart}${yearPart}`.trim();
+                            if (first) segments.push(first);
+                            if (titleStr) {
+                              const titleNode = href ? (
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline decoration-blue-300 hover:decoration-blue-500"
+                                >
+                                  {titleStr}
+                                </a>
+                              ) : titleStr;
+                              segments.push(titleNode);
+                            }
+                            if (placePublisher) segments.push(placePublisher);
+                            if (isbnPart) segments.push(isbnPart);
+
                             return (
                               <li key={b.key} className="flex items-start">
                                 <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                                <div className="space-y-0.5">
-                                  <div className="text-slate-700 dark:text-slate-200">
-                                    {citation || b.title}
-                                  </div>
-                                  {href && (
-                                    <div className="text-[11px]">
-                                      <a
-                                        href={href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="underline decoration-blue-300 hover:decoration-blue-500 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                                      >
-                                        書籍情報（外部）
-                                      </a>
-                                    </div>
+                                <div className="text-slate-700 dark:text-slate-200">
+                                  {segments.length > 0 ? (
+                                    <>
+                                      {segments.map((seg, idx) => (
+                                        <React.Fragment key={idx}>
+                                          {idx > 0 && '，'}{seg}
+                                        </React.Fragment>
+                                      ))}
+                                      {'。'}
+                                    </>
+                                  ) : (
+                                    b.title
                                   )}
                                 </div>
                               </li>
