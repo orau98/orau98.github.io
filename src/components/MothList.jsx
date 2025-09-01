@@ -9,6 +9,15 @@ import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {}, currentPage = 1 }) => {
+  // Heuristic: insert a space between genus and species if missing
+  const repairScientificBinomial = (name) => {
+    if (!name || typeof name !== 'string') return name;
+    const t = name.trim();
+    if (t.includes(' ')) return t;
+    const m = t.match(/^([A-Z][a-z]+)([a-z-][a-z-]{2,})(.*)$/);
+    if (m) return `${m[1]} ${m[2]}${m[3] || ''}`;
+    return t;
+  };
   const [isVisible, setIsVisible] = useState(isPriority);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
@@ -321,7 +330,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     {moth.name}
                   </h3>
                   <p className="text-white/90 text-sm drop-shadow-md">
-                    {formatScientificNameReact(moth.scientificName)}
+                  {formatScientificNameReact(repairScientificBinomial(moth.scientificName))}
                   </p>
                 </div>
               </div>
@@ -342,7 +351,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     {moth.name}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    {formatScientificNameReact(moth.scientificName)}
+                    {formatScientificNameReact(repairScientificBinomial(moth.scientificName))}
                   </p>
                 </div>
                 
