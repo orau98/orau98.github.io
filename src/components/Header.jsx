@@ -6,6 +6,19 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
   const location = useLocation();
   
   // Get current moth or plant data for classification display
+  const repairLatinBinomial = (s) => {
+    if (!s || typeof s !== 'string') return s;
+    const t = s.trim();
+    // Only attempt when it looks like Latin letters and no Japanese
+    if (/[\u3040-\u30FF\u3400-\u9FFF]/.test(t)) return t;
+    if (t.includes(' ')) {
+      // Normalize multiple spaces to a single space between genus and species
+      const m = t.match(/^([A-Z][a-z]+)\s+([a-z-]{2,})(.*)$/);
+      return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
+    }
+    const m = t.match(/^([A-Z][a-z]+)([a-z-]{2,})(.*)$/);
+    return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
+  };
   const getCurrentSpeciesInfo = () => {
     const pathParts = location.pathname.split('/');
     
@@ -55,11 +68,12 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
       }
     } else if (pathParts[1] === 'plant' && pathParts[2]) {
       const plantName = decodeURIComponent(pathParts[2]);
+      const displayName = repairLatinBinomial(plantName);
       const plantDetail = plantDetails[plantName];
       if (plantDetail) {
         return {
           type: 'plant',
-          name: plantName,
+          name: displayName,
           family: plantDetail.family,
           genus: plantDetail.genus
         };

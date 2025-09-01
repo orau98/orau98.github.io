@@ -1091,6 +1091,24 @@ function App() {
           normalized = normalized.replace(/\([^)]*\)$/g, ''); // Remove remaining parentheses at end
           
           normalized = normalized.trim();
+
+          // Preserve and repair Latin binomial spacing (e.g., "Capparisheyncana" -> "Capparis heyncana")
+          // Only applies when the string contains Latin letters/hyphens/spaces and no Japanese characters
+          const hasCJK = /[\u3040-\u30FF\u3400-\u9FFF]/.test(normalized);
+          if (!hasCJK) {
+            // If looks like a collapsed or loosely spaced binomial, normalize to a single space between genus and species
+            // 1) Collapsed pattern: Genusspecies
+            const collapsed = normalized.match(/^([A-Z][a-z]+)([a-z-]{2,})(.*)$/);
+            if (collapsed) {
+              normalized = `${collapsed[1]} ${collapsed[2]}${collapsed[3] || ''}`.trim();
+            } else {
+              // 2) Already spaced: ensure exactly one space between genus and species
+              const spaced = normalized.match(/^([A-Z][a-z]+)\s+([a-z-]{2,})(.*)$/);
+              if (spaced) {
+                normalized = `${spaced[1]} ${spaced[2]}${spaced[3] || ''}`.trim();
+              }
+            }
+          }
           
           // Comprehensive normalization for duplicate prevention
           // Convert full-width to half-width characters
@@ -1100,7 +1118,13 @@ function App() {
           
           // Normalize various dash and space characters  
           normalized = normalized.replace(/[－─━ー]/g, 'ー'); // Normalize different dash types
-          normalized = normalized.replace(/\s+/g, ''); // Remove all spaces
+          // Remove spaces for Japanese names, but preserve single space in Latin binomials
+          if (/[\u3040-\u30FF\u3400-\u9FFF]/.test(normalized)) {
+            normalized = normalized.replace(/\s+/g, '');
+          } else {
+            // Collapse multiple spaces to a single one for Latin text
+            normalized = normalized.replace(/\s+/g, ' ').trim();
+          }
           
           // Normalize punctuation marks
           normalized = normalized.replace(/[、，]/g, '、'); // Normalize commas
