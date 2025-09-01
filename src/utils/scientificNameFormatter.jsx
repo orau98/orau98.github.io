@@ -13,7 +13,13 @@ export const formatScientificNameHTML = (scientificName) => {
   // Pre-repair collapsed binomials like "Genusspecies" -> "Genus species"
   const preRepair = (s) => {
     const t = (s || '').trim();
-    if (!t || t.includes(' ')) return t;
+    if (!t) return t;
+    // Underscore variant from filenames: Genus_species -> Genus species
+    if (t.includes('_')) {
+      const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
+      if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
+    }
+    if (t.includes(' ')) return t;
     const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
     return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
   };
@@ -122,7 +128,12 @@ export const formatScientificNameReact = (scientificName) => {
   // Pre-repair collapsed binomials like "Genusspecies" -> "Genus species"
   const preRepair = (s) => {
     const t = (s || '').trim();
-    if (!t || t.includes(' ')) return t;
+    if (!t) return t;
+    if (t.includes('_')) {
+      const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
+      if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
+    }
+    if (t.includes(' ')) return t;
     const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
     return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
   };

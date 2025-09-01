@@ -13,8 +13,14 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const repairScientificBinomial = (name) => {
     if (!name || typeof name !== 'string') return name;
     const t = name.trim();
+    if (!t) return t;
     if (t.includes(' ')) return t;
-    const m = t.match(/^([A-Z][a-z]+)([a-z-][a-z-]{2,})(.*)$/);
+    // From filename pattern Genus_species
+    if (t.includes('_')) {
+      const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
+      if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
+    }
+    const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
     if (m) return `${m[1]} ${m[2]}${m[3] || ''}`;
     return t;
   };
