@@ -57,8 +57,10 @@ function generateSplitSitemaps() {
           return;
         }
         
+        // Encode the filename to ensure spaces and non-ASCII are valid in sitemap URLs
+        const encodedFile = encodeURIComponent(file);
         targetSitemap.push({
-          loc: `${baseUrl}/meta/${baseType}/${file}`,
+          loc: `${baseUrl}/meta/${baseType}/${encodedFile}`,
           lastmod: currentDate,
           changefreq: 'monthly',
           priority: priority
