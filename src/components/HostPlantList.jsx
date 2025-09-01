@@ -4,7 +4,19 @@ import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
 import Pagination from './Pagination';
-import { formatScientificNameReact } from '../utils/scientificNameFormatter';
+// Local: normalize Latin binomial spacing without italicizing
+const normalizeLatinBinomialPlain = (name) => {
+  if (!name || typeof name !== 'string') return name;
+  const t = name.trim();
+  // If contains Japanese, return as-is
+  if (/[\u3040-\u30FF\u3400-\u9FFF]/.test(t)) return t;
+  // Already binomial -> collapse multiple spaces to single
+  const spaced = t.match(/^([A-Z][a-z]+)\s+([a-z-]{3,})(.*)$/);
+  if (spaced) return `${spaced[1]} ${spaced[2]}${spaced[3] || ''}`.trim();
+  // Compact form -> insert single space
+  const m = t.replace(/\s+/g, '').match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
+  return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
+};
 
 // Preload list of available plant images
 let plantImageFilenames = [];
@@ -203,7 +215,7 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
                 <h3 className="text-white font-bold text-lg drop-shadow-lg tracking-tight">
                   {(/[A-Za-z]/.test(plant) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant))
-                    ? formatScientificNameReact(plant)
+                    ? normalizeLatinBinomialPlain(plant)
                     : plant}
                 </h3>
               </div>
@@ -222,7 +234,7 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
               <div className="text-center flex-1 flex flex-col justify-center">
                 <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-2 leading-tight tracking-tight">
                   {(/[A-Za-z]/.test(plant) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant))
-                    ? formatScientificNameReact(plant)
+                    ? normalizeLatinBinomialPlain(plant)
                     : plant}
                 </h3>
                 {plantDetails[plant]?.familyName && (
