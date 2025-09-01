@@ -909,27 +909,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
           const hasImageA = hasAnyImageForMoth(a);
           const hasImageB = hasAnyImageForMoth(b);
       
-      // Debug logging for specific moths
-      const debugMoths = ['キノコヨトウ', 'キグチヨトウ', 'アズサキリガ', 'イセキリガ', 'クモガタキリガ', 'ヒロバモクメキリガ', 'ベニモントガリホソガ'];
-      if (debugMoths.includes(a.name) || debugMoths.includes(b.name)) {
-        const targetMoth = debugMoths.find(moth => a.name === moth || b.name === moth);
-        logger.debug(`Sorting ${targetMoth}:`, {
-          mothA: a.name,
-          mothB: b.name,
-          filenameA,
-          filenameB,
-          hasImageA,
-          hasImageB,
-          scientificFilenameA: a.scientificFilename,
-          scientificFilenameB: b.scientificFilename,
-          scientificNameA: a.scientificName,
-          scientificNameB: b.scientificName,
-          imageFilenamesSize: imageFilenames.size,
-          imageFilenamesHasPseudopanolis: imageFilenames.has('Pseudopanolis_azusa'),
-          imageFilenamesHasAgrochola: imageFilenames.has('Agrochola_sakabei'),
-          imageFilenamesHasLabdia: imageFilenames.has('Labdia_semicoccinea')
-        });
-          }
+          // (debug logging removed to avoid runtime ReferenceError in production)
           
           // Priority: Images first, then others
           if (hasImageA && !hasImageB) return -1;
@@ -985,7 +965,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       logger.error('Error in sortedMoths calculation:', error);
       return filteredMoths || [];
     }
-  }, [filteredMoths, imageFilenames, debouncedSearchTerm, classificationFilter]);;
+  }, [filteredMoths, imageFilenames, imageFilenamesNormalized, imageExtensions, hasAnyImageForMoth, debouncedSearchTerm, classificationFilter]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
   const currentMoths = useMemo(() => {
