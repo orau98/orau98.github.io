@@ -382,6 +382,16 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   {(() => {
                     if (!moth.hostPlants) return '情報なし';
                     
+                    // Repair function for collapsed Latin binomials in plant names
+                    const repairPlantLatinBinomial = (plant) => {
+                      if (!plant || typeof plant !== 'string') return plant;
+                      const t = plant.trim();
+                      // Only attempt when no spaces and looks like Latin
+                      if (t.includes(' ') || !/^[A-Z][a-z]+[a-z-]+$/.test(t)) return t;
+                      const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})$/);
+                      return m ? `${m[1]} ${m[2]}` : t;
+                    };
+
                     // hostPlants が文字列の場合と配列の場合を処理
                     let plantNames;
                     if (typeof moth.hostPlants === 'string') {
@@ -393,7 +403,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           // 不明の場合はそのまま返す
                           if (plant === '不明') return '不明';
                           // 科名を除去: （○○科）や (○○科) のパターンを削除
-                          return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+                          const cleaned = plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+                          return repairPlantLatinBinomial(cleaned);
                         })
                         .filter(plant => plant && !plant.includes('以上'));
                     } else if (Array.isArray(moth.hostPlants)) {
@@ -403,7 +414,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           // 不明の場合はそのまま返す
                           if (plant === '不明') return '不明';
                           // 科名を除去
-                          return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+                          const cleaned = plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+                          return repairPlantLatinBinomial(cleaned);
                         })
                         .filter(plant => plant);
                     } else {
