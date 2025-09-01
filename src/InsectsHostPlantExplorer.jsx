@@ -9,6 +9,27 @@ import logger from './utils/logger';
 import { bibliography } from './utils/bibliography';
 import { getSourceLink } from './utils/sourceLinks';
 
+// 書誌情報の標準和文フォーマット
+// 例: 著者（年）『書名 第1巻』出版社，ISBN: 978-....
+const formatCitationJp = (b) => {
+  if (!b) return '';
+  const joinNames = (arr) => Array.isArray(arr) ? arr.filter(Boolean).join('・') : (typeof arr === 'string' ? arr : '');
+  const authors = joinNames(b.authors);
+  const editors = joinNames(b.editors);
+  const namePart = authors || (editors ? `${editors}（編）` : '');
+  const yearPart = b.year ? `（${b.year}）` : '';
+  const titlePart = b.title ? `『${b.title}${b.note ? ' ' + b.note : ''}』` : '';
+  const publisherPart = b.publisher || '';
+  const isbnPart = b.isbn13 ? `ISBN: ${b.isbn13}` : (b.isbn10 ? `ISBN-10: ${b.isbn10}` : '');
+  const parts = [];
+  if (namePart || yearPart) parts.push(`${namePart}${yearPart}`.trim());
+  if (titlePart) parts.push(titlePart);
+  if (publisherPart) parts.push(publisherPart);
+  if (isbnPart) parts.push(isbnPart);
+  const body = parts.filter(Boolean).join('，');
+  return body ? `${body}。` : '';
+};
+
 const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
@@ -411,49 +432,26 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                         <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
                           {bibliography.map((b) => {
                             const href = b.url || getSourceLink(b.title) || undefined;
+                            const citation = formatCitationJp(b);
                             return (
                               <li key={b.key} className="flex items-start">
                                 <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
                                 <div className="space-y-0.5">
-                                  <div>
-                                    {href ? (
+                                  <div className="text-slate-700 dark:text-slate-200">
+                                    {citation || b.title}
+                                  </div>
+                                  {href && (
+                                    <div className="text-[11px]">
                                       <a
                                         href={href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="underline decoration-blue-300 hover:decoration-blue-500 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white"
+                                        className="underline decoration-blue-300 hover:decoration-blue-500 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                                       >
-                                        {b.title}
+                                        書籍情報（外部）
                                       </a>
-                                    ) : (
-                                      <span className="text-slate-700 dark:text-slate-200">{b.title}</span>
-                                    )}
-                                  </div>
-                                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                                    {[
-                                      b.authors || b.editors,
-                                      b.publisher,
-                                      b.year
-                                    ].filter(Boolean).join(' / ')}
-                                    {b.isbn10 && (
-                                      <>
-                                        {([b.authors||b.editors,b.publisher,b.year].filter(Boolean).length>0) ? ' / ' : ''}
-                                        ISBN-10: {b.isbn10}
-                                      </>
-                                    )}
-                                    {b.isbn13 && (
-                                      <>
-                                        {b.isbn10 ? ', ' : ([b.authors||b.editors,b.publisher,b.year].filter(Boolean).length>0 ? ' / ' : '')}
-                                        ISBN-13: {b.isbn13}
-                                      </>
-                                    )}
-                                    {b.note && (
-                                      <>
-                                        { (b.isbn10 || b.isbn13 || b.authors || b.editors || b.publisher || b.year) ? ' / ' : ''}
-                                        {b.note}
-                                      </>
-                                    )}
-                                  </div>
+                                    </div>
+                                  )}
                                 </div>
                               </li>
                             );
