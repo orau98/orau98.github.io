@@ -6,6 +6,8 @@ import InstagramEmbed from './components/InstagramEmbed';
 import InstagramTimeline from './components/InstagramTimeline';
 import { MainStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
+import { bibliography } from './utils/bibliography';
+import { getSourceLink } from './utils/sourceLinks';
 
 const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
   const [activeTab, setActiveTab] = useState('insects');
@@ -405,36 +407,57 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                     </h3>
                     <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
                       <div className="space-y-2">
-                        <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">主要引用文献</p>
-                        <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>日本産蛾類標準図鑑 1-3巻 (学研)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>日本の冬尺蛾 (むし社)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>日本の冬夜蛾 (むし社)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>日本のハマキガ 1巻</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>日本産タマムシ大図鑑 (むし社)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>ハムシハンドブック (文一総合出版)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
-                            <span>日本産ハムシ科生態覚書</span>
-                          </li>
+                        <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">主要引用文献（書誌情報）</p>
+                        <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+                          {bibliography.map((b) => {
+                            const href = b.url || getSourceLink(b.title) || undefined;
+                            return (
+                              <li key={b.key} className="flex items-start">
+                                <span className="text-gray-600 dark:text-gray-400 mr-2">•</span>
+                                <div className="space-y-0.5">
+                                  <div>
+                                    {href ? (
+                                      <a
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="underline decoration-blue-300 hover:decoration-blue-500 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white"
+                                      >
+                                        {b.title}
+                                      </a>
+                                    ) : (
+                                      <span className="text-slate-700 dark:text-slate-200">{b.title}</span>
+                                    )}
+                                  </div>
+                                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                                    {[
+                                      b.authors || b.editors,
+                                      b.publisher,
+                                      b.year
+                                    ].filter(Boolean).join(' / ')}
+                                    {b.isbn10 && (
+                                      <>
+                                        {([b.authors||b.editors,b.publisher,b.year].filter(Boolean).length>0) ? ' / ' : ''}
+                                        ISBN-10: {b.isbn10}
+                                      </>
+                                    )}
+                                    {b.isbn13 && (
+                                      <>
+                                        {b.isbn10 ? ', ' : ([b.authors||b.editors,b.publisher,b.year].filter(Boolean).length>0 ? ' / ' : '')}
+                                        ISBN-13: {b.isbn13}
+                                      </>
+                                    )}
+                                    {b.note && (
+                                      <>
+                                        { (b.isbn10 || b.isbn13 || b.authors || b.editors || b.publisher || b.year) ? ' / ' : ''}
+                                        {b.note}
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              </li>
+                            );
+                          })}
                         </ul>
                         <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
                           <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">その他</p>
