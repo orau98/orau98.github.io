@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
 import Pagination from './Pagination';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter';
 
 // Preload list of available plant images
 let plantImageFilenames = [];
@@ -201,7 +202,9 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
               {/* Plant name overlay at bottom */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
                 <h3 className="text-white font-bold text-lg drop-shadow-lg tracking-tight">
-                  {plant}
+                  {(/[A-Za-z]/.test(plant) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant))
+                    ? formatScientificNameReact(plant)
+                    : plant}
                 </h3>
               </div>
             </div>
@@ -218,7 +221,9 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
               {/* Names displayed prominently in center */}
               <div className="text-center flex-1 flex flex-col justify-center">
                 <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-2 leading-tight tracking-tight">
-                  {plant}
+                  {(/[A-Za-z]/.test(plant) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant))
+                    ? formatScientificNameReact(plant)
+                    : plant}
                 </h3>
                 {plantDetails[plant]?.familyName && (
                   <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
