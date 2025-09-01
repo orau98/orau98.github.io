@@ -245,6 +245,22 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   const shownBadges = badges.slice(0, maxBadges);
   const extra = badges.length - shownBadges.length;
 
+  // Repair collapsed Latin plant binomials if any (display only)
+  const repairPlantLatinBinomial = (plant) => {
+    if (!plant || typeof plant !== 'string') return plant;
+    const t = plant.trim();
+    if (!t) return t;
+    // handle Genus_species
+    if (t.includes('_')) {
+      const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
+      if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
+    }
+    if (t.includes(' ')) return t;
+    const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
+    return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
+  };
+  const displayPlantName = repairPlantLatinBinomial(plantGroup.name);
+
   return (
     <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
       {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示） */}
@@ -253,9 +269,9 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
           <Link
             to={`/plant/${encodeURIComponent(plantGroup.name)}`}
             className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
-            title={`${plantGroup.name} の詳細へ`}
+            title={`${displayPlantName} の詳細へ`}
           >
-            {plantGroup.name}
+            {displayPlantName}
           </Link>
           {plantGroup.family && (
             <span className={`text-sm shrink-0 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
