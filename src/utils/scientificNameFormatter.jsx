@@ -10,8 +10,15 @@ export const formatScientificNameHTML = (scientificName) => {
   if (!scientificName || scientificName.trim() === '') {
     return '';
   }
+  // Pre-repair collapsed binomials like "Genusspecies" -> "Genus species"
+  const preRepair = (s) => {
+    const t = (s || '').trim();
+    if (!t || t.includes(' ')) return t;
+    const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
+    return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
+  };
 
-  const trimmed = scientificName.trim();
+  const trimmed = preRepair(scientificName);
   
   // 括弧で囲まれた著者名と年を検出
   const bracketPattern = /^(.+?)\s*(\([^)]+\))\s*$/;
@@ -112,8 +119,15 @@ export const formatScientificNameReact = (scientificName) => {
   if (!scientificName || scientificName.trim() === '') {
     return null;
   }
+  // Pre-repair collapsed binomials like "Genusspecies" -> "Genus species"
+  const preRepair = (s) => {
+    const t = (s || '').trim();
+    if (!t || t.includes(' ')) return t;
+    const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
+    return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
+  };
 
-  const trimmed = scientificName.trim();
+  const trimmed = preRepair(scientificName);
   
   // 括弧で囲まれた著者名と年を検出
   const bracketPattern = /^(.+?)\s*(\([^)]+\))\s*$/;
