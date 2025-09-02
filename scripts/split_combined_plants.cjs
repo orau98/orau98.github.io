@@ -107,6 +107,17 @@ function main() {
     return [x + 'の加工品', y + 'の加工品'];
   }
 
+  // Pattern C: Xの毛やYの羽(毛) => Xの毛, Yの羽(毛)
+  function splitKeToHane(name) {
+    const m = name.match(/^(.+?)の毛や(.+?)の(羽毛|羽)$/);
+    if (!m) return null;
+    const x = m[1].trim();
+    const y = m[2].trim();
+    const tail = m[3].trim(); // 羽 or 羽毛
+    if (!x || !y) return null;
+    return [x + 'の毛', y + 'の' + tail];
+  }
+
   const badPhrases = ['など', 'という', '主とし', '可能', '有名', '飼育', 'ペレット', '食糧'];
 
   for (let i = 1; i < hostRows.length; i++) {
@@ -162,6 +173,17 @@ function main() {
         const pB = splitXtoYNoKakohin(name);
         if (pB) {
           const [a, b] = pB;
+          const rowA = H.map((h) => (h === 'plant_name' ? a : h === 'plant_family' ? familyFor(a, fam) : r[idx[h]] ?? ''));
+          const rowB = H.map((h) => (h === 'record_id' ? (r[idx['record_id']] || 'hostplant-split') + '-2' : h === 'plant_name' ? b : h === 'plant_family' ? familyFor(b, fam) : r[idx[h]] ?? ''));
+          out.push(rowA);
+          out.push(rowB);
+          splitCount++;
+          continue;
+        }
+        // Pattern C: Xの毛やYの羽(毛)
+        const pC = splitKeToHane(name);
+        if (pC) {
+          const [a, b] = pC;
           const rowA = H.map((h) => (h === 'plant_name' ? a : h === 'plant_family' ? familyFor(a, fam) : r[idx[h]] ?? ''));
           const rowB = H.map((h) => (h === 'record_id' ? (r[idx['record_id']] || 'hostplant-split') + '-2' : h === 'plant_name' ? b : h === 'plant_family' ? familyFor(b, fam) : r[idx[h]] ?? ''));
           out.push(rowA);
