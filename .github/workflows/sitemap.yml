@@ -1,0 +1,48 @@
+name: Generate Sitemaps
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 1'
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Build site
+        run: npm run build
+
+      - name: Generate split sitemaps (project script)
+        run: node scripts/generate-sitemap-split.js
+
+      - name: Generate sitemap.xml (crawler)
+        uses: cicirello/generate-sitemap@v1
+        with:
+          base-url-path: https://orau98.github.io
+          include-html: true
+          sitemap-path: ./public
+
+      - name: Commit and push sitemap changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore(sitemap): update sitemap_index.xml and sitemaps'
+          branch: main
+          file_pattern: public/sitemap*.xml public/sitemap.xml
+

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>サイト内検索 | 昆虫食草図鑑</title>
+    <meta name="description" content="サイト内のページを検索（簡易版）。">
+    <link rel="canonical" href="https://orau98.github.io/search/">
+    <link rel="stylesheet" href="/assets/css/search.css">
+  </head>
+  <body>
+    <main class="seo-container" style="max-width:960px;margin:0 auto;padding:16px">
+      <h1>サイト内検索</h1>
+      <form action="/search/" method="get" role="search" aria-label="Site search" style="margin: 12px 0">
+        <input type="search" name="q" placeholder="キーワード" style="padding:8px;width:70%">
+        <button type="submit" style="padding:8px 12px">検索</button>
+      </form>
+      <div id="results" aria-live="polite"></div>
+    </main>
+    <script src="/assets/js/search.js" defer></script>
+  </body>
+</html>
+

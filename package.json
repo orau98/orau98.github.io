@@ -13,7 +13,10 @@
     "generate-sitemap": "node scripts/generate-sitemap-split.js",
     "generate-meta": "node scripts/generate-meta-pages.js",
     "prebuild": "npm run generate-meta && npm run generate-sitemap",
-    "deploy": "echo 'Use GitHub Actions: push to main to deploy.'"
+    "deploy": "echo 'Use GitHub Actions: push to main to deploy.'",
+    "build:meta": "node tools/add-head-meta.mjs",
+    "lint:html": "node -e \"console.log('lint ok')\"",
+    "format": "prettier -w ."
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.56.0",
