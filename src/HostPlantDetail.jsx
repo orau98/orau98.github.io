@@ -60,8 +60,8 @@ const PlantImageGallery = ({ images }) => {
     const checkImages = async () => {
       const available = [];
       
-      // cache-buster to avoid stale 404s on Pages/CDN
-      const v = `?v=${Date.now()}`;
+      // cache-buster only in development
+      const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
       for (const image of images) {
         try {
           // Try both .jpg and .JPG
@@ -296,7 +296,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         const base = import.meta.env.BASE_URL || '/';
         const [fnRes, extRes] = await Promise.allSettled([
           fetch(`${base}image_filenames.txt`),
-          fetch(`${base}image_extensions.json?v=${Date.now()}`)
+          fetch(import.meta.env.DEV ? `${base}image_extensions.json?v=${Date.now()}` : `${base}image_extensions.json`)
         ]);
         if (fnRes.status === 'fulfilled' && fnRes.value.ok) {
           const text = await fnRes.value.text();

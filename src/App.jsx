@@ -160,20 +160,30 @@ function App() {
       let hostPlantData = {};
       let plantDetailData = {};
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
-      const mainCsvPath = `${import.meta.env.BASE_URL}ListMJ_hostplants_master.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
+      const mainCsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}ListMJ_hostplants_master.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`
+        : `${import.meta.env.BASE_URL}ListMJ_hostplants_master.csv`;
       const yListCsvPath = `${import.meta.env.BASE_URL}20210514YList_download.csv`; // New YList CSV path
       const hamushiIntegratedCsvPath = `${import.meta.env.BASE_URL}hamushi_integrated_master.csv`;
       const butterflyCsvPath = `${import.meta.env.BASE_URL}butterfly_host.csv`;
       const beetleCsvPath = `${import.meta.env.BASE_URL}buprestidae_host.csv`;
       const kirigaCsvPath = `${import.meta.env.BASE_URL}日本の冬夜蛾.csv`;
-      const fuyushakuCsvPath = `${import.meta.env.BASE_URL}日本の冬尺蛾.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`;
+      const fuyushakuCsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}日本の冬尺蛾.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`
+        : `${import.meta.env.BASE_URL}日本の冬尺蛾.csv`;
       // emergence_time_integrated.csv統合済み - hamushi_integrated_master.csvに統合完了
       const genusMappingCsvPath = `${import.meta.env.BASE_URL}genus_mapping.csv`;
       
       // 正規化データのパス（新しい3ファイル構造）
-      const normalizedInsectsCsvPath = `${import.meta.env.BASE_URL}insects.csv?v=${Date.now()}`;
-      const normalizedHostplantsCsvPath = `${import.meta.env.BASE_URL}hostplants.csv?v=${Date.now()}`;
-      const normalizedNotesCsvPath = `${import.meta.env.BASE_URL}general_notes.csv?v=${Date.now()}`;
+      const normalizedInsectsCsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}insects.csv?v=${Date.now()}`
+        : `${import.meta.env.BASE_URL}insects.csv`;
+      const normalizedHostplantsCsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}hostplants.csv?v=${Date.now()}`
+        : `${import.meta.env.BASE_URL}hostplants.csv`;
+      const normalizedNotesCsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}general_notes.csv?v=${Date.now()}`
+        : `${import.meta.env.BASE_URL}general_notes.csv`;
       
       // 正規化データのみを優先的に使う運用フラグ
       const useNormalizedOnly = import.meta.env.VITE_USE_NORMALIZED_ONLY === 'true';

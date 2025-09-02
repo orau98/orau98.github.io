@@ -550,7 +550,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   useEffect(() => {
     const loadImageExtensions = async () => {
       try {
-        const response = await fetch(`${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`);
+        const response = await fetch(
+          import.meta.env.DEV
+            ? `${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`
+            : `${import.meta.env.BASE_URL}image_extensions.json`
+        );
         if (response.ok) {
           const extensions = await response.json();
           setImageExtensions(extensions);
@@ -562,7 +566,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     };
     const loadImageFilenames = async () => {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`);
+        const res = await fetch(
+          import.meta.env.DEV
+            ? `${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`
+            : `${import.meta.env.BASE_URL}image_filenames.txt`
+        );
         if (res.ok) {
           const text = await res.text();
           const list = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
@@ -580,7 +588,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // 画像候補（拡張子マップ + フォールバック拡張子を試行）
   const possibleImagePaths = React.useMemo(() => {
     const exts = imageExtensions || {};
-    const v = `?v=${Date.now()}`;
+    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
     const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${v}`;
     const uniq = new Set();
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };

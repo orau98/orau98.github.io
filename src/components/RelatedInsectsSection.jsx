@@ -40,7 +40,11 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`);
+        const res = await fetch(
+          import.meta.env.DEV
+            ? `${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`
+            : `${import.meta.env.BASE_URL}image_extensions.json`
+        );
         if (res.ok) {
           const data = await res.json();
           setImageExtensions(data || {});
@@ -103,14 +107,16 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   const getImagePath = (insect) => {
     const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
     const ext = imageExtensions[safeFilename] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}?v=${Date.now()}`;
+    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}${v}`;
   };
 
   // フォールバック画像パスを取得する関数
   const getFallbackImagePath = (insect) => {
     const japaneseName = insect.name;
     const ext = imageExtensions[japaneseName] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}?v=${Date.now()}`;
+    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}${v}`;
   };
 
   if (Object.keys(relatedMothsByPlant).length === 0) {

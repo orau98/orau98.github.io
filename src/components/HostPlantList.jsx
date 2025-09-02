@@ -27,7 +27,11 @@ const loadPlantImageFilenames = async () => {
   if (plantImageFilenamesLoaded) return plantImageFilenames;
   
   try {
-    const response = await fetch(`${import.meta.env.BASE_URL}plant_image_filenames.txt?v=${Date.now()}`);
+    const response = await fetch(
+      import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}plant_image_filenames.txt?v=${Date.now()}`
+        : `${import.meta.env.BASE_URL}plant_image_filenames.txt`
+    );
     if (response.ok) {
       const text = await response.text();
       plantImageFilenames = text.split('\n')

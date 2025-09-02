@@ -225,7 +225,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   // All insect images are in the insects folder
   const imageFolder = 'insects';
   
-  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}?v=${Date.now()}`;
+  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
   
   // Check if we have an actual match in imageFilenames
   // Do not request image until filenames mapping is loaded
@@ -307,7 +307,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       // Try fallback paths for beetles in insects directory
                       if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
                         e.target.dataset.fallbackAttempted = 'true';
-                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}?v=${Date.now()}`;
+                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
                         e.target.src = fallbackUrl;
                       } else {
                         // Safely hide the image and show fallback
@@ -768,7 +768,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     const loadImageData = async () => {
       try {
         // Load filenames
-        const filenamesResponse = await fetch(`${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`);
+        const filenamesResponse = await fetch(
+          import.meta.env.DEV
+            ? `${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`
+            : `${import.meta.env.BASE_URL}image_filenames.txt`
+        );
         const filenamesText = await filenamesResponse.text();
         const rawList = filenamesText.trim().split('\n').filter(Boolean);
         const filenames = new Set(rawList);
@@ -791,7 +795,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         
         // Load extension mapping
         try {
-          const extensionsResponse = await fetch(`${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`);
+          const extensionsResponse = await fetch(
+            import.meta.env.DEV
+              ? `${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`
+              : `${import.meta.env.BASE_URL}image_extensions.json`
+          );
           const extensionsData = await extensionsResponse.json();
           setImageExtensions(extensionsData);
           logger.debug('Loaded image extensions:', Object.keys(extensionsData).length, 'files');

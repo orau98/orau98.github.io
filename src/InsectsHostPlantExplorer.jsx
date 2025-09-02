@@ -114,7 +114,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   React.useEffect(() => {
     const loadInstagram = async () => {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}instagram_latest.txt`, { cache: 'no-store' });
+        const res = await fetch(`${import.meta.env.BASE_URL}instagram_latest.txt`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
         if (res.ok) {
           const text = (await res.text()).trim();
           // Basic validation for instagram url
@@ -138,7 +138,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   React.useEffect(() => {
     const loadTimeline = async () => {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}instagram_posts.txt`, { cache: 'no-store' });
+        const res = await fetch(`${import.meta.env.BASE_URL}instagram_posts.txt`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
         if (res.ok) {
           const text = await res.text();
           const urls = text.split(/\r?\n/)
@@ -157,7 +157,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   React.useEffect(() => {
     const loadWidget = async () => {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}instagram_widget.html`, { cache: 'no-store' });
+        const res = await fetch(`${import.meta.env.BASE_URL}instagram_widget.html`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
         if (res.ok) {
           const html = await res.text();
           if (html && html.trim().length > 0) {
