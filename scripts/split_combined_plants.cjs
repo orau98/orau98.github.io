@@ -88,6 +88,27 @@ function main() {
     return fallback || '';
   }
 
+  function splitKoreRa(name) {
+    const m = name.match(/^(.+?)やこれらの加工製品$/);
+    if (!m) return null;
+    const base = m[1].trim();
+    if (!base) return null;
+    const head = base.split('の').pop().trim();
+    if (!head) return null;
+    return [base, head + 'の加工製品'];
+  }
+
+  function splitXtoYNoKakohin(name) {
+    const m = name.match(/^(.+?)や(.+?)の加工品$/);
+    if (!m) return null;
+    const x = m[1].trim();
+    const y = m[2].trim();
+    if (!x || !y) return null;
+    return [x + 'の加工品', y + 'の加工品'];
+  }
+
+  const badPhrases = ['など', 'という', '主とし', '可能', '有名', '飼育', 'ペレット', '食糧'];
+
   for (let i = 1; i < hostRows.length; i++) {
     const r = hostRows[i];
     const name = (r[idx['plant_name']] || '').trim();
@@ -115,6 +136,34 @@ function main() {
             if (h === 'plant_family') return familyFor(b, fam);
             return r[idx[h]] ?? '';
           });
+          out.push(rowA);
+          out.push(rowB);
+          splitCount++;
+          continue;
+        }
+      }
+    }
+    // handle 'や' patterns safely
+    if (name && name.includes('や')) {
+      // skip sentences-like phrases
+      if (!badPhrases.some(p => name.includes(p))) {
+        // Pattern A: Aやこれらの加工製品
+        const pA = splitKoreRa(name);
+        if (pA) {
+          const [a, b] = pA;
+          const rowA = H.map((h) => (h === 'plant_name' ? a : h === 'plant_family' ? familyFor(a, fam) : r[idx[h]] ?? ''));
+          const rowB = H.map((h) => (h === 'record_id' ? (r[idx['record_id']] || 'hostplant-split') + '-2' : h === 'plant_name' ? b : h === 'plant_family' ? familyFor(b, fam) : r[idx[h]] ?? ''));
+          out.push(rowA);
+          out.push(rowB);
+          splitCount++;
+          continue;
+        }
+        // Pattern B: XやYの加工品 => Xの加工品, Yの加工品
+        const pB = splitXtoYNoKakohin(name);
+        if (pB) {
+          const [a, b] = pB;
+          const rowA = H.map((h) => (h === 'plant_name' ? a : h === 'plant_family' ? familyFor(a, fam) : r[idx[h]] ?? ''));
+          const rowB = H.map((h) => (h === 'record_id' ? (r[idx['record_id']] || 'hostplant-split') + '-2' : h === 'plant_name' ? b : h === 'plant_family' ? familyFor(b, fam) : r[idx[h]] ?? ''));
           out.push(rowA);
           out.push(rowB);
           splitCount++;
