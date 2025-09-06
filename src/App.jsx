@@ -3960,8 +3960,10 @@ function App() {
           console.log(`About to process ${butterflyParsedData.length} parsed butterfly rows...`);
           butterflyParsedData.forEach((row, index) => {
           const source = row['文献名'];
-          const family = row['科'];
-          const subfamily = row['亜科'];
+          const family = row['科名'] || row['科'] || '';
+          // Prefer Latin subfamily name when available; fall back to Japanese-named column
+          const subfamilyLatin = row['亜科名'] || row['亜科'] || '';
+          const subfamilyJapanese = row['亜科和名'] || row['亜科'] || '';
           const genus = row['属名'] || row['属'];
           const species = row['種小名'];
           const japaneseName = row['和名'];
@@ -4540,8 +4542,8 @@ function App() {
             classification: {
               family: family,
               familyJapanese: family,
-              subfamily: subfamily,
-              subfamilyJapanese: subfamily,
+              subfamily: subfamilyLatin,
+              subfamilyJapanese: subfamilyJapanese,
               genus: genus
             },
             hostPlants: hostPlantList,
