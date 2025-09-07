@@ -4,6 +4,9 @@ import logger from '../utils/logger';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
+import { createSafePlantFilename, splitFilenameBase } from '../utils/filename';
+import { hiraganaToKatakana } from '../utils/text';
+import { loadPlantImageFilenames as loadPlantImageFilenamesService } from '../services/imageIndex';
 import Pagination from './Pagination';
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -19,59 +22,13 @@ const normalizeLatinBinomialPlain = (name) => {
   return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
 };
 
-// Preload list of available plant images
-let plantImageFilenames = [];
-let plantImageFilenamesLoaded = false;
-
-const loadPlantImageFilenames = async () => {
-  if (plantImageFilenamesLoaded) return plantImageFilenames;
-  
-  try {
-    const response = await fetch(
-      import.meta.env.DEV
-        ? `${import.meta.env.BASE_URL}plant_image_filenames.txt?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}plant_image_filenames.txt`
-    );
-    if (response.ok) {
-      const text = await response.text();
-      plantImageFilenames = text.split('\n')
-        .map(line => line.trim())
-        .filter(line => line)
-        .map(line => {
-          // Extract filename after the arrow "→"
-          if (line.includes('→')) {
-            return line.split('→')[1].trim();
-          }
-          return line;
-        })
-        .filter(line => line);
-      plantImageFilenamesLoaded = true;
-    }
-  } catch (error) {
-    logger.warn('植物画像リストの読み込みに失敗しました:', error);
-  }
-  
-  return plantImageFilenames;
-};
+// Load via shared service (memoized)
 
 const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, plantImageFilenames: preloadedFilenames = [] }) => {
   const [imageExists, setImageExists] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [plantImageUrl, setPlantImageUrl] = useState('');
-  
-  // Create safe filename for plant image
-  const createSafePlantFilename = (plantName) => {
-    if (!plantName) return '';
-    // Remove family annotations and special characters
-    let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');
-    cleanedName = cleanedName.replace(/\([^)]*科[^)]*\)/g, '');
-    // Also remove patterns like (クルミ) without 科
-    cleanedName = cleanedName.replace(/\([^)]*\)/g, '');
-    cleanedName = cleanedName.replace(/科$/g, ''); // Remove trailing '科'
-    cleanedName = cleanedName.replace(/[^a-zA-Z0-9ぁ-んァ-ヶ一-龠]/g, '');
-    return cleanedName;
-  };
   
   const safePlantName = createSafePlantFilename(plant);
   
@@ -107,11 +64,7 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
         }));
 
         const matches = preloadedFilenames.filter(filename => {
-          // Extract the base name from the filename (remove extension, then part before underscore)
-          const withoutExt = filename.replace(/\.[^.]+$/, '');
-          // Split by ASCII underscore and full-width underscore (U+FF3F)
-          const filenameBase = withoutExt.split(/[_＿]/)[0];
-          // Exact match against any candidate
+          const filenameBase = splitFilenameBase(filename);
           return candidates.has(filenameBase);
         });
         
@@ -378,17 +331,9 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   };
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
 
-  // ひらがなをカタカナに変換する関数
-  const hiraganaToKatakana = (str) => {
-    return str.replace(/[\u3041-\u3096]/g, (match) => {
-      const chr = match.charCodeAt(0) + 0x60;
-      return String.fromCharCode(chr);
-    });
-  };
-
   // Load plant image filenames on component mount
   useEffect(() => {
-    loadPlantImageFilenames().then(filenames => {
+    loadPlantImageFilenamesService().then(filenames => {
       setPlantImageFilenames(filenames);
     });
   }, []);
@@ -599,44 +544,24 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
     
     // Count plants with images for debugging
     const plantsWithImages = sorted.filter(([plant]) => {
-      const createSafePlantFilename = (plantName) => {
-        if (!plantName) return '';
-        let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');
-        cleanedName = cleanedName.replace(/\([^)]*科[^)]*\)/g, '');
-        cleanedName = cleanedName.replace(/科$/g, '');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9ぁ-んァ-ヶ一-龠]/g, '');
-        return cleanedName;
-      };
-      
       if (!plant || plant === '不明' || plant.endsWith('科')) return false;
       const safeName = createSafePlantFilename(plant);
       const baseName = plant.split(' ')[0];
       const baseNameCleaned = createSafePlantFilename(baseName);
       return plantImageFilenames.some(filename => {
-        // Support both ASCII underscore (_) and full-width underscore (＿)
-        const filenameBase = filename.split(/[_＿]/)[0];
+        const filenameBase = splitFilenameBase(filename);
         return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
       });
     });
     
     logger.debug(`Plant image prioritization: ${plantsWithImages.length} plants have images out of ${sorted.length} total`);
     logger.debug('First 10 sorted plants:', sorted.slice(0, 10).map(([plant]) => {
-      const createSafePlantFilename = (plantName) => {
-        if (!plantName) return '';
-        let cleanedName = plantName.replace(/（[^）]*科[^）]*）/g, '');
-        cleanedName = cleanedName.replace(/\([^)]*科[^)]*\)/g, '');
-        cleanedName = cleanedName.replace(/科$/g, '');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9ぁ-んァ-ヶ一-龠]/g, '');
-        return cleanedName;
-      };
-      
       if (!plant || plant === '不明' || plant.endsWith('科')) return { plant, hasImage: false };
       const safeName = createSafePlantFilename(plant);
       const baseName = plant.split(' ')[0];
       const baseNameCleaned = createSafePlantFilename(baseName);
       const hasImage = plantImageFilenames.some(filename => {
-        // Support both ASCII underscore (_) and full-width underscore (＿)
-        const filenameBase = filename.split(/[_＿]/)[0];
+        const filenameBase = splitFilenameBase(filename);
         return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
       });
       
@@ -647,8 +572,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         baseNameCleaned,
         hasImage,
         matchingFilenames: plantImageFilenames.filter(filename => {
-          // Support both ASCII underscore (_) and full-width underscore (＿)
-          const filenameBase = filename.split(/[_＿]/)[0];
+          const filenameBase = splitFilenameBase(filename);
           return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
         })
       };

@@ -4,6 +4,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
+import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
+import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import { RelatedPlants } from './components/RelatedLinks';
 
@@ -547,54 +549,46 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     logger.debug('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
   }
   
+  const [plantImageNames, setPlantImageNames] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadPlantImageFilenamesService().then((names) => {
+      if (!cancelled) setPlantImageNames(Array.isArray(names) ? names : []);
+    }).catch(() => setPlantImageNames([]));
+    return () => { cancelled = true; };
+  }, [decodedPlantName]);
+
   // Get all available images for this plant (try canonical + aliases)
-  const getPlantImages = (plantName, altNames = []) => {
-    const commonImages = [
-      { suffix: '', label: '全体' },
-      { suffix: '_葉表', label: '葉表' },
-      { suffix: '_葉', label: '葉' },
-      { suffix: '_葉裏', label: '葉裏' },
-      { suffix: '_葉表白化', label: '葉表白化' },
-      { suffix: '_羽状複葉', label: '羽状複葉' },
-      { suffix: '_樹皮', label: '樹皮' },
-      { suffix: '_実', label: '実' },
-      { suffix: '_果実', label: '果実' },
-      { suffix: '_花', label: '花' },
-      { suffix: '_蕾', label: '蕾' },
-      { suffix: '_若葉', label: '若葉' },
-      { suffix: '_芽', label: '芽' },
-      { suffix: '_枝', label: '枝' },
-      { suffix: '_枝先', label: '枝先' },
-      { suffix: '_断面', label: '断面' }
-    ];
+  const getPlantImages = (plantName, altNames = [], nameIndex = null) => {
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
     const images = [];
-    bases.forEach(base => {
-      commonImages.forEach(({ suffix, label }) => {
-        // ASCII underscore variant (existing convention)
-        images.push({
-          src: `${import.meta.env.BASE_URL}images/plants/${base}${suffix}.jpg`,
-          srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${suffix}.JPG`,
-          label,
-          alt: `${base}${suffix ? ` (${label})` : ''}`
-        });
+    const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
 
-        // Full-width underscore variant between name and suffix (e.g., クズ＿葉表)
-        if (suffix.startsWith('_')) {
-          const fwSuffix = `＿${suffix.slice(1)}`; // replace leading '_' with '＿'
-          images.push({
-            src: `${import.meta.env.BASE_URL}images/plants/${base}${fwSuffix}.jpg`,
-            srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${fwSuffix}.JPG`,
-            label,
-            alt: `${base}${fwSuffix ? ` (${label})` : ''}`
-          });
+    const has = (fullName) => Array.isArray(nameIndex) && nameIndex.includes(fullName);
+
+    bases.forEach((base) => {
+      suffixes.forEach(({ suffix, label }) => {
+        let chosenSuffix = suffix;
+        if (suffix.startsWith('_') && Array.isArray(nameIndex)) {
+          const ascii = `${base}${suffix}`;
+          const full = `${base}＿${suffix.slice(1)}`;
+          if (has(full)) chosenSuffix = `＿${suffix.slice(1)}`;
+          else if (has(ascii)) chosenSuffix = suffix;
+          else chosenSuffix = suffix; // default ascii if unknown
         }
+        images.push({
+          src: `${import.meta.env.BASE_URL}images/plants/${base}${chosenSuffix}.jpg`,
+          srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${chosenSuffix}.JPG`,
+          label,
+          alt: `${base}${chosenSuffix ? ` (${label})` : ''}`
+        });
       });
     });
     return images;
   };
-  
-  const plantImages = getPlantImages(decodedPlantName, aliasNames);
+
+  const plantImages = getPlantImages(decodedPlantName, aliasNames, plantImageNames);
 
   // (no sticky tabs; aligns with insect page)
 
