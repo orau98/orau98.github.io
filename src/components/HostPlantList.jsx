@@ -566,11 +566,12 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
             return [name, base, cleaned, cleanedBase];
           })
         ].filter(Boolean));
-        return plantImageFilenames.some(filename => {
-          const withoutExt = filename.replace(/\.[^.]+$/, '');
-          const filenameBase = withoutExt.split('_')[0];
-          return candidates.has(filenameBase);
-        });
+      return plantImageFilenames.some(filename => {
+        const withoutExt = filename.replace(/\.[^.]+$/, '');
+        // Support both ASCII underscore (_) and full-width underscore (＿)
+        const filenameBase = withoutExt.split(/[_＿]/)[0];
+        return candidates.has(filenameBase);
+      });
       };
       
       const aHasImage = checkHasImage(a);
@@ -612,7 +613,8 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       const baseName = plant.split(' ')[0];
       const baseNameCleaned = createSafePlantFilename(baseName);
       return plantImageFilenames.some(filename => {
-        const filenameBase = filename.split('_')[0];
+        // Support both ASCII underscore (_) and full-width underscore (＿)
+        const filenameBase = filename.split(/[_＿]/)[0];
         return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
       });
     });
@@ -633,7 +635,8 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       const baseName = plant.split(' ')[0];
       const baseNameCleaned = createSafePlantFilename(baseName);
       const hasImage = plantImageFilenames.some(filename => {
-        const filenameBase = filename.split('_')[0];
+        // Support both ASCII underscore (_) and full-width underscore (＿)
+        const filenameBase = filename.split(/[_＿]/)[0];
         return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
       });
       
@@ -644,7 +647,8 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         baseNameCleaned,
         hasImage,
         matchingFilenames: plantImageFilenames.filter(filename => {
-          const filenameBase = filename.split('_')[0];
+          // Support both ASCII underscore (_) and full-width underscore (＿)
+          const filenameBase = filename.split(/[_＿]/)[0];
           return filenameBase === safeName || filenameBase === baseName || filenameBase === baseNameCleaned;
         })
       };
