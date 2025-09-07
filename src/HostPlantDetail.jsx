@@ -571,12 +571,24 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const images = [];
     bases.forEach(base => {
       commonImages.forEach(({ suffix, label }) => {
+        // ASCII underscore variant (existing convention)
         images.push({
           src: `${import.meta.env.BASE_URL}images/plants/${base}${suffix}.jpg`,
           srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${suffix}.JPG`,
           label,
           alt: `${base}${suffix ? ` (${label})` : ''}`
         });
+
+        // Full-width underscore variant between name and suffix (e.g., クズ＿葉表)
+        if (suffix.startsWith('_')) {
+          const fwSuffix = `＿${suffix.slice(1)}`; // replace leading '_' with '＿'
+          images.push({
+            src: `${import.meta.env.BASE_URL}images/plants/${base}${fwSuffix}.jpg`,
+            srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${fwSuffix}.JPG`,
+            label,
+            alt: `${base}${fwSuffix ? ` (${label})` : ''}`
+          });
+        }
       });
     });
     return images;
