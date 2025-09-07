@@ -109,7 +109,8 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
         const matches = preloadedFilenames.filter(filename => {
           // Extract the base name from the filename (remove extension, then part before underscore)
           const withoutExt = filename.replace(/\.[^.]+$/, '');
-          const filenameBase = withoutExt.split('_')[0];
+          // Split by ASCII underscore and full-width underscore (U+FF3F)
+          const filenameBase = withoutExt.split(/[_＿]/)[0];
           // Exact match against any candidate
           return candidates.has(filenameBase);
         });
