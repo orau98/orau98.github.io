@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
+import useSeoMeta from './hooks/useSeoMeta';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
 import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
@@ -326,103 +327,46 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   
-  // SEO: update title/description/canonical to static meta page（科・目ページにも最適化）
+  // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
+  const isFamily = /科$/.test(decodedPlantName);
+  const isOrder = /目$/.test(decodedPlantName);
+  const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
+  const pageTitle = isFamily
+    ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+    : isOrder
+    ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+    : `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
+  const pageDesc = isFamily
+    ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
+    : isOrder
+    ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
+    : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
+  const canonicalHref = `https://orau98.github.io/meta/plant/${encodeURIComponent(decodedPlantName)}.html`;
+
+  const { setOgTwitterImage } = useSeoMeta({
+    title: pageTitle,
+    description: pageDesc,
+    ogType: 'article',
+    url: canonicalHref,
+    breadcrumbItems: [
+      { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
+      { name: '植物', url: 'https://orau98.github.io/plant' },
+      { name: decodedPlantName, url: canonicalHref },
+    ],
+    resetCanonicalTo: 'https://orau98.github.io/',
+  });
+
+  // 画像決定後にOG/Twitterの画像を更新（DOMから拾う既存挙動を維持）
   useEffect(() => {
-    const isFamily = /科$/.test(decodedPlantName);
-    const isOrder = /目$/.test(decodedPlantName);
-    const title = isFamily
-      ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
-      : isOrder
-      ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
-      : `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
-    const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
-    const desc = isFamily
-      ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
-      : isOrder
-      ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
-      : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
-    document.title = title;
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) {
-      meta = document.createElement('meta');
-      meta.name = 'description';
-      document.head.appendChild(meta);
-    }
-    meta.content = desc;
-    // Open Graph / Twitter
-    const ensureMeta = (selector, attrs) => {
-      let el = document.querySelector(selector);
-      if (!el) {
-        el = document.createElement('meta');
-        Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
-        document.head.appendChild(el);
-      }
-      return el;
-    };
-    const setMetaContent = (selector, content) => {
-      const el = document.querySelector(selector);
-      if (el) el.setAttribute('content', content);
-    };
-    ensureMeta('meta[property="og:title"]', { property: 'og:title' });
-    setMetaContent('meta[property="og:title"]', title);
-    ensureMeta('meta[property="og:description"]', { property: 'og:description' });
-    setMetaContent('meta[property="og:description"]', desc);
-    ensureMeta('meta[property="og:type"]', { property: 'og:type' });
-    setMetaContent('meta[property="og:type"]', 'article');
-    // Prepare canonical URL first, then set og:url and link[rel=canonical]
-    const safePlantName = decodedPlantName;
-    const canonicalHref = `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html`;
-    ensureMeta('meta[property="og:url"]', { property: 'og:url' });
-    setMetaContent('meta[property="og:url"]', canonicalHref);
     try {
       const mainImg = document.querySelector('section[aria-labelledby="plant-photos"] img');
       const imgUrl = mainImg?.getAttribute('src');
-      if (imgUrl) {
-        ensureMeta('meta[property="og:image"]', { property: 'og:image' });
-        setMetaContent('meta[property="og:image"]', imgUrl);
-        ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });
-        setMetaContent('meta[name="twitter:image"]', imgUrl);
-        ensureMeta('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' });
-        setMetaContent('meta[name="twitter:image:alt"]', `${decodedPlantName}の写真`);
-      }
+      if (imgUrl) setOgTwitterImage(imgUrl, `${decodedPlantName}の写真`);
     } catch {}
-    let canon = document.querySelector('link[rel="canonical"]');
-    if (!canon) {
-      canon = document.createElement('link');
-      canon.rel = 'canonical';
-      document.head.appendChild(canon);
-    }
-    canon.href = canonicalHref;
-    // BreadcrumbList (JSON-LD)
-    const breadcrumb = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
-        { "@type": "ListItem", "position": 2, "name": "植物", "item": "https://orau98.github.io/plant" },
-        { "@type": "ListItem", "position": 3, "name": decodedPlantName, "item": `https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html` }
-      ]
-    };
-    let breadcrumbScript = document.querySelector('#breadcrumb-structured-data');
-    if (!breadcrumbScript) {
-      breadcrumbScript = document.createElement('script');
-      breadcrumbScript.id = 'breadcrumb-structured-data';
-      breadcrumbScript.type = 'application/ld+json';
-      document.head.appendChild(breadcrumbScript);
-    }
-    breadcrumbScript.textContent = JSON.stringify(breadcrumb);
-    return () => {
-      // restore index canonical
-      const c = document.querySelector('link[rel="canonical"]');
-      if (c) c.href = 'https://orau98.github.io/';
-      ['meta[property="og:image"]','meta[name="twitter:image"]','meta[name="twitter:image:alt"]','meta[property="og:url"]'].forEach(sel => {
-        const el = document.querySelector(sel);
-        if (el) el.parentElement.removeChild(el);
-      });
-      const b = document.querySelector('#breadcrumb-structured-data');
-      if (b) b.remove();
-    };
-    // ItemList JSON-LD（科・目ページ）
+  }, [decodedPlantName]);
+
+  // ItemList JSON-LD（科・目ページ）
+  useEffect(() => {
     try {
       const id = 'itemlist-classification';
       let s = document.querySelector('#' + id);
@@ -445,7 +389,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         document.head.appendChild(s);
       }
     } catch {}
-  }, [decodedPlantName, familyLabel, classificationMembers]);
+    return () => {
+      const s = document.querySelector('#itemlist-classification');
+      if (s) s.remove();
+    };
+  }, [isFamily, isOrder, classificationMembers, decodedPlantName]);
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
