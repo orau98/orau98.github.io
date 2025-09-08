@@ -54,6 +54,42 @@ const FILES = [
   path.join(ROOT, 'public', 'insects.csv'),
 ];
 
+// Genus → subfamily fallback (for Hesperiidae skippers common in Japan)
+const GENUS_TO_SUBFAMILY = new Map([
+  // Coeliadinae（コウモリセセリ亜科）
+  ['Badamia','Coeliadinae'],
+  ['Hasora','Coeliadinae'],
+  ['Ismene','Coeliadinae'],
+  ['Bibasis','Coeliadinae'],
+  ['Choaspes','Coeliadinae'],
+  ['Burara','Coeliadinae'],
+
+  // Pyrginae（ホソバセセリ亜科）
+  ['Daimio','Pyrginae'],
+  ['Pyrgus','Pyrginae'],
+  ['Erynnis','Pyrginae'],
+  ['Tagiades','Pyrginae'],
+  ['Notocrypta','Pyrginae'],
+  ['Udaspes','Pyrginae'],
+  ['Celaenorrhinus','Pyrginae'],
+
+  // Hesperiinae（セセリチョウ亜科）
+  ['Leptalina','Hesperiinae'],
+  ['Carterocephalus','Hesperiinae'],
+  ['Aeromachus','Hesperiinae'],
+  ['Thoressa','Hesperiinae'],
+  ['Hesperia','Hesperiinae'],
+  ['Ochlodes','Hesperiinae'],
+  ['Potanthus','Hesperiinae'],
+  ['Telicota','Hesperiinae'],
+  ['Erionota','Hesperiinae'],
+  ['Borbo','Hesperiinae'],
+  ['Pelopidas','Hesperiinae'],
+  ['Polytremis','Hesperiinae'],
+  ['Parnara','Hesperiinae'],
+  ['Isoteinon','Hesperiinae'],
+]);
+
 let totalChanged = 0;
 let totalIssues = 0;
 const missingMap = new Map();
@@ -104,6 +140,16 @@ for (const CSV_PATH of FILES) {
       // Prefer mapping from subfamily Latin to JP
       const jp = LATIN_TO_JP[sub] || '';
       if (jp) subJp = jp; else subJp = '';
+    }
+
+    // Case 3: both empty → fallback by genus mapping
+    if (!sub && !subJp) {
+      const genus = (r.genus || '').trim();
+      const la = GENUS_TO_SUBFAMILY.get(genus);
+      if (la) {
+        sub = la;
+        subJp = LATIN_TO_JP[la] || subJp;
+      }
     }
 
     // Normalize back
