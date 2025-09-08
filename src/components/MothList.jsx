@@ -9,6 +9,7 @@ import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
+import { createSafeInsectFilename } from '../utils/image';
 import useSeoMeta from '../hooks/useSeoMeta';
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {}, currentPage = 1 }) => {
@@ -733,7 +734,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         return cleanedName;
       };
 
-      const sciFile = insect.scientificFilename || createSafeFilename(insect.scientificName);
+      const sciFile = insect.scientificFilename || createSafeInsectFilename(insect.scientificName);
       if (sciFile) {
         if (imageFilenames.has(sciFile) || imageFilenamesNormalized.has(sciFile) || !!imageExtensions[sciFile]) return true;
         // Genus_species_* variants
