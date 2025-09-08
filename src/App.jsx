@@ -186,7 +186,10 @@ function App() {
         : `${import.meta.env.BASE_URL}general_notes.csv`;
       
       // 正規化データのみを優先的に使う運用フラグ
-      const useNormalizedOnly = import.meta.env.VITE_USE_NORMALIZED_ONLY === 'true';
+      // 既定: 本番では true（明示的に "false" 指定された場合のみ無効）
+      const normalizedEnv = import.meta.env.VITE_USE_NORMALIZED_ONLY;
+      const useNormalizedOnly = (normalizedEnv === 'true') || (import.meta.env.PROD && normalizedEnv !== 'false');
+      if (import.meta.env.DEV) logger.debug('useNormalizedOnly (effective):', useNormalizedOnly, '(env:', normalizedEnv, ')');
 
       // Unified scientific name processing function for all insect types - FIXED SCOPE
       const processScientificName = (existingScientificName, genusName, speciesName, authorName, yearName, insectType = 'moth') => {
