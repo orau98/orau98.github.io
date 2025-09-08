@@ -45,6 +45,16 @@ const BUTTERFLY_FAMILIES_LATIN = new Set([
   'Papilionidae', 'Pieridae', 'Lycaenidae', 'Nymphalidae', 'Hesperiidae', 'Riodinidae'
 ]);
 
+// Family mappings (JP <-> Latin) for butterflies
+const JP_FAMILY_TO_LATIN = {
+  'アゲハチョウ科': 'Papilionidae',
+  'シロチョウ科': 'Pieridae',
+  'シジミチョウ科': 'Lycaenidae',
+  'タテハチョウ科': 'Nymphalidae',
+  'セセリチョウ科': 'Hesperiidae',
+};
+const LATIN_FAMILY_TO_JP = Object.fromEntries(Object.entries(JP_FAMILY_TO_LATIN).map(([jp, la]) => [la, jp]));
+
 const hasJapanese = (s = '') => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(s);
 const hasLatin = (s = '') => /[A-Za-z]/.test(s);
 
@@ -108,11 +118,39 @@ for (const CSV_PATH of FILES) {
   for (const r of rows) {
     if (!r || (Object.keys(r).length === 1 && Object.values(r)[0] === '')) continue;
     total++;
-    const fam = (r.family || '').trim();
-    const famJp = (r.family_jp || '').trim();
-    const isButterfly = famJp.endsWith('チョウ科') || BUTTERFLY_FAMILIES_LATIN.has(fam);
+    let fam = (r.family || '').trim();
+    let famJp = (r.family_jp || '').trim();
+    const isButterfly = famJp.endsWith('チョウ科') || BUTTERFLY_FAMILIES_LATIN.has(fam) || JP_FAMILY_TO_LATIN[fam];
     if (!isButterfly) continue;
     butterflyRows++;
+
+    // Normalize family/family_jp first
+    const famIsJp = hasJapanese(fam);
+    const famJpIsLatin = hasLatin(famJp) && !hasJapanese(famJp);
+    if (famIsJp) {
+      // Move JP to family_jp and fill Latin family if known
+      const la = JP_FAMILY_TO_LATIN[fam] || fam;
+      famJp = famJp || fam; // keep JP in family_jp
+      fam = LATIN_FAMILY_TO_JP[la] ? la : fam; // set Latin if mapped
+    } else if (famJpIsLatin && (!fam || hasJapanese(fam))) {
+      // family_jp has Latin, swap to family and set proper JP
+      const la = famJp;
+      fam = la;
+      famJp = LATIN_FAMILY_TO_JP[la] || famJp;
+    } else {
+      // If family is Latin but family_jp empty/Latin → fill JP
+      if (BUTTERFLY_FAMILIES_LATIN.has(fam)) {
+        const jp = LATIN_FAMILY_TO_JP[fam];
+        if (jp) famJp = jp;
+      }
+    }
+
+    // Apply normalized family fields if changed
+    if (fam !== (r.family || '').trim() || famJp !== (r.family_jp || '').trim()) {
+      r.family = fam;
+      r.family_jp = famJp;
+      changed++;
+    }
 
     let sub = (r.subfamily || '').trim();
     let subJp = (r.subfamily_jp || '').trim();
