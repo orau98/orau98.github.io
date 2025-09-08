@@ -9,13 +9,32 @@ const files = [
 
 const trim = (v) => (v == null ? '' : String(v).trim());
 
-const needsFix = (name) => {
+const needsFix = (row) => {
+  const name = row?.['scientific_name'];
+  const author = trim(row?.['author']);
+  const year = trim(row?.['year']);
   if (!name) return true; // empty → rebuild if possible
   const t = String(name).trim();
-  // Heuristics: ends with comma or with "(Author," or lacks year when parentheses present
+  // Heuristics: ends with comma/whitespace or looks like "(Author," (truncated)
   if (/[,\s]$/.test(t)) return true;
   if (/\([^)]*,\s*$/.test(t)) return true;
-  // If has '(' but not a 4-digit year before ')'
+  // Broken parenthesis: has '(' but no ')'
+  if (/\(/.test(t) && !/\)/.test(t)) return true;
+  // If year exists in columns but not found in scientific_name.
+  // Year cells sometimes include brackets or multiple years like "[1889]" or "[1858] 1857".
+  if (year) {
+    const years = (year.match(/\d{4}/g) || []);
+    if (years.length > 0) {
+      const foundAny = years.some(y => new RegExp(`\\b${y}\\b`).test(t));
+      if (!foundAny) return true;
+    }
+  }
+  // If author exists but not visibly present in scientific_name (ignoring parentheses)
+  if (author) {
+    const a = author.replace(/^\(|\)$/g, '').trim();
+    if (a && !t.includes(a)) return true;
+  }
+  // If has parentheses pair but missing 4-digit year inside
   if (/\(.*\)/.test(t) && !/\(.*\b\d{4}\b.*\)/.test(t)) return true;
   return false;
 };
@@ -55,12 +74,18 @@ const processFile = async (file) => {
 
   rows.forEach((row) => {
     if (!row) return;
+    // Sanitize embedded newlines across all fields to prevent multi-line CSV records
+    for (const k of Object.keys(row)) {
+      if (row[k] != null) {
+        row[k] = String(row[k]).replace(/\r?\n/g, ' ').trim();
+      }
+    }
     const current = trim(row['scientific_name']);
     const genus = trim(row['genus']);
     const species = trim(row['species']);
     const subspecies = trim(row['subspecies']);
     const base = genus && species ? `${genus} ${species}${subspecies ? ' ' + subspecies : ''}` : '';
-    if (needsFix(current)) {
+    if (needsFix(row)) {
       const rebuilt = buildScientificName(row);
       if (rebuilt) {
         row['scientific_name'] = rebuilt;
@@ -80,6 +105,17 @@ const processFile = async (file) => {
       const rebuilt = trim(row['scientific_name']);
       if (rebuilt && syn === rebuilt) {
         row['synonyms'] = '';
+        fixed++;
+      }
+    }
+
+    // Clean stray species-id tokens accidentally placed into free-text fields
+    const idToken = /^species-\d+$/i;
+    const fields = ['synonyms', 'changes_since_standard', 'notes'];
+    for (const f of fields) {
+      const v = trim(row[f]);
+      if (idToken.test(v)) {
+        row[f] = '';
         fixed++;
       }
     }
