@@ -75,7 +75,13 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     try {
       const insectId = insect.insect_id?.trim();
       if (!insectId) {
-        logger.warn(`正規化データ警告: 行${index + 1}で昆虫IDが不明`);
+        // 空行や無効行は静かにスキップ（ノイズ抑制）
+        const values = Object.values(insect).map(v => (v || '').toString().trim());
+        const nonEmptyCount = values.filter(v => v).length;
+        if (nonEmptyCount > 0) {
+          // 何らかの値があるがIDがない場合のみデバッグ出力
+          logger.debug(`正規化データ注意: 行${index + 1}で昆虫IDが未設定（スキップ）`);
+        }
         return;
       }
 

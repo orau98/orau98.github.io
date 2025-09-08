@@ -4908,7 +4908,7 @@ function App() {
           logger.warn("Continuing without leafbeetle data - leafbeetle information may be incomplete");
         }
         } else {
-          logger.warn("Integrated hamushi data not available - leafbeetle information will be limited");
+          logger.debug("Integrated hamushi data not available - leafbeetle information will be limited");
         }
 
         // Combine all moth data after all parsing is complete
