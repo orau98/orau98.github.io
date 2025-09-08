@@ -25,6 +25,14 @@ https://orau98.github.io/
 - **データ**: CSV形式の昆虫・植物データベース
 - **スタイリング**: Tailwind CSS
 
+## 🆔 ID仕様について
+
+- IDは非連番です（連番の欠番は仕様）。運用上の削除・統合・系統の分離や、複数スキームの混在により、数値が飛ぶことがあります。
+- `insects.csv` の `insect_id` は主に `species-####` ですが、分類群により `species-H###`、`species-CR###`、`species-LB###` 等の接頭辞IDが混在します。
+- `hostplants.csv` の `record_id` はユニーク識別子で、分割処理由来の `-2` などの派生IDが存在します。連続性は保証しません。
+- 参照整合性（食草・備考が存在しない昆虫IDを参照していないか）は、`node scripts/validate-normalized.mjs` で検証し、結果は `reports/missing_ids.csv` に出力されます。
+- 欠番自体は問題ではありませんが、参照整合性エラー（unknown insect_id）は修正対象です。
+
 ## 📸 Instagram埋め込みの設定
 
 トップページ右側の「Instagram 最新投稿」には、投稿のパーマリンクを1件埋め込み表示します。
