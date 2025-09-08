@@ -13,11 +13,13 @@ const JP_TO_LATIN = {
   'モンキチョウ亜科': 'Coliadinae',
   'トンボシロチョウ亜科': 'Dismorphiinae',
 
-  // Lycaenidae
-  'シジミチョウ亜科': 'Lycaeninae', // Dataset aggregates multiple groups under this label
+  // Lycaenidae（代表的な対応）
+  'ベニシジミ亜科': 'Lycaeninae',
+  'ヒメシジミ亜科': 'Polyommatinae',
+  'ミドリシジミ亜科': 'Theclinae',
   'ウラギンシジミ亜科': 'Curetinae',
   'アシナガシジミ亜科': 'Miletinae',
-  // (ヒメシジミ亜科 -> Polyommatinae, ミドリシジミ亜科 -> Theclinae, ベニシジミ亜科 -> Lycaeninae)
+  'シジミチョウ亜科': 'Lycaeninae', // 便宜上
 
   // Nymphalidae
   'テングチョウ亜科': 'Libytheinae',
@@ -28,74 +30,105 @@ const JP_TO_LATIN = {
   'マダラチョウ亜科': 'Danainae',
   'フタオチョウ亜科': 'Charaxinae',
   'ドクチョウ亜科': 'Heliconiinae',
+
+  // Hesperiidae（代表的な対応）
+  'セセリチョウ亜科': 'Hesperiinae',
+  'ホソバセセリ亜科': 'Pyrginae',
+  'コウモリセセリ亜科': 'Coeliadinae',
 };
 
+const LATIN_TO_JP = Object.fromEntries(
+  Object.entries(JP_TO_LATIN).map(([jp, la]) => [la, jp])
+);
+
+const BUTTERFLY_FAMILIES_LATIN = new Set([
+  'Papilionidae', 'Pieridae', 'Lycaenidae', 'Nymphalidae', 'Hesperiidae', 'Riodinidae'
+]);
+
+const hasJapanese = (s = '') => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(s);
+const hasLatin = (s = '') => /[A-Za-z]/.test(s);
+
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const CSV_PATH = path.join(ROOT, 'public', 'insects.csv');
+const FILES = [
+  path.join(ROOT, 'normalized_data', 'insects.csv'),
+  path.join(ROOT, 'public', 'insects.csv'),
+];
 
-if (!fs.existsSync(CSV_PATH)) {
-  console.error(`Not found: ${CSV_PATH}`);
-  process.exit(1);
-}
+let totalChanged = 0;
+let totalIssues = 0;
+const missingMap = new Map();
 
-const raw = fs.readFileSync(CSV_PATH, 'utf-8');
-const parsed = Papa.parse(raw, { header: true, skipEmptyLines: false });
+for (const CSV_PATH of FILES) {
+  if (!fs.existsSync(CSV_PATH)) {
+    console.error(`Not found: ${CSV_PATH}`);
+    continue;
+  }
+  const raw = fs.readFileSync(CSV_PATH, 'utf-8');
+  const parsed = Papa.parse(raw, { header: true, skipEmptyLines: false });
+  const rows = parsed.data;
 
-if (parsed.errors?.length) {
-  console.warn('Parse warnings:', parsed.errors.slice(0, 5));
-}
+  let changed = 0, butterflyRows = 0, total = 0;
 
-const rows = parsed.data;
+  for (const r of rows) {
+    if (!r || (Object.keys(r).length === 1 && Object.values(r)[0] === '')) continue;
+    total++;
+    const fam = (r.family || '').trim();
+    const famJp = (r.family_jp || '').trim();
+    const isButterfly = famJp.endsWith('チョウ科') || BUTTERFLY_FAMILIES_LATIN.has(fam);
+    if (!isButterfly) continue;
+    butterflyRows++;
 
-let total = 0;
-let butterflyRows = 0;
-let changed = 0;
-let missingMap = new Map();
+    let sub = (r.subfamily || '').trim();
+    let subJp = (r.subfamily_jp || '').trim();
 
-for (const r of rows) {
-  // Skip empty lines
-  if (!r || Object.keys(r).length === 1 && Object.values(r)[0] === '') continue;
-  total++;
-  const familyJp = (r.family_jp || r.family || '').trim();
-  // Heuristic: butterfly families end with "チョウ科"
-  const isButterfly = /チョウ科$/.test(familyJp);
-  if (!isButterfly) continue;
-  butterflyRows++;
+    // Case 1: subfamily holds Japanese (wrong place)
+    if (hasJapanese(sub)) {
+      // If subfamily_jp is Latin and ends with -inae, swap
+      if (hasLatin(subJp) && /inae$/i.test(subJp)) {
+        [sub, subJp] = [subJp, sub];
+      } else {
+        // Move JP to subfamily_jp and fill Latin from mapping if possible
+        const la = JP_TO_LATIN[sub] || '';
+        if (la) {
+          subJp = sub; sub = la;
+        } else {
+          // keep JP in subfamily_jp, clear subfamily (unknown Latin)
+          subJp = sub; sub = '';
+          missingMap.set(subJp, (missingMap.get(subJp) || 0) + 1);
+        }
+      }
+    }
 
-  const jp = (r.subfamily_jp || '').trim();
-  if (!jp) continue;
-  const latin = JP_TO_LATIN[jp];
-  if (latin) {
-    if ((r.subfamily || '').trim() !== latin) {
-      r.subfamily = latin; // write Latin subfamily
+    // Case 2: subfamily_jp accidentally Latin
+    if (hasLatin(subJp) && !hasJapanese(subJp)) {
+      // Prefer mapping from subfamily Latin to JP
+      const jp = LATIN_TO_JP[sub] || '';
+      if (jp) subJp = jp; else subJp = '';
+    }
+
+    // Normalize back
+    if (sub !== r.subfamily || subJp !== r.subfamily_jp) {
+      r.subfamily = sub;
+      r.subfamily_jp = subJp;
       changed++;
     }
-    // ensure Japanese column keeps JP label
-    r.subfamily_jp = jp;
-  } else {
-    // track missing mapping values
-    const count = missingMap.get(jp) || 0;
-    missingMap.set(jp, count + 1);
   }
+
+  // Backup and write
+  const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+  const backupPath = `${CSV_PATH}.bak.butterfly_subfamily_fix_${stamp}`;
+  fs.writeFileSync(backupPath, raw);
+  const out = Papa.unparse(rows, { header: true, newline: '\n' });
+  fs.writeFileSync(CSV_PATH, out + '\n');
+
+  console.log(`[butterfly-subfamily-fix] ${path.relative(ROOT, CSV_PATH)}: scanned=${total} butterfly=${butterflyRows} changed=${changed}`);
+  totalChanged += changed;
 }
-
-// Write backup
-const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
-const backupPath = `${CSV_PATH}.bak.butterfly_subfamily_fix_${stamp}`;
-fs.writeFileSync(backupPath, raw);
-
-// Stringify back
-const out = Papa.unparse(rows, { header: true, newline: '\n' });
-fs.writeFileSync(CSV_PATH, out + '\n');
-
-console.log(`Scanned: ${total} rows`);
-console.log(`Butterfly rows: ${butterflyRows}`);
-console.log(`Updated subfamily -> Latin: ${changed}`);
 
 if (missingMap.size) {
-  console.log('Unmapped Japanese subfamily labels:');
-  for (const [k, v] of missingMap.entries()) {
-    console.log(`  - ${k}: ${v} rows`);
-  }
+  console.log('[butterfly-subfamily-fix] Unmapped JP subfamily labels (need mapping):');
+  for (const [k, v] of missingMap.entries()) console.log(`  - ${k}: ${v} rows`);
+  totalIssues += missingMap.size;
 }
 
+console.log(`[butterfly-subfamily-fix] Total changes: ${totalChanged}`);

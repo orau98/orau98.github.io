@@ -1,5 +1,14 @@
 file,row,reason,insect_id,plant_name,plant_family
+hostplants.csv,3667,unknown insect_id,species-5789,ケヤキ,ニレ科
+hostplants.csv,3670,unknown insect_id,species-5791,ケヤキ,ニレ科
+hostplants.csv,3671,unknown insect_id,species-5792,ハルニレ,ニレ科
+hostplants.csv,3672,unknown insect_id,species-5793,チドリノキ,ムクロジ科
+hostplants.csv,3673,unknown insect_id,species-5793,ヤマザクラ,バラ科
 hostplants.csv,4316,unknown insect_id,species-10001,アデク,フトモモ科
 hostplants.csv,4317,unknown insect_id,species-10001,ハマボウ,アオイ科
 general_notes.csv,13,unknown insect_id,species-10001,,
 general_notes.csv,14,unknown insect_id,species-10001,,
+general_notes.csv,611,unknown insect_id,species-5789,,
+general_notes.csv,612,unknown insect_id,species-5791,,
+general_notes.csv,614,unknown insect_id,species-5793,,
+general_notes.csv,616,unknown insect_id,species-5792,,
