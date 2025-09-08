@@ -1,0 +1,876 @@
+{
+  "total": 43,
+  "byJa": [
+    [
+      "ヨツボシナガツツハムシ",
+      {
+        "genus": "Clytra",
+        "subgenus": "Clytra",
+        "species": "arida",
+        "author": "Weise",
+        "year": "1889",
+        "jp": "ヨツボシナガツツハムシ"
+      }
+    ],
+    [
+      "アイヌツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Asionus",
+        "species": "hirtipennis",
+        "author": "Faldermann",
+        "year": "1835",
+        "jp": "アイヌツツハムシ"
+      }
+    ],
+    [
+      "セメノフツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Asionus",
+        "species": "limbellus semenovi",
+        "author": "Weise",
+        "year": "1889",
+        "jp": "セメノフツツハムシ"
+      }
+    ],
+    [
+      "フタスジツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "bilineatus",
+        "author": "Linnaeus",
+        "year": "1767",
+        "jp": "フタスジツツハムシ"
+      }
+    ],
+    [
+      "チビルリツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "confusus",
+        "author": "Suffrian",
+        "year": "1854",
+        "jp": "チビルリツツハムシ"
+      }
+    ],
+    [
+      "エジマツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "ejimai",
+        "author": "Takizawa",
+        "year": "1990",
+        "jp": "エジマツツハムシ"
+      }
+    ],
+    [
+      "キアシチビツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "exiguus amiculus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "キアシチビツツハムシ"
+      }
+    ],
+    [
+      "ウスグロスジツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "fulvus fuscolineatus",
+        "author": "Chûjô",
+        "year": "1940",
+        "jp": "ウスグロスジツツハムシ"
+      }
+    ],
+    [
+      "アカムネチビツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "honshuensis",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "アカムネチビツツハムシ"
+      }
+    ],
+    [
+      "キモトツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "kimotoi",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "キモトツツハムシ"
+      }
+    ],
+    [
+      "タテスジキツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "nigrofasciatus",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "タテスジキツツハムシ"
+      }
+    ],
+    [
+      "ハコネチビツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "pseudofulvus",
+        "author": "Medvedev",
+        "year": "1973",
+        "jp": "ハコネチビツツハムシ"
+      }
+    ],
+    [
+      "ルリツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "aeneoblitus",
+        "author": "Takizawa",
+        "year": "1975",
+        "jp": "ルリツツハムシ"
+      }
+    ],
+    [
+      "キアシルリツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "hyacinthinus",
+        "author": "Suffrian",
+        "year": "1860",
+        "jp": "キアシルリツツハムシ"
+      }
+    ],
+    [
+      "コヤツボシツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "instabilis",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "コヤツボシツツハムシ"
+      }
+    ],
+    [
+      "ニセセスジツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "janthinus",
+        "author": "Germar",
+        "year": "1824",
+        "jp": "ニセセスジツツハムシ"
+      }
+    ],
+    [
+      "カラフトツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "krutovskii triangulifer",
+        "author": "Jakobson",
+        "year": "1926",
+        "jp": "カラフトツツハムシ"
+      }
+    ],
+    [
+      "キスジツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "limbatipennis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "キスジツツハムシ"
+      }
+    ],
+    [
+      "リュウキュウツツハムシ　基亜種",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "loochooensis loochooensis",
+        "author": "Chûjô",
+        "year": "1935",
+        "jp": "リュウキュウツツハムシ　基亜種"
+      }
+    ],
+    [
+      "リュウキュウツツハムシ　宮古島亜種",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "loochooensis miyakoensis",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "リュウキュウツツハムシ　宮古島亜種"
+      }
+    ],
+    [
+      "クロボシツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "luridipennis pallescens",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "クロボシツツハムシ"
+      }
+    ],
+    [
+      "ツヤルリツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "nitidulus",
+        "author": "Fabricius",
+        "year": "1787",
+        "jp": "ツヤルリツツハムシ"
+      }
+    ],
+    [
+      "ヨツモンクロツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "nobilis",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "ヨツモンクロツツハムシ"
+      }
+    ],
+    [
+      "ムツキボシツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "ohnoi",
+        "author": "Kimoto",
+        "year": "1983",
+        "jp": "ムツキボシツツハムシ"
+      }
+    ],
+    [
+      "セスジツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "parvulus",
+        "author": "Müller",
+        "year": "1776",
+        "jp": "セスジツツハムシ"
+      }
+    ],
+    [
+      "ヤツボシツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "peliopterus peliopterus",
+        "author": "Solsky",
+        "year": "1872",
+        "jp": "ヤツボシツツハムシ"
+      }
+    ],
+    [
+      "キボシツツハムシ　基亜種",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans perelegans",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "キボシツツハムシ　基亜種"
+      }
+    ],
+    [
+      "キボシツツハムシ　琉球亜種",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans insulanus",
+        "author": "Chûjô",
+        "year": "1935",
+        "jp": "キボシツツハムシ　琉球亜種"
+      }
+    ],
+    [
+      "キボシツツハムシ　宮古島亜種",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans miyakoensis",
+        "author": "Kimotio",
+        "year": "1974",
+        "jp": "キボシツツハムシ　宮古島亜種"
+      }
+    ],
+    [
+      "キボシツツハムシ　与那国島亜種",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans yonaguniensis",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "キボシツツハムシ　与那国島亜種"
+      }
+    ],
+    [
+      "カシワツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "scitulus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "カシワツツハムシ"
+      }
+    ],
+    [
+      "ムツボシツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "sexpunctatus sexpunctatus",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "ムツボシツツハムシ"
+      }
+    ],
+    [
+      "ジュウシホシツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "tetradecaspilotus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ジュウシホシツツハムシ"
+      }
+    ],
+    [
+      "ツマキクロツツハムシ",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Disopus",
+        "species": "pini difformis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ツマキクロツツハムシ"
+      }
+    ],
+    [
+      "ヒゲブトツツハムシ",
+      {
+        "genus": "Melixanthus",
+        "subgenus": "Melixanthus",
+        "species": "hisamatsui",
+        "author": "Takizawa",
+        "year": "1975",
+        "jp": "ヒゲブトツツハムシ"
+      }
+    ],
+    [
+      "ハギツツハムシ",
+      {
+        "genus": "Pachybrachis",
+        "subgenus": "Pachybrachis",
+        "species": "eruditus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ハギツツハムシ"
+      }
+    ]
+  ],
+  "byBinom": [
+    [
+      "Clytra arida",
+      {
+        "genus": "Clytra",
+        "subgenus": "Clytra",
+        "species": "arida",
+        "author": "Weise",
+        "year": "1889",
+        "jp": "ヨツボシナガツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus hirtipennis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Asionus",
+        "species": "hirtipennis",
+        "author": "Faldermann",
+        "year": "1835",
+        "jp": "アイヌツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus limbellus semenovi",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Asionus",
+        "species": "limbellus semenovi",
+        "author": "Weise",
+        "year": "1889",
+        "jp": "セメノフツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus bilineatus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "bilineatus",
+        "author": "Linnaeus",
+        "year": "1767",
+        "jp": "フタスジツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus confusus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "confusus",
+        "author": "Suffrian",
+        "year": "1854",
+        "jp": "チビルリツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus ejimai",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "ejimai",
+        "author": "Takizawa",
+        "year": "1990",
+        "jp": "エジマツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus exiguus amiculus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "exiguus amiculus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "キアシチビツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus frontalis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "frontalis",
+        "author": "Marsham",
+        "year": "1802",
+        "jp": ""
+      }
+    ],
+    [
+      "Cryptocephalus fulvus fuscolineatus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "fulvus fuscolineatus",
+        "author": "Chûjô",
+        "year": "1940",
+        "jp": "ウスグロスジツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus honshuensis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "honshuensis",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "アカムネチビツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus kimotoi",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "kimotoi",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "キモトツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus nigrofasciatus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "nigrofasciatus",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "タテスジキツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus pseudofulvus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Burlinius",
+        "species": "pseudofulvus",
+        "author": "Medvedev",
+        "year": "1973",
+        "jp": "ハコネチビツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus aeneoblitus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "aeneoblitus",
+        "author": "Takizawa",
+        "year": "1975",
+        "jp": "ルリツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus coerulans",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "coerulans",
+        "author": "Marseul",
+        "year": "1875",
+        "jp": ""
+      }
+    ],
+    [
+      "Cryptocephalus hyacinthinus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "hyacinthinus",
+        "author": "Suffrian",
+        "year": "1860",
+        "jp": "キアシルリツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus instabilis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "instabilis",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "コヤツボシツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus janthinus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "janthinus",
+        "author": "Germar",
+        "year": "1824",
+        "jp": "ニセセスジツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus krutovskii triangulifer",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "krutovskii triangulifer",
+        "author": "Jakobson",
+        "year": "1926",
+        "jp": "カラフトツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus limbatipennis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "limbatipennis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "キスジツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus loochooensis loochooensis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "loochooensis loochooensis",
+        "author": "Chûjô",
+        "year": "1935",
+        "jp": "リュウキュウツツハムシ　基亜種"
+      }
+    ],
+    [
+      "Cryptocephalus loochooensis miyakoensis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "loochooensis miyakoensis",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "リュウキュウツツハムシ　宮古島亜種"
+      }
+    ],
+    [
+      "Cryptocephalus luridipennis pallescens",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "luridipennis pallescens",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "クロボシツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus mannerheimi",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "mannerheimi",
+        "author": "Gebler",
+        "year": "1825",
+        "jp": ""
+      }
+    ],
+    [
+      "Cryptocephalus multiplex multiplex",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "multiplex multiplex",
+        "author": "Suffrian",
+        "year": "1860",
+        "jp": ""
+      }
+    ],
+    [
+      "Cryptocephalus nitidulus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "nitidulus",
+        "author": "Fabricius",
+        "year": "1787",
+        "jp": "ツヤルリツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus nobilis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "nobilis",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "ヨツモンクロツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus ohnoi",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "ohnoi",
+        "author": "Kimoto",
+        "year": "1983",
+        "jp": "ムツキボシツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus parvulus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "parvulus",
+        "author": "Müller",
+        "year": "1776",
+        "jp": "セスジツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus peliopterus peliopterus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "peliopterus peliopterus",
+        "author": "Solsky",
+        "year": "1872",
+        "jp": "ヤツボシツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus perelegans perelegans",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans perelegans",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "キボシツツハムシ　基亜種"
+      }
+    ],
+    [
+      "Cryptocephalus perelegans insulanus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans insulanus",
+        "author": "Chûjô",
+        "year": "1935",
+        "jp": "キボシツツハムシ　琉球亜種"
+      }
+    ],
+    [
+      "Cryptocephalus perelegans miyakoensis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans miyakoensis",
+        "author": "Kimotio",
+        "year": "1974",
+        "jp": "キボシツツハムシ　宮古島亜種"
+      }
+    ],
+    [
+      "Cryptocephalus perelegans yonaguniensis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "perelegans yonaguniensis",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "キボシツツハムシ　与那国島亜種"
+      }
+    ],
+    [
+      "Cryptocephalus regalis regalis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "regalis regalis",
+        "author": "Gebler",
+        "year": "1830",
+        "jp": ""
+      }
+    ],
+    [
+      "Cryptocephalus scitulus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "scitulus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "カシワツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus sexpunctatus sexpunctatus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "sexpunctatus sexpunctatus",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "ムツボシツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus tetradecaspilotus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "tetradecaspilotus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ジュウシホシツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus trifasciatus",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Cryptocephalus",
+        "species": "trifasciatus",
+        "author": "Fabricius",
+        "year": "1787",
+        "jp": ""
+      }
+    ],
+    [
+      "Cryptocephalus pini difformis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Disopus",
+        "species": "pini difformis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ツマキクロツツハムシ"
+      }
+    ],
+    [
+      "Cryptocephalus manturiformis",
+      {
+        "genus": "Cryptocephalus",
+        "subgenus": "Protophysus",
+        "species": "manturiformis",
+        "author": "Pic",
+        "year": "1920",
+        "jp": ""
+      }
+    ],
+    [
+      "Melixanthus hisamatsui",
+      {
+        "genus": "Melixanthus",
+        "subgenus": "Melixanthus",
+        "species": "hisamatsui",
+        "author": "Takizawa",
+        "year": "1975",
+        "jp": "ヒゲブトツツハムシ"
+      }
+    ],
+    [
+      "Pachybrachis eruditus",
+      {
+        "genus": "Pachybrachis",
+        "subgenus": "Pachybrachis",
+        "species": "eruditus",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ハギツツハムシ"
+      }
+    ]
+  ]
+}
