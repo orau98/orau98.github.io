@@ -9,6 +9,7 @@ import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
+import useSeoMeta from '../hooks/useSeoMeta';
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {}, currentPage = 1 }) => {
   // Heuristic: insert a space between genus and species if missing
@@ -482,43 +483,22 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
 });
 
 const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false }) => {
-  // Canonical と Breadcrumb（一覧ページ用）
-  useEffect(() => {
-    if (embedded) return;
-    try {
-      // canonical を /moth に固定し、クエリ付きURLの重複を回避
-      let canon = document.querySelector('link[rel="canonical"]');
-      if (!canon) {
-        canon = document.createElement('link');
-        canon.rel = 'canonical';
-        document.head.appendChild(canon);
-      }
-      const base = new URL(window.location.origin + '/moth');
-      canon.href = base.toString();
-
-      // BreadcrumbList を注入
-      const breadcrumb = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
-          { "@type": "ListItem", "position": 2, "name": "蛾", "item": "https://orau98.github.io/moth" }
-        ]
-      };
-      let breadcrumbScript = document.querySelector('#breadcrumb-list-moth');
-      if (!breadcrumbScript) {
-        breadcrumbScript = document.createElement('script');
-        breadcrumbScript.id = 'breadcrumb-list-moth';
-        breadcrumbScript.type = 'application/ld+json';
-        document.head.appendChild(breadcrumbScript);
-      }
-      breadcrumbScript.textContent = JSON.stringify(breadcrumb);
-    } catch {}
-    return () => {
-      const s = document.querySelector('#breadcrumb-list-moth');
-      if (s) s.remove();
-    };
-  }, [embedded]);
+  // Canonical/OG/パンくず（一覧ページ）
+  if (!embedded) {
+    const pageTitle = `${title}の一覧 | 昆虫食草図鑑`;
+    const pageDesc = `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
+    useSeoMeta({
+      title: pageTitle,
+      description: pageDesc,
+      ogType: 'website',
+      url: 'https://orau98.github.io/moth',
+      breadcrumbItems: [
+        { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
+        { name: title, url: 'https://orau98.github.io/moth' }
+      ],
+      resetCanonicalTo: 'https://orau98.github.io/'
+    });
+  }
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -556,44 +536,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, [classificationFilter, searchTerm]);
 
-  // Meta description for list page (CTR向上の短文)
-  useEffect(() => {
-    try {
-      if (embedded) return;
-      const desc = `蛾の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
-      let meta = document.querySelector('meta[name="description"]');
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.name = 'description';
-        document.head.appendChild(meta);
-      }
-      meta.content = desc;
-      // OG/Twitter for list page
-      const ensureMeta = (selector, attrs) => {
-        let el = document.querySelector(selector);
-        if (!el) {
-          el = document.createElement('meta');
-          Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
-          document.head.appendChild(el);
-        }
-        return el;
-      };
-      const setMeta = (selector, content) => {
-        const el = document.querySelector(selector);
-        if (el) el.setAttribute('content', content);
-      };
-      ensureMeta('meta[property="og:title"]', { property: 'og:title' });
-      setMeta('meta[property="og:title"]', `${title}の一覧 | 昆虫食草図鑑`);
-      ensureMeta('meta[property="og:description"]', { property: 'og:description' });
-      setMeta('meta[property="og:description"]', desc);
-      ensureMeta('meta[property="og:type"]', { property: 'og:type' });
-      setMeta('meta[property="og:type"]', 'website');
-      ensureMeta('meta[property="og:url"]', { property: 'og:url' });
-      setMeta('meta[property="og:url"]', 'https://orau98.github.io/moth');
-      ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card' });
-      setMeta('meta[name="twitter:card"]', 'summary');
-    } catch {}
-  }, [embedded, moths?.length]);
+  // （メタは useSeoMeta に移行）
 
   // ItemList JSON-LD for top items (first 10)
   useEffect(() => {

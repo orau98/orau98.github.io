@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import logger from '../utils/logger';
+import useSeoMeta from '../hooks/useSeoMeta';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
@@ -278,43 +279,23 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   const [currentPage, setCurrentPage] = useState(1);
   const [plantImageFilenames, setPlantImageFilenames] = useState([]);
   
-  // Canonical と Breadcrumb（植物一覧用）
-  useEffect(() => {
-    if (embedded) return;
-    try {
-      // canonical を /plant に固定
-      let canon = document.querySelector('link[rel="canonical"]');
-      if (!canon) {
-        canon = document.createElement('link');
-        canon.rel = 'canonical';
-        document.head.appendChild(canon);
-      }
-      const base = new URL(window.location.origin + '/plant');
-      canon.href = base.toString();
-
-      // BreadcrumbList を注入
-      const breadcrumb = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
-          { "@type": "ListItem", "position": 2, "name": "植物", "item": "https://orau98.github.io/plant" }
-        ]
-      };
-      let breadcrumbScript = document.querySelector('#breadcrumb-list-plant');
-      if (!breadcrumbScript) {
-        breadcrumbScript = document.createElement('script');
-        breadcrumbScript.id = 'breadcrumb-list-plant';
-        breadcrumbScript.type = 'application/ld+json';
-        document.head.appendChild(breadcrumbScript);
-      }
-      breadcrumbScript.textContent = JSON.stringify(breadcrumb);
-    } catch {}
-    return () => {
-      const s = document.querySelector('#breadcrumb-list-plant');
-      if (s) s.remove();
-    };
-  }, [embedded]);
+  // Canonical/OG/パンくず（フックで共通化）
+  if (!embedded) {
+    const plantCount = Object.keys(hostPlants || {}).length;
+    const pageTitle = '植物（食草）一覧 | 昆虫食草図鑑';
+    const pageDesc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
+    useSeoMeta({
+      title: pageTitle,
+      description: pageDesc,
+      ogType: 'website',
+      url: 'https://orau98.github.io/plant',
+      breadcrumbItems: [
+        { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
+        { name: '植物', url: 'https://orau98.github.io/plant' }
+      ],
+      resetCanonicalTo: 'https://orau98.github.io/'
+    });
+  }
   // Responsive items-per-page to avoid empty grid slots on last row
   const getCols = () => {
     if (typeof window === 'undefined') return 1;
@@ -365,45 +346,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   const safeHostPlants = hostPlants || {};
   const safePlantDetails = plantDetails || {};
 
-  // Meta description for plant list page
-  useEffect(() => {
-    try {
-      if (embedded) return;
-      const plantCount = Object.keys(safeHostPlants || {}).length;
-      const desc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
-      let meta = document.querySelector('meta[name="description"]');
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.name = 'description';
-        document.head.appendChild(meta);
-      }
-      meta.content = desc;
-      // OG/Twitter for plant list page
-      const ensureMeta = (selector, attrs) => {
-        let el = document.querySelector(selector);
-        if (!el) {
-          el = document.createElement('meta');
-          Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
-          document.head.appendChild(el);
-        }
-        return el;
-      };
-      const setMeta = (selector, content) => {
-        const el = document.querySelector(selector);
-        if (el) el.setAttribute('content', content);
-      };
-      ensureMeta('meta[property="og:title"]', { property: 'og:title' });
-      setMeta('meta[property="og:title"]', `植物（食草）一覧 | 昆虫食草図鑑`);
-      ensureMeta('meta[property="og:description"]', { property: 'og:description' });
-      setMeta('meta[property="og:description"]', desc);
-      ensureMeta('meta[property="og:type"]', { property: 'og:type' });
-      setMeta('meta[property="og:type"]', 'website');
-      ensureMeta('meta[property="og:url"]', { property: 'og:url' });
-      setMeta('meta[property="og:url"]', 'https://orau98.github.io/plant');
-      ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card' });
-      setMeta('meta[name="twitter:card"]', 'summary');
-    } catch {}
-  }, [embedded, safeHostPlants]);
+  // （メタは useSeoMeta に移行）
 
   // ItemList JSON-LD for plant list (first 10)
   useEffect(() => {
