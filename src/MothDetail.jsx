@@ -6,6 +6,8 @@ import InstagramEmbed from './components/InstagramEmbed';
 import { getSourceLink } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
+import useSeoMeta from './hooks/useSeoMeta';
+import { loadInsectImageIndexes } from './services/imageIndex';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
@@ -185,147 +187,33 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     return typeHit || (!t && contentHit);
   };
 
-  // SEO optimization: Update page title and meta tags
-  useEffect(() => {
-    if (moth) {
-      const insectType = moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? 'タマムシ' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾';
-      const title = `${moth.name} (${moth.scientificName}) | ${insectType}の詳細 - 昆虫食草図鑑`;
-      const hostPlantsText = Array.isArray(moth.hostPlants)
-        ? (moth.hostPlants.length ? moth.hostPlants.join('、') : '不明')
-        : (typeof moth.hostPlants === 'string' && moth.hostPlants.trim()
-            ? moth.hostPlants
-            : '不明');
-      const description = `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectType}と植物の関係を詳しく学ぼう。`;
-      
-      document.title = title;
-      
-      // Update meta description
-      let metaDescription = document.querySelector('meta[name="description"]');
-      if (!metaDescription) {
-        metaDescription = document.createElement('meta');
-        metaDescription.name = 'description';
-        document.head.appendChild(metaDescription);
-      }
-      metaDescription.content = description;
+  // SEO（メタ/カノニカル/パンくず）を共通フックで設定
+  const insectTypeLabel = moth?.type === 'butterfly' ? '蝶' : moth?.type === 'beetle' ? 'タマムシ' : moth?.type === 'leafbeetle' ? 'ハムシ' : '蛾';
+  const hostPlantsText = Array.isArray(moth?.hostPlants)
+    ? (moth.hostPlants.length ? moth.hostPlants.join('、') : '不明')
+    : (typeof moth?.hostPlants === 'string' && moth?.hostPlants.trim() ? moth.hostPlants : '不明');
+  const canonicalHref = moth
+    ? `https://orau98.github.io/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`
+    : undefined;
+  const pageTitle = moth
+    ? `${moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫食草図鑑`
+    : '昆虫詳細 - 昆虫食草図鑑';
+  const pageDesc = moth
+    ? `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectTypeLabel}と植物の関係を詳しく学ぼう。`
+    : '昆虫の詳細情報。';
 
-      // Update canonical to static meta page for better SEO crawling
-      const canonicalHref = `https://orau98.github.io/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`;
-      let linkCanonical = document.querySelector('link[rel="canonical"]');
-      if (!linkCanonical) {
-        linkCanonical = document.createElement('link');
-        linkCanonical.rel = 'canonical';
-        document.head.appendChild(linkCanonical);
-      }
-      linkCanonical.href = canonicalHref;
-      
-      // Update OG/Twitter tags
-      const ensureMeta = (selector, attrs) => {
-        let el = document.querySelector(selector);
-        if (!el) {
-          el = document.createElement('meta');
-          Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
-          document.head.appendChild(el);
-        }
-        return el;
-      };
-      const setMetaContent = (selector, content) => {
-        const el = document.querySelector(selector);
-        if (el) el.setAttribute('content', content);
-      };
-      ensureMeta('meta[property="og:title"]', { property: 'og:title' });
-      setMetaContent('meta[property="og:title"]', title);
-      ensureMeta('meta[property="og:description"]', { property: 'og:description' });
-      setMetaContent('meta[property="og:description"]', description);
-      ensureMeta('meta[property="og:type"]', { property: 'og:type' });
-      setMetaContent('meta[property="og:type"]', 'article');
-      ensureMeta('meta[property="og:url"]', { property: 'og:url' });
-      setMetaContent('meta[property="og:url"]', canonicalHref);
-      // Set image if available (prefer current image path if rendered)
-      try {
-        const ogImageEl = document.querySelector('img[alt*="写真"]');
-        const imageUrl = ogImageEl?.getAttribute('src');
-        if (imageUrl) {
-          ensureMeta('meta[property="og:image"]', { property: 'og:image' });
-          setMetaContent('meta[property="og:image"]', imageUrl);
-          ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });
-          setMetaContent('meta[name="twitter:image"]', imageUrl);
-          ensureMeta('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' });
-          setMetaContent('meta[name="twitter:image:alt"]', `${moth.name}（${moth.scientificName}）の写真`);
-        }
-      } catch {}
-      
-      // Add structured data for the specific insect
-      const structuredData = {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": moth.name,
-        "description": description,
-        "author": {
-          "@type": "Organization",
-          "name": "昆虫食草図鑑"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "昆虫食草図鑑"
-        },
-        "mainEntity": {
-          "@type": "Animal",
-          "name": moth.name,
-          "scientificName": moth.scientificName,
-          "classification": moth.classification?.familyJapanese || '不明'
-        }
-      };
-      
-      let structuredDataScript = document.querySelector('#insect-structured-data');
-      if (!structuredDataScript) {
-        structuredDataScript = document.createElement('script');
-        structuredDataScript.id = 'insect-structured-data';
-        structuredDataScript.type = 'application/ld+json';
-        document.head.appendChild(structuredDataScript);
-      }
-      structuredDataScript.textContent = JSON.stringify(structuredData);
-
-      // BreadcrumbList (JSON-LD)
-      const breadcrumb = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/" },
-          { "@type": "ListItem", "position": 2, "name": moth.type === 'butterfly' ? '蝶' : moth.type === 'beetle' ? 'タマムシ' : moth.type === 'leafbeetle' ? 'ハムシ' : '蛾', "item": `https://orau98.github.io/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}` },
-          { "@type": "ListItem", "position": 3, "name": moth.name, "item": `https://orau98.github.io/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html` }
-        ]
-      };
-      let breadcrumbScript = document.querySelector('#breadcrumb-structured-data');
-      if (!breadcrumbScript) {
-        breadcrumbScript = document.createElement('script');
-        breadcrumbScript.id = 'breadcrumb-structured-data';
-        breadcrumbScript.type = 'application/ld+json';
-        document.head.appendChild(breadcrumbScript);
-      }
-      breadcrumbScript.textContent = JSON.stringify(breadcrumb);
-    }
-    
-    // Cleanup function to restore original title
-    return () => {
-      document.title = '昆虫食草図鑑 - 蛾と食草の繋がりを探る | 7000種以上の昆虫データベース';
-      const linkCanonical = document.querySelector('link[rel="canonical"]');
-      if (linkCanonical) {
-        linkCanonical.href = 'https://orau98.github.io/';
-      }
-      ['meta[property="og:image"]','meta[name="twitter:image"]','meta[name="twitter:image:alt"]','meta[property="og:url"]'].forEach(sel => {
-        const el = document.querySelector(sel);
-        if (el) el.parentElement.removeChild(el);
-      });
-      const structuredDataScript = document.querySelector('#insect-structured-data');
-      if (structuredDataScript) {
-        structuredDataScript.remove();
-      }
-      const breadcrumbScript = document.querySelector('#breadcrumb-structured-data');
-      if (breadcrumbScript) {
-        breadcrumbScript.remove();
-      }
-    };
-  }, [moth]);
+  const { setOgTwitterImage } = useSeoMeta({
+    title: pageTitle,
+    description: pageDesc,
+    ogType: 'article',
+    url: canonicalHref,
+    breadcrumbItems: moth ? [
+      { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
+      { name: insectTypeLabel, url: `https://orau98.github.io/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}` },
+      { name: moth.name, url: canonicalHref }
+    ] : undefined,
+    resetCanonicalTo: 'https://orau98.github.io/'
+  });
 
   // Show loading state if data is still loading
   if (isDataLoading) {
@@ -546,43 +434,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // 画像拡張子・ファイル名リスト（詳細でも堅牢に解決）
   const [imageExtensions, setImageExtensions] = useState({});
   const [imageBases, setImageBases] = useState([]);
-  
-  useEffect(() => {
-    const loadImageExtensions = async () => {
-      try {
-        const response = await fetch(
-          import.meta.env.DEV
-            ? `${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`
-            : `${import.meta.env.BASE_URL}image_extensions.json`
-        );
-        if (response.ok) {
-          const extensions = await response.json();
-          setImageExtensions(extensions);
-        }
-      } catch (error) {
-        logger.warn('Failed to load image extensions:', error);
-        setImageExtensions({});
-      }
-    };
-    const loadImageFilenames = async () => {
-      try {
-        const res = await fetch(
-          import.meta.env.DEV
-            ? `${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`
-            : `${import.meta.env.BASE_URL}image_filenames.txt`
-        );
-        if (res.ok) {
-          const text = await res.text();
-          const list = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-          setImageBases(list);
-        }
-      } catch (e) {
-        logger.debug('Failed to load image_filenames.txt:', e);
-      }
-    };
 
-    loadImageExtensions();
-    loadImageFilenames();
+  useEffect(() => {
+    loadInsectImageIndexes()
+      .then(({ names, exts }) => {
+        setImageExtensions(exts || {});
+        setImageBases(Array.from(names || []));
+      })
+      .catch((e) => {
+        logger.debug('Failed to load insect image indexes:', e);
+        setImageExtensions({});
+        setImageBases([]);
+      });
   }, []);
 
   // 画像候補（拡張子マップ + フォールバック拡張子を試行）
@@ -633,6 +496,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   logger.debug('Instagram URL:', moth.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
   logger.debug('Static Image Path:', staticImagePath);
+  
+  // Reflect chosen image to OG/Twitter tags when ready
+  useEffect(() => {
+    if (staticImagePath) {
+      setOgTwitterImage(staticImagePath, `${moth?.name}（${moth?.scientificName}）の写真`);
+    } else {
+      try {
+        const ogImageEl = document.querySelector('img[alt*="写真"]');
+        const imageUrl = ogImageEl?.getAttribute('src');
+        if (imageUrl) setOgTwitterImage(imageUrl, `${moth?.name}（${moth?.scientificName}）の写真`);
+      } catch {}
+    }
+  }, [staticImagePath, moth?.name, moth?.scientificName]);
   
   // Additional debug for beetles
   if (moth.type === 'beetle') {
