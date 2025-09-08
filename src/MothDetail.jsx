@@ -8,6 +8,7 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
 import { loadInsectImageIndexes } from './services/imageIndex';
+import { createSafeInsectFilename } from './utils/image';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
@@ -416,19 +417,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const hasInstagramPost = moth.instagramUrl && moth.instagramUrl.trim();
   
   // Create safe filename for static image fallback
-  const createSafeFilename = (scientificName) => {
-    if (!scientificName) return '';
-    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-    // More specific pattern to remove author names - only remove if it's after a binomial name
-    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-    cleanedName = cleanedName.replace(/\s+/g, '_');
-    return cleanedName;
-  };
-
-  const safeFilename = moth.scientificFilename || createSafeFilename(moth.scientificName);
+  const safeFilename = moth.scientificFilename || createSafeInsectFilename(moth.scientificName);
   const japaneseName = moth.name;
   
   // 画像拡張子・ファイル名リスト（詳細でも堅牢に解決）

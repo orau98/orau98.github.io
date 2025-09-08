@@ -19,6 +19,14 @@ export default defineConfig(({ command, mode }) => ({
     sourcemap: false,
     rollupOptions: {
       output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-router')) return 'vendor-router';
+            if (id.includes('papaparse')) return 'vendor-papaparse';
+            if (id.includes('react')) return 'vendor-react';
+            return 'vendor';
+          }
+        },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name && assetInfo.name.endsWith('.css')) {
             return `assets/[name]-[hash].css`;

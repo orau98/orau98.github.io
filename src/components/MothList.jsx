@@ -128,17 +128,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     ['アオモンギンセダカモクメ', 'Cucullia_argentea']
   ]);;
 
-  // Create safe filename for image checking
-  const createSafeFilename = (scientificName) => {
-    if (!scientificName) return '';
-    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-    cleanedName = cleanedName.replace(/\s+/g, '_');
-    return cleanedName;
-  };
+  // Create safe filename for image checking (shared util)
   
   // Try to find the actual image file that exists
   const getImageFilename = () => {
@@ -146,7 +136,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       // If imageFilenames is not loaded yet, use default
       if (!imageFilenames || imageFilenames.size === 0) {
         const mappedFilename = globalJapaneseToScientificMapping.get(moth?.name);
-        return mappedFilename || moth?.scientificFilename || createSafeFilename(moth?.scientificName);
+        return mappedFilename || moth?.scientificFilename || createSafeInsectFilename(moth?.scientificName);
       }
     
     // 0. Try mapped filename first (highest priority)
@@ -161,7 +151,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     }
     
     // 2. Try generated safe filename
-    const safeFilename = createSafeFilename(moth.scientificName);
+    const safeFilename = createSafeInsectFilename(moth.scientificName);
     if (imageFilenames.has(safeFilename)) {
       return safeFilename;
     }
@@ -206,7 +196,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     return mappedFilename || moth?.scientificFilename || safeFilename;
     } catch (error) {
       logger.error('Error in getImageFilename:', error, moth);
-      return createSafeFilename(moth?.scientificName || moth?.name || 'placeholder');
+      return createSafeInsectFilename(moth?.scientificName || moth?.name || 'placeholder');
     }
   };
   
@@ -935,7 +925,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         cleanedName = cleanedName.replace(/\s+/g, '_');
         return cleanedName;
       };
-      const fn = m.scientificFilename || createSafeFilename(m.scientificName);
+      const fn = m.scientificFilename || createSafeInsectFilename(m.scientificName);
       return imageFilenames.has(fn) || imageFilenamesNormalized.has(fn) || !!imageExtensions[fn];
     });
     
@@ -953,7 +943,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         return cleanedName;
       };
       
-      const filename = m.scientificFilename || createSafeFilename(m.scientificName);
+      const filename = m.scientificFilename || createSafeInsectFilename(m.scientificName);
       return {
         name: m.name,
         scientificName: m.scientificName,

@@ -9,6 +9,7 @@ import { MainStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
 import { bibliography } from './utils/bibliography';
 import { getSourceLink } from './utils/sourceLinks';
+import useSeoMeta from './hooks/useSeoMeta';
 
 // 書誌情報の標準和文フォーマット
 // 例: 著者（年）『書名 第1巻』出版社，ISBN: 978-....
@@ -100,6 +101,16 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
     else if (tab === 'insects') setActiveTab('insects');
   }, [searchParams]);
 
+  // SEO for Home (トップページ)
+  const title = '昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索';
+  const desc = `掲載: 蛾・蝶 ${moths.length + butterflies.length}種、甲虫 ${beetles.length + leafbeetles.length}種、食草 ${Object.keys(hostPlants).length}種。和名/学名/分類から高速検索。`;
+  const { setOgTwitterImage } = useSeoMeta({
+    title,
+    description: desc,
+    ogType: 'website',
+    url: 'https://orau98.github.io/',
+  });
+
   // Preload hero image on component mount
   React.useEffect(() => {
     const heroImageUrl = `${import.meta.env.BASE_URL}images/insects/Cucullia_argentea.jpg`;
@@ -109,6 +120,17 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
     img.onload = () => setHeroImageLoaded(true);
     img.src = heroImageUrl;
   }, []);
+
+  // Use hero image as OG/Twitter image when loaded
+  useEffect(() => {
+    if (heroImageLoaded) {
+      try {
+        const hero = document.querySelector('img[alt*="メインビジュアル"]');
+        const src = hero?.getAttribute('src') || `${import.meta.env.BASE_URL}images/insects/Cucullia_argentea.jpg`;
+        setOgTwitterImage(src, '昆虫食草図鑑 メインビジュアル');
+      } catch {}
+    }
+  }, [heroImageLoaded]);
 
   // Try to load latest Instagram permalink from a public text file
   React.useEffect(() => {
