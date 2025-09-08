@@ -7,6 +7,8 @@ import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx'
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
+import { hiraganaToKatakana } from '../utils/text';
+import { loadInsectImageIndexes } from '../services/imageIndex';
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {}, currentPage = 1 }) => {
   // Heuristic: insert a space between genus and species if missing
@@ -633,14 +635,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     };
   }, [embedded, moths]);
 
-  // ひらがなをカタカナに変換する関数
-  const hiraganaToKatakana = (str) => {
-    if (!str) return '';
-    return str.replace(/[\u3041-\u3096]/g, (match) => {
-      const code = match.charCodeAt(0) + 0x60;
-      return String.fromCharCode(code);
-    });
-  };
+  // ひらがな→カタカナは共通ユーティリティを使用
 
   const filteredMoths = useMemo(() => {
     try {
@@ -759,62 +754,35 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, [moths, searchTerm]);
 
-  // Load image filenames list for lightweight sorting
+  // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
   const [imageFilenamesNormalized, setImageFilenamesNormalized] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
-  
+
   useEffect(() => {
-    const loadImageData = async () => {
-      try {
-        // Load filenames
-        const filenamesResponse = await fetch(
-          import.meta.env.DEV
-            ? `${import.meta.env.BASE_URL}image_filenames.txt?v=${Date.now()}`
-            : `${import.meta.env.BASE_URL}image_filenames.txt`
-        );
-        const filenamesText = await filenamesResponse.text();
-        const rawList = filenamesText.trim().split('\n').filter(Boolean);
-        const filenames = new Set(rawList);
-        setImageFilenames(filenames);
+    loadInsectImageIndexes()
+      .then(({ names, exts }) => {
+        const list = Array.from(names || []);
+        const fileSet = new Set(list);
+        setImageFilenames(fileSet);
         // Build normalized base names (Genus_species)
         const normSet = new Set();
-        rawList.forEach(base => {
+        list.forEach(base => {
           const m1 = base.match(/^([A-Z][a-z]+)\s+([a-z]+)/);
-          if (m1) {
-            normSet.add(`${m1[1]}_${m1[2]}`);
-            return;
-          }
+          if (m1) { normSet.add(`${m1[1]}_${m1[2]}`); return; }
           const m2 = base.match(/^([A-Z][a-z]+)_([a-z]+)/);
-          if (m2) {
-            normSet.add(`${m2[1]}_${m2[2]}`);
-            return;
-          }
+          if (m2) { normSet.add(`${m2[1]}_${m2[2]}`); return; }
         });
         setImageFilenamesNormalized(normSet);
-        
-        // Load extension mapping
-        try {
-          const extensionsResponse = await fetch(
-            import.meta.env.DEV
-              ? `${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`
-              : `${import.meta.env.BASE_URL}image_extensions.json`
-          );
-          const extensionsData = await extensionsResponse.json();
-          setImageExtensions(extensionsData);
-          logger.debug('Loaded image extensions:', Object.keys(extensionsData).length, 'files');
-        } catch (extError) {
-          logger.debug('Could not load image extensions mapping:', extError);
-        }
-        
-        logger.debug('Loaded image filenames:', filenames.size, 'files');
-        logger.debug('Has Cryphia_mitsuhashi:', filenames.has('Cryphia_mitsuhashi'));
-        logger.debug('First 10 filenames:', Array.from(filenames).slice(0, 10));
-      } catch (error) {
-        logger.debug('Could not load image filenames:', error);
-      }
-    };
-    loadImageData();
+        setImageExtensions(exts || {});
+        logger.debug('Loaded image index via service:', list.length, 'files');
+      })
+      .catch((e) => {
+        logger.debug('Failed to load insect image index:', e);
+        setImageFilenames(new Set());
+        setImageFilenamesNormalized(new Set());
+        setImageExtensions({});
+      });
   }, []);
 
   // Helper to check if any image exists for a moth (JP or scientific filenames)

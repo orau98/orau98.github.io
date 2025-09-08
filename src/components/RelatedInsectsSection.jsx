@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
+import { loadInsectImageIndexes } from '../services/imageIndex';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   // 各植物の展開状態を管理
@@ -35,23 +36,12 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
     return count; // グリッド表示では全て表示
   };
 
-  // 画像拡張子マッピングを読み込む
+  // 画像拡張子マッピングを読み込む（共通サービス）
   const [imageExtensions, setImageExtensions] = useState({});
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch(
-          import.meta.env.DEV
-            ? `${import.meta.env.BASE_URL}image_extensions.json?v=${Date.now()}`
-            : `${import.meta.env.BASE_URL}image_extensions.json`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setImageExtensions(data || {});
-        }
-      } catch (_) {}
-    };
-    load();
+    loadInsectImageIndexes()
+      .then(({ exts }) => setImageExtensions(exts || {}))
+      .catch(() => setImageExtensions({}));
   }, []);
 
   // MothDetailと同じ画像パス構築ロジックを使用
