@@ -1,2 +1,5 @@
-file,row,reason
-none,,no issues found
+file,row,reason,insect_id,plant_name,plant_family
+hostplants.csv,4316,unknown insect_id,species-10001,アデク,フトモモ科
+hostplants.csv,4317,unknown insect_id,species-10001,ハマボウ,アオイ科
+general_notes.csv,13,unknown insect_id,species-10001,,
+general_notes.csv,14,unknown insect_id,species-10001,,
