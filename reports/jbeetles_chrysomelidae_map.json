@@ -1,6 +1,1942 @@
 {
-  "total": 43,
+  "total": 243,
   "byJa": [
+    [
+      "ナナセキハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Allohypericia",
+        "species": "orochi",
+        "author": "Takemoto",
+        "year": "2022",
+        "jp": "ナナセキハムシ"
+      }
+    ],
+    [
+      "ヨモギハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Anopachys",
+        "species": "aurichalcea",
+        "author": "Mannerheim",
+        "year": "1825",
+        "jp": "ヨモギハムシ"
+      }
+    ],
+    [
+      "ワタナベハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Anopachys",
+        "species": "watanabei",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "ワタナベハムシ"
+      }
+    ],
+    [
+      "アイヌヨモギハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Apterosoma",
+        "species": "aino",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "アイヌヨモギハムシ"
+      }
+    ],
+    [
+      "オオヨモギハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Apterosoma",
+        "species": "angusticollis",
+        "author": "Motschulsky",
+        "year": "1861",
+        "jp": "オオヨモギハムシ"
+      }
+    ],
+    [
+      "ミヤマヨモギハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Apterosoma",
+        "species": "porosirensis",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "ミヤマヨモギハムシ"
+      }
+    ],
+    [
+      "オドリコソウハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Bourdonneana",
+        "species": "koltzei lamii",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "オドリコソウハムシ"
+      }
+    ],
+    [
+      "サハリン産で記載",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Bourdonneana",
+        "species": "koltzei brunneipennis",
+        "author": "Matsumura",
+        "year": "1911",
+        "jp": "サハリン産で記載"
+      }
+    ],
+    [
+      "カワカミハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Chrysocrosita",
+        "species": "nikolskyi",
+        "author": "Jacobson",
+        "year": "1898",
+        "jp": "カワカミハムシ"
+      }
+    ],
+    [
+      "キリガミネハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Erythrochrysa",
+        "species": "kirigaminensis",
+        "author": "K. Suzuki &amp; S. Saitoh",
+        "year": "2011",
+        "jp": "キリガミネハムシ"
+      }
+    ],
+    [
+      "オオルリハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Erythrochrysa",
+        "species": "virgata",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "オオルリハムシ"
+      }
+    ],
+    [
+      "クロルリハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Hypericia",
+        "species": "difficilis yezoensis",
+        "author": "Matsumura",
+        "year": "1911",
+        "jp": "クロルリハムシ"
+      }
+    ],
+    [
+      "ニッコウルリハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Hypericia",
+        "species": "nikkoensis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ニッコウルリハムシ"
+      }
+    ],
+    [
+      "ハッカハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Lithopteroides",
+        "species": "exanthematica exanthematica",
+        "author": "Wiedemann",
+        "year": "1821",
+        "jp": "ハッカハムシ"
+      }
+    ],
+    [
+      "サメハダヨモギハムシ",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Pleurosticha",
+        "species": "pirka",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "サメハダヨモギハムシ"
+      }
+    ],
+    [
+      "ギシギシハムシ",
+      {
+        "genus": "Gastrophysa",
+        "subgenus": "Gastrophysa",
+        "species": "atrocyanea",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "ギシギシハムシ"
+      }
+    ],
+    [
+      "ヤマダクロフジハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Brachyphytodecta",
+        "species": "jamadai",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "ヤマダクロフジハムシ"
+      }
+    ],
+    [
+      "カワリムジハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Brachyphytodecta",
+        "species": "kidoi",
+        "author": "Takizawa &amp; Daccordi",
+        "year": "1998",
+        "jp": "カワリムジハムシ"
+      }
+    ],
+    [
+      "フジハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Brachyphytodecta",
+        "species": "rubripennis",
+        "author": "Baly",
+        "year": "1862",
+        "jp": "フジハムシ"
+      }
+    ],
+    [
+      "ウストホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "flavicornis flavicornis",
+        "author": "Suffrian",
+        "year": "1851",
+        "jp": "ウストホシハムシ"
+      }
+    ],
+    [
+      "ヒラノトホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "hiranoi",
+        "author": "Takizawa",
+        "year": "1989",
+        "jp": "ヒラノトホシハムシ"
+      }
+    ],
+    [
+      "ホウキトホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "hoki",
+        "author": "Takizawa",
+        "year": "2007",
+        "jp": "ホウキトホシハムシ"
+      }
+    ],
+    [
+      "ヤナギホシハムシ　基亜種",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "honshuensis honshuensis",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "ヤナギホシハムシ　基亜種"
+      }
+    ],
+    [
+      "ヤナギホシハムシ　千島亜種は基亜種のシノニムとしている（",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "honshuensis chujoi",
+        "author": "Medvedev",
+        "year": "1966",
+        "jp": "ヤナギホシハムシ　千島亜種は基亜種のシノニムとしている（"
+      }
+    ],
+    [
+      "ヤナギホシハムシ　千島亜種",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "honshuensis chujoi",
+        "author": "Medvedev",
+        "year": "1966",
+        "jp": "ヤナギホシハムシ　千島亜種"
+      }
+    ],
+    [
+      "シコクトホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "iyonis",
+        "author": "Suenaga",
+        "year": "2012",
+        "jp": "シコクトホシハムシ"
+      }
+    ],
+    [
+      "トホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "japonica japonica",
+        "author": "Chûjô &amp; Kimoto",
+        "year": "1960",
+        "jp": "トホシハムシ"
+      }
+    ],
+    [
+      "サクラムジハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "morimotoi",
+        "author": "Kimoto",
+        "year": "1963",
+        "jp": "サクラムジハムシ"
+      }
+    ],
+    [
+      "カンバムジハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "rufa",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "カンバムジハムシ"
+      }
+    ],
+    [
+      "シバタトホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "shibatai",
+        "author": "Takizawa",
+        "year": "1982",
+        "jp": "シバタトホシハムシ"
+      }
+    ],
+    [
+      "ヤナギムジハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "sibirica",
+        "author": "Weise",
+        "year": "1893",
+        "jp": "ヤナギムジハムシ"
+      }
+    ],
+    [
+      "クロモンハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "springlovae",
+        "author": "Bechyné",
+        "year": "1948",
+        "jp": "クロモンハムシ"
+      }
+    ],
+    [
+      "ヒメトホシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "takahashii",
+        "author": "Kimoto",
+        "year": "1963",
+        "jp": "ヒメトホシハムシ"
+      }
+    ],
+    [
+      "ヒコサンクロボシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Sinomela",
+        "species": "hikosana",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "ヒコサンクロボシハムシ"
+      }
+    ],
+    [
+      "リュウキュウクロボシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Sinomela",
+        "species": "nagaii",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "リュウキュウクロボシハムシ"
+      }
+    ],
+    [
+      "ヤツボシハムシ",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Sinomela",
+        "species": "nigroplagiata",
+        "author": "Baly",
+        "year": "1862",
+        "jp": "ヤツボシハムシ"
+      }
+    ],
+    [
+      "ダイコンハムシ",
+      {
+        "genus": "Phaedon",
+        "subgenus": "Phaedon",
+        "species": "brassicae",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ダイコンハムシ"
+      }
+    ],
+    [
+      "ホソルリハムシ",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phratora",
+        "species": "obtusicollis",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "ホソルリハムシ"
+      }
+    ],
+    [
+      "オオホソルリハムシ",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phyllodecta",
+        "species": "grandis",
+        "author": "Chûjô",
+        "year": "1956",
+        "jp": "オオホソルリハムシ"
+      }
+    ],
+    [
+      "フタイロホソルリハムシ",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phyllodecta",
+        "species": "koreana",
+        "author": "Takizawa",
+        "year": "1985",
+        "jp": "フタイロホソルリハムシ"
+      }
+    ],
+    [
+      "ヤマナラシハムシ",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phyllodecta",
+        "species": "laticollis",
+        "author": "Suffrian",
+        "year": "1851",
+        "jp": "ヤマナラシハムシ"
+      }
+    ],
+    [
+      "シワハダツブノミハムシ",
+      {
+        "genus": "Aphthona",
+        "subgenus": "",
+        "species": "formosana yakuana",
+        "author": "Nakane",
+        "year": "1958",
+        "jp": "シワハダツブノミハムシ"
+      }
+    ],
+    [
+      "オカボヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "chujoi",
+        "author": "Takizawa",
+        "year": "2021",
+        "jp": "オカボヒサゴトビハムシ"
+      }
+    ],
+    [
+      "オカボトビハムシ;",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "nigrica",
+        "author": "Motschulsky",
+        "year": "1858",
+        "jp": "オカボトビハムシ;"
+      }
+    ],
+    [
+      "ヒメドウガネトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "concinnicollis",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ヒメドウガネトビハムシ"
+      }
+    ],
+    [
+      "キイチゴヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "constricta",
+        "author": "Konstantinov &amp; Yang",
+        "year": "2014",
+        "jp": "キイチゴヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ムギヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "cylindrica",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ムギヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ヤマヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "hortensis",
+        "author": "Geoffroy",
+        "year": "1785",
+        "jp": "ヤマヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "ingenua",
+        "author": "Baly",
+        "year": "1876",
+        "jp": "ヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ワタラセヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "syowaensis",
+        "author": "Takizawa",
+        "year": "2021",
+        "jp": "ワタラセヒサゴトビハムシ"
+      }
+    ],
+    [
+      "フタイロヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "bicolorata",
+        "author": "Kimoto",
+        "year": "1971",
+        "jp": "フタイロヒサゴトビハムシ"
+      }
+    ],
+    [
+      "テンサイトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "concinna",
+        "author": "Marsham",
+        "year": "1802",
+        "jp": "テンサイトビハムシ"
+      }
+    ],
+    [
+      "ルイスヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "lewisii",
+        "author": "Chûjô",
+        "year": "1942",
+        "jp": "ルイスヒサゴトビハムシ"
+      }
+    ],
+    [
+      "サツマイモヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "confinis",
+        "author": "Crotch",
+        "year": "1873",
+        "jp": "サツマイモヒサゴトビハムシ"
+      }
+    ],
+    [
+      "クサイチゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "granulosa",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "クサイチゴトビハムシ"
+      }
+    ],
+    [
+      "カンミヤヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "kanmiyai",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "カンミヤヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ニセテンサイトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "kimotoi",
+        "author": "Gruev",
+        "year": "1980",
+        "jp": "ニセテンサイトビハムシ"
+      }
+    ],
+    [
+      "アオバドウガネトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "koreana",
+        "author": "Chûjô",
+        "year": "1942",
+        "jp": "アオバドウガネトビハムシ"
+      }
+    ],
+    [
+      "オオヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "major",
+        "author": "Jacquelin du Val",
+        "year": "1852",
+        "jp": "オオヒサゴトビハムシ"
+      }
+    ],
+    [
+      "キイチゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "puncticollis puncticollis",
+        "author": "Motschulsky",
+        "year": "1858",
+        "jp": "キイチゴトビハムシ"
+      }
+    ],
+    [
+      "タイワンヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Udorpes",
+        "species": "bella",
+        "author": "Baly",
+        "year": "1876",
+        "jp": "タイワンヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ウミベヒサゴトビハムシ",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Udorpes",
+        "species": "hiromui",
+        "author": "Takizawa",
+        "year": "2021",
+        "jp": "ウミベヒサゴトビハムシ"
+      }
+    ],
+    [
+      "ヤハズトビハムシ",
+      {
+        "genus": "Dibolia",
+        "subgenus": "Dibolia",
+        "species": "japonica",
+        "author": "S. -H. Chen",
+        "year": "1933",
+        "jp": "ヤハズトビハムシ"
+      }
+    ],
+    [
+      "ヒメトビハムシ",
+      {
+        "genus": "Hermaeophaga",
+        "subgenus": "Orthocrepis",
+        "species": "adamsii",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ヒメトビハムシ"
+      }
+    ],
+    [
+      "ヒルガオトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "adamsii",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ヒルガオトビハムシ"
+      }
+    ],
+    [
+      "クロボシトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "bimaculatus",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "クロボシトビハムシ"
+      }
+    ],
+    [
+      "ミスジアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "boharti",
+        "author": "Kimoto",
+        "year": "1965",
+        "jp": "ミスジアシナガトビハムシ"
+      }
+    ],
+    [
+      "ムラサキアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "boraginicolus",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "ムラサキアシナガトビハムシ"
+      }
+    ],
+    [
+      "アカアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "cervinus",
+        "author": "Baly",
+        "year": "1875",
+        "jp": "アカアシナガトビハムシ"
+      }
+    ],
+    [
+      "セアカアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "dorsopictus",
+        "author": "S. -H. Chen",
+        "year": "1939",
+        "jp": "セアカアシナガトビハムシ"
+      }
+    ],
+    [
+      "タイワンアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "formosanus",
+        "author": "Chûjô",
+        "year": "1937",
+        "jp": "タイワンアシナガトビハムシ"
+      }
+    ],
+    [
+      "イヌノフグリトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "holsaticus",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "イヌノフグリトビハムシ"
+      }
+    ],
+    [
+      "イシガキアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "ishigakiensis",
+        "author": "Kimoto",
+        "year": "1965",
+        "jp": "イシガキアシナガトビハムシ"
+      }
+    ],
+    [
+      "コミヤアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "komiyai",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "コミヤアシナガトビハムシ"
+      }
+    ],
+    [
+      "オオバコアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "lewisii",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "オオバコアシナガトビハムシ"
+      }
+    ],
+    [
+      "オオバコトビハムシのこと",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "scutellaris",
+        "author": "Mulsant &amp; Rey",
+        "year": "1874",
+        "jp": "オオバコトビハムシのこと"
+      }
+    ],
+    [
+      "クガイソウアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "longiseta",
+        "author": "Weise",
+        "year": "1889",
+        "jp": "クガイソウアシナガトビハムシ"
+      }
+    ],
+    [
+      "コクロアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "morrisonus",
+        "author": "Chûjô",
+        "year": "1937",
+        "jp": "コクロアシナガトビハムシ"
+      }
+    ],
+    [
+      "ハッカアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "nipponensis",
+        "author": "Csiki",
+        "year": "1940",
+        "jp": "ハッカアシナガトビハムシ"
+      }
+    ],
+    [
+      "ヒヨドリバナアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "nitidiamiculus",
+        "author": "Kimoto",
+        "year": "1965",
+        "jp": "ヒヨドリバナアシナガトビハムシ"
+      }
+    ],
+    [
+      "オオアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "nitidus",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "オオアシナガトビハムシ"
+      }
+    ],
+    [
+      "チュウジョウアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "ohnoi",
+        "author": "Gruev",
+        "year": "1995",
+        "jp": "チュウジョウアシナガトビハムシ"
+      }
+    ],
+    [
+      "は、",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "chujoi",
+        "author": "Csiki",
+        "year": "1941",
+        "jp": "は、"
+      }
+    ],
+    [
+      "の異物同名であり、",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "chujoi",
+        "author": "Csiki",
+        "year": "1941",
+        "jp": "の異物同名であり、"
+      }
+    ],
+    [
+      "ヒナノウスツボアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "okushiriensis",
+        "author": "Gruev",
+        "year": "1995",
+        "jp": "ヒナノウスツボアシナガトビハムシ"
+      }
+    ],
+    [
+      "トウヨウアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "orientalis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "トウヨウアシナガトビハムシ"
+      }
+    ],
+    [
+      "マルアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "osimaensis",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "マルアシナガトビハムシ"
+      }
+    ],
+    [
+      "カクムネアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "quadraticollis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "カクムネアシナガトビハムシ"
+      }
+    ],
+    [
+      "タツナミソウアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "scutellariae",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "タツナミソウアシナガトビハムシ"
+      }
+    ],
+    [
+      "オオバコトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "scutellaris",
+        "author": "Mulsant &amp; Rey",
+        "year": "1874",
+        "jp": "オオバコトビハムシ"
+      }
+    ],
+    [
+      "ヨモギトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "succineus",
+        "author": "Foudras",
+        "year": "1860",
+        "jp": "ヨモギトビハムシ"
+      }
+    ],
+    [
+      "ハンゴンソウアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "suturellus",
+        "author": "Duftschmid",
+        "year": "1825",
+        "jp": "ハンゴンソウアシナガトビハムシ"
+      }
+    ],
+    [
+      "スズキアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "suzukii",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "スズキアシナガトビハムシ"
+      }
+    ],
+    [
+      "トカラアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "tokaranus",
+        "author": "Nakane &amp; Kimoto",
+        "year": "1961",
+        "jp": "トカラアシナガトビハムシ"
+      }
+    ],
+    [
+      "カクバネアシナガトビハムシ",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "yoshiakii",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "カクバネアシナガトビハムシ"
+      }
+    ],
+    [
+      "スイバトビハムシ",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "clavareaui",
+        "author": "Heikertinger",
+        "year": "1912",
+        "jp": "スイバトビハムシ"
+      }
+    ],
+    [
+      "カタバミトビハムシ",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "fulvipes",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "カタバミトビハムシ"
+      }
+    ],
+    [
+      "ニホンハモグリトビハムシ",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "japonica",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ニホンハモグリトビハムシ"
+      }
+    ],
+    [
+      "セマルトビハムシ",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "nigropicea",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "セマルトビハムシ"
+      }
+    ],
+    [
+      "アサトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "attenuata",
+        "author": "Koch",
+        "year": "1803",
+        "jp": "アサトビハムシ"
+      }
+    ],
+    [
+      "ベーリーナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "balyi",
+        "author": "Jacoby",
+        "year": "1884",
+        "jp": "ベーリーナガスネトビハムシ"
+      }
+    ],
+    [
+      "ルリナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "brettinghami",
+        "author": "Baly",
+        "year": "1862",
+        "jp": "ルリナガスネトビハムシ"
+      }
+    ],
+    [
+      "チュウジョウナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "chujoe",
+        "author": "Madar",
+        "year": "1960",
+        "jp": "チュウジョウナガスネトビハムシ"
+      }
+    ],
+    [
+      "ナトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "punctifrons",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ナトビハムシ"
+      }
+    ],
+    [
+      "ヒロアシナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "sasakii",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "ヒロアシナガスネトビハムシ"
+      }
+    ],
+    [
+      "ダイコンナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "subrugosa",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ダイコンナガスネトビハムシ"
+      }
+    ],
+    [
+      "ナスナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "viridata",
+        "author": "Motschulsky",
+        "year": "1858",
+        "jp": "ナスナガスネトビハムシ"
+      }
+    ],
+    [
+      "キイロナガスネトビハムシ",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Semicnema",
+        "species": "reitteri parallela",
+        "author": "Weise",
+        "year": "1890",
+        "jp": "キイロナガスネトビハムシ"
+      }
+    ],
+    [
+      "チュウジョウヒゲナガハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "chujoi",
+        "author": "Y. Komiya",
+        "year": "2005",
+        "jp": "チュウジョウヒゲナガハムシ"
+      }
+    ],
+    [
+      "イチゴハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "grisescens",
+        "author": "Joannis",
+        "year": "1865",
+        "jp": "イチゴハムシ"
+      }
+    ],
+    [
+      "ジュンサイハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "nipponensis",
+        "author": "Laboissière",
+        "year": "1922",
+        "jp": "ジュンサイハムシ"
+      }
+    ],
+    [
+      "オオクラヒゲナガハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "ohkurai",
+        "author": "Kimoto &amp; Takahashi",
+        "year": "1992",
+        "jp": "オオクラヒゲナガハムシ"
+      }
+    ],
+    [
+      "オゼタデハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "ozeana",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "オゼタデハムシ"
+      }
+    ],
+    [
+      "ミソハギハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Neogalerucella",
+        "species": "calmariensis",
+        "author": "Linnaeus",
+        "year": "1767",
+        "jp": "ミソハギハムシ"
+      }
+    ],
+    [
+      "ハシバミハムシ",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Neogalerucella",
+        "species": "lineola lineola",
+        "author": "Fabricius",
+        "year": "1781",
+        "jp": "ハシバミハムシ"
+      }
+    ],
+    [
+      "アトボシハムシ",
+      {
+        "genus": "Paridea",
+        "subgenus": "Paridea",
+        "species": "angulicollis",
+        "author": "Motschulsky",
+        "year": "1854",
+        "jp": "アトボシハムシ"
+      }
+    ],
+    [
+      "ヨツボシハムシ",
+      {
+        "genus": "Paridea",
+        "subgenus": "Paridea",
+        "species": "oculata",
+        "author": "Laboissière",
+        "year": "1930",
+        "jp": "ヨツボシハムシ"
+      }
+    ],
+    [
+      "ガガブタネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Cyphogaster",
+        "species": "lenzi",
+        "author": "Schönfeldt",
+        "year": "1888",
+        "jp": "ガガブタネクイハムシ"
+      }
+    ],
+    [
+      "イネネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Cyphogaster",
+        "species": "provostii",
+        "author": "Fairmaire",
+        "year": "1885",
+        "jp": "イネネクイハムシ"
+      }
+    ],
+    [
+      "セラネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donacia",
+        "species": "akiyamai",
+        "author": "Y. Komiya",
+        "year": "2001",
+        "jp": "セラネクイハムシ"
+      }
+    ],
+    [
+      "コウホネネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donacia",
+        "species": "ozensis",
+        "author": "Nakane",
+        "year": "1954",
+        "jp": "コウホネネクイハムシ"
+      }
+    ],
+    [
+      "キアシネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "bicoloricornis",
+        "author": "S.-H. Chen",
+        "year": "1941",
+        "jp": "キアシネクイハムシ"
+      }
+    ],
+    [
+      "フトネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "clavareaui",
+        "author": "Jacobson",
+        "year": "1906",
+        "jp": "フトネクイハムシ"
+      }
+    ],
+    [
+      "クロガネネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "flemola",
+        "author": "Goecke",
+        "year": "1944",
+        "jp": "クロガネネクイハムシ"
+      }
+    ],
+    [
+      "アオノネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "frontalis",
+        "author": "Jacoby",
+        "year": "1893",
+        "jp": "アオノネクイハムシ"
+      }
+    ],
+    [
+      "アカガネネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "hirtihumeralis",
+        "author": "Y. Komiya &amp; Kubota",
+        "year": "1987",
+        "jp": "アカガネネクイハムシ"
+      }
+    ],
+    [
+      "キンイロネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "japana",
+        "author": "Chûjô &amp; Goecke",
+        "year": "1956",
+        "jp": "キンイロネクイハムシ"
+      }
+    ],
+    [
+      "カツラネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "katsurai",
+        "author": "Kimoto",
+        "year": "1981",
+        "jp": "カツラネクイハムシ"
+      }
+    ],
+    [
+      "ツヤネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "nitidior",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "ツヤネクイハムシ"
+      }
+    ],
+    [
+      "アシボソネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "sparganii gracilipes",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "アシボソネクイハムシ"
+      }
+    ],
+    [
+      "キタヒラタネクイハムシ　基亜種",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "splendens splendens",
+        "author": "Jacobson",
+        "year": "1894",
+        "jp": "キタヒラタネクイハムシ　基亜種"
+      }
+    ],
+    [
+      "キタヒラタネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "splendens hiurai",
+        "author": "Kimoto",
+        "year": "1983",
+        "jp": "キタヒラタネクイハムシ"
+      }
+    ],
+    [
+      "ニセヒラタネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "tominagai",
+        "author": "Hayashi",
+        "year": "2000",
+        "jp": "ニセヒラタネクイハムシ"
+      }
+    ],
+    [
+      "ホソネクイハムシ",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "vulgaris vulgaris",
+        "author": "Zschach",
+        "year": "1788",
+        "jp": "ホソネクイハムシ"
+      }
+    ],
+    [
+      "ルイスクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Bradyceris",
+        "species": "lewisi",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ルイスクビナガハムシ"
+      }
+    ],
+    [
+      "オキナワクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "formosana",
+        "author": "Heinze",
+        "year": "1943",
+        "jp": "オキナワクビナガハムシ"
+      }
+    ],
+    [
+      "ユリクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "merdigera",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "ユリクビナガハムシ"
+      }
+    ],
+    [
+      "ホソクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "parvicollis",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ホソクビナガハムシ"
+      }
+    ],
+    [
+      "キイロクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "rugata",
+        "author": "Baly",
+        "year": "1865",
+        "jp": "キイロクビナガハムシ"
+      }
+    ],
+    [
+      "カタモンクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "scapularis",
+        "author": "Baly",
+        "year": "1859",
+        "jp": "カタモンクビナガハムシ"
+      }
+    ],
+    [
+      "クロバネクビボソハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "sieversi",
+        "author": "Heyden",
+        "year": "1887",
+        "jp": "クロバネクビボソハムシ"
+      }
+    ],
+    [
+      "アカクビナガハムシ",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "subpolita",
+        "author": "Motschulsky",
+        "year": "1861",
+        "jp": "アカクビナガハムシ"
+      }
+    ],
+    [
+      "ルリクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "cirsicola",
+        "author": "Chûjô",
+        "year": "1959",
+        "jp": "ルリクビボソハムシ"
+      }
+    ],
+    [
+      "キバラルリクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "concinnipennis",
+        "author": "Baly",
+        "year": "1865",
+        "jp": "キバラルリクビボソハムシ"
+      }
+    ],
+    [
+      "ヒメアカクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "coomani",
+        "author": "Pic",
+        "year": "1924",
+        "jp": "ヒメアカクビボソハムシ"
+      }
+    ],
+    [
+      "トゲアシクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "coronata",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "トゲアシクビボソハムシ"
+      }
+    ],
+    [
+      "ササキクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "cyanella",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "ササキクビボソハムシ"
+      }
+    ],
+    [
+      "トホシクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "decempunctata",
+        "author": "Gebler",
+        "year": "1829",
+        "jp": "トホシクビボソハムシ"
+      }
+    ],
+    [
+      "キオビクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "delicatula",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "キオビクビボソハムシ"
+      }
+    ],
+    [
+      "スゲクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "dilecta",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "スゲクビボソハムシ"
+      }
+    ],
+    [
+      "コルリクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "michioi",
+        "author": "K.Suzuki",
+        "year": "2005",
+        "jp": "コルリクビボソハムシ"
+      }
+    ],
+    [
+      "アカクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "diversa",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "アカクビボソハムシ"
+      }
+    ],
+    [
+      "クズクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "diversipes",
+        "author": "Pic",
+        "year": "1921",
+        "jp": "クズクビボソハムシ"
+      }
+    ],
+    [
+      "ネッタイアカクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "lacertosa",
+        "author": "Lacordaire",
+        "year": "1845",
+        "jp": "ネッタイアカクビボソハムシ"
+      }
+    ],
+    [
+      "セアカクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "scutellaris",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "セアカクビボソハムシ"
+      }
+    ],
+    [
+      "キベリクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "adamsii",
+        "author": "Baly",
+        "year": "1865",
+        "jp": "キベリクビボソハムシ"
+      }
+    ],
+    [
+      "ヤマイモハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "honorata",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ヤマイモハムシ"
+      }
+    ],
+    [
+      "オオクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "pectoralis",
+        "author": "Clark",
+        "year": "1991",
+        "jp": "オオクビボソハムシ"
+      }
+    ],
+    [
+      "ナスクビボソハムシ",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "trivittata",
+        "author": "Say",
+        "year": "1824",
+        "jp": "ナスクビボソハムシ"
+      }
+    ],
+    [
+      "セスジクビボソハムシ",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "atrosuturalis",
+        "author": "Pic",
+        "year": "1923",
+        "jp": "セスジクビボソハムシ"
+      }
+    ],
+    [
+      "アワクビボソハムシ",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "dilutipes",
+        "author": "Fairmaire",
+        "year": "1888",
+        "jp": "アワクビボソハムシ"
+      }
+    ],
+    [
+      "ムギクビボソハムシ",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "erichsoni",
+        "author": "Suffrian",
+        "year": "1841",
+        "jp": "ムギクビボソハムシ"
+      }
+    ],
+    [
+      "クビアカクビボソハムシ",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "melanopus",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "クビアカクビボソハムシ"
+      }
+    ],
+    [
+      "イネクビボソハムシ",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "oryzae",
+        "author": "Kuwayama",
+        "year": "1931",
+        "jp": "イネクビボソハムシ"
+      }
+    ],
+    [
+      "キアシクビボソハムシ",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "tristis",
+        "author": "Ohno",
+        "year": "1962",
+        "jp": "キアシクビボソハムシ"
+      }
+    ],
+    [
+      "ジンガサハムシ",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "indica",
+        "author": "Boheman",
+        "year": "1854",
+        "jp": "ジンガサハムシ"
+      }
+    ],
+    [
+      "ゴマダラジンガサハムシ",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "miliaris",
+        "author": "Fabricius",
+        "year": "1775",
+        "jp": "ゴマダラジンガサハムシ"
+      }
+    ],
+    [
+      "スキバジンガサハムシ",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "transparipennis",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "スキバジンガサハムシ"
+      }
+    ],
+    [
+      "ヨツモンカメノコハムシ",
+      {
+        "genus": "Laccoptera",
+        "subgenus": "Laccopteroidea",
+        "species": "nepalensis",
+        "author": "Boheman",
+        "year": "1855",
+        "jp": "ヨツモンカメノコハムシ"
+      }
+    ],
+    [
+      "タケトゲハムシ",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Platypriella",
+        "species": "issikii",
+        "author": "Chûjô",
+        "year": "1938",
+        "jp": "タケトゲハムシ"
+      }
+    ],
+    [
+      "カタビロトゲハムシ",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Platypriella",
+        "species": "subquadrata subquadrata",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "カタビロトゲハムシ"
+      }
+    ],
+    [
+      "ヒメキベリトゲハムシ",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Triplispa",
+        "species": "angulosa",
+        "author": "Solsky",
+        "year": "1872",
+        "jp": "ヒメキベリトゲハムシ"
+      }
+    ],
+    [
+      "ヒゴトゲハムシ",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Triplispa",
+        "species": "higoniae higoniae",
+        "author": "Lewis",
+        "year": "1896",
+        "jp": "ヒゴトゲハムシ"
+      }
+    ],
+    [
+      "ヘリビロトゲハムシ",
+      {
+        "genus": "Platypria",
+        "subgenus": "Platypria",
+        "species": "echidna",
+        "author": "Guérin-Méneville",
+        "year": "1840",
+        "jp": "ヘリビロトゲハムシ"
+      }
+    ],
+    [
+      "ツシマヘリビロトゲハムシ",
+      {
+        "genus": "Platypria",
+        "subgenus": "Platypria",
+        "species": "melli",
+        "author": "Uhmann",
+        "year": "1955",
+        "jp": "ツシマヘリビロトゲハムシ"
+      }
+    ],
+    [
+      "ヒメツヤハムシ",
+      {
+        "genus": "Oomorphus",
+        "subgenus": "Oomorphus",
+        "species": "japanus",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ヒメツヤハムシ"
+      }
+    ],
     [
       "ヨツボシナガツツハムシ",
       {
@@ -399,6 +2335,2162 @@
     ]
   ],
   "byBinom": [
+    [
+      "Chrysolina orochi",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Allohypericia",
+        "species": "orochi",
+        "author": "Takemoto",
+        "year": "2022",
+        "jp": "ナナセキハムシ"
+      }
+    ],
+    [
+      "Chrysolina aurichalcea",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Anopachys",
+        "species": "aurichalcea",
+        "author": "Mannerheim",
+        "year": "1825",
+        "jp": "ヨモギハムシ"
+      }
+    ],
+    [
+      "Chrysolina watanabei",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Anopachys",
+        "species": "watanabei",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "ワタナベハムシ"
+      }
+    ],
+    [
+      "Chrysolina aino",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Apterosoma",
+        "species": "aino",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "アイヌヨモギハムシ"
+      }
+    ],
+    [
+      "Chrysolina angusticollis",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Apterosoma",
+        "species": "angusticollis",
+        "author": "Motschulsky",
+        "year": "1861",
+        "jp": "オオヨモギハムシ"
+      }
+    ],
+    [
+      "Chrysolina porosirensis",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Apterosoma",
+        "species": "porosirensis",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "ミヤマヨモギハムシ"
+      }
+    ],
+    [
+      "Chrysolina koltzei lamii",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Bourdonneana",
+        "species": "koltzei lamii",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "オドリコソウハムシ"
+      }
+    ],
+    [
+      "Chrysolina koltzei brunneipennis",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Bourdonneana",
+        "species": "koltzei brunneipennis",
+        "author": "Matsumura",
+        "year": "1911",
+        "jp": "サハリン産で記載"
+      }
+    ],
+    [
+      "Chrysolina nikolskyi",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Chrysocrosita",
+        "species": "nikolskyi",
+        "author": "Jacobson",
+        "year": "1898",
+        "jp": "カワカミハムシ"
+      }
+    ],
+    [
+      "Chrysolina kirigaminensis",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Erythrochrysa",
+        "species": "kirigaminensis",
+        "author": "K. Suzuki &amp; S. Saitoh",
+        "year": "2011",
+        "jp": "キリガミネハムシ"
+      }
+    ],
+    [
+      "Chrysolina virgata",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Erythrochrysa",
+        "species": "virgata",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "オオルリハムシ"
+      }
+    ],
+    [
+      "Chrysolina difficilis yezoensis",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Hypericia",
+        "species": "difficilis yezoensis",
+        "author": "Matsumura",
+        "year": "1911",
+        "jp": "クロルリハムシ"
+      }
+    ],
+    [
+      "Chrysolina nikkoensis",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Hypericia",
+        "species": "nikkoensis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ニッコウルリハムシ"
+      }
+    ],
+    [
+      "Chrysolina exanthematica exanthematica",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Lithopteroides",
+        "species": "exanthematica exanthematica",
+        "author": "Wiedemann",
+        "year": "1821",
+        "jp": "ハッカハムシ"
+      }
+    ],
+    [
+      "Chrysolina pirka",
+      {
+        "genus": "Chrysolina",
+        "subgenus": "Pleurosticha",
+        "species": "pirka",
+        "author": "Takizawa",
+        "year": "1970",
+        "jp": "サメハダヨモギハムシ"
+      }
+    ],
+    [
+      "Gastrophysa atrocyanea",
+      {
+        "genus": "Gastrophysa",
+        "subgenus": "Gastrophysa",
+        "species": "atrocyanea",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "ギシギシハムシ"
+      }
+    ],
+    [
+      "Gonioctena jamadai",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Brachyphytodecta",
+        "species": "jamadai",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "ヤマダクロフジハムシ"
+      }
+    ],
+    [
+      "Gonioctena kidoi",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Brachyphytodecta",
+        "species": "kidoi",
+        "author": "Takizawa &amp; Daccordi",
+        "year": "1998",
+        "jp": "カワリムジハムシ"
+      }
+    ],
+    [
+      "Gonioctena rubripennis",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Brachyphytodecta",
+        "species": "rubripennis",
+        "author": "Baly",
+        "year": "1862",
+        "jp": "フジハムシ"
+      }
+    ],
+    [
+      "Gonioctena arctica",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "arctica",
+        "author": "Mannerheim",
+        "year": "1853",
+        "jp": ""
+      }
+    ],
+    [
+      "Gonioctena flavicornis flavicornis",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "flavicornis flavicornis",
+        "author": "Suffrian",
+        "year": "1851",
+        "jp": "ウストホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena hiranoi",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "hiranoi",
+        "author": "Takizawa",
+        "year": "1989",
+        "jp": "ヒラノトホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena hoki",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "hoki",
+        "author": "Takizawa",
+        "year": "2007",
+        "jp": "ホウキトホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena honshuensis honshuensis",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "honshuensis honshuensis",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "ヤナギホシハムシ　基亜種"
+      }
+    ],
+    [
+      "Gonioctena honshuensis chujoi",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "honshuensis chujoi",
+        "author": "Medvedev",
+        "year": "1966",
+        "jp": "ヤナギホシハムシ　千島亜種は基亜種のシノニムとしている（"
+      }
+    ],
+    [
+      "Gonioctena iyonis",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "iyonis",
+        "author": "Suenaga",
+        "year": "2012",
+        "jp": "シコクトホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena japonica japonica",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "japonica japonica",
+        "author": "Chûjô &amp; Kimoto",
+        "year": "1960",
+        "jp": "トホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena kamikawai",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "kamikawai",
+        "author": "Chûjô",
+        "year": "1958",
+        "jp": ""
+      }
+    ],
+    [
+      "Gonioctena katsuyai",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "katsuyai",
+        "author": "Takizawa",
+        "year": "2007",
+        "jp": ""
+      }
+    ],
+    [
+      "Gonioctena morimotoi",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "morimotoi",
+        "author": "Kimoto",
+        "year": "1963",
+        "jp": "サクラムジハムシ"
+      }
+    ],
+    [
+      "Gonioctena rufa",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "rufa",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "カンバムジハムシ"
+      }
+    ],
+    [
+      "Gonioctena kamiyai",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "kamiyai",
+        "author": "Kimoto",
+        "year": "1963",
+        "jp": ""
+      }
+    ],
+    [
+      "Gonioctena shibatai",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "shibatai",
+        "author": "Takizawa",
+        "year": "1982",
+        "jp": "シバタトホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena sibirica",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "sibirica",
+        "author": "Weise",
+        "year": "1893",
+        "jp": "ヤナギムジハムシ"
+      }
+    ],
+    [
+      "Gonioctena simotuke",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "simotuke",
+        "author": "Takizawa",
+        "year": "2007",
+        "jp": ""
+      }
+    ],
+    [
+      "Gonioctena springlovae",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "springlovae",
+        "author": "Bechyné",
+        "year": "1948",
+        "jp": "クロモンハムシ"
+      }
+    ],
+    [
+      "Gonioctena takahashii",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "takahashii",
+        "author": "Kimoto",
+        "year": "1963",
+        "jp": "ヒメトホシハムシ"
+      }
+    ],
+    [
+      "Gonioctena tatesinensis",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Gonioctena",
+        "species": "tatesinensis",
+        "author": "Takizawa",
+        "year": "2007",
+        "jp": ""
+      }
+    ],
+    [
+      "Gonioctena hikosana",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Sinomela",
+        "species": "hikosana",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "ヒコサンクロボシハムシ"
+      }
+    ],
+    [
+      "Gonioctena nagaii",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Sinomela",
+        "species": "nagaii",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "リュウキュウクロボシハムシ"
+      }
+    ],
+    [
+      "Gonioctena nigroplagiata",
+      {
+        "genus": "Gonioctena",
+        "subgenus": "Sinomela",
+        "species": "nigroplagiata",
+        "author": "Baly",
+        "year": "1862",
+        "jp": "ヤツボシハムシ"
+      }
+    ],
+    [
+      "Phaedon brassicae",
+      {
+        "genus": "Phaedon",
+        "subgenus": "Phaedon",
+        "species": "brassicae",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ダイコンハムシ"
+      }
+    ],
+    [
+      "Phratora obtusicollis",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phratora",
+        "species": "obtusicollis",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "ホソルリハムシ"
+      }
+    ],
+    [
+      "Phratora grandis",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phyllodecta",
+        "species": "grandis",
+        "author": "Chûjô",
+        "year": "1956",
+        "jp": "オオホソルリハムシ"
+      }
+    ],
+    [
+      "Phratora koreana",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phyllodecta",
+        "species": "koreana",
+        "author": "Takizawa",
+        "year": "1985",
+        "jp": "フタイロホソルリハムシ"
+      }
+    ],
+    [
+      "Phratora laticollis",
+      {
+        "genus": "Phratora",
+        "subgenus": "Phyllodecta",
+        "species": "laticollis",
+        "author": "Suffrian",
+        "year": "1851",
+        "jp": "ヤマナラシハムシ"
+      }
+    ],
+    [
+      "Longitarsus ihai",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "ihai",
+        "author": "Chûjô",
+        "year": "1958",
+        "jp": ""
+      }
+    ],
+    [
+      "Aphthona formosana yakuana",
+      {
+        "genus": "Aphthona",
+        "subgenus": "",
+        "species": "formosana yakuana",
+        "author": "Nakane",
+        "year": "1958",
+        "jp": "シワハダツブノミハムシ"
+      }
+    ],
+    [
+      "Chaetocnema chujoi",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "chujoi",
+        "author": "Takizawa",
+        "year": "2021",
+        "jp": "オカボヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema nigrica",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "nigrica",
+        "author": "Motschulsky",
+        "year": "1858",
+        "jp": "オカボトビハムシ;"
+      }
+    ],
+    [
+      "Chaetocnema concinnicollis",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "concinnicollis",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ヒメドウガネトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema constricta",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "constricta",
+        "author": "Konstantinov &amp; Yang",
+        "year": "2014",
+        "jp": "キイチゴヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema cylindrica",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "cylindrica",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ムギヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema hortensis",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "hortensis",
+        "author": "Geoffroy",
+        "year": "1785",
+        "jp": "ヤマヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema ingenua",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "ingenua",
+        "author": "Baly",
+        "year": "1876",
+        "jp": "ヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema syowaensis",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Chaetocnema",
+        "species": "syowaensis",
+        "author": "Takizawa",
+        "year": "2021",
+        "jp": "ワタラセヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema bicolorata",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "bicolorata",
+        "author": "Kimoto",
+        "year": "1971",
+        "jp": "フタイロヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema concinna",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "concinna",
+        "author": "Marsham",
+        "year": "1802",
+        "jp": "テンサイトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema lewisii",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "lewisii",
+        "author": "Chûjô",
+        "year": "1942",
+        "jp": "ルイスヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema confinis",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "confinis",
+        "author": "Crotch",
+        "year": "1873",
+        "jp": "サツマイモヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema granulosa",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "granulosa",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "クサイチゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema kanmiyai",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "kanmiyai",
+        "author": "Kimoto",
+        "year": "1974",
+        "jp": "カンミヤヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema kimotoi",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "kimotoi",
+        "author": "Gruev",
+        "year": "1980",
+        "jp": "ニセテンサイトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema koreana",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "koreana",
+        "author": "Chûjô",
+        "year": "1942",
+        "jp": "アオバドウガネトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema septentrionalis",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "septentrionalis",
+        "author": "Kimoto",
+        "year": "1963",
+        "jp": ""
+      }
+    ],
+    [
+      "Chaetocnema major",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "major",
+        "author": "Jacquelin du Val",
+        "year": "1852",
+        "jp": "オオヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema mandschurica",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "mandschurica",
+        "author": "Heikertinger",
+        "year": "1951",
+        "jp": ""
+      }
+    ],
+    [
+      "Chaetocnema puncticollis puncticollis",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Tlanoma",
+        "species": "puncticollis puncticollis",
+        "author": "Motschulsky",
+        "year": "1858",
+        "jp": "キイチゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema bella",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Udorpes",
+        "species": "bella",
+        "author": "Baly",
+        "year": "1876",
+        "jp": "タイワンヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Chaetocnema hiromui",
+      {
+        "genus": "Chaetocnema",
+        "subgenus": "Udorpes",
+        "species": "hiromui",
+        "author": "Takizawa",
+        "year": "2021",
+        "jp": "ウミベヒサゴトビハムシ"
+      }
+    ],
+    [
+      "Dibolia japonica",
+      {
+        "genus": "Dibolia",
+        "subgenus": "Dibolia",
+        "species": "japonica",
+        "author": "S. -H. Chen",
+        "year": "1933",
+        "jp": "ヤハズトビハムシ"
+      }
+    ],
+    [
+      "Hermaeophaga adamsii",
+      {
+        "genus": "Hermaeophaga",
+        "subgenus": "Orthocrepis",
+        "species": "adamsii",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ヒメトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus adamsii",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "adamsii",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ヒルガオトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus arisanus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "arisanus",
+        "author": "Chûjô",
+        "year": "1937",
+        "jp": ""
+      }
+    ],
+    [
+      "Longitarsus bimaculatus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "bimaculatus",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "クロボシトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus boharti",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "boharti",
+        "author": "Kimoto",
+        "year": "1965",
+        "jp": "ミスジアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus boraginicolus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "boraginicolus",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "ムラサキアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus cervinus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "cervinus",
+        "author": "Baly",
+        "year": "1875",
+        "jp": "アカアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus dorsopictus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "dorsopictus",
+        "author": "S. -H. Chen",
+        "year": "1939",
+        "jp": "セアカアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus formosanus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "formosanus",
+        "author": "Chûjô",
+        "year": "1937",
+        "jp": "タイワンアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus holsaticus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "holsaticus",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "イヌノフグリトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus ishigakiensis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "ishigakiensis",
+        "author": "Kimoto",
+        "year": "1965",
+        "jp": "イシガキアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus komiyai",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "komiyai",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "コミヤアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus lewisii",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "lewisii",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "オオバコアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus scutellaris",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "scutellaris",
+        "author": "Mulsant &amp; Rey",
+        "year": "1874",
+        "jp": "オオバコトビハムシのこと"
+      }
+    ],
+    [
+      "Longitarsus longiseta",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "longiseta",
+        "author": "Weise",
+        "year": "1889",
+        "jp": "クガイソウアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus morrisonus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "morrisonus",
+        "author": "Chûjô",
+        "year": "1937",
+        "jp": "コクロアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus nipponensis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "nipponensis",
+        "author": "Csiki",
+        "year": "1940",
+        "jp": "ハッカアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus nitidiamiculus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "nitidiamiculus",
+        "author": "Kimoto",
+        "year": "1965",
+        "jp": "ヒヨドリバナアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus nitidus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "nitidus",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "オオアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus ohnoi",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "ohnoi",
+        "author": "Gruev",
+        "year": "1995",
+        "jp": "チュウジョウアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus chujoi",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "chujoi",
+        "author": "Csiki",
+        "year": "1941",
+        "jp": "は、"
+      }
+    ],
+    [
+      "Longitarsus okushiriensis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "okushiriensis",
+        "author": "Gruev",
+        "year": "1995",
+        "jp": "ヒナノウスツボアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus scrophulariae",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "scrophulariae",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": ""
+      }
+    ],
+    [
+      "Longitarsus orientalis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "orientalis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "トウヨウアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus tabidus orientalis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "tabidus orientalis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": ""
+      }
+    ],
+    [
+      "Longitarsus osimaensis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "osimaensis",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "マルアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus quadraticollis",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "quadraticollis",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "カクムネアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus scutellariae",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "scutellariae",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "タツナミソウアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus succineus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "succineus",
+        "author": "Foudras",
+        "year": "1860",
+        "jp": "ヨモギトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus suturellus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "suturellus",
+        "author": "Duftschmid",
+        "year": "1825",
+        "jp": "ハンゴンソウアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus suzukii",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "suzukii",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "スズキアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus tokaranus",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "tokaranus",
+        "author": "Nakane &amp; Kimoto",
+        "year": "1961",
+        "jp": "トカラアシナガトビハムシ"
+      }
+    ],
+    [
+      "Longitarsus yoshiakii",
+      {
+        "genus": "Longitarsus",
+        "subgenus": "Longitarsus",
+        "species": "yoshiakii",
+        "author": "Ohno",
+        "year": "1968",
+        "jp": "カクバネアシナガトビハムシ"
+      }
+    ],
+    [
+      "Mantura clavareaui",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "clavareaui",
+        "author": "Heikertinger",
+        "year": "1912",
+        "jp": "スイバトビハムシ"
+      }
+    ],
+    [
+      "Mantura fulvipes",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "fulvipes",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "カタバミトビハムシ"
+      }
+    ],
+    [
+      "Mantura japonica",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "japonica",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ニホンハモグリトビハムシ"
+      }
+    ],
+    [
+      "Mantura nigropicea",
+      {
+        "genus": "Mantura",
+        "subgenus": "Mantura",
+        "species": "nigropicea",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "セマルトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes attenuata",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "attenuata",
+        "author": "Koch",
+        "year": "1803",
+        "jp": "アサトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes balyi",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "balyi",
+        "author": "Jacoby",
+        "year": "1884",
+        "jp": "ベーリーナガスネトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes brettinghami",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "brettinghami",
+        "author": "Baly",
+        "year": "1862",
+        "jp": "ルリナガスネトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes difficilis",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "difficilis",
+        "author": "Baly",
+        "year": "1874",
+        "jp": ""
+      }
+    ],
+    [
+      "Psylliodes chujoe",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "chujoe",
+        "author": "Madar",
+        "year": "1960",
+        "jp": "チュウジョウナガスネトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes punctifrons",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "punctifrons",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "ナトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes sasakii",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "sasakii",
+        "author": "Takizawa",
+        "year": "2015",
+        "jp": "ヒロアシナガスネトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes subrugosa",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "subrugosa",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ダイコンナガスネトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes taiwana",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "taiwana",
+        "author": "Takizawa",
+        "year": "1979",
+        "jp": ""
+      }
+    ],
+    [
+      "Psylliodes viridata",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "viridata",
+        "author": "Motschulsky",
+        "year": "1858",
+        "jp": "ナスナガスネトビハムシ"
+      }
+    ],
+    [
+      "Psylliodes angusticollis",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Psylliodes",
+        "species": "angusticollis",
+        "author": "Baly",
+        "year": "1874",
+        "jp": ""
+      }
+    ],
+    [
+      "Psylliodes reitteri parallela",
+      {
+        "genus": "Psylliodes",
+        "subgenus": "Semicnema",
+        "species": "reitteri parallela",
+        "author": "Weise",
+        "year": "1890",
+        "jp": "キイロナガスネトビハムシ"
+      }
+    ],
+    [
+      "Galerucella chujoi",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "chujoi",
+        "author": "Y. Komiya",
+        "year": "2005",
+        "jp": "チュウジョウヒゲナガハムシ"
+      }
+    ],
+    [
+      "Galerucella grisescens",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "grisescens",
+        "author": "Joannis",
+        "year": "1865",
+        "jp": "イチゴハムシ"
+      }
+    ],
+    [
+      "Galerucella nipponensis",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "nipponensis",
+        "author": "Laboissière",
+        "year": "1922",
+        "jp": "ジュンサイハムシ"
+      }
+    ],
+    [
+      "Galerucella ohkurai",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "ohkurai",
+        "author": "Kimoto &amp; Takahashi",
+        "year": "1992",
+        "jp": "オオクラヒゲナガハムシ"
+      }
+    ],
+    [
+      "Galerucella ozeana",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Galerucella",
+        "species": "ozeana",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "オゼタデハムシ"
+      }
+    ],
+    [
+      "Galerucella calmariensis",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Neogalerucella",
+        "species": "calmariensis",
+        "author": "Linnaeus",
+        "year": "1767",
+        "jp": "ミソハギハムシ"
+      }
+    ],
+    [
+      "Galerucella lineola lineola",
+      {
+        "genus": "Galerucella",
+        "subgenus": "Neogalerucella",
+        "species": "lineola lineola",
+        "author": "Fabricius",
+        "year": "1781",
+        "jp": "ハシバミハムシ"
+      }
+    ],
+    [
+      "Lochmaea takeii",
+      {
+        "genus": "Lochmaea",
+        "subgenus": "Tricholochmaea",
+        "species": "takeii",
+        "author": "Chûjô",
+        "year": "1950",
+        "jp": ""
+      }
+    ],
+    [
+      "Paridea angulicollis",
+      {
+        "genus": "Paridea",
+        "subgenus": "Paridea",
+        "species": "angulicollis",
+        "author": "Motschulsky",
+        "year": "1854",
+        "jp": "アトボシハムシ"
+      }
+    ],
+    [
+      "Paridea oculata",
+      {
+        "genus": "Paridea",
+        "subgenus": "Paridea",
+        "species": "oculata",
+        "author": "Laboissière",
+        "year": "1930",
+        "jp": "ヨツボシハムシ"
+      }
+    ],
+    [
+      "Donacia lenzi",
+      {
+        "genus": "Donacia",
+        "subgenus": "Cyphogaster",
+        "species": "lenzi",
+        "author": "Schönfeldt",
+        "year": "1888",
+        "jp": "ガガブタネクイハムシ"
+      }
+    ],
+    [
+      "Donacia provostii",
+      {
+        "genus": "Donacia",
+        "subgenus": "Cyphogaster",
+        "species": "provostii",
+        "author": "Fairmaire",
+        "year": "1885",
+        "jp": "イネネクイハムシ"
+      }
+    ],
+    [
+      "Donacia akiyamai",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donacia",
+        "species": "akiyamai",
+        "author": "Y. Komiya",
+        "year": "2001",
+        "jp": "セラネクイハムシ"
+      }
+    ],
+    [
+      "Donacia ozensis",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donacia",
+        "species": "ozensis",
+        "author": "Nakane",
+        "year": "1954",
+        "jp": "コウホネネクイハムシ"
+      }
+    ],
+    [
+      "Donacia bicoloricornis",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "bicoloricornis",
+        "author": "S.-H. Chen",
+        "year": "1941",
+        "jp": "キアシネクイハムシ"
+      }
+    ],
+    [
+      "Donacia clavareaui",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "clavareaui",
+        "author": "Jacobson",
+        "year": "1906",
+        "jp": "フトネクイハムシ"
+      }
+    ],
+    [
+      "Donacia flemola",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "flemola",
+        "author": "Goecke",
+        "year": "1944",
+        "jp": "クロガネネクイハムシ"
+      }
+    ],
+    [
+      "Donacia frontalis",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "frontalis",
+        "author": "Jacoby",
+        "year": "1893",
+        "jp": "アオノネクイハムシ"
+      }
+    ],
+    [
+      "Donacia hirtihumeralis",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "hirtihumeralis",
+        "author": "Y. Komiya &amp; Kubota",
+        "year": "1987",
+        "jp": "アカガネネクイハムシ"
+      }
+    ],
+    [
+      "Donacia japana",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "japana",
+        "author": "Chûjô &amp; Goecke",
+        "year": "1956",
+        "jp": "キンイロネクイハムシ"
+      }
+    ],
+    [
+      "Donacia katsurai",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "katsurai",
+        "author": "Kimoto",
+        "year": "1981",
+        "jp": "カツラネクイハムシ"
+      }
+    ],
+    [
+      "Donacia nitidior",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "nitidior",
+        "author": "Nakane",
+        "year": "1963",
+        "jp": "ツヤネクイハムシ"
+      }
+    ],
+    [
+      "Donacia sparganii gracilipes",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "sparganii gracilipes",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "アシボソネクイハムシ"
+      }
+    ],
+    [
+      "Donacia splendens splendens",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "splendens splendens",
+        "author": "Jacobson",
+        "year": "1894",
+        "jp": "キタヒラタネクイハムシ　基亜種"
+      }
+    ],
+    [
+      "Donacia splendens hiurai",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "splendens hiurai",
+        "author": "Kimoto",
+        "year": "1983",
+        "jp": "キタヒラタネクイハムシ"
+      }
+    ],
+    [
+      "Donacia tominagai",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "tominagai",
+        "author": "Hayashi",
+        "year": "2000",
+        "jp": "ニセヒラタネクイハムシ"
+      }
+    ],
+    [
+      "Donacia vulgaris vulgaris",
+      {
+        "genus": "Donacia",
+        "subgenus": "Donaciomima",
+        "species": "vulgaris vulgaris",
+        "author": "Zschach",
+        "year": "1788",
+        "jp": "ホソネクイハムシ"
+      }
+    ],
+    [
+      "Lilioceris lewisi",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Bradyceris",
+        "species": "lewisi",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ルイスクビナガハムシ"
+      }
+    ],
+    [
+      "Lilioceris formosana",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "formosana",
+        "author": "Heinze",
+        "year": "1943",
+        "jp": "オキナワクビナガハムシ"
+      }
+    ],
+    [
+      "Lilioceris neptis",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "neptis",
+        "author": "Weise",
+        "year": "1922",
+        "jp": ""
+      }
+    ],
+    [
+      "Lilioceris merdigera",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "merdigera",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "ユリクビナガハムシ"
+      }
+    ],
+    [
+      "Lilioceris parvicollis",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "parvicollis",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ホソクビナガハムシ"
+      }
+    ],
+    [
+      "Lilioceris rugata",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "rugata",
+        "author": "Baly",
+        "year": "1865",
+        "jp": "キイロクビナガハムシ"
+      }
+    ],
+    [
+      "Lilioceris scapularis",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "scapularis",
+        "author": "Baly",
+        "year": "1859",
+        "jp": "カタモンクビナガハムシ"
+      }
+    ],
+    [
+      "Lilioceris sieversi",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "sieversi",
+        "author": "Heyden",
+        "year": "1887",
+        "jp": "クロバネクビボソハムシ"
+      }
+    ],
+    [
+      "Lilioceris subpolita",
+      {
+        "genus": "Lilioceris",
+        "subgenus": "Lilioceris",
+        "species": "subpolita",
+        "author": "Motschulsky",
+        "year": "1861",
+        "jp": "アカクビナガハムシ"
+      }
+    ],
+    [
+      "Lema cirsicola",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "cirsicola",
+        "author": "Chûjô",
+        "year": "1959",
+        "jp": "ルリクビボソハムシ"
+      }
+    ],
+    [
+      "Lema concinnipennis",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "concinnipennis",
+        "author": "Baly",
+        "year": "1865",
+        "jp": "キバラルリクビボソハムシ"
+      }
+    ],
+    [
+      "Lema coomani",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "coomani",
+        "author": "Pic",
+        "year": "1924",
+        "jp": "ヒメアカクビボソハムシ"
+      }
+    ],
+    [
+      "Lema paagai",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "paagai",
+        "author": "Chûjô",
+        "year": "1933",
+        "jp": ""
+      }
+    ],
+    [
+      "Lema coronata",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "coronata",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "トゲアシクビボソハムシ"
+      }
+    ],
+    [
+      "Lema sagensis",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "sagensis",
+        "author": "Heinze",
+        "year": "1943",
+        "jp": ""
+      }
+    ],
+    [
+      "Lema cyanella",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "cyanella",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "ササキクビボソハムシ"
+      }
+    ],
+    [
+      "Lema decempunctata",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "decempunctata",
+        "author": "Gebler",
+        "year": "1829",
+        "jp": "トホシクビボソハムシ"
+      }
+    ],
+    [
+      "Lema delicatula",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "delicatula",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "キオビクビボソハムシ"
+      }
+    ],
+    [
+      "Lema dilecta",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "dilecta",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "スゲクビボソハムシ"
+      }
+    ],
+    [
+      "Lema michioi",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "michioi",
+        "author": "K.Suzuki",
+        "year": "2005",
+        "jp": "コルリクビボソハムシ"
+      }
+    ],
+    [
+      "Lema hiranoi",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "hiranoi",
+        "author": "K.Suzuki",
+        "year": "2005",
+        "jp": ""
+      }
+    ],
+    [
+      "Lema diversa",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "diversa",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "アカクビボソハムシ"
+      }
+    ],
+    [
+      "Lema diversipes",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "diversipes",
+        "author": "Pic",
+        "year": "1921",
+        "jp": "クズクビボソハムシ"
+      }
+    ],
+    [
+      "Lema lacertosa",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "lacertosa",
+        "author": "Lacordaire",
+        "year": "1845",
+        "jp": "ネッタイアカクビボソハムシ"
+      }
+    ],
+    [
+      "Lema minutissima",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "minutissima",
+        "author": "Pic",
+        "year": "1923",
+        "jp": ""
+      }
+    ],
+    [
+      "Lema scutellaris",
+      {
+        "genus": "Lema",
+        "subgenus": "Lema",
+        "species": "scutellaris",
+        "author": "Kraatz",
+        "year": "1879",
+        "jp": "セアカクビボソハムシ"
+      }
+    ],
+    [
+      "Lema adamsii",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "adamsii",
+        "author": "Baly",
+        "year": "1865",
+        "jp": "キベリクビボソハムシ"
+      }
+    ],
+    [
+      "Lema fortunei",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "fortunei",
+        "author": "Baly",
+        "year": "1859",
+        "jp": ""
+      }
+    ],
+    [
+      "Lema honorata",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "honorata",
+        "author": "Baly",
+        "year": "1873",
+        "jp": "ヤマイモハムシ"
+      }
+    ],
+    [
+      "Lema pectoralis",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "pectoralis",
+        "author": "Clark",
+        "year": "1991",
+        "jp": "オオクビボソハムシ"
+      }
+    ],
+    [
+      "Lema trivittata",
+      {
+        "genus": "Lema",
+        "subgenus": "Petauristes",
+        "species": "trivittata",
+        "author": "Say",
+        "year": "1824",
+        "jp": "ナスクビボソハムシ"
+      }
+    ],
+    [
+      "Oulema atrosuturalis",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "atrosuturalis",
+        "author": "Pic",
+        "year": "1923",
+        "jp": "セスジクビボソハムシ"
+      }
+    ],
+    [
+      "Oulema dilutipes",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "dilutipes",
+        "author": "Fairmaire",
+        "year": "1888",
+        "jp": "アワクビボソハムシ"
+      }
+    ],
+    [
+      "Oulema erichsoni",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "erichsoni",
+        "author": "Suffrian",
+        "year": "1841",
+        "jp": "ムギクビボソハムシ"
+      }
+    ],
+    [
+      "Oulema melanopus",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "melanopus",
+        "author": "Linnaeus",
+        "year": "1758",
+        "jp": "クビアカクビボソハムシ"
+      }
+    ],
+    [
+      "Oulema oryzae",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "oryzae",
+        "author": "Kuwayama",
+        "year": "1931",
+        "jp": "イネクビボソハムシ"
+      }
+    ],
+    [
+      "Oulema tristis",
+      {
+        "genus": "Oulema",
+        "subgenus": "Oulema",
+        "species": "tristis",
+        "author": "Ohno",
+        "year": "1962",
+        "jp": "キアシクビボソハムシ"
+      }
+    ],
+    [
+      "Aspidimorpha difformis",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "difformis",
+        "author": "Motschulsky",
+        "year": "1861",
+        "jp": ""
+      }
+    ],
+    [
+      "Aspidimorpha indica",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "indica",
+        "author": "Boheman",
+        "year": "1854",
+        "jp": "ジンガサハムシ"
+      }
+    ],
+    [
+      "Aspidimorpha miliaris",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "miliaris",
+        "author": "Fabricius",
+        "year": "1775",
+        "jp": "ゴマダラジンガサハムシ"
+      }
+    ],
+    [
+      "Aspidimorpha transparipennis",
+      {
+        "genus": "Aspidimorpha",
+        "subgenus": "Aspidimorpha",
+        "species": "transparipennis",
+        "author": "Motschulsky",
+        "year": "1860",
+        "jp": "スキバジンガサハムシ"
+      }
+    ],
+    [
+      "Laccoptera nepalensis",
+      {
+        "genus": "Laccoptera",
+        "subgenus": "Laccopteroidea",
+        "species": "nepalensis",
+        "author": "Boheman",
+        "year": "1855",
+        "jp": "ヨツモンカメノコハムシ"
+      }
+    ],
+    [
+      "Dactylispa issikii",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Platypriella",
+        "species": "issikii",
+        "author": "Chûjô",
+        "year": "1938",
+        "jp": "タケトゲハムシ"
+      }
+    ],
+    [
+      "Dactylispa subquadrata subquadrata",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Platypriella",
+        "species": "subquadrata subquadrata",
+        "author": "Baly",
+        "year": "1874",
+        "jp": "カタビロトゲハムシ"
+      }
+    ],
+    [
+      "Dactylispa angulosa",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Triplispa",
+        "species": "angulosa",
+        "author": "Solsky",
+        "year": "1872",
+        "jp": "ヒメキベリトゲハムシ"
+      }
+    ],
+    [
+      "Dactylispa higoniae higoniae",
+      {
+        "genus": "Dactylispa",
+        "subgenus": "Triplispa",
+        "species": "higoniae higoniae",
+        "author": "Lewis",
+        "year": "1896",
+        "jp": "ヒゴトゲハムシ"
+      }
+    ],
+    [
+      "Platypria echidna",
+      {
+        "genus": "Platypria",
+        "subgenus": "Platypria",
+        "species": "echidna",
+        "author": "Guérin-Méneville",
+        "year": "1840",
+        "jp": "ヘリビロトゲハムシ"
+      }
+    ],
+    [
+      "Platypria melli",
+      {
+        "genus": "Platypria",
+        "subgenus": "Platypria",
+        "species": "melli",
+        "author": "Uhmann",
+        "year": "1955",
+        "jp": "ツシマヘリビロトゲハムシ"
+      }
+    ],
+    [
+      "Oomorphus japanus",
+      {
+        "genus": "Oomorphus",
+        "subgenus": "Oomorphus",
+        "species": "japanus",
+        "author": "Jacoby",
+        "year": "1885",
+        "jp": "ヒメツヤハムシ"
+      }
+    ],
     [
       "Clytra arida",
       {

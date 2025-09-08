@@ -17,10 +17,17 @@ const fetchText = async (url) => {
 const encode = (s) => encodeURI(s);
 
 // Crawl subfamily pages under 134-ハムシ科
-// For now, target the Cryptocephalinae page explicitly (ツツハムシ亜科)
-const PAGES = [
-  'https://japanesebeetles.jimdofree.com/目録/134-ハムシ科/134-11-ツツハムシ亜科/'
-];
+// Discover all subfamily pages from the index
+const INDEX = 'https://japanesebeetles.jimdofree.com/目録/134-ハムシ科/';
+const listSubfamilyPages = async () => {
+  const html = await fetchText(INDEX);
+  const s = new Set();
+  const rx = /(href=\"(\/[^"]*\/目録\/134-ハムシ科\/[^"]+\/)\")/g;
+  let m; while ((m = rx.exec(html))) { s.add('https://japanesebeetles.jimdofree.com' + m[2]); }
+  const rx2 = /href=\"(\/目録\/134-ハムシ科\/[^"]+\/)\"/g;
+  while ((m = rx2.exec(html))) { s.add('https://japanesebeetles.jimdofree.com' + m[1]); }
+  return Array.from(s);
+};
 
 // Parse species lines of the form: <em>Genus</em> (<em>Subgenus</em>) <em>species</em> Author, YEAR / <span>和名</span>
 const parseSpeciesFromHtml = (html) => {
@@ -56,7 +63,7 @@ const parseSpeciesFromHtml = (html) => {
 };
 
 const buildMap = async () => {
-  const pages = PAGES;
+  const pages = await listSubfamilyPages();
   const all = [];
   for (const url of pages) {
     try {
