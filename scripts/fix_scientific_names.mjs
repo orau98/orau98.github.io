@@ -25,8 +25,14 @@ const needsFix = (row) => {
   if (year) {
     const years = (year.match(/\d{4}/g) || []);
     if (years.length > 0) {
+      // If scientific_name lacks any of the year numbers → fix
       const foundAny = years.some(y => new RegExp(`\\b${y}\\b`).test(t));
       if (!foundAny) return true;
+      // If scientific_name repeats year numbers more times than provided → fix
+      const distinct = [...new Set(years)];
+      let totalOcc = 0;
+      for (const y of distinct) totalOcc += (t.match(new RegExp(`\\b${y}\\b`, 'g')) || []).length;
+      if (totalOcc > distinct.length) return true;
     }
   }
   // If author exists but not visibly present in scientific_name (ignoring parentheses)
@@ -39,11 +45,22 @@ const needsFix = (row) => {
   return false;
 };
 
+const sanitizeAuthorForName = (authorRaw = '') => {
+  let a = trim(authorRaw);
+  if (!a) return '';
+  // Remove any inline year tokens from author (e.g., "Fabricius, 1775" -> "Fabricius")
+  a = a.replace(/\s*,?\s*\[?\d{4}\]?/g, '');
+  // Collapse whitespace and stray commas
+  a = a.replace(/\s+/g, ' ').replace(/,\s*$/,'').trim();
+  return a;
+};
+
 const buildScientificName = (row) => {
   const genus = trim(row['genus']);
   const species = trim(row['species']);
   const subspecies = trim(row['subspecies']);
-  const author = trim(row['author']);
+  const authorRaw = trim(row['author']);
+  const author = sanitizeAuthorForName(authorRaw);
   const year = trim(row['year']);
   if (!genus || !species) return '';
   let base = `${genus} ${species}`;
