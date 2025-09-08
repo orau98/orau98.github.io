@@ -1,0 +1,4 @@
+file,row,reason,insect_id,plant_name,plant_family
+hostplants.csv,6978,unknown insect_id,species-20437,ハルニレ,ニレ科
+hostplants.csv,6979,unknown insect_id,species-20437,オヒョウ,ニレ科
+general_notes.csv,610,unknown insect_id,species-20437,,
