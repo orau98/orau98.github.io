@@ -40,3 +40,6 @@ reports/cleanup-inventory.json
 # Keep optimized images in Git (for distribution)
 # Note: WebP and AVIF files are intentionally tracked
 .serena/
+
+# Local backup artifacts from fix scripts
+*.bak.*

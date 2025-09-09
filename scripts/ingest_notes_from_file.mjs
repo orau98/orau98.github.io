@@ -22,8 +22,25 @@ for (const arg of process.argv.slice(2)) {
 function loadText(p) { return fs.readFileSync(p, 'utf8'); }
 function loadCSV(p) { return Papa.parse(fs.readFileSync(p, 'utf8'), { header: true, skipEmptyLines: false }).data; }
 function saveCSV(p, rows) {
-  const fields = Object.keys(rows[0] || {});
-  const csv = Papa.unparse(rows, { header: true, columns: fields });
+  // Sanitize: ensure 1 record = 1 physical line by removing internal newlines
+  const sanitizeField = (v) => {
+    if (v == null) return '';
+    let s = String(v);
+    // Replace CR/LF with a single space, collapse multiple spaces
+    s = s.replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+    // Normalize stray lone quotes-only values
+    if (s === '"') return '';
+    return s;
+  };
+  const sanRows = rows.map((r) => {
+    const o = {};
+    for (const k of Object.keys(r || {})) {
+      o[k] = sanitizeField(r[k]);
+    }
+    return o;
+  });
+  const fields = Object.keys(sanRows[0] || {});
+  const csv = Papa.unparse(sanRows, { header: true, columns: fields });
   fs.writeFileSync(p, csv, 'utf8');
 }
 function stripDiacritics(s='') {
@@ -256,16 +273,18 @@ function main() {
     }
     matched++;
     if (r.period) {
-      const exists = notesPub.some(n => n.insect_id === id && n.note_type === '出現時期' && String(n.content || '').trim() === r.period.trim());
+      const periodSan = String(r.period || '').replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      const exists = notesPub.some(n => n.insect_id === id && n.note_type === '出現時期' && String(n.content || '').replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim() === periodSan);
       if (!exists) {
-        const rec = { record_id: nextNoteId(notesPub), insect_id: id, note_type: '出現時期', content: r.period, reference: REF, page: '', year: '' };
+        const rec = { record_id: nextNoteId(notesPub), insect_id: id, note_type: '出現時期', content: periodSan, reference: REF, page: '', year: '' };
         notesPub.push(rec); notesNorm.push({ ...rec }); added++;
       }
     }
     if (r.note) {
-      const exists2 = notesPub.some(n => n.insect_id === id && n.note_type === '生態情報' && String(n.content || '').trim() === r.note.trim());
+      const noteSan = String(r.note || '').replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      const exists2 = notesPub.some(n => n.insect_id === id && n.note_type === '生態情報' && String(n.content || '').replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim() === noteSan);
       if (!exists2) {
-        const rec2 = { record_id: nextNoteId(notesPub), insect_id: id, note_type: '生態情報', content: r.note, reference: REF, page: '', year: '' };
+        const rec2 = { record_id: nextNoteId(notesPub), insect_id: id, note_type: '生態情報', content: noteSan, reference: REF, page: '', year: '' };
         notesPub.push(rec2); notesNorm.push({ ...rec2 }); added++;
       }
     }

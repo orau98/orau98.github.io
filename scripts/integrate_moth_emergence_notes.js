@@ -164,14 +164,37 @@ function parseInputLine(line) {
   if (!line.trim()) return null;
   const firstComma = line.indexOf(',');
   if (firstComma < 0) return null;
-  const ja = line.slice(0, firstComma).trim();
+  const rawJa = line.slice(0, firstComma).trim();
+  const ja = normalizeJaName(rawJa);
   const firstQuote = line.indexOf('"', firstComma + 1);
   const secondQuote = firstQuote >= 0 ? line.indexOf('"', firstQuote + 1) : -1;
   if (firstQuote < 0 || secondQuote < 0) {
-    // Fallback: try generic CSV parse (some rows may not have quotes around sci name)
-    const cols = parseCsvLine(line);
-    const [ja2, sci2, period2, remarks2 = ''] = cols;
-    return { ja: (ja2||'').trim(), sci: (sci2||'').replace(/^"|"$/g, '').trim(), period: (period2||'').trim(), remarks: (remarks2||'').trim() };
+    // Fallback for unquoted scientific names containing commas.
+    // Strategy: split by comma, then find the first segment that looks like a period field (contains 月/不明/季節/年/上中下旬 等)。
+    const cols = line.split(',');
+    const parts = cols.map(s => s.trim());
+    const ja2 = normalizeJaName(parts[0] || '');
+    // Find index of period field among parts[1..]
+    const looksLikePeriod = (s) => {
+      if (!s) return false;
+      // Detect typical period tokens (avoid matching plain years like "1881)" by excluding bare digits)
+      return /(\d+\s*[~〜]?\s*\d*\s*月)|月|不明|春|夏|秋|冬|年間|上旬|中旬|下旬|頃|日|〜|~/.test(s);
+    };
+    let k = -1;
+    for (let i = 1; i < parts.length; i++) {
+      if (looksLikePeriod(parts[i])) { k = i; break; }
+    }
+    if (k === -1) {
+      // As a very last resort, merge into 4 columns
+      const sci2 = (parts[1] || '').replace(/^"|"$/g, '').trim();
+      const period2 = parts[2] || '';
+      const remarks2 = parts.slice(3).join(',');
+      return { ja: ja2, sci: sci2, period: period2, remarks: remarks2 };
+    }
+    const sci2 = parts.slice(1, k).join(',').replace(/^"|"$/g, '').trim();
+    const period2 = parts[k] || '';
+    const remarks2 = parts.slice(k + 1).join(',');
+    return { ja: ja2, sci: sci2, period: period2, remarks: (remarks2 || '').trim() };
   }
   const sci = line.slice(firstQuote + 1, secondQuote).trim();
   let rest = line.slice(secondQuote + 1);
@@ -190,11 +213,25 @@ function parseInputLine(line) {
   return { ja, sci, period, remarks };
 }
 
+function normalizeJaName(name) {
+  if (!name) return name;
+  // Fix common OCR/encoding typos: Cyrillic 'да' -> Katakana 'ダ'
+  return name.replace(/да/g, 'ダ');
+}
+
 function csvEscape(s) {
   if (s == null) return '';
   const needsQuote = /[",\n]/.test(s);
   let v = s.replace(/"/g, '""');
   return needsQuote ? `"${v}"` : v;
+}
+
+function sanitizeInline(s) {
+  if (s == null) return '';
+  let t = String(s);
+  t = t.replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  if (t === '"') return '';
+  return t;
 }
 
 function main() {
@@ -232,8 +269,8 @@ function main() {
       continue;
     }
 
-    const period = rec.period || '';
-    const remarks = rec.remarks || '';
+    const period = sanitizeInline(rec.period || '');
+    const remarks = sanitizeInline(rec.remarks || '');
 
     // 出現時期ノート
     if (period) {
@@ -296,8 +333,8 @@ function main() {
 
   // Write unmatched report
   if (!fs.existsSync(REPORT_DIR)) fs.mkdirSync(REPORT_DIR, { recursive: true });
-  const reportHeader = '和名,学名,成虫発生時期,備考,備考\n';
-  const reportLines = unmatched.map(u => [csvEscape(u.ja), csvEscape(u.sci), csvEscape(u.period), csvEscape(u.remarks)].join(','));
+  const reportHeader = '和名,学名,成虫発生時期,備考\n';
+  const reportLines = unmatched.map(u => [csvEscape(sanitizeInline(u.ja)), csvEscape(sanitizeInline(u.sci)), csvEscape(sanitizeInline(u.period)), csvEscape(sanitizeInline(u.remarks))].join(','));
   fs.writeFileSync(UNMATCHED_REPORT, reportHeader + reportLines.join('\n'));
   console.log(`Unmatched: ${unmatched.length}. Report: ${UNMATCHED_REPORT}`);
 }
