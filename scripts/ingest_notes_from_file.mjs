@@ -8,11 +8,14 @@ import Papa from 'papaparse';
 // Simple args parsing
 let REF = '日本蛾類標準図鑑3';
 let inputPath = path.join('tmp', 'standard3_notes.md');
+let listmjPath = null; // optional: JSON from ListMJ for strict validation
 for (const arg of process.argv.slice(2)) {
   if (arg.startsWith('--ref=')) {
     REF = arg.substring('--ref='.length).replace(/^"|"$/g, '');
   } else if (!arg.startsWith('-')) {
     inputPath = arg;
+  } else if (arg.startsWith('--listmj=')) {
+    listmjPath = arg.substring('--listmj='.length);
   }
 }
 
@@ -147,7 +150,30 @@ function main() {
     }
   });
 
-  const rows = parseFile(inputPath, stdin);
+  let rows = parseFile(inputPath, stdin);
+  // Optional: strict validation against ListMJ JSON (filter out rows not present in ListMJ)
+  let listmjSet = null;
+  if (listmjPath && fs.existsSync(listmjPath)) {
+    try {
+      const list = JSON.parse(fs.readFileSync(listmjPath, 'utf8'));
+      listmjSet = new Set();
+      (list.records || []).forEach(r => {
+        if (r.binomial) listmjSet.add(toBinomial(r.binomial));
+        const vals = Object.values(r).map(v => String(v || '').trim());
+        for (let i = 0; i < vals.length - 1; i++) {
+          const a = vals[i], b = vals[i + 1];
+          if (/^[A-Z][a-z-]+$/.test(a) && /^[a-z][a-z-]+$/.test(b)) listmjSet.add(`${a} ${b}`);
+        }
+      });
+      const before = rows.length;
+      rows = rows.filter(r => !listmjSet || listmjSet.has(toBinomial(r.sci || '')));
+      if (before !== rows.length) {
+        console.log(`ListMJ strict filter: ${before - rows.length} rows removed (kept=${rows.length})`);
+      }
+    } catch (e) {
+      console.error('Failed to load ListMJ JSON:', e.message);
+    }
+  }
   // 表記揺れエイリアス
   const alias = new Map([
     ['Paramartyria immaculata', 'Paramartyria immaculatella'],
