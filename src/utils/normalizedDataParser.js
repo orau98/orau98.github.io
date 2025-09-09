@@ -152,6 +152,24 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         type: getInsectTypeFromFamily(insect.family_jp || insect.family || '')
       };
 
+      // general_notes から出現時期を既存フィールドへも反映（表示の安定化のため）
+      try {
+        const emergenceFromNotes = (generalNotes || []).find(n => {
+          const t = (n.type || '').trim();
+          const c = (n.content || '').trim();
+          if (!c) return false;
+          const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
+            .some(k => t.includes(k));
+          const contentHit = /\d+\s*月|成虫|発生/.test(c);
+          return typeHit || (!t && contentHit);
+        });
+        if (emergenceFromNotes && (!insectData.emergenceTime || insectData.emergenceTime === '不明')) {
+          insectData.emergenceTime = emergenceFromNotes.content;
+          insectData.emergenceTimeSource = emergenceFromNotes.reference || '';
+          insectData.emergenceTimeDescription = emergenceFromNotes.page ? `p.${emergenceFromNotes.page}` : '';
+        }
+      } catch {}
+
       // 分類群ごとに振り分け
       const classification = classifyInsect(insect);
       switch (classification) {
