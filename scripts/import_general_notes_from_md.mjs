@@ -101,11 +101,20 @@ function main() {
   }
 
   const rows = parseMarkdown(RAW);
+  // 手動エイリアス（表記揺れ/誤記対策）: binomial -> binomial
+  const BINOMIAL_ALIAS = new Map([
+    ['Paramartyria immaculata', 'Paramartyria immaculatella'],
+    ['Platymatopus japonicus', 'Phymatopus japonicus'],
+  ]);
   let matched = 0, added = 0, unmatched = 0;
 
   for (const row of rows) {
-    const b = toBinomial(row.sci);
-    const id = byBinom.get(b);
+    let b = toBinomial(row.sci);
+    let id = byBinom.get(b);
+    if (!id && BINOMIAL_ALIAS.has(b)) {
+      const b2 = BINOMIAL_ALIAS.get(b);
+      id = byBinom.get(b2);
+    }
     if (!id) { unmatched++; continue; }
     matched++;
     // Period
@@ -133,4 +142,3 @@ function main() {
 }
 
 main();
-
