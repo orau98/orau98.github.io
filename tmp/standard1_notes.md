@@ -114,7 +114,6 @@
 | シロスジヒメエダシャク | *Ligdia japonaria* Leech, 1897 | 5月～6月と7月～9月 | 2世代。 |
 | キブサヒメエダシャク | *Ligdia ciliaria* Leech, 1897 | 5月～6月と7月～8月 | 2世代。 |
 | クロフヒメエダシャク | *Peratophyga hyalinata* (Kollar, 1844) | 5月～6月と7月～8月 | 2世代。 |
-| ウスグロエダシャク | *Elphos insueta* (Butler, 1878) | 9月～11月 | 晩秋の蛾。 |
 | ウスバキエダシャク | *Pseuderannis lomozemia* (Prout, 1930) | 3月から5月 | 1世代。 |
 | ウスバシロエダシャク | *Pseuderannis amplipennis* (Inoue, 1942) | 3月～5月 | 1世代。 |
 | フタヤマエダシャク | *Rikiosatoa grisea* (Butler, 1878) | 5月から9月 | 年2化。 |
@@ -124,120 +123,57 @@
 | ウスゴマダラエダシャク | *Metabraxas paucimaculata* Inoue, 1955 | 10月～11月 | 1世代。 |
 | オオヨツメエダシャク | *Fascellina chromataria* (Walker, 1860) | 5月と7月～8月 | 年2化。 |
 | ヨツメエダシャク | *Fascellina plagiata* (Walker, 1866) | 4月～11月 | 多化性。 |
-| ミヤマヨツメエダシャク | *Fascellina undulimarginata* Inoue, 1990 | 6月～7月 | 年1化。 |
-| トガリバエダシャク | *Fascellina aurantiaca* Warren, 1894 | 8月～9月 | 1世代。 |
-| アカマダラエダシャク | *Fascellina subsignata* (Warren, 1893) | 5月と7月～8月 | 2世代。 |
-| クロフタオエダシャク | *Ourapteryx inspersa* (Leech, 1897) | 4月～5月と6月～8月 | 2世代。 |
 | フタオエダシャク | *Ourapteryx nomurai* Inoue, 1946 | 6月～7月と8月～9月 | 2世代。 |
-| ウスオビフタオエダシャク | *Ourapteryx caecias* (Meyrick, 1911) | 6月～7月 | 年1化。 |
-| ウスフタオエダシャク | *Ourapteryx clara* Butler, 1880 | 6月と8月 | 2世代。 |
 | オオハガタナミシャク | *Acrodontis fumosa* (Prout, 1930) | 10月～11月 | 年1化。 |
 | ホソバナミシャク | *Xanthorhoe abraxina* (Butler, 1879) | 7月～8月 | 年1化。 |
 | ギンナミシャク | *Xanthorhoe muscicapata* (Christoph, 1881) | 7月～8月 | 1世代。 |
 | マエシロモンナミシャク | *Xanthorhoe biriviata* (Borkhausen, 1794) | 5月～7月 | 年2化。 |
 | ウスベニナミシャク | *Xanthorhoe fluctuata* (Linnaeus, 1758) | 5月～9月 | 多化性。 |
 | フタスジシロエダシャク | *Xanthorhoe sajanaria* (Prout, 1914) | 7月～8月 | 1世代。 |
-| キリシマエダシャク | *Xanthorhoe curcumata* (Moore, 1888) | 6月～8月 | 年1化。 |
 | ウスオビシロエダシャク | *Xanthorhoe abrasaria* (Herrich-Schäffer, 1855) | 6月～9月 | 多化性。 |
-| クロオビシロエダシャク | *Xanthorhoe subflava* (Warren, 1896) | 5月～10月 | 多化性。 |
-| トビスジエダシャク | *Xanthorhoe umbrosa* (Butler, 1879) | 5月と7月 | 年2化。 |
 | オオシロオビエダシャク | *Xanthorhoe hortensiaria* (Graeser, 1889) | 5月と7月 | 年2化。 |
 | ヨコジマナミシャク | *Epirrhoe supergressa* (Butler, 1878) | 5月と7月 | 年2化。 |
-| ウスアカナミシャク | *Epirrhoe plebeculata* (Guenée, 1858) | 5月と7月 | 年2化。 |
 | ギンモンナミシャク | *Epirrhoe hastulata* (Hübner, 1790) | 6月～7月 | 年1化。 |
-| フタスジギンナミシャク | *Epirrhoe tristata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
-| フタモンギンナミシャク | *Epirrhoe alternata* (Müller, 1764) | 5月と7月～8月 | 年2化。 |
 | タカネナミシャク | *Epirrhoe sperryi* Herbulot, 1951 | 6月～8月 | 1世代。 |
-| シロシマナミシャク | *Epirrhoe superna* Djakonov, 1926 | 7月～8月 | 1世代。 |
-| キナミシマナミシャク | *Epirrhoe medeifascia* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| クロスジナミシャク | *Epirrhoe rivata* (Hübner, 1813) | 6月～8月 | 年1化。 |
-| ナカグロナミシャク | *Epirrhoe commixta* (Matsumura, 1925) | 5月と7月～8月 | 2世代。 |
-| フタスジクロナミシャク | *Epirrhoe psyroides* (Inoue, 1954) | 6月と7月 | 2世代。 |
-| ウスグロナミシャク | *Costaconvexa centrostrigaria* (Wollaston, 1858) | 5月と7月 | 年2化。 |
-| ナカオビナミシャク | *Euphyia adumbraria* (Herrich-Schäffer, 1852) | 6月～7月 | 1世代。 |
 | オオナミシャク | *Euphyia unangulata* (Haworth, 1809) | 5月と7月 | 年2化。 |
-| ギンモンアカナミシャク | *Catarhoe putridaria* (Herrich-Schäffer, 1852) | 6月と8月 | 年2化。 |
 | クロモンギンナミシャク | *Catarhoe obscura* (Butler, 1878) | 5月と8月 | 年2化。 |
-| シロテンナミシャク | *Psychophora sabini* (Curtis, 1835) | 6月～7月 | 2年に1世代。 |
 | キマダラナミシャク | *Anticlea derivata* (Denis & Schiffermüller, 1775) | 5月 | 年1化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 年1化。 |
-| ウスアオナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ナカオビアオナミシャク | *Spargania djakonovi* Mirzojan, 1970 | 6月～7月 | 1世代。 |
-| ミヤマナカオビアオナミシャク | *Spargania magnoliata* Guenée, 1858 | 6月～7月 | 1世代。 |
 | ナカキエダナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 年1化。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 年1化。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 年1化。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 年1化。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -245,83 +181,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 年1化。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -329,83 +224,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -413,83 +267,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -497,83 +310,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -581,83 +353,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -665,83 +396,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -749,83 +439,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -833,83 +482,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -917,83 +525,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -1001,83 +568,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -1085,83 +611,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -1169,83 +654,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -1253,83 +697,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -1337,83 +740,42 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年1化。 |
-| ヤマナミシャク | *Cidaria fulvata* (Forster, 1771) | 6月～7月 | 1世代。 |
 | ウスベニナミシャク | *Pennithera subalpina* Inoue, 1955 | 7月～8月 | 1世代。 |
-| アカガネナミシャク | *Pennithera djakonovi* (Kurentzov, 1950) | 7月～8月 | 1世代。 |
 | フタスジカバナミシャク | *Dysstroma citrata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | トビスジコナミシャク | *Dysstroma truncata* (Hufnagel, 1766) | 6月～8月 | 年2化。 |
-| ナカジロネグロナミシャク | *Dysstroma hedemannaria* (Oberthür, 1880) | 8月～9月 | 1世代。 |
 | クロオビシロナミシャク | *Dysstroma korbi* (Heydemann, 1929) | 7月～8月 | 1世代。 |
 | ミヤマシロナミシャク | *Dysstroma cinereata* (Moore, 1867) | 7月～8月 | 1世代。 |
-| キシタナミシャク | *Dysstroma morosata* (Geyer, 1837) | 7月～8月 | 1世代。 |
-| クロスジシロナミシャク | *Dysstroma hepronta* (Inoue, 1954) | 7月～8月 | 1世代。 |
-| ニセクロスジシロナミシャク | *Dysstroma hersiliata* (Guenée, 1858) | 6月～7月 | 年2化。 |
 | ヒメカバナミシャク | *Eulithis testata* (Linnaeus, 1761) | 7月～8月 | 1世代。 |
 | キモンカバナミシャク | *Eulithis pyraliata* (Denis & Schiffermüller, 1775) | 6月～7月 | 1世代。 |
 | フタオビカバナミシャク | *Eulithis convergenuata* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | マエモンカバナミシャク | *Eulithis prunata* (Linnaeus, 1758) | 6月～8月 | 年2化。 |
 | オオハガタナミシャク | *Eulithis achatinellaria* (Oberthür, 1880) | 6月～8月 | 年2化。 |
-| ギンガンスジナミシャク | *Eulithis amabilis* (Butler, 1879) | 6月～8月 | 年2化。 |
 | ウスベニトビスジナミシャク | *Gandaritis fixseni* (Bremer, 1864) | 6月～7月 | 1世代。 |
 | キシタトビスジナミシャク | *Gandaritis agnes* (Butler, 1878) | 6月～8月 | 年2化。 |
 | ホソバトビスジナミシャク | *Gandaritis evanescens* (Butler, 1881) | 5月と7月～8月 | 年2化。 |
 | ウスモンナミシャク | *Ecliptopera silaceata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | フタスジウラナミシャク | *Ecliptopera capitata* (Herrich-Schäffer, 1839) | 5月と7月 | 年2化。 |
 | チャオビウラナミシャク | *Ecliptopera umbrosaria* (Motschulsky, 1861) | 5月と7月 | 年2化。 |
-| ウラナミシャク | *Ecliptopera fastigiata* (Püngeler, 1908) | 6月と8月 | 年2化。 |
-| フタスジカバナミシャク | *Thamnurgis* sp. | 7月～8月 | 1世代。 |
-| フトフタスジナミシャク | *Neothera consimilis* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ウスイロカバナミシャク | *Neothera sp.** | 4月～5月 | |
-| ナカオビキナミシャク | *Heterothera tephroptilus* (Fletcher, 1961) | 5月と7月～8月 | 年2化。 |
-| キシタカバナミシャク | *Heterothera mussooriensis* (Moore, 1888) | 7月～8月 | 1世代。 |
 | クロオビカバナミシャク | *Heterothera postalbida* (Wileman, 1911) | 7月～8月 | 1世代。 |
-| キオビクロナミシャク | *Heterothera serraria* (Lienig & Zeller, 1846) | 7月 | 1世代。 |
 | クロシオナミシャク | *Heterothera taigana* (Djakonov, 1926) | 7月～8月 | 1世代。 |
-| ウスベニカバナミシャク | *Heterothera serrativalva* (Inoue, 1954) | 7月～8月 | 年1化。 |
-| クロフカバナミシャク | *Heterothera hoenei* (Djakonov, 1929) | 7月～8月 | 1世代。 |
 | カバナミシャク | *Lobogonodes erectaria* (Leech, 1897) | 5月と8月 | 年2化。 |
-| ヨツモンカバナミシャク | *Lobogonodes miniata* (Butler, 1881) | 7月～8月 | 1世代。 |
-| シロフタオビナミシャク | *Photoscotosia palaearctica* (Staudinger, 1882) | 7月～8月 | 1世代。 |
-| フタオビナミシャク | *Photoscotosia dejuncta* Prout, 1937 | 7月～8月 | 1世代。 |
-| クロフタオビナミシャク | *Photoscotosia amplicata* (Walker, 1862) | 7月～8月 | 1世代。 |
-| ホソバセジロナミシャク | *Neochele* sp. | 7月～8月 | 1世代。 |
-| ギンモンセジロナミシャク | *Neochele argentata* Butler, 1881 | 7月～8月 | 1世代。 |
 | セジロナミシャク | *Laciniodes ussuriensis* (Staudinger, 1892) | 8月～9月 | 1世代。 |
 | ナミシャク | *Eustroma reticulata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
-| ウスキナミシャク | *Zenophleps alpinata* Cassino, 1927 | 7月～8月 | 1世代。 |
-| ウスバナミシャク | *Zenophleps terminata* (Wileman, 1911) | 6月と8月 | 年2化。 |
-| マエシロモンナミシャク | *Zenophleps lignicolor* (Warren, 1896) | 5月と7月 | 年2化。 |
-| ホシウスバナミシャク | *Zenophleps signata* (Butler, 1879) | 5月と7月 | 年2化。 |
 | ウスマダラナミシャク | *Orthonama obstipata* (Fabricius, 1794) | 4月～11月 | 多化性。 |
-| ホソバヒメナミシャク | *Colostygia* sp. | 8月 | |
 | ナカアオナミシャク | *Plemyria rubiginata* (Denis & Schiffermüller, 1775) | 7月～8月 | 1世代。 |
 | シラナミナミシャク | *Plemyria matsi* (Inoue, 1982) | 7月～8月 | 1世代。 |
-| シロシマカバナミシャク | *Thera firmata* (Hübner, 1822) | 8月～9月 | 1世代。 |
 | トウヒシラナミシャク | *Thera variata* (Denis & Schiffermüller, 1775) | 6月と8月 | 年2化。 |
-| クロフシラナミシャク | *Thera juniperata* (Linnaeus, 1758) | 10月 | 1世代。 |
 | フタオビコバネナミシャク | *Electrophaes corylata* (Thunberg, 1792) | 6月～7月 | 年1化。 |
-| ヒメフタオビコバネナミシャク | *Electrophaes horia* (Prout, 1926) | 7月 | 1世代。 |
-| ウラモンコバネナミシャク | *Electrophaes fulgidaria* (Leech, 1897) | 6月～7月 | 1世代。 |
 | フタスジカバナミシャク | *Heterophleps confusa* (Wileman, 1911) | 5月～7月 | 年1化。 |
 | ソトウスバナミシャク | *Heterophleps fusca* (Butler, 1878) | 7月～8月 | 年1化。 |
 | シロモンキナミシャク | *Cosmorhoe ocellata* (Linnaeus, 1758) | 7月～8月 | 1世代。 |
@@ -1421,23 +783,13 @@
 | ヨツモンナミシャク | *Horisme vitalbata* (Denis & Schiffermüller, 1775) | 5月と7月 | 年2化。 |
 | キイロオオナミシャク | *Melanthia procellata* (Denis & Schiffermüller, 1775) | 5月～7月 | 年2化。 |
 | ハガタナミシャク | *Pareulype berberata* (Denis & Schiffermüller, 1775) | 5月と8月 | 年2化。 |
-| ウラモンクロナミシャク | *Spargania luctuata* (Denis & Schiffermüller, 1775) | 5月～6月と8月 | 年2化。 |
-| ウスアオナミシャク | *Anticlea consanguinata* Lederer, 1853 | 5月 | 年1化。 |
-| フタスジキナミシャク | *Anticlea hansi* (Hedemann, 1881) | 6月と8月 | 年2化。 |
-| キシタナミシャク | *Anticlea subornata* (Inoue, 1955) | 6月～7月 | 1世代。 |
-| ウラモンナミシャク | *Earophila badiata* (Denis & Schiffermüller, 1775) | 3月～5月 | 年1化。 |
 | チャオビナミシャク | *Mesoleuca albicillata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | キスジナミシャク | *Mesoleuca mandschuricata* (Bremer, 1864) | 6月～7月 | 1世代。 |
-| スギタニナミシャク | *Rheumaptera* sp. | 7月～8月 | 1世代。 |
 | ウスベニナミシャク | *Rheumaptera hecate* (Butler, 1878) | 7月～8月 | 1世代。 |
 | オオナカキエダナミシャク | *Rheumaptera latifasciaria* Leech, 1891 | 7月～8月 | 1世代。 |
 | キマダラエダナミシャク | *Rheumaptera flavipes* Ménétriès, 1858 | 7月～8月 | 1世代。 |
 | ウスグロエダナミシャク | *Rheumaptera hastata* (Linnaeus, 1758) | 6月～7月 | 1世代。 |
 | シロテンエダナミシャク | *Triphosa dubitata* (Linnaeus, 1758) | 9月～10月 | 年1化。 |
-| ナカオビエダシャク | *Triphosa amblychroura* Prout, 1937 | 8月～10月 | 1世代。 |
-| クロオビシロエダシャク | *Triphosa rubrodotata* (Walker, 1862) | 9月～10月 | 1世代。 |
 | ウスオビシロエダシャク | *Triphosa albirivia* Hampson, 1902 | 9月～10月 | 1世代。 |
 | キバナミシャク | *Philereme transversata* (Hufnagel, 1776) | 7月 | 年1化。 |
-| クロフナミシャク | *Philereme vetulata* (Denis & Schiffermüller, 1775) | 6月 | 年1化。 |
 | フタオビキナミシャク | *Epirrita autumnata* (Borkhausen, 1794) | 10月 | 年1化。 |
-| キエダナミシャク | *Hydria undulata* (Linnaeus, 1758) | 6月～7月 | 年
