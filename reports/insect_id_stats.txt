@@ -1,0 +1,6 @@
+ID statistics
+numeric: 6589
+letter:CR: 40
+letter:H: 593
+letter:LB: 42
+other: 9
