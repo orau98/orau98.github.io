@@ -219,7 +219,15 @@ function main() {
         }
       }
     }
-    if (!id) { unmatched++; unmatchedList.push(r.sci); continue; }
+    if (!id) {
+      unmatched++;
+      unmatchedList.push({
+        original: String(r.sci || ''),
+        normalized_binomial: toBinomial(r.sci || ''),
+        japanese: String(r.ja || '')
+      });
+      continue;
+    }
     matched++;
     if (r.period) {
       const exists = notesPub.some(n => n.insect_id === id && n.note_type === '出現時期' && String(n.content || '').trim() === r.period.trim());
@@ -242,8 +250,17 @@ function main() {
   if (unmatchedList.length > 0) {
     fs.mkdirSync('reports', { recursive: true });
     const slug = REF.replace(/[^\w\u3040-\u30FF\u4E00-\u9FFF]+/g, '_');
-    const file = `unmatched_${slug}.txt`;
-    fs.writeFileSync(path.join('reports', file), unmatchedList.join('\n'), 'utf8');
+    // Legacy TXT (original only)
+    const fileTxt = `unmatched_${slug}.txt`;
+    fs.writeFileSync(
+      path.join('reports', fileTxt),
+      unmatchedList.map(u => u.original).join('\n'),
+      'utf8'
+    );
+    // Detailed CSV (original + normalized + japanese)
+    const fileCsv = `unmatched_detailed_${slug}.csv`;
+    const csv = Papa.unparse(unmatchedList, { columns: ['original','normalized_binomial','japanese'] });
+    fs.writeFileSync(path.join('reports', fileCsv), csv, 'utf8');
   }
   console.log(`matched=${matched} unmatched=${unmatched} added=${added}`);
 }
