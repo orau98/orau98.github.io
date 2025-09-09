@@ -109,6 +109,25 @@ function main() {
     ['Eulithis convergenuata', 'Eulithis convergenata'],
   ]);
 
+  // Load additional alias suggestions (distance=1 only) if available
+  try {
+    const suggestionsPath = path.join('reports', 'alias_suggestions_from_unmatched.csv');
+    if (fs.existsSync(suggestionsPath)) {
+      const text = fs.readFileSync(suggestionsPath, 'utf8');
+      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+      for (const row of parsed.data || []) {
+        const src = (row.source || '').trim();
+        const dst = (row.target || '').trim();
+        const dist = parseInt(row.distance || '0', 10);
+        if (src && dst && dist === 1) {
+          alias.set(src, dst);
+        }
+      }
+    }
+  } catch (e) {
+    // non-fatal
+  }
+
   let matched = 0, unmatched = 0, added = 0;
   const unmatchedList = [];
   for (const r of rows) {
