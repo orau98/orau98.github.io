@@ -32,25 +32,65 @@ for (const r of pub) {
   const m = String(r.insect_id||'').match(/^species-(\d+)$/); if (m) maxId = Math.max(maxId, parseInt(m[1],10));
 }
 
+// Family mapping (JP -> Latin)
+const familyMap = new Map([
+  ['モグリチビガ科', 'Nepticulidae'],
+  ['ツヤコガ科', 'Heliozelidae'],
+  ['ヒゲナガガ科', 'Adelidae'],
+  ['ヒロズコガ科', 'Tineidae'],
+  ['ムモンハモグリガ科', 'Tischeriidae'],
+  ['コウモリガ科', 'Hepialidae'],
+]);
+
+function hasJapanese(s) { return /[\u3040-\u30FF\u4E00-\u9FFF]/.test(String(s||'')); }
+function isLatinGenus(s) { return /^[A-Z][a-z-]+$/.test(String(s||'')); }
+function isLatinSpecies(s) { return /^[a-z][a-z-]+$/.test(String(s||'')); }
+
+function extractFromRecord(r) {
+  const values = Object.values(r).map(v => String(v||'').trim()).filter(Boolean);
+  // genus+species
+  let genus='', species='';
+  for (let i=0;i<values.length-1;i++) {
+    if (isLatinGenus(values[i]) && isLatinSpecies(values[i+1])) { genus=values[i]; species=values[i+1]; break; }
+  }
+  if (!genus || !species) return null;
+  // Japanese name: longest JP token not obviously header
+  let japanese='';
+  for (const v of values) { if (hasJapanese(v) && /科|属|種|和名|出版|除外/.test(v) === false) { if (v.length > japanese.length) japanese=v; } }
+  // Author/year
+  let author='', year='';
+  for (let i=0;i<values.length;i++) {
+    const v=values[i];
+    if (/^\(.*\)$/.test(v) || /^[A-Z][A-Za-z .,&-]+$/.test(v)) { author = v.replace(/^\(|\)$/g, ''); const y=values[i+1]; if (/^\d{3,4}$/.test(y)) year=y; break; }
+    if (/^\d{3,4}$/.test(v)) { year=v; }
+  }
+  // Families
+  let family_jp = values.find(v => v.endsWith('科')) || '';
+  let family = values.find(v => /idae$/.test(v)) || '';
+  if (!family && familyMap.has(family_jp)) family = familyMap.get(family_jp);
+  return { genus, species, japanese, author, year, family, family_jp };
+}
+
 const added=[];
-for (const c of list.records) {
+for (const rec of list.records) {
   if (added.length >= N) break;
-  const binom = (c.binomial || '').trim();
-  const ja = (c.japanese || '').trim();
-  if (!binom || !ja) continue;
+  const ex = extractFromRecord(rec);
+  if (!ex) continue;
+  const binom = `${ex.genus} ${ex.species}`;
+  const ja = ex.japanese.trim();
   if (existingBinom.has(binom) || existingJa.has(ja)) continue;
 
   // Choose family and family_jp safely
-  let family = latinFamilyOrNull(c.family) || latinFamilyOrNull(c.family_jp);
-  let family_jp = japaneseFamilyOrNull(c.family_jp) || japaneseFamilyOrNull(c.family) || '';
+  let family = latinFamilyOrNull(ex.family) || (ex.family_jp && familyMap.get(ex.family_jp)) || '';
+  let family_jp = japaneseFamilyOrNull(ex.family_jp) || '';
   if (!family) continue; // require Latin family ending with -idae
   if (!family_jp) continue; // require Japanese family ending with 科
 
   const { genus, species } = splitBinom(binom);
   if (!genus || !species) continue;
 
-  const authorRaw = (c.author || '').trim();
-  const yearRaw = toInt(c.year || '');
+  const authorRaw = (ex.author || '').trim();
+  const yearRaw = toInt(ex.year || '');
   const scientific_name = authorRaw || yearRaw ? `${genus} ${species} ${[authorRaw, yearRaw].filter(Boolean).join(', ')}` : `${genus} ${species}`;
 
   const row = {
@@ -83,4 +123,3 @@ for (const c of list.records) {
 
 saveCSV(pubCsv, pub); saveCSV(normCsv, norm);
 console.log(JSON.stringify({ added: added.length, ids: added.map(r=>r.insect_id), families: [...new Set(added.map(r=>r.family))] }, null, 2));
-

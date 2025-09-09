@@ -50,9 +50,11 @@ function loadInsects(p){
   const text=fs.readFileSync(p,'utf8');
   const parsed=Papa.parse(text,{header:true,skipEmptyLines:true,transformHeader:h=>h.trim(),transform:v=>(v??'').toString().trim()});
   const genusMap=new Map();
+  const knownBinom=new Set();
   parsed.data.forEach(r=>{
     const id=r.insect_id; if(!id) return;
     const bin=toBinomial(r.scientific_name || `${r.genus||''} ${r.species||''}`);
+    if (bin) knownBinom.add(bin);
     const g=bin.split(' ')[0]; if(!g) return;
     const names=new Set();
     const add=(s)=>{ if(!s) return; let t=String(s).replace(/（[^）]*）/g,'').replace(/\([^\)]*\)/g,'').trim(); if(t) names.add(t); };
@@ -62,17 +64,19 @@ function loadInsects(p){
     if(!genusMap.has(g)) genusMap.set(g,[]);
     genusMap.get(g).push({id,bin,jaSet:names});
   });
-  return genusMap;
+  return { genusMap, knownBinom };
 }
 
 function main(){
   if(!fs.existsSync(mdPath)) { console.error('MD not found:', mdPath); process.exit(2);} 
   const md=fs.readFileSync(mdPath,'utf8');
   const rows=parseMarkdown(md);
-  const genusMap=loadInsects(insectsPath);
+  const { genusMap, knownBinom }=loadInsects(insectsPath);
   const out=[]; const seen=new Set();
   for(const r of rows){
     const bin=toBinomial(r.sci); if(!bin.includes(' ')) continue;
+    // consider only currently unmatched binomials
+    if (knownBinom.has(bin)) continue;
     const [g,s]=bin.split(' ');
     const cands=genusMap.get(g)||[];
     let best=null; let tie=false;
@@ -81,7 +85,8 @@ function main(){
       const d=levenshtein(s,s2);
       if(d<=2){ if(!best||d<best.distance){ best={...c,distance:d}; tie=false; } else if(d===best.distance){ tie=true; } }
     }
-    if(best && !tie && best.distance > 0){
+    // we focus on distance==2 to avoid already covered distance==1 cases
+    if(best && !tie && best.distance === 2){
       // require JA hint to be consistent
       if(r.ja){
         let ok=false; const ja=String(r.ja).trim();
