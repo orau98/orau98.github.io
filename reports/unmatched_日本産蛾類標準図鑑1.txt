@@ -1,0 +1,789 @@
+*Elphos insueta* (Butler, 1878)
+*Fascellina plagiata* (Walker, 1866)
+*Fascellina undulimarginata* Inoue, 1990
+*Fascellina aurantiaca* Warren, 1894
+*Fascellina subsignata* (Warren, 1893)
+*Ourapteryx inspersa* (Leech, 1897)
+*Ourapteryx caecias* (Meyrick, 1911)
+*Ourapteryx clara* Butler, 1880
+*Xanthorhoe curcumata* (Moore, 1888)
+*Xanthorhoe abrasaria* (Herrich-Schäffer, 1855)
+*Xanthorhoe subflava* (Warren, 1896)
+*Xanthorhoe umbrosa* (Butler, 1879)
+*Epirrhoe plebeculata* (Guenée, 1858)
+*Epirrhoe tristata* (Linnaeus, 1758)
+*Epirrhoe alternata* (Müller, 1764)
+*Epirrhoe sperryi* Herbulot, 1951
+*Epirrhoe superna* Djakonov, 1926
+*Epirrhoe medeifascia* (Staudinger, 1882)
+*Epirrhoe rivata* (Hübner, 1813)
+*Epirrhoe commixta* (Matsumura, 1925)
+*Epirrhoe psyroides* (Inoue, 1954)
+*Costaconvexa centrostrigaria* (Wollaston, 1858)
+*Euphyia adumbraria* (Herrich-Schäffer, 1852)
+*Catarhoe putridaria* (Herrich-Schäffer, 1852)
+*Psychophora sabini* (Curtis, 1835)
+*Anticlea derivata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Spargania djakonovi* Mirzojan, 1970
+*Spargania magnoliata* Guenée, 1858
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
+*Cidaria fulvata* (Forster, 1771)
+*Pennithera subalpina* Inoue, 1955
+*Pennithera djakonovi* (Kurentzov, 1950)
+*Dysstroma hedemannaria* (Oberthür, 1880)
+*Dysstroma morosata* (Geyer, 1837)
+*Dysstroma hepronta* (Inoue, 1954)
+*Dysstroma hersiliata* (Guenée, 1858)
+*Eulithis pyraliata* (Denis & Schiffermüller, 1775)
+*Eulithis convergenuata* (Bremer, 1864)
+*Eulithis achatinellaria* (Oberthür, 1880)
+*Eulithis amabilis* (Butler, 1879)
+*Ecliptopera fastigiata* (Püngeler, 1908)
+*Thamnurgis* sp.
+*Neothera consimilis* (Warren, 1896)
+*Neothera sp.**
+*Heterothera tephroptilus* (Fletcher, 1961)
+*Heterothera mussooriensis* (Moore, 1888)
+*Heterothera serraria* (Lienig & Zeller, 1846)
+*Heterothera serrativalva* (Inoue, 1954)
+*Heterothera hoenei* (Djakonov, 1929)
+*Lobogonodes miniata* (Butler, 1881)
+*Photoscotosia palaearctica* (Staudinger, 1882)
+*Photoscotosia dejuncta* Prout, 1937
+*Photoscotosia amplicata* (Walker, 1862)
+*Neochele* sp.
+*Neochele argentata* Butler, 1881
+*Laciniodes ussuriensis* (Staudinger, 1892)
+*Zenophleps alpinata* Cassino, 1927
+*Zenophleps terminata* (Wileman, 1911)
+*Zenophleps lignicolor* (Warren, 1896)
+*Zenophleps signata* (Butler, 1879)
+*Colostygia* sp.
+*Plemyria matsi* (Inoue, 1982)
+*Thera firmata* (Hübner, 1822)
+*Thera juniperata* (Linnaeus, 1758)
+*Electrophaes horia* (Prout, 1926)
+*Electrophaes fulgidaria* (Leech, 1897)
+*Pareulype berberata* (Denis & Schiffermüller, 1775)
+*Spargania luctuata* (Denis & Schiffermüller, 1775)
+*Anticlea consanguinata* Lederer, 1853
+*Anticlea hansi* (Hedemann, 1881)
+*Anticlea subornata* (Inoue, 1955)
+*Earophila badiata* (Denis & Schiffermüller, 1775)
+*Mesoleuca mandschuricata* (Bremer, 1864)
+*Rheumaptera* sp.
+*Triphosa amblychroura* Prout, 1937
+*Triphosa rubrodotata* (Walker, 1862)
+*Triphosa albirivia* Hampson, 1902
+*Philereme vetulata* (Denis & Schiffermüller, 1775)
+*Hydria undulata* (Linnaeus, 1758)
