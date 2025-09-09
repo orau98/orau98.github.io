@@ -1122,6 +1122,8 @@ async function generateMetaPages() {
     
     // 昆虫データの処理（正規化データを使用）
     let mothCount = 0;
+    let butterflyCountFromInsects = 0;
+    let leafbeetleCountFromInsects = 0;
     const hostPlantsMap = new Map();
     
     insectsData.forEach((row, index) => {
@@ -1153,7 +1155,13 @@ async function generateMetaPages() {
       // 一般備考データを取得
       const generalNotes = generalNotesMapByInsectId.get(insectId) || [];
       
-      const type = 'moth';
+      // 種ページのタイプ判定（科ベース）
+      const famLatin = (row.family || '').trim();
+      const famJP = (row.family_jp || '').trim();
+      const isButterfly = /チョウ科$/.test(famJP) || /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/.test(famLatin);
+      const isLeafBeetle = famJP === 'ハムシ科' || famLatin === 'Chrysomelidae';
+      const isBeetle = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
+      const type = isButterfly ? 'butterfly' : (isLeafBeetle ? 'leafbeetle' : (isBeetle ? 'beetle' : 'moth'));
       
       // 成虫出現時期の検索
       const emergenceTime = emergenceTimeMap.get(japaneseName) || 
@@ -1188,7 +1196,9 @@ async function generateMetaPages() {
       const html = generateInsectHTML(insect, type);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
-      mothCount++;
+      if (type === 'moth') mothCount++;
+      else if (type === 'butterfly') butterflyCountFromInsects++;
+      else if (type === 'leafbeetle') leafbeetleCountFromInsects++;
       
       // 食草マップに追加（植物ページ生成用）
       insectHostPlants.forEach(hostPlant => {
@@ -1205,7 +1215,7 @@ async function generateMetaPages() {
     });
     
     // バタフライデータの処理（従来通り）
-    let butterflyCount = 0;
+    let butterflyCount = butterflyCountFromInsects;
     
     butterflyData.forEach((row, index) => {
       const japaneseName = row['和名'];
@@ -1278,7 +1288,7 @@ async function generateMetaPages() {
     });
     
     // ハムシデータの処理（従来通り）
-    let leafbeetleCount = 0;
+    let leafbeetleCount = leafbeetleCountFromInsects;
     
     hamushiData.forEach((row, index) => {
       const id = row['大図鑑カタログNo'] || row['ID'] || row['id'] || '';
