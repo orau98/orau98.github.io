@@ -3,7 +3,7 @@ import logger from './utils/logger';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
-import { getSourceLink } from './utils/sourceLinks';
+import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
@@ -1353,6 +1353,68 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                         source={primarySource}
                         compact={false}
                       />
+                    );
+                  })()}
+
+                  {/* 生態情報（general_notes.csv） */}
+                  {(() => {
+                    const notes = Array.isArray(moth.generalNotes) ? moth.generalNotes : [];
+                    const ecology = notes
+                      .filter(n => (n.type === '生態情報' || n.type === '生態') && n.content && n.content.trim() && n.content.trim() !== '不明')
+                      .map(n => ({
+                        content: String(n.content).trim(),
+                        reference: n.reference || ''
+                      }));
+                    // 重複除去（内容で）
+                    const seen = new Set();
+                    const uniqueEcology = ecology.filter(n => {
+                      const key = n.content;
+                      if (seen.has(key)) return false;
+                      seen.add(key);
+                      return true;
+                    });
+
+                    if (uniqueEcology.length === 0) return null;
+
+                    return (
+                      <div className="mt-5 pt-4 border-t border-orange-200/30 dark:border-orange-700/30">
+                        <div className="flex items-start space-x-3">
+                          <div className="mt-0.5 p-1 rounded bg-orange-500/10 text-orange-600 dark:text-orange-300">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6c-1.657 0-3 1.343-3 3 0 2.25 3 6 3 6s3-3.75 3-6c0-1.657-1.343-3-3-3z" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">生態情報</div>
+                            <ul className="mt-2 space-y-1">
+                              {uniqueEcology.map((n, i) => {
+                                const refLabel = normalizeReference(n.reference);
+                                const href = getSourceLink(refLabel || n.reference);
+                                return (
+                                  <li key={i} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                                    • {n.content}
+                                    {n.reference && (
+                                      <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
+                                        出典:{' '}
+                                        {href ? (
+                                          <a href={href} target="_blank" rel="noopener noreferrer" className="underline decoration-slate-300 hover:decoration-slate-400">
+                                            {refLabel}
+                                            <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                            </svg>
+                                          </a>
+                                        ) : (
+                                          <span>{refLabel}</span>
+                                        )}
+                                      </span>
+                                    )}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
                     );
                   })()}
                 </div>
