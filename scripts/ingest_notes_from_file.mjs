@@ -2,11 +2,19 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 
-// Usage: node scripts/ingest_notes_from_file.mjs [inputPath]
+// Usage: node scripts/ingest_notes_from_file.mjs [inputPath|-] [--ref="日本産蛾類標準図鑑1"]
 // Accepts Markdown table or CSV with headers: 学名, 成虫発生時期, 成虫発生時期に関する備考
 
-const REF = '日本蛾類標準図鑑3';
-const inputPath = process.argv[2] || path.join('tmp', 'standard3_notes.md');
+// Simple args parsing
+let REF = '日本蛾類標準図鑑3';
+let inputPath = path.join('tmp', 'standard3_notes.md');
+for (const arg of process.argv.slice(2)) {
+  if (arg.startsWith('--ref=')) {
+    REF = arg.substring('--ref='.length).replace(/^"|"$/g, '');
+  } else if (!arg.startsWith('-')) {
+    inputPath = arg;
+  }
+}
 
 function loadText(p) { return fs.readFileSync(p, 'utf8'); }
 function loadCSV(p) { return Papa.parse(fs.readFileSync(p, 'utf8'), { header: true, skipEmptyLines: false }).data; }
@@ -17,20 +25,36 @@ function saveCSV(p, rows) {
 }
 function toBinomial(sci) {
   if (!sci) return '';
-  const t = sci.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  // Remove markdown italics or underscores and surrounding backticks
+  const cleaned = String(sci)
+    .replace(/[\*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const t = cleaned.replace(/\s*\([^)]*\)\s*$/, '').trim();
   const parts = t.split(/\s+/);
   if (parts.length >= 2) return `${parts[0]} ${parts[1]}`;
   return parts[0] || '';
 }
 function parseMarkdown(md) {
-  const lines = md.split(/\r?\n/).filter(l => l.trim().startsWith('|'));
+  const all = md.split(/\r?\n/);
+  const tableLines = all.filter(l => l.trim().startsWith('|'));
+  if (tableLines.length < 2) return [];
+  // Header detection
+  const headerCellsRaw = tableLines[0].split('|').map(c => c.trim());
+  const headerCells = headerCellsRaw.map(h => h.replace(/[\*_`]/g, '').trim());
+  const idxSci = headerCells.findIndex(h => h.includes('学名'));
+  const idxPeriod = headerCells.findIndex(h => h.includes('成虫発生時期'));
+  const idxNote = headerCells.findIndex(h => h.includes('備考'));
   const out = [];
-  for (const l of lines.slice(2)) {
+  for (const l of tableLines.slice(2)) { // skip header and separator row
     const cells = l.split('|').map(c => c.trim());
-    if (cells.length < 4) continue;
-    const sci = cells[1];
-    const period = cells[2] && cells[2] !== '情報なし' ? cells[2] : '';
-    const note = cells[3] || '';
+    // Guard for leading/trailing pipes
+    if (idxSci === -1) continue;
+    const sci = cells[idxSci] || '';
+    const periodRaw = idxPeriod !== -1 ? (cells[idxPeriod] || '') : '';
+    const noteRaw = idxNote !== -1 ? (cells[idxNote] || '') : '';
+    const period = periodRaw && periodRaw !== '情報なし' ? periodRaw : '';
+    const note = noteRaw || '';
     if (!sci) continue;
     out.push({ sci, period, note });
   }
@@ -110,7 +134,9 @@ function main() {
 
   if (unmatchedList.length > 0) {
     fs.mkdirSync('reports', { recursive: true });
-    fs.writeFileSync(path.join('reports', 'standard3_unmatched_species.txt'), unmatchedList.join('\n'), 'utf8');
+    const slug = REF.replace(/[^\w\u3040-\u30FF\u4E00-\u9FFF]+/g, '_');
+    const file = `unmatched_${slug}.txt`;
+    fs.writeFileSync(path.join('reports', file), unmatchedList.join('\n'), 'utf8');
   }
   console.log(`matched=${matched} unmatched=${unmatched} added=${added}`);
 }
