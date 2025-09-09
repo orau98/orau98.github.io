@@ -1,4 +1,18 @@
 file,row,reason,insect_id,plant_name,plant_family
+hostplants.csv,1583,unknown insect_id,species-4257,カラマツ,マツ科
+hostplants.csv,1584,unknown insect_id,species-4258,クマシデ,カバノキ科
+hostplants.csv,1585,unknown insect_id,species-4258,アカシデ,カバノキ科
+hostplants.csv,1586,unknown insect_id,species-4258,イヌブナ,ブナ科
+hostplants.csv,1587,unknown insect_id,species-4258,クヌギ,ブナ科
+hostplants.csv,1588,unknown insect_id,species-4258,カシワ,ブナ科
+hostplants.csv,1589,unknown insect_id,species-4258,アラカシ,ブナ科
+hostplants.csv,1590,unknown insect_id,species-4258,シラカシ,ブナ科
+hostplants.csv,1591,unknown insect_id,species-4258,コナラ,ブナ科
+hostplants.csv,1592,unknown insect_id,species-4258,アベマキ,ブナ科
+hostplants.csv,1593,unknown insect_id,species-4258,ズミ,バラ科
+hostplants.csv,1594,unknown insect_id,species-4258,リンゴ,バラ科
+hostplants.csv,1595,unknown insect_id,species-4258,イロハモミジ,ムクロジ科
+hostplants.csv,1596,unknown insect_id,species-4258,ヤマツツジ,ツツジ科
 hostplants.csv,3667,unknown insect_id,species-5789,ケヤキ,ニレ科
 hostplants.csv,3670,unknown insect_id,species-5791,ケヤキ,ニレ科
 hostplants.csv,3671,unknown insect_id,species-5792,ハルニレ,ニレ科
@@ -10,9 +24,13 @@ hostplants.csv,6585,unknown insect_id,species-H586,ヤナギ類,ヤナギ科
 hostplants.csv,6586,unknown insect_id,species-H586,ハンノキ,カバノキ科
 hostplants.csv,6587,unknown insect_id,species-H586,ハギ類,マメ科
 hostplants.csv,6588,unknown insect_id,species-H586,ズミ,バラ科
+hostplants.csv,6971,unknown insect_id,species-4258,タカオカエデ,
+hostplants.csv,7583,unknown insect_id,species-4258,不明,
 general_notes.csv,13,unknown insect_id,species-10001,,
 general_notes.csv,14,unknown insect_id,species-10001,,
 general_notes.csv,471,unknown insect_id,species-H586,,
+general_notes.csv,583,unknown insect_id,species-4257,,
+general_notes.csv,584,unknown insect_id,species-4258,,
 general_notes.csv,590,unknown insect_id,species-5789,,
 general_notes.csv,591,unknown insect_id,species-5791,,
 general_notes.csv,593,unknown insect_id,species-5793,,
