@@ -549,6 +549,9 @@ function generateInsectHTML(insect, type) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google AdSense (auto ads for meta pages) -->
+  <meta name="google-adsense-account" content="ca-pub-6982051533473293">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
   <title>${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑</title>
   <meta name="description" content="${insect.japaneseName}の詳細情報、分類、食草について。${hostPlantsArray.length > 0 ? `食草: ${hostPlantsArray.slice(0, 3).join('、')}など` : ''}">
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
@@ -777,6 +780,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google AdSense (auto ads for meta pages) -->
+  <meta name="google-adsense-account" content="ca-pub-6982051533473293">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
   <title>${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
   <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
