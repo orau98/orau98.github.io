@@ -175,15 +175,16 @@ function App() {
       const genusMappingCsvPath = `${import.meta.env.BASE_URL}genus_mapping.csv`;
       
       // 正規化データのパス（新しい3ファイル構造）
+      const assetVersion = import.meta.env.VITE_ASSET_VERSION || '';
       const normalizedInsectsCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}insects.csv?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}insects.csv`;
+        : `${import.meta.env.BASE_URL}insects.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
       const normalizedHostplantsCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}hostplants.csv?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}hostplants.csv`;
+        : `${import.meta.env.BASE_URL}hostplants.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
       const normalizedNotesCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}general_notes.csv?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}general_notes.csv`;
+        : `${import.meta.env.BASE_URL}general_notes.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
       
       // 正規化データのみを優先的に使う運用フラグ
       // 既定: 本番では true（明示的に "false" 指定された場合のみ無効）
