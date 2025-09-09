@@ -1163,11 +1163,25 @@ async function generateMetaPages() {
       const isBeetle = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
       const type = isButterfly ? 'butterfly' : (isLeafBeetle ? 'leafbeetle' : (isBeetle ? 'beetle' : 'moth'));
       
-      // 成虫出現時期の検索
-      const emergenceTime = emergenceTimeMap.get(japaneseName) || 
+      // 成虫出現時期の検索（外部CSV→general_notesの順にフォールバック）
+      let emergenceTime = emergenceTimeMap.get(japaneseName) || 
                            emergenceTimeMap.get(scientificName) ||
                            emergenceTimeMap.get(scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim()) ||
                            null;
+      if (!emergenceTime) {
+        // general_notes から抽出
+        const isEmergenceNote = (note) => {
+          const t = (note?.type || '').trim();
+          const c = (note?.content || '').trim();
+          if (!c || c === '不明') return false;
+          const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
+            .some(k => t.includes(k));
+          const contentHit = /\d+\s*月|春|夏|秋|冬|上旬|中旬|下旬|頃/.test(c);
+          return typeHit || (!t && contentHit);
+        };
+        const gn = (generalNotes || []).find(isEmergenceNote);
+        if (gn) emergenceTime = gn.content;
+      }
       
       const insect = {
         id: insectId,
