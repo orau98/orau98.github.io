@@ -23,13 +23,26 @@ function saveCSV(p, rows) {
   const csv = Papa.unparse(rows, { header: true, columns: fields });
   fs.writeFileSync(p, csv, 'utf8');
 }
+function stripDiacritics(s='') {
+  try {
+    return s.normalize('NFKD').replace(/\p{Diacritic}/gu, '');
+  } catch { return s; }
+}
+function collapseSubgenus(sci='') {
+  // Genus (Subgenus) species -> Genus species
+  const m = sci.match(/^([A-Z][a-z-]+)\s*\([^)]*\)\s*([a-z-]+)(.*)$/);
+  if (m) return `${m[1]} ${m[2]}${m[3] || ''}`;
+  return sci;
+}
 function toBinomial(sci) {
   if (!sci) return '';
   // Remove markdown italics or underscores and surrounding backticks
-  const cleaned = String(sci)
+  let cleaned = String(sci)
     .replace(/[\*_`]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
+  cleaned = stripDiacritics(cleaned);
+  cleaned = collapseSubgenus(cleaned);
   const t = cleaned.replace(/\s*\([^)]*\)\s*$/, '').trim();
   const parts = t.split(/\s+/);
   if (parts.length >= 2) return `${parts[0]} ${parts[1]}`;
@@ -42,6 +55,7 @@ function parseMarkdown(md) {
   // Header detection
   const headerCellsRaw = tableLines[0].split('|').map(c => c.trim());
   const headerCells = headerCellsRaw.map(h => h.replace(/[\*_`]/g, '').trim());
+  const idxJa = headerCells.findIndex(h => h.includes('和名'));
   const idxSci = headerCells.findIndex(h => h.includes('学名'));
   const idxPeriod = headerCells.findIndex(h => h.includes('成虫発生時期'));
   const idxNote = headerCells.findIndex(h => h.includes('備考'));
@@ -50,13 +64,14 @@ function parseMarkdown(md) {
     const cells = l.split('|').map(c => c.trim());
     // Guard for leading/trailing pipes
     if (idxSci === -1) continue;
+    const ja = idxJa !== -1 ? (cells[idxJa] || '') : '';
     const sci = cells[idxSci] || '';
     const periodRaw = idxPeriod !== -1 ? (cells[idxPeriod] || '') : '';
     const noteRaw = idxNote !== -1 ? (cells[idxNote] || '') : '';
     const period = periodRaw && periodRaw !== '情報なし' ? periodRaw : '';
     const note = noteRaw || '';
     if (!sci) continue;
-    out.push({ sci, period, note });
+    out.push({ ja, sci, period, note });
   }
   return out;
 }
@@ -64,12 +79,14 @@ function parseFile(p, stdinText = null) {
   const ext = path.extname(p).toLowerCase();
   if (ext === '.csv') {
     return loadCSV(p).map(r => ({
+      ja: (r['和名'] || '').trim(),
       sci: (r['学名'] || '').trim(),
       period: (r['成虫発生時期'] || '').trim(),
       note: (r['成虫発生時期に関する備考'] || '').trim(),
     }));
   }
   const md = stdinText != null ? stdinText : loadText(p);
+  // Try markdown table, but also support CSV-looking markdown without extension
   return parseMarkdown(md);
 }
 function nextNoteId(rows) {
@@ -94,9 +111,40 @@ function main() {
   const notesNorm = loadCSV(path.join('normalized_data', 'general_notes.csv'));
 
   const bin2id = new Map();
+  const ja2id = new Map();
+  const genusMap = new Map(); // genus -> [{id, bin, jaSet}]
   insects.forEach(r => {
-    const b = toBinomial(r.scientific_name || `${r.genus || ''} ${r.species || ''}`);
-    if (b && r.insect_id) bin2id.set(b, r.insect_id);
+    const id = r.insect_id;
+    if (!id) return;
+    const sci = r.scientific_name || `${r.genus || ''} ${r.species || ''}`;
+    const b = toBinomial(sci);
+    if (b) bin2id.set(b, id);
+    // synonyms column may contain multiple values separated by delimiters
+    const synonyms = (r.synonyms || '').split(/[;、，,]/).map(s => s.trim()).filter(Boolean);
+    for (const syn of synonyms) {
+      const sb = toBinomial(syn);
+      if (sb && !bin2id.has(sb)) bin2id.set(sb, id);
+    }
+    // Build Japanese name map (main + variants)
+    const names = new Set();
+    const addJa = (s) => {
+      if (!s) return;
+      let t = String(s).trim();
+      t = t.replace(/（[^）]*）/g, '').replace(/\([^\)]*\)/g, '').trim();
+      if (t) names.add(t);
+    };
+    addJa(r.japanese_name);
+    addJa(r.old_japanese_name);
+    (r.alternative_name || '').split(/[;、，,]/).forEach(addJa);
+    (r.other_names || '').split(/[;、，,]/).forEach(addJa);
+    for (const n of names) {
+      if (!ja2id.has(n)) ja2id.set(n, id);
+    }
+    const g = b.split(' ')[0];
+    if (g) {
+      if (!genusMap.has(g)) genusMap.set(g, []);
+      genusMap.get(g).push({ id, bin: b, jaSet: names });
+    }
   });
 
   const rows = parseFile(inputPath, stdin);
@@ -130,10 +178,47 @@ function main() {
 
   let matched = 0, unmatched = 0, added = 0;
   const unmatchedList = [];
+  const normEpithet = (s='') => s.toLowerCase().replace(/ae/g, 'e').replace(/oe/g, 'e').replace(/u/g, 'u');
+  const levenshtein = (a,b) => {
+    a = a.toLowerCase(); b = b.toLowerCase();
+    const m=a.length,n=b.length; const dp=Array.from({length:m+1},()=>Array(n+1).fill(0));
+    for(let i=0;i<=m;i++) dp[i][0]=i; for(let j=0;j<=n;j++) dp[0][j]=j;
+    for(let i=1;i<=m;i++) for(let j=1;j<=n;j++) dp[i][j]=Math.min(
+      dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+(a[i-1]===b[j-1]?0:1)
+    );
+    return dp[m][n];
+  };
+
   for (const r of rows) {
+    const ja = (r.ja || '').trim().replace(/（[^）]*）/g, '').trim();
     let b = toBinomial(r.sci);
     let id = bin2id.get(b);
     if (!id && alias.has(b)) id = bin2id.get(alias.get(b));
+    // Fallback: Japanese name map
+    if (!id && ja) {
+      const viaJa = ja2id.get(ja);
+      if (viaJa) id = viaJa;
+    }
+    // Fuzzy within-genus (distance<=1) when unique and optionally Japanese matches one candidate's jaSet
+    if (!id && b && b.includes(' ')) {
+      const [g, s] = b.split(' ');
+      const cands = genusMap.get(g) || [];
+      let best = null; let tie = false;
+      for (const c of cands) {
+        const s2 = c.bin.split(' ')[1] || '';
+        const d = levenshtein(normEpithet(s), normEpithet(s2));
+        if (d <= 1) {
+          if (!best || d < best.d) { best = { id: c.id, d, jaSet: c.jaSet }; tie = false; }
+          else if (d === best.d) { tie = true; }
+        }
+      }
+      if (best && !tie) {
+        // If Japanese name is provided, ensure consistency when possible
+        if (!ja || best.jaSet.has(ja)) {
+          id = best.id;
+        }
+      }
+    }
     if (!id) { unmatched++; unmatchedList.push(r.sci); continue; }
     matched++;
     if (r.period) {
