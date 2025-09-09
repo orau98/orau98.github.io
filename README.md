@@ -155,6 +155,27 @@ var BASE_PATH = '/repo-name/';
 - **SSR (Server Side Rendering)**: Vercel、Netlify等
 - **プリレンダリング**: react-snap等での静的ファイル事前生成
 
+## 🧭 メタページとサイトマップ（種ID粒度）
+
+- 種IDページは静的に生成し、`public/meta/{type}/{insect_id}.html` に出力します。
+  - 例: `public/meta/butterfly/species-20179.html`、`public/meta/moth/species-0123.html`
+- サイトマップはメタページのみを対象に分割出力し、粒度を「種ページ」に統一しています。
+  - 出力先: `public/sitemap-moth.xml`、`public/sitemap-butterfly.xml`、`public/sitemap-leafbeetle.xml`、`public/sitemap-plant.xml`、およびインデックス `public/sitemap_index.xml`（エイリアスとして `public/sitemap.xml` も出力）
+- 生成コマンド（手動実行）
+
+```bash
+# 種IDメタページの生成（既存ファイルは再生成）
+npm run generate-meta
+
+# メタページベースの分割サイトマップ生成
+npm run generate-sitemap
+```
+
+- ビルド時は `prebuild` フックで自動実行されます。
+  - `npm run build` 実行時に `generate-meta` → `generate-sitemap` を含む一連の前処理が走ります。
+
+注: SPAのハッシュ/深いURL（`/#/butterfly/...` 等）はサイトマップに含めず、検索エンジン向けにはクロール可能なメタページURL（`/meta/.../*.html`）のみを掲載しています。
+
 ## 📝 開発・デバッグ
 
 ### ローカル開発
