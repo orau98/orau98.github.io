@@ -176,6 +176,17 @@ npm run generate-sitemap
 
 注: SPAのハッシュ/深いURL（`/#/butterfly/...` 等）はサイトマップに含めず、検索エンジン向けにはクロール可能なメタページURL（`/meta/.../*.html`）のみを掲載しています。
 
+## 🆔 IDポリシー（ハムシの統一）
+
+- ハムシ科（Chrysomelidae）の種IDは `species-H###` を正規とします。
+  - 旧 `species-LB###`（一部のレガシー採番）は、学名/和名照合のうえ `H###` に移行しました。
+  - Criocerinae（クビボソハムシ亜科）の `species-CR###` も `H###` へ統合済みです。
+- 参照の自動置換スクリプト：
+  - `scripts/unify_leafbeetle_ids.mjs`（LB→H）
+  - `scripts/unify_criocerinae_ids.mjs`（CR→H）
+- 実行後は `scripts/sort_insects_by_id.mjs` でID整列とレポート更新、必要に応じてメタ/サイトマップを再生成してください。
+
+
 ## 📝 開発・デバッグ
 
 ### ローカル開発
