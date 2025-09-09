@@ -104,6 +104,9 @@ function main() {
   const alias = new Map([
     ['Paramartyria immaculata', 'Paramartyria immaculatella'],
     ['Platymatopus japonicus', 'Phymatopus japonicus'],
+    // Common typos / orthographic variants detected
+    ['Mesoleuca mandschuricata', 'Mesoleuca mandshuricata'],
+    ['Eulithis convergenuata', 'Eulithis convergenata'],
   ]);
 
   let matched = 0, unmatched = 0, added = 0;

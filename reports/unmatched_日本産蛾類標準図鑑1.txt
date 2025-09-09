@@ -28,7 +28,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Spargania luctuata* (Denis & Schiffermüller, 1775)
 *Spargania djakonovi* Mirzojan, 1970
 *Spargania magnoliata* Guenée, 1858
@@ -45,7 +44,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -80,7 +78,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -95,7 +92,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -130,7 +126,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -145,7 +140,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -180,7 +174,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -195,7 +188,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -230,7 +222,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -245,7 +236,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -280,7 +270,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -295,7 +284,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -330,7 +318,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -345,7 +332,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -380,7 +366,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -395,7 +380,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -430,7 +414,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -445,7 +428,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -480,7 +462,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -495,7 +476,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -530,7 +510,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -545,7 +524,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -580,7 +558,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -595,7 +572,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -630,7 +606,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -645,7 +620,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -680,7 +654,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -695,7 +668,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -730,7 +702,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
@@ -745,7 +716,6 @@
 *Dysstroma hepronta* (Inoue, 1954)
 *Dysstroma hersiliata* (Guenée, 1858)
 *Eulithis pyraliata* (Denis & Schiffermüller, 1775)
-*Eulithis convergenuata* (Bremer, 1864)
 *Eulithis achatinellaria* (Oberthür, 1880)
 *Eulithis amabilis* (Butler, 1879)
 *Ecliptopera fastigiata* (Püngeler, 1908)
@@ -780,7 +750,6 @@
 *Anticlea hansi* (Hedemann, 1881)
 *Anticlea subornata* (Inoue, 1955)
 *Earophila badiata* (Denis & Schiffermüller, 1775)
-*Mesoleuca mandschuricata* (Bremer, 1864)
 *Rheumaptera* sp.
 *Triphosa amblychroura* Prout, 1937
 *Triphosa rubrodotata* (Walker, 1862)
