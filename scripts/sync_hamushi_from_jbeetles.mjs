@@ -32,7 +32,8 @@ const listSubfamilyPages = async () => {
 // Parse species lines of the form: <em>Genus</em> (<em>Subgenus</em>) <em>species</em> Author, YEAR / <span>和名</span>
 const parseSpeciesFromHtml = (html) => {
   const entries = [];
-  const re = /<em>([A-Z][a-z]+)<\/em>(?:\s*\(<em>([A-Z][a-z]+)<\/em>\))?\s*<em>([a-z][a-z-]+(?:\s+[a-z-]+)?)<\/em>/g;
+  // Pattern A: <em>Genus</em> (<em>Subgenus</em>) <em>species</em>
+  let re = /<em>([A-Z][a-z]+)<\/em>(?:\s*\(<em>([A-Z][a-z]+)<\/em>\))?\s*<em>([a-z][a-z-]+(?:\s+[a-z-]+)?)<\/em>/g;
   let m;
   while ((m = re.exec(html))) {
     const genus = m[1];
@@ -58,6 +59,22 @@ const parseSpeciesFromHtml = (html) => {
       if (j2) jp = j2[1].trim();
     }
     entries.push({ genus, subgenus, species, author, year, jp });
+  }
+  // Pattern B: <em>Genus species[ subspecies]</em> ... / <span>和名</span>
+  re = /<em>([A-Z][a-z]+)\s+([a-z][a-z-]+(?:\s+[a-z-]+)?)<\/em>([\s\S]{0,200}?)\/(?:\s*)<span[^>]*>([^<]+)<\/span>/g;
+  while ((m = re.exec(html))) {
+    const genus = m[1];
+    const species = m[2];
+    const rest = m[3] || '';
+    const jp = (m[4] || '').trim();
+    let author = '';
+    let year = '';
+    let a = rest.match(/\(([^,()]+),\s*(\[?\d{4}\]?)/) || rest.match(/\s([A-Z][^<,()]+),\s*(\[?\d{4}\]?)/);
+    if (a) {
+      author = (a[1] || '').replace(/[\[\]]/g, '').trim();
+      year = (a[2] || '').replace(/[\[\]]/g, '').trim();
+    }
+    entries.push({ genus, subgenus: '', species, author, year, jp });
   }
   return entries;
 };
