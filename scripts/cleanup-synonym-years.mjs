@@ -20,7 +20,8 @@ function isYearToken(token) {
   return /^\d{4}$/.test(compact);
 }
 
-function cleanSynonymsField(value) {
+// 名前系フィールドをクリーニング（年トークンのみ除去）
+function cleanNameField(value) {
   if (!value) return '';
   const raw = String(value).trim();
   if (!raw) return '';
@@ -52,12 +53,15 @@ for (const file of targets) {
   let fixed = 0;
   for (const r of rows) {
     if (!r) continue;
-    if (!Object.prototype.hasOwnProperty.call(r, 'synonyms')) continue;
-    const before = r.synonyms ?? '';
-    const after = cleanSynonymsField(before);
-    if (String(before).trim() !== String(after).trim()) {
-      r.synonyms = after;
-      fixed += 1;
+    const cols = ['synonyms', 'alternative_name', 'other_names'];
+    for (const col of cols) {
+      if (!Object.prototype.hasOwnProperty.call(r, col)) continue;
+      const before = r[col] ?? '';
+      const after = cleanNameField(before);
+      if (String(before).trim() !== String(after).trim()) {
+        r[col] = after;
+        fixed += 1;
+      }
     }
   }
 
@@ -65,4 +69,3 @@ for (const file of targets) {
   fs.writeFileSync(file, out, 'utf8');
   console.log(`${path.relative(process.cwd(), file)}: cleaned ${fixed} rows`);
 }
-
