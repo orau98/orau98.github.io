@@ -116,6 +116,7 @@ function main() {
 
   const bin2id = new Map();
   const ja2id = new Map();
+  const genusMap = new Map(); // genus -> [{id, bin, jaSet}]
   insects.forEach(r => {
     const id = r.insect_id;
     if (!id) return;
@@ -123,6 +124,16 @@ function main() {
     if (bin) bin2id.set(bin, id);
     const ja = (r.japanese_name || '').trim();
     if (ja) ja2id.set(ja, id);
+    const names = new Set();
+    const addJa = (s) => { if (s && s.trim()) names.add(s.trim()); };
+    addJa(r.japanese_name);
+    addJa(r.old_japanese_name);
+    (r.alternative_name || '').split(/[;、，,]/).forEach(addJa);
+    const g = (bin.split(' ')[0] || '').trim();
+    if (g) {
+      if (!genusMap.has(g)) genusMap.set(g, []);
+      genusMap.get(g).push({ id, bin, jaSet: names });
+    }
   });
 
   // Try robust line-based parsing to handle unquoted commas in 学名
@@ -146,7 +157,16 @@ function main() {
     const sci = sanitizeInline(r.sci || '');
     const period = sanitizeInline(r.period || '');
     const note = sanitizeInline(r.note || '');
-    const id = ja2id.get(ja) || bin2id.get(toBinomial(sci));
+    let id = ja2id.get(ja) || bin2id.get(toBinomial(sci));
+    if (!id && sci) {
+      const bin = toBinomial(sci);
+      const [g, s] = bin.split(' ');
+      const cands = genusMap.get(g) || [];
+      const lev = (a,b)=>{a=a||'';b=b||'';const m=a.length,n=b.length;const dp=Array.from({length:m+1},()=>Array(n+1).fill(0));for(let i=0;i<=m;i++)dp[i][0]=i;for(let j=0;j<=n;j++)dp[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return dp[m][n];};
+      let best=null; let tie=false;
+      for (const c of cands){ const s2=c.bin.split(' ')[1]||''; const d=lev((s||'').toLowerCase(), s2.toLowerCase()); if (d<=1){ if (!best||d<best.d){best={id:c.id,d}; tie=false;} else if (d===best.d){ tie=true; } } }
+      if (best && !tie) id = best.id;
+    }
     if (!id) { unmatched++; continue; }
 
     const insert = (type, content) => {
@@ -159,6 +179,14 @@ function main() {
     };
     insert('出現時期', period);
     insert('生態情報', note);
+  }
+  // Report unmatched if any
+  if (unmatched > 0) {
+    const OUT = path.join('reports', 'unmatched_manual_book1.csv');
+    fs.mkdirSync('reports', { recursive: true });
+    const csv = Papa.unparse(manual.filter(r => !(ja2id.get(sanitizeInline(r.ja||'')) || bin2id.get(toBinomial(sanitizeInline(r.sci||''))))), { header: true });
+    fs.writeFileSync(OUT, csv, 'utf8');
+    console.log(`unmatched written: ${OUT}`);
   }
   saveCSV(NOTES_PUB, notesPub);
   saveCSV(NOTES_NORM, notesNorm);
