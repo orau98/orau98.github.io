@@ -5318,7 +5318,7 @@ function App() {
             // 未詳/不明 は上書き対象から除外（表示の邪魔をしない）
             if (!time || time === '未詳' || time === '不明') continue;
 
-            result.push({ jname, sci, time, notes, source: 'ユーザー提供' });
+            result.push({ jname, sci, time, notes, source: '日本産蛾類標準図鑑1' });
           }
 
           return result;

@@ -143,7 +143,11 @@ function main() {
       const content = (cur['content'] || '').trim();
       if ((!content || content === '不明' || content === '未詳') && o.time) {
         cur['content'] = o.time;
-        cur['reference'] = cur['reference'] && cur['reference'].trim() ? cur['reference'] : 'ユーザー提供';
+        // Set reference to 図鑑1 if empty or previously user-provided
+        const ref = (cur['reference'] || '').trim();
+        if (!ref || ref === 'ユーザー提供') {
+          cur['reference'] = '日本産蛾類標準図鑑1';
+        }
         changes++;
       } else if (!o.time && content === '') {
         // Repair accidental empty content to '不明'
@@ -157,7 +161,7 @@ function main() {
         insect_id: id,
         note_type: '出現時期',
         content: o.time,
-        reference: 'ユーザー提供',
+        reference: '日本産蛾類標準図鑑1',
         page: '',
         year: ''
       });
@@ -174,12 +178,33 @@ function main() {
           insect_id: id,
           note_type: '生態情報',
           content: ec,
-          reference: 'ユーザー提供',
+          reference: '日本産蛾類標準図鑑1',
           page: '',
           year: ''
         });
         if (!ecologyById.has(id)) ecologyById.set(id, new Set());
         ecologyById.get(id).add(ec);
+        changes++;
+      }
+    }
+  });
+
+  // Pass to update any existing rows added previously as ユーザー提供 to 図鑑1 for overrides-derived notes
+  overrides.forEach(o => {
+    const id = idByJ.get(o.jname) || idByJKey.get(o.jnameKey) || idBySci.get(o.sci) || idBySci.get(o.sciCanon) || idBySciCanon.get(o.sciCanon);
+    if (!id) return;
+    // Update 生態情報 reference if content matches and reference was ユーザー提供
+    for (const n of notes) {
+      if ((n['insect_id'] || '').trim() !== id) continue;
+      const type = (n['note_type'] || '').trim();
+      const content = (n['content'] || '').trim();
+      const ref = (n['reference'] || '').trim();
+      if (type === '生態情報' && o.notes && content === o.notes.trim() && (!ref || ref === 'ユーザー提供')) {
+        n['reference'] = '日本産蛾類標準図鑑1';
+        changes++;
+      }
+      if (type === '出現時期' && o.time && content === o.time.trim() && (!ref || ref === 'ユーザー提供')) {
+        n['reference'] = '日本産蛾類標準図鑑1';
         changes++;
       }
     }
