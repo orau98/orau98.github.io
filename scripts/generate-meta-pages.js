@@ -163,13 +163,8 @@ function isValidPlantName(plantName) {
     return false;
   }
   
-  // 年号パターンを除外
-  if (/^\d{4}\)?$/.test(trimmed)) {
-    return false;
-  }
-  
-  // 括弧付き年号を除外
-  if (/^[（(]\d{4}[）)]?$/.test(trimmed)) {
+  // 年号パターンを除外（括弧・角括弧・重複閉じ括弧にも対応）
+  if (/^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(trimmed)) {
     return false;
   }
   
@@ -528,8 +523,8 @@ function generateInsectHTML(insect, type) {
         if (!p) return false;
         if (p.includes('害虫') || p.includes('であり')) return false;
         if (p === '農業' || p === '農業害虫' || p === '農業害虫であり') return false;
-        // Filter out year numbers that might be parsed as plants
-        if (/^\d{4}\)?$/.test(p)) return false;
+        // Filter out year-like tokens that might be parsed as plants
+        if (/^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(p)) return false;
         // Must have at least one Japanese or alphabetic character
         if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(p)) return false;
         return true;

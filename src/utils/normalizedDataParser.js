@@ -24,8 +24,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
     // 無効な食草名を除外（年号や空値の混入対策）
     const rawName = (hp.plant_name || '').trim();
-    // 例: "1900)", "[1799])", "1978", "1828)" などを弾く
-    const looksLikeYearOnly = /^\[?\(?\d{3,4}[\]\)]?$/.test(rawName);
+    // 例: "1900)", "[1799])", "1978", "1828)" などを弾く（括弧や角括弧の有無・重複にも対応）
+    const looksLikeYearOnly = /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(rawName);
     const isUnknown = rawName === '' || rawName === '未知' || rawName === '不明';
     if (looksLikeYearOnly || isUnknown) {
       return; // この行はスキップ

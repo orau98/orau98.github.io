@@ -7771,91 +7771,91 @@ hostplant-005003,species-6061,ポプラ類,ヤナギ科,国外,葉,幼虫,日本
 hostplant-005004,species-6061,トネリコ類,モクセイ科,国外,葉,幼虫,日本産蛾類標準図鑑2,ヨーロッパ
 hostplant-005005,species-6061,ニレ類,ニレ科,国外,葉,幼虫,日本産蛾類標準図鑑2,ヨーロッパ
 hostplant-005006,species-6061,コケモモ類,ツツジ科,国外,葉,幼虫,日本産蛾類標準図鑑2,ヨーロッパ
-hostplant-090006,species-1867,1900),,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, ミズナラ Q. crispula, シラカシ Q. myrsinifolia, ウバメガシ Q. phillyreoides (ブナ科)"
-hostplant-090007,species-6156,1964,,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, クヌギ Q. acutissima (ブナ科)"
-hostplant-090008,species-1868,1900),,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, ミズナラ Q. crispula, アラカシ Q. glauca, クヌギ Q. acutissima (ブナ科), シラカシ Q. myrsinifolia, マテバシイ Lithocarpus edulis (ブナ科)からも記録がある"
+hostplant-090006,species-1867,,,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, ミズナラ Q. crispula, シラカシ Q. myrsinifolia, ウバメガシ Q. phillyreoides (ブナ科)"
+hostplant-090007,species-6156,,,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, クヌギ Q. acutissima (ブナ科)"
+hostplant-090008,species-1868,,,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, ミズナラ Q. crispula, アラカシ Q. glauca, クヌギ Q. acutissima (ブナ科), シラカシ Q. myrsinifolia, マテバシイ Lithocarpus edulis (ブナ科)からも記録がある"
 hostplant-090009,species-6157,コナラ,ブナ科,野外（国内）,堅果,幼虫,日本のハマキガ2,幼虫はコナラの堅果に潜り、5月に羽化した
 hostplant-090010,species-6157,アマミアラカシ,,野外（国内）,堅果,幼虫,日本のハマキガ2,幼虫は寄主の堅果に潜る
 hostplant-090011,species-6157,スダジイ,ブナ科,野外（国内）,堅果,幼虫,日本のハマキガ2,幼虫は寄主の堅果に潜る
-hostplant-090012,species-1869,1900),,野外（国内）,葉,幼虫,日本のハマキガ2,タブノキ Machilus thunbergii (クスノキ科)
-hostplant-090013,species-1891,1978,,野外（国内）,葉,幼虫,日本のハマキガ2,タブノキ Machilus thunbergia (クスノキ科)
-hostplant-090014,species-1892,1973,,野外（国内）,葉,幼虫,日本のハマキガ2,"ウラジロエノキ Trema orientalis (アサ科), チャノキ Camellia sinensis (ツバキ科), ミカン Citrus sp. (ミカン科)など"
-hostplant-090015,species-1895,1973,,野外（国内）,葉,幼虫,日本のハマキガ2,ギーマ Vaccinium wrightii (ツツジ科)
-hostplant-090016,species-1942,1901,,野外（国内）,葉,幼虫,日本のハマキガ2,国内では未知. オーストラリアではDrypetes属 (ツゲモドキ科)
-hostplant-090017,species-1893,1931),,野外（国内）,葉,幼虫,日本のハマキガ2,"ミズナラ Quercus crispula, クリ Castanea crenata (ブナ科), マンサク Hamamelis japonica (マンサク科), ナツハゼ Vaccinium oldhamii (ツツジ科)"
-hostplant-090018,species-1894,2012,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090019,species-1870,[1811]),,野外（国内）,葉,幼虫,日本のハマキガ2,"イグサ Juncus decipiens (イグサ科), アブラガヤ属 Scirpus (カヤツリグサ科)"
-hostplant-090020,species-1871,1872),,野外（国内）,葉,幼虫,日本のハマキガ2,"ウキヤガラ Bolboschoenus fluviatilis subsp. yagara, コウキヤガラ B. koshevnikovii (カヤツリグサ科)"
-hostplant-090021,species-1872,1959,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090022,species-1873,1847),,野外（国内）,葉,幼虫,日本のハマキガ2,ハマスゲ Cyperus rotundus (カヤツリグサ科)
-hostplant-090023,species-1874,1956,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090024,species-1875,1909,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090025,species-1876,1909),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090026,species-6158,1973),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090027,species-1877,1935),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090028,species-1878,1926),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090029,species-1881,[1811]),,野外（国内）,葉,幼虫,日本のハマキガ2,イヌゴマ属 Stachys (シソ科)
-hostplant-090030,species-1882,1863),,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパの記録では、クマツヅラ属 Verbena, アヤメ属 Iris, イヌゴマ属 Stachys, リンドウ属 Gentiana, アキノキリンソウ属 Solidagoなどの草本類"
-hostplant-090031,species-1883,[1799]),,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパの記録では、ナベナ属 Dipsacus, オオバコ属 Plantago, リンドウ属 Gentiana, ナデシコ属 Dianthus"
-hostplant-090032,species-1884,1970,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090033,species-1887,1916),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090034,species-1885,1970,,野外（国内）,葉,幼虫,日本のハマキガ2,シソ Perilla frutescens (シソ科)
-hostplant-090035,species-1888,1976,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090012,species-1869,,,野外（国内）,葉,幼虫,日本のハマキガ2,タブノキ Machilus thunbergii (クスノキ科)
+hostplant-090013,species-1891,,,野外（国内）,葉,幼虫,日本のハマキガ2,タブノキ Machilus thunbergia (クスノキ科)
+hostplant-090014,species-1892,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ウラジロエノキ Trema orientalis (アサ科), チャノキ Camellia sinensis (ツバキ科), ミカン Citrus sp. (ミカン科)など"
+hostplant-090015,species-1895,,,野外（国内）,葉,幼虫,日本のハマキガ2,ギーマ Vaccinium wrightii (ツツジ科)
+hostplant-090016,species-1942,,,野外（国内）,葉,幼虫,日本のハマキガ2,国内では未知. オーストラリアではDrypetes属 (ツゲモドキ科)
+hostplant-090017,species-1893,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ミズナラ Quercus crispula, クリ Castanea crenata (ブナ科), マンサク Hamamelis japonica (マンサク科), ナツハゼ Vaccinium oldhamii (ツツジ科)"
+hostplant-090018,species-1894,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090019,species-1870,,,野外（国内）,葉,幼虫,日本のハマキガ2,"イグサ Juncus decipiens (イグサ科), アブラガヤ属 Scirpus (カヤツリグサ科)"
+hostplant-090020,species-1871,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ウキヤガラ Bolboschoenus fluviatilis subsp. yagara, コウキヤガラ B. koshevnikovii (カヤツリグサ科)"
+hostplant-090021,species-1872,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090022,species-1873,,,野外（国内）,葉,幼虫,日本のハマキガ2,ハマスゲ Cyperus rotundus (カヤツリグサ科)
+hostplant-090023,species-1874,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090024,species-1875,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090025,species-1876,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090026,species-6158,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090027,species-1877,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090028,species-1878,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090029,species-1881,,,野外（国内）,葉,幼虫,日本のハマキガ2,イヌゴマ属 Stachys (シソ科)
+hostplant-090030,species-1882,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパの記録では、クマツヅラ属 Verbena, アヤメ属 Iris, イヌゴマ属 Stachys, リンドウ属 Gentiana, アキノキリンソウ属 Solidagoなどの草本類"
+hostplant-090031,species-1883,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパの記録では、ナベナ属 Dipsacus, オオバコ属 Plantago, リンドウ属 Gentiana, ナデシコ属 Dianthus"
+hostplant-090032,species-1884,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090033,species-1887,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090034,species-1885,,,野外（国内）,葉,幼虫,日本のハマキガ2,シソ Perilla frutescens (シソ科)
+hostplant-090035,species-1888,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
 hostplant-090036,species-1886,ミカエリソウ,,野外（国内）,花序軸,幼虫,日本のハマキガ2,秋に寄主の花序の軸内に潜っている幼虫が得られている
 hostplant-090037,species-1886,テンニンソウ,シソ科,野外（国内）,花序軸,幼虫,日本のハマキガ2,秋に寄主の花序の軸内に潜っている幼虫が得られている
-hostplant-090038,species-1889,1963),,野外（国内）,葉,幼虫,日本のハマキガ2,ハッカ Mentha canadensis (シソ科)
-hostplant-090039,species-1890,[1811]),,野外（国内）,葉,幼虫,日本のハマキガ2,"イヌゴマ属 Stachys, ハッカ属 Mentha (シソ科)"
-hostplant-090040,species-2059,1978,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090041,species-2060,1978,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090042,species-2061,1980,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090043,species-2062,1978,,野外（国内）,葉,幼虫,日本のハマキガ2,"クスノキ Cinnamomum camphora, カナクギノキ Lindera erythrocarpa (クスノキ科)"
-hostplant-090044,species-2063,1976),,野外（国内）,葉,幼虫,日本のハマキガ2,枯葉
-hostplant-090045,species-2064,1964,,野外（国内）,葉,幼虫,日本のハマキガ2,トモエソウ Hypericum ascyron subsp. ascyron var. ascyron (オトギリソウ科)
-hostplant-090046,species-2067,1965,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090047,species-2068,1970,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090048,species-2069,1775),,野外（国内）,葉,幼虫,日本のハマキガ2,ロシアでは、チョウセンヤマナラシ Populus tremula var. davidiana (ヤナギ科)
-hostplant-090049,species-2070,[1806]),,野外（国内）,葉,幼虫,日本のハマキガ2,海外では、ヤナギ属 Salix (ヤナギ科)
-hostplant-090050,species-2071,1901,,野外（国内）,葉,幼虫,日本のハマキガ2,ロシアではモンゴリナラ Quercus mongolica (ブナ科)
-hostplant-090051,species-2072,1969,,野外（国内）,葉,幼虫,日本のハマキガ2,"ブナ Fagus crenata (ブナ科), ロシアでは、カバノキ属 Betula (カバノキ科), コナラ属 Quercus (ブナ科)"
-hostplant-090052,species-2073,1882),,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, ミズナラ Q. crispula (ブナ科)"
-hostplant-090053,species-2074,1835),,野外（国内）,葉,幼虫,日本のハマキガ2,"国外では、ニレ属 Ulmus (ニレ科), カバノキ属 Betula (カバノキ科), コナラ属 Quercus (ブナ科)"
-hostplant-090054,species-2075,1969,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090055,species-2076,1775),,野外（国内）,葉,幼虫,日本のハマキガ2,"国外ではカバノキ属 Betula (カバノキ科), カルーナ属 Calluna, エリカ属 Erica (ツツジ科)"
-hostplant-090056,species-2077,1962,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090057,species-2078,[1811]),,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパでは、クロウメモドキ属 Rhamnus, イソノキ属 Frangula (クロウメモドキ科)"
-hostplant-090058,species-2087,[1811]),,野外（国内）,葉,幼虫,日本のハマキガ2,"海外では、ヤマナラシ属 Populus, ヤナギ属 Salix (ヤナギ科), クロウメモドキ属 Rhamnus, イソノキ属 Frangula (クロウメモドキ科), キイチゴ属 Rubus (バラ科)など"
-hostplant-090059,species-2088,1922,,野外（国内）,葉,幼虫,日本のハマキガ2,アキニレ Ulmus parvifolia (ニレ科)
-hostplant-090060,species-2089,2005,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090061,species-2090,1758),,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパでは、カルーナ属 Calluna, エリカ属 Erica (ツツジ科)"
-hostplant-090062,species-2091,1828),,野外（国内）,葉,幼虫,日本のハマキガ2,"オランダイチゴ属 Fragaria, キイチゴ属 Rubus, バラ属 Rosa など(バラ科), イブキジャコウソウ属 Thymus, ニガクサ属 Teucrium など(シソ科)"
-hostplant-090063,species-2084,1912),,野外（国内）,葉,幼虫,日本のハマキガ2,"ヤエヤマネコノチチ Rhamnella inaequilatera, リュウキュウクロウメモドキ Rhamnus liukiuensis (クロウメモドキ科)"
-hostplant-090064,species-2079,1830),,野外（国内）,葉,幼虫,日本のハマキガ2,ヨーロッパでは、スノキ属 Vaccinium (ツツジ科)
-hostplant-090065,species-2080,1775),,野外（国内）,葉,幼虫,日本のハマキガ2,"シロツメクサ Trifolium repens (マメ科). ロシアではクサフジ Vicia cracca, レンリソウ Lathyrus quinquenervius (マメ科)"
-hostplant-090066,species-2082,1871),,野外（国内）,葉,幼虫,日本のハマキガ2,"シロツメクサ Trifolium repens, エゾノレンリソウ Lathyrus palustris var. pilosus, ハマエンドウ L. japonicus (マメ科), ハマゴウ Vitex rotundifolia (シソ科)"
-hostplant-090067,species-2083,1900,,野外（国内）,葉,幼虫,日本のハマキガ2,ヤマハギ Lespedeza bicolor (マメ科)
-hostplant-090068,species-2081,2005,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090069,species-2085,1845),,野外（国内）,葉,幼虫,日本のハマキガ2,"カスミザクラ Cerasus leveilleana, ナシ Pyrus pyrifolia, アンズ Prunus armeniaca var. ansu, アズキナシ Aria alnifolia (バラ科)"
-hostplant-090070,species-2092,1775),,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパでは、クロウメモドキ属 Rhamnus (クロウメモドキ科), サンシュユ属 Cornus (ミズキ科), ヤチヤナギ属 Myrica (ヤマモモ科), イボタノキ属 Ligustrum (モクセイ科), スモモ属 Prunus (バラ科)"
-hostplant-090071,species-2086,1979,,野外（国内）,葉,幼虫,日本のハマキガ2,"ナツメ Ziziphus jujuba var. inermis, ケンポナシ Hovenia dulcis (クロウメモドキ科)"
-hostplant-090072,species-2065,1891),,野外（国内）,葉,幼虫,日本のハマキガ2,サトウキビ Saccharum officinarum (イネ科)
-hostplant-090073,species-6159,2021,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090074,species-6160,2022,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090075,species-2097,1900),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090076,species-2098,1978,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090077,species-2066,1971,,野外（国内）,葉,幼虫,日本のハマキガ2,チマキザサ(クマイザサ) Sasa palmata (イネ科)
-hostplant-090078,species-2099,1981,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090079,species-2100,2012,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090080,species-2101,1936),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090081,species-2102,1968,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090082,species-2103,1964),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090083,species-2104,1997,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090084,species-2105,1970,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090085,species-6161,2022,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
-hostplant-090086,species-2106,1964,,野外（国内）,葉,幼虫,日本のハマキガ2,クロバナヒキオコシ Isodon trichocarpus (シソ科)
-hostplant-090087,species-2107,1931),,野外（国内）,葉,幼虫,日本のハマキガ2,"フユイチゴ Rubus buergeri, モミジイチゴ R. palmatus var. coptophyllus, クマイチゴ R. crataegifolius, ホウロクイチゴ R. sieboldii (バラ科)"
+hostplant-090038,species-1889,,,野外（国内）,葉,幼虫,日本のハマキガ2,ハッカ Mentha canadensis (シソ科)
+hostplant-090039,species-1890,,,野外（国内）,葉,幼虫,日本のハマキガ2,"イヌゴマ属 Stachys, ハッカ属 Mentha (シソ科)"
+hostplant-090040,species-2059,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090041,species-2060,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090042,species-2061,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090043,species-2062,,,野外（国内）,葉,幼虫,日本のハマキガ2,"クスノキ Cinnamomum camphora, カナクギノキ Lindera erythrocarpa (クスノキ科)"
+hostplant-090044,species-2063,,,野外（国内）,葉,幼虫,日本のハマキガ2,枯葉
+hostplant-090045,species-2064,,,野外（国内）,葉,幼虫,日本のハマキガ2,トモエソウ Hypericum ascyron subsp. ascyron var. ascyron (オトギリソウ科)
+hostplant-090046,species-2067,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090047,species-2068,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090048,species-2069,,,野外（国内）,葉,幼虫,日本のハマキガ2,ロシアでは、チョウセンヤマナラシ Populus tremula var. davidiana (ヤナギ科)
+hostplant-090049,species-2070,,,野外（国内）,葉,幼虫,日本のハマキガ2,海外では、ヤナギ属 Salix (ヤナギ科)
+hostplant-090050,species-2071,,,野外（国内）,葉,幼虫,日本のハマキガ2,ロシアではモンゴリナラ Quercus mongolica (ブナ科)
+hostplant-090051,species-2072,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ブナ Fagus crenata (ブナ科), ロシアでは、カバノキ属 Betula (カバノキ科), コナラ属 Quercus (ブナ科)"
+hostplant-090052,species-2073,,,野外（国内）,葉,幼虫,日本のハマキガ2,"コナラ Quercus serrata, ミズナラ Q. crispula (ブナ科)"
+hostplant-090053,species-2074,,,野外（国内）,葉,幼虫,日本のハマキガ2,"国外では、ニレ属 Ulmus (ニレ科), カバノキ属 Betula (カバノキ科), コナラ属 Quercus (ブナ科)"
+hostplant-090054,species-2075,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090055,species-2076,,,野外（国内）,葉,幼虫,日本のハマキガ2,"国外ではカバノキ属 Betula (カバノキ科), カルーナ属 Calluna, エリカ属 Erica (ツツジ科)"
+hostplant-090056,species-2077,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090057,species-2078,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパでは、クロウメモドキ属 Rhamnus, イソノキ属 Frangula (クロウメモドキ科)"
+hostplant-090058,species-2087,,,野外（国内）,葉,幼虫,日本のハマキガ2,"海外では、ヤマナラシ属 Populus, ヤナギ属 Salix (ヤナギ科), クロウメモドキ属 Rhamnus, イソノキ属 Frangula (クロウメモドキ科), キイチゴ属 Rubus (バラ科)など"
+hostplant-090059,species-2088,,,野外（国内）,葉,幼虫,日本のハマキガ2,アキニレ Ulmus parvifolia (ニレ科)
+hostplant-090060,species-2089,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090061,species-2090,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパでは、カルーナ属 Calluna, エリカ属 Erica (ツツジ科)"
+hostplant-090062,species-2091,,,野外（国内）,葉,幼虫,日本のハマキガ2,"オランダイチゴ属 Fragaria, キイチゴ属 Rubus, バラ属 Rosa など(バラ科), イブキジャコウソウ属 Thymus, ニガクサ属 Teucrium など(シソ科)"
+hostplant-090063,species-2084,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ヤエヤマネコノチチ Rhamnella inaequilatera, リュウキュウクロウメモドキ Rhamnus liukiuensis (クロウメモドキ科)"
+hostplant-090064,species-2079,,,野外（国内）,葉,幼虫,日本のハマキガ2,ヨーロッパでは、スノキ属 Vaccinium (ツツジ科)
+hostplant-090065,species-2080,,,野外（国内）,葉,幼虫,日本のハマキガ2,"シロツメクサ Trifolium repens (マメ科). ロシアではクサフジ Vicia cracca, レンリソウ Lathyrus quinquenervius (マメ科)"
+hostplant-090066,species-2082,,,野外（国内）,葉,幼虫,日本のハマキガ2,"シロツメクサ Trifolium repens, エゾノレンリソウ Lathyrus palustris var. pilosus, ハマエンドウ L. japonicus (マメ科), ハマゴウ Vitex rotundifolia (シソ科)"
+hostplant-090067,species-2083,,,野外（国内）,葉,幼虫,日本のハマキガ2,ヤマハギ Lespedeza bicolor (マメ科)
+hostplant-090068,species-2081,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090069,species-2085,,,野外（国内）,葉,幼虫,日本のハマキガ2,"カスミザクラ Cerasus leveilleana, ナシ Pyrus pyrifolia, アンズ Prunus armeniaca var. ansu, アズキナシ Aria alnifolia (バラ科)"
+hostplant-090070,species-2092,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ヨーロッパでは、クロウメモドキ属 Rhamnus (クロウメモドキ科), サンシュユ属 Cornus (ミズキ科), ヤチヤナギ属 Myrica (ヤマモモ科), イボタノキ属 Ligustrum (モクセイ科), スモモ属 Prunus (バラ科)"
+hostplant-090071,species-2086,,,野外（国内）,葉,幼虫,日本のハマキガ2,"ナツメ Ziziphus jujuba var. inermis, ケンポナシ Hovenia dulcis (クロウメモドキ科)"
+hostplant-090072,species-2065,,,野外（国内）,葉,幼虫,日本のハマキガ2,サトウキビ Saccharum officinarum (イネ科)
+hostplant-090073,species-6159,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090074,species-6160,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090075,species-2097,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090076,species-2098,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090077,species-2066,,,野外（国内）,葉,幼虫,日本のハマキガ2,チマキザサ(クマイザサ) Sasa palmata (イネ科)
+hostplant-090078,species-2099,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090079,species-2100,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090080,species-2101,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090081,species-2102,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090082,species-2103,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090083,species-2104,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090084,species-2105,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090085,species-6161,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090086,species-2106,,,野外（国内）,葉,幼虫,日本のハマキガ2,クロバナヒキオコシ Isodon trichocarpus (シソ科)
+hostplant-090087,species-2107,,,野外（国内）,葉,幼虫,日本のハマキガ2,"フユイチゴ Rubus buergeri, モミジイチゴ R. palmatus var. coptophyllus, クマイチゴ R. crataegifolius, ホウロクイチゴ R. sieboldii (バラ科)"
 hostplant-090088,species-2109,アサダ,カバノキ科,野外（国内）,葉,,日本のハマキガ2,
-hostplant-090089,species-2108,1979),,野外（国内）,葉,幼虫,日本のハマキガ2,"クロバナヒキオコシ Isodon trichocarpus, ヒキオコシ I. japonicus, アキチョウジ I. longitubus (シソ科)"
-hostplant-090090,species-2109,1912),,野外（国内）,葉,幼虫,日本のハマキガ2,ムラサキシキブ Callicarpa japonica (シソ科)
-hostplant-090091,species-2110,1775),,野外（国内）,葉,幼虫,日本のハマキガ2,センダン Melia azedarach (センダン科)
+hostplant-090089,species-2108,,,野外（国内）,葉,幼虫,日本のハマキガ2,"クロバナヒキオコシ Isodon trichocarpus, ヒキオコシ I. japonicus, アキチョウジ I. longitubus (シソ科)"
+hostplant-090090,species-2109,,,野外（国内）,葉,幼虫,日本のハマキガ2,ムラサキシキブ Callicarpa japonica (シソ科)
+hostplant-090091,species-2110,,,野外（国内）,葉,幼虫,日本のハマキガ2,センダン Melia azedarach (センダン科)
 hostplant-090092,species-2111,フウトウカズラ,コショウ科,野外（国内）,葉,幼虫,日本のハマキガ2,幼虫はフウトウカズラの新梢に潜る
-hostplant-090093,species-6162,1909),,野外（国内）,葉,幼虫,日本のハマキガ2,未知
+hostplant-090093,species-6162,,,野外（国内）,葉,幼虫,日本のハマキガ2,未知
