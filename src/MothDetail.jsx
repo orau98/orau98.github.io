@@ -1277,8 +1277,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               // generalNotesから出現時期を抽出（共通関数で柔軟に判定）
               const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
               const hasGeneralNotesTime = emergenceFromGeneralNotes && emergenceFromGeneralNotes.content !== '不明';
+              // 出現時期タイプのノートが存在するか（内容が不明でもセクションを表示）
+              const hasEmergenceTypeNote = Array.isArray(moth.generalNotes) && moth.generalNotes.some(n => {
+                const t = (n?.type || '').trim();
+                return t.includes('出現時期') || t.includes('成虫発生時期') || t.includes('発生時期') || t.includes('出現');
+              });
               
-              return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime;
+              return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote;
             })() && (
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
