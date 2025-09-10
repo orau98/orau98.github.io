@@ -20,12 +20,23 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
   // 食草データをinsect_idでグループ化
   const hostPlantsByInsect = {};
   hostplantsData.forEach(hp => {
+    if (!hp) return;
+
+    // 無効な食草名を除外（年号や空値の混入対策）
+    const rawName = (hp.plant_name || '').trim();
+    // 例: "1900)", "[1799])", "1978", "1828)" などを弾く
+    const looksLikeYearOnly = /^\[?\(?\d{3,4}[\]\)]?$/.test(rawName);
+    const isUnknown = rawName === '' || rawName === '未知' || rawName === '不明';
+    if (looksLikeYearOnly || isUnknown) {
+      return; // この行はスキップ
+    }
+
     if (!hostPlantsByInsect[hp.insect_id]) {
       hostPlantsByInsect[hp.insect_id] = [];
     }
     
     // 表示用の食草名を構築
-    let displayName = hp.plant_name;
+    let displayName = rawName;
     if (hp.plant_family && hp.plant_family !== '以上バラ科' && hp.plant_family !== '以上ブナ科') {
       displayName += `（${hp.plant_family}）`;
     }
@@ -33,7 +44,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     // species-6115のデバッグログ
     if (hp.insect_id === 'species-6115') {
       logger.debug('DEBUG species-6115 hostplant data:', {
-        plant_name: hp.plant_name,
+        plant_name: rawName,
         observation_type: hp.observation_type,
         plant_part: hp.plant_part,
         life_stage: hp.life_stage,
@@ -43,7 +54,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     }
     
     hostPlantsByInsect[hp.insect_id].push({
-      name: hp.plant_name,
+      name: rawName,
       family: hp.plant_family || '',
       displayName: displayName,
       observationType: hp.observation_type || '野外（国内）',
