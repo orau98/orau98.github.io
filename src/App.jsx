@@ -185,6 +185,11 @@ function App() {
       const normalizedNotesCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}general_notes.csv?v=${Date.now()}`
         : `${import.meta.env.BASE_URL}general_notes.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
+
+      // 任意提供の成虫出現時期オーバーライド（ユーザー提供テーブル）
+      const emergenceOverridesCsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}emergence_overrides.csv?v=${Date.now()}`
+        : `${import.meta.env.BASE_URL}emergence_overrides.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
       
       // 正規化データのみを優先的に使う運用フラグ
       // 既定: 本番では true（明示的に "false" 指定された場合のみ無効）
@@ -478,7 +483,7 @@ function App() {
         if (isDevelopment) logger.debug("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
         if (isDevelopment) logger.debug("DEBUG: About to load フユシャク file with safeFileLoad");
         
-        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null;
+        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null, emergenceOverridesText = null;
 
         if (useNormalizedOnly) {
           // Load only normalized data + optional plant helpers
@@ -490,6 +495,8 @@ function App() {
             safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
             safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
           ]);
+          // Optional: emergence overrides table (ユーザー提供)
+          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data', 10000);
         } else {
           // Load everything (legacy compatibility)
           [wameiText, mainText, yListText, hamushiIntegratedText, butterflyText, beetleText, kirigaText, fuyushakuText, genusMappingText, normalizedInsectsText, normalizedHostplantsText, normalizedNotesText] = await Promise.all([
@@ -506,6 +513,8 @@ function App() {
             safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
             safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
           ]);
+          // Optional: emergence overrides table (ユーザー提供)
+          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data', 10000);
         }
         
         if (isDevelopment) logger.debug("DEBUG: File loading completed, checking results...");
@@ -5225,6 +5234,89 @@ function App() {
         finalButterflyData = fixScientificNames(finalButterflyData);
         finalBeetleData = fixScientificNames(finalBeetleData);
         finalLeafbeetleData = fixScientificNames(finalLeafbeetleData);
+
+        // Parse user-provided emergence overrides CSV (robust to extra commas)
+        const splitCsvLine = (line) => {
+          const out = [];
+          let buf = '';
+          let inQuotes = false;
+          for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (ch === '"') {
+              inQuotes = !inQuotes;
+              continue;
+            }
+            if (ch === ',' && !inQuotes) {
+              out.push(buf);
+              buf = '';
+            } else {
+              buf += ch;
+            }
+          }
+          out.push(buf);
+          return out.map(s => s.trim());
+        };
+
+        const parseEmergenceOverrides = (text) => {
+          const result = [];
+          if (!text || typeof text !== 'string') return result;
+          const lines = text.replace(/\r\n?|\n/g, '\n').split('\n').filter(Boolean);
+          if (lines.length === 0) return result;
+          let start = 0;
+          if (lines[0].includes('和名') && lines[0].includes('学名')) start = 1;
+          for (let li = start; li < lines.length; li++) {
+            const line = lines[li];
+            if (!line || /^\s*$/.test(line)) continue;
+            const cells = splitCsvLine(line);
+            if (cells.length < 3) continue;
+            const jname = (cells[0] || '').replace(/^"|"$/g, '').trim();
+            const sci = (cells[1] || '').replace(/^"|"$/g, '').trim();
+            const rest = cells.slice(2);
+            let notes = '';
+            let time = '';
+            if (rest.length === 1) {
+              time = (rest[0] || '').trim();
+            } else if (rest.length > 1) {
+              notes = (rest[rest.length - 1] || '').trim();
+              time = rest.slice(0, -1).map(s => s.trim()).filter(Boolean).join('、');
+            }
+            if (!jname && !sci) continue;
+            if (!time || time === '未詳' || time === '不明') continue;
+            result.push({ jname, sci, time, notes, source: 'ユーザー提供' });
+          }
+          return result;
+        };
+
+        const overrideEntries = parseEmergenceOverrides(emergenceOverridesText);
+        const overridesByJ = new Map();
+        const overridesBySci = new Map();
+        overrideEntries.forEach(o => {
+          if (o.jname) overridesByJ.set(o.jname, o);
+          if (o.sci) {
+            const cleaned = o.sci.replace(/\s*\([^)]*\)\s*$/, '').trim();
+            overridesBySci.set(o.sci, o);
+            if (cleaned && cleaned !== o.sci) overridesBySci.set(cleaned, o);
+          }
+        });
+
+        const applyEmergenceOverrides = (arr) => (arr || []).map(item => {
+          const cleanedSci = (item.scientificName || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+          const o = overridesByJ.get(item.name) || overridesBySci.get(item.scientificName) || overridesBySci.get(cleanedSci);
+          if (o && o.time) {
+            return {
+              ...item,
+              emergenceTime: o.time,
+              emergenceTimeSource: o.source || 'ユーザー提供',
+              emergenceTimeDescription: o.notes || item.emergenceTimeDescription || ''
+            };
+          }
+          return item;
+        });
+
+        finalMothData = applyEmergenceOverrides(finalMothData);
+        finalButterflyData = applyEmergenceOverrides(finalButterflyData);
+        finalBeetleData = applyEmergenceOverrides(finalBeetleData);
+        finalLeafbeetleData = applyEmergenceOverrides(finalLeafbeetleData);
 
         // Unify host plant mapping with normalized/integrated data to avoid discrepancies
         const unifiedHostPlantMap = { ...cleanedHostPlantData };
