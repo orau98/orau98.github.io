@@ -30,6 +30,30 @@ const isTimeLike = (s) => {
   return /月|上旬|中旬|下旬|頃|春|夏|秋|冬|通年|年間|年中|\d+\s*-\s*\d+\s*月|\d+月/.test(t);
 };
 
+const normalizeJapaneseName = (s) => {
+  if (!s) return '';
+  let t = String(s).trim();
+  // Remove any full/half width parenthetical commentary
+  t = t.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').trim();
+  // Collapse spaces
+  t = t.replace(/\s+/g, '');
+  return t;
+};
+
+const canonicalScientific = (s) => {
+  if (!s) return '';
+  let t = String(s).trim();
+  // Remove author/year parentheses segment at end if any
+  t = t.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  // Handle Genus (Subgenus) species -> Genus species
+  const gss = t.match(/^([A-Z][a-z]+)\s*\([^)]*\)\s+([a-z-]+)/);
+  if (gss) return `${gss[1]} ${gss[2]}`;
+  // Extract up to Genus + species (+ optional subspecies)
+  const m = t.match(/^([A-Z][a-z]+)\s+([a-z-]+)(?:\s+([a-z-]+))?/);
+  if (m) return `${m[1]} ${m[2]}${m[3] ? ' ' + m[3] : ''}`;
+  return t;
+};
+
 const parseOverrides = (text) => {
   const lines = text.replace(/\r\n?|\n/g, '\n').split('\n');
   let start = 0;
@@ -40,7 +64,8 @@ const parseOverrides = (text) => {
     if (!line || /^\s*$/.test(line)) continue;
     const tokens = splitCsvLine(line);
     if (tokens.length < 2) continue;
-    const jname = dequote(tokens[0]);
+    const jnameRaw = dequote(tokens[0]);
+    const jname = jnameRaw;
     let idx = 1; const sciParts = [];
     for (; idx < tokens.length; idx++) { const tk = tokens[idx]; if (containsCJK(tk)) break; sciParts.push(tk); }
     let sci = dequote(sciParts.join(',').trim()); if (!sci && tokens[1]) sci = dequote(tokens[1]);
@@ -54,7 +79,7 @@ const parseOverrides = (text) => {
     }
     if (!jname && !sci) continue;
     if (!time || time === '未詳' || time === '不明') continue;
-    result.push({ jname, sci, time, notes });
+    result.push({ jname, jnameKey: normalizeJapaneseName(jname), sci, sciCanon: canonicalScientific(sci), time, notes });
   }
   return result;
 };
@@ -66,15 +91,19 @@ function main() {
 
   const idByJ = new Map();
   const idBySci = new Map();
+  const idByJKey = new Map();
+  const idBySciCanon = new Map();
   insects.forEach(r => {
     const id = (r['insect_id'] || '').trim();
     const jn = (r['japanese_name'] || '').trim();
     const sci = (r['scientific_name'] || '').trim();
     if (id && jn) idByJ.set(jn, id);
+    if (id && jn) idByJKey.set(normalizeJapaneseName(jn), id);
     if (id && sci) {
       idBySci.set(sci, id);
       const cleaned = sci.replace(/\s*\([^)]*\)\s*$/, '').trim();
       if (cleaned && cleaned !== sci) idBySci.set(cleaned, id);
+      idBySciCanon.set(canonicalScientific(sci), id);
     }
   });
 
@@ -92,7 +121,7 @@ function main() {
 
   let changes = 0;
   overrides.forEach(o => {
-    const id = idByJ.get(o.jname) || idBySci.get(o.sci);
+    const id = idByJ.get(o.jname) || idByJKey.get(o.jnameKey) || idBySci.get(o.sci) || idBySci.get(o.sciCanon) || idBySciCanon.get(o.sciCanon);
     if (!id) return;
     const key = `${id}::出現時期`;
     const idx = existingById.get(key);
@@ -130,4 +159,3 @@ function main() {
 }
 
 main();
-
