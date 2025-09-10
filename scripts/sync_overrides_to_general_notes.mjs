@@ -2,6 +2,7 @@ import fs from 'fs';
 import Papa from 'papaparse';
 
 const INSECTS = 'public/insects.csv';
+const INSECTS_NORM = 'normalized_data/insects.csv';
 const NOTES = 'public/general_notes.csv';
 const OVERRIDES = 'public/emergence_overrides.csv';
 
@@ -92,6 +93,7 @@ const parseOverrides = (text) => {
 
 function main() {
   const insects = readCsv(INSECTS);
+  const insectsNorm = fs.existsSync(INSECTS_NORM) ? readCsv(INSECTS_NORM) : [];
   const notesCsv = fs.readFileSync(NOTES, 'utf8');
   const overridesCsv = fs.readFileSync(OVERRIDES, 'utf8');
 
@@ -99,7 +101,8 @@ function main() {
   const idBySci = new Map();
   const idByJKey = new Map();
   const idBySciCanon = new Map();
-  insects.forEach(r => {
+
+  const addToMaps = (r) => {
     const id = (r['insect_id'] || '').trim();
     const jn = (r['japanese_name'] || '').trim();
     const sci = (r['scientific_name'] || '').trim();
@@ -111,7 +114,11 @@ function main() {
       if (cleaned && cleaned !== sci) idBySci.set(cleaned, id);
       idBySciCanon.set(canonicalScientific(sci), id);
     }
-  });
+  };
+
+  insects.forEach(addToMaps);
+  // 補完: normalized_data からもIDマップを拡張（未収載の種を拾う）
+  insectsNorm.forEach(addToMaps);
 
   const overrides = parseOverrides(overridesCsv);
   const { data: notes } = Papa.parse(notesCsv, { header: true, skipEmptyLines: false });
