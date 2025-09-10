@@ -78,7 +78,13 @@ const parseOverrides = (text) => {
       if (looksTime) time = rest.join('、'); else { notes = last; time = rest.slice(0, -1).join('、'); }
     }
     if (!jname && !sci) continue;
-    if (!time || time === '未詳' || time === '不明') continue;
+    // 時期が未詳/不明でも、備考があれば生態情報として活用するため残す
+    if (!time || time === '未詳' || time === '不明') {
+      if ((notes || '').trim()) {
+        result.push({ jname, jnameKey: normalizeJapaneseName(jname), sci, sciCanon: canonicalScientific(sci), time: '', notes });
+      }
+      continue;
+    }
     result.push({ jname, jnameKey: normalizeJapaneseName(jname), sci, sciCanon: canonicalScientific(sci), time, notes });
   }
   return result;
@@ -111,12 +117,18 @@ function main() {
   const { data: notes } = Papa.parse(notesCsv, { header: true, skipEmptyLines: false });
 
   const existingById = new Map();
+  const ecologyById = new Map(); // Map<id, Set<content>> for 生態情報重複防止
   notes.forEach((n, idx) => {
     const id = (n['insect_id'] || '').trim();
     const type = (n['note_type'] || '').trim();
     if (!id || !type) return;
     const key = `${id}::${type}`;
     if (!existingById.has(key)) existingById.set(key, idx);
+    if (type === '生態情報') {
+      const c = (n['content'] || '').trim();
+      if (!ecologyById.has(id)) ecologyById.set(id, new Set());
+      if (c) ecologyById.get(id).add(c);
+    }
   });
 
   let changes = 0;
@@ -126,15 +138,19 @@ function main() {
     const key = `${id}::出現時期`;
     const idx = existingById.get(key);
     if (idx != null) {
-      // Update only if unknown/empty
+      // Update only if unknown/empty AND override has a concrete time
       const cur = notes[idx];
       const content = (cur['content'] || '').trim();
-      if (!content || content === '不明' || content === '未詳') {
+      if ((!content || content === '不明' || content === '未詳') && o.time) {
         cur['content'] = o.time;
         cur['reference'] = cur['reference'] && cur['reference'].trim() ? cur['reference'] : 'ユーザー提供';
         changes++;
+      } else if (!o.time && content === '') {
+        // Repair accidental empty content to '不明'
+        cur['content'] = '不明';
+        changes++;
       }
-    } else {
+    } else if (o.time) {
       // Append new row
       notes.push({
         record_id: `note-ovr-${Date.now()}-${Math.floor(Math.random()*100000)}`,
@@ -146,6 +162,26 @@ function main() {
         year: ''
       });
       changes++;
+    }
+
+    // 生態情報の追記（notesがある場合）。重複はスキップ
+    const ec = (o.notes || '').trim();
+    if (ec) {
+      const ecSet = ecologyById.get(id) || new Set();
+      if (!ecSet.has(ec)) {
+        notes.push({
+          record_id: `note-ovr-eco-${Date.now()}-${Math.floor(Math.random()*100000)}`,
+          insect_id: id,
+          note_type: '生態情報',
+          content: ec,
+          reference: 'ユーザー提供',
+          page: '',
+          year: ''
+        });
+        if (!ecologyById.has(id)) ecologyById.set(id, new Set());
+        ecologyById.get(id).add(ec);
+        changes++;
+      }
     }
   });
 
