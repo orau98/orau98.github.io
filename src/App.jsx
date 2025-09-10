@@ -5260,30 +5260,67 @@ function App() {
         const parseEmergenceOverrides = (text) => {
           const result = [];
           if (!text || typeof text !== 'string') return result;
-          const lines = text.replace(/\r\n?|\n/g, '\n').split('\n').filter(Boolean);
+          const lines = text.replace(/\r\n?|\n/g, '\n').split('\n');
           if (lines.length === 0) return result;
+
+          const containsCJK = (s) => /[\u3040-\u30FF\u3400-\u9FFF]/.test(s || '');
+          const dequote = (s) => (s || '').replace(/^"|"$/g, '').trim();
+          const isTimeLike = (s) => {
+            const t = (s || '').trim();
+            if (!t) return false;
+            return /月|上旬|中旬|下旬|頃|春|夏|秋|冬|通年|年間|年中|\d+\s*-\s*\d+\s*月|\d+月/.test(t);
+          };
+
           let start = 0;
-          if (lines[0].includes('和名') && lines[0].includes('学名')) start = 1;
+          if ((lines[0] || '').includes('和名') && (lines[0] || '').includes('学名')) start = 1;
+
           for (let li = start; li < lines.length; li++) {
             const line = lines[li];
             if (!line || /^\s*$/.test(line)) continue;
-            const cells = splitCsvLine(line);
-            if (cells.length < 3) continue;
-            const jname = (cells[0] || '').replace(/^"|"$/g, '').trim();
-            const sci = (cells[1] || '').replace(/^"|"$/g, '').trim();
-            const rest = cells.slice(2);
-            let notes = '';
-            let time = '';
-            if (rest.length === 1) {
-              time = (rest[0] || '').trim();
-            } else if (rest.length > 1) {
-              notes = (rest[rest.length - 1] || '').trim();
-              time = rest.slice(0, -1).map(s => s.trim()).filter(Boolean).join('、');
+
+            const tokens = splitCsvLine(line);
+            if (tokens.length < 2) continue;
+
+            const jname = dequote(tokens[0]);
+            // 再構成: 学名は日本語が登場するまでのトークンを結合（カンマを含んでいても吸収）
+            let idx = 1;
+            const sciParts = [];
+            for (; idx < tokens.length; idx++) {
+              const tk = tokens[idx];
+              if (containsCJK(tk)) break;
+              sciParts.push(tk);
             }
+            let sci = dequote(sciParts.join(',').trim());
+            // フォールバック
+            if (!sci && tokens[1]) sci = dequote(tokens[1]);
+
+            // 残りは [成虫発生時期 (複数可), 備考(任意)]
+            let rest = tokens.slice(idx).map(dequote);
+            // 末尾の空要素を除去（末尾カンマなど）
+            while (rest.length && !rest[rest.length - 1]) rest.pop();
+
+            let time = '';
+            let notes = '';
+            if (rest.length === 1) {
+              time = rest[0] || '';
+            } else if (rest.length > 1) {
+              const last = rest[rest.length - 1];
+              const looksTime = isTimeLike(last) && !/(?:年\d化|年\s*\d+化|\d+化|多化|可能|思われ|越冬|越夏|昼|昼飛|灯火|害虫|記録|採集|地域|標高)/.test(last);
+              if (looksTime) {
+                time = rest.join('、');
+              } else {
+                notes = last;
+                time = rest.slice(0, -1).join('、');
+              }
+            }
+
             if (!jname && !sci) continue;
+            // 未詳/不明 は上書き対象から除外（表示の邪魔をしない）
             if (!time || time === '未詳' || time === '不明') continue;
+
             result.push({ jname, sci, time, notes, source: 'ユーザー提供' });
           }
+
           return result;
         };
 
