@@ -68,7 +68,7 @@ function main() {
     const ja = (r['和名'] || '').trim();
     const sci = (r['学名'] || '').trim();
     const period = (r['成虫発生時期'] || '').trim();
-    const note = (r['備考'] || '').trim();
+    const note = (r['備考'] || r['成虫発生時期に関する備考'] || '').trim();
     const id = ja2id.get(ja) || bin2id.get(toBinomial(sci));
     if (!id) { unmatched++; continue; }
 
@@ -89,4 +89,3 @@ function main() {
 }
 
 main();
-
