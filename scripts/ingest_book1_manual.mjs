@@ -16,6 +16,70 @@ function loadCSV(p) {
   return Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: h => h.trim(), transform: v => (v ?? '').toString().trim() }).data;
 }
 
+function sanitizeInline(s) {
+  if (s == null) return '';
+  let t = String(s);
+  t = t.replace(/[\u201C\u201D]/g, '"');
+  // Remove quotes around single English tokens inside scientific names like "Epiplema"
+  t = t.replace(/"([A-Za-z][A-Za-z-]*)"/g, '$1');
+  // Collapse whitespace and newlines
+  t = t.replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  return t;
+}
+
+function parseManualLine(line) {
+  // Heuristic parser for lines shaped like: 和名,学名,成虫発生時期,備考
+  // 学名が未引用でカンマを含む場合でも、時期カラムを検出して分割する
+  if (!line || !line.trim()) return null;
+  const firstComma = line.indexOf(',');
+  if (firstComma < 0) return null;
+  let ja = sanitizeInline(line.slice(0, firstComma));
+  let rest = line.slice(firstComma + 1);
+  // If next segment starts with quote, read quoted scientific name
+  if (rest.startsWith('"')) {
+    let i = 1; let sci = '';
+    while (i < rest.length) {
+      const ch = rest[i];
+      if (ch === '"') {
+        if (rest[i + 1] === '"') { sci += '"'; i += 2; continue; }
+        i++; break;
+      }
+      sci += ch; i++;
+    }
+    // Skip following comma
+    if (rest[i] === ',') i++;
+    const tail = rest.slice(i);
+    const lastComma = tail.lastIndexOf(',');
+    let period = '', note = '';
+    if (lastComma >= 0) {
+      period = sanitizeInline(tail.slice(0, lastComma));
+      note = sanitizeInline(tail.slice(lastComma + 1));
+    } else {
+      period = sanitizeInline(tail);
+    }
+    return { ja, sci: sanitizeInline(sci), period, note };
+  }
+  // Unquoted: split by commas, detect which part looks like period
+  const parts = rest.split(',').map(s => sanitizeInline(s));
+  const looksLikePeriod = (s) => {
+    if (!s) return false;
+    return /(\d+\s*[~〜]?\s*\d*\s*月)|月|不明|春|夏|秋|冬|年間|上旬|中旬|下旬|頃|日|〜|~/.test(s);
+  };
+  let k = -1;
+  for (let i = 0; i < parts.length; i++) { if (looksLikePeriod(parts[i])) { k = i; break; } }
+  let sci = '', period = '', note = '';
+  if (k === -1) {
+    sci = parts[0] || '';
+    period = parts[1] || '';
+    note = parts.slice(2).join(',');
+  } else {
+    sci = parts.slice(0, k).join(',');
+    period = parts[k] || '';
+    note = parts.slice(k + 1).join(',');
+  }
+  return { ja, sci: sanitizeInline(sci), period: sanitizeInline(period), note: sanitizeInline(note) };
+}
+
 function saveCSV(p, rows) {
   const fields = Object.keys(rows[0] || {});
   const csv = Papa.unparse(rows, { header: true, columns: fields });
@@ -61,14 +125,27 @@ function main() {
     if (ja) ja2id.set(ja, id);
   });
 
-  const manual = loadCSV(inputPath);
+  // Try robust line-based parsing to handle unquoted commas in 学名
+  const raw = fs.readFileSync(inputPath, 'utf8').replace(/\r\n?|\n/g, '\n');
+  const lines = raw.split('\n');
+  // skip header line
+  const manual = [];
+  for (let i = 1; i < lines.length; i++) {
+    const rec = parseManualLine(lines[i]);
+    if (rec && (rec.ja || rec.sci)) manual.push({
+      ja: rec.ja,
+      sci: rec.sci,
+      period: rec.period,
+      note: rec.note
+    });
+  }
   let added = 0, unmatched = 0;
 
   for (const r of manual) {
-    const ja = (r['和名'] || '').trim();
-    const sci = (r['学名'] || '').trim();
-    const period = (r['成虫発生時期'] || '').trim();
-    const note = (r['備考'] || r['成虫発生時期に関する備考'] || '').trim();
+    const ja = sanitizeInline(r.ja || '');
+    const sci = sanitizeInline(r.sci || '');
+    const period = sanitizeInline(r.period || '');
+    const note = sanitizeInline(r.note || '');
     const id = ja2id.get(ja) || bin2id.get(toBinomial(sci));
     if (!id) { unmatched++; continue; }
 
