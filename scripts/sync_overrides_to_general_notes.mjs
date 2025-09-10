@@ -138,17 +138,19 @@ function main() {
     const key = `${id}::出現時期`;
     const idx = existingById.get(key);
     if (idx != null) {
-      // Update only if unknown/empty AND override has a concrete time
+      // Force unify: if overrides has concrete time, overwrite content and reference
       const cur = notes[idx];
       const content = (cur['content'] || '').trim();
-      if ((!content || content === '不明' || content === '未詳') && o.time) {
-        cur['content'] = o.time;
-        // Set reference to 図鑑1 if empty or previously user-provided
-        const ref = (cur['reference'] || '').trim();
-        if (!ref || ref === 'ユーザー提供') {
-          cur['reference'] = '日本産蛾類標準図鑑1';
+      if (o.time) {
+        if (content !== o.time) {
+          cur['content'] = o.time;
+          changes++;
         }
-        changes++;
+        // Always set reference to 図鑑1
+        if ((cur['reference'] || '').trim() !== '日本産蛾類標準図鑑1') {
+          cur['reference'] = '日本産蛾類標準図鑑1';
+          changes++;
+        }
       } else if (!o.time && content === '') {
         // Repair accidental empty content to '不明'
         cur['content'] = '不明';
