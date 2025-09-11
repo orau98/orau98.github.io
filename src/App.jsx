@@ -486,7 +486,7 @@ function App() {
         if (isDevelopment) logger.debug("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
         if (isDevelopment) logger.debug("DEBUG: About to load フユシャク file with safeFileLoad");
         
-        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null, emergenceOverridesText = null;
+        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null, emergenceOverridesText = null, emergenceOverridesStd2Text = null;
 
         if (useNormalizedOnly) {
           // Load only normalized data + optional plant helpers
