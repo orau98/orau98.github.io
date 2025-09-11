@@ -6608,8 +6608,7 @@ species-20459,Gracillariidae,ホソガ科,,,,,Rhadinoptilia,,camphorae,,Gracilla
 species-20460,Depressariidae,ヒラタマルハキバガ科,,,,,Depressaria,,nomia,,Depressariidae,1123,"ゴマダラマルハキバガ, ゴマダラカマガ",,,,"Depressaria nomia Depressariidae, 1123",,,
 species-20461,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,Operophtera,,nana,,Inoue,1955,ミヤマフユナミシャク,,,,"Operophtera nana Inoue, 1955",,
 species-20462,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,,Operophtera,,relegata,,Prout,1908,クロオビフユナミシャク,,,,"Operophtera relegata Prout, 1908",,
-species-20463,Sphingidae,スズメガ科,Macroglossinae,ホウジャク亜科,,,,Macroglossum,,faro,,(Cramer),1780,ファロオオホウジャク,,,,"Macroglossum faro (Cramer, 1780)",,"species-H001,Chrysomelidae,ハムシ科,Alticinae,ヒゲナガハムシ亜科,,,Altica,,aenea,,Olivier,1808,カミナリハムシ,,,,""Altica aenea Olivier, 1808"
-species-H002,Chrysomelidae,ハムシ科,Alticinae,ヒゲナガハムシ亜科,,,Altica,,birmanensis,,Jacoby,1896,ビルマカミナリハムシ,,,,"Altica birmanensis Jacoby, 1896",,,
+species-20463,Sphingidae,スズメガ科,Macroglossinae,ホウジャク亜科,,,,Macroglossum,,faro,,(Cramer),1780,ファロオオホウジャク,,,,"Macroglossum faro (Cramer, 1780)",,species-H002
 species-H003,Chrysomelidae,ハムシ科,Alticinae,ヒゲナガハムシ亜科,,,Altica,,caerulescens,,Baly,1874,ヒメカミナリハムシ,,,,"Altica caerulescens Baly, 1874",,,
 species-H004,Chrysomelidae,ハムシ科,Alticinae,ヒゲナガハムシ亜科,,,Altica,,circaeae,,Ohno,1960,ミズタマソウカミナリハムシ,,,,"Altica circaeae Ohno, 1960",,,
 species-H005,Chrysomelidae,ハムシ科,Alticinae,ヒゲナガハムシ亜科,,,Altica,,cirsicola,,Ohno,1960,アザミカミナリハムシ,,,,"Altica cirsicola Ohno, 1960",,,
@@ -7337,4 +7336,5 @@ species-20475,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モン�
 species-20476,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Xestia,,speciosa,,Hübner,[1813],アルプスヤガ,,,,"Xestia speciosa (Hübner, [1813])",,,
 species-20477,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Xestia,,sincera,,Herrich-Schäffer,1851,アトジロアルプスヤガ,,,,"Xestia sincera (Herrich-Schäffer, 1851)",,,
 species-20478,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Xestia,,descripta,,Bremer,1861,アサマウスモンヤガ,,,,"Xestia descripta (Bremer, 1861)",,,
+,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
