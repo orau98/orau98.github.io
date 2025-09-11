@@ -132,6 +132,17 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       const altNames = Array.from(new Set(altNamesRaw.filter(n => n && n !== primaryName)));
       const alternativeNames = altNames.join('、');
 
+      // 出現時期（general_notesからの詳細一覧も構築）
+      const emergenceNotes = (generalNotes || []).filter(n => {
+        const t = (n.type || '').trim();
+        return t.includes('出現時期') || t.includes('成虫発生時期') || t.includes('発生時期') || t.includes('出現');
+      }).map(n => ({
+        period: (n.content || '').trim(),
+        source: (n.reference || '').trim(),
+        region: '',
+        notes: (n.page || '').trim()
+      }));
+
       const insectData = {
         id: insectId,
         name: insect.japanese_name?.trim() || '不明',
@@ -156,6 +167,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         hostPlantsDetailed: hostPlants,
         // 総合備考
         generalNotes: generalNotes,
+        // 詳細な成虫発生時期（ノート由来）
+        emergenceTimeDetailed: emergenceNotes,
         dataSource: 'normalized_csv',
         notes: insect.notes?.trim() || '',
         alternativeNames,
