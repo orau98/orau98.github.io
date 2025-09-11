@@ -143,6 +143,16 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         notes: (n.page || '').trim()
       }));
 
+      // 英語キーでのタイプ判定（UIコンポーネントの条件分岐で使用）
+      const getTypeKey = (famJp = '', fam = '') => {
+        const fj = (famJp || '').trim();
+        const f = (fam || '').trim();
+        if (fj.includes('チョウ') || fj.includes('シジミ') || fj.includes('セセリ')) return 'butterfly';
+        if (f === 'Chrysomelidae' || fj.includes('ハムシ')) return 'leafbeetle';
+        if (f === 'Buprestidae' || fj.includes('タマムシ')) return 'beetle';
+        return 'moth';
+      };
+
       const insectData = {
         id: insectId,
         name: insect.japanese_name?.trim() || '不明',
@@ -172,8 +182,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         dataSource: 'normalized_csv',
         notes: insect.notes?.trim() || '',
         alternativeNames,
-        // 分類用フィールド
-        type: getInsectTypeFromFamily(insect.family_jp || insect.family || '')
+        // 分類用フィールド（英語キー）
+        type: getTypeKey(insect.family_jp, insect.family)
       };
 
       // general_notes から出現時期を既存フィールドへも反映（表示の安定化のため）
