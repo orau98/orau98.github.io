@@ -190,6 +190,9 @@ function App() {
       const emergenceOverridesCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}emergence_overrides.csv?v=${Date.now()}`
         : `${import.meta.env.BASE_URL}emergence_overrides.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
+      const emergenceOverridesStd2CsvPath = import.meta.env.DEV
+        ? `${import.meta.env.BASE_URL}emergence_overrides_std2.csv?v=${Date.now()}`
+        : `${import.meta.env.BASE_URL}emergence_overrides_std2.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
       
       // 正規化データのみを優先的に使う運用フラグ
       // 既定: 本番では true（明示的に "false" 指定された場合のみ無効）
@@ -496,7 +499,8 @@ function App() {
             safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
           ]);
           // Optional: emergence overrides table (ユーザー提供)
-          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data', 10000);
+          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data (std1)', 10000);
+          emergenceOverridesStd2Text = await safeFileLoad(emergenceOverridesStd2CsvPath, 'emergence overrides data (std2)', 10000);
         } else {
           // Load everything (legacy compatibility)
           [wameiText, mainText, yListText, hamushiIntegratedText, butterflyText, beetleText, kirigaText, fuyushakuText, genusMappingText, normalizedInsectsText, normalizedHostplantsText, normalizedNotesText] = await Promise.all([
@@ -514,7 +518,8 @@ function App() {
             safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
           ]);
           // Optional: emergence overrides table (ユーザー提供)
-          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data', 10000);
+          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data (std1)', 10000);
+          emergenceOverridesStd2Text = await safeFileLoad(emergenceOverridesStd2CsvPath, 'emergence overrides data (std2)', 10000);
         }
         
         if (isDevelopment) logger.debug("DEBUG: File loading completed, checking results...");
@@ -5257,7 +5262,7 @@ function App() {
           return out.map(s => s.trim());
         };
 
-        const parseEmergenceOverrides = (text) => {
+        const parseEmergenceOverrides = (text, sourceLabel = '日本産蛾類標準図鑑1') => {
           const result = [];
           if (!text || typeof text !== 'string') return result;
           const lines = text.replace(/\r\n?|\n/g, '\n').split('\n');
@@ -5318,13 +5323,15 @@ function App() {
             // 未詳/不明 は上書き対象から除外（表示の邪魔をしない）
             if (!time || time === '未詳' || time === '不明') continue;
 
-            result.push({ jname, sci, time, notes, source: '日本産蛾類標準図鑑1' });
+            result.push({ jname, sci, time, notes, source: sourceLabel });
           }
 
           return result;
         };
 
-        const overrideEntries = parseEmergenceOverrides(emergenceOverridesText);
+        const overrideEntriesStd1 = parseEmergenceOverrides(emergenceOverridesText, '日本産蛾類標準図鑑1');
+        const overrideEntriesStd2 = parseEmergenceOverrides(emergenceOverridesStd2Text, '日本産蛾類標準図鑑2');
+        const overrideEntries = [...overrideEntriesStd1, ...overrideEntriesStd2];
         const overridesByJ = new Map();
         const overridesBySci = new Map();
         overrideEntries.forEach(o => {

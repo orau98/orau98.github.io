@@ -1,4 +1,4 @@
 ID statistics
-numeric: 6589
+numeric: 6610
 letter:H: 675
-other: 10
+other: 40
