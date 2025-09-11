@@ -5362,6 +5362,34 @@ function App() {
         finalBeetleData = applyEmergenceOverrides(finalBeetleData);
         finalLeafbeetleData = applyEmergenceOverrides(finalLeafbeetleData);
 
+        // Fallback: if no emergenceTime after overrides, fill from general_notes
+        const isEmergenceNoteGeneric = (note) => {
+          const t = (note?.type || '').trim();
+          const c = (note?.content || '').trim();
+          if (!c || c === '不明') return false;
+          const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
+            .some(k => t.includes(k));
+          const contentHit = /\d+\s*月|春|夏|秋|冬|上旬|中旬|下旬|頃/.test(c);
+          return typeHit || (!t && contentHit);
+        };
+        const fillEmergenceFromNotes = (arr) => (arr || []).map(item => {
+          if (!item || (item.emergenceTime && item.emergenceTime !== '不明')) return item;
+          const gn = (item.generalNotes || []).find(isEmergenceNoteGeneric);
+          if (gn && gn.content) {
+            return {
+              ...item,
+              emergenceTime: gn.content,
+              emergenceTimeSource: gn.reference || item.emergenceTimeSource || '',
+              emergenceTimeDescription: (gn.page ? `p.${gn.page}` : '') || item.emergenceTimeDescription || ''
+            };
+          }
+          return item;
+        });
+        finalMothData = fillEmergenceFromNotes(finalMothData);
+        finalButterflyData = fillEmergenceFromNotes(finalButterflyData);
+        finalBeetleData = fillEmergenceFromNotes(finalBeetleData);
+        finalLeafbeetleData = fillEmergenceFromNotes(finalLeafbeetleData);
+
         // Unify host plant mapping with normalized/integrated data to avoid discrepancies
         const unifiedHostPlantMap = { ...cleanedHostPlantData };
         const addInsectPlants = (insect) => {
