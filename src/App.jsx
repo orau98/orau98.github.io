@@ -584,17 +584,11 @@ function App() {
             });
             // Fallback: if parsing errors exist, manually parse lines to recover critical fields
             let notesData = notesParsed.data;
-            if (notesParsed.errors && notesParsed.errors.length > 0) {
-              try {
-                const lines = normalizedNotesText.replace(/\r\n?|\n/g, '\n').split('\n');
-                const header = lines[0].split(',').map(h => h.trim());
-                const idxRecord = header.indexOf('record_id');
-                const idxInsect = header.indexOf('insect_id');
-                const idxType = header.indexOf('note_type');
-                const idxContent = header.indexOf('content');
-                const idxRef = header.indexOf('reference');
-                const idxPage = header.indexOf('page');
-                const idxYear = header.indexOf('year');
+            try {
+              const lines = normalizedNotesText.replace(/\r\n?|\n/g, '\n').split('\n');
+              const nonEmptyCount = lines.filter(l => l && l.trim()).length;
+              const shouldFallback = (notesParsed?.errors?.length || 0) > 0 || (notesParsed?.data?.length || 0) + 10 < (nonEmptyCount - 1);
+              if (shouldFallback) {
                 const parseCsvLine = (line) => {
                   const out = []; let cur = ''; let q = false;
                   for (let i = 0; i < line.length; i++) {
@@ -613,19 +607,28 @@ function App() {
                   out.push(cur);
                   return out;
                 };
+                const dequote = (s) => (s || '').replace(/^"|"$/g, '').trim();
                 const sanitize = (s) => (s || '').toString().replace(/\r?\n+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+                const headerTokens = parseCsvLine(lines[0]).map(dequote);
+                const idxRecord = headerTokens.indexOf('record_id');
+                const idxInsect = headerTokens.indexOf('insect_id');
+                const idxType = headerTokens.indexOf('note_type');
+                const idxContent = headerTokens.indexOf('content');
+                const idxRef = headerTokens.indexOf('reference');
+                const idxPage = headerTokens.indexOf('page');
+                const idxYear = headerTokens.indexOf('year');
                 const recs = [];
                 for (let i = 1; i < lines.length; i++) {
                   const line = lines[i];
                   if (!line || !line.trim()) continue;
-                  const cols = parseCsvLine(line);
-                  if (cols.length < 4) continue;
+                  const cols = parseCsvLine(line).map(dequote);
+                  if (cols.length < 2) continue;
                   const rec = {
-                    record_id: idxRecord >= 0 ? sanitize(cols[idxRecord]) : sanitize(cols[0]),
-                    insect_id: idxInsect >= 0 ? sanitize(cols[idxInsect]) : sanitize(cols[1] || ''),
-                    note_type: idxType >= 0 ? sanitize(cols[idxType]) : sanitize(cols[2] || ''),
-                    content: idxContent >= 0 ? sanitize(cols[idxContent]) : sanitize(cols[3] || ''),
-                    reference: idxRef >= 0 ? sanitize(cols[idxRef]) : sanitize(cols[4] || ''),
+                    record_id: idxRecord >= 0 ? sanitize(cols[idxRecord] || '') : sanitize(cols[0] || ''),
+                    insect_id: idxInsect >= 0 ? sanitize(cols[idxInsect] || '') : sanitize(cols[1] || ''),
+                    note_type: idxType >= 0 ? sanitize(cols[idxType] || '') : sanitize(cols[2] || ''),
+                    content: idxContent >= 0 ? sanitize(cols[idxContent] || '') : sanitize(cols[3] || ''),
+                    reference: idxRef >= 0 ? sanitize(cols[idxRef] || '') : sanitize(cols[4] || ''),
                     page: idxPage >= 0 ? sanitize(cols[idxPage] || '') : '',
                     year: idxYear >= 0 ? sanitize(cols[idxYear] || '') : ''
                   };
@@ -635,9 +638,9 @@ function App() {
                   if (isDevelopment) logger.warn('Using manual CSV parse fallback for general_notes (rows=', recs.length, ')');
                   notesData = recs;
                 }
-              } catch (e) {
-                logger.error('Manual parse fallback failed for general_notes:', e);
               }
+            } catch (e) {
+              logger.error('Manual parse fallback failed for general_notes:', e);
             }
             
             // Check for parsing errors
