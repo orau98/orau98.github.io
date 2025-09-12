@@ -1,4 +1,4 @@
-Sorted 7290 rows by insect_id. Backup: public/insects.csv.bak.sort_20250912060822
+Sorted 7298 rows by insect_id. Backup: public/insects.csv.bak.sort_20250912061651
 First 30 IDs after sort:
 2: species-0001
 3: species-0002
@@ -31,14 +31,6 @@ First 30 IDs after sort:
 30: species-0029
 31: species-0030
 Last 30 IDs after sort:
-7262: species-H690
-7263: species-H691
-7264: species-H692
-7265: species-H693
-7266: species-H694
-7267: species-H695
-7268: species-H696
-7269: species-H697
 7270: species-H698
 7271: species-H699
 7272: species-H700
@@ -61,3 +53,11 @@ Last 30 IDs after sort:
 7289: species-H717
 7290: species-H718
 7291: species-H719
+7292: species-H721
+7293: species-H724
+7294: species-H725
+7295: species-H726
+7296: species-H727
+7297: species-H728
+7298: species-H730
+7299: species-H731
