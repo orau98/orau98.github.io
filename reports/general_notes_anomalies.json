@@ -1,0 +1,14 @@
+[
+  {
+    "file": "public/general_notes.csv",
+    "line": 2755,
+    "reason": "too_few_columns",
+    "raw": "note-999153\"\""
+  },
+  {
+    "file": "normalized_data/general_notes.csv",
+    "line": 2755,
+    "reason": "too_few_columns",
+    "raw": "note-999153\"\""
+  }
+]
