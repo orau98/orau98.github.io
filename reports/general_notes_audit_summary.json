@@ -1,16 +1,16 @@
 [
   {
     "file": "public/general_notes.csv",
-    "total_lines": 2830,
+    "total_lines": 2828,
     "duplicates": 0,
-    "malformed": 1,
+    "malformed": 0,
     "top_species_by_duplicates": []
   },
   {
     "file": "normalized_data/general_notes.csv",
-    "total_lines": 2830,
+    "total_lines": 2828,
     "duplicates": 0,
-    "malformed": 1,
+    "malformed": 0,
     "top_species_by_duplicates": []
   }
 ]

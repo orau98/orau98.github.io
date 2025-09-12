@@ -176,6 +176,28 @@ npm run generate-sitemap
 
 注: SPAのハッシュ/深いURL（`/#/butterfly/...` 等）はサイトマップに含めず、検索エンジン向けにはクロール可能なメタページURL（`/meta/.../*.html`）のみを掲載しています。
 
+## 🔎 データ整合性: 不明な昆虫ID参照の整理
+
+外部ソース統合やID再編により、`hostplants.csv` / `general_notes.csv` が現行の `insects.csv` に存在しない `insect_id` を参照する場合があります。これによりビルド前の検証で `unknown insect_id` が検出されます。
+
+- 整理用スクリプト: `scripts/prune_unknown_insect_refs.mjs`
+- 目的: 不明IDを参照する行を除去し、バックアップとレポートを出力
+- 使い方:
+
+```bash
+# 参照不整合を削除（バックアップは .bak.YYYYMMDDHH で保存）
+npm run prune-unknown
+
+# 結果の検証とビルド
+npm run validate-normalized
+npm run build
+
+# レポート出力先
+open reports/pruned_unknown_insect_refs.csv
+```
+
+注意: 将来的に旧ID→現行IDの対応表が判明した場合は、削除ではなく「置換（移行）」に切り替えるのが望ましいです。対応表（CSV/JSON）が用意できれば、置換モードのスクリプトを追加します。
+
 ## 🆔 IDポリシー（ハムシの統一）
 
 - ハムシ科（Chrysomelidae）の種IDは `species-H###` を正規とします。
