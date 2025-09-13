@@ -39,6 +39,20 @@ const Footer = () => {
           >
             サイトマップ
           </a>
+          <span className="text-neutral-400">|</span>
+          <a 
+            href={`${import.meta.env.BASE_URL}meta/moth/index.html`}
+            className="text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            蛾メタ一覧
+          </a>
+          <span className="text-neutral-400">|</span>
+          <a 
+            href={`${import.meta.env.BASE_URL}meta/plant/index.html`}
+            className="text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            植物メタ一覧
+          </a>
         </div>
       </div>
     </footer>

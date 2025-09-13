@@ -617,7 +617,7 @@ function generateInsectHTML(insect, type) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/"},
-      {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "https://orau98.github.io/${type}"},
+      {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "https://orau98.github.io/meta/${type}/index.html"},
       {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "https://orau98.github.io/meta/${type}/${insect.id}.html"}
     ]
   }
@@ -628,7 +628,7 @@ function generateInsectHTML(insect, type) {
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
         <li><a href="/">昆虫食草図鑑</a></li>
-        <li><a href="/${type}">${typeNames[type]}</a></li>
+        <li><a href="/meta/${type}/index.html">${typeNames[type]}</a></li>
         <li aria-current="page">${insect.japaneseName}</li>
       </ol>
     </nav>
@@ -844,7 +844,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
         <li><a href="/">昆虫食草図鑑</a></li>
-        <li><a href="/plant">植物</a></li>
+        <li><a href="/meta/plant/index.html">植物</a></li>
         <li aria-current="page">${displayPlantName}</li>
       </ol>
     </nav>
