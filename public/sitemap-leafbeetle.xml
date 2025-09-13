@@ -3505,12 +3505,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://orau98.github.io/meta/leafbeetle/species-H640.html</loc>
-    <lastmod>2025-09-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://orau98.github.io/meta/leafbeetle/species-H641.html</loc>
     <lastmod>2025-09-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -3740,6 +3734,24 @@
   </url>
   <url>
     <loc>https://orau98.github.io/meta/leafbeetle/species-H679.html</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/meta/leafbeetle/species-H682.html</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/meta/leafbeetle/species-H687.html</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/meta/leafbeetle/species-H690.html</loc>
     <lastmod>2025-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

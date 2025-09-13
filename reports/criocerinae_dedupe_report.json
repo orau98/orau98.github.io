@@ -1,0 +1,11 @@
+{
+  "removed": [],
+  "mapping": {},
+  "referencesUpdated": {
+    "public_hostplants": 0,
+    "normalized_hostplants": 0,
+    "public_notes": 0,
+    "normalized_notes": 0
+  },
+  "backupInsects": "public/insects.csv.bak.dedupe_criocerinae_20250913135541"
+}

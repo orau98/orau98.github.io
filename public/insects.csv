@@ -7208,7 +7208,6 @@ species-H635,Megalopodidae,カタビロハムシ科,Zeugophorinae,モモブト�
 species-H636,Megalopodidae,カタビロハムシ科,Zeugophorinae,モモブトハムシ亜科,,,Zeugophora,,varipes,,(Jacoby),1885,アカイロナガハムシ,,,,"Zeugophora varipes (Jacoby, 1885)",,,
 species-H637,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Hispini,トゲハムシ族,Dactylispa,,masonii,,Gestro,1923,キベリトゲハムシ,,,,"Dactylispa masonii Gestro, 1923",,,
 species-H638,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Donaciini,ネクイハムシ族,Plateumaris,,sericea,sibirica,Solsky,1872,キヌツヤミズクサハムシ,,,,"Plateumaris sericea sibirica Solsky, 1872",,1872,
-species-H640,Chrysomelidae,ハムシ科,,,,,Lilioceris,Bradyceris,lewisi,,Jacoby,1885,ルイスクビナガハムシ,,,,"Lilioceris lewisi Jacoby, 1885",,1885,
 species-H641,Chrysomelidae,ハムシ科,,,,,Lilioceris,Lilioceris,rugata,,Baly,1865,キイロクビナガハムシ,,,,"Lilioceris rugata Baly, 1865",,1865,
 species-H642,Chrysomelidae,ハムシ科,,,,,Lilioceris,Lilioceris,subpolita,,Motschulsky,1861,アカクビナガハムシ,,,,"Lilioceris subpolita Motschulsky, 1861",,1861,
 species-H643,Chrysomelidae,ハムシ科,,,,,,,,,,,キイロホソハムシ,,,,Lema coronata,,,
@@ -7250,15 +7249,15 @@ species-H678,Chrysomelidae,ハムシ科,,,,,,,,,,,クソトビハムシ,,,,Psyll
 species-H679,Chrysomelidae,ハムシ科,,,,,,,,,,,イッシキトゲハムシ,,,,Dactylispa issikii,,,
 species-H680,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Crioceris,,orientalis,orientalis,Jacoby,,カタボシクビナガハムシ,,,,,,
 species-H681,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Crioceris,,quatuordecimpunctata,,Scopoli,,ジュウシホシクビナガハムシ,,,,,,
-species-H682,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Bradyceris,lewisi,,Jacoby,,ルイスクビナガハムシ,,,,,,
+species-H682,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Bradyceris,lewisi,,Jacoby,1885,ルイスクビナガハムシ,,,,"Lilioceris lewisi Jacoby, 1885",,1885
 species-H683,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,balyi,,Chûjô,,ベーリークビナガハムシ,,,,,,
 species-H684,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,formosana,,Heinze,,オキナワクビナガハムシ,,,,,,
 species-H685,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,merdigera,,Linnaeus,,ユリクビナガハムシ,,,,,,
 species-H686,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,parvicollis,,Baly,,ホソクビナガハムシ,,,,,,
-species-H687,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,rugata,,Baly,,キイロクビナガハムシ,,,,,,
+species-H687,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,rugata,,Baly,1865,キイロクビナガハムシ,,,,"Lilioceris rugata Baly, 1865",,1865
 species-H688,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,scapularis,,Baly,,カタモンクビナガハムシ,,,,,,
 species-H689,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,sieversi,,Heyden,,クロバネクビナガハムシ,,,,,,species-CR011
-species-H690,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,subpolita,,Motschulsky,,アカクビナガハムシ,,,,,,
+species-H690,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,,Lilioceris,Lilioceris,subpolita,,Motschulsky,1861,アカクビナガハムシ,,,,"Lilioceris subpolita Motschulsky, 1861",,1861
 species-H691,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Lemini,,,Lema,Lema,cirsicola,,Chûjô,,ルリクビボソハムシ,,アザミクビボソハムシ,,,,
 species-H692,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Lemini,,,Lema,Lema,concinnipennis,,Baly,,キバラルリクビボソハムシ,,,,,,
 species-H693,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Lemini,,,Lema,Lema,coomani,,Pic,,ヒメアカクビボソハムシ,,,,,,
@@ -7296,6 +7295,5 @@ species-H727,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Dona
 species-H728,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Donaciini,ネクイハムシ族,Plateumaris,,constricticollis,toyamensis,Tominaga & Katsura,1984,オオネクイハムシ　亜種,,,,"Plateumaris constricticollis toyamensis Tominaga & Katsura, 1984",,1984,
 species-H730,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Donaciini,ネクイハムシ族,Plateumaris,,shirahatai,,Kimoto,1971,シラハタネクイハムシ,,,,"Plateumaris shirahatai Kimoto, 1971",,1971,
 species-H731,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Donaciini,ネクイハムシ族,Plateumaris,,weisei,,Duvivier,1885,ヒラシマミズクサハムシ,,,,"Plateumaris weisei Duvivier, 1885",,1885,
-,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
