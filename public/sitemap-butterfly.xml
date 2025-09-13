@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://orau98.github.io/meta/butterfly/index.html</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://orau98.github.io/meta/butterfly/species-20167.html</loc>
     <lastmod>2025-09-13</lastmod>
     <changefreq>monthly</changefreq>

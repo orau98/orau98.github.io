@@ -544,6 +544,7 @@ function generateInsectHTML(insect, type) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
@@ -775,6 +776,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
@@ -1407,8 +1409,15 @@ async function generateMetaPages() {
       console.log(`- スキップされた無効な植物: ${skippedPlants}件`);
     }
     
-    // 画像ファイルリストを生成
-    generateImageFileLists();
+  // 画像ファイルリストを生成
+  generateImageFileLists();
+
+  // メタページのインデックスを生成（内部リンク強化・クロール補助）
+  try {
+    generateMetaIndexes();
+  } catch (e) {
+    console.warn('メタインデックス生成で警告:', e.message || e);
+  }
     
   } catch (error) {
     console.error('メタページ生成中にエラーが発生しました:', error);
@@ -1504,6 +1513,50 @@ function generateImageFileLists() {
     }
   } catch (error) {
     console.error('植物画像ファイルリスト生成時にエラー:', error);
+  }
+}
+
+// メタページ用の簡易インデックスを生成
+function generateMetaIndexes() {
+  const base = path.join(__dirname, '../public/meta');
+  const sections = [
+    { dir: 'moth', title: '蛾（メタページ一覧）' },
+    { dir: 'butterfly', title: '蝶（メタページ一覧）' },
+    { dir: 'leafbeetle', title: 'ハムシ（メタページ一覧）' },
+    { dir: 'plant', title: '植物（メタページ一覧）' }
+  ];
+
+  for (const sec of sections) {
+    const dirPath = path.join(base, sec.dir);
+    if (!fs.existsSync(dirPath)) continue;
+    const files = fs.readdirSync(dirPath)
+      .filter(f => f.endsWith('.html'))
+      .filter(f => f !== 'index.html')
+      .sort((a,b)=> a.localeCompare(b, 'ja'));
+
+    const relLinks = files.slice(0, 2000) // 安全のため上限（十分な内部リンク確保）
+      .map(f => `<li><a href="/${['meta', sec.dir, f].join('/')}">${f.replace(/\.html$/,'')}</a></li>`) // ファイル名表示
+      .join('\n');
+
+    const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <title>${sec.title}</title>
+  <meta name="description" content="${sec.title}への内部リンクページ。検索エンジン用に静的URLを明示します。">
+  <link rel="canonical" href="https://orau98.github.io/meta/${sec.dir}/index.html">
+  <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:16px}h1{font-size:20px}ul{columns:2;gap:24px;line-height:1.8}</style>
+</head>
+<body>
+  <h1>${sec.title}</h1>
+  <ul>
+    ${relLinks}
+  </ul>
+</body>
+</html>`;
+    fs.writeFileSync(path.join(dirPath, 'index.html'), html);
   }
 }
 
