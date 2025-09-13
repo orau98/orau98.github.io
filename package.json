@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node scripts/postbuild-cleanup.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "fix-butterfly-subfamily": "node scripts/fix_butterfly_subfamily_labels.mjs",
