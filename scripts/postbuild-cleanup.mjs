@@ -5,9 +5,7 @@ import path from 'path';
 
 const targets = [
   path.join('dist', 'images', 'insects', 'backup_japanese_names'),
-  path.join('dist', 'image_filenames.txt'),
-  path.join('dist', 'plant_image_filenames.txt'),
-  path.join('dist', 'image_extensions.json'),
+  // Keep small index files for client-side image detection
 ];
 
 for (const p of targets) {
@@ -26,4 +24,3 @@ for (const p of targets) {
     console.warn('[postbuild] Warning removing', p, e?.message || e);
   }
 }
-

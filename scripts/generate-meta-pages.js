@@ -1489,11 +1489,9 @@ function generateImageFileLists() {
         const extension = file.match(/\.[^.]+$/)[0];
         extensionMapping[nameWithoutExt] = extension;
       });
-      // 開発用の画像リストは公開ディレクトリではなくレポート配下に出力（公開不要）
-      const reportsDir = path.join(__dirname, '../reports');
-      if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir, { recursive: true });
-      fs.writeFileSync(path.join(reportsDir, 'image_filenames.txt'), mothImages.join('\n') + '\n');
-      fs.writeFileSync(path.join(reportsDir, 'image_extensions.json'), JSON.stringify(extensionMapping, null, 2));
+      // クライアントの画像優先表示に必要なインデックスを公開ディレクトリに出力
+      fs.writeFileSync(path.join(__dirname, '../public/image_filenames.txt'), mothImages.join('\n') + '\n');
+      fs.writeFileSync(path.join(__dirname, '../public/image_extensions.json'), JSON.stringify(extensionMapping, null, 2));
       console.log(`- 昆虫画像リスト生成完了: ${mothImages.length}件`);
       console.log(`- 画像拡張子マッピング生成完了: ${Object.keys(extensionMapping).length}件`);
     }
@@ -1509,9 +1507,7 @@ function generateImageFileLists() {
         .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
         .map(file => file.replace(/\.[^.]+$/, ''))
         .sort();
-      const reportsDir = path.join(__dirname, '../reports');
-      if (!fs.existsSync(reportsDir)) fs.mkdirSync(reportsDir, { recursive: true });
-      fs.writeFileSync(path.join(reportsDir, 'plant_image_filenames.txt'), plantImages.join('\n') + '\n');
+      fs.writeFileSync(path.join(__dirname, '../public/plant_image_filenames.txt'), plantImages.join('\n') + '\n');
       console.log(`- 植物画像リスト生成完了: ${plantImages.length}件`);
     } else {
       console.log('植物画像ディレクトリが見つかりませんでした（skipping）。');
