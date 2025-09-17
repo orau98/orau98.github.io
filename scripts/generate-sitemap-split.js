@@ -5,14 +5,40 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function formatDate(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function encodeFilename(filename) {
+  return encodeURIComponent(filename).replace(/[!'()*]/g, (char) =>
+    `%${char.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+}
+
+function escapeXml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/'/g, '&apos;');
+}
+
+function getFileLastmod(filePath) {
+  try {
+    const stat = fs.statSync(filePath);
+    return formatDate(stat.mtime);
+  } catch {
+    return formatDate(new Date());
+  }
+}
+
 // サイトマップを分割して生成
 function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
-  
+
   const baseUrl = 'https://orau98.github.io';
-  // 現在の日付を動的に取得
-  const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD形式
-  
+
   // 各カテゴリごとのサイトマップを格納
   const sitemaps = {
     main: [],
@@ -23,9 +49,10 @@ function generateSplitSitemaps() {
   };
   
   // トップページ（メインサイトマップ）
+  const topLevelFile = path.join(__dirname, '../public/index.html');
   sitemaps.main.push({
-    loc: baseUrl + '/',
-    lastmod: currentDate,
+    loc: `${baseUrl}/`,
+    lastmod: getFileLastmod(topLevelFile),
     changefreq: 'weekly',
     priority: '1.0'
   });
@@ -40,7 +67,7 @@ function generateSplitSitemaps() {
   
   // ディレクトリ内のHTMLファイルを対応するサイトマップに追加
   const addMetaPages = (dir, baseType, targetSitemap, priority = '0.8') => {
-    const fullPath = path.join(metaDir, baseType);
+    const fullPath = path.join(dir, baseType);
     if (!fs.existsSync(fullPath)) {
       console.log(`ディレクトリが存在しません: ${fullPath}`);
       return 0;
@@ -58,10 +85,12 @@ function generateSplitSitemaps() {
         }
         
         // Encode the filename to ensure spaces and non-ASCII are valid in sitemap URLs
-        const encodedFile = encodeURIComponent(file);
+        const filePath = path.join(fullPath, file);
+        const encodedFile = encodeFilename(file);
+        const lastmod = getFileLastmod(filePath);
         targetSitemap.push({
           loc: `${baseUrl}/meta/${baseType}/${encodedFile}`,
-          lastmod: currentDate,
+          lastmod,
           changefreq: 'monthly',
           priority: priority
         });
@@ -83,16 +112,16 @@ function generateSplitSitemaps() {
   const generateXML = (urls) => {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-    
+
     urls.forEach(url => {
       xml += '  <url>\n';
-      xml += `    <loc>${url.loc}</loc>\n`;
-      xml += `    <lastmod>${url.lastmod}</lastmod>\n`;
-      xml += `    <changefreq>${url.changefreq}</changefreq>\n`;
-      xml += `    <priority>${url.priority}</priority>\n`;
+      xml += `    <loc>${escapeXml(url.loc)}</loc>\n`;
+      xml += `    <lastmod>${escapeXml(url.lastmod)}</lastmod>\n`;
+      xml += `    <changefreq>${escapeXml(url.changefreq)}</changefreq>\n`;
+      xml += `    <priority>${escapeXml(url.priority)}</priority>\n`;
       xml += '  </url>\n';
     });
-    
+
     xml += '</urlset>';
     return xml;
   };
@@ -104,23 +133,27 @@ function generateSplitSitemaps() {
     if (urls.length > 0) {
       const filename = name === 'main' ? 'sitemap-main.xml' : `sitemap-${name}.xml`;
       const xml = generateXML(urls);
-      
+
       // publicディレクトリに保存
       const publicPath = path.join(__dirname, '../public', filename);
       fs.writeFileSync(publicPath, xml, 'utf-8');
-      
+
       // distディレクトリにもコピー
       const distPath = path.join(__dirname, '../dist');
       if (fs.existsSync(distPath)) {
         const distSitemapPath = path.join(distPath, filename);
         fs.writeFileSync(distSitemapPath, xml, 'utf-8');
       }
-      
+
+      const newestLastmod = urls.reduce((latest, item) =>
+        item.lastmod > latest ? item.lastmod : latest,
+      '1970-01-01');
+
       sitemapFiles.push({
         loc: `${baseUrl}/${filename}`,
-        lastmod: currentDate
+        lastmod: newestLastmod,
       });
-      
+
       console.log(`${filename} 生成完了: ${urls.length} URLs`);
     }
   });
@@ -131,8 +164,8 @@ function generateSplitSitemaps() {
   
   sitemapFiles.forEach(sitemap => {
     indexXml += '  <sitemap>\n';
-    indexXml += `    <loc>${sitemap.loc}</loc>\n`;
-    indexXml += `    <lastmod>${sitemap.lastmod}</lastmod>\n`;
+    indexXml += `    <loc>${escapeXml(sitemap.loc)}</loc>\n`;
+    indexXml += `    <lastmod>${escapeXml(sitemap.lastmod)}</lastmod>\n`;
     indexXml += '  </sitemap>\n';
   });
   

@@ -23,4 +23,4 @@ node -e "import('./lib/fetchWithCache.js').then(async m => { const html = await 
 Notes
 - Bump the cache version (`--cache-version`) to create a new snapshot set.
 - Cache manifest: `cache/manifest.json` lists stored versions and paths.
-
+- When a fetch fails and a cached `key@version` exists, `fetchWithCache()` now logs a warning and falls back to the cached contents so data workflows remain resilient offline.
