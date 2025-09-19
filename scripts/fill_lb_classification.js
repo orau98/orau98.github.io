@@ -4,6 +4,7 @@ import Papa from 'papaparse'
 import { VersionedCache } from './lib/versionedCache.js'
 
 const CSV_PATH = path.join(process.cwd(), 'public', 'insects.csv')
+const SITE_CACHE_CSV = path.join(process.cwd(), 'cache', 'insects-csv', 'v1.csv')
 
 function parseName(sci) {
   // Returns { genus, subgenus, species, subspecies }
@@ -42,6 +43,28 @@ function buildGenusMap(rows) {
   return map
 }
 
+function loadSiteGenusMap() {
+  if (!fs.existsSync(SITE_CACHE_CSV)) return new Map()
+  const text = fs.readFileSync(SITE_CACHE_CSV, 'utf8')
+  const parsed = Papa.parse(text, { header: true, skipEmptyLines: false })
+  const map = new Map()
+  for (const row of parsed.data) {
+    if (!row) continue
+    if (row.family !== 'Chrysomelidae') continue
+    const genus = row.genus?.trim()
+    if (!genus) continue
+    if (!map.has(genus)) {
+      map.set(genus, {
+        subfamily: row.subfamily || '',
+        subfamily_jp: row.subfamily_jp || '',
+        tribe: row.tribe || '',
+        tribe_jp: row.tribe_jp || '',
+      })
+    }
+  }
+  return map
+}
+
 // Hardcoded complements based on the referenced site (japanesebeetles) for genera
 const siteBased = new Map([
   // Donaciinae (ネクイハムシ亜科)
@@ -52,14 +75,15 @@ const siteBased = new Map([
   ['Physosmaragdina', { subfamily: 'Cryptocephalinae', subfamily_jp: 'ツツハムシ亜科', tribe: 'Clytrini', tribe_jp: 'ナガツツハムシ族' }],
 
   // Chrysomelinae (ハムシ亜科) — Tribe Chrysomelini
-  ['Chrysolina', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Gastrolina', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Gastrobrodina', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Gonioctena', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Linaeidea', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Phaedon', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Plagiodera', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
-  ['Plagiosterna', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: '' }],
+  ['Chrysolina', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Gastrolina', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Gastrobrodina', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Gonioctena', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Linaeidea', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Chrysomela', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Phaedon', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Plagiodera', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
+  ['Plagiosterna', { subfamily: 'Chrysomelinae', subfamily_jp: 'ハムシ亜科', tribe: 'Chrysomelini', tribe_jp: 'ハムシ族' }],
 
   // Eumolpinae (サルハムシ亜科): leave tribe empty to match existing style
   ['Hyperaxis', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
@@ -68,6 +92,29 @@ const siteBased = new Map([
   ['Fidia', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
   ['Nodina', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
   ['Pagria', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Basilepta', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Acrothinium', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Heteraspis', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Platycorynus', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Colaspoides', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Colasposoma', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+  ['Rhyparida', { subfamily: 'Eumolpinae', subfamily_jp: 'サルハムシ亜科', tribe: '', tribe_jp: '' }],
+
+  // Alticinae (ヒゲナガハムシ亜科) — default tribe Alticini when site data omits finer split
+  ['Altica', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Aphthona', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Aphthonaltica', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Aphthonoides', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Argopistes', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Argopistini', tribe_jp: 'テントウノミハムシ族' }],
+  ['Argopus', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Chaetocnema', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Chaetocnemini', tribe_jp: 'ヒサゴトビハムシ族' }],
+  ['Crepidodera', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Longitarsus', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Neocrepidodera', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Phyllotreta', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Psylliodes', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Trachyaphthona', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
+  ['Zipanginia', { subfamily: 'Alticinae', subfamily_jp: 'ヒゲナガハムシ亜科', tribe: 'Alticini', tribe_jp: 'ノミハムシ族' }],
 
   // Lamprosomatinae (ツヤハムシ亜科)
   ['Oomorphoides', { subfamily: 'Lamprosomatinae', subfamily_jp: 'ツヤハムシ亜科', tribe: '', tribe_jp: '' }],
@@ -125,20 +172,26 @@ function main() {
 
   // Build mapping from existing rows first
   const genusMap = buildGenusMap(rows)
+  const siteGenusMap = loadSiteGenusMap()
 
   let updated = 0
   const changes = []
   for (const r of rows) {
-    if (!r.insect_id || !/^species-LB/.test(r.insect_id)) continue
+    if (!r.insect_id || r.family !== 'Chrysomelidae') continue
 
     const sci = (r.scientific_name || '').trim()
-    const { genus, subgenus, species, subspecies } = parseName(sci)
+    const parsedName = parseName(sci)
+    const genusKey = (parsedName.genus || r.genus || '').trim()
+    const subgenus = parsedName.subgenus
+    const species = parsedName.species
+    const subspecies = parsedName.subspecies
 
     // Decide classification
-    let cls = genusMap.get(genus)
-    if (!cls) cls = siteBased.get(genus)
+    let cls = genusMap.get(genusKey)
+    if (!cls) cls = siteGenusMap.get(genusKey)
+    if (!cls) cls = siteBased.get(genusKey)
     // Some mis-spelled genus in data (e.g. Physosmaragdia) -> try corrected spelling
-    if (!cls && genus === 'Physosmaragdia') cls = siteBased.get('Physosmaragdia') || siteBased.get('Physosmaragdina')
+    if (!cls && genusKey === 'Physosmaragdia') cls = siteBased.get('Physosmaragdia') || siteBased.get('Physosmaragdina')
 
     if (!cls) {
       // No info — leave as-is
@@ -157,8 +210,16 @@ function main() {
     r.subfamily_jp = r.subfamily_jp || cls.subfamily_jp || ''
     r.tribe = r.tribe || cls.tribe || ''
     r.tribe_jp = r.tribe_jp || cls.tribe_jp || ''
-    // Always set genus/species from scientific_name tokens
-    r.genus = genus || r.genus || ''
+    if (r.subfamily === 'Alticinae' && !r.tribe) {
+      r.tribe = 'Alticini'
+      if (!r.tribe_jp) r.tribe_jp = 'ノミハムシ族'
+    }
+    if (r.subfamily === 'Chrysomelinae' && !r.tribe) {
+      r.tribe = 'Chrysomelini'
+      if (!r.tribe_jp) r.tribe_jp = 'ハムシ族'
+    }
+    // Always set genus/species from scientific_name tokens when available
+    r.genus = genusKey || r.genus || ''
     r.subgenus = subgenus || r.subgenus || ''
     r.species = species || r.species || ''
     r.subspecies = subspecies || r.subspecies || ''
@@ -170,7 +231,7 @@ function main() {
       genus: r.genus, subgenus: r.subgenus,
       species: r.species, subspecies: r.subspecies,
     }
-    if (useCache) {
+    if (useCache && /^species-LB/.test(r.insect_id)) {
       changes.push({ insect_id: r.insect_id, before, after })
     }
   }
