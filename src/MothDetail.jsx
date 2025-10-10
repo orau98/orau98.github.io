@@ -10,6 +10,7 @@ import useSeoMeta from './hooks/useSeoMeta';
 import { absUrl } from './utils/origin';
 import { loadInsectImageIndexes } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
+import { buildResponsiveSrcset } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
@@ -609,15 +610,39 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
                     {!imageError && possibleImagePaths.length > 0 ? (
                       <div className="relative h-full w-full">
-                        <img 
-                          src={possibleImagePaths[currentImageIndex]} 
-                          alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
-                          width="1200"
-                          height="900"
-                          className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                          onLoad={handleImageLoad}
-                          onError={handleImageError}
-                        />
+                        {(() => {
+                          const srcUrl = possibleImagePaths[currentImageIndex];
+                          // Try to infer filename for responsive paths if matches /images/insects/<name>.<ext>
+                          const m = srcUrl && srcUrl.match(/\/images\/insects\/([^/?#]+)\.(jpg|jpeg|png|webp|JPG|PNG|WEBP)/);
+                          if (m) {
+                            const base = decodeURIComponent(m[1]);
+                            const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext: '.' + m[2].toLowerCase(), widths: [640, 1024, 1600], sizes: '100vw' });
+                            return (
+                              <img 
+                                src={src}
+                                srcSet={srcSet}
+                                sizes={sizes}
+                                alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
+                                width="1200"
+                                height="900"
+                                className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                                onLoad={handleImageLoad}
+                                onError={handleImageError}
+                              />
+                            );
+                          }
+                          return (
+                            <img 
+                              src={srcUrl}
+                              alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
+                              width="1200"
+                              height="900"
+                              className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                              onLoad={handleImageLoad}
+                              onError={handleImageError}
+                            />
+                          );
+                        })()}
                         {/* Elegant gradient overlay on hover */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         

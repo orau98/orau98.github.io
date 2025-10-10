@@ -10,6 +10,7 @@ import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergence
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
+import { buildResponsiveSrcset } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 
@@ -212,43 +213,54 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             {hasImageFilename ? (
               <div className="relative w-full aspect-[4/3]">
                 {isVisible ? (
-                  <img
-                    src={imageUrl}
-                    alt={`${moth.name}（${moth.scientificName}）の写真`}
-                    width="800"
-                    height="600"
-                    className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 gpu-accelerated ${
-                      imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
-                    }`}
-                    style={{ 
-                      imageRendering: 'auto', // Better for photos
-                      willChange: imageLoaded ? 'auto' : 'opacity, transform',
-                      contain: 'layout style paint'
-                    }}
-                    loading={isPriority ? "eager" : "lazy"}
-                    decoding="async"
-                    fetchpriority={isPriority ? "high" : "auto"}
-                    onLoad={() => setImageLoaded(true)}
-                    onError={(e) => {
-                      // Try fallback paths for beetles in insects directory
-                      if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
-                        e.target.dataset.fallbackAttempted = 'true';
-                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}${cacheBustRef.current}`;
-                        e.target.src = fallbackUrl;
-                      } else {
-                        // Safely hide the image and show fallback
-                        if (e.target && e.target.style) {
-                          e.target.style.display = 'none';
-                        }
-                        // Only access nextSibling if parentElement exists and has a nextSibling
-                        const parent = e.target?.parentElement;
-                        const sibling = parent?.nextSibling;
-                        if (sibling && sibling.style) {
-                          sibling.style.display = 'flex';
-                        }
-                      }
-                    }}
-                  />
+                  (() => {
+                    const { src, srcSet, sizes } = buildResponsiveSrcset({
+                      folder: 'insects', filename: imageFilename, ext: imageExtension,
+                      widths: [320, 640, 1024],
+                      sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
+                    });
+                    return (
+                      <img
+                        src={src}
+                        srcSet={srcSet}
+                        sizes={sizes}
+                        alt={`${moth.name}（${moth.scientificName}）の写真`}
+                        width="800"
+                        height="600"
+                        className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 gpu-accelerated ${
+                          imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
+                        }`}
+                        style={{ 
+                          imageRendering: 'auto',
+                          willChange: imageLoaded ? 'auto' : 'opacity, transform',
+                          contain: 'layout style paint'
+                        }}
+                        loading={isPriority ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchpriority={isPriority ? "high" : "auto"}
+                        onLoad={() => setImageLoaded(true)}
+                        onError={(e) => {
+                          // Try fallback paths for beetles in insects directory
+                          if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
+                            e.target.dataset.fallbackAttempted = 'true';
+                            const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}${cacheBustRef.current}`;
+                            e.target.src = fallbackUrl;
+                          } else {
+                            // Safely hide the image and show fallback
+                            if (e.target && e.target.style) {
+                              e.target.style.display = 'none';
+                            }
+                            // Only access nextSibling if parentElement exists and has a nextSibling
+                            const parent = e.target?.parentElement;
+                            const sibling = parent?.nextSibling;
+                            if (sibling && sibling.style) {
+                              sibling.style.display = 'flex';
+                            }
+                          }
+                        }}
+                      />
+                    );
+                  })()
                 ) : (
                   <div className="w-full h-full bg-slate-200 dark:bg-slate-700 animate-pulse flex items-center justify-center">
                     <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

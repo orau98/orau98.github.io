@@ -32,6 +32,7 @@
     "build:data-lite": "node scripts/build-data-lite.mjs",
     "build:ylist-lite": "node scripts/build-ylist-lite.mjs",
     "build:image-index": "node scripts/build-image-index.mjs",
+    "build:images:responsive": "node scripts/build-responsive-images.mjs",
     "lint:html": "node -e \"console.log('lint ok')\"",
     "format": "prettier -w ."
   },
@@ -59,6 +60,7 @@
     "gh-pages": "^6.3.0",
     "globals": "^16.0.0",
     "postcss": "^8.5.6",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "sharp": "^0.33.4"
   }
 }

@@ -220,31 +220,45 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
             <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 animate-pulse z-5" />
           )}
           
-          <img 
-            src={`${import.meta.env.BASE_URL}images/insects/Cucullia_argentea.jpg`} 
-            alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）" 
-            width="1600"
-            height="900"
-            className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
-              heroImageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ 
-              imageRendering: 'auto',
-              willChange: heroImageLoaded ? 'auto' : 'opacity, transform',
-              contain: 'layout style paint'
-            }}
-            loading="eager"
-            decoding="async" 
-            fetchpriority="high"
-            onLoad={() => setHeroImageLoaded(true)}
-            onError={(e) => { 
-              logger.warn('Hero image failed to load:', e.target.src);
-              e.target.onerror = null; 
-              e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; 
-              e.target.alt='画像が見つかりません';
-              setHeroImageLoaded(true);
-            }}
-          />
+          {(() => {
+            const base = 'Cucullia_argentea';
+            const src = `${import.meta.env.BASE_URL}images/insects/${base}.jpg`;
+            const srcSet = [
+              `${import.meta.env.BASE_URL}images/resized/insects/${base}.640.jpg 640w`,
+              `${import.meta.env.BASE_URL}images/resized/insects/${base}.1024.jpg 1024w`,
+              `${import.meta.env.BASE_URL}images/resized/insects/${base}.1600.jpg 1600w`,
+            ].join(', ');
+            const sizes = '100vw';
+            return (
+              <img 
+                src={src}
+                srcSet={srcSet}
+                sizes={sizes}
+                alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）" 
+                width="1600"
+                height="900"
+                className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
+                  heroImageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{ 
+                  imageRendering: 'auto',
+                  willChange: heroImageLoaded ? 'auto' : 'opacity, transform',
+                  contain: 'layout style paint'
+                }}
+                loading="eager"
+                decoding="async" 
+                fetchpriority="high"
+                onLoad={() => setHeroImageLoaded(true)}
+                onError={(e) => { 
+                  logger.warn('Hero image failed to load:', e.target.src);
+                  e.target.onerror = null; 
+                  e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; 
+                  e.target.alt='画像が見つかりません';
+                  setHeroImageLoaded(true);
+                }}
+              />
+            );
+          })()}
           
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
           
