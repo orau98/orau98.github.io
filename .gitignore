@@ -43,3 +43,9 @@ reports/cleanup-inventory.json
 
 # Local backup artifacts from fix scripts
 *.bak.*
+
+# Local temp artifacts
+tmp/
+tmp_*/
+tmp_listmj_xlsx/
+tmp_xlsx_cli/

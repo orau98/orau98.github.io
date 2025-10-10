@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 
 // 英語単語をイタリック体にフォーマットする関数
 function formatEnglishWordsInItalic(text) {
@@ -551,8 +552,8 @@ function generateInsectHTML(insect, type) {
   <title>${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑</title>
   <meta name="description" content="${insect.japaneseName}の詳細情報、分類、食草について。${hostPlantsArray.length > 0 ? `食草: ${hostPlantsArray.slice(0, 3).join('、')}など` : ''}">
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
-  <link rel="canonical" href="https://orau98.github.io/meta/${type}/${insect.id}.html">
-  <link rel="alternate" href="https://orau98.github.io/${type}/${insect.id}">
+  <link rel="canonical" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  <link rel="alternate" href="${BASE_ORIGIN}/${type}/${insect.id}">
   <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
   
   <!-- Open Graph -->
@@ -560,15 +561,15 @@ function generateInsectHTML(insect, type) {
   <meta property="og:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="https://orau98.github.io/meta/${type}/${insect.id}.html">
-  ${imageUrl ? `<meta property="og:image" content="https://orau98.github.io${imageUrl}">` : ''}
+  <meta property="og:url" content="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  ${imageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta property="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
-  ${imageUrl ? `<meta property="twitter:image" content="https://orau98.github.io${imageUrl}">` : ''}
+  ${imageUrl ? `<meta property="twitter:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
   ${imageUrl ? `<meta name="twitter:image:alt" content="${insect.japaneseName}（${scientificName}）の写真">` : ''}
   
   <!-- Enhanced Structured Data -->
@@ -594,10 +595,10 @@ function generateInsectHTML(insect, type) {
       }
     },
     "description": "${insect.japaneseName}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}",
-    "url": "https://orau98.github.io/meta/${type}/${insect.id}.html",
+    "url": "${BASE_ORIGIN}/meta/${type}/${insect.id}.html",
     ${imageUrl ? `"image": {
       "@type": "ImageObject",
-      "url": "https://orau98.github.io${imageUrl}",
+      "url": "${BASE_ORIGIN}${imageUrl}",
       "caption": "${insect.japaneseName}（${scientificName}）の写真"
     },` : ''}
     "inLanguage": "ja",
@@ -616,9 +617,9 @@ function generateInsectHTML(insect, type) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "https://orau98.github.io/"},
-      {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "https://orau98.github.io/meta/${type}/index.html"},
-      {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "https://orau98.github.io/meta/${type}/${insect.id}.html"}
+      {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "${BASE_ORIGIN}/"},
+      {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "${BASE_ORIGIN}/meta/${type}/index.html"},
+      {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "${BASE_ORIGIN}/meta/${type}/${insect.id}.html"}
     ]
   }
   </script>
@@ -792,15 +793,15 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html">
-  ${mainImageUrl ? `<meta property="og:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
+  <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safePlantName)}.html">
+  ${mainImageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${displayPlantName} - 食草図鑑">
   <meta property="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
-  ${mainImageUrl ? `<meta property="twitter:image" content="https://orau98.github.io${mainImageUrl}">` : ''}
+  ${mainImageUrl ? `<meta property="twitter:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -814,8 +815,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       "value": "${displayPlantName}"
     },
     "description": "${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
-    "url": "https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html",
-    ${mainImageUrl ? `"image": "https://orau98.github.io${mainImageUrl}",` : ''}
+    "url": "${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safePlantName)}.html",
+    ${mainImageUrl ? `"image": "${BASE_ORIGIN}${mainImageUrl}",` : ''}
     "inLanguage": "ja",
     "hasEcologicalInteraction": [
       ${relatedInsects.map(insect => `{
@@ -1547,7 +1548,7 @@ function generateMetaIndexes() {
   <meta name="robots" content="index, follow">
   <title>${sec.title}</title>
   <meta name="description" content="${sec.title}への内部リンクページ。検索エンジン用に静的URLを明示します。">
-  <link rel="canonical" href="https://orau98.github.io/meta/${sec.dir}/index.html">
+  <link rel="canonical" href="${BASE_ORIGIN}/meta/${sec.dir}/index.html">
   <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:16px}h1{font-size:20px}ul{columns:2;gap:24px;line-height:1.8}</style>
 </head>
 <body>

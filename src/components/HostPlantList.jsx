@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import logger from '../utils/logger';
 import useSeoMeta from '../hooks/useSeoMeta';
+import { absUrl } from '../utils/origin';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import SearchInput from './SearchInput';
@@ -147,7 +148,7 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
     };
     
     checkPlantImage();
-  }, [plant, safePlantName, preloadedFilenames]);
+  }, [plant, safePlantName, preloadedFilenames, plantDetails]);
 
   return (
   <li className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
@@ -197,6 +198,9 @@ const HostPlantListItem = React.memo(({ plant, mothNames, plantDetails = {}, pla
                     ? normalizeLatinBinomialPlain(plant)
                     : plant}
                 </h3>
+                {imageError && (
+                  <p className="text-emerald-700 dark:text-emerald-300 text-sm mb-2">画像を読み込めませんでした。</p>
+                )}
                 {plantDetails[plant]?.familyName && (
                   <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
                     {plantDetails[plant].familyName}
@@ -280,36 +284,34 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
   const [plantImageFilenames, setPlantImageFilenames] = useState([]);
   
   // Canonical/OG/パンくず（フックで共通化）
-  if (!embedded) {
-    const plantCount = Object.keys(hostPlants || {}).length;
-    const pageTitle = '植物（食草）一覧 | 昆虫食草図鑑';
-    const pageDesc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
-    useSeoMeta({
-      title: pageTitle,
-      description: pageDesc,
-      ogType: 'website',
-      url: 'https://orau98.github.io/plant',
-      breadcrumbItems: [
-        { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
-        { name: '植物', url: 'https://orau98.github.io/plant' }
-      ],
-      resetCanonicalTo: 'https://orau98.github.io/'
-    });
-  }
+  const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
+  const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
+
+  const plantCount = Object.keys(safeHostPlants).length;
+  const plantCanonicalUrl = absUrl('/plant');
+  const plantPageTitle = '植物（食草）一覧 | 昆虫食草図鑑';
+  const plantPageDesc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
+  const plantBreadcrumbItems = useMemo(() => ([
+    { name: '昆虫食草図鑑', url: absUrl('/') },
+    { name: '植物', url: plantCanonicalUrl }
+  ]), [plantCanonicalUrl]);
+
+  useSeoMeta({
+    enabled: !embedded,
+    title: plantPageTitle,
+    description: plantPageDesc,
+    ogType: 'website',
+    url: plantCanonicalUrl,
+    breadcrumbItems: plantBreadcrumbItems,
+    resetCanonicalTo: absUrl('/')
+  });
   // Responsive items-per-page to avoid empty grid slots on last row
-  const getCols = () => {
-    if (typeof window === 'undefined') return 1;
+  const computeItemsPerPage = useCallback(() => {
+    if (typeof window === 'undefined') return 12;
     const w = window.innerWidth;
-    if (w >= 1280) return 4; // xl
-    if (w >= 1024) return 3; // lg
-    if (w >= 768) return 2;  // md
-    return 1;                // base
-  };
-  const computeItemsPerPage = () => {
-    const cols = getCols();
-    const rows = 12; // show 12 rows to fill grid nicely
-    return cols * rows;
-  };
+    const cols = w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 768 ? 2 : 1;
+    return cols * 12;
+  }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
 
   // Load plant image filenames on component mount
@@ -321,16 +323,16 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
 
   // Update itemsPerPage on resize to keep pages filling complete rows
   useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
     const onResize = () => {
       const next = computeItemsPerPage();
       setItemsPerPage(prev => (prev === next ? prev : next));
       setCurrentPage(1);
     };
     window.addEventListener('resize', onResize);
-    // Ensure correct initial calculation
     onResize();
     return () => window.removeEventListener('resize', onResize);
-  }, []);
+  }, [computeItemsPerPage]);
 
   const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
   const [searchParams] = useSearchParams();
@@ -343,9 +345,6 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
     }
   }, [classificationFilter, plantSearchTerm]);
 
-  const safeHostPlants = hostPlants || {};
-  const safePlantDetails = plantDetails || {};
-
   // （メタは useSeoMeta に移行）
 
   // ItemList JSON-LD for plant list (first 10)
@@ -355,7 +354,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
       const items = Object.keys(safeHostPlants || {}).slice(0, 10).map((name, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
-        url: `https://orau98.github.io/meta/plant/${encodeURIComponent(name)}.html`
+        url: absUrl(`/meta/plant/${encodeURIComponent(name)}.html`)
       }));
       const id = 'itemlist-plant';
       let s = document.querySelector('#' + id);
@@ -370,7 +369,9 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         "@type": "ItemList",
         itemListElement: items
       });
-    } catch {}
+    } catch (error) {
+      logger.debug('Failed to inject plant item list structured data:', error);
+    }
     return () => {
       const s = document.querySelector('#itemlist-plant');
       if (s) s.remove();
@@ -526,6 +527,7 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
 
   // Add rel=prev/next for plant list pagination
   useEffect(() => {
+    if (typeof document === 'undefined') return;
     try {
       const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
       document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(n => n.remove());
@@ -547,7 +549,9 @@ const HostPlantList = ({ hostPlants = {}, plantDetails = {}, embedded = false })
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
-    } catch {}
+    } catch (error) {
+      logger.debug('Failed to update rel prev/next links for plant list:', error);
+    }
   }, [currentPage, itemsPerPage, filteredHostPlants.length]);
 
   const plantNameSuggestions = useMemo(() => {

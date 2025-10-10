@@ -11,6 +11,7 @@ import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 import useSeoMeta from '../hooks/useSeoMeta';
+import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilenames = new Set(), imageExtensions = {}, currentPage = 1 }) => {
   // Heuristic: insert a space between genus and species if missing
@@ -31,6 +32,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const [isVisible, setIsVisible] = useState(isPriority);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
 
   const handleIntersection = useCallback((entries) => {
     if (!(entries && entries[0])) return;
@@ -68,68 +70,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
      moth.type === 'leafbeetle' ? `/leafbeetle/${moth.id}` : `/moth/${moth.id}`) : 
     `${baseRoute}/${moth.id}`;
   
-  // 和名→学名ファイル名マッピング（App.jsxと同期）
-  const globalJapaneseToScientificMapping = new Map([
-    // 蛾類
-    ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
-    ['オオマエベニトガリバ', 'Tethea_consimilis'],
-    ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
-    ['シラオビキリガ', 'Cosmia_camptostigma'],
-    ['シラホシキリガ', 'Cosmia_pyralina'],
-    ['タカオキリガ', 'Pseudopanolis_takao'],
-    ['ツマベニヒメハマキ', 'Phaecasiophora_roseana_2'],
-    ['ナシキリガ', 'Cosmia_restituta_Walker_1857'],
-    ['ニッコウケンモン', 'Craniophora_praeclara'],
-    ['ニッコウシャチホコ', 'Shachia_circumscripta'],
-    ['ノコメセダカヨトウ', 'Orthogonia_sera'],
-    ['ハスモンヨトウ', 'Spodoptera_litura'],
-    ['マエジロシャチホコ', 'Notodonta_albicosta'],
-    ['クロハナコヤガ', 'Aventiola_pusilla'],
-    ['フタスジエグリアツバ', 'Gonepatica_opalina'],
-    ['ベニスズメ', 'Deilephila_elpenor'],
-    ['ヒメスズメ', 'Deilephila_askoldensis'],
-    ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
-    ['ナシイラガ', 'Narosoideus_flavidorsalis'],
-    ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
-    ['ノコメキシタバ', 'Catocala_bella'],
-    ['ハマオモトヨトウ', 'Brithys_crini'],
-    // タマムシ科
-    ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
-    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
-    // シジミチョウ科
-    ['クロマダラソテツシジミ', 'Chilades_pandava'],
-    
-    // New Japanese names mapped to scientific filenames
-    ['ムラサキシジミ', 'Narathura_japonica'],
-    ['ウスクロスジツトガ', 'Chrysoteuchia diplogramma Zeller'],
-    ['ゴマダラキリガ', 'Conistra castaneofasciata Motschulsky'],
-    ['イシガケチョウ', 'Cyrestis thyodamas'],
-    ['ヤエヤマコブヒゲアツバ', 'Zanclognatha yaeyamalis Owada'],
-    ['ヤエヤマカラスアゲハ', 'Papilio bianor okinawensis'],
-    ['クロスジツトガ', 'Flavocrambus striatellus Leech'],
-    ['シロスジツトガ', 'Crambus argyrophorus Butler'],
-    ['アマギシャチホコ', 'Eriodonta amagisana Marumo'],
-    ['ギンボシスズメ', 'Parum colligata Walker'],
-    ['イボタケンモン', 'Craniophora ligustri'],
-    ['キボシミスジトガリバ本州亜種', 'Achlya longipennis longipennis Inoue'],
-    ['クロスジコブガ', 'Meganola_fumosa'],
-    ['ウスベリケンモン', 'Anacronicta_nitida'],
-    ['カバイロキバガ', 'Dichomeris_heriguronis'],
-    ['オオバトガリバ', 'Tethea_ampliata_ampliata'],
-    ['カクモンキシタバ', 'Chrysorithrum_amatum'],
-    ['アトヘリヒトホシアツバ', 'Hemipsectra_fallax'],
-    ['カギバアオシャク', 'Tanaorhinus_reciprocata_confuciaria'],
-    ['アカハラゴマダラヒトリ', 'Spilosoma_punctarium'],
-    ['カクバネヒゲナガキバガ', 'Lecitholaxa_thiodora'],
-    ['クビワウスグロホソバ', 'Macrobrochis_staudingeri_staudingeri'],
-    ['ウスイロオオエダシャク', 'Amraica_superans_superans'],
-    ['キマダラアツバ', 'Lophomilia_polybapta'],
-    ['ツマオビアツバ', 'Zanclognatha_griselda'],
-    
-    // Add the main moth that should be showing
-    ['アオモンギンセダカモクメ', 'Cucullia_argentea']
-  ]);;
-
   // Create safe filename for image checking (shared util)
   
   // Try to find the actual image file that exists
@@ -210,16 +150,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     imageExtension = imageExtensions[imageFilename];
   }
   
-  // Determine the correct image folder based on insect type
-  // Special handling for Japanese-named insects that have images in the insects folder
-  // These insects have mappings and their images are stored in the insects folder regardless of their type
-  const japaneseNamedInsects = ['アオマダラタマムシ', 'ルイスヒラタチビタマムシ', 'ウスムラサキケンモン', 'オオマエベニトガリバ', 'ショウブオオヨトウ', 'シラオビキリガ', 'シラホシキリガ', 'タカオキリガ', 'ツマベニヒメハマキ', 'ナシキリガ', 'ニッコウケンモン', 'ニッコウシャチホコ', 'ノコメセダカヨトウ', 'ハスモンヨトウ', 'マエジロシャチホコ', 'クロハナコヤガ', 'フタスジエグリアツバ', 'ベニスズメ', 'ヒメスズメ', 'マダラキボシキリガ', 'ナシイラガ', 'ヨモギオオホソハマキ',
-    // New Japanese-named insects from recent GitHub additions
-    'ムラサキシジミ', 'ウスクロスジツトガ', 'ゴマダラキリガ', 'イシガケチョウ', 'ヤエヤマコブヒゲアツバ', 'ヤエヤマカラスアゲハ', 'クロスジツトガ', 'シロスジツトガ', 'アマギシャチホコ', 'ギンボシスズメ', 'イボタケンモン', 'キボシミスジトガリバ本州亜種', 'クロスジコブガ', 'ウスベリケンモン', 'カバイロキバガ', 'オオバトガリバ', 'カクモンキシタバ', 'アトヘリヒトホシアツバ', 'カギバアオシャク', 'アカハラゴマダラヒトリ', 'カクバネヒゲナガキバガ', 'クビワウスグロホソバ', 'ウスイロオオエダシャク', 'キマダラアツバ', 'ツマオビアツバ'];
-  // All insect images are in the insects folder
   const imageFolder = 'insects';
-  
-  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
+  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(imageFilename)}${imageExtension}${cacheBustRef.current}`;
   
   // Check if we have an actual match in imageFilenames
   // Do not request image until filenames mapping is loaded
@@ -301,7 +233,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       // Try fallback paths for beetles in insects directory
                       if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
                         e.target.dataset.fallbackAttempted = 'true';
-                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
+                        const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(imageFilename)}${imageExtension}${cacheBustRef.current}`;
                         e.target.src = fallbackUrl;
                       } else {
                         // Safely hide the image and show fallback
@@ -485,21 +417,27 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
 
 const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false }) => {
   // Canonical/OG/パンくず（一覧ページ）
-  if (!embedded) {
-    const pageTitle = `${title}の一覧 | 昆虫食草図鑑`;
-    const pageDesc = `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
-    useSeoMeta({
-      title: pageTitle,
-      description: pageDesc,
-      ogType: 'website',
-      url: 'https://orau98.github.io/moth',
-      breadcrumbItems: [
-        { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
-        { name: title, url: 'https://orau98.github.io/moth' }
-      ],
-      resetCanonicalTo: 'https://orau98.github.io/'
-    });
-  }
+  const canonicalPath = baseRoute === '/' || baseRoute === '' ? '/' : baseRoute;
+  const canonicalUrl = (typeof window !== 'undefined' && window.location && window.location.origin
+    ? window.location.origin
+    : 'https://orau98.github.io') + (canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`);
+  const pageTitle = `${title}の一覧 | 昆虫食草図鑑`;
+  const pageDesc = `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
+
+  const breadcrumbItems = useMemo(() => ([
+    { name: '昆虫食草図鑑', url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/' },
+    { name: title, url: canonicalUrl }
+  ]), [canonicalUrl, title]);
+
+  useSeoMeta({
+    enabled: !embedded,
+    title: pageTitle,
+    description: pageDesc,
+    ogType: 'website',
+    url: canonicalUrl,
+    breadcrumbItems,
+    resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/'
+  });
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -547,7 +485,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const items = source.map((m, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
-        url: `https://orau98.github.io/meta/moth/${m.id}.html`
+        url: ((typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io')) + `/meta/moth/${m.id}.html`
       }));
       const scriptElId = 'itemlist-moth';
       let s = document.querySelector('#' + scriptElId);
@@ -562,7 +500,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         "@type": "ItemList",
         itemListElement: items
       });
-    } catch {}
+    } catch (error) {
+      logger.debug('Failed to inject moth item list structured data:', error);
+    }
     return () => {
       const s = document.querySelector('#itemlist-moth');
       if (s) s.remove();
@@ -723,17 +663,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   const hasAnyImageForMoth = useCallback((insect) => {
     try {
       if (!insect) return false;
-      const createSafeFilename = (scientificName) => {
-        if (!scientificName) return '';
-        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-        cleanedName = cleanedName.replace(/\s+/g, '_');
-        return cleanedName;
-      };
-
       const sciFile = insect.scientificFilename || createSafeInsectFilename(insect.scientificName);
       if (sciFile) {
         if (imageFilenames.has(sciFile) || imageFilenamesNormalized.has(sciFile) || !!imageExtensions[sciFile]) return true;
@@ -785,17 +714,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       const sorted = [...filteredMoths].sort((a, b) => {
         if (isSearching) {
           // 検索時でも「画像あり」を優先。その上で分類優先の並びにする。
-          const createSafeFilename = (scientificName) => {
-        if (!scientificName) return '';
-        // Extract genus and species only
-        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-        cleanedName = cleanedName.replace(/\s+/g, '_');
-        return cleanedName;
-      };
           const hasImageA = hasAnyImageForMoth(a);
           const hasImageB = hasAnyImageForMoth(b);
           if (hasImageA && !hasImageB) return -1;
@@ -830,18 +748,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
           return a.name.localeCompare(b.name, 'ja');
         } else {
           // デフォルト表示時：画像優先 + あいうえお順
-          const createSafeFilename = (scientificName) => {
-        if (!scientificName) return '';
-        // Extract genus and species only
-        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-        cleanedName = cleanedName.replace(/\s+/g, '_');
-        return cleanedName;
-      };
-      
           // Check if species has a static image file (based on preloaded filename list)
           const hasImageA = hasAnyImageForMoth(a);
           const hasImageB = hasAnyImageForMoth(b);
@@ -859,16 +765,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     
     // Count moths with images
     const mothsWithImages = sorted.filter(m => {
-      const createSafeFilename = (scientificName) => {
-        if (!scientificName) return '';
-        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-        cleanedName = cleanedName.replace(/\s+/g, '_');
-        return cleanedName;
-      };
       const fn = m.scientificFilename || createSafeInsectFilename(m.scientificName);
       return imageFilenames.has(fn) || imageFilenamesNormalized.has(fn) || !!imageExtensions[fn];
     });
@@ -876,17 +772,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     // Log the first few sorted moths to see if images are prioritized
     logger.debug(`Image prioritization: ${mothsWithImages.length} moths have images out of ${sorted.length} total`);
     logger.debug('First 20 sorted moths:', sorted.slice(0, 20).map(m => {
-      const createSafeFilename = (scientificName) => {
-        if (!scientificName) return '';
-        let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-        cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-        cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-        cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-        cleanedName = cleanedName.replace(/\s+/g, '_');
-        return cleanedName;
-      };
-      
       const filename = m.scientificFilename || createSafeInsectFilename(m.scientificName);
       return {
         name: m.name,
@@ -927,7 +812,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   // Add rel=prev/next for crawlers (hint)
   useEffect(() => {
     try {
-      // Remove existing
       document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(n => n.remove());
       const url = new URL(window.location.href);
       url.searchParams.delete('page');
@@ -947,7 +831,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
-    } catch {}
+    } catch (error) {
+      logger.debug('Failed to update rel prev/next links for moth list:', error);
+    }
   }, [currentPage, totalPages]);
 
   React.useEffect(() => {

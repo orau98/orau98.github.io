@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 // Small helpers
 const ensureMeta = (selector, attrs) => {
@@ -16,8 +16,12 @@ const setMetaContent = (selector, content) => {
   if (el) el.setAttribute('content', content);
 };
 
-export default function useSeoMeta(options = {}) {
+import { absUrl } from '../utils/origin';
+
+export default function useSeoMeta(rawOptions) {
+  const options = rawOptions ?? {};
   const {
+    enabled = true,
     title,
     description,
     ogType = 'website',
@@ -25,8 +29,10 @@ export default function useSeoMeta(options = {}) {
     imageUrl,
     imageAlt,
     breadcrumbItems, // [{name, url}] order is important
-    resetCanonicalTo = 'https://orau98.github.io/',
+    resetCanonicalTo = absUrl('/'),
   } = options;
+
+  const isActive = enabled !== false;
 
   const insertedScriptIdsRef = useRef([]);
   const managedMetaSelectorsRef = useRef([
@@ -39,7 +45,13 @@ export default function useSeoMeta(options = {}) {
     'meta[name="twitter:image:alt"]',
   ]);
 
+  const breadcrumbSignature = useMemo(() => JSON.stringify(breadcrumbItems), [breadcrumbItems]);
+
   useEffect(() => {
+    if (!isActive) {
+      return undefined;
+    }
+    const managedMetaSelectors = managedMetaSelectorsRef.current;
     if (title) document.title = title;
 
     // description
@@ -82,6 +94,28 @@ export default function useSeoMeta(options = {}) {
       canon.href = url;
     }
 
+    // Minimal WebPage structured data fallback for better eligibility
+    try {
+      const id = 'webpage-structured-data';
+      let s = document.querySelector('#' + id);
+      if (!s) {
+        s = document.createElement('script');
+        s.id = id;
+        s.type = 'application/ld+json';
+        document.head.appendChild(s);
+      }
+      const pageUrl = url || (typeof window !== 'undefined' ? window.location.href : undefined) || '';
+      s.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        url: pageUrl,
+        name: title || '',
+        description: description || '',
+        inLanguage: 'ja'
+      });
+      insertedScriptIdsRef.current.push(id);
+    } catch {}
+
     // breadcrumb JSON-LD
     if (Array.isArray(breadcrumbItems) && breadcrumbItems.length > 0) {
       const id = 'breadcrumb-structured-data';
@@ -112,7 +146,7 @@ export default function useSeoMeta(options = {}) {
         if (c) c.href = resetCanonicalTo;
       }
       // remove managed meta tags we may have inserted
-      managedMetaSelectorsRef.current.forEach((sel) => {
+      managedMetaSelectors.forEach((sel) => {
         const el = document.querySelector(sel);
         if (el) el.parentElement && el.parentElement.removeChild(el);
       });
@@ -123,10 +157,11 @@ export default function useSeoMeta(options = {}) {
       });
       insertedScriptIdsRef.current = [];
     };
-  }, [title, description, ogType, url, imageUrl, imageAlt, JSON.stringify(breadcrumbItems)]);
+  }, [isActive, title, description, ogType, url, imageUrl, imageAlt, breadcrumbItems, breadcrumbSignature, resetCanonicalTo]);
 
   // Expose helper to set/update OG/Twitter image later (e.g., after <img> loads)
   const setOgTwitterImage = (imgUrl, alt) => {
+    if (!isActive) return;
     if (!imgUrl) return;
     ensureMeta('meta[property="og:image"]', { property: 'og:image' });
     setMetaContent('meta[property="og:image"]', imgUrl);
@@ -138,4 +173,3 @@ export default function useSeoMeta(options = {}) {
 
   return { setOgTwitterImage };
 }
-

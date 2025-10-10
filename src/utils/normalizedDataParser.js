@@ -7,7 +7,7 @@
  * @param {Array} generalNotesData - general_notes.csvの解析済みデータ
  * @returns {Object} - 分類群別に整理されたデータ
  */
-import logger from './logger';
+import logger from './logger.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = {

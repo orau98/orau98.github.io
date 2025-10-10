@@ -9,6 +9,7 @@ import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
+import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 
 // This map can be a fallback, but the primary source is now the wamei_checklist.csv.
 const plantFamilyMap = {
@@ -37,75 +38,6 @@ const plantScientificNameMap = {
   'コナラ': 'Quercus serrata',
 };
 
-// 全体的な和名→学名ファイル名マッピング（ファイル名変更対応）
-const globalJapaneseToScientificMapping = new Map([
-    // 蛾類
-    ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
-    ['オオマエベニトガリバ', 'Tethea_consimilis'],
-    ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
-    ['シラオビキリガ', 'Cosmia_camptostigma'],
-    ['シラホシキリガ', 'Cosmia_pyralina'],
-    ['タカオキリガ', 'Pseudopanolis_takao'],
-    ['ツマベニヒメハマキ', 'Phaecasiophora_roseana_2'],
-    ['ナシキリガ', 'Cosmia_restituta_Walker_1857'],
-    ['ニッコウケンモン', 'Craniophora_praeclara'],
-    ['ニッコウシャチホコ', 'Shachia_circumscripta'],
-    ['ノコメセダカヨトウ', 'Orthogonia_sera'],
-    ['ハスモンヨトウ', 'Spodoptera_litura'],
-    ['マエジロシャチホコ', 'Notodonta_albicosta'],
-    ['クロハナコヤガ', 'Aventiola_pusilla'],
-    ['フタスジエグリアツバ', 'Gonepatica_opalina'],
-    ['ベニスズメ', 'Deilephila_elpenor'],
-    ['ヒメスズメ', 'Deilephila_askoldensis'],
-    ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
-    ['ナシイラガ', 'Narosoideus_flavidorsalis'],
-    ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
-    // 画像整備（学名ファイル）
-    ['ノコメキシタバ', 'Catocala_bella'],
-    ['ハマオモトヨトウ', 'Brithys_crini'],
-    // 今回リネームした画像のマッピング追加
-    ['クロモクメヨトウ', 'Dypterygia_caliginosa'],
-    ['コスジシロエダシャク', 'Cabera_purus'],
-    ['シマフコヤガ', 'Corgatha_nitens'],
-    ['シロテンツマキリアツバ', 'Amphitrogia_amphidecta'],
-    ['スジモンヒトリ', 'Spilarctia_seriatopunctata'],
-    ['プライヤエグリシャチホコ', 'Lophontosia_pryeri'],
-    // タマムシ科
-    ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
-    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
-    // シジミチョウ科
-    ['クロマダラソテツシジミ', 'Chilades_pandava'],
-    // セセリチョウ科
-    ['オオチャバネセセリ', 'Polytremis_pellucida'],
-    
-    // New Japanese names from recent GitHub additions
-    ['ムラサキシジミ', 'Narathura_japonica'],
-    ['ウスクロスジツトガ', 'Chrysoteuchia_diplogramma'],
-    ['ゴマダラキリガ', 'Conistra castaneofasciata Motschulsky'],
-    ['イシガケチョウ', 'Cyrestis_thyodamas'],
-    ['ヤエヤマコブヒゲアツバ', 'Zanclognatha_yaeyamalis'],
-    ['ヤエヤマカラスアゲハ', 'Papilio_bianor_okinawensis'],
-    ['クロスジツトガ', 'Flavocrambus_striatellus'],
-    ['シロスジツトガ', 'Crambus_argyrophorus'],
-    ['アマギシャチホコ', 'Eriodonta_amagisana'],
-    ['ギンボシスズメ', 'Parum_colligata'],
-    ['イボタケンモン', 'Craniophora_ligustri'],
-    ['キボシミスジトガリバ本州亜種', 'Achlya_longipennis_longipennis'],
-    ['クロスジコブガ', 'Meganola_fumosa'],
-    ['ウスベリケンモン', 'Anacronicta_nitida'],
-    ['カバイロキバガ', 'Dichomeris_heriguronis'],
-    ['オオバトガリバ', 'Tethea_ampliata_ampliata'],
-    ['カクモンキシタバ', 'Chrysorithrum_amatum'],
-    ['アトヘリヒトホシアツバ', 'Hemipsectra_fallax'],
-    ['カギバアオシャク', 'Tanaorhinus_reciprocata_confuciaria'],
-    ['アカハラゴマダラヒトリ', 'Spilosoma_punctarium'],
-    ['カクバネヒゲナガキバガ', 'Lecitholaxa_thiodora'],
-    ['クビワウスグロホソバ', 'Macrobrochis_staudingeri_staudingeri'],
-    ['ウスイロオオエダシャク', 'Amraica_superans_superans'],
-    ['キマダラアツバ', 'Lophomilia_polybapta'],
-    ['ツマオビアツバ', 'Zanclognatha_griselda']
-  ]);
-
 function App() {
   const location = useLocation();
   const [moths, setMoths] = useState([]);
@@ -115,6 +47,7 @@ function App() {
   const [hostPlants, setHostPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
+  const [summaryCounts, setSummaryCounts] = useState(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   
   const isDevelopment = import.meta.env.DEV;
@@ -156,6 +89,63 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      const base = import.meta.env.BASE_URL || '/';
+      // Try lightweight split JSON first to speed up initial paint
+      try {
+        const manifestRes = await fetch(`${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        const hostRes = await fetch(`${base}assets/data-lite/hostplants.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        if (manifestRes.ok && hostRes.ok) {
+          const manifest = await manifestRes.json();
+          const hostMap = await hostRes.json();
+          if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+            setSummaryCounts(manifest.counts);
+            setHostPlants(hostMap);
+            setPlantDetails({});
+            setLoading(false);
+            // Fetch type partitions in background and stitch arrays
+            Promise.allSettled([
+              fetch(`${base}assets/data-lite/moths.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
+              fetch(`${base}assets/data-lite/butterflies.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
+              fetch(`${base}assets/data-lite/beetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
+              fetch(`${base}assets/data-lite/leafbeetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`)
+            ]).then(async (results) => {
+              try {
+                const [mothR, butterR, beetleR, leafR] = results;
+                const toJson = async (r) => (r && r.status === 'fulfilled' && r.value.ok) ? r.value.json() : [];
+                const [mothArr, butterArr, beetleArr, leafArr] = await Promise.all([
+                  toJson(mothR), toJson(butterR), toJson(beetleR), toJson(leafR)
+                ]);
+                if (Array.isArray(mothArr)) setMoths(mothArr);
+                if (Array.isArray(butterArr)) setButterflies(butterArr);
+                if (Array.isArray(beetleArr)) setBeetles(beetleArr);
+                if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+              } catch {}
+            });
+            // Skip heavy CSV path; still allow background enrichment later as needed
+            // but we keep the legacy fetch below in case split files not present.
+            // Return to avoid executing heavy path immediately
+          }
+        } else {
+          // Fallback to combined lite index
+          const liteUrl = `${base}assets/data-lite/index.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
+          const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+          if (res.ok) {
+            const lite = await res.json();
+            if (lite && Array.isArray(lite.moths) && Array.isArray(lite.butterflies)) {
+              setMoths(lite.moths);
+              setButterflies(lite.butterflies);
+              setBeetles(lite.beetles || []);
+              setLeafbeetles(lite.leafbeetles || []);
+              setHostPlants(lite.hostPlants || {});
+              setPlantDetails({});
+              setLoading(false);
+              // Continue to CSV background load
+            }
+          }
+        }
+      } catch (_) {
+        // ignore and fallback to full pipeline
+      }
       let mainMothData = [];
       let hostPlantData = {};
       let plantDetailData = {};
@@ -5426,6 +5416,15 @@ function App() {
         setLeafbeetles(finalLeafbeetleData);
         setHostPlants(unifiedHostPlantMap);
         setPlantDetails(cleanedPlantDetailData);
+        try {
+          setSummaryCounts({
+            moths: finalMothData.length,
+            butterflies: finalButterflyData.length,
+            beetles: finalBeetleData.length,
+            leafbeetles: finalLeafbeetleData.length,
+            hostPlants: Object.keys(unifiedHostPlantMap).length,
+          });
+        } catch {}
         setLoading(false); // Set loading to false after data is loaded
         
         // DEBUG: Check actual state after setting
@@ -5576,7 +5575,7 @@ function App() {
       ) : (
         <React.Suspense fallback={<SkeletonLoader />}>
           <Routes>
-            <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} />} />
+            <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} summaryCounts={summaryCounts} />} />
             <Route path="/moth/:mothId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
             <Route path="/butterfly/:butterflyId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
             <Route path="/beetle/:beetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />

@@ -37,7 +37,7 @@ function getFileLastmod(filePath) {
 function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
 
-  const baseUrl = 'https://orau98.github.io';
+  const baseUrl = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 
   // 各カテゴリごとのサイトマップを格納
   const sitemaps = {

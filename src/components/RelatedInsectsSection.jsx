@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import { loadInsectImageIndexes } from '../services/imageIndex';
+import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   // 各植物の展開状態を管理
@@ -44,43 +44,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
       .catch(() => setImageExtensions({}));
   }, []);
 
-  // MothDetailと同じ画像パス構築ロジックを使用
-  // 和名→学名ファイル名マッピング（App.jsxと同期）
-  const globalJapaneseToScientificMapping = new Map([
-    // 蛾類
-    ['ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura'],
-    ['オオマエベニトガリバ', 'Tethea_consimilis'],
-    ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
-    ['シラオビキリガ', 'Cosmia_camptostigma'],
-    ['シラホシキリガ', 'Cosmia_pyralina'],
-    ['タカオキリガ', 'Pseudopanolis_takao'],
-    ['ツマベニヒメハマキ', 'Phaecasiophora_roseana_2'],
-    ['ナシキリガ', 'Cosmia_restituta_Walker_1857'],
-    ['ニッコウケンモン', 'Craniophora_praeclara'],
-    ['ニッコウシャチホコ', 'Shachia_circumscripta'],
-    ['ノコメセダカヨトウ', 'Orthogonia_sera'],
-    ['ハスモンヨトウ', 'Spodoptera_litura'],
-    ['マエジロシャチホコ', 'Notodonta_albicosta'],
-    ['クロハナコヤガ', 'Aventiola_pusilla'],
-    ['フタスジエグリアツバ', 'Gonepatica_opalina'],
-    ['ベニスズメ', 'Deilephila_elpenor'],
-    ['ヒメスズメ', 'Deilephila_askoldensis'],
-    ['マダラキボシキリガ', 'Dimorphicosmia_variegata'],
-    ['ナシイラガ', 'Narosoideus_flavidorsalis'],
-    ['ヨモギオオホソハマキ', 'Phtheochroides_clandestina'],
-    // 今回リネームした画像のマッピング追加
-    ['クロモクメヨトウ', 'Dypterygia_caliginosa'],
-    ['コスジシロエダシャク', 'Cabera_purus'],
-    ['シマフコヤガ', 'Corgatha_nitens'],
-    ['シロテンツマキリアツバ', 'Amphitrogia_amphidecta'],
-    ['スジモンヒトリ', 'Spilarctia_seriatopunctata'],
-    ['プライヤエグリシャチホコ', 'Lophontosia_pryeri'],
-    // タマムシ科
-    ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
-    ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
-    // シジミチョウ科
-    ['クロマダラソテツシジミ', 'Chilades_pandava']
-  ]);
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
 
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';
@@ -95,18 +59,17 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
 
   // 画像パスを構築する関数（MothDetailと同じロジック）
   const getImagePath = (insect) => {
-    const safeFilename = insect.scientificFilename || createSafeFilename(insect.scientificName);
+    const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
+    const safeFilename = insect.scientificFilename || mappedFilename || createSafeFilename(insect.scientificName);
     const ext = imageExtensions[safeFilename] || '.jpg';
-    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}${v}`;
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}${cacheBustRef.current}`;
   };
 
   // フォールバック画像パスを取得する関数
   const getFallbackImagePath = (insect) => {
     const japaneseName = insect.name;
     const ext = imageExtensions[japaneseName] || '.jpg';
-    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}${v}`;
+    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}${cacheBustRef.current}`;
   };
 
   if (Object.keys(relatedMothsByPlant).length === 0) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import logger from './utils/logger';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
@@ -7,8 +7,10 @@ import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
+import { absUrl } from './utils/origin';
 import { loadInsectImageIndexes } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
+import { getMappedScientificFilename } from './utils/insectImageMappings';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
@@ -36,6 +38,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Apply ID mapping if needed
   const mappedInsectId = idMapping[insectId] || insectId;
+
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
   
   // 🔍 デバッグ：データ配列の状況確認
   logger.debug('🔍 Data arrays status:', {
@@ -167,6 +171,86 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageExtensions, setImageExtensions] = useState({});
+  const [imageBases, setImageBases] = useState([]);
+
+  useEffect(() => {
+    loadInsectImageIndexes()
+      .then(({ names, exts }) => {
+        setImageExtensions(exts || {});
+        setImageBases(Array.from(names || []));
+      })
+      .catch((error) => {
+        logger.debug('Failed to load insect image indexes:', error);
+        setImageExtensions({});
+        setImageBases([]);
+      });
+  }, []);
+
+  const mappedScientificFilename = moth ? getMappedScientificFilename(moth.name) : '';
+  const safeFilename = moth
+    ? (moth.scientificFilename || mappedScientificFilename || createSafeInsectFilename(moth.scientificName))
+    : '';
+  const japaneseName = moth?.name || '';
+
+  const possibleImagePaths = React.useMemo(() => {
+    if (!moth) return [];
+
+    const exts = imageExtensions || {};
+    const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${cacheBustRef.current}`;
+    const uniq = new Set();
+    const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
+    const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
+
+    if (safeFilename && exts[safeFilename]) push(build(safeFilename, exts[safeFilename]));
+    if (japaneseName && exts[japaneseName]) push(build(japaneseName, exts[japaneseName]));
+
+    if (safeFilename) {
+      tryExts.forEach(ext => push(build(safeFilename, ext)));
+    }
+    if (japaneseName) {
+      tryExts.forEach(ext => push(build(japaneseName, ext)));
+    }
+
+    try {
+      if (imageBases && imageBases.length > 0 && moth.scientificName) {
+        const sci = moth.scientificName.replace(/\s*\(.*$/, '').trim();
+        const [genus, species] = sci.split(/\s+/);
+        if (genus && species) {
+          const candidates = imageBases.filter(base => base.includes(genus) && base.includes(species));
+          candidates.sort((a, b) => a.length - b.length);
+          for (const base of candidates) {
+            if (exts[base]) {
+              push(build(base, exts[base]));
+            } else {
+              tryExts.forEach(ext => push(build(base, ext)));
+            }
+          }
+        }
+      }
+    } catch (error) {
+      logger.debug('Failed to derive additional image candidates:', error);
+    }
+
+    return Array.from(uniq);
+  }, [imageExtensions, imageBases, safeFilename, japaneseName, moth]);
+
+  const staticImagePath = possibleImagePaths[0] || '';
+  const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
+
+  useEffect(() => {
+    if (!moth) return;
+    if (staticImagePath) {
+      setOgTwitterImage(staticImagePath, `${moth.name}（${moth.scientificName}）の写真`);
+      return;
+    }
+    if (typeof document === 'undefined') return;
+    const ogImageEl = document.querySelector('img[alt*="写真"]');
+    const imageUrl = ogImageEl?.getAttribute('src');
+    if (imageUrl) {
+      setOgTwitterImage(imageUrl, `${moth.name}（${moth.scientificName}）の写真`);
+    }
+  }, [moth, staticImagePath, setOgTwitterImage]);
 
   // Filter alternative names to exclude duplicates of the primary name
   const alternativeNamesFiltered = React.useMemo(() => {
@@ -194,7 +278,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     ? (moth.hostPlants.length ? moth.hostPlants.join('、') : '不明')
     : (typeof moth?.hostPlants === 'string' && moth?.hostPlants.trim() ? moth.hostPlants : '不明');
   const canonicalHref = moth
-    ? `https://orau98.github.io/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`
+    ? absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`)
     : undefined;
   const pageTitle = moth
     ? `${moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫食草図鑑`
@@ -209,11 +293,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     ogType: 'article',
     url: canonicalHref,
     breadcrumbItems: moth ? [
-      { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
-      { name: insectTypeLabel, url: `https://orau98.github.io/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}` },
+      { name: '昆虫食草図鑑', url: absUrl('/') },
+      { name: insectTypeLabel, url: absUrl(`/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}`) },
       { name: moth.name, url: canonicalHref }
     ] : undefined,
-    resetCanonicalTo: 'https://orau98.github.io/'
+    resetCanonicalTo: absUrl('/')
   });
 
   // Show loading state if data is still loading
@@ -413,102 +497,21 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     });
   });
 
-  // Check if Instagram post is available
-  const hasInstagramPost = moth.instagramUrl && moth.instagramUrl.trim();
-  
-  // Create safe filename for static image fallback
-  const safeFilename = moth.scientificFilename || createSafeInsectFilename(moth.scientificName);
-  const japaneseName = moth.name;
-  
-  // 画像拡張子・ファイル名リスト（詳細でも堅牢に解決）
-  const [imageExtensions, setImageExtensions] = useState({});
-  const [imageBases, setImageBases] = useState([]);
-
-  useEffect(() => {
-    loadInsectImageIndexes()
-      .then(({ names, exts }) => {
-        setImageExtensions(exts || {});
-        setImageBases(Array.from(names || []));
-      })
-      .catch((e) => {
-        logger.debug('Failed to load insect image indexes:', e);
-        setImageExtensions({});
-        setImageBases([]);
-      });
-  }, []);
-
-  // 画像候補（拡張子マップ + フォールバック拡張子を試行）
-  const possibleImagePaths = React.useMemo(() => {
-    const exts = imageExtensions || {};
-    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
-    const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${v}`;
-    const uniq = new Set();
-    const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
-    const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
-
-    // 1) mapping-priority
-    if (exts[safeFilename]) push(build(safeFilename, exts[safeFilename]));
-    if (exts[japaneseName]) push(build(japaneseName, exts[japaneseName]));
-
-    // 2) fallback exts for scientific filename
-    tryExts.forEach(ext => push(build(safeFilename, ext)));
-
-    // 3) fallback exts for Japanese filename
-    tryExts.forEach(ext => push(build(japaneseName, ext)));
-
-    // 4) filename list-based matching (e.g., "Amraica superans superans Butler")
-    try {
-      if (imageBases && imageBases.length > 0 && moth?.scientificName) {
-        const sci = moth.scientificName.replace(/\s*\(.*$/, '').trim(); // "Genus species"
-        const [genus, species] = sci.split(/\s+/);
-        if (genus && species) {
-          const candidates = imageBases.filter(base => base.includes(genus) && base.includes(species));
-          // Prefer the shortest matching base (likely closest to binomial)
-          candidates.sort((a, b) => a.length - b.length);
-          for (const base of candidates) {
-            if (exts[base]) push(build(base, exts[base]));
-            else {
-              tryExts.forEach(ext => push(build(base, ext)));
-            }
-          }
-        }
-      }
-    } catch (_) {}
-
-    return Array.from(uniq);
-  }, [imageExtensions, imageBases, safeFilename, japaneseName, moth?.scientificName]);
-  
-  const staticImagePath = possibleImagePaths[0]; // Default to scientific name
-  
   // Debug logging
-  logger.debug('Moth ID:', moth.id);
-  logger.debug('Instagram URL:', moth.instagramUrl);
+  logger.debug('Moth ID:', moth?.id);
+  logger.debug('Instagram URL:', moth?.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
   logger.debug('Static Image Path:', staticImagePath);
   
-  // Reflect chosen image to OG/Twitter tags when ready
-  useEffect(() => {
-    if (staticImagePath) {
-      setOgTwitterImage(staticImagePath, `${moth?.name}（${moth?.scientificName}）の写真`);
-    } else {
-      try {
-        const ogImageEl = document.querySelector('img[alt*="写真"]');
-        const imageUrl = ogImageEl?.getAttribute('src');
-        if (imageUrl) setOgTwitterImage(imageUrl, `${moth?.name}（${moth?.scientificName}）の写真`);
-      } catch {}
-    }
-  }, [staticImagePath, moth?.name, moth?.scientificName]);
-  
-  // Additional debug for beetles
-  if (moth.type === 'beetle') {
+  if (moth?.type === 'beetle') {
     console.log('DEBUG: Beetle detail view:', {
       name: moth.name,
       scientificName: moth.scientificName,
       scientificFilename: moth.scientificFilename,
-      safeFilename: safeFilename,
-      japaneseName: japaneseName,
-      imageExtensions: imageExtensions,
-      possibleImagePaths: possibleImagePaths
+      safeFilename,
+      japaneseName,
+      imageExtensions,
+      possibleImagePaths
     });
   }
 

@@ -5,6 +5,7 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
+import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
 import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
@@ -136,6 +137,8 @@ const PlantImageGallery = ({ images }) => {
                 <img 
                   src={mainImage.finalSrc}
                   alt={`${mainImage.alt}の写真`}
+                  width="1600"
+                  height="1000"
                   className="w-full h-full object-cover"
                 />
                 
@@ -173,6 +176,8 @@ const PlantImageGallery = ({ images }) => {
                     <img 
                       src={image.finalSrc}
                       alt={`${image.alt}の写真`}
+                      width="400"
+                      height="400"
                       className="w-full h-full object-cover"
                     />
                     {mainImage?.finalSrc === image.finalSrc && (
@@ -220,6 +225,8 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
             <img
               src={imgSrc}
               alt={name}
+              width="1200"
+              height="900"
               className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
               onError={() => setImgError(true)}
               loading="lazy"
@@ -341,7 +348,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     : isOrder
     ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
     : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
-  const canonicalHref = `https://orau98.github.io/meta/plant/${encodeURIComponent(decodedPlantName)}.html`;
+  const canonicalHref = absUrl(`/meta/plant/${encodeURIComponent(decodedPlantName)}.html`);
 
   const { setOgTwitterImage } = useSeoMeta({
     title: pageTitle,
@@ -349,11 +356,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     ogType: 'article',
     url: canonicalHref,
     breadcrumbItems: [
-      { name: '昆虫食草図鑑', url: 'https://orau98.github.io/' },
-      { name: '植物', url: 'https://orau98.github.io/plant' },
+      { name: '昆虫食草図鑑', url: absUrl('/') },
+      { name: '植物', url: absUrl('/plant') },
       { name: decodedPlantName, url: canonicalHref },
     ],
-    resetCanonicalTo: 'https://orau98.github.io/',
+    resetCanonicalTo: absUrl('/'),
   });
 
   // 画像決定後にOG/Twitterの画像を更新（DOMから拾う既存挙動を維持）
@@ -375,7 +382,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         const items = (classificationMembers || []).slice(0, 10).map((name, idx) => ({
           "@type": "ListItem",
           position: idx + 1,
-          url: `https://orau98.github.io/meta/plant/${encodeURIComponent(name)}.html`
+          url: `${absUrl(`/meta/plant/${encodeURIComponent(name)}.html`)}`
         }));
         s = document.createElement('script');
         s.id = id;
@@ -540,12 +547,60 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   // (no sticky tabs; aligns with insect page)
 
-  // Load classification from public/20210514YList_download.csv
+  // Thin-content guard: if this is a plant page with no related insects, mark as noindex
   useEffect(() => {
-    const url = `${import.meta.env.BASE_URL}20210514YList_download.csv`;
-    fetch(url)
-      .then(r => r.text())
-      .then(text => {
+    try {
+      const isTaxonList = isFamily || isOrder;
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) {
+        robots = document.createElement('meta');
+        robots.name = 'robots';
+        document.head.appendChild(robots);
+      }
+      if (!isTaxonList && Array.isArray(relatedInsects) && relatedInsects.length === 0) {
+        robots.content = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+      } else {
+        robots.content = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+      }
+    } catch {}
+  }, [isFamily, isOrder, relatedInsects]);
+
+  // Load classification: prefer lite JSON, fallback to CSV
+  useEffect(() => {
+    const base = import.meta.env.BASE_URL || '/';
+    const isTaxonListPage = isFamily || isOrder;
+    const loadFromLite = async () => {
+      try {
+        if (isTaxonListPage) return false; // CSV for family/order pages
+        const res = await fetch(`${base}assets/data-lite/ylist-lite.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        if (!res.ok) return false;
+        const lite = await res.json();
+        const plants = lite?.plants || {};
+        const aliasToCanonical = lite?.aliasToCanonical || {};
+        const target = decodedPlantName;
+        const canonical = plants[target] ? target : (aliasToCanonical[target] || '');
+        const info = canonical ? plants[canonical] : null;
+        if (!info) return false;
+        setTaxonomy({
+          familyJp: info.familyJp || '',
+          familyEn: info.familyEn || '',
+          orderJp: info.orderJp || '',
+          orderEn: info.orderEn || '',
+          genus: '',
+          scientificName: info.scientificName || ''
+        });
+        setCanonicalName(canonical || '');
+        const aliases = Array.isArray(info.aliases) ? info.aliases.filter(a => a && a !== canonical) : [];
+        setAliasNames(aliases);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    const loadFromCsv = async () => {
+      const url = `${base}20210514YList_download.csv`;
+      const text = await fetch(url).then(r => r.text());
         const res = Papa.parse(text, { header: true, skipEmptyLines: true });
         const rows = res.data || [];
         // Normalize column keys to trim BOM or spaces
@@ -649,8 +704,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
             navigate(`/plant/${encodeURIComponent(canonical)}`, { replace: true });
           }
         }
-      })
-      .catch(() => { /* ignore */ });
+      };
+
+    (async () => {
+      const ok = await loadFromLite();
+      if (!ok) {
+        try { await loadFromCsv(); } catch {}
+      }
+    })();
   }, [decodedPlantName, navigate]);
 
   return (
@@ -705,10 +766,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       </div>
       {/* 構造化データ */}
       <PlantStructuredData 
-        plant={{ name: decodedPlantName, scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined }} 
-        details={details} 
-        insects={relatedInsects}
-        images={plantImages}
+        plant={{ name: decodedPlantName, scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined, family: familyLabel }} 
+        relatedInsects={relatedInsects}
       />
       
       {/* 概要セクション（和名＋学名のみ） */}

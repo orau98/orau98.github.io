@@ -23,6 +23,18 @@
         "path": "insects-csv/v1.csv",
         "savedAt": "2025-08-28T16:48:16.994Z"
       }
+    },
+    "listmj-lemini": {
+      "v2025-09-17": {
+        "path": "listmj-lemini/v2025-09-17.html",
+        "savedAt": "2025-09-19T07:40:30.063Z"
+      }
+    },
+    "listmj-eumolpinae": {
+      "v2025-09-19": {
+        "path": "listmj-eumolpinae/v2025-09-19.html",
+        "savedAt": "2025-09-19T08:40:17.003Z"
+      }
     }
   }
 }

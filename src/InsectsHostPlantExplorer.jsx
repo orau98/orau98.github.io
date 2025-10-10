@@ -32,7 +32,7 @@ const formatCitationJp = (b) => {
   return body ? `${body}。` : '';
 };
 
-const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme }) => {
+const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme, summaryCounts }) => {
   const [activeTab, setActiveTab] = useState('insects');
   const [searchParams] = useSearchParams();
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
@@ -103,12 +103,19 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
 
   // SEO for Home (トップページ)
   const title = '昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索';
-  const desc = `掲載: 蛾・蝶 ${moths.length + butterflies.length}種、甲虫 ${beetles.length + leafbeetles.length}種、食草 ${Object.keys(hostPlants).length}種。和名/学名/分類から高速検索。`;
+  const counts = summaryCounts || {
+    moths: moths.length,
+    butterflies: butterflies.length,
+    beetles: beetles.length,
+    leafbeetles: leafbeetles.length,
+    hostPlants: Object.keys(hostPlants).length,
+  };
+  const desc = `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、甲虫 ${counts.beetles + counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。`;
   const { setOgTwitterImage } = useSeoMeta({
     title,
     description: desc,
     ogType: 'website',
-    url: 'https://orau98.github.io/',
+    url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io/') + '/',
   });
 
   // Preload hero image on component mount
@@ -249,13 +256,13 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
               
               <div className="flex flex-wrap gap-3 mt-6">
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                  <span className="text-white/90 text-sm font-medium">蝶・蛾 {moths.length + butterflies.length}種</span>
+              <span className="text-white/90 text-sm font-medium">蝶・蛾 {counts.moths + counts.butterflies}種</span>
                 </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                  <span className="text-white/90 text-sm font-medium">甲虫 {beetles.length + leafbeetles.length}種</span>
+              <span className="text-white/90 text-sm font-medium">甲虫 {counts.beetles + counts.leafbeetles}種</span>
                 </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                  <span className="text-white/90 text-sm font-medium">食草 {Object.keys(hostPlants).length}種</span>
+              <span className="text-white/90 text-sm font-medium">食草 {counts.hostPlants}種</span>
                 </div>
               </div>
               
