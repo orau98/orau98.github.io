@@ -616,7 +616,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           const m = srcUrl && srcUrl.match(/\/images\/insects\/([^/?#]+)\.(jpg|jpeg|png|webp|JPG|PNG|WEBP)/);
                           if (m) {
                             const base = decodeURIComponent(m[1]);
-                            const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext: '.' + m[2].toLowerCase(), widths: [640, 1024, 1600], sizes: '100vw' });
+                            const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext: '.' + m[2].toLowerCase(), widths: [320, 640, 1024], sizes: '100vw' });
                             return (
                               <img 
                                 src={src}
