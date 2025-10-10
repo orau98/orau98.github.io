@@ -5,6 +5,18 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
+// Enable debug logs via query param (?debug=1) in production
+try {
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search || '');
+    if (params.has('debug')) {
+      window.DEBUG_LOGS = true;
+    }
+  }
+} catch (_) {
+  // ignore
+}
+
 // Silence verbose logs in production while keeping errors/warnings
 if (import.meta && import.meta.env && import.meta.env.PROD && typeof window !== 'undefined' && !window.DEBUG_LOGS) {
   try {
@@ -84,6 +96,22 @@ window.addEventListener('error', (event) => {
     event.preventDefault();
     return false;
   }
+
+  // Minimal inline reporter in debug mode to avoid white screen without clues
+  try {
+    if (typeof window !== 'undefined' && window.DEBUG_LOGS) {
+      const id = 'debug-error-overlay';
+      let box = document.getElementById(id);
+      if (!box) {
+        box = document.createElement('pre');
+        box.id = id;
+        box.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:#111;color:#f66;padding:8px;margin:0;z-index:99999;font-size:12px;white-space:pre-wrap;';
+        document.body.appendChild(box);
+      }
+      const msg = `[error] ${errorMessage || event.message || 'unknown error'}\n` + (event.error?.stack || '');
+      box.textContent += `\n${msg}`;
+    }
+  } catch {}
 });
 
 // Also handle unhandled promise rejections
@@ -102,6 +130,22 @@ window.addEventListener('unhandledrejection', (event) => {
     event.preventDefault();
     return false;
   }
+
+  // Minimal inline reporter in debug mode for async errors
+  try {
+    if (typeof window !== 'undefined' && window.DEBUG_LOGS) {
+      const id = 'debug-error-overlay';
+      let box = document.getElementById(id);
+      if (!box) {
+        box = document.createElement('pre');
+        box.id = id;
+        box.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow:auto;background:#111;color:#f66;padding:8px;margin:0;z-index:99999;font-size:12px;white-space:pre-wrap;';
+        document.body.appendChild(box);
+      }
+      const msg = `[unhandledrejection] ${reasonMessage || String(event.reason)}\n` + (event.reason?.stack || '');
+      box.textContent += `\n${msg}`;
+    }
+  } catch {}
 });
 
 // Note: SPA deep-link redirect is handled by 404.html -> index.html
