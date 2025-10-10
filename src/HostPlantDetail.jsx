@@ -571,28 +571,47 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const isTaxonListPage = isFamily || isOrder;
     const loadFromLite = async () => {
       try {
-        if (isTaxonListPage) return false; // CSV for family/order pages
         const res = await fetch(`${base}assets/data-lite/ylist-lite.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
         if (!res.ok) return false;
         const lite = await res.json();
         const plants = lite?.plants || {};
         const aliasToCanonical = lite?.aliasToCanonical || {};
         const target = decodedPlantName;
-        const canonical = plants[target] ? target : (aliasToCanonical[target] || '');
-        const info = canonical ? plants[canonical] : null;
-        if (!info) return false;
-        setTaxonomy({
-          familyJp: info.familyJp || '',
-          familyEn: info.familyEn || '',
-          orderJp: info.orderJp || '',
-          orderEn: info.orderEn || '',
-          genus: '',
-          scientificName: info.scientificName || ''
-        });
-        setCanonicalName(canonical || '');
-        const aliases = Array.isArray(info.aliases) ? info.aliases.filter(a => a && a !== canonical) : [];
-        setAliasNames(aliases);
-        return true;
+        if (!isTaxonListPage) {
+          const canonical = plants[target] ? target : (aliasToCanonical[target] || '');
+          const info = canonical ? plants[canonical] : null;
+          if (!info) return false;
+          setTaxonomy({
+            familyJp: info.familyJp || '',
+            familyEn: info.familyEn || '',
+            orderJp: info.orderJp || '',
+            orderEn: info.orderEn || '',
+            genus: '',
+            scientificName: info.scientificName || ''
+          });
+          setCanonicalName(canonical || '');
+          const aliases = Array.isArray(info.aliases) ? info.aliases.filter(a => a && a !== canonical) : [];
+          setAliasNames(aliases);
+          return true;
+        }
+        // taxon pages: use familiesMap/ordersMap if available
+        if (isFamily) {
+          const members = (lite.familiesMap && lite.familiesMap[target]) ? lite.familiesMap[target] : [];
+          if (Array.isArray(members) && members.length > 0) {
+            setTaxonomy({ familyJp: target, familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
+            setClassificationMembers(members.slice().sort((a,b)=> a.localeCompare(b,'ja')));
+            return true;
+          }
+        }
+        if (isOrder) {
+          const members = (lite.ordersMap && lite.ordersMap[target]) ? lite.ordersMap[target] : [];
+          if (Array.isArray(members) && members.length > 0) {
+            setTaxonomy({ familyJp: '', familyEn: '', orderJp: target, orderEn: '', genus: '', scientificName: '' });
+            setClassificationMembers(members.slice().sort((a,b)=> a.localeCompare(b,'ja')));
+            return true;
+          }
+        }
+        return false;
       } catch {
         return false;
       }

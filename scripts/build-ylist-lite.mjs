@@ -33,6 +33,8 @@ function build() {
 
   const rows = parseCsv(ylistCsv);
   const plants = {}; // name -> info
+  const familiesMap = {}; // familyJp -> [plant names]
+  const ordersMap = {};  // orderJp -> [plant names]
   const aliasToCanonical = {}; // alias -> name
 
   // Helper to get first non-empty
@@ -62,16 +64,27 @@ function build() {
     info.aliases = Array.from(new Set([...(info.aliases || []), ...aliases]));
     plants[name] = info;
 
+    // Build family/order membership restricted to known plants
+    const fam = info.familyJp || '';
+    const ord = info.orderJp || '';
+    if (fam) {
+      if (!familiesMap[fam]) familiesMap[fam] = [];
+      if (!familiesMap[fam].includes(name)) familiesMap[fam].push(name);
+    }
+    if (ord) {
+      if (!ordersMap[ord]) ordersMap[ord] = [];
+      if (!ordersMap[ord].includes(name)) ordersMap[ord].push(name);
+    }
+
     aliases.forEach(a => { if (a && !aliasToCanonical[a]) aliasToCanonical[a] = name; });
   });
 
   const outDir = path.join(PUBLIC_DIR, 'assets', 'data-lite');
   fs.mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, 'ylist-lite.json');
-  fs.writeFileSync(outPath, JSON.stringify({ plants, aliasToCanonical }, null, 0), 'utf-8');
+  fs.writeFileSync(outPath, JSON.stringify({ plants, aliasToCanonical, familiesMap, ordersMap }, null, 0), 'utf-8');
   const size = fs.statSync(outPath).size;
   console.log('[ylist-lite] wrote', outPath, `size=${size} bytes`, 'plants=', Object.keys(plants).length);
 }
 
 build();
-
