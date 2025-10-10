@@ -32,7 +32,7 @@ const formatCitationJp = (b) => {
   return body ? `${body}。` : '';
 };
 
-const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme, summaryCounts }) => {
+const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leafbeetles, hostPlants, plantDetails, theme, setTheme, summaryCounts, onNeedInsectsData }) => {
   const [activeTab, setActiveTab] = useState('insects');
   const [searchParams] = useSearchParams();
   const [heroImageLoaded, setHeroImageLoaded] = useState(false);
@@ -100,6 +100,12 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
     if (tab === 'plants') setActiveTab('plants');
     else if (tab === 'insects') setActiveTab('insects');
   }, [searchParams]);
+
+  useEffect(() => {
+    if (activeTab === 'insects' && typeof onNeedInsectsData === 'function') {
+      onNeedInsectsData();
+    }
+  }, [activeTab, onNeedInsectsData]);
 
   // SEO for Home (トップページ)
   const title = '昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索';
@@ -295,7 +301,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
             {/* タブヘッダー */}
             <div className="flex border-b-2 border-gradient-to-r from-emerald-200/50 via-blue-200/50 to-emerald-200/50 dark:from-emerald-700/50 dark:via-blue-700/50 dark:to-emerald-700/50">
               <button
-                onClick={() => setActiveTab('insects')}
+                onClick={() => { setActiveTab('insects'); if (typeof onNeedInsectsData === 'function') onNeedInsectsData(); }}
                 className={`flex-1 px-6 py-5 text-base font-medium tracking-tight transition-all duration-300 relative ${
                   activeTab === 'insects'
                     ? 'text-emerald-600 dark:text-emerald-400 bg-gradient-to-br from-emerald-50/70 to-blue-50/70 dark:from-emerald-900/30 dark:to-blue-900/30'

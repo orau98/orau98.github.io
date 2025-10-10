@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Papa from 'papaparse';
 import logger from './utils/logger';
@@ -48,6 +48,8 @@ function App() {
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [summaryCounts, setSummaryCounts] = useState(null);
+  const typesFetchStartedRef = useRef(false);
+  const ensureTypesLoaderRef = useRef(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   
   const isDevelopment = import.meta.env.DEV;
@@ -121,9 +123,44 @@ function App() {
                 if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
               } catch {}
             });
-            // Skip heavy CSV path; still allow background enrichment later as needed
-            // but we keep the legacy fetch below in case split files not present.
-            // Return to avoid executing heavy path immediately
+            // Prepare lazy loader for insects types and schedule based on initial tab
+            const startFetchTypes = () => {
+              if (typesFetchStartedRef.current) return;
+              typesFetchStartedRef.current = true;
+              Promise.allSettled([
+                fetch(`${base}assets/data-lite/moths.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
+                fetch(`${base}assets/data-lite/butterflies.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
+                fetch(`${base}assets/data-lite/beetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
+                fetch(`${base}assets/data-lite/leafbeetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`)
+              ]).then(async (results) => {
+                try {
+                  const [mothR, butterR, beetleR, leafR] = results;
+                  const toJson = async (r) => (r && r.status === 'fulfilled' && r.value.ok) ? r.value.json() : [];
+                  const [mothArr, butterArr, beetleArr, leafArr] = await Promise.all([
+                    toJson(mothR), toJson(butterR), toJson(beetleR), toJson(leafR)
+                  ]);
+                  if (Array.isArray(mothArr)) setMoths(mothArr);
+                  if (Array.isArray(butterArr)) setButterflies(butterArr);
+                  if (Array.isArray(beetleArr)) setBeetles(beetleArr);
+                  if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+                } catch {}
+              });
+            };
+            ensureTypesLoaderRef.current = startFetchTypes;
+            try {
+              const params = new URLSearchParams(location.search || '');
+              const initialTab = params.get('tab') || 'insects';
+              if (initialTab !== 'plants') {
+                startFetchTypes();
+              } else {
+                const delay = 5000;
+                if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+                  setTimeout(() => window.requestIdleCallback(startFetchTypes, { timeout: 2000 }), delay);
+                } else {
+                  setTimeout(startFetchTypes, delay);
+                }
+              }
+            } catch { /* ignore */ }
           }
         } else {
           // Fallback to combined lite index
@@ -139,6 +176,10 @@ function App() {
               setHostPlants(lite.hostPlants || {});
               setPlantDetails({});
               setLoading(false);
+              // Provide no-op loader since combined index already has arrays
+              ensureTypesLoaderRef.current = () => {
+                typesFetchStartedRef.current = true;
+              };
               // Continue to CSV background load
             }
           }
@@ -5575,7 +5616,7 @@ function App() {
       ) : (
         <React.Suspense fallback={<SkeletonLoader />}>
           <Routes>
-            <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} summaryCounts={summaryCounts} />} />
+            <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} summaryCounts={summaryCounts} onNeedInsectsData={() => { try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {} }} />} />
             <Route path="/moth/:mothId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
             <Route path="/butterfly/:butterflyId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
             <Route path="/beetle/:beetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
