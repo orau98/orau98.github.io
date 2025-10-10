@@ -26,11 +26,12 @@
     "restore-missing-insects": "node scripts/restore_missing_insects_from_cache.mjs",
     "clean-insects-empty": "node scripts/clean_insects_empty_rows.mjs",
     "sort-insects": "node scripts/sort_insects_by_id.mjs",
-    "prebuild": "npm run fix-butterfly-subfamily && npm run fix-butterfly-author-year && npm run fix-beetle-subfamily && npm run fill-beetle-species && npm run fix-scientific && npm run validate-normalized && npm run build:data-lite && npm run build:ylist-lite && npm run generate-meta && npm run generate-sitemap",
+    "prebuild": "npm run fix-butterfly-subfamily && npm run fix-butterfly-author-year && npm run fix-beetle-subfamily && npm run fill-beetle-species && npm run fix-scientific && npm run validate-normalized && npm run build:data-lite && npm run build:ylist-lite && npm run build:image-index && npm run generate-meta && npm run generate-sitemap",
     "deploy": "echo 'Use GitHub Actions: push to main to deploy.'",
     "build:meta": "node tools/add-head-meta.mjs",
     "build:data-lite": "node scripts/build-data-lite.mjs",
     "build:ylist-lite": "node scripts/build-ylist-lite.mjs",
+    "build:image-index": "node scripts/build-image-index.mjs",
     "lint:html": "node -e \"console.log('lint ok')\"",
     "format": "prettier -w ."
   },

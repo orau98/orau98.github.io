@@ -40,13 +40,30 @@ export const loadInsectImageIndexes = async () => {
   _insectLoading = (async () => {
     try {
       const base = import.meta.env.BASE_URL || '/';
-      const [namesRes, extsRes] = await Promise.all([
-        fetch(import.meta.env.DEV ? `${base}image_filenames.txt?v=${Date.now()}` : `${base}image_filenames.txt`),
-        fetch(import.meta.env.DEV ? `${base}image_extensions.json?v=${Date.now()}` : `${base}image_extensions.json`),
-      ]);
-      const namesText = namesRes.ok ? await namesRes.text() : '';
-      _insectImageNames = new Set(namesText.split('\n').map(s => s.trim()).filter(Boolean));
-      _insectExtMap = extsRes.ok ? await extsRes.json() : {};
+      // Try combined lite index first
+      const liteUrl = import.meta.env.DEV ? `${base}assets/data-lite/image-index.json?v=${Date.now()}` : `${base}assets/data-lite/image-index.json`;
+      let namesSet = null;
+      let extsMap = null;
+      try {
+        const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        if (res.ok) {
+          const json = await res.json();
+          const arr = Array.isArray(json.names) ? json.names : Object.keys(json.exts || {});
+          namesSet = new Set(arr.map(s => String(s).trim()).filter(Boolean));
+          extsMap = json.exts || {};
+        }
+      } catch {}
+      if (!namesSet || !extsMap) {
+        const [namesRes, extsRes] = await Promise.all([
+          fetch(import.meta.env.DEV ? `${base}image_filenames.txt?v=${Date.now()}` : `${base}image_filenames.txt`),
+          fetch(import.meta.env.DEV ? `${base}image_extensions.json?v=${Date.now()}` : `${base}image_extensions.json`),
+        ]);
+        const namesText = namesRes.ok ? await namesRes.text() : '';
+        namesSet = new Set(namesText.split('\n').map(s => s.trim()).filter(Boolean));
+        extsMap = extsRes.ok ? await extsRes.json() : {};
+      }
+      _insectImageNames = namesSet;
+      _insectExtMap = extsMap;
       return { names: _insectImageNames, exts: _insectExtMap };
     } catch {
       _insectImageNames = new Set();
@@ -58,4 +75,3 @@ export const loadInsectImageIndexes = async () => {
   })();
   return _insectLoading;
 };
-
