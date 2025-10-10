@@ -251,7 +251,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     if (imageUrl) {
       setOgTwitterImage(imageUrl, `${moth.name}（${moth.scientificName}）の写真`);
     }
-  }, [moth, staticImagePath, setOgTwitterImage]);
+  }, [moth, staticImagePath]);
 
   // Filter alternative names to exclude duplicates of the primary name
   const alternativeNamesFiltered = React.useMemo(() => {
