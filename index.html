@@ -2,16 +2,18 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <!-- Ensure relative URLs resolve correctly under subpath deployments -->
+    <base href="%BASE_URL%">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Performance optimization -->
-    <link rel="dns-prefetch" href="//orau98.github.io">
-    <link rel="preconnect" href="https://orau98.github.io" crossorigin>
-    <link rel="prefetch" href="/images/insects/Cucullia_argentea.jpg">
-    <link rel="preload" href="/images/insects/Cucullia_argentea.jpg" as="image" fetchpriority="high">
+    <!-- Removed domain-specific preconnect to avoid wrong-origin hints when hosted elsewhere -->
+    <!-- Use Vite's BASE_URL placeholder to support subpath deployments -->
+    <link rel="prefetch" href="%BASE_URL%images/insects/Cucullia_argentea.jpg">
+    <link rel="preload" href="%BASE_URL%images/insects/Cucullia_argentea.jpg" as="image" fetchpriority="high">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     <!-- Preconnect for embeds/CDNs (Instagram widgets) -->
     <link rel="preconnect" href="https://www.instagram.com" crossorigin>

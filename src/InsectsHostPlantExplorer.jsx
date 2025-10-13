@@ -124,9 +124,9 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
     url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io/') + '/',
   });
 
-  // Preload hero image on component mount
+  // Preload hero image on component mount (use relative path for subpath-safe resolution)
   React.useEffect(() => {
-    const heroImageUrl = `${import.meta.env.BASE_URL}images/insects/Cucullia_argentea.jpg`;
+    const heroImageUrl = 'images/insects/Cucullia_argentea.jpg';
     const img = new Image();
     img.decoding = 'async';
     img.fetchPriority = 'high';
@@ -139,7 +139,8 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
     if (heroImageLoaded) {
       try {
         const hero = document.querySelector('img[alt*="メインビジュアル"]');
-        const src = hero?.getAttribute('src') || `${import.meta.env.BASE_URL}images/insects/Cucullia_argentea.jpg`;
+        // Prefer resolved absolute URL from currentSrc/src
+        const src = (hero?.currentSrc || hero?.src || 'images/insects/Cucullia_argentea.jpg');
         setOgTwitterImage(src, '昆虫食草図鑑 メインビジュアル');
       } catch {}
     }
@@ -222,11 +223,13 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
           
           {(() => {
             const base = 'Cucullia_argentea';
-            const src = `${import.meta.env.BASE_URL}images/insects/${base}.jpg`;
+            // Use relative paths so it works under any base path
+            const src = `images/insects/${base}.jpg`;
+            // Use only sizes that actually exist to avoid 404s
             const srcSet = [
-              `${import.meta.env.BASE_URL}images/resized/insects/${base}.640.jpg 640w`,
-              `${import.meta.env.BASE_URL}images/resized/insects/${base}.1024.jpg 1024w`,
-              `${import.meta.env.BASE_URL}images/resized/insects/${base}.1600.jpg 1600w`,
+              `images/resized/insects/${base}.320.jpg 320w`,
+              `images/resized/insects/${base}.640.jpg 640w`,
+              `images/resized/insects/${base}.1024.jpg 1024w`,
             ].join(', ');
             const sizes = '100vw';
             return (
@@ -250,10 +253,21 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                 fetchpriority="high"
                 onLoad={() => setHeroImageLoaded(true)}
                 onError={(e) => { 
-                  logger.warn('Hero image failed to load:', e.target.src);
-                  e.target.onerror = null; 
-                  e.target.src=`${import.meta.env.BASE_URL}images/placeholder.jpg`; 
-                  e.target.alt='画像が見つかりません';
+                  try {
+                    const imgEl = e.target;
+                    logger.warn('Hero image failed to load:', imgEl?.src);
+                    // Try relative path first (works under subpath deployments)
+                    if (!imgEl.dataset.fallbackTried) {
+                      imgEl.dataset.fallbackTried = '1';
+                      imgEl.onerror = null; // prevent loop
+                      imgEl.src = 'images/insects/Cucullia_argentea.jpg';
+                    } else {
+                      imgEl.onerror = null; // prevent loop
+                      // Final fallback to a local placeholder (relative path)
+                      imgEl.src = 'images/placeholder.jpg';
+                      imgEl.alt = '画像が見つかりません';
+                    }
+                  } catch {}
                   setHeroImageLoaded(true);
                 }}
               />
