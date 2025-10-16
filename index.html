@@ -124,10 +124,58 @@
   })();
   </script>
 
+  <!-- Slug URL -> ID URL resolver (scientific-name slugs, incl. subspecies) -->
+  <script>
+  (function () {
+    try {
+      var path = location.pathname;
+      // Expect paths like: /moth/abraxas-grossulariata or /butterfly/papilio-bianor-okinawensis
+      var m = path.match(/^\/(moth|butterfly|leafbeetle|beetle)\/([^\/?#]+)/i);
+      if (!m) return; // Not a detail page pattern; ignore
+      var group = (m[1] || '').toLowerCase();
+      var last = (m[2] || '').toLowerCase();
+      // If already an ID route (e.g., species-1234), do nothing
+      if (/^(species-|moth-|butterfly-|leafbeetle-|beetle-)/.test(last)) return;
+
+      // Load slug map synchronously to avoid race with SPA bootstrap
+      var map = null;
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/assets/slug-map.json', false /* sync */);
+        xhr.setRequestHeader('Cache-Control', 'no-cache');
+        xhr.send(null);
+        if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
+          map = JSON.parse(xhr.responseText);
+        }
+      } catch (e) { /* ignore */ }
+
+      var id = null;
+      if (map && map[group]) {
+        id = map[group][last] || null;
+      }
+      // Fallback: allow slug with trailing numeric id (e.g., ...-3541)
+      if (!id) {
+        var m2 = last.match(/-(\d{2,})$/);
+        if (m2) {
+          id = 'species-' + m2[1];
+        }
+      }
+      if (id) {
+        var target = '/' + group + '/' + id + location.search + location.hash;
+        if (target !== location.pathname + location.search + location.hash) {
+          history.replaceState(null, '', target);
+        }
+      }
+    } catch (e) {
+      // no-op on error
+    }
+  })();
+  </script>
+
     <script type="module" crossorigin src="/assets/index-DfwwPcGH.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DUAcT9ld.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
