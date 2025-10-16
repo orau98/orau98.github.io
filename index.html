@@ -124,50 +124,76 @@
   })();
   </script>
 
-  <!-- Slug URL -> ID URL resolver (scientific-name slugs, incl. subspecies) -->
+  <!-- Slug <-> ID URL compatibility layer (scientific-name slugs, incl. subspecies) -->
   <script>
   (function () {
-    try {
-      var path = location.pathname;
-      // Expect paths like: /moth/abraxas-grossulariata or /butterfly/papilio-bianor-okinawensis
-      var m = path.match(/^\/(moth|butterfly|leafbeetle|beetle)\/([^\/?#]+)/i);
-      if (!m) return; // Not a detail page pattern; ignore
-      var group = (m[1] || '').toLowerCase();
-      var last = (m[2] || '').toLowerCase();
-      // If already an ID route (e.g., species-1234), do nothing
-      if (/^(species-|moth-|butterfly-|leafbeetle-|beetle-)/.test(last)) return;
-
-      // Load slug map synchronously to avoid race with SPA bootstrap
-      var map = null;
+    function loadMapSync() {
       try {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/assets/slug-map.json', false /* sync */);
+        xhr.open('GET', '/assets/slug-map.json', false);
         xhr.setRequestHeader('Cache-Control', 'no-cache');
         xhr.send(null);
         if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
-          map = JSON.parse(xhr.responseText);
+          return JSON.parse(xhr.responseText);
         }
-      } catch (e) { /* ignore */ }
-
-      var id = null;
-      if (map && map[group]) {
-        id = map[group][last] || null;
-      }
-      // Fallback: allow slug with trailing numeric id (e.g., ...-3541)
+      } catch (e) {}
+      return null;
+    }
+    function parse(pathname) {
+      var m = String(pathname||'').match(/^\/(moth|butterfly|leafbeetle|beetle)\/([^\/?#]+)/i);
+      if (!m) return null;
+      return { group: m[1].toLowerCase(), last: m[2].toLowerCase() };
+    }
+    function resolveSlugToId(group, last, map) {
+      if (/^(species-|moth-|butterfly-|leafbeetle-|beetle-)/.test(last)) return null;
+      var id = map && map[group] ? map[group][last] : null;
       if (!id) {
         var m2 = last.match(/-(\d{2,})$/);
-        if (m2) {
-          id = 'species-' + m2[1];
-        }
+        if (m2) id = 'species-' + m2[1];
       }
-      if (id) {
-        var target = '/' + group + '/' + id + location.search + location.hash;
-        if (target !== location.pathname + location.search + location.hash) {
+      return id || null;
+    }
+    function toUrl(pathname, search, hash) {
+      return String(pathname||'') + String(search||'') + String(hash||'');
+    }
+
+    var slugMap = null;
+    var parsed = parse(location.pathname);
+    if (parsed) {
+      // Load synchronously before app bootstrap
+      slugMap = loadMapSync();
+      // Monkey-patch history to rewrite slug navigations during SPA routing
+      try {
+        var _push = history.pushState, _replace = history.replaceState;
+        function rewriteAndCall(fn, state, url, ...rest) {
+          try {
+            if (typeof url === 'string') {
+              var u = new URL(url, location.origin);
+              var p = parse(u.pathname);
+              if (p) {
+                var id = resolveSlugToId(p.group, p.last, slugMap || (slugMap = loadMapSync()));
+                if (id) {
+                  var newPath = '/' + p.group + '/' + id;
+                  var newUrl = newPath + u.search + u.hash;
+                  return fn.call(history, state, '', newUrl, ...rest);
+                }
+              }
+            }
+          } catch (e) {}
+          return fn.call(history, state, '', url, ...rest);
+        }
+        history.pushState = function (state, _, url) { return rewriteAndCall(_push, state, url); };
+        history.replaceState = function (state, _, url) { return rewriteAndCall(_replace, state, url); };
+      } catch (e) {}
+
+      // Handle direct entry on slug URL before React mounts
+      var idDirect = resolveSlugToId(parsed.group, parsed.last, slugMap);
+      if (idDirect) {
+        var target = '/' + parsed.group + '/' + idDirect + location.search + location.hash;
+        if (toUrl(location.pathname, location.search, location.hash) !== target) {
           history.replaceState(null, '', target);
         }
       }
-    } catch (e) {
-      // no-op on error
     }
   })();
   </script>
