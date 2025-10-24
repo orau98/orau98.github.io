@@ -8,17 +8,23 @@
     <link rel="alternate icon" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2c5530" />
     
     <!-- Performance optimization -->
-    <!-- Removed domain-specific preconnect to avoid wrong-origin hints when hosted elsewhere -->
     <!-- Use Vite's BASE_URL placeholder to support subpath deployments -->
     <link rel="prefetch" href="%BASE_URL%images/insects/Cucullia_argentea.jpg">
     <link rel="preload" href="%BASE_URL%images/insects/Cucullia_argentea.jpg" as="image" fetchpriority="high">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
-    <!-- Preconnect for embeds/CDNs (Instagram widgets) -->
+    <!-- Preconnect for embeds/CDNs (Instagram widgets / Analytics / Ads) -->
     <link rel="preconnect" href="https://www.instagram.com" crossorigin>
     <link rel="preconnect" href="https://snapwidget.com" crossorigin>
     <link rel="preconnect" href="https://cdn.lightwidget.com" crossorigin>
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+    <link rel="dns-prefetch" href="//tpc.googlesyndication.com">
+    <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
     <title>昆虫 食草 - 7000種以上の昆虫食草図鑑 | 蛾・蝶・タマムシの植物関係データベース</title>
     <meta name="description" content="昆虫 食草の関係を検索できる日本最大級データベース。7000種以上の蛾・蝶・タマムシと植物の関係を網羅。オニグルミ、ヤナギ、イラクサなど豊富な食草情報で昆虫と植物の意外な繋がりを発見。研究者から愛好家まで必見の昆虫食草専門図鑑。"> 
     <meta name="keywords" content="昆虫 食草, 食草, 昆虫図鑑, 蛾, 蝶, タマムシ, ハムシ, ホストプラント, 寄主植物, オニグルミ, ヤナギ, イラクサ, アキニレ, 植物昆虫関係, 生態, 観察, 研究, データベース, 7000種, 日本産, 標準図鑑, 生物多様性, 幼虫食餌">
@@ -162,5 +168,18 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <noscript>
+      <section style="max-width: 960px; margin: 24px auto; padding: 16px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fafafa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; line-height: 1.7;">
+        <h1 style="font-size: 1.25rem; margin: 0 0 8px; color: #2c5530;">昆虫 食草データベース（簡易リンク）</h1>
+        <p style="margin: 0 0 12px; color: #333;">JavaScriptが無効でも閲覧できる主要ページのリンクです。詳細はサイトマップから全URLをご確認ください。</p>
+        <ul style="margin: 0 0 12px 20px;">
+          <li><a href="/meta/moth/species-6016.html">蛾: ホソバオビキリガ</a></li>
+          <li><a href="/meta/moth/species-0001.html">蛾: モンフタオビコバネ</a></li>
+          <li><a href="/meta/butterfly/butterfly-csv-0.html">蝶: ギフチョウ</a></li>
+          <li><a href="/meta/plant/%E3%82%A2%E3%82%AA%E3%83%80%E3%83%A2(%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91).html">食草: アオダモ（モクセイ科）</a></li>
+        </ul>
+        <p style="margin: 0; color: #333;"><a href="/sitemap.xml">サイトマップ</a></p>
+      </section>
+    </noscript>
   </body>
 </html>
