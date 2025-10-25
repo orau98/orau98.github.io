@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="google-adsense-account" content="ca-pub-6982051533473293">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
+  <title>アオバシャチホコ 応援テスト (Zaranga permagna) - 蛾図鑑</title>
+  <meta name="description" content="アオバシャチホコの図鑑ページをベースに、保全団体情報と応援機能を試験的に追加したテストページです。">
+  <meta name="keywords" content="アオバシャチホコ,Zaranga permagna,蛾,保全,応援,推し活,図鑑">
+  <link rel="canonical" href="https://orau98.github.io/meta/moth/species-4601-support-test.html">
+  <link rel="alternate" href="https://orau98.github.io/moth/species-4601">
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="アオバシャチホコ 応援テスト (Zaranga permagna) - 蛾図鑑">
+  <meta property="og:description" content="保全活動と推し活を掛け合わせた応援機能のテストページ。アオバシャチホコを守る団体と企業サポートを紹介します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://orau98.github.io/meta/moth/species-4601-support-test.html">
+  <meta property="og:image" content="https://orau98.github.io/images/moths/Zaranga_permagna.jpg">
+  <meta property="og:site_name" content="昆虫と食草の図鑑">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="アオバシャチホコ 応援テスト (Zaranga permagna) - 蛾図鑑">
+  <meta property="twitter:description" content="保全活動と推し活を掛け合わせた応援機能のテストページ。アオバシャチホコを守る団体と企業サポートを紹介します。">
+  <meta property="twitter:image" content="https://orau98.github.io/images/moths/Zaranga_permagna.jpg">
+
+  <style>
+    .fan-highlight {
+      margin-top: 12px;
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 18px;
+      background-color: #f1f6f2;
+      color: #2c5530;
+      font-size: 0.95em;
+    }
+
+    .fan-support,
+    .partner-support {
+      background-color: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .fan-support h4,
+    .partner-support h4 {
+      font-size: 1.1em;
+      margin: 16px 0 10px;
+      color: #2c5530;
+    }
+
+    .support-organization {
+      border-top: 1px solid #e0e0e0;
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .support-organization header {
+      margin-bottom: 12px;
+    }
+
+    .support-organization h5 {
+      font-size: 1.05em;
+      color: #2c5530;
+      margin-bottom: 4px;
+    }
+
+    .support-organization .region {
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .support-organization ul {
+      margin-left: 20px;
+      list-style: disc;
+      color: #444;
+    }
+
+    .support-organization dl {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 6px 16px;
+      font-size: 0.95em;
+      color: #555;
+    }
+
+    .support-organization dt {
+      font-weight: 600;
+      color: #2c5530;
+    }
+
+    .support-actions {
+      margin-top: 16px;
+    }
+
+    .support-button {
+      display: inline-block;
+      padding: 11px 22px;
+      border-radius: 24px;
+      background-color: #2c5530;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .support-button:hover {
+      background-color: #23472a;
+    }
+
+    .support-button:focus-visible {
+      outline: 3px solid rgba(44, 85, 48, 0.3);
+      outline-offset: 3px;
+    }
+
+    .donation-panel {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid #dce6de;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+
+    .donation-panel[hidden] {
+      display: none;
+    }
+
+    .donation-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .donation-form fieldset {
+      border: 1px solid #dfe6df;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .donation-form legend {
+      font-weight: 600;
+      color: #2c5530;
+      margin-bottom: 8px;
+    }
+
+    .donation-form label.option {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    .donation-form label:not(.option) {
+      font-weight: 600;
+      color: #2c5530;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .donation-form input[type="radio"] {
+      accent-color: #2c5530;
+    }
+
+    .donation-form input[type="number"],
+    .donation-form input[type="text"],
+    .donation-form input[type="email"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cdd7ce;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+
+    #customAmount {
+      margin-left: 26px;
+      max-width: 180px;
+    }
+
+    .donation-form .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .donation-form button[type="submit"] {
+      background-color: #2c5530;
+      color: #fff;
+      border: none;
+      border-radius: 22px;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .donation-form button[type="submit"]:hover {
+      background-color: #23472a;
+    }
+
+    .donation-form button[type="button"] {
+      background: transparent;
+      border: none;
+      color: #2c5530;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 16px;
+    }
+
+    .donation-confirmation {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background-color: #eef6ef;
+      border: 1px solid #cbdccb;
+      color: #2c5530;
+      font-weight: 600;
+    }
+
+    .donation-confirmation[hidden] {
+      display: none;
+    }
+
+    .sponsor-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .sponsor-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      background-color: #fff;
+    }
+
+    .sponsor-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background-color: #f1f5f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sponsor-name {
+      font-weight: 600;
+      color: #2c5530;
+    }
+
+    .support-note {
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    @media (max-width: 640px) {
+      .support-organization dl {
+        grid-template-columns: 1fr;
+      }
+
+      .support-button,
+      .donation-form button[type="submit"],
+      .donation-form button[type="button"] {
+        width: 100%;
+        text-align: center;
+      }
+
+      .donation-form .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["Animal", "Species"],
+    "name": "アオバシャチホコ",
+    "alternateName": ["Zaranga permagna (Butler, 1881)", "アオバシャチホコ"],
+    "scientificName": "Zaranga permagna (Butler, 1881)",
+    "identifier": {
+      "@type": "PropertyValue",
+      "propertyID": "species_id",
+      "value": "species-4601-support-test"
+    },
+    "classification": {
+      "@type": "Taxon",
+      "taxonRank": "species",
+      "parentTaxon": {
+        "@type": "Taxon",
+        "name": "シャチホコガ科",
+        "taxonRank": "family"
+      }
+    },
+    "description": "アオバシャチホコの既存図鑑ページに応援機能を追加したテストページです。保全団体・応援プラン・企業サポートを紹介しています。",
+    "url": "https://orau98.github.io/meta/moth/species-4601-support-test.html",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://orau98.github.io/images/moths/Zaranga_permagna.jpg",
+      "caption": "アオバシャチホコ（Zaranga permagna）の写真"
+    },
+    "inLanguage": "ja",
+    "author": {
+      "@type": "Organization",
+      "name": "昆虫食草図鑑"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "昆虫と食草の図鑑"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="meta-page">
+    <nav class="breadcrumb">
+      <a href="/">昆虫食草図鑑</a>
+      <span>></span>
+      <a href="/moth">蛾</a>
+      <span>></span>
+      <span>アオバシャチホコ（応援テスト）</span>
+    </nav>
+    
+    <header class="meta-header">
+      <h1>アオバシャチホコ</h1>
+      <h2><em>Zaranga permagna</em> (Butler, 1881)</h2>
+      <p class="fan-highlight">図鑑 × 推し活で保全をもっと身近に（テスト実装）</p>
+    </header>
+    
+    <main class="meta-content">
+      <section class="basic-info">
+        <h3>基本情報</h3>
+        <dl>
+          <dt>和名</dt>
+          <dd>アオバシャチホコ</dd>
+          
+          <dt>学名</dt>
+          <dd><em>Zaranga permagna</em> (Butler, 1881)</dd>
+          <dt>分類</dt>
+          <dd>シャチホコガ科</dd>
+          <dt>種類</dt>
+          <dd>蛾</dd>
+          
+          <dt>食草数</dt>
+          <dd>3種</dd>
+          
+          <dt>出典</dt>
+          <dd>insects.csv + hostplants.csv</dd>
+        </dl>
+      </section>
+      
+      
+      <section class="image-section">
+        <img src="/images/moths/Zaranga_permagna.jpg" 
+             alt="アオバシャチホコ（Zaranga permagna (Butler, 1881)）の写真" 
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; padding: 40px; text-align: center; background-color: #f0f0f0; border-radius: 8px; color: #666;">
+          画像を読み込み中...
+        </div>
+        <div class="image-caption">アオバシャチホコの生態写真</div>
+      </section>
+      
+      <section class="host-plants">
+        <h3>食草・食樹</h3>
+        
+        <p>アオバシャチホコは以下の植物を食草として利用します：</p>
+        <ul>
+          <li><a href="/meta/plant/%E3%83%A4%E3%83%9E%E3%83%9C%E3%82%A6%E3%82%B7(%E3%83%9F%E3%82%BA%E3%82%AD%E7%A7%91).html">ヤマボウシ(ミズキ科)</a></li><li><a href="/meta/plant/%E3%83%9F%E3%82%BA%E3%82%AD(%E3%83%9F%E3%82%BA%E3%82%AD%E7%A7%91).html">ミズキ(ミズキ科)</a></li><li><a href="/meta/plant/%E3%82%AF%E3%83%9E%E3%83%8E%E3%83%9F%E3%82%BA%E3%82%AD(%E3%83%9F%E3%82%BA%E3%82%AD%E7%A7%91).html">クマノミズキ(ミズキ科)</a></li>
+        </ul>
+      </section>
+      
+      <section class="description">
+        <h3>詳細説明</h3>
+        <p>アオバシャチホコ（学名：<em>Zaranga permagna</em> (Butler, 1881)）はシャチホコガ科に分類される蛾の一種です。</p>
+        
+        <p>幼虫はヤマボウシ(ミズキ科)、ミズキ(ミズキ科)、クマノミズキ(ミズキ科)を食草として成長します。3種の植物との関係が確認されており、多様な植物資源を利用する種です。</p>
+        
+        <p>出典: insects.csv + hostplants.csv</p>
+        <p>この種の詳細な生態情報や観察記録については、メインの図鑑ページでご確認ください。</p>
+      </section>
+
+      <section class="fan-support" aria-labelledby="fan-support-heading">
+        <h3 id="fan-support-heading">保全団体と応援プログラム（テスト）</h3>
+        <p>図鑑ページの知識と推し活的な感情をつなげ、アオバシャチホコを守る団体への継続支援を実現するテスト実装です。</p>
+
+        <h4>アオバシャチホコを守る取り組み</h4>
+        <article class="support-organization">
+          <header>
+            <h5>アオバの森リカバリープロジェクト</h5>
+            <p class="region">活動地域：北関東〜中部地方の広葉樹林</p>
+          </header>
+          <div class="activities">
+            <p>主な活動内容：</p>
+            <ul>
+              <li>ミズキ科植物の植栽と林床管理による生息環境再生</li>
+              <li>幼虫発生期のモニタリングと市民参加型観察会</li>
+              <li>地域と協働したライトトラップ運用の最適化</li>
+            </ul>
+          </div>
+          <dl>
+            <dt>設立</dt>
+            <dd>2014年</dd>
+            <dt>代表</dt>
+            <dd>森田 葉月</dd>
+            <dt>連絡先</dt>
+            <dd><a href="mailto:info@aobamori.jp">info@aobamori.jp</a></dd>
+            <dt>活動レポート</dt>
+            <dd><a href="https://example.org/aoba-report.pdf" target="_blank" rel="noopener noreferrer">2023透明性レポート（PDF）</a></dd>
+          </dl>
+        </article>
+
+        <div class="support-actions">
+          <p>推し活名での応援プランを選び、活動の継続を後押しできます。</p>
+          <button type="button" class="support-button" id="supportButton" aria-expanded="false" aria-controls="donationPanel">
+            アオバシャチホコを応援する
+          </button>
+        </div>
+
+        <div class="donation-panel" id="donationPanel" hidden>
+          <form class="donation-form" id="donationForm">
+            <fieldset>
+              <legend>応援プランを選択</legend>
+              <label class="option">
+                <input type="radio" name="donation" value="1000" checked>
+                ライトプラン ¥1,000 / 月 — 幼虫観察会の運営サポート
+              </label>
+              <label class="option">
+                <input type="radio" name="donation" value="3000">
+                スタンダードプラン ¥3,000 / 月 — モニタリング機材の更新費
+              </label>
+              <label class="option">
+                <input type="radio" name="donation" value="7000">
+                プレミアムプラン ¥7,000 / 月 — 広葉樹苗の植栽支援
+              </label>
+              <label class="option">
+                <input type="radio" name="donation" value="custom">
+                カスタムプラン
+              </label>
+              <input type="number" id="customAmount" name="customAmount" min="500" step="500" placeholder="¥3,000" aria-label="カスタム金額 (円)" disabled>
+            </fieldset>
+
+            <label for="donorName">ニックネーム（推し活名）</label>
+            <input type="text" id="donorName" name="donorName" placeholder="例：アオバ推しの葉っぱさん" required>
+
+            <label for="donorEmail">連絡用メールアドレス</label>
+            <input type="email" id="donorEmail" name="donorEmail" placeholder="例：you@example.com" required>
+
+            <div class="form-actions">
+              <button type="submit">応援を確定する</button>
+              <button type="button" id="closePanel">閉じる</button>
+            </div>
+          </form>
+          <div class="donation-confirmation" id="donationConfirmation" hidden>
+            ありがとうございます！応援内容を仮登録しました。詳細メールをお送りいたします。
+          </div>
+        </div>
+      </section>
+
+      <section class="partner-support" aria-labelledby="partner-support-heading">
+        <h3 id="partner-support-heading">活動を支える企業（テスト）</h3>
+        <p>企業との協働も推し活を支える大切なパートナー。ロゴと支援内容を並べ、誰がどのように応援しているかを可視化しています。</p>
+
+        <h4>サポート企業</h4>
+        <div class="sponsor-list">
+          <article class="sponsor-card">
+            <div class="sponsor-logo" aria-hidden="true">
+              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img">
+                <rect x="6" y="6" width="36" height="36" rx="10" fill="#2c5530"/>
+                <path d="M14 26c6-10 14-10 20 0-6 6-10 8-14 8s-8-2-6-8z" fill="#f1f6f2"/>
+                <circle cx="24" cy="20" r="4" fill="#f8f9fa"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sponsor-name">GreenPulse テクノロジーズ</div>
+              <div class="support-note">ドローン解析で生息域の植生を高頻度モニタリング</div>
+            </div>
+          </article>
+
+          <article class="sponsor-card">
+            <div class="sponsor-logo" aria-hidden="true">
+              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img">
+                <circle cx="24" cy="24" r="18" fill="#f1f6f2"/>
+                <path d="M16 30c6-8 12-10 20-8-4 8-10 12-18 12z" fill="#6fa264"/>
+                <path d="M18 22c4-4 8-6 12-4-2 4-6 6-12 6z" fill="#2c5530"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sponsor-name">LeafWorks ホールディングス</div>
+              <div class="support-note">苗木供給とCSR寄付プログラムで植栽をバックアップ</div>
+            </div>
+          </article>
+
+          <article class="sponsor-card">
+            <div class="sponsor-logo" aria-hidden="true">
+              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img">
+                <rect x="5" y="8" width="38" height="32" rx="8" fill="#2c5530"/>
+                <path d="M15 20h18l-3 12h-12l-3-12z" fill="#e3efd8"/>
+                <path d="M18 18c0-4 3-7 6-7s6 3 6 7" stroke="#e3efd8" stroke-width="2" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sponsor-name">ForestLink バンク</div>
+              <div class="support-note">寄付決済と成果連動型資金プランを共同開発</div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    
+    <section class="navigation">
+      <a href="/" class="back-link">図鑑トップへ</a>
+      <a href="/moth/species-4601" class="detail-link">現行ページを見る</a>
+    </section>
+
+    <noscript>
+      <style>
+        #donationPanel[hidden] {
+          display: block;
+        }
+        #supportButton {
+          display: none;
+        }
+      </style>
+      <div class="donation-confirmation" style="margin-top: 20px;">
+        JavaScript が無効のため応援フォームは常に表示されています。必要事項をご入力のうえご利用ください。
+      </div>
+    </noscript>
+  </div>
+  
+  <script>
+    (function() {
+      const supportButton = document.getElementById('supportButton');
+      const donationPanel = document.getElementById('donationPanel');
+      const closePanelButton = document.getElementById('closePanel');
+      const donationForm = document.getElementById('donationForm');
+      const confirmation = document.getElementById('donationConfirmation');
+      const customAmount = document.getElementById('customAmount');
+      const donationRadios = donationForm ? donationForm.querySelectorAll('input[name="donation"]') : [];
+
+      if (!supportButton || !donationPanel || !donationForm) {
+        return;
+      }
+
+      const togglePanel = (show) => {
+        donationPanel.hidden = !show;
+        supportButton.setAttribute('aria-expanded', String(show));
+        if (show) {
+          confirmation.hidden = true;
+          donationForm.reset();
+          donationRadios.forEach((radio, index) => {
+            radio.checked = index === 0;
+          });
+          customAmount.value = '';
+          customAmount.disabled = true;
+          const nameField = donationForm.querySelector('#donorName');
+          if (nameField) {
+            nameField.focus();
+          }
+        } else {
+          supportButton.focus();
+        }
+      };
+
+      supportButton.addEventListener('click', () => togglePanel(true));
+      if (closePanelButton) {
+        closePanelButton.addEventListener('click', () => togglePanel(false));
+      }
+
+      donationRadios.forEach((radio) => {
+        radio.addEventListener('change', () => {
+          const isCustom = radio.value === 'custom';
+          customAmount.disabled = !isCustom;
+          if (isCustom) {
+            customAmount.focus();
+          } else {
+            customAmount.value = '';
+          }
+        });
+      });
+
+      donationForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        confirmation.hidden = false;
+        confirmation.focus();
+      });
+
+      confirmation.setAttribute('tabindex', '-1');
+    })();
+  </script>
+</body>
+</html>
