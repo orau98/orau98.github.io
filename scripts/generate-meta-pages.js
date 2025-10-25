@@ -968,6 +968,29 @@ async function generateMetaPages() {
   
   // 出力ディレクトリを作成
   const metaDir = path.join(__dirname, '../public/meta');
+  // 既存のカスタムページ（*-support-test.html）を退避しておき、生成後に復元する
+  const preserveMap = new Map();
+  try {
+    ['moth', 'butterfly', 'beetle', 'leafbeetle', 'plant'].forEach(type => {
+      const typeDir = path.join(metaDir, type);
+      const preserve = [];
+      if (fs.existsSync(typeDir)) {
+        try {
+          for (const f of fs.readdirSync(typeDir)) {
+            if (f.endsWith('-support-test.html')) {
+              const p = path.join(typeDir, f);
+              try {
+                preserve.push({ name: f, content: fs.readFileSync(p, 'utf-8') });
+              } catch {}
+            }
+          }
+        } catch {}
+      }
+      preserveMap.set(type, preserve);
+    });
+  } catch (e) {
+    console.warn('preserve custom meta pages warn:', e.message || e);
+  }
   if (!fs.existsSync(metaDir)) {
     fs.mkdirSync(metaDir, { recursive: true });
   }
@@ -1418,6 +1441,23 @@ async function generateMetaPages() {
     generateMetaIndexes();
   } catch (e) {
     console.warn('メタインデックス生成で警告:', e.message || e);
+  }
+  
+  // 退避していたカスタムページを復元
+  try {
+    let restored = 0;
+    for (const [type, files] of preserveMap.entries()) {
+      if (!files || files.length === 0) continue;
+      const typeDir = path.join(metaDir, type);
+      fs.mkdirSync(typeDir, { recursive: true });
+      for (const { name, content } of files) {
+        const out = path.join(typeDir, name);
+        try { fs.writeFileSync(out, content); restored++; } catch {}
+      }
+    }
+    if (restored > 0) console.log(`Restored custom meta pages: ${restored}`);
+  } catch (e) {
+    console.warn('restore custom meta pages warn:', e.message || e);
   }
     
   } catch (error) {
