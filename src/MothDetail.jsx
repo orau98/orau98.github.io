@@ -17,7 +17,7 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
-import SupportEngagementSection from './components/SupportEngagementSection.jsx';
+// SupportEngagementSection is test-only and not used in SPA detail
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
@@ -1455,10 +1455,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             )}
 
-            {/* 保全応援セクション（アオバシャチホコ限定テスト） */}
-            {mappedInsectId === 'species-4601' && (
-              <SupportEngagementSection speciesName={moth.name} />
-            )}
+            {/* 保全応援セクション（テストページ専用のためSPAには含めない） */}
 
             {/* 関連種情報 - 横スクロール式カードデザイン */}
             <RelatedInsectsSection 
