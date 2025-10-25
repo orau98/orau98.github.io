@@ -10,7 +10,7 @@
 </head>
 <body style="margin:0; background:#fff;">
   <!-- 現行SPAページを完全ロードし、そのDOMへテストセクションを差し込む方式（デザイン完全一致） -->
-  <iframe id="spaFrame" src="/moth/species-4601" title="アオバシャチホコ（現行ページ埋め込み）" style="width:100%; border:0; display:block; min-height:80vh;"></iframe>
+  <iframe id="spaFrame" src="/moth/species-4601" title="アオバシャチホコ（現行ページ埋め込み）" style="width:100%; border:0; display:block;"></iframe>
 
   <script>
   (function(){
@@ -20,7 +20,16 @@
       try {
         const doc = iframe.contentDocument;
         if (!doc) return;
-        const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
+        const root = doc.documentElement;
+        const scroller = doc.scrollingElement || root;
+        const body = doc.body || root;
+        const h = Math.max(
+          scroller.scrollHeight || 0,
+          root.scrollHeight || 0,
+          body.scrollHeight || 0,
+          root.offsetHeight || 0,
+          root.clientHeight || 0
+        );
         if (h && h !== iframe._lastH) {
           iframe.style.height = h + 'px';
           iframe._lastH = h;
@@ -145,15 +154,21 @@
 
       try {
         const doc = iframe.contentDocument;
+        const update = () => setHeight();
+        // Observe DOM mutations (structure/style changes)
         const mo = new MutationObserver(() => {
-          if (!doc.getElementById('conservation-support-test-section')) {
-            const ok = injectSections();
-            if (ok) setHeight();
-          } else {
-            setHeight();
-          }
+          const ok = doc.getElementById('conservation-support-test-section') || injectSections();
+          update();
         });
         mo.observe(doc.documentElement, { childList: true, subtree: true, attributes: true });
+        // Observe size changes precisely
+        if (typeof ResizeObserver !== 'undefined') {
+          try { new ResizeObserver(update).observe(doc.documentElement); } catch {}
+          try { new ResizeObserver(update).observe(doc.body); } catch {}
+        }
+        // Fallback periodic adjustments for late-loading assets
+        let ticks = 0;
+        const timer = setInterval(() => { update(); if (++ticks > 40) clearInterval(timer); }, 250);
         window.addEventListener('resize', setHeight);
       } catch (e) {}
     }
