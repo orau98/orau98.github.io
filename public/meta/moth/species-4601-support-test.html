@@ -31,11 +31,11 @@
     function injectSections() {
       try {
         const doc = iframe.contentDocument;
-        if (!doc) return;
+        if (!doc) return false;
 
         // 左カラムの画像カードブロックを特定（aspect-[4/3]）
         const imageBlock = doc.querySelector('.aspect-\\[4\\/3\\]') || doc.querySelector('[class*="aspect-"][class*="4/3"]');
-        if (!imageBlock) return;
+        if (!imageBlock) return false;
 
         // 画像カードの外側カード要素（rounded/shadow/border等を持つ親）を探索
         let imageCard = imageBlock;
@@ -44,10 +44,10 @@
           if (/rounded|shadow|border|overflow/.test(cls)) break;
           imageCard = imageCard.parentElement;
         }
-        if (!imageCard || !imageCard.parentElement) return;
+        if (!imageCard || !imageCard.parentElement) return false;
 
         // 既に挿入済みならスキップ
-        if (doc.getElementById('conservation-support-test-section')) return;
+        if (doc.getElementById('conservation-support-test-section')) return true;
 
         // 1枚目: 保全団体と応援プログラム
         const html1 = `
@@ -155,15 +155,33 @@
         node2.innerHTML = html2;
         imageCard.insertAdjacentElement('afterend', node1.firstElementChild);
         imageCard.nextElementSibling.insertAdjacentElement('afterend', node2.firstElementChild);
-      } catch (e) {}
+        return true;
+      } catch (e) { return false; }
     }
 
     function afterLoad() {
-      injectSections();
-      setHeight();
+      // 試行的に複数回チャレンジ（Reactの描画完了を待つ）
+      let attempts = 0;
+      const tryInject = () => {
+        const done = injectSections();
+        setHeight();
+        attempts++;
+        if (!done && attempts < 50) {
+          setTimeout(tryInject, 200);
+        }
+      };
+      tryInject();
+
       try {
         const doc = iframe.contentDocument;
-        const mo = new MutationObserver(() => setHeight());
+        const mo = new MutationObserver(() => {
+          if (!doc.getElementById('conservation-support-test-section')) {
+            const ok = injectSections();
+            if (ok) setHeight();
+          } else {
+            setHeight();
+          }
+        });
         mo.observe(doc.documentElement, { childList: true, subtree: true, attributes: true });
         window.addEventListener('resize', setHeight);
       } catch (e) {}
