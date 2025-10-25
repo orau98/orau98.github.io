@@ -33,29 +33,24 @@
         const doc = iframe.contentDocument;
         if (!doc) return;
 
-        // 右カラム（情報カードのスタックコンテナ）候補を探索
-        let right = doc.querySelector('div.lg\\:col-span-1.space-y-4')
-                 || doc.querySelector('[class*="lg:col-span-1"][class*="space-y-4"]');
+        // 左カラムの画像カードブロックを特定（aspect-[4/3]）
+        const imageBlock = doc.querySelector('.aspect-\\[4\\/3\\]') || doc.querySelector('[class*="aspect-"][class*="4/3"]');
+        if (!imageBlock) return;
 
-        // 予備: グリッド内の2列目っぽい要素
-        if (!right) {
-          const grids = Array.from(doc.querySelectorAll('[class*="grid"][class*="gap"]'));
-          for (const g of grids) {
-            const cols = g.querySelectorAll(':scope > div, :scope > section, :scope > aside');
-            if (cols.length >= 2) {
-              right = cols[1];
-              break;
-            }
-          }
+        // 画像カードの外側カード要素（rounded/shadow/border等を持つ親）を探索
+        let imageCard = imageBlock;
+        for (let i = 0; i < 6 && imageCard; i++) {
+          const cls = (imageCard.className || '').toString();
+          if (/rounded|shadow|border|overflow/.test(cls)) break;
+          imageCard = imageCard.parentElement;
         }
-
-        if (!right) return;
+        if (!imageCard || !imageCard.parentElement) return;
 
         // 既に挿入済みならスキップ
         if (doc.getElementById('conservation-support-test-section')) return;
 
-        // 挿入するHTML（TailwindクラスはSPA側CSSを利用）
-        const html = `
+        // 1枚目: 保全団体と応援プログラム
+        const html1 = `
           <section id="conservation-support-test-section" class="bg-white/80 dark:bg-slate-800/70 backdrop-blur rounded-2xl shadow-xl border border-white/40 dark:border-slate-700/60 p-6 space-y-6">
             <div>
               <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 text-xs font-semibold tracking-wide">
@@ -122,9 +117,44 @@
             </div>
           </section>`;
 
-        const container = doc.createElement('div');
-        container.innerHTML = html;
-        right.appendChild(container.firstElementChild);
+        // 2枚目: 企業サポート
+        const html2 = `
+          <section id="conservation-sponsors-test-section" class="bg-white/80 dark:bg-slate-800/70 backdrop-blur rounded-2xl shadow-xl border border-white/40 dark:border-slate-700/60 p-6">
+            <div class="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <h4 class="text-lg font-semibold text-slate-800 dark:text-slate-100">活動を支える企業（テスト）</h4>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">企業サポートも推し活の大切なパートナー。支援内容をロゴと一緒に掲示し、協働の姿を紹介しています。</p>
+              </div>
+              <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">β 版 UI</span>
+            </div>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              ${[{
+                  name:'GreenPulse テクノロジーズ', note:'ドローン解析で生息域の植生を高頻度モニタリング'
+                },{
+                  name:'LeafWorks ホールディングス', note:'苗木供給とCSR寄付プログラムで植栽をバックアップ'
+                },{
+                  name:'ForestLink バンク', note:'寄付決済と成果連動型資金プランを共同開発'
+                }].map(s => `
+                <article class="flex items-start gap-3 rounded-xl border border-slate-200/70 dark:border-slate-700/60 bg-white/80 dark:bg-slate-900/60 p-3">
+                  <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100/70 dark:bg-emerald-900/40">
+                    <svg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg' class='w-9 h-9 text-emerald-700'><rect x='6' y='6' width='36' height='36' rx='10' fill='#d1fae5'/></svg>
+                  </div>
+                  <div>
+                    <h5 class="text-sm font-semibold text-slate-800 dark:text-slate-100">${s.name}</h5>
+                    <p class="mt-1 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${s.note}</p>
+                  </div>
+                </article>
+              `).join('')}
+            </div>
+          </section>`;
+
+        // 画像カード直下に2枚のカードを順に差し込む
+        const node1 = doc.createElement('div');
+        node1.innerHTML = html1;
+        const node2 = doc.createElement('div');
+        node2.innerHTML = html2;
+        imageCard.insertAdjacentElement('afterend', node1.firstElementChild);
+        imageCard.nextElementSibling.insertAdjacentElement('afterend', node2.firstElementChild);
       } catch (e) {}
     }
 
@@ -144,4 +174,3 @@
   </script>
 </body>
 </html>
-
