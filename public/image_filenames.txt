@@ -14,6 +14,7 @@ Ambulyx_japonica
 Amphitrogia_amphidecta
 Amraica superans superans Butler
 Anacronicta nitida Butler
+Apamea_lateritia
 Archiearis_parthenias
 Aroga_mesostrepta
 Artena_dotata
@@ -22,6 +23,7 @@ Atkinsonia_ignipicta
 Atrachya_menetriesi
 Aventiola_pusilla
 Aventiola_pusilla_2
+Blepharita_amica
 Bomolocha_benepartita
 Bomolocha_nigrobasalis
 Brahmaea_japonica
@@ -67,6 +69,7 @@ Cucullia_argentea
 Cucullia_kurilullia
 Cucullia_pustulata
 Cyrestis thyodamas
+Daseochaeta_viridis
 Deilephila_askoldensis
 Deilephila_askoldensis_2
 Deilephila_elpenor
@@ -79,6 +82,7 @@ Diphtherocome_autumnalis
 Dypterygia_caliginosa
 Eligma_narcissus
 Endotricha_minialis
+Episteira_eupena
 Eriodonta amagisana Marumo
 Eriodonta_amagisana
 Etielloides_bipartitella
@@ -101,6 +105,7 @@ Hypephyra_terrosa
 Hypocala_deflorata
 IMG_4738
 Imosca_coreana
+Ipimorpha_subtusa
 Iragaodes_nobilis
 Jocheaera_alni
 Kawabeia_razowskii
@@ -226,6 +231,7 @@ Trichopteryx_miracula
 Trichopteryx_muscigera
 Trigonodes_hyppasia
 Triphosa_sericata
+Vulpechola_vulpecula
 Xanthia_icteritia
 Xanthia_togata
 Xenotrachea_niphonica
