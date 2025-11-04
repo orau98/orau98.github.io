@@ -40,8 +40,10 @@ export const loadInsectImageIndexes = async () => {
   _insectLoading = (async () => {
     try {
       const base = import.meta.env.BASE_URL || '/';
+      // Add cache-busting even in production to avoid stale indexes on Pages
+      const bust = `?v=${Date.now()}`;
       // Try combined lite index first
-      const liteUrl = import.meta.env.DEV ? `${base}assets/data-lite/image-index.json?v=${Date.now()}` : `${base}assets/data-lite/image-index.json`;
+      const liteUrl = `${base}assets/data-lite/image-index.json${bust}`;
       let namesSet = null;
       let extsMap = null;
       try {
@@ -55,8 +57,8 @@ export const loadInsectImageIndexes = async () => {
       } catch {}
       if (!namesSet || !extsMap) {
         const [namesRes, extsRes] = await Promise.all([
-          fetch(import.meta.env.DEV ? `${base}image_filenames.txt?v=${Date.now()}` : `${base}image_filenames.txt`),
-          fetch(import.meta.env.DEV ? `${base}image_extensions.json?v=${Date.now()}` : `${base}image_extensions.json`),
+          fetch(`${base}image_filenames.txt${bust}`),
+          fetch(`${base}image_extensions.json${bust}`),
         ]);
         const namesText = namesRes.ok ? await namesRes.text() : '';
         namesSet = new Set(namesText.split('\n').map(s => s.trim()).filter(Boolean));
