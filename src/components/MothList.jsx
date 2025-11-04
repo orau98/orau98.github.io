@@ -705,101 +705,40 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, [imageExtensions, imageFilenames, imageFilenamesNormalized]);
 
-  // Sort moths to prioritize those with images (lightweight)
+  // Sort moths with a stable, deterministic order to avoid reordering after load
   const sortedMoths = useMemo(() => {
     try {
       if (!filteredMoths || filteredMoths.length === 0) {
         return [];
       }
-      
-      // Wait for imageFilenames to load before sorting - return unsorted on first render
-      // This is better than showing wrong order initially
-      const hasAnyImageIndex = (imageFilenames && imageFilenames.size > 0) || (imageExtensions && Object.keys(imageExtensions).length > 0);
-      if (!hasAnyImageIndex) {
-        logger.debug('No image index loaded yet, returning unsorted');
-        return filteredMoths;
-      }
-      
-      // Determine if we're in search mode
+      // 検索時は分類優先 + 種名あいうえお、通常時は種名あいうえおのみ（画像有無で順序は変えない）
       const isSearching = (debouncedSearchTerm && debouncedSearchTerm.trim() !== '') || classificationFilter;
-      
       const sorted = [...filteredMoths].sort((a, b) => {
         if (isSearching) {
-          // 検索時でも「画像あり」を優先。その上で分類優先の並びにする。
-          const hasImageA = hasAnyImageForMoth(a);
-          const hasImageB = hasAnyImageForMoth(b);
-          if (hasImageA && !hasImageB) return -1;
-          if (!hasImageA && hasImageB) return 1;
-
-          // 検索時：分類階層順（科→亜科→族→属→種）+ あいうえお順
           const getClassificationPriority = (insect) => {
             const classification = insect.classification;
             if (!classification) return { level: 5, name: insect.name };
-            
             if (classification.familyJapanese) return { level: 1, name: classification.familyJapanese };
             if (classification.subfamilyJapanese) return { level: 2, name: classification.subfamilyJapanese };
             if (classification.tribeJapanese) return { level: 3, name: classification.tribeJapanese };
             if (classification.genus) return { level: 4, name: classification.genus };
             return { level: 5, name: insect.name };
           };
-          
           const priorityA = getClassificationPriority(a);
           const priorityB = getClassificationPriority(b);
-          
-          // 階層レベルで比較
-          if (priorityA.level !== priorityB.level) {
-            return priorityA.level - priorityB.level;
-          }
-          
-          // 同じ階層レベル内では分類名であいうえお順
-          if (priorityA.name !== priorityB.name) {
-            return priorityA.name.localeCompare(priorityB.name, 'ja');
-          }
-          
-          // 分類名も同じ場合は種名であいうえお順
-          return a.name.localeCompare(b.name, 'ja');
-        } else {
-          // デフォルト表示時：画像優先 + あいうえお順
-          // Check if species has a static image file (based on preloaded filename list)
-          const hasImageA = hasAnyImageForMoth(a);
-          const hasImageB = hasAnyImageForMoth(b);
-      
-          // (debug logging removed to avoid runtime ReferenceError in production)
-          
-          // Priority: Images first, then others
-          if (hasImageA && !hasImageB) return -1;
-          if (!hasImageA && hasImageB) return 1;
-          
-          // If both have images or both don't, sort alphabetically by name
+          if (priorityA.level !== priorityB.level) return priorityA.level - priorityB.level;
+          if (priorityA.name !== priorityB.name) return priorityA.name.localeCompare(priorityB.name, 'ja');
           return a.name.localeCompare(b.name, 'ja');
         }
+        return a.name.localeCompare(b.name, 'ja');
       });
-    
-    // Count moths with images
-    const mothsWithImages = sorted.filter(m => {
-      const fn = m.scientificFilename || createSafeInsectFilename(m.scientificName);
-      return imageFilenames.has(fn) || imageFilenamesNormalized.has(fn) || !!imageExtensions[fn];
-    });
-    
-    // Log the first few sorted moths to see if images are prioritized
-    logger.debug(`Image prioritization: ${mothsWithImages.length} moths have images out of ${sorted.length} total`);
-    logger.debug('First 20 sorted moths:', sorted.slice(0, 20).map(m => {
-      const filename = m.scientificFilename || createSafeInsectFilename(m.scientificName);
-      return {
-        name: m.name,
-        scientificName: m.scientificName,
-        scientificFilename: m.scientificFilename,
-        generatedFilename: filename,
-        hasImage: imageFilenames.has(filename)
-      };
-    }));
-    
-    return sorted;
+
+      return sorted;
     } catch (error) {
       logger.error('Error in sortedMoths calculation:', error);
       return filteredMoths || [];
     }
-  }, [filteredMoths, imageFilenames, imageFilenamesNormalized, imageExtensions, hasAnyImageForMoth, debouncedSearchTerm, classificationFilter]);
+  }, [filteredMoths, debouncedSearchTerm, classificationFilter]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
   const currentMoths = useMemo(() => {
