@@ -354,7 +354,7 @@ Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
 ウスモンクロテンヒメシャク
-オオカバスジヤガ
-クロテンキヨトウ
+Sineugraphe_oceanica
+Mythimna_chosenicola
 テングイラガ
-マメチャイロキヨトウ
+Mythimna_stolida
