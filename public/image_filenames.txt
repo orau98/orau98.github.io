@@ -16,6 +16,7 @@ Amraica superans superans Butler
 Anacronicta nitida Butler
 Anorthoa_angustipennis
 Apamea_lateritia
+Archiearis_notha
 Archiearis_parthenias
 Aroga_mesostrepta
 Artena_dotata
@@ -64,6 +65,7 @@ Cosmia_restituta
 Cosmia_restituta_2
 Crambus argyrophorus Butler
 Crambus_humidellus
+Cranionycta_jankowskii
 Craniophora ligustri
 Craniophora_ligustri
 Craniophora_praeclara
@@ -71,6 +73,7 @@ Craniophora_praeclara_2
 Cryphia_mitsuhashi
 Cucullia_argentea
 Cucullia_kurilullia
+Cucullia_lucifuga
 Cucullia_pustulata
 Cyrestis thyodamas
 Dactylioglypha_tonica
@@ -91,6 +94,7 @@ Episteira_eupena
 Eriodonta amagisana Marumo
 Eriodonta_amagisana
 Etielloides_bipartitella
+Euphyia_cineraria
 Eupithecia_virgaureata
 Euplexidia_angusta
 Eupsilia_boursini
@@ -121,6 +125,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
+Libythea_lepita
 Lithomoia_solidaginis
 Lithophane_lamda
 Lithophane_nagaii
@@ -149,6 +154,7 @@ Microxyla_confusa
 Mimachrostia_fasciata
 Mimas_christophi
 Mimopsestis_basalis
+Mniotype_melanodonta
 Mythimna_conigera
 Naganoella_timandra
 Narathura japonica
@@ -163,12 +169,14 @@ Notodonta_albicosta
 Notodonta_albicosta_2
 Nyssiodes_lefuarius
 Oides_bowringii
+Oncocnemis_campicola
 Organopoda_carnearia
 Orgyia_postica
 Orthogonia_sera
 Orthogonia_sera_2
 Orthosia_ijimai
 Orthosia_incerta
+Orthosia_limbata
 Orthosia_lizetta
 Orthosia_satoi
 Pachyerannis_obliquaria
@@ -228,8 +236,11 @@ Stericta_kogii
 Sugitania_akirai
 Sugitaniella_kuramana
 Synanthedon_hector
+Syntypistis_pryeri
+Takadonta_takamukui
 Tanaorhinus reciprocata confuciaria Walker
 Telorta_divergens
+Teratoglaea_pacifica
 Tethea ampliata ampliata Butler
 Tethea_consimilis
 Tethea_consimilis_2
@@ -242,6 +253,7 @@ Trichopteryx_muscigera
 Trichopteryx_ustata
 Trigonodes_hyppasia
 Triphosa_sericata
+Valeria_dilutiapicana
 Vulpechola_vulpecula
 Xanthia_icteritia
 Xanthia_togata
@@ -254,4 +266,3 @@ Zanclognatha griselda Butler
 Zanclognatha yaeyamalis Owada
 Zanclognatha_yaeyamalis
 Zaranga_permagna
-テングチョウ
