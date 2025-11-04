@@ -66,16 +66,24 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.force == 'true'
         run: |
           echo "Force optimization of all images..."
-          node scripts/optimize-images.mjs
+          if [ -f scripts/optimize-images.mjs ]; then
+            node scripts/optimize-images.mjs
+          else
+            echo "scripts/optimize-images.mjs not found, skipping optimization"
+          fi
       
       - name: Optimize changed images
         if: steps.changed-files.outputs.has_changes == 'true'
         run: |
           echo "Optimizing changed images..."
-          while IFS= read -r image; do
-            echo "Processing: $image"
-            node scripts/optimize-images.mjs "$image"
-          done < changed_images.txt
+          if [ -f scripts/optimize-images.mjs ]; then
+            while IFS= read -r image; do
+              echo "Processing: $image"
+              node scripts/optimize-images.mjs "$image"
+            done < changed_images.txt
+          else
+            echo "scripts/optimize-images.mjs not found, skipping optimization"
+          fi
       
       - name: Check for changes
         id: verify-changes
