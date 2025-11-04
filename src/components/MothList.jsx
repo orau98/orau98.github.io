@@ -705,15 +705,33 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, [imageExtensions, imageFilenames, imageFilenamesNormalized]);
 
-  // Sort moths with a stable, deterministic order to avoid reordering after load
+  // Image index readiness (avoid reordering after first paint by waiting for index)
+  const isImageIndexReady = useMemo(() => {
+    try {
+      return (imageFilenames && imageFilenames.size > 0) || (imageExtensions && Object.keys(imageExtensions).length > 0);
+    } catch {
+      return false;
+    }
+  }, [imageFilenames, imageExtensions]);
+
+  // Sort moths prioritizing those with images; render deferred until index is ready
   const sortedMoths = useMemo(() => {
     try {
       if (!filteredMoths || filteredMoths.length === 0) {
         return [];
       }
-      // 検索時は分類優先 + 種名あいうえお、通常時は種名あいうえおのみ（画像有無で順序は変えない）
+      // If image index isn't ready, return unsorted. UI will show placeholders meanwhile.
+      if (!isImageIndexReady) {
+        return filteredMoths;
+      }
+
       const isSearching = (debouncedSearchTerm && debouncedSearchTerm.trim() !== '') || classificationFilter;
       const sorted = [...filteredMoths].sort((a, b) => {
+        const hasImageA = hasAnyImageForMoth(a);
+        const hasImageB = hasAnyImageForMoth(b);
+        if (hasImageA && !hasImageB) return -1;
+        if (!hasImageA && hasImageB) return 1;
+
         if (isSearching) {
           const getClassificationPriority = (insect) => {
             const classification = insect.classification;
@@ -728,7 +746,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
           const priorityB = getClassificationPriority(b);
           if (priorityA.level !== priorityB.level) return priorityA.level - priorityB.level;
           if (priorityA.name !== priorityB.name) return priorityA.name.localeCompare(priorityB.name, 'ja');
-          return a.name.localeCompare(b.name, 'ja');
         }
         return a.name.localeCompare(b.name, 'ja');
       });
@@ -738,7 +755,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       logger.error('Error in sortedMoths calculation:', error);
       return filteredMoths || [];
     }
-  }, [filteredMoths, debouncedSearchTerm, classificationFilter]);
+  }, [filteredMoths, debouncedSearchTerm, classificationFilter, isImageIndexReady, hasAnyImageForMoth]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
   const currentMoths = useMemo(() => {
@@ -859,7 +876,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       
       <div className="p-6">
         <div className="max-h-[800px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 dark:scrollbar-thumb-blue-600 dark:scrollbar-track-blue-900/20">
-          {currentMoths.length > 0 ? (
+          {!isImageIndexReady ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={`skeleton-${i}`} className="bg-white/60 dark:bg-slate-800/60 rounded-2xl h-64 animate-pulse border border-white/30 dark:border-slate-700/40" />
+              ))}
+            </div>
+          ) : currentMoths.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {currentMoths.map((moth, index) => {
                 try {
