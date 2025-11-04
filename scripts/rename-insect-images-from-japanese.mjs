@@ -73,6 +73,15 @@ async function loadJapaneseToScientificMap() {
     addArr(j.beetles);
     addArr(j.butterflies);
   }
+  // Manual overrides for names missing from datasets
+  const manualOverrides = {
+    'アカスジキヨトウ': 'Mythimna postica (Hampson, 1905)',
+    'ウスイロキヨトウ': 'Mythimna inanis (Oberthür, 1880)',
+    'ウスクロモクメヨトウ': 'Dipterygina cupreotincta Sugi, 1954',
+  };
+  for (const [jp, sci] of Object.entries(manualOverrides)) {
+    if (jp && sci && !map.has(jp)) map.set(jp, sci);
+  }
   return map;
 }
 

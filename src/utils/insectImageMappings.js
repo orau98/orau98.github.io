@@ -61,6 +61,9 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ツマオビアツバ', 'Zanclognatha griselda Butler'],
   ['マエホシヨトウ', 'Pyrrhidivalva_sordida'],
   ['マルモンキノコヨトウ', 'Bryomoia_melachlora'],
+  ['アカスジキヨトウ', 'Mythimna_postica'],
+  ['ウスイロキヨトウ', 'Mythimna_inanis'],
+  ['ウスクロモクメヨトウ', 'Dipterygina_cupreotincta'],
   ['アオモンギンセダカモクメ', 'Cucullia_argentea']
 ]);
 
