@@ -10,6 +10,8 @@ import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
 import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
+import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
+import { createSafeInsectFilename } from './utils/image';
 // import { RelatedPlants } from './components/RelatedLinks';
 
 // DetailCard component
@@ -252,10 +254,33 @@ const PlantImageGallery = ({ images }) => {
 // カードコンポーネント（昆虫詳細ページのデザインに近い表現）
 const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions = {} }) => {
   const [imgError, setImgError] = React.useState(false);
-  const scientificSlug = (insect.scientificName || '').replace(/\s+/g, '_');
-  const filename = insect.scientificFilename || scientificSlug;
-  const hasImage = imageFilenames.size > 0 && imageFilenames.has(filename);
-  const ext = imageExtensions[filename] || '.jpg';
+  // Resolve the best image basename for this insect
+  const resolveImageBase = () => {
+    const nameJp = (insect.name || insect.japaneseName || '').trim();
+    const mapped = globalJapaneseToScientificMapping.get(nameJp);
+    const safe = createSafeInsectFilename(insect.scientificName || '');
+    const preferred = insect.scientificFilename || mapped || safe;
+    if (!preferred) return '';
+    // Exact or variant hit in extensions map
+    if (imageExtensions && imageExtensions[preferred]) return preferred;
+    const keys = imageExtensions ? Object.keys(imageExtensions) : [];
+    const variant = keys.find(k => k === preferred || k.startsWith(`${preferred}_`));
+    if (variant) return variant;
+    // Fallback to names list
+    if (imageFilenames && imageFilenames.size > 0) {
+      if (imageFilenames.has(preferred)) return preferred;
+      for (const k of imageFilenames) {
+        if (k === preferred || k.startsWith(`${preferred}_`)) return k;
+      }
+    }
+    return preferred;
+  };
+  const filename = resolveImageBase();
+  const hasImage = Boolean(filename) && (
+    (imageExtensions && imageExtensions[filename]) ||
+    (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(filename))
+  );
+  const ext = (imageExtensions && imageExtensions[filename]) || '.jpg';
   const imgSrc = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(filename)}${ext}`;
   const href = insect.path || '#';
   const name = insect.name || insect.japaneseName || '（名称不明）';
@@ -348,9 +373,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const load = async () => {
       try {
         const base = import.meta.env.BASE_URL || '/';
+        const bust = `?v=${Date.now()}`;
         const [fnRes, extRes] = await Promise.allSettled([
-          fetch(`${base}image_filenames.txt`),
-          fetch(import.meta.env.DEV ? `${base}image_extensions.json?v=${Date.now()}` : `${base}image_extensions.json`)
+          fetch(`${base}image_filenames.txt${bust}`),
+          fetch(`${base}image_extensions.json${bust}`)
         ]);
         if (fnRes.status === 'fulfilled' && fnRes.value.ok) {
           const text = await fnRes.value.text();
