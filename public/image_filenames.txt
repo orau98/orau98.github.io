@@ -14,6 +14,7 @@ Ambulyx_japonica
 Amphitrogia_amphidecta
 Amraica superans superans Butler
 Anacronicta nitida Butler
+Anorthoa_angustipennis
 Apamea_lateritia
 Archiearis_parthenias
 Aroga_mesostrepta
@@ -23,6 +24,7 @@ Atkinsonia_ignipicta
 Atrachya_menetriesi
 Aventiola_pusilla
 Aventiola_pusilla_2
+Bactra_cerata
 Blepharita_amica
 Bomolocha_benepartita
 Bomolocha_nigrobasalis
@@ -45,7 +47,9 @@ Chilodes_pacifica
 Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
 Circobotys_heterogenalis
+Cirrhochrista_brizoalis
 Clanis_bilineata
+Clavipalpula_aurariae
 Conistra castaneofasciata Motschulsky
 Conistra_flammatra
 Coraebus_daisenensis
@@ -69,6 +73,7 @@ Cucullia_argentea
 Cucullia_kurilullia
 Cucullia_pustulata
 Cyrestis thyodamas
+Dactylioglypha_tonica
 Daseochaeta_viridis
 Deilephila_askoldensis
 Deilephila_askoldensis_2
@@ -88,6 +93,7 @@ Eriodonta_amagisana
 Etielloides_bipartitella
 Eupithecia_virgaureata
 Euplexidia_angusta
+Eupsilia_boursini
 Eupsilia_strigifera
 Flavocrambus striatellus Leech
 Gabala_argentata
@@ -96,11 +102,13 @@ Gonepatica_opalina_2
 Gonitis_mesogona
 Habroloma_lewisii
 Habroloma_lewisii_2
+Hedya_auricristana
 Helicoverpa_armigera
 Helotropha_leucostigma
 Helotropha_leucostigma_2
 Hemipsectra fallax Butler
 Herculia_orthogramma
+Homodes_vivida
 Hypephyra_terrosa
 Hypocala_deflorata
 IMG_4738
@@ -113,6 +121,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
+Libythea_lepita
 Lithomoia_solidaginis
 Lithophane_lamda
 Lithophane_nagaii
@@ -127,6 +136,7 @@ Lophontosia_pryeri
 Lophoptera_hayesi
 Lygephila_nigricostata
 Macrobrochis staudingeri staudingeri Alphéraky
+Macroglossum_saga
 Maikona_jezoensis
 Martania_fulvida
 Maruca_vitrata
@@ -199,6 +209,7 @@ Pyrrhidivalva_sordida
 Rhadinosa_nigrocyanea
 Rhodinia_jankowskii
 Sarcopolia_illoba
+Sasunaga_longiplaga
 Saturnia_jonasii
 Schiffermuelleria_zelleri
 Scoliopteryx_libatrix
@@ -229,6 +240,7 @@ Togepteryx_velutina
 Trachys_auricollis
 Trichopteryx_miracula
 Trichopteryx_muscigera
+Trichopteryx_ustata
 Trigonodes_hyppasia
 Triphosa_sericata
 Vulpechola_vulpecula
