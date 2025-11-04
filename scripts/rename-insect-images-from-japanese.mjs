@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import csv from 'csv-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,22 +35,27 @@ function formatScientificNameForFilename(scientificName) {
 }
 
 async function loadJapaneseToScientificMap() {
-  // Prefer CSV for freshness
+  // Prefer CSV for freshness; fallback to data-lite JSON when CSV parsing unavailable
   const map = new Map();
   const insectsCsv = path.join(PUBLIC_DIR, 'insects.csv');
   if (fs.existsSync(insectsCsv)) {
-    await new Promise((resolve, reject) => {
-      fs.createReadStream(insectsCsv)
-        .pipe(csv())
-        .on('data', (row) => {
-          const j = String(row['japanese_name'] || '').trim();
-          const s = String(row['scientific_name'] || '').trim();
-          if (j && s) map.set(j, s);
-        })
-        .on('end', resolve)
-        .on('error', reject);
-    });
-    if (map.size > 0) return map;
+    try {
+      const csvParser = (await import('csv-parser')).default;
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(insectsCsv)
+          .pipe(csvParser())
+          .on('data', (row) => {
+            const j = String(row['japanese_name'] || '').trim();
+            const s = String(row['scientific_name'] || '').trim();
+            if (j && s) map.set(j, s);
+          })
+          .on('end', resolve)
+          .on('error', reject);
+      });
+      if (map.size > 0) return map;
+    } catch (e) {
+      console.warn('[rename] csv-parser not available, fallback to JSON:', e.message);
+    }
   }
   // Fallback to data-lite JSON
   const litePath = path.join(PUBLIC_DIR, 'assets', 'data-lite', 'index.json');
@@ -169,4 +173,3 @@ async function main() {
 }
 
 main().catch(err => { console.error(err); process.exit(1); });
-

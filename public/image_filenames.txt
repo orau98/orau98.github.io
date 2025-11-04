@@ -1,4 +1,5 @@
 Acanthoplusia_ichinosei
+Achaea_janata
 Acherontia_lachesis
 Achlya longipennis longipennis Inoue
 Acronicta_subpurpurea
@@ -21,9 +22,11 @@ Atkinsonia_ignipicta
 Atrachya_menetriesi
 Aventiola_pusilla
 Aventiola_pusilla_2
+Bomolocha_benepartita
 Bomolocha_nigrobasalis
 Brahmaea_japonica
 Brithys_crini
+Bryomoia_melachlora
 Cabera_purus
 Callopistria_argyrosticta
 Capua_vulgana
@@ -45,6 +48,7 @@ Conistra castaneofasciata Motschulsky
 Conistra_flammatra
 Coraebus_daisenensis
 Corgatha_nitens
+Corymica_deducta
 Cosmia_affinis
 Cosmia_camptostigma
 Cosmia_camptostigma_2
@@ -96,6 +100,7 @@ Herculia_orthogramma
 Hypephyra_terrosa
 Hypocala_deflorata
 IMG_4738
+Imosca_coreana
 Iragaodes_nobilis
 Jocheaera_alni
 Kawabeia_razowskii
@@ -185,6 +190,7 @@ Pseudopanolis_takao
 Pseudopanolis_takao_2
 Pyralis_regalis
 Pyrosis_idiota
+Pyrrhidivalva_sordida
 Rhadinosa_nigrocyanea
 Rhodinia_jankowskii
 Sarcopolia_illoba
@@ -196,6 +202,7 @@ Semidonta_biloba
 Shachia_circumscripta
 Shachia_circumscripta_2
 Siccia_obscura
+Sinarella_rotundipennis
 Spatulipalpia_albistrialis
 Spilarctia_seriatopunctata
 Spilosoma punctarium Stoll
@@ -230,5 +237,3 @@ Zanclognatha griselda Butler
 Zanclognatha yaeyamalis Owada
 Zanclognatha_yaeyamalis
 Zaranga_permagna
-Pyrrhidivalva_sordida
-Bryomoia_melachlora
