@@ -71,6 +71,7 @@ Craniophora_praeclara_2
 Cryphia_mitsuhashi
 Cucullia_argentea
 Cucullia_kurilullia
+Cucullia_lucifuga
 Cucullia_pustulata
 Cyrestis thyodamas
 Dactylioglypha_tonica
@@ -91,6 +92,7 @@ Episteira_eupena
 Eriodonta amagisana Marumo
 Eriodonta_amagisana
 Etielloides_bipartitella
+Euphyia_cineraria
 Eupithecia_virgaureata
 Euplexidia_angusta
 Eupsilia_boursini
@@ -121,6 +123,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
+Libythea_lepita
 Lithomoia_solidaginis
 Lithophane_lamda
 Lithophane_nagaii
@@ -149,6 +152,7 @@ Microxyla_confusa
 Mimachrostia_fasciata
 Mimas_christophi
 Mimopsestis_basalis
+Mniotype_melanodonta
 Mythimna_conigera
 Naganoella_timandra
 Narathura japonica
@@ -254,4 +258,3 @@ Zanclognatha griselda Butler
 Zanclognatha yaeyamalis Owada
 Zanclognatha_yaeyamalis
 Zaranga_permagna
-テングチョウ
