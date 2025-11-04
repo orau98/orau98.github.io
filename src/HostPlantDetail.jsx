@@ -373,7 +373,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const load = async () => {
       try {
         const base = import.meta.env.BASE_URL || '/';
-        const bust = `?v=${Date.now()}`;
+        const ver = (import.meta.env.DEV ? String(Date.now()) : (import.meta.env.VITE_ASSET_VERSION || ''));
+        const bust = ver ? `?v=${ver}` : '';
         const [fnRes, extRes] = await Promise.allSettled([
           fetch(`${base}image_filenames.txt${bust}`),
           fetch(`${base}image_extensions.json${bust}`)
@@ -602,12 +603,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           else if (has(ascii)) chosenSuffix = suffix;
           else chosenSuffix = suffix; // default ascii if unknown
         }
-        images.push({
-          src: `${import.meta.env.BASE_URL}images/plants/${base}${chosenSuffix}.jpg`,
-          srcJPG: `${import.meta.env.BASE_URL}images/plants/${base}${chosenSuffix}.JPG`,
-          label,
-          alt: `${base}${chosenSuffix ? ` (${label})` : ''}`
-        });
+        // Filter out non-existing images based on the filename index
+        const finalName = `${base}${chosenSuffix}`;
+        if (!Array.isArray(nameIndex) || has(finalName)) {
+          images.push({
+            src: `${import.meta.env.BASE_URL}images/plants/${finalName}.jpg`,
+            srcJPG: `${import.meta.env.BASE_URL}images/plants/${finalName}.JPG`,
+            label,
+            alt: `${base}${chosenSuffix ? ` (${label})` : ''}`
+          });
+        }
       });
     });
     return images;

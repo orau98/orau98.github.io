@@ -40,8 +40,9 @@ export const loadInsectImageIndexes = async () => {
   _insectLoading = (async () => {
     try {
       const base = import.meta.env.BASE_URL || '/';
-      // Add cache-busting even in production to avoid stale indexes on Pages
-      const bust = `?v=${Date.now()}`;
+      // Cache-bust using build asset version in production; DEV uses Date.now()
+      const ver = (import.meta.env.DEV ? String(Date.now()) : (import.meta.env.VITE_ASSET_VERSION || ''));
+      const bust = ver ? `?v=${ver}` : '';
       // Try combined lite index first
       const liteUrl = `${base}assets/data-lite/image-index.json${bust}`;
       let namesSet = null;
