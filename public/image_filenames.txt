@@ -14,6 +14,7 @@ Ambulyx_japonica
 Amphitrogia_amphidecta
 Amraica superans superans Butler
 Anacronicta nitida Butler
+Anorthoa_angustipennis
 Apamea_lateritia
 Archiearis_parthenias
 Aroga_mesostrepta
@@ -45,6 +46,7 @@ Chilodes_pacifica
 Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
 Circobotys_heterogenalis
+Cirrhochrista_brizoalis
 Clanis_bilineata
 Conistra castaneofasciata Motschulsky
 Conistra_flammatra
@@ -113,6 +115,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
+Libythea_lepita
 Lithomoia_solidaginis
 Lithophane_lamda
 Lithophane_nagaii
@@ -229,6 +232,7 @@ Togepteryx_velutina
 Trachys_auricollis
 Trichopteryx_miracula
 Trichopteryx_muscigera
+Trichopteryx_ustata
 Trigonodes_hyppasia
 Triphosa_sericata
 Vulpechola_vulpecula
