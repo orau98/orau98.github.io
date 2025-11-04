@@ -57,7 +57,10 @@ export const globalJapaneseToScientificMapping = new Map([
   ['クビワウスグロホソバ', 'Macrobrochis staudingeri staudingeri Alphéraky'],
   ['ウスイロオオエダシャク', 'Amraica superans superans Butler'],
   ['キマダラアツバ', 'Lophomilia polybapta Butler'],
+  ['ツマモンキリガ', 'Imosca_coreana'],
   ['ツマオビアツバ', 'Zanclognatha griselda Butler'],
+  ['マエホシヨトウ', 'Pyrrhidivalva_sordida'],
+  ['マルモンキノコヨトウ', 'Bryomoia_melachlora'],
   ['アオモンギンセダカモクメ', 'Cucullia_argentea']
 ]);
 

@@ -1,0 +1,92 @@
+name: Rename Insect Images (JP -> Scientific)
+
+on:
+  push:
+    paths:
+      - 'public/images/insects/**'
+      - 'public/insects.csv'
+  pull_request:
+    paths:
+      - 'public/images/insects/**'
+      - 'public/insects.csv'
+  workflow_dispatch:
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rename Japanese-named insect images
+        run: node scripts/rename-insect-images-from-japanese.mjs
+
+      - name: Install sharp for responsive images
+        run: npm install sharp --save-dev
+
+      - name: Build responsive images
+        run: node scripts/build-responsive-images.mjs
+
+      - name: Rebuild image index
+        run: node scripts/build-image-index.mjs
+
+      - name: Check for changes
+        id: verify-changes
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "has_output=false" >> $GITHUB_OUTPUT
+            echo "No changes after rename/index build"
+          else
+            echo "has_output=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+            git status --short
+          fi
+
+      - name: Create Pull Request
+        if: steps.verify-changes.outputs.has_output == 'true' && github.event_name == 'push'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: rename insect images to scientific basenames + refresh indexes'
+          title: '🐛 Rename insect images (JP → Scientific)'
+          body: |
+            This PR automatically renamed Japanese-named insect images to scientific basenames, updated responsive derivatives, and refreshed image indexes.
+
+            - Renamed originals under `public/images/insects/`
+            - Moved old Japanese files to `public/images/insects/backup_japanese_names/`
+            - Generated `public/images/resized/insects/` variants (320/640/1024)
+            - Rebuilt `public/image_filenames.txt`, `public/image_extensions.json`, and the combined `assets/data-lite/image-index.json`
+
+            Trigger: `${{ github.event_name }}`
+          branch: auto/rename-insect-images-${{ github.run_number }}
+          delete-branch: true
+          labels: |
+            automated
+            images
+            rename
+
+      - name: Commit changes directly (PR context)
+        if: steps.verify-changes.outputs.has_output == 'true' && github.event_name == 'pull_request'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "chore: rename insect images to scientific basenames + refresh indexes for PR #${{ github.event.pull_request.number }}"
+          git push
+
