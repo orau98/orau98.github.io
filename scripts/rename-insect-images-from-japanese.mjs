@@ -170,6 +170,40 @@ async function main() {
 
   // Refresh indexes from current directory state
   updateImageIndexesFromDir(INSECT_IMG_DIR);
+
+  // Rename leftover resized images with Japanese basenames
+  try {
+    if (fs.existsSync(INSECT_RESIZED_DIR)) {
+      const files = fs.readdirSync(INSECT_RESIZED_DIR);
+      for (const f of files) {
+        const ext = path.extname(f);
+        if (!IMG_EXTS.has(ext)) continue;
+        const base = path.basename(f, ext); // e.g., 日本名.640
+        // split base: baseName.width
+        const m = base.match(/^(.+?)\.(\d{3,4})$/);
+        if (!m) continue;
+        const jpBase = m[1];
+        if (!hasJapanese(jpBase)) continue;
+        const width = m[2];
+        // find scientific
+        const scientificFull = j2s.get(jpBase);
+        if (!scientificFull) {
+          console.warn('[rename:resized] skip, mapping not found for', jpBase, 'file=', f);
+          continue;
+        }
+        const sciBase = formatScientificNameForFilename(scientificFull);
+        if (!sciBase) continue;
+        const src = path.join(INSECT_RESIZED_DIR, f);
+        const dst = path.join(INSECT_RESIZED_DIR, `${sciBase}.${width}.jpg`);
+        if (!fs.existsSync(dst)) {
+          fs.renameSync(src, dst);
+          console.log('[rename:resized] ->', path.relative(PUBLIC_DIR, dst));
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('[rename:resized] error', e.message);
+  }
 }
 
 main().catch(err => { console.error(err); process.exit(1); });
