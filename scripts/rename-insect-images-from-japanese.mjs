@@ -71,6 +71,7 @@ async function loadJapaneseToScientificMap() {
     addArr(j.moths);
     addArr(j.leafbeetles);
     addArr(j.beetles);
+    addArr(j.butterflies);
   }
   return map;
 }

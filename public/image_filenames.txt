@@ -121,6 +121,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
+Libythea_lepita
 Lithomoia_solidaginis
 Lithophane_lamda
 Lithophane_nagaii
@@ -254,4 +255,3 @@ Zanclognatha griselda Butler
 Zanclognatha yaeyamalis Owada
 Zanclognatha_yaeyamalis
 Zaranga_permagna
-テングチョウ
