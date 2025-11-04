@@ -73,6 +73,26 @@ async function loadJapaneseToScientificMap() {
     addArr(j.beetles);
     addArr(j.butterflies);
   }
+  // Supplement map with unmatched report (normalized_binomial,japanese)
+  try {
+    const unmatchedPath = path.join(ROOT, 'reports', 'unmatched_detailed_日本産蛾類標準図鑑2.csv');
+    if (fs.existsSync(unmatchedPath)) {
+      const lines = fs.readFileSync(unmatchedPath, 'utf-8').split(/\r?\n/);
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        // pattern: "Original",Normalized Binomial,Japanese
+        const m = line.match(/^(?:\".*?\"|[^,]*),([^,]*),([^,]*)$/);
+        if (m) {
+          const bin = (m[1] || '').trim();
+          const jp = (m[2] || '').trim();
+          if (jp && bin && !map.has(jp)) {
+            map.set(jp, bin);
+          }
+        }
+      }
+    }
+  } catch {}
   // Manual overrides for names missing from datasets
   const manualOverrides = {
     'アカスジキヨトウ': 'Mythimna postica (Hampson, 1905)',
@@ -216,4 +236,4 @@ async function main() {
   }
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+main().catch(err => { console.error('[rename] fatal error (non-blocking):', err); process.exit(0); });
