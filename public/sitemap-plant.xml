@@ -589,18 +589,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://orau98.github.io/meta/plant/%E3%82%A2%E3%82%B5%E3%83%80%20Ostrya%20%E3%81%AE%E5%90%84%E5%B1%9E%28%E3%82%AB%E3%83%90%E3%83%8E%E3%82%AD%E7%A7%91%29.html</loc>
-    <lastmod>2025-11-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://orau98.github.io/meta/plant/%E3%82%A2%E3%82%B5%E3%83%80%20Ostrya%20%E3%81%AE%E5%90%84%E5%B1%9E.html</loc>
-    <lastmod>2025-11-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://orau98.github.io/meta/plant/%E3%82%A2%E3%82%B5%E3%83%80%28%E3%82%AB%E3%83%90%E3%83%8E%E3%82%AD%E7%A7%91%29.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -614,6 +602,18 @@
   </url>
   <url>
     <loc>https://orau98.github.io/meta/plant/%E3%82%A2%E3%82%B5%E3%83%80.html</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/meta/plant/%E3%82%A2%E3%82%B5%E3%83%80%E5%B1%9E%20Ostrya%28%E3%82%AB%E3%83%90%E3%83%8E%E3%82%AD%E7%A7%91%29.html</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/meta/plant/%E3%82%A2%E3%82%B5%E3%83%80%E5%B1%9E%20Ostrya.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -6157,6 +6157,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://orau98.github.io/meta/plant/%E3%82%AF%E3%83%9E%E3%82%B7%E3%83%87%E5%B1%9E%20Carpinus.html</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://orau98.github.io/meta/plant/%E3%82%AF%E3%83%9E%E3%82%BF%E3%82%B1%E3%83%A9%E3%83%B3.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -7730,12 +7736,6 @@
   </url>
   <url>
     <loc>https://orau98.github.io/meta/plant/%E3%82%B5%E3%82%AF%E3%83%A9%E9%A1%9E.html</loc>
-    <lastmod>2025-11-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://orau98.github.io/meta/plant/%E3%82%B5%E3%82%AF%E3%83%A9%E9%A1%9E%E3%81%A7%E3%82%82.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -13177,12 +13177,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%90%E3%83%9F%20Corylus.html</loc>
-    <lastmod>2025-11-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%90%E3%83%9F%28%E3%82%AB%E3%83%90%E3%83%8E%E3%82%AD%E7%A7%91%29.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -13190,6 +13184,12 @@
   </url>
   <url>
     <loc>https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%90%E3%83%9F.html</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%90%E3%83%9F%E5%B1%9E%20Corylus.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -18488,12 +18488,6 @@
   </url>
   <url>
     <loc>https://orau98.github.io/meta/plant/%E3%83%A8%E3%83%A2%E3%82%AE.html</loc>
-    <lastmod>2025-11-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://orau98.github.io/meta/plant/%E3%83%A8%E3%83%BC%E3%83%AD%E3%83%83%E3%83%91.html</loc>
     <lastmod>2025-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
