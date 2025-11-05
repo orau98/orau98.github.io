@@ -808,6 +808,35 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     })();
   }, [decodedPlantName, navigate]);
 
+  // Fallback: if taxonomy couldn't resolve genus/scientificName (e.g., サクラ類),
+  // try to use normalized plantDetails (e.g., サクラ -> Cerasus)
+  useEffect(() => {
+    try {
+      const missingGenus = !taxonomy.genus || taxonomy.genus.trim() === '';
+      const missingSci = !taxonomy.scientificName || taxonomy.scientificName.trim() === '';
+      if (!missingGenus && !missingSci) return;
+
+      const altKey = decodedPlantName.replace(/類$/, '');
+      const d = plantDetails[decodedPlantName] || plantDetails[altKey];
+      if (!d) return;
+
+      const derivedGenus = d.genus || (d.scientificName ? String(d.scientificName).split(' ')[0] : '');
+      const derivedSci = d.scientificName || '';
+      const derivedFamily = d.family || '';
+
+      if ((derivedGenus && missingGenus) || (derivedSci && missingSci) || derivedFamily) {
+        setTaxonomy(prev => ({
+          familyJp: prev.familyJp || derivedFamily || '',
+          familyEn: prev.familyEn || '',
+          orderJp: prev.orderJp || '',
+          orderEn: prev.orderEn || '',
+          genus: prev.genus || derivedGenus || '',
+          scientificName: prev.scientificName || derivedSci || ''
+        }));
+      }
+    } catch {}
+  }, [decodedPlantName, plantDetails, taxonomy.genus, taxonomy.scientificName]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-8">

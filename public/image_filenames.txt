@@ -153,8 +153,8 @@ Hypephyra_terrosa
 Hyperstrotia_flavipuncta
 Hypocala_deflorata
 Hypomecis_crassestrigata
-Ilema_eurydice
 IMG_4738
+Ilema_eurydice
 Imosca_coreana
 Inurois_fletcheri
 Inurois_fumosa
@@ -211,9 +211,11 @@ Mimas_christophi
 Mimopsestis_basalis
 Mniotype_melanodonta
 Monobolodes_prunaria
+Mythimna_chosenicola
 Mythimna_conigera
 Mythimna_inanis
 Mythimna_postica
+Mythimna_stolida
 Naganoella_timandra
 Narathura japonica
 Narosoideus_flavidorsalis
@@ -301,6 +303,7 @@ Shachia_circumscripta_2
 Siccia_obscura
 Simplicia_xanthoma
 Sinarella_rotundipennis
+Sineugraphe_oceanica
 Spatalia_doerriesi
 Spatulipalpia_albistrialis
 Sphragifera_sigillata
@@ -354,7 +357,4 @@ Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
 ウスモンクロテンヒメシャク
-Sineugraphe_oceanica
-Mythimna_chosenicola
 テングイラガ
-Mythimna_stolida
