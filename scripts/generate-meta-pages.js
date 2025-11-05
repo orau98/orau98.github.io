@@ -1084,53 +1084,8 @@ async function generateMetaPages() {
       }
     });
     
-    // 成虫出現時期データを集約（優先度: emergence_overrides* > 日本の冬夜蛾/冬尺蛾 > general_notes）
+    // 成虫出現時期データは general_notes のみ使用
     const emergenceTimeMap = new Map();
-
-    // 1) 任意提供のオーバーライドCSV（std1/2）
-    const overrides1 = loadCSVOptional(path.join(__dirname, '../public/emergence_overrides.csv'));
-    const overrides2 = loadCSVOptional(path.join(__dirname, '../public/emergence_overrides_std2.csv'));
-    // 解析が壊れている可能性に備え、Raw行パーサーを用意
-    const parseOverridesRaw = (filePath) => {
-      const results = [];
-      try {
-        if (!fs.existsSync(filePath)) return results;
-        const text = fs.readFileSync(filePath, 'utf-8');
-        const lines = text.split(/\r?\n/);
-        const containsCJK = (s) => /[\u3040-\u30FF\u3400-\u9FFF]/.test(s || '');
-        const isTimeLike = (s) => /\d+\s*月|春|夏|秋|冬|上旬|中旬|下旬|頃|通年|周年|不明/.test(s || '');
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          if (!line || !line.trim()) continue;
-          if (line.startsWith('和名,')) continue; // header
-          const rawTokens = line.split(',');
-          if (rawTokens.length < 2) continue;
-          const jname = (rawTokens[0] || '').replace(/^"|"$/g, '').trim();
-          // 学名はASCIIで、時期は日本語を含むことが多い想定で復元
-          const sciParts = [];
-          let idx = 1;
-          for (; idx < rawTokens.length; idx++) {
-            const tk = (rawTokens[idx] || '').trim();
-            // 時期に見えるトークンに到達したら停止
-            if (isTimeLike(tk) && containsCJK(tk)) break;
-            sciParts.push(tk);
-          }
-          const sci = sciParts.join(',').replace(/^"|"$/g, '').trim();
-          let time = '';
-          let notes = '';
-          const rest = rawTokens.slice(idx).map(s => (s || '').replace(/^"|"$/g, '').trim());
-          if (rest.length === 1) {
-            time = rest[0];
-          } else if (rest.length > 1) {
-            // 最後の要素を備考とみなし、それ以前を結合
-            notes = rest[rest.length - 1];
-            time = rest.slice(0, -1).join('、');
-          }
-          if (jname && (sci || time)) results.push({ jname, sci, time, notes });
-        }
-      } catch {}
-      return results;
-    };
     const addEmergenceFromRow = (nameJP, nameSci, time) => {
       const j = (nameJP || '').trim();
       const s = (nameSci || '').trim();
@@ -1143,15 +1098,7 @@ async function generateMetaPages() {
         if (cleaned && cleaned !== s) emergenceTimeMap.set(cleaned, t);
       }
     };
-    [...overrides1, ...overrides2].forEach(row => {
-      addEmergenceFromRow(row['和名'], row['学名'], row['成虫発生時期'] || row['成虫の発生時期']);
-    });
-    // Rawパース結果で上書き（優先）
-    const rawOv1 = parseOverridesRaw(path.join(__dirname, '../public/emergence_overrides.csv'));
-    const rawOv2 = parseOverridesRaw(path.join(__dirname, '../public/emergence_overrides_std2.csv'));
-    [...rawOv1, ...rawOv2].forEach(({ jname, sci, time }) => addEmergenceFromRow(jname, sci, time));
-
-    console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました（overridesのみ）`);
+    console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました（general_notesのみ）`);
     
     // 昆虫データの処理（正規化データを使用）
     let mothCount = 0;
