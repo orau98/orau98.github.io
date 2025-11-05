@@ -41,6 +41,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // Apply ID mapping if needed
   const mappedInsectId = idMapping[insectId] || insectId;
 
+  // Resolve non-standard suffix IDs like `species-6131m` -> `species-6131`
+  const resolveInsectId = (id) => {
+    if (!id) return id;
+    // strip trailing single-letter suffixes commonly used (e.g., m/f variants)
+    const m = String(id).match(/^(species|catalog)-(\d+)[a-z]$/i);
+    if (m) return `${m[1]}-${m[2]}`;
+    return id;
+  };
+
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
   
   // 🔍 デバッグ：データ配列の状況確認
@@ -79,7 +88,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Combine all insects for searching
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
-  const moth = allInsects.find(m => m.id === mappedInsectId);
+  let moth = allInsects.find(m => m.id === mappedInsectId);
+  if (!moth) {
+    const fallbackId = resolveInsectId(mappedInsectId);
+    if (fallbackId !== mappedInsectId) {
+      moth = allInsects.find(m => m.id === fallbackId);
+    }
+  }
   
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {

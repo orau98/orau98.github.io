@@ -146,7 +146,12 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                 'flex space-x-4 min-w-max'
               }`}>
                 {relatedMothNames.slice(0, displayCount).map(relatedMothName => {
-                  const relatedMoth = allInsects.find(m => m.name === relatedMothName);
+                  let relatedMoth = allInsects.find(m => m.name === relatedMothName);
+                  // Fallback: try trimming common suffixes like '類' (e.g., name mismatches)
+                  if (!relatedMoth) {
+                    const alt = relatedMothName.replace(/類$/, '');
+                    relatedMoth = allInsects.find(m => m.name === alt);
+                  }
                   if (!relatedMoth) return null;
                   
                   const baseUrl = relatedMoth.type === 'butterfly' ? '/butterfly/' : 
