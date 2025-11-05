@@ -102,6 +102,24 @@ const parseEmergenceTime = (emergenceTime) => {
     toMonth = parseInt(match[1]);
     toPeriod = match[2];
   }
+
+  // 特別処理: 「X月…翌年Y月まで」の表現を検出（例: 10月頃羽化し、翌年4月まで）
+  if (fromMonth === null && toMonth === null) {
+    const nextYearPattern = /(\d{1,2})月[^\d]*翌年(\d{1,2})月まで/;
+    const nyMatch = emergenceTime.match(nextYearPattern);
+    if (nyMatch) {
+      fromMonth = parseInt(nyMatch[1]);
+      toMonth = parseInt(nyMatch[2]);
+    }
+  }
+
+  // 補助: 「から」が無いが最初の月と「Y月まで」がある場合に範囲推定（例: 10月…4月まで）
+  if (fromMonth === null && toMonth !== null) {
+    const monthAll = Array.from(emergenceTime.matchAll(/(\d{1,2})月/g));
+    if (monthAll.length > 0) {
+      fromMonth = parseInt(monthAll[0][1]);
+    }
+  }
   
   // 「から」と「まで」の両方がある場合、期間として処理
   if (fromMonth !== null && toMonth !== null) {

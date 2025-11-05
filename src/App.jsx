@@ -161,8 +161,6 @@ function App() {
                 }
               }
             } catch { /* ignore */ }
-            // Lite manifest + hostplants loaded: avoid heavy CSV pipeline on initial render
-            return;
           }
         } else {
           // Fallback to combined lite index
@@ -182,8 +180,7 @@ function App() {
               ensureTypesLoaderRef.current = () => {
                 typesFetchStartedRef.current = true;
               };
-              // Combined lite loaded: avoid heavy CSV pipeline on initial render
-              return;
+              // Continue to CSV background load
             }
           }
         }
