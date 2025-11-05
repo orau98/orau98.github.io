@@ -285,6 +285,84 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   }
 
+  // 混在範囲その1: 「X月(上|中|下)旬~Y月」(終了側に旬指定なし)
+  const periodToMonthPattern = /(\d{1,2})月(上旬|中旬|下旬)[～〜~-](\d{1,2})月(?![頃上中下])/g;
+  while ((match = periodToMonthPattern.exec(emergenceTime)) !== null) {
+    const startMonth = parseInt(match[1]);
+    const startPeriod = match[2];
+    const endMonth = parseInt(match[3]);
+    const startPeriodNum = startPeriod === '上旬' ? 1 : startPeriod === '中旬' ? 2 : 3;
+    const endPeriodNum = 3; // 指定がない場合は月末まで
+
+    if (startMonth <= endMonth) {
+      for (let m = startMonth; m <= endMonth; m++) {
+        activeMonths.add(m);
+        if (m === startMonth) {
+          for (let p = startPeriodNum; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        } else if (m === endMonth) {
+          for (let p = 1; p <= endPeriodNum; p++) activePeriods.add(m + p * 0.1);
+        } else {
+          for (let p = 1; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        }
+      }
+    } else {
+      // 年越し
+      for (let m = startMonth; m <= 12; m++) {
+        activeMonths.add(m);
+        if (m === startMonth) {
+          for (let p = startPeriodNum; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        } else {
+          for (let p = 1; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        }
+      }
+      for (let m = 1; m <= endMonth; m++) {
+        activeMonths.add(m);
+        for (let p = 1; p <= 3; p++) activePeriods.add(m + p * 0.1);
+      }
+    }
+  }
+
+  // 混在範囲その2: 「X月~Y月(上|中|下)旬」（開始側に旬指定なし）
+  const monthToPeriodPattern = /(\d{1,2})月[～〜~-](\d{1,2})月(上旬|中旬|下旬)/g;
+  while ((match = monthToPeriodPattern.exec(emergenceTime)) !== null) {
+    const startMonth = parseInt(match[1]);
+    const endMonth = parseInt(match[2]);
+    const endPeriod = match[3];
+    const startPeriodNum = 1; // 指定がない場合は月初から
+    const endPeriodNum = endPeriod === '上旬' ? 1 : endPeriod === '中旬' ? 2 : 3;
+
+    if (startMonth <= endMonth) {
+      for (let m = startMonth; m <= endMonth; m++) {
+        activeMonths.add(m);
+        if (m === startMonth) {
+          for (let p = startPeriodNum; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        } else if (m === endMonth) {
+          for (let p = 1; p <= endPeriodNum; p++) activePeriods.add(m + p * 0.1);
+        } else {
+          for (let p = 1; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        }
+      }
+    } else {
+      // 年越し
+      for (let m = startMonth; m <= 12; m++) {
+        activeMonths.add(m);
+        if (m === startMonth) {
+          for (let p = startPeriodNum; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        } else {
+          for (let p = 1; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        }
+      }
+      for (let m = 1; m <= endMonth; m++) {
+        activeMonths.add(m);
+        if (m === endMonth) {
+          for (let p = 1; p <= endPeriodNum; p++) activePeriods.add(m + p * 0.1);
+        } else {
+          for (let p = 1; p <= 3; p++) activePeriods.add(m + p * 0.1);
+        }
+      }
+    }
+  }
+
   // 数字の月（1月、2月など）を検出（旬指定がない場合）
   const numberMonthPattern = /(\d{1,2})月(?![上中下])/g;
   while ((match = numberMonthPattern.exec(emergenceTime)) !== null) {
