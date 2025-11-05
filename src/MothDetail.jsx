@@ -1394,13 +1394,35 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       });
                     }
                     
-                    // 最初のデータを使用してEmergenceTimeDisplayに渡す
-                    const primaryEmergenceTime = allEmergenceTimeData.length > 0 
-                      ? allEmergenceTimeData[0].period 
-                      : '不明';
-                    const primarySource = allEmergenceTimeData.length > 0 
-                      ? allEmergenceTimeData[0].source 
-                      : '';
+                    // 最適な発生時期データを選択（年越しや範囲の広い表現を優先）
+                    const scorePeriod = (s = '') => {
+                      if (!s) return 0;
+                      let score = 0;
+                      if (/翌年/.test(s)) score += 100; // 年越しを最優先
+                      if (/[~〜～\-]|から|まで/.test(s)) score += 10; // 範囲表現
+                      const months = (s.match(/(\d{1,2})月/g) || []).map(m => parseInt(m));
+                      const uniq = Array.from(new Set(months));
+                      score += uniq.length; // 含まれる月数を加点
+                      return score;
+                    };
+
+                    let best = null;
+                    let bestScore = -1;
+                    allEmergenceTimeData.forEach(item => {
+                      const sc = scorePeriod(item.period || '');
+                      if (sc > bestScore) {
+                        bestScore = sc;
+                        best = item;
+                      }
+                    });
+
+                    const primaryEmergenceTime = best ? best.period : '不明';
+                    // 出典は選択アイテムのsource。空なら他の候補から最初の非空を補う
+                    let primarySource = (best && best.source) ? best.source : '';
+                    if (!primarySource) {
+                      const withSource = allEmergenceTimeData.find(i => i.source && i.source.trim());
+                      if (withSource) primarySource = withSource.source;
+                    }
                     
                     return (
                       <EmergenceTimeDisplay
