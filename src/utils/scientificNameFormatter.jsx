@@ -19,9 +19,10 @@ export const formatScientificNameHTML = (scientificName) => {
       const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
       if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
     }
-    if (t.includes(' ')) return t;
-    const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
-    return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
+    // Do NOT attempt to split single-word capitalized strings like "Carex" into "Ca rex"
+    // If there are no spaces, trust the input as-is.
+    if (!t.includes(' ')) return t;
+    return t;
   };
 
   const trimmed = preRepair(scientificName);
@@ -133,9 +134,9 @@ export const formatScientificNameReact = (scientificName) => {
       const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
       if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
     }
-    if (t.includes(' ')) return t;
-    const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
-    return m ? `${m[1]} ${m[2]}${m[3] || ''}` : t;
+    // Avoid incorrectly splitting single-word genus names (e.g., "Carex")
+    if (!t.includes(' ')) return t;
+    return t;
   };
 
   const trimmed = preRepair(scientificName);
