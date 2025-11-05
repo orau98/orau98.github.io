@@ -217,13 +217,7 @@ function App() {
         ? `${import.meta.env.BASE_URL}general_notes.csv?v=${Date.now()}`
         : `${import.meta.env.BASE_URL}general_notes.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
 
-      // 任意提供の成虫出現時期オーバーライド（ユーザー提供テーブル）
-      const emergenceOverridesCsvPath = import.meta.env.DEV
-        ? `${import.meta.env.BASE_URL}emergence_overrides.csv?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}emergence_overrides.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
-      const emergenceOverridesStd2CsvPath = import.meta.env.DEV
-        ? `${import.meta.env.BASE_URL}emergence_overrides_std2.csv?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}emergence_overrides_std2.csv${assetVersion ? `?v=${assetVersion}` : ''}`;
+      // 任意提供の成虫出現時期オーバーライドは廃止（general_notes から抽出運用に統一）
       
       // 正規化データのみを優先的に使う運用フラグ
       // 既定: 本番では true（明示的に "false" 指定された場合のみ無効）
@@ -517,7 +511,7 @@ function App() {
         if (isDevelopment) logger.debug("DEBUG: フユシャクCsvPath:", fuyushakuCsvPath);
         if (isDevelopment) logger.debug("DEBUG: About to load フユシャク file with safeFileLoad");
         
-        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null, emergenceOverridesText = null, emergenceOverridesStd2Text = null;
+        let wameiText = null, mainText = null, yListText = null, hamushiIntegratedText = null, butterflyText = null, beetleText = null, kirigaText = null, fuyushakuText = null, genusMappingText = null, normalizedInsectsText = null, normalizedHostplantsText = null, normalizedNotesText = null;
 
         if (useNormalizedOnly) {
           // Load only normalized data + optional plant helpers
@@ -529,9 +523,7 @@ function App() {
             safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
             safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
           ]);
-          // Optional: emergence overrides table (ユーザー提供)
-          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data (std1)', 10000);
-          emergenceOverridesStd2Text = await safeFileLoad(emergenceOverridesStd2CsvPath, 'emergence overrides data (std2)', 10000);
+          // emergence overrides は廃止
         } else {
           // Load everything (legacy compatibility)
           [wameiText, mainText, yListText, hamushiIntegratedText, butterflyText, beetleText, kirigaText, fuyushakuText, genusMappingText, normalizedInsectsText, normalizedHostplantsText, normalizedNotesText] = await Promise.all([
@@ -548,9 +540,7 @@ function App() {
             safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
             safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
           ]);
-          // Optional: emergence overrides table (ユーザー提供)
-          emergenceOverridesText = await safeFileLoad(emergenceOverridesCsvPath, 'emergence overrides data (std1)', 10000);
-          emergenceOverridesStd2Text = await safeFileLoad(emergenceOverridesStd2CsvPath, 'emergence overrides data (std2)', 10000);
+          // emergence overrides は廃止
         }
         
         if (isDevelopment) logger.debug("DEBUG: File loading completed, checking results...");
