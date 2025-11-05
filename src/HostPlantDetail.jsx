@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Papa from 'papaparse';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
@@ -13,6 +13,45 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { createSafeInsectFilename } from './utils/image';
 // import { RelatedPlants } from './components/RelatedLinks';
+
+let genusMappingPromise = null;
+
+const fetchGenusMapping = async (baseUrl) => {
+  if (genusMappingPromise) return genusMappingPromise;
+  genusMappingPromise = (async () => {
+    try {
+      const cacheBust = import.meta?.env?.DEV ? `?v=${Date.now()}` : '';
+      const res = await fetch(`${baseUrl}genus_mapping.csv${cacheBust}`);
+      if (!res.ok) return {};
+      const text = await res.text();
+      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+      const map = {};
+      parsed.data.forEach(row => {
+        const jp = row['属和名']?.trim();
+        const family = row['科名']?.trim() || '';
+        const latin = row['属学名']?.trim();
+        if (!jp || !latin) return;
+        map[jp] = { family, scientificName: latin };
+        if (jp.endsWith('属')) {
+          const base = jp.replace(/属$/, '').trim();
+          if (base && !map[base]) {
+            map[base] = { family, scientificName: latin };
+          }
+        }
+      });
+      return map;
+    } catch {
+      return {};
+    }
+  })();
+  return genusMappingPromise;
+};
+
+const buildGenusCandidates = (name = '') => Array.from(new Set([
+  name,
+  name.replace(/属の一種$/, '属'),
+  name.replace(/属$/, '')
+].filter(Boolean)));
 
 // DetailCard component
 const DetailCard = ({ title, children }) => (
@@ -398,25 +437,52 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const details = plantDetails[decodedPlantName] || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
-  const [classificationMembers, setClassificationMembers] = useState([]); // 科/目ページ用の構成員（植物名）
+  const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
   const [showAllMembers, setShowAllMembers] = useState(false);
   const [canonicalName, setCanonicalName] = useState('');
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
-  
-  // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
+
+  useEffect(() => {
+    setClassificationMembers([]);
+    setShowAllMembers(false);
+  }, [decodedPlantName]);
+
   const isFamily = /科$/.test(decodedPlantName);
   const isOrder = /目$/.test(decodedPlantName);
+  const isGenus = !isFamily && !isOrder && /属$/.test(decodedPlantName);
+
+  const classificationGroups = useMemo(() => {
+    if (!isOrder || !Array.isArray(classificationMembers) || classificationMembers.length === 0) return [];
+    const grouped = new Map();
+    classificationMembers.forEach(name => {
+      const detail = plantDetails[name] || {};
+      const groupFamily = detail.family || detail.familyName || taxonomy.familyJp || '不明';
+      const key = groupFamily || '不明';
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key).push(name);
+    });
+    return Array.from(grouped.entries()).map(([groupFamily, members]) => ({
+      family: groupFamily,
+      members: members.slice().sort((a, b) => a.localeCompare(b, 'ja'))
+    })).sort((a, b) => a.family.localeCompare(b.family, 'ja'));
+  }, [isOrder, classificationMembers, plantDetails, taxonomy.familyJp]);
+
+  // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
   const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
   const pageTitle = isFamily
     ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
     : isOrder
     ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+    : isGenus
+    ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
     : `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
   const pageDesc = isFamily
     ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
     : isOrder
+    ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
+    : isGenus
     ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
     : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
   const canonicalHref = absUrl(`/meta/plant/${encodeURIComponent(decodedPlantName)}.html`);
@@ -449,7 +515,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       const id = 'itemlist-classification';
       let s = document.querySelector('#' + id);
       if (s) s.remove();
-      if (isFamily || isOrder) {
+      if (isFamily || isOrder || isGenus) {
         const items = (classificationMembers || []).slice(0, 10).map((name, idx) => ({
           "@type": "ListItem",
           position: idx + 1,
@@ -471,7 +537,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       const s = document.querySelector('#itemlist-classification');
       if (s) s.remove();
     };
-  }, [isFamily, isOrder, classificationMembers, decodedPlantName]);
+  }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName]);
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
@@ -625,7 +691,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   // Thin-content guard: if this is a plant page with no related insects, mark as noindex
   useEffect(() => {
     try {
-      const isTaxonList = isFamily || isOrder;
+      const isTaxonList = isFamily || isOrder || isGenus;
       let robots = document.querySelector('meta[name="robots"]');
       if (!robots) {
         robots = document.createElement('meta');
@@ -638,12 +704,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         robots.content = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
       }
     } catch {}
-  }, [isFamily, isOrder, relatedInsects]);
+  }, [isFamily, isOrder, isGenus, relatedInsects]);
 
   // Load classification: prefer lite JSON, fallback to CSV
   useEffect(() => {
     const base = import.meta.env.BASE_URL || '/';
-    const isTaxonListPage = isFamily || isOrder;
+    const isTaxonListPage = isFamily || isOrder || isGenus;
     const loadFromLite = async () => {
       try {
         const res = await fetch(`${base}assets/data-lite/ylist-lite.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
@@ -684,6 +750,68 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
             setTaxonomy({ familyJp: '', familyEn: '', orderJp: target, orderEn: '', genus: '', scientificName: '' });
             setClassificationMembers(members.slice().sort((a,b)=> a.localeCompare(b,'ja')));
             return true;
+          }
+        }
+        if (isGenus) {
+          const genusMapping = await fetchGenusMapping(base);
+          const candidates = buildGenusCandidates(target);
+          let mappingEntry = null;
+          for (const key of candidates) {
+            if (genusMapping && genusMapping[key]) {
+              mappingEntry = genusMapping[key];
+              break;
+            }
+          }
+          let genusLatin = mappingEntry?.scientificName || '';
+          let genusFamily = mappingEntry?.family || '';
+          const detailCandidates = candidates.map(key => plantDetails[key]).filter(Boolean);
+          detailCandidates.forEach(detail => {
+            if (!genusLatin && detail?.genusScientificName) genusLatin = detail.genusScientificName;
+            if (!genusLatin && detail?.scientificName) {
+              const first = String(detail.scientificName).split(' ')[0];
+              if (first) genusLatin = first;
+            }
+            if (!genusFamily && detail?.genusFamily) genusFamily = detail.genusFamily;
+            if (!genusFamily && detail?.family && detail.family !== '不明') genusFamily = detail.family;
+          });
+          const normalizedLatin = (genusLatin || '').trim();
+          const memberSet = new Set();
+          if (normalizedLatin) {
+            Object.entries(plants).forEach(([name, info]) => {
+              const sci = info?.scientificName || '';
+              const genus = (sci.split(/\s+/)[0] || '').trim();
+              if (genus === normalizedLatin) memberSet.add(name.trim());
+            });
+            if (memberSet.size === 0) {
+              Object.entries(plantDetails || {}).forEach(([name, detail]) => {
+                const genusCandidate = (detail?.genusScientificName || detail?.genus || '').trim();
+                if (genusCandidate && genusCandidate === normalizedLatin) memberSet.add(name);
+              });
+            }
+          }
+          const members = Array.from(memberSet).sort((a, b) => a.localeCompare(b, 'ja'));
+          if (members.length > 0) {
+            const first = plants[members[0]] || {};
+            setTaxonomy({
+              familyJp: (genusFamily || first.familyJp || '').trim(),
+              familyEn: (first.familyEn || '').trim(),
+              orderJp: (first.orderJp || '').trim(),
+              orderEn: (first.orderEn || '').trim(),
+              genus: normalizedLatin,
+              scientificName: normalizedLatin
+            });
+            setClassificationMembers(members);
+            return true;
+          }
+          if (genusFamily || normalizedLatin) {
+            setTaxonomy(prev => ({
+              familyJp: (genusFamily || prev.familyJp || '').trim(),
+              familyEn: prev.familyEn || '',
+              orderJp: prev.orderJp || '',
+              orderEn: prev.orderEn || '',
+              genus: normalizedLatin || prev.genus || '',
+              scientificName: normalizedLatin || prev.scientificName || ''
+            }));
           }
         }
         return false;
@@ -774,6 +902,77 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
               ).sort((a,b) => a.localeCompare(b, 'ja'));
               setClassificationMembers(members);
             }
+          } else if (isGenus) {
+            const genusMapping = await fetchGenusMapping(base);
+            const candidates = buildGenusCandidates(target);
+            let mappingEntry = null;
+            for (const key of candidates) {
+              if (genusMapping && genusMapping[key]) {
+                mappingEntry = genusMapping[key];
+                break;
+              }
+            }
+            let genusLatin = mappingEntry?.scientificName || '';
+            let genusFamily = mappingEntry?.family || '';
+            const detailCandidates = candidates.map(key => plantDetails[key]).filter(Boolean);
+            detailCandidates.forEach(detail => {
+              if (!genusLatin && detail?.genusScientificName) genusLatin = detail.genusScientificName;
+              if (!genusLatin && detail?.scientificName) {
+                const first = String(detail.scientificName).split(' ')[0];
+                if (first) genusLatin = first;
+              }
+              if (!genusFamily && detail?.genusFamily) genusFamily = detail.genusFamily;
+              if (!genusFamily && detail?.family && detail.family !== '不明') genusFamily = detail.family;
+            });
+            const normalizedLatin = (genusLatin || '').trim();
+            const memberSet = new Set();
+            let firstRowMatch = null;
+            if (normalizedLatin) {
+              rows.forEach(row0 => {
+                const row = normalizeKeys(row0);
+                const sciRaw = (row['学名'] || row['学名 withAuthor'] || '').trim();
+                if (!sciRaw) return;
+                const genusPart = (sciRaw.split(/\s+/)[0] || '').trim();
+                if (genusPart === normalizedLatin) {
+                  const jpName = (row['和名'] || '').trim();
+                  if (jpName) memberSet.add(jpName);
+                  if (!firstRowMatch) firstRowMatch = row;
+                }
+              });
+            }
+            if (memberSet.size === 0 && normalizedLatin) {
+              Object.entries(plantDetails || {}).forEach(([name, detail]) => {
+                const genusCandidate = (detail?.genusScientificName || detail?.genus || '').trim();
+                if (genusCandidate && genusCandidate === normalizedLatin) memberSet.add(name);
+              });
+            }
+            const members = Array.from(memberSet).sort((a, b) => a.localeCompare(b, 'ja'));
+            if (members.length > 0) {
+              const familyFromRow = firstRowMatch
+                ? (firstRowMatch['LAPGII::LAPG科名'] || firstRowMatch['LAPG 科名'] || firstRowMatch['Cronquist 科名'] || firstRowMatch['Engler 科名'] || '').trim()
+                : '';
+              const orderFromRow = firstRowMatch
+                ? (firstRowMatch['LAPGII::LAPG 目'] || firstRowMatch['LAPGII::LAPG Order'] || '').trim()
+                : '';
+              setTaxonomy({
+                familyJp: (genusFamily || familyFromRow || '').trim(),
+                familyEn: '',
+                orderJp: orderFromRow,
+                orderEn: '',
+                genus: normalizedLatin,
+                scientificName: normalizedLatin
+              });
+              setClassificationMembers(members);
+            } else if (genusFamily || normalizedLatin) {
+              setTaxonomy(prev => ({
+                familyJp: (genusFamily || prev.familyJp || '').trim(),
+                familyEn: prev.familyEn || '',
+                orderJp: prev.orderJp || '',
+                orderEn: prev.orderEn || '',
+                genus: normalizedLatin || prev.genus || '',
+                scientificName: normalizedLatin || prev.scientificName || ''
+              }));
+            }
           }
         }
         if (hit) {
@@ -806,7 +1005,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         try { await loadFromCsv(); } catch {}
       }
     })();
-  }, [decodedPlantName, navigate]);
+  }, [decodedPlantName, navigate, isFamily, isOrder, isGenus, plantDetails]);
 
   // Fallback: if taxonomy couldn't resolve genus/scientificName (e.g., サクラ類),
   // try to use normalized plantDetails (e.g., サクラ -> Cerasus)
@@ -924,9 +1123,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       {classificationMembers && classificationMembers.length > 0 && (
         <section className="mb-12 md:mb-16 lg:mb-20">
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6">
-            {/科$/.test(decodedPlantName) ? 'この科に属する植物一覧' : 'この目に属する植物一覧'}（{classificationMembers.length}種）
+            {isFamily ? 'この科に属する植物一覧' : isOrder ? 'この目に属する植物一覧' : 'この属に属する植物一覧'}（{classificationMembers.length}種）
           </h2>
-          {(/目$/.test(decodedPlantName) && classificationGroups && classificationGroups.length > 0) ? (
+          {(isOrder && classificationGroups && classificationGroups.length > 0) ? (
             <div className="space-y-6">
               {classificationGroups.map(group => (
                 <div key={group.family}>
