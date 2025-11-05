@@ -37,8 +37,19 @@ export const normalizeReference = (source) => {
 
   // よくある書誌情報の除去（著者・出版社・発行年・ページなど）
   s = s.replace(/著者\s*[:：][^,，。]+/g, '').replace(/出版社\s*[:：][^,，。]+/g, '')
-       .replace(/発行年\s*[:：][^,，。]+/g, '').replace(/\bpp?\.\s*\d+(-\d+)?/gi, '')
-       .replace(/\(.*?\)/g, '');
+       .replace(/発行年\s*[:：][^,，。]+/g, '').replace(/\bpp?\.\s*\d+(-\d+)?/gi, '');
+
+  // 丸括弧内の情報は基本除去するが、号数・巻数など数字のみの括弧は残す
+  // 1) 数字のみの括弧を一時退避
+  const preserved = [];
+  s = s.replace(/\(\s*\d+\s*\)/g, (m) => {
+    preserved.push(m);
+    return `__PRESERVED_REF_${preserved.length - 1}__`;
+  });
+  // 2) 残りの括弧を除去
+  s = s.replace(/\(.*?\)/g, '');
+  // 3) 一時退避を復元
+  s = s.replace(/__PRESERVED_REF_(\d+)__/g, (_, i) => preserved[Number(i)] || '');
   // 記号の余剰除去
   s = s.replace(/[，,。\s]+$/g, '').replace(/\s{2,}/g, ' ').trim();
   return s;
