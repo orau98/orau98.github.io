@@ -1151,37 +1151,7 @@ async function generateMetaPages() {
     const rawOv2 = parseOverridesRaw(path.join(__dirname, '../public/emergence_overrides_std2.csv'));
     [...rawOv1, ...rawOv2].forEach(({ jname, sci, time }) => addEmergenceFromRow(jname, sci, time));
 
-    // 2) 日本の冬夜蛾.csvから成虫出現時期データを読み込み
-    const kirigaData = loadCSVOptional(path.join(__dirname, '../public/日本の冬夜蛾.csv'));
-    kirigaData.forEach(row => {
-      const japaneseName = row['和名']?.trim();
-      const scientificName = row['学名']?.trim();
-      const emergenceTime = row['成虫の発生時期']?.trim();
-      addEmergenceFromRow(japaneseName, scientificName, emergenceTime);
-    });
-    
-    // 日本の冬尺蛾.csvからも成虫出現時期データを読み込み
-    const fuyushakuCsvPath = path.join(__dirname, '../public/日本の冬尺蛾.csv');
-    if (fs.existsSync(fuyushakuCsvPath)) {
-      const fuyushakuData = loadCSVOptional(fuyushakuCsvPath);
-      
-      fuyushakuData.forEach(row => {
-        const japaneseName = row['和名']?.trim();
-        const scientificName = row['学名']?.trim();
-        let emergenceTime = row['成虫の発生時期']?.trim();
-        
-        // Fix for CSV parsing issue - check if real emergence time is in __parsed_extra
-        if (row.__parsed_extra && row.__parsed_extra.length > 0) {
-          const extraData = row.__parsed_extra[0]?.trim();
-          if (extraData && (extraData.includes('月') || extraData.includes('上旬') || extraData.includes('中旬') || extraData.includes('下旬'))) {
-            emergenceTime = extraData;
-          }
-        }
-        addEmergenceFromRow(japaneseName, scientificName, emergenceTime);
-      });
-    }
-    
-    console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました（overrides + 冬蛾）`);
+    console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました（overridesのみ）`);
     
     // 昆虫データの処理（正規化データを使用）
     let mothCount = 0;
