@@ -100,6 +100,34 @@ function App() {
           const manifest = await manifestRes.json();
           const hostMap = await hostRes.json();
           if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+            // Attempt to load precomputed full dataset first (fast path)
+            try {
+              const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+              if (fullRes.ok) {
+                const fullData = await fullRes.json();
+                if (fullData && Array.isArray(fullData.moths) && fullData.hostPlants) {
+                  setMoths(fullData.moths || []);
+                  setButterflies(fullData.butterflies || []);
+                  setBeetles(fullData.beetles || []);
+                  setLeafbeetles(fullData.leafbeetles || []);
+                  setHostPlants(fullData.hostPlants || hostMap);
+                  setPlantDetails(fullData.plantDetails || {});
+                  try {
+                    setSummaryCounts(fullData.summaryCounts || manifest.counts);
+                  } catch {}
+                  setLoading(false);
+                  ensureTypesLoaderRef.current = () => {
+                    typesFetchStartedRef.current = true;
+                  };
+                  typesFetchStartedRef.current = true;
+                  // Short-circuit before legacy pipeline
+                  return;
+                }
+              }
+            } catch (error) {
+              logger.debug('full-dataset fetch failed, falling back to incremental loading:', error);
+            }
+
             setSummaryCounts(manifest.counts);
             setHostPlants(hostMap);
             setPlantDetails({});
