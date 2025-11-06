@@ -35,8 +35,8 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline --no-audit --no-fund
 
-      - name: Build
-        run: npm run build
+      - name: Build (vite only; skip prebuild chain)
+        run: npx vite build
 
       - name: Add .nojekyll
         run: |

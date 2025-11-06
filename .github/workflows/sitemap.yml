@@ -26,8 +26,8 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit --no-fund
 
-      - name: Build site
-        run: npm run build
+      - name: Setup build cache (optional)
+        run: echo "skip app build for sitemap generation"
 
       - name: Generate split sitemaps (project script)
         run: node scripts/generate-sitemap-split.js
@@ -45,4 +45,3 @@ jobs:
           commit_message: 'chore(sitemap): update sitemap_index.xml and sitemaps'
           branch: main
           file_pattern: public/sitemap*.xml public/sitemap.xml
-
