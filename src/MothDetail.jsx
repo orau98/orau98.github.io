@@ -25,6 +25,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
   let insectId = mothId || butterflyId || beetleId || leafbeetleId;
+  const [fallbackHostPlants, setFallbackHostPlants] = useState([]);
   
   // 🔍 デバッグ：URLパラメータ確認
   logger.debug('🔍 URL params:', { mothId, butterflyId, beetleId, leafbeetleId, insectId });
@@ -95,6 +96,75 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       moth = allInsects.find(m => m.id === fallbackId);
     }
   }
+
+  // Fallback: if no host plants are available (e.g., data-lite initial state),
+  // lazily load from normalized CSV (public/hostplants.csv) and synthesize minimal records.
+  useEffect(() => {
+    const needFallback = !!leafbeetleId && moth && (
+      (!Array.isArray(moth.hostPlantsDetailed) || moth.hostPlantsDetailed.length === 0) &&
+      (!Array.isArray(moth.hostPlants) || moth.hostPlants.length === 0)
+    );
+    if (!needFallback) return;
+    let aborted = false;
+    const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+    fetch(`${import.meta.env.BASE_URL}hostplants.csv${v}`)
+      .then(res => res.ok ? res.text() : '')
+      .then(text => {
+        if (aborted || !text) return;
+        const lines = text.replace(/\r\n?|\n/g, '\n').split('\n');
+        if (lines.length < 2) return;
+        const header = lines[0].split(',').map(h => h.trim());
+        const iInsect = header.indexOf('insect_id');
+        const iPlant = header.indexOf('plant_name');
+        const iFamily = header.indexOf('plant_family');
+        const iObs = header.indexOf('observation_type');
+        const iPart = header.indexOf('plant_part');
+        const iStage = header.indexOf('life_stage');
+        const iRef = header.indexOf('reference');
+        const iNotes = header.indexOf('notes');
+        if (iInsect < 0 || iPlant < 0) return;
+        const out = [];
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i];
+          if (!line || !line.trim()) continue;
+          // simple CSV split (publicは安全に整形済み)
+          const cols = [];
+          let buf = '', q = false;
+          for (let j = 0; j < line.length; j++) {
+            const ch = line[j];
+            if (q) {
+              if (ch === '"') {
+                if (line[j + 1] === '"') { buf += '"'; j++; }
+                else { q = false; }
+              } else { buf += ch; }
+            } else {
+              if (ch === '"') q = true;
+              else if (ch === ',') { cols.push(buf); buf = ''; }
+              else { buf += ch; }
+            }
+          }
+        cols.push(buf);
+          const insect = (cols[iInsect] || '').trim();
+          if (insect !== mappedInsectId) continue;
+          const plant = (cols[iPlant] || '').trim();
+          if (!plant || plant === '不明' || /^(\d{3,4})$/.test(plant)) continue;
+          out.push({
+            name: plant,
+            family: (cols[iFamily] || '').trim(),
+            displayName: (cols[iFamily] || '').trim() ? `${plant}（${(cols[iFamily] || '').trim()}）` : plant,
+            observationType: (cols[iObs] || '').trim() || '文献',
+            plantPart: (cols[iPart] || '').trim() || '',
+            lifeStage: (cols[iStage] || '').trim() || '',
+            reference: (cols[iRef] || '').trim() || '',
+            notes: (cols[iNotes] || '').trim() || '',
+            isDetailed: true
+          });
+        }
+        if (!aborted && out.length > 0) setFallbackHostPlants(out);
+      })
+      .catch(() => {})
+    return () => { aborted = true; };
+  }, [leafbeetleId, moth, mappedInsectId]);
   
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
@@ -852,10 +922,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   const hostPlantsDetailedArray = Array.isArray(moth.hostPlantsDetailed)
                     ? moth.hostPlantsDetailed
                     : (Array.isArray(moth.hostPlantDetails) ? moth.hostPlantDetails : []);
+                  const mergedDetailed = (hostPlantsDetailedArray && hostPlantsDetailedArray.length > 0)
+                    ? hostPlantsDetailedArray
+                    : (fallbackHostPlants || []);
                   return (
                     <EnhancedHostPlantDisplay 
                       hostPlants={hostPlantsArray}
-                      hostPlantsDetailed={hostPlantsDetailedArray}
+                      hostPlantsDetailed={mergedDetailed}
                       showDetailsByDefault={false}
                       maxDisplayCount={10}
                     />
