@@ -373,7 +373,16 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
 
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const { plantName } = useParams();
-  const decodedPlantName = decodeURIComponent(plantName);
+  const rawDecodedPlantName = decodeURIComponent(plantName);
+  const sanitizePlantParam = (s) => {
+    if (!s) return s;
+    // Trim whitespace and common stray quote/hyphen characters from both ends
+    let x = String(s).trim();
+    x = x.replace(/^[\"'“”‚‘’`´\-‐‑–—−]+/, ''); // leading quotes/dashes
+    x = x.replace(/[\"'“”‚‘’`´\-‐‑–—−]+$/, ''); // trailing quotes/dashes
+    return x.trim();
+  };
+  const decodedPlantName = sanitizePlantParam(rawDecodedPlantName);
 
   // If URL provides Latin binomial without a space (e.g., Capparisheyncana), repair for display only
   const isLikelyLatin = (s) => /^[A-Za-z]+$/.test(s);
@@ -733,6 +742,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           setCanonicalName(canonical || '');
           const aliases = Array.isArray(info.aliases) ? info.aliases.filter(a => a && a !== canonical) : [];
           setAliasNames(aliases);
+          // If the URL contained stray characters or an alias, redirect to canonical clean URL
+          if ((rawDecodedPlantName && rawDecodedPlantName !== target) || (canonical && canonical !== target)) {
+            navigate(`/plant/${encodeURIComponent(canonical || target)}`, { replace: true });
+          }
           return true;
         }
         // taxon pages: use familiesMap/ordersMap if available
