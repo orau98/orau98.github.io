@@ -568,7 +568,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                                 </div>
                               </li>
                             );
-                          })()}
+                          }); })()}
                         </ul>
                         <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
                           <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">その他</p>
