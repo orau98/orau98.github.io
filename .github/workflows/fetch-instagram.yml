@@ -2,8 +2,6 @@ name: Fetch Instagram Posts
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/30 * * * *' # every 30 minutes
 
 permissions:
   contents: write
