@@ -7,7 +7,7 @@ import InstagramEmbed from './components/InstagramEmbed';
 import InstagramTimeline from './components/InstagramTimeline';
 import { MainStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
-import { bibliography } from './utils/bibliography';
+import { bibliography as rawBibliography } from './utils/bibliography';
 import { getSourceLink } from './utils/sourceLinks';
 import useSeoMeta from './hooks/useSeoMeta';
 
@@ -502,10 +502,17 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                       <div className="space-y-2">
                         <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">主要引用文献（書誌情報）</p>
                         <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
-                          {bibliography.map((b) => {
-                            const href = b.url || getSourceLink(b.title) || undefined;
-                            const joinNames = (arr) => Array.isArray(arr) ? arr.filter(Boolean).join(', ') : (typeof arr === 'string' ? arr : '');
-                            const authorStr = joinNames(b.authors) || (b.editors ? `${joinNames(b.editors)}（編）` : '');
+                          {(() => {
+                            const normalize = (s) => (s || '').toString().trim().toLowerCase();
+                            const authorKey = (b) => {
+                              const names = Array.isArray(b.authors) ? b.authors : (Array.isArray(b.editors) ? b.editors : []);
+                              return normalize(names && names.length > 0 ? names[0] : '');
+                            };
+                            const bibliography = rawBibliography.slice().sort((a, b) => authorKey(a).localeCompare(authorKey(b), 'en', { sensitivity: 'base' }));
+                            return bibliography.map((b) => {
+                              const href = b.url || getSourceLink(b.title) || undefined;
+                              const joinNames = (arr) => Array.isArray(arr) ? arr.filter(Boolean).join(', ') : (typeof arr === 'string' ? arr : '');
+                              const authorStr = joinNames(b.authors) || (b.editors ? `${joinNames(b.editors)}（編）` : '');
                             const titlePlain = b.title ? `${b.title}${b.note ? ' ' + b.note : ''}` : '';
                             const publisherStr = b.publisher || '';
                             const yearStr = b.year || '';
@@ -561,7 +568,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                                 </div>
                               </li>
                             );
-                          })}
+                          })()}
                         </ul>
                         <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
                           <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">その他</p>
