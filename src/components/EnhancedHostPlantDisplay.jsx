@@ -311,7 +311,21 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
           usage.references.forEach(ref => allReferences.add(ref));
           usage.notes.forEach(n => allNotes.add(n));
         });
-        if (allReferences.size === 0 && allNotes.size === 0) return null;
+        // 備考のフィルタリング: 食草セクションに不適切な生活史・発生時期系の文言を除去
+        const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
+        const isPlantRelevant = (s) => /葉|花|蕾|若葉|茎|根|枝|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
+        const splitSegments = (s) => s.split(/[\/／]|。|；|;/.source ? /[\/／]|。|；|;/ : /[\/／]|。|；|;/).map(t => t.trim()).filter(Boolean);
+        const filteredNotesSet = new Set();
+        Array.from(allNotes).forEach(note => {
+          splitSegments(note).forEach(seg => {
+            if (!seg) return;
+            // 生活史重複（出現時期等）は除外
+            if (isLifecycleNote(seg) && !isPlantRelevant(seg)) return;
+            filteredNotesSet.add(seg);
+          });
+        });
+
+        if (allReferences.size === 0 && filteredNotesSet.size === 0) return null;
         return (
           <div className="mt-2 pt-2 border-t border-emerald-200/30 dark:border-emerald-700/30 space-y-1.5">
             {allReferences.size > 0 && (
@@ -353,7 +367,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
                 </div>
               </div>
             )}
-            {allNotes.size > 0 && (
+            {filteredNotesSet.size > 0 && (
               <div className="flex items-start space-x-2">
                 <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2z" />
@@ -361,7 +375,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
                 <div className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
                   <div className="font-medium">備考:</div>
                   <ul className="list-disc pl-5 space-y-0.5">
-                    {Array.from(allNotes).map((note, idx) => (
+                    {Array.from(filteredNotesSet).map((note, idx) => (
                       <li key={idx}>{note}</li>
                     ))}
                   </ul>
