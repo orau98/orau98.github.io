@@ -11,6 +11,7 @@ permissions:
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    continue-on-error: true
     if: ${{ secrets.IG_ACCESS_TOKEN != '' && secrets.IG_USER_ID != '' }}
     steps:
       - name: Checkout
@@ -38,6 +39,7 @@ jobs:
           fi
 
       - name: Commit changes
+        continue-on-error: true
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
