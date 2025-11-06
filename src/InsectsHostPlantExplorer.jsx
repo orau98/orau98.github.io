@@ -39,6 +39,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
   const [instagramUrl, setInstagramUrl] = useState('');
   const [instagramPosts, setInstagramPosts] = useState([]);
   const [instagramWidgetHtml, setInstagramWidgetHtml] = useState('');
+  const [showBibliography, setShowBibliography] = useState(false);
   
   // Helper: detect profile URL (not a single post permalink)
   const isInstagramProfileUrl = (url) => {
@@ -500,8 +501,18 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                     </h3>
                     <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
                       <div className="space-y-2">
-                        <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">主要引用文献（書誌情報）</p>
-                        <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+                        <button
+                          type="button"
+                          onClick={() => setShowBibliography(v => !v)}
+                          aria-expanded={showBibliography}
+                          aria-controls="bibliography-list"
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-white/70 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-800/90 transition-colors"
+                        >
+                          <span>主要引用文献（書誌情報）</span>
+                          <span className={`ml-3 transform transition-transform ${showBibliography ? 'rotate-90' : ''}`}>▶</span>
+                        </button>
+                        {showBibliography && (
+                        <ul id="bibliography-list" className="mt-2 space-y-2 text-xs text-slate-600 dark:text-slate-400">
                           {(() => {
                             const normalize = (s) => (s || '').toString().trim().toLowerCase();
                             const authorKey = (b) => {
@@ -570,6 +581,7 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                             );
                           }); })()}
                         </ul>
+                        )}
                         <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
                           <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">その他</p>
                           <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
