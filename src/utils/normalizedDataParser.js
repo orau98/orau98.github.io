@@ -258,6 +258,11 @@ const classifyInsect = (insect) => {
     return 'タマムシ類';
   }
   
+  // カミキリムシ（Cerambycidae）を甲虫（beetle）として扱う
+  if (familyJp.includes('カミキリ')) {
+    return 'タマムシ類'; // beetle bucket（サイトでは beetles 集合に集約）
+  }
+  
   if (familyJp.includes('ハムシ')) {
     return 'ハムシ類';
   }
@@ -268,6 +273,10 @@ const classifyInsect = (insect) => {
   }
   
   if (family === 'Buprestidae') {
+    return 'タマムシ類';
+  }
+  
+  if (family === 'Cerambycidae') {
     return 'タマムシ類';
   }
   
