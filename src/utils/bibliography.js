@@ -43,6 +43,26 @@ export const bibliography = [
     pages: '37-48'
   },
   {
+    key: 'hamushi-notes-4',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (4)',
+    authors: ['滝沢 春雄'],
+    year: '2009',
+    journal: '神奈川虫報',
+    issue: '168',
+    pages: '1-11'
+  },
+  {
+    key: 'hamushi-notes-5',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (5)',
+    authors: ['滝沢 春雄'],
+    year: '2011',
+    journal: '神奈川虫報',
+    issue: '173',
+    pages: '35-51'
+  },
+  {
     key: 'nihonsan-garui-hyojun-2',
     title: '日本産蛾類標準図鑑 2',
     authors: ['岸田 泰則'],
@@ -110,8 +130,32 @@ export const bibliography = [
   },
   {
     key: 'nihonsan-hamushi-seitai-obogaki',
+    type: 'article',
     title: '日本産ハムシ科生態覚書 (6)',
     authors: ['滝沢 春雄'],
-    year: '2012'
+    year: '2012',
+    journal: '神奈川虫報',
+    issue: '177',
+    pages: '33-51'
+  },
+  {
+    key: 'hamushi-notes-7',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (7)',
+    authors: ['滝沢 春雄'],
+    year: '2013',
+    journal: '神奈川虫報',
+    issue: '179',
+    pages: '17-33'
+  },
+  {
+    key: 'hamushi-notes-8',
+    type: 'article',
+    title: '日本産ハムシ科生態覚書 (8)',
+    authors: ['滝沢 春雄'],
+    year: '2014',
+    journal: '神奈川虫報',
+    issue: '182',
+    pages: '37-46'
   }
 ];
