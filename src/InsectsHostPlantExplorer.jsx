@@ -597,11 +597,11 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                 </div>
                 
                 {/* 右側：Instagram */}
-                <div className="lg:flex lg:flex-col">
-                  <div className="flex-grow flex flex-col">
+                <div className="lg:flex lg:flex-col lg:gap-6">
+                  <div className="flex flex-col">
 
                     {/* Instagram最新投稿 */}
-                    <div className="flex-grow flex flex-col max-h-[450px] sm:max-h-[500px] lg:max-h-none mt-4">
+                    <div className="flex flex-col mt-4">
                       <div className="mb-3">
                         <div className="flex items-center space-x-3 mb-2">
                           <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0">
@@ -617,8 +617,8 @@ const InsectsHostPlantExplorer = React.memo(({ moths, butterflies, beetles, leaf
                       </div>
                       
                       {/* Instagram埋め込み */}
-                      <div className="flex-grow overflow-hidden flex items-center justify-center">
-                        <div className="instagram-wrapper w-full h-full max-h-[380px] sm:max-h-[480px] md:max-h-[560px] lg:max-h-none overflow-y-auto border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
+                      <div className="overflow-hidden">
+                        <div className="instagram-wrapper w-full border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
                           {(() => {
                             // 1) timeline from file
                             if (instagramPosts && instagramPosts.length > 0) {
