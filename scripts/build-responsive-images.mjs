@@ -20,6 +20,11 @@ function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 async function processImage(srcPath, outBase, widths = WIDTHS) {
   try {
     const srcStat = fs.statSync(srcPath);
+    // Skip obviously invalid placeholders or tiny files
+    if (!srcStat.isFile() || srcStat.size < 100) {
+      console.warn('[responsive] skip', srcPath, 'Input file too small or not a regular file');
+      return;
+    }
     const input = sharp(srcPath, { failOnError: false });
     for (const w of widths) {
       const outPath = `${outBase}.${w}.jpg`;
@@ -59,4 +64,3 @@ async function main() {
 }
 
 main().catch(err => { console.error(err); process.exit(1); });
-

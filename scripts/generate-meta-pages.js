@@ -108,6 +108,32 @@ function loadCSV(filePath) {
       }
     }
     
+    // Sanitize general_notes.csv: ensure 7 columns and quote content field
+    if (filePath.endsWith(path.sep + 'general_notes.csv') || filePath.includes('/general_notes.csv')) {
+      const lines = csvContent.split(/\r?\n/);
+      const header = lines.shift() || '';
+      const fixed = [header];
+      for (const raw of lines) {
+        if (!raw || !raw.trim()) continue;
+        // Already well-formed lines are kept as-is if they appear to have balanced quotes
+        if ((raw.match(/\"/g) || []).length % 2 === 0) {
+          // Try to coerce to 7 columns by capturing the last three comma-separated tokens
+          const m = raw.match(/^(.*?),(.*?),(.*?),(.*),(.*?),(.*?),(.*?)$/);
+          if (m) {
+            let content = (m[4] || '').replace(/\r$/, '');
+            // Escape inner quotes and wrap content in quotes to protect commas
+            if (!/^\s*\".*\"\s*$/.test(content)) {
+              content = '"' + content.replace(/\"/g, '""') + '"';
+            }
+            fixed.push([m[1], m[2], m[3], content, m[5], m[6], m[7]].join(','));
+            continue;
+          }
+        }
+        fixed.push(raw);
+      }
+      csvContent = fixed.join('\n');
+    }
+
     const result = Papa.parse(csvContent, {
       header: true,
       skipEmptyLines: true,
