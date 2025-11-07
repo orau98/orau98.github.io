@@ -49,7 +49,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [summaryCounts, setSummaryCounts] = useState(null);
   const typesFetchStartedRef = useRef(false);
+  const typesFetchPromiseRef = useRef(null);
   const ensureTypesLoaderRef = useRef(null);
+  const hostCsvExtendStartedRef = useRef(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   
   const isDevelopment = import.meta.env.DEV;
@@ -94,15 +96,59 @@ function App() {
       const base = import.meta.env.BASE_URL || '/';
       // Try lightweight split JSON first to speed up initial paint
       try {
-        const manifestRes = await fetch(`${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
-        const hostRes = await fetch(`${base}assets/data-lite/hostplants.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
-        if (manifestRes.ok && hostRes.ok) {
-          const manifest = await manifestRes.json();
-          const hostMap = await hostRes.json();
+        const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
+        const cacheBuster = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+        const manifestUrl = `${base}assets/data-lite/manifest.json${cacheBuster}`;
+        const hostUrl = `${base}assets/data-lite/hostplants.json${cacheBuster}`;
+        const plantInfoUrl = `${base}assets/data-lite/ylist-lite.json${cacheBuster}`;
+
+        const [manifestRes, hostRes, plantInfoRes] = await Promise.all([
+          fetch(manifestUrl, { cache: cacheMode }),
+          fetch(hostUrl, { cache: cacheMode }),
+          fetch(plantInfoUrl, { cache: cacheMode }).catch((error) => {
+            logger.debug('Plant taxonomy preload skipped:', error);
+            return null;
+          }),
+        ]);
+
+        if (manifestRes?.ok && hostRes?.ok) {
+          const manifestPromise = manifestRes.json();
+          const hostPromise = hostRes.json();
+          const plantInfoPromise =
+            plantInfoRes && plantInfoRes.ok ? plantInfoRes.json() : Promise.resolve(null);
+
+          const [manifest, hostMap, plantInfoPayload] = await Promise.all([
+            manifestPromise,
+            hostPromise,
+            plantInfoPromise,
+          ]);
+
           if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+            const plantInfoRaw = plantInfoPayload && typeof plantInfoPayload === 'object'
+              ? plantInfoPayload.plants || {}
+              : {};
+            const plantDetailsLite = {};
+            Object.entries(plantInfoRaw).forEach(([name, detail]) => {
+              if (!name) return;
+              const familyJp = detail?.familyJp || '';
+              const scientific = detail?.scientificName || '';
+              const genus = scientific ? scientific.split(' ')[0] : '';
+              const aliases = Array.isArray(detail?.aliases) ? detail.aliases.filter(Boolean) : [];
+              plantDetailsLite[name] = {
+                family: familyJp || '不明',
+                familyName: familyJp || '不明',
+                scientificName: scientific,
+                genus,
+                order: detail?.orderJp || '',
+                aliases,
+              };
+            });
+
             // Attempt to load precomputed full dataset first (fast path)
             try {
-              const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+              const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${cacheBuster}`, {
+                cache: cacheMode,
+              });
               if (fullRes.ok) {
                 const fullData = await fullRes.json();
                 if (fullData && Array.isArray(fullData.moths) && fullData.hostPlants) {
@@ -111,15 +157,17 @@ function App() {
                   setBeetles(fullData.beetles || []);
                   setLeafbeetles(fullData.leafbeetles || []);
                   setHostPlants(fullData.hostPlants || hostMap);
-                  setPlantDetails(fullData.plantDetails || {});
+                  setPlantDetails(fullData.plantDetails || plantDetailsLite);
                   try {
                     setSummaryCounts(fullData.summaryCounts || manifest.counts);
                   } catch {}
                   setLoading(false);
                   ensureTypesLoaderRef.current = () => {
                     typesFetchStartedRef.current = true;
+                    typesFetchPromiseRef.current = Promise.resolve(null);
                   };
                   typesFetchStartedRef.current = true;
+                  typesFetchPromiseRef.current = Promise.resolve(null);
                   // Short-circuit before legacy pipeline
                   return;
                 }
@@ -128,53 +176,175 @@ function App() {
               logger.debug('full-dataset fetch failed, falling back to incremental loading:', error);
             }
 
-            setSummaryCounts(manifest.counts);
-            setHostPlants(hostMap);
-            setPlantDetails({});
-            setLoading(false);
-            // Fetch type partitions in background and stitch arrays
-            Promise.allSettled([
-              fetch(`${base}assets/data-lite/moths.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
-              fetch(`${base}assets/data-lite/butterflies.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
-              fetch(`${base}assets/data-lite/beetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
-              fetch(`${base}assets/data-lite/leafbeetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`)
-            ]).then(async (results) => {
-              try {
-                const [mothR, butterR, beetleR, leafR] = results;
-                const toJson = async (r) => (r && r.status === 'fulfilled' && r.value.ok) ? r.value.json() : [];
-                const [mothArr, butterArr, beetleArr, leafArr] = await Promise.all([
-                  toJson(mothR), toJson(butterR), toJson(beetleR), toJson(leafR)
-                ]);
-                if (Array.isArray(mothArr)) setMoths(mothArr);
-                if (Array.isArray(butterArr)) setButterflies(butterArr);
-                if (Array.isArray(beetleArr)) setBeetles(beetleArr);
-                if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
-              } catch {}
-            });
-            // Prepare lazy loader for insects types and schedule based on initial tab
-            const startFetchTypes = () => {
-              if (typesFetchStartedRef.current) return;
-              typesFetchStartedRef.current = true;
-              Promise.allSettled([
-                fetch(`${base}assets/data-lite/moths.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
-                fetch(`${base}assets/data-lite/butterflies.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
-                fetch(`${base}assets/data-lite/beetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`),
-                fetch(`${base}assets/data-lite/leafbeetles.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`)
-              ]).then(async (results) => {
-                try {
-                  const [mothR, butterR, beetleR, leafR] = results;
-                  const toJson = async (r) => (r && r.status === 'fulfilled' && r.value.ok) ? r.value.json() : [];
-                  const [mothArr, butterArr, beetleArr, leafArr] = await Promise.all([
-                    toJson(mothR), toJson(butterR), toJson(beetleR), toJson(leafR)
-                  ]);
-                  if (Array.isArray(mothArr)) setMoths(mothArr);
-                  if (Array.isArray(butterArr)) setButterflies(butterArr);
-                  if (Array.isArray(beetleArr)) setBeetles(beetleArr);
-                  if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
-                } catch {}
-              });
+            const computedCounts = {
+              ...manifest.counts,
+              hostPlants: Object.keys(hostMap || {}).length,
             };
+
+            setSummaryCounts(computedCounts);
+            setHostPlants(hostMap);
+            setPlantDetails(plantDetailsLite);
+            setLoading(false);
+
+            const hydrateHostPlantsFromNormalized = async (insectLookup) => {
+              if (hostCsvExtendStartedRef.current) return;
+              hostCsvExtendStartedRef.current = true;
+              try {
+                if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+                  await new Promise((resolve) =>
+                    window.requestIdleCallback(resolve, { timeout: 3000 }),
+                  );
+                }
+                const normalizedUrl = `${base}hostplants.csv${cacheBuster}`;
+                const csvRes = await fetch(normalizedUrl, { cache: cacheMode });
+                if (!csvRes.ok) return;
+                const csvText = await csvRes.text();
+                if (!csvText) return;
+                const parsed = Papa.parse(csvText, {
+                  header: true,
+                  skipEmptyLines: true,
+                });
+                if (!parsed || !Array.isArray(parsed.data)) return;
+
+                const additions = new Map();
+                parsed.data.forEach((row) => {
+                  if (!row) return;
+                  const plantName = (row.plant_name || '').trim();
+                  const insectId = (row.insect_id || '').trim();
+                  const familyName = (row.plant_family || '').trim();
+                  if (!plantName || !insectId) return;
+                  const insectName = insectLookup.get(insectId);
+                  if (!insectName) return;
+
+                  if (!additions.has(plantName)) {
+                    additions.set(plantName, {
+                      insects: new Set(),
+                      family: familyName,
+                    });
+                  }
+                  const entry = additions.get(plantName);
+                  entry.insects.add(insectName);
+                  if (!entry.family && familyName) {
+                    entry.family = familyName;
+                  }
+                });
+                if (additions.size === 0) return;
+
+                let updatedCount = null;
+                setHostPlants((prev) => {
+                  const next = { ...prev };
+                  let changed = false;
+                  additions.forEach(({ insects }, plant) => {
+                    const existing = Array.isArray(next[plant]) ? new Set(next[plant]) : new Set();
+                    const beforeSize = existing.size;
+                    insects.forEach((name) => existing.add(name));
+                    if (!next[plant] || existing.size !== beforeSize) {
+                      next[plant] = Array.from(existing);
+                      changed = true;
+                    }
+                  });
+                  if (changed) {
+                    updatedCount = Object.keys(next).length;
+                    return next;
+                  }
+                  return prev;
+                });
+
+                if (updatedCount !== null) {
+                  setSummaryCounts((prev) => {
+                    if (!prev) return prev;
+                    if (prev.hostPlants === updatedCount) return prev;
+                    return { ...prev, hostPlants: updatedCount };
+                  });
+                }
+
+                setPlantDetails((prev) => {
+                  let changed = false;
+                  const next = { ...prev };
+                  additions.forEach(({ family }, plant) => {
+                    if (!next[plant]) {
+                      next[plant] = plantDetailsLite[plant] || {
+                        family: family || '不明',
+                        familyName: family || '不明',
+                        scientificName: '',
+                        genus: '',
+                        aliases: [],
+                      };
+                      changed = true;
+                    } else if (
+                      family &&
+                      (!next[plant].family || next[plant].family === '不明')
+                    ) {
+                      next[plant] = {
+                        ...next[plant],
+                        family,
+                        familyName: family,
+                      };
+                      changed = true;
+                    }
+                  });
+                  return changed ? next : prev;
+                });
+              } catch (error) {
+                logger.debug('Failed to hydrate host plants from normalized CSV:', error);
+              }
+            };
+
+            // Reset fetch guards for fresh lifecycle
+            typesFetchStartedRef.current = false;
+            typesFetchPromiseRef.current = null;
+
+            const loadTypePartitions = async () => {
+              const responses = await Promise.all([
+                fetch(`${base}assets/data-lite/moths.json${cacheBuster}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/butterflies.json${cacheBuster}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/beetles.json${cacheBuster}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/leafbeetles.json${cacheBuster}`, { cache: cacheMode }),
+              ]);
+              const [mothRes, butterflyRes, beetleRes, leafRes] = responses;
+              const safeJson = async (res) => (res && res.ok ? res.json() : []);
+              const [mothArr, butterArr, beetleArr, leafArr] = await Promise.all([
+                safeJson(mothRes),
+                safeJson(butterflyRes),
+                safeJson(beetleRes),
+                safeJson(leafRes),
+              ]);
+              if (Array.isArray(mothArr)) setMoths(mothArr);
+              if (Array.isArray(butterArr)) setButterflies(butterArr);
+              if (Array.isArray(beetleArr)) setBeetles(beetleArr);
+              if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+              const lookup = new Map();
+              [...(mothArr || []), ...(butterArr || []), ...(beetleArr || []), ...(leafArr || [])].forEach(
+                (insect) => {
+                  if (insect && insect.id && insect.name) {
+                    lookup.set(insect.id, insect.name);
+                  }
+                },
+              );
+              hydrateHostPlantsFromNormalized(lookup);
+              return { mothArr, butterArr, beetleArr, leafArr };
+            };
+
+            const startFetchTypes = () => {
+              if (typesFetchStartedRef.current && typesFetchPromiseRef.current) {
+                return typesFetchPromiseRef.current;
+              }
+              if (typesFetchStartedRef.current) {
+                return Promise.resolve(null);
+              }
+              typesFetchStartedRef.current = true;
+              const promise = loadTypePartitions().catch((error) => {
+                logger.warn('Failed to load insect partitions:', error);
+                typesFetchStartedRef.current = false;
+                typesFetchPromiseRef.current = null;
+                return null;
+              });
+              typesFetchPromiseRef.current = promise;
+              return promise;
+            };
+
             ensureTypesLoaderRef.current = startFetchTypes;
+
             try {
               const params = new URLSearchParams(location.search || '');
               const initialTab = params.get('tab') || 'insects';
@@ -183,12 +353,20 @@ function App() {
               } else {
                 const delay = 5000;
                 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-                  setTimeout(() => window.requestIdleCallback(startFetchTypes, { timeout: 2000 }), delay);
+                  setTimeout(
+                    () => window.requestIdleCallback(() => startFetchTypes(), { timeout: 2000 }),
+                    delay,
+                  );
                 } else {
-                  setTimeout(startFetchTypes, delay);
+                  setTimeout(() => startFetchTypes(), delay);
                 }
               }
-            } catch { /* ignore */ }
+            } catch (error) {
+              logger.debug('Failed to interpret initial tab, fetching insects immediately:', error);
+              startFetchTypes();
+            }
+
+            return;
           }
         } else {
           // Fallback to combined lite index
