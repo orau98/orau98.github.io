@@ -24,6 +24,7 @@ Archiearis_parthenias
 Arctornis_l_nigrum
 Aroga_mesostrepta
 Artena_dotata
+Ataboruza_divisa
 Atacira_grabczewskii
 Aterpia_circumfluxana
 Atkinsonia_ignipicta
@@ -31,6 +32,8 @@ Atrachya_menetriesi
 Aventiola_pusilla
 Aventiola_pusilla_2
 Bactra_cerata
+Bastilla_maturata
+Betapsestis_umbrosa
 Blepharita_amica
 Bomolocha_benepartita
 Bomolocha_nigrobasalis
@@ -54,6 +57,7 @@ Chasminodes_nervosus
 Chilades_pandava
 Chilodes_pacifica
 Chlorissa_obliterata
+Chrysobothris_succedanea
 Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
 Cifuna_locuples
@@ -61,6 +65,8 @@ Circobotys_heterogenalis
 Cirrhochrista_brizoalis
 Clanis_bilineata
 Clavipalpula_aurariae
+Coenobiodes_granitalis
+Colocasidia_albifera
 Concubina_trigonalis
 Conistra castaneofasciata Motschulsky
 Conistra_flammatra
@@ -97,6 +103,7 @@ Deilephila_askoldensis_2
 Deilephila_elpenor
 Deilephila_elpenor_2
 Deltote_uncula
+Descoreba_simplex
 Diarsia_deparca
 Dichomeris heriguronis Matsumura
 Dimorphicosmia_variegata
@@ -119,6 +126,7 @@ Eriodonta_amagisana
 Etielloides_bipartitella
 Eucarta_fasciata
 Eucosma_metzneriana
+Eucyclodes_difficta
 Euphyia_cineraria
 Eupithecia_virgaureata
 Euplexia_lucipara
@@ -153,8 +161,8 @@ Hypephyra_terrosa
 Hyperstrotia_flavipuncta
 Hypocala_deflorata
 Hypomecis_crassestrigata
-IMG_4738
 Ilema_eurydice
+IMG_4738
 Imosca_coreana
 Inurois_fletcheri
 Inurois_fumosa
@@ -165,11 +173,13 @@ Jocheaera_alni
 Kawabeia_razowskii
 Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
+Kerala_decipiens
 Krananda_latimarginaria
 Labdia_citracma
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
 Leucapamea_askoldis
+Leucapamea_kawadai
 Libythea_lepita
 Lista_ficki
 Lithomoia_solidaginis
@@ -193,6 +203,7 @@ Macrobrochis staudingeri staudingeri Alphéraky
 Macroglossum_saga
 Maikona_jezoensis
 Malacosoma_neustrium
+Mamestra_brassicae
 Martania_fulvida
 Maruca_vitrata
 Maxates_protrusa
@@ -229,6 +240,7 @@ Nipponobuprestis_amabilis_2
 Notodonta_albicosta
 Notodonta_albicosta_2
 Nyssiodes_lefuarius
+Oberthueria_falcigera
 Oides_bowringii
 Olethreutes_electana
 Oligonyx_vulnerata
@@ -258,6 +270,7 @@ Parum colligata Walker
 Pennithera_comis
 Peridea_gigantea
 Perigrapha_circumducta
+Perigrapha_hoenei_P_ngeler_1914
 Petrophora_chlorosata
 Phaecasiophora_roseana
 Phaecasiophora_roseana_3
@@ -266,11 +279,13 @@ Phalga_clarirena
 Phazaca_alikangensis
 Phlogophora_albovittata
 Phlogophora_beatrix
+Phlossa_conjuncta
 Phragmataecia_castaneae
 Phtheochroides_clandestina
 Phtheochroides_clandestina_2
 Phthonoloba_viridifasciata
 Piletocera_aegimiusalis
+Plagodis_dolabraria
 Pleuroptya_chlorophanta
 Plutella_xylostella
 Polytremis_pellucida
@@ -301,6 +316,7 @@ Semidonta_biloba
 Shachia_circumscripta
 Shachia_circumscripta_2
 Siccia_obscura
+Simplicia_niphona
 Simplicia_xanthoma
 Sinarella_rotundipennis
 Sineugraphe_oceanica
@@ -329,6 +345,7 @@ Teratoglaea_pacifica
 Tethea ampliata ampliata Butler
 Tethea_consimilis
 Tethea_consimilis_2
+Theretra_japonica
 Thysanoplusia_intermixta
 Tiracola_aureata
 Togepteryx_velutina
@@ -356,5 +373,6 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
+アヤモクメヨトウ
 ウスモンクロテンヒメシャク
 テングイラガ
