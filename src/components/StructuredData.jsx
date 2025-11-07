@@ -111,13 +111,13 @@ export const MothStructuredData = ({ moth }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "${absUrl('/')}"
+        "item": absUrl('/')
       },
       {
         "@type": "ListItem", 
         "position": 2,
         "name": "蛾",
-        "item": "${absUrl('/moth')}"
+        "item": absUrl('/moth')
       },
       {
         "@type": "ListItem",
@@ -245,13 +245,13 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "${absUrl('/')}"
+        "item": absUrl('/')
       },
       {
         "@type": "ListItem", 
         "position": 2,
         "name": "蝶",
-        "item": "${absUrl('/butterfly')}"
+        "item": absUrl('/butterfly')
       },
       {
         "@type": "ListItem",
@@ -379,13 +379,13 @@ export const BeetleStructuredData = ({ beetle }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "${absUrl('/')}"
+        "item": absUrl('/')
       },
       {
         "@type": "ListItem", 
         "position": 2,
         "name": "タマムシ",
-        "item": "${absUrl('/beetle')}"
+        "item": absUrl('/beetle')
       },
       {
         "@type": "ListItem",
@@ -532,13 +532,13 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "${absUrl('/')}"
+        "item": absUrl('/')
       },
       {
-        "@type": "ListItem",
+        "@type": "ListItem", 
         "position": 2,
         "name": "ハムシ",
-        "item": "${absUrl('/leafbeetle')}"
+        "item": absUrl('/leafbeetle')
       },
       {
         "@type": "ListItem",
@@ -650,13 +650,13 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
         "@type": "ListItem",
         "position": 1,
         "name": "昆虫食草図鑑",
-        "item": "${absUrl('/')}"
+        "item": absUrl('/')
       },
       {
-        "@type": "ListItem",
+        "@type": "ListItem", 
         "position": 2,
         "name": "植物",
-        "item": "${absUrl('/plant')}"
+        "item": absUrl('/plant')
       },
       {
         "@type": "ListItem",
@@ -677,12 +677,13 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
 
 // メインページの構造化データ
 export const MainStructuredData = () => {
+  const siteUrl = absUrl('/');
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "昆虫食草図鑑",
     "alternateName": "昆虫と食草の美しい関係を探る図鑑",
-    "url": "${absUrl('/')}",
+    "url": siteUrl,
     "description": "昆虫と食草の美しい関係を探る、自然界の意外な繋がりを発見しよう。蛾、蝶、甲虫、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
     "inLanguage": "ja",
     "author": {
@@ -691,7 +692,7 @@ export const MainStructuredData = () => {
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "${absUrl('/')}?q={search_term_string}",
+      "target": `${siteUrl}?q={search_term_string}`,
       "query-input": "required name=search_term_string"
     },
     "mainEntity": {
