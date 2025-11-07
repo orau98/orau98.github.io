@@ -54,6 +54,7 @@ Chasminodes_nervosus
 Chilades_pandava
 Chilodes_pacifica
 Chlorissa_obliterata
+Chrysobothris_succedanea
 Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
 Cifuna_locuples
@@ -153,8 +154,8 @@ Hypephyra_terrosa
 Hyperstrotia_flavipuncta
 Hypocala_deflorata
 Hypomecis_crassestrigata
-IMG_4738
 Ilema_eurydice
+IMG_4738
 Imosca_coreana
 Inurois_fletcheri
 Inurois_fumosa
@@ -170,6 +171,7 @@ Labdia_citracma
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
 Leucapamea_askoldis
+Leucapamea_kawadai
 Libythea_lepita
 Lista_ficki
 Lithomoia_solidaginis
@@ -266,11 +268,13 @@ Phalga_clarirena
 Phazaca_alikangensis
 Phlogophora_albovittata
 Phlogophora_beatrix
+Phlossa_conjuncta
 Phragmataecia_castaneae
 Phtheochroides_clandestina
 Phtheochroides_clandestina_2
 Phthonoloba_viridifasciata
 Piletocera_aegimiusalis
+Plagodis_dolabraria
 Pleuroptya_chlorophanta
 Plutella_xylostella
 Polytremis_pellucida
@@ -301,6 +305,7 @@ Semidonta_biloba
 Shachia_circumscripta
 Shachia_circumscripta_2
 Siccia_obscura
+Simplicia_niphona
 Simplicia_xanthoma
 Sinarella_rotundipennis
 Sineugraphe_oceanica
