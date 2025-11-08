@@ -38,6 +38,7 @@ async function loadJapaneseToScientificMap() {
   // Prefer CSV for freshness; fallback to data-lite JSON when CSV parsing unavailable
   const map = new Map();
   const insectsCsv = path.join(PUBLIC_DIR, 'insects.csv');
+  let loadedFromCsv = false;
   if (fs.existsSync(insectsCsv)) {
     try {
       const csvParser = (await import('csv-parser')).default;
@@ -52,26 +53,28 @@ async function loadJapaneseToScientificMap() {
           .on('end', resolve)
           .on('error', reject);
       });
-      if (map.size > 0) return map;
+      if (map.size > 0) loadedFromCsv = true;
     } catch (e) {
       console.warn('[rename] csv-parser not available, fallback to JSON:', e.message);
     }
   }
   // Fallback to data-lite JSON
-  const litePath = path.join(PUBLIC_DIR, 'assets', 'data-lite', 'index.json');
-  if (fs.existsSync(litePath)) {
-    const j = JSON.parse(fs.readFileSync(litePath, 'utf-8'));
-    const addArr = (arr = []) => {
-      for (const it of arr) {
-        const jn = String(it.name || '').trim();
-        const sn = String(it.scientificName || '').trim();
-        if (jn && sn) map.set(jn, sn);
-      }
-    };
-    addArr(j.moths);
-    addArr(j.leafbeetles);
-    addArr(j.beetles);
-    addArr(j.butterflies);
+  if (!loadedFromCsv) {
+    const litePath = path.join(PUBLIC_DIR, 'assets', 'data-lite', 'index.json');
+    if (fs.existsSync(litePath)) {
+      const j = JSON.parse(fs.readFileSync(litePath, 'utf-8'));
+      const addArr = (arr = []) => {
+        for (const it of arr) {
+          const jn = String(it.name || '').trim();
+          const sn = String(it.scientificName || '').trim();
+          if (jn && sn) map.set(jn, sn);
+        }
+      };
+      addArr(j.moths);
+      addArr(j.leafbeetles);
+      addArr(j.beetles);
+      addArr(j.butterflies);
+    }
   }
   // Supplement map with unmatched report (normalized_binomial,japanese)
   try {
@@ -98,6 +101,8 @@ async function loadJapaneseToScientificMap() {
     'アカスジキヨトウ': 'Mythimna postica (Hampson, 1905)',
     'ウスイロキヨトウ': 'Mythimna inanis (Oberthür, 1880)',
     'ウスクロモクメヨトウ': 'Dipterygina cupreotincta Sugi, 1954',
+    'ウスモンクロテンヒメシャク': 'Scopula ignobilis (Warren, 1901)',
+    'テングイラガ': 'Microleon longipalpis Butler, 1885',
   };
   for (const [jp, sci] of Object.entries(manualOverrides)) {
     if (jp && sci && !map.has(jp)) map.set(jp, sci);
