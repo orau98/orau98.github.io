@@ -5,7 +5,6 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
-import { buildResponsiveSrcset } from './utils/imageSrcset';
 import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
 import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
@@ -202,37 +201,15 @@ const PlantImageGallery = ({ images }) => {
               onClick={() => handleImageClick(mainImage)}
             >
               <div className="relative bg-emerald-50 dark:bg-emerald-900/20 overflow-hidden aspect-[16/10] min-h-[200px] md:min-h-[300px] lg:min-h-[400px]">
-                {(() => {
-                  // Try to infer plants filename from finalSrc
-                  const m = mainImage.finalSrc && mainImage.finalSrc.match(/\/images\/plants\/([^/?#]+)\.(jpg|jpeg|png|JPG|PNG)/);
-                  if (m) {
-                    const base = decodeURIComponent(m[1]);
-                    const ext = '.' + m[2].toLowerCase();
-                    const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'plants', filename: base, ext, widths: [640, 1024, 1600], sizes: '100vw' });
-                    return (
-                      <img 
-                        src={src}
-                        srcSet={srcSet}
-                        sizes={sizes}
-                        alt={`${mainImage.alt}の写真`}
-                        width="1600"
-                        height="1000"
-                        className="w-full h-full object-cover"
-                        onError={(event) => handleImageError(mainImage.id, event)}
-                      />
-                    );
-                  }
-                  return (
-                    <img 
-                      src={mainImage.finalSrc}
-                      alt={`${mainImage.alt}の写真`}
-                      width="1600"
-                      height="1000"
-                      className="w-full h-full object-cover"
-                      onError={(event) => handleImageError(mainImage.id, event)}
-                    />
-                  );
-                })()}
+                <img 
+                  src={mainImage.finalSrc}
+                  alt={`${mainImage.alt}の写真`}
+                  width="1600"
+                  height="1000"
+                  className="w-full h-full object-cover"
+                  onError={(event) => handleImageError(mainImage.id, event)}
+                  loading="lazy"
+                />
                 
                 {/* Elegant gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100"></div>
@@ -268,36 +245,15 @@ const PlantImageGallery = ({ images }) => {
                   }}
                 >
                   <div className="relative aspect-square bg-emerald-50 dark:bg-emerald-900/20">
-                    {(() => {
-                      const m = image.finalSrc && image.finalSrc.match(/\/images\/plants\/([^/?#]+)\.(jpg|jpeg|png|JPG|PNG)/);
-                      if (m) {
-                        const base = decodeURIComponent(m[1]);
-                        const ext = '.' + m[2].toLowerCase();
-                        const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'plants', filename: base, ext, widths: [320, 640, 1024], sizes: '(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 160px' });
-                        return (
-                          <img 
-                            src={src}
-                            srcSet={srcSet}
-                            sizes={sizes}
-                            alt={`${image.alt}の写真`}
-                            width="400"
-                            height="400"
-                            className="w-full h-full object-cover"
-                            onError={(event) => handleImageError(image.id, event)}
-                          />
-                        );
-                      }
-                      return (
-                        <img 
-                          src={image.finalSrc}
-                          alt={`${image.alt}の写真`}
-                          width="400"
-                          height="400"
-                          className="w-full h-full object-cover"
-                          onError={(event) => handleImageError(image.id, event)}
-                        />
-                      );
-                    })()}
+                    <img 
+                      src={image.finalSrc}
+                      alt={`${image.alt}の写真`}
+                      width="400"
+                      height="400"
+                      className="w-full h-full object-cover"
+                      onError={(event) => handleImageError(image.id, event)}
+                      loading="lazy"
+                    />
                     {mainImage?.finalSrc === image.finalSrc && (
                       <div className="absolute inset-0 bg-emerald-500/20"></div>
                     )}
