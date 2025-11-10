@@ -3644,7 +3644,7 @@ species-3620,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Oxyma
 species-3621,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Oxymacaria,,temeraria,,(Swinhoe),1891,クロモンオエダシャク,,,,"Oxymacaria temeraria (Swinhoe, 1891)",,,
 species-3622,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Oxymacaria,,pryeri,,(Butler),1879,フトスジオエダシャク,,,,"Oxymacaria pryeri (Butler, 1879)",,,
 species-3623,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Isturgia,,vapulata,,(Butler),1879,ウスネズミエダシャク,,,,"Isturgia vapulata (Butler, 1879)",,,
-species-3624,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Isturgia,,arenacearia,,(Denis & Schiffermüller),1775,ソトオビエダシャク,,,,"Isturgia arenacearia (Denis & Schiffermüller, 1775)",,少なくとも年2化し、5~6月と8~9月に出現する（日本産蛾類標準図鑑1）。昼間、飛び出す個体もいる（日本産蛾類標準図鑑1）。
+species-3624,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Isturgia,,arenacearia,,(Denis & Schiffermüller),1775,ソトオビエダシャク,,,,"Isturgia arenacearia (Denis & Schiffermüller, 1775)",,,
 species-3625,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Luxiaria,,amasa,,(Butler),1878,トビカギバエダシャク,トビカギバエダシャク,,,"Luxiaria amasa (Butler, 1878)",,,
 species-3626,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Luxiaria,,mitorrhaphes,,Prout,1925,ミナミトビカギバエダシャク,,,,"Luxiaria mitorrhaphes Prout, 1925",,,
 species-3627,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Luxiaria,,costinota,,Inoue,1978,マエモントビカギバエダシャク,,,,"Luxiaria costinota Inoue, 1978",,新記録・再分類等,
@@ -6029,7 +6029,7 @@ species-6013,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族
 species-6014,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dryobotodes,,intermissa,,(Butler),1886,ナカオビキリガ,,,,"Dryobotodes intermissa (Butler, 1886)",,,
 species-6015,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dryobotodes,,pryeri,,(Leech),1900,プライヤオビキリガ,,,,"Dryobotodes pryeri (Leech, 1900)",,,
 species-6016,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dryobotodes,,angusta,,Sugi,1980,ホソバオビキリガ,ホソバオビキリガ,,,"Dryobotodes angusta Sugi, 1980",,,
-species-6017,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,fumosa,,(Butler),1878,アヤモクメキリガ,,,,"Xylena fumosa (Butler, 1878)",,多食性で、木本より草本で幼虫がみられる（日本産蛾類標準図鑑2） species-6018,Noctuidae
+species-6017,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,fumosa,,(Butler),1878,アヤモクメキリガ,,,,"Xylena fumosa (Butler, 1878)",,,
 species-6019,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,changi,,Horie,1993,ヒロバモクメキリガ,,タイワンハネナガモクメキリガ,,"Xylena changi Horie, 1993",,,
 species-6020,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,formosa,,(Butler),1878,キバラモクメキリガ,,,,"Xylena formosa (Butler, 1878)",,,
 species-6021,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Lithomoia,,solidaginis,,(Hübner),[1803],シロスジキリガ,,,,"Lithomoia solidaginis (Hübner, 1803)",,,
@@ -6073,7 +6073,7 @@ species-6058,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族
 species-6059,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Agrocholorta,,kimurai,,(Shikata),2015,ヤンバルキリガ,,,,"Agrocholorta kimurai (Shikata, 2015)",,新記録・再分類等,
 species-6060,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Orbona,,fragariae,,(Vieweg),1790,イチゴキリガ,イチゴキリガ,,,"Orbona fragariae (Vieweg, 1790)",,,
 species-6061,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,togata,,(Esper),1788,キイロキリガ,,,,"Xanthia togata (Esper, 1788)",,,
-species-6062,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,icteritia,,(Hufnagel),1766,モンキキリガ,,,,"Xanthia icteritia (Hufnagel, 1766)",,花と一緒に地下に落下し、その枯れた部分を食べて成長する（日本の冬夜蛾）。他の植物も利用していると考えられる（日本の冬夜蛾）。 species-6063,Noctuidae
+species-6062,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,icteritia,,(Hufnagel),1766,モンキキリガ,,,,"Xanthia icteritia (Hufnagel, 1766)",,,
 species-6064,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Tiliacea,,japonago,,(Wileman & West),1929,エゾキイロキリガ,,,,"Tiliacea japonago (Wileman & West, 1929)",,,
 species-6065,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Jodia,,sericea,,(Butler),1878,ミスジキリガ,,,,"Jodia sericea (Butler, 1878)",,,
 species-6066,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Telorta,,acuminata,,(Butler),1878,ウスキトガリキリガ,,,,"Telorta acuminata (Butler, 1878)",,,
@@ -6120,7 +6120,7 @@ species-6106,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族
 species-6107,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dasypolia,,fani,,Staudinger,1892,オガサワラヒゲヨトウ,,,,"Dasypolia fani Staudinger, 1892",,,
 species-6108,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Blepharita,,amica,,(Treitschke),1825,ムラサキハガタヨトウ,ムラサキハガタヨトウ,,,"Blepharita amica (Treitschke, 1825)",,,
 species-6109,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Mniotype,,melanodonta,,(Hampson),1906,オオハガタヨトウ,,,,"Mniotype melanodonta (Hampson, 1906)",,,
-species-6110,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Mniotype,,bathensis,,(Lützau),1901,ミヤマハガタヨトウ,,,,"Mniotype bathensis (Lützau, 1901)",,多食性だと思われる species-6111,Noctuidae
+species-6110,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Mniotype,,bathensis,,(Lützau),1901,ミヤマハガタヨトウ,,,,"Mniotype bathensis (Lützau, 1901)",,,
 species-6112,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Egira,,saxea,,(Leech),[1889],ケンモンキリガ,,,,"Egira saxea (Leech, 1889)",,,
 species-6113,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Panolis,,japonica,,Draudt,1935,マツキリガ,,,,"Panolis japonica Draudt, 1935",,,
 species-6114,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Pseudopanolis,,takao,,Inaba,1927,タカオキリガ,,,,"Pseudopanolis takao Inaba, 1927",,,
