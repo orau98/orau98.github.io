@@ -433,8 +433,29 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   logger.debug('HostPlantDetail - decodedPlantName:', decodedPlantName);
   logger.debug('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
-  const exactPlantDetail = plantDetails[decodedPlantName];
-  const details = exactPlantDetail || { family: '不明' };
+  const resolvePlantDetail = (name) => {
+    if (plantDetails[name]) {
+      return { detail: plantDetails[name], canonical: name };
+    }
+    for (const [canonical, detail] of Object.entries(plantDetails)) {
+      const aliasesRaw = detail.aliases || detail.aliasNames;
+      const aliases = Array.isArray(aliasesRaw)
+        ? aliasesRaw
+        : aliasesRaw instanceof Set
+          ? Array.from(aliasesRaw)
+          : [];
+      if (aliases.includes(name)) {
+        return { detail, canonical };
+      }
+      if (canonical.startsWith(`${name} (`) || canonical.startsWith(`${name}（`)) {
+        return { detail, canonical };
+      }
+    }
+    return { detail: null, canonical: '' };
+  };
+
+  const { detail: resolvedPlantDetail, canonical: resolvedCanonicalName } = resolvePlantDetail(decodedPlantName);
+  const details = resolvedPlantDetail || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
   const [showAllMembers, setShowAllMembers] = useState(false);
@@ -443,7 +464,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
 
-  const displayLatin = exactPlantDetail ? decodedPlantName : repairLatinBinomial(decodedPlantName);
+  const displayLatin = resolvedPlantDetail ? (resolvedCanonicalName || decodedPlantName) : repairLatinBinomial(decodedPlantName);
+
+  useEffect(() => {
+    if (!canonicalName && resolvedCanonicalName) {
+      setCanonicalName(resolvedCanonicalName);
+    }
+  }, [canonicalName, resolvedCanonicalName]);
 
   useEffect(() => {
     setClassificationMembers([]);
