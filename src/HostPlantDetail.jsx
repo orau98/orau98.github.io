@@ -706,9 +706,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         // Filter out non-existing images based on the filename index
         const finalName = `${base}${chosenSuffix}`;
         if (!Array.isArray(nameIndex) || has(finalName)) {
+          const encodedName = encodeURIComponent(finalName);
           images.push({
-            src: `${import.meta.env.BASE_URL}images/plants/${finalName}.jpg`,
-            srcJPG: `${import.meta.env.BASE_URL}images/plants/${finalName}.JPG`,
+            src: `${import.meta.env.BASE_URL}images/plants/${encodedName}.jpg`,
+            srcJPG: `${import.meta.env.BASE_URL}images/plants/${encodedName}.JPG`,
             label,
             alt: `${base}${chosenSuffix ? ` (${label})` : ''}`
           });
