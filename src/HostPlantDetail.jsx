@@ -113,13 +113,19 @@ const PlantImageGallery = ({ images }) => {
       return;
     }
 
-    const normalized = images.map((image, idx) => ({
-      ...image,
-      id: `${image.src}-${idx}`,
-      finalSrc: image.src,
-      fallbackSrc: image.srcJPG,
-      triedFallback: false,
-    }));
+    const normalized = images.map((image, idx) => {
+      const candidates = Array.isArray(image.candidates) && image.candidates.length
+        ? image.candidates
+        : [image.src, image.srcJPG].filter(Boolean);
+      return {
+        ...image,
+        id: image.id || `${image.alt || 'plant'}-${idx}`,
+        candidates,
+        candidateIndex: 0,
+        finalSrc: candidates[0],
+      };
+    });
+
     setAvailableImages(normalized);
     setMainImage(normalized[0]);
     setSelectedImage(normalized[0]);
@@ -133,13 +139,16 @@ const PlantImageGallery = ({ images }) => {
       if (idx === -1) return prev;
       const current = prev[idx];
 
-      if (!current.triedFallback && current.fallbackSrc && current.fallbackSrc !== current.finalSrc) {
+      const hasNextCandidate = current.candidates && current.candidateIndex + 1 < current.candidates.length;
+      if (hasNextCandidate) {
+        const nextIndex = current.candidateIndex + 1;
+        const nextSrc = current.candidates[nextIndex];
         const updated = [...prev];
-        const nextImage = { ...current, finalSrc: current.fallbackSrc, triedFallback: true };
+        const nextImage = { ...current, candidateIndex: nextIndex, finalSrc: nextSrc };
         updated[idx] = nextImage;
         if (mainImage?.id === imageId) setMainImage(nextImage);
         if (selectedImage?.id === imageId) setSelectedImage(nextImage);
-        if (event?.currentTarget) event.currentTarget.src = current.fallbackSrc;
+        if (event?.currentTarget) event.currentTarget.src = nextSrc;
         return updated;
       }
 
@@ -692,6 +701,19 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
 
     const has = (fullName) => Array.isArray(nameIndex) && nameIndex.includes(fullName);
+    const baseUrl = import.meta.env.BASE_URL || '/';
+
+    const buildCandidates = (name) => {
+      const raw = `${baseUrl}images/plants/${name}.jpg`;
+      const rawUpper = `${baseUrl}images/plants/${name}.JPG`;
+      const encoded = `${baseUrl}images/plants/${encodeURIComponent(name)}.jpg`;
+      const encodedUpper = `${baseUrl}images/plants/${encodeURIComponent(name)}.JPG`;
+      const unique = [];
+      [raw, rawUpper, encoded, encodedUpper].forEach((path) => {
+        if (path && !unique.includes(path)) unique.push(path);
+      });
+      return unique;
+    };
 
     bases.forEach((base) => {
       suffixes.forEach(({ suffix, label }) => {
@@ -701,17 +723,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           const full = `${base}＿${suffix.slice(1)}`;
           if (has(full)) chosenSuffix = `＿${suffix.slice(1)}`;
           else if (has(ascii)) chosenSuffix = suffix;
-          else chosenSuffix = suffix; // default ascii if unknown
+          else chosenSuffix = suffix;
         }
-        // Filter out non-existing images based on the filename index
         const finalName = `${base}${chosenSuffix}`;
         if (!Array.isArray(nameIndex) || has(finalName)) {
-          const encodedName = encodeURIComponent(finalName);
           images.push({
-            src: `${import.meta.env.BASE_URL}images/plants/${encodedName}.jpg`,
-            srcJPG: `${import.meta.env.BASE_URL}images/plants/${encodedName}.JPG`,
             label,
-            alt: `${base}${chosenSuffix ? ` (${label})` : ''}`
+            alt: `${base}${chosenSuffix ? ` (${label})` : ''}`,
+            candidates: buildCandidates(finalName)
           });
         }
       });
