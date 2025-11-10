@@ -701,18 +701,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
 
     const has = (fullName) => Array.isArray(nameIndex) && nameIndex.includes(fullName);
-    const baseUrl = import.meta.env.BASE_URL || '/';
+    const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
 
     const buildCandidates = (name) => {
-      const raw = `${baseUrl}images/plants/${name}.jpg`;
-      const rawUpper = `${baseUrl}images/plants/${name}.JPG`;
-      const encoded = `${baseUrl}images/plants/${encodeURIComponent(name)}.jpg`;
-      const encodedUpper = `${baseUrl}images/plants/${encodeURIComponent(name)}.JPG`;
-      const unique = [];
-      [raw, rawUpper, encoded, encodedUpper].forEach((path) => {
-        if (path && !unique.includes(path)) unique.push(path);
-      });
-      return unique;
+      const encodedName = encodeURIComponent(name);
+      const variations = [
+        `${baseUrl}images/plants/${encodedName}.jpg`,
+        `${baseUrl}images/plants/${encodedName}.JPG`,
+        `${baseUrl}images/plants/${name}.jpg`,
+        `${baseUrl}images/plants/${name}.JPG`,
+      ];
+      return variations.filter((url, idx) => url && variations.indexOf(url) === idx);
     };
 
     bases.forEach((base) => {
