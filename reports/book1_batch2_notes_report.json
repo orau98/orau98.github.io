@@ -1,0 +1,14 @@
+{
+  "source": "data/moth_ecology_book1_batch2.csv",
+  "added_records": 433,
+  "added_emergence": 226,
+  "added_ecology": 207,
+  "skipped_emergence_due_to_placeholder": 0,
+  "skipped_ecology_due_to_placeholder": 17,
+  "unmatched_entries": [
+    {
+      "japanese_name": "アオシャク科",
+      "scientific_name": "GEOMETRINAE"
+    }
+  ]
+}
