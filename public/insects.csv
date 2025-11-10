@@ -6710,8 +6710,7 @@ species-6013,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族
 species-6014,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dryobotodes,,intermissa,,(Butler),1886,ナカオビキリガ,,,,"Dryobotodes intermissa (Butler, 1886)",,,
 species-6015,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dryobotodes,,pryeri,,(Leech),1900,プライヤオビキリガ,,,,"Dryobotodes pryeri (Leech, 1900)",,,
 species-6016,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dryobotodes,,angusta,,Sugi,1980,ホソバオビキリガ,,,,"Dryobotodes angusta Sugi, 1980",,,
-species-6017,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,fumosa,,(Butler),1878,アヤモクメキリガ,,,,"Xylena fumosa (Butler, 1878)",,多食性で、木本より草本で幼虫がみられる（日本産蛾類標準図鑑2）
-species-6018,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,nihonica,,Höne,1917,ハネナガモクメキリガ,,,,"Xylena nihonica Höne, 1917",,,
+species-6017,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,fumosa,,(Butler),1878,アヤモクメキリガ,,,,"Xylena fumosa (Butler, 1878)",,多食性で、木本より草本で幼虫がみられる（日本産蛾類標準図鑑2） species-6018,Noctuidae
 species-6019,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,changi,,Horie,1993,ヒロバモクメキリガ,,タイワンハネナガモクメキリガ,,"Xylena changi Horie, 1993",,,
 species-6020,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xylena,,formosa,,(Butler),1878,キバラモクメキリガ,,,,"Xylena formosa (Butler, 1878)",,,
 species-6021,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Lithomoia,,solidaginis,,(Hübner),[1803],シロスジキリガ,,,,"Lithomoia solidaginis (Hübner, 1803)",,,
@@ -6755,8 +6754,7 @@ species-6058,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族
 species-6059,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Agrocholorta,,kimurai,,(Shikata),2015,ヤンバルキリガ,,,,"Agrocholorta kimurai (Shikata, 2015)",,新記録・再分類等,
 species-6060,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Orbona,,fragariae,,(Vieweg),1790,イチゴキリガ,,,,"Orbona fragariae (Vieweg, 1790)",,,
 species-6061,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,togata,,(Esper),1788,キイロキリガ,,,,"Xanthia togata (Esper, 1788)",,,
-species-6062,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,icteritia,,(Hufnagel),1766,モンキキリガ,,,,"Xanthia icteritia (Hufnagel, 1766)",,花と一緒に地下に落下し、その枯れた部分を食べて成長する（日本の冬夜蛾）。他の植物も利用していると考えられる（日本の冬夜蛾）。
-species-6063,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,tunicata,,Graeser,1889,オオモンキキリガ,,,,"Xanthia tunicata Graeser, 1889",,,
+species-6062,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Xanthia,,icteritia,,(Hufnagel),1766,モンキキリガ,,,,"Xanthia icteritia (Hufnagel, 1766)",,花と一緒に地下に落下し、その枯れた部分を食べて成長する（日本の冬夜蛾）。他の植物も利用していると考えられる（日本の冬夜蛾）。 species-6063,Noctuidae
 species-6064,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Tiliacea,,japonago,,(Wileman & West),1929,エゾキイロキリガ,,,,"Tiliacea japonago (Wileman & West, 1929)",,,
 species-6065,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Jodia,,sericea,,(Butler),1878,ミスジキリガ,,,,"Jodia sericea (Butler, 1878)",,,
 species-6066,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Telorta,,acuminata,,(Butler),1878,ウスキトガリキリガ,,,,"Telorta acuminata (Butler, 1878)",,,
@@ -7460,6 +7458,7 @@ species-20766,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モン�
 species-20767,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Anaplectoides,,prasinus,,(Denis & Schiffermüller),1775,アオバヤガ,,,,"Anaplectoides prasinus (Denis & Schiffermüller, 1775)",,,
 species-20768,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Anaplectoides,,virens,,(Butler),1878,オオアオバヤガ,,,,"Anaplectoides virens (Butler, 1878)",,,
 species-20769,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Eurois,,occulta,,(Linnaeus),1758,オオシラホシヤガ,,,,"Eurois occulta (Linnaeus, 1758)",,,
+,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,

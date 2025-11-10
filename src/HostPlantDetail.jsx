@@ -67,7 +67,7 @@ const plantAliases = {
   'リンゴ': ['セイヨウリンゴ', 'ヨーロッパリンゴ']
 };
 
-const ImageModal = ({ image, isOpen, onClose }) => {
+const ImageModal = ({ image, isOpen, onClose, onImageError }) => {
   if (!isOpen || !image) return null;
 
   return (
@@ -77,6 +77,7 @@ const ImageModal = ({ image, isOpen, onClose }) => {
           src={image.finalSrc || image.src}
           alt={image.alt}
           className="w-full h-full object-contain rounded-lg shadow-2xl"
+          onError={(event) => onImageError?.(image.id, event)}
           onClick={(e) => e.stopPropagation()}
         />
         <button 
@@ -103,38 +104,47 @@ const PlantImageGallery = ({ images }) => {
   const [mainImage, setMainImage] = useState(null);
 
   useEffect(() => {
-    const checkImages = async () => {
-      const available = [];
-      
-      // cache-buster only in development
-      const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
-      for (const image of images) {
-        try {
-          // Try both .jpg and .JPG
-          const responses = await Promise.allSettled([
-            fetch(image.src + v, { method: 'HEAD' }),
-            fetch(image.srcJPG + v, { method: 'HEAD' })
-          ]);
-          
-          if (responses[0].status === 'fulfilled' && responses[0].value.ok) {
-            available.push({ ...image, finalSrc: image.src + v });
-          } else if (responses[1].status === 'fulfilled' && responses[1].value.ok) {
-            available.push({ ...image, finalSrc: image.srcJPG + v });
-          }
-        } catch {
-          // Image doesn't exist, skip it
-        }
-      }
-      
-      setAvailableImages(available);
-      if (available.length > 0) {
-        setMainImage(available[0]); // Set first image as main image
-      }
+    if (!Array.isArray(images) || images.length === 0) {
+      setAvailableImages([]);
+      setMainImage(null);
       setLoading(false);
-    };
+      return;
+    }
 
-    checkImages();
+    const normalized = images.map((image, idx) => ({
+      ...image,
+      id: `${image.src}-${idx}`,
+      finalSrc: image.src,
+      fallbackSrc: image.srcJPG,
+      triedFallback: false,
+    }));
+    setAvailableImages(normalized);
+    setMainImage(normalized[0]);
+    setLoading(false);
   }, [images]);
+
+  const handleImageError = (imageId, event) => {
+    setAvailableImages((prev) => {
+      const idx = prev.findIndex((img) => img.id === imageId);
+      if (idx === -1) return prev;
+      const current = prev[idx];
+
+      if (!current.triedFallback && current.fallbackSrc && current.fallbackSrc !== current.finalSrc) {
+        const updated = [...prev];
+        const nextImage = { ...current, finalSrc: current.fallbackSrc, triedFallback: true };
+        updated[idx] = nextImage;
+        if (mainImage?.id === imageId) setMainImage(nextImage);
+        if (selectedImage?.id === imageId) setSelectedImage(nextImage);
+        if (event?.currentTarget) event.currentTarget.src = current.fallbackSrc;
+        return updated;
+      }
+
+      const updated = prev.filter((img) => img.id !== imageId);
+      if (mainImage?.id === imageId) setMainImage(updated[0] || null);
+      if (selectedImage?.id === imageId) setSelectedImage(null);
+      return updated;
+    });
+  };
 
   if (loading) {
     return (
@@ -192,6 +202,7 @@ const PlantImageGallery = ({ images }) => {
                         width="1600"
                         height="1000"
                         className="w-full h-full object-cover"
+                        onError={(event) => handleImageError(mainImage.id, event)}
                       />
                     );
                   }
@@ -202,6 +213,7 @@ const PlantImageGallery = ({ images }) => {
                       width="1600"
                       height="1000"
                       className="w-full h-full object-cover"
+                      onError={(event) => handleImageError(mainImage.id, event)}
                     />
                   );
                 })()}
@@ -252,6 +264,7 @@ const PlantImageGallery = ({ images }) => {
                             width="400"
                             height="400"
                             className="w-full h-full object-cover"
+                            onError={(event) => handleImageError(image.id, event)}
                           />
                         );
                       }
@@ -262,6 +275,7 @@ const PlantImageGallery = ({ images }) => {
                           width="400"
                           height="400"
                           className="w-full h-full object-cover"
+                          onError={(event) => handleImageError(image.id, event)}
                         />
                       );
                     })()}
@@ -285,6 +299,7 @@ const PlantImageGallery = ({ images }) => {
         image={selectedImage}
         isOpen={modalOpen}
         onClose={handleCloseModal}
+        onImageError={handleImageError}
       />
     </>
   );
