@@ -399,7 +399,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const m = s.match(/^([A-Z][a-z]{2,})([a-z-]{3,})$/);
     return m ? `${m[1]} ${m[2]}` : s;
   };
-  const displayLatin = repairLatinBinomial(decodedPlantName);
   const [imageFilenames, setImageFilenames] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
   
@@ -434,7 +433,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   logger.debug('HostPlantDetail - decodedPlantName:', decodedPlantName);
   logger.debug('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
-  const details = plantDetails[decodedPlantName] || { family: '不明' };
+  const exactPlantDetail = plantDetails[decodedPlantName];
+  const details = exactPlantDetail || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
   const [showAllMembers, setShowAllMembers] = useState(false);
@@ -442,6 +442,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
+
+  const displayLatin = exactPlantDetail ? decodedPlantName : repairLatinBinomial(decodedPlantName);
 
   useEffect(() => {
     setClassificationMembers([]);
