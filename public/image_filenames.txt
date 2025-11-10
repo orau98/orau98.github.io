@@ -182,8 +182,8 @@ Hypephyra_terrosa
 Hyperstrotia_flavipuncta
 Hypocala_deflorata
 Hypomecis_crassestrigata
-IMG_4738
 Ilema_eurydice
+IMG_4738
 Imosca_coreana
 Inurois_fletcheri
 Inurois_fumosa
@@ -424,5 +424,4 @@ Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
 アマヒトリ北海道亜種
-アヤモクメヨトウ
 ルリモンジャノメ
