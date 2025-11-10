@@ -255,9 +255,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
     // If already a binomial, normalize to a single space
     const spaced = t.match(/^([A-Z][a-z]+)\s+([a-z-]{3,})(.*)$/);
     if (spaced) return `${spaced[1]} ${spaced[2]}${spaced[3] || ''}`.trim();
-    // Otherwise, repair compact form
-    const m = t.replace(/\s+/g, '').match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
-    return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
+    return t;
   };
   const displayPlantName = repairPlantLatinBinomial(plantGroup.name);
 

@@ -329,11 +329,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     // Repair function for collapsed Latin binomials in plant names
                     const repairPlantLatinBinomial = (plant) => {
                       if (!plant || typeof plant !== 'string') return plant;
-                      const t = plant.trim();
-                      // Only attempt when no spaces and looks like Latin
-                      if (t.includes(' ') || !/^[A-Z][a-z]+[a-z-]+$/.test(t)) return t;
-                      const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})$/);
-                      return m ? `${m[1]} ${m[2]}` : t;
+                      return plant.trim();
                     };
 
                     // hostPlants が文字列の場合と配列の場合を処理

@@ -20,9 +20,7 @@ const normalizeLatinBinomialPlain = (name) => {
   // Already binomial -> collapse multiple spaces to single
   const spaced = t.match(/^([A-Z][a-z]+)\s+([a-z-]{3,})(.*)$/);
   if (spaced) return `${spaced[1]} ${spaced[2]}${spaced[3] || ""}`.trim();
-  // Compact form -> insert single space
-  const m = t.replace(/\s+/g, "").match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
-  return m ? `${m[1]} ${m[2]}${m[3] || ""}`.trim() : t;
+  return t;
 };
 
 // Load via shared service (memoized)
