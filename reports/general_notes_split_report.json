@@ -1,0 +1,524 @@
+[
+  {
+    "file": "public/general_notes.csv",
+    "totalRows": 2782,
+    "rowsModified": 149,
+    "rowsRemoved": 466,
+    "newRecords": 552,
+    "segmentsMoved": 586,
+    "ambiguousSegments": 213,
+    "ambiguousSamples": [
+      {
+        "record_id": "note-000016",
+        "note_type": "生態情報",
+        "segment": "沖縄島ではマルバニッケイの枯れ枝から羽化。"
+      },
+      {
+        "record_id": "note-000020",
+        "note_type": "生態情報",
+        "segment": "オオイタビの葉より成虫を羽化脱出させた記録あり。"
+      },
+      {
+        "record_id": "note-000041",
+        "note_type": "生態情報",
+        "segment": "モミの樹皮下で越冬し。"
+      },
+      {
+        "record_id": "note-000118",
+        "note_type": "生態情報",
+        "segment": "新成虫は秋に羽化脱出してエノキの生葉を後食し。"
+      },
+      {
+        "record_id": "note-000118",
+        "note_type": "生態情報",
+        "segment": "樹皮下などで野外越冬する。"
+      },
+      {
+        "record_id": "note-000249",
+        "note_type": "生態情報",
+        "segment": "幼虫期前半の食草はシソ科のカメバヒキオコシ・クロバナヒキオコシの花穂。"
+      },
+      {
+        "record_id": "note-000351",
+        "note_type": "出現時期",
+        "segment": "8月(山地では6~7月。"
+      },
+      {
+        "record_id": "note-000352",
+        "note_type": "出現時期",
+        "segment": "4~8月(山地では8~10月)"
+      },
+      {
+        "record_id": "note-000431",
+        "note_type": "出現時期",
+        "segment": "4~7月(山地では7~9月)"
+      },
+      {
+        "record_id": "note-000434",
+        "note_type": "出現時期",
+        "segment": "4~6月(低山地では5~8月)"
+      },
+      {
+        "record_id": "note-000452",
+        "note_type": "出現時期",
+        "segment": "4~6月(山地では6~8月)"
+      },
+      {
+        "record_id": "note-000455",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000456",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000457",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000458",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000459",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000460",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000461",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000463",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000464",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000465",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000466",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~8月)"
+      },
+      {
+        "record_id": "note-000467",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000468",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000469",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000470",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000471",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000473",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000474",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000475",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000477",
+        "note_type": "出現時期",
+        "segment": "4~6月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000479",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000480",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000481",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000483",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000505",
+        "note_type": "出現時期",
+        "segment": "低山地では4-5月"
+      },
+      {
+        "record_id": "note-000519",
+        "note_type": "出現時期",
+        "segment": "山地では7-8月。"
+      },
+      {
+        "record_id": "note-000567",
+        "note_type": "出現時期",
+        "segment": "関東地方の平地・丘陵部では2月上旬から3月上旬。"
+      },
+      {
+        "record_id": "note-000568",
+        "note_type": "出現時期",
+        "segment": "北海道や関東周辺の山地では4月中旬から5月上旬。"
+      },
+      {
+        "record_id": "note-000569",
+        "note_type": "出現時期",
+        "segment": "関東地方の山地では11月上旬から下旬。"
+      },
+      {
+        "record_id": "note-000571",
+        "note_type": "出現時期",
+        "segment": "関東地方の平地では3月中旬~4月上旬。"
+      },
+      {
+        "record_id": "note-000571",
+        "note_type": "出現時期",
+        "segment": "山地では4月下旬~5月上旬。"
+      },
+      {
+        "record_id": "note-000572",
+        "note_type": "出現時期",
+        "segment": "関東平地では2月中旬~3月上旬(暖冬年は1月上旬から)。"
+      },
+      {
+        "record_id": "note-000572",
+        "note_type": "出現時期",
+        "segment": "山地や高緯度地域では4月中旬~5月上旬。"
+      },
+      {
+        "record_id": "note-000573",
+        "note_type": "出現時期",
+        "segment": "関東平地では12月中旬頃~1月中旬。"
+      },
+      {
+        "record_id": "note-000574",
+        "note_type": "出現時期",
+        "segment": "関東平地では12月中旬~1月上旬。"
+      },
+      {
+        "record_id": "note-000574",
+        "note_type": "出現時期",
+        "segment": "山地では11月上旬~12月上旬。"
+      },
+      {
+        "record_id": "note-000575",
+        "note_type": "出現時期",
+        "segment": "関東から中部の山地では10月中旬~11月中旬。"
+      },
+      {
+        "record_id": "note-000576",
+        "note_type": "出現時期",
+        "segment": "平地では2月上旬~3月上旬。"
+      },
+      {
+        "record_id": "note-000576",
+        "note_type": "出現時期",
+        "segment": "山地では3月中旬~4月上旬。"
+      }
+    ]
+  },
+  {
+    "file": "normalized_data/general_notes.csv",
+    "totalRows": 2856,
+    "rowsModified": 144,
+    "rowsRemoved": 465,
+    "newRecords": 550,
+    "segmentsMoved": 583,
+    "ambiguousSegments": 210,
+    "ambiguousSamples": [
+      {
+        "record_id": "note-000016",
+        "note_type": "生態情報",
+        "segment": "沖縄島ではマルバニッケイの枯れ枝から羽化。"
+      },
+      {
+        "record_id": "note-000020",
+        "note_type": "生態情報",
+        "segment": "オオイタビの葉より成虫を羽化脱出させた記録あり。"
+      },
+      {
+        "record_id": "note-000041",
+        "note_type": "生態情報",
+        "segment": "モミの樹皮下で越冬し。"
+      },
+      {
+        "record_id": "note-000118",
+        "note_type": "生態情報",
+        "segment": "新成虫は秋に羽化脱出してエノキの生葉を後食し。"
+      },
+      {
+        "record_id": "note-000118",
+        "note_type": "生態情報",
+        "segment": "樹皮下などで野外越冬する。"
+      },
+      {
+        "record_id": "note-000249",
+        "note_type": "生態情報",
+        "segment": "幼虫期前半の食草はシソ科のカメバヒキオコシ・クロバナヒキオコシの花穂。"
+      },
+      {
+        "record_id": "note-000351",
+        "note_type": "出現時期",
+        "segment": "8月(山地では6~7月。"
+      },
+      {
+        "record_id": "note-000352",
+        "note_type": "出現時期",
+        "segment": "4~8月(山地では8~10月)"
+      },
+      {
+        "record_id": "note-000431",
+        "note_type": "出現時期",
+        "segment": "4~7月(山地では7~9月)"
+      },
+      {
+        "record_id": "note-000434",
+        "note_type": "出現時期",
+        "segment": "4~6月(低山地では5~8月)"
+      },
+      {
+        "record_id": "note-000452",
+        "note_type": "出現時期",
+        "segment": "4~6月(山地では6~8月)"
+      },
+      {
+        "record_id": "note-000455",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000456",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000457",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000458",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000459",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000460",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000461",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000463",
+        "note_type": "出現時期",
+        "segment": "5~6月(山地では7~8月)"
+      },
+      {
+        "record_id": "note-000464",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000465",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000466",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~8月)"
+      },
+      {
+        "record_id": "note-000467",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000468",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000469",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000470",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000471",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000473",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000474",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000475",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000477",
+        "note_type": "出現時期",
+        "segment": "4~6月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000479",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000480",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000481",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000483",
+        "note_type": "出現時期",
+        "segment": "4~5月(山地では6~7月)"
+      },
+      {
+        "record_id": "note-000505",
+        "note_type": "出現時期",
+        "segment": "低山地では4-5月"
+      },
+      {
+        "record_id": "note-000519",
+        "note_type": "出現時期",
+        "segment": "山地では7-8月。"
+      },
+      {
+        "record_id": "note-000567",
+        "note_type": "出現時期",
+        "segment": "関東地方の平地・丘陵部では2月上旬から3月上旬。"
+      },
+      {
+        "record_id": "note-000568",
+        "note_type": "出現時期",
+        "segment": "北海道や関東周辺の山地では4月中旬から5月上旬。"
+      },
+      {
+        "record_id": "note-000569",
+        "note_type": "出現時期",
+        "segment": "関東地方の山地では11月上旬から下旬。"
+      },
+      {
+        "record_id": "note-000571",
+        "note_type": "出現時期",
+        "segment": "関東地方の平地では3月中旬~4月上旬。"
+      },
+      {
+        "record_id": "note-000571",
+        "note_type": "出現時期",
+        "segment": "山地では4月下旬~5月上旬。"
+      },
+      {
+        "record_id": "note-000572",
+        "note_type": "出現時期",
+        "segment": "関東平地では2月中旬~3月上旬(暖冬年は1月上旬から)。"
+      },
+      {
+        "record_id": "note-000572",
+        "note_type": "出現時期",
+        "segment": "山地や高緯度地域では4月中旬~5月上旬。"
+      },
+      {
+        "record_id": "note-000573",
+        "note_type": "出現時期",
+        "segment": "関東平地では12月中旬頃~1月中旬。"
+      },
+      {
+        "record_id": "note-000574",
+        "note_type": "出現時期",
+        "segment": "関東平地では12月中旬~1月上旬。"
+      },
+      {
+        "record_id": "note-000574",
+        "note_type": "出現時期",
+        "segment": "山地では11月上旬~12月上旬。"
+      },
+      {
+        "record_id": "note-000575",
+        "note_type": "出現時期",
+        "segment": "関東から中部の山地では10月中旬~11月中旬。"
+      },
+      {
+        "record_id": "note-000576",
+        "note_type": "出現時期",
+        "segment": "平地では2月上旬~3月上旬。"
+      },
+      {
+        "record_id": "note-000576",
+        "note_type": "出現時期",
+        "segment": "山地では3月中旬~4月上旬。"
+      }
+    ]
+  }
+]
