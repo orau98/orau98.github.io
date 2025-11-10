@@ -652,6 +652,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   // Get all available images for this plant (try canonical + aliases)
   const getPlantImages = (plantName, altNames = [], nameIndex = null) => {
+    if (!Array.isArray(nameIndex) || nameIndex.length === 0) {
+      return [];
+    }
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
