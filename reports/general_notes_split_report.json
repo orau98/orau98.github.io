@@ -1,23 +1,13 @@
 [
   {
     "file": "public/general_notes.csv",
-    "totalRows": 2782,
-    "rowsModified": 149,
-    "rowsRemoved": 466,
-    "newRecords": 552,
-    "segmentsMoved": 586,
-    "ambiguousSegments": 213,
+    "totalRows": 3674,
+    "rowsModified": 72,
+    "rowsRemoved": 16,
+    "newRecords": 88,
+    "segmentsMoved": 92,
+    "ambiguousSegments": 192,
     "ambiguousSamples": [
-      {
-        "record_id": "note-000016",
-        "note_type": "生態情報",
-        "segment": "沖縄島ではマルバニッケイの枯れ枝から羽化。"
-      },
-      {
-        "record_id": "note-000020",
-        "note_type": "生態情報",
-        "segment": "オオイタビの葉より成虫を羽化脱出させた記録あり。"
-      },
       {
         "record_id": "note-000041",
         "note_type": "生態情報",
@@ -26,17 +16,7 @@
       {
         "record_id": "note-000118",
         "note_type": "生態情報",
-        "segment": "新成虫は秋に羽化脱出してエノキの生葉を後食し。"
-      },
-      {
-        "record_id": "note-000118",
-        "note_type": "生態情報",
         "segment": "樹皮下などで野外越冬する。"
-      },
-      {
-        "record_id": "note-000249",
-        "note_type": "生態情報",
-        "segment": "幼虫期前半の食草はシソ科のカメバヒキオコシ・クロバナヒキオコシの花穂。"
       },
       {
         "record_id": "note-000351",
@@ -257,28 +237,38 @@
         "record_id": "note-000576",
         "note_type": "出現時期",
         "segment": "山地では3月中旬~4月上旬。"
+      },
+      {
+        "record_id": "note-000577",
+        "note_type": "出現時期",
+        "segment": "関東平地から低山帯では1月上旬~3月上旬(近年は12月下旬から)。"
+      },
+      {
+        "record_id": "note-000577",
+        "note_type": "出現時期",
+        "segment": "山地では4月中旬~5月中旬。"
+      },
+      {
+        "record_id": "note-000578",
+        "note_type": "出現時期",
+        "segment": "関東地方周辺の山地では4月中旬~5月上旬。"
+      },
+      {
+        "record_id": "note-000579",
+        "note_type": "出現時期",
+        "segment": "関東地方の平地から丘陵部では2月下旬~3月中旬。"
       }
     ]
   },
   {
     "file": "normalized_data/general_notes.csv",
-    "totalRows": 2856,
-    "rowsModified": 144,
-    "rowsRemoved": 465,
-    "newRecords": 550,
-    "segmentsMoved": 583,
-    "ambiguousSegments": 210,
+    "totalRows": 3747,
+    "rowsModified": 71,
+    "rowsRemoved": 16,
+    "newRecords": 87,
+    "segmentsMoved": 91,
+    "ambiguousSegments": 191,
     "ambiguousSamples": [
-      {
-        "record_id": "note-000016",
-        "note_type": "生態情報",
-        "segment": "沖縄島ではマルバニッケイの枯れ枝から羽化。"
-      },
-      {
-        "record_id": "note-000020",
-        "note_type": "生態情報",
-        "segment": "オオイタビの葉より成虫を羽化脱出させた記録あり。"
-      },
       {
         "record_id": "note-000041",
         "note_type": "生態情報",
@@ -287,17 +277,7 @@
       {
         "record_id": "note-000118",
         "note_type": "生態情報",
-        "segment": "新成虫は秋に羽化脱出してエノキの生葉を後食し。"
-      },
-      {
-        "record_id": "note-000118",
-        "note_type": "生態情報",
         "segment": "樹皮下などで野外越冬する。"
-      },
-      {
-        "record_id": "note-000249",
-        "note_type": "生態情報",
-        "segment": "幼虫期前半の食草はシソ科のカメバヒキオコシ・クロバナヒキオコシの花穂。"
       },
       {
         "record_id": "note-000351",
@@ -518,6 +498,26 @@
         "record_id": "note-000576",
         "note_type": "出現時期",
         "segment": "山地では3月中旬~4月上旬。"
+      },
+      {
+        "record_id": "note-000577",
+        "note_type": "出現時期",
+        "segment": "関東平地から低山帯では1月上旬~3月上旬(近年は12月下旬から)。"
+      },
+      {
+        "record_id": "note-000577",
+        "note_type": "出現時期",
+        "segment": "山地では4月中旬~5月中旬。"
+      },
+      {
+        "record_id": "note-000578",
+        "note_type": "出現時期",
+        "segment": "関東地方周辺の山地では4月中旬~5月上旬。"
+      },
+      {
+        "record_id": "note-000579",
+        "note_type": "出現時期",
+        "segment": "関東地方の平地から丘陵部では2月下旬~3月中旬。"
       }
     ]
   }

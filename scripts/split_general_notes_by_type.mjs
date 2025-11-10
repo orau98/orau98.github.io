@@ -25,11 +25,12 @@ const files = targets.length ? targets : DEFAULT_FILES;
 
 const EMERGENCE_REGEXES = [
   /[0-9０-９]{1,2}\s*(?:[~〜\-–—−－―]\s*[0-9０-９]{1,2})?\s*月/,
-  /(初春|早春|春|晩春|梅雨|初夏|盛夏|晩夏|初秋|仲秋|晩秋|初冬|真冬|厳冬|晩冬|冬|越冬|越夏|越年|周年|通年)/,
+  /(初春|早春|春|晩春|梅雨|初夏|盛夏|晩夏|初秋|仲秋|晩秋|初冬|真冬|厳冬|晩冬|冬|越冬|越夏|越年|周年|通年|春季|夏季|秋季|冬季|春期|夏期|秋期|冬期)/,
   /(上旬|中旬|下旬|頃|ごろ|ころ|前半|後半)/,
   /(?:[0-9０-９一二三四五六七八九十]+|数)\s*(?:化|世代)/,
   /(発生|出現|羽化|活動|出没|現れる|飛翔|出る)\s*(?:時期|期)?/,
-  /(成虫|幼虫|蛹)[^。．\.！？!?、，；;]*(?:期|時期|出現|活動)/,
+  /(新成虫|羽化脱出|羽脱)/,
+  /(成虫|幼虫|蛹)[^。．\.！？!?、，；;]*(?:期|時期|出現|活動|越冬|越夏)/,
 ];
 
 const ECOLOGY_REGEXES = [
@@ -83,29 +84,37 @@ function formatSegment(text) {
   return t;
 }
 
+function analyzeFlags(text = '') {
+  const prepared = normalizeForDetection(text);
+  const hasEmergence = EMERGENCE_REGEXES.some(re => re.test(prepared));
+  const hasEcology = ECOLOGY_REGEXES.some(re => re.test(prepared));
+  return { hasEmergence, hasEcology };
+}
+
 function maybeSplitAmbiguous(segment) {
-  const classification = classifyBasic(segment.clean);
-  if (classification !== 'both' || !/[、，]/.test(segment.clean)) return [segment];
+  const flags = analyzeFlags(segment.clean);
+  if (!(flags.hasEmergence && flags.hasEcology) || !/[、，]/.test(segment.clean)) return [segment];
   const clauses = segment.clean.split(/[、，]/).map(v => v.trim()).filter(Boolean);
   if (clauses.length <= 1) return [segment];
   const derived = clauses.map(cl => ({ raw: formatSegment(cl), clean: cl, derived: true }));
   return derived.flatMap(maybeSplitAmbiguous);
 }
 
-function classifyBasic(text = '') {
-  const prepared = normalizeForDetection(text);
-  const hasEmergence = EMERGENCE_REGEXES.some(re => re.test(prepared));
-  const hasEcology = ECOLOGY_REGEXES.some(re => re.test(prepared));
-  if (hasEmergence && hasEcology) return 'both';
+const ADULT_CUES = /(成虫|新成虫|羽化|羽化脱出|羽脱|飛翔|灯火|採集|発生|出現|蛹化直後|成虫で越冬)/;
+const IMMATURE_CUES = /(幼虫|若齢|終齢|蛹|卵|幼生|幼虫で越冬|蛹で越冬|幼虫越冬|蛹越冬|産卵)/;
+
+function classifySegment(segment) {
+  const { hasEmergence, hasEcology } = analyzeFlags(segment.clean);
+  if (hasEmergence && hasEcology) {
+    const hasAdult = ADULT_CUES.test(segment.clean);
+    const hasImmature = IMMATURE_CUES.test(segment.clean);
+    if (hasAdult && !hasImmature) return 'emergence';
+    if (hasImmature && !hasAdult) return 'ecology';
+    return 'ambiguous';
+  }
   if (hasEmergence) return 'emergence';
   if (hasEcology) return 'ecology';
   return 'unknown';
-}
-
-function classifySegment(segment) {
-  const basic = classifyBasic(segment.clean);
-  if (basic === 'both') return 'ambiguous';
-  return basic;
 }
 
 function joinSegments(segments) {
