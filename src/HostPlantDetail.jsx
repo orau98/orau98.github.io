@@ -107,6 +107,8 @@ const PlantImageGallery = ({ images }) => {
     if (!Array.isArray(images) || images.length === 0) {
       setAvailableImages([]);
       setMainImage(null);
+      setSelectedImage(null);
+      setModalOpen(false);
       setLoading(false);
       return;
     }
@@ -120,6 +122,8 @@ const PlantImageGallery = ({ images }) => {
     }));
     setAvailableImages(normalized);
     setMainImage(normalized[0]);
+    setSelectedImage(normalized[0]);
+    setModalOpen(false);
     setLoading(false);
   }, [images]);
 
@@ -140,8 +144,10 @@ const PlantImageGallery = ({ images }) => {
       }
 
       const updated = prev.filter((img) => img.id !== imageId);
-      if (mainImage?.id === imageId) setMainImage(updated[0] || null);
-      if (selectedImage?.id === imageId) setSelectedImage(null);
+      const fallbackImage = updated[0] || null;
+      if (mainImage?.id === imageId) setMainImage(fallbackImage);
+      if (selectedImage?.id === imageId) setSelectedImage(fallbackImage);
+      if (!fallbackImage) setModalOpen(false);
       return updated;
     });
   };
@@ -166,6 +172,7 @@ const PlantImageGallery = ({ images }) => {
   }
 
   const handleImageClick = (image) => {
+    if (!image) return;
     setSelectedImage(image);
     setModalOpen(true);
   };
@@ -246,7 +253,10 @@ const PlantImageGallery = ({ images }) => {
                       ? 'ring-3 ring-emerald-500 ring-offset-2 dark:ring-offset-slate-900' 
                       : ''
                   }`}
-                  onClick={() => setMainImage(image)}
+                  onClick={() => {
+                    setMainImage(image);
+                    setSelectedImage(image);
+                  }}
                 >
                   <div className="relative aspect-square bg-emerald-50 dark:bg-emerald-900/20">
                     {(() => {
