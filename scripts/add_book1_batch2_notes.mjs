@@ -88,13 +88,42 @@ function sortNotes(rows) {
   });
 }
 
-function main() {
+function loadBatch2Data() {
   if (!fs.existsSync(DATA_PATH)) {
     console.error(`Data file not found: ${DATA_PATH}`);
     process.exit(1);
   }
-  const dataText = fs.readFileSync(DATA_PATH, 'utf8');
-  const dataRows = Papa.parse(dataText, { header: true, skipEmptyLines: false }).data.filter(r => r && Object.values(r).some(v => (v ?? '').toString().trim() !== ''));
+  const raw = fs.readFileSync(DATA_PATH, 'utf8').split(/\r?\n/);
+  const header = raw.shift();
+  const rows = [];
+  for (const line of raw) {
+    if (!line || !line.trim()) continue;
+    const sanitized = line.replace(/\\"/g, '"');
+    const lastComma = sanitized.lastIndexOf(',');
+    if (lastComma === -1) continue;
+    const ecologyRaw = sanitized.slice(lastComma + 1).trim();
+    const beforeEco = sanitized.slice(0, lastComma);
+    const secondLastComma = beforeEco.lastIndexOf(',');
+    if (secondLastComma === -1) continue;
+    const adultRaw = beforeEco.slice(secondLastComma + 1).trim();
+    const prefix = beforeEco.slice(0, secondLastComma);
+    const firstComma = prefix.indexOf(',');
+    if (firstComma === -1) continue;
+    const japanese = prefix.slice(0, firstComma).trim();
+    const scientific = prefix.slice(firstComma + 1).trim();
+    const cleanField = (value) => value.replace(/^\"/, '').replace(/\"$/, '').trim();
+    rows.push({
+      '和名': japanese,
+      '学名': scientific,
+      '成虫時期': cleanField(adultRaw),
+      '生態の備考': cleanField(ecologyRaw),
+    });
+  }
+  return rows;
+}
+
+function main() {
+  const dataRows = loadBatch2Data();
   const { byJapanese, byScientific, byGenusSpecies } = buildInsectIndex();
   const indexes = { byJapanese, byScientific, byGenusSpecies };
 
