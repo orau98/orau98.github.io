@@ -456,6 +456,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
 
   const classificationFilter = searchParams.get('classification');
+  const lastAppliedClassificationRef = useRef(null);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   // Restore scroll position and page when returning from detail page
@@ -480,12 +481,18 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     }
   }, []);
 
-  // Set initial search term from URL parameter
+  // Sync search term with classification filter and clear when filter removed
   useEffect(() => {
-    if (classificationFilter && !searchTerm) {
+    if (classificationFilter) {
       setSearchTerm(classificationFilter);
+      lastAppliedClassificationRef.current = classificationFilter;
+    } else if (lastAppliedClassificationRef.current) {
+      setSearchTerm((prev) =>
+        prev === lastAppliedClassificationRef.current ? '' : prev
+      );
+      lastAppliedClassificationRef.current = null;
     }
-  }, [classificationFilter, searchTerm]);
+  }, [classificationFilter]);
 
   // （メタは useSeoMeta に移行）
 

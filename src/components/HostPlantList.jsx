@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
@@ -424,13 +424,20 @@ const HostPlantList = ({
   const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
   const [searchParams] = useSearchParams();
   const classificationFilter = searchParams.get("classification");
+  const lastAppliedClassificationRef = useRef(null);
 
   // Initialize plant search term from URL (classification=...)
   useEffect(() => {
-    if (classificationFilter && !plantSearchTerm) {
+    if (classificationFilter) {
       setPlantSearchTerm(classificationFilter);
+      lastAppliedClassificationRef.current = classificationFilter;
+    } else if (lastAppliedClassificationRef.current) {
+      setPlantSearchTerm((prev) =>
+        prev === lastAppliedClassificationRef.current ? "" : prev,
+      );
+      lastAppliedClassificationRef.current = null;
     }
-  }, [classificationFilter, plantSearchTerm]);
+  }, [classificationFilter]);
 
   // （メタは useSeoMeta に移行）
 

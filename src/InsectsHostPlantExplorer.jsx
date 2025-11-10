@@ -699,7 +699,7 @@ const InsectsHostPlantExplorer = React.memo(
                           aria-controls="bibliography-list"
                           className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-white/70 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-800/90 transition-colors"
                         >
-                          <span>主要引用文献（書誌情報）</span>
+                          <span>主要引用文献</span>
                           <span
                             className={`ml-3 transform transition-transform ${showBibliography ? "rotate-90" : ""}`}
                           >

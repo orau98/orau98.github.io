@@ -111,6 +111,14 @@ export const bibliography = [
     place: 'つくば'
   },
   {
+    key: 'nihon-no-hamakiga-2',
+    title: '日本のハマキガ 2',
+    authors: ['那須 義次'],
+    year: '2023-07',
+    publisher: '日本蛾類学会',
+    place: 'つくば'
+  },
+  {
     key: 'nihonsan-tamamushi-daizukan',
     title: '日本産タマムシ大図鑑',
     authors: ['大桃 定洋', '福富 宏和', '藤田 宏'],
