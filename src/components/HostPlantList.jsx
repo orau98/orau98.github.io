@@ -504,8 +504,11 @@ const HostPlantList = ({
         safePlantDetails[plantName],
       );
       const detail = safePlantDetails[plantName] || {};
-      const family = detail.family ? detail.family.toLowerCase() : "";
-      const genus = detail.genus ? detail.genus.toLowerCase() : "";
+      const family = (detail.family || "").toLowerCase();
+      const familyLatin = (detail.familyLatin || "").toLowerCase();
+      const genus = (detail.genus || "").toLowerCase();
+      const order = (detail.order || "").toLowerCase();
+      const orderLatin = (detail.orderLatin || "").toLowerCase();
       const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
       const aliasHit = aliases.some((a) => {
         const aLower = (a || "").toLowerCase();
@@ -521,8 +524,12 @@ const HostPlantList = ({
         plantName.toLowerCase().includes(katakanaSearchTerm) ||
         family.includes(lowerCaseSearchTerm) ||
         family.includes(katakanaSearchTerm) ||
+        familyLatin.includes(lowerCaseSearchTerm) ||
         genus.includes(lowerCaseSearchTerm) ||
         genus.includes(katakanaSearchTerm) ||
+        order.includes(lowerCaseSearchTerm) ||
+        order.includes(katakanaSearchTerm) ||
+        orderLatin.includes(lowerCaseSearchTerm) ||
         aliasHit
       );
     });

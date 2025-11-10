@@ -4,11 +4,7 @@ import csv, re, sys, os
 ROOT = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(ROOT, '..'))
 PUBLIC_INSECTS = os.path.join(ROOT, 'public', 'insects.csv')
-# Prefer the timestamped ListMJ export if present; fallback to master
-LISTMJ_PATH = os.path.join(ROOT, 'ListMJ_hostplants_2025-07-17T13-57-59-642Z.csv')
-if not os.path.exists(LISTMJ_PATH):
-    # fallback
-    LISTMJ_PATH = os.path.join(ROOT, 'public', 'archive', 'legacy-data', 'ListMJ_hostplants_master.csv')
+LISTMJ_PATH = os.path.join(ROOT, 'public', 'archive', 'legacy-data', 'ListMJ_hostplants_master.csv')
 
 def read_csv(path):
     encs = ['utf-8-sig', 'utf-8']
@@ -158,4 +154,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

@@ -146,6 +146,8 @@ function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
         family: '',
         familyName: '',
         familyLatin: '',
+        order: '',
+        orderLatin: '',
         scientificName: '',
         genus: '',
         aliases: new Set()
@@ -194,6 +196,8 @@ function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
       detail.family = detail.family && detail.family !== '不明' ? detail.family : yDetail.familyJp || detail.family;
       detail.familyName = detail.familyName || yDetail.familyJp || detail.family;
       detail.familyLatin = detail.familyLatin || yDetail.familyEn || '';
+      detail.order = detail.order || yDetail.orderJp || '';
+      detail.orderLatin = detail.orderLatin || yDetail.orderEn || '';
       const sci = yDetail.scientificName || detail.scientificName || '';
       detail.scientificName = sci || detail.scientificName || '';
       if (sci && !detail.genus) {
@@ -220,6 +224,8 @@ function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
       family: detail.family || detail.familyName || '',
       familyName: detail.familyName || detail.family || '',
       familyLatin: detail.familyLatin || '',
+      order: detail.order || '',
+      orderLatin: detail.orderLatin || '',
       scientificName: detail.scientificName || '',
       genus: detail.genus || '',
       aliases

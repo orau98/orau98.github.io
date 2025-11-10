@@ -131,15 +131,19 @@ function App() {
             Object.entries(plantInfoRaw).forEach(([name, detail]) => {
               if (!name) return;
               const familyJp = detail?.familyJp || '';
+              const familyLatin = detail?.familyEn || '';
               const scientific = detail?.scientificName || '';
               const genus = scientific ? scientific.split(' ')[0] : '';
               const aliases = Array.isArray(detail?.aliases) ? detail.aliases.filter(Boolean) : [];
+              const orderLatin = detail?.orderEn || '';
               plantDetailsLite[name] = {
                 family: familyJp || '不明',
                 familyName: familyJp || '不明',
+                familyLatin: familyLatin || '',
                 scientificName: scientific,
                 genus,
                 order: detail?.orderJp || '',
+                orderLatin: orderLatin || '',
                 aliases,
               };
             });
@@ -266,8 +270,11 @@ function App() {
                       next[plant] = plantDetailsLite[plant] || {
                         family: family || '不明',
                         familyName: family || '不明',
+                        familyLatin: '',
                         scientificName: '',
                         genus: '',
+                        order: '',
+                        orderLatin: '',
                         aliases: [],
                       };
                       changed = true;
