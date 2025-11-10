@@ -1,0 +1,53 @@
+{
+  "removed_count": 8,
+  "removed_records": [
+    {
+      "removed": "note-200456",
+      "kept": "note-900160",
+      "insect_id": "species-3434",
+      "note_type": "生態情報"
+    },
+    {
+      "removed": "note-200462",
+      "kept": "note-900164",
+      "insect_id": "species-3437",
+      "note_type": "生態情報"
+    },
+    {
+      "removed": "note-200466",
+      "kept": "note-900167",
+      "insect_id": "species-3439",
+      "note_type": "生態情報"
+    },
+    {
+      "removed": "note-200483",
+      "kept": "note-900202",
+      "insect_id": "species-3458",
+      "note_type": "生態情報"
+    },
+    {
+      "removed": "note-200493",
+      "kept": "note-900069-E01",
+      "insect_id": "species-3464",
+      "note_type": "出現時期"
+    },
+    {
+      "removed": "note-900147-E01",
+      "kept": "note-B1B2-E-202511102102-070",
+      "insect_id": "species-3504",
+      "note_type": "出現時期"
+    },
+    {
+      "removed": "note-200660-E01",
+      "kept": "note-900339-E01",
+      "insect_id": "species-3547",
+      "note_type": "出現時期"
+    },
+    {
+      "removed": "note-200663",
+      "kept": "note-900344",
+      "insect_id": "species-3550",
+      "note_type": "出現時期"
+    }
+  ]
+}
