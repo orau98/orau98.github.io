@@ -5900,16 +5900,100 @@ function App() {
       {loading ? (
         <SkeletonLoader />
       ) : (
-        <React.Suspense fallback={<SkeletonLoader />}>
-          <Routes>
-            <Route path="/" element={<InsectsHostPlantExplorer moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} theme={theme} setTheme={setTheme} summaryCounts={summaryCounts} onNeedInsectsData={() => { try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {} }} />} />
-            <Route path="/moth/:mothId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
-            <Route path="/butterfly/:butterflyId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
-            <Route path="/beetle/:beetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
-            <Route path="/leafbeetle/:leafbeetleId" element={<MothDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} />} />
-            <Route path="/plant/:plantName" element={<HostPlantDetail moths={moths} butterflies={butterflies} beetles={beetles} leafbeetles={leafbeetles} hostPlants={hostPlants} plantDetails={plantDetails} />} />
-          </Routes>
-        </React.Suspense>
+        <>
+          <React.Suspense fallback={<SkeletonLoader />}>
+            <div
+              aria-hidden={!isHomePage}
+              style={isHomePage ? undefined : { display: 'none' }}
+            >
+              <InsectsHostPlantExplorer
+                moths={moths}
+                butterflies={butterflies}
+                beetles={beetles}
+                leafbeetles={leafbeetles}
+                hostPlants={hostPlants}
+                plantDetails={plantDetails}
+                theme={theme}
+                setTheme={setTheme}
+                summaryCounts={summaryCounts}
+                onNeedInsectsData={() => {
+                  try {
+                    ensureTypesLoaderRef.current &&
+                      ensureTypesLoaderRef.current();
+                  } catch {}
+                }}
+              />
+            </div>
+          </React.Suspense>
+
+          {!isHomePage && (
+            <React.Suspense fallback={<SkeletonLoader />}>
+              <Routes>
+                <Route
+                  path="/moth/:mothId"
+                  element={
+                    <MothDetail
+                      moths={moths}
+                      butterflies={butterflies}
+                      beetles={beetles}
+                      leafbeetles={leafbeetles}
+                      hostPlants={hostPlants}
+                    />
+                  }
+                />
+                <Route
+                  path="/butterfly/:butterflyId"
+                  element={
+                    <MothDetail
+                      moths={moths}
+                      butterflies={butterflies}
+                      beetles={beetles}
+                      leafbeetles={leafbeetles}
+                      hostPlants={hostPlants}
+                    />
+                  }
+                />
+                <Route
+                  path="/beetle/:beetleId"
+                  element={
+                    <MothDetail
+                      moths={moths}
+                      butterflies={butterflies}
+                      beetles={beetles}
+                      leafbeetles={leafbeetles}
+                      hostPlants={hostPlants}
+                    />
+                  }
+                />
+                <Route
+                  path="/leafbeetle/:leafbeetleId"
+                  element={
+                    <MothDetail
+                      moths={moths}
+                      butterflies={butterflies}
+                      beetles={beetles}
+                      leafbeetles={leafbeetles}
+                      hostPlants={hostPlants}
+                    />
+                  }
+                />
+                <Route
+                  path="/plant/:plantName"
+                  element={
+                    <HostPlantDetail
+                      moths={moths}
+                      butterflies={butterflies}
+                      beetles={beetles}
+                      leafbeetles={leafbeetles}
+                      hostPlants={hostPlants}
+                      plantDetails={plantDetails}
+                    />
+                  }
+                />
+              </Routes>
+            </React.Suspense>
+          )}
+        </>
       )}
       <Footer />
     </div>
