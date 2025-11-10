@@ -1,0 +1,9 @@
+{
+  "source": "data/moth_ecology_book1_batch5.csv",
+  "added_records": 11,
+  "added_emergence": 6,
+  "added_ecology": 5,
+  "skipped_emergence_due_to_placeholder": 0,
+  "skipped_ecology_due_to_placeholder": 0,
+  "unmatched_entries": []
+}
