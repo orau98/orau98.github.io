@@ -6122,8 +6122,7 @@ species-6106,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族
 species-6107,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Dasypolia,,fani,,Staudinger,1892,オガサワラヒゲヨトウ,,,,"Dasypolia fani Staudinger, 1892",,,
 species-6108,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Blepharita,,amica,,(Treitschke),1825,ムラサキハガタヨトウ,ムラサキハガタヨトウ,,,"Blepharita amica (Treitschke, 1825)",,,
 species-6109,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Mniotype,,melanodonta,,(Hampson),1906,オオハガタヨトウ,,,,"Mniotype melanodonta (Hampson, 1906)",,,
-species-6110,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Mniotype,,bathensis,,(Lützau),1901,ミヤマハガタヨトウ,,,,"Mniotype bathensis (Lützau, 1901)",,,
-species-6111,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Xylopolia,,bella,,(Butler),1881,クロスジキリガ,クロスジキリガ,,,"Xylopolia bella (Butler, 1881)",,,
+species-6110,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Mniotype,,bathensis,,(Lützau),1901,ミヤマハガタヨトウ,,,,"Mniotype bathensis (Lützau, 1901)",,多食性だと思われる species-6111,Noctuidae
 species-6112,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Egira,,saxea,,(Leech),[1889],ケンモンキリガ,,,,"Egira saxea (Leech, 1889)",,,
 species-6113,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Panolis,,japonica,,Draudt,1935,マツキリガ,,,,"Panolis japonica Draudt, 1935",,,
 species-6114,Noctuidae,ヤガ科,Hadeninae,ヨトウガ亜科,Orthosiini,オルトシア族,Pseudopanolis,,takao,,Inaba,1927,タカオキリガ,,,,"Pseudopanolis takao Inaba, 1927",,,
@@ -7359,6 +7358,7 @@ species-20475,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モン�
 species-20476,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Xestia,,speciosa,,Hübner,[1813],アルプスヤガ,,,,"Xestia speciosa (Hübner, [1813])",,,
 species-20477,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Xestia,,sincera,,Herrich-Schäffer,1851,アトジロアルプスヤガ,,,,"Xestia sincera (Herrich-Schäffer, 1851)",,,
 species-20478,Noctuidae,ヤガ科,Noctuinae,モンヤガ亜科,Noctuini,モンヤガ族,Xestia,,descripta,,Bremer,1861,アサマウスモンヤガ,,,,"Xestia descripta (Bremer, 1861)",,,
+,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
