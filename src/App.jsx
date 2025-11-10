@@ -38,6 +38,16 @@ const plantScientificNameMap = {
   'コナラ': 'Quercus serrata',
 };
 
+const safeDeepClone = (obj) => {
+  if (!obj) return {};
+  try {
+    return JSON.parse(JSON.stringify(obj));
+  } catch (error) {
+    logger.debug('safeDeepClone fallback due to error:', error);
+    return { ...obj };
+  }
+};
+
 function App() {
   const location = useLocation();
   const [moths, setMoths] = useState([]);
@@ -402,7 +412,7 @@ function App() {
       }
       let mainMothData = [];
       let hostPlantData = {};
-      let plantDetailData = {};
+        let plantDetailData = safeDeepClone(plantDetailsLite);
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
       const mainCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}ListMJ_hostplants_master.csv?v=${Date.now()}&bust=${Math.random()}&nocache=${Date.now()}&t=${performance.now()}`
@@ -2037,6 +2047,8 @@ function App() {
         let yListPlantFamilyMap = {};
         let yListPlantScientificNameMap = {};
         let yListPlantAliasMap = {};
+        let yListPlantOrderMap = {};
+        let yListPlantOrderLatinMap = {};
         let yListPlantNames = new Set();
         
         if (yListText) {
@@ -2052,6 +2064,8 @@ function App() {
               const familyJp = row['LAPG 科名']?.trim();
               const scientificName = row['学名']?.trim();
               const aliases = row['別名']?.trim();
+              const orderJp = row['LAPGII::LAPG 目']?.trim() || row['LAPGII::LAPG 目(広義)']?.trim();
+              const orderEn = row['LAPGII::LAPG Order']?.trim();
 
               if (plantName) {
                 yListPlantNames.add(plantName);
@@ -2069,6 +2083,12 @@ function App() {
               }
               if (plantName && scientificName) {
                 yListPlantScientificNameMap[plantName] = scientificName;
+              }
+              if (plantName && orderJp) {
+                yListPlantOrderMap[plantName] = orderJp;
+              }
+              if (plantName && orderEn) {
+                yListPlantOrderLatinMap[plantName] = orderEn;
               }
               if (plantName && aliases) {
                 // Parse aliases - they can be separated by commas or Japanese comma
@@ -4190,21 +4210,52 @@ function App() {
                     hostPlantData[validPlant].push(mothName);
                   }
 
-                  if (!plantDetailData[validPlant]) plantDetailData[validPlant] = {}; // Ensure it's an object
+                  const detail = plantDetailData[validPlant] || (plantDetailData[validPlant] = {});
                   // Check if the plant name itself is a family name (ends with 科)
                   if (validPlant.endsWith('科')) {
-                    plantDetailData[validPlant].family = validPlant;
+                    if (!detail.family || detail.family === '不明') detail.family = validPlant;
+                    if (!detail.familyName) detail.familyName = validPlant;
                   } else {
-                    plantDetailData[validPlant].family = yListPlantFamilyMap[validPlant] || wameiFamilyMap[validPlant] || plantFamilyMap[validPlant] || '不明';
+                    const fallbackFamily = yListPlantFamilyMap[validPlant] || wameiFamilyMap[validPlant] || plantFamilyMap[validPlant] || '不明';
+                    if (!detail.family || detail.family === '不明') detail.family = fallbackFamily;
+                    if (!detail.familyName && detail.family && detail.family !== '不明') {
+                      detail.familyName = detail.family;
+                    }
                   }
-                  plantDetailData[validPlant].scientificName = yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '';
-                  plantDetailData[validPlant].genus = (yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '').split(' ')[0] || '';
-                  plantDetailData[validPlant].aliases = yListPlantAliasMap[validPlant] || [];
-                  
+
+                  if (!detail.scientificName) {
+                    detail.scientificName = yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '';
+                  }
+                  if (!detail.genus) {
+                    const genusCandidate = detail.scientificName || yListPlantScientificNameMap[validPlant] || plantScientificNameMap[validPlant] || '';
+                    detail.genus = genusCandidate ? genusCandidate.split(' ')[0] : '';
+                  }
+
+                  const existingAliases = Array.isArray(detail.aliases) ? detail.aliases : [];
+                  const aliasSet = new Set(existingAliases);
+                  (yListPlantAliasMap[validPlant] || []).forEach((alias) => alias && aliasSet.add(alias));
+                  detail.aliases = Array.from(aliasSet);
+
+                  if (!detail.familyName && detail.family && detail.family !== '不明') {
+                    detail.familyName = detail.family;
+                  }
+
+                  if (!detail.order && yListPlantOrderMap[validPlant]) {
+                    detail.order = yListPlantOrderMap[validPlant];
+                  }
+                  if (!detail.orderLatin && yListPlantOrderLatinMap[validPlant]) {
+                    detail.orderLatin = yListPlantOrderLatinMap[validPlant];
+                  }
+
                   // Add genus mapping information if available
                   if (genusMapping[validPlant]) {
-                    plantDetailData[validPlant].genusFamily = genusMapping[validPlant].family;
-                    plantDetailData[validPlant].genusScientificName = genusMapping[validPlant].scientificName;
+                    const genusInfo = genusMapping[validPlant];
+                    if (!detail.genusFamily) detail.genusFamily = genusInfo.family;
+                    if (!detail.genusScientificName) detail.genusScientificName = genusInfo.scientificName;
+                    if (!detail.scientificName) detail.scientificName = genusInfo.scientificName;
+                    if (!detail.genus && genusInfo.scientificName) {
+                      detail.genus = genusInfo.scientificName.split(' ')[0] || detail.genus;
+                    }
                   }
                 }
               });
@@ -5307,12 +5358,24 @@ function App() {
             if (!existing.family || existing.family === '不明') {
               existing.family = incoming.family || existing.family;
             }
+            if (!existing.familyName && incoming.familyName) {
+              existing.familyName = incoming.familyName;
+            }
+            if (!existing.familyLatin && incoming.familyLatin) {
+              existing.familyLatin = incoming.familyLatin;
+            }
             // Fill missing core fields
             if (!existing.scientificName && incoming.scientificName) {
               existing.scientificName = incoming.scientificName;
             }
             if (!existing.genus && incoming.genus) {
               existing.genus = incoming.genus;
+            }
+            if (!existing.order && incoming.order) {
+              existing.order = incoming.order;
+            }
+            if (!existing.orderLatin && incoming.orderLatin) {
+              existing.orderLatin = incoming.orderLatin;
             }
             if (!existing.genusFamily && incoming.genusFamily) {
               existing.genusFamily = incoming.genusFamily;
@@ -5355,12 +5418,16 @@ function App() {
             const family = (yListPlantFamilyMap && (yListPlantFamilyMap[plant] || yListPlantFamilyMap[canonical])) || '不明';
             const scientificName = (yListPlantScientificNameMap && (yListPlantScientificNameMap[plant] || yListPlantScientificNameMap[canonical])) || '';
             const genus = scientificName ? scientificName.split(' ')[0] : '';
+            const order = (yListPlantOrderMap && (yListPlantOrderMap[plant] || yListPlantOrderMap[canonical])) || '';
+            const orderLatin = (yListPlantOrderLatinMap && (yListPlantOrderLatinMap[plant] || yListPlantOrderLatinMap[canonical])) || '';
 
             if (!cleanedPlantDetailData[plant]) {
               cleanedPlantDetailData[plant] = {
                 family,
                 scientificName,
                 genus,
+                order,
+                orderLatin,
                 aliases: Array.from(aliases)
               };
             } else {
@@ -5369,11 +5436,123 @@ function App() {
               existing.family = existing.family && existing.family !== '不明' ? existing.family : family;
               existing.scientificName = existing.scientificName || scientificName;
               existing.genus = existing.genus || genus;
+              if (!existing.order && order) existing.order = order;
+              if (!existing.orderLatin && orderLatin) existing.orderLatin = orderLatin;
               const aliasSet = new Set([...(existing.aliases || []), ...aliases]);
               existing.aliases = Array.from(aliasSet);
             }
           });
         }
+
+        const enrichGenusDetails = (detailMap) => {
+          const normalizeKey = (str = '') => (str || '').replace(/\s+/g, '');
+          const genusBase = (str = '') => normalizeKey(str).replace(/属$/, '');
+          const getOrderFromYList = (base) =>
+            yListPlantOrderMap[base] ||
+            yListPlantOrderMap[`${base}属`] ||
+            yListPlantOrderMap[`${base}類`] || '';
+          const getOrderLatinFromYList = (base) =>
+            yListPlantOrderLatinMap[base] ||
+            yListPlantOrderLatinMap[`${base}属`] ||
+            yListPlantOrderLatinMap[`${base}類`] || '';
+
+          const findDetailByNormalized = (target, skipName) => {
+            if (!target) return null;
+            const normalizedTarget = normalizeKey(target);
+            return Object.keys(detailMap).reduce((match, candidate) => {
+              if (match || candidate === skipName) return match;
+              if (normalizeKey(candidate) === normalizedTarget) {
+                return detailMap[candidate];
+              }
+              return null;
+            }, null);
+          };
+
+          Object.keys(detailMap).forEach((name) => {
+            if (!name || typeof name !== 'string') return;
+            const trimmedName = name.trim();
+            if (!trimmedName.endsWith('属')) return;
+            const canonical = genusBase(trimmedName);
+            if (!canonical) return;
+
+            const detail = detailMap[name] || (detailMap[name] = {});
+            let sourceDetail =
+              findDetailByNormalized(canonical, name) ||
+              findDetailByNormalized(`${canonical}類`, name);
+
+            if (!sourceDetail) {
+              sourceDetail = Object.entries(detailMap)
+                .filter(([candidateName]) =>
+                  candidateName !== name &&
+                  !candidateName.endsWith('属') &&
+                  normalizeKey(candidateName).includes(canonical)
+                )
+                .map(([, candidateDetail]) => candidateDetail)[0];
+            }
+
+            if (!sourceDetail) {
+              const lowerCanonical = canonical.toLowerCase();
+              sourceDetail = Object.values(detailMap).find((candidateDetail) => {
+                const genusLatin = (candidateDetail?.genus || '').toLowerCase();
+                const sciLatin = (candidateDetail?.scientificName || '').split(' ')[0]?.toLowerCase();
+                return (
+                  (genusLatin && genusLatin === lowerCanonical) ||
+                  (sciLatin && sciLatin === lowerCanonical)
+                );
+              });
+            }
+
+            if (!sourceDetail) {
+              const genusKey = Object.keys(genusMapping || {}).find(
+                (key) => genusBase(key) === canonical
+              );
+              if (genusKey) {
+                const info = genusMapping[genusKey];
+                sourceDetail = {
+                  family: info.family,
+                  familyName: info.family,
+                  genusScientificName: info.scientificName,
+                  scientificName: info.scientificName,
+                  genus: info.scientificName,
+                };
+              }
+            }
+
+            if (!sourceDetail) return;
+
+            const copyIfMissing = (field, value, allowUnknown = false) => {
+              if (!value) return;
+              if (!detail[field] || detail[field] === '' || (!allowUnknown && detail[field] === '不明')) {
+                detail[field] = value;
+              }
+            };
+
+            copyIfMissing('family', sourceDetail.family || sourceDetail.familyName, true);
+            copyIfMissing('familyName', sourceDetail.familyName || sourceDetail.family, true);
+            copyIfMissing('familyLatin', sourceDetail.familyLatin, true);
+            copyIfMissing('order', sourceDetail.order || getOrderFromYList(canonical), true);
+            copyIfMissing('orderLatin', sourceDetail.orderLatin || getOrderLatinFromYList(canonical), true);
+
+            if (!detail.scientificName) {
+              detail.scientificName =
+                sourceDetail.genusScientificName ||
+                sourceDetail.scientificName ||
+                '';
+            }
+            if (!detail.genus && detail.scientificName) {
+              detail.genus = detail.scientificName.split(' ')[0];
+            }
+
+            if (!Array.isArray(detail.aliases)) detail.aliases = [];
+            const aliasSet = new Set(detail.aliases);
+            const readableBase = trimmedName.replace(/属$/, '').trim();
+            if (readableBase) aliasSet.add(readableBase);
+            if (canonical && canonical !== readableBase) aliasSet.add(canonical);
+            detail.aliases = Array.from(aliasSet);
+          });
+        };
+
+        enrichGenusDetails(cleanedPlantDetailData);
 
         logger.debug("Final butterfly data:", butterflyData.length, "butterflies");
         logger.debug("Final beetle data:", combinedBeetleData.length, "beetles");
