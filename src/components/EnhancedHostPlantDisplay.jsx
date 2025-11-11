@@ -116,7 +116,7 @@ const getObservationTypeStyle = (observationType) => {
       };
     case '海外':
     case '国外':
-    case '野外（海外）':
+    case '野外（国外）':
       return {
         label: '海外',
         bgColor: 'bg-purple-50 dark:bg-purple-900/20',
@@ -141,7 +141,7 @@ const getObservationTypePriority = (observationType) => {
     case '野外（国内）': return 1; // 最優先
     case '飼育':
     case '飼育記録': return 2;
-    case '野外（海外）':
+    case '野外（国外）':
     case '海外':
     case '国外': return 3;
     default: return 4; // その他は最後
