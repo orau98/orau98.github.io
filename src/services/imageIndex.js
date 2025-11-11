@@ -1,9 +1,17 @@
 // Preload and cache image filename indexes shared across components
 
+const ASSET_VERSION = import.meta.env.VITE_ASSET_VERSION || 'dev';
+
 let _plantImageNames = null; // array of strings without extension
 let _plantImageLoading = null;
+let _plantImageVersion = null;
 
 export const loadPlantImageFilenames = async () => {
+  if (_plantImageVersion !== ASSET_VERSION) {
+    _plantImageNames = null;
+    _plantImageLoading = null;
+    _plantImageVersion = ASSET_VERSION;
+  }
   if (_plantImageNames) return _plantImageNames;
   if (_plantImageLoading) return _plantImageLoading;
   _plantImageLoading = (async () => {
@@ -20,6 +28,7 @@ export const loadPlantImageFilenames = async () => {
         .filter(Boolean)
         .map(line => (line.includes('→') ? line.split('→')[1].trim() : line));
       _plantImageNames = list;
+      _plantImageVersion = ASSET_VERSION;
       return _plantImageNames;
     } catch (e) {
       _plantImageNames = [];

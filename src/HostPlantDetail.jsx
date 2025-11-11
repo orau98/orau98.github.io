@@ -681,14 +681,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   // Get all available images for this plant (try canonical + aliases)
   const getPlantImages = (plantName, altNames = [], nameIndex = null) => {
-    if (!Array.isArray(nameIndex) || nameIndex.length === 0) {
-      return [];
-    }
+    const nameIndexSet = Array.isArray(nameIndex)
+      ? new Set(nameIndex.filter(Boolean))
+      : null;
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
 
-    const has = (fullName) => Array.isArray(nameIndex) && nameIndex.includes(fullName);
+    const has = (fullName) => {
+      if (!nameIndexSet) return true; // allow optimistic fetch when index missing
+      return nameIndexSet.has(fullName);
+    };
     const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
 
     const buildCandidates = (name) => {
@@ -713,11 +716,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           else chosenSuffix = suffix;
         }
         const finalName = `${base}${chosenSuffix}`;
-        if (!Array.isArray(nameIndex) || has(finalName)) {
+        if (has(finalName)) {
           images.push({
             label,
             alt: `${base}${chosenSuffix ? ` (${label})` : ''}`,
             candidates: buildCandidates(finalName)
+          });
+        } else if (!nameIndexSet && suffix === '') {
+          // When no index is available, still attempt the base filename once
+          images.push({
+            label,
+            alt: base,
+            candidates: buildCandidates(base)
           });
         }
       });
