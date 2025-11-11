@@ -14,6 +14,13 @@ const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectS
     setShowSuggestions(false);
   };
 
+  const handleClear = () => {
+    if (typeof onChange === "function") {
+      onChange({ target: { value: "" } });
+    }
+    setShowSuggestions(false);
+  };
+
   return (
     <div className="relative">
       <div className="relative">
@@ -29,8 +36,20 @@ const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectS
           onChange={handleChange}
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
-          className="w-full pl-10 pr-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 dark:focus:ring-blue-400/50 dark:focus:border-blue-400/50 transition-all duration-200 shadow-sm hover:shadow-md placeholder-slate-400 dark:placeholder-slate-500 text-slate-700 dark:text-slate-200"
+          className="w-full pl-10 pr-12 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 dark:focus:ring-blue-400/50 dark:focus:border-blue-400/50 transition-all duration-200 shadow-sm hover:shadow-md placeholder-slate-400 dark:placeholder-slate-500 text-slate-700 dark:text-slate-200"
         />
+        {value && value.length > 0 && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute inset-y-0 right-2 flex items-center justify-center w-8 h-8 my-1 rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-slate-700/70 transition-colors"
+            aria-label="検索入力をクリア"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
       
       {showSuggestions && suggestions.length > 0 && (
