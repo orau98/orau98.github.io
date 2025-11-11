@@ -8,10 +8,11 @@ export const loadPlantImageFilenames = async () => {
   if (_plantImageLoading) return _plantImageLoading;
   _plantImageLoading = (async () => {
     try {
-      const url = import.meta.env.DEV
-        ? `${import.meta.env.BASE_URL}plant_image_filenames.txt?v=${Date.now()}`
-        : `${import.meta.env.BASE_URL}plant_image_filenames.txt`;
-      const res = await fetch(url);
+      const base = import.meta.env.BASE_URL || '/';
+      const ver = import.meta.env.DEV ? `${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION || '');
+      const bust = ver ? `?v=${ver}` : '';
+      const url = `${base}plant_image_filenames.txt${bust}`;
+      const res = await fetch(url, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
       const list = text.split('\n')
