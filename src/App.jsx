@@ -11,6 +11,66 @@ import Header from './components/Header';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 
+const DATA_CACHE_DB = 'ihpe-cache';
+const DATA_CACHE_STORE = 'datasets';
+const DATA_CACHE_KEY = 'full-dataset';
+const CACHE_SCHEMA_VERSION = 1;
+
+const openCacheDb = () => {
+  if (typeof window === 'undefined' || !window.indexedDB) return Promise.resolve(null);
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DATA_CACHE_DB, CACHE_SCHEMA_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(DATA_CACHE_STORE)) {
+        db.createObjectStore(DATA_CACHE_STORE);
+      }
+    };
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+};
+
+const loadDatasetFromCache = async () => {
+  try {
+    const db = await openCacheDb();
+    if (!db) return null;
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(DATA_CACHE_STORE, 'readonly');
+      const store = tx.objectStore(DATA_CACHE_STORE);
+      const req = store.get(DATA_CACHE_KEY);
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => resolve(req.result || null);
+    });
+  } catch (error) {
+    logger.debug('Dataset cache load failed:', error);
+    return null;
+  }
+};
+
+const saveDatasetToCache = async (version, payload) => {
+  try {
+    const db = await openCacheDb();
+    if (!db) return;
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(DATA_CACHE_STORE, 'readwrite');
+      const store = tx.objectStore(DATA_CACHE_STORE);
+      const req = store.put(
+        {
+          version,
+          timestamp: Date.now(),
+          payload,
+        },
+        DATA_CACHE_KEY,
+      );
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => resolve();
+    });
+  } catch (error) {
+    logger.debug('Dataset cache save failed:', error);
+  }
+};
+
 // This map can be a fallback, but the primary source is now the wamei_checklist.csv.
 const plantFamilyMap = {
   'ヤナギ': 'ヤナギ科', 'ヤナギ類': 'ヤナギ科', 'クリ': 'ブナ科', 'クヌギ': 'ブナ科', 'コナラ': 'ブナ科',
@@ -63,6 +123,8 @@ function App() {
   const ensureTypesLoaderRef = useRef(null);
   const hostCsvExtendStartedRef = useRef(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const cacheLoadedRef = useRef(false);
+  const cachedVersionRef = useRef(null);
   
   const isDevelopment = import.meta.env.DEV;
   
@@ -100,9 +162,23 @@ function App() {
     }
   }, [theme]);
 
+  const applyDataset = (data = {}) => {
+    setMoths(Array.isArray(data.moths) ? data.moths : []);
+    setButterflies(Array.isArray(data.butterflies) ? data.butterflies : []);
+    setBeetles(Array.isArray(data.beetles) ? data.beetles : []);
+    setLeafbeetles(Array.isArray(data.leafbeetles) ? data.leafbeetles : []);
+    setHostPlants(data.hostPlants || {});
+    setPlantDetails(data.plantDetails || {});
+    if (data.summaryCounts) {
+      setSummaryCounts(data.summaryCounts);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const fetchData = async (cachedVersion = null) => {
+      if (!cacheLoadedRef.current) {
+        setLoading(true);
+      }
       const base = import.meta.env.BASE_URL || '/';
       // Try lightweight split JSON first to speed up initial paint
       try {
@@ -134,6 +210,18 @@ function App() {
           ]);
 
           if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+            cachedVersionRef.current = manifest.version || null;
+            if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
+              setSummaryCounts((prev) => prev || manifest.counts);
+              setLoading(false);
+              ensureTypesLoaderRef.current = () => {
+                typesFetchStartedRef.current = true;
+                typesFetchPromiseRef.current = Promise.resolve(null);
+              };
+              typesFetchStartedRef.current = true;
+              typesFetchPromiseRef.current = Promise.resolve(null);
+              return;
+            }
             const plantInfoRaw = plantInfoPayload && typeof plantInfoPayload === 'object'
               ? plantInfoPayload.plants || {}
               : {};
@@ -160,30 +248,44 @@ function App() {
 
             // Attempt to load precomputed full dataset first (fast path)
             try {
-              const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${cacheBuster}`, {
-                cache: cacheMode,
-              });
-              if (fullRes.ok) {
-                const fullData = await fullRes.json();
-                if (fullData && Array.isArray(fullData.moths) && fullData.hostPlants) {
-                  setMoths(fullData.moths || []);
-                  setButterflies(fullData.butterflies || []);
-                  setBeetles(fullData.beetles || []);
-                  setLeafbeetles(fullData.leafbeetles || []);
-                  setHostPlants(fullData.hostPlants || hostMap);
-                  setPlantDetails(fullData.plantDetails || plantDetailsLite);
-                  try {
-                    setSummaryCounts(fullData.summaryCounts || manifest.counts);
-                  } catch {}
-                  setLoading(false);
-                  ensureTypesLoaderRef.current = () => {
+              if (!cacheLoadedRef.current || (cachedVersion && manifest.version !== cachedVersion)) {
+                const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${cacheBuster}`, {
+                  cache: cacheMode,
+                });
+                if (fullRes.ok) {
+                  const fullData = await fullRes.json();
+                  if (fullData && Array.isArray(fullData.moths) && fullData.hostPlants) {
+                    applyDataset({
+                      moths: fullData.moths,
+                      butterflies: fullData.butterflies,
+                      beetles: fullData.beetles,
+                      leafbeetles: fullData.leafbeetles,
+                      hostPlants: fullData.hostPlants || hostMap,
+                      plantDetails: fullData.plantDetails || plantDetailsLite,
+                      summaryCounts: fullData.summaryCounts || manifest.counts,
+                    });
+                    setLoading(false);
+                    cacheLoadedRef.current = true;
+                    try {
+                      await saveDatasetToCache(manifest.version || null, {
+                        moths: fullData.moths,
+                        butterflies: fullData.butterflies,
+                        beetles: fullData.beetles,
+                        leafbeetles: fullData.leafbeetles,
+                        hostPlants: fullData.hostPlants || hostMap,
+                        plantDetails: fullData.plantDetails || plantDetailsLite,
+                        summaryCounts: fullData.summaryCounts || manifest.counts,
+                      });
+                    } catch {}
+                    ensureTypesLoaderRef.current = () => {
+                      typesFetchStartedRef.current = true;
+                      typesFetchPromiseRef.current = Promise.resolve(null);
+                    };
                     typesFetchStartedRef.current = true;
                     typesFetchPromiseRef.current = Promise.resolve(null);
-                  };
-                  typesFetchStartedRef.current = true;
-                  typesFetchPromiseRef.current = Promise.resolve(null);
-                  // Short-circuit before legacy pipeline
-                  return;
+                    // Short-circuit before legacy pipeline
+                    return;
+                  }
                 }
               }
             } catch (error) {
@@ -195,9 +297,11 @@ function App() {
               hostPlants: Object.keys(hostMap || {}).length,
             };
 
-            setSummaryCounts(computedCounts);
-            setHostPlants(hostMap);
-            setPlantDetails(plantDetailsLite);
+            if (!cacheLoadedRef.current) {
+              setSummaryCounts(computedCounts);
+              setHostPlants(hostMap);
+              setPlantDetails(plantDetailsLite);
+            }
             setLoading(false);
 
             const hydrateHostPlantsFromNormalized = async (insectLookup) => {
@@ -5743,16 +5847,31 @@ function App() {
         setLeafbeetles(finalLeafbeetleData);
         setHostPlants(unifiedHostPlantMap);
         setPlantDetails(cleanedPlantDetailData);
+        const finalSummaryCounts = {
+          moths: finalMothData.length,
+          butterflies: finalButterflyData.length,
+          beetles: finalBeetleData.length,
+          leafbeetles: finalLeafbeetleData.length,
+          hostPlants: Object.keys(unifiedHostPlantMap).length,
+        };
         try {
-          setSummaryCounts({
-            moths: finalMothData.length,
-            butterflies: finalButterflyData.length,
-            beetles: finalBeetleData.length,
-            leafbeetles: finalLeafbeetleData.length,
-            hostPlants: Object.keys(unifiedHostPlantMap).length,
-          });
+          setSummaryCounts(finalSummaryCounts);
         } catch {}
         setLoading(false); // Set loading to false after data is loaded
+        cacheLoadedRef.current = true;
+        if (cachedVersionRef.current) {
+          try {
+            await saveDatasetToCache(cachedVersionRef.current, {
+              moths: deduplicatedMoths,
+              butterflies: finalButterflyData,
+              beetles: finalBeetleData,
+              leafbeetles: finalLeafbeetleData,
+              hostPlants: cleanedHostPlantData,
+              plantDetails: cleanedPlantDetailData,
+              summaryCounts: finalSummaryCounts,
+            });
+          } catch {}
+        }
         
         // DEBUG: Check actual state after setting
         logger.debug("DEBUG: Expected total species:", deduplicatedMoths.length + butterflyData.length + combinedBeetleData.length + combinedLeafbeetleData.length);
@@ -5781,8 +5900,23 @@ function App() {
         setHostPlants({});
         setPlantDetails({});
       }
+    let cancelled = false;
+    const bootstrap = async () => {
+      const cached = await loadDatasetFromCache();
+      if (!cancelled && cached?.payload) {
+        applyDataset(cached.payload);
+        setLoading(false);
+        cacheLoadedRef.current = true;
+        cachedVersionRef.current = cached.version || null;
+      }
+      if (!cancelled) {
+        await fetchData(cached?.version || null);
+      }
     };
-    fetchData(); // Call fetchData
+    bootstrap();
+    return () => {
+      cancelled = true;
+    };
   }, []); // Close useEffect and add dependency array
 
   // Content protection measures (removed to improve UX/performance)
