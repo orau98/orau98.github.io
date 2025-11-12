@@ -38,6 +38,9 @@ jobs:
       - name: Build (vite only; skip prebuild chain)
         run: npx vite build
 
+      - name: Post-build cleanup and asset sync
+        run: node scripts/postbuild-cleanup.mjs
+
       - name: Add .nojekyll
         run: |
           echo > dist/.nojekyll

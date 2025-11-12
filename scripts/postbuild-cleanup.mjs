@@ -8,6 +8,32 @@ const targets = [
   // Keep small index files for client-side image detection
 ];
 
+const syncPlantImages = () => {
+  const srcDir = path.join('public', 'images', 'plants');
+  const destDir = path.join('dist', 'images', 'plants');
+  try {
+    if (!fs.existsSync(srcDir) || !fs.existsSync(destDir)) return;
+    const srcFiles = fs.readdirSync(srcDir);
+    const destFiles = new Set(fs.readdirSync(destDir));
+    let copied = 0;
+    for (const file of srcFiles) {
+      const srcPath = path.join(srcDir, file);
+      const destPath = path.join(destDir, file);
+      const stat = fs.statSync(srcPath);
+      if (!stat.isFile()) continue;
+      if (!destFiles.has(file)) {
+        fs.copyFileSync(srcPath, destPath);
+        copied++;
+      }
+    }
+    if (copied) {
+      console.log(`[postbuild] Synced ${copied} plant image(s) missing from dist.`);
+    }
+  } catch (error) {
+    console.warn('[postbuild] Failed to sync plant images:', error?.message || error);
+  }
+};
+
 for (const p of targets) {
   try {
     if (fs.existsSync(p)) {
@@ -24,3 +50,5 @@ for (const p of targets) {
     console.warn('[postbuild] Warning removing', p, e?.message || e);
   }
 }
+
+syncPlantImages();

@@ -5900,6 +5900,7 @@ function App() {
         setHostPlants({});
         setPlantDetails({});
       }
+    };
     let cancelled = false;
     const bootstrap = async () => {
       const cached = await loadDatasetFromCache();
