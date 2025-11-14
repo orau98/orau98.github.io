@@ -21,6 +21,7 @@ Amraica_asahinai
 Anacronicta nitida Butler
 Anatatha_wilemani
 Anorthoa_angustipennis
+Apamea_aquila
 Apamea_lateritia
 Archiearis_notha
 Archiearis_parthenias
@@ -129,6 +130,7 @@ Dolbina_exacta
 Dypterygia_caliginosa
 Eligma_narcissus
 Elwesia_sugii
+Elymnias_hypermnestra_hainana
 Endotricha_minialis
 Enispa_lutefascialis
 Epiblema_sugii
@@ -314,6 +316,7 @@ Phlogophora_albovittata
 Phlogophora_beatrix
 Phlossa_conjuncta
 Phragmataecia_castaneae
+Phragmatobia_amurensis_amurensis_Seitz
 Phtheochroides_clandestina
 Phtheochroides_clandestina_2
 Phthonoloba_viridifasciata
@@ -422,5 +425,3 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
-アマヒトリ北海道亜種
-ルリモンジャノメ

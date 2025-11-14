@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -107,6 +107,22 @@ async function loadJapaneseToScientificMap() {
   for (const [jp, sci] of Object.entries(manualOverrides)) {
     if (jp && sci && !map.has(jp)) map.set(jp, sci);
   }
+
+  // Merge global override mapping used by the web app itself so scripts stay in sync
+  try {
+    const mappingModule = await import(
+      pathToFileURL(path.join(ROOT, 'src', 'utils', 'insectImageMappings.js'))
+    );
+    const { globalJapaneseToScientificMapping } = mappingModule || {};
+    if (globalJapaneseToScientificMapping instanceof Map) {
+      for (const [jp, sci] of globalJapaneseToScientificMapping.entries()) {
+        if (jp && sci && !map.has(jp)) map.set(jp, sci);
+      }
+    }
+  } catch (err) {
+    console.warn('[rename] warning: failed to load global mapping:', err.message);
+  }
+
   return map;
 }
 
