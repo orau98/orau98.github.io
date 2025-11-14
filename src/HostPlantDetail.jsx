@@ -694,6 +694,23 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     };
     const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
 
+    const resolveNameWithIndex = (base, suffix) => {
+      if (!nameIndexSet) return `${base}${suffix}`;
+      if (!suffix) return has(base) ? base : null;
+      const suffixCore = suffix.startsWith('_') ? suffix.slice(1) : suffix;
+      const candidates = new Set();
+      if (suffix.startsWith('_')) {
+        candidates.add(`${base}${suffix}`);             // ASCII underscore
+        candidates.add(`${base}＿${suffixCore}`);       // Full-width underscore
+        if (suffixCore) candidates.add(`${base}${suffixCore}`); // No underscore
+      } else {
+        candidates.add(`${base}${suffix}`);
+        if (suffixCore && suffixCore !== suffix) candidates.add(`${base}${suffixCore}`);
+      }
+      const hit = Array.from(candidates).find(name => has(name));
+      return hit || null;
+    };
+
     const buildCandidates = (name) => {
       const encodedName = encodeURIComponent(name);
       const variations = [
@@ -707,19 +724,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
     bases.forEach((base) => {
       suffixes.forEach(({ suffix, label }) => {
-        let chosenSuffix = suffix;
-        if (suffix.startsWith('_') && Array.isArray(nameIndex)) {
-          const ascii = `${base}${suffix}`;
-          const full = `${base}＿${suffix.slice(1)}`;
-          if (has(full)) chosenSuffix = `＿${suffix.slice(1)}`;
-          else if (has(ascii)) chosenSuffix = suffix;
-          else chosenSuffix = suffix;
-        }
-        const finalName = `${base}${chosenSuffix}`;
-        if (has(finalName)) {
+        const finalName = nameIndexSet
+          ? resolveNameWithIndex(base, suffix)
+          : `${base}${suffix}`;
+        if (finalName && has(finalName)) {
+          const appliedSuffix = finalName.startsWith(base) ? finalName.slice(base.length) : '';
           images.push({
             label,
-            alt: `${base}${chosenSuffix ? ` (${label})` : ''}`,
+            alt: `${base}${appliedSuffix ? ` (${label})` : ''}`,
             candidates: buildCandidates(finalName)
           });
         } else if (!nameIndexSet && suffix === '') {
