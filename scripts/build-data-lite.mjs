@@ -267,7 +267,7 @@ async function build() {
     scientificName: i.scientificName,
     type: i.type,
     classification: i.classification || {},
-    hostPlants: Array.isArray(i.hostPlants) ? i.hostPlants.slice(0, 5) : [],
+    hostPlants: Array.isArray(i.hostPlants) ? i.hostPlants.slice() : [],
     notes: i.emergenceTime || i.notes || '',
     emergenceTime: i.emergenceTime || ''
   }));
