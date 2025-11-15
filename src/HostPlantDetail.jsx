@@ -598,6 +598,22 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   // この植物を利用する昆虫のリストを作成（改善されたマッチングロジック）
   const relatedInsects = allInsects.filter(insect => {
+    const insectDisplayName = (insect.name || insect.japaneseName || '').trim();
+
+    const hostMapHit = () => {
+      if (!insectDisplayName) return false;
+      const targets = [
+        decodedPlantName,
+        canonicalName,
+        ...aliasNames
+      ].filter(Boolean);
+      return targets.some(target => {
+        const list = hostPlants[target];
+        return Array.isArray(list) && list.includes(insectDisplayName);
+      });
+    };
+
+    if (hostMapHit()) return true;
     if (!insect.hostPlants) return false;
     
     // hostPlantsを文字列に変換（配列の場合も考慮）
@@ -636,14 +652,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       // 括弧を除いた植物名での一致（従来のロジック）
       const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
       if (cleanPlant === decodedPlantName) return true;
-      
-      // App.jsxのhostPlantDataとの一貫性を保つため、
-      // hostPlantsに登録されている昆虫名リストもチェック
-      if ((hostPlants[decodedPlantName] && hostPlants[decodedPlantName].includes(insect.name || insect.japaneseName)) ||
-          (canonicalName && hostPlants[canonicalName] && hostPlants[canonicalName].includes(insect.name || insect.japaneseName)) ||
-          aliasNames.some(a => hostPlants[a] && hostPlants[a].includes(insect.name || insect.japaneseName))) {
-        return true;
-      }
       
       return false;
     });

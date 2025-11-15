@@ -277,17 +277,19 @@ async function build() {
   const beetles = slim(normalized.beetles);
   const leafbeetles = slim(normalized.leafbeetles);
 
-  // Build lightweight host plant map from slim data
+  // Build lightweight host plant map using full normalized host plant data
   const hostPlantsMap = {};
   const addPlants = (insect) => {
+    const insectName = insect.name?.trim();
+    if (!insectName) return;
     (insect.hostPlants || []).forEach(raw => {
       const key = normalizePlantNameLite(raw);
       if (!key) return;
       if (!hostPlantsMap[key]) hostPlantsMap[key] = [];
-      if (hostPlantsMap[key].length < 8 && !hostPlantsMap[key].includes(insect.name)) hostPlantsMap[key].push(insect.name);
+      if (!hostPlantsMap[key].includes(insectName)) hostPlantsMap[key].push(insectName);
     });
   };
-  [...moths, ...butterflies, ...beetles, ...leafbeetles].forEach(addPlants);
+  [...normalized.moths, ...normalized.butterflies, ...normalized.beetles, ...normalized.leafbeetles].forEach(addPlants);
 
   // Ensure output dir
   fs.mkdirSync(OUT_DIR, { recursive: true });
