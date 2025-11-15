@@ -351,6 +351,7 @@ Samia_cynthia
 Saptha_beryllitis
 Sarcopolia_illoba
 Sasunaga_longiplaga
+Saturnia_japonica
 Saturnia_jonasii
 Schiffermuelleria_zelleri
 Sciota_intercisella
@@ -428,3 +429,4 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
+スカシエダシャク
