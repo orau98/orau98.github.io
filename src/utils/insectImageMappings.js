@@ -65,6 +65,7 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ツマモンキリガ', 'Imosca_coreana'],
   ['ツマオビアツバ', 'Zanclognatha griselda Butler'],
   ['クスサン', 'Saturnia japonica (Moore, 1872)'],
+  ['スカシエダシャク', 'Krananda semihyalina Moore, 1868'],
   ['マエホシヨトウ', 'Pyrrhidivalva_sordida'],
   ['マルモンキノコヨトウ', 'Bryomoia_melachlora'],
   ['アカスジキヨトウ', 'Mythimna_postica'],
