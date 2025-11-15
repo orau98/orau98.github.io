@@ -288,21 +288,28 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
     const nameJp = (insect.name || insect.japaneseName || '').trim();
     const mapped = globalJapaneseToScientificMapping.get(nameJp);
     const safe = createSafeInsectFilename(insect.scientificName || '');
-    const preferred = insect.scientificFilename || mapped || safe;
-    if (!preferred) return '';
-    // Exact or variant hit in extensions map
-    if (imageExtensions && imageExtensions[preferred]) return preferred;
-    const keys = imageExtensions ? Object.keys(imageExtensions) : [];
-    const variant = keys.find(k => k === preferred || k.startsWith(`${preferred}_`));
-    if (variant) return variant;
-    // Fallback to names list
-    if (imageFilenames && imageFilenames.size > 0) {
-      if (imageFilenames.has(preferred)) return preferred;
-      for (const k of imageFilenames) {
-        if (k === preferred || k.startsWith(`${preferred}_`)) return k;
-      }
+    const safeFromMapped = createSafeInsectFilename(mapped || '');
+    const safeFromExisting = createSafeInsectFilename(insect.scientificFilename || '');
+    const hasImageBase = (base) => {
+      if (!base) return false;
+      if (imageExtensions && imageExtensions[base]) return true;
+      if (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(base)) return true;
+      const keys = imageExtensions ? Object.keys(imageExtensions) : [];
+      return keys.some((k) => k === base || k.startsWith(`${base}_`));
+    };
+    const candidates = [
+      insect.scientificFilename,
+      mapped,
+      safe,
+      safeFromMapped,
+      safeFromExisting,
+      createSafeInsectFilename(nameJp),
+      nameJp
+    ].filter(Boolean);
+    for (const cand of candidates) {
+      if (hasImageBase(cand)) return cand;
     }
-    return preferred;
+    return candidates[0] || '';
   };
   const filename = resolveImageBase();
   const hasImage = Boolean(filename) && (
@@ -677,13 +684,23 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     logger.debug('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
   }
   
-  const [plantImageNames, setPlantImageNames] = useState(null);
+  const [plantImageNames, setPlantImageNames] = useState([]);
+  const [plantImageIndexReady, setPlantImageIndexReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    loadPlantImageFilenamesService().then((names) => {
-      if (!cancelled) setPlantImageNames(Array.isArray(names) ? names : []);
-    }).catch(() => setPlantImageNames([]));
+    setPlantImageIndexReady(false);
+    loadPlantImageFilenamesService()
+      .then((names) => {
+        if (cancelled) return;
+        setPlantImageNames(Array.isArray(names) ? names : []);
+        setPlantImageIndexReady(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPlantImageNames([]);
+        setPlantImageIndexReady(true);
+      });
     return () => { cancelled = true; };
   }, [decodedPlantName]);
 
@@ -755,7 +772,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     return images;
   };
 
-  const plantImages = getPlantImages(decodedPlantName, aliasNames, plantImageNames);
+  const plantImages = useMemo(() => {
+    if (!plantImageIndexReady) return [];
+    return getPlantImages(decodedPlantName, aliasNames, plantImageNames);
+  }, [decodedPlantName, aliasNames, plantImageNames, plantImageIndexReady]);
 
   // (no sticky tabs; aligns with insect page)
 
