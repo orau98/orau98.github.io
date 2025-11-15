@@ -198,6 +198,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Kerala_decipiens
 Krananda_latimarginaria
+Krananda_semihyalina
 Labdia_citracma
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
@@ -351,6 +352,7 @@ Samia_cynthia
 Saptha_beryllitis
 Sarcopolia_illoba
 Sasunaga_longiplaga
+Saturnia_japonica
 Saturnia_jonasii
 Schiffermuelleria_zelleri
 Sciota_intercisella
