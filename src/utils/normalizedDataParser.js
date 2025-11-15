@@ -8,6 +8,7 @@
  * @returns {Object} - 分類群別に整理されたデータ
  */
 import logger from './logger.js';
+import { createSafeInsectFilename } from './image.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = {
@@ -185,6 +186,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         // 分類用フィールド（英語キー）
         type: getTypeKey(insect.family_jp, insect.family)
       };
+
+      insectData.scientificFilename = createSafeInsectFilename(insectData.scientificName);
 
       // general_notes から出現時期を既存フィールドへも反映（表示の安定化のため）
       try {

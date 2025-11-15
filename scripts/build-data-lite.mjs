@@ -261,10 +261,11 @@ async function build() {
   const normalized = convertNormalizedDataToStandardFormat(insects, hostplants, notes);
 
   // Slim each record for list/search use
-  const slim = (arr) => (arr || []).map(i => ({
+const slim = (arr) => (arr || []).map(i => ({
     id: i.id,
     name: i.name,
     scientificName: i.scientificName,
+    scientificFilename: i.scientificFilename || '',
     type: i.type,
     classification: i.classification || {},
     hostPlants: Array.isArray(i.hostPlants) ? i.hostPlants.slice() : [],
