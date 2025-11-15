@@ -23,6 +23,7 @@ Anatatha_wilemani
 Anorthoa_angustipennis
 Apamea_aquila
 Apamea_lateritia
+Apochima_juglansiaria
 Archiearis_notha
 Archiearis_parthenias
 Arctornis_l_nigrum
@@ -236,6 +237,7 @@ Meganola_fumosa
 Melapia_electaria
 Mesoplectra_griselda
 Mesorhynchaglaea_pacifica
+Mesorhynchaglaea_pacifica
 Microleon_longipalpis
 Micromelalopha_troglodyta
 Micromelalopha_troglodyta_2
@@ -345,6 +347,7 @@ Pyrrhidivalva_sordida
 Rhadinosa_nigrocyanea
 Rhodinia_jankowskii
 Rivula_curvifera
+Samia_cynthia
 Saptha_beryllitis
 Sarcopolia_illoba
 Sasunaga_longiplaga
