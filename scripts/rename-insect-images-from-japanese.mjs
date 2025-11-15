@@ -12,6 +12,8 @@ const BACKUP_DIR = path.join(INSECT_IMG_DIR, 'backup_japanese_names');
 
 const IMG_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.PNG', '.WEBP']);
 
+const normalizeJapaneseName = (str = '') => str ? str.normalize('NFC') : str;
+
 function hasJapanese(str = '') {
   return /[\u3040-\u30ff\u3400-\u9fff]/.test(str);
 }
@@ -46,7 +48,7 @@ async function loadJapaneseToScientificMap() {
         fs.createReadStream(insectsCsv)
           .pipe(csvParser())
           .on('data', (row) => {
-            const j = String(row['japanese_name'] || '').trim();
+            const j = normalizeJapaneseName(String(row['japanese_name'] || '').trim());
             const s = String(row['scientific_name'] || '').trim();
             if (j && s) map.set(j, s);
           })
@@ -65,7 +67,7 @@ async function loadJapaneseToScientificMap() {
       const j = JSON.parse(fs.readFileSync(litePath, 'utf-8'));
       const addArr = (arr = []) => {
         for (const it of arr) {
-          const jn = String(it.name || '').trim();
+          const jn = normalizeJapaneseName(String(it.name || '').trim());
           const sn = String(it.scientificName || '').trim();
           if (jn && sn) map.set(jn, sn);
         }
@@ -88,7 +90,7 @@ async function loadJapaneseToScientificMap() {
         const m = line.match(/^(?:\".*?\"|[^,]*),([^,]*),([^,]*)$/);
         if (m) {
           const bin = (m[1] || '').trim();
-          const jp = (m[2] || '').trim();
+          const jp = normalizeJapaneseName((m[2] || '').trim());
           if (jp && bin && !map.has(jp)) {
             map.set(jp, bin);
           }
@@ -105,7 +107,8 @@ async function loadJapaneseToScientificMap() {
     'テングイラガ': 'Microleon longipalpis Butler, 1885',
   };
   for (const [jp, sci] of Object.entries(manualOverrides)) {
-    if (jp && sci && !map.has(jp)) map.set(jp, sci);
+    const key = normalizeJapaneseName(jp);
+    if (key && sci && !map.has(key)) map.set(key, sci);
   }
 
   // Merge global override mapping used by the web app itself so scripts stay in sync
@@ -116,7 +119,8 @@ async function loadJapaneseToScientificMap() {
     const { globalJapaneseToScientificMapping } = mappingModule || {};
     if (globalJapaneseToScientificMapping instanceof Map) {
       for (const [jp, sci] of globalJapaneseToScientificMapping.entries()) {
-        if (jp && sci && !map.has(jp)) map.set(jp, sci);
+        const key = normalizeJapaneseName(jp);
+        if (key && sci && !map.has(key)) map.set(key, sci);
       }
     }
   } catch (err) {
@@ -175,7 +179,7 @@ async function main() {
 
     // Derive clean Japanese name before any spaces/latin blocks (e.g., 'ニッコウシャチホコ Shachia ...')
     const m = base.match(/^([\u3040-\u30ff\u3400-\u9fff]+)/);
-    const japaneseName = m ? m[1] : base;
+    const japaneseName = normalizeJapaneseName(m ? m[1] : base);
     const scientificFull = j2s.get(japaneseName);
     if (!scientificFull) {
       console.warn('[rename] skip, mapping not found for', japaneseName, 'file=', name);
@@ -233,7 +237,7 @@ async function main() {
         // split base: baseName.width
         const m = base.match(/^(.+?)\.(\d{3,4})$/);
         if (!m) continue;
-        const jpBase = m[1];
+        const jpBase = normalizeJapaneseName(m[1]);
         if (!hasJapanese(jpBase)) continue;
         const width = m[2];
         // find scientific

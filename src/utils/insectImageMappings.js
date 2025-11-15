@@ -30,6 +30,7 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ノコメキシタバ', 'Catocala_bella'],
   ['ハマオモトヨトウ', 'Brithys_crini'],
   ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
+  ['オカモトトゲエダシャク', 'Apochima juglansiaria (Graeser, 1889)'],
   ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
   ['ルリモンジャノメ', 'Elymnias hypermnestra hainana'],
   ['クロマダラソテツシジミ', 'Chilades_pandava'],
@@ -42,6 +43,7 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ヤエヤマカラスアゲハ', 'Papilio bianor okinawensis'],
   ['クロスジツトガ', 'Flavocrambus striatellus Leech'],
   ['シロスジツトガ', 'Crambus argyrophorus Butler'],
+  ['シンジュサン', 'Samia cynthia (Drury, [1773])'],
   ['アマギシャチホコ', 'Eriodonta amagisana Marumo'],
   ['アマヒトリ北海道亜種', 'Phragmatobia amurensis amurensis Seitz, 1910'],
   ['アカモクメヨトウ', 'Apamea aquila Donzel, 1837'],
@@ -62,12 +64,14 @@ export const globalJapaneseToScientificMapping = new Map([
   ['キマダラアツバ', 'Lophomilia polybapta Butler'],
   ['ツマモンキリガ', 'Imosca_coreana'],
   ['ツマオビアツバ', 'Zanclognatha griselda Butler'],
+  ['クスサン', 'Saturnia japonica (Moore, 1872)'],
   ['マエホシヨトウ', 'Pyrrhidivalva_sordida'],
   ['マルモンキノコヨトウ', 'Bryomoia_melachlora'],
   ['アカスジキヨトウ', 'Mythimna_postica'],
   ['ウスイロキヨトウ', 'Mythimna_inanis'],
   ['ウスクロモクメヨトウ', 'Dipterygina_cupreotincta'],
-  ['アオモンギンセダカモクメ', 'Cucullia_argentea']
+  ['アオモンギンセダカモクメ', 'Cucullia_argentea'],
+  ['ヤクシマキリガ', 'Mesorhynchaglaea pacifica Sugi, 1980']
 ]);
 
 export const getMappedScientificFilename = (japaneseName) => {
