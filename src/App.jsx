@@ -183,34 +183,37 @@ function App() {
       // Try lightweight split JSON first to speed up initial paint
       try {
         const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
-        const cacheBuster = import.meta.env.DEV ? `?v=${Date.now()}` : '';
-        const manifestUrl = `${base}assets/data-lite/manifest.json${cacheBuster}`;
-        const hostUrl = `${base}assets/data-lite/hostplants.json${cacheBuster}`;
-        const plantInfoUrl = `${base}assets/data-lite/ylist-lite.json${cacheBuster}`;
+        const manifestUrl = `${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
+        const manifestRes = await fetch(manifestUrl, { cache: 'no-store' });
+        let versionSuffix = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+        let manifest = null;
+        let manifestVersion = null;
+        if (manifestRes?.ok) {
+          manifest = await manifestRes.json();
+          manifestVersion = manifest?.version || null;
+          versionSuffix = import.meta.env.DEV
+            ? `?v=${Date.now()}`
+            : manifestVersion
+              ? `?v=${manifestVersion}`
+              : '';
+          const hostUrl = `${base}assets/data-lite/hostplants.json${versionSuffix}`;
+          const plantInfoUrl = `${base}assets/data-lite/ylist-lite.json${versionSuffix}`;
 
-        const [manifestRes, hostRes, plantInfoRes] = await Promise.all([
-          fetch(manifestUrl, { cache: cacheMode }),
-          fetch(hostUrl, { cache: cacheMode }),
-          fetch(plantInfoUrl, { cache: cacheMode }).catch((error) => {
-            logger.debug('Plant taxonomy preload skipped:', error);
-            return null;
-          }),
-        ]);
-
-        if (manifestRes?.ok && hostRes?.ok) {
-          const manifestPromise = manifestRes.json();
-          const hostPromise = hostRes.json();
-          const plantInfoPromise =
-            plantInfoRes && plantInfoRes.ok ? plantInfoRes.json() : Promise.resolve(null);
-
-          const [manifest, hostMap, plantInfoPayload] = await Promise.all([
-            manifestPromise,
-            hostPromise,
-            plantInfoPromise,
+          const [hostRes, plantInfoRes] = await Promise.all([
+            fetch(hostUrl, { cache: 'no-store' }),
+            fetch(plantInfoUrl, { cache: cacheMode }).catch((error) => {
+              logger.debug('Plant taxonomy preload skipped:', error);
+              return null;
+            }),
           ]);
 
+          if (hostRes?.ok) {
+            const hostMap = await hostRes.json();
+            const plantInfoPayload =
+              plantInfoRes && plantInfoRes.ok ? await plantInfoRes.json() : null;
+
           if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
-            cachedVersionRef.current = manifest.version || null;
+            cachedVersionRef.current = manifestVersion;
             if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
               setSummaryCounts((prev) => prev || manifest.counts);
               setLoading(false);
@@ -249,7 +252,7 @@ function App() {
             // Attempt to load precomputed full dataset first (fast path)
             try {
               if (!cacheLoadedRef.current || (cachedVersion && manifest.version !== cachedVersion)) {
-                const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${cacheBuster}`, {
+                const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
                   cache: cacheMode,
                 });
                 if (fullRes.ok) {
@@ -313,7 +316,7 @@ function App() {
                     window.requestIdleCallback(resolve, { timeout: 3000 }),
                   );
                 }
-                const normalizedUrl = `${base}hostplants.csv${cacheBuster}`;
+                const normalizedUrl = `${base}hostplants.csv${versionSuffix}`;
                 const csvRes = await fetch(normalizedUrl, { cache: cacheMode });
                 if (!csvRes.ok) return;
                 const csvText = await csvRes.text();
@@ -417,10 +420,10 @@ function App() {
 
             const loadTypePartitions = async () => {
               const responses = await Promise.all([
-                fetch(`${base}assets/data-lite/moths.json${cacheBuster}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/butterflies.json${cacheBuster}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/beetles.json${cacheBuster}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/leafbeetles.json${cacheBuster}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetch(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
               ]);
               const [mothRes, butterflyRes, beetleRes, leafRes] = responses;
               const safeJson = async (res) => (res && res.ok ? res.json() : []);
@@ -491,7 +494,7 @@ function App() {
           }
         } else {
           // Fallback to combined lite index
-          const liteUrl = `${base}assets/data-lite/index.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
+          const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || (import.meta.env.DEV ? `?v=${Date.now()}` : '')}`;
           const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
           if (res.ok) {
             const lite = await res.json();
