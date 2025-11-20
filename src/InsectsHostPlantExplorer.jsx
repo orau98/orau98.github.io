@@ -16,7 +16,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
 
 
 
-const InsectsHostPlantExplorer = React.memo(
+  const InsectsHostPlantExplorer = React.memo(
   ({
     moths,
     butterflies,
@@ -28,6 +28,7 @@ const InsectsHostPlantExplorer = React.memo(
     setTheme,
     summaryCounts,
     onNeedInsectsData,
+    onNeedPlantsData,
   }) => {
     const [activeTab, setActiveTab] = useState("insects");
     const [searchParams, setSearchParams] = useSearchParams();
@@ -146,7 +147,10 @@ const InsectsHostPlantExplorer = React.memo(
       if (activeTab === "insects" && typeof onNeedInsectsData === "function") {
         onNeedInsectsData();
       }
-    }, [activeTab, onNeedInsectsData]);
+      if (activeTab === "plants" && typeof onNeedPlantsData === "function") {
+        onNeedPlantsData();
+      }
+    }, [activeTab, onNeedInsectsData, onNeedPlantsData]);
 
     // SEO for Home (トップページ)
     const title = "昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索";

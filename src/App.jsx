@@ -131,6 +131,7 @@ function App() {
   const hostCsvExtendStartedRef = useRef(false);
   const hostHydrationRequestedRef = useRef(false);
   const pendingHostHydrationRef = useRef(null);
+  const requestHostHydrationRef = useRef(() => {});
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const cacheLoadedRef = useRef(false);
   const cachedVersionRef = useRef(null);
@@ -480,6 +481,7 @@ function App() {
                 pendingHostHydrationRef.current = null;
               }
             };
+            requestHostHydrationRef.current = requestHostHydration;
 
             // Plantsタブ未訪問でも、アイドル時にバックグラウンドでホスト植物をマージしておく（非同期）
             const idleHydrateHostplants = () => {
@@ -6089,6 +6091,12 @@ function App() {
                   try {
                     ensureTypesLoaderRef.current &&
                       ensureTypesLoaderRef.current();
+                  } catch {}
+                }}
+                onNeedPlantsData={() => {
+                  try {
+                    requestHostHydrationRef.current &&
+                      requestHostHydrationRef.current();
                   } catch {}
                 }}
               />
