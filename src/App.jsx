@@ -250,51 +250,8 @@ function App() {
               };
             });
 
-            // Attempt to load precomputed full dataset first (fast path)
-            try {
-              if (!cacheLoadedRef.current || (cachedVersion && manifest.version !== cachedVersion)) {
-                const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
-                  cache: cacheMode,
-                });
-                if (fullRes.ok) {
-                  const fullData = await fullRes.json();
-                  if (fullData && Array.isArray(fullData.moths) && fullData.hostPlants) {
-                    applyDataset({
-                      moths: fullData.moths,
-                      butterflies: fullData.butterflies,
-                      beetles: fullData.beetles,
-                      leafbeetles: fullData.leafbeetles,
-                      hostPlants: fullData.hostPlants || hostMap,
-                      plantDetails: fullData.plantDetails || plantDetailsLite,
-                      summaryCounts: fullData.summaryCounts || manifest.counts,
-                    });
-                    setLoading(false);
-                    cacheLoadedRef.current = true;
-                    try {
-                      await saveDatasetToCache(manifest.version || null, {
-                        moths: fullData.moths,
-                        butterflies: fullData.butterflies,
-                        beetles: fullData.beetles,
-                        leafbeetles: fullData.leafbeetles,
-                        hostPlants: fullData.hostPlants || hostMap,
-                        plantDetails: fullData.plantDetails || plantDetailsLite,
-                        summaryCounts: fullData.summaryCounts || manifest.counts,
-                      });
-                    } catch {}
-                    ensureTypesLoaderRef.current = () => {
-                      typesFetchStartedRef.current = true;
-                      typesFetchPromiseRef.current = Promise.resolve(null);
-                    };
-                    typesFetchStartedRef.current = true;
-                    typesFetchPromiseRef.current = Promise.resolve(null);
-                    // Short-circuit before legacy pipeline
-                    return;
-                  }
-                }
-              }
-            } catch (error) {
-              logger.debug('full-dataset fetch failed, falling back to incremental loading:', error);
-            }
+            // NOTE: full-dataset.json (約10MB) は初期描画の阻害要因になるためロードをスキップ。
+            // オフラインキャッシュ用途で欲しい場合は下の idle プレフェッチを有効にする。
 
             const computedCounts = {
               ...manifest.counts,
@@ -452,6 +409,36 @@ function App() {
               return { mothArr, butterArr, beetleArr, leafArr };
             };
 
+            // 非同期・アイドル時にだけ full-dataset をプレフェッチし、IndexedDB キャッシュだけ温める
+            const prefetchFullDataset = () => {
+              if (typeof window === 'undefined') return;
+              const fire = async () => {
+                try {
+                  const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
+                    cache: cacheMode,
+                  });
+                  if (!fullRes.ok) return;
+                  const fullData = await fullRes.json();
+                  await saveDatasetToCache(manifest.version || null, {
+                    moths: fullData.moths,
+                    butterflies: fullData.butterflies,
+                    beetles: fullData.beetles,
+                    leafbeetles: fullData.leafbeetles,
+                    hostPlants: fullData.hostPlants || hostMap,
+                    plantDetails: fullData.plantDetails || plantDetailsLite,
+                    summaryCounts: fullData.summaryCounts || manifest.counts,
+                  });
+                } catch (error) {
+                  if (import.meta.env.DEV) logger.debug('Idle prefetch full-dataset skipped:', error);
+                }
+              };
+              if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(() => fire(), { timeout: 5000 });
+              } else {
+                setTimeout(fire, 5000);
+              }
+            };
+
             const startFetchTypes = () => {
               if (typesFetchStartedRef.current && typesFetchPromiseRef.current) {
                 return typesFetchPromiseRef.current;
@@ -492,6 +479,8 @@ function App() {
               logger.debug('Failed to interpret initial tab, fetching insects immediately:', error);
               startFetchTypes();
             }
+
+            prefetchFullDataset();
 
             return;
           }
