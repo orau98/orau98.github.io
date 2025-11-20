@@ -647,6 +647,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
   const [imageFilenames, setImageFilenames] = useState(new Set());
   const [imageFilenamesNormalized, setImageFilenamesNormalized] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
+  const [imagePresenceMap, setImagePresenceMap] = useState(new Map()); // moth.id -> has image
 
   useEffect(() => {
     loadInsectImageIndexes()
@@ -707,7 +708,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       return false;
     }
   }, [imageExtensions, imageFilenames, imageFilenamesNormalized]);
-
   // Image index readiness (avoid reordering after first paint by waiting for index)
   const isImageIndexReady = useMemo(() => {
     try {
@@ -716,6 +716,20 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
       return false;
     }
   }, [imageFilenames, imageExtensions]);
+
+  // Precompute image availability per insect to avoid O(n log n) repeated set lookups during sorting
+  useEffect(() => {
+    if (!isImageIndexReady || !moths || moths.length === 0) {
+      setImagePresenceMap(new Map());
+      return;
+    }
+    const nextMap = new Map();
+    moths.forEach((insect) => {
+      if (!insect || !insect.id) return;
+      nextMap.set(insect.id, hasAnyImageForMoth(insect));
+    });
+    setImagePresenceMap(nextMap);
+  }, [hasAnyImageForMoth, isImageIndexReady, moths]);
 
   // Sort moths prioritizing those with images; render deferred until index is ready
   const sortedMoths = useMemo(() => {
@@ -728,10 +742,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
         return filteredMoths;
       }
 
+      const getHasImage = (insect) => {
+        if (!insect) return false;
+        return imagePresenceMap.get(insect.id) ?? false;
+      };
+
       const isSearching = (debouncedSearchTerm && debouncedSearchTerm.trim() !== '') || classificationFilter;
       const sorted = [...filteredMoths].sort((a, b) => {
-        const hasImageA = hasAnyImageForMoth(a);
-        const hasImageB = hasAnyImageForMoth(b);
+        const hasImageA = getHasImage(a);
+        const hasImageB = getHasImage(b);
         if (hasImageA && !hasImageB) return -1;
         if (!hasImageA && hasImageB) return 1;
 

@@ -473,7 +473,7 @@ const HostPlantList = ({
   }, [embedded, safeHostPlants]);
   const filteredHostPlants = useMemo(() => {
     logger.debug(
-      "DEBUG: Filtering plants, total count:",
+      "DEBUG: Filtering plants (summary only)",
       Object.keys(safeHostPlants).length,
       "search term:",
       debouncedPlantSearch,
@@ -495,20 +495,10 @@ const HostPlantList = ({
         plantName === "undefined" ||
         plantName === "null"
       ) {
-        logger.debug(
-          "DEBUG: Excluding invalid plant name:",
-          JSON.stringify(plantName),
-        );
-        return false;
-      }
+      return false;
+    }
 
-      logger.debug(
-        "Filtering plant:",
-        plantName,
-        "Details:",
-        safePlantDetails[plantName],
-      );
-      const detail = safePlantDetails[plantName] || {};
+    const detail = safePlantDetails[plantName] || {};
       const family = (detail.family || "").toLowerCase();
       const familyLatin = (detail.familyLatin || "").toLowerCase();
       const genus = (detail.genus || "").toLowerCase();

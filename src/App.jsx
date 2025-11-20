@@ -184,7 +184,8 @@ function App() {
       try {
         const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
         const manifestUrl = `${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
-        const manifestRes = await fetch(manifestUrl, { cache: 'no-store' });
+        // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
+        const manifestRes = await fetch(manifestUrl, { cache: cacheMode });
         let versionSuffix = import.meta.env.DEV ? `?v=${Date.now()}` : '';
         let manifest = null;
         let manifestVersion = null;
@@ -200,7 +201,7 @@ function App() {
           const plantInfoUrl = `${base}assets/data-lite/ylist-lite.json${versionSuffix}`;
 
           const [hostRes, plantInfoRes] = await Promise.all([
-            fetch(hostUrl, { cache: 'no-store' }),
+            fetch(hostUrl, { cache: cacheMode }),
             fetch(plantInfoUrl, { cache: cacheMode }).catch((error) => {
               logger.debug('Plant taxonomy preload skipped:', error);
               return null;
@@ -324,6 +325,8 @@ function App() {
                 const parsed = Papa.parse(csvText, {
                   header: true,
                   skipEmptyLines: true,
+                  worker: true, // offload large CSV parsing off the main thread to keep UI responsive
+                  fastMode: true,
                 });
                 if (!parsed || !Array.isArray(parsed.data)) return;
 
@@ -492,28 +495,29 @@ function App() {
 
             return;
           }
-        } else {
-          // Fallback to combined lite index
-          const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || (import.meta.env.DEV ? `?v=${Date.now()}` : '')}`;
-          const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
-          if (res.ok) {
-            const lite = await res.json();
-            if (lite && Array.isArray(lite.moths) && Array.isArray(lite.butterflies)) {
-              setMoths(lite.moths);
-              setButterflies(lite.butterflies);
-              setBeetles(lite.beetles || []);
-              setLeafbeetles(lite.leafbeetles || []);
-              setHostPlants(lite.hostPlants || {});
-              setPlantDetails({});
-              setLoading(false);
-              // Provide no-op loader since combined index already has arrays
-              ensureTypesLoaderRef.current = () => {
-                typesFetchStartedRef.current = true;
-              };
-              // Continue to CSV background load
-            }
+        } // end if (hostRes?.ok)
+      } else {
+        // manifest.json が取得できなかった場合のフォールバック: 合成インデックスを利用
+        const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || (import.meta.env.DEV ? `?v=${Date.now()}` : '')}`;
+        const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        if (res.ok) {
+          const lite = await res.json();
+          if (lite && Array.isArray(lite.moths) && Array.isArray(lite.butterflies)) {
+            setMoths(lite.moths);
+            setButterflies(lite.butterflies);
+            setBeetles(lite.beetles || []);
+            setLeafbeetles(lite.leafbeetles || []);
+            setHostPlants(lite.hostPlants || {});
+            setPlantDetails({});
+            setLoading(false);
+            // Provide no-op loader since combined index already has arrays
+            ensureTypesLoaderRef.current = () => {
+              typesFetchStartedRef.current = true;
+            };
+            // Continue to CSV background load
           }
         }
+      }
       } catch (_) {
         // ignore and fallback to full pipeline
       }
