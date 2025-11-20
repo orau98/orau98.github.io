@@ -346,7 +346,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }
 });
 
-const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false }) => {
+const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "" }) => {
   // Canonical/OG/パンくず（一覧ページ）
   const canonicalPath = baseRoute === '/' || baseRoute === '' ? '/' : baseRoute;
   const canonicalUrl = (typeof window !== 'undefined' && window.location && window.location.origin
@@ -370,13 +370,20 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false 
     resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/'
   });
   const [searchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
 
   const classificationFilter = searchParams.get('classification');
   const lastAppliedClassificationRef = useRef(null);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  // Sync with initialSearchTerm if it changes
+  useEffect(() => {
+    if (initialSearchTerm) {
+      setSearchTerm(initialSearchTerm);
+    }
+  }, [initialSearchTerm]);
 
   // Restore scroll position and page when returning from detail page
   useEffect(() => {

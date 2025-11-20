@@ -275,12 +275,20 @@ const HostPlantList = ({
   plantDetails = {},
   embedded = false,
   preloadedImageFilenames = [],
+  initialSearchTerm = "",
 }) => {
-  const [plantSearchTerm, setPlantSearchTerm] = useState("");
+  const [plantSearchTerm, setPlantSearchTerm] = useState(initialSearchTerm);
   const [currentPage, setCurrentPage] = useState(1);
   const [plantImageFilenames, setPlantImageFilenames] = useState(
     preloadedImageFilenames,
   );
+
+  // Sync with initialSearchTerm if it changes
+  useEffect(() => {
+    if (initialSearchTerm) {
+      setPlantSearchTerm(initialSearchTerm);
+    }
+  }, [initialSearchTerm]);
 
   // Canonical/OG/パンくず（フックで共通化）
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
