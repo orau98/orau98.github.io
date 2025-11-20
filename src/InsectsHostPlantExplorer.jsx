@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramEmbed from "./components/InstagramEmbed";
 import InstagramTimeline from "./components/InstagramTimeline";
+import SearchInput from "./components/SearchInput";
 import { MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
@@ -13,38 +14,7 @@ import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./ser
 const MothList = React.lazy(() => import("./components/MothList"));
 const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
 
-// 書誌情報の標準和文フォーマット
-// 例: 著者（年）『書名 第1巻』出版社，ISBN: 978-....
-const formatCitationJp = (b) => {
-  if (!b) return "";
-  const joinNames = (arr) =>
-    Array.isArray(arr)
-      ? arr.filter(Boolean).join("・")
-      : typeof arr === "string"
-        ? arr
-        : "";
-  const authors = joinNames(b.authors);
-  const editors = joinNames(b.editors);
-  const namePart = authors || (editors ? `${editors}（編）` : "");
-  const yearPart = b.year ? `（${b.year}）` : "";
-  const titlePart = b.title
-    ? `『${b.title}${b.note ? " " + b.note : ""}』`
-    : "";
-  const placePublisher =
-    b.place && b.publisher ? `${b.place}：${b.publisher}` : b.publisher || "";
-  const isbnPart = b.isbn13
-    ? `ISBN: ${b.isbn13}`
-    : b.isbn10
-      ? `ISBN-10: ${b.isbn10}`
-      : "";
-  const parts = [];
-  if (namePart || yearPart) parts.push(`${namePart}${yearPart}`.trim());
-  if (titlePart) parts.push(titlePart);
-  if (placePublisher) parts.push(placePublisher);
-  if (isbnPart) parts.push(isbnPart);
-  const body = parts.filter(Boolean).join("，");
-  return body ? `${body}。` : "";
-};
+
 
 const InsectsHostPlantExplorer = React.memo(
   ({
@@ -67,6 +37,31 @@ const InsectsHostPlantExplorer = React.memo(
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
     const [showBibliography, setShowBibliography] = useState(false);
     const [plantImageFilenames, setPlantImageFilenames] = useState([]);
+    const [globalSearchTerm, setGlobalSearchTerm] = useState(
+      searchParams.get("q") || "",
+    );
+
+    // Sync global search term with URL
+    useEffect(() => {
+      const q = searchParams.get("q");
+      if (q !== null && q !== globalSearchTerm) {
+        setGlobalSearchTerm(q);
+      }
+    }, [searchParams]);
+
+    const handleGlobalSearch = (e) => {
+      const val = e.target.value;
+      setGlobalSearchTerm(val);
+
+      // Update URL param
+      const newParams = new URLSearchParams(searchParams);
+      if (val) {
+        newParams.set("q", val);
+      } else {
+        newParams.delete("q");
+      }
+      setSearchParams(newParams, { replace: true });
+    };
 
     // Helper: detect profile URL (not a single post permalink)
     const isInstagramProfileUrl = (url) => {
@@ -394,6 +389,21 @@ const InsectsHostPlantExplorer = React.memo(
                     </span>
                   </div>
                 </div>
+
+                {/* ヒーローセクション内の検索バー */}
+                <div className="max-w-2xl w-full mt-8 mx-auto md:mx-0">
+                  <SearchInput
+                    placeholder={`${activeTab === "plants" ? "食草" : "昆虫"}を検索 (和名・学名・分類)`}
+                    value={globalSearchTerm}
+                    onChange={handleGlobalSearch}
+                    onSelectSuggestion={(val) => {
+                      setGlobalSearchTerm(val);
+                      const newParams = new URLSearchParams(searchParams);
+                      newParams.set("q", val);
+                      setSearchParams(newParams);
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -555,6 +565,7 @@ const InsectsHostPlantExplorer = React.memo(
                         title="昆虫"
                         baseRoute=""
                         embedded={true}
+                        initialSearchTerm={globalSearchTerm}
                       />
                     </Suspense>
                   </div>
@@ -582,6 +593,7 @@ const InsectsHostPlantExplorer = React.memo(
                         plantDetails={plantDetails}
                         embedded={true}
                         preloadedImageFilenames={plantImageFilenames}
+                        initialSearchTerm={globalSearchTerm}
                       />
                     </Suspense>
                   </div>
