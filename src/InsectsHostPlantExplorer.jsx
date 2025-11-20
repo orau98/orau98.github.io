@@ -30,7 +30,7 @@ const InsectsHostPlantExplorer = React.memo(
     onNeedInsectsData,
   }) => {
     const [activeTab, setActiveTab] = useState("insects");
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [heroImageLoaded, setHeroImageLoaded] = useState(false);
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
@@ -47,7 +47,7 @@ const InsectsHostPlantExplorer = React.memo(
       if (q !== null && q !== globalSearchTerm) {
         setGlobalSearchTerm(q);
       }
-    }, [searchParams]);
+    }, [searchParams, globalSearchTerm]);
 
     const handleGlobalSearch = (e) => {
       const val = e.target.value;
@@ -191,7 +191,7 @@ const InsectsHostPlantExplorer = React.memo(
           setOgTwitterImage(src, "昆虫食草図鑑 メインビジュアル");
         } catch {}
       }
-    }, [heroImageLoaded]);
+    }, [heroImageLoaded, setOgTwitterImage]);
 
     const instagramSectionRef = useRef(null);
     const [instagramInView, setInstagramInView] = useState(false);
