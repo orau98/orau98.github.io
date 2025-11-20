@@ -620,8 +620,8 @@ const InsectsHostPlantExplorer = React.memo(
               </div>
             </div>
 
-            <div className="p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="p-4 md:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                 {/* 左側：サイトポリシーと出典一覧 */}
                 <div className="lg:flex lg:flex-col space-y-4">
                   {/* サイトポリシー */}
@@ -872,8 +872,8 @@ const InsectsHostPlantExplorer = React.memo(
                 </div>
 
                 {/* 右側：Instagram */}
-                <div className="lg:flex lg:flex-col lg:gap-6">
-                  <div className="flex flex-col mt-4 lg:mt-0 bg-white/80 dark:bg-slate-800/70 backdrop-blur rounded-2xl border border-white/40 dark:border-slate-700/50 shadow-lg p-4 sm:p-6">
+                <div className="lg:flex lg:flex-col space-y-4">
+                  <div className="flex flex-col bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
                     {/* Instagram最新投稿 */}
                     <div className="flex flex-col">
                       <div className="mb-4 lg:mb-5">
