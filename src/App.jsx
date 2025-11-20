@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Papa from 'papaparse';
 import logger from './utils/logger';
 const InsectsHostPlantExplorer = React.lazy(() => import('./InsectsHostPlantExplorer'));
 const MothDetail = React.lazy(() => import('./MothDetail'));
@@ -15,6 +14,14 @@ const DATA_CACHE_DB = 'ihpe-cache';
 const DATA_CACHE_STORE = 'datasets';
 const DATA_CACHE_KEY = 'full-dataset';
 const CACHE_SCHEMA_VERSION = 1;
+
+let cachedPapa = null;
+const getPapa = async () => {
+  if (cachedPapa) return cachedPapa;
+  const mod = await import('papaparse');
+  cachedPapa = mod.default || mod;
+  return cachedPapa;
+};
 
 const openCacheDb = () => {
   if (typeof window === 'undefined' || !window.indexedDB) return Promise.resolve(null);
@@ -122,6 +129,8 @@ function App() {
   const typesFetchPromiseRef = useRef(null);
   const ensureTypesLoaderRef = useRef(null);
   const hostCsvExtendStartedRef = useRef(false);
+  const hostHydrationRequestedRef = useRef(false);
+  const pendingHostHydrationRef = useRef(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const cacheLoadedRef = useRef(false);
   const cachedVersionRef = useRef(null);
@@ -405,7 +414,12 @@ function App() {
                   }
                 },
               );
-              hydrateHostPlantsFromNormalized(lookup);
+              // Plantsタブが開かれるまでホスト植物の詳細パースを遅延
+              pendingHostHydrationRef.current = () => hydrateHostPlantsFromNormalized(lookup);
+              if (hostHydrationRequestedRef.current && pendingHostHydrationRef.current) {
+                pendingHostHydrationRef.current();
+                pendingHostHydrationRef.current = null;
+              }
               return { mothArr, butterArr, beetleArr, leafArr };
             };
 
@@ -459,11 +473,31 @@ function App() {
 
             ensureTypesLoaderRef.current = startFetchTypes;
 
+            const requestHostHydration = () => {
+              hostHydrationRequestedRef.current = true;
+              if (pendingHostHydrationRef.current) {
+                pendingHostHydrationRef.current();
+                pendingHostHydrationRef.current = null;
+              }
+            };
+
+            // Plantsタブ未訪問でも、アイドル時にバックグラウンドでホスト植物をマージしておく（非同期）
+            const idleHydrateHostplants = () => {
+              if (typeof window === 'undefined') return;
+              const fire = () => requestHostHydration();
+              if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(fire, { timeout: 10000 });
+              } else {
+                setTimeout(fire, 10000);
+              }
+            };
+
             try {
               const params = new URLSearchParams(location.search || '');
               const initialTab = params.get('tab') || 'insects';
               if (initialTab !== 'plants') {
                 startFetchTypes();
+                idleHydrateHostplants();
               } else {
                 const delay = 5000;
                 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
@@ -478,6 +512,7 @@ function App() {
             } catch (error) {
               logger.debug('Failed to interpret initial tab, fetching insects immediately:', error);
               startFetchTypes();
+              idleHydrateHostplants();
             }
 
             prefetchFullDataset();
@@ -1028,6 +1063,9 @@ function App() {
         }
 
         if (isDevelopment) logger.debug("CSV files fetched successfully. Parsing...");
+
+        // papaparse はここで遅延ロード（初期バンドルから除外）
+        const Papa = await getPapa();
 
         // Parse キリガ CSV to create emergence time lookup table（normalizedOnly時はスキップ）
         const emergenceTimeMap = new Map();
