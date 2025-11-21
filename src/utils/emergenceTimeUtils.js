@@ -78,6 +78,57 @@ export const normalizeEmergenceTime = (emergenceTime) => {
 };
 
 /**
+ * 出現期の文字列から「何月に出現するか」を月番号の配列で返す。
+ * フィルタ用に大まかな月情報さえ取れれば良いので、簡易的に範囲・リストを解釈する。
+ *
+ * 例:
+ *  - "4月下旬-6月中旬" -> [4,5,6]
+ *  - "7~9月" -> [7,8,9]
+ *  - "6, 9月" -> [6,9]
+ */
+export const getEmergenceMonths = (emergenceTime) => {
+  if (!emergenceTime) return [];
+
+  let text = `${emergenceTime}`;
+
+  // 全角数字を半角に、波ダッシュ類をハイフンに統一
+  text = text.replace(/[０-９]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xFEE0));
+  text = text.replace(/[〜～－ーｰ—–−]/g, '-');
+  // 区切り記号をスペースに統一（読点・スラッシュ・中黒など）
+  text = text.replace(/[、，,／/・]/g, ' ');
+  // 「上旬・中旬・下旬・頃」など月の後に付く語はフィルタ判定では無視
+  text = text.replace(/月\s*(上旬|中旬|下旬|初旬|頃|ごろ|前半|後半|中頃|中盤)/g, '月');
+
+  const months = new Set();
+
+  // 範囲指定（4-6月 / 4月-6月 / 10-3月 など）
+  const rangeRe = /(\d{1,2})\s*(?:月)?\s*-\s*(\d{1,2})\s*(?:月)?/g;
+  let m;
+  while ((m = rangeRe.exec(text)) !== null) {
+    let start = parseInt(m[1], 10);
+    let end = parseInt(m[2], 10);
+    if (start < 1 || start > 12 || end < 1 || end > 12) continue;
+
+    if (start <= end) {
+      for (let mm = start; mm <= end; mm++) months.add(mm);
+    } else {
+      // 年をまたぐ場合 (例: 10-3月)
+      for (let mm = start; mm <= 12; mm++) months.add(mm);
+      for (let mm = 1; mm <= end; mm++) months.add(mm);
+    }
+  }
+
+  // 個別月指定（6月・7月など）。範囲で既に追加されていても Set なので重複なし。
+  const singleRe = /(\d{1,2})\s*月/g;
+  while ((m = singleRe.exec(text)) !== null) {
+    const val = parseInt(m[1], 10);
+    if (val >= 1 && val <= 12) months.add(val);
+  }
+
+  return Array.from(months).sort((a, b) => a - b);
+};
+
+/**
  * マゲバヒメハマキのようなデータから成虫発生時期を抽出してテスト
  */
 export const testExtraction = () => {
