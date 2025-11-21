@@ -12,6 +12,8 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { createSafeInsectFilename } from './utils/image';
 import DetailNavigation from './components/DetailNavigation';
+import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
+import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 // import { RelatedPlants } from './components/RelatedLinks';
 
 let genusMappingPromise = null;
@@ -321,11 +323,14 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   const imgSrc = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(filename)}${ext}`;
   const href = insect.path || '#';
   const name = insect.name || insect.japaneseName || '（名称不明）';
-  const family = insect.classification?.familyJapanese || insect.family_jp || '';
+  
+  // Extract emergence time
+  const emergenceTime = insect.emergenceTime || extractEmergenceTime(insect.notes || '').emergenceTime;
+  const normalizedTime = normalizeEmergenceTime(emergenceTime);
 
   return (
-    <Link to={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition">
-      <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden">
+    <Link to={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
+      <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
             <img
@@ -340,31 +345,34 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
             />
             {/* Hover gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent hidden"></div>
-            {/* Name overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 ">
-              <h3 className="text-white font-bold text-lg drop-shadow-lg">{name}</h3>
-              {insect.scientificName && (
-                <p className="text-white/90 text-sm drop-shadow-md italic">{formatScientificNameReact(insect.scientificName)}</p>
-              )}
-            </div>
           </div>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
-              <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg tracking-tight">{name}</h3>
-              {insect.scientificName && (
-                <p className="text-white/90 text-sm drop-shadow-md italic">{formatScientificNameReact(insect.scientificName)}</p>
-              )}
-            </div>
-              <div className="hidden w-16 h-16 mx-auto mb-3 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
+              <div className="w-16 h-16 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <p className="hidden text-slate-500 dark:text-slate-400 font-medium">画像が見つかりません</p>
           </div>
         )}
-        </div>
+      </div>
+      
+      <div className="p-4 flex flex-col flex-grow">
+        <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1 leading-tight">{name}</h3>
+        {insect.scientificName && (
+          <p className="text-slate-600 dark:text-slate-400 text-sm italic mb-3">{formatScientificNameReact(insect.scientificName)}</p>
+        )}
+        
+        {normalizedTime && (
+          <div className="mt-auto pt-2 border-t border-slate-100 dark:border-slate-700/50">
+            <EmergenceTimeDisplay 
+              emergenceTime={normalizedTime} 
+              source={insect.source} 
+              compact={true} 
+            />
+          </div>
+        )}
+      </div>
     </Link>
   );
 };
