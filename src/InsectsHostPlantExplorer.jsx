@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramEmbed from "./components/InstagramEmbed";
@@ -299,6 +299,74 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
       loadInstagramResources();
     }, [instagramInView]);
 
+    const suggestions = useMemo(() => {
+      if (!globalSearchTerm || globalSearchTerm.trim() === "") return [];
+      const term = globalSearchTerm.toLowerCase();
+      const results = new Set();
+
+      if (activeTab === "insects") {
+        const allInsects = [
+          ...moths,
+          ...butterflies,
+          ...beetles,
+          ...leafbeetles,
+        ];
+        for (const insect of allInsects) {
+          if (results.size >= 10) break;
+          // Name match
+          if (insect.name && insect.name.includes(term)) {
+            results.add(insect.name);
+            continue;
+          }
+          // Scientific name match
+          if (
+            insect.scientificName &&
+            insect.scientificName.toLowerCase().includes(term)
+          ) {
+            results.add(insect.scientificName);
+            continue;
+          }
+          // Family match
+          if (
+            insect.classification?.familyJapanese &&
+            insect.classification.familyJapanese.includes(term)
+          ) {
+            results.add(insect.classification.familyJapanese);
+            continue;
+          }
+        }
+      } else {
+        // plants
+        const plantNames = Object.keys(hostPlants);
+        for (const plant of plantNames) {
+          if (results.size >= 10) break;
+          if (plant.includes(term)) {
+            results.add(plant);
+          }
+        }
+      }
+      return Array.from(results);
+    }, [
+      globalSearchTerm,
+      activeTab,
+      moths,
+      butterflies,
+      beetles,
+      leafbeetles,
+      hostPlants,
+    ]);
+
+    const handleSelectSuggestion = (value) => {
+      setGlobalSearchTerm(value);
+      const newParams = new URLSearchParams(searchParams);
+      if (value) {
+        newParams.set("q", value);
+      } else {
+        newParams.delete("q");
+      }
+      setSearchParams(newParams, { replace: true });
+    };
+
     useEffect(() => {
       let cancelled = false;
       loadPlantImageFilenamesService()
@@ -320,6 +388,8 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
           setActiveTab={setActiveTab} 
           searchTerm={globalSearchTerm} 
           onSearchChange={handleGlobalSearch}
+          suggestions={suggestions}
+          onSelectSuggestion={handleSelectSuggestion}
           onNeedInsectsData={onNeedInsectsData}
           onNeedPlantsData={onNeedPlantsData}
         />
@@ -424,12 +494,8 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                     placeholder={`${activeTab === "plants" ? "食草" : "昆虫"}を検索 (和名・学名・分類)`}
                     value={globalSearchTerm}
                     onChange={handleGlobalSearch}
-                    onSelectSuggestion={(val) => {
-                      setGlobalSearchTerm(val);
-                      const newParams = new URLSearchParams(searchParams);
-                      newParams.set("q", val);
-                      setSearchParams(newParams);
-                    }}
+                    suggestions={suggestions}
+                    onSelectSuggestion={handleSelectSuggestion}
                   />
                 </div>
               </div>
