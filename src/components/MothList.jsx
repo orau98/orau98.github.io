@@ -221,6 +221,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         fetchpriority={isPriority ? "high" : "auto"}
                         onLoad={() => setImageLoaded(true)}
                         onError={(e) => {
+                          // まず srcset/sizes をクリアし、以降は単一 src だけを使う（生成済みリサイズ画像が無い場合のループ防止）
+                          if (e.target) {
+                            e.target.srcset = '';
+                            e.target.sizes = '';
+                          }
                           // Robust多段フォールバック
                           const attempted = e.target.dataset.attempted || '';
                           const attempts = attempted.split(',').filter(Boolean);
