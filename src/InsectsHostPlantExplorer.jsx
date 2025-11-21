@@ -273,7 +273,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                 /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(s),
               );
             if (urls.length > 0) {
-              setInstagramPosts(urls.slice(0, 10));
+              setInstagramPosts(urls.slice(0, 24));
             }
           }
         } catch {
