@@ -48,11 +48,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     const genus = tokens[0];
     if (!genus) return name;
 
-    // 括弧付きサブジェヌスはスキップし、最初のラテン語小文字トークンを種小名とみなす
+    // 亜属 (Subgenus) を飛ばしつつ最初の小文字トークンを種小名とみなす
     let speciesIdx = -1;
     for (let i = 1; i < tokens.length; i += 1) {
       const t = tokens[i];
-      if (/^\(.*\)$/.test(t)) continue; // (Subgenus) は飛ばす
+      if (/^\(.*\)$/.test(t)) continue; // (Subgenus) をスキップ
       if (/^[a-z][a-z-]*$/.test(t)) { // 純小文字（ハイフン含む）は種小名候補
         speciesIdx = i;
         break;
@@ -62,12 +62,36 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
 
     const species = tokens[speciesIdx];
 
-    // 種の後に続く純小文字トークンを亜種小名とみなし除外。著者名・年などは残す。
-    const tail = tokens
-      .slice(speciesIdx + 1)
-      .filter((t) => !/^[a-z][a-z-]*$/.test(t) && !/^\(.*\)$/.test(t));
+    const output = [genus, species];
+    let skippingInfraspecific = true; // 種直後の純小文字を亜種扱いで除外
 
-    return tail.length ? `${genus} ${species} ${tail.join(' ')}` : `${genus} ${species}`;
+    for (let i = speciesIdx + 1; i < tokens.length; i += 1) {
+      const t = tokens[i];
+
+      // 亜属など括弧付きはそのまま残す（ただし subspecies とは無関係）
+      if (/^\(.*\)$/.test(t)) {
+        output.push(t);
+        skippingInfraspecific = false;
+        continue;
+      }
+
+      // 変種/品種などの階級表記（var., f., ssp., subsp. など）は表示しない
+      if (/^(subsp\.?|ssp\.?|var\.?|f\.?|forma)$/i.test(t)) {
+        skippingInfraspecific = true;
+        continue;
+      }
+
+      // 種の後に続く純小文字は亜種小名としてスキップ（著者名など大文字開始は残す）
+      if (skippingInfraspecific && /^[a-z][a-z-]*$/.test(t)) {
+        continue;
+      }
+
+      // ここまで来たら著者名・年などなので残す
+      output.push(t);
+      skippingInfraspecific = false;
+    }
+
+    return output.join(' ').replace(/\s+/g, ' ').trim();
   }, []);
 
   const handleIntersection = useCallback((entries) => {
