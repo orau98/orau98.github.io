@@ -44,6 +44,24 @@ let _insectImageNames = null; // set of bases for insects
 let _insectExtMap = null; // map base -> extension (e.g., .jpg)
 let _insectLoading = null;
 
+const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 250) => {
+  let lastErr;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const res = await fetch(url, opts);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res;
+    } catch (e) {
+      lastErr = e;
+      if (i < retries) {
+        await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+        continue;
+      }
+    }
+  }
+  throw lastErr;
+};
+
 export const loadInsectImageIndexes = async () => {
   if (_insectImageNames && _insectExtMap) return { names: _insectImageNames, exts: _insectExtMap };
   if (_insectLoading) return _insectLoading;
@@ -58,7 +76,7 @@ export const loadInsectImageIndexes = async () => {
       let namesSet = null;
       let extsMap = null;
       try {
-        const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        const res = await fetchWithRetry(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' }, 2, 200);
         if (res.ok) {
           const json = await res.json();
           const arr = Array.isArray(json.names) ? json.names : Object.keys(json.exts || {});
@@ -68,8 +86,8 @@ export const loadInsectImageIndexes = async () => {
       } catch {}
       if (!namesSet || !extsMap) {
         const [namesRes, extsRes] = await Promise.all([
-          fetch(`${base}image_filenames.txt${bust}`),
-          fetch(`${base}image_extensions.json${bust}`),
+          fetchWithRetry(`${base}image_filenames.txt${bust}`, {}, 2, 200),
+          fetchWithRetry(`${base}image_extensions.json${bust}`, {}, 2, 200),
         ]);
         const namesText = namesRes.ok ? await namesRes.text() : '';
         namesSet = new Set(namesText.split('\n').map(s => s.trim()).filter(Boolean));
