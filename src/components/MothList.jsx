@@ -5,7 +5,7 @@ import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 import logger from '../utils/logger';
-import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
+import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
@@ -379,7 +379,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     breadcrumbItems,
     resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/'
   });
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [hostFilter, setHostFilter] = useState("all"); // all | has | none
   const [familyFilter, setFamilyFilter] = useState("");
@@ -435,30 +435,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     if (!monthFilter) return true;
     // Use emergenceTime property if available (priority over re-extraction)
     const emergenceTime = moth.emergenceTime || extractEmergenceTime(moth?.notes || '').emergenceTime;
-    const n = normalizeEmergenceTime(emergenceTime);
-    if (!n) return false;
+    const normalized = normalizeEmergenceTime(emergenceTime);
+    if (!normalized) return false;
 
-    // Simple direct match
-    if (n.includes(monthFilter)) return true;
+    const months = getEmergenceMonths(normalized);
+    if (!months || months.length === 0) return false;
 
-    // Range match (e.g. "4-6月" should match "5月")
-    // Parse "X月" to X
     const targetMonth = parseInt(monthFilter.replace('月', ''), 10);
-    
-    // Regex for "Start-End月" or "Start～End月"
-    const rangeMatch = n.match(/(\d{1,2})\s*[~〜\-]\s*(\d{1,2})/);
-    if (rangeMatch) {
-      let start = parseInt(rangeMatch[1], 10);
-      let end = parseInt(rangeMatch[2], 10);
-      // Handle year crossing if needed, or just simple swap
-      if (start > end) { 
-        // e.g. 10-3月 (winter)
-        return targetMonth >= start || targetMonth <= end;
-      }
-      return targetMonth >= start && targetMonth <= end;
-    }
-    
-    return false;
+    if (Number.isNaN(targetMonth)) return false;
+
+    return months.includes(targetMonth);
   }, []);
   
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
@@ -974,11 +960,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const renderFilters = () => {
     const activeFilters = [];
+    const clearClassification = () => {
+      const p = new URLSearchParams(searchParams);
+      p.delete('classification');
+      setSearchParams(p, { replace: true });
+    };
+
     if (hostFilter !== 'all') activeFilters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setHostFilter('all') });
     if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setFamilyFilter('') });
     if (genusFilter) activeFilters.push({ type: '属', value: genusFilter, clear: () => setGenusFilter('') });
     if (emergenceFilter) activeFilters.push({ type: '出現期', value: emergenceFilter, clear: () => setEmergenceFilter('') });
-    if (classificationFilter) activeFilters.push({ type: '分類', value: classificationFilter, clear: () => {} }); // URL param managed by parent mainly, but displayed here
+    if (classificationFilter) activeFilters.push({ type: '分類', value: classificationFilter, clear: clearClassification });
 
     const hasActiveFilters = activeFilters.length > 0;
 
@@ -1012,17 +1004,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             {activeFilters.map((filter, idx) => (
               <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-700/50 transition-all hover:bg-blue-200 dark:hover:bg-blue-800/50">
                 {filter.type}: {filter.value}
-                {filter.clear.name !== 'clear' && filter.type !== '分類' && ( // Don't show x for URL param if no handler, though we could handle it
-                  <button 
-                    onClick={filter.clear}
-                    className="ml-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 focus:outline-none"
-                    aria-label={`${filter.type}フィルターを解除`}
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
+                <button 
+                  onClick={filter.clear}
+                  className="ml-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 focus:outline-none"
+                  aria-label={`${filter.type}フィルターを解除`}
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </span>
             ))}
             {hasActiveFilters && (
@@ -1032,6 +1022,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   setFamilyFilter('');
                   setGenusFilter('');
                   setEmergenceFilter('');
+                  clearClassification();
                 }}
                 className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
               >
