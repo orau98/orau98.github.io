@@ -14,6 +14,11 @@ import { buildResponsiveSrcset } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 
+// 「食草あり／なし」判定で無視するプレースホルダー語
+const HOST_PLACEHOLDERS = [
+  '不明', '未知', '未詳', '不詳', '？', '?', 'なし', '未確認', '未記載', '調査中', '情報なし'
+];
+
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, currentPage = 1 }) => {
   // Heuristic: insert a space between genus and species if missing
   const repairScientificBinomial = (name) => {
@@ -372,6 +377,38 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [currentPage, setCurrentPage] = useState(1);
+  const [hostFilter, setHostFilter] = useState("all"); // all | has | none
+  const [familyFilter, setFamilyFilter] = useState("");
+  const [genusFilter, setGenusFilter] = useState("");
+  const [emergenceFilter, setEmergenceFilter] = useState("");
+
+  const familyOptions = useMemo(() => {
+    const set = new Set();
+    moths.forEach((m) => {
+      const fam = (m?.classification?.familyJapanese || m?.classification?.family || '').trim();
+      if (fam) set.add(fam);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+  }, [moths]);
+
+  const genusOptions = useMemo(() => {
+    const set = new Set();
+    moths.forEach((m) => {
+      const gen = (m?.classification?.genus || '').trim();
+      if (gen) set.add(gen);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+  }, [moths]);
+
+  const emergenceOptions = useMemo(() => {
+    const set = new Set();
+    moths.forEach((m) => {
+      const { emergenceTime } = extractEmergenceTime(m?.notes || '');
+      const n = normalizeEmergenceTime(emergenceTime);
+      if (n) set.add(n);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+  }, [moths]);
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
 
   const classificationFilter = searchParams.get('classification');
@@ -456,6 +493,50 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   // ひらがな→カタカナは共通ユーティリティを使用
 
+  const normalizeText = useCallback((v) => (v || '').trim().toLowerCase(), []);
+
+  const isPlaceholderHost = useCallback((name) => {
+    if (!name) return true;
+    const base = name.replace(/[．。]/g, '.').trim();
+    const stripped = base.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+    if (!stripped) return true;
+    return HOST_PLACEHOLDERS.some(h => stripped === h || stripped.startsWith(h)) ||
+      /^unknown/i.test(stripped);
+  }, []);
+
+  const hasRealHost = useCallback((moth) => {
+    if (!moth || !moth.hostPlants) return false;
+    const splitPlants = (value) => {
+      if (typeof value === 'string') {
+        return value.split(/[;；、,]/).map((p) => p.trim());
+      }
+      if (Array.isArray(value)) {
+        return value.map((p) => (p || '').trim());
+      }
+      return [];
+    };
+
+    const plantNames = [];
+    splitPlants(moth.hostPlants)
+      .filter(Boolean)
+      .forEach((p) => {
+        const cleaned = p.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+        if (cleaned) plantNames.push(cleaned);
+      });
+
+    // 「不明」「未知」などのプレースホルダーだけの場合は false
+    return plantNames.some((p) => p && !isPlaceholderHost(p));
+  }, [isPlaceholderHost]);
+
+  const extractEmergence = useCallback((moth) => {
+    try {
+      const { emergenceTime } = extractEmergenceTime(moth?.notes || '');
+      return normalizeEmergenceTime(emergenceTime) || '';
+    } catch {
+      return '';
+    }
+  }, []);
+
   const filteredMoths = useMemo(() => {
     try {
       logger.debug('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
@@ -467,6 +548,29 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       return moths.filter(moth => {
         try {
           if (!moth) return false;
+          
+          // host filter
+          const hasHost = hasRealHost(moth);
+          if (hostFilter === 'has' && !hasHost) return false;
+          if (hostFilter === 'none' && hasHost) return false;
+          
+          // family filter
+          if (familyFilter) {
+            const famJ = normalizeText(moth.classification?.familyJapanese);
+            const fam = normalizeText(moth.classification?.family);
+            if (!(famJ === normalizeText(familyFilter) || fam === normalizeText(familyFilter))) return false;
+          }
+          
+          // genus filter
+          if (genusFilter) {
+            if ((moth.classification?.genus || '').toLowerCase() !== genusFilter.toLowerCase()) return false;
+          }
+          
+          // emergence filter
+          if (emergenceFilter) {
+            const em = extractEmergence(moth);
+            if (!em.includes(emergenceFilter)) return false;
+          }
           
           const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
           // ひらがなをカタカナに変換した検索語も用意
@@ -518,7 +622,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, extractEmergence, normalizeText]);
 
   const allSuggestions = useMemo(() => {
     try {
@@ -797,7 +901,66 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, hostFilter, familyFilter, genusFilter, emergenceFilter]);
+
+  const renderFilters = () => (
+    <div className="mt-4 flex flex-wrap gap-3 items-center text-sm text-slate-700 dark:text-slate-300">
+      <div className="flex items-center gap-1">
+        <span className="font-semibold">食草:</span>
+        <select
+          value={hostFilter}
+          onChange={(e) => setHostFilter(e.target.value)}
+          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
+        >
+          <option value="all">すべて</option>
+          <option value="has">食草あり</option>
+          <option value="none">未登録のみ</option>
+        </select>
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="font-semibold">科:</span>
+        <select
+          value={familyFilter}
+          onChange={(e) => setFamilyFilter(e.target.value)}
+          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
+        >
+          <option value="">指定なし</option>
+          {familyOptions.map((f) => (
+            <option key={f} value={f}>{f}</option>
+          ))}
+        </select>
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="font-semibold">属:</span>
+        <select
+          value={genusFilter}
+          onChange={(e) => setGenusFilter(e.target.value)}
+          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
+        >
+          <option value="">指定なし</option>
+          {genusOptions.map((g) => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="font-semibold">出現期:</span>
+        <select
+          value={emergenceFilter}
+          onChange={(e) => setEmergenceFilter(e.target.value)}
+          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
+        >
+          <option value="">指定なし</option>
+          {emergenceOptions.map((em) => (
+            <option key={em} value={em}>{em}</option>
+          ))}
+        </select>
+      </div>
+      <div className="ml-auto text-xs md:text-sm text-slate-500 dark:text-slate-400">
+        {filteredMoths?.length ?? 0} 件
+      </div>
+    </div>
+  );
 
   return (
     <div className={embedded ? "" : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden"}>
@@ -836,6 +999,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             suggestions={allSuggestions}
             onSelectSuggestion={setSearchTerm}
           />
+          {renderFilters()}
         </div>
       )}
       
@@ -862,6 +1026,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             suggestions={allSuggestions}
             onSelectSuggestion={setSearchTerm}
           />
+          {renderFilters()}
         </div>
       )}
       
