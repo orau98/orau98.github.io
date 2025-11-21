@@ -396,7 +396,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
         {/* 構造化データ */}
         <MainStructuredData />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div className="relative w-full h-[32rem] md:h-96 lg:h-[28rem] rounded-3xl overflow-hidden shadow-2xl group">
+          <div className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] rounded-3xl overflow-hidden shadow-2xl group">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
 
             {/* Show skeleton while loading */}
