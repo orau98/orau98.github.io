@@ -16,6 +16,7 @@ import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
+import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 // SupportEngagementSection is test-only and not used in SPA detail
 
@@ -88,7 +89,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
   
   // Combine all insects for searching
-  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
+  const allInsects = React.useMemo(() => [...moths, ...butterflies, ...beetles, ...leafbeetles], [moths, butterflies, beetles, leafbeetles]);
+  
+  // Sort for navigation
+  const sortedInsects = React.useMemo(() => {
+    return [...allInsects].sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+  }, [allInsects]);
+
   let moth = allInsects.find(m => m.id === mappedInsectId);
   if (!moth) {
     const fallbackId = resolveInsectId(mappedInsectId);
@@ -1580,6 +1587,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             />
           </div>
         </div>
+
+        {/* 前後の種へのナビゲーション */}
+        <DetailNavigation allItems={sortedInsects} currentId={moth.id} type="insect" />
       </div>
     </div>
   );

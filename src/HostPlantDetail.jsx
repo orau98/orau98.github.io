@@ -11,6 +11,7 @@ import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { createSafeInsectFilename } from './utils/image';
+import DetailNavigation from './components/DetailNavigation';
 // import { RelatedPlants } from './components/RelatedLinks';
 
 let genusMappingPromise = null;
@@ -1277,6 +1278,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           </div>
         )}
       </div>
+
+      {/* 前後の植物へのナビゲーション */}
+      <DetailNavigation 
+        allItems={useMemo(() => Object.keys(hostPlants).sort((a, b) => a.localeCompare(b, 'ja')).map(name => ({ name })), [hostPlants])} 
+        currentId={decodedPlantName} 
+        type="plant" 
+      />
 
       {/* 関連する他の植物 - 一時的にコメントアウト */}
       {/* 

@@ -1,0 +1,94 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+// Helper to get previous and next items from a sorted list
+// `items` should be sorted in the desired order (e.g., alphabetical or taxonomic)
+// `currentItemId` or `currentItemName` is used to find the current index
+const useNeighborItems = (items, currentItemIdentifier, identifierKey = 'id') => {
+  const currentIndex = items.findIndex(item => 
+    (identifierKey === 'name' ? item.name : item.id) === currentItemIdentifier
+  );
+
+  if (currentIndex === -1) return { prevItem: null, nextItem: null };
+
+  const prevItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+  const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+  return { prevItem, nextItem };
+};
+
+// Navigation Link Component
+const NeighborLink = ({ item, direction, type = 'insect' }) => {
+  if (!item) return <div className="flex-1" />; // Placeholder for alignment
+
+  const getRoute = (item, type) => {
+    if (type === 'plant') return `/plant/${encodeURIComponent(item.name)}`;
+    // Determine insect route
+    if (item.type === 'butterfly') return `/butterfly/${item.id}`;
+    if (item.type === 'beetle') return `/beetle/${item.id}`;
+    if (item.type === 'leafbeetle') return `/leafbeetle/${item.id}`;
+    return `/moth/${item.id}`;
+  };
+
+  const route = getRoute(item, type);
+  const isPrev = direction === 'prev';
+
+  return (
+    <Link
+      to={route}
+      className={`flex-1 flex items-center ${isPrev ? 'justify-start' : 'justify-end'} group p-4 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md`}
+    >
+      {isPrev && (
+        <div className="mr-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </div>
+      )}
+      
+      <div className={`flex flex-col ${isPrev ? 'items-start' : 'items-end'}`}>
+        <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-0.5">
+          {isPrev ? '前の種' : '次の種'}
+        </span>
+        <span className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-1">
+          {item.name}
+        </span>
+      </div>
+
+      {!isPrev && (
+        <div className="ml-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      )}
+    </Link>
+  );
+};
+
+// Main Component
+const DetailNavigation = ({ allItems, currentId, type = 'insect' }) => {
+  // Sort items for consistent navigation order (e.g., alphabetical by Japanese name)
+  // Assuming 'allItems' might be unsorted, let's sort by name if not already.
+  // For insects, usually passed sorted or we sort here.
+  // Sorting 7000+ items on every render is heavy. 
+  // Ideally 'allItems' is already memoized/sorted in parent or we memoize here.
+  
+  // However, for simplicity and correctness with the list view:
+  // The list view sorts by `name` usually.
+  
+  // Note: useNeighborItems iterates to find index.
+  
+  const { prevItem, nextItem } = useNeighborItems(allItems, currentId, type === 'plant' ? 'name' : 'id');
+
+  if (!prevItem && !nextItem) return null;
+
+  return (
+    <div className="flex justify-between gap-4 mt-12 border-t border-slate-200/50 dark:border-slate-700/50 pt-8">
+      <NeighborLink item={prevItem} direction="prev" type={type} />
+      <NeighborLink item={nextItem} direction="next" type={type} />
+    </div>
+  );
+};
+
+export default DetailNavigation;
