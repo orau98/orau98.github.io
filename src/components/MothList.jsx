@@ -40,12 +40,29 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   // Remove subspecies epithet from display (keep author/year if present)
   const dropSubspecies = useCallback((name) => {
     if (!name || typeof name !== 'string') return name;
-    const parts = name.trim().split(/\s+/);
+    const parts = name.trim().split(/\s+/).filter(Boolean);
     if (parts.length <= 2) return name;
-    const [genus, species, ...rest] = parts;
-    // 亜種小名は小文字のラテン語が多いのでそれを除外し、著者名・年などは残す
-    const tail = rest.filter((p) => !/^[a-z-]+$/.test(p)).join(' ');
-    return tail ? `${genus} ${species} ${tail}` : `${genus} ${species}`;
+
+    const genus = parts[0];
+
+    // サブジェヌスが括弧で入る場合に対応し、実際の species を探す
+    let speciesIdx = -1;
+    for (let i = 1; i < parts.length; i += 1) {
+      const token = parts[i];
+      if (/^\(.*\)$/.test(token)) continue; // (Subgenus)
+      speciesIdx = i;
+      break;
+    }
+    if (speciesIdx === -1) return name; // フォールバック
+
+    const species = parts[speciesIdx];
+    // 亜種小名は species より後ろの「すべて小文字のみ」トークンを除外する。
+    // (Subgenus) など括弧付きは除外。著者名や年は残す。
+    const tail = parts
+      .slice(speciesIdx + 1)
+      .filter((p) => !/^[a-z-]+$/.test(p) && !/^\(.*\)$/.test(p));
+
+    return tail.length ? `${genus} ${species} ${tail.join(' ')}` : `${genus} ${species}`;
   }, []);
 
   const handleIntersection = useCallback((entries) => {
