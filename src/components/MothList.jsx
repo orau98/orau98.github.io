@@ -38,29 +38,34 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
 
   // Remove subspecies epithet from display (keep author/year if present)
+  // 学名から亜種小名だけを落とし、種小名は必ず保持する
   const dropSubspecies = useCallback((name) => {
     if (!name || typeof name !== 'string') return name;
-    const parts = name.trim().split(/\s+/).filter(Boolean);
-    if (parts.length <= 2) return name;
 
-    const genus = parts[0];
+    const tokens = name.trim().split(/\s+/).filter(Boolean);
+    if (tokens.length <= 2) return name; // もともと亜種がない
 
-    // サブジェヌスが括弧で入る場合に対応し、実際の species を探す
+    const genus = tokens[0];
+    if (!genus) return name;
+
+    // 括弧付きサブジェヌスはスキップし、最初のラテン語小文字トークンを種小名とみなす
     let speciesIdx = -1;
-    for (let i = 1; i < parts.length; i += 1) {
-      const token = parts[i];
-      if (/^\(.*\)$/.test(token)) continue; // (Subgenus)
-      speciesIdx = i;
-      break;
+    for (let i = 1; i < tokens.length; i += 1) {
+      const t = tokens[i];
+      if (/^\(.*\)$/.test(t)) continue; // (Subgenus) は飛ばす
+      if (/^[a-z][a-z-]*$/.test(t)) { // 純小文字（ハイフン含む）は種小名候補
+        speciesIdx = i;
+        break;
+      }
     }
-    if (speciesIdx === -1) return name; // フォールバック
+    if (speciesIdx === -1) return name; // 種が見つからない場合はそのまま
 
-    const species = parts[speciesIdx];
-    // 亜種小名は species より後ろの「すべて小文字のみ」トークンを除外する。
-    // (Subgenus) など括弧付きは除外。著者名や年は残す。
-    const tail = parts
+    const species = tokens[speciesIdx];
+
+    // 種の後に続く純小文字トークンを亜種小名とみなし除外。著者名・年などは残す。
+    const tail = tokens
       .slice(speciesIdx + 1)
-      .filter((p) => !/^[a-z-]+$/.test(p) && !/^\(.*\)$/.test(p));
+      .filter((t) => !/^[a-z][a-z-]*$/.test(t) && !/^\(.*\)$/.test(t));
 
     return tail.length ? `${genus} ${species} ${tail.join(' ')}` : `${genus} ${species}`;
   }, []);
