@@ -462,10 +462,10 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
               <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight tracking-tight">
-                  <span className="block bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl animate-gradient-x font-bold">
+                  <span className="block bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl animate-gradient-x font-bold text-2xl sm:text-3xl md:text-5xl lg:text-6xl">
                     "繋がり"が見える
                   </span>
-                  <span className="block bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl text-4xl md:text-6xl lg:text-7xl mt-2 font-extrabold">
+                  <span className="block bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl mt-2 font-extrabold text-3xl sm:text-4xl md:text-6xl lg:text-7xl">
                     昆虫食草図鑑
                   </span>
                 </h1>
