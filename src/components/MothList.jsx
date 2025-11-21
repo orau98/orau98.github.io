@@ -303,22 +303,14 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 </div>
               </div>
               
-              {/* 成虫発生時期表示 */}
+              {/* 成虫発生時期表示（ガントチャートのみ） */}
               {(() => {
                 const { emergenceTime } = extractEmergenceTime(moth.notes || '');
                 const normalizedTime = normalizeEmergenceTime(emergenceTime);
                 
                 if (normalizedTime) {
                   return (
-                    <div className="space-y-2">
-                      <div className="flex items-start space-x-2">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 flex-shrink-0">
-                          発生時期
-                        </span>
-                        <span className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                          {normalizedTime}
-                        </span>
-                      </div>
+                    <div className="pt-1">
                       <EmergenceTimeDisplay 
                         emergenceTime={normalizedTime} 
                         source={moth.source}
@@ -377,6 +369,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const [familyFilter, setFamilyFilter] = useState("");
   const [genusFilter, setGenusFilter] = useState("");
   const [emergenceFilter, setEmergenceFilter] = useState("");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const familyOptions = useMemo(() => {
     const set = new Set();
@@ -432,6 +425,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       }, 100);
     }
   }, []);
+
+  // Sync search term with classification filter and clear when filter removed
+  useEffect(() => {
+    if (classificationFilter) {
+      setSearchTerm(classificationFilter);
+    } else {
+      setSearchTerm(initialSearchTerm || '');
+    }
+  }, [classificationFilter, initialSearchTerm]);
 
   // （メタは useSeoMeta に移行）
 
@@ -884,64 +886,171 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     setCurrentPage(1);
   }, [debouncedSearchTerm, hostFilter, familyFilter, genusFilter, emergenceFilter]);
 
-  const renderFilters = () => (
-    <div className="mt-4 flex flex-wrap gap-3 items-center text-sm text-slate-700 dark:text-slate-300">
-      <div className="flex items-center gap-1">
-        <span className="font-semibold">食草:</span>
-        <select
-          value={hostFilter}
-          onChange={(e) => setHostFilter(e.target.value)}
-          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
+  const renderFilters = () => {
+    const activeFilters = [];
+    if (hostFilter !== 'all') activeFilters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setHostFilter('all') });
+    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setFamilyFilter('') });
+    if (genusFilter) activeFilters.push({ type: '属', value: genusFilter, clear: () => setGenusFilter('') });
+    if (emergenceFilter) activeFilters.push({ type: '出現期', value: emergenceFilter, clear: () => setEmergenceFilter('') });
+    if (classificationFilter) activeFilters.push({ type: '分類', value: classificationFilter, clear: () => {} }); // URL param managed by parent mainly, but displayed here
+
+    const hasActiveFilters = activeFilters.length > 0;
+
+    return (
+      <div className="mt-4">
+        {/* Active Filters & Toggle */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {/* Chips */}
+          <div className="flex flex-wrap gap-2 items-center flex-1">
+            {hasActiveFilters && (
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
+            )}
+            {activeFilters.map((filter, idx) => (
+              <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-700/50 transition-all hover:bg-blue-200 dark:hover:bg-blue-800/50">
+                {filter.type}: {filter.value}
+                {filter.clear.name !== 'clear' && filter.type !== '分類' && ( // Don't show x for URL param if no handler, though we could handle it
+                  <button 
+                    onClick={filter.clear}
+                    className="ml-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 focus:outline-none"
+                    aria-label={`${filter.type}フィルターを解除`}
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </span>
+            ))}
+            {hasActiveFilters && (
+              <button 
+                onClick={() => {
+                  setHostFilter('all');
+                  setFamilyFilter('');
+                  setGenusFilter('');
+                  setEmergenceFilter('');
+                }}
+                className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
+              >
+                すべてクリア
+              </button>
+            )}
+          </div>
+
+          {/* Toggle Button */}
+          <button 
+            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              isFiltersOpen 
+                ? 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200' 
+                : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            詳細フィルタ
+            <svg className={`w-3 h-3 transition-transform duration-200 ${isFiltersOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Collapsible Controls */}
+        <div 
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 transition-all duration-300 ease-in-out overflow-hidden ${
+            isFiltersOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
         >
-          <option value="all">すべて</option>
-          <option value="has">食草あり</option>
-          <option value="none">未登録のみ</option>
-        </select>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">食草の有無</label>
+            <div className="relative">
+              <select
+                value={hostFilter}
+                onChange={(e) => setHostFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              >
+                <option value="all">すべて</option>
+                <option value="has">食草あり</option>
+                <option value="none">未登録のみ</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">科 (Family)</label>
+            <div className="relative">
+              <select
+                value={familyFilter}
+                onChange={(e) => setFamilyFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              >
+                <option value="">指定なし</option>
+                {familyOptions.map((f) => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">属 (Genus)</label>
+            <div className="relative">
+              <select
+                value={genusFilter}
+                onChange={(e) => setGenusFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              >
+                <option value="">指定なし</option>
+                {genusOptions.map((g) => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">出現期</label>
+            <div className="relative">
+              <select
+                value={emergenceFilter}
+                onChange={(e) => setEmergenceFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              >
+                <option value="">指定なし</option>
+                {emergenceOptions.map((em) => (
+                  <option key={em} value={em}>{em}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500">
+          {filteredMoths?.length ?? 0} 件が見つかりました
+        </div>
       </div>
-      <div className="flex items-center gap-1">
-        <span className="font-semibold">科:</span>
-        <select
-          value={familyFilter}
-          onChange={(e) => setFamilyFilter(e.target.value)}
-          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
-        >
-          <option value="">指定なし</option>
-          {familyOptions.map((f) => (
-            <option key={f} value={f}>{f}</option>
-          ))}
-        </select>
-      </div>
-      <div className="flex items-center gap-1">
-        <span className="font-semibold">属:</span>
-        <select
-          value={genusFilter}
-          onChange={(e) => setGenusFilter(e.target.value)}
-          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
-        >
-          <option value="">指定なし</option>
-          {genusOptions.map((g) => (
-            <option key={g} value={g}>{g}</option>
-          ))}
-        </select>
-      </div>
-      <div className="flex items-center gap-1">
-        <span className="font-semibold">出現期:</span>
-        <select
-          value={emergenceFilter}
-          onChange={(e) => setEmergenceFilter(e.target.value)}
-          className="px-2 py-1 border rounded-md bg-white dark:bg-slate-800 dark:border-slate-600"
-        >
-          <option value="">指定なし</option>
-          {emergenceOptions.map((em) => (
-            <option key={em} value={em}>{em}</option>
-          ))}
-        </select>
-      </div>
-      <div className="ml-auto text-xs md:text-sm text-slate-500 dark:text-slate-400">
-        {filteredMoths?.length ?? 0} 件
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className={embedded ? "" : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden"}>
@@ -957,20 +1066,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-tight">
                 {title}のリスト
               </h2>
-              {classificationFilter && (
-                <div className="flex items-center mt-2">
-                  <span className="text-sm text-slate-600 dark:text-slate-400 mr-2">フィルター:</span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200/50 dark:border-blue-700/50">
-                    {classificationFilter}
-                  </span>
-                  <Link
-                    to="/"
-                    className="ml-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 underline"
-                  >
-                    クリア
-                  </Link>
-                </div>
-              )}
             </div>
           </div>
           {renderFilters()}
@@ -979,20 +1074,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       
       {embedded && (
         <div className="p-6">
-          {classificationFilter && (
-            <div className="flex items-center mb-4">
-              <span className="text-sm text-slate-600 dark:text-slate-400 mr-2">フィルター:</span>
-              <span className="inline-flex items-center px-2 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200/50 dark:border-blue-700/50">
-                {classificationFilter}
-              </span>
-              <Link
-                to="/"
-                className="ml-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 underline"
-              >
-                クリア
-              </Link>
-            </div>
-          )}
           {renderFilters()}
         </div>
       )}
