@@ -396,7 +396,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
         {/* 構造化データ */}
         <MainStructuredData />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div className="relative w-full h-72 md:h-96 lg:h-[28rem] rounded-3xl overflow-hidden shadow-2xl group">
+          <div className="relative w-full h-[32rem] md:h-96 lg:h-[28rem] rounded-3xl overflow-hidden shadow-2xl group">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
 
             {/* Show skeleton while loading */}
@@ -461,7 +461,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
 
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
               <div className="max-w-6xl mx-auto">
-                <h1 className="font-extrabold text-white mb-4 leading-tight tracking-tight">
+                <h1 className="font-extrabold text-white mb-2 md:mb-4 leading-tight tracking-tight">
                   <span className="block bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl animate-gradient-x font-bold text-[6vw] sm:text-3xl md:text-5xl lg:text-6xl">
                     "繋がり"が見える
                   </span>
@@ -470,7 +470,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                   </span>
                 </h1>
 
-                <div className="flex flex-wrap gap-3 mt-6">
+                <div className="flex flex-wrap gap-3 mt-3 md:mt-6">
                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
                     <span className="text-white/90 text-sm font-medium">
                       蝶・蛾 {counts.moths + counts.butterflies}種
@@ -489,7 +489,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                 </div>
 
                 {/* ヒーローセクション内の検索バー */}
-                <div className="max-w-2xl w-full mt-8 mx-auto md:mx-0">
+                <div className="max-w-2xl w-full mt-4 md:mt-8 mx-auto md:mx-0">
                   <SearchInput
                     placeholder={`${activeTab === "plants" ? "食草" : "昆虫"}を検索 (和名・学名・分類)`}
                     value={globalSearchTerm}
