@@ -192,22 +192,34 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         fetchpriority={isPriority ? "high" : "auto"}
                         onLoad={() => setImageLoaded(true)}
                         onError={(e) => {
-                          // Try fallback paths for beetles in insects directory
-                          if ((moth.type === 'beetle' || moth.type === 'leafbeetle') && !e.target.dataset.fallbackAttempted) {
-                            e.target.dataset.fallbackAttempted = 'true';
-                            const fallbackUrl = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(finalImageFilename)}${imageExtension}${cacheBustRef.current}`;
-                            e.target.src = fallbackUrl;
-                          } else {
-                            // Safely hide the image and show fallback
-                            if (e.target && e.target.style) {
-                              e.target.style.display = 'none';
-                            }
-                            // Only access nextSibling if parentElement exists and has a nextSibling
-                            const parent = e.target?.parentElement;
-                            const sibling = parent?.nextSibling;
-                            if (sibling && sibling.style) {
-                              sibling.style.display = 'flex';
-                            }
+                          // Robust多段フォールバック
+                          const attempted = e.target.dataset.attempted || '';
+                          const attempts = attempted.split(',').filter(Boolean);
+                          
+                          // 候補リスト: 1) 拡張子違い 2) フォルダ違い(insects固定) 3) 最後にプレースホルダー
+                          const tryList = [
+                            `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}.jpg${cacheBustRef.current}`,
+                            `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}.jpeg${cacheBustRef.current}`,
+                            `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}.png${cacheBustRef.current}`,
+                            `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(finalImageFilename)}.jpg${cacheBustRef.current}`, // 異なるtypeでもinsectsに多く格納
+                          ].filter((u) => u && !attempts.includes(u));
+                          
+                          if (tryList.length > 0) {
+                            const next = tryList[0];
+                            attempts.push(next);
+                            e.target.dataset.attempted = attempts.join(',');
+                            e.target.src = next;
+                            return;
+                          }
+
+                          // フォールバックも尽きたら非表示に
+                          if (e.target && e.target.style) {
+                            e.target.style.display = 'none';
+                          }
+                          const parent = e.target?.parentElement;
+                          const sibling = parent?.nextSibling;
+                          if (sibling && sibling.style) {
+                            sibling.style.display = 'flex';
                           }
                         }}
                       />
