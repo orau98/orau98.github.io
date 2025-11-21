@@ -4,6 +4,7 @@ import InstagramIcon from "./components/InstagramIcon";
 import InstagramEmbed from "./components/InstagramEmbed";
 import InstagramTimeline from "./components/InstagramTimeline";
 import SearchInput from "./components/SearchInput";
+import StickyHeader from "./components/StickyHeader";
 import { MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
@@ -314,6 +315,14 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        <StickyHeader 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          searchTerm={globalSearchTerm} 
+          onSearchChange={handleGlobalSearch}
+          onNeedInsectsData={onNeedInsectsData}
+          onNeedPlantsData={onNeedPlantsData}
+        />
         {/* 構造化データ */}
         <MainStructuredData />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
