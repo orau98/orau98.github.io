@@ -5,7 +5,6 @@ import useSeoMeta from "../hooks/useSeoMeta";
 import { absUrl } from "../utils/origin";
 import { Link } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
-import SearchInput from "./SearchInput";
 import { createSafePlantFilename, splitFilenameBase } from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
@@ -277,19 +276,6 @@ const HostPlantList = ({
   preloadedImageFilenames = [],
   initialSearchTerm = "",
 }) => {
-  const [plantSearchTerm, setPlantSearchTerm] = useState(initialSearchTerm);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [plantImageFilenames, setPlantImageFilenames] = useState(
-    preloadedImageFilenames,
-  );
-
-  // Sync with initialSearchTerm if it changes
-  useEffect(() => {
-    if (initialSearchTerm) {
-      setPlantSearchTerm(initialSearchTerm);
-    }
-  }, [initialSearchTerm]);
-
   // Canonical/OG/パンくず（フックで共通化）
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
   const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
@@ -323,6 +309,10 @@ const HostPlantList = ({
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [plantImageFilenames, setPlantImageFilenames] = useState(
+    preloadedImageFilenames,
+  );
 
   // Load plant image filenames on component mount
   useEffect(() => {
@@ -352,23 +342,9 @@ const HostPlantList = ({
     return () => window.removeEventListener("resize", onResize);
   }, [computeItemsPerPage]);
 
-  const debouncedPlantSearch = useDebounce(plantSearchTerm, 300);
+  const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
   const [searchParams] = useSearchParams();
   const classificationFilter = searchParams.get("classification");
-  const lastAppliedClassificationRef = useRef(null);
-
-  // Initialize plant search term from URL (classification=...)
-  useEffect(() => {
-    if (classificationFilter) {
-      setPlantSearchTerm(classificationFilter);
-      lastAppliedClassificationRef.current = classificationFilter;
-    } else if (lastAppliedClassificationRef.current) {
-      setPlantSearchTerm((prev) =>
-        prev === lastAppliedClassificationRef.current ? "" : prev,
-      );
-      lastAppliedClassificationRef.current = null;
-    }
-  }, [classificationFilter]);
 
   // （メタは useSeoMeta に移行）
 
@@ -598,10 +574,10 @@ const HostPlantList = ({
   }, [currentPage, itemsPerPage, filteredHostPlants.length]);
 
   const plantNameSuggestions = useMemo(() => {
-    if (!plantSearchTerm) return [];
-    const lowerCaseSearchTerm = plantSearchTerm.toLowerCase();
+    if (!initialSearchTerm) return [];
+    const lowerCaseSearchTerm = initialSearchTerm.toLowerCase();
     const katakanaSearchTerm =
-      hiraganaToKatakana(plantSearchTerm).toLowerCase();
+      hiraganaToKatakana(initialSearchTerm).toLowerCase();
     const suggestions = new Set();
     Object.keys(safeHostPlants).forEach((plant) => {
       if (
@@ -637,7 +613,7 @@ const HostPlantList = ({
       }
     });
     return Array.from(suggestions).slice(0, 10);
-  }, [safeHostPlants, safePlantDetails, plantSearchTerm]);
+  }, [safeHostPlants, safePlantDetails, initialSearchTerm]);
 
   const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
   const currentHostPlants = useMemo(() => {
@@ -669,25 +645,6 @@ const HostPlantList = ({
               食草リスト
             </h2>
           </div>
-          <SearchInput
-            placeholder="食草を検索"
-            value={plantSearchTerm}
-            onChange={(e) => setPlantSearchTerm(e.target.value)}
-            suggestions={plantNameSuggestions}
-            onSelectSuggestion={setPlantSearchTerm}
-          />
-        </div>
-      )}
-
-      {embedded && (
-        <div className="p-6">
-          <SearchInput
-            placeholder="食草を検索"
-            value={plantSearchTerm}
-            onChange={(e) => setPlantSearchTerm(e.target.value)}
-            suggestions={plantNameSuggestions}
-            onSelectSuggestion={setPlantSearchTerm}
-          />
         </div>
       )}
 

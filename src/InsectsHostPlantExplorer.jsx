@@ -41,6 +41,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
     const [globalSearchTerm, setGlobalSearchTerm] = useState(
       searchParams.get("q") || "",
     );
+    const searchTimeoutRef = useRef(null);
 
     // Sync global search term with URL
     useEffect(() => {
@@ -48,21 +49,35 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
       if (q !== null && q !== globalSearchTerm) {
         setGlobalSearchTerm(q);
       }
-    }, [searchParams, globalSearchTerm]);
+    }, [searchParams]); // Remove globalSearchTerm dependency to avoid loop
 
     const handleGlobalSearch = (e) => {
       const val = e.target.value;
       setGlobalSearchTerm(val);
 
-      // Update URL param
-      const newParams = new URLSearchParams(searchParams);
-      if (val) {
-        newParams.set("q", val);
-      } else {
-        newParams.delete("q");
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
       }
-      setSearchParams(newParams, { replace: true });
+
+      searchTimeoutRef.current = setTimeout(() => {
+        const newParams = new URLSearchParams(searchParams);
+        if (val) {
+          newParams.set("q", val);
+        } else {
+          newParams.delete("q");
+        }
+        setSearchParams(newParams, { replace: true });
+      }, 300);
     };
+
+    // Cleanup timeout
+    useEffect(() => {
+      return () => {
+        if (searchTimeoutRef.current) {
+          clearTimeout(searchTimeoutRef.current);
+        }
+      };
+    }, []);
 
     // Helper: detect profile URL (not a single post permalink)
     const isInstagramProfileUrl = (url) => {

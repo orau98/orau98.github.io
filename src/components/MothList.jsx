@@ -300,14 +300,22 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 </div>
               </div>
               
-              {/* 成虫発生時期表示（ガントチャートのみ） */}
+              {/* 成虫発生時期表示 */}
               {(() => {
                 const { emergenceTime } = extractEmergenceTime(moth.notes || '');
                 const normalizedTime = normalizeEmergenceTime(emergenceTime);
                 
                 if (normalizedTime) {
                   return (
-                    <div className="pt-1">
+                    <div className="space-y-2">
+                      <div className="flex items-start space-x-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 flex-shrink-0">
+                          発生時期
+                        </span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          {normalizedTime}
+                        </span>
+                      </div>
                       <EmergenceTimeDisplay 
                         emergenceTime={normalizedTime} 
                         source={moth.source}
@@ -420,19 +428,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       }, 100);
     }
   }, []);
-
-  // Sync search term with classification filter and clear when filter removed
-  useEffect(() => {
-    if (classificationFilter) {
-      setSearchTerm(classificationFilter);
-      lastAppliedClassificationRef.current = classificationFilter;
-    } else if (lastAppliedClassificationRef.current) {
-      setSearchTerm((prev) =>
-        prev === lastAppliedClassificationRef.current ? '' : prev
-      );
-      lastAppliedClassificationRef.current = null;
-    }
-  }, [classificationFilter]);
 
   // （メタは useSeoMeta に移行）
 
@@ -562,7 +557,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                    (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.subfamilyJapanese?.toLowerCase().includes(katakanaClassification)) ||
                    (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerClassification)) ||
-                   (moth.classification?.tribeJapanese?.toLowerCase().includes(katakanaClassification)) ||
+                   (moth.classification?.tribeJapanese?.toLowerCase().includes(katakanaSearchTerm)) ||
                    (moth.classification?.genus?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.family?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.subfamily?.toLowerCase().includes(lowerClassification)) ||
@@ -603,11 +598,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const allSuggestions = useMemo(() => {
     try {
-      if (!searchTerm || !moths || moths.length === 0) return [];
+      if (!initialSearchTerm || !moths || moths.length === 0) return [];
       
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      const lowerCaseSearchTerm = initialSearchTerm.toLowerCase();
       // ひらがなをカタカナに変換した検索語も用意
-      const katakanaSearchTerm = hiraganaToKatakana(searchTerm).toLowerCase();
+      const katakanaSearchTerm = hiraganaToKatakana(initialSearchTerm).toLowerCase();
       const uniqueSuggestions = new Set();
 
       moths.forEach(moth => {
@@ -652,7 +647,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in allSuggestions calculation:', error);
       return [];
     }
-  }, [moths, searchTerm]);
+  }, [moths, initialSearchTerm]);
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
@@ -974,13 +969,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               )}
             </div>
           </div>
-          <SearchInput 
-            placeholder={`${title}を検索 (和名・学名・分類)`} 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            suggestions={allSuggestions}
-            onSelectSuggestion={setSearchTerm}
-          />
           {renderFilters()}
         </div>
       )}
@@ -1001,13 +989,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               </Link>
             </div>
           )}
-          <SearchInput 
-            placeholder={`${title}を検索 (和名・学名・分類)`} 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            suggestions={allSuggestions}
-            onSelectSuggestion={setSearchTerm}
-          />
           {renderFilters()}
         </div>
       )}
