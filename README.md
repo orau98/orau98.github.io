@@ -12,11 +12,12 @@ https://orau98.github.io/
 
 ### 主な機能
 
-- 7000種以上の昆虫データベース
-- 植物と昆虫の相互関係検索
-- 詳細な食草情報
-- レスポンシブデザイン
-- SEO最適化済み
+- 4分類群を収録（蛾・蝶・甲虫・ハムシ／計7,000種超）
+- 和名・学名・分類群・食草のキーワード高速検索
+- 「食草あり／なし（プレースホルダー除外）」「科」「属」「出現期」での複合フィルタとヒット件数のリアルタイム表示
+- 出現期の正規化（「初旬→上旬」「頃」削除・全角/半角/波ダッシュ統一）とガントチャート表示
+- 画像の遅延読込＋レスポンシブsrcset（優先カードのみpreload）
+- スティッキーヘッダーで検索ボックスとタブを常時利用可能
 
 ## 🔧 技術スタック
 
@@ -24,6 +25,21 @@ https://orau98.github.io/
 - **ホスティング**: GitHub Pages
 - **データ**: CSV形式の昆虫・植物データベース
 - **スタイリング**: Tailwind CSS
+
+## 🛠️ データ生成とビルドフロー
+
+- ソースデータは `public/*.csv`（昆虫・食草・備考）。
+- `prebuild` フックで以下を自動生成してから `vite build` を実行します。
+  - `assets/data-lite/*.json`（moths/butterflies/beetles/leafbeetles/hostplants/full-dataset 等の軽量化データ）
+  - `assets/data-lite/ylist-lite.json`（植物データの科名補完用ライト版）
+  - `assets/data-lite/image-index.json` + `public/images/**` のリサイズ画像
+  - メタページとサイトマップ（`public/meta/**` と `public/sitemap*.xml`）
+- いずれもGit管理外の再生成物です。CSVを更新したら `npm run build`（内部でprebuild実行）だけでOKです。
+
+### 開発時の注意
+
+- `npm run dev` は既存の `assets/data-lite/*.json` をそのまま読み込みます。CSVを書き換えた場合は一度 `npm run build:data-lite` などを走らせると反映されます。
+- 大量画像のリサイズが走るため、変更が無いときは `npm run build:images:responsive` を省略しても構いません。
 
 ## 🆔 ID仕様について
 
@@ -33,21 +49,28 @@ https://orau98.github.io/
 - 参照整合性（食草・備考が存在しない昆虫IDを参照していないか）は、`node scripts/validate-normalized.mjs` で検証し、結果は `reports/missing_ids.csv` に出力されます。
 - 欠番自体は問題ではありませんが、参照整合性エラー（unknown insect_id）は修正対象です。
 
+## 🔍 検索・フィルタの仕様メモ
+
+- 出現期フィルタは `general_notes.csv` の「成虫出現期」を正規化して利用します。波ダッシュ/全角ハイフン/「初旬」「頃」などは正規化・除去し、空欄は「指定なし」としてまとめています。
+- 食草あり／なし判定時は、`[不明, 未知, 不詳, 未確認, 未記載, なし, 未登録, 不詳種, 不明種]` をプレースホルダーとして無視します（`MothList.jsx` の `HOST_PLACEHOLDERS`）。
+- 科・属フィルタは昆虫データ側の分類列を使用します（植物の科ではありません）。
+
 ## 📸 Instagram埋め込みの設定
 
-トップページ右側の「Instagram 最新投稿」には、投稿のパーマリンクを1件埋め込み表示します。
+トップページ右側のウィジェットは次の優先順で読み込みます。
 
-- 表示方法は次のどちらかを設定してください。
-  - `public/instagram_latest.txt` に最新投稿のURLを1行で記載
-  - もしくは環境変数 `VITE_INSTAGRAM_URL` に投稿URLを設定
+1. `public/instagram_posts.txt` … 1行1URLで最大10件まで表示（`/p/`・`/reel/`・`/tv/` のいずれか）。
+2. `public/instagram_latest.txt` … 単一URLを表示。
+3. 環境変数 `VITE_INSTAGRAM_URL` … Netlify/Vercel等の環境でも利用可。
 
-例: `public/instagram_latest.txt`
+サンプル（複数投稿）
 
 ```
 https://www.instagram.com/p/XXXXXXXXXXX/
+https://www.instagram.com/reel/YYYYYYYYYYY/
 ```
 
-注意: Instagram公式は「アカウントのタイムライン埋め込み」を提供していません。複数投稿を並べたい場合は、`public/instagram_posts.txt` などに複数URLを用意しコンポーネント拡張で対応してください（要望があれば実装します）。
+任意で `public/instagram_widget.html` を置けば、提供元の埋め込みコードもそのまま描画します。404を防ぐため `instagram_posts.txt` は空ファイルでも配置してください。
 
 ## 🚀 デプロイ
 
