@@ -630,7 +630,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
             </div>
           </div>
 
-          {/* Instagram セクション */}
+          {/* サイトについて / Instagram セクション */}
           <div
             ref={instagramSectionRef}
             className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-slate-700/50 overflow-hidden"
@@ -660,96 +660,96 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
               </div>
             </div>
 
-            <div className="p-4 md:p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                {/* 左側：サイトポリシーと出典一覧 */}
-                <div className="lg:flex lg:flex-col space-y-4">
+            <div className="p-6 md:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+                {/* 左側：サイトポリシーと出典一覧 (2/3 width) */}
+                <div className="lg:col-span-2 space-y-8">
                   {/* サイトポリシー */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
+                  <section>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center border-b border-slate-200 dark:border-slate-700 pb-2">
+                      <span className="bg-slate-200 dark:bg-slate-700 w-1 h-6 mr-3 rounded-full"></span>
                       サイトポリシー
                     </h3>
-                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="space-y-2.5">
-                        <div>
-                          <p className="font-medium text-xs mb-1 text-slate-700 dark:text-slate-300">
-                            はじめに
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。
-                          </p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-xs mb-1 text-slate-700 dark:text-slate-300">
-                            免責事項
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。
-                          </p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-xs mb-1 text-slate-700 dark:text-slate-300">
-                            写真について
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、
-                            <a
-                              href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
-                            >
-                              こちらのGoogleフォーム
-                            </a>
-                            よりお気軽にご連絡ください。
-                          </p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-xs mb-1 text-slate-700 dark:text-slate-300">
-                            お問い合わせ
-                          </p>
-                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、
-                            <a
-                              href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
-                            >
-                              こちらのGoogleフォーム
-                            </a>
-                            までお寄せください。
-                          </p>
-                        </div>
+                    <div className="space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      <div>
+                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                          はじめに
+                        </p>
+                        <p>
+                          当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                          免責事項
+                        </p>
+                        <p>
+                          データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                          写真について
+                        </p>
+                        <p>
+                          掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、
+                          <a
+                            href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                          >
+                            こちらのGoogleフォーム
+                          </a>
+                          よりお気軽にご連絡ください。
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                          お問い合わせ
+                        </p>
+                        <p>
+                          誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、
+                          <a
+                            href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                          >
+                            こちらのGoogleフォーム
+                          </a>
+                          までお寄せください。
+                        </p>
                       </div>
                     </div>
-                  </div>
+                  </section>
 
                   {/* 出典一覧 */}
-                  <div className="flex-grow">
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
+                  <section>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center border-b border-slate-200 dark:border-slate-700 pb-2">
+                      <span className="bg-slate-200 dark:bg-slate-700 w-1 h-6 mr-3 rounded-full"></span>
                       出典一覧
                     </h3>
-                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                      <div className="space-y-2">
-                        <button
-                          type="button"
-                          onClick={() => setShowBibliography((v) => !v)}
-                          aria-expanded={showBibliography}
-                          aria-controls="bibliography-list"
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-white/70 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-800/90 transition-colors"
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowBibliography((v) => !v)}
+                        aria-expanded={showBibliography}
+                        aria-controls="bibliography-list"
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <span>主要引用文献リストを表示</span>
+                        <span
+                          className={`ml-3 transform transition-transform duration-300 ${showBibliography ? "rotate-90" : ""}`}
                         >
-                          <span>主要引用文献</span>
-                          <span
-                            className={`ml-3 transform transition-transform ${showBibliography ? "rotate-90" : ""}`}
-                          >
-                            ▶
-                          </span>
-                        </button>
-                        {showBibliography && (
+                          ▶
+                        </span>
+                      </button>
+                      {showBibliography && (
+                        <div className="mt-3 pl-2 border-l-2 border-slate-200 dark:border-slate-700">
                           <ul
                             id="bibliography-list"
-                            className="mt-2 space-y-2 text-xs text-slate-600 dark:text-slate-400"
+                            className="space-y-2 text-xs text-slate-600 dark:text-slate-400"
                           >
                             {(() => {
                               const normalize = (s) =>
@@ -802,11 +802,11 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                                 // Books: 著者名. 図書名. 出版社, 出版年.
                                 // Articles: 著者名(年)論文名. 誌名, 巻(号): 頁.
                                 return (
-                                  <li key={b.key} className="flex items-start">
-                                    <span className="text-gray-600 dark:text-gray-400 mr-2">
+                                  <li key={b.key} className="flex items-start leading-normal">
+                                    <span className="text-slate-400 mr-2 mt-0.5">
                                       •
                                     </span>
-                                    <div className="text-slate-700 dark:text-slate-200">
+                                    <div className="text-slate-700 dark:text-slate-300">
                                       {isArticle ? (
                                         // 著者名(年)論文名. 誌名, 巻(号): 頁.
                                         <>
@@ -822,7 +822,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                                                 href={href}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="underline decoration-blue-300 hover:decoration-blue-500"
+                                                className="underline decoration-slate-300 hover:decoration-slate-500 hover:text-emerald-600 transition-colors"
                                               >
                                                 {titlePlain}
                                               </a>
@@ -866,7 +866,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                                                   href={href}
                                                   target="_blank"
                                                   rel="noopener noreferrer"
-                                                  className="underline decoration-blue-300 hover:decoration-blue-500"
+                                                  className="underline decoration-slate-300 hover:decoration-slate-500 hover:text-emerald-600 transition-colors"
                                                 >
                                                   {titlePlain}
                                                 </a>
@@ -892,142 +892,134 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
                               });
                             })()}
                           </ul>
-                        )}
-                        <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
-                          <p className="font-medium text-xs mb-2 text-slate-700 dark:text-slate-300">
-                            その他
-                          </p>
-                          <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
-                            <li className="flex items-start">
-                              <span className="text-gray-600 dark:text-gray-400 mr-2">
-                                •
-                              </span>
-                              <span>学術論文等</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 右側：Instagram */}
-                <div className="lg:flex lg:flex-col space-y-4">
-                  <div className="flex flex-col bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                    {/* Instagram最新投稿 */}
-                    <div className="flex flex-col">
-                      <div className="mb-4 lg:mb-5">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0">
-                            <InstagramIcon
-                              className="w-4 h-4 text-white"
-                              alt="Instagramアイコン"
-                            />
+                          <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700/50">
+                            <p className="font-medium text-xs mb-2 text-slate-500 dark:text-slate-400">
+                              その他
+                            </p>
+                            <ul className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                              <li className="flex items-start">
+                                <span className="text-slate-400 mr-2">
+                                  •
+                                </span>
+                                <span>各種学術論文等</span>
+                              </li>
+                            </ul>
                           </div>
-                          <h3 className="text-base sm:text-lg font-semibold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
-                            Instagram 最新投稿
-                          </h3>
-                        </div>
-                        <p className="text-xs text-slate-600 dark:text-slate-400 ml-0 sm:ml-9 px-1 sm:px-0">
-                          徒然なるままに野生生物の観察記録をInstagramで投稿しています
-                        </p>
-                      </div>
-
-                      {/* Instagram埋め込み */}
-                      <div className="overflow-hidden">
-                        <div className="instagram-wrapper w-full border border-gradient-to-r from-purple-200/50 via-pink-200/50 to-orange-200/50 dark:border-purple-700/50 rounded-lg sm:rounded-xl p-2 sm:p-3 lg:p-4 bg-gradient-to-r from-purple-50/30 via-pink-50/30 to-orange-50/30 dark:bg-gradient-to-r dark:from-purple-900/10 dark:via-pink-900/10 dark:to-orange-900/10">
-                          {(() => {
-                            // 1) timeline from file
-                            if (instagramPosts && instagramPosts.length > 0) {
-                              return (
-                                <InstagramTimeline urls={instagramPosts} />
-                              );
-                            }
-                            // 2) third-party widget
-                            if (instagramWidgetHtml) {
-                              return (
-                                <div
-                                  className="bg-white/70 dark:bg-slate-800/70 rounded-xl overflow-hidden p-0"
-                                  dangerouslySetInnerHTML={{
-                                    __html: instagramWidgetHtml,
-                                  }}
-                                />
-                              );
-                            }
-                            // 3) single post permalink
-                            if (instagramUrl) {
-                              const isPostPermalink =
-                                /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(
-                                  instagramUrl,
-                                );
-                              if (isPostPermalink)
-                                return <InstagramEmbed url={instagramUrl} />;
-                              // Profile URL fallback: show a nice link card
-                              return (
-                                <a
-                                  href={instagramUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="block w-full"
-                                >
-                                  <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl p-4 sm:p-6 border border-white/30 dark:border-slate-700/50 shadow">
-                                    <div className="flex items-center space-x-3">
-                                      <div className="p-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg">
-                                        <InstagramIcon className="w-5 h-5 text-white" />
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">
-                                          Instagramプロフィール
-                                        </p>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                                          {instagramUrl.replace(
-                                            /^https?:\/\//,
-                                            "",
-                                          )}
-                                        </p>
-                                      </div>
-                                      <span className="text-xs text-white bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 px-2 py-1 rounded">
-                                        Open
-                                      </span>
-                                    </div>
-                                    <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">
-                                      最近の投稿は `public/instagram_posts.txt`
-                                      にパーマリンクを列挙するとタイムライン表示されます。
-                                    </p>
-                                  </div>
-                                </a>
-                              );
-                            }
-                            // 4) nothing configured
-                            return (
-                              <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8">
-                                Instagramの最新投稿が未設定です（public/instagram_posts.txt、instagram_widget.html、instagram_latest.txt
-                                のいずれかを設定）。
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      </div>
-
-                      {/* アカウントリンク（プロフィールURLがある場合は下部に配置） */}
-                      {isInstagramProfileUrl(instagramUrl) && (
-                        <div className="mt-2 flex justify-end">
-                          <a
-                            href={instagramUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-white/40 dark:border-slate-700/50 bg-white/70 dark:bg-slate-800/70 text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-800/90 transition-colors shadow-sm"
-                            aria-label="Instagramプロフィールへ"
-                          >
-                            <span className="p-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded">
-                              <InstagramIcon className="w-3.5 h-3.5 text-white" />
-                            </span>
-                            <span className="font-medium">
-                              Instagramプロフィールへ
-                            </span>
-                          </a>
                         </div>
                       )}
+                    </div>
+                  </section>
+                </div>
+
+                {/* 右側：Instagram (1/3 width) */}
+                <div className="lg:col-span-1">
+                  <div className="sticky top-24 space-y-6">
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-700/50 dark:to-slate-700/30 rounded-xl p-5 border border-purple-100 dark:border-slate-600">
+                      {/* Instagram最新投稿 */}
+                      <div className="flex flex-col">
+                        <div className="mb-4">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0 shadow-sm">
+                              <InstagramIcon
+                                className="w-4 h-4 text-white"
+                                alt="Instagramアイコン"
+                              />
+                            </div>
+                            <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
+                              Official Instagram
+                            </h3>
+                          </div>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug">
+                            野生生物の観察記録を投稿しています
+                          </p>
+                        </div>
+
+                        {/* Instagram埋め込み */}
+                        <div className="overflow-hidden rounded-lg shadow-sm">
+                          <div className="instagram-wrapper w-full bg-white dark:bg-slate-800">
+                            {(() => {
+                              // 1) timeline from file
+                              if (instagramPosts && instagramPosts.length > 0) {
+                                return (
+                                  <InstagramTimeline urls={instagramPosts} />
+                                );
+                              }
+                              // 2) third-party widget
+                              if (instagramWidgetHtml) {
+                                return (
+                                  <div
+                                    className="bg-white dark:bg-slate-800 overflow-hidden p-0"
+                                    dangerouslySetInnerHTML={{
+                                      __html: instagramWidgetHtml,
+                                    }}
+                                  />
+                                );
+                              }
+                              // 3) single post permalink
+                              if (instagramUrl) {
+                                const isPostPermalink =
+                                  /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(
+                                    instagramUrl,
+                                  );
+                                if (isPostPermalink)
+                                  return <InstagramEmbed url={instagramUrl} />;
+                                // Profile URL fallback: show a nice link card
+                                return (
+                                  <a
+                                    href={instagramUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block w-full group"
+                                  >
+                                    <div className="bg-white dark:bg-slate-800 p-4 border border-slate-200 dark:border-slate-600 group-hover:border-purple-300 transition-colors">
+                                      <div className="flex items-center space-x-3">
+                                        <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-full">
+                                          <InstagramIcon className="w-5 h-5 text-slate-400 group-hover:text-purple-500 transition-colors" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate group-hover:text-purple-600 transition-colors">
+                                            プロフィールを表示
+                                          </p>
+                                          <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
+                                            {instagramUrl.replace(
+                                              /^https?:\/\//,
+                                              "",
+                                            )}
+                                          </p>
+                                        </div>
+                                        <span className="text-slate-400 group-hover:translate-x-1 transition-transform">
+                                          →
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </a>
+                                );
+                              }
+                              // 4) nothing configured
+                              return (
+                                <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
+                                  Instagramの投稿を表示できません
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
+
+                        {/* アカウントリンク */}
+                        {isInstagramProfileUrl(instagramUrl) && (
+                          <div className="mt-4 text-center">
+                            <a
+                              href={instagramUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-purple-600 dark:hover:text-purple-400 transition-all shadow-sm"
+                            >
+                              <InstagramIcon className="w-4 h-4" />
+                              <span>プロフィールへ移動</span>
+                            </a>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
