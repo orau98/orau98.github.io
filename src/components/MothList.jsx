@@ -320,7 +320,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               
               {/* 成虫発生時期表示（ガントチャートのみ） */}
               {(() => {
-                const { emergenceTime } = extractEmergenceTime(moth.notes || '');
+                // Use emergenceTime property if available (priority over re-extraction)
+                const emergenceTime = moth.emergenceTime || extractEmergenceTime(moth.notes || '').emergenceTime;
                 const normalizedTime = normalizeEmergenceTime(emergenceTime);
                 
                 if (normalizedTime) {
@@ -386,11 +387,23 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const [emergenceFilter, setEmergenceFilter] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
+  // Debug log
+  useEffect(() => {
+    if (import.meta.env.DEV && moths && moths.length > 0) {
+      const sample = moths[0];
+      const genus = sample.genus || sample.classification?.genus;
+      if (!genus && sample.scientificName) {
+        console.log('DEBUG: Moth missing genus, will fallback to scientificName:', sample.name, sample.scientificName);
+      }
+    }
+  }, [moths]);
+
   const familyOptions = useMemo(() => {
     const set = new Set();
     moths.forEach((m) => {
-      const fam = (m?.classification?.familyJapanese || m?.classification?.family || '').trim();
-      if (fam) set.add(fam);
+      // Try multiple sources for family name
+      const fam = (m?.family || m?.classification?.familyJapanese || m?.classification?.family || '').trim();
+      if (fam && fam !== '不明') set.add(fam);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
   }, [moths]);
@@ -398,7 +411,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const genusOptions = useMemo(() => {
     const set = new Set();
     moths.forEach((m) => {
-      const gen = (m?.genus || m?.classification?.genus || '').trim();
+      let gen = (m?.genus || m?.classification?.genus || '').trim();
+      
+      // Fallback: extract from scientificName if genus is empty
+      if (!gen && m?.scientificName) {
+        const parts = m.scientificName.trim().split(/\s+/);
+        if (parts.length > 0 && /^[A-Z]/.test(parts[0])) {
+          gen = parts[0];
+        }
+      }
+      
       if (gen) set.add(gen);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
@@ -411,7 +433,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   // Helper to check if a moth appears in a specific month
   const checkEmergenceMatch = useCallback((moth, monthFilter) => {
     if (!monthFilter) return true;
-    const { emergenceTime } = extractEmergenceTime(moth?.notes || '');
+    // Use emergenceTime property if available (priority over re-extraction)
+    const emergenceTime = moth.emergenceTime || extractEmergenceTime(moth?.notes || '').emergenceTime;
     const n = normalizeEmergenceTime(emergenceTime);
     if (!n) return false;
 
@@ -546,8 +569,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return plantNames.some((p) => p && !isPlaceholderHost(p));
   }, [isPlaceholderHost]);
 
+  // extractEmergence function defined within component to access props if needed
+  // Actually extractEmergenceTime and normalizeEmergenceTime are imported
+  // This local helper just wraps them to handle nulls safely and consistent logic
   const extractEmergence = useCallback((moth) => {
     try {
+      // Prefer pre-calculated emergenceTime
+      if (moth.emergenceTime) {
+        return normalizeEmergenceTime(moth.emergenceTime);
+      }
+      // Fallback to re-extraction
       const { emergenceTime } = extractEmergenceTime(moth?.notes || '');
       return normalizeEmergenceTime(emergenceTime) || '';
     } catch {
@@ -574,15 +605,26 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           
           // family filter
           if (familyFilter) {
-            const famJ = normalizeText(moth.classification?.familyJapanese);
-            const fam = normalizeText(moth.classification?.family);
-            if (!(famJ === normalizeText(familyFilter) || fam === normalizeText(familyFilter))) return false;
+            const targets = [
+              moth.family,
+              moth.classification?.familyJapanese,
+              moth.classification?.family
+            ].map(normalizeText);
+            const filterVal = normalizeText(familyFilter);
+            if (!targets.includes(filterVal)) return false;
           }
           
           // genus filter
           if (genusFilter) {
-            const g = (moth.genus || moth.classification?.genus || '').toLowerCase();
-            if (g !== genusFilter.toLowerCase()) return false;
+            let g = (moth.genus || moth.classification?.genus || '').trim();
+            // Fallback to scientific name
+            if (!g && moth.scientificName) {
+               const parts = moth.scientificName.trim().split(/\s+/);
+               if (parts.length > 0 && /^[A-Z]/.test(parts[0])) {
+                 g = parts[0];
+               }
+            }
+            if (g.toLowerCase() !== genusFilter.toLowerCase()) return false;
           }
           
           // emergence filter
@@ -603,7 +645,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                    (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.subfamilyJapanese?.toLowerCase().includes(katakanaClassification)) ||
                    (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerClassification)) ||
-                   (moth.classification?.tribeJapanese?.toLowerCase().includes(katakanaSearchTerm)) ||
+                   (moth.classification?.tribeJapanese?.toLowerCase().includes(katakanaClassification)) ||
                    (moth.classification?.genus?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.family?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.subfamily?.toLowerCase().includes(lowerClassification)) ||
@@ -640,8 +682,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, checkEmergenceMatch, normalizeText]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, checkEmergenceMatch, extractEmergence, normalizeText]);
 
+  // ... (allSuggestions, image indexes, render, etc.)
+  // Since I'm overwriting the whole file, I must include the rest of the content.
+  // I will use the content from the previous read_file output as the base.
+  
   const allSuggestions = useMemo(() => {
     try {
       if (!searchTerm || !moths || moths.length === 0) return [];
