@@ -390,14 +390,39 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [moths]);
 
   const emergenceOptions = useMemo(() => {
-    const set = new Set();
-    moths.forEach((m) => {
-      const { emergenceTime } = extractEmergenceTime(m?.notes || '');
-      const n = normalizeEmergenceTime(emergenceTime);
-      if (n) set.add(n);
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
-  }, [moths]);
+    return ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+  }, []);
+
+  // Helper to check if a moth appears in a specific month
+  const checkEmergenceMatch = useCallback((moth, monthFilter) => {
+    if (!monthFilter) return true;
+    const { emergenceTime } = extractEmergenceTime(moth?.notes || '');
+    const n = normalizeEmergenceTime(emergenceTime);
+    if (!n) return false;
+
+    // Simple direct match
+    if (n.includes(monthFilter)) return true;
+
+    // Range match (e.g. "4-6月" should match "5月")
+    // Parse "X月" to X
+    const targetMonth = parseInt(monthFilter.replace('月', ''), 10);
+    
+    // Regex for "Start-End月" or "Start～End月"
+    const rangeMatch = n.match(/(\d{1,2})\s*[~〜\-]\s*(\d{1,2})/);
+    if (rangeMatch) {
+      let start = parseInt(rangeMatch[1], 10);
+      let end = parseInt(rangeMatch[2], 10);
+      // Handle year crossing if needed, or just simple swap
+      if (start > end) { 
+        // e.g. 10-3月 (winter)
+        return targetMonth >= start || targetMonth <= end;
+      }
+      return targetMonth >= start && targetMonth <= end;
+    }
+    
+    return false;
+  }, []);
+  
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
 
   const classificationFilter = searchParams.get('classification');
@@ -546,8 +571,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           
           // emergence filter
           if (emergenceFilter) {
-            const em = extractEmergence(moth);
-            if (!em.includes(emergenceFilter)) return false;
+            if (!checkEmergenceMatch(moth, emergenceFilter)) return false;
           }
           
           const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
@@ -600,7 +624,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, extractEmergence, normalizeText]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, checkEmergenceMatch, normalizeText]);
 
   const allSuggestions = useMemo(() => {
     try {
