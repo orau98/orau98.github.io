@@ -37,6 +37,17 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const imgRef = useRef(null);
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
 
+  // Remove subspecies epithet from display (keep author/year if present)
+  const dropSubspecies = useCallback((name) => {
+    if (!name || typeof name !== 'string') return name;
+    const parts = name.trim().split(/\s+/);
+    if (parts.length <= 2) return name;
+    const [genus, species, ...rest] = parts;
+    // 亜種小名は小文字のラテン語が多いのでそれを除外し、著者名・年などは残す
+    const tail = rest.filter((p) => !/^[a-z-]+$/.test(p)).join(' ');
+    return tail ? `${genus} ${species} ${tail}` : `${genus} ${species}`;
+  }, []);
+
   const handleIntersection = useCallback((entries) => {
     if (!(entries && entries[0])) return;
     if (entries[0].isIntersecting && !isVisible) {
@@ -198,7 +209,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     {moth.name}
                   </h3>
                   <p className="text-white/90 text-sm drop-shadow-md">
-                  {formatScientificNameReact(repairScientificBinomial(moth.scientificName))}
+                  {formatScientificNameReact(
+                    dropSubspecies(repairScientificBinomial(moth.scientificName))
+                  )}
                   </p>
                 </div>
               </div>
@@ -220,7 +233,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     {moth.name}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    {formatScientificNameReact(repairScientificBinomial(moth.scientificName))}
+                    {formatScientificNameReact(
+                      dropSubspecies(repairScientificBinomial(moth.scientificName))
+                    )}
                   </p>
                 </div>
                 

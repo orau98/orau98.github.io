@@ -49,3 +49,7 @@ tmp/
 tmp_*/
 tmp_listmj_xlsx/
 tmp_xlsx_cli/
+
+# Local caches / deploy artifacts
+cache/
+_deploy/
