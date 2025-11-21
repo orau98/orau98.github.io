@@ -313,6 +313,11 @@ const HostPlantList = ({
   const [plantImageFilenames, setPlantImageFilenames] = useState(
     preloadedImageFilenames,
   );
+  
+  // State for filters
+  const [familyFilter, setFamilyFilter] = useState("");
+  const [orderFilter, setOrderFilter] = useState("");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   // Load plant image filenames on component mount
   useEffect(() => {
@@ -345,6 +350,12 @@ const HostPlantList = ({
   const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
   const [searchParams] = useSearchParams();
   const classificationFilter = searchParams.get("classification");
+
+  // Initialize filters from URL parameters if needed
+  // Currently, classificationFilter is treated as search term in original implementation
+  // but could be used for family filter if it matches a family name.
+  // For simplicity, we'll stick to the search term logic for now, 
+  // but we could enhance it later.
 
   // （メタは useSeoMeta に移行）
 
@@ -460,6 +471,25 @@ const HostPlantList = ({
     return map;
   }, [plantImageFilenames, safeHostPlants, safePlantDetails]);
 
+  // Generate filter options
+  const familyOptions = useMemo(() => {
+    const set = new Set();
+    Object.values(safePlantDetails).forEach((d) => {
+      const fam = (d.family || d.familyName || '').trim();
+      if (fam && fam !== '不明') set.add(fam);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+  }, [safePlantDetails]);
+
+  const orderOptions = useMemo(() => {
+    const set = new Set();
+    Object.values(safePlantDetails).forEach((d) => {
+      const ord = (d.order || '').trim();
+      if (ord && ord !== '不明') set.add(ord);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
+  }, [safePlantDetails]);
+
   const filteredHostPlants = useMemo(() => {
     logger.debug(
       "DEBUG: Filtering plants (summary only)",
@@ -484,10 +514,28 @@ const HostPlantList = ({
         plantName === "undefined" ||
         plantName === "null"
       ) {
-      return false;
-    }
+        return false;
+      }
 
-    const detail = safePlantDetails[plantName] || {};
+      const detail = safePlantDetails[plantName] || {};
+      
+      // Apply Family Filter
+      if (familyFilter) {
+        const fam = (detail.family || detail.familyName || '').trim();
+        if (fam !== familyFilter) return false;
+      }
+
+      // Apply Order Filter
+      if (orderFilter) {
+        const ord = (detail.order || '').trim();
+        if (ord !== orderFilter) return false;
+      }
+
+      // Apply Search Term
+      if (!lowerCaseSearchTerm) {
+        return true; // No search term, pass
+      }
+
       const family = (detail.family || "").toLowerCase();
       const familyLatin = (detail.familyLatin || "").toLowerCase();
       const genus = (detail.genus || "").toLowerCase();
@@ -537,6 +585,8 @@ const HostPlantList = ({
     safePlantDetails,
     debouncedPlantSearch,
     plantImageMap,
+    familyFilter,
+    orderFilter
   ]);
 
   // Add rel=prev/next for plant list pagination
@@ -628,7 +678,125 @@ const HostPlantList = ({
 
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedPlantSearch]);
+  }, [debouncedPlantSearch, familyFilter, orderFilter]);
+
+  const renderFilters = () => {
+    const activeFilters = [];
+    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setFamilyFilter('') });
+    if (orderFilter) activeFilters.push({ type: '目', value: orderFilter, clear: () => setOrderFilter('') });
+
+    const hasActiveFilters = activeFilters.length > 0;
+
+    return (
+      <div className="mt-4">
+        {/* Active Filters & Toggle */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Toggle Button */}
+          <button 
+            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              isFiltersOpen 
+                ? 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200' 
+                : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700'
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            詳細フィルタ
+            <svg className={`w-3 h-3 transition-transform duration-200 ${isFiltersOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Chips */}
+          <div className="flex flex-wrap gap-2 items-center flex-1">
+            {hasActiveFilters && (
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
+            )}
+            {activeFilters.map((filter, idx) => (
+              <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50 transition-all hover:bg-emerald-200 dark:hover:bg-emerald-800/50">
+                {filter.type}: {filter.value}
+                <button 
+                  onClick={filter.clear}
+                  className="ml-1.5 text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-200 focus:outline-none"
+                  aria-label={`${filter.type}フィルターを解除`}
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </span>
+            ))}
+            {hasActiveFilters && (
+              <button 
+                onClick={() => {
+                  setFamilyFilter('');
+                  setOrderFilter('');
+                }}
+                className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
+              >
+                すべてクリア
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Collapsible Controls */}
+        <div 
+          className={`grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 transition-all duration-300 ease-in-out overflow-hidden ${
+            isFiltersOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">目 (Order)</label>
+            <div className="relative">
+              <select
+                value={orderFilter}
+                onChange={(e) => setOrderFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+              >
+                <option value="">指定なし</option>
+                {orderOptions.map((o) => (
+                  <option key={o} value={o}>{o}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">科 (Family)</label>
+            <div className="relative">
+              <select
+                value={familyFilter}
+                onChange={(e) => setFamilyFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+              >
+                <option value="">指定なし</option>
+                {familyOptions.map((f) => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500">
+          {filteredHostPlants?.length ?? 0} 件が見つかりました
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -645,6 +813,13 @@ const HostPlantList = ({
               食草リスト
             </h2>
           </div>
+          {renderFilters()}
+        </div>
+      )}
+
+      {embedded && (
+        <div className="p-6">
+          {renderFilters()}
         </div>
       )}
 
