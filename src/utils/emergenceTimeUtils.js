@@ -66,6 +66,7 @@ export const normalizeEmergenceTime = (emergenceTime) => {
   let normalized = emergenceTime
     .replace(/^[、。;:\s]+/, '')  // 先頭の句読点除去
     .replace(/[、。;:\s]+$/, '')  // 末尾の句読点除去
+    .replace(/初旬/g, '上旬')     // 「初旬」を「上旬」に統一
     .replace(/成虫は/, '')       // 「成虫は」を除去
     .replace(/に発生/, '')       // 「に発生」を除去
     .replace(/頃発生/, '頃')     // 「頃発生」を「頃」に
