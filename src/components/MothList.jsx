@@ -13,6 +13,9 @@ import { buildResponsiveSrcset } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 
+// 食草欄でプレースホルダー扱いにする文字列
+const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
+
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, currentPage = 1 }) => {
   // Heuristic: insert a space between genus and species if missing
   const repairScientificBinomial = (name) => {
@@ -405,7 +408,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
 
   const classificationFilter = searchParams.get('classification');
-  const debouncedSearchTerm = useDebounce(initialSearchTerm, 300);
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   // Restore scroll position and page when returning from detail page
   useEffect(() => {
@@ -598,11 +602,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const allSuggestions = useMemo(() => {
     try {
-      if (!initialSearchTerm || !moths || moths.length === 0) return [];
+      if (!searchTerm || !moths || moths.length === 0) return [];
       
-      const lowerCaseSearchTerm = initialSearchTerm.toLowerCase();
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
       // ひらがなをカタカナに変換した検索語も用意
-      const katakanaSearchTerm = hiraganaToKatakana(initialSearchTerm).toLowerCase();
+      const katakanaSearchTerm = hiraganaToKatakana(searchTerm).toLowerCase();
       const uniqueSuggestions = new Set();
 
       moths.forEach(moth => {
@@ -647,7 +651,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in allSuggestions calculation:', error);
       return [];
     }
-  }, [moths, initialSearchTerm]);
+  }, [moths, searchTerm]);
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
