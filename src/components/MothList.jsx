@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
-import SearchInput from './SearchInput';
 import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
@@ -13,11 +12,6 @@ import { createSafeInsectFilename } from '../utils/image';
 import { buildResponsiveSrcset } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
-
-// 「食草あり／なし」判定で無視するプレースホルダー語
-const HOST_PLACEHOLDERS = [
-  '不明', '未知', '未詳', '不詳', '？', '?', 'なし', '未確認', '未記載', '調査中', '情報なし'
-];
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, currentPage = 1 }) => {
   // Heuristic: insert a space between genus and species if missing
@@ -306,22 +300,14 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 </div>
               </div>
               
-              {/* 成虫発生時期表示 */}
+              {/* 成虫発生時期表示（ガントチャートのみ） */}
               {(() => {
                 const { emergenceTime } = extractEmergenceTime(moth.notes || '');
                 const normalizedTime = normalizeEmergenceTime(emergenceTime);
                 
                 if (normalizedTime) {
                   return (
-                    <div className="space-y-2">
-                      <div className="flex items-start space-x-2">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 flex-shrink-0">
-                          発生時期
-                        </span>
-                        <span className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                          {normalizedTime}
-                        </span>
-                      </div>
+                    <div className="pt-1">
                       <EmergenceTimeDisplay 
                         emergenceTime={normalizedTime} 
                         source={moth.source}
@@ -375,7 +361,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/'
   });
   const [searchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [currentPage, setCurrentPage] = useState(1);
   const [hostFilter, setHostFilter] = useState("all"); // all | has | none
   const [familyFilter, setFamilyFilter] = useState("");
@@ -412,15 +397,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
 
   const classificationFilter = searchParams.get('classification');
-  const lastAppliedClassificationRef = useRef(null);
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
-
-  // Sync with initialSearchTerm if it changes
-  useEffect(() => {
-    if (initialSearchTerm) {
-      setSearchTerm(initialSearchTerm);
-    }
-  }, [initialSearchTerm]);
+  const debouncedSearchTerm = useDebounce(initialSearchTerm, 300);
 
   // Restore scroll position and page when returning from detail page
   useEffect(() => {
