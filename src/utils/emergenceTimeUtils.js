@@ -39,6 +39,15 @@ export const extractEmergenceTime = (notes) => {
     }
   }
 
+  // 簡易な「3-10月」のみでも拾うフォールバック
+  if (!emergenceTime) {
+    const simple = notes.match(/([0-9０-９]{1,2}(?:[~〜－ーｰ-][0-9０-９]{1,2})?月[^;。\n]*)/);
+    if (simple) {
+      emergenceTime = simple[1].trim();
+      remainingNotes = notes.replace(simple[0], '').trim().replace(/^[;。、\s]+/, '').trim();
+    }
+  }
+
   return {
     emergenceTime: emergenceTime,
     notes: remainingNotes
