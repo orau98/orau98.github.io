@@ -383,7 +383,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const genusOptions = useMemo(() => {
     const set = new Set();
     moths.forEach((m) => {
-      const gen = (m?.classification?.genus || '').trim();
+      const gen = (m?.genus || m?.classification?.genus || '').trim();
       if (gen) set.add(gen);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
@@ -566,7 +566,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           
           // genus filter
           if (genusFilter) {
-            if ((moth.classification?.genus || '').toLowerCase() !== genusFilter.toLowerCase()) return false;
+            const g = (moth.genus || moth.classification?.genus || '').toLowerCase();
+            if (g !== genusFilter.toLowerCase()) return false;
           }
           
           // emergence filter
