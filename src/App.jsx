@@ -2136,6 +2136,12 @@ function App() {
           
           // 空白文字の正規化
           cleaned = cleaned.trim();
+
+          // 日本語名に含まれる空白を除去（ア オバシャチホコ -> アオバシャチホコ）
+          // 日本語文字（ひらがな、カタカナ、漢字）が含まれる場合のみ空白を除去
+          if (/[ぁ-んァ-ヶー一-龠]/.test(cleaned)) {
+            cleaned = cleaned.replace(/\s+/g, '');
+          }
           
           return cleaned;
         };
