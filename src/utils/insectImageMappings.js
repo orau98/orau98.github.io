@@ -72,7 +72,9 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ウスイロキヨトウ', 'Mythimna_inanis'],
   ['ウスクロモクメヨトウ', 'Dipterygina_cupreotincta'],
   ['アオモンギンセダカモクメ', 'Cucullia_argentea'],
-  ['ヤクシマキリガ', 'Mesorhynchaglaea pacifica Sugi, 1980']
+  ['ヤクシマキリガ', 'Mesorhynchaglaea pacifica Sugi, 1980'],
+  ['アオバシャチホコ', 'Zaranga_permagna'],
+  ['アオスジアゲハ', 'Graphium_sarpedon']
 ]);
 
 export const getMappedScientificFilename = (japaneseName) => {
