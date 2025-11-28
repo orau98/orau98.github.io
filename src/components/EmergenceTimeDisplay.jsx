@@ -670,8 +670,12 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
     // コンパクト表示：スマートで洗練されたタイムライン
     return (
       <div className="space-y-2">
-        <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-          発生時期
+        <div className="mb-1">
+          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 flex-shrink-0">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </span>
         </div>
         <div className="relative">
           {/* 背景のタイムライン（旬単位） */}
