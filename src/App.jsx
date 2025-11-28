@@ -7,6 +7,7 @@ const HostPlantDetail = React.lazy(() => import('./HostPlantDetail'));
 import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import FloatingActionButton from './components/FloatingActionButton';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 
@@ -6178,6 +6179,7 @@ function App() {
           )}
         </>
       )}
+        <FloatingActionButton />
       <Footer />
     </div>
   );
