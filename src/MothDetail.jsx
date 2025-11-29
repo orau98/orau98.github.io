@@ -694,7 +694,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 画像セクション */}
-          <div className="lg:col-span-1">
+          <div id="plant-photos" className="lg:col-span-1">
             <div className="sticky top-8">
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
                 {hasInstagramPost ? (
@@ -821,7 +821,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
           <div className="lg:col-span-1 space-y-4">
             
             {/* 種名情報 */}
-            <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden p-6">
+            <div id="basic-info" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden p-6">
               <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
                 {moth.name}
               </h1>
@@ -836,7 +836,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             </div>
 
             {/* 食草情報 */}
-            <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+            <div id="host-plants" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
               <div className="p-4 bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-emerald-500 rounded-lg">
@@ -1417,7 +1417,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               
               return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote;
             })() && (
-              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+              <div id="emergence-time" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-orange-500 rounded-lg">
@@ -1583,6 +1583,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             {/* 保全応援セクション（テストページ専用のためSPAには含めない） */}
 
             {/* 関連種情報 - 横スクロール式カードデザイン */}
+            <div id="related-insects"></div>
             <RelatedInsectsSection 
               relatedMothsByPlant={relatedMothsByPlant} 
               allInsects={allInsects} 
