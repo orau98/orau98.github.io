@@ -32,6 +32,9 @@ export const globalJapaneseToScientificMapping = new Map([
   ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
   ['オカモトトゲエダシャク', 'Apochima juglansiaria (Graeser, 1889)'],
   ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
+  // --- Frequently accessed top-page species ---
+  ['アオスジアゲハ', 'Graphium_sarpedon'],
+  ['アオバシャチホコ', 'Zaranga_permagna'],
   ['ルリモンジャノメ', 'Elymnias hypermnestra hainana'],
   ['クロマダラソテツシジミ', 'Chilades_pandava'],
   ['オオチャバネセセリ', 'Polytremis_pellucida'],
