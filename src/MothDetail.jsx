@@ -16,7 +16,6 @@ import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
-import InsectCarousel from './components/InsectCarousel';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 // SupportEngagementSection is test-only and not used in SPA detail
@@ -98,16 +97,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }, [allInsects]);
 
   let moth = allInsects.find(m => m.id === mappedInsectId);
-  
-  // Filter insects from the same family
-  const sameFamilyInsects = React.useMemo(() => {
-    if (!moth || !moth.classification || !moth.classification.familyJapanese) return [];
-    return allInsects.filter(i => 
-      i.id !== moth.id && 
-      i.classification && 
-      i.classification.familyJapanese === moth.classification.familyJapanese
-    );
-  }, [allInsects, moth]);
+
 
   if (!moth) {
     const fallbackId = resolveInsectId(mappedInsectId);
@@ -1597,11 +1587,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               relatedMothsByPlant={relatedMothsByPlant} 
               allInsects={allInsects} 
             />
-            
-            <InsectCarousel 
-              insects={sameFamilyInsects} 
-              title={moth.classification?.familyJapanese ? `同じ${moth.classification.familyJapanese}の仲間` : '同じ科の仲間'} 
-            />
+
           </div>
         </div>
 
