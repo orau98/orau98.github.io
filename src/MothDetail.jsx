@@ -1410,37 +1410,42 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         {/* Food Web Network Graph */}
         {/* 食草ネットワーク */}
         <div id="food-web-graph" className="mb-12" ref={graphContainerRef}>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-sky-500 to-emerald-400 text-white flex items-center justify-center shadow-lg shadow-indigo-200/70 dark:shadow-indigo-900/40">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
+          <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-emerald-500/90 text-white flex items-center justify-center shadow-md">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草・食樹</p>
+                  <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">食草ネットワーク</h2>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">食草ネットワーク</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">食草と関連昆虫のつながりを俯瞰できます</p>
+              <div className="px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
+                インタラクティブ
               </div>
             </div>
-            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200 border border-emerald-200/60 dark:border-emerald-700/60">Beta</span>
-          </div>
-          
-          <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/20 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 overflow-hidden relative shadow-xl shadow-slate-200/50 dark:shadow-emerald-900/30">
-            <React.Suspense fallback={
-              <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
-                ネットワーク図を読み込み中...
-              </div>
-            }>
-              {graphDimensions.width > 0 && (
-                               <FoodWebGraph 
-                                  currentInsect={moth}
-                                  allInsects={allInsects}
-                                  hostPlantsMap={hostPlants}
-                                  width={graphDimensions.width}
-                                  height={graphDimensions.height}
-                                  imageExtensions={imageExtensions}
-                               />              )}
-            </React.Suspense>
+
+            <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
+              <React.Suspense fallback={
+                <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
+                  ネットワーク図を読み込み中...
+                </div>
+              }>
+                {graphDimensions.width > 0 && (
+                  <FoodWebGraph
+                    currentInsect={moth}
+                    allInsects={allInsects}
+                    hostPlantsMap={hostPlants}
+                    width={graphDimensions.width}
+                    height={graphDimensions.height}
+                    imageExtensions={imageExtensions}
+                  />
+                )}
+              </React.Suspense>
+            </div>
           </div>
         </div>
 

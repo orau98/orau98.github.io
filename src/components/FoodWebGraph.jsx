@@ -513,7 +513,7 @@ const FoodWebGraph = ({
   }, [isDarkMode, images, hoverNode, highlightNodes]);
 
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 relative shadow-inner">
+    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-950 relative shadow-lg">
       <ForceGraph2D
         ref={fgRef}
         width={width}
