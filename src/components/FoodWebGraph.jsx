@@ -242,37 +242,19 @@ const FoodWebGraph = ({
     // リンク距離を食草中心に少し長めに
     const linkForce = fgRef.current.d3Force('link');
     if (linkForce) {
-      linkForce.distance(link => (link.source?.type === 'plant' ? 150 : 100));
+      linkForce.distance(link => (link.source?.type === 'plant' ? 150 : 110));
     }
-    // 反発力を強めにして密集を緩和
+    // 反発力を緩めに設定しつつ密集を緩和
     const chargeForce = fgRef.current.d3Force('charge');
     if (chargeForce && chargeForce.strength) {
-      chargeForce.strength(-160);
+      chargeForce.strength(-140);
     }
     fgRef.current.d3ReheatSimulation();
   }, [graphData]);
 
-  useEffect(() => {
-    // Adjust physics forces for better layout
-    if (fgRef.current) {
-      // Increase repulsion to reduce overlap
-      fgRef.current.d3Force('charge').strength(-300);
-      // Adjust link distance
-      fgRef.current.d3Force('link').distance(link => {
-        // Short distance for plant-insect, longer for others if any
-        return link.source.group === 0 || link.target.group === 0 ? 80 : 50;
-      });
-    }
-  }, []);
-
   // --- Interaction Handlers ---
   
   const handleNodeHover = useCallback((node) => {
-    // Change cursor style
-    if (fgRef.current) {
-        fgRef.current.canvas.style.cursor = node ? 'pointer' : null;
-    }
-
     if ((!node && !hoverNode) || (node && hoverNode === node)) return;
 
     setHoverNode(node || null);
@@ -282,17 +264,12 @@ const FoodWebGraph = ({
 
     if (node) {
       newHighlightNodes.add(node);
-      // Iterate links to find neighbors. Note: links may be objects or IDs depending on D3 state
       graphData.links.forEach(link => {
         const sourceId = link.source.id || link.source;
         const targetId = link.target.id || link.target;
-        
         if (sourceId === node.id || targetId === node.id) {
           newHighlightLinks.add(link);
-          
-          // Add neighbor node
           const neighborId = sourceId === node.id ? targetId : sourceId;
-          // Find object in graphData.nodes (since link might have object ref, but safe lookup)
           const neighbor = graphData.nodes.find(n => n.id === neighborId);
           if (neighbor) newHighlightNodes.add(neighbor);
         }
@@ -381,7 +358,7 @@ const FoodWebGraph = ({
 
     // Draw Node (Image or Circle)
     // Performance Optimization: Only draw images when zoomed in (LOD) or hovered
-    const drawImage = (imgToDraw) && (globalScale >= 1.5 || isHovered || isHighlighted);
+    const drawImage = !!imgToDraw && !dim; // 常に描画（ぼかしなし）
 
     if (drawImage) {
       ctx.save();
@@ -419,7 +396,12 @@ const FoodWebGraph = ({
     ctx.globalAlpha = 1;
 
     // Draw Label
-    const shouldShowLabel = isHovered || isHighlighted || globalScale > 1.8 || (node.type === 'current-insect' && globalScale > 0.8);
+    const shouldShowLabel =
+      isHovered ||
+      isHighlighted ||
+      node.type === 'plant' ||
+      node.type === 'current-insect' ||
+      globalScale > 1.1;
     
     if (shouldShowLabel && !dim) {
       ctx.textAlign = 'center';
@@ -464,10 +446,9 @@ const FoodWebGraph = ({
         linkDirectionalParticleSpeed={0.006}
         
         backgroundColor={isDarkMode ? "#0f172a" : "#f8fafc"}
-        linkCurvature={0.15}
-        d3VelocityDecay={0.6} // Higher decay for faster settling
-        cooldownTicks={50} // Stop simulation sooner
-        onEngineStop={() => fgRef.current.zoomToFit(400, 50)}
+        linkCurvature={0.08}
+        d3VelocityDecay={0.7}
+        cooldownTicks={0} // keep simulation responsive during zoom/pan
       />
       
       {/* Legend Overlay */}
