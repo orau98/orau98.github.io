@@ -11,6 +11,7 @@ import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink } from "./utils/sourceLinks";
 import useSeoMeta from "./hooks/useSeoMeta";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./services/imageIndex";
+import { hiraganaToKatakana } from "./utils/text";
 
 const MothList = React.lazy(() => import("./components/MothList"));
 const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
@@ -302,6 +303,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
     const suggestions = useMemo(() => {
       if (!globalSearchTerm || globalSearchTerm.trim() === "") return [];
       const term = globalSearchTerm.toLowerCase();
+      const katakanaTerm = hiraganaToKatakana(globalSearchTerm);
       const results = new Set();
 
       if (activeTab === "insects") {
@@ -314,7 +316,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
         for (const insect of allInsects) {
           if (results.size >= 10) break;
           // Name match
-          if (insect.name && insect.name.includes(term)) {
+          if (insect.name && (insect.name.includes(term) || insect.name.includes(katakanaTerm))) {
             results.add(insect.name);
             continue;
           }
@@ -329,7 +331,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
           // Family match
           if (
             insect.classification?.familyJapanese &&
-            insect.classification.familyJapanese.includes(term)
+            (insect.classification.familyJapanese.includes(term) || insect.classification.familyJapanese.includes(katakanaTerm))
           ) {
             results.add(insect.classification.familyJapanese);
             continue;
@@ -340,7 +342,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
         const plantNames = Object.keys(hostPlants);
         for (const plant of plantNames) {
           if (results.size >= 10) break;
-          if (plant.includes(term)) {
+          if (plant.includes(term) || plant.includes(katakanaTerm)) {
             results.add(plant);
           }
         }
