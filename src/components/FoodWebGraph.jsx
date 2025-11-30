@@ -468,8 +468,26 @@ const FoodWebGraph = ({
     }
   }, [isDarkMode, images, hoverNode, highlightNodes]);
 
+  const handleZoomIn = useCallback(() => {
+    if (fgRef.current) {
+      fgRef.current.zoom(fgRef.current.zoom() * 1.5, 400);
+    }
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    if (fgRef.current) {
+      fgRef.current.zoom(fgRef.current.zoom() / 1.5, 400);
+    }
+  }, []);
+
+  const handleZoomToFit = useCallback(() => {
+    if (fgRef.current) {
+      fgRef.current.zoomToFit(400, 50);
+    }
+  }, []);
+
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-950 relative shadow-lg">
+    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-950 relative shadow-lg group">
       <ForceGraph2D
         ref={fgRef}
         width={width}
@@ -497,6 +515,37 @@ const FoodWebGraph = ({
         d3VelocityDecay={0.55}
         cooldownTicks={120} // 少しだけシミュレーションを回して初期重なりを解消
       />
+      
+      {/* Zoom Controls */}
+      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <button
+          onClick={handleZoomIn}
+          className="p-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow-md border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          title="拡大"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </button>
+        <button
+          onClick={handleZoomOut}
+          className="p-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow-md border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          title="縮小"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+          </svg>
+        </button>
+        <button
+          onClick={handleZoomToFit}
+          className="p-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow-md border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+          title="全体表示"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+        </button>
+      </div>
       
       {/* Legend Overlay */}
       <div className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 text-xs z-10 pointer-events-none">
