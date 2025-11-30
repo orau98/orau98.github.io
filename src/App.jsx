@@ -6114,7 +6114,7 @@ function App() {
             <React.Suspense fallback={<SkeletonLoader />}>
               <Routes>
                 <Route
-                  path="/moth/:mothId"
+                  path="/moth/:mothSlug"
                   element={
                     <MothDetail
                       moths={moths}
@@ -6126,7 +6126,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/butterfly/:butterflyId"
+                  path="/butterfly/:butterflySlug"
                   element={
                     <MothDetail
                       moths={moths}
@@ -6138,7 +6138,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/beetle/:beetleId"
+                  path="/beetle/:beetleSlug"
                   element={
                     <MothDetail
                       moths={moths}
@@ -6150,7 +6150,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/leafbeetle/:leafbeetleId"
+                  path="/leafbeetle/:leafbeetleSlug"
                   element={
                     <MothDetail
                       moths={moths}

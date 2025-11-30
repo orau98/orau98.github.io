@@ -10,6 +10,7 @@ import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './ser
 import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
+import { buildInsectPath } from './utils/insectSlug';
 import { createSafeInsectFilename } from './utils/image';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
@@ -680,16 +681,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     });
   }).map(insect => {
     // pathプロパティを追加
-    let path = '';
-    if (moths.includes(insect)) {
-      path = `/moth/${insect.id}`;
-    } else if (butterflies.includes(insect)) {
-      path = `/butterfly/${insect.id}`;
-    } else if (beetles.includes(insect)) {
-      path = `/beetle/${insect.id}`;
-    } else if (leafbeetles.includes(insect)) {
-      path = `/leafbeetle/${insect.id}`;
-    }
+    const path = buildInsectPath(insect);
     return { ...insect, path };
   });
   

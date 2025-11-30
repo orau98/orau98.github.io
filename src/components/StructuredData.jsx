@@ -1,9 +1,12 @@
 import React from 'react';
 import { absUrl } from '../utils/origin';
+import { buildInsectPath } from '../utils/insectSlug';
 
 // Enhanced 蛾の構造化データ with Species and detailed taxonomy
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
+
+  const detailUrl = absUrl(buildInsectPath(moth));
 
   // Normalize hostPlants to an array for safe operations
   const hostPlantsList = Array.isArray(moth.hostPlants)
@@ -51,8 +54,8 @@ export const MothStructuredData = ({ moth }) => {
       ]
     },
     "description": `${moth.name}（${moth.scientificName}）は${moth.classification?.familyJapanese || moth.family || '蛾科'}に属する蛾の一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
-    "url": `${absUrl(`/moth/${moth.id}`)}`,
-    "sameAs": `${absUrl(`/moth/${moth.id}`)}`,
+    "url": detailUrl,
+    "sameAs": detailUrl,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -123,7 +126,7 @@ export const MothStructuredData = ({ moth }) => {
         "@type": "ListItem",
         "position": 3,
         "name": moth.name,
-        "item": `${absUrl(`/moth/${moth.id}`)}`
+        "item": detailUrl
       }
     ]
   };
@@ -139,6 +142,8 @@ export const MothStructuredData = ({ moth }) => {
 // Enhanced 蝶の構造化データ with Species and detailed taxonomy
 export const ButterflyStructuredData = ({ butterfly }) => {
   if (!butterfly) return null;
+
+  const detailUrl = absUrl(buildInsectPath(butterfly));
 
   const hostPlantsList = Array.isArray(butterfly.hostPlants)
     ? butterfly.hostPlants
@@ -185,8 +190,8 @@ export const ButterflyStructuredData = ({ butterfly }) => {
       ]
     },
     "description": `${butterfly.name}（${butterfly.scientificName}）は${butterfly.classification?.familyJapanese || butterfly.family || '蝶科'}に属する蝶の一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
-    "url": `${absUrl(`/butterfly/${butterfly.id}`)}`,
-    "sameAs": `${absUrl(`/butterfly/${butterfly.id}`)}`,
+    "url": detailUrl,
+    "sameAs": detailUrl,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -257,7 +262,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         "@type": "ListItem",
         "position": 3,
         "name": butterfly.name,
-        "item": `${absUrl(`/butterfly/${butterfly.id}`)}`
+        "item": detailUrl
       }
     ]
   };
@@ -273,6 +278,8 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 // Enhanced タマムシの構造化データ with Species and detailed taxonomy
 export const BeetleStructuredData = ({ beetle }) => {
   if (!beetle) return null;
+
+  const detailUrl = absUrl(buildInsectPath(beetle));
 
   const hostPlantsList = Array.isArray(beetle.hostPlants)
     ? beetle.hostPlants
@@ -319,8 +326,8 @@ export const BeetleStructuredData = ({ beetle }) => {
       ]
     },
     "description": `${beetle.name}（${beetle.scientificName}）は${beetle.classification?.family || 'タマムシ科'}に属するタマムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
-    "url": `${absUrl(`/beetle/${beetle.id}`)}`,
-    "sameAs": `${absUrl(`/beetle/${beetle.id}`)}`,
+    "url": detailUrl,
+    "sameAs": detailUrl,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -391,7 +398,7 @@ export const BeetleStructuredData = ({ beetle }) => {
         "@type": "ListItem",
         "position": 3,
         "name": beetle.name,
-        "item": `${absUrl(`/beetle/${beetle.id}`)}`
+        "item": detailUrl
       }
     ]
   };
@@ -407,6 +414,8 @@ export const BeetleStructuredData = ({ beetle }) => {
 // Enhanced ハムシの構造化データ with Species, detailed taxonomy and emergence time
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
+
+  const detailUrl = absUrl(buildInsectPath(leafbeetle));
 
   const hostPlantsList = Array.isArray(leafbeetle.hostPlants)
     ? leafbeetle.hostPlants
@@ -447,8 +456,8 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
       ]
     },
     "description": `${leafbeetle.name}（${leafbeetle.scientificName}）はハムシ科に属するハムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}${leafbeetle.emergenceTime && leafbeetle.emergenceTime !== '不明' ? ` 成虫発生時期：${leafbeetle.emergenceTime}` : ''}`,
-    "url": `${absUrl(`/leafbeetle/${leafbeetle.id}`)}`,
-    "sameAs": `${absUrl(`/leafbeetle/${leafbeetle.id}`)}`,
+    "url": detailUrl,
+    "sameAs": detailUrl,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -544,7 +553,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         "@type": "ListItem",
         "position": 3,
         "name": leafbeetle.name,
-        "item": `${absUrl(`/leafbeetle/${leafbeetle.id}`)}`
+        "item": detailUrl
       }
     ]
   };

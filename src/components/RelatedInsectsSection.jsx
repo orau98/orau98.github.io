@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
+import { buildInsectPath } from '../utils/insectSlug';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   // 各植物の展開状態を管理
@@ -154,14 +155,10 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                   }
                   if (!relatedMoth) return null;
                   
-                  const baseUrl = relatedMoth.type === 'butterfly' ? '/butterfly/' : 
-                                 relatedMoth.type === 'beetle' ? '/beetle/' : 
-                                 relatedMoth.type === 'leafbeetle' ? '/leafbeetle/' : '/moth/';
-                  
                   return (
                     <Link
                       key={relatedMoth.id}
-                      to={`${baseUrl}${relatedMoth.id}`}
+                      to={buildInsectPath(relatedMoth)}
                       className={`insect-card group ${
                         layout.startsWith('grid') ? 'w-full' : 'flex-shrink-0 w-56'
                       }`}

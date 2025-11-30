@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { buildInsectPath } from '../utils/insectSlug';
 
 // Helper to get previous and next items from a sorted list
 // `items` should be sorted in the desired order (e.g., alphabetical or taxonomic)
@@ -23,11 +24,7 @@ const NeighborLink = ({ item, direction, type = 'insect' }) => {
 
   const getRoute = (item, type) => {
     if (type === 'plant') return `/plant/${encodeURIComponent(item.name)}`;
-    // Determine insect route
-    if (item.type === 'butterfly') return `/butterfly/${item.id}`;
-    if (item.type === 'beetle') return `/beetle/${item.id}`;
-    if (item.type === 'leafbeetle') return `/leafbeetle/${item.id}`;
-    return `/moth/${item.id}`;
+    return buildInsectPath(item);
   };
 
   const route = getRoute(item, type);

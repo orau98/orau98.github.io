@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
+import { buildInsectPath } from '../utils/insectSlug';
 
 const InsectCarousel = ({ insects, title, type = 'default' }) => {
   // 画像拡張子マッピングを読み込む（共通サービス）
@@ -61,14 +62,10 @@ const InsectCarousel = ({ insects, title, type = 'default' }) => {
         <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-indigo-300 scrollbar-track-indigo-100 dark:scrollbar-thumb-indigo-600 dark:scrollbar-track-indigo-900/20">
           <div className="flex space-x-4 min-w-max">
             {insects.map(insect => {
-              const baseUrl = insect.type === 'butterfly' ? '/butterfly/' : 
-                             insect.type === 'beetle' ? '/beetle/' : 
-                             insect.type === 'leafbeetle' ? '/leafbeetle/' : '/moth/';
-              
               return (
                 <Link
                   key={insect.id}
-                  to={`${baseUrl}${insect.id}`}
+                  to={buildInsectPath(insect)}
                   className="flex-shrink-0 w-48 group"
                 >
                   <div className={`bg-white dark:bg-slate-800 rounded-xl overflow-hidden border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02] ${

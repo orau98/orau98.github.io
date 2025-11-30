@@ -104,15 +104,6 @@ const HostPlantListItem = React.memo(
                     onLoad={() => setImageLoaded(true)}
                     onError={() => setImageError(true)}
                   />
-                  {/* Plant name overlay at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-4">
-                    <h3 className="text-white font-bold text-lg drop-shadow-lg tracking-tight">
-                      {/[A-Za-z]/.test(plant) &&
-                      !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant)
-                        ? normalizeLatinBinomialPlain(plant)
-                        : plant}
-                    </h3>
-                  </div>
                 </div>
               ) : (
                 // Fallback to beautiful plant icon with better layout
@@ -133,27 +124,7 @@ const HostPlantListItem = React.memo(
                       />
                     </svg>
                   </div>
-
-                  {/* Names displayed prominently in center */}
-                  <div className="text-center flex-1 flex flex-col justify-center">
-                    <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-2 leading-tight tracking-tight">
-                      {/[A-Za-z]/.test(plant) &&
-                      !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant)
-                        ? normalizeLatinBinomialPlain(plant)
-                        : plant}
-                    </h3>
-                    {imageError && (
-                      <p className="text-emerald-700 dark:text-emerald-300 text-sm mb-2">
-                        画像を読み込めませんでした。
-                      </p>
-                    )}
-                    {plantDetails[plant]?.familyName && (
-                      <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
-                        {plantDetails[plant].familyName}
-                      </p>
-                    )}
-                  </div>
-
+                  
                   {/* No image indicator at bottom */}
                   <div className="flex-shrink-0 mt-4">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/70 dark:bg-emerald-600/70 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30 dark:border-emerald-500/30">
@@ -244,18 +215,35 @@ const HostPlantListItem = React.memo(
                 </span>
               </div>
 
-              {/* Gradient overlay */}
-              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/30 to-transparent"></div>
+              {/* Gradient overlay - Removed since name is now below */}
             </div>
 
             {/* Enhanced Content section */}
-            <div className="p-4">
-              <div className="space-y-2">
-                <div className="flex items-start space-x-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 flex-shrink-0">
-                    昆虫
+            <div className="p-4 flex flex-col flex-grow">
+              <div className="mb-3">
+                <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-1 leading-tight tracking-tight">
+                  {/[A-Za-z]/.test(plant) &&
+                  !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant)
+                    ? normalizeLatinBinomialPlain(plant)
+                    : plant}
+                </h3>
+                {plantDetails[plant]?.familyName && (
+                  <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
+                    {plantDetails[plant].familyName}
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-auto space-y-2">
+                <div className="flex items-start space-x-2 text-sm">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex-shrink-0 mt-0.5">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 512 512">
+                      <path d="M243.695,179.339c0.703,4.906,5.813,7.438,7.719,1.406c1.891-6.031-4.828-17.219-22.219-36.531c-14.828-16.484-35.625-39.391-23.844-51.578c14.609-10.078,8.469-27.75-4.172-29.469c-11.313-1.516-21.609,13.578-15.031,38.703C192.711,126.964,241.695,165.292,243.695,179.339z"/>
+                      <path d="M445.898,83.886c-74.469,0-160.703,89.859-174.516,111.078c-3.594-4.578-9.109-7.578-15.375-7.578c-6.281,0-11.797,3-15.391,7.578C226.805,173.73,140.57,83.886,66.102,83.886c-76.828,0-70.547,68.984-59.578,112.891c10.969,43.922,56.453,92.516,106.609,94.094c-56.438,25.078-61.141,89.375-43.891,119.156c16.359,28.25,103.266,92.016,167.156-50.296v29.141c0,10.813,8.781,19.593,19.609,19.593c10.813,0,19.594-8.781,19.594-19.593v-29.156c63.891,142.328,150.813,78.562,167.156,50.312c17.25-29.781,12.547-94.078-43.891-119.156c50.172-1.578,95.641-50.172,106.609-94.094C516.445,152.871,522.727,83.886,445.898,83.886z"/>
+                      <path d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531C262.492,186.777,267.602,184.246,268.305,179.339z"/>
+                    </svg>
                   </span>
-                  <span className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
                     {mothNames.slice(0, 4).join("、")}
                     {mothNames.length > 4 && `...他${mothNames.length - 4}種`}
                   </span>
