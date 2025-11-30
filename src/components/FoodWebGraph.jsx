@@ -228,9 +228,47 @@ const FoodWebGraph = ({
       });
     });
 
+    const nodesArray = Array.from(nodes.values());
+
+    // --- 初期配置: 重なり回避のために極座標でざっくり配置してから物理演算 ---
+    const plantNodes = nodesArray.filter(n => n.type === 'plant');
+    const insectNodes = nodesArray.filter(n => n.type === 'insect');
+    const centerNode = nodesArray.find(n => n.type === 'current-insect');
+
+    const R_PLANT = Math.max(200, plantNodes.length * 14);
+    plantNodes.forEach((p, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(1, plantNodes.length);
+      p.x = R_PLANT * Math.cos(angle);
+      p.y = R_PLANT * Math.sin(angle);
+    });
+
+    // plant 周りに子昆虫を円配置
+    const linksArray = links;
+    const nodeById = new Map(nodesArray.map(n => [n.id, n]));
+    plantNodes.forEach(p => {
+      const neighbors = linksArray
+        .filter(l => (l.source === p.id || l.target === p.id))
+        .map(l => (l.source === p.id ? l.target : l.source))
+        .map(id => nodeById.get(typeof id === 'object' ? id.id : id))
+        .filter(n => n && n.type === 'insect');
+      if (neighbors.length === 0) return;
+      const r = Math.max(70, neighbors.length * 6);
+      neighbors.forEach((n, idx) => {
+        const a = (2 * Math.PI * idx) / neighbors.length;
+        n.x = (p.x || 0) + r * Math.cos(a);
+        n.y = (p.y || 0) + r * Math.sin(a);
+      });
+    });
+
+    // 中央ノード
+    if (centerNode) {
+      centerNode.x = 0;
+      centerNode.y = 0;
+    }
+
     return {
-      nodes: Array.from(nodes.values()),
-      links
+      nodes: nodesArray,
+      links: linksArray
     };
   }, [currentInsect, allInsects, hostPlantsMap, isDarkMode, resolveInsectImageCandidates, resolvePlantImageCandidates]);
 
@@ -447,8 +485,8 @@ const FoodWebGraph = ({
         
         backgroundColor={isDarkMode ? "#0f172a" : "#f8fafc"}
         linkCurvature={0.08}
-        d3VelocityDecay={0.7}
-        cooldownTicks={0} // keep simulation responsive during zoom/pan
+        d3VelocityDecay={0.55}
+        cooldownTicks={120} // 少しだけシミュレーションを回して初期重なりを解消
       />
       
       {/* Legend Overlay */}
