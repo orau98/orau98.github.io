@@ -8,6 +8,7 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
 import { absUrl } from './utils/origin';
+import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
 import { loadInsectImageIndexes } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
 import { buildResponsiveSrcset } from './utils/imageSrcset';
@@ -24,12 +25,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
   
-  const { mothId, butterflyId, beetleId, leafbeetleId } = useParams();
-  let insectId = mothId || butterflyId || beetleId || leafbeetleId;
+  const { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug } = useParams();
+  const routeType = mothSlug ? 'moth' : butterflySlug ? 'butterfly' : beetleSlug ? 'beetle' : leafbeetleSlug ? 'leafbeetle' : '';
+  const rawRouteParam = mothSlug || butterflySlug || beetleSlug || leafbeetleSlug || '';
+  const decodedRouteParam = decodeSlug(rawRouteParam);
+  const normalizedRouteSlug = slugifyInsectName(decodedRouteParam);
+  const isLeafbeetleRoute = routeType === 'leafbeetle';
   const [fallbackHostPlants, setFallbackHostPlants] = useState([]);
-  
+
   // 🔍 デバッグ：URLパラメータ確認
-  logger.debug('🔍 URL params:', { mothId, butterflyId, beetleId, leafbeetleId, insectId });
+  logger.debug('🔍 URL params:', { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug, rawRouteParam, decodedRouteParam });
   
   // ID mapping for compatibility between different data sources
   // Since moths array is built from insects.csv (species-XXX format)
@@ -40,8 +45,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     // Add more mappings as needed
   };
   
-  // Apply ID mapping if needed
-  const mappedInsectId = idMapping[insectId] || insectId;
+  // Helper: determine whether the parameter looks like an internal ID (species-XXXX etc.)
+  const isLikelyInsectId = (value = '') => /^(species|catalog|moth|butterfly|butterfly-csv|beetle|leafbeetle)[-_]?\d+/i.test(value);
+  
+  // Apply ID mapping only when the route param looks like an ID
+  const mappedInsectId = isLikelyInsectId(decodedRouteParam) ? (idMapping[decodedRouteParam] || decodedRouteParam) : decodedRouteParam;
 
   // Resolve non-standard suffix IDs like `species-6131m` -> `species-6131`
   const resolveInsectId = (id) => {
@@ -68,11 +76,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const isDataLoading = totalDataLoaded === 0;
   
   // Add debug logging for アオバシャチホコ
-  if (insectId === 'species-4601' || insectId === 'catalog-3123') {
+  if (decodedRouteParam === 'species-4601' || decodedRouteParam === 'catalog-3123' || mappedInsectId === 'species-4601') {
     logger.debug('🔍 DEBUG アオバシャチホコ ID mapping:', {
-      originalId: insectId,
+      originalId: decodedRouteParam,
       mappedId: mappedInsectId,
-      hasMapping: !!idMapping[insectId],
+      hasMapping: !!idMapping[decodedRouteParam],
       idMappingTable: idMapping,
       isDataLoading: isDataLoading,
       totalDataLoaded: totalDataLoaded
@@ -80,11 +88,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
   
   // species-6115のIDマッピングデバッグ
-  if (insectId === 'species-6115') {
+  if (decodedRouteParam === 'species-6115' || mappedInsectId === 'species-6115') {
     logger.debug('DEBUG species-6115 ID mapping:', {
-      originalId: insectId,
+      originalId: decodedRouteParam,
       mappedId: mappedInsectId,
-      hasMapping: !!idMapping[insectId]
+      hasMapping: !!idMapping[decodedRouteParam]
     });
   }
   
@@ -96,20 +104,48 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     return [...allInsects].sort((a, b) => a.name.localeCompare(b.name, 'ja'));
   }, [allInsects]);
 
-  let moth = allInsects.find(m => m.id === mappedInsectId);
+  // Utility: find by slugified Japanese name (URL-safe)
+  const findBySlugOrName = (value) => {
+    if (!value) return null;
+    const normalized = slugifyInsectName(value);
+    return allInsects.find((m) => slugifyInsectName(m.name) === normalized || m.name === value);
+  };
 
+  let moth = null;
 
-  if (!moth) {
-    const fallbackId = resolveInsectId(mappedInsectId);
-    if (fallbackId !== mappedInsectId) {
-      moth = allInsects.find(m => m.id === fallbackId);
+  // 1) Try ID search when the param looks like an ID
+  if (isLikelyInsectId(mappedInsectId)) {
+    moth = allInsects.find(m => m.id === mappedInsectId);
+    if (!moth) {
+      const fallbackId = resolveInsectId(mappedInsectId);
+      if (fallbackId !== mappedInsectId) {
+        moth = allInsects.find(m => m.id === fallbackId);
+      }
     }
   }
+
+  // 2) Try slug/name search
+  if (!moth) {
+    moth = findBySlugOrName(decodedRouteParam) || findBySlugOrName(mappedInsectId);
+  }
+
+  // 3) Try alternativeNames for slug match
+  if (!moth) {
+    moth = allInsects.find((m) => {
+      const alts = (m.alternativeNames || '')
+        .split(/[、,，]/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      return alts.some((alt) => slugifyInsectName(alt) === normalizedRouteSlug);
+    }) || null;
+  }
+
+  const resolvedInsectId = moth?.id || resolveInsectId(mappedInsectId);
 
   // Fallback: if no host plants are available (e.g., data-lite initial state),
   // lazily load from normalized CSV (public/hostplants.csv) and synthesize minimal records.
   useEffect(() => {
-    const needFallback = !!leafbeetleId && moth && (
+    const needFallback = isLeafbeetleRoute && moth && (
       (!Array.isArray(moth.hostPlantsDetailed) || moth.hostPlantsDetailed.length === 0) &&
       (!Array.isArray(moth.hostPlants) || moth.hostPlants.length === 0)
     );
@@ -154,7 +190,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
           }
         cols.push(buf);
           const insect = (cols[iInsect] || '').trim();
-          if (insect !== mappedInsectId) continue;
+          if (insect !== resolvedInsectId) continue;
           const plant = (cols[iPlant] || '').trim();
           if (!plant || plant === '不明' || /^(\d{3,4})$/.test(plant)) continue;
           out.push({
@@ -173,7 +209,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       })
       .catch(() => {})
     return () => { aborted = true; };
-  }, [leafbeetleId, moth, mappedInsectId]);
+  }, [isLeafbeetleRoute, moth, resolvedInsectId]);
   
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
