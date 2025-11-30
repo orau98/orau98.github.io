@@ -1,3 +1,7 @@
+import React, { useMemo, useRef, useCallback, useEffect } from 'react';
+import { ForceGraph2D } from 'react-force-graph';
+import { useNavigate } from 'react-router-dom';
+
 // Helper to normalize plant names for lookup
 const normalizePlantName = (name) => {
   if (!name) return '';

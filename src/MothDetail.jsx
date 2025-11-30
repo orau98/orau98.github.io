@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
-import FoodWebGraph from './components/FoodWebGraph';
 import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
@@ -1408,33 +1407,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             </div>
 
         {/* Food Web Network Graph */}
-        <div id="food-web-graph" className="mb-16" ref={graphContainerRef}>
-          <div className="flex items-center mb-4 gap-2 text-indigo-700 dark:text-indigo-300">
+        {/* 食草ネットワーク（現在は機能停止中） */}
+        <div id="food-web-graph" className="mb-12">
+          <div className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 mb-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             <h2 className="text-xl font-bold">食草ネットワーク</h2>
           </div>
-          
-          <div className="h-[500px] bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden relative shadow-inner">
-             {graphDimensions.width > 0 && (
-               <FoodWebGraph 
-                  currentInsect={moth}
-                  allInsects={allInsects}
-                  hostPlantsMap={hostPlants}
-                  width={graphDimensions.width}
-                  height={graphDimensions.height}
-               />
-             )}
-             <div className="absolute top-4 right-4 pointer-events-none z-10">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 shadow-md backdrop-blur border border-slate-200 dark:border-slate-600">
-                  <svg className="w-3 h-3 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                  </svg>
-                  ドラッグで移動・ズーム
-                </span>
-             </div>
-          </div>
+          <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+            ネットワーク図は現在メンテナンス中です。データは引き続き表示されています。
+          </p>
         </div>
 
         {/* Emergence Period Section (Full Width) */}
