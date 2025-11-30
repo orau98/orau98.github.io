@@ -390,7 +390,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         push(build(name, knownExt));
         return;
       }
-      if (existsInIndex) {
+      // インデックスに無くても楽観的に主要拡張子を試す
+      if (existsInIndex || true) {
         tryExts.forEach(ext => push(build(name, ext)));
       }
     };
