@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useCallback, useEffect, useState } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 import { useNavigate } from 'react-router-dom';
+import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 
 // Helper to normalize plant names for lookup
@@ -18,32 +19,59 @@ const FoodWebGraph = ({
   allInsects,
   hostPlantsMap,
   width,
-  height,
-  imageExtensions = {}
+  height
 }) => {
   const navigate = useNavigate();
   const fgRef = useRef();
+  const loadingImagesRef = useRef(new Set());
   // Use dark mode detection (simple version, can be improved with context)
   const isBrowser = typeof document !== 'undefined';
   const isDarkMode = isBrowser && document.documentElement.classList.contains('dark');
   const [images, setImages] = useState({}); // Store loaded images
+  const [imageExtMap, setImageExtMap] = useState({});
+  const [imageBaseSet, setImageBaseSet] = useState(new Set());
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
+  const assetBase = import.meta.env.BASE_URL || '/';
+
+  // 画像インデックスを遅延ロード
+  useEffect(() => {
+    let aborted = false;
+    loadInsectImageIndexes()
+      .then(({ names, exts }) => {
+        if (aborted) return;
+        setImageExtMap(exts || {});
+        setImageBaseSet(new Set(Array.from(names || [])));
+      })
+      .catch(() => {
+        if (aborted) return;
+        setImageExtMap({});
+        setImageBaseSet(new Set());
+      });
+    return () => { aborted = true; };
+  }, []);
 
   // Helper to resolve image URL
-  const resolveImageUrl = useCallback((insectName, scientificName) => {
-    // Try multiple candidates similar to MothDetail logic
+  const resolveImageUrl = useCallback((detail) => {
+    if (!detail) return null;
+    if (detail.image) return detail.image;
     const candidates = [
-      scientificName ? createSafeInsectFilename(scientificName) : null,
-      createSafeInsectFilename(insectName),
-      insectName
+      detail.scientificFilename,
+      detail.scientificName ? createSafeInsectFilename(detail.scientificName) : null,
+      detail.name ? createSafeInsectFilename(detail.name) : null,
+      detail.name
     ].filter(Boolean);
 
     for (const cand of candidates) {
-      if (imageExtensions[cand]) {
-        return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(cand)}${imageExtensions[cand]}`;
+      const ext = imageExtMap[cand];
+      if (ext) {
+        return `${assetBase}images/insects/${encodeURIComponent(cand)}${ext}${cacheBustRef.current}`;
+      }
+      if (imageBaseSet.has(cand)) {
+        return `${assetBase}images/insects/${encodeURIComponent(cand)}.jpg${cacheBustRef.current}`;
       }
     }
     return null;
-  }, [imageExtensions]);
+  }, [assetBase, imageExtMap, imageBaseSet]);
   
   // --- Data Processing ---
   const graphData = useMemo(() => {
@@ -54,7 +82,7 @@ const FoodWebGraph = ({
 
     // 1. Central Node (Current Insect)
     const centerId = `insect:${currentInsect.name}`;
-    const centerImgUrl = resolveImageUrl(currentInsect.name, currentInsect.scientificName);
+    const centerImgUrl = resolveImageUrl(currentInsect);
     
     nodes.set(centerId, {
       id: centerId,
@@ -72,7 +100,7 @@ const FoodWebGraph = ({
       if (!nodes.has(id)) {
         // Try to find insect details in allInsects
         const detail = allInsects.find(i => i.name === name);
-        const imgUrl = detail ? resolveImageUrl(detail.name, detail.scientificName) : null;
+        const imgUrl = detail ? resolveImageUrl(detail) : null;
         
         nodes.set(id, {
           id,
@@ -251,14 +279,23 @@ const FoodWebGraph = ({
         ctx.strokeStyle = strokeStyle;
         ctx.stroke();
       } else {
-        // Image not loaded yet, draw placeholder and load
-        const newImg = new Image();
-        newImg.src = node.imgUrl;
-        newImg.onload = () => {
-          setImages(prev => ({ ...prev, [node.imgUrl]: newImg }));
-        };
+        // 画像ロードを一度だけ開始
+        if (!loadingImagesRef.current.has(node.imgUrl)) {
+          loadingImagesRef.current.add(node.imgUrl);
+          const newImg = new Image();
+          newImg.crossOrigin = 'anonymous';
+          newImg.src = node.imgUrl;
+          newImg.onload = () => {
+            loadingImagesRef.current.delete(node.imgUrl);
+            setImages(prev => ({ ...prev, [node.imgUrl]: newImg }));
+            fgRef.current?.refresh();
+          };
+          newImg.onerror = () => {
+            loadingImagesRef.current.delete(node.imgUrl);
+          };
+        }
         
-        // Draw standard circle while loading
+        // ロード中はプレースホルダ円
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
         ctx.fillStyle = fillStyle;
@@ -304,3 +341,44 @@ const FoodWebGraph = ({
       ctx.fillText(label, node.x, node.y + yOffset);
     }
   }, [isDarkMode, images]);
+
+  return (
+    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 relative">
+      <ForceGraph2D
+        ref={fgRef}
+        width={width}
+        height={height}
+        graphData={graphData}
+        nodeLabel="name"
+        nodeCanvasObject={nodeCanvasObject}
+        onNodeClick={handleNodeClick}
+        linkDirectionalParticles={2}
+        linkDirectionalParticleWidth={3}
+        linkDirectionalParticleSpeed={0.005}
+        linkColor={link => link.color || '#cbd5e1'}
+        backgroundColor={isDarkMode ? "#0f172a" : "#f8fafc"} // Slate-900 / Slate-50
+        d3VelocityDecay={0.4} // Higher decay for less bouncy
+        cooldownTicks={150}
+        onEngineStop={() => fgRef.current.zoomToFit(400, 50)}
+      />
+      
+      {/* Legend / Controls overlay */}
+      <div className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 text-xs z-10">
+        <div className="flex items-center mb-2">
+          <span className="w-3 h-3 rounded-full bg-rose-500 mr-2 shadow-sm"></span>
+          <span className="text-slate-700 dark:text-slate-200 font-medium">現在の昆虫</span>
+        </div>
+        <div className="flex items-center mb-2">
+          <span className="w-3 h-3 rounded-full bg-emerald-500 mr-2 shadow-sm"></span>
+          <span className="text-slate-700 dark:text-slate-200 font-medium">食草</span>
+        </div>
+        <div className="flex items-center">
+          <span className="w-3 h-3 rounded-full bg-sky-500 mr-2 shadow-sm"></span>
+          <span className="text-slate-700 dark:text-slate-200 font-medium">関連する他の昆虫</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FoodWebGraph;
