@@ -396,69 +396,73 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
         {/* 構造化データ */}
         <MainStructuredData />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] rounded-3xl overflow-hidden shadow-2xl group">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
+          <div className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] group">
+            {/* Background Container - Handles clipping for image and gradients */}
+            <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
 
-            {/* Show skeleton while loading */}
-            {!heroImageLoaded && (
-              <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 animate-pulse z-5" />
-            )}
+              {/* Show skeleton while loading */}
+              {!heroImageLoaded && (
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 animate-pulse z-5" />
+              )}
 
-            {(() => {
-              const base = "Cucullia_argentea";
-              // Use relative paths so it works under any base path
-              const src = `images/insects/${base}.jpg`;
-              // Use only sizes that actually exist to avoid 404s
-              const srcSet = [
-                `images/resized/insects/${base}.320.jpg 320w`,
-                `images/resized/insects/${base}.640.jpg 640w`,
-                `images/resized/insects/${base}.1024.jpg 1024w`,
-              ].join(", ");
-              const sizes = "100vw";
-              return (
-                <img
-                  src={src}
-                  srcSet={srcSet}
-                  sizes={sizes}
-                  alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
-                  width="1600"
-                  height="900"
-                  className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
-                    heroImageLoaded ? "opacity-100" : "opacity-0"
-                  }`}
-                  style={{
-                    imageRendering: "auto",
-                    willChange: heroImageLoaded ? "auto" : "opacity, transform",
-                    contain: "layout style paint",
-                  }}
-                  loading="eager"
-                  decoding="async"
-                  fetchpriority="high"
-                  onLoad={() => setHeroImageLoaded(true)}
-                  onError={(e) => {
-                    try {
-                      const imgEl = e.target;
-                      logger.warn("Hero image failed to load:", imgEl?.src);
-                      // Try relative path first (works under subpath deployments)
-                      if (!imgEl.dataset.fallbackTried) {
-                        imgEl.dataset.fallbackTried = "1";
-                        imgEl.onerror = null; // prevent loop
-                        imgEl.src = "images/insects/Cucullia_argentea.jpg";
-                      } else {
-                        imgEl.onerror = null; // prevent loop
-                        // Final fallback to a local placeholder (relative path)
-                        imgEl.src = "images/placeholder.jpg";
-                        imgEl.alt = "画像が見つかりません";
-                      }
-                    } catch {}
-                    setHeroImageLoaded(true);
-                  }}
-                />
-              );
-            })()}
+              {(() => {
+                const base = "Cucullia_argentea";
+                // Use relative paths so it works under any base path
+                const src = `images/insects/${base}.jpg`;
+                // Use only sizes that actually exist to avoid 404s
+                const srcSet = [
+                  `images/resized/insects/${base}.320.jpg 320w`,
+                  `images/resized/insects/${base}.640.jpg 640w`,
+                  `images/resized/insects/${base}.1024.jpg 1024w`,
+                ].join(", ");
+                const sizes = "100vw";
+                return (
+                  <img
+                    src={src}
+                    srcSet={srcSet}
+                    sizes={sizes}
+                    alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
+                    width="1600"
+                    height="900"
+                    className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
+                      heroImageLoaded ? "opacity-100" : "opacity-0"
+                    }`}
+                    style={{
+                      imageRendering: "auto",
+                      willChange: heroImageLoaded ? "auto" : "opacity, transform",
+                      contain: "layout style paint",
+                    }}
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                    onLoad={() => setHeroImageLoaded(true)}
+                    onError={(e) => {
+                      try {
+                        const imgEl = e.target;
+                        logger.warn("Hero image failed to load:", imgEl?.src);
+                        // Try relative path first (works under subpath deployments)
+                        if (!imgEl.dataset.fallbackTried) {
+                          imgEl.dataset.fallbackTried = "1";
+                          imgEl.onerror = null; // prevent loop
+                          imgEl.src = "images/insects/Cucullia_argentea.jpg";
+                        } else {
+                          imgEl.onerror = null; // prevent loop
+                          // Final fallback to a local placeholder (relative path)
+                          imgEl.src = "images/placeholder.jpg";
+                          imgEl.alt = "画像が見つかりません";
+                        }
+                      } catch {}
+                      setHeroImageLoaded(true);
+                    }}
+                  />
+                );
+              })()}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
+            </div>
 
+            {/* Content Container - Allows overflow for search suggestions */}
             <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
               <div className="max-w-6xl mx-auto">
                 <h1 className="font-extrabold text-white mb-2 md:mb-4 leading-tight tracking-tight">
