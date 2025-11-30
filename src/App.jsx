@@ -5059,15 +5059,7 @@ function App() {
             hostPlants: hostPlantList,
             hostPlantDetails: hostPlantEntries, // Add part information
             geographicalRemarks: remarks && remarks.trim() ? remarks.trim() : '',
-            source: source || "日本産蝶類標準図鑑",
-            emergenceTime: (() => {
-               if (remarks) {
-                 const { emergenceTime } = extractEmergenceTime(remarks);
-                 if (emergenceTime) return normalizeEmergenceTime(emergenceTime);
-               }
-               return '';
-            })(),
-            notes: remarks || ''
+            source: source || "日本産蝶類標準図鑑"
           };
           
           if (japaneseName === 'オオゴマシジミ') {
