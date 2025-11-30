@@ -324,8 +324,15 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   const href = insect.path || '#';
   const name = insect.name || insect.japaneseName || '（名称不明）';
   
-  // Extract emergence time
-  const emergenceTime = insect.emergenceTime || extractEmergenceTime(insect.notes || '').emergenceTime;
+  // Extract emergence time with better fallback for different insect types
+  const getEmergenceSource = (i) => {
+    if (i.emergenceTime && i.emergenceTime !== '不明') return i.emergenceTime;
+    // For butterflies, check geographicalRemarks (mapped from remarks in CSV)
+    if (i.type === 'butterfly' && i.geographicalRemarks) return extractEmergenceTime(i.geographicalRemarks).emergenceTime;
+    // Fallback to notes or remarks
+    return extractEmergenceTime(i.notes || i.remarks || '').emergenceTime;
+  };
+  const emergenceTime = getEmergenceSource(insect);
   const normalizedTime = normalizeEmergenceTime(emergenceTime);
 
   return (
