@@ -50,6 +50,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   // Apply ID mapping only when the route param looks like an ID
   const mappedInsectId = isLikelyInsectId(decodedRouteParam) ? (idMapping[decodedRouteParam] || decodedRouteParam) : decodedRouteParam;
+  const insectId = decodedRouteParam; // original (decoded) route param for logging/compatibility
 
   // Resolve non-standard suffix IDs like `species-6131m` -> `species-6131`
   const resolveInsectId = (id) => {
