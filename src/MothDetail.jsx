@@ -1424,14 +1424,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             }>
               {graphDimensions.width > 0 && (
-                <FoodWebGraph
-                  currentInsect={moth}
-                  allInsects={allInsects}
-                  hostPlantsMap={hostPlants}
-                  width={graphDimensions.width}
-                  height={graphDimensions.height}
-                />
-              )}
+                               <FoodWebGraph 
+                                  currentInsect={moth}
+                                  allInsects={allInsects}
+                                  hostPlantsMap={hostPlants}
+                                  width={graphDimensions.width}
+                                  height={graphDimensions.height}
+                                  imageExtensions={imageExtensions}
+                               />              )}
             </React.Suspense>
           </div>
         </div>
