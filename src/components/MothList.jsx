@@ -129,10 +129,30 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     ? buildInsectPath(moth)
     : `${baseRoute}/${slugifyInsectName(moth.name) || moth.id}`;
   
-  // Use passed imageFilename or fallback to placeholder/safe name
+  // 画像ファイル名を動的に解決（index 未登録でも拡張子マップがあれば表示を試す）
   const finalImageFilename = React.useMemo(() => {
-    return imageFilename || createSafeInsectFilename(moth?.scientificName || moth?.name || 'placeholder');
-  }, [imageFilename, moth]);
+    if (imageFilename) return imageFilename;
+    const candidates = [];
+    // 和名→学名マッピング
+    const mapped = globalJapaneseToScientificMapping.get(moth?.name);
+    if (mapped) candidates.push(mapped);
+    // 提供されている scientificFilename
+    if (moth?.scientificFilename) candidates.push(moth.scientificFilename);
+    // 学名から安全なファイル名生成
+    const safeFromSci = createSafeInsectFilename(moth?.scientificName);
+    if (safeFromSci) candidates.push(safeFromSci);
+    // 和名そのもの
+    if (moth?.name) candidates.push(moth.name);
+    // 最終フォールバック
+    candidates.push(createSafeInsectFilename(moth?.name || ''));
+    // 拡張子マップに存在する最初の候補を採用
+    if (imageExtensions) {
+      const hit = candidates.find(c => c && imageExtensions[c]);
+      if (hit) return hit;
+    }
+    // どれも見つからなければ先頭候補（存在するかは onError に任せる）
+    return candidates.find(Boolean) || 'placeholder';
+  }, [imageFilename, moth, imageExtensions]);
   
   // Determine the correct file extension using the extensions mapping
   let imageExtension = '.jpg'; // default
@@ -144,7 +164,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}${imageExtension}${cacheBustRef.current}`;
   
   // Check if we have an actual match (passed filename implies existence)
-  const hasImageFilename = !!imageFilename;
+  const hasImageFilename = !!finalImageFilename;
   
   
   // Preload priority images with better performance
