@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import logger from './utils/logger';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
+import FoodWebGraph from './components/FoodWebGraph';
 import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
@@ -218,6 +219,25 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     return () => { aborted = true; };
   }, [isLeafbeetleRoute, moth, resolvedInsectId]);
   
+  const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
+  const graphContainerRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      if (graphContainerRef.current) {
+        setGraphDimensions({
+          width: graphContainerRef.current.offsetWidth,
+          height: 500
+        });
+      }
+    };
+    
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
     logger.debug(`ID mapped: ${insectId} -> ${mappedInsectId}`);
@@ -1388,7 +1408,36 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               </div>
             </div>
 
-            {/* 成虫発生時期情報 - ハムシと蛾で表示 */}
+        {/* Food Web Network Graph */}
+        <div id="food-web-graph" className="mb-16" ref={graphContainerRef}>
+          <SectionHeader 
+            title="食草ネットワーク" 
+            iconPath={<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />} // Network/Server icon style
+            colorClass="text-indigo-700 dark:text-indigo-300"
+          />
+          
+          <div className="h-[500px] bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden relative shadow-inner">
+             {graphDimensions.width > 0 && (
+               <FoodWebGraph 
+                  currentInsect={moth}
+                  allInsects={allInsects}
+                  hostPlantsMap={hostPlants}
+                  width={graphDimensions.width}
+                  height={graphDimensions.height}
+               />
+             )}
+             <div className="absolute top-4 right-4 pointer-events-none z-10">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 shadow-md backdrop-blur border border-slate-200 dark:border-slate-600">
+                  <svg className="w-3 h-3 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                  ドラッグで移動・ズーム
+                </span>
+             </div>
+          </div>
+        </div>
+
+        {/* Emergence Period Section (Full Width) */}
             {(moth.type === 'leafbeetle' || moth.type === 'moth') && (() => {
               const hasDetailedTime = moth.emergenceTimeDetailed && moth.emergenceTimeDetailed.length > 0;
               const hasExistingTime = moth.emergenceTime && moth.emergenceTime !== '不明';
