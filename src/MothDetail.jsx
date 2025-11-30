@@ -142,6 +142,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
 
   const resolvedInsectId = moth?.id || resolveInsectId(mappedInsectId);
+  // 各分類ごとのID（構造化データ用）
+  const mothId = routeType === 'moth' ? resolvedInsectId : '';
+  const butterflyId = routeType === 'butterfly' ? resolvedInsectId : '';
+  const beetleId = routeType === 'beetle' ? resolvedInsectId : '';
+  const leafbeetleId = routeType === 'leafbeetle' ? resolvedInsectId : '';
 
   // Fallback: if no host plants are available (e.g., data-lite initial state),
   // lazily load from normalized CSV (public/hostplants.csv) and synthesize minimal records.
