@@ -882,7 +882,7 @@ function App() {
             safeFileLoad(genusMappingCsvPath, 'genus mapping data', 10000),
             safeFileLoad(normalizedInsectsCsvPath, 'normalized insects data', 15000),
             safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
-            safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
+            safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 20000)
           ]);
           // emergence overrides は廃止
         } else {
@@ -899,7 +899,7 @@ function App() {
             safeFileLoad(genusMappingCsvPath, 'genus mapping data', 10000),
             safeFileLoad(normalizedInsectsCsvPath, 'normalized insects data', 15000),
             safeFileLoad(normalizedHostplantsCsvPath, 'normalized hostplants data', 15000),
-            safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 10000)
+            safeFileLoad(normalizedNotesCsvPath, 'normalized notes data', 20000)
           ]);
           // emergence overrides は廃止
         }
