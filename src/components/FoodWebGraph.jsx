@@ -190,6 +190,8 @@ const FoodWebGraph = ({
     }
     plants = plants.filter(p => p && p !== '不明' && p !== 'undefined');
 
+    let totalTruncated = 0;
+
     plants.forEach(plantName => {
       const plantId = addPlantNode(plantName);
       links.push({ source: centerId, target: plantId, value: 3, color: isDarkMode ? '#34d399' : '#10b981' });
@@ -221,6 +223,10 @@ const FoodWebGraph = ({
         .sort((a, b) => b.score - a.score);
 
       const TOP_N = 30; // Show more when many insects share a plant (e.g., ブナ科)
+      if (scoredInsects.length > TOP_N) {
+        totalTruncated += (scoredInsects.length - TOP_N);
+      }
+      
       scoredInsects.slice(0, TOP_N).forEach(item => {
         const insectId = addInsectNode(item.name);
         links.push({ source: plantId, target: insectId, value: 1, color: isDarkMode ? '#60a5fa' : '#3b82f6' });
@@ -230,6 +236,51 @@ const FoodWebGraph = ({
     const nodesArray = Array.from(nodes.values());
 
     // --- 初期配置: 重なり回避のために極座標でざっくり配置してから物理演算 ---
+    const plantNodes = nodesArray.filter(n => n.type === 'plant');
+    const insectNodes = nodesArray.filter(n => n.type === 'insect');
+    const centerNode = nodesArray.find(n => n.type === 'current-insect');
+
+    const R_PLANT = Math.max(200, plantNodes.length * 14);
+    plantNodes.forEach((p, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(1, plantNodes.length);
+      p.x = R_PLANT * Math.cos(angle);
+      p.y = R_PLANT * Math.sin(angle);
+    });
+
+    // plant 周りに子昆虫を円配置
+    const linksArray = links;
+    const nodeById = new Map(nodesArray.map(n => [n.id, n]));
+    plantNodes.forEach(p => {
+      const neighbors = linksArray
+        .filter(l => (l.source === p.id || l.target === p.id))
+        .map(l => (l.source === p.id ? l.target : l.source))
+        .map(id => nodeById.get(typeof id === 'object' ? id.id : id))
+        .filter(n => n && n.type === 'insect');
+      if (neighbors.length === 0) return;
+      const r = Math.max(70, neighbors.length * 6);
+      neighbors.forEach((n, idx) => {
+        const a = (2 * Math.PI * idx) / neighbors.length;
+        n.x = (p.x || 0) + r * Math.cos(a);
+        n.y = (p.y || 0) + r * Math.sin(a);
+      });
+    });
+
+    // 中央ノード
+    if (centerNode) {
+      centerNode.x = 0;
+      centerNode.y = 0;
+    }
+
+    return {
+      nodes: nodesArray,
+      links: linksArray,
+      truncatedCount: totalTruncated
+    };
+  }, [currentInsect, allInsects, hostPlantsMap, isDarkMode, resolveInsectImageCandidates, resolvePlantImageCandidates]);
+  
+  // Re-implementing the graphData memo properly to include counting
+  // (Actually I should just modify the existing block in one go)
+
     const plantNodes = nodesArray.filter(n => n.type === 'plant');
     const insectNodes = nodesArray.filter(n => n.type === 'insect');
     const centerNode = nodesArray.find(n => n.type === 'current-insect');
@@ -505,6 +556,15 @@ const FoodWebGraph = ({
           <span className="w-3 h-3 rounded-full bg-sky-500 mr-2 shadow-sm"></span>
           <span className="text-slate-700 dark:text-slate-200 font-medium">関連する他の昆虫</span>
         </div>
+        
+        {graphData.truncatedCount > 0 && (
+          <div className="mt-3 pt-2 border-t border-slate-200 dark:border-slate-600">
+            <span className="text-xs text-orange-600 dark:text-orange-400 font-medium flex items-center">
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+              他 {graphData.truncatedCount} 種は省略
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
