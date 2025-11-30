@@ -252,9 +252,27 @@ const FoodWebGraph = ({
     fgRef.current.d3ReheatSimulation();
   }, [graphData]);
 
+  useEffect(() => {
+    // Adjust physics forces for better layout
+    if (fgRef.current) {
+      // Increase repulsion to reduce overlap
+      fgRef.current.d3Force('charge').strength(-300);
+      // Adjust link distance
+      fgRef.current.d3Force('link').distance(link => {
+        // Short distance for plant-insect, longer for others if any
+        return link.source.group === 0 || link.target.group === 0 ? 80 : 50;
+      });
+    }
+  }, []);
+
   // --- Interaction Handlers ---
   
   const handleNodeHover = useCallback((node) => {
+    // Change cursor style
+    if (fgRef.current) {
+        fgRef.current.canvas.style.cursor = node ? 'pointer' : null;
+    }
+
     if ((!node && !hoverNode) || (node && hoverNode === node)) return;
 
     setHoverNode(node || null);
@@ -443,6 +461,7 @@ const FoodWebGraph = ({
         linkDirectionalParticleSpeed={0.006}
         
         backgroundColor={isDarkMode ? "#0f172a" : "#f8fafc"}
+        linkCurvature={0.15}
         d3VelocityDecay={0.4}
         cooldownTicks={100}
         onEngineStop={() => fgRef.current.zoomToFit(400, 50)}
