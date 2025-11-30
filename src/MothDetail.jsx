@@ -672,7 +672,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   logger.debug('Moth ID:', moth?.id);
   logger.debug('Instagram URL:', moth?.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
-  logger.debug('Static Image Path:', staticImagePath);
   
   if (moth?.type === 'beetle') {
     console.log('DEBUG: Beetle detail view:', {
