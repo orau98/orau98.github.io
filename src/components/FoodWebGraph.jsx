@@ -22,7 +22,8 @@ const FoodWebGraph = ({
   const navigate = useNavigate();
   const fgRef = useRef();
   // Use dark mode detection (simple version, can be improved with context)
-  const isDarkMode = document.documentElement.classList.contains('dark');
+  const isBrowser = typeof document !== 'undefined';
+  const isDarkMode = isBrowser && document.documentElement.classList.contains('dark');
   
   // --- Data Processing ---
   const graphData = useMemo(() => {

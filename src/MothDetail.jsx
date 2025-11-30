@@ -21,6 +21,7 @@ import RelatedInsectsSection from './components/RelatedInsectsSection';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 // SupportEngagementSection is test-only and not used in SPA detail
+const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
@@ -1407,17 +1408,32 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             </div>
 
         {/* Food Web Network Graph */}
-        {/* 食草ネットワーク（現在は機能停止中） */}
-        <div id="food-web-graph" className="mb-12">
-          <div className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 mb-2">
+        {/* 食草ネットワーク */}
+        <div id="food-web-graph" className="mb-12" ref={graphContainerRef}>
+          <div className="flex items-center gap-2 text-indigo-700 dark:text-indigo-300 mb-3">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             <h2 className="text-xl font-bold">食草ネットワーク</h2>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
-            ネットワーク図は現在メンテナンス中です。データは引き続き表示されています。
-          </p>
+          
+          <div className="h-[500px] bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden relative shadow-inner">
+            <React.Suspense fallback={
+              <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
+                ネットワーク図を読み込み中...
+              </div>
+            }>
+              {graphDimensions.width > 0 && (
+                <FoodWebGraph
+                  currentInsect={moth}
+                  allInsects={allInsects}
+                  hostPlantsMap={hostPlants}
+                  width={graphDimensions.width}
+                  height={graphDimensions.height}
+                />
+              )}
+            </React.Suspense>
+          </div>
         </div>
 
         {/* Emergence Period Section (Full Width) */}
