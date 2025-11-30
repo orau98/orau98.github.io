@@ -3,13 +3,14 @@ import logger from './utils/logger';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
+import ImageWithFallback from './components/ImageWithFallback';
 import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
 import { absUrl } from './utils/origin';
 import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
-import { loadInsectImageIndexes } from './services/imageIndex';
+import { loadInsectImageIndexes, loadPlantImageFilenames } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
 import { buildResponsiveSrcset } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
@@ -185,7 +186,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             const ch = line[j];
             if (q) {
               if (ch === '"') {
-                if (line[j + 1] === '"') { buf += '"'; j++; }
+                if (line[j + 1] === '"') { buf += '"'; j++; } 
                 else { q = false; }
               } else { buf += ch; }
             } else {
@@ -306,9 +307,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     }
   }
   
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageExtensions, setImageExtensions] = useState({});
   const [imageBases, setImageBases] = useState([]);
   const imageBaseSet = React.useMemo(() => new Set(imageBases || []), [imageBases]);
@@ -380,22 +378,30 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     return Array.from(uniq);
   }, [imageExtensions, imageBases, safeFilename, japaneseName, moth]);
 
-  const staticImagePath = possibleImagePaths[0] || '';
+  const mainImageProps = React.useMemo(() => {
+    const firstUrl = possibleImagePaths[0];
+    if (!firstUrl) return { src: null };
+    
+    const m = firstUrl.match(/\/images\/insects\/([^/?#]+)\.(jpg|jpeg|png|webp|JPG|PNG|WEBP)/i);
+    if (m) {
+       const base = decodeURIComponent(m[1]);
+       const ext = '.' + m[2].toLowerCase();
+       const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext, widths: [320, 640, 1024], sizes: '100vw' });
+       return { src, srcSet, sizes };
+    }
+    return { src: firstUrl };
+  }, [possibleImagePaths]);
+
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 
   useEffect(() => {
     if (!moth) return;
-    if (staticImagePath) {
-      setOgTwitterImage(staticImagePath, `${moth.name}（${moth.scientificName}）の写真`);
+    if (mainImageProps.src) {
+      setOgTwitterImage(mainImageProps.src, `${moth.name}（${moth.scientificName}）の写真`);
       return;
     }
-    if (typeof document === 'undefined') return;
-    const ogImageEl = document.querySelector('img[alt*="写真"]');
-    const imageUrl = ogImageEl?.getAttribute('src');
-    if (imageUrl) {
-      setOgTwitterImage(imageUrl, `${moth.name}（${moth.scientificName}）の写真`);
-    }
-  }, [moth, staticImagePath]);
+    // Fallback to DOM extraction if needed (though useSeoMeta likely handles it if mainImageProps is passed elsewhere or if we just skip this fallback)
+  }, [moth, mainImageProps.src]);
 
   // Filter alternative names to exclude duplicates of the primary name
   const alternativeNamesFiltered = React.useMemo(() => {
@@ -660,22 +666,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     });
   }
 
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-    setImageError(false);
-  };
-
-  const handleImageError = () => {
-    if (currentImageIndex < possibleImagePaths.length - 1) {
-      // Try next image path
-      setCurrentImageIndex(currentImageIndex + 1);
-    } else {
-      // All paths failed
-      setImageLoaded(false);
-      setImageError(true);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-6xl mx-auto px-4 pt-6"></div>
@@ -752,77 +742,28 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   </div>
                 ) : (
                   <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 group overflow-hidden">
-                    {!imageError && possibleImagePaths.length > 0 ? (
-                      <div className="relative h-full w-full">
-                        {(() => {
-                          const srcUrl = possibleImagePaths[currentImageIndex];
-                          // Try to build responsive srcset when we can infer filename and extension
-                          const m = srcUrl && srcUrl.match(/\/images\/insects\/([^/?#]+)\.(jpg|jpeg|png|webp|JPG|PNG|WEBP)/);
-                          if (m) {
-                            const base = decodeURIComponent(m[1]);
-                            const ext = '.' + m[2].toLowerCase();
-                            const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext, widths: [320, 640, 1024], sizes: '100vw' });
-                            return (
-                              <img
-                                src={src}
-                                srcSet={srcSet}
-                                sizes={sizes}
-                                alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
-                                width="1200"
-                                height="900"
-                                className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                onLoad={handleImageLoad}
-                                onError={handleImageError}
-                                loading="eager"
-                                decoding="async"
-                                fetchpriority="high"
-                              />
-                            );
-                          }
-                          // Fallback to direct URL
-                          return (
-                            <img 
-                              src={srcUrl}
-                              alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
-                              width="1200"
-                              height="900"
-                              className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                              onLoad={handleImageLoad}
-                              onError={handleImageError}
-                              decoding="async"
-                            />
-                          );
-                        })()}
-                        {/* Elegant gradient overlay on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        {/* Moth name overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                          <h3 className="text-white font-bold text-lg drop-shadow-lg">{moth.name}</h3>
-                          <p className="text-white/90 text-sm drop-shadow-md">{formatScientificNameReact(moth.scientificName)}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
-                        <div className="text-center p-6">
-                          <div className="w-20 h-20 mx-auto mb-4 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
-                            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                            </svg>
-                          </div>
-                          <p className="text-slate-500 dark:text-slate-400 font-medium">画像が見つかりません</p>
-                        </div>
-                      </div>
-                    )}
+                    <ImageWithFallback
+                      src={mainImageProps.src}
+                      srcSet={mainImageProps.srcSet}
+                      sizes={mainImageProps.sizes}
+                      alt={`${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
+                      width="1200"
+                      height="900"
+                      className="w-full h-full object-contain transition-all duration-700 group-hover:scale-105"
+                      candidates={possibleImagePaths.slice(1)}
+                      fallbackSrc={null}
+                      loading="eager"
+                      fetchpriority="high"
+                    />
                     
-                    {!imageLoaded && !imageError && possibleImagePaths.length > 0 && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 dark:bg-blue-900/40">
-                        <div className="relative">
-                          <div className="w-16 h-16 border-4 border-blue-200 dark:border-blue-700 rounded-full"></div>
-                          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                        </div>
-                      </div>
-                    )}
+                    {/* Elegant gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                    
+                    {/* Moth name overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 pointer-events-none">
+                      <h3 className="text-white font-bold text-lg drop-shadow-lg">{moth.name}</h3>
+                      <p className="text-white/90 text-sm drop-shadow-md">{formatScientificNameReact(moth.scientificName)}</p>
+                    </div>
                   </div>
                 )}
                 
