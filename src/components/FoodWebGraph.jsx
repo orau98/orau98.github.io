@@ -3,7 +3,6 @@ import ForceGraph2D from 'react-force-graph-2d';
 import { useNavigate } from 'react-router-dom';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
-import { forceCollide } from 'd3-force-3d';
 
 // Helper to normalize plant names for lookup
 const normalizePlantName = (name) => {
@@ -275,18 +274,21 @@ const FoodWebGraph = ({
   // --- Force layout tuning to reduce overlap ---
   useEffect(() => {
     if (!fgRef.current) return;
-    // 衝突回避でノード同士の重なりを軽減
-    fgRef.current.d3Force('collide', forceCollide(node => (node.val || 10) + 6));
+    
+    // 衝突回避（forceCollide）は外部依存が必要なため削除し、
+    // 標準の反発力（charge）とリンク距離で調整する
+    
     // リンク距離を食草中心に少し長めに
     const linkForce = fgRef.current.d3Force('link');
     if (linkForce) {
-      linkForce.distance(link => (link.source?.type === 'plant' ? 150 : 110));
+      linkForce.distance(link => (link.source?.type === 'plant' ? 120 : 90));
     }
-    // 反発力を緩めに設定しつつ密集を緩和
+    // 反発力を強めて重なりを軽減
     const chargeForce = fgRef.current.d3Force('charge');
     if (chargeForce && chargeForce.strength) {
-      chargeForce.strength(-140);
+      chargeForce.strength(-200);
     }
+    
     fgRef.current.d3ReheatSimulation();
   }, [graphData]);
 
