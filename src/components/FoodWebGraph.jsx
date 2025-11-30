@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useCallback, useEffect } from 'react';
-import { ForceGraph2D } from 'react-force-graph';
+import ForceGraph2D from 'react-force-graph-2d';
 import { useNavigate } from 'react-router-dom';
 
 // Helper to normalize plant names for lookup
