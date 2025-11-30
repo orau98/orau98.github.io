@@ -311,6 +311,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageExtensions, setImageExtensions] = useState({});
   const [imageBases, setImageBases] = useState([]);
+  const imageBaseSet = React.useMemo(() => new Set(imageBases || []), [imageBases]);
 
   useEffect(() => {
     loadInsectImageIndexes()
@@ -340,15 +341,21 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
     const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
 
-    if (safeFilename && exts[safeFilename]) push(build(safeFilename, exts[safeFilename]));
-    if (japaneseName && exts[japaneseName]) push(build(japaneseName, exts[japaneseName]));
+    const addNameCandidates = (name) => {
+      if (!name) return;
+      const knownExt = exts[name];
+      const existsInIndex = imageBaseSet.has(name);
+      if (knownExt) {
+        push(build(name, knownExt));
+        return;
+      }
+      if (existsInIndex) {
+        tryExts.forEach(ext => push(build(name, ext)));
+      }
+    };
 
-    if (safeFilename) {
-      tryExts.forEach(ext => push(build(safeFilename, ext)));
-    }
-    if (japaneseName) {
-      tryExts.forEach(ext => push(build(japaneseName, ext)));
-    }
+    addNameCandidates(safeFilename);
+    addNameCandidates(japaneseName);
 
     try {
       if (imageBases && imageBases.length > 0 && moth.scientificName) {
