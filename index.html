@@ -2,6 +2,8 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <!-- Ensure relative URLs resolve correctly under subpath deployments -->
+    <base href="/">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.svg" />
@@ -9,8 +11,14 @@
     <meta name="theme-color" content="#2c5530" />
     
     <!-- Performance optimization -->
-    <link rel="dns-prefetch" href="//orau98.github.io">
-    <link rel="preconnect" href="https://orau98.github.io" crossorigin>
+    <!-- Use Vite's BASE_URL placeholder to support subpath deployments -->
+    <link rel="prefetch" href="/images/insects/Cucullia_argentea.jpg">
+    <link rel="preload" href="/images/insects/Cucullia_argentea.jpg" as="image" fetchpriority="high">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+    <!-- Preconnect for embeds/CDNs (Instagram widgets / Analytics / Ads) -->
+    <link rel="preconnect" href="https://www.instagram.com" crossorigin>
+    <link rel="preconnect" href="https://snapwidget.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.lightwidget.com" crossorigin>
     <link rel="dns-prefetch" href="//www.googletagmanager.com">
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
@@ -65,6 +73,7 @@
     <meta property="og:image:alt" content="美しい蛾の写真 - 昆虫食草図鑑">
     <meta property="og:site_name" content="昆虫食草図鑑">
     <meta property="og:locale" content="ja_JP">
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="昆虫×食草検索">
     
     <!-- Twitterカード設定 -->
     <meta name="twitter:card" content="summary_large_image">
@@ -72,6 +81,38 @@
     <meta name="twitter:description" content="昆虫 食草の関係を検索できる日本最大級データベース。7000種以上の蛾・蝶・タマムシと植物の関係を網羅。研究者から愛好家まで必見の昆虫食草専門図鑑。">
     <meta name="twitter:image" content="https://orau98.github.io/images/insects/Cucullia_argentea.jpg">
     <meta name="twitter:image:alt" content="美しい蛾の写真 - 昆虫食草図鑑">
+    
+    <!-- Organization (brand) JSON-LD with social profile -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "昆虫食草図鑑",
+      "url": "https://orau98.github.io/",
+      "logo": "https://orau98.github.io/favicon.svg",
+      "sameAs": [
+        "https://www.instagram.com/onychodactylus_nipponoborealis/"
+      ]
+    }
+    </script>
+    <!-- SiteNavigationElement JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": ["蛾（リスト）", "植物（リスト）", "ハムシ（リスト）", "サイトマップ"],
+      "url": [
+        "https://orau98.github.io/moth",
+        "https://orau98.github.io/plant",
+        "https://orau98.github.io/leafbeetle",
+        "https://orau98.github.io/sitemap.html"
+      ]
+    }
+    </script>
+    <!-- Security headers (X-Frame-Options handled by server) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
       <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H"></script>
 <script>
@@ -98,8 +139,7 @@
     
     // リダイレクトパラメータがない場合は通常アクセスなので何もしない
     if (!redirectUrl) {
-      // デバッグログ（本番環境では削除可能）
-      console.log('[SPA Restore] 通常アクセスのため処理をスキップ');
+      // 通常アクセス時は何もしない（本番はログ出力もしない）
       return;
     }
     
@@ -110,116 +150,66 @@
     try {
       // デコードして元のURL（パス + クエリ + ハッシュ）に戻す
       var originalUrl = decodeURIComponent(redirectUrl);
-      
-      console.log('[SPA Restore] デコード後URL:', originalUrl);
-      console.log('[SPA Restore] history.replaceState()を実行中...');
-      
+
       // アドレスバーだけを書き換える（ページリロードは行わない）
       // これにより、?redirect= パラメータがアドレスバーから消える
       history.replaceState(null, '', originalUrl);
-      
-      console.log('[SPA Restore] URL復元完了。SPAルーターが処理を引き継ぎます。');
-      
+
       // 以降はSPAのルーター（React Router等）がこのURLを見て画面を描画する
     } catch (error) {
       // デコードエラーなどが発生した場合のフォールバック
-      console.error('[SPA Restore] URL復元中にエラーが発生:', error);
-      console.log('[SPA Restore] ホームページにフォールバック');
+      // 本番ではユーザーに見えないようログを抑制
       history.replaceState(null, '', '/');
     }
   })();
   </script>
 
-  <!-- Slug <-> ID URL compatibility layer (scientific-name slugs, incl. subspecies) -->
-  <script>
-  (function () {
-    function loadMapSync() {
-      try {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/assets/slug-map.json', false);
-        xhr.setRequestHeader('Cache-Control', 'no-cache');
-        xhr.send(null);
-        if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
-          return JSON.parse(xhr.responseText);
-        }
-      } catch (e) {}
-      return null;
-    }
-    function parse(pathname) {
-      var m = String(pathname||'').match(/^\/(moth|butterfly|leafbeetle|beetle)\/([^\/?#]+)/i);
-      if (!m) return null;
-      return { group: m[1].toLowerCase(), last: m[2].toLowerCase() };
-    }
-    function resolveSlugToId(group, last, map) {
-      if (/^(species-|moth-|butterfly-|leafbeetle-|beetle-)/.test(last)) return null;
-      var id = map && map[group] ? map[group][last] : null;
-      if (!id) {
-        var m2 = last.match(/-(\d{2,})$/);
-        if (m2) id = 'species-' + m2[1];
-      }
-      return id || null;
-    }
-    function toUrl(pathname, search, hash) {
-      return String(pathname||'') + String(search||'') + String(hash||'');
-    }
-
-    var slugMap = null;
-    var parsed = parse(location.pathname);
-    if (parsed) {
-      // Load synchronously before app bootstrap
-      slugMap = loadMapSync();
-      // Monkey-patch history to rewrite slug navigations during SPA routing
-      try {
-        var _push = history.pushState, _replace = history.replaceState;
-        function rewriteAndCall(fn, state, url, ...rest) {
-          try {
-            if (typeof url === 'string') {
-              var u = new URL(url, location.origin);
-              var p = parse(u.pathname);
-              if (p) {
-                var id = resolveSlugToId(p.group, p.last, slugMap || (slugMap = loadMapSync()));
-                if (id) {
-                  var newPath = '/' + p.group + '/' + id;
-                  var newUrl = newPath + u.search + u.hash;
-                  return fn.call(history, state, '', newUrl, ...rest);
-                }
-              }
-            }
-          } catch (e) {}
-          return fn.call(history, state, '', url, ...rest);
-        }
-        history.pushState = function (state, _, url) { return rewriteAndCall(_push, state, url); };
-        history.replaceState = function (state, _, url) { return rewriteAndCall(_replace, state, url); };
-      } catch (e) {}
-
-      // Handle direct entry on slug URL before React mounts
-      var idDirect = resolveSlugToId(parsed.group, parsed.last, slugMap);
-      if (idDirect) {
-        var target = '/' + parsed.group + '/' + idDirect + location.search + location.hash;
-        if (toUrl(location.pathname, location.search, location.hash) !== target) {
-          history.replaceState(null, '', target);
-        }
-      }
-    }
-  })();
-  </script>
-
-    <script type="module" crossorigin src="/assets/index-DfwwPcGH.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DUAcT9ld.css">
+    <script type="module" crossorigin src="/assets/index-LwVuRx9I.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-DHUaPwvr.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-CyP08V5w.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-router-DAY12H0b.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-26udqxvr.css">
   </head>
   <body>
     <div id="root"></div>
     <noscript>
       <section style="max-width: 960px; margin: 24px auto; padding: 16px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fafafa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; line-height: 1.7;">
-        <h1 style="font-size: 1.25rem; margin: 0 0 8px; color: #2c5530;">昆虫 食草データベース（簡易版リンク）</h1>
+        <h1 style="font-size: 1.25rem; margin: 0 0 8px; color: #2c5530;">昆虫 食草データベース（簡易リンク）</h1>
         <p style="margin: 0 0 12px; color: #333;">JavaScriptが無効でも閲覧できる主要ページのリンクです。詳細はサイトマップから全URLをご確認ください。</p>
-        <ul style="margin: 0 0 12px 20px;">
-          <li><a href="/meta/moth/species-6016.html">蛾: ホソバオビキリガ</a></li>
-          <li><a href="/meta/moth/species-0001.html">蛾: モンフタオビコバネ</a></li>
-          <li><a href="/meta/butterfly/butterfly-csv-0.html">蝶: ギフチョウ</a></li>
-          <li><a href="/meta/plant/%E3%82%A2%E3%82%AA%E3%83%80%E3%83%A2(%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91).html">食草: アオダモ（モクセイ科）</a></li>
-        </ul>
-        <p style="margin: 0; color: #333;"><a href="/sitemap.xml">サイトマップ</a>（検索エンジン向け）</p>
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+          <div>
+            <h2 style="font-size: 1rem; margin: 0 0 6px; color: #1d3b24;">代表的な昆虫</h2>
+            <ul style="margin: 0 0 0 18px; padding: 0;">
+              <li><a href="/meta/moth/species-6016.html">蛾: ホソバオビキリガ</a></li>
+              <li><a href="/meta/butterfly/species-20167.html">蝶: ギフチョウ</a></li>
+              <li><a href="/meta/beetle/species-10005.html">甲虫: ダイトウツブタマムシ</a></li>
+              <li><a href="/meta/leafbeetle/species-H010.html">ハムシ: クロサワカミナリハムシ</a></li>
+              <li><a href="/meta/moth/species-0001.html">蛾: モンフタオビコバネ</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 style="font-size: 1rem; margin: 0 0 6px; color: #1d3b24;">植物・科から探す</h2>
+            <ul style="margin: 0 0 0 18px; padding: 0;">
+              <li><a href="/meta/plant/ブナ(ブナ科).html">ブナ（ブナ科）</a></li>
+              <li><a href="/meta/plant/クヌギ(ブナ科).html">クヌギ（ブナ科）</a></li>
+              <li><a href="/meta/plant/オニグルミ(クルミ科).html">オニグルミ（クルミ科）</a></li>
+              <li><a href="/meta/plant/ヤナギ(ヤナギ科).html">ヤナギ（ヤナギ科）</a></li>
+              <li><a href="/meta/plant/アオダモ(モクセイ科).html">アオダモ（モクセイ科）</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 style="font-size: 1rem; margin: 0 0 6px; color: #1d3b24;">静的カテゴリーハブ</h2>
+            <ul style="margin: 0 0 0 18px; padding: 0;">
+              <li><a href="/meta/moth/index.html">蛾メタページ一覧</a></li>
+              <li><a href="/meta/butterfly/index.html">蝶メタページ一覧</a></li>
+              <li><a href="/meta/beetle/index.html">甲虫メタページ一覧</a></li>
+              <li><a href="/meta/leafbeetle/index.html">ハムシメタページ一覧</a></li>
+              <li><a href="/meta/plant/index.html">植物メタページ一覧</a></li>
+            </ul>
+          </div>
+        </section>
+        <p style="margin: 0 0 8px; color: #333;">より多くのURLは <a href="/sitemap.html">HTMLサイトマップ</a> や <a href="/sitemap.xml">XMLサイトマップ</a> から参照できます。</p>
+        <p style="margin: 0; color: #333;">検索機能を直接開く場合は <a href="/search/?q=%E3%83%A4%E3%83%88%E3%83%9E">/search/?q=キーワード</a> を指定してください。</p>
       </section>
     </noscript>
   </body>

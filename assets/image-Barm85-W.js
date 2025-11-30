@@ -1,0 +1,1 @@
+const createSafeInsectFilename=(scientificName="")=>scientificName?String(scientificName).replace(/\s*\(.*?(?:\)|\s*$)/g,"").replace(/\s*,\s*\d{4}\s*$/,"").replace(/\s*[A-Z][a-zA-Z\s&.,]+\s*\d{4}\s*$/,"").replace(/^([A-Z][a-z]+)\s+([a-z]+).*$/,"$1 $2").replace(/[^a-zA-Z0-9\s]/g,"").trim().replace(/\s+/g,"_"):"";export{createSafeInsectFilename as c};

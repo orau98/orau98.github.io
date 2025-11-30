@@ -1,22 +1,5 @@
 User-agent: *
-Allow: /
-Allow: /moth/
-Allow: /butterfly/
-Allow: /leafbeetle/
-Allow: /plant/
-Allow: /images/
-Allow: /meta/
-Disallow: /*.json$
-Disallow: /*.csv$
-Disallow: /node_modules/
-Disallow: /src/
-Disallow: /scripts/
+Disallow:
 Disallow: /check_site.html
 
-# サイトマップ
 Sitemap: https://orau98.github.io/sitemap.xml
-Sitemap: https://orau98.github.io/sitemap-main.xml
-Sitemap: https://orau98.github.io/sitemap-moth.xml
-Sitemap: https://orau98.github.io/sitemap-butterfly.xml
-Sitemap: https://orau98.github.io/sitemap-leafbeetle.xml
-Sitemap: https://orau98.github.io/sitemap-plant.xml
