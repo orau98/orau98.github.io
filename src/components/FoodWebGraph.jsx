@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useCallback, useEffect, useState } from 'react'
 import ForceGraph2D from 'react-force-graph-2d';
 import { useNavigate } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
+import { loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 
 // Helper to normalize plant names for lookup
@@ -24,12 +25,14 @@ const FoodWebGraph = ({
   const navigate = useNavigate();
   const fgRef = useRef();
   const loadingImagesRef = useRef(new Set());
+  const failedImagesRef = useRef(new Set());
   // Use dark mode detection (simple version, can be improved with context)
   const isBrowser = typeof document !== 'undefined';
   const isDarkMode = isBrowser && document.documentElement.classList.contains('dark');
   const [images, setImages] = useState({}); // Store loaded images
   const [imageExtMap, setImageExtMap] = useState({});
   const [imageBaseSet, setImageBaseSet] = useState(new Set());
+  const [plantImageNames, setPlantImageNames] = useState([]);
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
   const assetBase = import.meta.env.BASE_URL || '/';
 
@@ -46,6 +49,21 @@ const FoodWebGraph = ({
         if (aborted) return;
         setImageExtMap({});
         setImageBaseSet(new Set());
+      });
+    return () => { aborted = true; };
+  }, []);
+  
+  // 植物画像ファイル名をロード
+  useEffect(() => {
+    let aborted = false;
+    loadPlantImageFilenames()
+      .then((names) => {
+        if (aborted) return;
+        setPlantImageNames(Array.isArray(names) ? names : []);
+      })
+      .catch(() => {
+        if (aborted) return;
+        setPlantImageNames([]);
       });
     return () => { aborted = true; };
   }, []);
@@ -72,6 +90,22 @@ const FoodWebGraph = ({
     }
     return null;
   }, [assetBase, imageExtMap, imageBaseSet]);
+
+  // Plant image url candidates (戻り値: 配列)
+  const resolvePlantImageUrls = useCallback((plantName) => {
+    if (!plantName || plantImageNames.length === 0) return [];
+    // plantImageNames には「クズ＿葉表」などバリエーションあり。名前で前方一致優先。
+    const hits = plantImageNames.filter(n => n.startsWith(plantName));
+    if (hits.length === 0) return [];
+    const exts = ['.jpg', '.JPG', '.jpeg', '.png', '.webp'];
+    const urls = [];
+    hits.forEach(base => {
+      exts.forEach(ext => {
+        urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}${ext}${cacheBustRef.current}`);
+      });
+    });
+    return urls;
+  }, [assetBase, plantImageNames]);
   
   // --- Data Processing ---
   const graphData = useMemo(() => {
@@ -90,7 +124,7 @@ const FoodWebGraph = ({
       type: 'current-insect',
       group: 0,
       val: 30, // Size increased
-      imgUrl: centerImgUrl,
+      imgCandidates: centerImgUrl ? [centerImgUrl] : [],
       raw: currentInsect
     });
 
@@ -109,7 +143,7 @@ const FoodWebGraph = ({
           group,
           val: 12,
           raw: detail,
-          imgUrl
+          imgCandidates: imgUrl ? [imgUrl] : []
         });
       }
       return id;
@@ -124,7 +158,8 @@ const FoodWebGraph = ({
           name,
           type: 'plant',
           group: 1,
-          val: 18
+          val: 18,
+          imgCandidates: resolvePlantImageUrls(name)
         });
       }
       return id;
@@ -191,8 +226,8 @@ const FoodWebGraph = ({
         })
         .sort((a, b) => b.score - a.score);
 
-      // Take top N related insects per plant
-      const TOP_N = 8; // Increased slightly
+      // Take top N related insects per plant (ブナ科など多い食草でも厚めに表示)
+      const TOP_N = 20;
       scoredInsects.slice(0, TOP_N).forEach(item => {
         const insectId = addInsectNode(item.name);
         links.push({ source: plantId, target: insectId, value: 1, color: isDarkMode ? '#60a5fa' : '#3b82f6' }); // Blue link
@@ -254,8 +289,10 @@ const FoodWebGraph = ({
     }
 
     // Image Drawing Logic
-    if (node.imgUrl) {
-      const img = images[node.imgUrl];
+    const candidates = node.imgCandidates || [];
+    const loadedImg = candidates.find(url => images[url]);
+    if (loadedImg) {
+      const img = images[loadedImg];
       if (img) {
         // Clip circular region
         ctx.save();
@@ -278,32 +315,33 @@ const FoodWebGraph = ({
         ctx.lineWidth = 2 / globalScale;
         ctx.strokeStyle = strokeStyle;
         ctx.stroke();
-      } else {
-        // 画像ロードを一度だけ開始
-        if (!loadingImagesRef.current.has(node.imgUrl)) {
-          loadingImagesRef.current.add(node.imgUrl);
-          const newImg = new Image();
-          newImg.crossOrigin = 'anonymous';
-          newImg.src = node.imgUrl;
-          newImg.onload = () => {
-            loadingImagesRef.current.delete(node.imgUrl);
-            setImages(prev => ({ ...prev, [node.imgUrl]: newImg }));
-            fgRef.current?.refresh();
-          };
-          newImg.onerror = () => {
-            loadingImagesRef.current.delete(node.imgUrl);
-          };
-        }
-        
-        // ロード中はプレースホルダ円
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
-        ctx.fillStyle = fillStyle;
-        ctx.fill();
-        ctx.lineWidth = 2 / globalScale;
-        ctx.strokeStyle = strokeStyle;
-        ctx.stroke();
       }
+    } else if (candidates.length > 0) {
+      // まだロードされていない場合、順番に試行
+      const tryUrl = candidates.find(url => !loadingImagesRef.current.has(url) && !failedImagesRef.current.has(url));
+      if (tryUrl) {
+        loadingImagesRef.current.add(tryUrl);
+        const newImg = new Image();
+        newImg.crossOrigin = 'anonymous';
+        newImg.src = tryUrl;
+        newImg.onload = () => {
+          loadingImagesRef.current.delete(tryUrl);
+          setImages(prev => ({ ...prev, [tryUrl]: newImg }));
+          fgRef.current?.refresh();
+        };
+        newImg.onerror = () => {
+          loadingImagesRef.current.delete(tryUrl);
+          failedImagesRef.current.add(tryUrl);
+        };
+      }
+      // ロード中はプレースホルダ円
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      ctx.lineWidth = 2 / globalScale;
+      ctx.strokeStyle = strokeStyle;
+      ctx.stroke();
     } else {
       // No image available - Draw Standard Node Circle
       ctx.beginPath();
