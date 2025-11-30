@@ -380,7 +380,10 @@ const FoodWebGraph = ({
     }
 
     // Draw Node (Image or Circle)
-    if (imgToDraw) {
+    // Performance Optimization: Only draw images when zoomed in (LOD) or hovered
+    const drawImage = (imgToDraw) && (globalScale >= 1.5 || isHovered || isHighlighted);
+
+    if (drawImage) {
       ctx.save();
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
@@ -401,14 +404,14 @@ const FoodWebGraph = ({
       ctx.strokeStyle = isHovered ? (isDarkMode ? '#fff' : '#333') : strokeStyle;
       ctx.stroke();
     } else {
-      // Standard Circle
+      // Standard Circle (Low Detail Mode)
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
       ctx.fillStyle = fillStyle;
       ctx.fill();
       
-      ctx.lineWidth = (isHovered ? 3 : 1.5) / globalScale;
-      ctx.strokeStyle = isHovered ? (isDarkMode ? '#fff' : '#333') : (isDarkMode ? '#1e293b' : '#fff');
+      ctx.lineWidth = 2 / globalScale;
+      ctx.strokeStyle = isDarkMode ? `rgba(30, 41, 59, ${alpha})` : `rgba(255, 255, 255, ${alpha})`;
       ctx.stroke();
     }
     
@@ -416,7 +419,7 @@ const FoodWebGraph = ({
     ctx.globalAlpha = 1;
 
     // Draw Label
-    const shouldShowLabel = isHovered || isHighlighted || globalScale > 1.2 || (node.type === 'current-insect' && globalScale > 0.5);
+    const shouldShowLabel = isHovered || isHighlighted || globalScale > 1.8 || (node.type === 'current-insect' && globalScale > 0.8);
     
     if (shouldShowLabel && !dim) {
       ctx.textAlign = 'center';
@@ -462,8 +465,8 @@ const FoodWebGraph = ({
         
         backgroundColor={isDarkMode ? "#0f172a" : "#f8fafc"}
         linkCurvature={0.15}
-        d3VelocityDecay={0.4}
-        cooldownTicks={100}
+        d3VelocityDecay={0.6} // Higher decay for faster settling
+        cooldownTicks={50} // Stop simulation sooner
         onEngineStop={() => fgRef.current.zoomToFit(400, 50)}
       />
       
@@ -486,4 +489,4 @@ const FoodWebGraph = ({
   );
 };
 
-export default FoodWebGraph;
+export default React.memo(FoodWebGraph);
