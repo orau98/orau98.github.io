@@ -220,13 +220,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }, [isLeafbeetleRoute, moth, resolvedInsectId]);
   
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
-  const graphContainerRef = useRef(null);
+  const graphContainerRefDesktop = useRef(null);
+  const graphContainerRefMobile = useRef(null);
 
   useLayoutEffect(() => {
     const updateSize = () => {
-      if (graphContainerRef.current) {
+      const desktopWidth = graphContainerRefDesktop.current?.offsetWidth || 0;
+      const mobileWidth = graphContainerRefMobile.current?.offsetWidth || 0;
+      const width = Math.max(desktopWidth, mobileWidth, 0);
+      if (width > 0) {
         setGraphDimensions({
-          width: graphContainerRef.current.offsetWidth,
+          width,
           height: 500
         });
       }
@@ -672,6 +676,48 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   logger.debug('Moth ID:', moth?.id);
   logger.debug('Instagram URL:', moth?.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
+
+  const renderFoodWebCard = (containerRef, className) => (
+    <div className={className} ref={containerRef}>
+      <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-emerald-500/90 text-white flex items-center justify-center shadow-md">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草・食樹</p>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">食草ネットワーク</h2>
+            </div>
+          </div>
+          <div className="px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
+            インタラクティブ
+          </div>
+        </div>
+
+        <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
+          <React.Suspense fallback={
+            <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
+              ネットワーク図を読み込み中...
+            </div>
+          }>
+            {graphDimensions.width > 0 && (
+              <FoodWebGraph
+                currentInsect={moth}
+                allInsects={allInsects}
+                hostPlantsMap={hostPlants}
+                width={graphDimensions.width}
+                height={graphDimensions.height}
+                imageExtensions={imageExtensions}
+              />
+            )}
+          </React.Suspense>
+        </div>
+      </div>
+    </div>
+  );
   
   if (moth?.type === 'beetle') {
     console.log('DEBUG: Beetle detail view:', {
@@ -824,6 +870,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 </div>
               </div>
             </div>
+
+            {/* PC: 食草ネットワークを左カラムに配置 */}
+            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6")}
           </div>
 
           {/* 情報セクション */}
@@ -1409,45 +1458,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
         {/* Food Web Network Graph */}
         {/* 食草ネットワーク */}
-        <div id="food-web-graph" className="mb-12" ref={graphContainerRef}>
-          <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-emerald-500/90 text-white flex items-center justify-center shadow-md">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草・食樹</p>
-                  <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">食草ネットワーク</h2>
-                </div>
-              </div>
-              <div className="px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
-                インタラクティブ
-              </div>
-            </div>
-
-            <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
-              <React.Suspense fallback={
-                <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
-                  ネットワーク図を読み込み中...
-                </div>
-              }>
-                {graphDimensions.width > 0 && (
-                  <FoodWebGraph
-                    currentInsect={moth}
-                    allInsects={allInsects}
-                    hostPlantsMap={hostPlants}
-                    width={graphDimensions.width}
-                    height={graphDimensions.height}
-                    imageExtensions={imageExtensions}
-                  />
-                )}
-              </React.Suspense>
-            </div>
-          </div>
-        </div>
+        
 
         {/* Emergence Period Section (Full Width) */}
             {(moth.type === 'leafbeetle' || moth.type === 'moth') && (() => {
@@ -1639,6 +1650,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               relatedMothsByPlant={relatedMothsByPlant} 
               allInsects={allInsects} 
             />
+            {/* Mobile: 食草ネットワークを同じ食草の昆虫セクションの後に配置 */}
+            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10")}
 
           </div>
         </div>
