@@ -36,7 +36,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const [isVisible, setIsVisible] = useState(isPriority);
   const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
-  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
 
   // Remove subspecies epithet from display (keep author/year if present)
   // 学名から亜種小名だけを落とし、種小名は必ず保持する

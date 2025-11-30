@@ -13,7 +13,7 @@ const InsectCarousel = ({ insects, title, type = 'default' }) => {
       .catch(() => setImageExtensions({}));
   }, []);
 
-  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
 
   const createSafeFilename = (scientificName) => {
     if (!scientificName) return '';

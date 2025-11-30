@@ -60,7 +60,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     return id;
   };
 
-  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
+  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
   
   // 🔍 デバッグ：データ配列の状況確認
   logger.debug('🔍 Data arrays status:', {

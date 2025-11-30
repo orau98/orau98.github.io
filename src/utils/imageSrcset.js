@@ -8,12 +8,13 @@ export function buildResponsiveSrcset({
 }) {
   if (!filename) return {};
   const safeBase = (baseUrl || '/').endsWith('/') ? baseUrl : baseUrl + '/';
-  const src = `${safeBase}images/${folder}/${encodeURIComponent(filename)}${ext}`;
-  const entries = widths.map(w => `${safeBase}images/resized/${folder}/${encodeURIComponent(filename)}.${w}.jpg ${w}w`);
+  const ver = import.meta.env.VITE_ASSET_VERSION || '';
+  const qs = ver ? `?v=${ver}` : '';
+  const src = `${safeBase}images/${folder}/${encodeURIComponent(filename)}${ext}${qs}`;
+  const entries = widths.map(w => `${safeBase}images/resized/${folder}/${encodeURIComponent(filename)}.${w}.jpg${qs} ${w}w`);
   return {
     src,
     srcSet: entries.join(', '),
     sizes,
   };
 }
-
