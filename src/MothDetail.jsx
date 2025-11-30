@@ -222,7 +222,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
   const graphContainerRefDesktop = useRef(null);
   const graphContainerRefMobile = useRef(null);
-  const [, setMainImageLoaded] = useState(false);
+  const [mainImageLoaded, setMainImageLoaded] = useState(false);
   const [shouldLoadGraph, setShouldLoadGraph] = useState(false);
 
   const markGraphReady = useCallback(() => {
@@ -253,16 +253,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     setMainImageLoaded(false);
     setShouldLoadGraph(false);
 
-    const timer = setTimeout(() => markGraphReady(), 1200);
-    const idleId = typeof requestIdleCallback !== 'undefined'
-      ? requestIdleCallback(() => markGraphReady(), { timeout: 2000 })
-      : null;
+    // 画像がなかなか読めなくても 4s 後には読み込み開始（フェイルセーフ）
+    const timer = setTimeout(() => markGraphReady(), 4000);
 
     return () => {
       clearTimeout(timer);
-      if (idleId && typeof cancelIdleCallback !== 'undefined') {
-        cancelIdleCallback(idleId);
-      }
     };
   }, [resolvedInsectId, markGraphReady]);
 
@@ -852,6 +847,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       onLoad={() => {
                         setMainImageLoaded(true);
                         markGraphReady();
+                      }}
+                      onError={() => {
+                        // 画像が失敗してもグラフ読み込みは進める
+                        setMainImageLoaded(false);
+                        setShouldLoadGraph(true);
                       }}
                     />
                     
