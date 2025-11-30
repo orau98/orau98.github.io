@@ -16,6 +16,7 @@ const normalizePlantName = (name) => {
 
 const FoodWebGraph = ({
   currentInsect,
+  currentPlantName,
   allInsects,
   hostPlantsMap,
   width,
@@ -128,22 +129,36 @@ const FoodWebGraph = ({
 
   // --- Data Processing ---
   const graphData = useMemo(() => {
-    if (!currentInsect || !hostPlantsMap) return { nodes: [], links: [] };
+    const isPlantMode = !!currentPlantName;
+    if ((!currentInsect && !currentPlantName) || !hostPlantsMap) return { nodes: [], links: [] };
 
     const nodes = new Map();
     const links = [];
 
-    // 1. Central Node (Current Insect)
-    const centerId = `insect:${currentInsect.name}`;
-    nodes.set(centerId, {
-      id: centerId,
-      name: currentInsect.name,
-      type: 'current-insect',
-      group: 0,
-      val: 30,
-      imgCandidates: resolveInsectImageCandidates(currentInsect),
-      raw: currentInsect
-    });
+    if (isPlantMode) {
+      const centerId = `plant:${currentPlantName}`;
+      nodes.set(centerId, {
+        id: centerId,
+        name: currentPlantName,
+        type: 'current-plant',
+        group: 1,
+        val: 30,
+        imgCandidates: resolvePlantImageCandidates(currentPlantName),
+        raw: { name: currentPlantName }
+      });
+    } else {
+      // 1. Central Node (Current Insect)
+      const centerId = `insect:${currentInsect.name}`;
+      nodes.set(centerId, {
+        id: centerId,
+        name: currentInsect.name,
+        type: 'current-insect',
+        group: 0,
+        val: 30,
+        imgCandidates: resolveInsectImageCandidates(currentInsect),
+        raw: currentInsect
+      });
+    }
 
     // Helper to add insect node
     const addInsectNode = (name, group = 2) => {
@@ -164,81 +179,115 @@ const FoodWebGraph = ({
     };
 
     // Helper to add plant node
-    const addPlantNode = (name) => {
+    const addPlantNode = (name, isCenter = false) => {
       const id = `plant:${name}`;
       if (!nodes.has(id)) {
         nodes.set(id, {
           id,
           name,
-          type: 'plant',
+          type: isCenter ? 'current-plant' : 'plant',
           group: 1,
-          val: 20,
+          val: isCenter ? 30 : 20,
           imgCandidates: resolvePlantImageCandidates(name)
         });
       }
       return id;
     };
 
-    // 2. Host Plants
     let plants = [];
-    if (Array.isArray(currentInsect.hostPlantsDetailed) && currentInsect.hostPlantsDetailed.length > 0) {
-      plants = currentInsect.hostPlantsDetailed.map(p => p.plant || p.name);
-    } else if (Array.isArray(currentInsect.hostPlants)) {
-      plants = currentInsect.hostPlants;
-    } else if (typeof currentInsect.hostPlants === 'string') {
-      plants = currentInsect.hostPlants.split(/[、，,]/).map(s => s.trim());
+    let centerId = null;
+    if (isPlantMode) {
+      centerId = addPlantNode(currentPlantName, true);
+      const normalized = normalizePlantName(currentPlantName);
+      const feederNames = [
+        ...(hostPlantsMap[currentPlantName] || []),
+        ...(hostPlantsMap[normalized] || [])
+      ];
+      const uniqueFeeders = Array.from(new Set(feederNames));
+      const TOP_INSECTS = 120;
+      uniqueFeeders.slice(0, TOP_INSECTS).forEach(name => {
+        const insectId = addInsectNode(name, 2);
+        links.push({ source: centerId, target: insectId, value: 2, color: isDarkMode ? '#60a5fa' : '#3b82f6' });
+        const detail = allInsects.find(i => i.name === name);
+        let otherPlants = [];
+        if (detail?.hostPlantsDetailed?.length) {
+          otherPlants = detail.hostPlantsDetailed.map(p => p.plant || p.name).filter(Boolean);
+        } else if (Array.isArray(detail?.hostPlants)) {
+          otherPlants = detail.hostPlants;
+        } else if (typeof detail?.hostPlants === 'string') {
+          otherPlants = detail.hostPlants.split(/[、，,]/).map(s => s.trim());
+        }
+        otherPlants = otherPlants.filter(p => p && p !== '不明' && normalizePlantName(p) !== normalized);
+        otherPlants.slice(0, 8).forEach(p => {
+          const pid = addPlantNode(p);
+          links.push({ source: insectId, target: pid, value: 1, color: isDarkMode ? '#34d399' : '#10b981' });
+        });
+      });
+    } else {
+      const center = nodes.values().next().value;
+      centerId = center.id;
+      // 2. Host Plants
+      if (Array.isArray(currentInsect.hostPlantsDetailed) && currentInsect.hostPlantsDetailed.length > 0) {
+        plants = currentInsect.hostPlantsDetailed.map(p => p.plant || p.name);
+      } else if (Array.isArray(currentInsect.hostPlants)) {
+        plants = currentInsect.hostPlants;
+      } else if (typeof currentInsect.hostPlants === 'string') {
+        plants = currentInsect.hostPlants.split(/[、，,]/).map(s => s.trim());
+      }
+      plants = plants.filter(p => p && p !== '不明' && p !== 'undefined');
     }
-    plants = plants.filter(p => p && p !== '不明' && p !== 'undefined');
 
     let totalTruncated = 0;
 
-    plants.forEach(plantName => {
-      const plantId = addPlantNode(plantName);
-      links.push({ source: centerId, target: plantId, value: 3, color: isDarkMode ? '#34d399' : '#10b981' });
+    if (!isPlantMode) {
+      plants.forEach(plantName => {
+        const plantId = addPlantNode(plantName);
+        links.push({ source: centerId, target: plantId, value: 3, color: isDarkMode ? '#34d399' : '#10b981' });
 
-      // 3. Related Insects
-      const normalizedPlantName = normalizePlantName(plantName);
-      let relatedInsectNames = hostPlantsMap[plantName] || 
-                               hostPlantsMap[normalizedPlantName] || [];
-                               
-      if (!relatedInsectNames || relatedInsectNames.length === 0) {
-         const potentialKeys = Object.keys(hostPlantsMap).filter(k => k.includes(normalizedPlantName) || normalizedPlantName.includes(k));
-         potentialKeys.forEach(k => {
-             relatedInsectNames = [...relatedInsectNames, ...hostPlantsMap[k]];
-         });
-         relatedInsectNames = [...new Set(relatedInsectNames)];
-      }
-      
-      const scoredInsects = relatedInsectNames
-        .filter(name => name !== currentInsect.name)
-        .map(name => {
-          const detail = allInsects.find(i => i.name === name);
-          let score = 1;
-          if (detail) {
-            if (currentInsect.classification?.family && detail.classification?.family === currentInsect.classification.family) score += 10;
-            if (currentInsect.type === detail.type) score += 5;
-          }
-          return { name, score, detail };
-        })
-        .sort((a, b) => b.score - a.score);
+        // 3. Related Insects
+        const normalizedPlantName = normalizePlantName(plantName);
+        let relatedInsectNames = hostPlantsMap[plantName] || 
+                                 hostPlantsMap[normalizedPlantName] || [];
+                                 
+        if (!relatedInsectNames || relatedInsectNames.length === 0) {
+           const potentialKeys = Object.keys(hostPlantsMap).filter(k => k.includes(normalizedPlantName) || normalizedPlantName.includes(k));
+           potentialKeys.forEach(k => {
+               relatedInsectNames = [...relatedInsectNames, ...hostPlantsMap[k]];
+           });
+           relatedInsectNames = [...new Set(relatedInsectNames)];
+        }
+        
+        const scoredInsects = relatedInsectNames
+          .filter(name => name !== currentInsect.name)
+          .map(name => {
+            const detail = allInsects.find(i => i.name === name);
+            let score = 1;
+            if (detail) {
+              if (currentInsect.classification?.family && detail.classification?.family === currentInsect.classification.family) score += 10;
+              if (currentInsect.type === detail.type) score += 5;
+            }
+            return { name, score, detail };
+          })
+          .sort((a, b) => b.score - a.score);
 
-      const TOP_N = 30; // Show more when many insects share a plant (e.g., ブナ科)
-      if (scoredInsects.length > TOP_N) {
-        totalTruncated += (scoredInsects.length - TOP_N);
-      }
-      
-      scoredInsects.slice(0, TOP_N).forEach(item => {
-        const insectId = addInsectNode(item.name);
-        links.push({ source: plantId, target: insectId, value: 1, color: isDarkMode ? '#60a5fa' : '#3b82f6' });
+        const TOP_N = 30; // Show more when many insects share a plant (e.g., ブナ科)
+        if (scoredInsects.length > TOP_N) {
+          totalTruncated += (scoredInsects.length - TOP_N);
+        }
+        
+        scoredInsects.slice(0, TOP_N).forEach(item => {
+          const insectId = addInsectNode(item.name);
+          links.push({ source: plantId, target: insectId, value: 1, color: isDarkMode ? '#60a5fa' : '#3b82f6' });
+        });
       });
-    });
+    }
 
     const nodesArray = Array.from(nodes.values());
 
     // --- 初期配置: 重なり回避のために極座標でざっくり配置してから物理演算 ---
-    const plantNodes = nodesArray.filter(n => n.type === 'plant');
+    const plantNodes = nodesArray.filter(n => n.type === 'plant' || n.type === 'current-plant');
     const insectNodes = nodesArray.filter(n => n.type === 'insect');
-    const centerNode = nodesArray.find(n => n.type === 'current-insect');
+    const centerNode = nodesArray.find(n => n.type === 'current-insect' || n.type === 'current-plant');
 
     const R_PLANT = Math.max(200, plantNodes.length * 14);
     plantNodes.forEach((p, i) => {
@@ -276,7 +325,7 @@ const FoodWebGraph = ({
       links: linksArray,
       truncatedCount: totalTruncated
     };
-  }, [currentInsect, allInsects, hostPlantsMap, isDarkMode, resolveInsectImageCandidates, resolvePlantImageCandidates]);
+  }, [currentInsect, currentPlantName, allInsects, hostPlantsMap, isDarkMode, resolveInsectImageCandidates, resolvePlantImageCandidates]);
 
   // --- Force layout tuning to reduce overlap ---
   useEffect(() => {
@@ -332,7 +381,7 @@ const FoodWebGraph = ({
       const type = node.raw.type || 'moth';
       const targetId = node.raw.id;
       navigate(`/${type}/${targetId}`);
-    } else if (node.type === 'plant') {
+    } else if (node.type === 'plant' || node.type === 'current-plant') {
       navigate(`/plant/${encodeURIComponent(node.name)}`);
     } else if (node.type === 'current-insect') {
       fgRef.current.centerAt(node.x, node.y, 1000);
@@ -359,6 +408,9 @@ const FoodWebGraph = ({
     if (node.type === 'current-insect') {
         fillStyle = `rgba(244, 63, 94, ${alpha})`; 
         strokeStyle = `rgba(255, 228, 230, ${alpha})`; 
+    } else if (node.type === 'current-plant') {
+        fillStyle = `rgba(5, 150, 105, ${alpha})`;
+        strokeStyle = `rgba(209, 250, 229, ${alpha})`;
     } else if (node.type === 'plant') {
         fillStyle = `rgba(16, 185, 129, ${alpha})`; 
         strokeStyle = `rgba(209, 250, 229, ${alpha})`;
@@ -372,7 +424,7 @@ const FoodWebGraph = ({
        ctx.beginPath();
        ctx.arc(node.x, node.y, node.val * 1.3, 0, 2 * Math.PI, false);
        ctx.fillStyle = node.type === 'current-insect' ? `rgba(244, 63, 94, 0.3)` : `rgba(14, 165, 233, 0.3)`;
-       if (node.type === 'plant') ctx.fillStyle = `rgba(16, 185, 129, 0.3)`;
+       if (node.type === 'plant' || node.type === 'current-plant') ctx.fillStyle = `rgba(16, 185, 129, 0.3)`;
        ctx.fill();
     }
 

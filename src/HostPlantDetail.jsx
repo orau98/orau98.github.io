@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Papa from 'papaparse';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
@@ -15,6 +15,7 @@ import { createSafeInsectFilename } from './utils/image';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
+const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 // import { RelatedPlants } from './components/RelatedLinks';
 
 let genusMappingPromise = null;
@@ -691,6 +692,22 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     logger.debug('DEBUG: hostPlants[オニグルミ]:', hostPlants['オニグルミ']);
     logger.debug('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
   }
+
+  // ネットワーク図サイズ
+  const [graphSize, setGraphSize] = useState({ width: 0, height: 520 });
+  const graphRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => {
+      const w = graphRef.current?.offsetWidth || 0;
+      if (w && Math.abs(w - graphSize.width) > 8) {
+        setGraphSize({ width: w, height: 520 });
+      }
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [graphSize.width]);
   
   const [plantImageNames, setPlantImageNames] = useState([]);
   const [plantImageIndexReady, setPlantImageIndexReady] = useState(false);
@@ -1266,6 +1283,47 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           )}
         </section>
       )}
+
+      {/* 食草ネットワーク（植物中心） */}
+      <section id="plant-network" className="mb-12 md:mb-16 lg:mb-20">
+        <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-emerald-500/90 text-white flex items-center justify-center shadow-md">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草ネットワーク</p>
+                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">この植物を利用する昆虫</h2>
+              </div>
+            </div>
+            <div className="px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
+              インタラクティブ
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25" ref={graphRef}>
+            <div className="h-[540px]">
+              <React.Suspense fallback={
+                <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
+                  ネットワーク図を読み込み中...
+                </div>
+              }>
+                {graphSize.width > 0 && (
+                  <FoodWebGraph
+                    currentPlantName={decodedPlantName}
+                    allInsects={allInsects}
+                    hostPlantsMap={hostPlants}
+                    width={graphSize.width}
+                    height={graphSize.height}
+                  />
+                )}
+              </React.Suspense>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* この植物を利用する昆虫一覧（カード表示） */}
       <div id="related-insects" className="mt-12 md:mt-16 mb-10">
