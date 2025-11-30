@@ -3,6 +3,7 @@ import ForceGraph2D from 'react-force-graph-2d';
 import { useNavigate } from 'react-router-dom';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
+import { forceCollide } from 'd3-force-3d';
 
 // Helper to normalize plant names for lookup
 const normalizePlantName = (name) => {
@@ -220,7 +221,7 @@ const FoodWebGraph = ({
         })
         .sort((a, b) => b.score - a.score);
 
-      const TOP_N = 20; // Show reasonable amount
+      const TOP_N = 30; // Show more when many insects share a plant (e.g., ブナ科)
       scoredInsects.slice(0, TOP_N).forEach(item => {
         const insectId = addInsectNode(item.name);
         links.push({ source: plantId, target: insectId, value: 1, color: isDarkMode ? '#60a5fa' : '#3b82f6' });
@@ -232,6 +233,24 @@ const FoodWebGraph = ({
       links
     };
   }, [currentInsect, allInsects, hostPlantsMap, isDarkMode, resolveInsectImageCandidates, resolvePlantImageCandidates]);
+
+  // --- Force layout tuning to reduce overlap ---
+  useEffect(() => {
+    if (!fgRef.current) return;
+    // 衝突回避でノード同士の重なりを軽減
+    fgRef.current.d3Force('collide', forceCollide(node => (node.val || 10) + 6));
+    // リンク距離を食草中心に少し長めに
+    const linkForce = fgRef.current.d3Force('link');
+    if (linkForce) {
+      linkForce.distance(link => (link.source?.type === 'plant' ? 150 : 100));
+    }
+    // 反発力を強めにして密集を緩和
+    const chargeForce = fgRef.current.d3Force('charge');
+    if (chargeForce && chargeForce.strength) {
+      chargeForce.strength(-160);
+    }
+    fgRef.current.d3ReheatSimulation();
+  }, [graphData]);
 
   // --- Interaction Handlers ---
   
