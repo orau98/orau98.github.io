@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import logger from './utils/logger';
 import { useParams, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
@@ -222,6 +222,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
   const graphContainerRefDesktop = useRef(null);
   const graphContainerRefMobile = useRef(null);
+  const [, setMainImageLoaded] = useState(false);
+  const [shouldLoadGraph, setShouldLoadGraph] = useState(false);
+
+  const markGraphReady = useCallback(() => {
+    setShouldLoadGraph(prev => prev || true);
+  }, []);
 
   useLayoutEffect(() => {
     const updateSize = () => {
@@ -241,6 +247,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     
     return () => window.removeEventListener('resize', updateSize);
   }, []);
+
+  // グラフ読み込みを初期表示後に遅延させ、画像表示を優先
+  useEffect(() => {
+    setMainImageLoaded(false);
+    setShouldLoadGraph(false);
+
+    const timer = setTimeout(() => markGraphReady(), 1200);
+    const idleId = typeof requestIdleCallback !== 'undefined'
+      ? requestIdleCallback(() => markGraphReady(), { timeout: 2000 })
+      : null;
+
+    return () => {
+      clearTimeout(timer);
+      if (idleId && typeof cancelIdleCallback !== 'undefined') {
+        cancelIdleCallback(idleId);
+      }
+    };
+  }, [resolvedInsectId, markGraphReady]);
 
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
@@ -677,7 +701,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   logger.debug('Instagram URL:', moth?.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
 
-  const renderFoodWebCard = (containerRef, className) => (
+  const renderFoodWebCard = (containerRef, className, showGraph) => (
     <div className={className} ref={containerRef}>
       <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
@@ -698,12 +722,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         </div>
 
         <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
-          <React.Suspense fallback={
-            <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
-              ネットワーク図を読み込み中...
+          {!showGraph || graphDimensions.width === 0 ? (
+            <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
+              <div className="w-24 h-24 mb-4 rounded-full bg-emerald-200/60 dark:bg-emerald-900/40"></div>
+              <div className="h-3 w-40 rounded-full bg-slate-200 dark:bg-slate-700 mb-2"></div>
+              <div className="h-3 w-24 rounded-full bg-slate-200 dark:bg-slate-700"></div>
             </div>
-          }>
-            {graphDimensions.width > 0 && (
+          ) : (
+            <React.Suspense fallback={
+              <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
+                ネットワーク図を読み込み中...
+              </div>
+            }>
               <FoodWebGraph
                 currentInsect={moth}
                 allInsects={allInsects}
@@ -712,8 +742,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 height={graphDimensions.height}
                 imageExtensions={imageExtensions}
               />
-            )}
-          </React.Suspense>
+            </React.Suspense>
+          )}
         </div>
       </div>
     </div>
@@ -819,6 +849,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       fallbackSrc={null}
                       loading="eager"
                       fetchpriority="high"
+                      onLoad={() => {
+                        setMainImageLoaded(true);
+                        markGraphReady();
+                      }}
                     />
                     
                     {/* Elegant gradient overlay on hover */}
@@ -872,7 +906,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             </div>
 
             {/* PC: 食草ネットワークを左カラムに配置 */}
-            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6")}
+            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6", shouldLoadGraph)}
           </div>
 
           {/* 情報セクション */}
@@ -1651,7 +1685,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               allInsects={allInsects} 
             />
             {/* Mobile: 食草ネットワークを同じ食草の昆虫セクションの後に配置 */}
-            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10")}
+            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10", shouldLoadGraph)}
 
           </div>
         </div>
