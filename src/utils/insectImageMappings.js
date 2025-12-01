@@ -76,6 +76,7 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ウスクロモクメヨトウ', 'Dipterygina_cupreotincta'],
   ['アオモンギンセダカモクメ', 'Cucullia_argentea'],
   ['ヤクシマキリガ', 'Mesorhynchaglaea pacifica Sugi, 1980'],
+  ['アカキリバ', 'Gonitis_mesogona'],
   ['アオバシャチホコ', 'Zaranga_permagna'],
   ['アオスジアゲハ', 'Graphium_sarpedon']
 ]);

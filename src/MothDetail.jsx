@@ -369,7 +369,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   const mappedScientificFilename = moth ? getMappedScientificFilename(moth.name) : '';
   const safeFilename = moth
-    ? (moth.scientificFilename || mappedScientificFilename || createSafeInsectFilename(moth.scientificName))
+    ? (mappedScientificFilename || moth.scientificFilename || createSafeInsectFilename(moth.scientificName))
     : '';
   const japaneseName = moth?.name || '';
 
@@ -390,7 +390,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         push(build(name, knownExt));
         return;
       }
+      // Even if index is missing, optimistically try common extensions.
       if (existsInIndex) {
+        tryExts.forEach(ext => push(build(name, ext)));
+      } else {
         tryExts.forEach(ext => push(build(name, ext)));
       }
     };

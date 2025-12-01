@@ -2,10 +2,22 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
+import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
+
+const INSECT_IMAGE_DIR = path.join(__dirname, '../public/images/insects');
+const insectImageFiles = fs.existsSync(INSECT_IMAGE_DIR)
+  ? fs.readdirSync(INSECT_IMAGE_DIR).filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+  : [];
+const insectImageBaseSet = new Set(insectImageFiles.map(file => file.replace(/\.[^.]+$/, '')));
+const insectImageExtMap = {};
+insectImageFiles.forEach(file => {
+  const base = file.replace(/\.[^.]+$/, '');
+  insectImageExtMap[base] = path.extname(file);
+});
 
 // 英語単語をイタリック体にフォーマットする関数
 function formatEnglishWordsInItalic(text) {
@@ -512,6 +524,41 @@ function getPlantAliases(plantName) {
   return mainToAliasesMap[basePlantName] || [];
 }
 
+function resolveInsectImageUrl(insect) {
+  if (!insect) return '';
+  const candidates = [];
+  const jpName = (insect.japaneseName || insect.name || '').trim();
+  const mapped = jpName ? globalJapaneseToScientificMapping.get(jpName) : undefined;
+  if (mapped) candidates.push(mapped);
+  if (insect.scientificFilename) candidates.push(insect.scientificFilename);
+  if (insect.scientificName) {
+    const sci = insect.scientificName.replace(/\s*\(.*$/, '').trim();
+    const [genus, species] = sci.split(/\s+/);
+    if (genus && species) {
+      const matches = Array.from(insectImageBaseSet).filter(base => base.includes(genus) && base.includes(species));
+      matches.sort((a, b) => a.length - b.length);
+      candidates.push(...matches);
+    }
+  }
+  if (jpName) candidates.push(jpName);
+
+  const tried = new Set();
+  for (const base of candidates) {
+    if (!base || tried.has(base)) continue;
+    tried.add(base);
+    const ext = insectImageExtMap[base];
+    if (ext) {
+      return `/images/insects/${encodeURIComponent(base)}${ext}`;
+    }
+    for (const e of ['.jpg', '.jpeg', '.png', '.webp']) {
+      if (fs.existsSync(path.join(INSECT_IMAGE_DIR, `${base}${e}`))) {
+        return `/images/insects/${encodeURIComponent(base)}${e}`;
+      }
+    }
+  }
+  return '';
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
 function generateInsectHTML(insect, type) {
   const typeNames = {
@@ -524,8 +571,7 @@ function generateInsectHTML(insect, type) {
   const hostPlants = insect.hostPlants || '不明';
   const scientificName = insect.scientificName || '';
   const source = insect.source || '不明';
-  const imageUrl = insect.scientificFilename ? 
-    `/images/insects/${insect.scientificFilename}.jpg` : '';
+  const imageUrl = resolveInsectImageUrl(insect);
   
   // 食草リストを配列として処理
   // セミコロン区切りも処理する（例：センモンヤガの場合）
