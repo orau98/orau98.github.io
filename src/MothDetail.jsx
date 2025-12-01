@@ -390,8 +390,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         push(build(name, knownExt));
         return;
       }
-      // インデックスに無くても楽観的に主要拡張子を試す
-      if (existsInIndex || true) {
+      if (existsInIndex) {
         tryExts.forEach(ext => push(build(name, ext)));
       }
     };
@@ -419,6 +418,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       logger.debug('Failed to derive additional image candidates:', error);
     }
 
+    if (uniq.size === 0) {
+      push(`${import.meta.env.BASE_URL}images/placeholder.jpg`);
+    }
+
     return Array.from(uniq);
   }, [imageExtensions, imageBases, safeFilename, japaneseName, moth]);
 
@@ -430,11 +433,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     if (m) {
        const base = decodeURIComponent(m[1]);
        const ext = '.' + m[2].toLowerCase();
-       const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext, widths: [320, 640, 1024], sizes: '100vw' });
-       return { src, srcSet, sizes };
+       if (imageBaseSet.has(base)) {
+         const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext, widths: [320, 640, 1024], sizes: '100vw' });
+         return { src, srcSet, sizes };
+       }
     }
     return { src: firstUrl };
-  }, [possibleImagePaths]);
+  }, [possibleImagePaths, imageBaseSet]);
 
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 
