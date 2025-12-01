@@ -29,6 +29,7 @@ const FoodWebGraph = ({
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
   const [hoverNode, setHoverNode] = useState(null);
+  const [activeLegend, setActiveLegend] = useState(null);
   
   // Image loading state
   const [images, setImages] = useState({});
@@ -399,7 +400,15 @@ const FoodWebGraph = ({
 
     const isHovered = node === hoverNode;
     const isHighlighted = highlightNodes.has(node);
-    const dim = hoverNode && !isHighlighted && !isHovered;
+    
+    // Dimming logic: Hover OR Legend
+    const isLegendMatch = activeLegend && (
+      (activeLegend === 'current' && node.type === 'current-insect') ||
+      (activeLegend === 'plant' && node.type === 'plant') ||
+      (activeLegend === 'other' && node.type === 'insect')
+    );
+    
+    const dim = (hoverNode && !isHighlighted && !isHovered) || (activeLegend && !isLegendMatch);
     
     let alpha = dim ? 0.15 : 1;
     
@@ -518,7 +527,7 @@ const FoodWebGraph = ({
       ctx.font = isHovered ? `bold ${fontSize}px Sans-Serif` : `${fontSize}px Sans-Serif`;
       ctx.fillText(label, node.x, node.y + yOffset);
     }
-  }, [isDarkMode, images, hoverNode, highlightNodes]);
+  }, [isDarkMode, images, hoverNode, highlightNodes, activeLegend]);
 
   const handleZoomIn = useCallback(() => {
     if (fgRef.current) {
@@ -566,10 +575,11 @@ const FoodWebGraph = ({
         linkCurvature={0.08}
         d3VelocityDecay={0.55}
         cooldownTicks={120} // 少しだけシミュレーションを回して初期重なりを解消
+        onEngineStop={() => fgRef.current.zoomToFit(400, 50)}
       />
       
       {/* Zoom Controls */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
         <button
           onClick={handleZoomIn}
           className="p-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow-md border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
@@ -600,22 +610,34 @@ const FoodWebGraph = ({
       </div>
       
       {/* Legend Overlay */}
-      <div className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 text-xs z-10 pointer-events-none">
-        <div className="flex items-center mb-2">
+      <div className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 text-xs z-10">
+        <div 
+          className={`flex items-center mb-2 p-1 rounded cursor-pointer transition-colors ${activeLegend === 'current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+          onMouseEnter={() => setActiveLegend('current')}
+          onMouseLeave={() => setActiveLegend(null)}
+        >
           <span className="w-3 h-3 rounded-full bg-rose-500 mr-2 shadow-sm"></span>
           <span className="text-slate-700 dark:text-slate-200 font-medium">現在の昆虫</span>
         </div>
-        <div className="flex items-center mb-2">
+        <div 
+          className={`flex items-center mb-2 p-1 rounded cursor-pointer transition-colors ${activeLegend === 'plant' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+          onMouseEnter={() => setActiveLegend('plant')}
+          onMouseLeave={() => setActiveLegend(null)}
+        >
           <span className="w-3 h-3 rounded-full bg-emerald-500 mr-2 shadow-sm"></span>
           <span className="text-slate-700 dark:text-slate-200 font-medium">食草</span>
         </div>
-        <div className="flex items-center">
+        <div 
+          className={`flex items-center p-1 rounded cursor-pointer transition-colors ${activeLegend === 'other' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+          onMouseEnter={() => setActiveLegend('other')}
+          onMouseLeave={() => setActiveLegend(null)}
+        >
           <span className="w-3 h-3 rounded-full bg-sky-500 mr-2 shadow-sm"></span>
           <span className="text-slate-700 dark:text-slate-200 font-medium">関連する他の昆虫</span>
         </div>
         
         {graphData.truncatedCount > 0 && (
-          <div className="mt-3 pt-2 border-t border-slate-200 dark:border-slate-600">
+          <div className="mt-3 pt-2 border-t border-slate-200 dark:border-slate-600 px-1">
             <span className="text-xs text-orange-600 dark:text-orange-400 font-medium flex items-center">
               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
               他 {graphData.truncatedCount} 種は省略
