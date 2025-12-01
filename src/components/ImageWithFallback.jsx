@@ -19,11 +19,19 @@ const ImageWithFallback = ({
   const [currentCandidates, setCurrentCandidates] = useState(candidates);
   const [status, setStatus] = useState('loading'); // loading, loaded, error
 
+  // Reset loading state only when the primary src actually changes.
+  // Changing just the candidates array (which is often recreated on every parent render)
+  // should NOT force the image back to the loading skeleton, otherwise a loaded image
+  // disappears after any parent state update.
   useEffect(() => {
     setCurrentSrc(src);
-    setCurrentCandidates(candidates);
     setStatus('loading');
-  }, [src, candidates]);
+  }, [src]);
+
+  // Keep the retry candidate list in sync without touching the load status.
+  useEffect(() => {
+    setCurrentCandidates(candidates);
+  }, [candidates]);
 
   const handleLoad = (e) => {
     setStatus('loaded');
