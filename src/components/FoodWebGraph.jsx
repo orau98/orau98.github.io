@@ -235,15 +235,30 @@ const FoodWebGraph = ({
       } else if (typeof currentInsect.hostPlants === 'string') {
         plants = currentInsect.hostPlants.split(/[、，,]/).map(s => s.trim());
       }
-      plants = plants.filter(p => p && p !== '不明' && p !== 'undefined');
-    }
+    plants = plants.filter(p => p && p !== '不明' && p !== 'undefined');
+
+    // Helper to determine line style based on plant part
+    const getLineDash = (name) => {
+      if (!name) return null;
+      if (name.match(/花|蕾/)) return [2, 2]; // Dotted for flowers
+      if (name.match(/実|種子|果実/)) return [5, 3]; // Dashed for fruits
+      return null; // Solid for leaves/others
+    };
 
     let totalTruncated = 0;
 
     if (!isPlantMode) {
       plants.forEach(plantName => {
         const plantId = addPlantNode(plantName);
-        links.push({ source: centerId, target: plantId, value: 3, color: isDarkMode ? '#34d399' : '#10b981' });
+        const linkDash = getLineDash(plantName);
+        
+        links.push({ 
+          source: centerId, 
+          target: plantId, 
+          value: 3, 
+          color: isDarkMode ? '#34d399' : '#10b981',
+          lineDash: linkDash
+        });
 
         // 3. Related Insects
         const normalizedPlantName = normalizePlantName(plantName);
@@ -263,11 +278,21 @@ const FoodWebGraph = ({
           .map(name => {
             const detail = allInsects.find(i => i.name === name);
             let score = 1;
+            let partDash = null;
+            
             if (detail) {
               if (currentInsect.classification?.family && detail.classification?.family === currentInsect.classification.family) score += 10;
               if (currentInsect.type === detail.type) score += 5;
+              
+              // Check if related insect eats specific parts of this plant
+              // We look for the normalized plant name + part keywords in the related insect's host plants
+              const rawHosts = Array.isArray(detail.hostPlants) ? detail.hostPlants : (typeof detail.hostPlants === 'string' ? detail.hostPlants.split(/[、，,]/) : []);
+              const matchingHost = rawHosts.find(h => h.includes(normalizedPlantName));
+              if (matchingHost) {
+                partDash = getLineDash(matchingHost);
+              }
             }
-            return { name, score, detail };
+            return { name, score, detail, partDash };
           })
           .sort((a, b) => b.score - a.score);
 
@@ -278,7 +303,13 @@ const FoodWebGraph = ({
         
         scoredInsects.slice(0, TOP_N).forEach(item => {
           const insectId = addInsectNode(item.name);
-          links.push({ source: plantId, target: insectId, value: 1, color: isDarkMode ? '#60a5fa' : '#3b82f6' });
+          links.push({ 
+            source: plantId, 
+            target: insectId, 
+            value: 1, 
+            color: isDarkMode ? '#60a5fa' : '#3b82f6',
+            lineDash: item.partDash 
+          });
         });
       });
     }
@@ -567,6 +598,7 @@ const FoodWebGraph = ({
             return link.color || '#cbd5e1';
         }}
         linkWidth={link => highlightLinks.has(link) ? 2.5 : 1}
+        linkLineDash={link => link.lineDash}
         linkDirectionalParticles={link => highlightLinks.has(link) ? 3 : 0}
         linkDirectionalParticleWidth={3}
         linkDirectionalParticleSpeed={0.006}
