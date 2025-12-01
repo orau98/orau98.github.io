@@ -28,6 +28,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   logger.debug('🔍 MothDetail component called');
   
   const { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug } = useParams();
+  const navigate = useNavigate();
   const routeType = mothSlug ? 'moth' : butterflySlug ? 'butterfly' : beetleSlug ? 'beetle' : leafbeetleSlug ? 'leafbeetle' : '';
   const rawRouteParam = mothSlug || butterflySlug || beetleSlug || leafbeetleSlug || '';
   const decodedRouteParam = decodeSlug(rawRouteParam);
@@ -149,6 +150,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const butterflyId = routeType === 'butterfly' ? resolvedInsectId : '';
   const beetleId = routeType === 'beetle' ? resolvedInsectId : '';
   const leafbeetleId = routeType === 'leafbeetle' ? resolvedInsectId : '';
+
+  // URL を和名スラグに正規化（idでアクセスされた場合でも置き換え）
+  useEffect(() => {
+    if (!moth || !mothSlug) return;
+    const expectedSlug = slugifyInsectName(moth.name);
+    if (expectedSlug && mothSlug !== expectedSlug) {
+      navigate(`/moth/${expectedSlug}`, { replace: true });
+    }
+  }, [moth, mothSlug, navigate]);
 
   // Fallback: if no host plants are available (e.g., data-lite initial state),
   // lazily load from normalized CSV (public/hostplants.csv) and synthesize minimal records.
@@ -383,7 +393,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
     const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
 
-    const addNameCandidates = (name) => {
+  const addNameCandidates = (name) => {
       if (!name) return;
       const knownExt = exts[name];
       const existsInIndex = imageBaseSet.has(name);
@@ -393,7 +403,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       }
       // Index未取得時でも、最有力候補を楽観的に試す（初回表示を早くする）
       if (!isImageIndexReady) {
-        tryExts.forEach(ext => push(build(name, ext)));
+        // 軽いリサイズ画像を優先的に試す
+        tryExts.forEach(ext => {
+          push(`${import.meta.env.BASE_URL}images/resized/insects/${encodeURIComponent(name)}.640.jpg${cacheBustRef.current}`);
+          push(build(name, ext));
+        });
         return;
       }
       if (existsInIndex) {
