@@ -10,6 +10,7 @@ import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
+import { loadInsectImageIndexes } from './services/imageIndex';
 
 const DATA_CACHE_DB = 'ihpe-cache';
 const DATA_CACHE_STORE = 'datasets';
@@ -184,6 +185,11 @@ function App() {
       setSummaryCounts(data.summaryCounts);
     }
   };
+
+  useEffect(() => {
+    // 画像インデックスをアプリ起動直後にプリフェッチし、初回表示での画像欠落を防ぐ
+    loadInsectImageIndexes().catch(() => {});
+  }, []);
 
   useEffect(() => {
     const fetchData = async (cachedVersion = null) => {
