@@ -353,6 +353,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const [imageExtensions, setImageExtensions] = useState({});
   const [imageBases, setImageBases] = useState([]);
   const imageBaseSet = React.useMemo(() => new Set(imageBases || []), [imageBases]);
+  const isImageIndexReady = imageBases.length > 0 || Object.keys(imageExtensions || {}).length > 0;
 
   useEffect(() => {
     loadInsectImageIndexes()
@@ -388,6 +389,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       const existsInIndex = imageBaseSet.has(name);
       if (knownExt) {
         push(build(name, knownExt));
+        return;
+      }
+      // Index未取得時でも、最有力候補を楽観的に試す（初回表示を早くする）
+      if (!isImageIndexReady) {
+        tryExts.forEach(ext => push(build(name, ext)));
         return;
       }
       if (existsInIndex) {
