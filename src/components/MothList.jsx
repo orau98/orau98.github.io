@@ -847,13 +847,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     try {
       if (!insect) return null;
       
-      // If index not loaded, we can't know for sure (except optimistic mapped/scientific guesses, but safer to return null)
-      // イントロ表示時に index 取得が遅れた場合でも、フィボナッチ的に試行するため
-      // index 未準備時は安全なファイル名を楽観的に返し、ブラウザの 404 で判定させる
-      if (!isImageIndexReady) {
-        const safeFilename = createSafeInsectFilename(insect.scientificName || insect.name || '');
-        return safeFilename || null;
-      }
+      // Index未準備の段階では 404 を量産しないよう null を返し、プレースホルダー表示に任せる
+      if (!isImageIndexReady) return null;
 
       // 0. Try mapped filename first (highest priority)
       const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);

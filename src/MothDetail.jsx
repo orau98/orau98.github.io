@@ -390,10 +390,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         push(build(name, knownExt));
         return;
       }
-      // Even if index is missing, optimistically try common extensions.
       if (existsInIndex) {
-        tryExts.forEach(ext => push(build(name, ext)));
-      } else {
         tryExts.forEach(ext => push(build(name, ext)));
       }
     };
