@@ -388,6 +388,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     if (!moth) return [];
 
     const exts = imageExtensions || {};
+    const ready = isImageIndexReady;
     const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${cacheBustRef.current}`;
     const uniq = new Set();
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
@@ -401,15 +402,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         push(build(name, knownExt));
         return;
       }
-      // Index未取得時でも、最有力候補を楽観的に試す（初回表示を早くする）
-      if (!isImageIndexReady) {
-        // 軽いリサイズ画像を優先的に試す
-        tryExts.forEach(ext => {
-          push(`${import.meta.env.BASE_URL}images/resized/insects/${encodeURIComponent(name)}.640.jpg${cacheBustRef.current}`);
-          push(build(name, ext));
-        });
-        return;
-      }
+      // インデックス未準備なら後でリトライ（404を量産しない）
+      if (!ready) return;
       if (existsInIndex) {
         tryExts.forEach(ext => push(build(name, ext)));
       }
@@ -443,7 +437,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     }
 
     return Array.from(uniq);
-  }, [imageExtensions, imageBases, safeFilename, japaneseName, moth]);
+  }, [imageExtensions, imageBases, safeFilename, japaneseName, moth, isImageIndexReady]);
 
   const mainImageProps = React.useMemo(() => {
     const firstUrl = possibleImagePaths[0];
