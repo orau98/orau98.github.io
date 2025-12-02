@@ -139,21 +139,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   // ノード描画
   const nodeCanvasObject = useCallback((node, ctx, globalScale) => {
-    const drawRoundedRect = (c, x, y, w, h, r) => {
-      const radius = Math.min(r, w / 2, h / 2);
-      c.beginPath();
-      c.moveTo(x + radius, y);
-      c.lineTo(x + w - radius, y);
-      c.arcTo(x + w, y, x + w, y + radius, radius);
-      c.lineTo(x + w, y + h - radius);
-      c.arcTo(x + w, y + h, x + w - radius, y + h, radius);
-      c.lineTo(x + radius, y + h);
-      c.arcTo(x, y + h, x, y + h - radius, radius);
-      c.lineTo(x, y + radius);
-      c.arcTo(x, y, x + radius, y, radius);
-      c.closePath();
-    };
-
     const colors = {
       'insect-current': '#fb7185',
       insect: '#38bdf8',
@@ -184,33 +169,75 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ctx.strokeStyle = 'rgba(15,23,42,0.2)';
     ctx.stroke();
 
+    // label logic
+    const isHovered = node === hoverNode;
+    const isHighlighted = highlightNodes.has(node);
+    
+    // LOD: Show labels based on importance and zoom level
+    const isCurrent = node.type.includes('current');
+    const isPlant = node.type === 'plant';
+    
+    const shouldShowLabel = 
+      isHovered || 
+      isHighlighted || 
+      (isCurrent && globalScale > 0.6) || 
+      (isPlant && globalScale > 1.2) ||
+      (globalScale > 1.8);
+
     // label
     const label = node.name;
     const fontSize = 13 / Math.sqrt(globalScale);
     ctx.font = `${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
-    const textWidth = ctx.measureText(label).width;
-    const padding = 4 / Math.sqrt(globalScale);
-    const labelWidth = textWidth + padding * 2;
-    const labelHeight = fontSize + padding * 2;
-    const y = node.y - radius - labelHeight - 4;
-    ctx.fillStyle = `rgba(248, 250, 252, ${dim ? 0.4 : 0.9})`;
-    ctx.strokeStyle = `rgba(148, 163, 184, ${dim ? 0.3 : 0.7})`;
-    ctx.lineWidth = 1 / Math.sqrt(globalScale);
-    ctx.beginPath();
-    drawRoundedRect(
-      ctx,
-      node.x - labelWidth / 2,
-      y,
-      labelWidth,
-      labelHeight,
-      4 / Math.sqrt(globalScale)
-    );
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = '#0f172a';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(label, node.x, y + labelHeight / 2);
+    
+    // LOD: Show labels based on importance and zoom level
+    // - Always show hovered or highlighted
+    // - Show current insect/plant if scale > 0.6
+    // - Show plants if scale > 0.9
+    // - Show all others if scale > 1.4
+    const showLabel = 
+      (hoverNode && (node === hoverNode || highlightNodes.has(node))) ||
+      legendFocus === node.type || 
+      (node.type.includes('current') && globalScale > 0.6) ||
+      (node.type === 'plant' && globalScale > 0.9) ||
+      (globalScale > 1.4);
+
+    if (showLabel && !dim) {
+      const textWidth = ctx.measureText(label).width;
+      const padding = 3 / Math.sqrt(globalScale);
+      const labelWidth = textWidth + padding * 2;
+      const labelHeight = fontSize + padding * 2;
+      const y = node.y + radius + 2; // Position below node
+
+      // Background Box
+      ctx.fillStyle = isDarkMode ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.85)';
+      ctx.strokeStyle = isDarkMode ? 'rgba(148, 163, 184, 0.4)' : 'rgba(203, 213, 225, 0.6)';
+      ctx.lineWidth = 1 / Math.sqrt(globalScale);
+      
+      ctx.beginPath();
+      drawRoundedRect(
+        ctx,
+        node.x - labelWidth / 2,
+        y,
+        labelWidth,
+        labelHeight,
+        3 / Math.sqrt(globalScale)
+      );
+      ctx.fill();
+      ctx.stroke();
+
+      // Text with Outline
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      // Outline (optional, but helps if background is transparent)
+      // ctx.strokeStyle = isDarkMode ? '#0f172a' : '#ffffff';
+      // ctx.lineWidth = 2 / Math.sqrt(globalScale);
+      // ctx.strokeText(label, node.x, y + labelHeight / 2);
+
+      // Text Fill
+      ctx.fillStyle = isDarkMode ? '#f1f5f9' : '#1e293b';
+      ctx.fillText(label, node.x, y + labelHeight / 2);
+    }
   }, [hoverNode, highlightNodes, legendFocus]);
 
   // Zoom controls
