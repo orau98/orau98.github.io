@@ -26,6 +26,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [hoverNode, setHoverNode] = useState(null);
   const [legendFocus, setLegendFocus] = useState(null);
 
+  const isBrowser = typeof document !== 'undefined';
+  const isDarkMode = isBrowser && document.documentElement.classList.contains('dark');
+
   // グラフデータ生成（シンプルな構造）
   const graphData = useMemo(() => {
     const nodes = [];
