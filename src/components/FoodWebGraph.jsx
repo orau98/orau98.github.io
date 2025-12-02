@@ -142,6 +142,21 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   // ノード描画
   const nodeCanvasObject = useCallback((node, ctx, globalScale) => {
+    const drawRoundedRect = (c, x, y, w, h, r) => {
+      const radius = Math.min(r, w / 2, h / 2);
+      c.beginPath();
+      c.moveTo(x + radius, y);
+      c.lineTo(x + w - radius, y);
+      c.arcTo(x + w, y, x + w, y + radius, radius);
+      c.lineTo(x + w, y + h - radius);
+      c.arcTo(x + w, y + h, x + w - radius, y + h, radius);
+      c.lineTo(x + radius, y + h);
+      c.arcTo(x, y + h, x, y + h - radius, radius);
+      c.lineTo(x, y + radius);
+      c.arcTo(x, y, x + radius, y, radius);
+      c.closePath();
+    };
+
     const colors = {
       'insect-current': '#fb7185',
       insect: '#38bdf8',
