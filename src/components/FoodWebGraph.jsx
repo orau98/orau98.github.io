@@ -81,9 +81,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     // --- 初期配置: 重なり回避のために極座標でざっくり配置してから物理演算 ---
-    const plantNodes = nodesArray.filter(n => n.type === 'plant' || n.type === 'current-plant');
-    const insectNodes = nodesArray.filter(n => n.type === 'insect');
-    const centerNode = nodesArray.find(n => n.type === 'current-insect' || n.type === 'current-plant');
+    const plantNodes = nodes.filter(n => n.type === 'plant' || n.type === 'current-plant');
+    const centerNode = nodes.find(n => n.type === 'current-insect' || n.type === 'current-plant');
 
     const R_PLANT = Math.max(150, plantNodes.length * 20); // 半径を縮小してコンパクトに
     plantNodes.forEach((p, i) => {
@@ -93,10 +92,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     });
 
     // plant 周りに子昆虫を円配置
-    const linksArray = links;
-    const nodeById = new Map(nodesArray.map(n => [n.id, n]));
+    const nodeById = new Map(nodes.map(n => [n.id, n]));
     plantNodes.forEach(p => {
-      const neighbors = linksArray
+      const neighbors = links
         .filter(l => (l.source === p.id || l.target === p.id))
         .map(l => (l.source === p.id ? l.target : l.source))
         .map(id => nodeById.get(typeof id === 'object' ? id.id : id))
@@ -117,9 +115,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     return {
-      nodes: nodesArray,
-      links: linksArray,
-      truncatedCount: totalTruncated
+      nodes: nodes,
+      links: links,
+      truncatedCount: 0
     };
   }, [currentInsect, currentPlantName, hostPlantsMap, allInsects]);
 
@@ -237,40 +235,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ctx.strokeStyle = 'rgba(15,23,42,0.2)';
     ctx.stroke();
 
-    // label logic
-    const isHovered = node === hoverNode;
-    const isHighlighted = highlightNodes.has(node);
-    
-    // LOD: Show labels based on importance and zoom level
-    const isCurrent = node.type.includes('current');
-    const isPlant = node.type === 'plant';
-    
-    const shouldShowLabel = 
-      isHovered || 
-      isHighlighted || 
-      (isCurrent && globalScale > 0.6) || 
-      (isPlant && globalScale > 1.2) ||
-      (globalScale > 1.8);
-
-    // label
-    const label = node.name;
-    const fontSize = 13 / Math.sqrt(globalScale);
-    ctx.font = `${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
-    
-    // LOD: Show labels based on importance and zoom level
-    // - Always show hovered or highlighted
-    // - Show current insect/plant ALWAYS (or very low threshold)
-    // - Show plants earlier
-    // - Show others earlier
-    const isCurrent = node.type.includes('current');
-    const isPlant = node.type === 'plant';
-    
     // User Request: Always show labels for better visibility
     const shouldShowLabel = true;
 
     if (shouldShowLabel) {
       ctx.save();
       ctx.globalAlpha = alpha;
+      
+      const label = node.name;
+      const fontSize = 13 / Math.sqrt(globalScale);
+      ctx.font = `${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
       
       const textWidth = ctx.measureText(label).width;
       const padding = 3 / Math.sqrt(globalScale);
