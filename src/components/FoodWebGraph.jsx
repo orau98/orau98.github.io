@@ -80,12 +80,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     }
 
-    // 初期配置: 重なり回避のために極座標で広めに配置
-    const nodesArray = nodes;
+    // --- 初期配置: 重なり回避のために極座標でざっくり配置してから物理演算 ---
     const plantNodes = nodesArray.filter(n => n.type === 'plant' || n.type === 'current-plant');
-    
-    // 半径を大幅に拡大してスペース確保
-    const R_PLANT = Math.max(400, plantNodes.length * 60); 
+    const insectNodes = nodesArray.filter(n => n.type === 'insect');
+    const centerNode = nodesArray.find(n => n.type === 'current-insect' || n.type === 'current-plant');
+
+    const R_PLANT = Math.max(150, plantNodes.length * 20); // 半径を縮小してコンパクトに
     plantNodes.forEach((p, i) => {
       const angle = (2 * Math.PI * i) / Math.max(1, plantNodes.length);
       p.x = R_PLANT * Math.cos(angle);
@@ -93,17 +93,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     });
 
     // plant 周りに子昆虫を円配置
+    const linksArray = links;
     const nodeById = new Map(nodesArray.map(n => [n.id, n]));
     plantNodes.forEach(p => {
-      const neighbors = links
+      const neighbors = linksArray
         .filter(l => (l.source === p.id || l.target === p.id))
         .map(l => (l.source === p.id ? l.target : l.source))
         .map(id => nodeById.get(typeof id === 'object' ? id.id : id))
         .filter(n => n && n.type === 'insect');
       if (neighbors.length === 0) return;
-      
-      // 子ノード間の距離も広げる
-      const r = Math.max(150, neighbors.length * 25); 
+      const r = Math.max(60, neighbors.length * 12); // 半径を縮小
       neighbors.forEach((n, idx) => {
         const a = (2 * Math.PI * idx) / neighbors.length;
         n.x = (p.x || 0) + r * Math.cos(a);
@@ -111,41 +110,38 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     });
 
-    const centerNode = nodesArray.find(n => n.type === 'current-insect' || n.type === 'current-plant');
+    // 中央ノード
     if (centerNode) {
       centerNode.x = 0;
       centerNode.y = 0;
     }
 
-    return { nodes, links };
+    return {
+      nodes: nodesArray,
+      links: linksArray,
+      truncatedCount: totalTruncated
+    };
   }, [currentInsect, currentPlantName, hostPlantsMap, allInsects]);
 
-  // 初期ズーム調整
+  // --- Force layout tuning to reduce overlap ---
   useEffect(() => {
     if (!fgRef.current) return;
     
-    // 物理演算パラメータの強力な調整
+    // 衝突回避（forceCollide）は外部依存が必要なため削除し、
+    // 標準の反発力（charge）とリンク距離で調整する
+    
+    // リンク距離を短くして一覧性を向上
     const linkForce = fgRef.current.d3Force('link');
     if (linkForce) {
-      // リンク距離を長くして密集を防ぐ
-      linkForce.distance(link => (link.source?.type?.includes('plant') || link.target?.type?.includes('plant') ? 350 : 200));
+      linkForce.distance(link => (link.source?.type === 'plant' ? 100 : 60));
     }
-    
+    // 反発力を調整（コンパクトにする分、強すぎると飛び散るため適度に）
     const chargeForce = fgRef.current.d3Force('charge');
-    if (chargeForce) {
-      // 反発力を極大化
-      chargeForce.strength(-3500);
+    if (chargeForce && chargeForce.strength) {
+      chargeForce.strength(-800);
     }
     
-    // シミュレーションを再加熱して安定させる
     fgRef.current.d3ReheatSimulation();
-    
-    const t = setTimeout(() => {
-      try {
-        fgRef.current.zoomToFit(400, 60);
-      } catch (_) {}
-    }, 800); // 安定するまで少し待つ
-    return () => clearTimeout(t);
   }, [graphData]);
 
   // ハイライト制御
@@ -344,8 +340,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         linkDirectionalParticleWidth={1.6}
         linkCurvature={0.18}
         backgroundColor="#f8fafc"
-        cooldownTicks={300}
-        d3VelocityDecay={0.1}
+        cooldownTicks={80}
+        d3VelocityDecay={0.2}
         onEngineStop={() => fgRef.current && fgRef.current.zoomToFit(400, 60)}
       />
 
