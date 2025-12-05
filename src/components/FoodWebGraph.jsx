@@ -263,17 +263,20 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     
     // LOD: Show labels based on importance and zoom level
     // - Always show hovered or highlighted
-    // - Show current insect/plant if scale > 0.6
-    // - Show plants if scale > 0.9
-    // - Show all others if scale > 1.4
-    const showLabel = 
-      (hoverNode && (node === hoverNode || highlightNodes.has(node))) ||
-      legendFocus === node.type || 
-      (node.type.includes('current') && globalScale > 0.6) ||
-      (node.type === 'plant' && globalScale > 0.9) ||
-      (globalScale > 1.4);
+    // - Show current insect/plant ALWAYS (or very low threshold)
+    // - Show plants earlier
+    // - Show others earlier
+    const isCurrent = node.type.includes('current');
+    const isPlant = node.type === 'plant';
+    
+    const shouldShowLabel = 
+      isHovered || 
+      isHighlighted || 
+      isCurrent ||                 // Always show current insect/plant
+      (isPlant && globalScale > 0.5) || // Show plants even when zoomed out a bit
+      (globalScale > 1.1);         // Show others sooner
 
-    if (showLabel && !dim) {
+    if (shouldShowLabel && !dim) {
       const textWidth = ctx.measureText(label).width;
       const padding = 3 / Math.sqrt(globalScale);
       const labelWidth = textWidth + padding * 2;
