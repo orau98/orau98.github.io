@@ -269,12 +269,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const isCurrent = node.type.includes('current');
     const isPlant = node.type === 'plant';
     
-    const shouldShowLabel = 
-      isHovered || 
-      isHighlighted || 
-      isCurrent ||                 // Always show current insect/plant
-      (isPlant && globalScale > 0.5) || // Show plants even when zoomed out a bit
-      (globalScale > 1.1);         // Show others sooner
+    // User Request: Always show labels for better visibility
+    const shouldShowLabel = true;
 
     if (shouldShowLabel && !dim) {
       const textWidth = ctx.measureText(label).width;
