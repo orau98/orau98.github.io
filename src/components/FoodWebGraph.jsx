@@ -272,7 +272,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     // User Request: Always show labels for better visibility
     const shouldShowLabel = true;
 
-    if (shouldShowLabel && !dim) {
+    if (shouldShowLabel) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      
       const textWidth = ctx.measureText(label).width;
       const padding = 3 / Math.sqrt(globalScale);
       const labelWidth = textWidth + padding * 2;
@@ -300,14 +303,11 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       
-      // Outline (optional, but helps if background is transparent)
-      // ctx.strokeStyle = isDarkMode ? '#0f172a' : '#ffffff';
-      // ctx.lineWidth = 2 / Math.sqrt(globalScale);
-      // ctx.strokeText(label, node.x, y + labelHeight / 2);
-
       // Text Fill
       ctx.fillStyle = isDarkMode ? '#f1f5f9' : '#1e293b';
       ctx.fillText(label, node.x, y + labelHeight / 2);
+      
+      ctx.restore();
     }
   }, [hoverNode, highlightNodes, legendFocus, isDarkMode]);
 
