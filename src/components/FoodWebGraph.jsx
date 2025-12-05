@@ -80,17 +80,71 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     }
 
+    // 初期配置: 重なり回避のために極座標で広めに配置
+    const nodesArray = nodes;
+    const plantNodes = nodesArray.filter(n => n.type === 'plant' || n.type === 'current-plant');
+    
+    // 半径を大幅に拡大してスペース確保
+    const R_PLANT = Math.max(400, plantNodes.length * 60); 
+    plantNodes.forEach((p, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(1, plantNodes.length);
+      p.x = R_PLANT * Math.cos(angle);
+      p.y = R_PLANT * Math.sin(angle);
+    });
+
+    // plant 周りに子昆虫を円配置
+    const nodeById = new Map(nodesArray.map(n => [n.id, n]));
+    plantNodes.forEach(p => {
+      const neighbors = links
+        .filter(l => (l.source === p.id || l.target === p.id))
+        .map(l => (l.source === p.id ? l.target : l.source))
+        .map(id => nodeById.get(typeof id === 'object' ? id.id : id))
+        .filter(n => n && n.type === 'insect');
+      if (neighbors.length === 0) return;
+      
+      // 子ノード間の距離も広げる
+      const r = Math.max(150, neighbors.length * 25); 
+      neighbors.forEach((n, idx) => {
+        const a = (2 * Math.PI * idx) / neighbors.length;
+        n.x = (p.x || 0) + r * Math.cos(a);
+        n.y = (p.y || 0) + r * Math.sin(a);
+      });
+    });
+
+    const centerNode = nodesArray.find(n => n.type === 'current-insect' || n.type === 'current-plant');
+    if (centerNode) {
+      centerNode.x = 0;
+      centerNode.y = 0;
+    }
+
     return { nodes, links };
   }, [currentInsect, currentPlantName, hostPlantsMap, allInsects]);
 
   // 初期ズーム調整
   useEffect(() => {
     if (!fgRef.current) return;
+    
+    // 物理演算パラメータの強力な調整
+    const linkForce = fgRef.current.d3Force('link');
+    if (linkForce) {
+      // リンク距離を長くして密集を防ぐ
+      linkForce.distance(link => (link.source?.type?.includes('plant') || link.target?.type?.includes('plant') ? 350 : 200));
+    }
+    
+    const chargeForce = fgRef.current.d3Force('charge');
+    if (chargeForce) {
+      // 反発力を極大化
+      chargeForce.strength(-3500);
+    }
+    
+    // シミュレーションを再加熱して安定させる
+    fgRef.current.d3ReheatSimulation();
+    
     const t = setTimeout(() => {
       try {
         fgRef.current.zoomToFit(400, 60);
       } catch (_) {}
-    }, 250);
+    }, 800); // 安定するまで少し待つ
     return () => clearTimeout(t);
   }, [graphData]);
 
@@ -163,7 +217,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       'plant-current': '#22c55e',
       plant: '#10b981'
     };
-    const baseR = node.type.includes('current') ? 12 : 8;
+    const baseR = node.type.includes('current') ? 10 : 6;
     const radius = baseR / Math.sqrt(globalScale);
 
     const dim = (hoverNode && !highlightNodes.has(node)) || (legendFocus && !node.type.includes(legendFocus));
@@ -256,7 +310,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.fillStyle = isDarkMode ? '#f1f5f9' : '#1e293b';
       ctx.fillText(label, node.x, y + labelHeight / 2);
     }
-  }, [hoverNode, highlightNodes, legendFocus]);
+  }, [hoverNode, highlightNodes, legendFocus, isDarkMode]);
 
   // Zoom controls
   const zoomIn = useCallback(() => {
@@ -291,8 +345,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         linkDirectionalParticleWidth={1.6}
         linkCurvature={0.18}
         backgroundColor="#f8fafc"
-        cooldownTicks={80}
-        d3VelocityDecay={0.35}
+        cooldownTicks={300}
+        d3VelocityDecay={0.1}
         onEngineStop={() => fgRef.current && fgRef.current.zoomToFit(400, 60)}
       />
 
