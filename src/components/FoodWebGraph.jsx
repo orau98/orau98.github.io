@@ -1,14 +1,21 @@
 import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
+import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
+import { createSafeInsectFilename } from '../utils/image';
 
-// よりリッチなビジュアルだが、画像読み込みなど重い処理は排除して安定動作を優先
-// - ホバーで近傍をハイライト
-// - カーブリンクと淡いグラデ背景
-// - ズームコントロール、凡例付き
-// - クリックで詳細ページへ遷移（昆虫・植物）
+// ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
+// 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
 
 const MAX_RELATED = 40;
+const IMG_EXTS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+const normalizePlantName = (name = '') =>
+  name
+    .replace(/（[^）]*）/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/の(花|実|葉|枝|茎|根|蕾).*/, '')
+    .trim();
 
 const FoodWebGraph = React.memo(function FoodWebGraph({
   currentInsect,
@@ -21,15 +28,96 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const fgRef = useRef(null);
   const navigate = useNavigate();
 
+  // image index caches
+  const [imageExtMap, setImageExtMap] = useState({});
+  const [imageBaseSet, setImageBaseSet] = useState(new Set());
+  const [plantImageNames, setPlantImageNames] = useState([]);
+
+  const loadingImagesRef = useRef(new Set());
+  const failedImagesRef = useRef(new Set());
+  const imageCacheRef = useRef({});
+
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
   const [hoverNode, setHoverNode] = useState(null);
   const [legendFocus, setLegendFocus] = useState(null);
 
-  const isBrowser = typeof document !== 'undefined';
-  const isDarkMode = isBrowser && document.documentElement.classList.contains('dark');
+  const assetBase = useMemo(() => import.meta.env.BASE_URL || '/', []);
+  const cacheBust = useMemo(() => {
+    if (import.meta.env.DEV) return `?v=${Date.now()}`;
+    return import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';
+  }, []);
 
-  // グラフデータ生成（シンプルな構造）
+  // load image indexes once
+  useEffect(() => {
+    let canceled = false;
+    loadInsectImageIndexes().then(({ names, exts }) => {
+      if (canceled) return;
+      setImageBaseSet(new Set(Array.from(names || [])));
+      setImageExtMap(exts || {});
+    }).catch(() => {
+      if (!canceled) {
+        setImageBaseSet(new Set());
+        setImageExtMap({});
+      }
+    });
+
+    loadPlantImageFilenames().then(list => {
+      if (!canceled) setPlantImageNames(Array.isArray(list) ? list : []);
+    }).catch(() => {
+      if (!canceled) setPlantImageNames([]);
+    });
+
+    return () => {
+      canceled = true;
+    };
+  }, []);
+
+  const insectImageCandidates = useCallback((detail) => {
+    if (!detail) return [];
+    if (detail.image) return [detail.image];
+
+    const candidates = [
+      detail.scientificFilename,
+      detail.scientificName ? createSafeInsectFilename(detail.scientificName) : null,
+      detail.name ? createSafeInsectFilename(detail.name) : null,
+      detail.name
+    ].filter(Boolean);
+
+    const urls = [];
+    for (const base of candidates) {
+      const ext = imageExtMap[base];
+      if (ext) {
+        urls.push(`${assetBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBust}`);
+      } else if (imageBaseSet.has(base)) {
+        urls.push(`${assetBase}images/insects/${encodeURIComponent(base)}.jpg${cacheBust}`);
+      }
+    }
+    return urls;
+  }, [assetBase, cacheBust, imageBaseSet, imageExtMap]);
+
+  const plantImageCandidates = useCallback((plantName) => {
+    if (!plantName || plantImageNames.length === 0) return [];
+    const norm = normalizePlantName(plantName);
+    const variants = [plantName, norm, plantName.replace(/＿/g, '_'), norm.replace(/＿/g, '_')];
+
+    const hits = plantImageNames.filter(n => variants.some(v => v && n.startsWith(v)));
+    if (hits.length === 0) return [];
+    const urls = [];
+    hits.slice(0, 2).forEach(base => {
+      const hasExt = IMG_EXTS.some(ext => base.endsWith(ext));
+      if (hasExt) {
+        urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}${cacheBust}`);
+      } else {
+        IMG_EXTS.forEach(ext => {
+          urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}${ext}${cacheBust}`);
+        });
+      }
+    });
+    return urls;
+  }, [assetBase, cacheBust, plantImageNames]);
+
+  // graph data with image candidates embedded
   const graphData = useMemo(() => {
     const nodes = [];
     const links = [];
@@ -37,7 +125,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
     const addNode = (id, name, type, raw) => {
       if (!nodes.find(n => n.id === id)) {
-        nodes.push({ id, name, type, raw });
+        const imgCandidates = type.includes('plant')
+          ? plantImageCandidates(name)
+          : insectImageCandidates(raw || { name });
+        nodes.push({ id, name, type, raw, imgCandidates });
       }
     };
 
@@ -55,7 +146,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       const centerId = `insect:${currentInsect.name}`;
       addNode(centerId, currentInsect.name, 'insect-current', currentInsect);
 
-      // 食草を取り出す
       let plants = [];
       if (Array.isArray(currentInsect.hostPlantsDetailed) && currentInsect.hostPlantsDetailed.length > 0) {
         plants = currentInsect.hostPlantsDetailed.map(p => p.name || p.plant).filter(Boolean);
@@ -80,129 +170,118 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     }
 
-    // --- 初期配置: 重なり回避のために極座標でざっくり配置してから物理演算 ---
-    const plantNodes = nodes.filter(n => n.type === 'plant' || n.type === 'current-plant');
-    const centerNode = nodes.find(n => n.type === 'current-insect' || n.type === 'current-plant');
+    return { nodes, links };
+  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, plantImageCandidates]);
 
-    const R_PLANT = Math.max(150, plantNodes.length * 20); // 半径を縮小してコンパクトに
-    plantNodes.forEach((p, i) => {
-      const angle = (2 * Math.PI * i) / Math.max(1, plantNodes.length);
-      p.x = R_PLANT * Math.cos(angle);
-      p.y = R_PLANT * Math.sin(angle);
-    });
-
-    // plant 周りに子昆虫を円配置
-    const nodeById = new Map(nodes.map(n => [n.id, n]));
-    plantNodes.forEach(p => {
-      const neighbors = links
-        .filter(l => (l.source === p.id || l.target === p.id))
-        .map(l => (l.source === p.id ? l.target : l.source))
-        .map(id => nodeById.get(typeof id === 'object' ? id.id : id))
-        .filter(n => n && n.type === 'insect');
-      if (neighbors.length === 0) return;
-      const r = Math.max(60, neighbors.length * 12); // 半径を縮小
-      neighbors.forEach((n, idx) => {
-        const a = (2 * Math.PI * idx) / neighbors.length;
-        n.x = (p.x || 0) + r * Math.cos(a);
-        n.y = (p.y || 0) + r * Math.sin(a);
-      });
-    });
-
-    // 中央ノード
-    if (centerNode) {
-      centerNode.x = 0;
-      centerNode.y = 0;
-    }
-
-    return {
-      nodes: nodes,
-      links: links,
-      truncatedCount: 0
-    };
-  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects]);
-
-  // --- Force layout tuning to reduce overlap ---
+  // initial fit
   useEffect(() => {
     if (!fgRef.current) return;
-    
-    // 衝突回避（forceCollide）は外部依存が必要なため削除し、
-    // 標準の反発力（charge）とリンク距離で調整する
-    
-    // リンク距離を短くして一覧性を向上
-    const linkForce = fgRef.current.d3Force('link');
-    if (linkForce) {
-      linkForce.distance(link => (link.source?.type === 'plant' ? 100 : 60));
-    }
-    // 反発力を調整（コンパクトにする分、強すぎると飛び散るため適度に）
-    const chargeForce = fgRef.current.d3Force('charge');
-    if (chargeForce && chargeForce.strength) {
-      chargeForce.strength(-800);
-    }
-    
-    fgRef.current.d3ReheatSimulation();
+    const t = setTimeout(() => {
+      try { fgRef.current.zoomToFit(400, 60); } catch (_) {}
+    }, 250);
+    return () => clearTimeout(t);
   }, [graphData]);
 
-  // ハイライト制御
-  const handleNodeHover = useCallback(
-    (node) => {
-      if (!node) {
-        setHoverNode(null);
-        setHighlightNodes(new Set());
-        setHighlightLinks(new Set());
-        return;
+  // hover highlight
+  const handleNodeHover = useCallback((node) => {
+    if (!node) {
+      setHoverNode(null);
+      setHighlightNodes(new Set());
+      setHighlightLinks(new Set());
+      return;
+    }
+    const nSet = new Set([node]);
+    const lSet = new Set();
+    graphData.links.forEach(link => {
+      const sId = link.source.id || link.source;
+      const tId = link.target.id || link.target;
+      if (sId === node.id || tId === node.id) {
+        lSet.add(link);
+        const neighborId = sId === node.id ? tId : sId;
+        const neighbor = graphData.nodes.find(n => n.id === neighborId);
+        if (neighbor) nSet.add(neighbor);
       }
+    });
+    setHoverNode(node);
+    setHighlightNodes(nSet);
+    setHighlightLinks(lSet);
+  }, [graphData]);
 
-      const nSet = new Set([node]);
-      const lSet = new Set();
-      graphData.links.forEach(link => {
-        const sId = link.source.id || link.source;
-        const tId = link.target.id || link.target;
-        if (sId === node.id || tId === node.id) {
-          lSet.add(link);
-          const neighborId = sId === node.id ? tId : sId;
-          const neighbor = graphData.nodes.find(n => n.id === neighborId);
-          if (neighbor) nSet.add(neighbor);
-        }
-      });
-      setHoverNode(node);
-      setHighlightNodes(nSet);
-      setHighlightLinks(lSet);
-    },
-    [graphData]
-  );
+  // click navigation
+  const handleNodeClick = useCallback((node) => {
+    if (!node) return;
+    if (node.type.startsWith('insect') && node.raw) {
+      const type = node.raw.type || 'moth';
+      navigate(`/${type}/${node.raw.id}`);
+    } else if (node.type.startsWith('plant')) {
+      navigate(`/plant/${encodeURIComponent(node.name)}`);
+    } else if (fgRef.current) {
+      fgRef.current.centerAt(node.x, node.y, 600);
+      fgRef.current.zoom(2.4, 800);
+    }
+  }, [navigate]);
 
-  // クリックで遷移/フォーカス
-  const handleNodeClick = useCallback(
-    (node) => {
-      if (!node) return;
-      if (node.type.startsWith('insect') && node.raw) {
-        const type = node.raw.type || 'moth';
-        navigate(`/${type}/${node.raw.id}`);
-      } else if (node.type.startsWith('plant')) {
-        navigate(`/plant/${encodeURIComponent(node.name)}`);
-      } else if (fgRef.current) {
-        fgRef.current.centerAt(node.x, node.y, 600);
-        fgRef.current.zoom(2.4, 800);
+  // draw helper: rounded rect
+  const drawRoundedRect = (c, x, y, w, h, r) => {
+    const radius = Math.min(r, w / 2, h / 2);
+    c.beginPath();
+    c.moveTo(x + radius, y);
+    c.lineTo(x + w - radius, y);
+    c.arcTo(x + w, y, x + w, y + radius, radius);
+    c.lineTo(x + w, y + h - radius);
+    c.arcTo(x + w, y + h, x + w - radius, y + h, radius);
+    c.lineTo(x + radius, y + h);
+    c.arcTo(x, y + h, x, y + h - radius, radius);
+    c.lineTo(x, y + radius);
+    c.arcTo(x, y, x + radius, y, radius);
+    c.closePath();
+  };
+
+  // request image load if needed
+  const ensureImage = (candidates) => {
+    if (typeof Image === 'undefined') return null;
+    if (!candidates || candidates.length === 0) return null;
+    for (const url of candidates) {
+      if (imageCacheRef.current[url]) return url;
+      if (failedImagesRef.current.has(url)) continue;
+      if (!loadingImagesRef.current.has(url)) {
+        loadingImagesRef.current.add(url);
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          loadingImagesRef.current.delete(url);
+          imageCacheRef.current[url] = img;
+        };
+        img.onerror = () => {
+          loadingImagesRef.current.delete(url);
+          failedImagesRef.current.add(url);
+        };
+        img.src = url;
       }
-    },
-    [navigate]
-  );
+    }
+    return null;
+  };
 
-  // ノード描画
+  // node renderer with image fallback
   const nodeCanvasObject = useCallback((node, ctx, globalScale) => {
-    const drawRoundedRect = (c, x, y, w, h, r) => {
-      const radius = Math.min(r, w / 2, h / 2);
-      c.beginPath();
-      c.moveTo(x + radius, y);
-      c.lineTo(x + w - radius, y);
-      c.arcTo(x + w, y, x + w, y + radius, radius);
-      c.lineTo(x + w, y + h - radius);
-      c.arcTo(x + w, y + h, x + w - radius, y + h, radius);
-      c.lineTo(x + radius, y + h);
-      c.arcTo(x, y + h, x, y + h - radius, radius);
-      c.lineTo(x, y + radius);
-      c.arcTo(x, y, x + radius, y, radius);
-      c.closePath();
+    const drawLabel = (x, y, label, dim) => {
+      const fontSize = 13 / Math.sqrt(globalScale);
+      ctx.font = `${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
+      const textWidth = ctx.measureText(label).width;
+      const padding = 4 / Math.sqrt(globalScale);
+      const labelWidth = textWidth + padding * 2;
+      const labelHeight = fontSize + padding * 2;
+      const top = y - labelHeight - 4;
+      ctx.fillStyle = `rgba(248,250,252,${dim ? 0.4 : 0.9})`;
+      ctx.strokeStyle = `rgba(148,163,184,${dim ? 0.3 : 0.7})`;
+      ctx.lineWidth = 1 / Math.sqrt(globalScale);
+      drawRoundedRect(ctx, x - labelWidth / 2, top, labelWidth, labelHeight, 4 / Math.sqrt(globalScale));
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#0f172a';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, x, top + labelHeight / 2);
     };
 
     const colors = {
@@ -211,11 +290,14 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       'plant-current': '#22c55e',
       plant: '#10b981'
     };
-    const baseR = node.type.includes('current') ? 10 : 6;
+    const baseR = node.type.includes('current') ? 12 : 8;
     const radius = baseR / Math.sqrt(globalScale);
-
     const dim = (hoverNode && !highlightNodes.has(node)) || (legendFocus && !node.type.includes(legendFocus));
-    const alpha = dim ? 0.2 : 1;
+    const alpha = dim ? 0.25 : 1;
+
+    // try to ensure image is loaded
+    const foundUrl = ensureImage(node.imgCandidates);
+    const img = foundUrl ? imageCacheRef.current[foundUrl] : null;
 
     // glow
     ctx.save();
@@ -226,71 +308,37 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ctx.fill();
     ctx.restore();
 
-    // core
-    ctx.beginPath();
-    ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
-    ctx.fillStyle = colors[node.type] || '#94a3b8';
-    ctx.fill();
-    ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
-    ctx.strokeStyle = 'rgba(15,23,42,0.2)';
-    ctx.stroke();
-
-    // User Request: Always show labels for better visibility
-    const shouldShowLabel = true;
-
-    if (shouldShowLabel) {
+    if (img) {
       ctx.save();
-      ctx.globalAlpha = alpha;
-      
-      const label = node.name;
-      const fontSize = 13 / Math.sqrt(globalScale);
-      ctx.font = `${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
-      
-      const textWidth = ctx.measureText(label).width;
-      const padding = 3 / Math.sqrt(globalScale);
-      const labelWidth = textWidth + padding * 2;
-      const labelHeight = fontSize + padding * 2;
-      const y = node.y + radius + 2; // Position below node
-
-      // Background Box
-      ctx.fillStyle = isDarkMode ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.85)';
-      ctx.strokeStyle = isDarkMode ? 'rgba(148, 163, 184, 0.4)' : 'rgba(203, 213, 225, 0.6)';
-      ctx.lineWidth = 1 / Math.sqrt(globalScale);
-      
       ctx.beginPath();
-      drawRoundedRect(
-        ctx,
-        node.x - labelWidth / 2,
-        y,
-        labelWidth,
-        labelHeight,
-        3 / Math.sqrt(globalScale)
-      );
-      ctx.fill();
-      ctx.stroke();
-
-      // Text with Outline
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      // Text Fill
-      ctx.fillStyle = isDarkMode ? '#f1f5f9' : '#1e293b';
-      ctx.fillText(label, node.x, y + labelHeight / 2);
-      
+      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(img, node.x - radius, node.y - radius, radius * 2, radius * 2);
       ctx.restore();
+      ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
+      ctx.strokeStyle = 'rgba(15,23,42,0.35)';
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = colors[node.type] || '#94a3b8';
+      ctx.globalAlpha = alpha;
+      ctx.fill();
+      ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
+      ctx.strokeStyle = 'rgba(15,23,42,0.2)';
+      ctx.stroke();
     }
-  }, [hoverNode, highlightNodes, legendFocus, isDarkMode]);
 
-  // Zoom controls
-  const zoomIn = useCallback(() => {
-    if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() * 1.4, 350);
-  }, []);
-  const zoomOut = useCallback(() => {
-    if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() / 1.4, 350);
-  }, []);
-  const zoomFit = useCallback(() => {
-    if (fgRef.current) fgRef.current.zoomToFit(400, 60);
-  }, []);
+    drawLabel(node.x, node.y, node.name, dim);
+  }, [hoverNode, highlightNodes, legendFocus]);
+
+  // zoom controls
+  const zoomIn = useCallback(() => { if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() * 1.4, 350); }, []);
+  const zoomOut = useCallback(() => { if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() / 1.4, 350); }, []);
+  const zoomFit = useCallback(() => { if (fgRef.current) fgRef.current.zoomToFit(400, 60); }, []);
 
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 relative shadow-md">
@@ -315,7 +363,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         linkCurvature={0.18}
         backgroundColor="#f8fafc"
         cooldownTicks={80}
-        d3VelocityDecay={0.2}
+        d3VelocityDecay={0.35}
         onEngineStop={() => fgRef.current && fgRef.current.zoomToFit(400, 60)}
       />
 
