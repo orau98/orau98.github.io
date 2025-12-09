@@ -938,6 +938,25 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return () => clearTimeout(timeoutId);
   }, [getBestImageForMoth, isImageIndexReady, moths]);
 
+  // 重要種はインデックス未準備でもあらかじめ画像ベース名を埋めておく
+  useEffect(() => {
+    const next = new Map();
+    moths?.forEach((insect) => {
+      if (!insect || !insect.id) return;
+      const override = IMAGE_OVERRIDES.get(insect.id);
+      if (override) {
+        next.set(insect.id, override);
+      }
+    });
+    if (next.size > 0) {
+      setMothImageMap((prev) => {
+        const merged = new Map(prev);
+        next.forEach((v, k) => merged.set(k, v));
+        return merged;
+      });
+    }
+  }, [IMAGE_OVERRIDES, moths]);
+
   // Sort moths prioritizing those with images; render deferred until index is ready
   const sortedMoths = useMemo(() => {
     try {
