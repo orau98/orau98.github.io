@@ -805,6 +805,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const [imageFilenamesNormalized, setImageFilenamesNormalized] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
 
+  // 重要種の画像を必ず拾うための強制マッピング（ID -> 画像ベース名）
+  const IMAGE_OVERRIDES = useMemo(() => new Map([
+    ['species-20176', 'Graphium_sarpedon'], // アオスジアゲハ
+    ['species-4601', 'Zaranga_permagna'],   // アオバシャチホコ
+  ]), []);
+
 
   useEffect(() => {
     loadInsectImageIndexes()
@@ -847,8 +853,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     try {
       if (!insect) return null;
       
-      // Index未準備の段階では 404 を量産しないよう null を返し、プレースホルダー表示に任せる
-      if (!isImageIndexReady) return null;
+      // Index未準備でも重要種は即座にファイル名を返して表示を試みる
+      const override = IMAGE_OVERRIDES.get(insect.id);
+      if (!isImageIndexReady) return override || null;
+
+      if (override && (imageFilenames.has(override) || imageExtensions[override])) {
+        return override;
+      }
 
       // 0. Try mapped filename first (highest priority)
       const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
@@ -902,7 +913,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     } catch {
       return null;
     }
-  }, [imageExtensions, imageFilenames, imageFilenamesNormalized, isImageIndexReady]);
+  }, [IMAGE_OVERRIDES, imageExtensions, imageFilenames, imageFilenamesNormalized, isImageIndexReady]);
 
   // Precompute image filename per insect to avoid O(n) lookups during sort/render
   const [mothImageMap, setMothImageMap] = useState(new Map());
