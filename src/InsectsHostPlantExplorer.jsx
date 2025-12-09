@@ -124,7 +124,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
             target.href.includes("/butterfly/") ||
             target.href.includes("/beetle/") ||
             target.href.includes("/leafbeetle/") ||
-            target.href.includes("/host-plant/"))
+            target.href.includes("/plant/"))
         ) {
           saveScrollPosition();
         }

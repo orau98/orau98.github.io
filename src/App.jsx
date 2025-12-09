@@ -197,6 +197,7 @@ function App() {
         setLoading(true);
       }
       const base = import.meta.env.BASE_URL || '/';
+      let plantDetailsLite = {};
       // Try lightweight split JSON first to speed up initial paint
       try {
         const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
@@ -227,8 +228,8 @@ function App() {
 
           if (hostRes?.ok) {
             const hostMap = await hostRes.json();
-            const plantInfoPayload =
-              plantInfoRes && plantInfoRes.ok ? await plantInfoRes.json() : null;
+          const plantInfoPayload =
+            plantInfoRes && plantInfoRes.ok ? await plantInfoRes.json() : null;
 
           if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
             cachedVersionRef.current = manifestVersion;
@@ -246,7 +247,7 @@ function App() {
             const plantInfoRaw = plantInfoPayload && typeof plantInfoPayload === 'object'
               ? plantInfoPayload.plants || {}
               : {};
-            const plantDetailsLite = {};
+            plantDetailsLite = {};
             Object.entries(plantInfoRaw).forEach(([name, detail]) => {
               if (!name) return;
               const familyJp = detail?.familyJp || '';
@@ -286,6 +287,7 @@ function App() {
               if (hostCsvExtendStartedRef.current) return;
               hostCsvExtendStartedRef.current = true;
               try {
+                const Papa = await getPapa();
                 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
                   await new Promise((resolve) =>
                     window.requestIdleCallback(resolve, { timeout: 3000 }),

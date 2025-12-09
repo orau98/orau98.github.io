@@ -173,7 +173,7 @@ const FloatingActionButton = () => {
       {/* Overlay to close when clicking outside */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[-1]" 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" 
           onClick={() => setIsOpen(false)}
         />
       )}
