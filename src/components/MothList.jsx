@@ -1254,7 +1254,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       )}
       
       <div className="p-6">
-        <div className="max-h-[800px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 dark:scrollbar-thumb-blue-600 dark:scrollbar-track-blue-900/20">
+        <div>
           {!isImageIndexReady ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (

@@ -1,7 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 
-const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectSuggestion }) => {
+const SearchInput = ({
+  value,
+  onChange,
+  placeholder,
+  suggestions = [],
+  onSelectSuggestion,
+  ariaLabel,
+}) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const listboxId = useId();
+  const expanded = showSuggestions && suggestions.length > 0;
+  const activeDescendantId = useMemo(() => {
+    if (!expanded || activeIndex < 0) return undefined;
+    return `${listboxId}-option-${activeIndex}`;
+  }, [activeIndex, expanded, listboxId]);
 
   const handleChange = (e) => {
     // 入力値はそのまま保持（変換しない）
@@ -10,8 +24,11 @@ const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectS
   };
 
   const handleSelect = (suggestion) => {
-    onSelectSuggestion(suggestion);
+    if (typeof onSelectSuggestion === "function") {
+      onSelectSuggestion(suggestion);
+    }
     setShowSuggestions(false);
+    setActiveIndex(-1);
   };
 
   const handleClear = () => {
@@ -19,7 +36,61 @@ const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectS
       onChange({ target: { value: "" } });
     }
     setShowSuggestions(false);
+    setActiveIndex(-1);
   };
+
+  const handleKeyDown = (e) => {
+    if (!expanded) {
+      if (e.key === "ArrowDown" && suggestions.length > 0) {
+        setShowSuggestions(true);
+        setActiveIndex(0);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((prev) => {
+        const next = prev + 1;
+        return next >= suggestions.length ? 0 : next;
+      });
+      return;
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((prev) => {
+        if (prev <= 0) return suggestions.length - 1;
+        return prev - 1;
+      });
+      return;
+    }
+    if (e.key === "Enter") {
+      if (activeIndex >= 0 && activeIndex < suggestions.length) {
+        e.preventDefault();
+        handleSelect(suggestions[activeIndex]);
+      }
+      return;
+    }
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setShowSuggestions(false);
+      setActiveIndex(-1);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (!expanded) {
+      setActiveIndex(-1);
+      return;
+    }
+    setActiveIndex((prev) => {
+      if (suggestions.length === 0) return -1;
+      if (prev >= suggestions.length) return suggestions.length - 1;
+      return prev;
+    });
+  }, [expanded, suggestions.length]);
 
   return (
     <div className="relative group">
@@ -36,7 +107,14 @@ const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectS
           onChange={handleChange}
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-          className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:ring-0 text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500"
+          onKeyDown={handleKeyDown}
+          role="combobox"
+          aria-label={ariaLabel || placeholder || "検索"}
+          aria-autocomplete="list"
+          aria-expanded={expanded}
+          aria-controls={expanded ? listboxId : undefined}
+          aria-activedescendant={activeDescendantId}
+          className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500"
         />
         {value && value.length > 0 && (
           <button
@@ -55,13 +133,22 @@ const SearchInput = ({ value, onChange, placeholder, suggestions = [], onSelectS
       {showSuggestions && suggestions.length > 0 && (
         <div className="absolute z-20 top-full left-0 right-0 -mt-px">
           <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-t-0 border-slate-200/50 dark:border-slate-600/50 rounded-b-2xl shadow-lg overflow-hidden">
-            <ul className="max-h-64 overflow-y-auto py-2">
+            <ul id={listboxId} role="listbox" className="max-h-64 overflow-y-auto py-2">
               {suggestions.map((suggestion, index) => (
-                <li key={index}>
+                <li key={`${suggestion}-${index}`} role="none">
                   <button
                     type="button"
+                    role="option"
+                    id={`${listboxId}-option-${index}`}
+                    aria-selected={index === activeIndex}
+                    tabIndex={-1}
                     onMouseDown={() => handleSelect(suggestion)}
-                    className="w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200 transition-colors flex items-center space-x-3"
+                    onMouseEnter={() => setActiveIndex(index)}
+                    className={`w-full text-left px-4 py-3 text-slate-700 dark:text-slate-200 transition-colors flex items-center space-x-3 ${
+                      index === activeIndex
+                        ? "bg-slate-50 dark:bg-slate-700/50"
+                        : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                    }`}
                   >
                     <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

@@ -72,6 +72,14 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
       }, 300);
     };
 
+    const setActiveTabWithUrl = (tab) => {
+      setActiveTab(tab);
+      const newParams = new URLSearchParams(searchParams);
+      if (tab) newParams.set("tab", tab);
+      else newParams.delete("tab");
+      setSearchParams(newParams, { replace: true });
+    };
+
     // Cleanup timeout
     useEffect(() => {
       return () => {
@@ -387,7 +395,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <StickyHeader 
           activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
+          setActiveTab={setActiveTabWithUrl} 
           searchTerm={globalSearchTerm} 
           onSearchChange={handleGlobalSearch}
           suggestions={suggestions}
@@ -554,9 +562,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
             <div className="flex border-b-2 border-gradient-to-r from-emerald-200/50 via-blue-200/50 to-emerald-200/50 dark:from-emerald-700/50 dark:via-blue-700/50 dark:to-emerald-700/50">
               <button
                 onClick={() => {
-                  setActiveTab("insects");
-                  if (typeof onNeedInsectsData === "function")
-                    onNeedInsectsData();
+                  setActiveTabWithUrl("insects");
                 }}
                 className={`flex-1 px-6 py-5 text-base font-medium tracking-tight transition-all duration-300 relative ${
                   activeTab === "insects"
@@ -605,7 +611,7 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
               </button>
 
               <button
-                onClick={() => setActiveTab("plants")}
+                onClick={() => setActiveTabWithUrl("plants")}
                 className={`flex-1 px-6 py-5 text-base font-medium tracking-tight transition-all duration-300 relative ${
                   activeTab === "plants"
                     ? "text-blue-600 dark:text-blue-400 bg-gradient-to-br from-blue-50/70 to-emerald-50/70 dark:from-blue-900/30 dark:to-emerald-900/30"

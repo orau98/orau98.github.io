@@ -812,7 +812,7 @@ const HostPlantList = ({
       )}
 
       <div className="p-6">
-        <div className="max-h-[800px] overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-300 scrollbar-track-emerald-100 dark:scrollbar-thumb-emerald-600 dark:scrollbar-track-emerald-900/20">
+        <div>
           {currentHostPlants.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {currentHostPlants.map(([plant, mothList], index) => (

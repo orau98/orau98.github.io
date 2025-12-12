@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-neutral-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">
+    <footer className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">
       <div className="container mx-auto px-4 py-6 text-center text-neutral-500 dark:text-neutral-400">
         <p className="text-sm">
           Private collection data. Open source on {' '}
