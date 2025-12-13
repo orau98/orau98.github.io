@@ -46,8 +46,9 @@ function generateSplitSitemaps() {
     main: [],
     moth: [],
     butterfly: [],
+    beetle: [],
     leafbeetle: [],
-  plant: []
+    plant: []
   };
   const today = formatDate(new Date());
   
@@ -58,87 +59,82 @@ function generateSplitSitemaps() {
     changefreq: 'weekly',
     priority: '1.0'
   });
-  
-  const addSpaRoutes = (items, routeBuilder, target, priority = '0.7', lastmod = today) => {
+
+  // NOTE:
+  // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
+  // 検索エンジン向けのサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
+  const addMetaDirToSitemap = ({ key, dir, routePrefix, priority, includeIndexInMain = true }) => {
+    const absDir = path.join(__dirname, dir);
+    if (!fs.existsSync(absDir)) {
+      console.warn(`[sitemap] meta dir not found: ${absDir}`);
+      return 0;
+    }
+    const files = fs
+      .readdirSync(absDir)
+      .filter((f) => f.endsWith('.html'))
+      .sort((a, b) => a.localeCompare(b, 'en'));
+
+    // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）
+    if (includeIndexInMain && files.includes('index.html')) {
+      const indexPath = path.join(absDir, 'index.html');
+      sitemaps.main.push({
+        loc: `${baseUrl}${routePrefix}index.html`,
+        lastmod: getFileLastmod(indexPath),
+        changefreq: 'weekly',
+        priority: '0.8',
+      });
+    }
+
     let count = 0;
-    items.forEach(item => {
-      if (!item) return;
-      const loc = routeBuilder(item);
-      if (!loc) return;
-      target.push({
-        loc: `${baseUrl}${loc}`,
-        lastmod,
+    files.forEach((file) => {
+      if (file === 'index.html') return;
+      const filePath = path.join(absDir, file);
+      sitemaps[key].push({
+        loc: `${baseUrl}${routePrefix}${encodeFilename(file)}`,
+        lastmod: getFileLastmod(filePath),
         changefreq: 'monthly',
-        priority
+        priority,
       });
       count++;
     });
     return count;
   };
-  
-  const readJsonArray = (relativePath) => {
-    const filePath = path.join(__dirname, relativePath);
-    if (!fs.existsSync(filePath)) {
-      console.warn(`[sitemap] JSONファイルが見つかりません: ${filePath}`);
-      return { data: [], lastmod: today };
-    }
-    const json = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    return { data: Array.isArray(json) ? json : [], lastmod: getFileLastmod(filePath) };
-  };
-  
-  const readJsonObject = (relativePath) => {
-    const filePath = path.join(__dirname, relativePath);
-    if (!fs.existsSync(filePath)) {
-      console.warn(`[sitemap] JSONファイルが見つかりません: ${filePath}`);
-      return { data: {}, lastmod: today };
-    }
-    const json = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    return { data: json && typeof json === 'object' ? json : {}, lastmod: getFileLastmod(filePath) };
-  };
-  
-  const { data: moths } = readJsonArray('../public/assets/data-lite/moths.json');
-  const { data: butterflies } = readJsonArray('../public/assets/data-lite/butterflies.json');
-  const { data: beetles } = readJsonArray('../public/assets/data-lite/beetles.json');
-  const { data: leafbeetles } = readJsonArray('../public/assets/data-lite/leafbeetles.json');
-  const { data: hostplantsMap } = readJsonObject('../public/assets/data-lite/hostplants.json');
-  
-  const mothCount = addSpaRoutes(
-    moths,
-    (item) => (item.id ? `/moth/${encodeFilename(String(item.id))}` : null),
-    sitemaps.moth,
-    '0.8',
-    today
-  );
-  const butterflyCount = addSpaRoutes(
-    butterflies,
-    (item) => (item.id ? `/butterfly/${encodeFilename(String(item.id))}` : null),
-    sitemaps.butterfly,
-    '0.8',
-    today
-  );
-  const beetleCount = addSpaRoutes(
-    beetles,
-    (item) => (item.id ? `/beetle/${encodeFilename(String(item.id))}` : null),
-    sitemaps.main,
-    '0.7',
-    today
-  );
-  const leafCount = addSpaRoutes(
-    leafbeetles,
-    (item) => (item.id ? `/leafbeetle/${encodeFilename(String(item.id))}` : null),
-    sitemaps.leafbeetle,
-    '0.7',
-    today
-  );
-  
-  const plantNames = Object.keys(hostplantsMap || {});
-  const plantCount = addSpaRoutes(
-    plantNames.map((name) => ({ name })),
-    (item) => (item.name ? `/plant/${encodeFilename(item.name)}` : null),
-    sitemaps.plant,
-    '0.6',
-    today
-  );
+
+  const mothCount = addMetaDirToSitemap({
+    key: 'moth',
+    dir: '../public/meta/moth',
+    routePrefix: '/meta/moth/',
+    priority: '0.8',
+    includeIndexInMain: true,
+  });
+  const butterflyCount = addMetaDirToSitemap({
+    key: 'butterfly',
+    dir: '../public/meta/butterfly',
+    routePrefix: '/meta/butterfly/',
+    priority: '0.8',
+    includeIndexInMain: true,
+  });
+  const beetleCount = addMetaDirToSitemap({
+    key: 'beetle',
+    dir: '../public/meta/beetle',
+    routePrefix: '/meta/beetle/',
+    priority: '0.7',
+    includeIndexInMain: false,
+  });
+  const leafCount = addMetaDirToSitemap({
+    key: 'leafbeetle',
+    dir: '../public/meta/leafbeetle',
+    routePrefix: '/meta/leafbeetle/',
+    priority: '0.7',
+    includeIndexInMain: true,
+  });
+  const plantCount = addMetaDirToSitemap({
+    key: 'plant',
+    dir: '../public/meta/plant',
+    routePrefix: '/meta/plant/',
+    priority: '0.6',
+    includeIndexInMain: true,
+  });
   
   // XMLを生成する関数
   const generateXML = (urls) => {
@@ -221,11 +217,11 @@ function generateSplitSitemaps() {
   });
   
   console.log('\n統計:');
-  console.log(`- 蛾: ${mothCount} URL`);
-  console.log(`- 蝶: ${butterflyCount} URL`);
-  console.log(`- 甲虫（メイン）: ${beetleCount} URL`);
-  console.log(`- ハムシ: ${leafCount} URL`);
-  console.log(`- 植物: ${plantCount} URL`);
+  console.log(`- 蛾（meta）: ${mothCount} URL`);
+  console.log(`- 蝶（meta）: ${butterflyCount} URL`);
+  console.log(`- 甲虫（meta）: ${beetleCount} URL`);
+  console.log(`- ハムシ（meta）: ${leafCount} URL`);
+  console.log(`- 植物（meta）: ${plantCount} URL`);
   console.log(`- 合計: ${Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0)} URLs`);
 }
 
