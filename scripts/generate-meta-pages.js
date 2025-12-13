@@ -1177,11 +1177,14 @@ async function generateMetaPages() {
     let butterflyCountFromInsects = 0;
     let leafbeetleCountFromInsects = 0;
     const hostPlantsMap = new Map();
+
+    // e.g. "1758)" / "[1799])" / "1978"
+    const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(String(value || '').trim());
     
     insectsData.forEach((row, index) => {
       const insectId = row.insect_id;
-      const japaneseName = row.japanese_name || '';
-      const scientificName = row.scientific_name || '';
+      let japaneseName = (row.japanese_name || '').trim();
+      const scientificName = (row.scientific_name || '').trim();
       const familyJapanese = row.family_jp || row.family || '';
       const subfamily = row.subfamily_jp || row.subfamily || '';
       const genus = row.genus || '';
@@ -1191,12 +1194,19 @@ async function generateMetaPages() {
       const notes = row.notes || '';
       const alternativeNames = row.alternative_name || '';
       
-    if (!japaneseName || !insectId) return;
+    if (!insectId) return;
     // Skip malformed IDs like "species-" (missing suffix)
     if (/^species-$/.test(insectId)) return;
+
+      // 年号だけが和名欄に混入するケース（例: "1758)"）は無効として扱う
+      if (looksLikeYearOnly(japaneseName)) {
+        japaneseName = '';
+      }
+      const displayName = japaneseName || (scientificName ? `${scientificName}（和名未記載）` : '');
+      if (!displayName) return;
       
       // プレースホルダーや無効な昆虫名を除外
-      if (japaneseName === '和名' || japaneseName === '種名' || japaneseName === '不明' || japaneseName.trim().length < 2) {
+      if (displayName === '和名' || displayName === '種名' || displayName === '不明' || displayName.trim().length < 2) {
         return;
       }
       
@@ -1237,8 +1247,8 @@ async function generateMetaPages() {
       
       const insect = {
         id: insectId,
-        name: japaneseName,
-        japaneseName: japaneseName,
+        name: displayName,
+        japaneseName: displayName,
         scientificName: scientificName,
         hostPlants: hostPlantsString,
         hostPlantsDetailed: insectHostPlants,

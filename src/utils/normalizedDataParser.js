@@ -121,7 +121,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
       // 基本昆虫データを構築
       // 別名の統合（旧和名・別名・その他の和名）
-      const primaryName = (insect.japanese_name || '').trim();
+      const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test((value || '').toString().trim());
+      const rawPrimaryName = (insect.japanese_name || '').trim();
+      const primaryName = looksLikeYearOnly(rawPrimaryName) ? '' : rawPrimaryName;
       const altNamesRaw = [];
       const oldName = (insect.old_japanese_name || '').trim();
       const altName = (insect.alternative_name || '').trim();
@@ -132,6 +134,21 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       // remove exact duplicates and names identical to the primary name
       const altNames = Array.from(new Set(altNamesRaw.filter(n => n && n !== primaryName)));
       const alternativeNames = altNames.join('、');
+
+      // 和名が欠落/壊れている場合（例: "1758)" など年号だけが入っている）に、表示用の名称をフォールバック
+      const displayName = (() => {
+        if (primaryName) return primaryName;
+        const fallbackFromAlt = altNames.find((n) => n && !looksLikeYearOnly(n));
+        if (fallbackFromAlt) return fallbackFromAlt;
+        const sci = (insect.scientific_name || '').trim();
+        if (sci) return `${sci}（和名未記載）`;
+        const genus = (insect.genus || '').trim();
+        const species = (insect.species || '').trim();
+        const subspecies = (insect.subspecies || '').trim();
+        const binomial = [genus, species, subspecies].filter(Boolean).join(' ').trim();
+        if (binomial) return `${binomial}（和名未記載）`;
+        return '不明';
+      })();
 
       // 出現時期（general_notesからの詳細一覧も構築）
       const emergenceNotes = (generalNotes || []).filter(n => {
@@ -156,7 +173,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
       const insectData = {
         id: insectId,
-        name: insect.japanese_name?.trim() || '不明',
+        name: displayName,
         scientificName: insect.scientific_name?.trim() || '',
         family: insect.family_jp?.trim() || insect.family?.trim() || '',
         subfamily: insect.subfamily_jp?.trim() || insect.subfamily?.trim() || '',
