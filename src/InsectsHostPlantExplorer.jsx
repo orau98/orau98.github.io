@@ -11,14 +11,15 @@ import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink } from "./utils/sourceLinks";
 import useSeoMeta from "./hooks/useSeoMeta";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./services/imageIndex";
+import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 
-const MothList = React.lazy(() => import("./components/MothList"));
-const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
+const MothList = lazyWithRetry(() => import("./components/MothList"));
+const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
 
 
 
-  const InsectsHostPlantExplorer = React.memo(
+const InsectsHostPlantExplorer = React.memo(
   ({
     moths,
     butterflies,
@@ -31,8 +32,9 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
     summaryCounts,
     onNeedInsectsData,
     onNeedPlantsData,
+    initialTab = "insects",
   }) => {
-    const [activeTab, setActiveTab] = useState("insects");
+    const [activeTab, setActiveTab] = useState(initialTab);
     const [searchParams, setSearchParams] = useSearchParams();
     const [heroImageLoaded, setHeroImageLoaded] = useState(false);
     const [instagramUrl, setInstagramUrl] = useState("");
@@ -161,12 +163,21 @@ const HostPlantList = React.lazy(() => import("./components/HostPlantList"));
       }
     }, []);
 
-    // Initialize tab from URL (e.g., tab=plants to open plant list)
+    // Initialize tab from URL, fallback to prop when absent
     useEffect(() => {
-      const tab = searchParams.get("tab");
-      if (tab === "plants") setActiveTab("plants");
-      else if (tab === "insects") setActiveTab("insects");
-    }, [searchParams]);
+      const tabParam = searchParams.get("tab");
+      if (tabParam === "plants" || tabParam === "insects") {
+        setActiveTab(tabParam);
+        return;
+      }
+      // Ensure URL reflects requested initial tab so戻る/共有で維持される
+      if (initialTab && !tabParam) {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("tab", initialTab);
+        setSearchParams(newParams, { replace: true });
+        setActiveTab(initialTab);
+      }
+    }, [searchParams, initialTab, setSearchParams]);
 
     useEffect(() => {
       if (activeTab === "insects" && typeof onNeedInsectsData === "function") {

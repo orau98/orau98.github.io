@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import logger from './utils/logger';
-const InsectsHostPlantExplorer = React.lazy(() => import('./InsectsHostPlantExplorer'));
-const MothDetail = React.lazy(() => import('./MothDetail'));
-const HostPlantDetail = React.lazy(() => import('./HostPlantDetail'));
+import lazyWithRetry from './utils/lazyWithRetry';
+import ChunkErrorBoundary from './components/ChunkErrorBoundary';
+const InsectsHostPlantExplorer = lazyWithRetry(() => import('./InsectsHostPlantExplorer'));
+const MothDetail = lazyWithRetry(() => import('./MothDetail'));
+const HostPlantDetail = lazyWithRetry(() => import('./HostPlantDetail'));
 import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -6086,106 +6088,178 @@ function App() {
       {loading ? (
         <SkeletonLoader />
       ) : (
-        <>
-          <React.Suspense fallback={<SkeletonLoader />}>
-            <div
-              aria-hidden={!isHomePage}
-              style={isHomePage ? undefined : { display: 'none' }}
-            >
-              <InsectsHostPlantExplorer
-                moths={moths}
-                butterflies={butterflies}
-                beetles={beetles}
-                leafbeetles={leafbeetles}
-                hostPlants={hostPlants}
-                plantDetails={plantDetails}
-                theme={theme}
-                setTheme={setTheme}
-                summaryCounts={summaryCounts}
-                onNeedInsectsData={() => {
-                  try {
-                    ensureTypesLoaderRef.current &&
-                      ensureTypesLoaderRef.current();
-                  } catch {}
-                }}
-                onNeedPlantsData={() => {
-                  try {
-                    requestHostHydrationRef.current &&
-                      requestHostHydrationRef.current();
-                  } catch {}
-                }}
-              />
-            </div>
-          </React.Suspense>
+        <Routes>
+          {/* 一覧ビュー（トップ/昆虫/植物タブ付き） */}
+          <Route
+            path="/"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <InsectsHostPlantExplorer
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                    plantDetails={plantDetails}
+                    theme={theme}
+                    setTheme={setTheme}
+                    summaryCounts={summaryCounts}
+                    initialTab="insects"
+                    onNeedInsectsData={() => {
+                      try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
+                    }}
+                    onNeedPlantsData={() => {
+                      try { requestHostHydrationRef.current && requestHostHydrationRef.current(); } catch {}
+                    }}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
 
-          {!isHomePage && (
-            <React.Suspense fallback={<SkeletonLoader />}>
-              <Routes>
-                <Route
-                  path="/moth/:mothSlug"
-                  element={
-                    <MothDetail
-                      moths={moths}
-                      butterflies={butterflies}
-                      beetles={beetles}
-                      leafbeetles={leafbeetles}
-                      hostPlants={hostPlants}
-                    />
-                  }
-                />
-                <Route
-                  path="/butterfly/:butterflySlug"
-                  element={
-                    <MothDetail
-                      moths={moths}
-                      butterflies={butterflies}
-                      beetles={beetles}
-                      leafbeetles={leafbeetles}
-                      hostPlants={hostPlants}
-                    />
-                  }
-                />
-                <Route
-                  path="/beetle/:beetleSlug"
-                  element={
-                    <MothDetail
-                      moths={moths}
-                      butterflies={butterflies}
-                      beetles={beetles}
-                      leafbeetles={leafbeetles}
-                      hostPlants={hostPlants}
-                    />
-                  }
-                />
-                <Route
-                  path="/leafbeetle/:leafbeetleSlug"
-                  element={
-                    <MothDetail
-                      moths={moths}
-                      butterflies={butterflies}
-                      beetles={beetles}
-                      leafbeetles={leafbeetles}
-                      hostPlants={hostPlants}
-                    />
-                  }
-                />
-                <Route
-                  path="/plant/:plantName"
-                  element={
-                    <HostPlantDetail
-                      moths={moths}
-                      butterflies={butterflies}
-                      beetles={beetles}
-                      leafbeetles={leafbeetles}
-                      hostPlants={hostPlants}
-                      plantDetails={plantDetails}
-                    />
-                  }
-                />
-              </Routes>
-            </React.Suspense>
-          )}
-        </>
+          {/* 昆虫一覧専用ルート（検索共有用） */}
+          <Route
+            path="/moth"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <InsectsHostPlantExplorer
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                    plantDetails={plantDetails}
+                    theme={theme}
+                    setTheme={setTheme}
+                    summaryCounts={summaryCounts}
+                    initialTab="insects"
+                    onNeedInsectsData={() => {
+                      try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
+                    }}
+                    onNeedPlantsData={() => {
+                      try { requestHostHydrationRef.current && requestHostHydrationRef.current(); } catch {}
+                    }}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+
+          {/* 植物一覧専用ルート（検索共有用） */}
+          <Route
+            path="/plant"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <InsectsHostPlantExplorer
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                    plantDetails={plantDetails}
+                    theme={theme}
+                    setTheme={setTheme}
+                    summaryCounts={summaryCounts}
+                    initialTab="plants"
+                    onNeedInsectsData={() => {
+                      try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
+                    }}
+                    onNeedPlantsData={() => {
+                      try { requestHostHydrationRef.current && requestHostHydrationRef.current(); } catch {}
+                    }}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+
+          {/* 詳細ページ群 */}
+          <Route
+            path="/moth/:mothSlug"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <MothDetail
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+          <Route
+            path="/butterfly/:butterflySlug"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <MothDetail
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+          <Route
+            path="/beetle/:beetleSlug"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <MothDetail
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+          <Route
+            path="/leafbeetle/:leafbeetleSlug"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <MothDetail
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+          <Route
+            path="/plant/:plantName"
+            element={
+              <ChunkErrorBoundary>
+                <React.Suspense fallback={<SkeletonLoader />}>
+                  <HostPlantDetail
+                    moths={moths}
+                    butterflies={butterflies}
+                    beetles={beetles}
+                    leafbeetles={leafbeetles}
+                    hostPlants={hostPlants}
+                    plantDetails={plantDetails}
+                  />
+                </React.Suspense>
+              </ChunkErrorBoundary>
+            }
+          />
+          <Route path="*" element={<SkeletonLoader />} />
+        </Routes>
       )}
         <FloatingActionButton />
       <Footer />
