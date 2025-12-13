@@ -161,7 +161,10 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }
   
   const imageFolder = 'insects';
-  const imageUrl = `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}${imageExtension}${cacheBustRef.current}`;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const imageUrl = `${normalizedBase}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}${imageExtension}${cacheBustRef.current}`;
+  const responsivePreloadUrl = `${normalizedBase}images/resized/${imageFolder}/${encodeURIComponent(finalImageFilename)}.640.jpg${cacheBustRef.current}`;
   
   // Check if we have an actual match (passed filename implies existence)
   const hasImageFilename = !!finalImageFilename;
@@ -170,11 +173,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   // Preload priority images with better performance
   useEffect(() => {
     if (isPriority && hasImageFilename) {
+      const preloadHref = responsivePreloadUrl || imageUrl;
       // Create link preload for priority images
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
-      link.href = imageUrl;
+      link.href = preloadHref;
       link.fetchPriority = 'high';
       document.head.appendChild(link);
       
@@ -182,13 +186,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       const img = new Image();
       img.decoding = 'async';
       img.fetchPriority = 'high';
-      img.src = imageUrl;
+      img.src = preloadHref;
       
       return () => {
         document.head.removeChild(link);
       };
     }
-  }, [isPriority, hasImageFilename, imageUrl]);
+  }, [isPriority, hasImageFilename, responsivePreloadUrl, imageUrl]);
   
   // Error boundary for individual moth items
   if (!moth) {

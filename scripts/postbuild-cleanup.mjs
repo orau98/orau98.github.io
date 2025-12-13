@@ -34,6 +34,18 @@ const syncPlantImages = () => {
   }
 };
 
+const ensureSpa404 = () => {
+  try {
+    const indexPath = path.join('dist', 'index.html');
+    const targetPath = path.join('dist', '404.html');
+    if (!fs.existsSync(indexPath)) return;
+    fs.copyFileSync(indexPath, targetPath);
+    console.log('[postbuild] Synced SPA 404.html from index.html (no redirect hop).');
+  } catch (error) {
+    console.warn('[postbuild] Failed to sync SPA 404:', error?.message || error);
+  }
+};
+
 for (const p of targets) {
   try {
     if (fs.existsSync(p)) {
@@ -52,3 +64,4 @@ for (const p of targets) {
 }
 
 syncPlantImages();
+ensureSpa404();

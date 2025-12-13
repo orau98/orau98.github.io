@@ -12,6 +12,7 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
 import { createSafeInsectFilename } from './utils/image';
+import { buildResponsiveSrcset } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
@@ -322,7 +323,22 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
     (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(filename))
   );
   const ext = (imageExtensions && imageExtensions[filename]) || '.jpg';
-  const imgSrc = `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(filename)}${ext}`;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';
+  const responsive = filename
+    ? buildResponsiveSrcset({
+        folder: 'insects',
+        filename,
+        ext,
+        widths: [320, 640, 1024],
+        sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
+      })
+    : {};
+  const resizedSrc = filename
+    ? `${normalizedBase}images/resized/insects/${encodeURIComponent(filename)}.640.jpg${assetVer}`
+    : '';
+  const imgSrc = resizedSrc || responsive.src || `${normalizedBase}images/insects/${encodeURIComponent(filename)}${ext}`;
   const href = insect.path || '#';
   const name = insect.name || insect.japaneseName || '（名称不明）';
   
@@ -344,11 +360,24 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
           <div className="relative h-full w-full">
             <img
               src={imgSrc}
+              srcSet={responsive.srcSet}
+              sizes={responsive.sizes}
               alt={name}
               width="1200"
               height="900"
               className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
-              onError={() => setImgError(true)}
+              onError={(e) => {
+                const triedOriginal = e.currentTarget.dataset?.orig === '1';
+                if (!triedOriginal && filename) {
+                  // One fallback to original画像（重いが確実）
+                  e.currentTarget.dataset.orig = '1';
+                  e.currentTarget.srcset = '';
+                  e.currentTarget.sizes = '';
+                  e.currentTarget.src = `${normalizedBase}images/insects/${encodeURIComponent(filename)}${ext}${assetVer}`;
+                  return;
+                }
+                setImgError(true);
+              }}
               loading="lazy"
               decoding="async"
             />
