@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef, useId } from "react";
 import { useSearchParams } from "react-router-dom";
 import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
@@ -83,7 +83,7 @@ const HostPlantListItem = React.memo(
     }, [imageFilename]);
 
     return (
-      <li className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
+      <article className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
         <Link to={`/plant/${encodeURIComponent(plant)}`} className="block">
           <div className="flex flex-col h-full">
             {/* Enhanced Plant Image/Icon section */}
@@ -252,7 +252,7 @@ const HostPlantListItem = React.memo(
             </div>
           </div>
         </Link>
-      </li>
+      </article>
     );
   },
 );
@@ -306,6 +306,9 @@ const HostPlantList = ({
   const [familyFilter, setFamilyFilter] = useState("");
   const [orderFilter, setOrderFilter] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const filterIdBase = useId();
+  const orderFilterId = `${filterIdBase}-order`;
+  const familyFilterId = `${filterIdBase}-family`;
 
   // Load plant image filenames on component mount
   useEffect(() => {
@@ -737,9 +740,10 @@ const HostPlantList = ({
           }`}
         >
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">目 (Order)</label>
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={orderFilterId}>目 (Order)</label>
             <div className="relative">
               <select
+                id={orderFilterId}
                 value={orderFilter}
                 onChange={(e) => setOrderFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
@@ -758,9 +762,10 @@ const HostPlantList = ({
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">科 (Family)</label>
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>科 (Family)</label>
             <div className="relative">
               <select
+                id={familyFilterId}
                 value={familyFilter}
                 onChange={(e) => setFamilyFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"

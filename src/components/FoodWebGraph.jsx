@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
+import { buildInsectPath } from '../utils/insectSlug';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
@@ -211,8 +212,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const handleNodeClick = useCallback((node) => {
     if (!node) return;
     if (node.type.startsWith('insect') && node.raw) {
-      const type = node.raw.type || 'moth';
-      navigate(`/${type}/${node.raw.id}`);
+      const path = node.raw.path || buildInsectPath(node.raw);
+      navigate(path);
     } else if (node.type.startsWith('plant')) {
       navigate(`/plant/${encodeURIComponent(node.name)}`);
     } else if (fgRef.current) {

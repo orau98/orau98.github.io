@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
@@ -201,7 +201,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   
   try {
     return (
-      <li ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
+      <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
             <Link 
         to={route} 
         className="block"
@@ -418,16 +418,16 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           </div>
         </div>
       </Link>
-    </li>
+    </article>
     );
   } catch (error) {
     logger.error('Error rendering MothListItem:', error, moth);
     return (
-      <li className="group relative overflow-hidden rounded-xl bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border-2 border-red-200 dark:border-red-600 p-4">
+      <article className="group relative overflow-hidden rounded-xl bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border-2 border-red-200 dark:border-red-600 p-4">
         <div className="text-red-600 dark:text-red-400 text-sm">
           表示エラーが発生しました: {moth?.name || '不明な昆虫'}
         </div>
-      </li>
+      </article>
     );
   }
 });
@@ -524,6 +524,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, []);
   
   const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
+  const filterIdBase = useId();
+  const hostFilterId = `${filterIdBase}-host`;
+  const familyFilterId = `${filterIdBase}-family`;
+  const genusFilterId = `${filterIdBase}-genus`;
+  const emergenceFilterId = `${filterIdBase}-emergence`;
 
   const classificationFilter = searchParams.get('classification');
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
@@ -1141,9 +1146,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           }`}
         >
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">食草の有無</label>
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>食草の有無</label>
             <div className="relative">
               <select
+                id={hostFilterId}
                 value={hostFilter}
                 onChange={(e) => setHostFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -1161,9 +1167,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">科 (Family)</label>
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>科 (Family)</label>
             <div className="relative">
               <select
+                id={familyFilterId}
                 value={familyFilter}
                 onChange={(e) => setFamilyFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -1182,9 +1189,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">属 (Genus)</label>
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={genusFilterId}>属 (Genus)</label>
             <div className="relative">
               <select
+                id={genusFilterId}
                 value={genusFilter}
                 onChange={(e) => setGenusFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -1203,9 +1211,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1">出現期</label>
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>出現期</label>
             <div className="relative">
               <select
+                id={emergenceFilterId}
                 value={emergenceFilter}
                 onChange={(e) => setEmergenceFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"

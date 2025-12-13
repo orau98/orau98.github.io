@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
+import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
 
 const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const location = useLocation();
@@ -18,12 +19,21 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
     const m = t.replace(/\s+/g, '').match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
     return m ? `${m[1]} ${m[2]}${m[3] || ''}`.trim() : t;
   };
+  const findBySlugOrId = (list = [], slugOrId) => {
+    if (!slugOrId) return null;
+    const decoded = decodeSlug(slugOrId);
+    const normalizedSlug = slugifyInsectName(decoded);
+    return (
+      list.find((m) => slugifyInsectName(m.name) === normalizedSlug) ||
+      list.find((m) => m.id === decoded || m.id === slugOrId)
+    );
+  };
+
   const getCurrentSpeciesInfo = () => {
     const pathParts = location.pathname.split('/');
     
     if (pathParts[1] === 'moth' && pathParts[2]) {
-      const mothId = pathParts[2];
-      const moth = moths.find(m => m.id === mothId);
+      const moth = findBySlugOrId(moths, pathParts[2]);
       if (moth) {
         return {
           type: 'moth',
@@ -33,8 +43,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
         };
       }
     } else if (pathParts[1] === 'butterfly' && pathParts[2]) {
-      const butterflyId = pathParts[2];
-      const butterfly = butterflies.find(b => b.id === butterflyId);
+      const butterfly = findBySlugOrId(butterflies, pathParts[2]);
       if (butterfly) {
         return {
           type: 'butterfly',
@@ -44,8 +53,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
         };
       }
     } else if (pathParts[1] === 'beetle' && pathParts[2]) {
-      const beetleId = pathParts[2];
-      const beetle = beetles.find(b => b.id === beetleId);
+      const beetle = findBySlugOrId(beetles, pathParts[2]);
       if (beetle) {
         return {
           type: 'beetle',
@@ -55,8 +63,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
         };
       }
     } else if (pathParts[1] === 'leafbeetle' && pathParts[2]) {
-      const leafbeetleId = pathParts[2];
-      const leafbeetle = leafbeetles.find(l => l.id === leafbeetleId);
+      const leafbeetle = findBySlugOrId(leafbeetles, pathParts[2]);
       if (leafbeetle) {
         return {
           type: 'leafbeetle',

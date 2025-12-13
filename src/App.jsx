@@ -6085,9 +6085,10 @@ function App() {
         />
       )}
 
-      {loading ? (
-        <SkeletonLoader />
-      ) : (
+      <main id="main-content" role="main">
+        {loading ? (
+          <SkeletonLoader />
+        ) : (
         <Routes>
           {/* 一覧ビュー（トップ/昆虫/植物タブ付き） */}
           <Route
@@ -6261,6 +6262,7 @@ function App() {
           <Route path="*" element={<SkeletonLoader />} />
         </Routes>
       )}
+      </main>
         <FloatingActionButton />
       <Footer />
     </div>
