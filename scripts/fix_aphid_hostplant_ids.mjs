@@ -536,6 +536,17 @@ const resolveInsectIdForAtlasEntry = (atlasEntry, aphidIndex) => {
     if (!hit || hit.size === 0) continue;
     if (hit.size === 1) return { id: Array.from(hit)[0], reason: 'ok' };
 
+    // When matching a binomial ("Genus species") but multiple subspecies exist, prefer the
+    // species-level row (subspecies empty) to avoid false ambiguity.
+    const tokenCount = k.split(/\s+/).filter(Boolean).length;
+    if (tokenCount === 2) {
+      const preferred = Array.from(hit).filter((candidateId) => {
+        const row = byId.get(candidateId);
+        return cleanString(row?.subspecies) === '';
+      });
+      if (preferred.length === 1) return { id: preferred[0], reason: 'ok (preferred species-level record)' };
+    }
+
     // Disambiguate by Japanese name when possible
     if (jp) {
       const matches = Array.from(hit).filter((candidateId) => {
