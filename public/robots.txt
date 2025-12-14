@@ -1,5 +1,5 @@
 User-agent: *
-Disallow:
 Disallow: /check_site.html
 
 Sitemap: https://orau98.github.io/sitemap.xml
+Sitemap: https://orau98.github.io/sitemap-test.xml

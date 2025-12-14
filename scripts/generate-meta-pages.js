@@ -1088,6 +1088,39 @@ async function generateMetaPages() {
 
     // 正規化された3つのCSVファイルを読み込み
     const insectsData = loadCSV(path.join(__dirname, '../public/insects.csv'));
+    // leafbeetle（ハムシ）は運用上 `hamushi_integrated_master.csv` 側に存在することがあるため、
+    // `public/insects.csv` に含まれない場合は `normalized_data/insects.csv` から不足分を補う。
+    // （SEO向け静的メタページの欠落・リンク切れを防ぐ）
+    try {
+      const hasLeafbeetle =
+        insectsData.some((row) => {
+          const famLatin = (row.family || '').trim();
+          const famJP = (row.family_jp || '').trim();
+          return famJP === 'ハムシ科' || famLatin === 'Chrysomelidae';
+        });
+      if (!hasLeafbeetle) {
+        const normalizedInsectsData = loadCSVOptional(
+          path.join(__dirname, '../normalized_data/insects.csv'),
+        );
+        const existingIds = new Set(insectsData.map((row) => row.insect_id).filter(Boolean));
+        let added = 0;
+        normalizedInsectsData.forEach((row) => {
+          const famLatin = (row.family || '').trim();
+          const famJP = (row.family_jp || '').trim();
+          const isLeafbeetle = famJP === 'ハムシ科' || famLatin === 'Chrysomelidae';
+          const id = (row.insect_id || '').trim();
+          if (!isLeafbeetle || !id || existingIds.has(id)) return;
+          insectsData.push(row);
+          existingIds.add(id);
+          added++;
+        });
+        if (added > 0) {
+          console.log(`[meta] leafbeetle rows added from normalized_data: ${added}`);
+        }
+      }
+    } catch (e) {
+      console.warn('[meta] leafbeetle merge warn:', e?.message || e);
+    }
     const hostplantsData = loadCSV(path.join(__dirname, '../public/hostplants.csv'));
     const generalNotesData = loadCSV(path.join(__dirname, '../public/general_notes.csv'));
     
@@ -1605,6 +1638,7 @@ function generateMetaIndexes() {
   const sections = [
     { dir: 'moth', title: '蛾（メタページ一覧）' },
     { dir: 'butterfly', title: '蝶（メタページ一覧）' },
+    { dir: 'beetle', title: '甲虫（メタページ一覧）' },
     { dir: 'leafbeetle', title: 'ハムシ（メタページ一覧）' },
     { dir: 'plant', title: '植物（メタページ一覧）' }
   ];

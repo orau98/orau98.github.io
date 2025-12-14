@@ -119,7 +119,7 @@ function generateSplitSitemaps() {
     dir: '../public/meta/beetle',
     routePrefix: '/meta/beetle/',
     priority: '0.7',
-    includeIndexInMain: false,
+    includeIndexInMain: true,
   });
   const leafCount = addMetaDirToSitemap({
     key: 'leafbeetle',
@@ -158,8 +158,8 @@ function generateSplitSitemaps() {
   const sitemapFiles = [];
   
   Object.entries(sitemaps).forEach(([name, urls]) => {
+    const filename = name === 'main' ? 'sitemap-main.xml' : `sitemap-${name}.xml`;
     if (urls.length > 0) {
-      const filename = name === 'main' ? 'sitemap-main.xml' : `sitemap-${name}.xml`;
       const xml = generateXML(urls);
 
       // publicディレクトリに保存
@@ -183,6 +183,20 @@ function generateSplitSitemaps() {
       });
 
       console.log(`${filename} 生成完了: ${urls.length} URLs`);
+    } else {
+      // urls が 0 のカテゴリは、古いサイトマップが残って誤解を招かないよう削除する
+      const publicPath = path.join(__dirname, '../public', filename);
+      if (fs.existsSync(publicPath)) {
+        fs.rmSync(publicPath, { force: true });
+        console.log(`${filename} を削除: URLs=0`);
+      }
+      const distPath = path.join(__dirname, '../dist');
+      if (fs.existsSync(distPath)) {
+        const distSitemapPath = path.join(distPath, filename);
+        if (fs.existsSync(distSitemapPath)) {
+          fs.rmSync(distSitemapPath, { force: true });
+        }
+      }
     }
   });
   
