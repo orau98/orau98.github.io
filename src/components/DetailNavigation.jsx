@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { buildInsectPath } from '../utils/insectSlug';
+import { makeDetailLinkState } from '../utils/navState';
 
 // Helper to get previous and next items from a sorted list
 // `items` should be sorted in the desired order (e.g., alphabetical or taxonomic)
@@ -21,6 +22,7 @@ const useNeighborItems = (items, currentItemIdentifier, identifierKey = 'id') =>
 // Navigation Link Component
 const NeighborLink = ({ item, direction, type = 'insect' }) => {
   if (!item) return <div className="flex-1" />; // Placeholder for alignment
+  const location = useLocation();
 
   const getRoute = (item, type) => {
     if (type === 'plant') return `/plant/${encodeURIComponent(item.name)}`;
@@ -33,6 +35,7 @@ const NeighborLink = ({ item, direction, type = 'insect' }) => {
   return (
     <Link
       to={route}
+      state={makeDetailLinkState(location)}
       className={`flex-1 flex items-center ${isPrev ? 'justify-start' : 'justify-end'} group p-4 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md`}
     >
       {isPrev && (

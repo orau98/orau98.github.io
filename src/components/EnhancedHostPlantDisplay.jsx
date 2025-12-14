@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import logger from '../utils/logger';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getSourceLink, normalizeReference } from '../utils/sourceLinks';
+import { makeDetailLinkState } from '../utils/navState';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -179,6 +180,7 @@ const groupPlantsByName = (plants) => {
  * 個別食草情報の詳細表示コンポーネント（統合版）
  */
 const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
+  const location = useLocation();
   // 最優先の観察タイプを決定（野外（国内）を最優先）
   const primaryRecord = plantGroup.records.reduce((prev, current) => {
     const prevPriority = getObservationTypePriority(prev.observationType);
@@ -266,6 +268,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <Link
             to={`/plant/${encodeURIComponent(plantGroup.name)}`}
+            state={makeDetailLinkState(location)}
             className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
             title={`${displayPlantName} の詳細へ`}
           >

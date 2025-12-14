@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
@@ -13,11 +13,13 @@ import { buildResponsiveSrcset } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
+import { makeDetailLinkState } from '../utils/navState';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
 
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, currentPage = 1 }) => {
+  const location = useLocation();
   // Heuristic: insert a space between genus and species if missing
   const repairScientificBinomial = (name) => {
     if (!name || typeof name !== 'string') return name;
@@ -204,11 +206,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
             <Link 
         to={route} 
+        state={makeDetailLinkState(location, { setFromList: true })}
         className="block"
         onClick={() => {
           // Save scroll position before navigation
           sessionStorage.setItem('mothListScrollPosition', window.scrollY.toString());
-          sessionStorage.setItem('mothListPage', currentPage.toString());
         }}
       >
         <div className="flex flex-col h-full">
@@ -456,12 +458,72 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/'
   });
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hostFilter, setHostFilter] = useState("all"); // all | has | none
-  const [familyFilter, setFamilyFilter] = useState("");
-  const [genusFilter, setGenusFilter] = useState("");
-  const [emergenceFilter, setEmergenceFilter] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const updateSearchParams = useCallback((mutate) => {
+    const next = new URLSearchParams(searchParams);
+    try {
+      mutate(next);
+    } catch {}
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  const currentPage = useMemo(() => {
+    const raw = searchParams.get('ipage');
+    const n = parseInt(raw || '', 10);
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  }, [searchParams]);
+
+  const hostFilter = useMemo(() => {
+    const v = (searchParams.get('ihost') || '').toLowerCase();
+    return v === 'has' || v === 'none' ? v : 'all';
+  }, [searchParams]);
+  const familyFilter = useMemo(() => searchParams.get('ifamily') || '', [searchParams]);
+  const genusFilter = useMemo(() => searchParams.get('igenus') || '', [searchParams]);
+  const emergenceFilter = useMemo(() => searchParams.get('imonth') || '', [searchParams]);
+
+  const setIPage = useCallback((page) => {
+    updateSearchParams((p) => {
+      const n = parseInt(page, 10);
+      if (Number.isFinite(n) && n > 1) p.set('ipage', String(n));
+      else p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setIHostFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').toLowerCase();
+      if (v === 'has' || v === 'none') p.set('ihost', v);
+      else p.delete('ihost');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setIFamilyFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (v) p.set('ifamily', v);
+      else p.delete('ifamily');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setIGenusFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (v) p.set('igenus', v);
+      else p.delete('igenus');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setIEmergenceFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (v) p.set('imonth', v);
+      else p.delete('imonth');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
 
   // Debug log
   useEffect(() => {
@@ -537,20 +599,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   // Restore scroll position and page when returning from detail page
   useEffect(() => {
     const savedPosition = sessionStorage.getItem('mothListScrollPosition');
-    const savedPage = sessionStorage.getItem('mothListPage');
-    
-    if (savedPosition && savedPage) {
-      // Restore the page
-      const pageNum = parseInt(savedPage, 10);
-      if (!isNaN(pageNum) && pageNum > 0) {
-        setCurrentPage(pageNum);
-      }
-      
+    if (savedPosition) {
       // Restore scroll position after a small delay to ensure content is rendered
       setTimeout(() => {
         window.scrollTo(0, parseInt(savedPosition, 10));
         // Clear the saved position after restoring
         sessionStorage.removeItem('mothListScrollPosition');
+        // Cleanup legacy key (page is now in URL)
         sessionStorage.removeItem('mothListPage');
       }, 100);
     }
@@ -1031,7 +1086,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [sortedMoths, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    setIPage(page);
   };
 
   // Add rel=prev/next for crawlers (hint)
@@ -1039,12 +1094,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     try {
       document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(n => n.remove());
       const url = new URL(window.location.href);
-      url.searchParams.delete('page');
+      url.searchParams.delete('ipage');
       if (currentPage > 1) {
         const prev = document.createElement('link');
         prev.rel = 'prev';
         const prevUrl = new URL(url.href);
-        prevUrl.searchParams.set('page', String(currentPage - 1));
+        const prevPage = currentPage - 1;
+        if (prevPage > 1) prevUrl.searchParams.set('ipage', String(prevPage));
         prev.href = prevUrl.toString();
         document.head.appendChild(prev);
       }
@@ -1052,7 +1108,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         const next = document.createElement('link');
         next.rel = 'next';
         const nextUrl = new URL(url.href);
-        nextUrl.searchParams.set('page', String(currentPage + 1));
+        nextUrl.searchParams.set('ipage', String(currentPage + 1));
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
@@ -1062,29 +1118,33 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [currentPage, totalPages]);
 
   React.useEffect(() => {
-    setCurrentPage(1);
-  }, [debouncedSearchTerm, hostFilter, familyFilter, genusFilter, emergenceFilter]);
+    if (currentPage === 1) return;
+    setIPage(1);
+  }, [debouncedSearchTerm, hostFilter, familyFilter, genusFilter, emergenceFilter, currentPage, setIPage]);
 
   const renderFilters = () => {
     const activeFilters = [];
     const clearClassification = () => {
-      const p = new URLSearchParams(searchParams);
-      p.delete('classification');
-      setSearchParams(p, { replace: true });
+      updateSearchParams((p) => {
+        p.delete('classification');
+        p.delete('ipage');
+      });
     };
 
-    if (hostFilter !== 'all') activeFilters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setHostFilter('all') });
-    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setFamilyFilter('') });
-    if (genusFilter) activeFilters.push({ type: '属', value: genusFilter, clear: () => setGenusFilter('') });
-    if (emergenceFilter) activeFilters.push({ type: '出現期', value: emergenceFilter, clear: () => setEmergenceFilter('') });
+    if (hostFilter !== 'all') activeFilters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setIHostFilter('all') });
+    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setIFamilyFilter('') });
+    if (genusFilter) activeFilters.push({ type: '属', value: genusFilter, clear: () => setIGenusFilter('') });
+    if (emergenceFilter) activeFilters.push({ type: '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
     if (classificationFilter) activeFilters.push({ type: '分類', value: classificationFilter, clear: clearClassification });
 
     const hasActiveFilters = activeFilters.length > 0;
 
     return (
       <div className="mt-4">
-        {/* Active Filters & Toggle */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="sticky top-20 z-40">
+          <div className="rounded-xl bg-white/85 dark:bg-slate-900/70 backdrop-blur border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 shadow-sm">
+            {/* Active Filters & Toggle */}
+            <div className="flex flex-wrap items-center gap-3">
           {/* Toggle Button - Moved to start */}
           <button 
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
@@ -1125,17 +1185,22 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             {hasActiveFilters && (
               <button 
                 onClick={() => {
-                  setHostFilter('all');
-                  setFamilyFilter('');
-                  setGenusFilter('');
-                  setEmergenceFilter('');
-                  clearClassification();
+                  updateSearchParams((p) => {
+                    p.delete('ihost');
+                    p.delete('ifamily');
+                    p.delete('igenus');
+                    p.delete('imonth');
+                    p.delete('classification');
+                    p.delete('ipage');
+                  });
                 }}
                 className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
               >
                 すべてクリア
               </button>
             )}
+          </div>
+            </div>
           </div>
         </div>
 
@@ -1151,7 +1216,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               <select
                 id={hostFilterId}
                 value={hostFilter}
-                onChange={(e) => setHostFilter(e.target.value)}
+                onChange={(e) => setIHostFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               >
                 <option value="all">すべて</option>
@@ -1172,7 +1237,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               <select
                 id={familyFilterId}
                 value={familyFilter}
-                onChange={(e) => setFamilyFilter(e.target.value)}
+                onChange={(e) => setIFamilyFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               >
                 <option value="">指定なし</option>
@@ -1194,7 +1259,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               <select
                 id={genusFilterId}
                 value={genusFilter}
-                onChange={(e) => setGenusFilter(e.target.value)}
+                onChange={(e) => setIGenusFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               >
                 <option value="">指定なし</option>
@@ -1216,7 +1281,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               <select
                 id={emergenceFilterId}
                 value={emergenceFilter}
-                onChange={(e) => setEmergenceFilter(e.target.value)}
+                onChange={(e) => setIEmergenceFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               >
                 <option value="">指定なし</option>

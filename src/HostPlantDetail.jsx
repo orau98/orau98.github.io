@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Papa from 'papaparse';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
@@ -16,6 +16,7 @@ import { buildResponsiveSrcset } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
+import { getBackTarget, makeDetailLinkState } from './utils/navState';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 // import { RelatedPlants } from './components/RelatedLinks';
 
@@ -289,6 +290,7 @@ const PlantImageGallery = ({ images }) => {
 // カードコンポーネント（昆虫詳細ページのデザインに近い表現）
 const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions = {} }) => {
   const [imgError, setImgError] = React.useState(false);
+  const location = useLocation();
   // Resolve the best image basename for this insect
   const resolveImageBase = () => {
     const nameJp = (insect.name || insect.japaneseName || '').trim();
@@ -341,6 +343,7 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   const imgSrc = resizedSrc || responsive.src || `${normalizedBase}images/insects/${encodeURIComponent(filename)}${ext}`;
   const href = insect.path || '#';
   const name = insect.name || insect.japaneseName || '（名称不明）';
+  const linkState = href && href !== '#' ? makeDetailLinkState(location) : undefined;
   
   // Extract emergence time with better fallback for different insect types
   const getEmergenceSource = (i) => {
@@ -354,7 +357,7 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   const normalizedTime = normalizeEmergenceTime(emergenceTime);
 
   return (
-    <Link to={href} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
+    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
@@ -516,6 +519,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   const [canonicalName, setCanonicalName] = useState('');
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
 
   const displayLatin = resolvedPlantDetail ? (resolvedCanonicalName || decodedPlantName) : repairLatinBinomial(decodedPlantName);
@@ -880,7 +884,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           setAliasNames(aliases);
           // If the URL contained stray characters or an alias, redirect to canonical clean URL
           if ((rawDecodedPlantName && rawDecodedPlantName !== target) || (canonical && canonical !== target)) {
-            navigate(`/plant/${encodeURIComponent(canonical || target)}`, { replace: true });
+            navigate(`/plant/${encodeURIComponent(canonical || target)}`, { replace: true, state: location.state });
           }
           return true;
         }
@@ -1143,7 +1147,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
           // もし別名で到達していたら正規の和名へリダイレクト（URL統一）
           if (canonical && canonical !== decodedPlantName && !/科$/.test(target) && !/目$/.test(target)) {
-            navigate(`/plant/${encodeURIComponent(canonical)}`, { replace: true });
+            navigate(`/plant/${encodeURIComponent(canonical)}`, { replace: true, state: location.state });
           }
         }
       };
@@ -1191,7 +1195,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       {/* Top row: back link + classification chips (unified with insect detail) */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
         <Link 
-          to="/" 
+          to={getBackTarget(location, '/plant')}
+          state={makeDetailLinkState(location)}
           className="inline-flex items-center px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-xl hover:bg-white/90 dark:hover:bg-slate-800/90 transition-all duration-200 shadow-sm hover:shadow-md text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1281,7 +1286,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                   <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">{group.family}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     {group.members.map(name => (
-                      <Link key={group.family + ':' + name} to={`/plant/${encodeURIComponent(name)}`} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                      <Link key={group.family + ':' + name} to={`/plant/${encodeURIComponent(name)}`} state={makeDetailLinkState(location)} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
                         <span className="truncate">{name}</span>
                       </Link>
                     ))}
@@ -1293,7 +1298,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {(showAllMembers ? classificationMembers : classificationMembers.slice(0, 48)).map((name) => (
-                  <Link key={name} to={`/plant/${encodeURIComponent(name)}`} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                  <Link key={name} to={`/plant/${encodeURIComponent(name)}`} state={makeDetailLinkState(location)} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
                     <span className="truncate">{name}</span>
                   </Link>
                 ))}

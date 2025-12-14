@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef, useId } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
 import { absUrl } from "../utils/origin";
-import { Link } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
 import { createSafePlantFilename, splitFilenameBase } from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
+import { makeDetailLinkState } from "../utils/navState";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -29,6 +29,7 @@ const HostPlantListItem = React.memo(
     plantDetails = {},
     imageFilename,
   }) => {
+    const location = useLocation();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
 
@@ -61,7 +62,11 @@ const HostPlantListItem = React.memo(
 
     return (
       <article className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
-        <Link to={`/plant/${encodeURIComponent(plant)}`} className="block">
+        <Link
+          to={`/plant/${encodeURIComponent(plant)}`}
+          state={makeDetailLinkState(location, { setFromList: true })}
+          className="block"
+        >
           <div className="flex flex-col h-full">
             {/* Enhanced Plant Image/Icon section */}
             <div className="w-full relative overflow-hidden rounded-t-[10px] -mx-[2px] -mt-[2px]">
@@ -288,15 +293,55 @@ const HostPlantList = ({
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
-  const [currentPage, setCurrentPage] = useState(1);
   const [plantImageFilenames, setPlantImageFilenames] = useState(
     preloadedImageFilenames,
   );
   
   // State for filters
-  const [familyFilter, setFamilyFilter] = useState("");
-  const [orderFilter, setOrderFilter] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const updateSearchParams = useCallback((mutate) => {
+    const next = new URLSearchParams(searchParams);
+    try {
+      mutate(next);
+    } catch {}
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  const currentPage = useMemo(() => {
+    const raw = searchParams.get('ppage');
+    const n = parseInt(raw || '', 10);
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  }, [searchParams]);
+
+  const familyFilter = useMemo(() => searchParams.get('pfamily') || '', [searchParams]);
+  const orderFilter = useMemo(() => searchParams.get('porder') || '', [searchParams]);
+
+  const setPPage = useCallback((page) => {
+    updateSearchParams((p) => {
+      const n = parseInt(page, 10);
+      if (Number.isFinite(n) && n > 1) p.set('ppage', String(n));
+      else p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const setPFamilyFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (v) p.set('pfamily', v);
+      else p.delete('pfamily');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const setPOrderFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (v) p.set('porder', v);
+      else p.delete('porder');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
   const filterIdBase = useId();
   const orderFilterId = `${filterIdBase}-order`;
   const familyFilterId = `${filterIdBase}-family`;
@@ -322,22 +367,14 @@ const HostPlantList = ({
     const onResize = () => {
       const next = computeItemsPerPage();
       setItemsPerPage((prev) => (prev === next ? prev : next));
-      setCurrentPage(1);
+      setPPage(1);
     };
     window.addEventListener("resize", onResize);
     onResize();
     return () => window.removeEventListener("resize", onResize);
-  }, [computeItemsPerPage]);
+  }, [computeItemsPerPage, setPPage]);
 
   const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
-  const [searchParams] = useSearchParams();
-  const classificationFilter = searchParams.get("classification");
-
-  // Initialize filters from URL parameters if needed
-  // Currently, classificationFilter is treated as search term in original implementation
-  // but could be used for family filter if it matches a family name.
-  // For simplicity, we'll stick to the search term logic for now, 
-  // but we could enhance it later.
 
   // （メタは useSeoMeta に移行）
 
@@ -655,24 +692,27 @@ const HostPlantList = ({
   }, [filteredHostPlants, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    setPPage(page);
   };
 
   React.useEffect(() => {
-    setCurrentPage(1);
-  }, [debouncedPlantSearch, familyFilter, orderFilter]);
+    if (currentPage === 1) return;
+    setPPage(1);
+  }, [debouncedPlantSearch, familyFilter, orderFilter, currentPage, setPPage]);
 
   const renderFilters = () => {
     const activeFilters = [];
-    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setFamilyFilter('') });
-    if (orderFilter) activeFilters.push({ type: '目', value: orderFilter, clear: () => setOrderFilter('') });
+    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setPFamilyFilter('') });
+    if (orderFilter) activeFilters.push({ type: '目', value: orderFilter, clear: () => setPOrderFilter('') });
 
     const hasActiveFilters = activeFilters.length > 0;
 
     return (
       <div className="mt-4">
-        {/* Active Filters & Toggle */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="sticky top-20 z-40">
+          <div className="rounded-xl bg-white/85 dark:bg-slate-900/70 backdrop-blur border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 shadow-sm">
+            {/* Active Filters & Toggle */}
+            <div className="flex flex-wrap items-center gap-3">
           {/* Toggle Button */}
           <button 
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
@@ -713,14 +753,19 @@ const HostPlantList = ({
             {hasActiveFilters && (
               <button 
                 onClick={() => {
-                  setFamilyFilter('');
-                  setOrderFilter('');
+                  updateSearchParams((p) => {
+                    p.delete('pfamily');
+                    p.delete('porder');
+                    p.delete('ppage');
+                  });
                 }}
                 className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
               >
                 すべてクリア
               </button>
             )}
+          </div>
+            </div>
           </div>
         </div>
 
@@ -736,7 +781,7 @@ const HostPlantList = ({
               <select
                 id={orderFilterId}
                 value={orderFilter}
-                onChange={(e) => setOrderFilter(e.target.value)}
+                onChange={(e) => setPOrderFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
               >
                 <option value="">指定なし</option>
@@ -758,7 +803,7 @@ const HostPlantList = ({
               <select
                 id={familyFilterId}
                 value={familyFilter}
-                onChange={(e) => setFamilyFilter(e.target.value)}
+                onChange={(e) => setPFamilyFilter(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
               >
                 <option value="">指定なし</option>

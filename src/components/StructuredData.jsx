@@ -119,7 +119,7 @@ export const MothStructuredData = ({ moth }) => {
       {
         "@type": "ListItem", 
         "position": 2,
-        "name": "蛾",
+        "name": "昆虫",
         "item": absUrl('/moth')
       },
       {
@@ -255,8 +255,8 @@ export const ButterflyStructuredData = ({ butterfly }) => {
       {
         "@type": "ListItem", 
         "position": 2,
-        "name": "蝶",
-        "item": absUrl('/butterfly')
+        "name": "昆虫",
+        "item": absUrl('/moth')
       },
       {
         "@type": "ListItem",
@@ -391,8 +391,8 @@ export const BeetleStructuredData = ({ beetle }) => {
       {
         "@type": "ListItem", 
         "position": 2,
-        "name": "タマムシ",
-        "item": absUrl('/beetle')
+        "name": "昆虫",
+        "item": absUrl('/moth')
       },
       {
         "@type": "ListItem",
@@ -546,8 +546,8 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
       {
         "@type": "ListItem", 
         "position": 2,
-        "name": "ハムシ",
-        "item": absUrl('/leafbeetle')
+        "name": "昆虫",
+        "item": absUrl('/moth')
       },
       {
         "@type": "ListItem",

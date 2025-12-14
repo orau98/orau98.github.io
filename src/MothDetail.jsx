@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import logger from './utils/logger';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
@@ -20,6 +20,7 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
+import { getBackTarget, makeDetailLinkState } from './utils/navState';
 // SupportEngagementSection is test-only and not used in SPA detail
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -29,6 +30,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   
   const { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const routeType = mothSlug ? 'moth' : butterflySlug ? 'butterfly' : beetleSlug ? 'beetle' : leafbeetleSlug ? 'leafbeetle' : '';
   const rawRouteParam = mothSlug || butterflySlug || beetleSlug || leafbeetleSlug || '';
   const decodedRouteParam = decodeSlug(rawRouteParam);
@@ -156,9 +158,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     if (!moth || !mothSlug) return;
     const expectedSlug = slugifyInsectName(moth.name);
     if (expectedSlug && mothSlug !== expectedSlug) {
-      navigate(`/moth/${expectedSlug}`, { replace: true });
+      navigate(`/moth/${expectedSlug}`, { replace: true, state: location.state });
     }
-  }, [moth, mothSlug, navigate]);
+  }, [moth, mothSlug, navigate, location.state]);
 
   // Fallback: if no host plants are available (e.g., data-lite initial state),
   // lazily load from normalized CSV (public/hostplants.csv) and synthesize minimal records.
@@ -787,7 +789,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
           <Link 
-            to="/" 
+            to={getBackTarget(location, '/')} 
+            state={makeDetailLinkState(location)}
             className="inline-flex items-center px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-xl hover:bg-white/90 dark:hover:bg-slate-800/90 transition-all duration-200 shadow-sm hover:shadow-md text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

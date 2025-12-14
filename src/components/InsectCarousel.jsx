@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath } from '../utils/insectSlug';
+import { makeDetailLinkState } from '../utils/navState';
 
 const InsectCarousel = ({ insects, title, type = 'default' }) => {
+  const location = useLocation();
   // 画像拡張子マッピングを読み込む（共通サービス）
   const [imageExtensions, setImageExtensions] = useState({});
   useEffect(() => {
@@ -66,6 +68,7 @@ const InsectCarousel = ({ insects, title, type = 'default' }) => {
                 <Link
                   key={insect.id}
                   to={buildInsectPath(insect)}
+                  state={makeDetailLinkState(location)}
                   className="flex-shrink-0 w-48 group"
                 >
                   <div className={`bg-white dark:bg-slate-800 rounded-xl overflow-hidden border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02] ${

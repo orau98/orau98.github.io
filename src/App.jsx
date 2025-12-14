@@ -142,13 +142,27 @@ function App() {
   
   const isDevelopment = import.meta.env.DEV;
   
-  const isHomePage = location.pathname === '/';
+  const isExplorerPage = location.pathname === '/' || location.pathname === '/moth' || location.pathname === '/plant';
 
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
     try {
       const params = new URLSearchParams(location.search);
-      const hasSearch = params.has('q') || params.has('search') || params.has('term') || params.has('classification') || params.has('page');
+      const hasSearch =
+        params.has('q') ||
+        params.has('search') ||
+        params.has('term') ||
+        params.has('classification') ||
+        params.has('page') ||
+        params.has('ipage') ||
+        params.has('ppage') ||
+        params.has('ihost') ||
+        params.has('ifamily') ||
+        params.has('igenus') ||
+        params.has('imonth') ||
+        params.has('pfamily') ||
+        params.has('porder') ||
+        params.has('redirect');
       let robots = document.querySelector('meta[name="robots"]');
       if (!robots) {
         robots = document.createElement('meta');
@@ -6072,10 +6086,10 @@ function App() {
   
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
-      {!isHomePage && (
-        <Header 
-          theme={theme} 
-          setTheme={setTheme} 
+      {!isExplorerPage && (
+        <Header
+          theme={theme}
+          setTheme={setTheme}
           moths={moths}
           butterflies={butterflies}
           beetles={beetles}

@@ -1,9 +1,10 @@
 import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 import { buildInsectPath } from '../utils/insectSlug';
+import { makeDetailLinkState } from '../utils/navState';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
@@ -28,6 +29,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 }) {
   const fgRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const isDark = theme === 'dark';
 
   // image index caches
@@ -215,14 +217,14 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!node) return;
     if (node.type.startsWith('insect') && node.raw) {
       const path = node.raw.path || buildInsectPath(node.raw);
-      navigate(path);
+      navigate(path, { state: makeDetailLinkState(location) });
     } else if (node.type.startsWith('plant')) {
-      navigate(`/plant/${encodeURIComponent(node.name)}`);
+      navigate(`/plant/${encodeURIComponent(node.name)}`, { state: makeDetailLinkState(location) });
     } else if (fgRef.current) {
       fgRef.current.centerAt(node.x, node.y, 600);
       fgRef.current.zoom(2.4, 800);
     }
-  }, [navigate]);
+  }, [navigate, location]);
 
   // draw helper: rounded rect
   const drawRoundedRect = (c, x, y, w, h, r) => {

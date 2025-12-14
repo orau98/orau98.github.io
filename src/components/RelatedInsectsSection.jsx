@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath } from '../utils/insectSlug';
+import { makeDetailLinkState } from '../utils/navState';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
+  const location = useLocation();
   // 各植物の展開状態を管理
   const [expandedPlants, setExpandedPlants] = useState(new Set());
   
@@ -105,6 +107,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                 <div className="flex items-center space-x-2">
                   <Link
                     to={`/plant/${encodeURIComponent(plant)}`}
+                    state={makeDetailLinkState(location)}
                     className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
                   >
                     {plant}
@@ -159,6 +162,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                     <Link
                       key={relatedMoth.id}
                       to={buildInsectPath(relatedMoth)}
+                      state={makeDetailLinkState(location)}
                       className={`insect-card group ${
                         layout.startsWith('grid') ? 'w-full' : 'flex-shrink-0 w-56'
                       }`}
