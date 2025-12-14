@@ -413,11 +413,13 @@ const InsectsHostPlantExplorer = React.memo(
           onSelectSuggestion={handleSelectSuggestion}
           onNeedInsectsData={onNeedInsectsData}
           onNeedPlantsData={onNeedPlantsData}
+          theme={theme}
+          setTheme={setTheme}
         />
         {/* 構造化データ */}
         <MainStructuredData />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] group">
+          <div id="hero-section" className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] group">
             {/* Background Container - Handles clipping for image and gradients */}
             <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
@@ -568,7 +570,7 @@ const InsectsHostPlantExplorer = React.memo(
           {/* 主要カテゴリ導線セクションは不要のため削除 */}
 
           {/* タブナビゲーション */}
-          <div className="bg-gradient-to-br from-white/90 to-white/80 dark:from-slate-800/90 dark:to-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
+          <div id="explorer-results" className="scroll-mt-24 bg-gradient-to-br from-white/90 to-white/80 dark:from-slate-800/90 dark:to-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
             {/* タブヘッダー */}
             <div className="flex border-b-2 border-gradient-to-r from-emerald-200/50 via-blue-200/50 to-emerald-200/50 dark:from-emerald-700/50 dark:via-blue-700/50 dark:to-emerald-700/50">
               <button

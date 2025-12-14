@@ -23,7 +23,7 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 // SupportEngagementSection is test-only and not used in SPA detail
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
-const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants }) => {
+const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, theme }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
   
@@ -756,6 +756,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 width={graphDimensions.width}
                 height={graphDimensions.height}
                 imageExtensions={imageExtensions}
+                theme={theme}
               />
             </React.Suspense>
           )}

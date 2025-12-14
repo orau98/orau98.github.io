@@ -6189,6 +6189,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    theme={theme}
                   />
                 </React.Suspense>
               </ChunkErrorBoundary>
@@ -6205,6 +6206,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    theme={theme}
                   />
                 </React.Suspense>
               </ChunkErrorBoundary>
@@ -6221,6 +6223,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    theme={theme}
                   />
                 </React.Suspense>
               </ChunkErrorBoundary>
@@ -6237,6 +6240,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    theme={theme}
                   />
                 </React.Suspense>
               </ChunkErrorBoundary>
@@ -6254,6 +6258,7 @@ function App() {
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
                     plantDetails={plantDetails}
+                    theme={theme}
                   />
                 </React.Suspense>
               </ChunkErrorBoundary>

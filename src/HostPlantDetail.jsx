@@ -415,7 +415,7 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   );
 };
 
-const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails, theme }) => {
   const { plantName } = useParams();
   const rawDecodedPlantName = decodeURIComponent(plantName);
   const sanitizePlantParam = (s) => {
@@ -1346,6 +1346,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                     hostPlantsMap={hostPlants}
                     width={graphSize.width}
                     height={graphSize.height}
+                    theme={theme}
                   />
                 )}
               </React.Suspense>

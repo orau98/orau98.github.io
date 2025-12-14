@@ -31,55 +31,32 @@ const HostPlantListItem = React.memo(
   }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
-    const [plantImageUrl, setPlantImageUrl] = useState("");
 
     const safePlantName = createSafePlantFilename(plant);
+    const baseUrl = import.meta.env.BASE_URL || "/";
+    const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+    const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : "";
+    const encoded = imageFilename ? encodeURIComponent(imageFilename) : "";
+    const resizedBaseUrl = `${normalizedBase}images/resized/plants/`;
+    const originalBaseUrl = `${normalizedBase}images/plants/`;
+    const resizedSrc = imageFilename
+      ? `${resizedBaseUrl}${encoded}.640.jpg${assetVer}`
+      : "";
+    const resizedSrcSet = imageFilename
+      ? [320, 640, 1024]
+          .map((w) => `${resizedBaseUrl}${encoded}.${w}.jpg${assetVer} ${w}w`)
+          .join(", ")
+      : "";
+    const resizedSizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw";
+    const originalFallbackUrls = imageFilename
+      ? ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG"].map(
+          (ext) => `${originalBaseUrl}${encoded}.${ext}${assetVer}`,
+        )
+      : [];
 
     React.useEffect(() => {
-      if (imageFilename) {
-        const baseUrl = `${import.meta.env.BASE_URL}images/plants/`;
-        // Since imageFilename usually comes without extension from the index logic (or with?),
-        // actually loadPlantImageFilenamesService returns names *without* extension usually?
-        // Let's check imageIndex.js again. It says "array of strings without extension".
-        // So we need to try extensions.
-        
-        const extensions = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG"];
-        const tryExtension = (extensionIndex) => {
-          if (extensionIndex >= extensions.length) {
-            setImageError(true);
-            return;
-          }
-          const ext = extensions[extensionIndex];
-          const encodedName = encodeURIComponent(imageFilename);
-          // Check if imageFilename already has extension
-          const hasExt = /\.(jpg|jpeg|png|gif|webp)$/i.test(imageFilename);
-          const url = hasExt ? `${baseUrl}${encodedName}` : `${baseUrl}${encodedName}.${ext}`;
-          
-          if (hasExt) {
-             setPlantImageUrl(url);
-             setImageLoaded(true);
-             return;
-          }
-
-          const img = new Image();
-          img.onload = () => {
-            setPlantImageUrl(url);
-            setImageLoaded(true);
-          };
-          img.onerror = () => tryExtension(extensionIndex + 1);
-          img.src = url;
-        };
-        
-        // If filename already has an extension (rare but possible), just use it
-        if (/\.(jpg|jpeg|png|gif|webp)$/i.test(imageFilename)) {
-           setPlantImageUrl(`${baseUrl}${encodeURIComponent(imageFilename)}`);
-           setImageLoaded(true);
-        } else {
-           tryExtension(0);
-        }
-      } else {
-        setImageError(true);
-      }
+      setImageLoaded(false);
+      setImageError(false);
     }, [imageFilename]);
 
     return (
@@ -92,17 +69,31 @@ const HostPlantListItem = React.memo(
                 // Actual plant image
                 <div className="relative w-full aspect-[4/3]">
                   <img
-                    src={plantImageUrl}
+                    src={resizedSrc}
+                    srcSet={resizedSrcSet}
+                    sizes={resizedSizes}
                     alt={`${plant}の写真`}
                     width="800"
                     height="600"
+                    data-fallback-idx="0"
                     className={`w-full h-full object-cover transition-opacity duration-500 ${
                       imageLoaded ? "opacity-100" : "opacity-0"
                     }`}
                     loading="lazy"
                     decoding="async"
                     onLoad={() => setImageLoaded(true)}
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                      const imgEl = e.currentTarget;
+                      const idx = Number.parseInt(imgEl.dataset.fallbackIdx || "0", 10);
+                      if (idx < originalFallbackUrls.length) {
+                        imgEl.dataset.fallbackIdx = String(idx + 1);
+                        imgEl.srcset = "";
+                        imgEl.sizes = "";
+                        imgEl.src = originalFallbackUrls[idx];
+                        return;
+                      }
+                      setImageError(true);
+                    }}
                   />
                 </div>
               ) : (
