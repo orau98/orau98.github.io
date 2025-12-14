@@ -406,6 +406,68 @@ const extractKeysFromTextLoose = (text) => {
   return out;
 };
 
+// Prefer modern genera when the atlas uses older genus assignments and the epithet matches.
+// This is only used as a disambiguation hint, not as a global rewrite rule.
+const PREFERRED_GENERA_BY_ATLAS_GENUS = new Map([
+  ['Acyrthosiphon', ['Aulacorthum']],
+  ['Akkaia', ['Betacallis']],
+  ['Cinara', ['Tiliaphis']],
+  ['Eomyzus', ['Ovatus']],
+  ['Eumyzus', ['Megouroleum']],
+  ['Hyalopteroides', ['Longicaudus']],
+  ['Micromyzus', ['Tinocallis']],
+  ['Nipponaphis', ['Neothoracaphis']],
+  ['Phloeomyzus', ['Diphyllaphis']],
+  ['Prociphilus', ['Colophina']],
+  ['Unisitobion', ['Paratinocallis']],
+]);
+
+const isCandidatePreferredForAtlasGenus = (atlasGenus, candidateRow) => {
+  const preferred = PREFERRED_GENERA_BY_ATLAS_GENUS.get(atlasGenus) || [];
+  if (preferred.length === 0) return false;
+  const genus = cleanString(candidateRow?.genus);
+  const subgenus = cleanString(candidateRow?.subgenus);
+  return preferred.includes(genus) || preferred.includes(subgenus);
+};
+
+const isGenusCompatible = (atlasGenus, candidateRow) => {
+  const atlas = cleanString(atlasGenus);
+  if (!atlas) return false;
+  const atlasLower = atlas.toLowerCase();
+  const genus = cleanString(candidateRow?.genus);
+  const subgenus = cleanString(candidateRow?.subgenus);
+  if (genus && genus.toLowerCase() === atlasLower) return true;
+  if (subgenus && subgenus.toLowerCase() === atlasLower) return true;
+  if (isCandidatePreferredForAtlasGenus(atlas, candidateRow)) return true;
+
+  const combined = normalizeSpaces(
+    [candidateRow?.scientific_name, candidateRow?.synonyms, candidateRow?.japanese_name].filter(Boolean).join(' ')
+  ).toLowerCase();
+  return combined.includes(atlasLower);
+};
+
+const disambiguateByHostPlantsInJapaneseName = (candidateIds, byId, hostPlants) => {
+  if (!hostPlants || hostPlants.size === 0) return [];
+  const plants = Array.from(hostPlants)
+    .map((p) => cleanString(p))
+    .filter((p) => p.length >= 2 && p !== '多種の植物');
+  if (plants.length === 0) return [];
+
+  const scored = candidateIds.map((id) => {
+    const row = byId.get(id);
+    const jp = cleanString(row?.japanese_name);
+    let hits = 0;
+    for (const plant of plants) {
+      if (jp && jp.includes(plant)) hits++;
+    }
+    return { id, hits };
+  });
+
+  const maxHits = scored.reduce((m, x) => Math.max(m, x.hits), 0);
+  if (maxHits <= 0) return [];
+  return scored.filter((x) => x.hits === maxHits).map((x) => x.id);
+};
+
 const parseAtlasList = () => {
   const rows = ATLAS_NO_NAME_SCI_RAW.split('\n').map(line => line.trim()).filter(Boolean);
   const byNo = new Map();
@@ -459,11 +521,19 @@ const buildAphidIndex = (insectsRows) => {
 
   // keyLower -> Set(insect_id)
   const index = new Map();
+  // epithetLower -> Set(insect_id) (species-level epithet)
+  const epithetIndex = new Map();
   const add = (key, insectId) => {
     const k = cleanString(key).toLowerCase();
     if (!k) return;
     if (!index.has(k)) index.set(k, new Set());
     index.get(k).add(insectId);
+  };
+  const addEpithet = (epithet, insectId) => {
+    const e = cleanString(epithet).toLowerCase();
+    if (!e || e === 'sp.' || e === 'sp') return;
+    if (!epithetIndex.has(e)) epithetIndex.set(e, new Set());
+    epithetIndex.get(e).add(insectId);
   };
 
   aphids.forEach(r => {
@@ -471,6 +541,7 @@ const buildAphidIndex = (insectsRows) => {
     if (!id) return;
 
     const genus = cleanString(r.genus);
+    const subgenus = cleanString(r.subgenus);
     const species = cleanString(r.species);
     const subspecies = cleanString(r.subspecies);
 
@@ -478,6 +549,13 @@ const buildAphidIndex = (insectsRows) => {
       add([genus, species, subspecies].filter(Boolean).join(' '), id);
       add([genus, species].join(' '), id);
     }
+    if (subgenus && species) {
+      // Some rows store legacy genus as "subgenus" (e.g., Aphis (Toxoptera) aurantii).
+      add([subgenus, species, subspecies].filter(Boolean).join(' '), id);
+      add([subgenus, species].join(' '), id);
+    }
+
+    if (species) addEpithet(species, id);
 
     const sci = cleanString(r.scientific_name);
     const syn = cleanString(r.synonyms);
@@ -499,11 +577,12 @@ const buildAphidIndex = (insectsRows) => {
     extractKeysFromTextLoose(nameJp).forEach(k => add(k, id));
   });
 
-  return { byId, index, aphids };
+  return { byId, index, aphids, epithetIndex };
 };
 
-const resolveInsectIdForAtlasEntry = (atlasEntry, aphidIndex) => {
-  const { byId, index, aphids } = aphidIndex;
+const resolveInsectIdForAtlasEntry = (atlasEntry, aphidIndex, options = {}) => {
+  const { byId, index, aphids, epithetIndex } = aphidIndex;
+  const hostPlants = options?.hostPlants instanceof Set ? options.hostPlants : new Set();
 
   const primaryKey = atlasEntry?.taxonKey;
   const jp = cleanString(atlasEntry?.japaneseName);
@@ -557,6 +636,10 @@ const resolveInsectIdForAtlasEntry = (atlasEntry, aphidIndex) => {
       if (matches.length === 1) return { id: matches[0], reason: 'ok (disambiguated by japanese name)' };
     }
 
+    // Disambiguate by host plants: choose the candidate whose Japanese name contains the host plant(s).
+    const hostMatches = disambiguateByHostPlantsInJapaneseName(Array.from(hit), byId, hostPlants);
+    if (hostMatches.length === 1) return { id: hostMatches[0], reason: 'ok (disambiguated by host plant name)' };
+
     return { id: '', reason: `ambiguous match (${hit.size} candidates) for ${k}` };
   }
 
@@ -569,6 +652,29 @@ const resolveInsectIdForAtlasEntry = (atlasEntry, aphidIndex) => {
     const uniq = Array.from(new Set(jpHits));
     if (uniq.length === 1) return { id: uniq[0], reason: 'ok (matched by japanese name)' };
     if (uniq.length > 1) return { id: '', reason: `ambiguous match (${uniq.length} candidates) by japanese name` };
+  }
+
+  // Fallback: epithet-level resolution with conservative genus compatibility checks.
+  const primaryParts = primaryKey.split(/\s+/).filter(Boolean);
+  const atlasGenus = cleanString(primaryParts[0]);
+  const atlasEpithet = cleanString(primaryParts[1]);
+  const atlasEpithetLower = atlasEpithet.toLowerCase();
+  const isSp = atlasEpithetLower === 'sp.' || atlasEpithetLower === 'sp';
+  if (!isSp && atlasEpithet) {
+    const set = epithetIndex.get(atlasEpithetLower);
+    const ids = set ? Array.from(set) : [];
+    if (ids.length === 1) {
+      const row = byId.get(ids[0]);
+      if (isGenusCompatible(atlasGenus, row)) return { id: ids[0], reason: 'ok (unique epithet match)' };
+    } else if (ids.length > 1) {
+      // Prefer known modern genera when the atlas genus is legacy.
+      const preferred = ids.filter((id) => isCandidatePreferredForAtlasGenus(atlasGenus, byId.get(id)));
+      if (preferred.length === 1) return { id: preferred[0], reason: 'ok (preferred genus by epithet)' };
+
+      // Otherwise try host-plant signal.
+      const hostMatches = disambiguateByHostPlantsInJapaneseName(preferred.length > 0 ? preferred : ids, byId, hostPlants);
+      if (hostMatches.length === 1) return { id: hostMatches[0], reason: 'ok (disambiguated by host plant name)' };
+    }
   }
 
   return { id: '', reason: `no match for ${primaryKey}` };
@@ -586,6 +692,7 @@ const main = async () => {
 
   const placeholderToResolved = new Map(); // srcId -> {dstId, reason, no, sci}
   const placeholderCounts = new Map(); // srcId -> count
+  const placeholderHostPlants = new Map(); // srcId -> Set(plant_name)
 
   const isPlaceholderId = (id) => {
     const m = cleanString(id).match(/^species-(\d+)$/);
@@ -605,6 +712,12 @@ const main = async () => {
       const srcId = cleanString(r.insect_id);
       if (!isPlaceholderId(srcId)) return;
       placeholderCounts.set(srcId, (placeholderCounts.get(srcId) || 0) + 1);
+
+      const plant = cleanString(r.plant_name);
+      if (plant) {
+        if (!placeholderHostPlants.has(srcId)) placeholderHostPlants.set(srcId, new Set());
+        placeholderHostPlants.get(srcId).add(plant);
+      }
     });
   }
 
@@ -622,7 +735,8 @@ const main = async () => {
       continue;
     }
 
-    const resolved = resolveInsectIdForAtlasEntry(atlas, aphidIndex);
+    const hostPlants = placeholderHostPlants.get(srcId) || new Set();
+    const resolved = resolveInsectIdForAtlasEntry(atlas, aphidIndex, { hostPlants });
     placeholderToResolved.set(srcId, { dstId: resolved.id, reason: resolved.reason, no, sci, jp });
   }
 

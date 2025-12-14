@@ -2,12 +2,12 @@ src_insect_id,dst_insect_id,no,japanese_name,scientific_name,hostplant_rows,reas
 species-21568,,1,ネズミサシオオアブラムシ,Cinara juniperi (de Geer),4,no match for Cinara juniperi
 species-21569,,2,ハネナガオオアブラムシ,Cinara longipennis (Matsumura),6,no match for Cinara longipennis
 species-21570,,3,マツオオアブラムシ,Cinara pini (Linné),4,no match for Cinara pini
-species-21571,,4,ヒメコマツオオアブラムシ,Cinara shinjii (Inoue),2,no match for Cinara shinjii
+species-21571,species-21123,4,ヒメコマツオオアブラムシ,Cinara shinjii (Inoue),2,ok (unique epithet match)
 species-21593,,26,,Tuberculatus sp. A,2,no match for Tuberculatus sp. A
 species-21594,,27,,Tuberculatus sp. B,2,no match for Tuberculatus sp. B
-species-21595,,28,クヌギハアブラムシ,Phloeomyzus quercus (Takahashi),4,no match for Phloeomyzus quercus
+species-21595,species-21084,28,クヌギハアブラムシ,Phloeomyzus quercus (Takahashi),4,ok (preferred genus by epithet)
 species-21598,,31,,Chaitophorus sp.,2,no match for Chaitophorus sp.
-species-21611,,44,ハシバミヒゲナガアブラムシ,Unisitobion corylicola (Shinji)?,6,no match for Unisitobion corylicola
+species-21611,species-21102,44,ハシバミヒゲナガアブラムシ,Unisitobion corylicola (Shinji)?,6,ok (unique epithet match)
 species-21612,,45,ヨモギオナガヒメヒゲナガアブラムシ,Macrosiphoniella grandicauda Takahashi et Moritsu,4,no match for Macrosiphoniella grandicauda
 species-21613,,46,ヒコサンヒメヒゲナガアブラムシ,Macrosiphoniella hikosanensis Moritsu,2,no match for Macrosiphoniella hikosanensis
 species-21614,,47,クワヤマヒメヒゲナガアブラムシ,Macrosiphoniella kuwayamai Takahashi,2,no match for Macrosiphoniella kuwayamai
@@ -25,14 +25,14 @@ species-21628,,61,アキノキリンソウヒゲナガアブラムシ,Dactynotus
 species-21634,,67,ヨメナアミナシヒゲナガアブラムシ,Acyrthosiphon asteris (Takahashi),2,no match for Acyrthosiphon asteris
 species-21635,,68,アザミアミナシヒゲナガアブラムシ,Acyrthosiphon cirsicola (Takahashi),4,no match for Acyrthosiphon cirsicola
 species-21636,,69,カキドオシヒゲナガアブラムシ,Acyrthosiphon glechomae (Takahashi),2,no match for Acyrthosiphon glechomae
-species-21637,,70,ヤマブキヒゲナガアブラムシ,Acyrthosiphon kerriae (Shinji),6,no match for Acyrthosiphon kerriae
+species-21637,species-21325,70,ヤマブキヒゲナガアブラムシ,Acyrthosiphon kerriae (Shinji),6,ok (unique epithet match)
 species-21638,,71,コンドウヒゲナガアブラムシ,Acyrthosiphon kondoi Shinji,6,no match for Acyrthosiphon kondoi
-species-21639,,72,アオキコブアブラムシ,Acyrthosiphon linderae (Shinji),4,no match for Acyrthosiphon linderae
-species-21641,,74,アブラチャンコブアブラムシ,Acyrthosiphon muradachi (Shinji),6,no match for Acyrthosiphon muradachi
-species-21644,,77,シソヒゲナガアブラムシ,Acyrthosiphon perillae (Shinji),4,no match for Acyrthosiphon perillae
+species-21639,species-21326,72,アオキコブアブラムシ,Acyrthosiphon linderae (Shinji),4,ok (preferred genus by epithet)
+species-21641,species-21327,74,アブラチャンコブアブラムシ,Acyrthosiphon muradachi (Shinji),6,ok (unique epithet match)
+species-21644,species-21339,77,シソヒゲナガアブラムシ,Acyrthosiphon perillae (Shinji),4,ok (unique epithet match)
 species-21645,,78,エンドウヒゲナガアブラムシ,Acyrthosiphon pisum (Harris),8,no match for Acyrthosiphon pisum
-species-21646,,79,ジャガイモヒゲナガアブラムシ,Acyrthosiphon solani (Kaltenbach),2,no match for Acyrthosiphon solani
-species-21647,,80,アザミキイロヒゲナガアブラムシ,Acyrthosiphon vandenboschi Hille Ris Lambers,2,no match for Acyrthosiphon vandenboschi
+species-21646,species-21331,79,ジャガイモヒゲナガアブラムシ,Acyrthosiphon solani (Kaltenbach),2,ok (unique epithet match)
+species-21647,species-21334,80,アザミキイロヒゲナガアブラムシ,Acyrthosiphon vandenboschi Hille Ris Lambers,2,ok (unique epithet match)
 species-21648,,81,,Acyrthosiphon sp. A,2,no match for Acyrthosiphon sp. A
 species-21649,,82,,Acyrthosiphon sp. B,2,no match for Acyrthosiphon sp. B
 species-21656,,89,,Hydronaphis sp.,2,no match for Hydronaphis sp.
@@ -50,38 +50,34 @@ species-21670,,103,ヒキオコシコブアブラムシ,Myzus siegesbeckiae Taka
 species-21671,,104,ハンショウヅルコブアブラムシ,Myzus varians Davidson,8,no match for Myzus varians
 species-21672,,105,,Myzus sp.,2,no match for Myzus sp.
 species-21673,,106,クワクサヒゲナガアブラムシ,Eomyzus kuwanusae (Uye),2,no match for Eomyzus kuwanusae
-species-21674,,107,シソコブアブラムシ,Eomyzus nipponicus (Moritsu),2,no match for Eomyzus nipponicus
+species-21674,species-21474,107,シソコブアブラムシ,Eomyzus nipponicus (Moritsu),2,ok (unique epithet match)
 species-21679,,112,イチゴケナガアブラムシ,Capitophorus fragariaefolii (Cockerell),2,no match for Capitophorus fragariaefolii
 species-21681,,114,アキノタムラソウコブアブラムシ,Chaetomyzus hirticornis Takahashi,4,no match for Chaetomyzus hirticornis
 species-21682,,115,シクラメンコブアブラムシ,Neomyzus circumflexus (Buckton),6,no match for Neomyzus circumflexus
 species-21683,,116,ホップイボアブラムシ,Phorodon humuli Schrank,8,no match for Phorodon humuli
 species-21685,,118,,Neotoxoptera sp.,2,no match for Neotoxoptera sp.
 species-21686,,119,ウツギアブラムシ,Micromyzus diervillae (Matsumura),6,no match for Micromyzus diervillae
-species-21687,,120,ニッコウコブアブラムシ,Micromyzus nikkoensis Miyazaki ?,2,no match for Micromyzus nikkoensis
+species-21687,species-21125,120,ニッコウコブアブラムシ,Micromyzus nikkoensis Miyazaki ?,2,ok (unique epithet match)
 species-21692,,125,,Tuberocephalus sp.,2,no match for Tuberocephalus sp.
-species-21696,,129,ヤマハッカアブラムシ,Eumyzus plectranthi (Shinji),4,no match for Eumyzus plectranthi
-species-21697,,130,オオダイヨソオアブラムシ,Akkaia odaiensis Takahashi,4,no match for Akkaia odaiensis
+species-21696,species-21459,129,ヤマハッカアブラムシ,Eumyzus plectranthi (Shinji),4,ok (unique epithet match)
+species-21697,species-21073,130,オオダイヨソオアブラムシ,Akkaia odaiensis Takahashi,4,ok (unique epithet match)
 species-21698,,131,タデヨソオヒゲナガアブラムシ,Akkaia polygoni Takahashi,4,no match for Akkaia polygoni
 species-21706,,139,イシミカワイボアブラムシ,Trichosiphonaphis ishimikawae (Shinji),4,no match for Trichosiphonaphis ishimikawae
 species-21707,,140,スイカズラヒゲナガアブラムシ,Trichosiphonaphis lonicerae (Uye),2,no match for Trichosiphonaphis lonicerae
 species-21709,,142,タデケクダヒゲナガアブラムシ,Trichosiphonaphis polygoniformosanus (Takahashi),4,no match for Trichosiphonaphis polygoniformosanus
 species-21710,,143,タデヒゲナガアブラムシ,Trichosiphonaphis tade (Shinji),2,no match for Trichosiphonaphis tade
-species-21713,,146,フウロケマンアブラムシ,Hyalopteroides corydalisicola (Tao),4,no match for Hyalopteroides corydalisicola
+species-21713,species-21417,146,フウロケマンアブラムシ,Hyalopteroides corydalisicola (Tao),4,ok (unique epithet match)
 species-21722,,155,ヨモギクレアブラムシ,Coloradoa artemisiae (Del Guercio),2,no match for Coloradoa artemisiae
 species-21724,,157,ヨモギコアブラムシ,Micraphis artemisiae (Takahashi),2,no match for Micraphis artemisiae
-species-21728,species-21224,161,クサギアブラムシ,Aphis clerodendri Matsumura,2,ok (preferred species-level record)
-species-21730,species-21228,163,マメアブラムシ,Aphis craccivora Koch,10,ok (preferred species-level record)
-species-21732,species-21237,165,ヤナギアブラムシ,Aphis farinosa Gmelin,2,ok (preferred species-level record)
 species-21739,,172,キツネノマゴアブラムシ,Aphis justiceae Shinji,2,no match for Aphis justiceae
 species-21746,,179,ニワトコアブラムシ,Aphis sambuci Linné,2,no match for Aphis sambuci
-species-21747,,180,サルトリイバラアブラムシ,Aphis smilacifoliae Takahashi,2,no match for Aphis smilacifoliae
+species-21747,species-21500,180,サルトリイバラアブラムシ,Aphis smilacifoliae Takahashi,2,ok (disambiguated by host plant name)
 species-21749,,182,,Aphis sp.,4,no match for Aphis sp.
 species-21752,,185,タイワンススキアブラムシ,Melanaphis formosana (Takahashi),2,no match for Melanaphis formosana
 species-21756,,189,,Melanaphis sp.,2,no match for Melanaphis sp.
-species-21760,,193,コミカンアブラムシ,Toxoptera aurantii (Boyer de Fonscolombe),8,no match for Toxoptera aurantii
+species-21760,species-21288,193,コミカンアブラムシ,Toxoptera aurantii (Boyer de Fonscolombe),8,ok
 species-21763,,196,,Toxoptera sp. A,4,no match for Toxoptera sp. A
 species-21764,,197,,Toxoptera sp. B,2,no match for Toxoptera sp. B
-species-21769,species-21212,202,ヤナギミキアブラムシ,Pterocomma pilosum Buckton,2,ok (preferred species-level record)
 species-21777,,210,ヤブタバココナジラミモドキ,Aleurodaphis blumeae van der Goot,2,no match for Aleurodaphis blumeae
 species-21778,,211,,Aleurodaphis sp.,2,no match for Aleurodaphis sp.
 species-21779,,212,ミズキヒラタアブラムシ,Anoecia corni (Fabricius),10,no match for Anoecia corni
@@ -89,13 +85,13 @@ species-21782,,215,イスノフキアブラムシ,Nipponaphis autumnalis Monzen,
 species-21783,,216,シイムネアブラムシ,Nipponaphis cuspidatae Essig et Kuwana,4,no match for Nipponaphis cuspidatae
 species-21786,,219,イスノタマフシアブラムシ,Nipponaphis globuli (Monzen),2,no match for Nipponaphis globuli
 species-21788,,221,モンゼンイスアブラムシ,Nipponaphis monzeni Takahashi,6,no match for Nipponaphis monzeni
-species-21789,,222,ヤノイスフシアブラムシ,Nipponaphis yanonis (Matsumura),6,no match for Nipponaphis yanonis
+species-21789,species-21007,222,ヤノイスフシアブラムシ,Nipponaphis yanonis (Matsumura),6,ok (preferred genus by epithet)
 species-21790,,223,クスマルアブラムシ,Thoracaphis kashifoliae Uye?,2,no match for Thoracaphis kashifoliae
 species-21791,,224,トドマツワタムシ,Mindarus abietinus japonicus Takahashi,8,no match for Mindarus abietinus japonicus
 species-21793,,226,クヌギミツアブラムシ,Glyphina onigurumi querciphila Takahashi,14,no match for Glyphina onigurumi querciphila
 species-21798,,231,ニレワタムシ,Eriosoma japonica (Matsumura),4,no match for Eriosoma japonica
 species-21799,,232,,Eriosoma sp.,2,no match for Eriosoma sp.
-species-21800,,233,ハンショウヅルコワタムシ,Prociphilus clematicola (Shinji)?,6,no match for Prociphilus clematicola
+species-21800,species-21043,233,ハンショウヅルコワタムシ,Prociphilus clematicola (Shinji)?,6,ok (unique epithet match)
 species-21804,,237,パイクヨスジメンチュウ,Tetraneura paiki Hille Ris Lambers,8,no match for Tetraneura paiki
 species-21806,,239,ニシヤワタアブラムシ,Watabura nishiyae Matsumura,6,no match for Watabura nishiyae
 species-21807,,240,クリイガアブラムシ,Moritziella castaneivora Miyazaki,2,no match for Moritziella castaneivora
