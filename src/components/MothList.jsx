@@ -208,10 +208,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
         to={route} 
         state={makeDetailLinkState(location, { setFromList: true })}
         className="block"
-        onClick={() => {
-          // Save scroll position before navigation
-          sessionStorage.setItem('mothListScrollPosition', window.scrollY.toString());
-        }}
       >
         <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
@@ -585,7 +581,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return months.includes(targetMonth);
   }, []);
   
-  const itemsPerPage = 52; // Changed from 50 to 52 to fill the 4-column grid completely
+  const computeItemsPerPage = useCallback(() => {
+    if (typeof window === 'undefined') return 48;
+    const w = window.innerWidth;
+    const cols = w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 768 ? 2 : 1;
+    return cols * 12;
+  }, []);
+  const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
   const filterIdBase = useId();
   const hostFilterId = `${filterIdBase}-host`;
   const familyFilterId = `${filterIdBase}-family`;
@@ -595,21 +597,28 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const classificationFilter = searchParams.get('classification');
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const listTopRef = useRef(null);
+  const resizeInitializedRef = useRef(false);
 
-  // Restore scroll position and page when returning from detail page
-  useEffect(() => {
-    const savedPosition = sessionStorage.getItem('mothListScrollPosition');
-    if (savedPosition) {
-      // Restore scroll position after a small delay to ensure content is rendered
-      setTimeout(() => {
-        window.scrollTo(0, parseInt(savedPosition, 10));
-        // Clear the saved position after restoring
-        sessionStorage.removeItem('mothListScrollPosition');
-        // Cleanup legacy key (page is now in URL)
-        sessionStorage.removeItem('mothListPage');
-      }, 100);
-    }
+  const getStickyHeaderOffset = useCallback(() => {
+    if (typeof window === 'undefined') return 0;
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue('--app-sticky-header-height');
+    const parsed = parseInt(raw, 10);
+    if (Number.isFinite(parsed)) return parsed + 12;
+    return 80;
   }, []);
+
+  const scrollToListTop = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const el = listTopRef.current;
+    if (!el) return;
+    const offset = getStickyHeaderOffset();
+    const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, [getStickyHeaderOffset]);
+
+  // Scroll restoration is handled centrally by InsectsHostPlantExplorer
 
   // Sync search term with classification filter and clear when filter removed
   useEffect(() => {
@@ -619,6 +628,24 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       setSearchTerm(initialSearchTerm || '');
     }
   }, [classificationFilter, initialSearchTerm]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const onResize = () => {
+      const next = computeItemsPerPage();
+      setItemsPerPage((prev) => {
+        if (prev === next) return prev;
+        if (resizeInitializedRef.current) {
+          setIPage(1);
+        }
+        return next;
+      });
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+    onResize();
+    resizeInitializedRef.current = true;
+    return () => window.removeEventListener('resize', onResize);
+  }, [computeItemsPerPage, setIPage]);
 
   // （メタは useSeoMeta に移行）
 
@@ -1087,6 +1114,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const handlePageChange = (page) => {
     setIPage(page);
+    scrollToListTop();
   };
 
   // Add rel=prev/next for crawlers (hint)
@@ -1141,7 +1169,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
     return (
       <div className="mt-4">
-        <div className="sticky top-20 z-40">
+        <div className="sticky z-40" style={{ top: 'calc(var(--app-sticky-header-height, 0px) + 12px)' }}>
           <div className="rounded-xl bg-white/85 dark:bg-slate-900/70 backdrop-blur border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 shadow-sm">
             {/* Active Filters & Toggle */}
             <div className="flex flex-wrap items-center gap-3">
@@ -1192,6 +1220,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                     p.delete('imonth');
                     p.delete('classification');
                     p.delete('ipage');
+                    p.delete('q');
                   });
                 }}
                 className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
@@ -1332,6 +1361,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       )}
       
       <div className="p-6">
+        <div ref={listTopRef} />
         <div>
           {!isImageIndexReady ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

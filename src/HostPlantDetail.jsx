@@ -1202,12 +1202,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          ホームに戻る
+          一覧に戻る
         </Link>
         <div className="flex flex-wrap gap-2">
           {taxonomy.orderJp && (
             <Link
-              to={`/?classification=${encodeURIComponent(taxonomy.orderJp)}&tab=plants`}
+              to={`/?tab=plants&porder=${encodeURIComponent(taxonomy.orderJp)}`}
               className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:bg-emerald-200/70 dark:hover:bg-emerald-900/50"
               aria-label={`${taxonomy.orderJp} の植物を検索`}
             >
@@ -1219,7 +1219,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           )}
           {familyLabel && (
             <Link
-              to={`/?classification=${encodeURIComponent(familyLabel)}&tab=plants`}
+              to={`/?tab=plants&pfamily=${encodeURIComponent(familyLabel)}`}
               className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50 hover:bg-blue-200/70 dark:hover:bg-blue-900/50"
               aria-label={`${familyLabel} の植物を検索`}
             >
@@ -1231,7 +1231,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           )}
           {taxonomy.genus && (
             <Link
-              to={`/?classification=${encodeURIComponent(taxonomy.genus)}&tab=plants`}
+              to={`/?tab=plants&q=${encodeURIComponent(taxonomy.genus)}`}
               className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50 hover:bg-slate-200/70 dark:hover:bg-slate-900/50"
               aria-label={`${taxonomy.genus} の植物を検索`}
             >
@@ -1332,9 +1332,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                 <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草ネットワーク</p>
                 <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">この植物を利用する昆虫</h2>
               </div>
-            </div>
-            <div className="px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
-              インタラクティブ
             </div>
           </div>
           <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25" ref={graphRef}>

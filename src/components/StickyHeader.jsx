@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SearchInput from './SearchInput';
 
 const StickyHeader = ({ 
@@ -16,6 +16,7 @@ const StickyHeader = ({
   scrollTargetId = 'explorer-results'
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const headerBarRef = useRef(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -48,6 +49,25 @@ const StickyHeader = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [heroId]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return undefined;
+
+    const root = document.documentElement;
+    const update = () => {
+      const h = isVisible && headerBarRef.current
+        ? headerBarRef.current.getBoundingClientRect().height
+        : 0;
+      root.style.setProperty('--app-sticky-header-height', `${Math.max(0, Math.round(h))}px`);
+    };
+
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    return () => {
+      window.removeEventListener('resize', update);
+      root.style.setProperty('--app-sticky-header-height', '0px');
+    };
+  }, [isVisible]);
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === 'insects' && onNeedInsectsData) onNeedInsectsData();
@@ -69,7 +89,10 @@ const StickyHeader = ({
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
-      <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-slate-200 dark:border-slate-700 px-4 py-3">
+      <div
+        ref={headerBarRef}
+        className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-slate-200 dark:border-slate-700 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]"
+      >
         <div className="max-w-6xl mx-auto flex items-center gap-3 sm:gap-4">
           {/* Logo / Top Button */}
           <button 

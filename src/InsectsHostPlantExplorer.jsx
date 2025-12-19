@@ -34,8 +34,12 @@ const InsectsHostPlantExplorer = React.memo(
     onNeedPlantsData,
     initialTab = "insects",
   }) => {
-    const [activeTab, setActiveTab] = useState(initialTab);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [activeTab, setActiveTab] = useState(() => {
+      const tabParam = searchParams.get("tab");
+      if (tabParam === "plants" || tabParam === "insects") return tabParam;
+      return initialTab;
+    });
     const [heroImageLoaded, setHeroImageLoaded] = useState(false);
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
@@ -99,7 +103,8 @@ const InsectsHostPlantExplorer = React.memo(
         !/\/(p|reel|tv)\//.test(url)
       );
     };
-    const scrollPositionRef = useRef(0);
+    const didRestoreScrollRef = useRef(false);
+    const SCROLL_RESTORE_KEY = "explorerScrollRestore";
 
     // DEBUG: Log the actual data received (dev only)
     if (import.meta && import.meta.env && import.meta.env.DEV)
@@ -115,53 +120,116 @@ const InsectsHostPlantExplorer = React.memo(
           leafbeetles.length,
       });
 
-    // Save scroll position before navigating away
+    // Save scroll position before navigating away (single source of truth)
     useEffect(() => {
-      const saveScrollPosition = () => {
-        scrollPositionRef.current = window.scrollY;
-        sessionStorage.setItem(
-          "insectExplorerScrollPosition",
-          window.scrollY.toString(),
-        );
-      };
-
       // Save scroll position on click of any link that navigates to detail page
       const handleClick = (e) => {
         const target = e.target.closest("a");
-        if (
-          target &&
-          (target.href.includes("/moth/") ||
-            target.href.includes("/butterfly/") ||
-            target.href.includes("/beetle/") ||
-            target.href.includes("/leafbeetle/") ||
-            target.href.includes("/plant/"))
-        ) {
-          saveScrollPosition();
+        if (!target) return;
+        if (e.defaultPrevented) return;
+        if (e.button !== 0) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (target.target === "_blank") return;
+        if (target.hasAttribute("download")) return;
+
+        let url;
+        try {
+          url = new URL(target.href, window.location.origin);
+        } catch {
+          return;
         }
+        if (url.origin !== window.location.origin) return;
+        if (!/^\/(moth|butterfly|beetle|leafbeetle|plant)\//.test(url.pathname)) return;
+
+        try {
+          sessionStorage.setItem(
+            SCROLL_RESTORE_KEY,
+            JSON.stringify({
+              y: window.scrollY,
+              tab: activeTab,
+              from: window.location.pathname + window.location.search,
+              to: url.pathname + url.search,
+              ts: Date.now(),
+            }),
+          );
+        } catch {}
       };
 
-      document.addEventListener("click", handleClick);
+      document.addEventListener("click", handleClick, true);
 
       return () => {
-        document.removeEventListener("click", handleClick);
+        document.removeEventListener("click", handleClick, true);
       };
-    }, []);
+    }, [activeTab, SCROLL_RESTORE_KEY]);
 
-    // Restore scroll position when returning to the page
+    // Restore scroll position when returning to the page (retry until layout is ready)
     useEffect(() => {
-      const savedPosition = sessionStorage.getItem(
-        "insectExplorerScrollPosition",
-      );
-      if (savedPosition) {
-        const position = parseInt(savedPosition, 10);
-        // Use setTimeout to ensure DOM is fully rendered before scrolling
-        setTimeout(() => {
-          window.scrollTo(0, position);
-        }, 100);
-        // Clear the saved position after restoring
-        sessionStorage.removeItem("insectExplorerScrollPosition");
+      if (didRestoreScrollRef.current) return;
+
+      let saved = null;
+      const raw = sessionStorage.getItem(SCROLL_RESTORE_KEY);
+      if (raw) {
+        try {
+          saved = JSON.parse(raw);
+        } catch {
+          saved = null;
+        }
+      } else {
+        // Backward-compat fallback
+        const legacy = sessionStorage.getItem("insectExplorerScrollPosition");
+        if (legacy) saved = { y: parseInt(legacy, 10), legacy: true };
       }
-    }, []);
+
+      const currentPath = window.location.pathname + window.location.search;
+      if (saved?.from && saved.from !== currentPath) {
+        sessionStorage.removeItem(SCROLL_RESTORE_KEY);
+        sessionStorage.removeItem("insectExplorerScrollPosition");
+        return;
+      }
+
+      const y = Number(saved?.y);
+      if (!Number.isFinite(y)) {
+        sessionStorage.removeItem(SCROLL_RESTORE_KEY);
+        sessionStorage.removeItem("insectExplorerScrollPosition");
+        return;
+      }
+
+      const startedAt = Date.now();
+      const maxWaitMs = 1800;
+
+      const tryRestore = () => {
+        const resultsEl = document.getElementById("explorer-results");
+        const maxScroll =
+          Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const targetY = Math.min(y, maxScroll);
+
+        if (resultsEl) {
+          window.scrollTo(0, targetY);
+        }
+
+        const done =
+          resultsEl &&
+          (Math.abs(window.scrollY - targetY) < 2 ||
+            Date.now() - startedAt > maxWaitMs);
+        if (done) {
+          didRestoreScrollRef.current = true;
+          sessionStorage.removeItem(SCROLL_RESTORE_KEY);
+          sessionStorage.removeItem("insectExplorerScrollPosition");
+          return;
+        }
+
+        if (Date.now() - startedAt > maxWaitMs) {
+          didRestoreScrollRef.current = true;
+          sessionStorage.removeItem(SCROLL_RESTORE_KEY);
+          sessionStorage.removeItem("insectExplorerScrollPosition");
+          return;
+        }
+
+        setTimeout(tryRestore, 60);
+      };
+
+      setTimeout(tryRestore, 0);
+    }, [SCROLL_RESTORE_KEY, activeTab]);
 
     // Initialize tab from URL, fallback to prop when absent
     useEffect(() => {
@@ -322,7 +390,7 @@ const InsectsHostPlantExplorer = React.memo(
     const suggestions = useMemo(() => {
       if (!globalSearchTerm || globalSearchTerm.trim() === "") return [];
       const term = globalSearchTerm.toLowerCase();
-      const katakanaTerm = hiraganaToKatakana(globalSearchTerm);
+      const katakanaTerm = hiraganaToKatakana(globalSearchTerm).toLowerCase();
       const results = new Set();
 
       if (activeTab === "insects") {
@@ -359,10 +427,31 @@ const InsectsHostPlantExplorer = React.memo(
       } else {
         // plants
         const plantNames = Object.keys(hostPlants);
+        const matches = (value) => {
+          if (!value) return false;
+          const lower = String(value).toLowerCase();
+          return lower.includes(term) || lower.includes(katakanaTerm);
+        };
         for (const plant of plantNames) {
           if (results.size >= 10) break;
-          if (plant.includes(term) || plant.includes(katakanaTerm)) {
+          if (matches(plant)) {
             results.add(plant);
+          }
+          const detail = plantDetails?.[plant] || {};
+          const candidates = [
+            detail.family,
+            detail.familyName,
+            detail.familyLatin,
+            detail.order,
+            detail.orderLatin,
+            detail.genus,
+          ].filter(Boolean);
+          if (Array.isArray(detail.aliases)) {
+            candidates.push(...detail.aliases.filter(Boolean));
+          }
+          for (const candidate of candidates) {
+            if (results.size >= 10) break;
+            if (matches(candidate)) results.add(candidate);
           }
         }
       }
@@ -375,6 +464,7 @@ const InsectsHostPlantExplorer = React.memo(
       beetles,
       leafbeetles,
       hostPlants,
+      plantDetails,
     ]);
 
     const handleSelectSuggestion = (value) => {

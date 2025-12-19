@@ -10,6 +10,7 @@ import { makeDetailLinkState } from '../utils/navState';
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
 
 const MAX_RELATED = 40;
+const MAX_PANEL_ITEMS = 12;
 
 const normalizePlantName = (name = '') =>
   name
@@ -28,6 +29,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   height = 520
 }) {
   const fgRef = useRef(null);
+  const containerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isDark = theme === 'dark';
@@ -41,11 +43,19 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const failedImagesRef = useRef(new Set());
   const imageCacheRef = useRef({});
 
-  const [highlightNodes, setHighlightNodes] = useState(new Set());
-  const [highlightLinks, setHighlightLinks] = useState(new Set());
-  const [hoverNode, setHoverNode] = useState(null);
+  const ignoreNextNodeClickRef = useRef(false);
+  const activeTouchPointersRef = useRef(new Set());
+  const longPressTimerRef = useRef(null);
+  const longPressStartRef = useRef(null);
+  const isPinDraggingRef = useRef(false);
+  const pinDragPointerIdRef = useRef(null);
+  const pinDragNodeIdRef = useRef(null);
+  const [hoverNodeId, setHoverNodeId] = useState(null);
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [legendFocus, setLegendFocus] = useState(null);
-  const [labelMode, setLabelMode] = useState('auto'); // auto | all
+  const [labelMode, setLabelMode] = useState('auto'); // auto | all | none
+
+  const [ylistData, setYlistData] = useState(null);
 
   const assetBase = useMemo(() => import.meta.env.BASE_URL || '/', []);
   const cacheBust = useMemo(() => {
@@ -178,6 +188,140 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return { nodes, links };
   }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, plantImageCandidates]);
 
+  // selection safety: clear when graph changes
+  useEffect(() => {
+    if (!selectedNodeId) return;
+    if (graphData.nodes.some(n => n.id === selectedNodeId)) return;
+    setSelectedNodeId(null);
+  }, [graphData.nodes, selectedNodeId]);
+
+  const selectedNode = useMemo(() => {
+    if (!selectedNodeId) return null;
+    return graphData.nodes.find(n => n.id === selectedNodeId) || null;
+  }, [graphData.nodes, selectedNodeId]);
+
+  // lazy-load plant scientific names (YList lite) only when needed
+  useEffect(() => {
+    if (!selectedNode) return;
+    if (!selectedNode.type?.startsWith('plant')) return;
+    if (ylistData) return;
+
+    let canceled = false;
+    fetch(`${assetBase}assets/data-lite/ylist-lite.json${cacheBust}`)
+      .then(res => (res.ok ? res.json() : Promise.reject(new Error('Failed to load ylist-lite.json'))))
+      .then((data) => {
+        if (!canceled) setYlistData(data);
+      })
+      .catch(() => {
+        // optional enhancement only; ignore errors
+      });
+
+    return () => { canceled = true; };
+  }, [assetBase, cacheBust, selectedNode, ylistData]);
+
+  const getYlistPlantInfo = useCallback((plantName) => {
+    if (!ylistData || !plantName) return null;
+    const plants = ylistData?.plants;
+    const aliasToCanonical = ylistData?.aliasToCanonical;
+    if (!plants || !aliasToCanonical) return null;
+
+    const candidates = [
+      plantName,
+      normalizePlantName(plantName),
+      plantName.replace(/＿/g, '_'),
+      normalizePlantName(plantName).replace(/＿/g, '_')
+    ].filter(Boolean);
+
+    for (const key of candidates) {
+      const canonical = aliasToCanonical[key] || key;
+      const info = plants[canonical];
+      if (info) return { canonical, info };
+    }
+    return null;
+  }, [ylistData]);
+
+  const activeHoverNodeId = selectedNodeId ? null : hoverNodeId;
+  const activeNodeId = selectedNodeId || activeHoverNodeId;
+  const { highlightNodeIds, highlightLinks } = useMemo(() => {
+    const nodeIds = new Set();
+    const linkSet = new Set();
+    if (!activeNodeId) return { highlightNodeIds: nodeIds, highlightLinks: linkSet };
+
+    nodeIds.add(activeNodeId);
+    for (const link of graphData.links) {
+      const sId = typeof link.source === 'object' ? link.source.id : link.source;
+      const tId = typeof link.target === 'object' ? link.target.id : link.target;
+      if (!sId || !tId) continue;
+      if (sId === activeNodeId || tId === activeNodeId) {
+        linkSet.add(link);
+        nodeIds.add(sId);
+        nodeIds.add(tId);
+      }
+    }
+    return { highlightNodeIds: nodeIds, highlightLinks: linkSet };
+  }, [activeNodeId, graphData.links]);
+
+  const selectedStats = useMemo(() => {
+    if (!selectedNode) return null;
+    const degree = graphData.links.reduce((acc, link) => {
+      const sId = typeof link.source === 'object' ? link.source.id : link.source;
+      const tId = typeof link.target === 'object' ? link.target.id : link.target;
+      if (sId === selectedNode.id || tId === selectedNode.id) return acc + 1;
+      return acc;
+    }, 0);
+    return { degree };
+  }, [graphData.links, selectedNode]);
+
+  const selectedInsectHostPlants = useMemo(() => {
+    if (!selectedNode?.type?.startsWith('insect')) return [];
+    const detail = selectedNode.raw;
+    if (!detail) return [];
+
+    const items = [];
+    if (Array.isArray(detail.hostPlantsDetailed) && detail.hostPlantsDetailed.length > 0) {
+      for (const p of detail.hostPlantsDetailed) {
+        const name = String(p?.name || p?.plant || p?.hostPlant || p?.hostPlantName || '').trim();
+        if (!name || name === '不明') continue;
+        const part = String(p?.part || p?.organ || p?.site || p?.parasiticPart || '').trim();
+        items.push({ name, part });
+      }
+    } else if (Array.isArray(detail.hostPlants) && detail.hostPlants.length > 0) {
+      for (const raw of detail.hostPlants) {
+        const name = String(raw || '').trim();
+        if (!name || name === '不明') continue;
+        items.push({ name, part: '' });
+      }
+    } else if (typeof detail.hostPlants === 'string' && detail.hostPlants.trim()) {
+      detail.hostPlants.split(/[;；、，,]/).map(s => s.trim()).filter(Boolean).forEach((name) => {
+        if (name !== '不明') items.push({ name, part: '' });
+      });
+    }
+
+    const seen = new Set();
+    const deduped = [];
+    for (const item of items) {
+      const key = `${item.name}__${item.part || ''}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      deduped.push(item);
+    }
+    return deduped;
+  }, [selectedNode]);
+
+  const selectedPlantInsects = useMemo(() => {
+    if (!selectedNode?.type?.startsWith('plant')) return [];
+    const keyCandidates = [
+      selectedNode.name,
+      normalizePlantName(selectedNode.name)
+    ].filter(Boolean);
+    for (const key of keyCandidates) {
+      const list = hostPlantsMap?.[key];
+      if (Array.isArray(list)) return list.filter(Boolean);
+      if (typeof list === 'string' && list.trim()) return list.split(/[;；、，,]/).map(s => s.trim()).filter(Boolean);
+    }
+    return [];
+  }, [hostPlantsMap, selectedNode]);
+
   // initial fit
   useEffect(() => {
     if (!fgRef.current) return;
@@ -187,44 +331,27 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return () => clearTimeout(t);
   }, [graphData]);
 
-  // hover highlight
+  // hover highlight (preview only; selection takes precedence)
   const handleNodeHover = useCallback((node) => {
-    if (!node) {
-      setHoverNode(null);
-      setHighlightNodes(new Set());
-      setHighlightLinks(new Set());
-      return;
-    }
-    const nSet = new Set([node]);
-    const lSet = new Set();
-    graphData.links.forEach(link => {
-      const sId = link.source.id || link.source;
-      const tId = link.target.id || link.target;
-      if (sId === node.id || tId === node.id) {
-        lSet.add(link);
-        const neighborId = sId === node.id ? tId : sId;
-        const neighbor = graphData.nodes.find(n => n.id === neighborId);
-        if (neighbor) nSet.add(neighbor);
-      }
-    });
-    setHoverNode(node);
-    setHighlightNodes(nSet);
-    setHighlightLinks(lSet);
-  }, [graphData]);
+    if (selectedNodeId) return;
+    setHoverNodeId(node ? node.id : null);
+  }, [selectedNodeId]);
 
-  // click navigation
+  // click toggles selection (navigation moved to the detail panel)
   const handleNodeClick = useCallback((node) => {
     if (!node) return;
-    if (node.type.startsWith('insect') && node.raw) {
-      const path = node.raw.path || buildInsectPath(node.raw);
-      navigate(path, { state: makeDetailLinkState(location) });
-    } else if (node.type.startsWith('plant')) {
-      navigate(`/plant/${encodeURIComponent(node.name)}`, { state: makeDetailLinkState(location) });
-    } else if (fgRef.current) {
-      fgRef.current.centerAt(node.x, node.y, 600);
-      fgRef.current.zoom(2.4, 800);
+    if (ignoreNextNodeClickRef.current) {
+      ignoreNextNodeClickRef.current = false;
+      return;
     }
-  }, [navigate, location]);
+    setSelectedNodeId(prev => (prev === node.id ? null : node.id));
+    setHoverNodeId(null);
+  }, []);
+
+  const handleBackgroundClick = useCallback(() => {
+    setSelectedNodeId(null);
+    setHoverNodeId(null);
+  }, []);
 
   // draw helper: rounded rect
   const drawRoundedRect = (c, x, y, w, h, r) => {
@@ -306,14 +433,19 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     };
     const baseR = node.type.includes('current') ? 12 : 8;
     const radius = baseR / Math.sqrt(globalScale);
-    const dim = (hoverNode && !highlightNodes.has(node)) || (legendFocus && !node.type.includes(legendFocus));
+    const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
+    const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
+    const dimByLegend = legendFocus && !node.type.includes(legendFocus) && node.id !== selectedNodeId;
+    const dim = dimByHighlight || dimByLegend;
     const alpha = dim ? 0.25 : 1;
     const dense = labelMode === 'auto' && graphData.nodes.length > 24;
-    const showLabel = labelMode === 'all'
+    const showLabel = labelMode !== 'none' && (
+      labelMode === 'all'
       || node.type.includes('current')
-      || (hoverNode && highlightNodes.has(node))
+      || (activeNodeId && inHighlight)
       || (!dense && !dim)
-      || (globalScale > 1.8 && !dim);
+      || (globalScale > 1.8 && !dim)
+    );
 
     // try to ensure image is loaded
     const foundUrl = ensureImage(node.imgCandidates);
@@ -338,6 +470,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.restore();
       ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
       ctx.strokeStyle = isDark ? 'rgba(226,232,240,0.35)' : 'rgba(15,23,42,0.35)';
+      if (selectedNodeId === node.id) ctx.strokeStyle = isDark ? 'rgba(251,113,133,0.8)' : 'rgba(244,63,94,0.85)';
       ctx.beginPath();
       ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
       ctx.stroke();
@@ -349,23 +482,173 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.fill();
       ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
       ctx.strokeStyle = isDark ? 'rgba(226,232,240,0.22)' : 'rgba(15,23,42,0.2)';
+      if (selectedNodeId === node.id) ctx.strokeStyle = isDark ? 'rgba(251,113,133,0.8)' : 'rgba(244,63,94,0.85)';
       ctx.stroke();
     }
 
     if (showLabel) drawLabel(node.x, node.y, node.name, dim);
-  }, [graphData.nodes.length, hoverNode, highlightNodes, legendFocus, isDark, labelMode]);
+  }, [activeNodeId, graphData.nodes.length, highlightNodeIds, legendFocus, isDark, labelMode, selectedNodeId]);
 
   // zoom controls
   const zoomIn = useCallback(() => { if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() * 1.4, 350); }, []);
   const zoomOut = useCallback(() => { if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() / 1.4, 350); }, []);
-  const zoomFit = useCallback(() => { if (fgRef.current) fgRef.current.zoomToFit(400, 60); }, []);
-  const toggleLabelMode = useCallback(() => setLabelMode(m => (m === 'auto' ? 'all' : 'auto')), []);
+  const resetView = useCallback(() => { if (fgRef.current) fgRef.current.zoomToFit(400, 60); }, []);
+  const reheatLayout = useCallback(() => { if (fgRef.current) fgRef.current.d3ReheatSimulation(); }, []);
+  const unpinAll = useCallback(() => {
+    for (const node of graphData.nodes) {
+      node.fx = undefined;
+      node.fy = undefined;
+    }
+    try { fgRef.current && fgRef.current.d3ReheatSimulation(); } catch { /* ignore */ }
+  }, [graphData.nodes]);
   const toggleLegendFocus = useCallback((key) => {
     setLegendFocus((prev) => (prev === key ? null : key));
   }, []);
 
+  // touch interactions: long-press to pin-drag
+  const cancelLongPress = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+    longPressStartRef.current = null;
+  }, []);
+
+  useEffect(() => {
+    return () => cancelLongPress();
+  }, [cancelLongPress]);
+
+  const getRelativePoint = useCallback((event) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  }, []);
+
+  const findNearestNode = useCallback((screenX, screenY) => {
+    if (!fgRef.current) return null;
+    if (!graphData.nodes || graphData.nodes.length === 0) return null;
+
+    try {
+      const graphPt = fgRef.current.screen2GraphCoords(screenX, screenY);
+      const graphPt2 = fgRef.current.screen2GraphCoords(screenX + 26, screenY);
+      const threshold = Math.max(8, Math.abs(graphPt2.x - graphPt.x));
+
+      let best = null;
+      let bestDist = Infinity;
+      for (const node of graphData.nodes) {
+        if (typeof node?.x !== 'number' || typeof node?.y !== 'number') continue;
+        const dist = Math.hypot(node.x - graphPt.x, node.y - graphPt.y);
+        if (dist < bestDist) {
+          best = node;
+          bestDist = dist;
+        }
+      }
+      if (!best || bestDist > threshold) return null;
+      return best;
+    } catch {
+      return null;
+    }
+  }, [graphData.nodes]);
+
+  const beginPinDrag = useCallback((node, pointerId) => {
+    if (!node) return;
+    ignoreNextNodeClickRef.current = true;
+    isPinDraggingRef.current = true;
+    pinDragNodeIdRef.current = node.id;
+    pinDragPointerIdRef.current = pointerId;
+    setSelectedNodeId(node.id);
+    setHoverNodeId(null);
+    node.fx = typeof node.x === 'number' ? node.x : 0;
+    node.fy = typeof node.y === 'number' ? node.y : 0;
+    try { fgRef.current && fgRef.current.d3ReheatSimulation(); } catch { /* ignore */ }
+  }, []);
+
+  const handlePointerDownCapture = useCallback((event) => {
+    if (event.pointerType !== 'touch') return;
+    if (event.target instanceof Element && event.target.closest('[data-fg-ui]')) return;
+
+    activeTouchPointersRef.current.add(event.pointerId);
+    if (activeTouchPointersRef.current.size > 1) {
+      cancelLongPress();
+      return;
+    }
+
+    const pt = getRelativePoint(event);
+    if (!pt) return;
+
+    longPressStartRef.current = { pointerId: event.pointerId, x: pt.x, y: pt.y };
+    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+
+    const pointerId = event.pointerId;
+    longPressTimerRef.current = window.setTimeout(() => {
+      longPressTimerRef.current = null;
+      if (activeTouchPointersRef.current.size !== 1) return;
+      const origin = longPressStartRef.current;
+      if (!origin || origin.pointerId !== pointerId) return;
+
+      const node = findNearestNode(origin.x, origin.y);
+      if (!node) return;
+      longPressStartRef.current = null;
+      beginPinDrag(node, pointerId);
+    }, 450);
+  }, [beginPinDrag, cancelLongPress, findNearestNode, getRelativePoint]);
+
+  const handlePointerMoveCapture = useCallback((event) => {
+    if (event.pointerType !== 'touch') return;
+
+    const pt = getRelativePoint(event);
+    if (!pt) return;
+
+    if (isPinDraggingRef.current && pinDragPointerIdRef.current === event.pointerId) {
+      event.preventDefault();
+      const nodeId = pinDragNodeIdRef.current;
+      const node = nodeId ? graphData.nodes.find(n => n.id === nodeId) : null;
+      if (!node || !fgRef.current) return;
+      try {
+        const coords = fgRef.current.screen2GraphCoords(pt.x, pt.y);
+        node.fx = coords.x;
+        node.fy = coords.y;
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    const origin = longPressStartRef.current;
+    if (!origin || origin.pointerId !== event.pointerId) return;
+    const dx = pt.x - origin.x;
+    const dy = pt.y - origin.y;
+    if (Math.hypot(dx, dy) > 12) cancelLongPress();
+  }, [cancelLongPress, getRelativePoint, graphData.nodes]);
+
+  const handlePointerUpCapture = useCallback((event) => {
+    if (event.pointerType !== 'touch') return;
+    activeTouchPointersRef.current.delete(event.pointerId);
+
+    if (pinDragPointerIdRef.current === event.pointerId) {
+      isPinDraggingRef.current = false;
+      pinDragPointerIdRef.current = null;
+      pinDragNodeIdRef.current = null;
+      cancelLongPress();
+      window.setTimeout(() => { ignoreNextNodeClickRef.current = false; }, 260);
+      return;
+    }
+
+    const origin = longPressStartRef.current;
+    if (origin?.pointerId === event.pointerId) cancelLongPress();
+  }, [cancelLongPress]);
+
+  const allowPanZoom = useCallback(() => !isPinDraggingRef.current, []);
+
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 relative shadow-md">
+    <div
+      ref={containerRef}
+      className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 relative shadow-md"
+      onPointerDownCapture={handlePointerDownCapture}
+      onPointerMoveCapture={handlePointerMoveCapture}
+      onPointerUpCapture={handlePointerUpCapture}
+      onPointerCancelCapture={handlePointerUpCapture}
+    >
       <ForceGraph2D
         ref={fgRef}
         width={width}
@@ -375,9 +658,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         nodeCanvasObject={nodeCanvasObject}
         onNodeHover={handleNodeHover}
         onNodeClick={handleNodeClick}
+        onBackgroundClick={handleBackgroundClick}
+        enablePanInteraction={allowPanZoom}
+        enableZoomInteraction={allowPanZoom}
         linkColor={link => {
           const highlighted = highlightLinks.has(link);
-          const dim = hoverNode && !highlighted;
+          const dim = activeNodeId && !highlighted;
           if (dim) return 'rgba(148,163,184,0.25)';
           return highlighted ? '#38bdf8' : 'rgba(148,163,184,0.65)';
         }}
@@ -391,18 +677,85 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         onEngineStop={() => fgRef.current && fgRef.current.zoomToFit(400, 60)}
       />
 
-      {/* Zoom buttons */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2 text-slate-700 dark:text-slate-200">
-        <button onClick={zoomIn} className="p-2 bg-white/90 dark:bg-slate-800/90 rounded-lg shadow border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" title="拡大">＋</button>
-        <button onClick={zoomOut} className="p-2 bg-white/90 dark:bg-slate-800/90 rounded-lg shadow border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" title="縮小">－</button>
-        <button onClick={zoomFit} className="p-2 bg-white/90 dark:bg-slate-800/90 rounded-lg shadow border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" title="全体表示">⤢</button>
-        <button onClick={toggleLabelMode} className="p-2 bg-white/90 dark:bg-slate-800/90 rounded-lg shadow border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" title={`ラベル表示: ${labelMode === 'all' ? 'すべて' : '自動'}`} aria-pressed={labelMode === 'all'}>
-          Aa
-        </button>
+      {/* Toolbar */}
+      <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
+        <div className="pointer-events-auto flex flex-wrap items-center gap-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-3 py-2 text-slate-700 dark:text-slate-200">
+          <button
+            type="button"
+            onClick={resetView}
+            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+            title="リセット（ズーム/中心）"
+          >
+            リセット
+          </button>
+          <button
+            type="button"
+            onClick={zoomOut}
+            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+            title="縮小"
+          >
+            －
+          </button>
+          <button
+            type="button"
+            onClick={zoomIn}
+            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+            title="拡大"
+          >
+            ＋
+          </button>
+          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+          <button
+            type="button"
+            onClick={unpinAll}
+            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+            title="固定解除（pin解除）"
+          >
+            固定解除
+          </button>
+          <button
+            type="button"
+            onClick={reheatLayout}
+            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+            title="再レイアウト（reheat）"
+          >
+            再レイアウト
+          </button>
+          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">ラベル</span>
+            <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
+              <button
+                type="button"
+                onClick={() => setLabelMode('auto')}
+                aria-pressed={labelMode === 'auto'}
+                className={`px-2.5 py-1.5 text-[12px] font-semibold ${labelMode === 'auto' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+              >
+                自動
+              </button>
+              <button
+                type="button"
+                onClick={() => setLabelMode('all')}
+                aria-pressed={labelMode === 'all'}
+                className={`px-2.5 py-1.5 text-[12px] font-semibold border-l border-slate-200 dark:border-slate-600 ${labelMode === 'all' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+              >
+                全部
+              </button>
+              <button
+                type="button"
+                onClick={() => setLabelMode('none')}
+                aria-pressed={labelMode === 'none'}
+                className={`px-2.5 py-1.5 text-[12px] font-semibold border-l border-slate-200 dark:border-slate-600 ${labelMode === 'none' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+              >
+                なし
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
+      <div data-fg-ui className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
         <button
           type="button"
           className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
@@ -428,6 +781,106 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           <span className="w-3 h-3 rounded-full bg-sky-400"></span>関連する昆虫
         </button>
       </div>
+
+      {/* Selection panel */}
+      {selectedNode && (
+        <div data-fg-ui className="absolute bottom-4 right-4 left-4 sm:left-auto sm:w-[360px] bg-white/95 dark:bg-slate-900/90 backdrop-blur rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-800 dark:text-slate-100">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${selectedNode.type.startsWith('plant') ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-200 dark:border-emerald-900/60' : 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-200 dark:border-sky-900/60'}`}>
+                  {selectedNode.type.startsWith('plant') ? '植物' : '昆虫'}
+                </span>
+                <h3 className="font-bold truncate">{selectedNode.name}</h3>
+              </div>
+              <div className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                {selectedNode.type.startsWith('plant') ? (() => {
+                  const yinfo = getYlistPlantInfo(selectedNode.name);
+                  return yinfo?.info?.scientificName ? <span className="italic">{yinfo.info.scientificName}</span> : <span className="opacity-70">学名: 不明</span>;
+                })() : (
+                  selectedNode.raw?.scientificName
+                    ? <span className="italic">{selectedNode.raw.scientificName}</span>
+                    : <span className="opacity-70">学名: 不明</span>
+                )}
+              </div>
+              {selectedStats && (
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-slate-600 dark:text-slate-300">
+                  <span>接続: {selectedStats.degree}</span>
+                  {selectedNode.type.startsWith('plant') && <span>利用種: {selectedPlantInsects.length}</span>}
+                  {selectedNode.type.startsWith('insect') && <span>食草: {selectedInsectHostPlants.length}</span>}
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              className="shrink-0 p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              onClick={() => setSelectedNodeId(null)}
+              aria-label="選択を解除"
+              title="解除"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="mt-3 space-y-2">
+            {selectedNode.type.startsWith('insect') ? (
+              <div>
+                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">食草</div>
+                {selectedInsectHostPlants.length === 0 ? (
+                  <div className="text-xs text-slate-500 dark:text-slate-400">不明 / 未登録</div>
+                ) : (
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedInsectHostPlants.slice(0, MAX_PANEL_ITEMS).map((p, idx) => (
+                      <span key={`${p.name}_${p.part}_${idx}`} className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        {p.name}{p.part ? `（${p.part}）` : ''}
+                      </span>
+                    ))}
+                    {selectedInsectHostPlants.length > MAX_PANEL_ITEMS && (
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedInsectHostPlants.length - MAX_PANEL_ITEMS}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">この植物を利用する昆虫</div>
+                {selectedPlantInsects.length === 0 ? (
+                  <div className="text-xs text-slate-500 dark:text-slate-400">不明 / 未登録</div>
+                ) : (
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedPlantInsects.slice(0, MAX_PANEL_ITEMS).map((name, idx) => (
+                      <span key={`${name}_${idx}`} className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        {name}
+                      </span>
+                    ))}
+                    {selectedPlantInsects.length > MAX_PANEL_ITEMS && (
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedPlantInsects.length - MAX_PANEL_ITEMS}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              className={`px-3 py-2 rounded-lg text-[12px] font-semibold text-white shadow ${selectedNode.type.startsWith('plant') ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-sky-600 hover:bg-sky-700'}`}
+              onClick={() => {
+                if (!selectedNode) return;
+                if (selectedNode.type.startsWith('insect')) {
+                  const path = selectedNode.raw?.path || buildInsectPath(selectedNode.raw || { name: selectedNode.name });
+                  navigate(path, { state: makeDetailLinkState(location) });
+                } else {
+                  navigate(`/plant/${encodeURIComponent(selectedNode.name)}`, { state: makeDetailLinkState(location) });
+                }
+              }}
+            >
+              詳細へ
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 });

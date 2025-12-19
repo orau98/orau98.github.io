@@ -85,7 +85,8 @@ const FloatingActionButton = () => {
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      navigate('/');
+      const isPlantContext = location.pathname.startsWith('/plant');
+      navigate(`/?tab=${isPlantContext ? 'plants' : 'insects'}`);
     }
     setIsOpen(false);
   };

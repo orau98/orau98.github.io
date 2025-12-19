@@ -733,9 +733,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">食草ネットワーク</h2>
             </div>
           </div>
-          <div className="px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
-            インタラクティブ
-          </div>
         </div>
 
         <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
@@ -796,7 +793,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-ホームに戻る
+一覧に戻る
           </Link>
           
           {/* 分類情報をヘッダーに表示 */}

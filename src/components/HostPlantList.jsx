@@ -300,6 +300,7 @@ const HostPlantList = ({
   // State for filters
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const listTopRef = useRef(null);
   const updateSearchParams = useCallback((mutate) => {
     const next = new URLSearchParams(searchParams);
     try {
@@ -307,6 +308,24 @@ const HostPlantList = ({
     } catch {}
     setSearchParams(next, { replace: true });
   }, [searchParams, setSearchParams]);
+
+  const getStickyHeaderOffset = useCallback(() => {
+    if (typeof window === "undefined") return 0;
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue("--app-sticky-header-height");
+    const parsed = parseInt(raw, 10);
+    if (Number.isFinite(parsed)) return parsed + 12;
+    return 80;
+  }, []);
+
+  const scrollToListTop = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const el = listTopRef.current;
+    if (!el) return;
+    const offset = getStickyHeaderOffset();
+    const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }, [getStickyHeaderOffset]);
 
   const currentPage = useMemo(() => {
     const raw = searchParams.get('ppage');
@@ -693,6 +712,7 @@ const HostPlantList = ({
 
   const handlePageChange = (page) => {
     setPPage(page);
+    scrollToListTop();
   };
 
   React.useEffect(() => {
@@ -709,7 +729,7 @@ const HostPlantList = ({
 
     return (
       <div className="mt-4">
-        <div className="sticky top-20 z-40">
+        <div className="sticky z-40" style={{ top: 'calc(var(--app-sticky-header-height, 0px) + 12px)' }}>
           <div className="rounded-xl bg-white/85 dark:bg-slate-900/70 backdrop-blur border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 shadow-sm">
             {/* Active Filters & Toggle */}
             <div className="flex flex-wrap items-center gap-3">
@@ -757,6 +777,7 @@ const HostPlantList = ({
                     p.delete('pfamily');
                     p.delete('porder');
                     p.delete('ppage');
+                    p.delete('q');
                   });
                 }}
                 className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
@@ -853,6 +874,7 @@ const HostPlantList = ({
       )}
 
       <div className="p-6">
+        <div ref={listTopRef} />
         <div>
           {currentHostPlants.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

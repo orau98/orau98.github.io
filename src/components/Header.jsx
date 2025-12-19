@@ -139,7 +139,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
                         <>
                           {' '}
                           <Link
-                            to={`/?classification=${encodeURIComponent(speciesInfo.family)}&tab=plants`}
+                            to={`/?tab=plants&pfamily=${encodeURIComponent(speciesInfo.family)}`}
                             className="text-slate-300 ml-2 underline decoration-emerald-300/60 hover:decoration-emerald-400"
                             aria-label={`${speciesInfo.family} の植物を検索`}
                           >
