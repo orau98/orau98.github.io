@@ -9,7 +9,8 @@ import { makeDetailLinkState } from '../utils/navState';
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
 
-const MAX_RELATED = 40;
+const DEFAULT_RELATED_LIMIT = 24;
+const RELATED_LIMIT_OPTIONS = [12, 24, 40, 60];
 const MAX_PANEL_ITEMS = 12;
 
 const normalizePlantName = (name = '') =>
@@ -50,10 +51,19 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const isPinDraggingRef = useRef(false);
   const pinDragPointerIdRef = useRef(null);
   const pinDragNodeIdRef = useRef(null);
+  const hasUserInteractedRef = useRef(false);
+  const lastClickRef = useRef({ id: null, ts: 0 });
   const [hoverNodeId, setHoverNodeId] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [legendFocus, setLegendFocus] = useState(null);
+  const [legendDimMode, setLegendDimMode] = useState('fade'); // fade | hide
   const [labelMode, setLabelMode] = useState('auto'); // auto | all | none
+  const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
+  const [showRelatedInsects, setShowRelatedInsects] = useState(true);
+  const [linkDistance, setLinkDistance] = useState(48);
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
+  const [isCompactPanel, setIsCompactPanel] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const [ylistData, setYlistData] = useState(null);
 
@@ -62,6 +72,28 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (import.meta.env.DEV) return `?v=${Date.now()}`;
     return import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';
   }, []);
+
+  useEffect(() => {
+    hasUserInteractedRef.current = false;
+  }, [currentInsect?.name, currentPlantName]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mq = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsCompactPanel(mq.matches);
+    update();
+    if (mq.addEventListener) {
+      mq.addEventListener('change', update);
+      return () => mq.removeEventListener('change', update);
+    }
+    mq.addListener(update);
+    return () => mq.removeListener(update);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedNodeId) return;
+    setPanelCollapsed(isCompactPanel);
+  }, [selectedNodeId, isCompactPanel]);
 
   // load image indexes once
   useEffect(() => {
@@ -147,11 +179,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       }
     };
 
+    const relatedLimitSafe = Math.max(6, relatedLimit || DEFAULT_RELATED_LIMIT);
+
     if (currentPlantName) {
       const centerId = `plant:${currentPlantName}`;
       addNode(centerId, currentPlantName, 'plant-current');
       const related = hostPlantsMap[currentPlantName] || [];
-      related.slice(0, MAX_RELATED).forEach(name => {
+      related.slice(0, relatedLimitSafe).forEach(name => {
         const insectDetail = allInsects?.find(i => i.name === name);
         const insectId = `insect:${name}`;
         addNode(insectId, name, 'insect', insectDetail);
@@ -170,23 +204,28 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         plants = currentInsect.hostPlants.split(/[、，,]/).map(s => s.trim()).filter(Boolean);
       }
 
-      plants.forEach(plantName => {
+      const limitedPlants = plants.slice(0, relatedLimitSafe);
+      const relatedPerPlant = Math.max(4, Math.floor(relatedLimitSafe / Math.max(1, limitedPlants.length)));
+
+      limitedPlants.forEach(plantName => {
         const plantId = `plant:${plantName}`;
         addNode(plantId, plantName, 'plant');
         links.push({ source: centerId, target: plantId });
 
-        const related = (hostPlantsMap[plantName] || []).filter(n => n !== currentInsect.name);
-        related.slice(0, MAX_RELATED).forEach(name => {
-          const insectDetail = allInsects?.find(i => i.name === name);
-          const insectId = `insect:${name}`;
-          addNode(insectId, name, 'insect', insectDetail);
-          links.push({ source: plantId, target: insectId });
-        });
+        if (showRelatedInsects) {
+          const related = (hostPlantsMap[plantName] || []).filter(n => n !== currentInsect.name);
+          related.slice(0, relatedPerPlant).forEach(name => {
+            const insectDetail = allInsects?.find(i => i.name === name);
+            const insectId = `insect:${name}`;
+            addNode(insectId, name, 'insect', insectDetail);
+            links.push({ source: plantId, target: insectId });
+          });
+        }
       });
     }
 
     return { nodes, links };
-  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, plantImageCandidates]);
+  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, plantImageCandidates, relatedLimit, showRelatedInsects]);
 
   // selection safety: clear when graph changes
   useEffect(() => {
@@ -194,6 +233,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (graphData.nodes.some(n => n.id === selectedNodeId)) return;
     setSelectedNodeId(null);
   }, [graphData.nodes, selectedNodeId]);
+
+  const nodeTypeById = useMemo(() => {
+    const map = new Map();
+    graphData.nodes.forEach((n) => map.set(n.id, n.type));
+    return map;
+  }, [graphData.nodes]);
 
   const selectedNode = useMemo(() => {
     if (!selectedNodeId) return null;
@@ -322,9 +367,30 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return [];
   }, [hostPlantsMap, selectedNode]);
 
+  const focusNodeById = useCallback((nodeId) => {
+    if (!nodeId) return;
+    const node = graphData.nodes.find(n => n.id === nodeId);
+    if (!node) return;
+    hasUserInteractedRef.current = true;
+    setSelectedNodeId(nodeId);
+    setHoverNodeId(null);
+    try {
+      if (fgRef.current && typeof node.x === 'number' && typeof node.y === 'number') {
+        fgRef.current.centerAt(node.x, node.y, 280);
+      }
+    } catch { /* ignore */ }
+  }, [graphData.nodes]);
+
+  const focusNodeByName = useCallback((name, typeHint) => {
+    if (!name) return;
+    const id = typeHint === 'plant' ? `plant:${name}` : `insect:${name}`;
+    focusNodeById(id);
+  }, [focusNodeById]);
+
   // initial fit
   useEffect(() => {
     if (!fgRef.current) return;
+    if (hasUserInteractedRef.current) return;
     const t = setTimeout(() => {
       try { fgRef.current.zoomToFit(400, 60); } catch { /* ignore */ }
     }, 250);
@@ -337,6 +403,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setHoverNodeId(node ? node.id : null);
   }, [selectedNodeId]);
 
+  const markUserInteracted = useCallback(() => {
+    hasUserInteractedRef.current = true;
+  }, []);
+
   // click toggles selection (navigation moved to the detail panel)
   const handleNodeClick = useCallback((node) => {
     if (!node) return;
@@ -344,14 +414,29 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ignoreNextNodeClickRef.current = false;
       return;
     }
+    markUserInteracted();
+    const now = Date.now();
+    if (lastClickRef.current.id === node.id && now - lastClickRef.current.ts < 420) {
+      // double click/tap: go to detail
+      if (node.type.startsWith('insect')) {
+        const path = node.raw?.path || buildInsectPath(node.raw || { name: node.name });
+        navigate(path, { state: makeDetailLinkState(location) });
+      } else {
+        navigate(`/plant/${encodeURIComponent(node.name)}`, { state: makeDetailLinkState(location) });
+      }
+      lastClickRef.current = { id: null, ts: 0 };
+      return;
+    }
+    lastClickRef.current = { id: node.id, ts: now };
     setSelectedNodeId(prev => (prev === node.id ? null : node.id));
     setHoverNodeId(null);
-  }, []);
+  }, [location, markUserInteracted, navigate]);
 
   const handleBackgroundClick = useCallback(() => {
+    markUserInteracted();
     setSelectedNodeId(null);
     setHoverNodeId(null);
-  }, []);
+  }, [markUserInteracted]);
 
   // draw helper: rounded rect
   const drawRoundedRect = (c, x, y, w, h, r) => {
@@ -431,17 +516,20 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       'plant-current': '#22c55e',
       plant: '#10b981'
     };
-    const baseR = node.type.includes('current') ? 12 : 8;
+    const isCurrent = node.type.includes('current');
+    const baseR = isCurrent ? 13 : 8;
     const radius = baseR / Math.sqrt(globalScale);
     const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
     const dimByLegend = legendFocus && !node.type.includes(legendFocus) && node.id !== selectedNodeId;
     const dim = dimByHighlight || dimByLegend;
-    const alpha = dim ? 0.25 : 1;
-    const dense = labelMode === 'auto' && graphData.nodes.length > 24;
+    const dimAlpha = legendDimMode === 'hide' ? 0.06 : 0.25;
+    const alpha = dim ? dimAlpha : 1;
+    const dense = labelMode === 'auto' && graphData.nodes.length > 28;
     const showLabel = labelMode !== 'none' && (
       labelMode === 'all'
-      || node.type.includes('current')
+      || isCurrent
+      || selectedNodeId === node.id
       || (activeNodeId && inHighlight)
       || (!dense && !dim)
       || (globalScale > 1.8 && !dim)
@@ -486,21 +574,47 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.stroke();
     }
 
+    if (isCurrent) {
+      ctx.save();
+      ctx.lineWidth = 2.2 / Math.sqrt(globalScale);
+      ctx.strokeStyle = isDark ? 'rgba(248,250,252,0.9)' : 'rgba(15,23,42,0.85)';
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius * 1.35, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
     if (showLabel) drawLabel(node.x, node.y, node.name, dim);
-  }, [activeNodeId, graphData.nodes.length, highlightNodeIds, legendFocus, isDark, labelMode, selectedNodeId]);
+  }, [activeNodeId, graphData.nodes.length, highlightNodeIds, legendFocus, legendDimMode, isDark, labelMode, selectedNodeId]);
 
   // zoom controls
-  const zoomIn = useCallback(() => { if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() * 1.4, 350); }, []);
-  const zoomOut = useCallback(() => { if (fgRef.current) fgRef.current.zoom(fgRef.current.zoom() / 1.4, 350); }, []);
-  const resetView = useCallback(() => { if (fgRef.current) fgRef.current.zoomToFit(400, 60); }, []);
-  const reheatLayout = useCallback(() => { if (fgRef.current) fgRef.current.d3ReheatSimulation(); }, []);
+  const zoomIn = useCallback(() => {
+    if (!fgRef.current) return;
+    markUserInteracted();
+    fgRef.current.zoom(fgRef.current.zoom() * 1.4, 350);
+  }, [markUserInteracted]);
+  const zoomOut = useCallback(() => {
+    if (!fgRef.current) return;
+    markUserInteracted();
+    fgRef.current.zoom(fgRef.current.zoom() / 1.4, 350);
+  }, [markUserInteracted]);
+  const resetView = useCallback(() => {
+    if (!fgRef.current) return;
+    markUserInteracted();
+    fgRef.current.zoomToFit(400, 60);
+  }, [markUserInteracted]);
+  const reheatLayout = useCallback(() => {
+    markUserInteracted();
+    if (fgRef.current) fgRef.current.d3ReheatSimulation();
+  }, [markUserInteracted]);
   const unpinAll = useCallback(() => {
     for (const node of graphData.nodes) {
       node.fx = undefined;
       node.fy = undefined;
     }
+    markUserInteracted();
     try { fgRef.current && fgRef.current.d3ReheatSimulation(); } catch { /* ignore */ }
-  }, [graphData.nodes]);
+  }, [graphData.nodes, markUserInteracted]);
   const toggleLegendFocus = useCallback((key) => {
     setLegendFocus((prev) => (prev === key ? null : key));
   }, []);
@@ -566,6 +680,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const handlePointerDownCapture = useCallback((event) => {
     if (event.pointerType !== 'touch') return;
     if (event.target instanceof Element && event.target.closest('[data-fg-ui]')) return;
+    markUserInteracted();
 
     activeTouchPointersRef.current.add(event.pointerId);
     if (activeTouchPointersRef.current.size > 1) {
@@ -591,7 +706,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       longPressStartRef.current = null;
       beginPinDrag(node, pointerId);
     }, 450);
-  }, [beginPinDrag, cancelLongPress, findNearestNode, getRelativePoint]);
+  }, [beginPinDrag, cancelLongPress, findNearestNode, getRelativePoint, markUserInteracted]);
 
   const handlePointerMoveCapture = useCallback((event) => {
     if (event.pointerType !== 'touch') return;
@@ -661,20 +776,32 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         onBackgroundClick={handleBackgroundClick}
         enablePanInteraction={allowPanZoom}
         enableZoomInteraction={allowPanZoom}
+        linkDistance={linkDistance}
         linkColor={link => {
           const highlighted = highlightLinks.has(link);
-          const dim = activeNodeId && !highlighted;
-          if (dim) return 'rgba(148,163,184,0.25)';
+          const sId = typeof link.source === 'object' ? link.source.id : link.source;
+          const tId = typeof link.target === 'object' ? link.target.id : link.target;
+          const sType = nodeTypeById.get(sId);
+          const tType = nodeTypeById.get(tId);
+          const legendDim = legendFocus && !(sType?.includes(legendFocus) || tType?.includes(legendFocus));
+          const dim = (activeNodeId && !highlighted) || legendDim;
+          const dimAlpha = legendDimMode === 'hide' ? 0.08 : 0.25;
+          if (dim) return `rgba(148,163,184,${dimAlpha})`;
           return highlighted ? '#38bdf8' : 'rgba(148,163,184,0.65)';
         }}
-        linkWidth={link => (highlightLinks.has(link) ? 2.2 : 1.1)}
+        linkWidth={link => (highlightLinks.has(link) ? 2.2 : (legendFocus ? 0.7 : 1.1))}
         linkDirectionalParticles={link => (highlightLinks.has(link) ? 3 : 0)}
         linkDirectionalParticleWidth={1.6}
         linkCurvature={0.18}
         backgroundColor={isDark ? '#0b1220' : '#f8fafc'}
         cooldownTicks={80}
         d3VelocityDecay={0.35}
-        onEngineStop={() => fgRef.current && fgRef.current.zoomToFit(400, 60)}
+        onZoom={markUserInteracted}
+        onEngineStop={() => {
+          if (!fgRef.current) return;
+          if (hasUserInteractedRef.current) return;
+          fgRef.current.zoomToFit(400, 60);
+        }}
       />
 
       {/* Toolbar */}
@@ -751,19 +878,99 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               </button>
             </div>
           </div>
+          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">関連数</span>
+            <select
+              value={relatedLimit}
+              onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+              className="text-[12px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 px-2 py-1"
+            >
+              {RELATED_LIMIT_OPTIONS.map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowRelatedInsects((prev) => !prev)}
+            disabled={!currentInsect}
+            className={`px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 ${
+              showRelatedInsects ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-200' : 'bg-white/70 dark:bg-slate-900/40'
+            } ${!currentInsect ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white dark:hover:bg-slate-800'}`}
+            title="食草から関連昆虫を表示/非表示"
+          >
+            関連昆虫{showRelatedInsects ? 'ON' : 'OFF'}
+          </button>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">間隔</span>
+            <input
+              type="range"
+              min="32"
+              max="80"
+              step="4"
+              value={linkDistance}
+              onChange={(e) => setLinkDistance(parseInt(e.target.value, 10))}
+              className="w-20"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowHelp((prev) => !prev)}
+            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+            title="操作ヘルプ"
+          >
+            ？ヘルプ
+          </button>
         </div>
       </div>
 
+      {showHelp && (
+        <div data-fg-ui className="absolute top-16 left-3 right-3 sm:right-auto sm:w-[360px] bg-white/95 dark:bg-slate-900/95 backdrop-blur rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 text-xs text-slate-700 dark:text-slate-200">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <div className="font-bold text-sm mb-2">操作ガイド</div>
+              <ul className="space-y-1 list-disc list-inside text-[12px]">
+                <li>ドラッグで移動、ホイール/ピンチでズーム</li>
+                <li>タップ/クリックで選択、同じノードを素早く2回で詳細</li>
+                <li>長押しでノード固定（モバイル）</li>
+                <li>ラベル/関連数/間隔を調整して密度をコントロール</li>
+              </ul>
+            </div>
+            <button
+              type="button"
+              className="shrink-0 p-1 rounded-md text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
+              onClick={() => setShowHelp(false)}
+              aria-label="ヘルプを閉じる"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Legend */}
       <div data-fg-ui className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
-        <button
-          type="button"
-          className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-          onClick={() => toggleLegendFocus('insect-current')}
-          aria-pressed={legendFocus === 'insect-current'}
-        >
-          <span className="w-3 h-3 rounded-full bg-rose-400"></span>現在の昆虫
-        </button>
+        {currentInsect && (
+          <button
+            type="button"
+            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
+            onClick={() => toggleLegendFocus('insect-current')}
+            aria-pressed={legendFocus === 'insect-current'}
+          >
+            <span className="w-3 h-3 rounded-full bg-rose-400"></span>現在の昆虫
+          </button>
+        )}
+        {currentPlantName && (
+          <button
+            type="button"
+            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'plant-current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
+            onClick={() => toggleLegendFocus('plant-current')}
+            aria-pressed={legendFocus === 'plant-current'}
+          >
+            <span className="w-3 h-3 rounded-full bg-emerald-400"></span>現在の植物
+          </button>
+        )}
         <button
           type="button"
           className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'plant' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
@@ -780,11 +987,37 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         >
           <span className="w-3 h-3 rounded-full bg-sky-400"></span>関連する昆虫
         </button>
+        <div className="pt-2 mt-2 border-t border-slate-200/70 dark:border-slate-700/70 flex items-center gap-2">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">絞り込み</span>
+          <div className="inline-flex rounded-md overflow-hidden border border-slate-200 dark:border-slate-600">
+            <button
+              type="button"
+              onClick={() => setLegendDimMode('fade')}
+              aria-pressed={legendDimMode === 'fade'}
+              className={`px-2 py-1 text-[11px] font-semibold ${legendDimMode === 'fade' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+            >
+              薄く
+            </button>
+            <button
+              type="button"
+              onClick={() => setLegendDimMode('hide')}
+              aria-pressed={legendDimMode === 'hide'}
+              className={`px-2 py-1 text-[11px] font-semibold border-l border-slate-200 dark:border-slate-600 ${legendDimMode === 'hide' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+            >
+              隠す
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Selection panel */}
       {selectedNode && (
-        <div data-fg-ui className="absolute bottom-4 right-4 left-4 sm:left-auto sm:w-[360px] bg-white/95 dark:bg-slate-900/90 backdrop-blur rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-800 dark:text-slate-100">
+        <div
+          data-fg-ui
+          className={`absolute bottom-4 right-4 left-4 sm:left-auto sm:w-[360px] bg-white/95 dark:bg-slate-900/90 backdrop-blur rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-800 dark:text-slate-100 transition-all ${
+            panelCollapsed ? 'max-h-20 overflow-hidden' : 'max-h-[70vh]'
+          }`}
+        >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
@@ -811,17 +1044,30 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              className="shrink-0 p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-              onClick={() => setSelectedNodeId(null)}
-              aria-label="選択を解除"
-              title="解除"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-1">
+              {isCompactPanel && (
+                <button
+                  type="button"
+                  className="shrink-0 px-2 py-1 rounded-md text-[11px] font-semibold border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                  onClick={() => setPanelCollapsed((prev) => !prev)}
+                  aria-label={panelCollapsed ? '詳細を表示' : '縮小'}
+                >
+                  {panelCollapsed ? '詳細' : '縮小'}
+                </button>
+              )}
+              <button
+                type="button"
+                className="shrink-0 p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                onClick={() => setSelectedNodeId(null)}
+                aria-label="選択を解除"
+                title="解除"
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
+          {!panelCollapsed && (
           <div className="mt-3 space-y-2">
             {selectedNode.type.startsWith('insect') ? (
               <div>
@@ -831,9 +1077,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
                     {selectedInsectHostPlants.slice(0, MAX_PANEL_ITEMS).map((p, idx) => (
-                      <span key={`${p.name}_${p.part}_${idx}`} className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                      <button
+                        type="button"
+                        key={`${p.name}_${p.part}_${idx}`}
+                        onClick={() => focusNodeByName(p.name, 'plant')}
+                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                        title={`${p.name}へフォーカス`}
+                      >
                         {p.name}{p.part ? `（${p.part}）` : ''}
-                      </span>
+                      </button>
                     ))}
                     {selectedInsectHostPlants.length > MAX_PANEL_ITEMS && (
                       <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedInsectHostPlants.length - MAX_PANEL_ITEMS}</span>
@@ -849,9 +1101,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
                     {selectedPlantInsects.slice(0, MAX_PANEL_ITEMS).map((name, idx) => (
-                      <span key={`${name}_${idx}`} className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                      <button
+                        type="button"
+                        key={`${name}_${idx}`}
+                        onClick={() => focusNodeByName(name, 'insect')}
+                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                        title={`${name}へフォーカス`}
+                      >
                         {name}
-                      </span>
+                      </button>
                     ))}
                     {selectedPlantInsects.length > MAX_PANEL_ITEMS && (
                       <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedPlantInsects.length - MAX_PANEL_ITEMS}</span>
@@ -879,6 +1137,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               詳細へ
             </button>
           </div>
+          )}
         </div>
       )}
     </div>
