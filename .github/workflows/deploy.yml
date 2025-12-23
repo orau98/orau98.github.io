@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-  schedule:
-    - cron: '0 */6 * * *'
 
 permissions:
   contents: read
@@ -22,6 +20,7 @@ jobs:
     env:
       CI: true
       TZ: UTC
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,10 +34,8 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline --no-audit --no-fund
 
-      - name: Build (full prebuild + vite)
-        run: |
-          npm run prebuild
-          npm run build
+      - name: Build (prebuild via npm lifecycle + vite)
+        run: npm run build
 
       - name: Post-build cleanup and asset sync
         run: node scripts/postbuild-cleanup.mjs

@@ -2,10 +2,11 @@ name: Generate Sitemaps
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 3 * * 1'
-  push:
-    branches: [ main ]
+  # 手動実行のみ（自動更新はデプロイ時の prebuild で反映）
+
+concurrency:
+  group: sitemap-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
