@@ -1,12 +1,32 @@
 import React from 'react';
 import { absUrl } from '../utils/origin';
-import { buildInsectPath } from '../utils/insectSlug';
+
+const buildInsectMetaPath = (insect, fallbackType = 'moth') => {
+  if (!insect) return '/';
+  const type = insect.type || fallbackType;
+  const base =
+    type === 'butterfly'
+      ? 'butterfly'
+      : type === 'beetle'
+        ? 'beetle'
+        : type === 'leafbeetle'
+          ? 'leafbeetle'
+          : 'moth';
+  const id = insect.id || '';
+  if (!id) return '/';
+  return `/meta/${base}/${encodeURIComponent(id)}.html`;
+};
+
+const buildPlantMetaPath = (plantName) => {
+  if (!plantName) return '/';
+  return `/meta/plant/${encodeURIComponent(plantName)}.html`;
+};
 
 // Enhanced 蛾の構造化データ with Species and detailed taxonomy
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
 
-  const detailUrl = absUrl(buildInsectPath(moth));
+  const detailUrl = absUrl(buildInsectMetaPath(moth, 'moth'));
 
   // Normalize hostPlants to an array for safe operations
   const hostPlantsList = Array.isArray(moth.hostPlants)
@@ -117,10 +137,10 @@ export const MothStructuredData = ({ moth }) => {
         "item": absUrl('/')
       },
       {
-        "@type": "ListItem", 
+        "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/moth')
+        "item": absUrl('/meta/moth/index.html')
       },
       {
         "@type": "ListItem",
@@ -143,7 +163,7 @@ export const MothStructuredData = ({ moth }) => {
 export const ButterflyStructuredData = ({ butterfly }) => {
   if (!butterfly) return null;
 
-  const detailUrl = absUrl(buildInsectPath(butterfly));
+  const detailUrl = absUrl(buildInsectMetaPath(butterfly, 'butterfly'));
 
   const hostPlantsList = Array.isArray(butterfly.hostPlants)
     ? butterfly.hostPlants
@@ -253,10 +273,10 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         "item": absUrl('/')
       },
       {
-        "@type": "ListItem", 
+        "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/moth')
+        "item": absUrl('/meta/butterfly/index.html')
       },
       {
         "@type": "ListItem",
@@ -279,7 +299,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 export const BeetleStructuredData = ({ beetle }) => {
   if (!beetle) return null;
 
-  const detailUrl = absUrl(buildInsectPath(beetle));
+  const detailUrl = absUrl(buildInsectMetaPath(beetle, 'beetle'));
 
   const hostPlantsList = Array.isArray(beetle.hostPlants)
     ? beetle.hostPlants
@@ -389,10 +409,10 @@ export const BeetleStructuredData = ({ beetle }) => {
         "item": absUrl('/')
       },
       {
-        "@type": "ListItem", 
+        "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/moth')
+        "item": absUrl('/meta/beetle/index.html')
       },
       {
         "@type": "ListItem",
@@ -415,7 +435,7 @@ export const BeetleStructuredData = ({ beetle }) => {
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
 
-  const detailUrl = absUrl(buildInsectPath(leafbeetle));
+  const detailUrl = absUrl(buildInsectMetaPath(leafbeetle, 'leafbeetle'));
 
   const hostPlantsList = Array.isArray(leafbeetle.hostPlants)
     ? leafbeetle.hostPlants
@@ -544,10 +564,10 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         "item": absUrl('/')
       },
       {
-        "@type": "ListItem", 
+        "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/moth')
+        "item": absUrl('/meta/leafbeetle/index.html')
       },
       {
         "@type": "ListItem",
@@ -569,6 +589,9 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
 // Enhanced 植物の構造化データ with Species and detailed taxonomy
 export const PlantStructuredData = ({ plant, relatedInsects }) => {
   if (!plant) return null;
+
+  const canonicalPlantName = plant.canonicalName || plant.name;
+  const plantMetaUrl = absUrl(buildPlantMetaPath(canonicalPlantName));
 
   // Create comprehensive plant species schema with detailed information
   const structuredData = {
@@ -599,8 +622,8 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
       ]
     },
     "description": `${plant.name}${plant.scientificName ? `（${plant.scientificName}）` : ''}${plant.family ? `は${plant.family}に属する植物です。` : 'の詳細情報。'}${relatedInsects?.length ? `この植物を食草とする昆虫：${relatedInsects.slice(0, 3).map(i => i.name).join('、')}など${relatedInsects.length}種の昆虫が利用します。` : ''}`,
-    "url": `${absUrl(`/plant/${encodeURIComponent(plant.name)}`)}`,
-    "sameAs": `${absUrl(`/plant/${encodeURIComponent(plant.name)}`)}`,
+    "url": plantMetaUrl,
+    "sameAs": plantMetaUrl,
     "inLanguage": "ja",
     "additionalProperty": [
       {
@@ -665,13 +688,13 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
         "@type": "ListItem", 
         "position": 2,
         "name": "植物",
-        "item": absUrl('/plant')
+        "item": absUrl('/meta/plant/index.html')
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": plant.name,
-        "item": `${absUrl(`/plant/${encodeURIComponent(plant.name)}`)}`
+        "item": plantMetaUrl
       }
     ]
   };

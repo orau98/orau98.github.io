@@ -69,10 +69,28 @@ function generateSplitSitemaps() {
       console.warn(`[sitemap] meta dir not found: ${absDir}`);
       return 0;
     }
-    const files = fs
+    let files = fs
       .readdirSync(absDir)
       .filter((f) => f.endsWith('.html'))
       .sort((a, b) => a.localeCompare(b, 'en'));
+
+    // 植物は「科名付きが正」として、科名なしエイリアスをサイトマップから除外
+    if (key === 'plant') {
+      const aliasBases = new Set();
+      files.forEach((file) => {
+        if (file === 'index.html') return;
+        const base = file.replace(/\.html$/i, '');
+        const m = base.match(/^(.+?)\(([^)]+科)\)$/);
+        if (m) aliasBases.add(m[1]);
+      });
+      files = files.filter((file) => {
+        if (file === 'index.html') return true;
+        const base = file.replace(/\.html$/i, '');
+        const isFamilyVariant = /\([^)]*科\)$/.test(base);
+        if (!isFamilyVariant && aliasBases.has(base)) return false;
+        return true;
+      });
+    }
 
     // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）
     if (includeIndexInMain && files.includes('index.html')) {

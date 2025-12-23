@@ -1,5 +1,11 @@
 User-agent: *
 Disallow: /check_site.html
+Disallow: /search/
+Disallow: /archive/
+Disallow: /dist/
+Disallow: /*.csv
+Disallow: /*.xlsx
+Disallow: /*.bak
+Disallow: /*.bak.*
 
 Sitemap: https://orau98.github.io/sitemap.xml
-Sitemap: https://orau98.github.io/sitemap-test.xml

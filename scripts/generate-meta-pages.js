@@ -817,7 +817,11 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const displayPlantName = plantName;
   
   const insectsList = relatedInsects.map(insect => insect.japaneseName).join(', ');
+  const isAlias = Boolean(originalPlantName && originalPlantName !== displayPlantName);
+  const canonicalPlantName = originalPlantName || displayPlantName;
   const safePlantName = displayPlantName.replace(/[/\\?%*:|"<>]/g, '-');
+  const safeCanonicalName = canonicalPlantName.replace(/[/\\?%*:|"<>]/g, '-');
+  const robotsContent = isAlias ? 'noindex, follow' : 'index, follow';
 
   // 植物の別名を取得（データ用の名前で取得）
   const plantAliases = getPlantAliases(dataPlantName);
@@ -849,14 +853,14 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="${robotsContent}">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
   <title>${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
   <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
-  <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safePlantName)}.html">
+  <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
   <link rel="alternate" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}">
   <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
   
@@ -865,7 +869,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safePlantName)}.html">
+  <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
   ${mainImageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
   <meta property="og:site_name" content="昆虫と食草の図鑑">
   
@@ -887,7 +891,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       "value": "${displayPlantName}"
     },
     "description": "${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
-    "url": "${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safePlantName)}.html",
+    "url": "${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html",
     ${mainImageUrl ? `"image": "${BASE_ORIGIN}${mainImageUrl}",` : ''}
     "inLanguage": "ja",
     "hasEcologicalInteraction": [
@@ -1089,19 +1093,13 @@ async function generateMetaPages() {
     // 正規化された3つのCSVファイルを読み込み
     const insectsData = loadCSV(path.join(__dirname, '../public/insects.csv'));
     // leafbeetle（ハムシ）は運用上 `hamushi_integrated_master.csv` 側に存在することがあるため、
-    // `public/insects.csv` に含まれない場合は `normalized_data/insects.csv` から不足分を補う。
+    // `public/insects.csv` に含まれない分は `normalized_data/insects.csv` から不足分を補う。
     // （SEO向け静的メタページの欠落・リンク切れを防ぐ）
     try {
-      const hasLeafbeetle =
-        insectsData.some((row) => {
-          const famLatin = (row.family || '').trim();
-          const famJP = (row.family_jp || '').trim();
-          return famJP === 'ハムシ科' || famLatin === 'Chrysomelidae';
-        });
-      if (!hasLeafbeetle) {
-        const normalizedInsectsData = loadCSVOptional(
-          path.join(__dirname, '../normalized_data/insects.csv'),
-        );
+      const normalizedInsectsData = loadCSVOptional(
+        path.join(__dirname, '../normalized_data/insects.csv'),
+      );
+      if (normalizedInsectsData.length > 0) {
         const existingIds = new Set(insectsData.map((row) => row.insect_id).filter(Boolean));
         let added = 0;
         normalizedInsectsData.forEach((row) => {
@@ -1646,10 +1644,26 @@ function generateMetaIndexes() {
   for (const sec of sections) {
     const dirPath = path.join(base, sec.dir);
     if (!fs.existsSync(dirPath)) continue;
-    const files = fs.readdirSync(dirPath)
+    let files = fs.readdirSync(dirPath)
       .filter(f => f.endsWith('.html'))
       .filter(f => f !== 'index.html')
       .sort((a,b)=> a.localeCompare(b, 'ja'));
+
+    // 植物は「科名付きが正」としてエイリアス（科名なし）を一覧から除外
+    if (sec.dir === 'plant') {
+      const aliasBases = new Set();
+      files.forEach((file) => {
+        const base = file.replace(/\.html$/i, '');
+        const m = base.match(/^(.+?)\(([^)]+科)\)$/);
+        if (m) aliasBases.add(m[1]);
+      });
+      files = files.filter((file) => {
+        const base = file.replace(/\.html$/i, '');
+        const isFamilyVariant = /\([^)]*科\)$/.test(base);
+        if (!isFamilyVariant && aliasBases.has(base)) return false;
+        return true;
+      });
+    }
 
     const relLinks = files.slice(0, 2000) // 安全のため上限（十分な内部リンク確保）
       .map(f => `<li><a href="/${['meta', sec.dir, f].join('/')}">${f.replace(/\.html$/,'')}</a></li>`) // ファイル名表示

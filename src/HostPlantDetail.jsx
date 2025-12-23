@@ -571,7 +571,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     : isGenus
     ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
     : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
-  const canonicalHref = absUrl(`/meta/plant/${encodeURIComponent(decodedPlantName)}.html`);
+  const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
+  const canonicalHref = absUrl(`/meta/plant/${encodeURIComponent(canonicalPlantName)}.html`);
 
   const { setOgTwitterImage } = useSeoMeta({
     title: pageTitle,
@@ -580,7 +581,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     url: canonicalHref,
     breadcrumbItems: [
       { name: '昆虫食草図鑑', url: absUrl('/') },
-      { name: '植物', url: absUrl('/plant') },
+      { name: '植物', url: absUrl('/meta/plant/index.html') },
       { name: decodedPlantName, url: canonicalHref },
     ],
     resetCanonicalTo: absUrl('/'),
@@ -1242,7 +1243,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       </div>
       {/* 構造化データ */}
       <PlantStructuredData 
-        plant={{ name: decodedPlantName, scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined, family: familyLabel }} 
+        plant={{
+          name: decodedPlantName,
+          canonicalName: canonicalPlantName,
+          scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined,
+          family: familyLabel,
+        }} 
         relatedInsects={relatedInsects}
       />
       

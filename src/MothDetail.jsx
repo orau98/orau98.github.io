@@ -510,7 +510,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     url: canonicalHref,
     breadcrumbItems: moth ? [
       { name: '昆虫食草図鑑', url: absUrl('/') },
-      { name: insectTypeLabel, url: absUrl(`/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}`) },
+      { name: insectTypeLabel, url: absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/index.html`) },
       { name: moth.name, url: canonicalHref }
     ] : undefined,
     resetCanonicalTo: absUrl('/')
