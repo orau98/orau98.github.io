@@ -17,6 +17,14 @@ const WIDTHS = [320, 640, 1024];
 
 function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 
+if (
+  process.env.SKIP_RESPONSIVE_IMAGES === '1' ||
+  (process.env.CI === 'true' && process.env.FORCE_RESPONSIVE_IMAGES !== '1')
+) {
+  console.log('[responsive] skipped (CI or SKIP_RESPONSIVE_IMAGES=1)');
+  process.exit(0);
+}
+
 async function processImage(srcPath, outBase, widths = WIDTHS) {
   try {
     const srcStat = fs.statSync(srcPath);
