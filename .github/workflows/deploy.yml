@@ -35,8 +35,8 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline --no-audit --no-fund
 
-      - name: Build (prebuild via npm lifecycle + vite)
-        run: npm run build
+      - name: Build (vite only)
+        run: npm run build:app
 
       - name: Post-build cleanup and asset sync
         run: node scripts/postbuild-cleanup.mjs
