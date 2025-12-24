@@ -1241,6 +1241,46 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           )}
         </div>
       </div>
+      <nav
+        aria-label="ページ内リンク"
+        className="mb-8 rounded-2xl bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 px-4 py-3 shadow-sm"
+      >
+        <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">ページ内</div>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <a
+            href="#basic-info"
+            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-900/40 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+          >
+            概要
+          </a>
+          <a
+            href="#plant-photos"
+            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200/80 dark:hover:bg-emerald-900/60 transition-colors"
+          >
+            写真
+          </a>
+          {classificationMembers && classificationMembers.length > 0 && (
+            <a
+              href="#classification-members"
+              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 hover:bg-blue-200/80 dark:hover:bg-blue-900/60 transition-colors"
+            >
+              分類内の植物
+            </a>
+          )}
+          <a
+            href="#plant-network"
+            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/70 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-200 hover:bg-emerald-200/80 dark:hover:bg-emerald-900/60 transition-colors"
+          >
+            ネットワーク
+          </a>
+          <a
+            href="#related-insects"
+            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-900/40 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+          >
+            関連昆虫
+          </a>
+        </div>
+      </nav>
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{
@@ -1253,7 +1293,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       />
       
       {/* 概要セクション（和名＋学名のみ） */}
-      <div id="basic-info" className="mt-4 md:mt-6">
+      <div id="basic-info" className="mt-4 md:mt-6 scroll-mt-24">
       <div className="mb-6">
         {/* Breadcrumb UI removed per request */}
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
@@ -1275,13 +1315,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       </div>
 
       {/* 植物画像ギャラリー */}
-      <section id="plant-photos" aria-labelledby="plant-photos" className="mb-12 md:mb-16 lg:mb-20">
+      <section id="plant-photos" aria-labelledby="plant-photos" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
         <PlantImageGallery images={plantImages} plantName={decodedPlantName} />
       </section>
 
       {/* 科／目ページ用：この分類に属する植物一覧 */}
       {classificationMembers && classificationMembers.length > 0 && (
-        <section className="mb-12 md:mb-16 lg:mb-20">
+        <section id="classification-members" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6">
             {isFamily ? 'この科に属する植物一覧' : isOrder ? 'この目に属する植物一覧' : 'この属に属する植物一覧'}（{classificationMembers.length}種）
           </h2>
@@ -1325,7 +1365,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       )}
 
       {/* 食草ネットワーク（植物中心） */}
-      <section id="plant-network" className="mb-12 md:mb-16 lg:mb-20">
+      <section id="plant-network" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
         <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
             <div className="flex items-center gap-3">
@@ -1364,7 +1404,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       </section>
 
       {/* この植物を利用する昆虫一覧（カード表示） */}
-      <div id="related-insects" className="mt-12 md:mt-16 mb-10">
+      <div id="related-insects" className="mt-12 md:mt-16 mb-10 scroll-mt-24">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-8 flex items-center">
           <svg className="w-8 h-8 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />

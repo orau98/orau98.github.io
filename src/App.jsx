@@ -128,6 +128,7 @@ function App() {
   const [hostPlants, setHostPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [summaryCounts, setSummaryCounts] = useState(null);
   const typesFetchStartedRef = useRef(false);
   const typesFetchPromiseRef = useRef(null);
@@ -136,6 +137,7 @@ function App() {
   const hostHydrationRequestedRef = useRef(false);
   const pendingHostHydrationRef = useRef(null);
   const requestHostHydrationRef = useRef(() => {});
+  const fetchDataRef = useRef(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const cacheLoadedRef = useRef(false);
   const cachedVersionRef = useRef(null);
@@ -212,6 +214,7 @@ function App() {
       if (!cacheLoadedRef.current) {
         setLoading(true);
       }
+      setLoadError(null);
       const base = import.meta.env.BASE_URL || '/';
       let plantDetailsLite = {};
       // Try lightweight split JSON first to speed up initial paint
@@ -5966,9 +5969,11 @@ function App() {
         setLeafbeetles([]);
         setHostPlants({});
         setPlantDetails({});
+        setLoadError(error);
       }
     };
     let cancelled = false;
+    fetchDataRef.current = fetchData;
     const bootstrap = async () => {
       const cached = await loadDatasetFromCache();
       if (!cancelled && cached?.payload) {
@@ -5984,6 +5989,7 @@ function App() {
     bootstrap();
     return () => {
       cancelled = true;
+      fetchDataRef.current = null;
     };
   }, []); // Close useEffect and add dependency array
 
@@ -6086,6 +6092,12 @@ function App() {
   
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-white focus:text-slate-900 focus:shadow-lg"
+      >
+        本文へスキップ
+      </a>
       {!isExplorerPage && (
         <Header
           theme={theme}
@@ -6099,7 +6111,31 @@ function App() {
         />
       )}
 
-      <main id="main-content" role="main">
+      {loadError && (
+        <div className="px-4 sm:px-6 lg:px-8 mt-4">
+          <div
+            role="alert"
+            className="max-w-6xl mx-auto rounded-2xl border border-red-200/70 dark:border-red-700/60 bg-red-50/90 dark:bg-red-900/30 px-4 py-3 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          >
+            <div className="text-sm text-red-700 dark:text-red-200">
+              データの読み込みに失敗しました。通信状態を確認して再試行してください。
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (fetchDataRef.current) {
+                  fetchDataRef.current(cachedVersionRef.current);
+                }
+              }}
+              className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors shadow-sm"
+            >
+              再読み込み
+            </button>
+          </div>
+        </div>
+      )}
+
+      <main id="main-content" role="main" tabIndex={-1}>
         {loading ? (
           <SkeletonLoader />
         ) : (

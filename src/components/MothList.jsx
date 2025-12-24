@@ -521,6 +521,43 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     });
   }, [updateSearchParams]);
 
+  const clearClassification = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('classification');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const clearFilters = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('ihost');
+      p.delete('ifamily');
+      p.delete('igenus');
+      p.delete('imonth');
+      p.delete('classification');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const clearSearch = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('q');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const resetAll = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('ihost');
+      p.delete('ifamily');
+      p.delete('igenus');
+      p.delete('imonth');
+      p.delete('classification');
+      p.delete('q');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
   // Debug log
   useEffect(() => {
     if (import.meta.env.DEV && moths && moths.length > 0) {
@@ -595,6 +632,34 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const emergenceFilterId = `${filterIdBase}-emergence`;
 
   const classificationFilter = searchParams.get('classification');
+  const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
+  const hasSearchQuery = searchQuery.length > 0;
+  const hasFilterCriteria = hostFilter !== 'all' || !!familyFilter || !!genusFilter || !!emergenceFilter || !!classificationFilter;
+  const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
+  const activeFilters = useMemo(() => {
+    const filters = [];
+    if (hasSearchQuery) filters.push({ type: '検索', value: searchQuery, clear: clearSearch });
+    if (hostFilter !== 'all') filters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setIHostFilter('all') });
+    if (familyFilter) filters.push({ type: '科', value: familyFilter, clear: () => setIFamilyFilter('') });
+    if (genusFilter) filters.push({ type: '属', value: genusFilter, clear: () => setIGenusFilter('') });
+    if (emergenceFilter) filters.push({ type: '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
+    if (classificationFilter) filters.push({ type: '分類', value: classificationFilter, clear: clearClassification });
+    return filters;
+  }, [
+    hasSearchQuery,
+    searchQuery,
+    hostFilter,
+    familyFilter,
+    genusFilter,
+    emergenceFilter,
+    classificationFilter,
+    clearSearch,
+    clearClassification,
+    setIHostFilter,
+    setIFamilyFilter,
+    setIGenusFilter,
+    setIEmergenceFilter,
+  ]);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const listTopRef = useRef(null);
@@ -1151,28 +1216,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [debouncedSearchTerm, hostFilter, familyFilter, genusFilter, emergenceFilter, currentPage, setIPage]);
 
   const renderFilters = () => {
-    const activeFilters = [];
-    const clearClassification = () => {
-      updateSearchParams((p) => {
-        p.delete('classification');
-        p.delete('ipage');
-      });
-    };
-
-    if (hostFilter !== 'all') activeFilters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setIHostFilter('all') });
-    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setIFamilyFilter('') });
-    if (genusFilter) activeFilters.push({ type: '属', value: genusFilter, clear: () => setIGenusFilter('') });
-    if (emergenceFilter) activeFilters.push({ type: '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
-    if (classificationFilter) activeFilters.push({ type: '分類', value: classificationFilter, clear: clearClassification });
-
-    const hasActiveFilters = activeFilters.length > 0;
-
     return (
       <div className="mt-4">
         <div className="sticky z-40" style={{ top: 'calc(var(--app-sticky-header-height, 0px) + 12px)' }}>
           <div className="rounded-xl bg-white/85 dark:bg-slate-900/70 backdrop-blur border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 shadow-sm">
             {/* Active Filters & Toggle */}
-            <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
           {/* Toggle Button - Moved to start */}
           <button 
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
@@ -1193,7 +1242,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
           {/* Chips - Chips next */}
           <div className="flex flex-wrap gap-2 items-center flex-1">
-            {hasActiveFilters && (
+            {hasAnyCriteria && (
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
             )}
             {activeFilters.map((filter, idx) => (
@@ -1210,22 +1259,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                 </button>
               </span>
             ))}
-            {hasActiveFilters && (
-              <button 
-                onClick={() => {
-                  updateSearchParams((p) => {
-                    p.delete('ihost');
-                    p.delete('ifamily');
-                    p.delete('igenus');
-                    p.delete('imonth');
-                    p.delete('classification');
-                    p.delete('ipage');
-                    p.delete('q');
-                  });
-                }}
-                className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
+            {hasAnyCriteria && (
+              <button
+                type="button"
+                onClick={resetAll}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               >
-                すべてクリア
+                すべてリセット
               </button>
             )}
           </div>
@@ -1327,7 +1367,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
         </div>
         
-        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500">
+        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500" role="status" aria-live="polite">
           {filteredMoths?.length ?? 0} 件が見つかりました
         </div>
       </div>
@@ -1406,6 +1446,44 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               </div>
               <p className="text-slate-500 dark:text-slate-400 font-medium">該当する{title}が見つかりません</p>
               <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">別のキーワードで検索してみてください</p>
+              {hasAnyCriteria && (
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={resetAll}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                  >
+                    すべてリセット
+                  </button>
+                  {hasSearchQuery && hasFilterCriteria && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-200 text-blue-700 dark:text-blue-200 dark:border-blue-500/60 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                    >
+                      検索のみクリア
+                    </button>
+                  )}
+                  {hasSearchQuery && !hasFilterCriteria && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-200 text-blue-700 dark:text-blue-200 dark:border-blue-500/60 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                    >
+                      検索をクリア
+                    </button>
+                  )}
+                  {!hasSearchQuery && hasFilterCriteria && (
+                    <button
+                      type="button"
+                      onClick={clearFilters}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-blue-200 text-blue-700 dark:text-blue-200 dark:border-blue-500/60 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                    >
+                      フィルター解除
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

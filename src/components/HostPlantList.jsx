@@ -361,6 +361,50 @@ const HostPlantList = ({
       p.delete('ppage');
     });
   }, [updateSearchParams]);
+
+  const clearFilters = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('pfamily');
+      p.delete('porder');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const clearSearch = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('q');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const resetAll = useCallback(() => {
+    updateSearchParams((p) => {
+      p.delete('pfamily');
+      p.delete('porder');
+      p.delete('q');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
+  const hasSearchQuery = searchQuery.length > 0;
+  const hasFilterCriteria = !!familyFilter || !!orderFilter;
+  const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
+  const activeFilters = useMemo(() => {
+    const filters = [];
+    if (hasSearchQuery) filters.push({ type: '検索', value: searchQuery, clear: clearSearch });
+    if (familyFilter) filters.push({ type: '科', value: familyFilter, clear: () => setPFamilyFilter('') });
+    if (orderFilter) filters.push({ type: '目', value: orderFilter, clear: () => setPOrderFilter('') });
+    return filters;
+  }, [
+    hasSearchQuery,
+    searchQuery,
+    familyFilter,
+    orderFilter,
+    clearSearch,
+    setPFamilyFilter,
+    setPOrderFilter,
+  ]);
   const filterIdBase = useId();
   const orderFilterId = `${filterIdBase}-order`;
   const familyFilterId = `${filterIdBase}-family`;
@@ -721,12 +765,6 @@ const HostPlantList = ({
   }, [debouncedPlantSearch, familyFilter, orderFilter, currentPage, setPPage]);
 
   const renderFilters = () => {
-    const activeFilters = [];
-    if (familyFilter) activeFilters.push({ type: '科', value: familyFilter, clear: () => setPFamilyFilter('') });
-    if (orderFilter) activeFilters.push({ type: '目', value: orderFilter, clear: () => setPOrderFilter('') });
-
-    const hasActiveFilters = activeFilters.length > 0;
-
     return (
       <div className="mt-4">
         <div className="sticky z-40" style={{ top: 'calc(var(--app-sticky-header-height, 0px) + 12px)' }}>
@@ -753,7 +791,7 @@ const HostPlantList = ({
 
           {/* Chips */}
           <div className="flex flex-wrap gap-2 items-center flex-1">
-            {hasActiveFilters && (
+            {hasAnyCriteria && (
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
             )}
             {activeFilters.map((filter, idx) => (
@@ -770,19 +808,13 @@ const HostPlantList = ({
                 </button>
               </span>
             ))}
-            {hasActiveFilters && (
-              <button 
-                onClick={() => {
-                  updateSearchParams((p) => {
-                    p.delete('pfamily');
-                    p.delete('porder');
-                    p.delete('ppage');
-                    p.delete('q');
-                  });
-                }}
-                className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2"
+            {hasAnyCriteria && (
+              <button
+                type="button"
+                onClick={resetAll}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               >
-                すべてクリア
+                すべてリセット
               </button>
             )}
           </div>
@@ -841,7 +873,7 @@ const HostPlantList = ({
           </div>
         </div>
         
-        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500">
+        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500" role="status" aria-live="polite">
           {filteredHostPlants?.length ?? 0} 件が見つかりました
         </div>
       </div>
@@ -901,6 +933,44 @@ const HostPlantList = ({
               <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
                 別のキーワードで検索してみてください
               </p>
+              {hasAnyCriteria && (
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={resetAll}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                  >
+                    すべてリセット
+                  </button>
+                  {hasSearchQuery && hasFilterCriteria && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 text-emerald-700 dark:text-emerald-200 dark:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors"
+                    >
+                      検索のみクリア
+                    </button>
+                  )}
+                  {hasSearchQuery && !hasFilterCriteria && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 text-emerald-700 dark:text-emerald-200 dark:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors"
+                    >
+                      検索をクリア
+                    </button>
+                  )}
+                  {!hasSearchQuery && hasFilterCriteria && (
+                    <button
+                      type="button"
+                      onClick={clearFilters}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 text-emerald-700 dark:text-emerald-200 dark:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors"
+                    >
+                      フィルター解除
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 const SearchInput = ({
   value,
@@ -11,6 +11,7 @@ const SearchInput = ({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const listboxId = useId();
+  const blurTimeoutRef = useRef(null);
   const expanded = showSuggestions && suggestions.length > 0;
   const activeDescendantId = useMemo(() => {
     if (!expanded || activeIndex < 0) return undefined;
@@ -21,6 +22,22 @@ const SearchInput = ({
     // 入力値はそのまま保持（変換しない）
     onChange(e);
     setShowSuggestions(true);
+  };
+
+  const handleFocus = () => {
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+      blurTimeoutRef.current = null;
+    }
+    setShowSuggestions(true);
+  };
+
+  const handleBlur = () => {
+    if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current);
+    blurTimeoutRef.current = setTimeout(() => {
+      setShowSuggestions(false);
+      setActiveIndex(-1);
+    }, 120);
   };
 
   const handleSelect = (suggestion) => {
@@ -92,6 +109,15 @@ const SearchInput = ({
     });
   }, [expanded, suggestions.length]);
 
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+        blurTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   return (
     <div className="relative group">
       <div className={`relative z-30 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm ${showSuggestions && suggestions.length > 0 ? 'rounded-t-2xl rounded-b-none border-b-0 shadow-lg' : 'rounded-2xl hover:shadow-md'}`}>
@@ -105,8 +131,8 @@ const SearchInput = ({
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
-          onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           role="combobox"
           aria-label={ariaLabel || placeholder || "検索"}
@@ -131,7 +157,10 @@ const SearchInput = ({
       </div>
       
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-20 top-full left-0 right-0 -mt-px">
+        <div
+          className="absolute z-20 top-full left-0 right-0 -mt-px"
+          onMouseDown={(e) => e.preventDefault()}
+        >
           <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-t-0 border-slate-200/50 dark:border-slate-600/50 rounded-b-2xl shadow-lg overflow-hidden">
             <ul id={listboxId} role="listbox" className="max-h-64 overflow-y-auto py-2">
               {suggestions.map((suggestion, index) => (

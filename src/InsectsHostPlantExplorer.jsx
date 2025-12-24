@@ -613,7 +613,11 @@ const InsectsHostPlantExplorer = React.memo(
                     onChange={handleGlobalSearch}
                     suggestions={suggestions}
                     onSelectSuggestion={handleSelectSuggestion}
+                    ariaLabel={`${activeTab === "plants" ? "食草" : "昆虫"}を検索`}
                   />
+                  <p className="mt-2 text-xs md:text-sm text-white/80">
+                    検索対象: {activeTab === "plants" ? "食草" : "昆虫"}（タブで切り替え）
+                  </p>
                 </div>
               </div>
             </div>

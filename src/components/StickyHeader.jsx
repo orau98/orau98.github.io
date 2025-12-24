@@ -113,6 +113,7 @@ const StickyHeader = ({
               placeholder={`${activeTab === 'plants' ? '食草' : '昆虫'}を検索...`}
               suggestions={suggestions}
               onSelectSuggestion={onSelectSuggestion}
+              ariaLabel={`${activeTab === 'plants' ? '食草' : '昆虫'}を検索`}
             />
           </div>
 
