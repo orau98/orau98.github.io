@@ -1068,75 +1068,77 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           </div>
 
           {!panelCollapsed && (
-          <div className="mt-3 space-y-2">
-            {selectedNode.type.startsWith('insect') ? (
-              <div>
-                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">食草</div>
-                {selectedInsectHostPlants.length === 0 ? (
-                  <div className="text-xs text-slate-500 dark:text-slate-400">不明 / 未登録</div>
+            <>
+              <div className="mt-3 space-y-2">
+                {selectedNode.type.startsWith('insect') ? (
+                  <div>
+                    <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">食草</div>
+                    {selectedInsectHostPlants.length === 0 ? (
+                      <div className="text-xs text-slate-500 dark:text-slate-400">不明 / 未登録</div>
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedInsectHostPlants.slice(0, MAX_PANEL_ITEMS).map((p, idx) => (
+                          <button
+                            type="button"
+                            key={`${p.name}_${p.part}_${idx}`}
+                            onClick={() => focusNodeByName(p.name, 'plant')}
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                            title={`${p.name}へフォーカス`}
+                          >
+                            {p.name}{p.part ? `（${p.part}）` : ''}
+                          </button>
+                        ))}
+                        {selectedInsectHostPlants.length > MAX_PANEL_ITEMS && (
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedInsectHostPlants.length - MAX_PANEL_ITEMS}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ) : (
-                  <div className="flex flex-wrap gap-1.5">
-                    {selectedInsectHostPlants.slice(0, MAX_PANEL_ITEMS).map((p, idx) => (
-                      <button
-                        type="button"
-                        key={`${p.name}_${p.part}_${idx}`}
-                        onClick={() => focusNodeByName(p.name, 'plant')}
-                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
-                        title={`${p.name}へフォーカス`}
-                      >
-                        {p.name}{p.part ? `（${p.part}）` : ''}
-                      </button>
-                    ))}
-                    {selectedInsectHostPlants.length > MAX_PANEL_ITEMS && (
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedInsectHostPlants.length - MAX_PANEL_ITEMS}</span>
+                  <div>
+                    <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">この植物を利用する昆虫</div>
+                    {selectedPlantInsects.length === 0 ? (
+                      <div className="text-xs text-slate-500 dark:text-slate-400">不明 / 未登録</div>
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedPlantInsects.slice(0, MAX_PANEL_ITEMS).map((name, idx) => (
+                          <button
+                            type="button"
+                            key={`${name}_${idx}`}
+                            onClick={() => focusNodeByName(name, 'insect')}
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                            title={`${name}へフォーカス`}
+                          >
+                            {name}
+                          </button>
+                        ))}
+                        {selectedPlantInsects.length > MAX_PANEL_ITEMS && (
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedPlantInsects.length - MAX_PANEL_ITEMS}</span>
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
               </div>
-            ) : (
-              <div>
-                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">この植物を利用する昆虫</div>
-                {selectedPlantInsects.length === 0 ? (
-                  <div className="text-xs text-slate-500 dark:text-slate-400">不明 / 未登録</div>
-                ) : (
-                  <div className="flex flex-wrap gap-1.5">
-                    {selectedPlantInsects.slice(0, MAX_PANEL_ITEMS).map((name, idx) => (
-                      <button
-                        type="button"
-                        key={`${name}_${idx}`}
-                        onClick={() => focusNodeByName(name, 'insect')}
-                        className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
-                        title={`${name}へフォーカス`}
-                      >
-                        {name}
-                      </button>
-                    ))}
-                    {selectedPlantInsects.length > MAX_PANEL_ITEMS && (
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400">ほか {selectedPlantInsects.length - MAX_PANEL_ITEMS}</span>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
 
-          <div className="mt-4 flex items-center justify-end gap-2">
-            <button
-              type="button"
-              className={`px-3 py-2 rounded-lg text-[12px] font-semibold text-white shadow ${selectedNode.type.startsWith('plant') ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-sky-600 hover:bg-sky-700'}`}
-              onClick={() => {
-                if (!selectedNode) return;
-                if (selectedNode.type.startsWith('insect')) {
-                  const path = selectedNode.raw?.path || buildInsectPath(selectedNode.raw || { name: selectedNode.name });
-                  navigate(path, { state: makeDetailLinkState(location) });
-                } else {
-                  navigate(`/plant/${encodeURIComponent(selectedNode.name)}`, { state: makeDetailLinkState(location) });
-                }
-              }}
-            >
-              詳細へ
-            </button>
-          </div>
+              <div className="mt-4 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  className={`px-3 py-2 rounded-lg text-[12px] font-semibold text-white shadow ${selectedNode.type.startsWith('plant') ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-sky-600 hover:bg-sky-700'}`}
+                  onClick={() => {
+                    if (!selectedNode) return;
+                    if (selectedNode.type.startsWith('insect')) {
+                      const path = selectedNode.raw?.path || buildInsectPath(selectedNode.raw || { name: selectedNode.name });
+                      navigate(path, { state: makeDetailLinkState(location) });
+                    } else {
+                      navigate(`/plant/${encodeURIComponent(selectedNode.name)}`, { state: makeDetailLinkState(location) });
+                    }
+                  }}
+                >
+                  詳細へ
+                </button>
+              </div>
+            </>
           )}
         </div>
       )}
