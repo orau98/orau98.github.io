@@ -6276,6 +6276,7 @@ function App() {
                       try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
                     }}
                     onNeedPlantsData={() => {
+                      try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
                       try { requestHostHydrationRef.current && requestHostHydrationRef.current(); } catch {}
                     }}
                   />
@@ -6306,6 +6307,7 @@ function App() {
                       try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
                     }}
                     onNeedPlantsData={() => {
+                      try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
                       try { requestHostHydrationRef.current && requestHostHydrationRef.current(); } catch {}
                     }}
                   />
@@ -6336,6 +6338,7 @@ function App() {
                       try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
                     }}
                     onNeedPlantsData={() => {
+                      try { ensureTypesLoaderRef.current && ensureTypesLoaderRef.current(); } catch {}
                       try { requestHostHydrationRef.current && requestHostHydrationRef.current(); } catch {}
                     }}
                   />
