@@ -26,6 +26,7 @@ const InsectsHostPlantExplorer = React.memo(
     beetles,
     leafbeetles,
     hostPlants,
+    flowerVisitPlants: flowerVisitPlantsProp = {},
     plantDetails,
     theme,
     setTheme,
@@ -256,7 +257,7 @@ const InsectsHostPlantExplorer = React.memo(
       }
     }, [activeTab, onNeedInsectsData, onNeedPlantsData]);
 
-    const flowerVisitPlants = useMemo(() => {
+    const computedFlowerVisitPlants = useMemo(() => {
       const map = {};
       const allInsects = [
         ...moths,
@@ -291,6 +292,20 @@ const InsectsHostPlantExplorer = React.memo(
       });
       return map;
     }, [moths, butterflies, beetles, leafbeetles]);
+    const flowerVisitPlants = useMemo(() => {
+      const merged = { ...(flowerVisitPlantsProp || {}) };
+      Object.entries(computedFlowerVisitPlants || {}).forEach(([plant, insects]) => {
+        if (!plant) return;
+        const existing = Array.isArray(merged[plant]) ? new Set(merged[plant]) : new Set();
+        if (Array.isArray(insects)) {
+          insects.forEach((name) => {
+            if (name) existing.add(name);
+          });
+        }
+        merged[plant] = Array.from(existing);
+      });
+      return merged;
+    }, [flowerVisitPlantsProp, computedFlowerVisitPlants]);
     const mergedHostPlantCount = useMemo(() => {
       const names = new Set(Object.keys(hostPlants || {}));
       Object.keys(flowerVisitPlants || {}).forEach((name) => {

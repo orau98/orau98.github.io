@@ -126,6 +126,7 @@ function App() {
   const [beetles, setBeetles] = useState([]);
   const [leafbeetles, setLeafbeetles] = useState([]);
   const [hostPlants, setHostPlants] = useState({});
+  const [flowerVisitPlants, setFlowerVisitPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
@@ -193,12 +194,54 @@ function App() {
     }
   }, [theme]);
 
+  const buildFlowerVisitMap = (insects = []) => {
+    const map = {};
+    const normalizePlant = (value) => {
+      if (!value || typeof value !== 'string') return '';
+      return value
+        .replace(/[（(][^）)]*科[^）)]*[）)]/g, '')
+        .replace(/[（(][^）)]*[）)]/g, '')
+        .trim();
+    };
+    (insects || []).forEach((insect) => {
+      if (!insect) return;
+      const insectName = (insect.name || insect.japaneseName || '').trim();
+      if (!insectName) return;
+      const records = insect.hostPlantsDetailed;
+      if (!Array.isArray(records) || records.length === 0) return;
+      records.forEach((record) => {
+        const lifeStage = (record?.lifeStage || '').trim();
+        const plantPart = (record?.plantPart || '').trim();
+        if (lifeStage !== '成虫' || plantPart !== '花') return;
+        const rawPlant = record?.name || record?.displayName || record?.plant || '';
+        const plantName = normalizePlant(String(rawPlant || '').trim());
+        if (!plantName || plantName === '不明') return;
+        if (!map[plantName]) map[plantName] = [];
+        if (!map[plantName].includes(insectName)) map[plantName].push(insectName);
+      });
+    });
+    return map;
+  };
+
   const applyDataset = (data = {}) => {
-    setMoths(Array.isArray(data.moths) ? data.moths : []);
-    setButterflies(Array.isArray(data.butterflies) ? data.butterflies : []);
-    setBeetles(Array.isArray(data.beetles) ? data.beetles : []);
-    setLeafbeetles(Array.isArray(data.leafbeetles) ? data.leafbeetles : []);
+    const mothArr = Array.isArray(data.moths) ? data.moths : [];
+    const butterflyArr = Array.isArray(data.butterflies) ? data.butterflies : [];
+    const beetleArr = Array.isArray(data.beetles) ? data.beetles : [];
+    const leafArr = Array.isArray(data.leafbeetles) ? data.leafbeetles : [];
+    setMoths(mothArr);
+    setButterflies(butterflyArr);
+    setBeetles(beetleArr);
+    setLeafbeetles(leafArr);
     setHostPlants(data.hostPlants || {});
+    setFlowerVisitPlants(
+      data.flowerVisitPlants ||
+        buildFlowerVisitMap([
+          ...mothArr,
+          ...butterflyArr,
+          ...beetleArr,
+          ...leafArr,
+        ]),
+    );
     setPlantDetails(data.plantDetails || {});
     if (data.summaryCounts) {
       setSummaryCounts(data.summaryCounts);
@@ -327,11 +370,22 @@ function App() {
                 if (!parsed || !Array.isArray(parsed.data)) return;
 
                 const additions = new Map();
+                const flowerAdditions = new Map();
+                const normalizePlant = (value) => {
+                  if (!value || typeof value !== 'string') return '';
+                  return value
+                    .replace(/[（(][^）)]*科[^）)]*[）)]/g, '')
+                    .replace(/[（(][^）)]*[）)]/g, '')
+                    .trim();
+                };
                 parsed.data.forEach((row) => {
                   if (!row) return;
-                  const plantName = (row.plant_name || '').trim();
+                  const plantNameRaw = (row.plant_name || '').trim();
+                  const plantName = normalizePlant(plantNameRaw);
                   const insectId = (row.insect_id || '').trim();
                   const familyName = (row.plant_family || '').trim();
+                  const lifeStage = (row.life_stage || '').trim();
+                  const plantPart = (row.plant_part || '').trim();
                   if (!plantName || !insectId) return;
                   const insectName = insectLookup.get(insectId);
                   if (!insectName) return;
@@ -346,6 +400,13 @@ function App() {
                   entry.insects.add(insectName);
                   if (!entry.family && familyName) {
                     entry.family = familyName;
+                  }
+
+                  if (lifeStage === '成虫' && plantPart === '花') {
+                    if (!flowerAdditions.has(plantName)) {
+                      flowerAdditions.set(plantName, new Set());
+                    }
+                    flowerAdditions.get(plantName).add(insectName);
                   }
                 });
                 if (additions.size === 0) return;
@@ -408,6 +469,23 @@ function App() {
                   });
                   return changed ? next : prev;
                 });
+
+                if (flowerAdditions.size > 0) {
+                  setFlowerVisitPlants((prev) => {
+                    const next = { ...prev };
+                    let changed = false;
+                    flowerAdditions.forEach((insects, plant) => {
+                      const existing = Array.isArray(next[plant]) ? new Set(next[plant]) : new Set();
+                      const beforeSize = existing.size;
+                      insects.forEach((name) => existing.add(name));
+                      if (!next[plant] || existing.size !== beforeSize) {
+                        next[plant] = Array.from(existing);
+                        changed = true;
+                      }
+                    });
+                    return changed ? next : prev;
+                  });
+                }
               } catch (error) {
                 logger.debug('Failed to hydrate host plants from normalized CSV:', error);
               }
@@ -436,6 +514,13 @@ function App() {
               if (Array.isArray(butterArr)) setButterflies(butterArr);
               if (Array.isArray(beetleArr)) setBeetles(beetleArr);
               if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+              const flowerMap = buildFlowerVisitMap([
+                ...(mothArr || []),
+                ...(butterArr || []),
+                ...(beetleArr || []),
+                ...(leafArr || []),
+              ]);
+              setFlowerVisitPlants(flowerMap);
               const lookup = new Map();
               [...(mothArr || []), ...(butterArr || []), ...(beetleArr || []), ...(leafArr || [])].forEach(
                 (insect) => {
@@ -463,12 +548,19 @@ function App() {
                   });
                   if (!fullRes.ok) return;
                   const fullData = await fullRes.json();
+                  const fullFlowerVisits = buildFlowerVisitMap([
+                    ...(fullData.moths || []),
+                    ...(fullData.butterflies || []),
+                    ...(fullData.beetles || []),
+                    ...(fullData.leafbeetles || []),
+                  ]);
                   await saveDatasetToCache(manifest.version || null, {
                     moths: fullData.moths,
                     butterflies: fullData.butterflies,
                     beetles: fullData.beetles,
                     leafbeetles: fullData.leafbeetles,
                     hostPlants: fullData.hostPlants || hostMap,
+                    flowerVisitPlants: fullFlowerVisits,
                     plantDetails: fullData.plantDetails || plantDetailsLite,
                     summaryCounts: fullData.summaryCounts || manifest.counts,
                   });
@@ -5919,6 +6011,14 @@ function App() {
         setButterflies(finalButterflyData);
         setBeetles(finalBeetleData);
         setLeafbeetles(finalLeafbeetleData);
+        setFlowerVisitPlants(
+          buildFlowerVisitMap([
+            ...finalMothData,
+            ...finalButterflyData,
+            ...finalBeetleData,
+            ...finalLeafbeetleData,
+          ]),
+        );
         setHostPlants(unifiedHostPlantMap);
         setPlantDetails(cleanedPlantDetailData);
         const finalSummaryCounts = {
@@ -5941,6 +6041,12 @@ function App() {
               beetles: finalBeetleData,
               leafbeetles: finalLeafbeetleData,
               hostPlants: cleanedHostPlantData,
+              flowerVisitPlants: buildFlowerVisitMap([
+                ...finalMothData,
+                ...finalButterflyData,
+                ...finalBeetleData,
+                ...finalLeafbeetleData,
+              ]),
               plantDetails: cleanedPlantDetailData,
               summaryCounts: finalSummaryCounts,
             });
@@ -6156,6 +6262,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     plantDetails={plantDetails}
                     theme={theme}
                     setTheme={setTheme}
@@ -6185,6 +6292,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     plantDetails={plantDetails}
                     theme={theme}
                     setTheme={setTheme}
@@ -6214,6 +6322,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     plantDetails={plantDetails}
                     theme={theme}
                     setTheme={setTheme}
