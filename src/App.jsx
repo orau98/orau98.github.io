@@ -375,6 +375,7 @@ function App() {
 
                 const additions = new Map();
                 const flowerAdditions = new Map();
+                const plantMeta = new Map();
                 const normalizePlant = (value) => {
                   if (!value || typeof value !== 'string') return '';
                   return value
@@ -393,6 +394,24 @@ function App() {
                   if (!plantName || !insectId) return;
                   const insectName = insectLookup.get(insectId);
                   if (!insectName) return;
+                  if (!plantMeta.has(plantName)) {
+                    plantMeta.set(plantName, { family: familyName });
+                  } else if (familyName && !plantMeta.get(plantName).family) {
+                    plantMeta.get(plantName).family = familyName;
+                  }
+
+                  const plantPartCompact = plantPart.replace(/\s+/g, '');
+                  const isFlowerVisit =
+                    (lifeStage === '成虫' || !lifeStage) &&
+                    plantPartCompact &&
+                    plantPartCompact.includes('花');
+                  if (isFlowerVisit) {
+                    if (!flowerAdditions.has(plantName)) {
+                      flowerAdditions.set(plantName, new Set());
+                    }
+                    flowerAdditions.get(plantName).add(insectName);
+                    return;
+                  }
 
                   if (!additions.has(plantName)) {
                     additions.set(plantName, {
@@ -405,35 +424,30 @@ function App() {
                   if (!entry.family && familyName) {
                     entry.family = familyName;
                   }
-
-                  if (lifeStage === '成虫' && plantPart === '花') {
-                    if (!flowerAdditions.has(plantName)) {
-                      flowerAdditions.set(plantName, new Set());
-                    }
-                    flowerAdditions.get(plantName).add(insectName);
-                  }
                 });
-                if (additions.size === 0) return;
+                if (additions.size === 0 && flowerAdditions.size === 0 && plantMeta.size === 0) return;
 
                 let updatedCount = null;
-                setHostPlants((prev) => {
-                  const next = { ...prev };
-                  let changed = false;
-                  additions.forEach(({ insects }, plant) => {
-                    const existing = Array.isArray(next[plant]) ? new Set(next[plant]) : new Set();
-                    const beforeSize = existing.size;
-                    insects.forEach((name) => existing.add(name));
-                    if (!next[plant] || existing.size !== beforeSize) {
-                      next[plant] = Array.from(existing);
-                      changed = true;
+                if (additions.size > 0) {
+                  setHostPlants((prev) => {
+                    const next = { ...prev };
+                    let changed = false;
+                    additions.forEach(({ insects }, plant) => {
+                      const existing = Array.isArray(next[plant]) ? new Set(next[plant]) : new Set();
+                      const beforeSize = existing.size;
+                      insects.forEach((name) => existing.add(name));
+                      if (!next[plant] || existing.size !== beforeSize) {
+                        next[plant] = Array.from(existing);
+                        changed = true;
+                      }
+                    });
+                    if (changed) {
+                      updatedCount = Object.keys(next).length;
+                      return next;
                     }
+                    return prev;
                   });
-                  if (changed) {
-                    updatedCount = Object.keys(next).length;
-                    return next;
-                  }
-                  return prev;
-                });
+                }
 
                 if (updatedCount !== null) {
                   setSummaryCounts((prev) => {
@@ -446,7 +460,7 @@ function App() {
                 setPlantDetails((prev) => {
                   let changed = false;
                   const next = { ...prev };
-                  additions.forEach(({ family }, plant) => {
+                  plantMeta.forEach(({ family }, plant) => {
                     if (!next[plant]) {
                       next[plant] = plantDetailsLite[plant] || {
                         family: family || '不明',
@@ -6427,6 +6441,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     plantDetails={plantDetails}
                     theme={theme}
                   />

@@ -418,7 +418,7 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   );
 };
 
-const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails, theme }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails, theme, flowerVisitPlants = {} }) => {
   const { plantName } = useParams();
   const rawDecodedPlantName = decodeURIComponent(plantName);
   const sanitizePlantParam = (s) => {
@@ -664,6 +664,21 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const targetNames = [decodedPlantName, canonicalName, ...aliasNames].filter(Boolean);
   const normalizedTargets = new Set(targetNames.map(normalizePlantName).filter(Boolean));
+  const flowerVisitInsectSet = useMemo(() => {
+    const set = new Set();
+    const addList = (list) => {
+      if (!Array.isArray(list)) return;
+      list.forEach((name) => {
+        if (name) set.add(name);
+      });
+    };
+    const keys = new Set([...targetNames, ...normalizedTargets]);
+    keys.forEach((key) => {
+      if (!key) return;
+      addList(flowerVisitPlants?.[key]);
+    });
+    return set;
+  }, [flowerVisitPlants, targetNames, normalizedTargets]);
 
   const matchesTargetPlant = (plant) => {
     if (!plant) return false;
@@ -689,8 +704,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         return Array.isArray(list) && list.includes(insectDisplayName);
       });
     };
+    const flowerMapHit = () => {
+      if (!insectDisplayName) return false;
+      return flowerVisitInsectSet.has(insectDisplayName);
+    };
 
     if (hostMapHit()) hasHost = true;
+    if (flowerMapHit()) hasFlowerVisit = true;
 
     if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
       insect.hostPlantsDetailed.forEach((record) => {
@@ -1402,6 +1422,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                     currentPlantName={decodedPlantName}
                     allInsects={allInsects}
                     hostPlantsMap={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     width={graphSize.width}
                     height={graphSize.height}
                     theme={theme}

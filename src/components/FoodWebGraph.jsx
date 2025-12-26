@@ -32,6 +32,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   currentPlantName,
   allInsects,
   hostPlantsMap,
+  flowerVisitPlants,
   theme,
   width = 720,
   height = 520
@@ -68,6 +69,21 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const flowerVisitMap = useMemo(() => {
     const map = new Map();
+    const addVisit = (plantName, insectName) => {
+      if (!plantName || !insectName) return;
+      const normalized = normalizePlantName(plantName);
+      const keys = new Set([plantName, normalized].filter(Boolean));
+      keys.forEach((key) => {
+        if (!map.has(key)) map.set(key, new Set());
+        map.get(key).add(insectName);
+      });
+    };
+    if (flowerVisitPlants && typeof flowerVisitPlants === 'object') {
+      Object.entries(flowerVisitPlants).forEach(([plantName, insects]) => {
+        if (!plantName || !Array.isArray(insects)) return;
+        insects.forEach((insectName) => addVisit(plantName, insectName));
+      });
+    }
     if (!Array.isArray(allInsects)) return map;
     allInsects.forEach((insect) => {
       const insectName = String(insect?.name || insect?.japaneseName || '').trim();
@@ -78,17 +94,11 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         if (!isFlowerVisitRecord(record)) return;
         const rawPlant = record?.name || record?.plant || record?.displayName || '';
         const plantName = String(rawPlant).trim();
-        if (!plantName) return;
-        const normalized = normalizePlantName(plantName);
-        const keys = new Set([plantName, normalized].filter(Boolean));
-        keys.forEach((key) => {
-          if (!map.has(key)) map.set(key, new Set());
-          map.get(key).add(insectName);
-        });
+        addVisit(plantName, insectName);
       });
     });
     return map;
-  }, [allInsects]);
+  }, [allInsects, flowerVisitPlants]);
 
   const hasFlowerVisitForPlant = useCallback((insect, plantName) => {
     if (!insect || !plantName) return false;
