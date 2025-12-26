@@ -677,6 +677,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   ]);
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const filterCriteriaRef = useRef({
+    debouncedSearchTerm,
+    hostFilter,
+    familyFilter,
+    genusFilter,
+    emergenceFilter,
+  });
   const listTopRef = useRef(null);
   const resizeInitializedRef = useRef(false);
 
@@ -1226,9 +1233,35 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [currentPage, totalPages]);
 
   React.useEffect(() => {
+    const prev = filterCriteriaRef.current;
+    const changed =
+      prev.debouncedSearchTerm !== debouncedSearchTerm ||
+      prev.hostFilter !== hostFilter ||
+      prev.familyFilter !== familyFilter ||
+      prev.genusFilter !== genusFilter ||
+      prev.emergenceFilter !== emergenceFilter;
+
+    if (!changed) return;
+
+    filterCriteriaRef.current = {
+      debouncedSearchTerm,
+      hostFilter,
+      familyFilter,
+      genusFilter,
+      emergenceFilter,
+    };
+
     if (currentPage === 1) return;
     setIPage(1);
-  }, [debouncedSearchTerm, hostFilter, familyFilter, genusFilter, emergenceFilter, currentPage, setIPage]);
+  }, [
+    debouncedSearchTerm,
+    hostFilter,
+    familyFilter,
+    genusFilter,
+    emergenceFilter,
+    currentPage,
+    setIPage,
+  ]);
 
   const renderFilters = () => {
     return (

@@ -438,6 +438,11 @@ const HostPlantList = ({
   }, [computeItemsPerPage, setPPage]);
 
   const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
+  const filterCriteriaRef = useRef({
+    debouncedPlantSearch,
+    familyFilter,
+    orderFilter,
+  });
 
   // （メタは useSeoMeta に移行）
 
@@ -760,6 +765,20 @@ const HostPlantList = ({
   };
 
   React.useEffect(() => {
+    const prev = filterCriteriaRef.current;
+    const changed =
+      prev.debouncedPlantSearch !== debouncedPlantSearch ||
+      prev.familyFilter !== familyFilter ||
+      prev.orderFilter !== orderFilter;
+
+    if (!changed) return;
+
+    filterCriteriaRef.current = {
+      debouncedPlantSearch,
+      familyFilter,
+      orderFilter,
+    };
+
     if (currentPage === 1) return;
     setPPage(1);
   }, [debouncedPlantSearch, familyFilter, orderFilter, currentPage, setPPage]);
