@@ -429,8 +429,12 @@ const HostPlantList = ({
     if (typeof window === "undefined") return undefined;
     const onResize = () => {
       const next = computeItemsPerPage();
-      setItemsPerPage((prev) => (prev === next ? prev : next));
-      setPPage(1);
+      setItemsPerPage((prev) => {
+        if (prev === next) return prev;
+        // Reset pagination only when the breakpoint changes (mobile address bar resize shouldn't).
+        setPPage(1);
+        return next;
+      });
     };
     window.addEventListener("resize", onResize);
     onResize();
