@@ -35,7 +35,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const rawRouteParam = mothSlug || butterflySlug || beetleSlug || leafbeetleSlug || '';
   const decodedRouteParam = decodeSlug(rawRouteParam);
   const normalizedRouteSlug = slugifyInsectName(decodedRouteParam);
-  const isLeafbeetleRoute = routeType === 'leafbeetle';
   const [fallbackHostPlants, setFallbackHostPlants] = useState([]);
 
   // 🔍 デバッグ：URLパラメータ確認
@@ -165,11 +164,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // Fallback: if no host plants are available (e.g., data-lite initial state),
   // lazily load from normalized CSV (public/hostplants.csv) and synthesize minimal records.
   useEffect(() => {
-    const needFallback = isLeafbeetleRoute && moth && (
-      (!Array.isArray(moth.hostPlantsDetailed) || moth.hostPlantsDetailed.length === 0) &&
-      (!Array.isArray(moth.hostPlants) || moth.hostPlants.length === 0)
-    );
-    if (!needFallback) return;
+    if (!moth) {
+      setFallbackHostPlants([]);
+      return;
+    }
+    const hasHostPlants =
+      (Array.isArray(moth.hostPlantsDetailed) && moth.hostPlantsDetailed.length > 0) ||
+      (Array.isArray(moth.hostPlants) && moth.hostPlants.length > 0);
+    if (hasHostPlants) {
+      setFallbackHostPlants([]);
+      return;
+    }
     let aborted = false;
     const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
     fetch(`${import.meta.env.BASE_URL}hostplants.csv${v}`)
@@ -208,7 +213,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               else { buf += ch; }
             }
           }
-        cols.push(buf);
+          cols.push(buf);
           const insect = (cols[iInsect] || '').trim();
           if (insect !== resolvedInsectId) continue;
           const plant = (cols[iPlant] || '').trim();
@@ -229,7 +234,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       })
       .catch(() => {})
     return () => { aborted = true; };
-  }, [isLeafbeetleRoute, moth, resolvedInsectId]);
+  }, [moth, resolvedInsectId]);
   
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
   const graphContainerRefDesktop = useRef(null);
