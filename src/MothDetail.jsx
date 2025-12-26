@@ -488,11 +488,48 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     return typeHit || (!t && contentHit);
   };
 
+  const cleanPlantName = (plant = '') => {
+    if (!plant) return '';
+    return String(plant).replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+  };
+
+  const isFlowerVisitRecord = (record) => {
+    if (!record || typeof record !== 'object') return false;
+    const lifeStage = (record.lifeStage || '').trim();
+    const plantPart = (record.plantPart || '').trim();
+    return lifeStage === '成虫' && plantPart === '花';
+  };
+
+  const extractLarvalHostPlants = (insect) => {
+    if (!insect) return [];
+    if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
+      const detailedPlants = insect.hostPlantsDetailed
+        .filter(record => !isFlowerVisitRecord(record))
+        .map(record => cleanPlantName(record?.name ? String(record.name).trim() : ''))
+        .filter(name => name && name !== '不明');
+      if (detailedPlants.length > 0) {
+        return Array.from(new Set(detailedPlants));
+      }
+    }
+    if (Array.isArray(insect.hostPlants)) {
+      const plants = insect.hostPlants
+        .map(plant => cleanPlantName(plant))
+        .filter(name => name && name !== '不明');
+      return Array.from(new Set(plants));
+    }
+    if (typeof insect.hostPlants === 'string') {
+      const plants = insect.hostPlants.split(/[;；、,]/)
+        .map(plant => cleanPlantName(plant))
+        .filter(name => name && name !== '不明');
+      return Array.from(new Set(plants));
+    }
+    return [];
+  };
+
   // SEO（メタ/カノニカル/パンくず）を共通フックで設定
   const insectTypeLabel = moth?.type === 'butterfly' ? '蝶' : moth?.type === 'beetle' ? 'タマムシ' : moth?.type === 'leafbeetle' ? 'ハムシ' : '蛾';
-  const hostPlantsText = Array.isArray(moth?.hostPlants)
-    ? (moth.hostPlants.length ? moth.hostPlants.join('、') : '不明')
-    : (typeof moth?.hostPlants === 'string' && moth?.hostPlants.trim() ? moth.hostPlants : '不明');
+  const larvalHostPlants = extractLarvalHostPlants(moth);
+  const hostPlantsText = larvalHostPlants.length > 0 ? larvalHostPlants.join('、') : '不明';
   const canonicalHref = moth
     ? absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`)
     : undefined;
@@ -561,27 +598,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // Group related moths by host plant
   const relatedMothsByPlant = {};
   
-  // Get plant names from current moth - handle both string and array formats
-  let currentMothPlants = [];
-  if (moth.hostPlantsDetailed && moth.hostPlantsDetailed.length > 0) {
-    // Use new detailed format
-    currentMothPlants = moth.hostPlantsDetailed.map(plant => plant.name).filter(name => name);
-  } else if (moth.hostPlants) {
-    // Handle old format - could be string or array
-    if (typeof moth.hostPlants === 'string') {
-      // Split by common delimiters and clean up
-      currentMothPlants = moth.hostPlants.split(/[;；、,]/)
-        .map(plant => plant.trim())
-        .filter(plant => plant && plant !== '不明')
-        .map(plant => {
-          // Remove family annotations like （〇〇科）
-          return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
-        })
-        .filter(plant => plant);
-    } else if (Array.isArray(moth.hostPlants)) {
-      currentMothPlants = moth.hostPlants.filter(plant => plant && plant !== '不明');
-    }
-  }
+  // Use larval host plants only (exclude adult flower visits)
+  const currentMothPlants = extractLarvalHostPlants(moth);
 
   currentMothPlants.forEach(plant => {
     // Extract base plant name for matching (e.g., "フジの花蕾" -> "フジ")
@@ -622,70 +640,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       hostPlantsForヤマボウシ: hostPlants['ヤマボウシ'],
       hostPlantsForミズキ: hostPlants['ミズキ'],
       hostPlantsForクマノミズキ: hostPlants['クマノミズキ']
-    });
-  }
-
-  // Get plant names from current moth - handle both string and array formats
-  // (reusing existing relatedMothsByPlant and currentMothPlants from above)
-  if (moth.hostPlantsDetailed && moth.hostPlantsDetailed.length > 0) {
-    // Use new detailed format
-    currentMothPlants = moth.hostPlantsDetailed.map(plant => plant.name).filter(name => name);
-  } else if (moth.hostPlants) {
-    // Handle old format - could be string or array
-    if (typeof moth.hostPlants === 'string') {
-      // Split by common delimiters and clean up
-      currentMothPlants = moth.hostPlants.split(/[;；、,]/)
-        .map(plant => plant.trim())
-        .filter(plant => plant && plant !== '不明')
-        .map(plant => {
-          // Remove family annotations like （○○科）
-          return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
-        })
-        .filter(plant => plant);
-    } else if (Array.isArray(moth.hostPlants)) {
-      currentMothPlants = moth.hostPlants.filter(plant => plant && plant !== '不明');
-    }
-  }
-
-  currentMothPlants.forEach(plant => {
-    // Extract base plant name for matching (e.g., "フジの花蕾" -> "フジ")
-    let basePlantName = plant;
-    const partMatch = plant.match(/^([^の]+)の/);
-    if (partMatch) {
-      basePlantName = partMatch[1];
-    }
-    
-    // Try both full plant name and base plant name
-    const plantsToCheck = [plant, basePlantName];
-    
-    plantsToCheck.forEach(checkPlant => {
-      if (hostPlants[checkPlant]) {
-        const relatedMoths = hostPlants[checkPlant].filter(mothName => mothName !== moth.name);
-        if (relatedMoths.length > 0) {
-          // Use base plant name for display (without parts like "の花蕾")
-          if (!relatedMothsByPlant[basePlantName]) {
-            relatedMothsByPlant[basePlantName] = [];
-          }
-          // Add unique moths only
-          relatedMoths.forEach(mothName => {
-            if (!relatedMothsByPlant[basePlantName].includes(mothName)) {
-              relatedMothsByPlant[basePlantName].push(mothName);
-            }
-          });
-        }
-      }
-    });
-  });
-
-  // Debug logging for アオバシャチホコ
-  if (moth.name === 'アオバシャチホコ') {
-    logger.debug('DEBUG アオバシャチホコ関連昆虫:', {
-      currentMothPlants,
-      relatedMothsByPlant,
-      hostPlantsKeys: Object.keys(hostPlants),
-      hasYamaboushi: hostPlants['ヤマボウシ'] || 'not found',
-      hasMizuki: hostPlants['ミズキ'] || 'not found',
-      hasKumanoMizuki: hostPlants['クマノミズキ'] || 'not found'
     });
   }
 
@@ -958,7 +912,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                    食草・食樹
+                    食草・食樹 / 訪花
                     {moth.isMonophagous && (
                       <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
                         単食性

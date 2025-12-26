@@ -22,6 +22,31 @@ const buildPlantMetaPath = (plantName) => {
   return `/meta/plant/${encodeURIComponent(plantName)}.html`;
 };
 
+const isFlowerVisitRecord = (record) => {
+  if (!record) return false;
+  const lifeStage = (record.lifeStage || '').trim();
+  const plantPart = (record.plantPart || '').trim();
+  return lifeStage === '成虫' && plantPart === '花';
+};
+
+const extractLarvalHostPlants = (hostPlantsDetailed, hostPlantsFallback) => {
+  if (Array.isArray(hostPlantsDetailed) && hostPlantsDetailed.length > 0) {
+    const names = hostPlantsDetailed
+      .filter((record) => !isFlowerVisitRecord(record))
+      .map((record) => record.displayName || record.name || record.plant || '')
+      .map((name) => String(name || '').trim())
+      .filter(Boolean);
+    return Array.from(new Set(names));
+  }
+  if (Array.isArray(hostPlantsFallback)) {
+    return Array.from(new Set(hostPlantsFallback.map(s => String(s || '').trim()).filter(Boolean)));
+  }
+  if (typeof hostPlantsFallback === 'string') {
+    return Array.from(new Set(hostPlantsFallback.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)));
+  }
+  return [];
+};
+
 // Enhanced 蛾の構造化データ with Species and detailed taxonomy
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
@@ -29,11 +54,7 @@ export const MothStructuredData = ({ moth }) => {
   const detailUrl = absUrl(buildInsectMetaPath(moth, 'moth'));
 
   // Normalize hostPlants to an array for safe operations
-  const hostPlantsList = Array.isArray(moth.hostPlants)
-    ? moth.hostPlants
-    : (typeof moth.hostPlants === 'string'
-        ? moth.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
-        : []);
+  const hostPlantsList = extractLarvalHostPlants(moth.hostPlantsDetailed, moth.hostPlants);
 
   // Create comprehensive species schema with detailed taxonomic information
   const structuredData = {
@@ -96,7 +117,7 @@ export const MothStructuredData = ({ moth }) => {
       {
         "@type": "PropertyValue",
         "name": "食草数",
-        "value": moth.hostPlants?.length || 0
+        "value": hostPlantsList.length || 0
       }
     ]
   };
@@ -165,11 +186,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 
   const detailUrl = absUrl(buildInsectMetaPath(butterfly, 'butterfly'));
 
-  const hostPlantsList = Array.isArray(butterfly.hostPlants)
-    ? butterfly.hostPlants
-    : (typeof butterfly.hostPlants === 'string'
-        ? butterfly.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
-        : []);
+  const hostPlantsList = extractLarvalHostPlants(butterfly.hostPlantsDetailed, butterfly.hostPlants);
 
   // Create comprehensive species schema with detailed taxonomic information
   const structuredData = {
@@ -232,7 +249,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
       {
         "@type": "PropertyValue",
         "name": "食草数",
-        "value": butterfly.hostPlants?.length || 0
+        "value": hostPlantsList.length || 0
       }
     ]
   };
@@ -301,11 +318,7 @@ export const BeetleStructuredData = ({ beetle }) => {
 
   const detailUrl = absUrl(buildInsectMetaPath(beetle, 'beetle'));
 
-  const hostPlantsList = Array.isArray(beetle.hostPlants)
-    ? beetle.hostPlants
-    : (typeof beetle.hostPlants === 'string'
-        ? beetle.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
-        : []);
+  const hostPlantsList = extractLarvalHostPlants(beetle.hostPlantsDetailed, beetle.hostPlants);
 
   // Create comprehensive species schema with detailed taxonomic information
   const structuredData = {
@@ -368,7 +381,7 @@ export const BeetleStructuredData = ({ beetle }) => {
       {
         "@type": "PropertyValue",
         "name": "食草数",
-        "value": beetle.hostPlants?.length || 0
+        "value": hostPlantsList.length || 0
       }
     ]
   };
@@ -437,11 +450,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
 
   const detailUrl = absUrl(buildInsectMetaPath(leafbeetle, 'leafbeetle'));
 
-  const hostPlantsList = Array.isArray(leafbeetle.hostPlants)
-    ? leafbeetle.hostPlants
-    : (typeof leafbeetle.hostPlants === 'string'
-        ? leafbeetle.hostPlants.split(/[、，,;；]/).map(s => s.trim()).filter(Boolean)
-        : []);
+  const hostPlantsList = extractLarvalHostPlants(leafbeetle.hostPlantsDetailed, leafbeetle.hostPlants);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -498,7 +507,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
       {
         "@type": "PropertyValue",
         "name": "食草数",
-        "value": leafbeetle.hostPlants?.length || 0
+        "value": hostPlantsList.length || 0
       }
     ]
   };

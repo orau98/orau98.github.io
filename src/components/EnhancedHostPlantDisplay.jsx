@@ -96,10 +96,27 @@ const getPlantPartIcon = (plantPart) => {
 };
 
 /**
+ * 成虫の訪花記録かどうか
+ */
+const isFlowerVisitRecord = (record) => {
+  if (!record) return false;
+  const lifeStage = (record.lifeStage || '').trim();
+  const plantPart = (record.plantPart || '').trim();
+  return lifeStage === '成虫' && plantPart === '花';
+};
+
+/**
  * 観察タイプ別のスタイルを取得
  */
 const getObservationTypeStyle = (observationType) => {
   switch (observationType) {
+    case '文献':
+      return {
+        label: '文献',
+        bgColor: 'bg-amber-50 dark:bg-amber-900/20',
+        textColor: 'text-amber-700 dark:text-amber-300',
+        borderColor: 'border-amber-200 dark:border-amber-700'
+      };
     case '飼育':
     case '飼育記録':
       return {
@@ -140,6 +157,7 @@ const getObservationTypeStyle = (observationType) => {
 const getObservationTypePriority = (observationType) => {
   switch (observationType) {
     case '野外（国内）': return 1; // 最優先
+    case '文献': return 2;
     case '飼育':
     case '飼育記録': return 2;
     case '野外（国外）':
@@ -240,7 +258,10 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
   const badges = usageInfoArray.map((usage) => {
     const ls = usage.lifeStage ? getLifeStageIcon(usage.lifeStage) : null;
     const pp = usage.plantPart ? getPlantPartIcon(usage.plantPart) : null;
-    const label = [usage.lifeStage, usage.plantPart].filter(Boolean).join('・') || '';
+    const isFlowerVisit = isFlowerVisitRecord({ lifeStage: usage.lifeStage, plantPart: usage.plantPart });
+    const label = isFlowerVisit
+      ? '訪花'
+      : ([usage.lifeStage, usage.plantPart].filter(Boolean).join('・') || '');
     return { label, ls, pp };
   }).filter(b => b.label);
   const maxBadges = 2;
@@ -400,7 +421,8 @@ const EnhancedHostPlantDisplay = ({
   maxDisplayCount = 5 
 }) => {
   const [expandedItems, setExpandedItems] = useState(new Set());
-  const [showAll, setShowAll] = useState(false);
+  const [showAllHost, setShowAllHost] = useState(false);
+  const [showAllFlower, setShowAllFlower] = useState(false);
   
   // 詳細情報がある場合はそれを優先、なければ従来形式を使用
   let plantsToDisplay = hostPlantsDetailed && hostPlantsDetailed.length > 0 
@@ -444,12 +466,12 @@ const EnhancedHostPlantDisplay = ({
     return priorityA - priorityB;
   });
   
-  const toggleExpanded = (index) => {
+  const toggleExpanded = (key) => {
     const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(index)) {
-      newExpanded.delete(index);
+    if (newExpanded.has(key)) {
+      newExpanded.delete(key);
     } else {
-      newExpanded.add(index);
+      newExpanded.add(key);
     }
     setExpandedItems(newExpanded);
   };
@@ -462,40 +484,101 @@ const EnhancedHostPlantDisplay = ({
     );
   }
   
-  const displayCount = showAll ? sortedGroups.length : Math.min(maxDisplayCount, sortedGroups.length);
-  const hasMore = sortedGroups.length > maxDisplayCount;
+  const splitGroupsByUsage = (groups) => {
+    const hostGroups = [];
+    const flowerGroups = [];
+    groups.forEach((group) => {
+      const flowerRecords = group.records.filter(isFlowerVisitRecord);
+      const hostRecords = group.records.filter((record) => !isFlowerVisitRecord(record));
+      if (hostRecords.length > 0) hostGroups.push({ ...group, records: hostRecords, usageCategory: 'host' });
+      if (flowerRecords.length > 0) flowerGroups.push({ ...group, records: flowerRecords, usageCategory: 'flower' });
+    });
+    return { hostGroups, flowerGroups };
+  };
+
+  const { hostGroups, flowerGroups } = splitGroupsByUsage(sortedGroups);
+  const hostDisplayCount = showAllHost ? hostGroups.length : Math.min(maxDisplayCount, hostGroups.length);
+  const flowerDisplayCount = showAllFlower ? flowerGroups.length : Math.min(maxDisplayCount, flowerGroups.length);
+  const hasMoreHost = hostGroups.length > maxDisplayCount;
+  const hasMoreFlower = flowerGroups.length > maxDisplayCount;
   
   return (
-    <div className="space-y-3">
-      {/* 食草リスト */}
-      <div className="space-y-2">
-        {sortedGroups.slice(0, displayCount).map((plantGroup, index) => (
-          <HostPlantDetailCard
-            key={`${plantGroup.name}-${index}`}
-            plantGroup={plantGroup}
-            isExpanded={expandedItems.has(index) || showDetailsByDefault}
-            onToggle={() => toggleExpanded(index)}
-          />
-        ))}
-      </div>
-      
-      {/* "もっと見る" ボタン */}
-      {hasMore && (
-        <div className="text-center">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
-          >
-            {showAll ? '簡略表示' : `他${sortedGroups.length - maxDisplayCount}種を表示`}
-            <svg 
-              className={`ml-1 w-4 h-4 transition-transform ${showAll ? 'rotate-180' : ''}`}
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+    <div className="space-y-4">
+      {hostGroups.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            幼虫の食草・食樹
+          </div>
+          <div className="space-y-2">
+            {hostGroups.slice(0, hostDisplayCount).map((plantGroup, index) => {
+              const key = `host-${index}`;
+              return (
+                <HostPlantDetailCard
+                  key={`${plantGroup.name}-${key}`}
+                  plantGroup={plantGroup}
+                  isExpanded={expandedItems.has(key) || showDetailsByDefault}
+                  onToggle={() => toggleExpanded(key)}
+                />
+              );
+            })}
+          </div>
+          {hasMoreHost && (
+            <div className="text-center">
+              <button
+                onClick={() => setShowAllHost(!showAllHost)}
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
+              >
+                {showAllHost ? '簡略表示' : `他${hostGroups.length - maxDisplayCount}種を表示`}
+                <svg 
+                  className={`ml-1 w-4 h-4 transition-transform ${showAllHost ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {flowerGroups.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-xs font-semibold text-pink-600 dark:text-pink-300 uppercase tracking-wide">
+            成虫の訪花
+          </div>
+          <div className="space-y-2">
+            {flowerGroups.slice(0, flowerDisplayCount).map((plantGroup, index) => {
+              const key = `flower-${index}`;
+              return (
+                <HostPlantDetailCard
+                  key={`${plantGroup.name}-${key}`}
+                  plantGroup={plantGroup}
+                  isExpanded={expandedItems.has(key) || showDetailsByDefault}
+                  onToggle={() => toggleExpanded(key)}
+                />
+              );
+            })}
+          </div>
+          {hasMoreFlower && (
+            <div className="text-center">
+              <button
+                onClick={() => setShowAllFlower(!showAllFlower)}
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-lg transition-colors"
+              >
+                {showAllFlower ? '簡略表示' : `他${flowerGroups.length - maxDisplayCount}種を表示`}
+                <svg 
+                  className={`ml-1 w-4 h-4 transition-transform ${showAllFlower ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

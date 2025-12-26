@@ -20,6 +20,13 @@ const normalizePlantName = (name = '') =>
     .replace(/の(花|実|葉|枝|茎|根|蕾).*/, '')
     .trim();
 
+const isFlowerVisitRecord = (record) => {
+  if (!record) return false;
+  const lifeStage = (record.lifeStage || '').trim();
+  const plantPart = (record.plantPart || '').trim();
+  return lifeStage === '成虫' && plantPart === '花';
+};
+
 const FoodWebGraph = React.memo(function FoodWebGraph({
   currentInsect,
   currentPlantName,
@@ -34,6 +41,30 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const navigate = useNavigate();
   const location = useLocation();
   const isDark = theme === 'dark';
+
+  const matchesPlantName = useCallback((plantName, targetName) => {
+    if (!plantName || !targetName) return false;
+    if (plantName === targetName) return true;
+    return normalizePlantName(plantName) === normalizePlantName(targetName);
+  }, []);
+
+  const hasLarvalHostForPlant = useCallback((insect, plantName) => {
+    if (!insect || !plantName) return false;
+    if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
+      return insect.hostPlantsDetailed.some((record) => {
+        if (isFlowerVisitRecord(record)) return false;
+        const raw = record?.name || record?.plant || record?.displayName || '';
+        return matchesPlantName(String(raw).trim(), plantName);
+      });
+    }
+    if (Array.isArray(insect.hostPlants) && insect.hostPlants.length > 0) {
+      return insect.hostPlants.some((raw) => matchesPlantName(String(raw || '').trim(), plantName));
+    }
+    if (typeof insect.hostPlants === 'string' && insect.hostPlants.trim()) {
+      return insect.hostPlants.split(/[;；、，,]/).some((raw) => matchesPlantName(raw.trim(), plantName));
+    }
+    return false;
+  }, [matchesPlantName]);
 
   // image index caches
   const [imageExtMap, setImageExtMap] = useState({});
@@ -184,7 +215,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (currentPlantName) {
       const centerId = `plant:${currentPlantName}`;
       addNode(centerId, currentPlantName, 'plant-current');
-      const related = hostPlantsMap[currentPlantName] || [];
+      const relatedAll = hostPlantsMap[currentPlantName] || [];
+      const related = relatedAll.filter((name) => {
+        const insectDetail = allInsects?.find(i => i.name === name);
+        if (!insectDetail) return true;
+        return hasLarvalHostForPlant(insectDetail, currentPlantName);
+      });
       related.slice(0, relatedLimitSafe).forEach(name => {
         const insectDetail = allInsects?.find(i => i.name === name);
         const insectId = `insect:${name}`;
@@ -197,7 +233,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
       let plants = [];
       if (Array.isArray(currentInsect.hostPlantsDetailed) && currentInsect.hostPlantsDetailed.length > 0) {
-        plants = currentInsect.hostPlantsDetailed.map(p => p.name || p.plant).filter(Boolean);
+        plants = currentInsect.hostPlantsDetailed
+          .filter((record) => !isFlowerVisitRecord(record))
+          .map(p => p.name || p.plant || p.displayName)
+          .filter(Boolean);
       } else if (Array.isArray(currentInsect.hostPlants)) {
         plants = currentInsect.hostPlants.filter(p => p && p !== '不明');
       } else if (typeof currentInsect.hostPlants === 'string') {
@@ -213,7 +252,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         links.push({ source: centerId, target: plantId });
 
         if (showRelatedInsects) {
-          const related = (hostPlantsMap[plantName] || []).filter(n => n !== currentInsect.name);
+          const related = (hostPlantsMap[plantName] || [])
+            .filter(n => n !== currentInsect.name)
+            .filter((name) => {
+              const insectDetail = allInsects?.find(i => i.name === name);
+              if (!insectDetail) return true;
+              return hasLarvalHostForPlant(insectDetail, plantName);
+            });
           related.slice(0, relatedPerPlant).forEach(name => {
             const insectDetail = allInsects?.find(i => i.name === name);
             const insectId = `insect:${name}`;
@@ -325,6 +370,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const items = [];
     if (Array.isArray(detail.hostPlantsDetailed) && detail.hostPlantsDetailed.length > 0) {
       for (const p of detail.hostPlantsDetailed) {
+        if (isFlowerVisitRecord(p)) continue;
         const name = String(p?.name || p?.plant || p?.hostPlant || p?.hostPlantName || '').trim();
         if (!name || name === '不明') continue;
         const part = String(p?.part || p?.organ || p?.site || p?.parasiticPart || '').trim();
@@ -361,11 +407,29 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ].filter(Boolean);
     for (const key of keyCandidates) {
       const list = hostPlantsMap?.[key];
-      if (Array.isArray(list)) return list.filter(Boolean);
-      if (typeof list === 'string' && list.trim()) return list.split(/[;；、，,]/).map(s => s.trim()).filter(Boolean);
+      if (Array.isArray(list)) {
+        return list
+          .filter(Boolean)
+          .filter((name) => {
+            const insectDetail = allInsects?.find(i => i.name === name);
+            if (!insectDetail) return true;
+            return hasLarvalHostForPlant(insectDetail, selectedNode.name);
+          });
+      }
+      if (typeof list === 'string' && list.trim()) {
+        return list
+          .split(/[;；、，,]/)
+          .map(s => s.trim())
+          .filter(Boolean)
+          .filter((name) => {
+            const insectDetail = allInsects?.find(i => i.name === name);
+            if (!insectDetail) return true;
+            return hasLarvalHostForPlant(insectDetail, selectedNode.name);
+          });
+      }
     }
     return [];
-  }, [hostPlantsMap, selectedNode]);
+  }, [hostPlantsMap, selectedNode, allInsects, hasLarvalHostForPlant]);
 
   const focusNodeById = useCallback((nodeId) => {
     if (!nodeId) return;

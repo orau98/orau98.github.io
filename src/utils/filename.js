@@ -31,6 +31,7 @@ export const PLANT_IMAGE_SUFFIXES = [
   { suffix: '_葉表', label: '葉表' },
   { suffix: '_葉', label: '葉' },
   { suffix: '_葉裏', label: '葉裏' },
+  { suffix: '_ダニ室', label: 'ダニ室' },
   { suffix: '_葉表白化', label: '葉表白化' },
   { suffix: '_羽状複葉', label: '羽状複葉' },
   { suffix: '_樹皮', label: '樹皮' },
@@ -39,9 +40,10 @@ export const PLANT_IMAGE_SUFFIXES = [
   { suffix: '_花', label: '花' },
   { suffix: '_蕾', label: '蕾' },
   { suffix: '_若葉', label: '若葉' },
+  { suffix: '_冬芽', label: '冬芽' },
   { suffix: '_芽', label: '芽' },
+  { suffix: '_茎', label: '茎' },
   { suffix: '_枝', label: '枝' },
   { suffix: '_枝先', label: '枝先' },
   { suffix: '_断面', label: '断面' },
 ];
-

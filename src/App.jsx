@@ -5890,7 +5890,10 @@ function App() {
           if (!insect) return;
           let plants = [];
           if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
-            plants = insect.hostPlantsDetailed.map(p => p && p.name ? String(p.name).trim() : '').filter(Boolean);
+            plants = insect.hostPlantsDetailed
+              .filter(p => !(p && p.lifeStage === '成虫' && p.plantPart === '花'))
+              .map(p => p && p.name ? String(p.name).trim() : '')
+              .filter(Boolean);
           } else if (Array.isArray(insect.hostPlants)) {
             plants = insect.hostPlants.filter(p => typeof p === 'string' && p.trim()).map(p => p.trim());
           } else if (typeof insect.hostPlants === 'string') {

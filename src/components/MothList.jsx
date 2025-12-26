@@ -337,56 +337,71 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 leading-snug">
                   {(() => {
-                    if (!moth.hostPlants) return '情報なし';
-                    
+                    const isFlowerVisitRecord = (record) => {
+                      if (!record) return false;
+                      const lifeStage = (record.lifeStage || '').trim();
+                      const plantPart = (record.plantPart || '').trim();
+                      return lifeStage === '成虫' && plantPart === '花';
+                    };
+
                     // Repair function for collapsed Latin binomials in plant names
                     const repairPlantLatinBinomial = (plant) => {
                       if (!plant || typeof plant !== 'string') return plant;
                       return plant.trim();
                     };
 
-                    // hostPlants が文字列の場合と配列の場合を処理
-                    let plantNames;
-                    if (typeof moth.hostPlants === 'string') {
-                      // セミコロン、カンマで分割して各食草を取得
-                      plantNames = moth.hostPlants.split(/[;；、,]/)
-                        .map(plant => plant.trim())
-                        .filter(plant => plant)
-                        .map(plant => {
-                          // 不明の場合はそのまま返す
-                          if (plant === '不明') return '不明';
-                          // 科名を除去: （○○科）や (○○科) のパターンを削除
-                          const cleaned = plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
-                          return repairPlantLatinBinomial(cleaned);
-                        })
-                        .filter(plant => plant && !plant.includes('以上'));
-                    } else if (Array.isArray(moth.hostPlants)) {
-                      plantNames = moth.hostPlants
-                        .filter(plant => plant)
-                        .map(plant => {
-                          // 不明の場合はそのまま返す
-                          if (plant === '不明') return '不明';
-                          // 科名を除去
-                          const cleaned = plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
-                          return repairPlantLatinBinomial(cleaned);
-                        })
-                        .filter(plant => plant);
-                    } else {
-                      return '情報なし';
+                    const cleanPlantName = (plant) => {
+                      if (!plant || typeof plant !== 'string') return '';
+                      if (plant === '不明') return '不明';
+                      const cleaned = plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+                      return repairPlantLatinBinomial(cleaned);
+                    };
+
+                    let larvalNames = [];
+                    let flowerNames = [];
+
+                    if (Array.isArray(moth.hostPlantsDetailed) && moth.hostPlantsDetailed.length > 0) {
+                      moth.hostPlantsDetailed.forEach((record) => {
+                        const raw = record.displayName || record.name || '';
+                        const cleaned = cleanPlantName(String(raw).trim());
+                        if (!cleaned) return;
+                        if (isFlowerVisitRecord(record)) {
+                          flowerNames.push(cleaned);
+                        } else {
+                          larvalNames.push(cleaned);
+                        }
+                      });
+                    } else if (moth.hostPlants) {
+                      // hostPlants が文字列の場合と配列の場合を処理
+                      let plantNames;
+                      if (typeof moth.hostPlants === 'string') {
+                        plantNames = moth.hostPlants.split(/[;；、,]/)
+                          .map(plant => cleanPlantName(plant.trim()))
+                          .filter(plant => plant);
+                      } else if (Array.isArray(moth.hostPlants)) {
+                        plantNames = moth.hostPlants
+                          .map(plant => cleanPlantName(String(plant || '').trim()))
+                          .filter(plant => plant);
+                      } else {
+                        plantNames = [];
+                      }
+                      larvalNames = plantNames;
                     }
-                    
+
                     // 「不明」植物のフィルタリング：具体的な食草情報がある場合は「不明」を除外
-                    const hasSpecificPlants = plantNames.some(plant => 
-                      plant && plant !== '不明'
-                    );
-                    
-                    if (hasSpecificPlants) {
-                      plantNames = plantNames.filter(plant => plant !== '不明');
-                    }
+                    const filterUnknown = (names) => {
+                      const hasSpecific = names.some(name => name && name !== '不明');
+                      return hasSpecific ? names.filter(name => name !== '不明') : names;
+                    };
+                    larvalNames = filterUnknown(larvalNames);
+                    flowerNames = filterUnknown(flowerNames);
                     
                     // 重複を除去
-                    const uniquePlantNames = [...new Set(plantNames)];
-                    return uniquePlantNames.length > 0 ? uniquePlantNames.join('、') : '情報なし';
+                    const uniqueLarvalNames = [...new Set(larvalNames)];
+                    const uniqueFlowerNames = [...new Set(flowerNames)];
+                    if (uniqueLarvalNames.length > 0) return uniqueLarvalNames.join('、');
+                    if (uniqueFlowerNames.length > 0) return `訪花: ${uniqueFlowerNames.join('、')}`;
+                    return '情報なし';
                   })()}
                   </span>
                 </div>

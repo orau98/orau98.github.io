@@ -655,76 +655,84 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     });
   }
   
-  // この植物を利用する昆虫のリストを作成（改善されたマッチングロジック）
-  const relatedInsects = allInsects.filter(insect => {
+  const isFlowerVisitRecord = (record) => {
+    if (!record) return false;
+    const lifeStage = (record.lifeStage || '').trim();
+    const plantPart = (record.plantPart || '').trim();
+    return lifeStage === '成虫' && plantPart === '花';
+  };
+
+  const targetNames = [decodedPlantName, canonicalName, ...aliasNames].filter(Boolean);
+  const normalizedTargets = new Set(targetNames.map(normalizePlantName).filter(Boolean));
+
+  const matchesTargetPlant = (plant) => {
+    if (!plant) return false;
+    if (targetNames.includes(plant)) return true;
+    const normalizedPlant = normalizePlantName(plant);
+    if (normalizedTargets.has(normalizedPlant)) return true;
+    const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
+    if (targetNames.includes(cleanPlant)) return true;
+    const normalizedClean = normalizePlantName(cleanPlant);
+    if (normalizedTargets.has(normalizedClean)) return true;
+    return false;
+  };
+
+  const classifiedInsects = allInsects.map((insect) => {
     const insectDisplayName = (insect.name || insect.japaneseName || '').trim();
+    let hasHost = false;
+    let hasFlowerVisit = false;
 
     const hostMapHit = () => {
       if (!insectDisplayName) return false;
-      const targets = [
-        decodedPlantName,
-        canonicalName,
-        ...aliasNames
-      ].filter(Boolean);
-      return targets.some(target => {
+      return targetNames.some(target => {
         const list = hostPlants[target];
         return Array.isArray(list) && list.includes(insectDisplayName);
       });
     };
 
-    if (hostMapHit()) return true;
-    if (!insect.hostPlants) return false;
-    
-    // hostPlantsを文字列に変換（配列の場合も考慮）
-    let hostPlantsStr;
-    if (typeof insect.hostPlants === 'string') {
-      hostPlantsStr = insect.hostPlants;
-    } else if (Array.isArray(insect.hostPlants)) {
-      hostPlantsStr = insect.hostPlants.join('、');
-    } else {
-      // その他の型の場合はStringに変換を試みる
-      hostPlantsStr = String(insect.hostPlants);
+    if (hostMapHit()) hasHost = true;
+
+    if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
+      insect.hostPlantsDetailed.forEach((record) => {
+        const plantName = String(record?.name || record?.displayName || record?.plant || '').trim();
+        if (!plantName) return;
+        if (!matchesTargetPlant(plantName)) return;
+        if (isFlowerVisitRecord(record)) {
+          hasFlowerVisit = true;
+        } else {
+          hasHost = true;
+        }
+      });
+    } else if (!hasHost && insect.hostPlants) {
+      // hostPlantsを文字列に変換（配列の場合も考慮）
+      let hostPlantsStr;
+      if (typeof insect.hostPlants === 'string') {
+        hostPlantsStr = insect.hostPlants;
+      } else if (Array.isArray(insect.hostPlants)) {
+        hostPlantsStr = insect.hostPlants.join('、');
+      } else {
+        hostPlantsStr = String(insect.hostPlants);
+      }
+
+      const hostPlantsList = hostPlantsStr.split(/[、,；;]/).map(p => p.trim());
+      if (hostPlantsList.some(matchesTargetPlant)) {
+        hasHost = true;
+      }
     }
-    
-    // 食草リストを正規化して検索
-    const hostPlantsList = hostPlantsStr.split(/[、,；;]/).map(p => p.trim());
-    
-    // 検索対象の植物名を正規化
-    const normalizedTarget = normalizePlantName(decodedPlantName);
-    const additionalTargets = new Set([
-      normalizedTarget,
-      ...aliasNames.map(normalizePlantName),
-      normalizePlantName(canonicalName)
-    ].filter(Boolean));
-    
-    return hostPlantsList.some(plant => {
-      // 元の植物名での完全一致
-      if (plant === decodedPlantName) return true;
-      if (canonicalName && plant === canonicalName) return true;
-      if (aliasNames.includes(plant)) return true;
-      
-      // 正規化した植物名での一致
-      const normalizedPlant = normalizePlantName(plant);
-      if (normalizedPlant === normalizedTarget) return true;
-      if (additionalTargets.has(normalizedPlant)) return true;
-      
-      // 括弧を除いた植物名での一致（従来のロジック）
-      const cleanPlant = plant.replace(/[(（][^)）]*[)）]/g, '').trim();
-      if (cleanPlant === decodedPlantName) return true;
-      
-      return false;
-    });
-  }).map(insect => {
-    // pathプロパティを追加
+
+    if (!hasHost && !hasFlowerVisit) return null;
     const path = buildInsectPath(insect);
-    return { ...insect, path };
-  });
+    return { ...insect, path, hasHost, hasFlowerVisit };
+  }).filter(Boolean);
+
+  const hostPlantInsects = classifiedInsects.filter(i => i.hasHost);
+  const flowerVisitInsects = classifiedInsects.filter(i => i.hasFlowerVisit);
   
   // Debug logging for オニグルミ
   if (decodedPlantName === 'オニグルミ') {
-    logger.debug('DEBUG: Related insects found for オニグルミ:', relatedInsects.length);
+    logger.debug('DEBUG: Related insects found for オニグルミ:', hostPlantInsects.length);
     logger.debug('DEBUG: hostPlants[オニグルミ]:', hostPlants['オニグルミ']);
-    logger.debug('DEBUG: First few related insects:', relatedInsects.slice(0, 5).map(i => i.name || i.japaneseName));
+    logger.debug('DEBUG: First few related insects:', hostPlantInsects.slice(0, 5).map(i => i.name || i.japaneseName));
   }
 
   // ネットワーク図サイズ
@@ -797,13 +805,15 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
     const buildCandidates = (name) => {
       const encodedName = encodeURIComponent(name);
-      const variations = [
-        `${baseUrl}images/plants/${encodedName}.jpg`,
-        `${baseUrl}images/plants/${encodedName}.JPG`,
-        `${baseUrl}images/plants/${name}.jpg`,
-        `${baseUrl}images/plants/${name}.JPG`,
-      ];
-      return variations.filter((url, idx) => url && variations.indexOf(url) === idx);
+      const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
+      const variations = [];
+      extensions.forEach((ext) => {
+        variations.push(`${baseUrl}images/plants/${encodedName}${ext}`);
+      });
+      extensions.forEach((ext) => {
+        variations.push(`${baseUrl}images/plants/${name}${ext}`);
+      });
+      return Array.from(new Set(variations.filter(Boolean)));
     };
 
     bases.forEach((base) => {
@@ -848,13 +858,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         robots.name = 'robots';
         document.head.appendChild(robots);
       }
-      if (!isTaxonList && Array.isArray(relatedInsects) && relatedInsects.length === 0) {
+      if (!isTaxonList && Array.isArray(hostPlantInsects) && hostPlantInsects.length === 0 && Array.isArray(flowerVisitInsects) && flowerVisitInsects.length === 0) {
         robots.content = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
       } else {
         robots.content = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
       }
     } catch {}
-  }, [isFamily, isOrder, isGenus, relatedInsects]);
+  }, [isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects]);
 
   // Load classification: prefer lite JSON, fallback to CSV
   useEffect(() => {
@@ -1289,7 +1299,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined,
           family: familyLabel,
         }} 
-        relatedInsects={relatedInsects}
+        relatedInsects={hostPlantInsects}
       />
       
       {/* 概要セクション（和名＋学名のみ） */}
@@ -1409,15 +1419,36 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           <svg className="w-8 h-8 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          同じ食草を利用する昆虫 ({relatedInsects.length}種)
+          関連する昆虫
         </h2>
-        {relatedInsects.length === 0 ? (
+        {hostPlantInsects.length === 0 && flowerVisitInsects.length === 0 ? (
           <div className="text-slate-500 dark:text-slate-400">関連する昆虫が見つかりませんでした。</div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {relatedInsects.map((insect, idx) => (
-              <InsectCard key={insect.id || idx} insect={insect} idx={idx} imageFilenames={imageFilenames} imageExtensions={imageExtensions} />
-            ))}
+          <div className="space-y-10">
+            {hostPlantInsects.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-emerald-700 dark:text-emerald-300 mb-4">
+                  幼虫の食草として利用する昆虫 ({hostPlantInsects.length}種)
+                </h3>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {hostPlantInsects.map((insect, idx) => (
+                    <InsectCard key={`host-${insect.id || idx}`} insect={insect} idx={idx} imageFilenames={imageFilenames} imageExtensions={imageExtensions} />
+                  ))}
+                </div>
+              </div>
+            )}
+            {flowerVisitInsects.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-pink-600 dark:text-pink-300 mb-4">
+                  訪花で利用する昆虫 ({flowerVisitInsects.length}種)
+                </h3>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {flowerVisitInsects.map((insect, idx) => (
+                    <InsectCard key={`flower-${insect.id || idx}`} insect={insect} idx={idx} imageFilenames={imageFilenames} imageExtensions={imageExtensions} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
