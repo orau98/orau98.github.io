@@ -298,6 +298,33 @@ const InsectsHostPlantExplorer = React.memo(
       });
       return names.size;
     }, [hostPlants, flowerVisitPlants]);
+    const aphidCount = useMemo(() => {
+      const allInsects = [
+        ...moths,
+        ...butterflies,
+        ...beetles,
+        ...leafbeetles,
+      ];
+      const seen = new Set();
+      allInsects.forEach((insect) => {
+        if (!insect) return;
+        const familyJp = (
+          insect.classification?.familyJapanese ||
+          insect.family ||
+          ""
+        ).toString();
+        const familyLatin = (
+          insect.classification?.family ||
+          ""
+        ).toString();
+        const isAphid =
+          familyJp.includes("アブラムシ") || familyLatin === "Aphididae";
+        if (!isAphid) return;
+        const key = insect.id || insect.name;
+        if (key) seen.add(key);
+      });
+      return seen.size;
+    }, [moths, butterflies, beetles, leafbeetles]);
 
     // SEO for Home (トップページ)
     const title = "昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索";
@@ -646,6 +673,11 @@ const InsectsHostPlantExplorer = React.memo(
                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
                     <span className="text-white/90 text-sm font-medium">
                       甲虫 {counts.beetles + counts.leafbeetles}種
+                    </span>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
+                    <span className="text-white/90 text-sm font-medium">
+                      アブラムシ {aphidCount}種
                     </span>
                   </div>
                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
