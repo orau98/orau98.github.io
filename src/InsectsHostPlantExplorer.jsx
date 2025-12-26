@@ -256,15 +256,60 @@ const InsectsHostPlantExplorer = React.memo(
       }
     }, [activeTab, onNeedInsectsData, onNeedPlantsData]);
 
+    const flowerVisitPlants = useMemo(() => {
+      const map = {};
+      const allInsects = [
+        ...moths,
+        ...butterflies,
+        ...beetles,
+        ...leafbeetles,
+      ];
+      const normalizePlant = (value) => {
+        if (!value || typeof value !== "string") return "";
+        return value
+          .replace(/[（(][^）)]*科[^）)]*[）)]/g, "")
+          .replace(/[（(][^）)]*[）)]/g, "")
+          .trim();
+      };
+      allInsects.forEach((insect) => {
+        const insectName = (insect?.name || insect?.japaneseName || "").trim();
+        if (!insectName) return;
+        const records = insect?.hostPlantsDetailed;
+        if (!Array.isArray(records) || records.length === 0) return;
+        records.forEach((record) => {
+          const lifeStage = (record?.lifeStage || "").trim();
+          const plantPart = (record?.plantPart || "").trim();
+          if (lifeStage !== "成虫" || plantPart !== "花") return;
+          const rawPlant = record?.name || record?.displayName || record?.plant || "";
+          const plantName = normalizePlant(String(rawPlant || "").trim());
+          if (!plantName || plantName === "不明") return;
+          if (!map[plantName]) map[plantName] = [];
+          if (!map[plantName].includes(insectName)) {
+            map[plantName].push(insectName);
+          }
+        });
+      });
+      return map;
+    }, [moths, butterflies, beetles, leafbeetles]);
+    const mergedHostPlantCount = useMemo(() => {
+      const names = new Set(Object.keys(hostPlants || {}));
+      Object.keys(flowerVisitPlants || {}).forEach((name) => {
+        if (name) names.add(name);
+      });
+      return names.size;
+    }, [hostPlants, flowerVisitPlants]);
+
     // SEO for Home (トップページ)
     const title = "昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索";
-    const counts = summaryCounts || {
-      moths: moths.length,
-      butterflies: butterflies.length,
-      beetles: beetles.length,
-      leafbeetles: leafbeetles.length,
-      hostPlants: Object.keys(hostPlants).length,
-    };
+    const counts = summaryCounts
+      ? { ...summaryCounts, hostPlants: mergedHostPlantCount }
+      : {
+          moths: moths.length,
+          butterflies: butterflies.length,
+          beetles: beetles.length,
+          leafbeetles: leafbeetles.length,
+          hostPlants: mergedHostPlantCount,
+        };
     const desc = `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、甲虫 ${counts.beetles + counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。`;
     const { setOgTwitterImage } = useSeoMeta({
       title,
@@ -426,7 +471,11 @@ const InsectsHostPlantExplorer = React.memo(
         }
       } else {
         // plants
-        const plantNames = Object.keys(hostPlants);
+        const plantNameSet = new Set(Object.keys(hostPlants));
+        Object.keys(flowerVisitPlants || {}).forEach((name) => {
+          if (name) plantNameSet.add(name);
+        });
+        const plantNames = Array.from(plantNameSet);
         const matches = (value) => {
           if (!value) return false;
           const lower = String(value).toLowerCase();
@@ -464,6 +513,7 @@ const InsectsHostPlantExplorer = React.memo(
       beetles,
       leafbeetles,
       hostPlants,
+      flowerVisitPlants,
       plantDetails,
     ]);
 
@@ -803,6 +853,7 @@ const InsectsHostPlantExplorer = React.memo(
                     >
                       <HostPlantList
                         hostPlants={hostPlants}
+                        flowerVisitPlants={flowerVisitPlants}
                         plantDetails={plantDetails}
                         embedded={true}
                         preloadedImageFilenames={plantImageFilenames}

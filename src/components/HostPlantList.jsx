@@ -255,6 +255,7 @@ const HostPlantListItem = React.memo(
 
 const HostPlantList = ({
   hostPlants = {},
+  flowerVisitPlants = {},
   plantDetails = {},
   embedded = false,
   preloadedImageFilenames = [],
@@ -264,7 +265,22 @@ const HostPlantList = ({
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
   const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
 
-  const plantCount = Object.keys(safeHostPlants).length;
+  const mergedHostPlants = useMemo(() => {
+    const merged = { ...safeHostPlants };
+    Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {
+      if (!plant || plant === '不明') return;
+      const existing = Array.isArray(merged[plant]) ? new Set(merged[plant]) : new Set();
+      if (Array.isArray(insects)) {
+        insects.forEach((name) => {
+          if (name) existing.add(name);
+        });
+      }
+      merged[plant] = Array.from(existing);
+    });
+    return merged;
+  }, [safeHostPlants, flowerVisitPlants]);
+
+  const plantCount = Object.keys(mergedHostPlants).length;
   const plantCanonicalUrl = absUrl("/plant");
   const plantPageTitle = "植物（食草）一覧 | 昆虫食草図鑑";
   const plantPageDesc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
@@ -335,6 +351,7 @@ const HostPlantList = ({
 
   const familyFilter = useMemo(() => searchParams.get('pfamily') || '', [searchParams]);
   const orderFilter = useMemo(() => searchParams.get('porder') || '', [searchParams]);
+  const visitFilter = useMemo(() => searchParams.get('pvisit') || 'all', [searchParams]);
 
   const setPPage = useCallback((page) => {
     updateSearchParams((p) => {
@@ -362,10 +379,20 @@ const HostPlantList = ({
     });
   }, [updateSearchParams]);
 
+  const setPVisitFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (v && v !== 'all') p.set('pvisit', v);
+      else p.delete('pvisit');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
   const clearFilters = useCallback(() => {
     updateSearchParams((p) => {
       p.delete('pfamily');
       p.delete('porder');
+      p.delete('pvisit');
       p.delete('ppage');
     });
   }, [updateSearchParams]);
@@ -381,6 +408,7 @@ const HostPlantList = ({
     updateSearchParams((p) => {
       p.delete('pfamily');
       p.delete('porder');
+      p.delete('pvisit');
       p.delete('q');
       p.delete('ppage');
     });
@@ -388,26 +416,30 @@ const HostPlantList = ({
 
   const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
   const hasSearchQuery = searchQuery.length > 0;
-  const hasFilterCriteria = !!familyFilter || !!orderFilter;
+  const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all';
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: '検索', value: searchQuery, clear: clearSearch });
     if (familyFilter) filters.push({ type: '科', value: familyFilter, clear: () => setPFamilyFilter('') });
     if (orderFilter) filters.push({ type: '目', value: orderFilter, clear: () => setPOrderFilter('') });
+    if (visitFilter !== 'all') filters.push({ type: '訪花', value: 'のみ', clear: () => setPVisitFilter('all') });
     return filters;
   }, [
     hasSearchQuery,
     searchQuery,
     familyFilter,
     orderFilter,
+    visitFilter,
     clearSearch,
     setPFamilyFilter,
     setPOrderFilter,
+    setPVisitFilter,
   ]);
   const filterIdBase = useId();
   const orderFilterId = `${filterIdBase}-order`;
   const familyFilterId = `${filterIdBase}-family`;
+  const visitFilterId = `${filterIdBase}-visit`;
 
   // Load plant image filenames on component mount
   useEffect(() => {
@@ -446,6 +478,7 @@ const HostPlantList = ({
     debouncedPlantSearch,
     familyFilter,
     orderFilter,
+    visitFilter,
   });
 
   // （メタは useSeoMeta に移行）
@@ -454,7 +487,7 @@ const HostPlantList = ({
   useEffect(() => {
     if (embedded) return;
     try {
-      const items = Object.keys(safeHostPlants || {})
+      const items = Object.keys(mergedHostPlants || {})
         .slice(0, 10)
         .map((name, idx) => ({
           "@type": "ListItem",
@@ -481,7 +514,7 @@ const HostPlantList = ({
       const s = document.querySelector("#itemlist-plant");
       if (s) s.remove();
     };
-  }, [embedded, safeHostPlants]);
+  }, [embedded, mergedHostPlants]);
 
   // Pre-calculate plant image mapping to avoid O(N^2) during sort
   const plantImageMap = useMemo(() => {
@@ -500,7 +533,7 @@ const HostPlantList = ({
       baseToFiles.get(base).push(filename);
     });
 
-    Object.keys(safeHostPlants).forEach(plantName => {
+    Object.keys(mergedHostPlants).forEach(plantName => {
       if (!plantName || plantName === "不明" || plantName.endsWith("科")) return;
 
       const detail = safePlantDetails[plantName] || {};
@@ -560,7 +593,7 @@ const HostPlantList = ({
       }
     });
     return map;
-  }, [plantImageFilenames, safeHostPlants, safePlantDetails]);
+  }, [plantImageFilenames, mergedHostPlants, safePlantDetails]);
 
   // Generate filter options
   const familyOptions = useMemo(() => {
@@ -584,11 +617,11 @@ const HostPlantList = ({
   const filteredHostPlants = useMemo(() => {
     logger.debug(
       "DEBUG: Filtering plants (summary only)",
-      Object.keys(safeHostPlants).length,
+      Object.keys(mergedHostPlants).length,
       "search term:",
       debouncedPlantSearch,
     );
-    if (!safeHostPlants || Object.keys(safeHostPlants).length === 0) {
+    if (!mergedHostPlants || Object.keys(mergedHostPlants).length === 0) {
       logger.debug("DEBUG: No host plants available");
       return [];
     }
@@ -597,7 +630,7 @@ const HostPlantList = ({
     const katakanaSearchTerm =
       hiraganaToKatakana(debouncedPlantSearch).toLowerCase();
 
-    const filtered = Object.entries(safeHostPlants).filter(([plantName]) => {
+    const filtered = Object.entries(mergedHostPlants).filter(([plantName]) => {
       // Explicitly exclude empty, undefined, or invalid plant names
       if (
         !plantName ||
@@ -620,6 +653,17 @@ const HostPlantList = ({
       if (orderFilter) {
         const ord = (detail.order || '').trim();
         if (ord !== orderFilter) return false;
+      }
+
+      // Apply Flower Visit Filter
+      if (visitFilter !== 'all') {
+        const normalizedPlant = plantName
+          .replace(/[（(][^）)]*[）)]/g, '')
+          .trim();
+        const hasFlowerVisit = !!(flowerVisitPlants?.[plantName] || (normalizedPlant && flowerVisitPlants?.[normalizedPlant]));
+        const hasLarvalHost = !!(safeHostPlants?.[plantName] || (normalizedPlant && safeHostPlants?.[normalizedPlant]));
+        const isFlowerOnly = hasFlowerVisit && !hasLarvalHost;
+        if (!isFlowerOnly) return false;
       }
 
       // Apply Search Term
@@ -672,12 +716,15 @@ const HostPlantList = ({
 
     return sorted;
   }, [
+    mergedHostPlants,
+    flowerVisitPlants,
     safeHostPlants,
     safePlantDetails,
     debouncedPlantSearch,
     plantImageMap,
     familyFilter,
-    orderFilter
+    orderFilter,
+    visitFilter
   ]);
 
   // Add rel=prev/next for plant list pagination
@@ -720,7 +767,7 @@ const HostPlantList = ({
     const katakanaSearchTerm =
       hiraganaToKatakana(initialSearchTerm).toLowerCase();
     const suggestions = new Set();
-    Object.keys(safeHostPlants).forEach((plant) => {
+    Object.keys(mergedHostPlants).forEach((plant) => {
       if (
         plant.toLowerCase().includes(lowerCaseSearchTerm) ||
         plant.toLowerCase().includes(katakanaSearchTerm)
@@ -754,7 +801,7 @@ const HostPlantList = ({
       }
     });
     return Array.from(suggestions).slice(0, 10);
-  }, [safeHostPlants, safePlantDetails, initialSearchTerm]);
+  }, [mergedHostPlants, safePlantDetails, initialSearchTerm]);
 
   const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
   const currentHostPlants = useMemo(() => {
@@ -773,7 +820,8 @@ const HostPlantList = ({
     const changed =
       prev.debouncedPlantSearch !== debouncedPlantSearch ||
       prev.familyFilter !== familyFilter ||
-      prev.orderFilter !== orderFilter;
+      prev.orderFilter !== orderFilter ||
+      prev.visitFilter !== visitFilter;
 
     if (!changed) return;
 
@@ -781,6 +829,7 @@ const HostPlantList = ({
       debouncedPlantSearch,
       familyFilter,
       orderFilter,
+      visitFilter,
     };
 
     if (currentPage === 1) return;
@@ -847,7 +896,7 @@ const HostPlantList = ({
 
         {/* Collapsible Controls */}
         <div 
-          className={`grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 transition-all duration-300 ease-in-out overflow-hidden ${
             isFiltersOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
@@ -886,6 +935,26 @@ const HostPlantList = ({
                 {familyOptions.map((f) => (
                   <option key={f} value={f}>{f}</option>
                 ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>訪花</label>
+            <div className="relative">
+              <select
+                id={visitFilterId}
+                value={visitFilter}
+                onChange={(e) => setPVisitFilter(e.target.value)}
+                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+              >
+                <option value="all">指定なし</option>
+                <option value="flower">訪花のみ</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

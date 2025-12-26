@@ -164,6 +164,7 @@ function App() {
         params.has('imonth') ||
         params.has('pfamily') ||
         params.has('porder') ||
+        params.has('pvisit') ||
         params.has('redirect');
       let robots = document.querySelector('meta[name="robots"]');
       if (!robots) {
