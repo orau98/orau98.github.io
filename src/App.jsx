@@ -361,11 +361,15 @@ function App() {
                 if (!csvRes.ok) return;
                 const csvText = await csvRes.text();
                 if (!csvText) return;
-                const parsed = Papa.parse(csvText, {
-                  header: true,
-                  skipEmptyLines: true,
-                  worker: true, // offload large CSV parsing off the main thread to keep UI responsive
-                  fastMode: true,
+                const parsed = await new Promise((resolve) => {
+                  Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    worker: true, // offload large CSV parsing off the main thread to keep UI responsive
+                    fastMode: true,
+                    complete: (results) => resolve(results),
+                    error: () => resolve(null),
+                  });
                 });
                 if (!parsed || !Array.isArray(parsed.data)) return;
 
