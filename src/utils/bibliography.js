@@ -85,6 +85,19 @@ export const bibliography = [
     note: '第3巻'
   },
   {
+    key: 'hana-wo-otozureru-gatachi',
+    title: '花を訪れる蛾たち',
+    note: '知られざる姿を求めて',
+    authors: ['池ノ上 利幸'],
+    year: '2008.11',
+    publisher: '昆虫文献六本脚',
+    pages: '215p',
+    size: '31cm',
+    isbn10: '4902649086',
+    isbn13: '978-4-902649-08-6',
+    url: 'https://amzn.to/4b2pvfe'
+  },
+  {
     key: 'nihon-no-fuyushaku',
     title: '日本の冬尺蛾',
     authors: ['中島 秀雄', '小林 秀紀'],
