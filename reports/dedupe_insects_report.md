@@ -1,0 +1,1544 @@
+# 昆虫CSV 重複削除レポート
+
+判定基準: 和名 + 学名ベース一致（属種/亜種 or 学名から著者・年を除去）
+選択基準: 記載者/年の有無を優先し、情報量の多い行を保持
+
+## normalized_data/insects.csv
+- 重複グループ数: 255
+- 削除行数: 255
+
+- ヨツモンキヌバコガ / scythris sinensis
+  - keep: id=species-0901 sci="Scythris sinensis (Felder & Rogenhofer, 1875)" author=(Felder & Rogenhofer) year=1875
+  - drop: id=species-20817 sci="Scythris sinensis" author= year=
+- イッシキメスコバネキバガ / diurnea issikii
+  - keep: id=species-0905 sci="Diurnea issikii Saito, 1979" author=Saito year=1979
+  - drop: id=species-20818 sci="Diurnea issikii" author= year=
+- メスコバネキバガ / diurnea cupreifera
+  - keep: id=species-0906 sci="Diurnea cupreifera (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20819 sci="Diurnea cupreifera" author= year=
+- ミヤマメスコバネキバガ / cheimophila fumida
+  - keep: id=species-0907 sci="Cheimophila fumida (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20820 sci="Cheimophila fumida" author= year=
+- ミツモンホソキバガ / oecia oecophila
+  - keep: id=species-0908 sci="Oecia oecophila (Staudinger, 1876)" author=(Staudinger) year=1876
+  - drop: id=species-20821 sci="Oecia oecophila" author= year=
+- クロモンベニマルハキバガ / schiffermuelleria imogena
+  - keep: id=species-0909 sci="Schiffermuelleria imogena (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20822 sci="Schiffermuelleria imogena" author= year=
+- カレハヒメマルハキバガ / pseudodoxia achlyphanes
+  - keep: id=species-0928 sci="Pseudodoxia achlyphanes (Meyrick, 1934)" author=(Meyrick) year=1934
+  - drop: id=species-20828 sci="Pseudodoxia achlyphanes" author= year=
+- スジモンキマルハキバガ / periacma delegata
+  - keep: id=species-0929 sci="Periacma delegata Meyrick, 1914" author=Meyrick year=1914
+  - drop: id=species-20829 sci="Periacma delegata" author= year=
+- ウスムジヒゲナガマルハキバガ / carcina homomorpha
+  - keep: id=species-0930 sci="Carcina homomorpha (Meyrick, 1931)" author=(Meyrick) year=1931
+  - drop: id=species-20830 sci="Carcina homomorpha" author= year=
+- コクマルハキバガ / martyringa xeraula
+  - keep: id=species-0931 sci="Martyringa xeraula (Meyrick, 1910)" author=(Meyrick) year=1910
+  - drop: id=species-20831 sci="Martyringa xeraula" author= year=
+- ニセコクマルハキバガ / martyringa ussuriella
+  - keep: id=species-0932 sci="Martyringa ussuriella Lvovsky, 1979" author=Lvovsky year=1979
+  - drop: id=species-20832 sci="Martyringa ussuriella" author= year=
+- ヤシャブシキホリマルハキバガ / casmara agronoma
+  - keep: id=species-0933 sci="Casmara agronoma Meyrick, 1931" author=Meyrick year=1931
+  - drop: id=species-20833 sci="Casmara agronoma" author= year=
+- チャノキホリマルハキバガ / casmara patrona
+  - keep: id=species-0934 sci="Casmara patrona Meyrick, 1925" author=Meyrick year=1925
+  - drop: id=species-20834 sci="Casmara patrona" author= year=
+- フジサワベニマルハキバガ / promalactis ermolenkoi
+  - keep: id=species-0935 sci="Promalactis ermolenkoi Lvovsky, 1986" author=Lvovsky year=1986
+  - drop: id=species-20835 sci="Promalactis ermolenkoi" author= year=
+- マノベニマルハキバガ / promalactis manoi
+  - keep: id=species-0936 sci="Promalactis manoi Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20836 sci="Promalactis manoi" author= year=
+- シロスジベニマルハキバガ / promalactis enopisema
+  - keep: id=species-0937 sci="Promalactis enopisema (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20837 sci="Promalactis enopisema" author= year=
+- ヨスジカバマルハキバガ / promalactis matsuurae
+  - keep: id=species-0939 sci="Promalactis matsuurae Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20838 sci="Promalactis matsuurae" author= year=
+- ギンモンカバマルハキバガ / promalactis jezonica
+  - keep: id=species-0943 sci="Promalactis jezonica (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20840 sci="Promalactis jezonica" author= year=
+- ヒメシロスジカバマルハキバガ / promalactis autoclina
+  - keep: id=species-0944 sci="Promalactis autoclina Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20841 sci="Promalactis autoclina" author= year=
+- シロスジカバマルハキバガ / promalactis suzukiella
+  - keep: id=species-0945 sci="Promalactis suzukiella (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20842 sci="Promalactis suzukiella" author= year=
+- ホングウギンモンマルハキバガ / promalactis kumanoensis
+  - keep: id=species-0947 sci="Promalactis kumanoensis Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20844 sci="Promalactis kumanoensis" author= year=
+- ヤエヤマカバマルハキバガ / promalactis yaeyamaensis
+  - keep: id=species-0948 sci="Promalactis yaeyamaensis Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20845 sci="Promalactis yaeyamaensis" author= year=
+- サカイマルハキバガ / promalactis sakaiella
+  - keep: id=species-0949 sci="Promalactis sakaiella (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20846 sci="Promalactis sakaiella" author= year=
+- カレハチビマルハキバガ / tyrolimnas anthraconesa
+  - keep: id=species-0952 sci="Tyrolimnas anthraconesa Meyrick, 1934" author=Meyrick year=1934
+  - drop: id=species-20847 sci="Tyrolimnas anthraconesa" author= year=
+- キガシラマルハキバガ / pedioxestis isomorpha
+  - keep: id=species-0953 sci="Pedioxestis isomorpha Meyrick, 1932" author=Meyrick year=1932
+  - drop: id=species-20848 sci="Pedioxestis isomorpha" author= year=
+- ナニワズハリキバガ / anchinia cristalis
+  - keep: id=species-0954 sci="Anchinia cristalis (Scopoli, 1763)" author=(Scopoli) year=1763
+  - drop: id=species-20849 sci="Anchinia cristalis" author= year=
+- クロマイコモドキ / lamprystica igneola
+  - keep: id=species-0955 sci="Lamprystica igneola Stringer, 1930" author=Stringer year=1930
+  - drop: id=species-20850 sci="Lamprystica igneola" author= year=
+- キボシクロマルハキバガ / telechrysis tripuncta
+  - keep: id=species-0957 sci="Telechrysis tripuncta (Haworth, 1828)" author=(Haworth) year=1828
+  - drop: id=species-20852 sci="Telechrysis tripuncta" author= year=
+- フタクロボシハビロキバガ / scythropiodes issikii
+  - keep: id=species-0958 sci="Scythropiodes issikii (Takahashi, 1930)" author=(Takahashi) year=1930
+  - drop: id=species-20853 sci="Scythropiodes issikii" author= year=
+- ゴマフシロハビロキバガ / scythropiodes leucostola
+  - keep: id=species-0959 sci="Scythropiodes leucostola (Meyrick, 1921)" author=(Meyrick) year=1921
+  - drop: id=species-20854 sci="Scythropiodes leucostola" author= year=
+- ムモンハビロキバガ / scythropiodes lividula
+  - keep: id=species-0960 sci="Scythropiodes lividula (Meyrick, 1932)" author=(Meyrick) year=1932
+  - drop: id=species-20855 sci="Scythropiodes lividula" author= year=
+- フタテンハビロキバガ / scythropiodes malivora
+  - keep: id=species-0961 sci="Scythropiodes malivora (Meyrick, 1930)" author=(Meyrick) year=1930
+  - drop: id=species-20856 sci="Scythropiodes malivora" author= year=
+- シロハビロキバガ / scythropiodes venusta
+  - keep: id=species-0962 sci="Scythropiodes venusta (Moriuti, 1977)" author=(Moriuti) year=1977
+  - drop: id=species-20857 sci="Scythropiodes venusta" author= year=
+- マエチャオオハビロキバガ / rhizosthenes falciformis
+  - keep: id=species-0965 sci="Rhizosthenes falciformis Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20770 sci="Rhizosthenes falciformis" author= year=
+- オビカクバネヒゲナガキバガ / deltoplastis apostatis
+  - keep: id=species-0966 sci="Deltoplastis apostatis (Meyrick, 1932)" author=(Meyrick) year=1932
+  - drop: id=species-20771 sci="Deltoplastis apostatis" author= year=
+- クロカクバネヒゲナガキバガ / athymoris martialis
+  - keep: id=species-0967 sci="Athymoris martialis Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20772 sci="Athymoris martialis" author= year=
+- コゲチャヒゲナガキバガ / halolaguna sublaxata
+  - keep: id=species-0968 sci="Halolaguna sublaxata Gozmány, 1978" author=Gozmány year=1978
+  - drop: id=species-20773 sci="Halolaguna sublaxata" author= year=
+- オオキイロホソバヒゲナガキバガ / lecithocera chersitis
+  - keep: id=species-0969 sci="Lecithocera chersitis Meyrick, 1918" author=Meyrick year=1918
+  - drop: id=species-20774 sci="Lecithocera chersitis" author= year=
+- デブトウホソバヒゲナガキバガ / lecithocera daebuensis
+  - keep: id=species-0970 sci="Lecithocera daebuensis Park, 1999" author=Park year=1999
+  - drop: id=species-20775 sci="Lecithocera daebuensis" author= year=
+- フタテンホソバヒゲナガキバガ / lecithocera cerussata
+  - keep: id=species-0971 sci="Lecithocera cerussata (Wu, 1994)" author=(Wu) year=1994
+  - drop: id=species-20776 sci="Lecithocera cerussata" author= year=
+- ヒメマルバネヒゲナガキバガ / lecithocera rotundata
+  - keep: id=species-0972 sci="Lecithocera rotundata Gozmany, 1978" author=Gozmany year=1978
+  - drop: id=species-20777 sci="Lecithocera rotundata" author= year=
+- ヒメフタテンホソバヒゲナガキバガ / lecithocera tridentata
+  - keep: id=species-0973 sci="Lecithocera tridentata Wu & Liu, 1993" author=Wu & Liu year=1993
+  - drop: id=species-20778 sci="Lecithocera tridentata" author= year=
+- キベリハイヒゲナガキバガ / homaloxestis myeloxesta
+  - keep: id=species-0975 sci="Homaloxestis myeloxesta Meyrick, 1932" author=Meyrick year=1932
+  - drop: id=species-20780 sci="Homaloxestis myeloxesta" author= year=
+- オオキベリハイヒゲナガキバガ / homaloxestis hesperis
+  - keep: id=species-0976 sci="Homaloxestis hesperis Gozmány, 1978" author=Gozmány year=1978
+  - drop: id=species-20781 sci="Homaloxestis hesperis" author= year=
+- タイリクフタモンヒゲナガキバガ / homaloxestis cholopis
+  - keep: id=species-0977 sci="Homaloxestis cholopis (Meyrick, 1906)" author=(Meyrick) year=1906
+  - drop: id=species-20782 sci="Homaloxestis cholopis" author= year=
+- イッシキヒゲナガキバガ / issikiopteryx japonica
+  - keep: id=species-0978 sci="Issikiopteryx japonica Moriuti, 1973" author=Moriuti year=1973
+  - drop: id=species-20783 sci="Issikiopteryx japonica" author= year=
+- カクバネヒゲナガキバガ / lecitholaxa thiodora
+  - keep: id=species-0979 sci="Lecitholaxa thiodora (Meyrick, 1914)" author=(Meyrick) year=1914
+  - drop: id=species-20784 sci="Lecitholaxa thiodora" author= year=
+- ムモンクロヒゲナガキバガ / catacreagra notolychna
+  - keep: id=species-0980 sci="Catacreagra notolychna (Meyrick, 1936)" author=(Meyrick) year=1936
+  - drop: id=species-20785 sci="Catacreagra notolychna" author= year=
+- ミニフタテンホソバヒゲナガキバガ / kalocyrma echita
+  - keep: id=species-0981 sci="Kalocyrma echita Wu, 1994" author=Wu year=1994
+  - drop: id=species-20786 sci="Kalocyrma echita" author= year=
+- シロガシラホソキバガ / batrachedra albicapitella
+  - keep: id=species-0983 sci="Batrachedra albicapitella Sinev, 1986" author=Sinev year=1986
+  - drop: id=species-20787 sci="Batrachedra albicapitella" author= year=
+- ウスチャホソキバガ / batrachedra koreana
+  - keep: id=species-0984 sci="Batrachedra koreana Sinev & Park, 1994" author=Sinev & Park year=1994
+  - drop: id=species-20788 sci="Batrachedra koreana" author= year=
+- ウスジロホソキバガ / batrachedra pinicolella
+  - keep: id=species-0985 sci="Batrachedra pinicolella (Zeller, 1839)" author=(Zeller) year=1839
+  - drop: id=species-20789 sci="Batrachedra pinicolella" author= year=
+- キスジホソキバガ / batrachedra flavilineata
+  - keep: id=species-0986 sci="Batrachedra flavilineata Sugisima, 2006" author=Sugisima year=2006
+  - drop: id=species-20790 sci="Batrachedra flavilineata" author= year=
+- ヤブミョウガスゴモリキバガ / idioglossa polliacola
+  - keep: id=species-0989 sci="Idioglossa polliacola Sugisima, 2000" author=Sugisima year=2000
+  - drop: id=species-20793 sci="Idioglossa polliacola" author= year=
+- ヒロバスゴモリキバガ / epimarptis hiranoi
+  - keep: id=species-0991 sci="Epimarptis hiranoi Sugisima, 2004" author=Sugisima year=2004
+  - drop: id=species-20794 sci="Epimarptis hiranoi" author= year=
+- キイロオビマイコガ / stathmopoda pedella
+  - keep: id=species-0992 sci="Stathmopoda pedella (Linnaeus, 1761)" author=(Linnaeus) year=1761
+  - drop: id=species-20795 sci="Stathmopoda pedella" author= year=
+- オオマイコガ / stathmopoda stimulata
+  - keep: id=species-0998 sci="Stathmopoda stimulata Meyrick, 1913" author=Meyrick year=1913
+  - drop: id=species-20797 sci="Stathmopoda stimulata" author= year=
+- ハンノマイコガ / stathmopoda flavescens
+  - keep: id=species-0999 sci="Stathmopoda flavescens Kuznetzov, 1984" author=Kuznetzov year=1984
+  - drop: id=species-20806 sci="Stathmopoda flavescens" author= year=
+- ヒメムラサキシキブマイコガ / stathmopoda gemmiconsuta
+  - keep: id=species-1000 sci="Stathmopoda gemmiconsuta Terada, 2012" author=Terada year=2012
+  - drop: id=species-20804 sci="Stathmopoda gemmiconsuta" author= year=
+- ミナミヒメムラサキシキブマイコガ / stathmopoda luxuriivora
+  - keep: id=species-1001 sci="Stathmopoda luxuriivora Terada, 2012" author=Terada year=2012
+  - drop: id=species-20805 sci="Stathmopoda luxuriivora" author= year=
+- ムラサキシキブマイコガ / stathmopoda magnisignata
+  - keep: id=species-1002 sci="Stathmopoda magnisignata Terada, 2012" author=Terada year=2012
+  - drop: id=species-20802 sci="Stathmopoda magnisignata" author= year=
+- ウスムラサキシキブマイコガ / stathmopoda callicarpicola
+  - keep: id=species-1003 sci="Stathmopoda callicarpicola Terada, 2012" author=Terada year=2012
+  - drop: id=species-20803 sci="Stathmopoda callicarpicola" author= year=
+- オビマイコガ / stathmopoda opticaspis
+  - keep: id=species-1004 sci="Stathmopoda opticaspis Meyrick, 1931" author=Meyrick year=1931
+  - drop: id=species-20800 sci="Stathmopoda opticaspis" author= year=
+- モトキマイコガ / stathmopoda moriutiella
+  - keep: id=species-1006 sci="Stathmopoda moriutiella Kasy, 1973" author=Kasy year=1973
+  - drop: id=species-20810 sci="Stathmopoda moriutiella" author= year=
+- カキノヘタムシガ / stathmopoda masinissa
+  - keep: id=species-1008 sci="Stathmopoda masinissa Meyrick, 1906" author=Meyrick year=1906
+  - drop: id=species-20798 sci="Stathmopoda masinissa" author= year=
+- リュウキュウカキノヘタムシガ / stathmopoda maritimicola
+  - keep: id=species-1009 sci="Stathmopoda maritimicola Terada & Sakamaki, 2011" author=Terada & Sakamaki year=2011
+  - drop: id=species-20799 sci="Stathmopoda maritimicola" author= year=
+- キイロマイコガ / stathmopoda auriferella
+  - keep: id=species-1012 sci="Stathmopoda auriferella (Walker, 1864)" author=(Walker) year=1864
+  - drop: id=species-20808 sci="Stathmopoda auriferella" author= year=
+- カタアカマイコガ / stathmopoda haematosema
+  - keep: id=species-1013 sci="Stathmopoda haematosema Meyrick, 1933" author=Meyrick year=1933
+  - drop: id=species-20809 sci="Stathmopoda haematosema" author= year=
+- フタオビクロマイコガ / stathmopoda brachymochla
+  - keep: id=species-1015 sci="Stathmopoda brachymochla Meyrick, 1937" author=Meyrick year=1937
+  - drop: id=species-20811 sci="Stathmopoda brachymochla" author= year=
+- シロテンクロマイコガ / atrijuglans hetaohei
+  - keep: id=species-1017 sci="Atrijuglans hetaohei Yang, 1977" author=Yang year=1977
+  - drop: id=species-20812 sci="Atrijuglans hetaohei" author= year=
+- クロコマイコガ / hieromantis kurokoi
+  - keep: id=species-1018 sci="Hieromantis kurokoi Yasuda, 1988" author=Yasuda year=1988
+  - drop: id=species-20813 sci="Hieromantis kurokoi" author= year=
+- マキオマイコガ / hieromantis makiosana
+  - keep: id=species-1019 sci="Hieromantis makiosana Yasuda, 1988" author=Yasuda year=1988
+  - drop: id=species-20814 sci="Hieromantis makiosana" author= year=
+- アカヒゲベニトゲアシガ / oedematopoda leechi
+  - keep: id=species-1038 sci="Oedematopoda leechi Walsingham, 1889" author=Walsingham year=1889
+  - drop: id=species-20816 sci="Oedematopoda leechi" author= year=
+- セグロベニトゲアシガ / atkinsonia ignipicta
+  - keep: id=species-1039 sci="Atkinsonia ignipicta (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-20815 sci="Atkinsonia ignipicta" author= year=
+- ハマナスツツミノガ / coleophora gryphipennella
+  - keep: id=species-1041 sci="Coleophora gryphipennella (Hübner, 1796)" author=(Hübner) year=1796
+  - drop: id=species-20860 sci="Coleophora gryphipennella" author= year=
+- サクラツツミノガ / coleophora sakurae
+  - keep: id=species-1042 sci="Coleophora sakurae Oku, 2009" author=Oku year=2009
+  - drop: id=species-20861 sci="Coleophora sakurae" author= year=
+- ナラツツミノガ / coleophora levantis
+  - keep: id=species-1043 sci="Coleophora levantis Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20862 sci="Coleophora levantis" author= year=
+- シラカバツツミノガ / coleophora serratella
+  - keep: id=species-1044 sci="Coleophora serratella (Linnaeus, 1761)" author=(Linnaeus) year=1761
+  - drop: id=species-20863 sci="Coleophora serratella" author= year=
+- リンゴツツミノガ / coleophora spinella
+  - keep: id=species-1045 sci="Coleophora spinella (Schrank, 1802)" author=(Schrank) year=1802
+  - drop: id=species-20864 sci="Coleophora spinella" author= year=
+- フタイロツツミノガ / coleophora eteropennella
+  - keep: id=species-1046 sci="Coleophora eteropennella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20865 sci="Coleophora eteropennella" author= year=
+- カンバマエジロツツミノガ / coleophora milvipennis
+  - keep: id=species-1047 sci="Coleophora milvipennis Zeller, 1839" author=Zeller year=1839
+  - drop: id=species-20866 sci="Coleophora milvipennis" author= year=
+- ニレナガツツミノガ / coleophora japonicella
+  - keep: id=species-1049 sci="Coleophora japonicella Oku, 1965" author=Oku year=1965
+  - drop: id=species-20867 sci="Coleophora japonicella" author= year=
+- ニレコツツミノガ / coleophora ulmivorella
+  - keep: id=species-1050 sci="Coleophora ulmivorella Oku, 1965" author=Oku year=1965
+  - drop: id=species-20868 sci="Coleophora ulmivorella" author= year=
+- エゾムラサキツツジツツミノガ / coleophora uliginosella
+  - keep: id=species-1051 sci="Coleophora uliginosella Glitz, 1872" author=Glitz year=1872
+  - drop: id=species-20869 sci="Coleophora uliginosella" author= year=
+- イソツツジツツミノガ / coleophora ledi
+  - keep: id=species-1052 sci="Coleophora ledi Stainton, 1860" author=Stainton year=1860
+  - drop: id=species-20870 sci="Coleophora ledi" author= year=
+- コケモモツツミノガ / coleophora murinella
+  - keep: id=species-1053 sci="Coleophora murinella Tengström, 1847" author=Tengström year=1847
+  - drop: id=species-20871 sci="Coleophora murinella" author= year=
+- スノキツツミノガ / coleophora plumbella
+  - keep: id=species-1056 sci="Coleophora plumbella Kanerva, 1941" author=Kanerva year=1941
+  - drop: id=species-20872 sci="Coleophora plumbella" author= year=
+- ダケカンバツツミノガ / coleophora orbitella
+  - keep: id=species-1057 sci="Coleophora orbitella Zeller, 1849" author=Zeller year=1849
+  - drop: id=species-20873 sci="Coleophora orbitella" author= year=
+- ハンノキツツミノガ / coleophora hancola
+  - keep: id=species-1058 sci="Coleophora hancola Oku, 1965" author=Oku year=1965
+  - drop: id=species-20874 sci="Coleophora hancola" author= year=
+- カツラツツミノガ / coleophora cercidiphyllella
+  - keep: id=species-1059 sci="Coleophora cercidiphyllella Oku, 1965" author=Oku year=1965
+  - drop: id=species-20875 sci="Coleophora cercidiphyllella" author= year=
+- オニシモツケツツミノガ / coleophora potentillae
+  - keep: id=species-1062 sci="Coleophora potentillae Elisha, 1885" author=Elisha year=1885
+  - drop: id=species-20876 sci="Coleophora potentillae" author= year=
+- アズキナシツツミノガ / coleophora trigeminella
+  - keep: id=species-1063 sci="Coleophora trigeminella Fuchs, 1881" author=Fuchs year=1881
+  - drop: id=species-20877 sci="Coleophora trigeminella" author= year=
+- アカザフシガ / coleophora serinipennella
+  - keep: id=species-1064 sci="Coleophora serinipennella Christoph, 1872" author=Christoph year=1872
+  - drop: id=species-20878 sci="Coleophora serinipennella" author= year=
+- キンバネツツミノガ / coleophora alcyonipennella
+  - keep: id=species-1065 sci="Coleophora alcyonipennella (Kollar, 1832)" author=(Kollar) year=1832
+  - drop: id=species-20879 sci="Coleophora alcyonipennella" author= year=
+- ヒメキンバネツツミノガ / coleophora mayrella
+  - keep: id=species-1066 sci="Coleophora mayrella (Hübner, [1813])" author=(Hübner) year=[1813]
+  - drop: id=species-20880 sci="Coleophora mayrella" author= year=
+- キミャクツツミノガ / coleophora flavovena
+  - keep: id=species-1068 sci="Coleophora flavovena Matsumura, 1931" author=Matsumura year=1931
+  - drop: id=species-20881 sci="Coleophora flavovena" author= year=
+- ヨモギホソツツミノガ / coleophora enkomiella
+  - keep: id=species-1069 sci="Coleophora enkomiella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20882 sci="Coleophora enkomiella" author= year=
+- オオヤマフスマツツミノガ / coleophora chalcogrammella
+  - keep: id=species-1070 sci="Coleophora chalcogrammella Zeller, 1839" author=Zeller year=1839
+  - drop: id=species-20883 sci="Coleophora chalcogrammella" author= year=
+- ヤナギピストルミノガ / coleophora albidella
+  - keep: id=species-1071 sci="Coleophora albidella (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-20884 sci="Coleophora albidella" author= year=
+- リンゴピストルミノガ / coleophora bernoulliella
+  - keep: id=species-1072 sci="Coleophora bernoulliella (Goeze, 1783)" author=(Goeze) year=1783
+  - drop: id=species-20885 sci="Coleophora bernoulliella" author= year=
+- シラカバピストルミノガ / coleophora platyphyllae
+  - keep: id=species-1073 sci="Coleophora platyphyllae Oku, 1965" author=Oku year=1965
+  - drop: id=species-20886 sci="Coleophora platyphyllae" author= year=
+- ミヤマピストルミノガ / coleophora quercicola
+  - keep: id=species-1074 sci="Coleophora quercicola Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20887 sci="Coleophora quercicola" author= year=
+- カシワピストルミノガ / coleophora melanograpta
+  - keep: id=species-1075 sci="Coleophora melanograpta Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20888 sci="Coleophora melanograpta" author= year=
+- アザミシロツツミノガ / coleophora brevipalpella
+  - keep: id=species-1076 sci="Coleophora brevipalpella Wocke, 1874" author=Wocke year=1874
+  - drop: id=species-20889 sci="Coleophora brevipalpella" author= year=
+- ヨモギオオツツミノガ / coleophora honshuella
+  - keep: id=species-1077 sci="Coleophora honshuella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20890 sci="Coleophora honshuella" author= year=
+- ノギクギンオビツツミノガ / coleophora pseudoditella
+  - keep: id=species-1079 sci="Coleophora pseudoditella Baldizzone & Patzak, 1983" author=Baldizzone & Patzak year=1983
+  - drop: id=species-20891 sci="Coleophora pseudoditella" author= year=
+- カラマツツツミノガ / coleophora obducta
+  - keep: id=species-1080 sci="Coleophora obducta (Meyrick, 1931)" author=(Meyrick) year=1931
+  - drop: id=species-20892 sci="Coleophora obducta" author= year=
+- ヨモギムモンツツミノガ / coleophora cinclella
+  - keep: id=species-1081 sci="Coleophora cinclella Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20893 sci="Coleophora cinclella" author= year=
+- シラヤマギクツツミノガ / coleophora raphidon
+  - keep: id=species-1083 sci="Coleophora raphidon Baldizzone & Savenkov, 2002" author=Baldizzone & Savenkov year=2002
+  - drop: id=species-20894 sci="Coleophora raphidon" author= year=
+- アザミクロツツミノガ / coleophora paripennella
+  - keep: id=species-1084 sci="Coleophora paripennella Zeller, 1839" author=Zeller year=1839
+  - drop: id=species-20895 sci="Coleophora paripennella" author= year=
+- ノギククロツツミノガ / coleophora molothrella
+  - keep: id=species-1085 sci="Coleophora molothrella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20896 sci="Coleophora molothrella" author= year=
+- キクツツミノガ / coleophora kurokoi
+  - keep: id=species-1088 sci="Coleophora kurokoi Oku, 1974" author=Oku year=1974
+  - drop: id=species-20898 sci="Coleophora kurokoi" author= year=
+- シロミャクツツミノガ / coleophora therinella
+  - keep: id=species-1089 sci="Coleophora therinella Tengström, 1848" author=Tengström year=1848
+  - drop: id=species-20899 sci="Coleophora therinella" author= year=
+- ウスシロミャクツツミノガ / coleophora issikii
+  - keep: id=species-1092 sci="Coleophora issikii Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20900 sci="Coleophora issikii" author= year=
+- ノコギリソウツツミノガ / coleophora argentula
+  - keep: id=species-1094 sci="Coleophora argentula (Stephens, 1834)" author=(Stephens) year=1834
+  - drop: id=species-20901 sci="Coleophora argentula" author= year=
+- ホウキギツツミノガ / coleophora scopariella
+  - keep: id=species-1095 sci="Coleophora scopariella Oku, 2009" author=Oku year=2009
+  - drop: id=species-20902 sci="Coleophora scopariella" author= year=
+- アカミャクツツミノガ / coleophora cristata
+  - keep: id=species-1096 sci="Coleophora cristata Baldizzone, 1989" author=Baldizzone year=1989
+  - drop: id=species-20903 sci="Coleophora cristata" author= year=
+- ノコンギクハナツツミノガ / coleophora hsiaolingensis
+  - keep: id=species-1097 sci="Coleophora hsiaolingensis Toll, 1942" author=Toll year=1942
+  - drop: id=species-20904 sci="Coleophora hsiaolingensis" author= year=
+- ホソハイイロツツミノガ / coleophora laniella
+  - keep: id=species-1099 sci="Coleophora laniella Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20906 sci="Coleophora laniella" author= year=
+- アキノキリンソウツツミノガ / coleophora virgaureae
+  - keep: id=species-1100 sci="Coleophora virgaureae Stainton, 1857" author=Stainton year=1857
+  - drop: id=species-20907 sci="Coleophora virgaureae" author= year=
+- アカザウスグロツツミノガ / coleophora sternipennella
+  - keep: id=species-1101 sci="Coleophora sternipennella (Zetterstedt, 1839)" author=(Zetterstedt) year=1839
+  - drop: id=species-20908 sci="Coleophora sternipennella" author= year=
+- アカザハナツツミノガ / coleophora chenopodii
+  - keep: id=species-1102 sci="Coleophora chenopodii Oku, 1965" author=Oku year=1965
+  - drop: id=species-20909 sci="Coleophora chenopodii" author= year=
+- アオビユツツミノガ / coleophora versurella
+  - keep: id=species-1103 sci="Coleophora versurella Zeller, 1849" author=Zeller year=1849
+  - drop: id=species-20910 sci="Coleophora versurella" author= year=
+- シモフリツツミノガ / coleophora vestianella
+  - keep: id=species-1104 sci="Coleophora vestianella (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-20911 sci="Coleophora vestianella" author= year=
+- ゴマフツツミノガ / coleophora kudrosella
+  - keep: id=species-1105 sci="Coleophora kudrosella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20912 sci="Coleophora kudrosella" author= year=
+- ヨモギケブカツツミノガ / coleophora albicans
+  - keep: id=species-1106 sci="Coleophora albicans Zeller, 1849" author=Zeller year=1849
+  - drop: id=species-20913 sci="Coleophora albicans" author= year=
+- ヨモギハナツツミノガ / coleophora artemisicolella
+  - keep: id=species-1107 sci="Coleophora artemisicolella Bruand, 1854" author=Bruand year=1854
+  - drop: id=species-20914 sci="Coleophora artemisicolella" author= year=
+- イヌイツツミノガ / coleophora glaucicolella
+  - keep: id=species-1108 sci="Coleophora glaucicolella Wood, 1892" author=Wood year=1892
+  - drop: id=species-20915 sci="Coleophora glaucicolella" author= year=
+- ヤチツツミノガ / coleophora elodella
+  - keep: id=species-1109 sci="Coleophora elodella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20916 sci="Coleophora elodella" author= year=
+- ニセヤチツツミノガ / coleophora okuella
+  - keep: id=species-1110 sci="Coleophora okuella Baldizzone & Savenkov, 2002" author=Baldizzone & Savenkov year=2002
+  - drop: id=species-20917 sci="Coleophora okuella" author= year=
+- タニガワツツミノガ / coleophora tamesis
+  - keep: id=species-1111 sci="Coleophora tamesis Waters, 1929" author=Waters year=1929
+  - drop: id=species-20918 sci="Coleophora tamesis" author= year=
+- スズメノヤリツツミノガ / coleophora burhinella
+  - keep: id=species-1112 sci="Coleophora burhinella Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20919 sci="Coleophora burhinella" author= year=
+- ヒメツツミノガ / coleophora citrarga
+  - keep: id=species-1113 sci="Coleophora citrarga Meyrick, 1934" author=Meyrick year=1934
+  - drop: id=species-20920 sci="Coleophora citrarga" author= year=
+- コウガイゼキショウツツミノガ / coleophora juncivora
+  - keep: id=species-1114 sci="Coleophora juncivora Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20921 sci="Coleophora juncivora" author= year=
+- ヨモギシロハナツツミノガ / coleophora parki
+  - keep: id=species-1115 sci="Coleophora parki Baldizzone & Savenkov, 2002" author=Baldizzone & Savenkov year=2002
+  - drop: id=species-20922 sci="Coleophora parki" author= year=
+- ハマベツツミノガ / coleophora clypeiferella
+  - keep: id=species-1116 sci="Coleophora clypeiferella Hofmann, 1871" author=Hofmann year=1871
+  - drop: id=species-20923 sci="Coleophora clypeiferella" author= year=
+- ムナブトヒメスカシバ / entrichella constricta
+  - keep: id=species-1574 sci="Entrichella constricta (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20924 sci="Entrichella constricta" author= year=
+- ヤクシマヒメスカシバ / entrichella yakushimaensis
+  - keep: id=species-1575 sci="Entrichella yakushimaensis (Arita, 1993)" author=(Arita) year=1993
+  - drop: id=species-20925 sci="Entrichella yakushimaensis" author= year=
+- エサキヒメスカシバ / entrichella esakii
+  - keep: id=species-1576 sci="Entrichella esakii (Yano, 1960)" author=(Yano) year=1960
+  - drop: id=species-20926 sci="Entrichella esakii" author= year=
+- シラホシヒメスカシバ / paranthrenopsis editha
+  - keep: id=species-1577 sci="Paranthrenopsis editha (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20927 sci="Paranthrenopsis editha" author= year=
+- ヒメセスジスカシバ / pennisetia hylaeiformis
+  - keep: id=species-1579 sci="Pennisetia hylaeiformis (Laspeyres, 1801)" author=(Laspeyres) year=1801
+  - drop: id=species-20929 sci="Pennisetia hylaeiformis" author= year=
+- セスジスカシバ / pennisetia fixseni
+  - keep: id=species-1580 sci="Pennisetia fixseni (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20930 sci="Pennisetia fixseni" author= year=
+- キタセスジスカシバ / pennisetia admirabilis
+  - keep: id=species-1581 sci="Pennisetia admirabilis Arita, 1992" author=Arita year=1992
+  - drop: id=species-20931 sci="Pennisetia admirabilis" author= year=
+- ミナミセスジスカシバ / pennisetia insulicola
+  - keep: id=species-1582 sci="Pennisetia insulicola Arita, 1992" author=Arita year=1992
+  - drop: id=species-20932 sci="Pennisetia insulicola" author= year=
+- コシボソスカシバ / milisipepsis takizawai
+  - keep: id=species-1583 sci="Milisipepsis takizawai (Arita & Špatenka, 1989)" author=(Arita & Špatenka) year=1989
+  - drop: id=species-20933 sci="Milisipepsis takizawai" author= year=
+- キタスカシバ / sesia yezoensis
+  - keep: id=species-1584 sci="Sesia yezoensis (Hampson, 1919)" author=(Hampson) year=1919
+  - drop: id=species-20934 sci="Sesia yezoensis" author= year=
+- オキナワスカシバ / scasiba okinawana
+  - keep: id=species-1585 sci="Scasiba okinawana (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20935 sci="Scasiba okinawana" author= year=
+- カシワスカシバ / scasiba rhynchioides
+  - keep: id=species-1586 sci="Scasiba rhynchioides (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-20936 sci="Scasiba rhynchioides" author= year=
+- コシアカスカシバ / scasiba scribai
+  - keep: id=species-1587 sci="Scasiba scribai (Bartel, 1912)" author=(Bartel) year=1912
+  - drop: id=species-20937 sci="Scasiba scribai" author= year=
+- シタキモモブトスカシバ / melittia inouei
+  - keep: id=species-1589 sci="Melittia inouei Arita & Yata, 1987" author=Arita & Yata year=1987
+  - drop: id=species-20940 sci="Melittia inouei" author= year=
+- オオモモブトスカシバ / melittia sangaica
+  - keep: id=species-1590 sci="Melittia sangaica Moore, 1877" author=Moore year=1877
+  - drop: id=species-20941 sci="Melittia sangaica" author= year=
+- アシナガモモブトスカシバ / macroscelesia longipes
+  - keep: id=species-1591 sci="Macroscelesia longipes (Moore, 1877)" author=(Moore) year=1877
+  - drop: id=species-20942 sci="Macroscelesia longipes" author= year=
+- モモブトスカシバ / macroscelesia japona
+  - keep: id=species-1592 sci="Macroscelesia japona (Hampson, 1919)" author=(Hampson) year=1919
+  - drop: id=species-20943 sci="Macroscelesia japona" author= year=
+- ブドウスカシバ / nokona regalis
+  - keep: id=species-1596 sci="Nokona regalis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20944 sci="Nokona regalis" author= year=
+- ムラサキスカシバ / nokona purpurea
+  - keep: id=species-1598 sci="Nokona purpurea (Yano, 1965)" author=(Yano) year=1965
+  - drop: id=species-20945 sci="Nokona purpurea" author= year=
+- ヒメアトスカシバ / nokona pernix
+  - keep: id=species-1599 sci="Nokona pernix (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20946 sci="Nokona pernix" author= year=
+- アカスカシバ / nokona rubra
+  - keep: id=species-1600 sci="Nokona rubra Arita & Tosevski, 1992" author=Arita & Tosevski year=1992
+  - drop: id=species-20947 sci="Nokona rubra" author= year=
+- キクビスカシバ / nokona feralis
+  - keep: id=species-1601 sci="Nokona feralis (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20948 sci="Nokona feralis" author= year=
+- クロスカシバ / nokona nigra
+  - keep: id=species-1602 sci="Nokona nigra Arita, Kimura & Owada, 2009" author=Arita, Kimura & Owada year=2009
+  - drop: id=species-20949 sci="Nokona nigra" author= year=
+- ビロードスカシバ / paranthrene tabaniformis
+  - keep: id=species-1603 sci="Paranthrene tabaniformis (Rottemburg, 1775)" author=(Rottemburg) year=1775
+  - drop: id=species-20950 sci="Paranthrene tabaniformis" author= year=
+- ハチマガイスカシバ / glossosphecia contaminata
+  - keep: id=species-1605 sci="Glossosphecia contaminata (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20951 sci="Glossosphecia contaminata" author= year=
+- クビアカスカシバ / glossosphecia romanovi
+  - keep: id=species-1606 sci="Glossosphecia romanovi (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20952 sci="Glossosphecia romanovi" author= year=
+- キコスカシバ / synanthedon esperi
+  - keep: id=species-1607 sci="Synanthedon esperi Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20953 sci="Synanthedon esperi" author= year=
+- ヤマコスカシバ / synanthedon subproducta
+  - keep: id=species-1608 sci="Synanthedon subproducta Inoue, 1982" author=Inoue year=1982
+  - drop: id=species-20954 sci="Synanthedon subproducta" author= year=
+- ヤノコスカシバ / synanthedon yanoi
+  - keep: id=species-1609 sci="Synanthedon yanoi Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20955 sci="Synanthedon yanoi" author= year=
+- フトモンコスカシバ / synanthedon scoliaeformis
+  - keep: id=species-1610 sci="Synanthedon scoliaeformis (Borkhausen, 1789)" author=(Borkhausen) year=1789
+  - drop: id=species-20956 sci="Synanthedon scoliaeformis" author= year=
+- コスカシバ / synanthedon hector
+  - keep: id=species-1611 sci="Synanthedon hector (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20957 sci="Synanthedon hector" author= year=
+- アカオビコスカシバ / synanthedon formicaeformis
+  - keep: id=species-1612 sci="Synanthedon formicaeformis (Esper, 1783)" author=(Esper) year=1783
+  - drop: id=species-20958 sci="Synanthedon formicaeformis" author= year=
+- フクズミコスカシバ / synanthedon fukuzumii
+  - keep: id=species-1613 sci="Synanthedon fukuzumii Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20959 sci="Synanthedon fukuzumii" author= year=
+- フタスジコスカシバ / synanthedon pseudoscoliaeformis
+  - keep: id=species-1614 sci="Synanthedon pseudoscoliaeformis Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20960 sci="Synanthedon pseudoscoliaeformis" author= year=
+- ヒメコスカシバ / synanthedon tenuis
+  - keep: id=species-1615 sci="Synanthedon tenuis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20961 sci="Synanthedon tenuis" author= year=
+- キオビコスカシバ / synanthedon unocingulata
+  - keep: id=species-1617 sci="Synanthedon unocingulata Bartel, 1912" author=Bartel year=1912
+  - drop: id=species-20963 sci="Synanthedon unocingulata" author= year=
+- ヒトスジコスカシバ / synanthedon multitarsus
+  - keep: id=species-1620 sci="Synanthedon multitarsus Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20964 sci="Synanthedon multitarsus" author= year=
+- カシコスカシバ / synanthedon quercus
+  - keep: id=species-1621 sci="Synanthedon quercus (Matsumura, 1911)" author=(Matsumura) year=1911
+  - drop: id=species-20965 sci="Synanthedon quercus" author= year=
+- ニシキヒロハマキモドキ / nigilgia limata
+  - keep: id=species-1625 sci="Nigilgia limata Diakonoff & Arita, 1979" author=Diakonoff & Arita year=1979
+  - drop: id=species-20967 sci="Nigilgia limata" author= year=
+- ヤエヤマヒロハマキモドキ / paranigilgia bushii
+  - keep: id=species-1626 sci="Paranigilgia bushii (Arita, 1980)" author=(Arita) year=1980
+  - drop: id=species-20968 sci="Paranigilgia bushii" author= year=
+- オオボクトウ / cossus cossus
+  - keep: id=species-1627 sci="Cossus cossus (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-20969 sci="Cossus cossus" author= year=
+- ボクトウガ / cossus jezoensis
+  - keep: id=species-1628 sci="Cossus jezoensis (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20970 sci="Cossus jezoensis" author= year=
+- ゴマフボクトウ / zeuzera multistrigata
+  - keep: id=species-1631 sci="Zeuzera multistrigata Moore, 1881" author=Moore year=1881
+  - drop: id=species-20972 sci="Zeuzera multistrigata" author= year=
+- クロシオゴマフボクトウ / zeuzera caudata
+  - keep: id=species-1632 sci="Zeuzera caudata Joicey & Talbot, 1916" author=Joicey & Talbot year=1916
+  - drop: id=species-20973 sci="Zeuzera caudata" author= year=
+- コーヒーゴマフボクトウ / zeuzera coffeae
+  - keep: id=species-1633 sci="Zeuzera coffeae Nietner, 1861" author=Nietner year=1861
+  - drop: id=species-20974 sci="Zeuzera coffeae" author= year=
+- シロトゲエダシャク / phigalia verecundaria
+  - keep: id=species-3756 sci="Phigalia verecundaria (Leech, 1897)" author=(Leech) year=1897
+  - drop: id=species-21577 sci="Phigalia verecundaria" author= year=
+- ニッコウエダシャク / lassaba nikkonis
+  - keep: id=species-3778 sci="Lassaba nikkonis (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-21580 sci="Lassaba nikkonis" author= year=
+- アトジロエダシャク / pachyligia dolosa
+  - keep: id=species-3783 sci="Pachyligia dolosa Butler, 1878" author=Butler year=1878
+  - drop: id=species-21581 sci="Pachyligia dolosa" author= year=
+- キイロエダシャク / doratoptera virescens
+  - keep: id=species-3784 sci="Doratoptera virescens (Marumo, 1923)" author=Marumo year=1923
+  - drop: id=species-21583 sci="Doratoptera virescens" author= year=
+- ヒロバトガリエダシャク / planociampa antipala
+  - keep: id=species-3786 sci="Planociampa antipala Prout, 1930" author=Prout year=1930
+  - drop: id=species-21585 sci="Planociampa antipala" author= year=
+- ホソバトガリエダシャク / planociampa modesta
+  - keep: id=species-3787 sci="Planociampa modesta (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21584 sci="Planociampa modesta" author= year=
+- ウスクモエダシャク / menophra senilis
+  - keep: id=species-3793 sci="Menophra senilis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21587 sci="Menophra senilis" author= year=
+- ハルタウスクモエダシャク / menophra harutai
+  - keep: id=species-3794 sci="Menophra harutai (Inoue, 1954)" author=(Inoue) year=1954
+  - drop: id=species-21586 sci="Menophra harutai" author= year=
+- ヒゲマダラエダシャク / cryptochorina amphidasyaria
+  - keep: id=species-3797 sci="Cryptochorina amphidasyaria (Oberthür, 1880)" author=(Oberthür) year=1880
+  - drop: id=species-21588 sci="Cryptochorina amphidasyaria" author= year=
+- クロモンキリバエダシャク / psyra bluethgeni
+  - keep: id=species-3801 sci="Psyra bluethgeni (Püngeler, 1903)" author=(Püngeler) year=1903
+  - drop: id=species-21589 sci="Psyra bluethgeni" author= year=
+- マエキトビエダシャク / nothomiza formosa
+  - keep: id=species-3808 sci="Nothomiza formosa (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21590 sci="Nothomiza formosa" author= year=
+- キエダシャク / auaxa sulphurea
+  - keep: id=species-3830 sci="Auaxa sulphurea (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21595 sci="Auaxa sulphurea" author= year=
+- エグリエダシャク / fascellina chromataria
+  - keep: id=species-3831 sci="Fascellina chromataria Walker, 1860" author=Walker year=1860
+  - drop: id=species-21597 sci="Fascellina chromataria" author= year=
+- ツマキリウスキエダシャク / pareclipsis gracilis
+  - keep: id=species-3833 sci="Pareclipsis gracilis (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21596 sci="Pareclipsis gracilis" author= year=
+- トガリエダシャク / xyloscia subspersata
+  - keep: id=species-3843 sci="Xyloscia subspersata (Felder & Rogenhofer, 1875)" author=(Felder & Rogenhofer) year=1875
+  - drop: id=species-21600 sci="Xyloscia subspersata" author= year=
+- ナカキエダシャク / plagodis dolabraria
+  - keep: id=species-3847 sci="Plagodis dolabraria (Linnaeus, 1767)" author=(Linnaeus) year=1767
+  - drop: id=species-21603 sci="Plagodis dolabraria" author= year=
+- ウラモンアカエダシャク / parepione grata
+  - keep: id=species-3852 sci="Parepione grata (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21606 sci="Parepione grata" author= year=
+- ウラベニエダシャク / heterolocha aristonaria
+  - keep: id=species-3857 sci="Heterolocha aristonaria (Walker, 1860)" author=(Walker) year=1860
+  - drop: id=species-21605 sci="Heterolocha aristonaria" author= year=
+- ウコンエダシャク / corymica pryeri
+  - keep: id=species-3864 sci="Corymica pryeri (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21607 sci="Corymica pryeri" author= year=
+- ウスキツバメエダシャク / ourapteryx nivea
+  - keep: id=species-3868 sci="Ourapteryx nivea Butler, 1883" author=Butler year=1883
+  - drop: id=species-21608 sci="Ourapteryx nivea" author= year=
+- ノムラツバメエダシャク / ourapteryx nomurai
+  - keep: id=species-3869 sci="Ourapteryx nomurai Inoue, 1946" author=Inoue year=1946
+  - drop: id=species-21609 sci="Ourapteryx nomurai" author= year=
+- コガタツバメエダシャク / ourapteryx obtusicauda
+  - keep: id=species-3870 sci="Ourapteryx obtusicauda (Warren, 1894)" author=(Warren) year=1894
+  - drop: id=species-21610 sci="Ourapteryx obtusicauda" author= year=
+- シロツバメエダシャク / ourapteryx maculicaudaria
+  - keep: id=species-3872 sci="Ourapteryx maculicaudaria (Motschulsky, 1866)" author=(Motschulsky) year=1866
+  - drop: id=species-21611 sci="Ourapteryx maculicaudaria" author= year=
+- スカシコケガ / nudaria ranruna
+  - keep: id=species-4794 sci="Nudaria ranruna (Matsumura, 1927)" author=Matsumura year=1927
+  - drop: id=species-21616 sci="Nudaria ranruna" author= year=
+- ウスバフタホシコケガ / schistophleps bipuncta
+  - keep: id=species-4795 sci="Schistophleps bipuncta (Hampson, 1891)" author=Hampson year=1891
+  - drop: id=species-21615 sci="Schistophleps bipuncta" author= year=
+- キバラケンモン / trichosea champa
+  - keep: id=species-5690 sci="Trichosea champa (Moore, 1879)" author=(Moore) year=1879
+  - drop: id=species-21620 sci="Trichosea champa" author= year=
+- ゴマケンモン / moma alpium
+  - keep: id=species-5702 sci="Moma alpium (Osbeck, 1778)" author=(Osbeck) year=1778
+  - drop: id=species-21621 sci="Moma alpium" author= year=
+- キタバコガ / pyrrhia umbra
+  - keep: id=species-5805 sci="Pyrrhia umbra (Hufnagel, 1766)" author=(Hufnagel) year=1766
+  - drop: id=species-21623 sci="Pyrrhia umbra" author= year=
+- ウスオビヤガ / pyrrhia bifasciata
+  - keep: id=species-5806 sci="Pyrrhia bifasciata (Staudinger, 1888)" author=(Staudinger) year=1888
+  - drop: id=species-21624 sci="Pyrrhia bifasciata" author= year=
+- ケンモンキリガ / egira saxea
+  - keep: id=species-6112 sci="Egira saxea (Leech, 1889)" author=(Leech) year=[1889]
+  - drop: id=species-21657 sci="Egira saxea" author= year=
+- マツキリガ / panolis japonica
+  - keep: id=species-6113 sci="Panolis japonica Draudt, 1935" author=Draudt year=1935
+  - drop: id=species-21658 sci="Panolis japonica" author= year=
+- スギタニキリガ / perigrapha hoenei
+  - keep: id=species-6118 sci="Perigrapha hoenei Püngeler 1914" author=Püngeler year=1914
+  - drop: id=species-21660 sci="Perigrapha hoenei" author= year=
+- スモモキリガ / anorthoa munda
+  - keep: id=species-6119 sci="Anorthoa munda (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21662 sci="Anorthoa munda" author= year=
+- ホソバキリガ / anorthoa angustipennis
+  - keep: id=species-6120 sci="Anorthoa angustipennis (Matsumura, 1926)" author=(Matsumura) year=1926
+  - drop: id=species-21661 sci="Anorthoa angustipennis" author= year=
+- カバキリガ / orthosia evanida
+  - keep: id=species-6122 sci="Orthosia evanida (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21663 sci="Orthosia evanida" author= year=
+- アオヤマキリガ / orthosia aoyamensis
+  - keep: id=species-6123 sci="Orthosia aoyamensis (Matsumura, 1926)" author=(Matsumura) year=1926
+  - drop: id=species-21664 sci="Orthosia aoyamensis" author= year=
+- カギモンキリガ / orthosia nigromaculata
+  - keep: id=species-6124 sci="Orthosia nigromaculata (Höne, 1917)" author=(Höne) year=1917
+  - drop: id=species-21665 sci="Orthosia nigromaculata" author= year=
+- クロミミキリガ / orthosia lizetta
+  - keep: id=species-6125 sci="Orthosia lizetta Butler, 1878" author=Butler year=1878
+  - drop: id=species-21666 sci="Orthosia lizetta" author= year=
+- ブナキリガ / orthosia paromoea
+  - keep: id=species-6127 sci="Orthosia paromoea (Hampson, 1905)" author=(Hampson) year=1905
+  - drop: id=species-21667 sci="Orthosia paromoea" author= year=
+- クロテンキリガ / orthosia fausta
+  - keep: id=species-6128 sci="Orthosia fausta Leech, 1889" author=Leech year=[1889]
+  - drop: id=species-21668 sci="Orthosia fausta" author= year=
+- シロヘリキリガ / orthosia limbata
+  - keep: id=species-6130 sci="Orthosia limbata (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21669 sci="Orthosia limbata" author= year=
+- チャイロキリガ / orthosia odiosa
+  - keep: id=species-6132 sci="Orthosia odiosa (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21670 sci="Orthosia odiosa" author= year=
+- アカバキリガ / orthosia carnipennis
+  - keep: id=species-6137 sci="Orthosia carnipennis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21672 sci="Orthosia carnipennis" author= year=
+- カギモンヤガ / cerastis pallescens
+  - keep: id=species-20438 sci="Cerastis pallescens (Butler, 1878)" author= year=
+  - drop: id=species-21649 sci="Cerastis pallescens" author= year=
+- ヨトウガ / mamestra brassicae
+  - keep: id=species-20634 sci="Mamestra brassicae (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-21651 sci="Mamestra brassicae" author= year=
+- キミャクヨトウ / dictyestra dissecta
+  - keep: id=species-20641 sci="Dictyestra dissecta (Walker, 1865)" author=(Walker) year=1865
+  - drop: id=species-21653 sci="Dictyestra dissecta" author= year=
+- フタスジヨトウ / protomiselia bilinea
+  - keep: id=species-20651 sci="Protomiselia bilinea (Hampson, 1905)" author=(Hampson) year=1905
+  - drop: id=species-21655 sci="Protomiselia bilinea" author= year=
+- シロシタヨトウ / sarcopolia illoba
+  - keep: id=species-20652 sci="Sarcopolia illoba (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21652 sci="Sarcopolia illoba" author= year=
+- フタオビキヨトウ / mythimna turca
+  - keep: id=species-20653 sci="Mythimna turca (Linnaeus, 1761)" author=(Linnaeus) year=1761
+  - drop: id=species-21673 sci="Mythimna turca" author= year=
+- オオフタオビキヨトウ / mythimna grandis
+  - keep: id=species-20655 sci="Mythimna grandis Butler, 1878" author=Butler year=1878
+  - drop: id=species-21674 sci="Mythimna grandis" author= year=
+- クロシタキヨトウ / mythimna placida
+  - keep: id=species-20657 sci="Mythimna placida Butler, 1878" author=Butler year=1878
+  - drop: id=species-21676 sci="Mythimna placida" author= year=
+- シロテンキヨトウ / mythimna conigera
+  - keep: id=species-20660 sci="Mythimna conigera (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21675 sci="Mythimna conigera" author= year=
+- オキナワマダラキヨトウ / mythimna formosana
+  - keep: id=species-20667 sci="Mythimna formosana (Butler, 1880)" author=(Butler) year=1880
+  - drop: id=species-21678 sci="Mythimna formosana" author= year=
+- マダラキヨトウ / mythimna flavostigma
+  - keep: id=species-20686 sci="Mythimna flavostigma (Bremer, 1861)" author=(Bremer) year=1861
+  - drop: id=species-21677 sci="Mythimna flavostigma" author= year=
+- ニセタマナヤガ / peridroma saucia
+  - keep: id=species-20700 sci="Peridroma saucia (Hübner, [1808])" author=(Hübner) year=[1808]
+  - drop: id=species-21633 sci="Peridroma saucia" author= year=
+- クロヤガ / euxoa nigrata
+  - keep: id=species-20711 sci="Euxoa nigrata Matsumura, 1925" author=Matsumura year=1925
+  - drop: id=species-21625 sci="Euxoa nigrata" author= year=
+- タマナヤガ / agrotis ipsilon
+  - keep: id=species-20713 sci="Agrotis ipsilon (Hufnagel, 1766)" author=(Hufnagel) year=1766
+  - drop: id=species-21626 sci="Agrotis ipsilon" author= year=
+- カブラヤガ / agrotis segetum
+  - keep: id=species-20714 sci="Agrotis segetum (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21627 sci="Agrotis segetum" author= year=
+- ホシボシヤガ / hermonassa arenosa
+  - keep: id=species-20723 sci="Hermonassa arenosa (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-21629 sci="Hermonassa arenosa" author= year=
+- クロクモヤガ / hermonassa cecilia
+  - keep: id=species-20724 sci="Hermonassa cecilia Butler, 1878" author=Butler year=1878
+  - drop: id=species-21630 sci="Hermonassa cecilia" author= year=
+- カバスジヤガ / sineugraphe exusta
+  - keep: id=species-20735 sci="Sineugraphe exusta (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21631 sci="Sineugraphe exusta" author= year=
+- オオカバスジヤガ / sineugraphe oceanica
+  - keep: id=species-20737 sci="Sineugraphe oceanica (Kardakoff, 1928)" author=(Kardakoff) year=1928
+  - drop: id=species-21632 sci="Sineugraphe oceanica" author= year=
+- コウスチャヤガ / diarsia deparca
+  - keep: id=species-20742 sci="Diarsia deparca (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21634 sci="Diarsia deparca" author= year=
+- ヤマトウスチャヤガ / diarsia nipponica
+  - keep: id=species-20743 sci="Diarsia nipponica Ogata, 1957" author=Ogata year=1957
+  - drop: id=species-21638 sci="Diarsia nipponica" author= year=
+- オオバコヤガ / diarsia canescens
+  - keep: id=species-20744 sci="Diarsia canescens (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21635 sci="Diarsia canescens" author= year=
+- ミヤマアカヤガ / diarsia brunnea
+  - keep: id=species-20745 sci="Diarsia brunnea (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21636 sci="Diarsia brunnea" author= year=
+- モンキヤガ / diarsia dewitzi
+  - keep: id=species-20747 sci="Diarsia dewitzi (Graeser, 1889)" author=(Graeser) year=1889
+  - drop: id=species-21637 sci="Diarsia dewitzi" author= year=
+- アカフヤガ / diarsia pacifica
+  - keep: id=species-20748 sci="Diarsia pacifica Boursin, 1943" author=Boursin year=1943
+  - drop: id=species-21639 sci="Diarsia pacifica" author= year=
+- ウスイロアカフヤガ / diarsia ruficauda
+  - keep: id=species-20749 sci="Diarsia ruficauda (Warren, 1909)" author=(Warren) year=1909
+  - drop: id=species-21640 sci="Diarsia ruficauda" author= year=
+- シロモンヤガ / xestia c-nigrum
+  - keep: id=species-20757 sci="Xestia c-nigrum (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-21641 sci="Xestia c-nigrum" author= year=
+- マエキヤガ / xestia stupenda
+  - keep: id=species-20759 sci="Xestia stupenda (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21643 sci="Xestia stupenda" author= year=
+- ウスチャヤガ / xestia dilatata
+  - keep: id=species-20761 sci="Xestia dilatata (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21644 sci="Xestia dilatata" author= year=
+- キシタミドリヤガ / xestia efflorescens
+  - keep: id=species-20764 sci="Xestia efflorescens (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21646 sci="Xestia efflorescens" author= year=
+- クロギシギシヤガ / naenia contaminata
+  - keep: id=species-20766 sci="Naenia contaminata (Walker, 1865)" author=(Walker) year=1865
+  - drop: id=species-21648 sci="Naenia contaminata" author= year=
+
+## public/insects.csv
+- 重複グループ数: 255
+- 削除行数: 255
+
+- ヨツモンキヌバコガ / scythris sinensis
+  - keep: id=species-0901 sci="Scythris sinensis (Felder & Rogenhofer, 1875)" author=(Felder & Rogenhofer) year=1875
+  - drop: id=species-20817 sci="Scythris sinensis" author= year=
+- イッシキメスコバネキバガ / diurnea issikii
+  - keep: id=species-0905 sci="Diurnea issikii Saito, 1979" author=Saito year=1979
+  - drop: id=species-20818 sci="Diurnea issikii" author= year=
+- メスコバネキバガ / diurnea cupreifera
+  - keep: id=species-0906 sci="Diurnea cupreifera (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20819 sci="Diurnea cupreifera" author= year=
+- ミヤマメスコバネキバガ / cheimophila fumida
+  - keep: id=species-0907 sci="Cheimophila fumida (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20820 sci="Cheimophila fumida" author= year=
+- ミツモンホソキバガ / oecia oecophila
+  - keep: id=species-0908 sci="Oecia oecophila (Staudinger, 1876)" author=(Staudinger) year=1876
+  - drop: id=species-20821 sci="Oecia oecophila" author= year=
+- クロモンベニマルハキバガ / schiffermuelleria imogena
+  - keep: id=species-0909 sci="Schiffermuelleria imogena (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20822 sci="Schiffermuelleria imogena" author= year=
+- カレハヒメマルハキバガ / pseudodoxia achlyphanes
+  - keep: id=species-0928 sci="Pseudodoxia achlyphanes (Meyrick, 1934)" author=(Meyrick) year=1934
+  - drop: id=species-20828 sci="Pseudodoxia achlyphanes" author= year=
+- スジモンキマルハキバガ / periacma delegata
+  - keep: id=species-0929 sci="Periacma delegata Meyrick, 1914" author=Meyrick year=1914
+  - drop: id=species-20829 sci="Periacma delegata" author= year=
+- ウスムジヒゲナガマルハキバガ / carcina homomorpha
+  - keep: id=species-0930 sci="Carcina homomorpha (Meyrick, 1931)" author=(Meyrick) year=1931
+  - drop: id=species-20830 sci="Carcina homomorpha" author= year=
+- コクマルハキバガ / martyringa xeraula
+  - keep: id=species-0931 sci="Martyringa xeraula (Meyrick, 1910)" author=(Meyrick) year=1910
+  - drop: id=species-20831 sci="Martyringa xeraula" author= year=
+- ニセコクマルハキバガ / martyringa ussuriella
+  - keep: id=species-0932 sci="Martyringa ussuriella Lvovsky, 1979" author=Lvovsky year=1979
+  - drop: id=species-20832 sci="Martyringa ussuriella" author= year=
+- ヤシャブシキホリマルハキバガ / casmara agronoma
+  - keep: id=species-0933 sci="Casmara agronoma Meyrick, 1931" author=Meyrick year=1931
+  - drop: id=species-20833 sci="Casmara agronoma" author= year=
+- チャノキホリマルハキバガ / casmara patrona
+  - keep: id=species-0934 sci="Casmara patrona Meyrick, 1925" author=Meyrick year=1925
+  - drop: id=species-20834 sci="Casmara patrona" author= year=
+- フジサワベニマルハキバガ / promalactis ermolenkoi
+  - keep: id=species-0935 sci="Promalactis ermolenkoi Lvovsky, 1986" author=Lvovsky year=1986
+  - drop: id=species-20835 sci="Promalactis ermolenkoi" author= year=
+- マノベニマルハキバガ / promalactis manoi
+  - keep: id=species-0936 sci="Promalactis manoi Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20836 sci="Promalactis manoi" author= year=
+- シロスジベニマルハキバガ / promalactis enopisema
+  - keep: id=species-0937 sci="Promalactis enopisema (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-20837 sci="Promalactis enopisema" author= year=
+- ヨスジカバマルハキバガ / promalactis matsuurae
+  - keep: id=species-0939 sci="Promalactis matsuurae Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20838 sci="Promalactis matsuurae" author= year=
+- ギンモンカバマルハキバガ / promalactis jezonica
+  - keep: id=species-0943 sci="Promalactis jezonica (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20840 sci="Promalactis jezonica" author= year=
+- ヒメシロスジカバマルハキバガ / promalactis autoclina
+  - keep: id=species-0944 sci="Promalactis autoclina Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20841 sci="Promalactis autoclina" author= year=
+- シロスジカバマルハキバガ / promalactis suzukiella
+  - keep: id=species-0945 sci="Promalactis suzukiella (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20842 sci="Promalactis suzukiella" author= year=
+- ホングウギンモンマルハキバガ / promalactis kumanoensis
+  - keep: id=species-0947 sci="Promalactis kumanoensis Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20844 sci="Promalactis kumanoensis" author= year=
+- ヤエヤマカバマルハキバガ / promalactis yaeyamaensis
+  - keep: id=species-0948 sci="Promalactis yaeyamaensis Fujisawa, 2002" author=Fujisawa year=2002
+  - drop: id=species-20845 sci="Promalactis yaeyamaensis" author= year=
+- サカイマルハキバガ / promalactis sakaiella
+  - keep: id=species-0949 sci="Promalactis sakaiella (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20846 sci="Promalactis sakaiella" author= year=
+- カレハチビマルハキバガ / tyrolimnas anthraconesa
+  - keep: id=species-0952 sci="Tyrolimnas anthraconesa Meyrick, 1934" author=Meyrick year=1934
+  - drop: id=species-20847 sci="Tyrolimnas anthraconesa" author= year=
+- キガシラマルハキバガ / pedioxestis isomorpha
+  - keep: id=species-0953 sci="Pedioxestis isomorpha Meyrick, 1932" author=Meyrick year=1932
+  - drop: id=species-20848 sci="Pedioxestis isomorpha" author= year=
+- ナニワズハリキバガ / anchinia cristalis
+  - keep: id=species-0954 sci="Anchinia cristalis (Scopoli, 1763)" author=(Scopoli) year=1763
+  - drop: id=species-20849 sci="Anchinia cristalis" author= year=
+- クロマイコモドキ / lamprystica igneola
+  - keep: id=species-0955 sci="Lamprystica igneola Stringer, 1930" author=Stringer year=1930
+  - drop: id=species-20850 sci="Lamprystica igneola" author= year=
+- キボシクロマルハキバガ / telechrysis tripuncta
+  - keep: id=species-0957 sci="Telechrysis tripuncta (Haworth, 1828)" author=(Haworth) year=1828
+  - drop: id=species-20852 sci="Telechrysis tripuncta" author= year=
+- フタクロボシハビロキバガ / scythropiodes issikii
+  - keep: id=species-0958 sci="Scythropiodes issikii (Takahashi, 1930)" author=(Takahashi) year=1930
+  - drop: id=species-20853 sci="Scythropiodes issikii" author= year=
+- ゴマフシロハビロキバガ / scythropiodes leucostola
+  - keep: id=species-0959 sci="Scythropiodes leucostola (Meyrick, 1921)" author=(Meyrick) year=1921
+  - drop: id=species-20854 sci="Scythropiodes leucostola" author= year=
+- ムモンハビロキバガ / scythropiodes lividula
+  - keep: id=species-0960 sci="Scythropiodes lividula (Meyrick, 1932)" author=(Meyrick) year=1932
+  - drop: id=species-20855 sci="Scythropiodes lividula" author= year=
+- フタテンハビロキバガ / scythropiodes malivora
+  - keep: id=species-0961 sci="Scythropiodes malivora (Meyrick, 1930)" author=(Meyrick) year=1930
+  - drop: id=species-20856 sci="Scythropiodes malivora" author= year=
+- シロハビロキバガ / scythropiodes venusta
+  - keep: id=species-0962 sci="Scythropiodes venusta (Moriuti, 1977)" author=(Moriuti) year=1977
+  - drop: id=species-20857 sci="Scythropiodes venusta" author= year=
+- マエチャオオハビロキバガ / rhizosthenes falciformis
+  - keep: id=species-0965 sci="Rhizosthenes falciformis Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20770 sci="Rhizosthenes falciformis" author= year=
+- オビカクバネヒゲナガキバガ / deltoplastis apostatis
+  - keep: id=species-0966 sci="Deltoplastis apostatis (Meyrick, 1932)" author=(Meyrick) year=1932
+  - drop: id=species-20771 sci="Deltoplastis apostatis" author= year=
+- クロカクバネヒゲナガキバガ / athymoris martialis
+  - keep: id=species-0967 sci="Athymoris martialis Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20772 sci="Athymoris martialis" author= year=
+- コゲチャヒゲナガキバガ / halolaguna sublaxata
+  - keep: id=species-0968 sci="Halolaguna sublaxata Gozmány, 1978" author=Gozmány year=1978
+  - drop: id=species-20773 sci="Halolaguna sublaxata" author= year=
+- オオキイロホソバヒゲナガキバガ / lecithocera chersitis
+  - keep: id=species-0969 sci="Lecithocera chersitis Meyrick, 1918" author=Meyrick year=1918
+  - drop: id=species-20774 sci="Lecithocera chersitis" author= year=
+- デブトウホソバヒゲナガキバガ / lecithocera daebuensis
+  - keep: id=species-0970 sci="Lecithocera daebuensis Park, 1999" author=Park year=1999
+  - drop: id=species-20775 sci="Lecithocera daebuensis" author= year=
+- フタテンホソバヒゲナガキバガ / lecithocera cerussata
+  - keep: id=species-0971 sci="Lecithocera cerussata (Wu, 1994)" author=(Wu) year=1994
+  - drop: id=species-20776 sci="Lecithocera cerussata" author= year=
+- ヒメマルバネヒゲナガキバガ / lecithocera rotundata
+  - keep: id=species-0972 sci="Lecithocera rotundata Gozmany, 1978" author=Gozmany year=1978
+  - drop: id=species-20777 sci="Lecithocera rotundata" author= year=
+- ヒメフタテンホソバヒゲナガキバガ / lecithocera tridentata
+  - keep: id=species-0973 sci="Lecithocera tridentata Wu & Liu, 1993" author=Wu & Liu year=1993
+  - drop: id=species-20778 sci="Lecithocera tridentata" author= year=
+- キベリハイヒゲナガキバガ / homaloxestis myeloxesta
+  - keep: id=species-0975 sci="Homaloxestis myeloxesta Meyrick, 1932" author=Meyrick year=1932
+  - drop: id=species-20780 sci="Homaloxestis myeloxesta" author= year=
+- オオキベリハイヒゲナガキバガ / homaloxestis hesperis
+  - keep: id=species-0976 sci="Homaloxestis hesperis Gozmány, 1978" author=Gozmány year=1978
+  - drop: id=species-20781 sci="Homaloxestis hesperis" author= year=
+- タイリクフタモンヒゲナガキバガ / homaloxestis cholopis
+  - keep: id=species-0977 sci="Homaloxestis cholopis (Meyrick, 1906)" author=(Meyrick) year=1906
+  - drop: id=species-20782 sci="Homaloxestis cholopis" author= year=
+- イッシキヒゲナガキバガ / issikiopteryx japonica
+  - keep: id=species-0978 sci="Issikiopteryx japonica Moriuti, 1973" author=Moriuti year=1973
+  - drop: id=species-20783 sci="Issikiopteryx japonica" author= year=
+- カクバネヒゲナガキバガ / lecitholaxa thiodora
+  - keep: id=species-0979 sci="Lecitholaxa thiodora (Meyrick, 1914)" author=(Meyrick) year=1914
+  - drop: id=species-20784 sci="Lecitholaxa thiodora" author= year=
+- ムモンクロヒゲナガキバガ / catacreagra notolychna
+  - keep: id=species-0980 sci="Catacreagra notolychna (Meyrick, 1936)" author=(Meyrick) year=1936
+  - drop: id=species-20785 sci="Catacreagra notolychna" author= year=
+- ミニフタテンホソバヒゲナガキバガ / kalocyrma echita
+  - keep: id=species-0981 sci="Kalocyrma echita Wu, 1994" author=Wu year=1994
+  - drop: id=species-20786 sci="Kalocyrma echita" author= year=
+- シロガシラホソキバガ / batrachedra albicapitella
+  - keep: id=species-0983 sci="Batrachedra albicapitella Sinev, 1986" author=Sinev year=1986
+  - drop: id=species-20787 sci="Batrachedra albicapitella" author= year=
+- ウスチャホソキバガ / batrachedra koreana
+  - keep: id=species-0984 sci="Batrachedra koreana Sinev & Park, 1994" author=Sinev & Park year=1994
+  - drop: id=species-20788 sci="Batrachedra koreana" author= year=
+- ウスジロホソキバガ / batrachedra pinicolella
+  - keep: id=species-0985 sci="Batrachedra pinicolella (Zeller, 1839)" author=(Zeller) year=1839
+  - drop: id=species-20789 sci="Batrachedra pinicolella" author= year=
+- キスジホソキバガ / batrachedra flavilineata
+  - keep: id=species-0986 sci="Batrachedra flavilineata Sugisima, 2006" author=Sugisima year=2006
+  - drop: id=species-20790 sci="Batrachedra flavilineata" author= year=
+- ヤブミョウガスゴモリキバガ / idioglossa polliacola
+  - keep: id=species-0989 sci="Idioglossa polliacola Sugisima, 2000" author=Sugisima year=2000
+  - drop: id=species-20793 sci="Idioglossa polliacola" author= year=
+- ヒロバスゴモリキバガ / epimarptis hiranoi
+  - keep: id=species-0991 sci="Epimarptis hiranoi Sugisima, 2004" author=Sugisima year=2004
+  - drop: id=species-20794 sci="Epimarptis hiranoi" author= year=
+- キイロオビマイコガ / stathmopoda pedella
+  - keep: id=species-0992 sci="Stathmopoda pedella (Linnaeus, 1761)" author=(Linnaeus) year=1761
+  - drop: id=species-20795 sci="Stathmopoda pedella" author= year=
+- オオマイコガ / stathmopoda stimulata
+  - keep: id=species-0998 sci="Stathmopoda stimulata Meyrick, 1913" author=Meyrick year=1913
+  - drop: id=species-20797 sci="Stathmopoda stimulata" author= year=
+- ハンノマイコガ / stathmopoda flavescens
+  - keep: id=species-0999 sci="Stathmopoda flavescens Kuznetzov, 1984" author=Kuznetzov year=1984
+  - drop: id=species-20806 sci="Stathmopoda flavescens" author= year=
+- ヒメムラサキシキブマイコガ / stathmopoda gemmiconsuta
+  - keep: id=species-1000 sci="Stathmopoda gemmiconsuta Terada, 2012" author=Terada year=2012
+  - drop: id=species-20804 sci="Stathmopoda gemmiconsuta" author= year=
+- ミナミヒメムラサキシキブマイコガ / stathmopoda luxuriivora
+  - keep: id=species-1001 sci="Stathmopoda luxuriivora Terada, 2012" author=Terada year=2012
+  - drop: id=species-20805 sci="Stathmopoda luxuriivora" author= year=
+- ムラサキシキブマイコガ / stathmopoda magnisignata
+  - keep: id=species-1002 sci="Stathmopoda magnisignata Terada, 2012" author=Terada year=2012
+  - drop: id=species-20802 sci="Stathmopoda magnisignata" author= year=
+- ウスムラサキシキブマイコガ / stathmopoda callicarpicola
+  - keep: id=species-1003 sci="Stathmopoda callicarpicola Terada, 2012" author=Terada year=2012
+  - drop: id=species-20803 sci="Stathmopoda callicarpicola" author= year=
+- オビマイコガ / stathmopoda opticaspis
+  - keep: id=species-1004 sci="Stathmopoda opticaspis Meyrick, 1931" author=Meyrick year=1931
+  - drop: id=species-20800 sci="Stathmopoda opticaspis" author= year=
+- モトキマイコガ / stathmopoda moriutiella
+  - keep: id=species-1006 sci="Stathmopoda moriutiella Kasy, 1973" author=Kasy year=1973
+  - drop: id=species-20810 sci="Stathmopoda moriutiella" author= year=
+- カキノヘタムシガ / stathmopoda masinissa
+  - keep: id=species-1008 sci="Stathmopoda masinissa Meyrick, 1906" author=Meyrick year=1906
+  - drop: id=species-20798 sci="Stathmopoda masinissa" author= year=
+- リュウキュウカキノヘタムシガ / stathmopoda maritimicola
+  - keep: id=species-1009 sci="Stathmopoda maritimicola Terada & Sakamaki, 2011" author=Terada & Sakamaki year=2011
+  - drop: id=species-20799 sci="Stathmopoda maritimicola" author= year=
+- キイロマイコガ / stathmopoda auriferella
+  - keep: id=species-1012 sci="Stathmopoda auriferella (Walker, 1864)" author=(Walker) year=1864
+  - drop: id=species-20808 sci="Stathmopoda auriferella" author= year=
+- カタアカマイコガ / stathmopoda haematosema
+  - keep: id=species-1013 sci="Stathmopoda haematosema Meyrick, 1933" author=Meyrick year=1933
+  - drop: id=species-20809 sci="Stathmopoda haematosema" author= year=
+- フタオビクロマイコガ / stathmopoda brachymochla
+  - keep: id=species-1015 sci="Stathmopoda brachymochla Meyrick, 1937" author=Meyrick year=1937
+  - drop: id=species-20811 sci="Stathmopoda brachymochla" author= year=
+- シロテンクロマイコガ / atrijuglans hetaohei
+  - keep: id=species-1017 sci="Atrijuglans hetaohei Yang, 1977" author=Yang year=1977
+  - drop: id=species-20812 sci="Atrijuglans hetaohei" author= year=
+- クロコマイコガ / hieromantis kurokoi
+  - keep: id=species-1018 sci="Hieromantis kurokoi Yasuda, 1988" author=Yasuda year=1988
+  - drop: id=species-20813 sci="Hieromantis kurokoi" author= year=
+- マキオマイコガ / hieromantis makiosana
+  - keep: id=species-1019 sci="Hieromantis makiosana Yasuda, 1988" author=Yasuda year=1988
+  - drop: id=species-20814 sci="Hieromantis makiosana" author= year=
+- アカヒゲベニトゲアシガ / oedematopoda leechi
+  - keep: id=species-1038 sci="Oedematopoda leechi Walsingham, 1889" author=Walsingham year=1889
+  - drop: id=species-20816 sci="Oedematopoda leechi" author= year=
+- セグロベニトゲアシガ / atkinsonia ignipicta
+  - keep: id=species-1039 sci="Atkinsonia ignipicta (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-20815 sci="Atkinsonia ignipicta" author= year=
+- ハマナスツツミノガ / coleophora gryphipennella
+  - keep: id=species-1041 sci="Coleophora gryphipennella (Hübner, 1796)" author=(Hübner) year=1796
+  - drop: id=species-20860 sci="Coleophora gryphipennella" author= year=
+- サクラツツミノガ / coleophora sakurae
+  - keep: id=species-1042 sci="Coleophora sakurae Oku, 2009" author=Oku year=2009
+  - drop: id=species-20861 sci="Coleophora sakurae" author= year=
+- ナラツツミノガ / coleophora levantis
+  - keep: id=species-1043 sci="Coleophora levantis Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20862 sci="Coleophora levantis" author= year=
+- シラカバツツミノガ / coleophora serratella
+  - keep: id=species-1044 sci="Coleophora serratella (Linnaeus, 1761)" author=(Linnaeus) year=1761
+  - drop: id=species-20863 sci="Coleophora serratella" author= year=
+- リンゴツツミノガ / coleophora spinella
+  - keep: id=species-1045 sci="Coleophora spinella (Schrank, 1802)" author=(Schrank) year=1802
+  - drop: id=species-20864 sci="Coleophora spinella" author= year=
+- フタイロツツミノガ / coleophora eteropennella
+  - keep: id=species-1046 sci="Coleophora eteropennella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20865 sci="Coleophora eteropennella" author= year=
+- カンバマエジロツツミノガ / coleophora milvipennis
+  - keep: id=species-1047 sci="Coleophora milvipennis Zeller, 1839" author=Zeller year=1839
+  - drop: id=species-20866 sci="Coleophora milvipennis" author= year=
+- ニレナガツツミノガ / coleophora japonicella
+  - keep: id=species-1049 sci="Coleophora japonicella Oku, 1965" author=Oku year=1965
+  - drop: id=species-20867 sci="Coleophora japonicella" author= year=
+- ニレコツツミノガ / coleophora ulmivorella
+  - keep: id=species-1050 sci="Coleophora ulmivorella Oku, 1965" author=Oku year=1965
+  - drop: id=species-20868 sci="Coleophora ulmivorella" author= year=
+- エゾムラサキツツジツツミノガ / coleophora uliginosella
+  - keep: id=species-1051 sci="Coleophora uliginosella Glitz, 1872" author=Glitz year=1872
+  - drop: id=species-20869 sci="Coleophora uliginosella" author= year=
+- イソツツジツツミノガ / coleophora ledi
+  - keep: id=species-1052 sci="Coleophora ledi Stainton, 1860" author=Stainton year=1860
+  - drop: id=species-20870 sci="Coleophora ledi" author= year=
+- コケモモツツミノガ / coleophora murinella
+  - keep: id=species-1053 sci="Coleophora murinella Tengström, 1847" author=Tengström year=1847
+  - drop: id=species-20871 sci="Coleophora murinella" author= year=
+- スノキツツミノガ / coleophora plumbella
+  - keep: id=species-1056 sci="Coleophora plumbella Kanerva, 1941" author=Kanerva year=1941
+  - drop: id=species-20872 sci="Coleophora plumbella" author= year=
+- ダケカンバツツミノガ / coleophora orbitella
+  - keep: id=species-1057 sci="Coleophora orbitella Zeller, 1849" author=Zeller year=1849
+  - drop: id=species-20873 sci="Coleophora orbitella" author= year=
+- ハンノキツツミノガ / coleophora hancola
+  - keep: id=species-1058 sci="Coleophora hancola Oku, 1965" author=Oku year=1965
+  - drop: id=species-20874 sci="Coleophora hancola" author= year=
+- カツラツツミノガ / coleophora cercidiphyllella
+  - keep: id=species-1059 sci="Coleophora cercidiphyllella Oku, 1965" author=Oku year=1965
+  - drop: id=species-20875 sci="Coleophora cercidiphyllella" author= year=
+- オニシモツケツツミノガ / coleophora potentillae
+  - keep: id=species-1062 sci="Coleophora potentillae Elisha, 1885" author=Elisha year=1885
+  - drop: id=species-20876 sci="Coleophora potentillae" author= year=
+- アズキナシツツミノガ / coleophora trigeminella
+  - keep: id=species-1063 sci="Coleophora trigeminella Fuchs, 1881" author=Fuchs year=1881
+  - drop: id=species-20877 sci="Coleophora trigeminella" author= year=
+- アカザフシガ / coleophora serinipennella
+  - keep: id=species-1064 sci="Coleophora serinipennella Christoph, 1872" author=Christoph year=1872
+  - drop: id=species-20878 sci="Coleophora serinipennella" author= year=
+- キンバネツツミノガ / coleophora alcyonipennella
+  - keep: id=species-1065 sci="Coleophora alcyonipennella (Kollar, 1832)" author=(Kollar) year=1832
+  - drop: id=species-20879 sci="Coleophora alcyonipennella" author= year=
+- ヒメキンバネツツミノガ / coleophora mayrella
+  - keep: id=species-1066 sci="Coleophora mayrella (Hübner, [1813])" author=(Hübner) year=[1813]
+  - drop: id=species-20880 sci="Coleophora mayrella" author= year=
+- キミャクツツミノガ / coleophora flavovena
+  - keep: id=species-1068 sci="Coleophora flavovena Matsumura, 1931" author=Matsumura year=1931
+  - drop: id=species-20881 sci="Coleophora flavovena" author= year=
+- ヨモギホソツツミノガ / coleophora enkomiella
+  - keep: id=species-1069 sci="Coleophora enkomiella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20882 sci="Coleophora enkomiella" author= year=
+- オオヤマフスマツツミノガ / coleophora chalcogrammella
+  - keep: id=species-1070 sci="Coleophora chalcogrammella Zeller, 1839" author=Zeller year=1839
+  - drop: id=species-20883 sci="Coleophora chalcogrammella" author= year=
+- ヤナギピストルミノガ / coleophora albidella
+  - keep: id=species-1071 sci="Coleophora albidella (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-20884 sci="Coleophora albidella" author= year=
+- リンゴピストルミノガ / coleophora bernoulliella
+  - keep: id=species-1072 sci="Coleophora bernoulliella (Goeze, 1783)" author=(Goeze) year=1783
+  - drop: id=species-20885 sci="Coleophora bernoulliella" author= year=
+- シラカバピストルミノガ / coleophora platyphyllae
+  - keep: id=species-1073 sci="Coleophora platyphyllae Oku, 1965" author=Oku year=1965
+  - drop: id=species-20886 sci="Coleophora platyphyllae" author= year=
+- ミヤマピストルミノガ / coleophora quercicola
+  - keep: id=species-1074 sci="Coleophora quercicola Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20887 sci="Coleophora quercicola" author= year=
+- カシワピストルミノガ / coleophora melanograpta
+  - keep: id=species-1075 sci="Coleophora melanograpta Meyrick, 1935" author=Meyrick year=1935
+  - drop: id=species-20888 sci="Coleophora melanograpta" author= year=
+- アザミシロツツミノガ / coleophora brevipalpella
+  - keep: id=species-1076 sci="Coleophora brevipalpella Wocke, 1874" author=Wocke year=1874
+  - drop: id=species-20889 sci="Coleophora brevipalpella" author= year=
+- ヨモギオオツツミノガ / coleophora honshuella
+  - keep: id=species-1077 sci="Coleophora honshuella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20890 sci="Coleophora honshuella" author= year=
+- ノギクギンオビツツミノガ / coleophora pseudoditella
+  - keep: id=species-1079 sci="Coleophora pseudoditella Baldizzone & Patzak, 1983" author=Baldizzone & Patzak year=1983
+  - drop: id=species-20891 sci="Coleophora pseudoditella" author= year=
+- カラマツツツミノガ / coleophora obducta
+  - keep: id=species-1080 sci="Coleophora obducta (Meyrick, 1931)" author=(Meyrick) year=1931
+  - drop: id=species-20892 sci="Coleophora obducta" author= year=
+- ヨモギムモンツツミノガ / coleophora cinclella
+  - keep: id=species-1081 sci="Coleophora cinclella Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20893 sci="Coleophora cinclella" author= year=
+- シラヤマギクツツミノガ / coleophora raphidon
+  - keep: id=species-1083 sci="Coleophora raphidon Baldizzone & Savenkov, 2002" author=Baldizzone & Savenkov year=2002
+  - drop: id=species-20894 sci="Coleophora raphidon" author= year=
+- アザミクロツツミノガ / coleophora paripennella
+  - keep: id=species-1084 sci="Coleophora paripennella Zeller, 1839" author=Zeller year=1839
+  - drop: id=species-20895 sci="Coleophora paripennella" author= year=
+- ノギククロツツミノガ / coleophora molothrella
+  - keep: id=species-1085 sci="Coleophora molothrella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20896 sci="Coleophora molothrella" author= year=
+- キクツツミノガ / coleophora kurokoi
+  - keep: id=species-1088 sci="Coleophora kurokoi Oku, 1974" author=Oku year=1974
+  - drop: id=species-20898 sci="Coleophora kurokoi" author= year=
+- シロミャクツツミノガ / coleophora therinella
+  - keep: id=species-1089 sci="Coleophora therinella Tengström, 1848" author=Tengström year=1848
+  - drop: id=species-20899 sci="Coleophora therinella" author= year=
+- ウスシロミャクツツミノガ / coleophora issikii
+  - keep: id=species-1092 sci="Coleophora issikii Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20900 sci="Coleophora issikii" author= year=
+- ノコギリソウツツミノガ / coleophora argentula
+  - keep: id=species-1094 sci="Coleophora argentula (Stephens, 1834)" author=(Stephens) year=1834
+  - drop: id=species-20901 sci="Coleophora argentula" author= year=
+- ホウキギツツミノガ / coleophora scopariella
+  - keep: id=species-1095 sci="Coleophora scopariella Oku, 2009" author=Oku year=2009
+  - drop: id=species-20902 sci="Coleophora scopariella" author= year=
+- アカミャクツツミノガ / coleophora cristata
+  - keep: id=species-1096 sci="Coleophora cristata Baldizzone, 1989" author=Baldizzone year=1989
+  - drop: id=species-20903 sci="Coleophora cristata" author= year=
+- ノコンギクハナツツミノガ / coleophora hsiaolingensis
+  - keep: id=species-1097 sci="Coleophora hsiaolingensis Toll, 1942" author=Toll year=1942
+  - drop: id=species-20904 sci="Coleophora hsiaolingensis" author= year=
+- ホソハイイロツツミノガ / coleophora laniella
+  - keep: id=species-1099 sci="Coleophora laniella Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20906 sci="Coleophora laniella" author= year=
+- アキノキリンソウツツミノガ / coleophora virgaureae
+  - keep: id=species-1100 sci="Coleophora virgaureae Stainton, 1857" author=Stainton year=1857
+  - drop: id=species-20907 sci="Coleophora virgaureae" author= year=
+- アカザウスグロツツミノガ / coleophora sternipennella
+  - keep: id=species-1101 sci="Coleophora sternipennella (Zetterstedt, 1839)" author=(Zetterstedt) year=1839
+  - drop: id=species-20908 sci="Coleophora sternipennella" author= year=
+- アカザハナツツミノガ / coleophora chenopodii
+  - keep: id=species-1102 sci="Coleophora chenopodii Oku, 1965" author=Oku year=1965
+  - drop: id=species-20909 sci="Coleophora chenopodii" author= year=
+- アオビユツツミノガ / coleophora versurella
+  - keep: id=species-1103 sci="Coleophora versurella Zeller, 1849" author=Zeller year=1849
+  - drop: id=species-20910 sci="Coleophora versurella" author= year=
+- シモフリツツミノガ / coleophora vestianella
+  - keep: id=species-1104 sci="Coleophora vestianella (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-20911 sci="Coleophora vestianella" author= year=
+- ゴマフツツミノガ / coleophora kudrosella
+  - keep: id=species-1105 sci="Coleophora kudrosella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20912 sci="Coleophora kudrosella" author= year=
+- ヨモギケブカツツミノガ / coleophora albicans
+  - keep: id=species-1106 sci="Coleophora albicans Zeller, 1849" author=Zeller year=1849
+  - drop: id=species-20913 sci="Coleophora albicans" author= year=
+- ヨモギハナツツミノガ / coleophora artemisicolella
+  - keep: id=species-1107 sci="Coleophora artemisicolella Bruand, 1854" author=Bruand year=1854
+  - drop: id=species-20914 sci="Coleophora artemisicolella" author= year=
+- イヌイツツミノガ / coleophora glaucicolella
+  - keep: id=species-1108 sci="Coleophora glaucicolella Wood, 1892" author=Wood year=1892
+  - drop: id=species-20915 sci="Coleophora glaucicolella" author= year=
+- ヤチツツミノガ / coleophora elodella
+  - keep: id=species-1109 sci="Coleophora elodella Baldizzone & Oku, 1988" author=Baldizzone & Oku year=1988
+  - drop: id=species-20916 sci="Coleophora elodella" author= year=
+- ニセヤチツツミノガ / coleophora okuella
+  - keep: id=species-1110 sci="Coleophora okuella Baldizzone & Savenkov, 2002" author=Baldizzone & Savenkov year=2002
+  - drop: id=species-20917 sci="Coleophora okuella" author= year=
+- タニガワツツミノガ / coleophora tamesis
+  - keep: id=species-1111 sci="Coleophora tamesis Waters, 1929" author=Waters year=1929
+  - drop: id=species-20918 sci="Coleophora tamesis" author= year=
+- スズメノヤリツツミノガ / coleophora burhinella
+  - keep: id=species-1112 sci="Coleophora burhinella Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20919 sci="Coleophora burhinella" author= year=
+- ヒメツツミノガ / coleophora citrarga
+  - keep: id=species-1113 sci="Coleophora citrarga Meyrick, 1934" author=Meyrick year=1934
+  - drop: id=species-20920 sci="Coleophora citrarga" author= year=
+- コウガイゼキショウツツミノガ / coleophora juncivora
+  - keep: id=species-1114 sci="Coleophora juncivora Baldizzone & Oku, 1990" author=Baldizzone & Oku year=1990
+  - drop: id=species-20921 sci="Coleophora juncivora" author= year=
+- ヨモギシロハナツツミノガ / coleophora parki
+  - keep: id=species-1115 sci="Coleophora parki Baldizzone & Savenkov, 2002" author=Baldizzone & Savenkov year=2002
+  - drop: id=species-20922 sci="Coleophora parki" author= year=
+- ハマベツツミノガ / coleophora clypeiferella
+  - keep: id=species-1116 sci="Coleophora clypeiferella Hofmann, 1871" author=Hofmann year=1871
+  - drop: id=species-20923 sci="Coleophora clypeiferella" author= year=
+- ムナブトヒメスカシバ / entrichella constricta
+  - keep: id=species-1574 sci="Entrichella constricta (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20924 sci="Entrichella constricta" author= year=
+- ヤクシマヒメスカシバ / entrichella yakushimaensis
+  - keep: id=species-1575 sci="Entrichella yakushimaensis (Arita, 1993)" author=(Arita) year=1993
+  - drop: id=species-20925 sci="Entrichella yakushimaensis" author= year=
+- エサキヒメスカシバ / entrichella esakii
+  - keep: id=species-1576 sci="Entrichella esakii (Yano, 1960)" author=(Yano) year=1960
+  - drop: id=species-20926 sci="Entrichella esakii" author= year=
+- シラホシヒメスカシバ / paranthrenopsis editha
+  - keep: id=species-1577 sci="Paranthrenopsis editha (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20927 sci="Paranthrenopsis editha" author= year=
+- ヒメセスジスカシバ / pennisetia hylaeiformis
+  - keep: id=species-1579 sci="Pennisetia hylaeiformis (Laspeyres, 1801)" author=(Laspeyres) year=1801
+  - drop: id=species-20929 sci="Pennisetia hylaeiformis" author= year=
+- セスジスカシバ / pennisetia fixseni
+  - keep: id=species-1580 sci="Pennisetia fixseni (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20930 sci="Pennisetia fixseni" author= year=
+- キタセスジスカシバ / pennisetia admirabilis
+  - keep: id=species-1581 sci="Pennisetia admirabilis Arita, 1992" author=Arita year=1992
+  - drop: id=species-20931 sci="Pennisetia admirabilis" author= year=
+- ミナミセスジスカシバ / pennisetia insulicola
+  - keep: id=species-1582 sci="Pennisetia insulicola Arita, 1992" author=Arita year=1992
+  - drop: id=species-20932 sci="Pennisetia insulicola" author= year=
+- コシボソスカシバ / milisipepsis takizawai
+  - keep: id=species-1583 sci="Milisipepsis takizawai (Arita & Špatenka, 1989)" author=(Arita & Špatenka) year=1989
+  - drop: id=species-20933 sci="Milisipepsis takizawai" author= year=
+- キタスカシバ / sesia yezoensis
+  - keep: id=species-1584 sci="Sesia yezoensis (Hampson, 1919)" author=(Hampson) year=1919
+  - drop: id=species-20934 sci="Sesia yezoensis" author= year=
+- オキナワスカシバ / scasiba okinawana
+  - keep: id=species-1585 sci="Scasiba okinawana (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20935 sci="Scasiba okinawana" author= year=
+- カシワスカシバ / scasiba rhynchioides
+  - keep: id=species-1586 sci="Scasiba rhynchioides (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-20936 sci="Scasiba rhynchioides" author= year=
+- コシアカスカシバ / scasiba scribai
+  - keep: id=species-1587 sci="Scasiba scribai (Bartel, 1912)" author=(Bartel) year=1912
+  - drop: id=species-20937 sci="Scasiba scribai" author= year=
+- シタキモモブトスカシバ / melittia inouei
+  - keep: id=species-1589 sci="Melittia inouei Arita & Yata, 1987" author=Arita & Yata year=1987
+  - drop: id=species-20940 sci="Melittia inouei" author= year=
+- オオモモブトスカシバ / melittia sangaica
+  - keep: id=species-1590 sci="Melittia sangaica Moore, 1877" author=Moore year=1877
+  - drop: id=species-20941 sci="Melittia sangaica" author= year=
+- アシナガモモブトスカシバ / macroscelesia longipes
+  - keep: id=species-1591 sci="Macroscelesia longipes (Moore, 1877)" author=(Moore) year=1877
+  - drop: id=species-20942 sci="Macroscelesia longipes" author= year=
+- モモブトスカシバ / macroscelesia japona
+  - keep: id=species-1592 sci="Macroscelesia japona (Hampson, 1919)" author=(Hampson) year=1919
+  - drop: id=species-20943 sci="Macroscelesia japona" author= year=
+- ブドウスカシバ / nokona regalis
+  - keep: id=species-1596 sci="Nokona regalis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20944 sci="Nokona regalis" author= year=
+- ムラサキスカシバ / nokona purpurea
+  - keep: id=species-1598 sci="Nokona purpurea (Yano, 1965)" author=(Yano) year=1965
+  - drop: id=species-20945 sci="Nokona purpurea" author= year=
+- ヒメアトスカシバ / nokona pernix
+  - keep: id=species-1599 sci="Nokona pernix (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20946 sci="Nokona pernix" author= year=
+- アカスカシバ / nokona rubra
+  - keep: id=species-1600 sci="Nokona rubra Arita & Tosevski, 1992" author=Arita & Tosevski year=1992
+  - drop: id=species-20947 sci="Nokona rubra" author= year=
+- キクビスカシバ / nokona feralis
+  - keep: id=species-1601 sci="Nokona feralis (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20948 sci="Nokona feralis" author= year=
+- クロスカシバ / nokona nigra
+  - keep: id=species-1602 sci="Nokona nigra Arita, Kimura & Owada, 2009" author=Arita, Kimura & Owada year=2009
+  - drop: id=species-20949 sci="Nokona nigra" author= year=
+- ビロードスカシバ / paranthrene tabaniformis
+  - keep: id=species-1603 sci="Paranthrene tabaniformis (Rottemburg, 1775)" author=(Rottemburg) year=1775
+  - drop: id=species-20950 sci="Paranthrene tabaniformis" author= year=
+- ハチマガイスカシバ / glossosphecia contaminata
+  - keep: id=species-1605 sci="Glossosphecia contaminata (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20951 sci="Glossosphecia contaminata" author= year=
+- クビアカスカシバ / glossosphecia romanovi
+  - keep: id=species-1606 sci="Glossosphecia romanovi (Leech, [1889])" author=(Leech) year=[1889]
+  - drop: id=species-20952 sci="Glossosphecia romanovi" author= year=
+- キコスカシバ / synanthedon esperi
+  - keep: id=species-1607 sci="Synanthedon esperi Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20953 sci="Synanthedon esperi" author= year=
+- ヤマコスカシバ / synanthedon subproducta
+  - keep: id=species-1608 sci="Synanthedon subproducta Inoue, 1982" author=Inoue year=1982
+  - drop: id=species-20954 sci="Synanthedon subproducta" author= year=
+- ヤノコスカシバ / synanthedon yanoi
+  - keep: id=species-1609 sci="Synanthedon yanoi Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20955 sci="Synanthedon yanoi" author= year=
+- フトモンコスカシバ / synanthedon scoliaeformis
+  - keep: id=species-1610 sci="Synanthedon scoliaeformis (Borkhausen, 1789)" author=(Borkhausen) year=1789
+  - drop: id=species-20956 sci="Synanthedon scoliaeformis" author= year=
+- コスカシバ / synanthedon hector
+  - keep: id=species-1611 sci="Synanthedon hector (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20957 sci="Synanthedon hector" author= year=
+- アカオビコスカシバ / synanthedon formicaeformis
+  - keep: id=species-1612 sci="Synanthedon formicaeformis (Esper, 1783)" author=(Esper) year=1783
+  - drop: id=species-20958 sci="Synanthedon formicaeformis" author= year=
+- フクズミコスカシバ / synanthedon fukuzumii
+  - keep: id=species-1613 sci="Synanthedon fukuzumii Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20959 sci="Synanthedon fukuzumii" author= year=
+- フタスジコスカシバ / synanthedon pseudoscoliaeformis
+  - keep: id=species-1614 sci="Synanthedon pseudoscoliaeformis Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20960 sci="Synanthedon pseudoscoliaeformis" author= year=
+- ヒメコスカシバ / synanthedon tenuis
+  - keep: id=species-1615 sci="Synanthedon tenuis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-20961 sci="Synanthedon tenuis" author= year=
+- キオビコスカシバ / synanthedon unocingulata
+  - keep: id=species-1617 sci="Synanthedon unocingulata Bartel, 1912" author=Bartel year=1912
+  - drop: id=species-20963 sci="Synanthedon unocingulata" author= year=
+- ヒトスジコスカシバ / synanthedon multitarsus
+  - keep: id=species-1620 sci="Synanthedon multitarsus Špatenka & Arita, 1992" author=Špatenka & Arita year=1992
+  - drop: id=species-20964 sci="Synanthedon multitarsus" author= year=
+- カシコスカシバ / synanthedon quercus
+  - keep: id=species-1621 sci="Synanthedon quercus (Matsumura, 1911)" author=(Matsumura) year=1911
+  - drop: id=species-20965 sci="Synanthedon quercus" author= year=
+- ニシキヒロハマキモドキ / nigilgia limata
+  - keep: id=species-1625 sci="Nigilgia limata Diakonoff & Arita, 1979" author=Diakonoff & Arita year=1979
+  - drop: id=species-20967 sci="Nigilgia limata" author= year=
+- ヤエヤマヒロハマキモドキ / paranigilgia bushii
+  - keep: id=species-1626 sci="Paranigilgia bushii (Arita, 1980)" author=(Arita) year=1980
+  - drop: id=species-20968 sci="Paranigilgia bushii" author= year=
+- オオボクトウ / cossus cossus
+  - keep: id=species-1627 sci="Cossus cossus (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-20969 sci="Cossus cossus" author= year=
+- ボクトウガ / cossus jezoensis
+  - keep: id=species-1628 sci="Cossus jezoensis (Matsumura, 1931)" author=(Matsumura) year=1931
+  - drop: id=species-20970 sci="Cossus jezoensis" author= year=
+- ゴマフボクトウ / zeuzera multistrigata
+  - keep: id=species-1631 sci="Zeuzera multistrigata Moore, 1881" author=Moore year=1881
+  - drop: id=species-20972 sci="Zeuzera multistrigata" author= year=
+- クロシオゴマフボクトウ / zeuzera caudata
+  - keep: id=species-1632 sci="Zeuzera caudata Joicey & Talbot, 1916" author=Joicey & Talbot year=1916
+  - drop: id=species-20973 sci="Zeuzera caudata" author= year=
+- コーヒーゴマフボクトウ / zeuzera coffeae
+  - keep: id=species-1633 sci="Zeuzera coffeae Nietner, 1861" author=Nietner year=1861
+  - drop: id=species-20974 sci="Zeuzera coffeae" author= year=
+- シロトゲエダシャク / phigalia verecundaria
+  - keep: id=species-3756 sci="Phigalia verecundaria (Leech, 1897)" author=(Leech) year=1897
+  - drop: id=species-21577 sci="Phigalia verecundaria" author= year=
+- ニッコウエダシャク / lassaba nikkonis
+  - keep: id=species-3778 sci="Lassaba nikkonis (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-21580 sci="Lassaba nikkonis" author= year=
+- アトジロエダシャク / pachyligia dolosa
+  - keep: id=species-3783 sci="Pachyligia dolosa Butler, 1878" author=Butler year=1878
+  - drop: id=species-21581 sci="Pachyligia dolosa" author= year=
+- キイロエダシャク / doratoptera virescens
+  - keep: id=species-3784 sci="Doratoptera virescens (Marumo, 1923)" author=Marumo year=1923
+  - drop: id=species-21583 sci="Doratoptera virescens" author= year=
+- ヒロバトガリエダシャク / planociampa antipala
+  - keep: id=species-3786 sci="Planociampa antipala Prout, 1930" author=Prout year=1930
+  - drop: id=species-21585 sci="Planociampa antipala" author= year=
+- ホソバトガリエダシャク / planociampa modesta
+  - keep: id=species-3787 sci="Planociampa modesta (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21584 sci="Planociampa modesta" author= year=
+- ウスクモエダシャク / menophra senilis
+  - keep: id=species-3793 sci="Menophra senilis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21587 sci="Menophra senilis" author= year=
+- ハルタウスクモエダシャク / menophra harutai
+  - keep: id=species-3794 sci="Menophra harutai (Inoue, 1954)" author=(Inoue) year=1954
+  - drop: id=species-21586 sci="Menophra harutai" author= year=
+- ヒゲマダラエダシャク / cryptochorina amphidasyaria
+  - keep: id=species-3797 sci="Cryptochorina amphidasyaria (Oberthür, 1880)" author=(Oberthür) year=1880
+  - drop: id=species-21588 sci="Cryptochorina amphidasyaria" author= year=
+- クロモンキリバエダシャク / psyra bluethgeni
+  - keep: id=species-3801 sci="Psyra bluethgeni (Püngeler, 1903)" author=(Püngeler) year=1903
+  - drop: id=species-21589 sci="Psyra bluethgeni" author= year=
+- マエキトビエダシャク / nothomiza formosa
+  - keep: id=species-3808 sci="Nothomiza formosa (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21590 sci="Nothomiza formosa" author= year=
+- キエダシャク / auaxa sulphurea
+  - keep: id=species-3830 sci="Auaxa sulphurea (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21595 sci="Auaxa sulphurea" author= year=
+- エグリエダシャク / fascellina chromataria
+  - keep: id=species-3831 sci="Fascellina chromataria Walker, 1860" author=Walker year=1860
+  - drop: id=species-21597 sci="Fascellina chromataria" author= year=
+- ツマキリウスキエダシャク / pareclipsis gracilis
+  - keep: id=species-3833 sci="Pareclipsis gracilis (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21596 sci="Pareclipsis gracilis" author= year=
+- トガリエダシャク / xyloscia subspersata
+  - keep: id=species-3843 sci="Xyloscia subspersata (Felder & Rogenhofer, 1875)" author=(Felder & Rogenhofer) year=1875
+  - drop: id=species-21600 sci="Xyloscia subspersata" author= year=
+- ナカキエダシャク / plagodis dolabraria
+  - keep: id=species-3847 sci="Plagodis dolabraria (Linnaeus, 1767)" author=(Linnaeus) year=1767
+  - drop: id=species-21603 sci="Plagodis dolabraria" author= year=
+- ウラモンアカエダシャク / parepione grata
+  - keep: id=species-3852 sci="Parepione grata (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21606 sci="Parepione grata" author= year=
+- ウラベニエダシャク / heterolocha aristonaria
+  - keep: id=species-3857 sci="Heterolocha aristonaria (Walker, 1860)" author=(Walker) year=1860
+  - drop: id=species-21605 sci="Heterolocha aristonaria" author= year=
+- ウコンエダシャク / corymica pryeri
+  - keep: id=species-3864 sci="Corymica pryeri (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21607 sci="Corymica pryeri" author= year=
+- ウスキツバメエダシャク / ourapteryx nivea
+  - keep: id=species-3868 sci="Ourapteryx nivea Butler, 1883" author=Butler year=1883
+  - drop: id=species-21608 sci="Ourapteryx nivea" author= year=
+- ノムラツバメエダシャク / ourapteryx nomurai
+  - keep: id=species-3869 sci="Ourapteryx nomurai Inoue, 1946" author=Inoue year=1946
+  - drop: id=species-21609 sci="Ourapteryx nomurai" author= year=
+- コガタツバメエダシャク / ourapteryx obtusicauda
+  - keep: id=species-3870 sci="Ourapteryx obtusicauda (Warren, 1894)" author=(Warren) year=1894
+  - drop: id=species-21610 sci="Ourapteryx obtusicauda" author= year=
+- シロツバメエダシャク / ourapteryx maculicaudaria
+  - keep: id=species-3872 sci="Ourapteryx maculicaudaria (Motschulsky, 1866)" author=(Motschulsky) year=1866
+  - drop: id=species-21611 sci="Ourapteryx maculicaudaria" author= year=
+- スカシコケガ / nudaria ranruna
+  - keep: id=species-4794 sci="Nudaria ranruna (Matsumura, 1927)" author=Matsumura year=1927
+  - drop: id=species-21616 sci="Nudaria ranruna" author= year=
+- ウスバフタホシコケガ / schistophleps bipuncta
+  - keep: id=species-4795 sci="Schistophleps bipuncta (Hampson, 1891)" author=Hampson year=1891
+  - drop: id=species-21615 sci="Schistophleps bipuncta" author= year=
+- キバラケンモン / trichosea champa
+  - keep: id=species-5690 sci="Trichosea champa (Moore, 1879)" author=(Moore) year=1879
+  - drop: id=species-21620 sci="Trichosea champa" author= year=
+- ゴマケンモン / moma alpium
+  - keep: id=species-5702 sci="Moma alpium (Osbeck, 1778)" author=(Osbeck) year=1778
+  - drop: id=species-21621 sci="Moma alpium" author= year=
+- キタバコガ / pyrrhia umbra
+  - keep: id=species-5805 sci="Pyrrhia umbra (Hufnagel, 1766)" author=(Hufnagel) year=1766
+  - drop: id=species-21623 sci="Pyrrhia umbra" author= year=
+- ウスオビヤガ / pyrrhia bifasciata
+  - keep: id=species-5806 sci="Pyrrhia bifasciata (Staudinger, 1888)" author=(Staudinger) year=1888
+  - drop: id=species-21624 sci="Pyrrhia bifasciata" author= year=
+- ケンモンキリガ / egira saxea
+  - keep: id=species-6112 sci="Egira saxea (Leech, 1889)" author=(Leech) year=[1889]
+  - drop: id=species-21657 sci="Egira saxea" author= year=
+- マツキリガ / panolis japonica
+  - keep: id=species-6113 sci="Panolis japonica Draudt, 1935" author=Draudt year=1935
+  - drop: id=species-21658 sci="Panolis japonica" author= year=
+- スギタニキリガ / perigrapha hoenei
+  - keep: id=species-6118 sci="Perigrapha hoenei Püngeler 1914" author=Püngeler year=1914
+  - drop: id=species-21660 sci="Perigrapha hoenei" author= year=
+- スモモキリガ / anorthoa munda
+  - keep: id=species-6119 sci="Anorthoa munda (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21662 sci="Anorthoa munda" author= year=
+- ホソバキリガ / anorthoa angustipennis
+  - keep: id=species-6120 sci="Anorthoa angustipennis (Matsumura, 1926)" author=(Matsumura) year=1926
+  - drop: id=species-21661 sci="Anorthoa angustipennis" author= year=
+- カバキリガ / orthosia evanida
+  - keep: id=species-6122 sci="Orthosia evanida (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21663 sci="Orthosia evanida" author= year=
+- アオヤマキリガ / orthosia aoyamensis
+  - keep: id=species-6123 sci="Orthosia aoyamensis (Matsumura, 1926)" author=(Matsumura) year=1926
+  - drop: id=species-21664 sci="Orthosia aoyamensis" author= year=
+- カギモンキリガ / orthosia nigromaculata
+  - keep: id=species-6124 sci="Orthosia nigromaculata (Höne, 1917)" author=(Höne) year=1917
+  - drop: id=species-21665 sci="Orthosia nigromaculata" author= year=
+- クロミミキリガ / orthosia lizetta
+  - keep: id=species-6125 sci="Orthosia lizetta Butler, 1878" author=Butler year=1878
+  - drop: id=species-21666 sci="Orthosia lizetta" author= year=
+- ブナキリガ / orthosia paromoea
+  - keep: id=species-6127 sci="Orthosia paromoea (Hampson, 1905)" author=(Hampson) year=1905
+  - drop: id=species-21667 sci="Orthosia paromoea" author= year=
+- クロテンキリガ / orthosia fausta
+  - keep: id=species-6128 sci="Orthosia fausta Leech, 1889" author=Leech year=[1889]
+  - drop: id=species-21668 sci="Orthosia fausta" author= year=
+- シロヘリキリガ / orthosia limbata
+  - keep: id=species-6130 sci="Orthosia limbata (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21669 sci="Orthosia limbata" author= year=
+- チャイロキリガ / orthosia odiosa
+  - keep: id=species-6132 sci="Orthosia odiosa (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21670 sci="Orthosia odiosa" author= year=
+- アカバキリガ / orthosia carnipennis
+  - keep: id=species-6137 sci="Orthosia carnipennis (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21672 sci="Orthosia carnipennis" author= year=
+- カギモンヤガ / cerastis pallescens
+  - keep: id=species-20438 sci="Cerastis pallescens (Butler, 1878)" author= year=
+  - drop: id=species-21649 sci="Cerastis pallescens" author= year=
+- ヨトウガ / mamestra brassicae
+  - keep: id=species-20634 sci="Mamestra brassicae (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-21651 sci="Mamestra brassicae" author= year=
+- キミャクヨトウ / dictyestra dissecta
+  - keep: id=species-20641 sci="Dictyestra dissecta (Walker, 1865)" author=(Walker) year=1865
+  - drop: id=species-21653 sci="Dictyestra dissecta" author= year=
+- フタスジヨトウ / protomiselia bilinea
+  - keep: id=species-20651 sci="Protomiselia bilinea (Hampson, 1905)" author=(Hampson) year=1905
+  - drop: id=species-21655 sci="Protomiselia bilinea" author= year=
+- シロシタヨトウ / sarcopolia illoba
+  - keep: id=species-20652 sci="Sarcopolia illoba (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21652 sci="Sarcopolia illoba" author= year=
+- フタオビキヨトウ / mythimna turca
+  - keep: id=species-20653 sci="Mythimna turca (Linnaeus, 1761)" author=(Linnaeus) year=1761
+  - drop: id=species-21673 sci="Mythimna turca" author= year=
+- オオフタオビキヨトウ / mythimna grandis
+  - keep: id=species-20655 sci="Mythimna grandis Butler, 1878" author=Butler year=1878
+  - drop: id=species-21674 sci="Mythimna grandis" author= year=
+- クロシタキヨトウ / mythimna placida
+  - keep: id=species-20657 sci="Mythimna placida Butler, 1878" author=Butler year=1878
+  - drop: id=species-21676 sci="Mythimna placida" author= year=
+- シロテンキヨトウ / mythimna conigera
+  - keep: id=species-20660 sci="Mythimna conigera (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21675 sci="Mythimna conigera" author= year=
+- オキナワマダラキヨトウ / mythimna formosana
+  - keep: id=species-20667 sci="Mythimna formosana (Butler, 1880)" author=(Butler) year=1880
+  - drop: id=species-21678 sci="Mythimna formosana" author= year=
+- マダラキヨトウ / mythimna flavostigma
+  - keep: id=species-20686 sci="Mythimna flavostigma (Bremer, 1861)" author=(Bremer) year=1861
+  - drop: id=species-21677 sci="Mythimna flavostigma" author= year=
+- ニセタマナヤガ / peridroma saucia
+  - keep: id=species-20700 sci="Peridroma saucia (Hübner, [1808])" author=(Hübner) year=[1808]
+  - drop: id=species-21633 sci="Peridroma saucia" author= year=
+- クロヤガ / euxoa nigrata
+  - keep: id=species-20711 sci="Euxoa nigrata Matsumura, 1925" author=Matsumura year=1925
+  - drop: id=species-21625 sci="Euxoa nigrata" author= year=
+- タマナヤガ / agrotis ipsilon
+  - keep: id=species-20713 sci="Agrotis ipsilon (Hufnagel, 1766)" author=(Hufnagel) year=1766
+  - drop: id=species-21626 sci="Agrotis ipsilon" author= year=
+- カブラヤガ / agrotis segetum
+  - keep: id=species-20714 sci="Agrotis segetum (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21627 sci="Agrotis segetum" author= year=
+- ホシボシヤガ / hermonassa arenosa
+  - keep: id=species-20723 sci="Hermonassa arenosa (Butler, 1881)" author=(Butler) year=1881
+  - drop: id=species-21629 sci="Hermonassa arenosa" author= year=
+- クロクモヤガ / hermonassa cecilia
+  - keep: id=species-20724 sci="Hermonassa cecilia Butler, 1878" author=Butler year=1878
+  - drop: id=species-21630 sci="Hermonassa cecilia" author= year=
+- カバスジヤガ / sineugraphe exusta
+  - keep: id=species-20735 sci="Sineugraphe exusta (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21631 sci="Sineugraphe exusta" author= year=
+- オオカバスジヤガ / sineugraphe oceanica
+  - keep: id=species-20737 sci="Sineugraphe oceanica (Kardakoff, 1928)" author=(Kardakoff) year=1928
+  - drop: id=species-21632 sci="Sineugraphe oceanica" author= year=
+- コウスチャヤガ / diarsia deparca
+  - keep: id=species-20742 sci="Diarsia deparca (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21634 sci="Diarsia deparca" author= year=
+- ヤマトウスチャヤガ / diarsia nipponica
+  - keep: id=species-20743 sci="Diarsia nipponica Ogata, 1957" author=Ogata year=1957
+  - drop: id=species-21638 sci="Diarsia nipponica" author= year=
+- オオバコヤガ / diarsia canescens
+  - keep: id=species-20744 sci="Diarsia canescens (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21635 sci="Diarsia canescens" author= year=
+- ミヤマアカヤガ / diarsia brunnea
+  - keep: id=species-20745 sci="Diarsia brunnea (Denis & Schiffermüller, 1775)" author=(Denis & Schiffermüller) year=1775
+  - drop: id=species-21636 sci="Diarsia brunnea" author= year=
+- モンキヤガ / diarsia dewitzi
+  - keep: id=species-20747 sci="Diarsia dewitzi (Graeser, 1889)" author=(Graeser) year=1889
+  - drop: id=species-21637 sci="Diarsia dewitzi" author= year=
+- アカフヤガ / diarsia pacifica
+  - keep: id=species-20748 sci="Diarsia pacifica Boursin, 1943" author=Boursin year=1943
+  - drop: id=species-21639 sci="Diarsia pacifica" author= year=
+- ウスイロアカフヤガ / diarsia ruficauda
+  - keep: id=species-20749 sci="Diarsia ruficauda (Warren, 1909)" author=(Warren) year=1909
+  - drop: id=species-21640 sci="Diarsia ruficauda" author= year=
+- シロモンヤガ / xestia c-nigrum
+  - keep: id=species-20757 sci="Xestia c-nigrum (Linnaeus, 1758)" author=(Linnaeus) year=1758
+  - drop: id=species-21641 sci="Xestia c-nigrum" author= year=
+- マエキヤガ / xestia stupenda
+  - keep: id=species-20759 sci="Xestia stupenda (Butler, 1878)" author=(Butler) year=1878
+  - drop: id=species-21643 sci="Xestia stupenda" author= year=
+- ウスチャヤガ / xestia dilatata
+  - keep: id=species-20761 sci="Xestia dilatata (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21644 sci="Xestia dilatata" author= year=
+- キシタミドリヤガ / xestia efflorescens
+  - keep: id=species-20764 sci="Xestia efflorescens (Butler, 1879)" author=(Butler) year=1879
+  - drop: id=species-21646 sci="Xestia efflorescens" author= year=
+- クロギシギシヤガ / naenia contaminata
+  - keep: id=species-20766 sci="Naenia contaminata (Walker, 1865)" author=(Walker) year=1865
+  - drop: id=species-21648 sci="Naenia contaminata" author= year=
