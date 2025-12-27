@@ -17,6 +17,127 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     beetles: [],
     leafbeetles: []
   };
+  const dedupeMaps = {
+    moths: new Map(),
+    butterflies: new Map(),
+    beetles: new Map(),
+    leafbeetles: new Map()
+  };
+
+  const normalizeScientificBase = (name = '') => {
+    const s = (name || '').toString().trim();
+    if (!s) return '';
+    return s
+      .replace(/\([^)]*\)/g, '')
+      .replace(/\s+\d{4}.*/g, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  };
+
+  const buildDedupKey = (insectRow, insectData) => {
+    const name = (insectData?.name || '').trim();
+    if (!name) return null;
+    const genus = (insectRow?.genus || insectData?.genus || '').trim();
+    const species = (insectRow?.species || insectData?.species || '').trim();
+    const subspecies = (insectRow?.subspecies || '').trim();
+    let binomial = [genus, species, subspecies].filter(Boolean).join(' ').trim();
+    if (!binomial) binomial = normalizeScientificBase(insectData?.scientificName || '');
+    if (!binomial) return null; // avoid accidental merges when scientific info is absent
+    return `${name}__${binomial.toLowerCase()}`;
+  };
+
+  const preferValue = (current, incoming) => {
+    const a = (current ?? '').toString().trim();
+    const b = (incoming ?? '').toString().trim();
+    if (!b) return current;
+    if (!a) return incoming;
+    return b.length > a.length ? incoming : current;
+  };
+
+  const mergeByKey = (baseList = [], incomingList = [], keyFn, mergeFn) => {
+    const map = new Map();
+    (baseList || []).forEach((item) => {
+      if (!item) return;
+      const key = keyFn(item);
+      if (!key) return;
+      map.set(key, item);
+    });
+    (incomingList || []).forEach((item) => {
+      if (!item) return;
+      const key = keyFn(item);
+      if (!key) return;
+      if (map.has(key)) {
+        const existing = map.get(key);
+        if (mergeFn) mergeFn(existing, item);
+      } else {
+        map.set(key, item);
+      }
+    });
+    return Array.from(map.values());
+  };
+
+  const mergeInsectRecords = (target, incoming) => {
+    if (!target || !incoming) return target;
+    target.scientificName = preferValue(target.scientificName, incoming.scientificName);
+    target.scientificFilename = createSafeInsectFilename(target.scientificName);
+    target.family = preferValue(target.family, incoming.family);
+    target.subfamily = preferValue(target.subfamily, incoming.subfamily);
+    target.genus = preferValue(target.genus, incoming.genus);
+    target.species = preferValue(target.species, incoming.species);
+    target.author = preferValue(target.author, incoming.author);
+    target.year = preferValue(target.year, incoming.year);
+    target.notes = preferValue(target.notes, incoming.notes);
+    target.alternativeNames = preferValue(target.alternativeNames, incoming.alternativeNames);
+    target.emergenceTime = preferValue(target.emergenceTime, incoming.emergenceTime);
+    target.emergenceTimeSource = preferValue(target.emergenceTimeSource, incoming.emergenceTimeSource);
+    target.emergenceTimeDescription = preferValue(target.emergenceTimeDescription, incoming.emergenceTimeDescription);
+
+    const targetClass = target.classification || (target.classification = {});
+    const incomingClass = incoming.classification || {};
+    ['family', 'familyJapanese', 'subfamily', 'subfamilyJapanese', 'tribe', 'tribeJapanese'].forEach((key) => {
+      targetClass[key] = preferValue(targetClass[key], incomingClass[key]);
+    });
+
+    target.hostPlants = Array.from(new Set([...(target.hostPlants || []), ...(incoming.hostPlants || [])]));
+
+    const detailKey = (d) => [
+      (d?.name || '').trim(),
+      (d?.lifeStage || '').trim(),
+      (d?.plantPart || '').trim(),
+      (d?.reference || '').trim(),
+      (d?.notes || '').trim()
+    ].join('|');
+    const noteKey = (n) => [
+      (n?.type || '').trim(),
+      (n?.content || '').trim(),
+      (n?.reference || '').trim(),
+      (n?.page || '').trim(),
+      (n?.year || '').trim()
+    ].join('|');
+    const emergenceKey = (e) => [
+      (e?.period || '').trim(),
+      (e?.source || '').trim(),
+      (e?.region || '').trim(),
+      (e?.notes || '').trim()
+    ].join('|');
+
+    target.hostPlantsDetailed = mergeByKey(
+      target.hostPlantsDetailed || [],
+      incoming.hostPlantsDetailed || [],
+      detailKey,
+      (a, b) => {
+        a.displayName = preferValue(a.displayName, b.displayName);
+        a.observationType = preferValue(a.observationType, b.observationType);
+        a.plantPart = preferValue(a.plantPart, b.plantPart);
+        a.lifeStage = preferValue(a.lifeStage, b.lifeStage);
+        a.reference = preferValue(a.reference, b.reference);
+        a.notes = preferValue(a.notes, b.notes);
+      }
+    );
+    target.generalNotes = mergeByKey(target.generalNotes || [], incoming.generalNotes || [], noteKey);
+    target.emergenceTimeDetailed = mergeByKey(target.emergenceTimeDetailed || [], incoming.emergenceTimeDetailed || [], emergenceKey);
+    return target;
+  };
 
   // 食草データをinsect_idでグループ化
   const hostPlantsByInsect = {};
@@ -224,24 +345,33 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         }
       } catch {}
 
-      // 分類群ごとに振り分け
+      // 分類群ごとに振り分け（同名・同学名の重複は統合）
       const classification = classifyInsect(insect);
+      const pushWithDedupe = (bucket, map) => {
+        const key = buildDedupKey(insect, insectData);
+        if (key && map.has(key)) {
+          mergeInsectRecords(map.get(key), insectData);
+          return;
+        }
+        bucket.push(insectData);
+        if (key) map.set(key, insectData);
+      };
       switch (classification) {
         case '蛾類':
-          result.moths.push(insectData);
+          pushWithDedupe(result.moths, dedupeMaps.moths);
           break;
         case '蝶類':
-          result.butterflies.push(insectData);
+          pushWithDedupe(result.butterflies, dedupeMaps.butterflies);
           break;
         case 'タマムシ類':
-          result.beetles.push(insectData);
+          pushWithDedupe(result.beetles, dedupeMaps.beetles);
           break;
         case 'ハムシ類':
-          result.leafbeetles.push(insectData);
+          pushWithDedupe(result.leafbeetles, dedupeMaps.leafbeetles);
           break;
         default:
           // デフォルトは蛾類として扱う
-          result.moths.push(insectData);
+          pushWithDedupe(result.moths, dedupeMaps.moths);
       }
 
     } catch (error) {
