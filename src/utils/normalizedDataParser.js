@@ -74,7 +74,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       generalNotesByInsect[note.insect_id] = [];
     }
     generalNotesByInsect[note.insect_id].push({
-      type: note.note_type,
+      type: note.note_type || note.type || '',
       content: note.content,
       reference: note.reference || '',
       page: note.page || '',
