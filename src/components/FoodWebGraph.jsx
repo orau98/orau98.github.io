@@ -32,6 +32,7 @@ const isFlowerVisitRecord = (record) => {
 const FoodWebGraph = React.memo(function FoodWebGraph({
   currentInsect,
   currentPlantName,
+  plantInsects,
   allInsects,
   hostPlantsMap,
   flowerVisitPlants,
@@ -139,6 +140,126 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
     return false;
   }, [flowerVisitMap, matchesPlantName]);
+
+  const insectLookup = useMemo(() => {
+    const map = new Map();
+    if (!Array.isArray(allInsects)) return map;
+    allInsects.forEach((insect) => {
+      const names = [insect?.name, insect?.japaneseName]
+        .filter(Boolean)
+        .map((n) => String(n).trim())
+        .filter(Boolean);
+      names.forEach((name) => {
+        if (!map.has(name)) map.set(name, insect);
+      });
+    });
+    return map;
+  }, [allInsects]);
+
+  const plantInsectMeta = useMemo(() => {
+    if (!currentPlantName) return { orderedNames: [], metaByName: new Map() };
+    const metaByName = new Map();
+    const orderedNames = [];
+    const seen = new Set();
+
+    const pushName = (name) => {
+      const key = String(name || '').trim();
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      orderedNames.push(key);
+    };
+
+    const addMeta = (name, detail, host, flower) => {
+      const key = String(name || '').trim();
+      if (!key) return;
+      const existing = metaByName.get(key) || {
+        name: key,
+        detail: detail || insectLookup.get(key) || null,
+        hasHost: false,
+        hasFlowerVisit: false
+      };
+      existing.hasHost = existing.hasHost || !!host;
+      existing.hasFlowerVisit = existing.hasFlowerVisit || !!flower;
+      if (!existing.detail && detail) existing.detail = detail;
+      metaByName.set(key, existing);
+    };
+
+    const hostSet = new Set();
+    const flowerSet = new Set();
+    const addListToSet = (list, target) => {
+      if (!Array.isArray(list)) return;
+      list.forEach((name) => {
+        const key = String(name || '').trim();
+        if (key) target.add(key);
+      });
+    };
+
+    const normalized = normalizePlantName(currentPlantName);
+    addListToSet(hostPlantsMap?.[currentPlantName], hostSet);
+    if (normalized && normalized !== currentPlantName) {
+      addListToSet(hostPlantsMap?.[normalized], hostSet);
+    }
+    const addFlowerFromMap = (key) => {
+      if (!key) return;
+      const set = flowerVisitMap.get(key);
+      if (set) {
+        set.forEach((name) => {
+          const value = String(name || '').trim();
+          if (value) flowerSet.add(value);
+        });
+      }
+    };
+    addFlowerFromMap(currentPlantName);
+    if (normalized && normalized !== currentPlantName) {
+      addFlowerFromMap(normalized);
+    }
+
+    if (Array.isArray(plantInsects) && plantInsects.length > 0) {
+      plantInsects.forEach((insect) => {
+        const name = String(insect?.name || insect?.japaneseName || '').trim();
+        if (!name) return;
+        const hostFlag = typeof insect.hasHost === 'boolean' ? insect.hasHost : hostSet.has(name);
+        const flowerFlag = typeof insect.hasFlowerVisit === 'boolean' ? insect.hasFlowerVisit : flowerSet.has(name);
+        addMeta(name, insect, hostFlag, flowerFlag);
+        if (hostFlag) hostSet.add(name);
+        if (flowerFlag) flowerSet.add(name);
+        pushName(name);
+      });
+    }
+
+    hostSet.forEach((name) => {
+      addMeta(name, null, true, false);
+      pushName(name);
+    });
+    flowerSet.forEach((name) => {
+      addMeta(name, null, false, true);
+      pushName(name);
+    });
+
+    if (orderedNames.length === 0 && Array.isArray(allInsects)) {
+      allInsects.forEach((insect) => {
+        const name = String(insect?.name || insect?.japaneseName || '').trim();
+        if (!name) return;
+        const hostFlag = hasLarvalHostForPlant(insect, currentPlantName);
+        const flowerFlag = hasFlowerVisitForPlant(insect, currentPlantName);
+        if (!hostFlag && !flowerFlag) return;
+        addMeta(name, insect, hostFlag, flowerFlag);
+        pushName(name);
+      });
+    }
+
+    metaByName.forEach((meta, name) => {
+      if (!meta.detail) meta.detail = insectLookup.get(name) || null;
+      if (!meta.hasHost && meta.detail) {
+        meta.hasHost = hasLarvalHostForPlant(meta.detail, currentPlantName);
+      }
+      if (!meta.hasFlowerVisit && meta.detail) {
+        meta.hasFlowerVisit = hasFlowerVisitForPlant(meta.detail, currentPlantName);
+      }
+    });
+
+    return { orderedNames, metaByName };
+  }, [allInsects, currentPlantName, flowerVisitMap, hasFlowerVisitForPlant, hasLarvalHostForPlant, hostPlantsMap, insectLookup, plantInsects]);
 
   const getInsectPlantItems = useCallback((insect) => {
     const hostMap = new Map();
@@ -409,18 +530,22 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (currentPlantName) {
       const centerId = `plant:${currentPlantName}`;
       addNode(centerId, currentPlantName, 'plant-current');
-      const relatedAll = getPlantInsects(currentPlantName);
-      const related = relatedAll.filter((name) => {
-        const insectDetail = allInsects?.find(i => i.name === name);
-        if (!insectDetail) return true;
-        return hasLarvalHostForPlant(insectDetail, currentPlantName)
-          || hasFlowerVisitForPlant(insectDetail, currentPlantName);
-      });
-      related.slice(0, relatedLimitSafe).forEach(name => {
-        const insectDetail = allInsects?.find(i => i.name === name);
+      const related = (plantInsectMeta.orderedNames || []).slice(0, relatedLimitSafe);
+      related.forEach((name) => {
+        const meta = plantInsectMeta.metaByName.get(name) || {};
+        const insectDetail = meta.detail || insectLookup.get(name) || null;
         const insectId = `insect:${name}`;
-        addNode(insectId, name, 'insect', insectDetail);
-        links.push({ source: centerId, target: insectId });
+        const hasHost = !!meta.hasHost;
+        const hasFlower = !!meta.hasFlowerVisit;
+        const insectType = hasHost && hasFlower
+          ? 'insect-both'
+          : hasFlower
+            ? 'insect-flower'
+            : hasHost
+              ? 'insect-host'
+              : 'insect';
+        addNode(insectId, name, insectType, insectDetail);
+        links.push({ source: centerId, target: insectId, relation: insectType });
       });
     } else if (currentInsect) {
       const centerId = `insect:${currentInsect.name}`;
@@ -462,7 +587,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     return { nodes, links };
-  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, plantImageCandidates, relatedLimit, showRelatedInsects, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems]);
+  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, insectLookup, plantImageCandidates, plantInsectMeta, relatedLimit, showRelatedInsects, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems]);
 
   // selection safety: clear when graph changes
   useEffect(() => {
@@ -604,10 +729,46 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     };
   }, [selectedNode]);
 
+  const selectedInsectBadge = useMemo(() => {
+    if (!selectedNode?.type?.startsWith('insect')) return null;
+    if (selectedNode.type === 'insect-current') {
+      return {
+        label: '現在の昆虫',
+        className: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-200 dark:border-rose-900/60'
+      };
+    }
+    if (selectedNode.type === 'insect-flower') {
+      return {
+        label: '訪花昆虫',
+        className: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-200 dark:border-rose-900/60'
+      };
+    }
+    if (selectedNode.type === 'insect-both') {
+      return {
+        label: '食草＋訪花',
+        className: 'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/40 dark:text-violet-200 dark:border-violet-900/60'
+      };
+    }
+    if (selectedNode.type === 'insect-host') {
+      return {
+        label: '食草昆虫',
+        className: 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-200 dark:border-sky-900/60'
+      };
+    }
+    return {
+      label: '昆虫',
+      className: 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-200 dark:border-sky-900/60'
+    };
+  }, [selectedNode]);
+
   const legendTypeSet = useMemo(() => new Set(graphData.nodes.map((n) => n.type)), [graphData.nodes]);
   const showHostPlantLegend = legendTypeSet.has('plant-host');
   const showFlowerPlantLegend = legendTypeSet.has('plant-flower');
   const showBothPlantLegend = legendTypeSet.has('plant-both');
+  const showInsectLegend = legendTypeSet.has('insect');
+  const showInsectHostLegend = legendTypeSet.has('insect-host');
+  const showInsectFlowerLegend = legendTypeSet.has('insect-flower');
+  const showInsectBothLegend = legendTypeSet.has('insect-both');
 
   const focusNodeById = useCallback((nodeId) => {
     if (!nodeId) return;
@@ -754,6 +915,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
     const colors = {
       'insect-current': '#fb7185',
+      'insect-host': '#38bdf8',
+      'insect-flower': '#fb7185',
+      'insect-both': '#a78bfa',
       insect: '#38bdf8',
       'plant-current': '#22c55e',
       'plant-host': '#10b981',
@@ -1246,14 +1410,46 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             <span className="w-3 h-3 rounded-full bg-lime-400"></span>食草＋訪花
           </button>
         )}
-        <button
-          type="button"
-          className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-          onClick={() => toggleLegendFocus('insect')}
-          aria-pressed={legendFocus === 'insect'}
-        >
-          <span className="w-3 h-3 rounded-full bg-sky-400"></span>関連する昆虫
-        </button>
+        {showInsectHostLegend && (
+          <button
+            type="button"
+            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-host' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
+            onClick={() => toggleLegendFocus('insect-host')}
+            aria-pressed={legendFocus === 'insect-host'}
+          >
+            <span className="w-3 h-3 rounded-full bg-sky-400"></span>食草昆虫
+          </button>
+        )}
+        {showInsectFlowerLegend && (
+          <button
+            type="button"
+            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-flower' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
+            onClick={() => toggleLegendFocus('insect-flower')}
+            aria-pressed={legendFocus === 'insect-flower'}
+          >
+            <span className="w-3 h-3 rounded-full bg-rose-400"></span>訪花昆虫
+          </button>
+        )}
+        {showInsectBothLegend && (
+          <button
+            type="button"
+            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-both' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
+            onClick={() => toggleLegendFocus('insect-both')}
+            aria-pressed={legendFocus === 'insect-both'}
+          >
+            <span className="w-3 h-3 rounded-full bg-violet-400"></span>食草＋訪花昆虫
+          </button>
+        )}
+        {(showInsectLegend || showInsectHostLegend || showInsectFlowerLegend || showInsectBothLegend) && (
+          <button
+            type="button"
+            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
+            onClick={() => toggleLegendFocus('insect')}
+            aria-pressed={legendFocus === 'insect'}
+          >
+            <span className="w-3 h-3 rounded-full bg-sky-400"></span>関連する昆虫
+          </button>
+        )}
         <div className="pt-2 mt-2 border-t border-slate-200/70 dark:border-slate-700/70 flex items-center gap-2">
           <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">絞り込み</span>
           <div className="inline-flex rounded-md overflow-hidden border border-slate-200 dark:border-slate-600">
@@ -1292,10 +1488,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${
                     selectedNode.type.startsWith('plant')
                       ? (selectedPlantBadge?.className || 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-200 dark:border-emerald-900/60')
-                      : 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-200 dark:border-sky-900/60'
+                      : (selectedInsectBadge?.className || 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-200 dark:border-sky-900/60')
                   }`}
                 >
-                  {selectedNode.type.startsWith('plant') ? (selectedPlantBadge?.label || '植物') : '昆虫'}
+                  {selectedNode.type.startsWith('plant')
+                    ? (selectedPlantBadge?.label || '植物')
+                    : (selectedInsectBadge?.label || '昆虫')}
                 </span>
                 <h3 className="font-bold truncate">{selectedNode.name}</h3>
               </div>

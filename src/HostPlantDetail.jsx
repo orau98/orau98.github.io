@@ -659,7 +659,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     if (!record) return false;
     const lifeStage = (record.lifeStage || '').trim();
     const plantPart = (record.plantPart || '').trim();
-    return lifeStage === '成虫' && plantPart === '花';
+    const partCompact = plantPart.replace(/\s+/g, '');
+    const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
+    return isAdultOrUnknown && partCompact && partCompact.includes('花');
   };
 
   const targetNames = [decodedPlantName, canonicalName, ...aliasNames].filter(Boolean);
@@ -747,6 +749,30 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const hostPlantInsects = classifiedInsects.filter(i => i.hasHost);
   const flowerVisitInsects = classifiedInsects.filter(i => i.hasFlowerVisit);
+
+  const hostInsectKeys = useMemo(() => {
+    const set = new Set();
+    hostPlantInsects.forEach((insect) => {
+      const key = String(insect?.id || insect?.name || insect?.japaneseName || '').trim();
+      if (key) set.add(key);
+    });
+    return set;
+  }, [hostPlantInsects]);
+  const flowerInsectKeys = useMemo(() => {
+    const set = new Set();
+    flowerVisitInsects.forEach((insect) => {
+      const key = String(insect?.id || insect?.name || insect?.japaneseName || '').trim();
+      if (key) set.add(key);
+    });
+    return set;
+  }, [flowerVisitInsects]);
+  const bothInsectCount = useMemo(() => {
+    let count = 0;
+    hostInsectKeys.forEach((key) => {
+      if (flowerInsectKeys.has(key)) count += 1;
+    });
+    return count;
+  }, [hostInsectKeys, flowerInsectKeys]);
   
   // Debug logging for オニグルミ
   if (decodedPlantName === 'オニグルミ') {
@@ -1394,7 +1420,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         </section>
       )}
 
-      {/* 食草ネットワーク（植物中心） */}
+      {/* 食草・訪花ネットワーク（植物中心） */}
       <section id="plant-network" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
         <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
@@ -1405,8 +1431,24 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                 </svg>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草ネットワーク</p>
-                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">この植物を利用する昆虫</h2>
+                <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草・訪花ネットワーク</p>
+                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">この植物に関わる昆虫</h2>
+                <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
+                    食草 {hostPlantInsects.length}種
+                  </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-900/30 dark:text-rose-200">
+                    訪花 {flowerVisitInsects.length}種
+                  </span>
+                  {bothInsectCount > 0 && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-800 dark:bg-violet-900/30 dark:text-violet-200">
+                      両方 {bothInsectCount}種
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                  ノード色で食草・訪花の区別を表示します（凡例で絞り込み可）。
+                </p>
               </div>
             </div>
           </div>
@@ -1420,6 +1462,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                 {graphSize.width > 0 && (
                   <FoodWebGraph
                     currentPlantName={decodedPlantName}
+                    plantInsects={classifiedInsects}
                     allInsects={allInsects}
                     hostPlantsMap={hostPlants}
                     flowerVisitPlants={flowerVisitPlants}

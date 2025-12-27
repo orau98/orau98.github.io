@@ -212,7 +212,9 @@ function App() {
       records.forEach((record) => {
         const lifeStage = (record?.lifeStage || '').trim();
         const plantPart = (record?.plantPart || '').trim();
-        if (lifeStage !== '成虫' || plantPart !== '花') return;
+        const partCompact = plantPart.replace(/\s+/g, '');
+        const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
+        if (!isAdultOrUnknown || !partCompact || !partCompact.includes('花')) return;
         const rawPlant = record?.name || record?.displayName || record?.plant || '';
         const plantName = normalizePlant(String(rawPlant || '').trim());
         if (!plantName || plantName === '不明') return;
