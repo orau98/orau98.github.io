@@ -6373,6 +6373,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     theme={theme}
                   />
                 </React.Suspense>
@@ -6390,6 +6391,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     theme={theme}
                   />
                 </React.Suspense>
@@ -6407,6 +6409,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     theme={theme}
                   />
                 </React.Suspense>
@@ -6424,6 +6427,7 @@ function App() {
                     beetles={beetles}
                     leafbeetles={leafbeetles}
                     hostPlants={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
                     theme={theme}
                   />
                 </React.Suspense>

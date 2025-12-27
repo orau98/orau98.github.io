@@ -24,7 +24,7 @@ import { getBackTarget, makeDetailLinkState } from './utils/navState';
 // SupportEngagementSection is test-only and not used in SPA detail
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
-const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, theme }) => {
+const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, flowerVisitPlants = {}, theme }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
   
@@ -711,6 +711,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 currentInsect={moth}
                 allInsects={allInsects}
                 hostPlantsMap={hostPlants}
+                flowerVisitPlants={flowerVisitPlants}
                 width={graphDimensions.width}
                 height={graphDimensions.height}
                 imageExtensions={imageExtensions}
