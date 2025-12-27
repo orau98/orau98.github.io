@@ -1297,46 +1297,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           )}
         </div>
       </div>
-      <nav
-        aria-label="ページ内リンク"
-        className="mb-8 rounded-2xl bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 px-4 py-3 shadow-sm"
-      >
-        <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">ページ内</div>
-        <div className="mt-2 flex flex-wrap gap-2">
-          <a
-            href="#basic-info"
-            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-900/40 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
-          >
-            概要
-          </a>
-          <a
-            href="#plant-photos"
-            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200/80 dark:hover:bg-emerald-900/60 transition-colors"
-          >
-            写真
-          </a>
-          {classificationMembers && classificationMembers.length > 0 && (
-            <a
-              href="#classification-members"
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 hover:bg-blue-200/80 dark:hover:bg-blue-900/60 transition-colors"
-            >
-              分類内の植物
-            </a>
-          )}
-          <a
-            href="#plant-network"
-            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/70 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-200 hover:bg-emerald-200/80 dark:hover:bg-emerald-900/60 transition-colors"
-          >
-            ネットワーク
-          </a>
-          <a
-            href="#related-insects"
-            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-900/40 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
-          >
-            関連昆虫
-          </a>
-        </div>
-      </nav>
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{
