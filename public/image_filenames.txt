@@ -27,6 +27,7 @@ Apochima_juglansiaria
 Archiearis_notha
 Archiearis_parthenias
 Arctornis_l_nigrum
+Argyresthia_subrimosa
 Aroana_baliensis
 Aroga_mesostrepta
 Artena_dotata
@@ -103,6 +104,7 @@ Craniophora_ligustri
 Craniophora_praeclara
 Craniophora_praeclara_2
 Cryphia_mitsuhashi
+Cryptaspasma_marginifasciata
 Ctenoplusia_albostriata
 Cucullia_argentea
 Cucullia_fraudatrix
@@ -128,6 +130,7 @@ Dioryctria_abietella
 Diphtherocome_autumnalis
 Dipterygina_cupreotincta
 Dolbina_exacta
+Dryobotodes_angusta
 Dypterygia_caliginosa
 Eligma_narcissus
 Elwesia_sugii
@@ -176,6 +179,7 @@ Heliothis_maritima
 Helotropha_leucostigma
 Helotropha_leucostigma_2
 Hemipsectra fallax Butler
+Hendecaneura_impar
 Herculia_orthogramma
 Homodes_vivida
 Hydraecia_petasitis
@@ -218,6 +222,7 @@ Lithophane_socia
 Lithophane_ustulata
 Lithophane_venusta
 Loepa_sakaei
+Lomographa_simplicior
 Lophomilia polybapta Butler
 Lophontosia_pryeri
 Lophoptera_hayesi
@@ -249,7 +254,9 @@ Mimachrostia_fasciata
 Mimas_christophi
 Mimopsestis_basalis
 Mniotype_melanodonta
+Mocis_undata
 Monobolodes_prunaria
+Morophaga_bucephala
 Morphosphaera_caerulea_Sch_nfeldt
 Myrioblephara_cilicornaria
 Mythimna_chosenicola
@@ -304,6 +311,7 @@ Parabapta_clarissa
 Paracolax_albinotata
 Paracolax_fentoni
 Paragona_cleorides
+Parapsestis_albida
 Parum colligata Walker
 Pennithera_comis
 Peridea_gigantea
@@ -327,6 +335,7 @@ Piletocera_aegimiusalis
 Plagodis_dolabraria
 Plesiomorpha_flaviceps
 Pleuroptya_chlorophanta
+Plodia_interpunctella
 Plutella_xylostella
 Polytremis_pellucida
 Problepsis_albidior
@@ -357,6 +366,7 @@ Saturnia_jonasii
 Schiffermuelleria_zelleri
 Sciota_intercisella
 Scoliopteryx_libatrix
+Scopelodes_contracta
 Scopula_ignobilis
 Sebastosema_bubonaria
 Semidonta_biloba
@@ -390,6 +400,7 @@ Syntypistis_pryeri
 Takadonta_takamukui
 Tanaorhinus reciprocata confuciaria Walker
 Telorta_divergens
+Telorta_edentata
 Teratoglaea_pacifica
 Tethea ampliata ampliata Butler
 Tethea_consimilis
@@ -430,6 +441,3 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
-ウバメガシ＿葉表
-ウバメガシ＿葉裏
-ユキヤナギ＿葉表
