@@ -234,12 +234,18 @@ function generateSplitSitemaps() {
   // サイトマップインデックスを保存（sitemap.xmlとして）
   const indexPath = path.join(__dirname, '../public/sitemap.xml');
   fs.writeFileSync(indexPath, indexXml, 'utf-8');
+
+  // 旧登録のテスト用サイトマップが残っていても取得できるようにコピー
+  const testPath = path.join(__dirname, '../public/sitemap-test.xml');
+  fs.writeFileSync(testPath, indexXml, 'utf-8');
   
   // distディレクトリにもコピー
   const distPath = path.join(__dirname, '../dist');
   if (fs.existsSync(distPath)) {
     const distIndexPath = path.join(distPath, 'sitemap.xml');
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
+    const distTestPath = path.join(distPath, 'sitemap-test.xml');
+    fs.writeFileSync(distTestPath, indexXml, 'utf-8');
   }
 
   console.log('\nサイトマップインデックス生成完了');

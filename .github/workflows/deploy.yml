@@ -41,6 +41,9 @@ jobs:
       - name: Build (vite only)
         run: npm run build:app
 
+      - name: Generate sitemaps
+        run: npm run generate-sitemap
+
       - name: Post-build cleanup and asset sync
         run: node scripts/postbuild-cleanup.mjs
 
