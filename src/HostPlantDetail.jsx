@@ -699,6 +699,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const insectDisplayName = (insect.name || insect.japaneseName || '').trim();
     let hasHost = false;
     let hasFlowerVisit = false;
+    let matchedTarget = false;
+    let matchedLarval = false;
 
     const hostMapHit = () => {
       if (!insectDisplayName) return false;
@@ -720,10 +722,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
         const plantName = String(record?.name || record?.displayName || record?.plant || '').trim();
         if (!plantName) return;
         if (!matchesTargetPlant(plantName)) return;
+        matchedTarget = true;
         if (isFlowerVisitRecord(record)) {
           hasFlowerVisit = true;
         } else {
           hasHost = true;
+          matchedLarval = true;
         }
       });
     } else if (!hasHost && insect.hostPlants) {
@@ -741,6 +745,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       if (hostPlantsList.some(matchesTargetPlant)) {
         hasHost = true;
       }
+    }
+
+    // If detailed records show only flower visits for this plant, avoid classifying as host
+    if (matchedTarget && !matchedLarval && hasFlowerVisit) {
+      hasHost = false;
     }
 
     if (!hasHost && !hasFlowerVisit) return null;
