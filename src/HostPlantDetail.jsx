@@ -825,6 +825,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
+    const addedNames = new Set();
 
     const has = (fullName) => {
       if (!nameIndexSet) return true; // allow optimistic fetch when index missing
@@ -862,6 +863,23 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       return Array.from(new Set(variations.filter(Boolean)));
     };
 
+    const buildLabelFromSuffix = (suffix, fallback = '画像') => {
+      if (!suffix) return '全体';
+      const trimmed = String(suffix).replace(/^[_＿]+/, '');
+      if (!trimmed) return '全体';
+      return trimmed.replace(/[_＿]+/g, '・') || fallback;
+    };
+
+    const pushImage = (finalName, base, label, appliedSuffix = '') => {
+      if (!finalName || addedNames.has(finalName)) return;
+      addedNames.add(finalName);
+      images.push({
+        label: label || buildLabelFromSuffix(appliedSuffix || ''),
+        alt: `${base}${appliedSuffix ? ` (${label || buildLabelFromSuffix(appliedSuffix || '')})` : ''}`,
+        candidates: buildCandidates(finalName)
+      });
+    };
+
     bases.forEach((base) => {
       suffixes.forEach(({ suffix, label }) => {
         const finalName = nameIndexSet
@@ -869,20 +887,24 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
           : `${base}${suffix}`;
         if (finalName && has(finalName)) {
           const appliedSuffix = finalName.startsWith(base) ? finalName.slice(base.length) : '';
-          images.push({
-            label,
-            alt: `${base}${appliedSuffix ? ` (${label})` : ''}`,
-            candidates: buildCandidates(finalName)
-          });
+          pushImage(finalName, base, label, appliedSuffix);
         } else if (!nameIndexSet && suffix === '') {
           // When no index is available, still attempt the base filename once
-          images.push({
-            label,
-            alt: base,
-            candidates: buildCandidates(base)
-          });
+          pushImage(base, base, label, '');
         }
       });
+
+      if (nameIndexSet) {
+        // Include any additional suffix variants present in the index (e.g., _紅葉)
+        nameIndex
+          .filter((name) => name && name.startsWith(base))
+          .forEach((name) => {
+            if (addedNames.has(name)) return;
+            const suffixPart = name.startsWith(base) ? name.slice(base.length) : '';
+            const label = buildLabelFromSuffix(suffixPart, '画像');
+            pushImage(name, base, label, suffixPart);
+          });
+      }
     });
     return images;
   };
