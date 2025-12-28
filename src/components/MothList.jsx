@@ -573,16 +573,18 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     });
   }, [updateSearchParams]);
 
+  const allowDebugLogs = (import.meta.env?.DEV || (typeof window !== 'undefined' && !!window.DEBUG_LOGS));
+
   // Debug log
   useEffect(() => {
-    if (import.meta.env.DEV && moths && moths.length > 0) {
+    if (allowDebugLogs && moths && moths.length > 0) {
       const sample = moths[0];
       const genus = sample.genus || sample.classification?.genus;
       if (!genus && sample.scientificName) {
         console.log('DEBUG: Moth missing genus, will fallback to scientificName:', sample.name, sample.scientificName);
       }
     }
-  }, [moths]);
+  }, [allowDebugLogs, moths]);
 
   const familyOptions = useMemo(() => {
     const set = new Set();

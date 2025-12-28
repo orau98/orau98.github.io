@@ -33,7 +33,6 @@ if (import.meta && import.meta.env && import.meta.env.PROD && typeof window !== 
 (function() {
   // Detect headless browsers and automation tools
   const suspiciousFeatures = [
-    !window.navigator.webdriver === undefined,
     window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect,
     window.phantom,
     window._phantom,

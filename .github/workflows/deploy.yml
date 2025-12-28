@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline --no-audit --no-fund
 
+      - name: Build data-lite
+        run: npm run build:data-lite
+
       - name: Build (vite only)
         run: npm run build:app
 

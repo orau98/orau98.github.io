@@ -27,6 +27,9 @@ const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, flowerVisitPlants = {}, theme }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
+
+  const isDevelopment = typeof import.meta !== 'undefined' && import.meta.env && !!import.meta.env.DEV;
+  const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
   
   const { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug } = useParams();
   const navigate = useNavigate();
@@ -725,7 +728,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   );
   
   if (moth?.type === 'beetle') {
-    console.log('DEBUG: Beetle detail view:', {
+    allowDebugLogs && console.log('DEBUG: Beetle detail view:', {
       name: moth.name,
       scientificName: moth.scientificName,
       scientificFilename: moth.scientificFilename,
@@ -984,7 +987,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   
                   // スミレモンキリガのデバッグ
                   if (moth.id === 'catalog-6065') {
-                    console.log('DEBUG catalog-6065 plant parts extraction:', {
+                    allowDebugLogs && console.log('DEBUG catalog-6065 plant parts extraction:', {
                       hostPlantNotes: moth.hostPlantNotes,
                       extractedParts: plantPartsInfo
                     });
@@ -1069,10 +1072,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                       
                       // catalog-2604特別対応：「などの花」「の花」を含む備考は完全除去
                       if (moth.id === 'catalog-2604') {
-                        console.log('DEBUG catalog-2604 filtering note:', note);
+                        allowDebugLogs && console.log('DEBUG catalog-2604 filtering note:', note);
                         // 「の花」「などの花」が含まれる場合は無条件で除去
                         if (note.includes('の花') || note.includes('など花') || note.includes('などの花')) {
-                          console.log('DEBUG catalog-2604: Filtering out flower note:', note);
+                          allowDebugLogs && console.log('DEBUG catalog-2604: Filtering out flower note:', note);
                           return false;
                         }
                       }
@@ -1103,7 +1106,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   
                   // Debug logging for catalog-2604
                   if (moth.id === 'catalog-2604') {
-                    console.log('DEBUG catalog-2604 hostPlantNotes section:', {
+                    allowDebugLogs && console.log('DEBUG catalog-2604 hostPlantNotes section:', {
                       original: moth.hostPlantNotes,
                       filtered: filteredNotes
                     });
@@ -1139,20 +1142,20 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   (moth.remarks && typeof moth.remarks === 'string' && moth.remarks.trim() && moth.type === 'moth')) && (() => {
                   // Debug logging for オオゴマシジミ
                   if (moth.name === 'オオゴマシジミ') {
-                    console.log('=== DEBUG オオゴマシジミ geographicalRemarks section ===');
-                    console.log('  moth.geographicalRemarks:', moth.geographicalRemarks);
-                    console.log('  moth.geographicalRemarks type:', typeof moth.geographicalRemarks);
-                    console.log('  moth.geographicalRemarks length:', moth.geographicalRemarks ? moth.geographicalRemarks.length : 0);
-                    console.log('  moth.geographicalRemarks.trim():', moth.geographicalRemarks ? moth.geographicalRemarks.trim() : 'N/A');
-                    console.log('  moth.id:', moth.id);
-                    console.log('  moth.name:', moth.name);
-                    console.log('  moth.type:', moth.type);
-                    console.log('  Full moth object:', moth);
+                    allowDebugLogs && console.log('=== DEBUG オオゴマシジミ geographicalRemarks section ===');
+                    allowDebugLogs && console.log('  moth.geographicalRemarks:', moth.geographicalRemarks);
+                    allowDebugLogs && console.log('  moth.geographicalRemarks type:', typeof moth.geographicalRemarks);
+                    allowDebugLogs && console.log('  moth.geographicalRemarks length:', moth.geographicalRemarks ? moth.geographicalRemarks.length : 0);
+                    allowDebugLogs && console.log('  moth.geographicalRemarks.trim():', moth.geographicalRemarks ? moth.geographicalRemarks.trim() : 'N/A');
+                    allowDebugLogs && console.log('  moth.id:', moth.id);
+                    allowDebugLogs && console.log('  moth.name:', moth.name);
+                    allowDebugLogs && console.log('  moth.type:', moth.type);
+                    allowDebugLogs && console.log('  Full moth object:', moth);
                   }
                   
                   // Debug logging for catalog-2604
                   if (moth.id === 'catalog-2604') {
-                    console.log('DEBUG catalog-2604 geographicalRemarks section:', {
+                    allowDebugLogs && console.log('DEBUG catalog-2604 geographicalRemarks section:', {
                       content: moth.geographicalRemarks,
                       isEcological: moth.geographicalRemarks.trim().match(/^(単食性|広食性|狭食性)$/)
                     });
@@ -1228,7 +1231,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 {(() => {
                   // Debug logging for remarks
                   if (moth.id && (moth.id.includes('2090') || moth.id.includes('2102'))) {
-                    console.log('DEBUG moth remarks:', {
+                    allowDebugLogs && console.log('DEBUG moth remarks:', {
                       id: moth.id,
                       name: moth.name,
                       remarks: moth.remarks,
@@ -1392,12 +1395,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                   
                   // catalog-2604特別対応：「などの花」「の花」を含む備考は完全除去
                   if (moth.id === 'catalog-2604') {
-                    console.log('DEBUG catalog-2604 notes section:', {
+                    allowDebugLogs && console.log('DEBUG catalog-2604 notes section:', {
                       original: moth.notes,
                       remaining: remainingNotes
                     });
                     if (remainingNotes.includes('の花') || remainingNotes.includes('など花') || remainingNotes.includes('などの花')) {
-                      console.log('DEBUG catalog-2604: Filtering out flower note in condition check:', remainingNotes);
+                      allowDebugLogs && console.log('DEBUG catalog-2604: Filtering out flower note in condition check:', remainingNotes);
                       remainingNotes = '';
                     }
                   }
@@ -1426,9 +1429,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                           
                           // catalog-2604特別対応：「などの花」「の花」を含む備考は完全除去
                           if (moth.id === 'catalog-2604') {
-                            console.log('DEBUG catalog-2604 filtering remainingNotes:', remainingNotes);
+                            allowDebugLogs && console.log('DEBUG catalog-2604 filtering remainingNotes:', remainingNotes);
                             if (remainingNotes.includes('の花') || remainingNotes.includes('など花') || remainingNotes.includes('などの花')) {
-                              console.log('DEBUG catalog-2604: Filtering out flower note in remaining notes:', remainingNotes);
+                              allowDebugLogs && console.log('DEBUG catalog-2604: Filtering out flower note in remaining notes:', remainingNotes);
                               remainingNotes = '';
                             }
                           }

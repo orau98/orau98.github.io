@@ -144,6 +144,7 @@ function App() {
   const cachedVersionRef = useRef(null);
   
   const isDevelopment = import.meta.env.DEV;
+  const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
   
   const isExplorerPage = location.pathname === '/' || location.pathname === '/moth' || location.pathname === '/plant';
 
@@ -758,7 +759,7 @@ function App() {
           if (mixedMatch) {
             const [, binomial, year] = mixedMatch;
             const cleanBinomial = binomial.trim();
-            console.log(`REPAIR: Fixed mixed data pattern: "${brokenName}" -> "${cleanBinomial}, ${year})"`);
+            allowDebugLogs && console.log(`REPAIR: Fixed mixed data pattern: "${brokenName}" -> "${cleanBinomial}, ${year})"`);
             return `${cleanBinomial}, ${year})`;
           }
           
@@ -771,10 +772,10 @@ function App() {
             // Try to find year in the corrupted data
             const yearMatch = brokenName.match(/\b(19|20)\d{2}\b/);
             if (yearMatch) {
-              console.log(`REPAIR: Extracted from corrupted data: "${brokenName}" -> "${extracted}, ${yearMatch[0]})"`);
+              allowDebugLogs && console.log(`REPAIR: Extracted from corrupted data: "${brokenName}" -> "${extracted}, ${yearMatch[0]})"`);
               return `${extracted}, ${yearMatch[0]})`;
             } else {
-              console.log(`REPAIR: Extracted binomial without year: "${brokenName}" -> "${extracted})"`);
+              allowDebugLogs && console.log(`REPAIR: Extracted binomial without year: "${brokenName}" -> "${extracted})"`);
               return `${extracted})`;
             }
           }
@@ -799,7 +800,7 @@ function App() {
         /*
         for (const [broken, fixed] of Object.entries(knownFixes)) {
           if (cleanExisting.includes(broken)) {
-            console.log(`REPAIR: Applied known fix: "${cleanExisting}" -> "${fixed}"`);
+            allowDebugLogs && console.log(`REPAIR: Applied known fix: "${cleanExisting}" -> "${fixed}"`);
             cleanExisting = fixed;
             break;
           }
@@ -840,7 +841,7 @@ function App() {
           const incompleteMatch = cleanExisting.match(/^([A-Z][a-z]+)\s+\([^)]+\)$/);
           if (incompleteMatch) {
             // It's incomplete (genus + subgenus), need to fix
-            console.log(`Incomplete scientific name detected for ${insectType}: ${cleanExisting}`);
+            allowDebugLogs && console.log(`Incomplete scientific name detected for ${insectType}: ${cleanExisting}`);
             return cleanGenus ? `${cleanGenus} sp.` : '未同定';
           }
         }
@@ -928,7 +929,7 @@ function App() {
         
         // Log issues for debugging
         if (issues.length > 0) {
-          console.log(`Scientific name quality issues for ${insectType} "${japaneseName}": ${scientificName} - ${issues.join(', ')}`);
+          allowDebugLogs && console.log(`Scientific name quality issues for ${insectType} "${japaneseName}": ${scientificName} - ${issues.join(', ')}`);
         }
         
         return {
@@ -1258,7 +1259,7 @@ function App() {
           
           // Debug specific species
           if (japaneseName && japaneseName.includes('アズサキリガ')) {
-            if (isDevelopment) console.log('DEBUG: アズサキリガ found in kiriga CSV:', {
+            if (allowDebugLogs) console.log('DEBUG: アズサキリガ found in kiriga CSV:', {
               japaneseName, scientificName, emergenceTime, hostPlants, remarks
             });
           }
@@ -1273,7 +1274,7 @@ function App() {
               const highAltMatch = emergenceTime.match(/高地では(\d+月[上中下]旬)まで/);
               if (lowAltMatch && highAltMatch) {
                 normalizedEmergenceTime = `${lowAltMatch[1]}～${highAltMatch[1]}`;
-                console.log(`Normalized アズサキリガ emergence time: "${emergenceTime}" -> "${normalizedEmergenceTime}"`);
+                allowDebugLogs && console.log(`Normalized アズサキリガ emergence time: "${emergenceTime}" -> "${normalizedEmergenceTime}"`);
               }
             }
             
@@ -1281,7 +1282,7 @@ function App() {
             if (japaneseName === 'ゴマダラキリガ' && emergenceTime.includes('羽化し')) {
               // "10~11月に羽化し、寒冷地では5月まで" を "10-12、1-5月" に変換
               normalizedEmergenceTime = '10-12、1-5月';
-              console.log(`Normalized ゴマダラキリガ emergence time for chart: "${emergenceTime}" -> "${normalizedEmergenceTime}"`);
+              allowDebugLogs && console.log(`Normalized ゴマダラキリガ emergence time for chart: "${emergenceTime}" -> "${normalizedEmergenceTime}"`);
             }
             
             // キリガCSVのデータを常に優先して上書き（説明文として保存）
@@ -1289,7 +1290,7 @@ function App() {
             
             // Debug log for target species
             if (japaneseName.includes('キバラモクメキリガ') || japaneseName.includes('ナンカイミドリキリガ') || japaneseName.includes('アズサキリガ')) {
-              if (isDevelopment) console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${normalizedEmergenceTime}`);
+              if (allowDebugLogs) console.log(`Added to emergenceTimeMap (キリガCSV優先): ${japaneseName} -> ${normalizedEmergenceTime}`);
             }
           }
           if (scientificName && emergenceTime && emergenceTime !== '不明') {
@@ -1303,7 +1304,7 @@ function App() {
               
               // Debug log for target species
               if (cleanedScientificName.includes('Xylena formosa') || cleanedScientificName.includes('Diphtherocome autumnalis') || cleanedScientificName.includes('Pseudopanolis azusa')) {
-                console.log(`Added to emergenceTimeMap: ${cleanedScientificName} -> ${emergenceTime}`);
+                allowDebugLogs && console.log(`Added to emergenceTimeMap: ${cleanedScientificName} -> ${emergenceTime}`);
               }
             }
           }
@@ -1442,7 +1443,7 @@ function App() {
           
           // Debug log for カバシタムクゲエダシャク
           if (japaneseName === 'カバシタムクゲエダシャク') {
-            console.log('DEBUG: Found カバシタムクゲエダシャク in フユシャク.csv:', {
+            allowDebugLogs && console.log('DEBUG: Found カバシタムクゲエダシャク in フユシャク.csv:', {
               japaneseName,
               scientificName,
               hostPlants,
@@ -2170,7 +2171,7 @@ function App() {
         
         if (wameiText) {
           try {
-            console.log("Parsing wamei checklist data...");
+            allowDebugLogs && console.log("Parsing wamei checklist data...");
             const wameiParsed = Papa.parse(wameiText, { header: true, skipEmptyLines: true, delimiter: ',' });
             if (wameiParsed.errors.length) {
               console.error("PapaParse errors in wamei_checklist_ver.1.10.csv:", wameiParsed.errors);
@@ -2186,17 +2187,17 @@ function App() {
                 wameiMap[allName] = hubName;
                 // Debug ツバキ-related mappings
                 if ((allName && allName.includes('ツバキ')) || (hubName && hubName.includes('ツバキ'))) {
-                  console.log(`DEBUG: wameiMap ツバキ mapping: "${allName}" -> "${hubName}"`);
+                  allowDebugLogs && console.log(`DEBUG: wameiMap ツバキ mapping: "${allName}" -> "${hubName}"`);
                 }
                 // Debug ソメイヨシノ-related mappings
                 if ((allName && allName.includes('ソメイヨシノ')) || (hubName && hubName.includes('ソメイヨシノ')) ||
                     (allName && allName.includes('染井吉野')) || (hubName && hubName.includes('染井吉野'))) {
-                  console.log(`DEBUG: wameiMap ソメイヨシノ mapping: "${allName}" -> "${hubName}"`);
+                  allowDebugLogs && console.log(`DEBUG: wameiMap ソメイヨシノ mapping: "${allName}" -> "${hubName}"`);
                 }
               }
               if (hubName && familyJp) wameiFamilyMap[hubName] = familyJp;
             });
-            console.log("wamei_checklist_ver.1.10.csv parsed successfully. wameiMap size:", Object.keys(wameiMap).length);
+            allowDebugLogs && console.log("wamei_checklist_ver.1.10.csv parsed successfully. wameiMap size:", Object.keys(wameiMap).length);
           } catch (error) {
             console.error("Error parsing wamei checklist data:", error);
             console.warn("Continuing without wamei checklist data - moth name validation may be incomplete");
@@ -2314,7 +2315,7 @@ function App() {
 
         const formatScientificNameForFilename = (scientificName) => {
           if (!scientificName) return '';
-          console.log("Original scientificName:", scientificName);
+          allowDebugLogs && console.log("Original scientificName:", scientificName);
           // Remove anything in parentheses, or from ( to end of string if no closing parenthesis
           let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
           // Remove common author/year patterns at the end of the string
@@ -2326,7 +2327,7 @@ function App() {
           cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
           // Replace spaces with underscores
           cleanedName = cleanedName.replace(/\s/g, '_');
-          console.log("Cleaned scientificName for filename:", cleanedName);
+          allowDebugLogs && console.log("Cleaned scientificName for filename:", cleanedName);
           return cleanedName;
         };
 
@@ -2340,7 +2341,7 @@ function App() {
         
         if (yListText) {
           try {
-            console.log("Parsing YList data...");
+            allowDebugLogs && console.log("Parsing YList data...");
             const yListParsed = Papa.parse(yListText, { header: true, skipEmptyLines: true, delimiter: ',' });
             if (yListParsed.errors.length) {
               console.error("PapaParse errors in 20210514YList_download.csv:", yListParsed.errors);
@@ -2358,11 +2359,11 @@ function App() {
                 yListPlantNames.add(plantName);
                 // Debug ツバキ-related plants in YList
                 if (plantName.includes('ツバキ')) {
-                  console.log(`DEBUG: YList ツバキ plant added: "${plantName}"`);
+                  allowDebugLogs && console.log(`DEBUG: YList ツバキ plant added: "${plantName}"`);
                 }
                 // Debug セイヨウハコヤナギ
                 if (plantName === 'セイヨウハコヤナギ') {
-                  console.log(`DEBUG: セイヨウハコヤナギ added to yListPlantNames`);
+                  allowDebugLogs && console.log(`DEBUG: セイヨウハコヤナギ added to yListPlantNames`);
                 }
               }
               if (plantName && familyJp) {
@@ -2385,9 +2386,9 @@ function App() {
                 }
               }
             });
-            console.log("20210514YList_download.csv parsed successfully. yListPlantFamilyMap size:", Object.keys(yListPlantFamilyMap).length);
-            console.log("20210514YList_download.csv parsed successfully. yListPlantScientificNameMap size:", Object.keys(yListPlantScientificNameMap).length);
-            console.log("20210514YList_download.csv parsed successfully. yListPlantAliasMap size:", Object.keys(yListPlantAliasMap).length);
+            allowDebugLogs && console.log("20210514YList_download.csv parsed successfully. yListPlantFamilyMap size:", Object.keys(yListPlantFamilyMap).length);
+            allowDebugLogs && console.log("20210514YList_download.csv parsed successfully. yListPlantScientificNameMap size:", Object.keys(yListPlantScientificNameMap).length);
+            allowDebugLogs && console.log("20210514YList_download.csv parsed successfully. yListPlantAliasMap size:", Object.keys(yListPlantAliasMap).length);
           } catch (error) {
             console.error("Error parsing YList data:", error);
             console.warn("Continuing without YList data - plant family information may be incomplete");
@@ -2400,7 +2401,7 @@ function App() {
         let genusMapping = {};
         if (genusMappingText) {
           try {
-            console.log("Parsing genus mapping data...");
+            allowDebugLogs && console.log("Parsing genus mapping data...");
             const genusMappingParsed = Papa.parse(genusMappingText, { header: true, skipEmptyLines: true, delimiter: ',' });
             if (genusMappingParsed.errors.length) {
               console.error("PapaParse errors in genus_mapping.csv:", genusMappingParsed.errors);
@@ -2416,10 +2417,10 @@ function App() {
                   family: familyJp,
                   scientificName: genusLatin
                 };
-                console.log(`Genus mapping added: ${genusJp} -> ${familyJp}, ${genusLatin}`);
+                allowDebugLogs && console.log(`Genus mapping added: ${genusJp} -> ${familyJp}, ${genusLatin}`);
               }
             });
-            console.log("genus_mapping.csv parsed successfully. genusMapping size:", Object.keys(genusMapping).length);
+            allowDebugLogs && console.log("genus_mapping.csv parsed successfully. genusMapping size:", Object.keys(genusMapping).length);
           } catch (error) {
             console.error("Error parsing genus mapping data:", error);
             console.warn("Continuing without genus mapping data");
@@ -2504,28 +2505,28 @@ function App() {
         const correctPlantName = (name) => {
           // デバッグ: セイヨウハコヤナギの処理を追跡
           if (name && name.includes('セイヨウハコヤナギ')) {
-            console.log(`DEBUG: correctPlantName called with セイヨウハコヤナギ: "${name}"`);
-            console.log(`DEBUG: yListPlantNames.has('セイヨウハコヤナギ'): ${yListPlantNames.has('セイヨウハコヤナギ')}`);
+            allowDebugLogs && console.log(`DEBUG: correctPlantName called with セイヨウハコヤナギ: "${name}"`);
+            allowDebugLogs && console.log(`DEBUG: yListPlantNames.has('セイヨウハコヤナギ'): ${yListPlantNames.has('セイヨウハコヤナギ')}`);
           }
           
           // 0. スラッシュを含む植物名の処理（別名処理）
           if (name && name.includes('/')) {
             // スラッシュで区切られた植物名は最初の名前を使用
             const firstPart = name.split('/')[0].trim();
-            console.log(`DEBUG: Processing slash-separated plant name: "${name}" -> using first part: "${firstPart}"`);
+            allowDebugLogs && console.log(`DEBUG: Processing slash-separated plant name: "${name}" -> using first part: "${firstPart}"`);
             return firstPart;
           }
           
           // 0.5. セイヨウハコヤナギの特別処理
           if (name === 'セイヨウハコヤナギ') {
-            console.log('DEBUG: セイヨウハコヤナギ special handling - returning as-is');
+            allowDebugLogs && console.log('DEBUG: セイヨウハコヤナギ special handling - returning as-is');
             return 'セイヨウハコヤナギ';
           }
           
           // 1. 直接マッチ（最優先）
           if (yListPlantNames.has(name)) {
             if (name === 'セイヨウハコヤナギ') {
-              console.log('DEBUG: セイヨウハコヤナギ found in yListPlantNames, returning as-is');
+              allowDebugLogs && console.log('DEBUG: セイヨウハコヤナギ found in yListPlantNames, returning as-is');
             }
             return name;
           }
@@ -2543,7 +2544,7 @@ function App() {
           ]);
           
           if (geographicNames.has(name) || /諸島$|島では$|地方$|県$|市$|区$/.test(name)) {
-            console.log(`DEBUG: Plant "${name}" is a geographic location, returning null`);
+            allowDebugLogs && console.log(`DEBUG: Plant "${name}" is a geographic location, returning null`);
             return '';  // Return empty string to filter out
           }
 
@@ -2605,10 +2606,10 @@ function App() {
             
             const expanded = groupExpansions[name];
             if (name === 'ツバキ類') {
-              console.log(`DEBUG: ツバキ類 expansion - expanded to: ${expanded}, exists in YList: ${yListPlantNames.has(expanded)}`);
+              allowDebugLogs && console.log(`DEBUG: ツバキ類 expansion - expanded to: ${expanded}, exists in YList: ${yListPlantNames.has(expanded)}`);
             }
             if (expanded && yListPlantNames.has(expanded)) {
-              console.log(`DEBUG: Expanded ${name} to ${expanded}`);
+              allowDebugLogs && console.log(`DEBUG: Expanded ${name} to ${expanded}`);
               return expanded;
             }
             
@@ -2619,7 +2620,7 @@ function App() {
           // 7. 見つからない場合は元の名前を返す（YListにない植物も表示する）
           // Special debug for common plants that might be getting filtered
           if (name === 'ヤマモモ' || name === 'コナラ' || name === 'カシワ' || name === 'クヌギ' || name === 'セイヨウハコヤナギ') {
-            console.log(`DEBUG: Plant "${name}" not found in YList, returning as-is`);
+            allowDebugLogs && console.log(`DEBUG: Plant "${name}" not found in YList, returning as-is`);
           }
           return name;
         };;
@@ -2629,7 +2630,7 @@ function App() {
         let hamushiParsedData = [];
         if (hamushiIntegratedText) {
           try {
-            console.log("Parsing integrated hamushi data...");
+            allowDebugLogs && console.log("Parsing integrated hamushi data...");
             const hamushiParsed = Papa.parse(hamushiIntegratedText, { header: true, skipEmptyLines: true, delimiter: ',' });
             if (hamushiParsed.errors.length) {
               console.error("PapaParse errors in hamushi_integrated_master.csv:", hamushiParsed.errors);
@@ -2654,7 +2655,7 @@ function App() {
                 };
               }
             });
-            console.log("Integrated hamushi data parsed successfully. hamushiMap size:", Object.keys(hamushiMap).length);
+            allowDebugLogs && console.log("Integrated hamushi data parsed successfully. hamushiMap size:", Object.keys(hamushiMap).length);
           } catch (error) {
             console.error("Error parsing integrated hamushi data:", error);
             console.warn("Continuing without integrated hamushi data - detailed hamushi information may be incomplete");
@@ -2688,12 +2689,12 @@ function App() {
             }
             
             // Pre-scan for センモンヤガ and カバシタムクゲエダシャク
-            console.log('=== MAIN CSV PARSED - SEARCHING FOR センモンヤガ AND カバシタムクゲエダシャク ===');
+            allowDebugLogs && console.log('=== MAIN CSV PARSED - SEARCHING FOR センモンヤガ AND カバシタムクゲエダシャク ===');
             const senmonYagaPreScan = results.data.filter((row, idx) => {
               const matchesName = row['和名'] === 'センモンヤガ' || row['大図鑑和名'] === 'センモンヤガ';
               const matchesCatalog = row['大図鑑カタログNo'] === '3489';
               if (matchesName || matchesCatalog) {
-                console.log(`Pre-scan found センモンヤガ at row ${idx}:`, {
+                allowDebugLogs && console.log(`Pre-scan found センモンヤガ at row ${idx}:`, {
                   和名: row['和名'],
                   大図鑑和名: row['大図鑑和名'],
                   カタログNo: row['大図鑑カタログNo'],
@@ -2707,7 +2708,7 @@ function App() {
             const kabaShitaPreScan = results.data.filter((row, idx) => {
               const matchesName = row['和名'] === 'カバシタムクゲエダシャク';
               if (matchesName) {
-                console.log(`Pre-scan found カバシタムクゲエダシャク at row ${idx}:`, {
+                allowDebugLogs && console.log(`Pre-scan found カバシタムクゲエダシャク at row ${idx}:`, {
                   和名: row['和名'],
                   学名: row['学名']?.substring(0, 50),
                   食草: row['食草'] ? row['食草'].substring(0, 50) + '...' : 'EMPTY',
@@ -2720,13 +2721,13 @@ function App() {
               return matchesName;
             });
             
-            console.log(`Total センモンヤガ entries found in pre-scan: ${senmonYagaPreScan.length}`);
-            console.log(`Total カバシタムクゲエダシャク entries found in pre-scan: ${kabaShitaPreScan.length}`);
-            console.log('=== END PRE-SCAN ===');
+            allowDebugLogs && console.log(`Total センモンヤガ entries found in pre-scan: ${senmonYagaPreScan.length}`);
+            allowDebugLogs && console.log(`Total カバシタムクゲエダシャク entries found in pre-scan: ${kabaShitaPreScan.length}`);
+            allowDebugLogs && console.log('=== END PRE-SCAN ===');
             
             // COLUMN MISALIGNMENT FIX - Fix rows where scientific names are shifted to wrong columns
             // CSV修正により不要になった列位置ずれ修正処理
-            console.log('=== COLUMN MISALIGNMENT FIX (DISABLED - fixed in CSV) ===');
+            allowDebugLogs && console.log('=== COLUMN MISALIGNMENT FIX (DISABLED - fixed in CSV) ===');
             let fixedRows = 0;
             // Column misalignment fix disabled - issues resolved in CSV files
             if (false) { // Disabled: CSV files have been pre-cleaned
@@ -2744,8 +2745,8 @@ function App() {
                     (hostPlants.includes('図鑑') || hostPlants.includes('標準') || 
                      hostPlants === '日本産蛾類標準図鑑1')) {
                   
-                  console.log(`Fixing column misalignment for ${japaneseName} at row ${index + 2}`);
-                  console.log(`  Before: 学名="${scientificName}", 食草="${hostPlants}", 出典="${source}"`);
+                  allowDebugLogs && console.log(`Fixing column misalignment for ${japaneseName} at row ${index + 2}`);
+                  allowDebugLogs && console.log(`  Before: 学名="${scientificName}", 食草="${hostPlants}", 出典="${source}"`);
                   
                   // Shift values to correct positions
                   row['学名'] = ''; // Clear scientific name (it was incorrect)
@@ -2753,13 +2754,13 @@ function App() {
                   row['出典'] = hostPlants; // Move the source data to correct column
                   row['備考'] = source || ''; // Move whatever was in source to remarks
                   
-                  console.log(`  After:  学名="${row['学名']}", 食草="${row['食草']}", 出典="${row['出典']}"`);
+                  allowDebugLogs && console.log(`  After:  学名="${row['学名']}", 食草="${row['食草']}", 出典="${row['出典']}"`);
                   fixedRows++;
                 }
               });
             }
-            console.log(`Column misalignment fix: ${fixedRows} rows (disabled - CSV pre-cleaned)`);
-            console.log('=== END COLUMN MISALIGNMENT FIX ===');
+            allowDebugLogs && console.log(`Column misalignment fix: ${fixedRows} rows (disabled - CSV pre-cleaned)`);
+            allowDebugLogs && console.log('=== END COLUMN MISALIGNMENT FIX ===');
             
             results.data.forEach((row, index) => {
               const catalogNo = row['大図鑑カタログNo']?.trim();
@@ -2772,7 +2773,7 @@ function App() {
               
               // Debug logging for スミレモンキリガ
               if (originalMothName.includes('スミレモンキリガ')) {
-                console.log(`DEBUG: Found スミレモンキリガ at index ${index}:`, {
+                allowDebugLogs && console.log(`DEBUG: Found スミレモンキリガ at index ${index}:`, {
                   originalMothName,
                   hostPlants: row['食草'],
                   willBeId: `main-${index}`
@@ -2781,7 +2782,7 @@ function App() {
               
               // Debug logging for センモンヤガ
               if (originalMothName === 'センモンヤガ') {
-                console.log(`DEBUG: Found センモンヤガ at index ${index}:`, {
+                allowDebugLogs && console.log(`DEBUG: Found センモンヤガ at index ${index}:`, {
                   originalMothName,
                   catalogNo: row['大図鑑カタログNo'],
                   hostPlants: row['食草'],
@@ -2797,8 +2798,8 @@ function App() {
               
               // Debug logging for フクラスズメ and related species (temporarily disabled)
               // if (mothName === 'フクラスズメ' || mothName === 'ホリシャキシタケンモン' || mothName === 'マルバネキシタケンモン') {
-              //   console.log(`DEBUG: Processing ${mothName} at index ${index}, ID will be main-${index}`);
-              //   console.log(`DEBUG: Food plants field:`, row['食草']);
+              //   allowDebugLogs && console.log(`DEBUG: Processing ${mothName} at index ${index}, ID will be main-${index}`);
+              //   allowDebugLogs && console.log(`DEBUG: Food plants field:`, row['食草']);
               // }
               
               
@@ -2850,10 +2851,10 @@ function App() {
               
               // Debug logging for カバシタムクゲエダシャク processing
               if (mothName === 'カバシタムクゲエダシャク') {
-                console.log('=== カバシタムクゲエダシャク PROCESSING DEBUG ===');
-                console.log('rawHostPlant from CSV:', rawHostPlant);
-                console.log('rawRemarks from CSV:', rawRemarks);
-                console.log('Original row data:', {
+                allowDebugLogs && console.log('=== カバシタムクゲエダシャク PROCESSING DEBUG ===');
+                allowDebugLogs && console.log('rawHostPlant from CSV:', rawHostPlant);
+                allowDebugLogs && console.log('rawRemarks from CSV:', rawRemarks);
+                allowDebugLogs && console.log('Original row data:', {
                   食草: row['食草'],
                   備考: row['備考'],
                   学名: row['学名'],
@@ -2885,7 +2886,7 @@ function App() {
 
               // Debug logging for センモンヤガ host plant processing
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
-                console.log(`DEBUG: Processing センモンヤガ host plants:`, {
+                allowDebugLogs && console.log(`DEBUG: Processing センモンヤガ host plants:`, {
                   mothName,
                   rawHostPlant,
                   rawRemarks,
@@ -3002,16 +3003,16 @@ function App() {
               
               // Special handling for カバシタムクゲエダシャク
               if (mothName === 'カバシタムクゲエダシャク') {
-                console.log('DEBUG: Special handling for カバシタムクゲエダシャク - looking up in maps');
-                console.log('DEBUG: Keys in fuyushakuHostPlantMap:', Array.from(fuyushakuHostPlantMap.keys()).filter(k => k && (k.includes('カバシタ') || k.includes('Sebastosema') || k.includes('bubonaria'))));
-                console.log('DEBUG: All fuyushaku keys (first 50):', Array.from(fuyushakuHostPlantMap.keys()).slice(0, 50));
+                allowDebugLogs && console.log('DEBUG: Special handling for カバシタムクゲエダシャク - looking up in maps');
+                allowDebugLogs && console.log('DEBUG: Keys in fuyushakuHostPlantMap:', Array.from(fuyushakuHostPlantMap.keys()).filter(k => k && (k.includes('カバシタ') || k.includes('Sebastosema') || k.includes('bubonaria'))));
+                allowDebugLogs && console.log('DEBUG: All fuyushaku keys (first 50):', Array.from(fuyushakuHostPlantMap.keys()).slice(0, 50));
                 
                 // Force override for カバシタムクゲエダシャク from フユシャク data
                 const directLookup = fuyushakuHostPlantMap.get('カバシタムクゲエダシャク');
                 if (directLookup) {
-                  console.log('DEBUG: Found カバシタムクゲエダシャク data directly:', directLookup);
+                  allowDebugLogs && console.log('DEBUG: Found カバシタムクゲエダシャク data directly:', directLookup);
                 } else {
-                  console.log('DEBUG: カバシタムクゲエダシャク not found in fuyushakuHostPlantMap');
+                  allowDebugLogs && console.log('DEBUG: カバシタムクゲエダシャク not found in fuyushakuHostPlantMap');
                   // Try with different scientific name variations
                   const variations = [
                     'Sebastosema bubonaria Warren, 1896',
@@ -3022,7 +3023,7 @@ function App() {
                   for (const variation of variations) {
                     const found = fuyushakuHostPlantMap.get(variation);
                     if (found) {
-                      console.log(`DEBUG: Found using variation "${variation}":`, found);
+                      allowDebugLogs && console.log(`DEBUG: Found using variation "${variation}":`, found);
                       break;
                     }
                   }
@@ -3033,15 +3034,15 @@ function App() {
               
               // Debug log for クロスジフユエダシャク and カバシタムクゲエダシャク
               if (mothName === 'クロスジフユエダシャク' || mothName === 'カバシタムクゲエダシャク') {
-                console.log(`=== Debug ${mothName} ===`);
-                console.log(`mothName: ${mothName}`);
-                console.log(`scientificName: ${scientificName}`);
-                console.log(`cleanedScientificName: ${cleanedScientificName}`);
-                console.log(`rawHostPlant (before): ${rawHostPlant}`);
-                console.log(`kirigaHostPlants: ${kirigaHostPlants}`);
-                console.log(`fuyushakuHostPlants: ${fuyushakuHostPlants}`);
-                console.log(`hasKirigaData: ${hasKirigaData}`);
-                console.log(`hasFuyushakuData: ${hasFuyushakuData}`);
+                allowDebugLogs && console.log(`=== Debug ${mothName} ===`);
+                allowDebugLogs && console.log(`mothName: ${mothName}`);
+                allowDebugLogs && console.log(`scientificName: ${scientificName}`);
+                allowDebugLogs && console.log(`cleanedScientificName: ${cleanedScientificName}`);
+                allowDebugLogs && console.log(`rawHostPlant (before): ${rawHostPlant}`);
+                allowDebugLogs && console.log(`kirigaHostPlants: ${kirigaHostPlants}`);
+                allowDebugLogs && console.log(`fuyushakuHostPlants: ${fuyushakuHostPlants}`);
+                allowDebugLogs && console.log(`hasKirigaData: ${hasKirigaData}`);
+                allowDebugLogs && console.log(`hasFuyushakuData: ${hasFuyushakuData}`);
               }
               
               // Special hardcoded override for カバシタムクゲエダシャク if フユシャク data exists but isn't being picked up
@@ -3050,7 +3051,7 @@ function App() {
                 const forcedFuyushakuPlants = 'ツルウメモドキ、ニシキギ、コマユミ、マユミ、マサキ、ツルマサキ';
                 const forcedFuyushakuRemarks = 'ニシキギ科に固有。マユミ、マサキ、ツルマサキでも蛹化に成功。';
                 
-                console.log('DEBUG: Forcing フユシャク data for カバシタムクゲエダシャク');
+                allowDebugLogs && console.log('DEBUG: Forcing フユシャク data for カバシタムクゲエダシャク');
                 const fuyushakuResult = extractPlantPartsAndCleanNames(forcedFuyushakuPlants);
                 rawHostPlant = fuyushakuResult.cleanedText;
                 
@@ -3079,7 +3080,7 @@ function App() {
                   }
                 }
                 
-                console.log('DEBUG: カバシタムクゲエダシャク forced update:', {
+                allowDebugLogs && console.log('DEBUG: カバシタムクゲエダシャク forced update:', {
                   rawHostPlant,
                   hostPlantNotes
                 });
@@ -3090,11 +3091,11 @@ function App() {
                 emergenceTimeMap.set(scientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
                 emergenceTimeMap.set(cleanedScientificName, { time: forcedEmergenceTime, source: '日本のフユシャク' });
                 
-                console.log('DEBUG: カバシタムクゲエダシャク forced emergence time:', forcedEmergenceTime);
+                allowDebugLogs && console.log('DEBUG: カバシタムクゲエダシャク forced emergence time:', forcedEmergenceTime);
               } else if (fuyushakuHostPlants) {
                 // Debug log for カバシタムクゲエダシャク
                 if (mothName === 'カバシタムクゲエダシャク') {
-                  console.log('DEBUG: Using フユシャク data for カバシタムクゲエダシャク:', {
+                  allowDebugLogs && console.log('DEBUG: Using フユシャク data for カバシタムクゲエダシャク:', {
                     fuyushakuHostPlants,
                     fuyushakuRemarks
                   });
@@ -3130,8 +3131,8 @@ function App() {
                 
                 // Debug log for フユシャク species and クロスジフユエダシャク
                 if (mothName.includes('フユエダシャク') || mothName.includes('フユシャク') || mothName.includes('トゲエダシャク') || mothName === 'クロスジフユエダシャク') {
-                  console.log(`Updated フユシャク host plants for ${mothName}: ${rawHostPlant}`);
-                  console.log(`Extracted parts for ${mothName}:`, Array.from(fuyushakuResult.parts.entries()));
+                  allowDebugLogs && console.log(`Updated フユシャク host plants for ${mothName}: ${rawHostPlant}`);
+                  allowDebugLogs && console.log(`Extracted parts for ${mothName}:`, Array.from(fuyushakuResult.parts.entries()));
                 }
               } else if (kirigaHostPlants && kirigaHostPlants !== rawHostPlant) {
                 // Use キリガ data as secondary priority source and extract parts
@@ -3164,15 +3165,15 @@ function App() {
                 
                 // Debug log for target species
                 if (mothName.includes('ナンカイミドリキリガ') || mothName.includes('キバラモクメキリガ') || mothName.includes('スミレモンキリガ')) {
-                  console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
-                  console.log(`Extracted parts for ${mothName}:`, Array.from(kirigaResult.parts.entries()));
+                  allowDebugLogs && console.log(`Updated host plants for ${mothName}: ${rawHostPlant}`);
+                  allowDebugLogs && console.log(`Extracted parts for ${mothName}:`, Array.from(kirigaResult.parts.entries()));
                 }
               }
               
               // Debug log for クロスジフユエダシャク after processing
               if (mothName === 'クロスジフユエダシャク') {
-                console.log(`rawHostPlant (after): ${rawHostPlant}`);
-                console.log(`=== End Debug クロスジフユエダシャク ===`);
+                allowDebugLogs && console.log(`rawHostPlant (after): ${rawHostPlant}`);
+                allowDebugLogs && console.log(`=== End Debug クロスジフユエダシャク ===`);
               }
               
               // Special handling for フクラスズメ which has malformed food plant data due to CSV parsing issues
@@ -3191,7 +3192,7 @@ function App() {
                   rawHostPlant.trim() === '不明' ||
                   rawHostPlant.length < 2) {
                 if (mothName === 'センモンヤガ') {
-                  console.log('DEBUG: センモンヤガ rawHostPlant was cleared! Original:', row['食草']);
+                  allowDebugLogs && console.log('DEBUG: センモンヤガ rawHostPlant was cleared! Original:', row['食草']);
                 }
                 rawHostPlant = '';
               }
@@ -3293,9 +3294,9 @@ function App() {
               
               if (rawHostPlant) {
                 if (mothName === 'センモンヤガ') {
-                  console.log('DEBUG: センモンヤガ - Raw host plant data before processing:', rawHostPlant);
+                  allowDebugLogs && console.log('DEBUG: センモンヤガ - Raw host plant data before processing:', rawHostPlant);
                 } else {
-                  console.log('DEBUG: Raw host plant data:', rawHostPlant);
+                  allowDebugLogs && console.log('DEBUG: Raw host plant data:', rawHostPlant);
                 }
                 
                 // Check if this is a descriptive text (contains observation conditions)
@@ -3319,7 +3320,7 @@ function App() {
                     } else if (part.includes('国外では')) {
                       // Handle international observations as notes, not as host plants
                       internationalCondition = part.replace('国外では', '').replace(/が?[記録知].*れている?/, '').trim();
-                      console.log('DEBUG: International condition found:', internationalCondition);
+                      allowDebugLogs && console.log('DEBUG: International condition found:', internationalCondition);
                       // Add international information to host plant notes
                       if (internationalCondition) {
                         // 成虫発生時期を除去
@@ -3543,12 +3544,12 @@ function App() {
                         const normalizedPlant = normalizePlantName(plant);
                         // Debug for スミレモンキリガ
                         if (originalMothName?.includes('スミレモンキリガ')) {
-                          console.log(`DEBUG: スミレモンキリガ plant processing: "${plant}" -> normalized: "${normalizedPlant}"`);
+                          allowDebugLogs && console.log(`DEBUG: スミレモンキリガ plant processing: "${plant}" -> normalized: "${normalizedPlant}"`);
                         }
                         const correctedPlantName = correctPlantName(normalizedPlant);
                         // Debug for スミレモンキリガ
                         if (originalMothName?.includes('スミレモンキリガ')) {
-                          console.log(`DEBUG: スミレモンキリガ corrected plant: "${correctedPlantName}"`);
+                          allowDebugLogs && console.log(`DEBUG: スミレモンキリガ corrected plant: "${correctedPlantName}"`);
                         }
                         // Only add if the corrected plant name is not empty (i.e., found in YList)
                         if (correctedPlantName && correctedPlantName.trim()) {
@@ -3564,7 +3565,7 @@ function App() {
                   }
                   
                   if (culturedCondition) {
-                    console.log('DEBUG: Processing culturedCondition:', culturedCondition);
+                    allowDebugLogs && console.log('DEBUG: Processing culturedCondition:', culturedCondition);
                     // More specific pattern to extract plant names from cultured condition
                     const plants = culturedCondition.split(/[;；、，,]/);
                     plants.forEach(plant => {
@@ -3608,7 +3609,7 @@ function App() {
                       
                       plant = plant.trim();
                       
-                      console.log('DEBUG: Extracted cultured plant:', plant);
+                      allowDebugLogs && console.log('DEBUG: Extracted cultured plant:', plant);
                       
                       if (plant.length > 1 && isValidPlantName(plant)) {
                         const normalizedPlant = normalizePlantName(plant);
@@ -3622,15 +3623,15 @@ function App() {
                           
                           const added = addPlantEntry(hostPlantEntries, plantWithParts, '飼育条件下', familyFromMainCsv);
                           if (added) {
-                            console.log('DEBUG: Added cultured plant:', plantWithParts);
+                            allowDebugLogs && console.log('DEBUG: Added cultured plant:', plantWithParts);
                           } else {
-                            console.log('DEBUG: Skipped duplicate cultured plant:', plantWithParts);
+                            allowDebugLogs && console.log('DEBUG: Skipped duplicate cultured plant:', plantWithParts);
                           }
                         } else {
-                          console.log('DEBUG: Rejected cultured plant (not in YList):', plant);
+                          allowDebugLogs && console.log('DEBUG: Rejected cultured plant (not in YList):', plant);
                         }
                       } else {
-                        console.log('DEBUG: Rejected cultured plant:', plant, 'Valid:', isValidPlantName(plant));
+                        allowDebugLogs && console.log('DEBUG: Rejected cultured plant:', plant, 'Valid:', isValidPlantName(plant));
                       }
                     });
                   }
@@ -3655,10 +3656,10 @@ function App() {
                   // Pre-process to extract notes after '。'
                   // Special handling for センモンヤガ - don't split by '。' as it ends with "につく。"
                   if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
-                    console.log('DEBUG: センモンヤガ special handling - keeping full rawHostPlant:', rawHostPlant);
+                    allowDebugLogs && console.log('DEBUG: センモンヤガ special handling - keeping full rawHostPlant:', rawHostPlant);
                     // Remove only the final "につく。" pattern
                     rawHostPlant = rawHostPlant.replace(/につく。$/, '');
-                    console.log('DEBUG: センモンヤガ after removing につく。:', rawHostPlant);
+                    allowDebugLogs && console.log('DEBUG: センモンヤガ after removing につく。:', rawHostPlant);
                   } else if (rawHostPlant.includes('。')) {
                     const parts = rawHostPlant.split('。');
                     rawHostPlant = parts[0].trim();
@@ -3847,7 +3848,7 @@ function App() {
                   // Standard parsing for normal plant lists
                   // First, detect cultivation conditions before processing
                   const cultivationInfo = detectCultivationConditions(rawHostPlant);
-                  console.log('DEBUG: Cultivation detection for', mothName, ':', cultivationInfo);
+                  allowDebugLogs && console.log('DEBUG: Cultivation detection for', mothName, ':', cultivationInfo);
                   
                   // Add cultivation-specific remarks to hostPlantNotes
                   if (cultivationInfo.remarks) {
@@ -3916,7 +3917,7 @@ function App() {
                   
                   // If we found plants with family names in the descriptive text, process them
                   if (foundPlantsWithFamily.length > 0) {
-                    console.log('DEBUG: Found plants with family names in descriptive text:', foundPlantsWithFamily);
+                    allowDebugLogs && console.log('DEBUG: Found plants with family names in descriptive text:', foundPlantsWithFamily);
                     
                     // Extract the descriptive context as notes
                     const contextPatterns = [
@@ -4088,14 +4089,14 @@ function App() {
                       if (normalizedPlant === 'ツバキ' || normalizedPlant === 'つばき') {
                         wameiMapped = 'ヤブツバキ';
                         if (mothName === 'スミレモンキリガ') {
-                          console.log('DEBUG: ツバキ→ヤブツバキに変換しました');
+                          allowDebugLogs && console.log('DEBUG: ツバキ→ヤブツバキに変換しました');
                         }
                       }
                       const correctedPlantName = correctPlantName(wameiMapped || normalizedPlant);
                       
                       // Debug for センモンヤガ, スミレモンキリガ, アオバシャチホコ, and シャンハイオエダシャク
                       if (mothName === 'センモンヤガ' || mothName === 'スミレモンキリガ' || mothName === 'アオバシャチホコ' || mothName === 'シャンハイオエダシャク') {
-                        console.log(`DEBUG: ${mothName} - Processing plant:`, {
+                        allowDebugLogs && console.log(`DEBUG: ${mothName} - Processing plant:`, {
                           original: plant,
                           normalized: normalizedPlant,
                           wameiMapped: wameiMapped,
@@ -4203,22 +4204,22 @@ function App() {
               
               // Debug logging for カバシタムクゲエダシャク hostPlantList creation
               if (mothName === 'カバシタムクゲエダシャク') {
-                console.log('=== カバシタムクゲエダシャク hostPlantList DEBUG ===');
-                console.log('hostPlantEntries:', hostPlantEntries);
-                console.log('plantMap values:', [...plantMap.values()]);
-                console.log('Final hostPlantList:', hostPlantList);
-                console.log('rawHostPlant at this point:', rawHostPlant);
+                allowDebugLogs && console.log('=== カバシタムクゲエダシャク hostPlantList DEBUG ===');
+                allowDebugLogs && console.log('hostPlantEntries:', hostPlantEntries);
+                allowDebugLogs && console.log('plantMap values:', [...plantMap.values()]);
+                allowDebugLogs && console.log('Final hostPlantList:', hostPlantList);
+                allowDebugLogs && console.log('rawHostPlant at this point:', rawHostPlant);
               }
               
               // Additional debug logging for duplicate detection
               if (hostPlantEntries.length > hostPlantList.length) {
-                console.log(`Duplicate removal: ${hostPlantEntries.length} -> ${hostPlantList.length} for ${mothName}`);
+                allowDebugLogs && console.log(`Duplicate removal: ${hostPlantEntries.length} -> ${hostPlantList.length} for ${mothName}`);
               }
-              console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
+              allowDebugLogs && console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
               
               // Debug logging for センモンヤガ final data
               if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
-                console.log(`DEBUG: Final センモンヤガ data:`, {
+                allowDebugLogs && console.log(`DEBUG: Final センモンヤガ data:`, {
                   mothName,
                   hostPlantEntries,
                   hostPlantList,
@@ -4228,7 +4229,7 @@ function App() {
                   catalogNo: row['大図鑑カタログNo'],
                   rawHostPlantFromCSV: row['食草']
                 });
-                console.log(`DEBUG: センモンヤガ will be added to:`, isBeetle ? 'beetles' : 'insects');
+                allowDebugLogs && console.log(`DEBUG: センモンヤガ will be added to:`, isBeetle ? 'beetles' : 'insects');
               }
               
               if (isBeetle) {
@@ -4295,7 +4296,7 @@ function App() {
                 
                 // Debug logging for カバシタムクゲエダシャク
                 if (mothName === 'カバシタムクゲエダシャク') {
-                  console.log('DEBUG: Creating moth data for カバシタムクゲエダシャク:', {
+                  allowDebugLogs && console.log('DEBUG: Creating moth data for カバシタムクゲエダシャク:', {
                     id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
                     hostPlants: hostPlantList,
                     hostPlantDetails: hostPlantEntries,
@@ -4314,7 +4315,7 @@ function App() {
                 }
                 // Debug logging for アオバシャチホコ
                 if (mothName === 'アオバシャチホコ') {
-                  console.log('DEBUG: Creating moth data for アオバシャチホコ:', {
+                  allowDebugLogs && console.log('DEBUG: Creating moth data for アオバシャチホコ:', {
                     id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
                     hostPlants: hostPlantList,
                     hostPlantDetails: hostPlantEntries,
@@ -4325,7 +4326,7 @@ function App() {
                 
                 // Debug logging for シロオビオエダシャク and シモフリスズメ
                 if (mothName === 'シロオビオエダシャク') {
-                  console.log('DEBUG: Creating moth data for シロオビオエダシャク:', {
+                  allowDebugLogs && console.log('DEBUG: Creating moth data for シロオビオエダシャク:', {
                     id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
                     geographicalRemarks: String(row['備考'] || '').trim(),
                     備考Raw: row['備考'],
@@ -4335,7 +4336,7 @@ function App() {
                 }
                 
                 if (mothName === 'シモフリスズメ') {
-                  console.log('DEBUG: Creating moth data for シモフリスズメ:', {
+                  allowDebugLogs && console.log('DEBUG: Creating moth data for シモフリスズメ:', {
                     id: catalogNo ? `catalog-${catalogNo}` : `main-${index}`,
                     rawHostPlant,
                     hostPlants: hostPlantList,
@@ -4349,7 +4350,7 @@ function App() {
 
                 // Debug for catalog-2090 (ヒメウコンカギバ)
                 if (catalogNo === '2090') {
-                  console.log('DEBUG: catalog-2090 (ヒメウコンカギバ) data:', {
+                  allowDebugLogs && console.log('DEBUG: catalog-2090 (ヒメウコンカギバ) data:', {
                     catalogNo: catalogNo,
                     name: mothName,
                     備考_raw: row['備考'],
@@ -4451,7 +4452,7 @@ function App() {
                 
                 // Debug for スミレモンキリガ
                 if (mothName === 'スミレモンキリガ') {
-                  console.log('DEBUG: Final スミレモンキリガ data:', {
+                  allowDebugLogs && console.log('DEBUG: Final スミレモンキリガ data:', {
                     id: mothData.id,
                     hostPlants: mothData.hostPlants,
                     hostPlantDetails: mothData.hostPlantDetails
@@ -4460,15 +4461,15 @@ function App() {
                 
                 // Debug for センモンヤガ
                 if (mothName === 'センモンヤガ' || mothData.id === 'catalog-3489') {
-                  console.log('=== FINAL センモンヤガ DATA BEFORE PUSH ===');
-                  console.log('ID:', mothData.id);
-                  console.log('Name:', mothData.name);
-                  console.log('Host plants array:', mothData.hostPlants);
-                  console.log('Host plants count:', mothData.hostPlants.length);
-                  console.log('Host plant details:', mothData.hostPlantDetails);
-                  console.log('Raw host plant text:', rawHostPlant);
-                  console.log('Host plant entries:', hostPlantEntries);
-                  console.log('=== END センモンヤガ DATA ===');
+                  allowDebugLogs && console.log('=== FINAL センモンヤガ DATA BEFORE PUSH ===');
+                  allowDebugLogs && console.log('ID:', mothData.id);
+                  allowDebugLogs && console.log('Name:', mothData.name);
+                  allowDebugLogs && console.log('Host plants array:', mothData.hostPlants);
+                  allowDebugLogs && console.log('Host plants count:', mothData.hostPlants.length);
+                  allowDebugLogs && console.log('Host plant details:', mothData.hostPlantDetails);
+                  allowDebugLogs && console.log('Raw host plant text:', rawHostPlant);
+                  allowDebugLogs && console.log('Host plant entries:', hostPlantEntries);
+                  allowDebugLogs && console.log('=== END センモンヤガ DATA ===');
                 }
                 
                 
@@ -4489,7 +4490,7 @@ function App() {
                   
                   // Double check the trimmed plant name
                   if (!validPlant || validPlant === '' || validPlant.length === 0) {
-                    console.log("DEBUG: Skipping empty validPlant:", JSON.stringify(plant), "->", JSON.stringify(validPlant));
+                    allowDebugLogs && console.log("DEBUG: Skipping empty validPlant:", JSON.stringify(plant), "->", JSON.stringify(validPlant));
                     return;
                   }
                   if (!hostPlantData[validPlant]) hostPlantData[validPlant] = [];
@@ -4549,13 +4550,13 @@ function App() {
             });
             
             // Final check for センモンヤガ in mainMothData
-            console.log('=== FINAL CHECK FOR センモンヤガ IN mainMothData ===');
+            allowDebugLogs && console.log('=== FINAL CHECK FOR センモンヤガ IN mainMothData ===');
             const senmonYagaFinal = mainMothData.filter(moth => 
               moth.name === 'センモンヤガ' || moth.id === 'catalog-3489'
             );
-            console.log(`Found ${senmonYagaFinal.length} センモンヤガ entries in final data`);
+            allowDebugLogs && console.log(`Found ${senmonYagaFinal.length} センモンヤガ entries in final data`);
             senmonYagaFinal.forEach((moth, idx) => {
-              console.log(`センモンヤガ ${idx}:`, {
+              allowDebugLogs && console.log(`センモンヤガ ${idx}:`, {
                 id: moth.id,
                 name: moth.name,
                 hostPlantsCount: moth.hostPlants.length,
@@ -4563,7 +4564,7 @@ function App() {
                 hostPlantDetails: moth.hostPlantDetails
               });
             });
-            console.log('=== END FINAL CHECK ===');
+            allowDebugLogs && console.log('=== END FINAL CHECK ===');
           } // Added missing closing brace for complete callback
         });
 
@@ -4571,7 +4572,7 @@ function App() {
         let butterflyParsedData = [];
         if (!useNormalizedOnly && butterflyText) {
           try {
-            console.log("Parsing butterfly data with Papa Parse...");
+            allowDebugLogs && console.log("Parsing butterfly data with Papa Parse...");
             const butterfliesResult = Papa.parse(butterflyText, { 
               header: true, 
               skipEmptyLines: true, 
@@ -4581,23 +4582,23 @@ function App() {
             });
             
             if (butterfliesResult.errors.length > 0) {
-              console.log("Papa Parse had errors:", butterfliesResult.errors.slice(0, 10));
-              console.log("But continuing with data that was parsed...");
+              allowDebugLogs && console.log("Papa Parse had errors:", butterfliesResult.errors.slice(0, 10));
+              allowDebugLogs && console.log("But continuing with data that was parsed...");
             }
             
             butterflyParsedData = butterfliesResult.data;
-            console.log("Papa Parse completed. Total rows:", butterflyParsedData.length);
+            allowDebugLogs && console.log("Papa Parse completed. Total rows:", butterflyParsedData.length);
         
         // Verify data structure
-        console.log("Sample butterfly data structure:", butterflyParsedData[0]);
-        console.log("Total butterflies available:", butterflyParsedData.length);
+        allowDebugLogs && console.log("Sample butterfly data structure:", butterflyParsedData[0]);
+        allowDebugLogs && console.log("Total butterflies available:", butterflyParsedData.length);
         
         // Check if オオゴマシジミ is in parsed data
         const oogomashijimi = (!useNormalizedOnly && butterflyParsedData.length > 0) ? butterflyParsedData.find(b => b['和名'] === 'オオゴマシジミ') : null;
-        console.log("オオゴマシジミ found in parsed data:", oogomashijimi ? 'YES' : 'NO');
+        allowDebugLogs && console.log("オオゴマシジミ found in parsed data:", oogomashijimi ? 'YES' : 'NO');
         if (oogomashijimi) {
-          console.log("オオゴマシジミ raw data:", oogomashijimi);
-          console.log("オオゴマシジミ 備考 field:", oogomashijimi['備考']);
+          allowDebugLogs && console.log("オオゴマシジミ raw data:", oogomashijimi);
+          allowDebugLogs && console.log("オオゴマシジミ 備考 field:", oogomashijimi['備考']);
         }
 
         // Initialize butterfly data array
@@ -4607,7 +4608,7 @@ function App() {
         let processedCount = 0;
         let skippedCount = 0;
         if (!useNormalizedOnly) {
-          console.log(`About to process ${butterflyParsedData.length} parsed butterfly rows...`);
+          allowDebugLogs && console.log(`About to process ${butterflyParsedData.length} parsed butterfly rows...`);
           butterflyParsedData.forEach((row, index) => {
           const source = row['文献名'];
           const family = row['科名'] || row['科'] || '';
@@ -4623,37 +4624,37 @@ function App() {
           const year = row['公表年'] || '';
           
           if (japaneseName === 'オオゴマシジミ') {
-            console.log(`=== BUTTERFLY DATA LOADING for ${japaneseName} ===`);
-            console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants, remarks, author, year });
-            console.log(`Processed remarks:`, remarks);
-            console.log(`Full row object:`, row);
+            allowDebugLogs && console.log(`=== BUTTERFLY DATA LOADING for ${japaneseName} ===`);
+            allowDebugLogs && console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants, remarks, author, year });
+            allowDebugLogs && console.log(`Processed remarks:`, remarks);
+            allowDebugLogs && console.log(`Full row object:`, row);
           }
           
           // Special debug for ルリシジミ
           if (japaneseName === 'ルリシジミ') {
-            console.log('=== INITIAL DATA FOR ルリシジミ ===');
-            console.log('  Row index:', index);
-            console.log('  Raw hostPlants from CSV:', hostPlants);
-            console.log('  hostPlants type:', typeof hostPlants);
-            console.log('  hostPlants length:', hostPlants ? hostPlants.length : 0);
-            console.log('  First 200 chars:', hostPlants ? hostPlants.substring(0, 200) : 'N/A');
-            console.log('  Contains semicolon?:', hostPlants && hostPlants.includes(';'));
+            allowDebugLogs && console.log('=== INITIAL DATA FOR ルリシジミ ===');
+            allowDebugLogs && console.log('  Row index:', index);
+            allowDebugLogs && console.log('  Raw hostPlants from CSV:', hostPlants);
+            allowDebugLogs && console.log('  hostPlants type:', typeof hostPlants);
+            allowDebugLogs && console.log('  hostPlants length:', hostPlants ? hostPlants.length : 0);
+            allowDebugLogs && console.log('  First 200 chars:', hostPlants ? hostPlants.substring(0, 200) : 'N/A');
+            allowDebugLogs && console.log('  Contains semicolon?:', hostPlants && hostPlants.includes(';'));
           }
           
           // Special debug for ヤクシマルリシジミ
           if (japaneseName === 'ヤクシマルリシジミ') {
-            console.log('DEBUG: ヤクシマルリシジミ found!');
-            console.log('  Raw hostPlants:', hostPlants);
-            console.log('  hostPlants type:', typeof hostPlants);
-            console.log('  hostPlants length:', hostPlants ? hostPlants.length : 0);
+            allowDebugLogs && console.log('DEBUG: ヤクシマルリシジミ found!');
+            allowDebugLogs && console.log('  Raw hostPlants:', hostPlants);
+            allowDebugLogs && console.log('  hostPlants type:', typeof hostPlants);
+            allowDebugLogs && console.log('  hostPlants length:', hostPlants ? hostPlants.length : 0);
           }
           
           if (!japaneseName || !genus || !species) {
             skippedCount++;
-            console.log("Skipping butterfly row:", { japaneseName, genus, species, rowIndex: index });
+            allowDebugLogs && console.log("Skipping butterfly row:", { japaneseName, genus, species, rowIndex: index });
             if (skippedCount <= 5) { // Only log first 5 skipped rows to avoid spam
-              console.log("Row keys:", Object.keys(row));
-              console.log("Full row data:", row);
+              allowDebugLogs && console.log("Row keys:", Object.keys(row));
+              allowDebugLogs && console.log("Full row data:", row);
             }
             return;
           }
@@ -4672,11 +4673,11 @@ function App() {
           let hostPlantList = [];
           let hostPlantEntries = [];
           if (hostPlants) {
-            console.log("Raw host plants for", japaneseName, ":", hostPlants);
+            allowDebugLogs && console.log("Raw host plants for", japaneseName, ":", hostPlants);
             
             // SUPER SIMPLE HANDLING FOR ルリシジミ
             if (japaneseName === 'ルリシジミ') {
-              console.log('=== SIMPLIFIED HANDLING FOR ルリシジミ ===');
+              allowDebugLogs && console.log('=== SIMPLIFIED HANDLING FOR ルリシジミ ===');
               // Just split by semicolon and use all segments
               const plantEntries = hostPlants.split(/[;；]/)
                 .map(plant => plant.trim())
@@ -4721,29 +4722,29 @@ function App() {
                 };
               });
               
-              console.log('  plantEntries (raw):', plantEntries.length, 'entries');
-              console.log('  First 3 raw entries:', plantEntries.slice(0, 3));
-              console.log('  plantPartsMap size:', plantPartsMap.size);
-              console.log('  plantPartsMap keys:', Array.from(plantPartsMap.keys()).slice(0, 5));
-              console.log('  Split by semicolon directly:', hostPlantList.length, 'plants');
-              console.log('  First 5 plants:', hostPlantList.slice(0, 5));
-              console.log('  Last 5 plants:', hostPlantList.slice(-5));
-              console.log('  Host plant entries with parts:', hostPlantEntries.slice(0, 5));
+              allowDebugLogs && console.log('  plantEntries (raw):', plantEntries.length, 'entries');
+              allowDebugLogs && console.log('  First 3 raw entries:', plantEntries.slice(0, 3));
+              allowDebugLogs && console.log('  plantPartsMap size:', plantPartsMap.size);
+              allowDebugLogs && console.log('  plantPartsMap keys:', Array.from(plantPartsMap.keys()).slice(0, 5));
+              allowDebugLogs && console.log('  Split by semicolon directly:', hostPlantList.length, 'plants');
+              allowDebugLogs && console.log('  First 5 plants:', hostPlantList.slice(0, 5));
+              allowDebugLogs && console.log('  Last 5 plants:', hostPlantList.slice(-5));
+              allowDebugLogs && console.log('  Host plant entries with parts:', hostPlantEntries.slice(0, 5));
               
               // Skip all other processing for ルリシジミ
             } else {
             
             // Special debug for ヤクシマルリシジミ
             if (japaneseName === 'ヤクシマルリシジミ') {
-              console.log('DEBUG: Processing ヤクシマルリシジミ host plants');
-              console.log('  hostPlants before processing:', hostPlants);
-              console.log('  hostPlants includes semicolon:', hostPlants.includes(';'));
+              allowDebugLogs && console.log('DEBUG: Processing ヤクシマルリシジミ host plants');
+              allowDebugLogs && console.log('  hostPlants before processing:', hostPlants);
+              allowDebugLogs && console.log('  hostPlants includes semicolon:', hostPlants.includes(';'));
             }
             
             // Special debug for シモフリスズメ (need to check moth data too)
             if (japaneseName === 'シモフリスズメ') {
-              console.log('DEBUG: Processing シモフリスズメ host plants in butterfly data');
-              console.log('  hostPlants before processing:', hostPlants);
+              allowDebugLogs && console.log('DEBUG: Processing シモフリスズメ host plants in butterfly data');
+              allowDebugLogs && console.log('  hostPlants before processing:', hostPlants);
             }
             
             // Extract plant parts information from hostPlants field (for butterflies)
@@ -4843,9 +4844,9 @@ function App() {
             
             // Debug for ルリシジミ
             if (japaneseName === 'ルリシジミ') {
-              console.log('=== DEBUG: ルリシジミ plant parts extraction ===');
-              console.log('  Original hostPlants:', hostPlants);
-              console.log('  Extracted parts Map:', Array.from(butterflyPlantParts.entries()));
+              allowDebugLogs && console.log('=== DEBUG: ルリシジミ plant parts extraction ===');
+              allowDebugLogs && console.log('  Original hostPlants:', hostPlants);
+              allowDebugLogs && console.log('  Extracted parts Map:', Array.from(butterflyPlantParts.entries()));
             }
             
             // Remove outer quotes and inner quotes
@@ -4860,19 +4861,19 @@ function App() {
               cleanedHostPlants = cleanedHostPlants.slice(2, -2);
             }
             
-            console.log("After removing quotes:", cleanedHostPlants);
+            allowDebugLogs && console.log("After removing quotes:", cleanedHostPlants);
             
             // Debug for ヤクシマルリシジミ specifically
             if (japaneseName === 'ヤクシマルリシジミ') {
-              console.log('DEBUG: ヤクシマルリシジミ cleanedHostPlants after quote removal:', cleanedHostPlants);
-              console.log('  Length:', cleanedHostPlants.length);
-              console.log('  Starts with:', cleanedHostPlants.substring(0, 100));
+              allowDebugLogs && console.log('DEBUG: ヤクシマルリシジミ cleanedHostPlants after quote removal:', cleanedHostPlants);
+              allowDebugLogs && console.log('  Length:', cleanedHostPlants.length);
+              allowDebugLogs && console.log('  Starts with:', cleanedHostPlants.substring(0, 100));
             }
             
             // Special handling for ルリシジミ - skip the parentheses extraction
             if (japaneseName === 'ルリシジミ') {
-              console.log('=== SPECIAL HANDLING FOR ルリシジミ (parentheses extraction) ===');
-              console.log('  Keeping original format:', cleanedHostPlants.substring(0, 200));
+              allowDebugLogs && console.log('=== SPECIAL HANDLING FOR ルリシジミ (parentheses extraction) ===');
+              allowDebugLogs && console.log('  Keeping original format:', cleanedHostPlants.substring(0, 200));
               // Keep the original format for ルリシジミ
             } else {
               // Check if this has the pattern "科名（植物名、植物名）"
@@ -4882,19 +4883,19 @@ function App() {
                 const familyName = familyWithParenthesesMatch[1];
                 const plantsInParentheses = familyWithParenthesesMatch[2];
                 cleanedHostPlants = familyName + '、' + plantsInParentheses;
-                console.log("Family with parentheses - combined:", cleanedHostPlants);
+                allowDebugLogs && console.log("Family with parentheses - combined:", cleanedHostPlants);
               } else {
                 // Extract content from parentheses only
                 const parenthesesMatch = cleanedHostPlants.match(/[（(]([^）)]+)[）)]/);
                 if (parenthesesMatch) {
                   // If there's content in parentheses, use that
                   cleanedHostPlants = parenthesesMatch[1];
-                  console.log("Extracted from parentheses:", cleanedHostPlants);
+                  allowDebugLogs && console.log("Extracted from parentheses:", cleanedHostPlants);
                   
                   // Debug for ヤクシマルリシジミ
                   if (japaneseName === 'ヤクシマルリシジミ') {
-                    console.log('DEBUG: ヤクシマルリシジミ - parentheses found, extracting content');
-                    console.log('  parenthesesMatch[1]:', parenthesesMatch[1]);
+                    allowDebugLogs && console.log('DEBUG: ヤクシマルリシジミ - parentheses found, extracting content');
+                    allowDebugLogs && console.log('  parenthesesMatch[1]:', parenthesesMatch[1]);
                   }
                 } else {
                   // Otherwise, clean up the whole string - be more careful with scientific terms
@@ -4914,10 +4915,10 @@ function App() {
             
             // Special case for オオゴマシジミ - hardcoded fix for troubleshooting
             if (japaneseName === 'オオゴマシジミ') {
-              console.log('=== SPECIAL HANDLING for オオゴマシジミ ===');
+              allowDebugLogs && console.log('=== SPECIAL HANDLING for オオゴマシジミ ===');
               // Hardcode the expected plants for now to test the display
               plants = ['カメバヒキオコシ（花穂）', 'クロバナヒキオコシ（花穂）'];
-              console.log('  Hardcoded plants:', plants);
+              allowDebugLogs && console.log('  Hardcoded plants:', plants);
             } else if (cleanedHostPlants.includes(';') || cleanedHostPlants.includes('；')) {
               // Check if all segments end with the same plant part (e.g., "の花蕾")
               const segments = cleanedHostPlants.split(/[;；]/);
@@ -4925,13 +4926,13 @@ function App() {
               
               // Special handling for ルリシジミ - all segments are plants with parts
               if (japaneseName === 'ルリシジミ') {
-                console.log('=== SPECIAL HANDLING FOR ルリシジミ ===');
-                console.log('  Original cleanedHostPlants:', cleanedHostPlants);
-                console.log('  Number of segments:', allSegmentsTrimmed.length);
-                console.log('  First 5 segments:', allSegmentsTrimmed.slice(0, 5));
+                allowDebugLogs && console.log('=== SPECIAL HANDLING FOR ルリシジミ ===');
+                allowDebugLogs && console.log('  Original cleanedHostPlants:', cleanedHostPlants);
+                allowDebugLogs && console.log('  Number of segments:', allSegmentsTrimmed.length);
+                allowDebugLogs && console.log('  First 5 segments:', allSegmentsTrimmed.slice(0, 5));
                 // All segments are plant entries for ルリシジミ
                 plants = allSegmentsTrimmed;
-                console.log('  Assigned all segments to plants array:', plants.length, 'plants');
+                allowDebugLogs && console.log('  Assigned all segments to plants array:', plants.length, 'plants');
               } else {
                 // Check if all segments contain plant parts like "の花蕾", "の花", etc.
                 // Pattern now matches formats like "植物名 (科名)の花蕾" as well as "植物名の花蕾"
@@ -4973,39 +4974,39 @@ function App() {
             
             // Debug for specific butterflies
             if (japaneseName === 'ルリシジミ') {
-              console.log(`=== DEBUG: Processing ${japaneseName} ===`);
-              console.log('  Original hostPlants:', hostPlants);
-              console.log('  cleanedHostPlants:', cleanedHostPlants);
-              console.log('  cleanedHostPlants length:', cleanedHostPlants.length);
-              console.log('  Contains semicolon?:', cleanedHostPlants.includes(';') || cleanedHostPlants.includes('；'));
+              allowDebugLogs && console.log(`=== DEBUG: Processing ${japaneseName} ===`);
+              allowDebugLogs && console.log('  Original hostPlants:', hostPlants);
+              allowDebugLogs && console.log('  cleanedHostPlants:', cleanedHostPlants);
+              allowDebugLogs && console.log('  cleanedHostPlants length:', cleanedHostPlants.length);
+              allowDebugLogs && console.log('  Contains semicolon?:', cleanedHostPlants.includes(';') || cleanedHostPlants.includes('；'));
               
               const segments = cleanedHostPlants.split(/[;；]/);
-              console.log('  Number of segments:', segments.length);
-              console.log('  First 5 segments:', segments.slice(0, 5));
+              allowDebugLogs && console.log('  Number of segments:', segments.length);
+              allowDebugLogs && console.log('  First 5 segments:', segments.slice(0, 5));
               
               // Updated pattern to match "植物名 (科名)の花蕾" format
               const plantPartPattern = /(?:\s*\([^)]+\))?[のから](花蕾|花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|新芽|花穂)$/;
               const allSegmentsTrimmed = segments.map(s => s.trim()).filter(s => s);
               
               // Check each segment
-              console.log('  Checking each segment:');
+              allowDebugLogs && console.log('  Checking each segment:');
               allSegmentsTrimmed.slice(0, 5).forEach((segment, i) => {
                 const matches = plantPartPattern.test(segment);
-                console.log(`    Segment ${i}: "${segment}" - Pattern matches: ${matches}`);
+                allowDebugLogs && console.log(`    Segment ${i}: "${segment}" - Pattern matches: ${matches}`);
               });
               
               const allHavePlantParts = allSegmentsTrimmed.every(segment => 
                 plantPartPattern.test(segment) || segment.includes('(') && segment.includes(')')
               );
-              console.log('  All have plant parts?:', allHavePlantParts);
-              console.log('  Processing path:', allHavePlantParts ? 'ALL_SEGMENTS' : 'FIRST_SEGMENT_ONLY');
-              console.log('  allSegmentsTrimmed length:', allSegmentsTrimmed.length);
+              allowDebugLogs && console.log('  All have plant parts?:', allHavePlantParts);
+              allowDebugLogs && console.log('  Processing path:', allHavePlantParts ? 'ALL_SEGMENTS' : 'FIRST_SEGMENT_ONLY');
+              allowDebugLogs && console.log('  allSegmentsTrimmed length:', allSegmentsTrimmed.length);
               
-              console.log('  Parsed plants array:', plants);
-              console.log('  Number of plants:', plants.length);
+              allowDebugLogs && console.log('  Parsed plants array:', plants);
+              allowDebugLogs && console.log('  Number of plants:', plants.length);
               if (plants.length > 0) {
-                console.log('  First 5 plants:', plants.slice(0, 5));
-                console.log('  Last 5 plants:', plants.slice(-5));
+                allowDebugLogs && console.log('  First 5 plants:', plants.slice(0, 5));
+                allowDebugLogs && console.log('  Last 5 plants:', plants.slice(-5));
               }
               
               // Check family distribution
@@ -5014,25 +5015,25 @@ function App() {
                 const familyMatch = plant.match(/\(([^)]+)\)/);
                 if (familyMatch) families.add(familyMatch[1]);
               });
-              console.log('  Unique families found:', Array.from(families));
+              allowDebugLogs && console.log('  Unique families found:', Array.from(families));
             }
             if (japaneseName === 'オオゴマシジミ') {
-              console.log(`=== DEBUG: Processing ${japaneseName} ===`);
-              console.log('  Original hostPlants:', hostPlants);
-              console.log('  cleanedHostPlants:', cleanedHostPlants);
-              console.log('  Contains semicolon:', cleanedHostPlants.includes(';') || cleanedHostPlants.includes('；'));
-              console.log('  Split plants:', plants);
-              console.log('  Number of plants:', plants.length);
-              console.log('  Extracted parts:', Array.from(butterflyPlantParts.entries()));
+              allowDebugLogs && console.log(`=== DEBUG: Processing ${japaneseName} ===`);
+              allowDebugLogs && console.log('  Original hostPlants:', hostPlants);
+              allowDebugLogs && console.log('  cleanedHostPlants:', cleanedHostPlants);
+              allowDebugLogs && console.log('  Contains semicolon:', cleanedHostPlants.includes(';') || cleanedHostPlants.includes('；'));
+              allowDebugLogs && console.log('  Split plants:', plants);
+              allowDebugLogs && console.log('  Number of plants:', plants.length);
+              allowDebugLogs && console.log('  Extracted parts:', Array.from(butterflyPlantParts.entries()));
               
               // Show semicolon parsing details
               if (cleanedHostPlants.includes(';') || cleanedHostPlants.includes('；')) {
                 const segments = cleanedHostPlants.split(/[;；]/);
-                console.log('  Semicolon segments:', segments);
-                console.log('  First segment (plants):', segments[0]);
+                allowDebugLogs && console.log('  Semicolon segments:', segments);
+                allowDebugLogs && console.log('  First segment (plants):', segments[0]);
                 if (segments[1]) {
-                  console.log('  Second segment:', segments[1]);
-                  console.log('  Contains アリ:', segments[1].includes('アリ'));
+                  allowDebugLogs && console.log('  Second segment:', segments[1]);
+                  allowDebugLogs && console.log('  Contains アリ:', segments[1].includes('アリ'));
                 }
               }
             }
@@ -5070,7 +5071,7 @@ function App() {
               }
               
               if (japaneseName === 'ルリシジミ' || japaneseName === 'オオゴマシジミ') {
-                console.log(`DEBUG: Plant processing: "${plant}" -> clean: "${cleanPlant}", family: "${family}", part: "${part}"`);
+                allowDebugLogs && console.log(`DEBUG: Plant processing: "${plant}" -> clean: "${cleanPlant}", family: "${family}", part: "${part}"`);
               }
               
               return { original: plant, clean: cleanPlant, family, part };
@@ -5095,7 +5096,7 @@ function App() {
               // If correctPlantName returned empty, fall back to normalized name for butterflies
               const finalName = item.corrected && item.corrected.trim() !== '' ? item.corrected : item.normalized;
               if (japaneseName === 'オオゴマシジミ') {
-                console.log(`DEBUG: YList filter: ${item.original} -> normalized: ${item.normalized} -> corrected: ${item.corrected} -> final: ${finalName}`);
+                allowDebugLogs && console.log(`DEBUG: YList filter: ${item.original} -> normalized: ${item.normalized} -> corrected: ${item.corrected} -> final: ${finalName}`);
               }
               return finalName && finalName.trim() !== '';
             }).map(item => ({
@@ -5129,49 +5130,49 @@ function App() {
             
             // Debug filtering steps for specific butterflies
             if (japaneseName === 'ルリシジミ') {
-              console.log(`=== DEBUG: Filter steps for ${japaneseName} ===`);
-              console.log('  After trim:', plantsAfterTrim.length, 'plants');
-              console.log('    First 10:', plantsAfterTrim.slice(0, 10));
+              allowDebugLogs && console.log(`=== DEBUG: Filter steps for ${japaneseName} ===`);
+              allowDebugLogs && console.log('  After trim:', plantsAfterTrim.length, 'plants');
+              allowDebugLogs && console.log('    First 10:', plantsAfterTrim.slice(0, 10));
               
-              console.log('  After empty filter:', plantsAfterEmptyFilter.length, 'plants');
-              console.log('    First 10:', plantsAfterEmptyFilter.slice(0, 10));
+              allowDebugLogs && console.log('  After empty filter:', plantsAfterEmptyFilter.length, 'plants');
+              allowDebugLogs && console.log('    First 10:', plantsAfterEmptyFilter.slice(0, 10));
               
-              console.log('  After processing (with parts):', plantsWithParts.length, 'plants');
-              console.log('    First 10 processed:');
+              allowDebugLogs && console.log('  After processing (with parts):', plantsWithParts.length, 'plants');
+              allowDebugLogs && console.log('    First 10 processed:');
               plantsWithParts.slice(0, 10).forEach((item, i) => 
-                console.log(`      ${i}: original="${item.original}" clean="${item.clean}" family="${item.family}" part="${item.part}"`));
+                allowDebugLogs && console.log(`      ${i}: original="${item.original}" clean="${item.clean}" family="${item.family}" part="${item.part}"`));
               
-              console.log('  After science filter:', plantsAfterScienceFilter.length, 'plants');
-              console.log('    First 10:', plantsAfterScienceFilter.slice(0, 10).map(p => p.clean));
+              allowDebugLogs && console.log('  After science filter:', plantsAfterScienceFilter.length, 'plants');
+              allowDebugLogs && console.log('    First 10:', plantsAfterScienceFilter.slice(0, 10).map(p => p.clean));
               
-              console.log('  After normalize:', plantsAfterNormalize.length, 'plants');  
-              console.log('    First 10:', plantsAfterNormalize.slice(0, 10).map(p => `${p.clean} -> ${p.normalized}`));
+              allowDebugLogs && console.log('  After normalize:', plantsAfterNormalize.length, 'plants');  
+              allowDebugLogs && console.log('    First 10:', plantsAfterNormalize.slice(0, 10).map(p => `${p.clean} -> ${p.normalized}`));
               
-              console.log('  After correction:', plantsAfterCorrection.length, 'plants');
-              console.log('    First 10:', plantsAfterCorrection.slice(0, 10).map(p => `${p.normalized} -> ${p.corrected}`));
+              allowDebugLogs && console.log('  After correction:', plantsAfterCorrection.length, 'plants');
+              allowDebugLogs && console.log('    First 10:', plantsAfterCorrection.slice(0, 10).map(p => `${p.normalized} -> ${p.corrected}`));
               
-              console.log('  After YList filter:', plantsAfterYListFilter.length, 'plants');
-              console.log('    First 10:', plantsAfterYListFilter.slice(0, 10).map(p => p.corrected));
+              allowDebugLogs && console.log('  After YList filter:', plantsAfterYListFilter.length, 'plants');
+              allowDebugLogs && console.log('    First 10:', plantsAfterYListFilter.slice(0, 10).map(p => p.corrected));
               
-              console.log('  Final host plant list:', hostPlantList.length, 'plants');
-              console.log('    All plants:', hostPlantList);
+              allowDebugLogs && console.log('  Final host plant list:', hostPlantList.length, 'plants');
+              allowDebugLogs && console.log('    All plants:', hostPlantList);
             }
             if (japaneseName === 'オオゴマシジミ') {
-              console.log(`=== DEBUG: Filter steps for ${japaneseName} ===`);
-              console.log('  After trim:', plantsAfterTrim.length, 'plants -', plantsAfterTrim);
-              console.log('  After quotes:', plantsAfterQuotes.length, 'plants -', plantsAfterQuotes);
-              console.log('  After empty filter:', plantsAfterEmptyFilter.length, 'plants -', plantsAfterEmptyFilter);
-              console.log('  After parentheses processing:', plantsWithParts.length, 'plants');
-              plantsWithParts.forEach((item, i) => console.log(`    ${i}: "${item.original}" -> clean: "${item.clean}"`));
-              console.log('  After science filter:', plantsAfterScienceFilter.length, 'plants');
-              plantsAfterScienceFilter.forEach((item, i) => console.log(`    ${i}: clean: "${item.clean}"`));
-              console.log('  After normalize:', plantsAfterNormalize.length, 'plants');
-              plantsAfterNormalize.forEach((item, i) => console.log(`    ${i}: "${item.clean}" -> normalized: "${item.normalized}"`));
-              console.log('  After correction:', plantsAfterCorrection.length, 'plants');
-              plantsAfterCorrection.forEach((item, i) => console.log(`    ${i}: "${item.normalized}" -> corrected: "${item.corrected}"`));
-              console.log('  After YList filter:', plantsAfterYListFilter.length, 'plants');
-              plantsAfterYListFilter.forEach((item, i) => console.log(`    ${i}: final: "${item.corrected}"`));
-              console.log('  Final host plant list:', hostPlantList);
+              allowDebugLogs && console.log(`=== DEBUG: Filter steps for ${japaneseName} ===`);
+              allowDebugLogs && console.log('  After trim:', plantsAfterTrim.length, 'plants -', plantsAfterTrim);
+              allowDebugLogs && console.log('  After quotes:', plantsAfterQuotes.length, 'plants -', plantsAfterQuotes);
+              allowDebugLogs && console.log('  After empty filter:', plantsAfterEmptyFilter.length, 'plants -', plantsAfterEmptyFilter);
+              allowDebugLogs && console.log('  After parentheses processing:', plantsWithParts.length, 'plants');
+              plantsWithParts.forEach((item, i) => allowDebugLogs && console.log(`    ${i}: "${item.original}" -> clean: "${item.clean}"`));
+              allowDebugLogs && console.log('  After science filter:', plantsAfterScienceFilter.length, 'plants');
+              plantsAfterScienceFilter.forEach((item, i) => allowDebugLogs && console.log(`    ${i}: clean: "${item.clean}"`));
+              allowDebugLogs && console.log('  After normalize:', plantsAfterNormalize.length, 'plants');
+              plantsAfterNormalize.forEach((item, i) => allowDebugLogs && console.log(`    ${i}: "${item.clean}" -> normalized: "${item.normalized}"`));
+              allowDebugLogs && console.log('  After correction:', plantsAfterCorrection.length, 'plants');
+              plantsAfterCorrection.forEach((item, i) => allowDebugLogs && console.log(`    ${i}: "${item.normalized}" -> corrected: "${item.corrected}"`));
+              allowDebugLogs && console.log('  After YList filter:', plantsAfterYListFilter.length, 'plants');
+              plantsAfterYListFilter.forEach((item, i) => allowDebugLogs && console.log(`    ${i}: final: "${item.corrected}"`));
+              allowDebugLogs && console.log('  Final host plant list:', hostPlantList);
             }
             
             // Remove duplicates and final empty string check (skip for ルリシジミ since we already have the final list)
@@ -5180,7 +5181,7 @@ function App() {
             }
             } // Close the else block for ルリシジミ special handling
             
-            console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
+            allowDebugLogs && console.log("Final parsed host plants for", japaneseName, ":", hostPlantList);
           }
 
           const butterfly = {
@@ -5203,18 +5204,18 @@ function App() {
           };
           
           if (japaneseName === 'オオゴマシジミ') {
-            console.log(`=== BUTTERFLY OBJECT CREATED for ${japaneseName} ===`);
-            console.log('  butterfly.geographicalRemarks:', butterfly.geographicalRemarks);
-            console.log('  original remarks value:', remarks);
-            console.log('  butterfly.id:', butterfly.id);
-            console.log('  expected id should be butterfly-csv-131:', id === 'butterfly-csv-131');
-            console.log('  forEach index:', index);
-            console.log('  index + 1:', index + 1);
-            console.log('  Full butterfly object:', butterfly);
+            allowDebugLogs && console.log(`=== BUTTERFLY OBJECT CREATED for ${japaneseName} ===`);
+            allowDebugLogs && console.log('  butterfly.geographicalRemarks:', butterfly.geographicalRemarks);
+            allowDebugLogs && console.log('  original remarks value:', remarks);
+            allowDebugLogs && console.log('  butterfly.id:', butterfly.id);
+            allowDebugLogs && console.log('  expected id should be butterfly-csv-131:', id === 'butterfly-csv-131');
+            allowDebugLogs && console.log('  forEach index:', index);
+            allowDebugLogs && console.log('  index + 1:', index + 1);
+            allowDebugLogs && console.log('  Full butterfly object:', butterfly);
           }
 
           butterflyData.push(butterfly);
-          console.log("Added butterfly:", japaneseName, scientificName);
+          allowDebugLogs && console.log("Added butterfly:", japaneseName, scientificName);
 
           // Add to host plants data with validation
           hostPlantList.forEach(plant => {
@@ -5232,12 +5233,12 @@ function App() {
           });
         }
         
-        console.log("=== BUTTERFLY DATA FINAL SUMMARY ===");
-        console.log("- Original CSV rows:", butterflyParsedData.length);
-        console.log("- Successfully processed:", processedCount);
-        console.log("- Skipped due to missing data:", skippedCount);
-        console.log("- Final butterfly objects created:", butterflyData.slice(1).length, "(excluding test entry)");
-        console.log("- Does final data include オオゴマシジミ?", butterflyData.find(b => b.name === 'オオゴマシジミ') ? 'YES' : 'NO');
+        allowDebugLogs && console.log("=== BUTTERFLY DATA FINAL SUMMARY ===");
+        allowDebugLogs && console.log("- Original CSV rows:", butterflyParsedData.length);
+        allowDebugLogs && console.log("- Successfully processed:", processedCount);
+        allowDebugLogs && console.log("- Skipped due to missing data:", skippedCount);
+        allowDebugLogs && console.log("- Final butterfly objects created:", butterflyData.slice(1).length, "(excluding test entry)");
+        allowDebugLogs && console.log("- Does final data include オオゴマシジミ?", butterflyData.find(b => b.name === 'オオゴマシジミ') ? 'YES' : 'NO');
         } catch (error) {
           console.error("Error parsing butterfly data:", error);
           console.warn("Continuing without butterfly data - butterfly information may be incomplete");
@@ -5250,11 +5251,11 @@ function App() {
         beetleData = [];
         if (!useNormalizedOnly && beetleText) {
           try {
-            console.log("Parsing beetle data...");
-            console.log("Beetle CSV text length:", beetleText.length);
-            console.log("First 500 chars of beetle CSV:", beetleText.substring(0, 500));
+            allowDebugLogs && console.log("Parsing beetle data...");
+            allowDebugLogs && console.log("Beetle CSV text length:", beetleText.length);
+            allowDebugLogs && console.log("First 500 chars of beetle CSV:", beetleText.substring(0, 500));
             const beetleParsed = Papa.parse(beetleText, { header: true, skipEmptyLines: true, delimiter: ',' });
-            console.log("Beetle data parsed. Row count:", beetleParsed.data.length);
+            allowDebugLogs && console.log("Beetle data parsed. Row count:", beetleParsed.data.length);
             if (beetleParsed.errors.length) {
               console.error("PapaParse errors in buprestidae_host.csv:", beetleParsed.errors);
             }
@@ -5275,7 +5276,7 @@ function App() {
           const year = row['公表年'] || '';
           
           if (!japaneseName || !genus || !species) {
-            console.log("Skipping beetle row:", { japaneseName, genus, species, rowIndex: index });
+            allowDebugLogs && console.log("Skipping beetle row:", { japaneseName, genus, species, rowIndex: index });
             return;
           }
           
@@ -5390,7 +5391,7 @@ function App() {
           
           // Debug log for specific species
           if (japaneseName === 'ルイスヒラタチビタマムシ' || japaneseName === 'アオマダラタマムシ') {
-            console.log(`DEBUG: ${japaneseName} beetle object created:`, {
+            allowDebugLogs && console.log(`DEBUG: ${japaneseName} beetle object created:`, {
               name: japaneseName,
               scientificName: scientificName,
               scientificFilename: scientificFilenameForBeetle,
@@ -5401,7 +5402,7 @@ function App() {
           }
 
           beetleData.push(beetle);
-          console.log("Added beetle:", japaneseName, scientificName);
+          allowDebugLogs && console.log("Added beetle:", japaneseName, scientificName);
 
           // Add to host plants data with validation
           hostPlantList.forEach(plant => {
@@ -5418,7 +5419,7 @@ function App() {
           });
         });
         
-        console.log("Beetle data parsed successfully. beetleData count:", beetleData.length);
+        allowDebugLogs && console.log("Beetle data parsed successfully. beetleData count:", beetleData.length);
         } catch (error) {
           console.error("Error parsing beetle data:", error);
           console.warn("Continuing without beetle data - beetle information may be incomplete");
@@ -5431,7 +5432,7 @@ function App() {
         leafbeetleData = [];
         if (!useNormalizedOnly && hamushiParsedData.length > 0) {
           try {
-            console.log("Processing leafbeetle data from integrated hamushi file...");
+            allowDebugLogs && console.log("Processing leafbeetle data from integrated hamushi file...");
             let processedCount = 0;
             let skippedCount = 0;
             hamushiParsedData.forEach((row, index) => {
@@ -5450,14 +5451,14 @@ function App() {
           // 和名が空の場合はスキップ
           if (!japaneseName) {
             skippedCount++;
-            if (isDevelopment) console.log("Skipping leafbeetle row - no Japanese name:", { japaneseName, scientificName, rowIndex: index });
+            if (allowDebugLogs) console.log("Skipping leafbeetle row - no Japanese name:", { japaneseName, scientificName, rowIndex: index });
             return;
           }
           
           // 学名が空の場合もスキップ
           if (!scientificName) {
             skippedCount++;
-            if (isDevelopment) console.log("Skipping leafbeetle row - no scientific name:", { japaneseName, scientificName, rowIndex: index });
+            if (allowDebugLogs) console.log("Skipping leafbeetle row - no scientific name:", { japaneseName, scientificName, rowIndex: index });
             return;
           }
           
@@ -5476,7 +5477,7 @@ function App() {
             id = `leafbeetle-${catalogId.substring(1)}`;
             // デバッグ: H629のデータを確認
             if (catalogId === 'H629') {
-              console.log('H629 (ムナグロナガハムシ) データ:', {
+              allowDebugLogs && console.log('H629 (ムナグロナガハムシ) データ:', {
                 id,
                 catalogId,
                 japaneseName,
@@ -5532,7 +5533,7 @@ function App() {
           };
 
           leafbeetleData.push(leafbeetle);
-          console.log("Added leafbeetle:", japaneseName, scientificName);
+          allowDebugLogs && console.log("Added leafbeetle:", japaneseName, scientificName);
 
           // Add to host plants data with validation
           hostPlantList.forEach(plant => {
@@ -6202,8 +6203,8 @@ function App() {
     //     if (!devtools.open) {
     //       devtools.open = true;
     //       console.clear();
-    //       console.log('%c⚠️ 開発者ツールが検出されました', 'color: red; font-size: 20px; font-weight: bold;');
-    //       console.log('%c研究用データの保護にご協力ください', 'color: orange; font-size: 14px;');
+    //       allowDebugLogs && console.log('%c⚠️ 開発者ツールが検出されました', 'color: red; font-size: 20px; font-weight: bold;');
+    //       allowDebugLogs && console.log('%c研究用データの保護にご協力ください', 'color: orange; font-size: 14px;');
     //     }
     //   } else {
     //     devtools.open = false;
