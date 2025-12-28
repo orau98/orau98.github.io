@@ -401,15 +401,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const lastClickRef = useRef({ id: null, ts: 0 });
   const [hoverNodeId, setHoverNodeId] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
-  const [legendFocus, setLegendFocus] = useState(null);
-  const [legendDimMode, setLegendDimMode] = useState('fade'); // fade | hide
-  const [labelMode, setLabelMode] = useState('auto'); // auto | all | none
+  const [labelMode, setLabelMode] = useState('auto'); // auto | none
   const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
-  const [showRelatedInsects, setShowRelatedInsects] = useState(true);
-  const [linkDistance, setLinkDistance] = useState(48);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [isCompactPanel, setIsCompactPanel] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
+  const showRelatedInsects = true;
+  const linkDistance = 48;
 
   const [ylistData, setYlistData] = useState(null);
 
@@ -587,7 +584,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     return { nodes, links };
-  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, insectLookup, plantImageCandidates, plantInsectMeta, relatedLimit, showRelatedInsects, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems]);
+  }, [currentInsect, currentPlantName, hostPlantsMap, allInsects, insectImageCandidates, insectLookup, plantImageCandidates, plantInsectMeta, relatedLimit, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems]);
 
   // selection safety: clear when graph changes
   useEffect(() => {
@@ -595,12 +592,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (graphData.nodes.some(n => n.id === selectedNodeId)) return;
     setSelectedNodeId(null);
   }, [graphData.nodes, selectedNodeId]);
-
-  const nodeTypeById = useMemo(() => {
-    const map = new Map();
-    graphData.nodes.forEach((n) => map.set(n.id, n.type));
-    return map;
-  }, [graphData.nodes]);
 
   const selectedNode = useMemo(() => {
     if (!selectedNodeId) return null;
@@ -930,10 +921,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const radius = baseR / Math.sqrt(globalScale);
     const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
-    const dimByLegend = legendFocus && !node.type.includes(legendFocus) && node.id !== selectedNodeId;
-    const dim = dimByHighlight || dimByLegend;
-    const dimAlpha = legendDimMode === 'hide' ? 0.06 : 0.25;
-    const alpha = dim ? dimAlpha : 1;
+    const dim = dimByHighlight;
+    const alpha = dim ? 0.25 : 1;
     const dense = labelMode === 'auto' && graphData.nodes.length > 28;
     const showLabel = labelMode !== 'none' && (
       labelMode === 'all'
@@ -994,7 +983,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     if (showLabel) drawLabel(node.x, node.y, node.name, dim);
-  }, [activeNodeId, graphData.nodes.length, highlightNodeIds, legendFocus, legendDimMode, isDark, labelMode, selectedNodeId]);
+  }, [activeNodeId, graphData.nodes.length, highlightNodeIds, isDark, labelMode, selectedNodeId]);
 
   // zoom controls
   const zoomIn = useCallback(() => {
@@ -1012,22 +1001,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     markUserInteracted();
     fgRef.current.zoomToFit(400, 60);
   }, [markUserInteracted]);
-  const reheatLayout = useCallback(() => {
-    markUserInteracted();
-    if (fgRef.current) fgRef.current.d3ReheatSimulation();
-  }, [markUserInteracted]);
-  const unpinAll = useCallback(() => {
-    for (const node of graphData.nodes) {
-      node.fx = undefined;
-      node.fy = undefined;
-    }
-    markUserInteracted();
-    try { fgRef.current && fgRef.current.d3ReheatSimulation(); } catch { /* ignore */ }
-  }, [graphData.nodes, markUserInteracted]);
-  const toggleLegendFocus = useCallback((key) => {
-    setLegendFocus((prev) => (prev === key ? null : key));
-  }, []);
-
   // touch interactions: long-press to pin-drag
   const cancelLongPress = useCallback(() => {
     if (longPressTimerRef.current) {
@@ -1190,15 +1163,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           const highlighted = highlightLinks.has(link);
           const sId = typeof link.source === 'object' ? link.source.id : link.source;
           const tId = typeof link.target === 'object' ? link.target.id : link.target;
-          const sType = nodeTypeById.get(sId);
-          const tType = nodeTypeById.get(tId);
-          const legendDim = legendFocus && !(sType?.includes(legendFocus) || tType?.includes(legendFocus));
-          const dim = (activeNodeId && !highlighted) || legendDim;
-          const dimAlpha = legendDimMode === 'hide' ? 0.08 : 0.25;
-          if (dim) return `rgba(148,163,184,${dimAlpha})`;
+          if (!sId || !tId) return 'rgba(148,163,184,0.65)';
+          const dim = activeNodeId && !highlighted;
+          if (dim) return 'rgba(148,163,184,0.25)';
           return highlighted ? '#38bdf8' : 'rgba(148,163,184,0.65)';
         }}
-        linkWidth={link => (highlightLinks.has(link) ? 2.2 : (legendFocus ? 0.7 : 1.1))}
+        linkWidth={link => (highlightLinks.has(link) ? 2.2 : 1.1)}
         linkDirectionalParticles={link => (highlightLinks.has(link) ? 3 : 0)}
         linkDirectionalParticleWidth={1.6}
         linkCurvature={0.18}
@@ -1241,23 +1211,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             ＋
           </button>
           <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
-          <button
-            type="button"
-            onClick={unpinAll}
-            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-            title="固定解除（pin解除）"
-          >
-            固定解除
-          </button>
-          <button
-            type="button"
-            onClick={reheatLayout}
-            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-            title="再レイアウト（reheat）"
-          >
-            再レイアウト
-          </button>
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">ラベル</span>
             <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
@@ -1268,14 +1221,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 className={`px-2.5 py-1.5 text-[12px] font-semibold ${labelMode === 'auto' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
               >
                 自動
-              </button>
-              <button
-                type="button"
-                onClick={() => setLabelMode('all')}
-                aria-pressed={labelMode === 'all'}
-                className={`px-2.5 py-1.5 text-[12px] font-semibold border-l border-slate-200 dark:border-slate-600 ${labelMode === 'all' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
-              >
-                全部
               </button>
               <button
                 type="button"
@@ -1300,176 +1245,67 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               ))}
             </select>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowRelatedInsects((prev) => !prev)}
-            disabled={!currentInsect}
-            className={`px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 ${
-              showRelatedInsects ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-200' : 'bg-white/70 dark:bg-slate-900/40'
-            } ${!currentInsect ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white dark:hover:bg-slate-800'}`}
-            title="食草から関連昆虫を表示/非表示"
-          >
-            関連昆虫{showRelatedInsects ? 'ON' : 'OFF'}
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">間隔</span>
-            <input
-              type="range"
-              min="32"
-              max="80"
-              step="4"
-              value={linkDistance}
-              onChange={(e) => setLinkDistance(parseInt(e.target.value, 10))}
-              className="w-20"
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowHelp((prev) => !prev)}
-            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-            title="操作ヘルプ"
-          >
-            ？ヘルプ
-          </button>
         </div>
       </div>
 
-      {showHelp && (
-        <div data-fg-ui className="absolute top-16 left-3 right-3 sm:right-auto sm:w-[360px] bg-white/95 dark:bg-slate-900/95 backdrop-blur rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 text-xs text-slate-700 dark:text-slate-200">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <div className="font-bold text-sm mb-2">操作ガイド</div>
-              <ul className="space-y-1 list-disc list-inside text-[12px]">
-                <li>ドラッグで移動、ホイール/ピンチでズーム</li>
-                <li>タップ/クリックで選択、同じノードを素早く2回で詳細</li>
-                <li>長押しでノード固定（モバイル）</li>
-                <li>ラベル/関連数/間隔を調整して密度をコントロール</li>
-              </ul>
-            </div>
-            <button
-              type="button"
-              className="shrink-0 p-1 rounded-md text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
-              onClick={() => setShowHelp(false)}
-              aria-label="ヘルプを閉じる"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Legend */}
       <div data-fg-ui className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
-        {currentInsect && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('insect-current')}
-            aria-pressed={legendFocus === 'insect-current'}
-          >
-            <span className="w-3 h-3 rounded-full bg-rose-400"></span>現在の昆虫
-          </button>
-        )}
-        {currentPlantName && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'plant-current' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('plant-current')}
-            aria-pressed={legendFocus === 'plant-current'}
-          >
-            <span className="w-3 h-3 rounded-full bg-emerald-400"></span>現在の植物
-          </button>
-        )}
-        {showHostPlantLegend && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'plant-host' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('plant-host')}
-            aria-pressed={legendFocus === 'plant-host'}
-          >
-            <span className="w-3 h-3 rounded-full bg-emerald-500"></span>食草（幼虫）
-          </button>
-        )}
-        {showFlowerPlantLegend && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'plant-flower' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('plant-flower')}
-            aria-pressed={legendFocus === 'plant-flower'}
-          >
-            <span className="w-3 h-3 rounded-full bg-amber-400"></span>訪花植物
-          </button>
-        )}
-        {showBothPlantLegend && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'plant-both' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('plant-both')}
-            aria-pressed={legendFocus === 'plant-both'}
-          >
-            <span className="w-3 h-3 rounded-full bg-lime-400"></span>食草＋訪花
-          </button>
-        )}
-        {showInsectHostLegend && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-host' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('insect-host')}
-            aria-pressed={legendFocus === 'insect-host'}
-          >
-            <span className="w-3 h-3 rounded-full bg-sky-400"></span>食草昆虫
-          </button>
-        )}
-        {showInsectFlowerLegend && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-flower' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('insect-flower')}
-            aria-pressed={legendFocus === 'insect-flower'}
-          >
-            <span className="w-3 h-3 rounded-full bg-rose-400"></span>訪花昆虫
-          </button>
-        )}
-        {showInsectBothLegend && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect-both' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('insect-both')}
-            aria-pressed={legendFocus === 'insect-both'}
-          >
-            <span className="w-3 h-3 rounded-full bg-violet-400"></span>食草＋訪花昆虫
-          </button>
-        )}
-        {(showInsectLegend || showInsectHostLegend || showInsectFlowerLegend || showInsectBothLegend) && (
-          <button
-            type="button"
-            className={`w-full flex items-center gap-2 cursor-pointer px-1 py-1 rounded text-left ${legendFocus === 'insect' ? 'bg-slate-100 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`}
-            onClick={() => toggleLegendFocus('insect')}
-            aria-pressed={legendFocus === 'insect'}
-          >
-            <span className="w-3 h-3 rounded-full bg-sky-400"></span>関連する昆虫
-          </button>
-        )}
-        <div className="pt-2 mt-2 border-t border-slate-200/70 dark:border-slate-700/70 flex items-center gap-2">
-          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">絞り込み</span>
-          <div className="inline-flex rounded-md overflow-hidden border border-slate-200 dark:border-slate-600">
-            <button
-              type="button"
-              onClick={() => setLegendDimMode('fade')}
-              aria-pressed={legendDimMode === 'fade'}
-              className={`px-2 py-1 text-[11px] font-semibold ${legendDimMode === 'fade' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
-            >
-              薄く
-            </button>
-            <button
-              type="button"
-              onClick={() => setLegendDimMode('hide')}
-              aria-pressed={legendDimMode === 'hide'}
-              className={`px-2 py-1 text-[11px] font-semibold border-l border-slate-200 dark:border-slate-600 ${legendDimMode === 'hide' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
-            >
-              隠す
-            </button>
-          </div>
+        <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+        <div className="space-y-1">
+          {currentInsect && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-rose-400"></span>
+              <span>現在の昆虫</span>
+            </div>
+          )}
+          {currentPlantName && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
+              <span>現在の植物</span>
+            </div>
+          )}
+          {showHostPlantLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <span>食草（幼虫）</span>
+            </div>
+          )}
+          {showFlowerPlantLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-amber-400"></span>
+              <span>訪花植物</span>
+            </div>
+          )}
+          {showBothPlantLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-lime-400"></span>
+              <span>食草＋訪花</span>
+            </div>
+          )}
+          {showInsectHostLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-sky-400"></span>
+              <span>食草昆虫</span>
+            </div>
+          )}
+          {showInsectFlowerLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-rose-400"></span>
+              <span>訪花昆虫</span>
+            </div>
+          )}
+          {showInsectBothLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-violet-400"></span>
+              <span>食草＋訪花昆虫</span>
+            </div>
+          )}
+          {showInsectLegend && (
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-sky-400"></span>
+              <span>関連する昆虫</span>
+            </div>
+          )}
         </div>
       </div>
 
