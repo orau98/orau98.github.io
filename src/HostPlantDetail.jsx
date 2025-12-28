@@ -657,6 +657,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   const isFlowerVisitRecord = (record) => {
     if (!record) return false;
+    if (record.isFlowerVisit === true) return true;
     const lifeStage = (record.lifeStage || '').trim();
     const plantPart = (record.plantPart || '').trim();
     const partCompact = plantPart.replace(/\s+/g, '');

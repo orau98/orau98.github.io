@@ -33,6 +33,16 @@ function normalizePlantNameLite(plantName) {
 
 const cleanString = (value) => (value ?? '').toString().trim();
 
+const isFlowerVisitRecord = (record) => {
+  if (!record) return false;
+  if (record.isFlowerVisit === true) return true;
+  const lifeStage = cleanString(record.lifeStage);
+  const plantPart = cleanString(record.plantPart);
+  const partCompact = plantPart.replace(/\s+/g, '');
+  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
+  return isAdultOrUnknown && partCompact && partCompact.includes('花');
+};
+
 const firstNonEmpty = (...values) => {
   for (const v of values) {
     const trimmed = cleanString(v);
@@ -185,7 +195,9 @@ function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
       if (rawName !== canonical && !aliasToCanonical[rawName]) {
         aliasToCanonical[rawName] = canonical;
       }
-      registerInsect(canonical, insectName);
+      if (!isFlowerVisitRecord(hp)) {
+        registerInsect(canonical, insectName);
+      }
     });
   });
 

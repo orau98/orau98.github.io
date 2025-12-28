@@ -195,6 +195,16 @@ function App() {
     }
   }, [theme]);
 
+  const isFlowerVisitRecord = (record) => {
+    if (!record) return false;
+    if (record.isFlowerVisit === true) return true;
+    const lifeStage = (record?.lifeStage || '').trim();
+    const plantPart = (record?.plantPart || '').trim();
+    const partCompact = plantPart.replace(/\s+/g, '');
+    const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
+    return isAdultOrUnknown && partCompact && partCompact.includes('花');
+  };
+
   const buildFlowerVisitMap = (insects = []) => {
     const map = {};
     const normalizePlant = (value) => {
@@ -211,11 +221,7 @@ function App() {
       const records = insect.hostPlantsDetailed;
       if (!Array.isArray(records) || records.length === 0) return;
       records.forEach((record) => {
-        const lifeStage = (record?.lifeStage || '').trim();
-        const plantPart = (record?.plantPart || '').trim();
-        const partCompact = plantPart.replace(/\s+/g, '');
-        const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-        if (!isAdultOrUnknown || !partCompact || !partCompact.includes('花')) return;
+        if (!isFlowerVisitRecord(record)) return;
         const rawPlant = record?.name || record?.displayName || record?.plant || '';
         const plantName = normalizePlant(String(rawPlant || '').trim());
         if (!plantName || plantName === '不明') return;
@@ -6005,7 +6011,7 @@ function App() {
           let plants = [];
           if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
             plants = insect.hostPlantsDetailed
-              .filter(p => !(p && p.lifeStage === '成虫' && p.plantPart === '花'))
+              .filter(p => !isFlowerVisitRecord(p))
               .map(p => p && p.name ? String(p.name).trim() : '')
               .filter(Boolean);
           } else if (Array.isArray(insect.hostPlants)) {
@@ -6021,7 +6027,40 @@ function App() {
             if (!unifiedHostPlantMap[normalized].includes(insect.name)) unifiedHostPlantMap[normalized].push(insect.name);
           });
         };
+        const pruneFlowerOnlyHosts = (map, insect) => {
+          if (!map || !insect) return;
+          const records = insect.hostPlantsDetailed;
+          if (!Array.isArray(records) || records.length === 0) return;
+          const insectName = (insect.name || insect.japaneseName || '').trim();
+          if (!insectName) return;
+          const larvalPlants = new Set();
+          const flowerPlants = new Set();
+          records.forEach((record) => {
+            const raw = record?.name || record?.displayName || record?.plant || '';
+            const normalized = normalizePlantName(String(raw || '').trim());
+            if (!normalized || normalized === '不明') return;
+            if (isFlowerVisitRecord(record)) {
+              flowerPlants.add(normalized);
+            } else {
+              larvalPlants.add(normalized);
+            }
+          });
+          flowerPlants.forEach((plant) => {
+            if (larvalPlants.has(plant)) return;
+            const list = map[plant];
+            if (!Array.isArray(list)) return;
+            const next = list.filter(name => name !== insectName);
+            if (next.length === 0) {
+              delete map[plant];
+            } else if (next.length !== list.length) {
+              map[plant] = next;
+            }
+          });
+        };
         [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLeafbeetleData].forEach(addInsectPlants);
+        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLeafbeetleData].forEach((insect) => {
+          pruneFlowerOnlyHosts(unifiedHostPlantMap, insect);
+        });
 
         // Debug specific plant like キョウチクトウ to ensure expected insects are present
         if (unifiedHostPlantMap['キョウチクトウ']) {

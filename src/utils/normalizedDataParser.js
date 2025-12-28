@@ -175,16 +175,24 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       });
     }
     
+    const lifeStageRaw = (hp.life_stage || '').trim();
+    const plantPartRaw = (hp.plant_part || '').trim();
+    const partCompact = plantPartRaw.replace(/\s+/g, '');
+    const isAdultOrUnknown = lifeStageRaw === '成虫' || lifeStageRaw === '';
+    const isFlowerVisit = isAdultOrUnknown && partCompact && partCompact.includes('花');
+
     hostPlantsByInsect[hp.insect_id].push({
       name: rawName,
       family: hp.plant_family || '',
       displayName: displayName,
       observationType: hp.observation_type || '野外（国内）',
-      plantPart: hp.plant_part || '葉',
-      lifeStage: hp.life_stage || '幼虫',
+      // Keep display defaults but preserve flower-visit detection via isFlowerVisit flag.
+      plantPart: plantPartRaw || '葉',
+      lifeStage: lifeStageRaw || '幼虫',
       reference: hp.reference || '',
       notes: hp.notes || '',
-      isDetailed: true
+      isDetailed: true,
+      isFlowerVisit
     });
   });
 
@@ -292,6 +300,13 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         return 'moth';
       };
 
+      const hostPlantList = Array.from(new Set(
+        hostPlants
+          .filter(hp => !hp.isFlowerVisit)
+          .map(hp => hp.displayName)
+          .filter(Boolean)
+      ));
+
       const insectData = {
         id: insectId,
         name: displayName,
@@ -311,7 +326,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
           tribeJapanese: insect.tribe_jp?.trim() || ''
         },
         // 従来形式（配列）- 後方互換性のため
-        hostPlants: hostPlants.map(hp => hp.displayName),
+        hostPlants: hostPlantList,
         // 新しい詳細形式
         hostPlantsDetailed: hostPlants,
         // 総合備考

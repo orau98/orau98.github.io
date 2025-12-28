@@ -339,9 +339,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   {(() => {
                     const isFlowerVisitRecord = (record) => {
                       if (!record) return false;
+                      if (record.isFlowerVisit === true) return true;
                       const lifeStage = (record.lifeStage || '').trim();
                       const plantPart = (record.plantPart || '').trim();
-                      return lifeStage === '成虫' && plantPart === '花';
+                      const partCompact = plantPart.replace(/\s+/g, '');
+                      const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
+                      return isAdultOrUnknown && partCompact && partCompact.includes('花');
                     };
 
                     // Repair function for collapsed Latin binomials in plant names
