@@ -500,9 +500,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (hits.length === 0) return [];
     const urls = [];
     hits.slice(0, 2).forEach(base => {
-      // Use resized thumbnails only to avoid extension guessing and heavy originals
+      // Prefer resized thumbnails, fallback to original if missing
       urls.push(`${assetBase}images/resized/plants/${encodeURIComponent(base)}.320.jpg${cacheBust}`);
       urls.push(`${assetBase}images/resized/plants/${encodeURIComponent(base)}.640.jpg${cacheBust}`);
+      urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}.jpg${cacheBust}`);
     });
     return urls;
   }, [assetBase, cacheBust, plantImageNames]);
