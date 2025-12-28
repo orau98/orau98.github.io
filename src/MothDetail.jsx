@@ -922,26 +922,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
                 {formatScientificNameReact(moth.scientificName)}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <a
-                  href={shareXUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
-                  aria-label={`${moth.name}をXで共有`}
-                >
-                  Xで共有
-                </a>
-                <a
-                  href={shareLineUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
-                  aria-label={`${moth.name}をLINEで共有`}
-                >
-                  LINEで共有
-                </a>
-              </div>
             </div>
 
             {/* 食草情報 */}
@@ -1709,6 +1689,36 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
         {/* 前後の種へのナビゲーション */}
         <DetailNavigation allItems={sortedInsects} currentId={moth.id} type="insect" />
+
+        <div id="share" className="mt-8">
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+            <div className="p-4 bg-slate-100/70 dark:bg-slate-700/40 border-b border-slate-200/40 dark:border-slate-600/40">
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                このページを共有
+              </h2>
+            </div>
+            <div className="p-4 flex flex-wrap gap-2">
+              <a
+                href={shareXUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                aria-label={`${moth.name}をXで共有`}
+              >
+                Xで共有
+              </a>
+              <a
+                href={shareLineUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+                aria-label={`${moth.name}をLINEで共有`}
+              >
+                LINEで共有
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
