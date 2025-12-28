@@ -103,6 +103,7 @@ Craniophora_ligustri
 Craniophora_praeclara
 Craniophora_praeclara_2
 Cryphia_mitsuhashi
+Cryptaspasma_marginifasciata
 Ctenoplusia_albostriata
 Cucullia_argentea
 Cucullia_fraudatrix
@@ -218,6 +219,7 @@ Lithophane_socia
 Lithophane_ustulata
 Lithophane_venusta
 Loepa_sakaei
+Lomographa_simplicior
 Lophomilia polybapta Butler
 Lophontosia_pryeri
 Lophoptera_hayesi
@@ -390,6 +392,7 @@ Syntypistis_pryeri
 Takadonta_takamukui
 Tanaorhinus reciprocata confuciaria Walker
 Telorta_divergens
+Telorta_edentata
 Teratoglaea_pacifica
 Tethea ampliata ampliata Butler
 Tethea_consimilis
@@ -430,6 +433,3 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
-ウバメガシ＿葉表
-ウバメガシ＿葉裏
-ユキヤナギ＿葉表
