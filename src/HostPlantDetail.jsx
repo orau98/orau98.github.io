@@ -573,6 +573,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
   const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
   const canonicalHref = absUrl(`/meta/plant/${encodeURIComponent(canonicalPlantName)}.html`);
+  const shareUrl =
+    (typeof window !== 'undefined' && window.location?.href) ||
+    canonicalHref ||
+    '';
+  const shareText = `${decodedPlantName}｜昆虫食草図鑑`;
+  const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+  const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
 
   const { setOgTwitterImage } = useSeoMeta({
     title: pageTitle,
@@ -1359,6 +1366,26 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
               {formatScientificNameReact(taxonomy.scientificName)}
             </div>
           )}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <a
+              href={shareXUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+              aria-label={`${decodedPlantName}をXで共有`}
+            >
+              Xで共有
+            </a>
+            <a
+              href={shareLineUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+              aria-label={`${decodedPlantName}をLINEで共有`}
+            >
+              LINEで共有
+            </a>
+          </div>
         </div>
       </div>
 

@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect, useRef, useState, useMemo } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramEmbed from "./components/InstagramEmbed";
 import InstagramTimeline from "./components/InstagramTimeline";
 import SearchInput from "./components/SearchInput";
 import StickyHeader from "./components/StickyHeader";
-import { FaqStructuredData, MainStructuredData } from "./components/StructuredData";
+import { MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink } from "./utils/sourceLinks";
@@ -13,7 +13,6 @@ import useSeoMeta from "./hooks/useSeoMeta";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./services/imageIndex";
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
-import { buildInsectPath } from "./utils/insectSlug";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -585,139 +584,6 @@ const InsectsHostPlantExplorer = React.memo(
       };
     }, []);
 
-    const isFlowerVisitRecord = (record) => {
-      if (!record) return false;
-      if (record.isFlowerVisit === true) return true;
-      const lifeStage = (record.lifeStage || "").trim();
-      const plantPart = (record.plantPart || "").trim();
-      const partCompact = plantPart.replace(/\s+/g, "");
-      const isAdultOrUnknown = lifeStage === "成虫" || lifeStage === "";
-      return isAdultOrUnknown && partCompact && partCompact.includes("花");
-    };
-
-    const extractLarvalHostPlants = (insect) => {
-      if (!insect) return [];
-      const detailed = Array.isArray(insect.hostPlantsDetailed)
-        ? insect.hostPlantsDetailed
-        : [];
-      if (detailed.length > 0) {
-        const names = new Set();
-        detailed.forEach((record) => {
-          if (isFlowerVisitRecord(record)) return;
-          const name = String(
-            record?.displayName || record?.name || record?.plant || "",
-          ).trim();
-          if (name && name !== "不明") names.add(name);
-        });
-        return Array.from(names);
-      }
-      const fallback = insect.hostPlants;
-      if (Array.isArray(fallback)) {
-        return Array.from(
-          new Set(
-            fallback
-              .map((plant) => String(plant || "").trim())
-              .filter((name) => name && name !== "不明"),
-          ),
-        );
-      }
-      if (typeof fallback === "string") {
-        return Array.from(
-          new Set(
-            fallback
-              .split(/[;；、,]/)
-              .map((plant) => String(plant || "").trim())
-              .filter((name) => name && name !== "不明"),
-          ),
-        );
-      }
-      return [];
-    };
-
-    const insectTypeLabel = (insect) => {
-      if (!insect) return "昆虫";
-      if (insect.type === "butterfly") return "蝶";
-      if (insect.type === "beetle") return "タマムシ";
-      if (insect.type === "leafbeetle") return "ハムシ";
-      return "蛾";
-    };
-
-    const featuredInsects = useMemo(() => {
-      const all = [
-        ...moths,
-        ...butterflies,
-        ...beetles,
-        ...leafbeetles,
-      ].filter(Boolean);
-      const items = all
-        .map((insect) => {
-          const hosts = extractLarvalHostPlants(insect);
-          return {
-            insect,
-            count: hosts.length,
-          };
-        })
-        .filter((item) => item.insect?.name && item.count > 0)
-        .sort((a, b) => {
-          if (b.count !== a.count) return b.count - a.count;
-          return a.insect.name.localeCompare(b.insect.name, "ja");
-        })
-        .slice(0, 8)
-        .map((item) => ({
-          id: item.insect.id,
-          name: item.insect.name,
-          scientificName: item.insect.scientificName,
-          typeLabel: insectTypeLabel(item.insect),
-          href: buildInsectPath(item.insect),
-          count: item.count,
-        }));
-      return items;
-    }, [moths, butterflies, beetles, leafbeetles]);
-
-    const featuredPlants = useMemo(() => {
-      const entries = Object.entries(hostPlants || {});
-      const items = entries
-        .filter(([name]) => name && name !== "不明")
-        .map(([name, insects]) => {
-          const list = Array.isArray(insects) ? insects : [];
-          const unique = new Set(list.filter(Boolean));
-          return { name, count: unique.size };
-        })
-        .filter((item) => item.count > 0)
-        .sort((a, b) => {
-          if (b.count !== a.count) return b.count - a.count;
-          return a.name.localeCompare(b.name, "ja");
-        })
-        .slice(0, 8)
-        .map((item) => ({
-          name: item.name,
-          count: item.count,
-          href: `/plant/${encodeURIComponent(item.name)}`,
-        }));
-      return items;
-    }, [hostPlants]);
-
-    const faqItems = useMemo(
-      () => [
-        {
-          question: "食草とは何ですか？",
-          answer:
-            "食草は、昆虫の幼虫が餌として利用する植物のことです。本サイトでは成虫が花を訪れる記録（訪花）は食草と区別して表示しています。",
-        },
-        {
-          question: "訪花昆虫はどのように分類していますか？",
-          answer:
-            "成虫または生活史が不明な記録で、植物部位が「花」に該当する場合を訪花として扱い、幼虫の食草とは分けて集計しています。",
-        },
-        {
-          question: "データの出典はどこで確認できますか？",
-          answer:
-            "図鑑や文献を基に整理しており、出典はページ内の出典一覧で参照できます。研究用途では必ず原典の確認をお願いします。",
-        },
-      ],
-      [],
-    );
-
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <StickyHeader 
@@ -734,7 +600,6 @@ const InsectsHostPlantExplorer = React.memo(
         />
         {/* 構造化データ */}
         <MainStructuredData />
-        <FaqStructuredData items={faqItems} />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
           <div id="hero-section" className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] group">
             {/* Background Container - Handles clipping for image and gradients */}
@@ -893,109 +758,6 @@ const InsectsHostPlantExplorer = React.memo(
             </div>
           </div>
 
-          {(featuredInsects.length > 0 || featuredPlants.length > 0) && (
-            <section className="bg-white/85 dark:bg-slate-800/85 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
-              <div className="p-4 md:p-6 border-b border-emerald-200/30 dark:border-emerald-700/30 bg-gradient-to-r from-emerald-50/60 via-white/20 to-blue-50/60 dark:from-emerald-900/30 dark:via-slate-900/30 dark:to-blue-900/30">
-                <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">
-                  注目の入口
-                </h2>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
-                  食草数や関連昆虫数が多い代表的な種から、関係性を深掘りできます。
-                </p>
-              </div>
-              <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                      食草が多い昆虫
-                    </h3>
-                    <Link
-                      to="/moth"
-                      className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
-                    >
-                      昆虫一覧へ
-                    </Link>
-                  </div>
-                  {featuredInsects.length > 0 ? (
-                    <ul className="space-y-3">
-                      {featuredInsects.map((item) => (
-                        <li key={`${item.id || item.name}-${item.typeLabel}`}>
-                          <Link
-                            to={item.href}
-                            className="group flex items-center justify-between gap-4 rounded-2xl border border-emerald-200/40 dark:border-emerald-700/40 bg-white/70 dark:bg-slate-900/40 px-4 py-3 transition-all hover:shadow-md hover:border-emerald-400/60 dark:hover:border-emerald-500/60"
-                          >
-                            <div>
-                              <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                                {item.typeLabel}
-                              </span>
-                              <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                {item.name}
-                              </div>
-                              {item.scientificName && (
-                                <div className="text-xs text-slate-500 dark:text-slate-400">
-                                  {item.scientificName}
-                                </div>
-                              )}
-                            </div>
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 bg-emerald-100/60 dark:bg-emerald-900/40 px-2.5 py-1 rounded-full">
-                              食草 {item.count}種
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      昆虫データを読み込み中です…
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                      関連昆虫が多い植物
-                    </h3>
-                    <Link
-                      to="/plant"
-                      className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                      植物一覧へ
-                    </Link>
-                  </div>
-                  {featuredPlants.length > 0 ? (
-                    <ul className="space-y-3">
-                      {featuredPlants.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            to={item.href}
-                            className="group flex items-center justify-between gap-4 rounded-2xl border border-blue-200/40 dark:border-blue-700/40 bg-white/70 dark:bg-slate-900/40 px-4 py-3 transition-all hover:shadow-md hover:border-blue-400/60 dark:hover:border-blue-500/60"
-                          >
-                            <div>
-                              <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">
-                                食草
-                              </span>
-                              <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                {item.name}
-                              </div>
-                            </div>
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 bg-blue-100/60 dark:bg-blue-900/40 px-2.5 py-1 rounded-full">
-                              関連昆虫 {item.count}種
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      植物データを読み込み中です…
-                    </p>
-                  )}
-                </div>
-              </div>
-            </section>
-          )}
-
           {/* 主要カテゴリ導線セクションは不要のため削除 */}
 
           {/* タブナビゲーション */}
@@ -1150,28 +912,6 @@ const InsectsHostPlantExplorer = React.memo(
               </div>
             </div>
           </div>
-
-          {faqItems.length > 0 && (
-            <section className="bg-white/85 dark:bg-slate-800/85 backdrop-blur-xl rounded-2xl shadow-xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
-              <div className="p-4 bg-emerald-50/60 dark:bg-emerald-900/30 border-b border-emerald-200/30 dark:border-emerald-700/30">
-                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
-                  よくある質問
-                </h2>
-              </div>
-              <div className="p-6 md:p-8 space-y-6">
-                {faqItems.map((item) => (
-                  <div key={item.question} className="space-y-2">
-                    <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">
-                      {item.question}
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      {item.answer}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
 
           {/* サイトについて / Instagram セクション */}
           <div

@@ -758,30 +758,3 @@ export const MainStructuredData = () => {
     />
   );
 };
-
-export const FaqStructuredData = ({ items = [] }) => {
-  if (!Array.isArray(items) || items.length === 0) return null;
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": items
-      .filter((item) => item && item.question && item.answer)
-      .map((item) => ({
-        "@type": "Question",
-        "name": item.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": item.answer
-        }
-      }))
-  };
-
-  if (!structuredData.mainEntity.length) return null;
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
-    />
-  );
-};

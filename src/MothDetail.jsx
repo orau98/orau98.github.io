@@ -550,6 +550,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const pageDesc = moth
     ? `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectTypeLabel}と植物の関係を詳しく学ぼう。`
     : '昆虫の詳細情報。';
+  const shareUrl =
+    (typeof window !== 'undefined' && window.location?.href) ||
+    canonicalHref ||
+    '';
+  const shareTitle = moth
+    ? `${moth.name}（${moth.scientificName}）`
+    : '昆虫食草図鑑';
+  const shareText = `${shareTitle}｜昆虫食草図鑑`;
+  const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+  const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
 
   const { setOgTwitterImage } = useSeoMeta({
     title: pageTitle,
@@ -912,6 +922,26 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
                 {formatScientificNameReact(moth.scientificName)}
               </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <a
+                  href={shareXUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                  aria-label={`${moth.name}をXで共有`}
+                >
+                  Xで共有
+                </a>
+                <a
+                  href={shareLineUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+                  aria-label={`${moth.name}をLINEで共有`}
+                >
+                  LINEで共有
+                </a>
+              </div>
             </div>
 
             {/* 食草情報 */}
