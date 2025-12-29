@@ -1,6 +1,5 @@
 User-agent: *
 Disallow: /check_site.html
-Disallow: /search/
 Disallow: /archive/
 Disallow: /dist/
 Disallow: /*.csv

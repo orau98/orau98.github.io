@@ -28,6 +28,8 @@ export default function useSeoMeta(rawOptions) {
     url,
     imageUrl,
     imageAlt,
+    siteName = '昆虫食草図鑑',
+    locale = 'ja_JP',
     breadcrumbItems, // [{name, url}] order is important
     resetCanonicalTo = absUrl('/'),
   } = options;
@@ -41,6 +43,11 @@ export default function useSeoMeta(rawOptions) {
     'meta[property="og:type"]',
     'meta[property="og:url"]',
     'meta[property="og:image"]',
+    'meta[property="og:site_name"]',
+    'meta[property="og:locale"]',
+    'meta[name="twitter:card"]',
+    'meta[name="twitter:title"]',
+    'meta[name="twitter:description"]',
     'meta[name="twitter:image"]',
     'meta[name="twitter:image:alt"]',
   ]);
@@ -70,10 +77,20 @@ export default function useSeoMeta(rawOptions) {
     setMetaContent('meta[property="og:description"]', description || '');
     ensureMeta('meta[property="og:type"]', { property: 'og:type' });
     setMetaContent('meta[property="og:type"]', ogType);
+    ensureMeta('meta[property="og:site_name"]', { property: 'og:site_name' });
+    setMetaContent('meta[property="og:site_name"]', siteName || '');
+    ensureMeta('meta[property="og:locale"]', { property: 'og:locale' });
+    setMetaContent('meta[property="og:locale"]', locale || '');
     if (url) {
       ensureMeta('meta[property="og:url"]', { property: 'og:url' });
       setMetaContent('meta[property="og:url"]', url);
     }
+    ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card' });
+    setMetaContent('meta[name="twitter:card"]', imageUrl ? 'summary_large_image' : 'summary');
+    ensureMeta('meta[name="twitter:title"]', { name: 'twitter:title' });
+    setMetaContent('meta[name="twitter:title"]', title || '');
+    ensureMeta('meta[name="twitter:description"]', { name: 'twitter:description' });
+    setMetaContent('meta[name="twitter:description"]', description || '');
     if (imageUrl) {
       ensureMeta('meta[property="og:image"]', { property: 'og:image' });
       setMetaContent('meta[property="og:image"]', imageUrl);
@@ -165,6 +182,8 @@ export default function useSeoMeta(rawOptions) {
     if (!imgUrl) return;
     ensureMeta('meta[property="og:image"]', { property: 'og:image' });
     setMetaContent('meta[property="og:image"]', imgUrl);
+    ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card' });
+    setMetaContent('meta[name="twitter:card"]', 'summary_large_image');
     ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });
     setMetaContent('meta[name="twitter:image"]', imgUrl);
     ensureMeta('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' });

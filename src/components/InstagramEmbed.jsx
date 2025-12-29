@@ -1,11 +1,32 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Instagram Embed Component (render only when a permalink URL is provided)
 const InstagramEmbed = ({ url, className = "" }) => {
   const embedRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    if (!url) return; // Do not load script if no URL provided
+    if (!url) return;
+    const target = embedRef.current;
+    if (!target || typeof IntersectionObserver === 'undefined') {
+      setShouldLoad(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [url]);
+
+  useEffect(() => {
+    if (!url || !shouldLoad) return; // Do not load script if no URL provided or not in view
     // Load Instagram embed script
     if (window.instgrm) {
       try {
@@ -22,7 +43,7 @@ const InstagramEmbed = ({ url, className = "" }) => {
       };
       document.body.appendChild(script);
     }
-  }, [url]);
+  }, [url, shouldLoad]);
 
   if (!url) return null;
 
