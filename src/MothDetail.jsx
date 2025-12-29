@@ -582,9 +582,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const shareText = `${shareTitle}｜昆虫食草図鑑`;
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
-  const metaIndexUrl = moth
-    ? absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/index.html`)
-    : absUrl('/meta/moth/index.html');
 
   const { setOgTwitterImage } = useSeoMeta({
     title: pageTitle,
@@ -1722,28 +1719,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 このページを共有
               </h2>
             </div>
-            <div className="p-4 flex flex-col gap-3">
-              <div className="text-xs text-slate-600 dark:text-slate-300">
-                <span className="font-medium">検索向けの静的ページ:</span>{' '}
-                <a
-                  href={canonicalHref || '#'}
-                  className="text-emerald-600 dark:text-emerald-300 hover:underline"
-                >
-                  メタページを見る
-                </a>
-                {metaIndexUrl && (
-                  <>
-                    <span className="mx-1 text-slate-400">|</span>
-                    <a
-                      href={metaIndexUrl}
-                      className="text-emerald-600 dark:text-emerald-300 hover:underline"
-                    >
-                      {insectTypeLabel}一覧
-                    </a>
-                  </>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
+            <div className="p-4 flex flex-wrap gap-2">
               <a
                 href={shareXUrl}
                 target="_blank"
@@ -1762,7 +1738,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
               >
                 LINEで共有
               </a>
-              </div>
             </div>
           </div>
         </div>
