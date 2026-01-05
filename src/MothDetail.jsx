@@ -14,6 +14,7 @@ import { loadInsectImageIndexes, loadPlantImageFilenames } from './services/imag
 import { createSafeInsectFilename } from './utils/image';
 import { buildResponsiveSrcset } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
+import { splitJapaneseNameAliases } from './utils/insectNameAliases';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 // import EnhancedEmergenceTimeDisplay from './components/EnhancedEmergenceTimeDisplay';
@@ -146,6 +147,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
         .filter(Boolean);
       return alts.some((alt) => slugifyInsectName(alt) === normalizedRouteSlug);
     }) || null;
+  }
+
+  // 4) If route param contains alias-style parentheses, try the cleaned base name
+  if (!moth) {
+    const parsed = splitJapaneseNameAliases(decodedRouteParam);
+    if (parsed?.name && parsed.name !== decodedRouteParam) {
+      moth = findBySlugOrName(parsed.name);
+    }
   }
 
   const resolvedInsectId = moth?.id || resolveInsectId(mappedInsectId);

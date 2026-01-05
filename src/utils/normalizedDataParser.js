@@ -9,6 +9,7 @@
  */
 import logger from './logger.js';
 import { createSafeInsectFilename } from './image.js';
+import { splitJapaneseNameAliases } from './insectNameAliases.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = {
@@ -252,11 +253,13 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       // 別名の統合（旧和名・別名・その他の和名）
       const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test((value || '').toString().trim());
       const rawPrimaryName = (insect.japanese_name || '').trim();
-      const primaryName = looksLikeYearOnly(rawPrimaryName) ? '' : rawPrimaryName;
+      const primaryNameRaw = looksLikeYearOnly(rawPrimaryName) ? '' : rawPrimaryName;
+      const { name: primaryName, aliases: parenAliases } = splitJapaneseNameAliases(primaryNameRaw);
       const altNamesRaw = [];
       const oldName = (insect.old_japanese_name || '').trim();
       const altName = (insect.alternative_name || '').trim();
       const otherNames = (insect.other_names || '').trim();
+      if (parenAliases.length > 0) altNamesRaw.push(...parenAliases);
       if (oldName) altNamesRaw.push(oldName);
       if (altName) altNamesRaw.push(...altName.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
       if (otherNames) altNamesRaw.push(...otherNames.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
