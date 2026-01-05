@@ -498,6 +498,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
 
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 
+  const nameAliasInfo = React.useMemo(() => {
+    return splitJapaneseNameAliases(moth?.name || '');
+  }, [moth?.name]);
+
+  const displayName = nameAliasInfo?.name || moth?.name || '';
+
   useEffect(() => {
     if (!moth) return;
     if (mainImageProps.src) {
@@ -510,11 +516,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   // Filter alternative names to exclude duplicates of the primary name
   const alternativeNamesFiltered = React.useMemo(() => {
     const raw = (moth?.alternativeNames || '').trim();
-    if (!raw) return '';
-    const items = raw.split(/[、,，]/).map(s => s.trim()).filter(Boolean);
-    const filtered = Array.from(new Set(items.filter(n => n !== moth?.name)));
-    return filtered.join('、');
-  }, [moth?.alternativeNames, moth?.name]);
+    const items = raw
+      ? raw.split(/[、,，]/).map(s => s.trim()).filter(Boolean)
+      : [];
+    const combined = new Set([...(nameAliasInfo?.aliases || []), ...items]);
+    if (displayName) combined.delete(displayName);
+    if (moth?.name) combined.delete(moth.name);
+    return Array.from(combined).join('、');
+  }, [moth?.alternativeNames, moth?.name, nameAliasInfo?.aliases, displayName]);
 
   // General-notes emergence-time detector (type is not fixed)
   const isEmergenceNote = (note) => {
@@ -576,17 +585,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     ? absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`)
     : undefined;
   const pageTitle = moth
-    ? `${moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫食草図鑑`
+    ? `${displayName || moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫食草図鑑`
     : '昆虫詳細 - 昆虫食草図鑑';
   const pageDesc = moth
-    ? `${moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectTypeLabel}と植物の関係を詳しく学ぼう。`
+    ? `${displayName || moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectTypeLabel}と植物の関係を詳しく学ぼう。`
     : '昆虫の詳細情報。';
   const shareUrl =
     (typeof window !== 'undefined' && window.location?.href) ||
     canonicalHref ||
     '';
   const shareTitle = moth
-    ? `${moth.name}（${moth.scientificName}）`
+    ? `${displayName || moth.name}（${moth.scientificName}）`
     : '昆虫食草図鑑';
   const shareText = `${shareTitle}｜昆虫食草図鑑`;
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
@@ -600,7 +609,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     breadcrumbItems: moth ? [
       { name: '昆虫食草図鑑', url: absUrl('/') },
       { name: insectTypeLabel, url: absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/index.html`) },
-      { name: moth.name, url: canonicalHref }
+      { name: displayName || moth.name, url: canonicalHref }
     ] : undefined,
     resetCanonicalTo: absUrl('/')
   });
@@ -943,7 +952,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
             {/* 種名情報 */}
             <div id="basic-info" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden p-6">
               <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
-                {moth.name}
+                {displayName || moth.name}
               </h1>
               {alternativeNamesFiltered && (
                 <p className="text-lg text-slate-600 dark:text-slate-400 mb-2">
