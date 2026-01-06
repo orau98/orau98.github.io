@@ -157,7 +157,7 @@ export const MothStructuredData = ({ moth }) => {
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "昆虫食草図鑑",
+        "name": "昆虫植物図鑑",
         "item": absUrl('/')
       },
       {
@@ -289,7 +289,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "昆虫食草図鑑",
+        "name": "昆虫植物図鑑",
         "item": absUrl('/')
       },
       {
@@ -421,7 +421,7 @@ export const BeetleStructuredData = ({ beetle }) => {
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "昆虫食草図鑑",
+        "name": "昆虫植物図鑑",
         "item": absUrl('/')
       },
       {
@@ -572,7 +572,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "昆虫食草図鑑",
+        "name": "昆虫植物図鑑",
         "item": absUrl('/')
       },
       {
@@ -693,7 +693,7 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "昆虫食草図鑑",
+        "name": "昆虫植物図鑑",
         "item": absUrl('/')
       },
       {
@@ -725,14 +725,14 @@ export const MainStructuredData = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "昆虫食草図鑑",
-    "alternateName": "昆虫と食草の美しい関係を探る図鑑",
+    "name": "昆虫植物図鑑",
+    "alternateName": "昆虫食草図鑑",
     "url": siteUrl,
-    "description": "昆虫と食草の美しい関係を探る、自然界の意外な繋がりを発見しよう。蛾、蝶、甲虫、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
+    "description": "昆虫植物図鑑（昆虫食草図鑑）として、昆虫と食草の美しい関係を探る。蛾、蝶、甲虫、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
     "inLanguage": "ja",
     "author": {
       "@type": "Organization",
-      "name": "昆虫食草図鑑"
+      "name": "昆虫植物図鑑"
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -741,12 +741,12 @@ export const MainStructuredData = () => {
     },
     "mainEntity": {
       "@type": "Dataset",
-      "name": "昆虫食草データベース",
+      "name": "昆虫植物・食草データベース",
       "description": "日本の昆虫と食草の関係を網羅的に収録したデータベース",
       "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "ハムシ", "植物", "生態学"],
       "creator": {
         "@type": "Organization",
-        "name": "昆虫食草図鑑"
+        "name": "昆虫植物図鑑"
       }
     }
   };

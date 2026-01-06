@@ -585,10 +585,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     ? absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`)
     : undefined;
   const pageTitle = moth
-    ? `${displayName || moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫食草図鑑`
-    : '昆虫詳細 - 昆虫食草図鑑';
+    ? `${displayName || moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫植物図鑑`
+    : '昆虫詳細 - 昆虫植物図鑑';
   const pageDesc = moth
-    ? `${displayName || moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫食草図鑑で${insectTypeLabel}と植物の関係を詳しく学ぼう。`
+    ? `${displayName || moth.name}（${moth.scientificName}）の詳細情報。食草: ${hostPlantsText}。昆虫植物図鑑で${insectTypeLabel}と植物の関係を詳しく学ぼう。`
     : '昆虫の詳細情報。';
   const shareUrl =
     (typeof window !== 'undefined' && window.location?.href) ||
@@ -596,8 +596,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     '';
   const shareTitle = moth
     ? `${displayName || moth.name}（${moth.scientificName}）`
-    : '昆虫食草図鑑';
-  const shareText = `${shareTitle}｜昆虫食草図鑑`;
+    : '昆虫植物図鑑';
+  const shareText = `${shareTitle}｜昆虫植物図鑑`;
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
 
@@ -607,7 +607,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     ogType: 'article',
     url: canonicalHref,
     breadcrumbItems: moth ? [
-      { name: '昆虫食草図鑑', url: absUrl('/') },
+      { name: '昆虫植物図鑑', url: absUrl('/') },
       { name: insectTypeLabel, url: absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/index.html`) },
       { name: displayName || moth.name, url: canonicalHref }
     ] : undefined,

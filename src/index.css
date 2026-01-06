@@ -344,7 +344,7 @@ img[loading="lazy"] {
 }
 
 .protected-image::after {
-  content: "© 昆虫食草図鑑";
+  content: "© 昆虫植物図鑑";
   position: absolute;
   top: 50%;
   left: 50%;

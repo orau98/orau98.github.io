@@ -342,7 +342,7 @@ const InsectsHostPlantExplorer = React.memo(
     }, [moths, butterflies, beetles, leafbeetles]);
 
     // SEO for Home (トップページ)
-    const title = "昆虫食草図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索";
+    const title = "昆虫植物図鑑 — 蛾・蝶・甲虫と食草の繋がりを探索";
     const counts = summaryCounts
       ? { ...summaryCounts, hostPlants: mergedHostPlantCount }
       : {
@@ -352,7 +352,7 @@ const InsectsHostPlantExplorer = React.memo(
           leafbeetles: leafbeetles.length,
           hostPlants: mergedHostPlantCount,
         };
-    const desc = `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、甲虫 ${counts.beetles + counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。`;
+    const desc = `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、甲虫 ${counts.beetles + counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`;
     const { setOgTwitterImage } = useSeoMeta({
       title,
       description: desc,
@@ -383,7 +383,7 @@ const InsectsHostPlantExplorer = React.memo(
             hero?.currentSrc ||
             hero?.src ||
             "images/insects/Cucullia_argentea.jpg";
-          setOgTwitterImage(src, "昆虫食草図鑑 メインビジュアル");
+          setOgTwitterImage(src, "昆虫植物図鑑 メインビジュアル");
         } catch {}
       }
     }, [heroImageLoaded, setOgTwitterImage]);
@@ -627,7 +627,7 @@ const InsectsHostPlantExplorer = React.memo(
                     src={src}
                     srcSet={srcSet}
                     sizes={sizes}
-                    alt="昆虫と食草の美しい関係を探る図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
+                    alt="昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
                     width="1600"
                     height="900"
                     className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
@@ -675,9 +675,12 @@ const InsectsHostPlantExplorer = React.memo(
                     "繋がり"が見える
                   </span>
                   <span className="block bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl mt-2 font-extrabold text-[10vw] sm:text-5xl md:text-6xl lg:text-7xl">
-                    昆虫食草図鑑
+                    昆虫植物図鑑
                   </span>
                 </h1>
+                <p className="text-white/80 text-xs sm:text-sm md:text-base font-semibold tracking-widest">
+                  （昆虫食草図鑑）
+                </p>
 
                 <div className="flex flex-wrap gap-3 mt-3 md:mt-6">
                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">

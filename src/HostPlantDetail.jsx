@@ -558,12 +558,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
   const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
   const pageTitle = isFamily
-    ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+    ? `${decodedPlantName}の植物一覧 | 昆虫植物図鑑`
     : isOrder
-    ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
+    ? `${decodedPlantName}の植物一覧 | 昆虫植物図鑑`
     : isGenus
-    ? `${decodedPlantName}の植物一覧 | 昆虫食草図鑑`
-    : `${decodedPlantName} - 食草植物の詳細 | 昆虫食草図鑑`;
+    ? `${decodedPlantName}の植物一覧 | 昆虫植物図鑑`
+    : `${decodedPlantName} - 食草植物の詳細 | 昆虫植物図鑑`;
   const pageDesc = isFamily
     ? `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`
     : isOrder
@@ -577,7 +577,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     (typeof window !== 'undefined' && window.location?.href) ||
     canonicalHref ||
     '';
-  const shareText = `${decodedPlantName}｜昆虫食草図鑑`;
+  const shareText = `${decodedPlantName}｜昆虫植物図鑑`;
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
 
@@ -587,7 +587,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     ogType: 'article',
     url: canonicalHref,
     breadcrumbItems: [
-      { name: '昆虫食草図鑑', url: absUrl('/') },
+      { name: '昆虫植物図鑑', url: absUrl('/') },
       { name: '植物', url: absUrl('/meta/plant/index.html') },
       { name: decodedPlantName, url: canonicalHref },
     ],

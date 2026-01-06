@@ -28,7 +28,7 @@ export default function useSeoMeta(rawOptions) {
     url,
     imageUrl,
     imageAlt,
-    siteName = '昆虫食草図鑑',
+    siteName = '昆虫植物図鑑',
     locale = 'ja_JP',
     breadcrumbItems, // [{name, url}] order is important
     resetCanonicalTo = absUrl('/'),

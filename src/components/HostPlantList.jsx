@@ -282,11 +282,11 @@ const HostPlantList = ({
 
   const plantCount = Object.keys(mergedHostPlants).length;
   const plantCanonicalUrl = absUrl("/plant");
-  const plantPageTitle = "植物（食草）一覧 | 昆虫食草図鑑";
+  const plantPageTitle = "植物（食草）一覧 | 昆虫植物図鑑";
   const plantPageDesc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
   const plantBreadcrumbItems = useMemo(
     () => [
-      { name: "昆虫食草図鑑", url: absUrl("/") },
+      { name: "昆虫植物図鑑", url: absUrl("/") },
       { name: "植物", url: plantCanonicalUrl },
     ],
     [plantCanonicalUrl],

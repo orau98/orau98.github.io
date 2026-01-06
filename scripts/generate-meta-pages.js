@@ -635,7 +635,7 @@ function generateInsectHTML(insect, type) {
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
   ${imageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
-  <meta property="og:site_name" content="昆虫と食草の図鑑">
+  <meta property="og:site_name" content="昆虫植物図鑑">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -676,11 +676,11 @@ function generateInsectHTML(insect, type) {
     "inLanguage": "ja",
     "author": {
       "@type": "Organization",
-      "name": "昆虫食草図鑑"
+      "name": "昆虫植物図鑑"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "昆虫と食草の図鑑"
+      "name": "昆虫植物図鑑"
     }
   }
   </script>
@@ -689,7 +689,7 @@ function generateInsectHTML(insect, type) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "昆虫食草図鑑", "item": "${BASE_ORIGIN}/"},
+      {"@type": "ListItem", "position": 1, "name": "昆虫植物図鑑", "item": "${BASE_ORIGIN}/"},
       {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "${BASE_ORIGIN}/meta/${type}/index.html"},
       {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "${BASE_ORIGIN}/meta/${type}/${insect.id}.html"}
     ]
@@ -700,7 +700,7 @@ function generateInsectHTML(insect, type) {
   <div class="meta-page">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
-        <li><a href="/">昆虫食草図鑑</a></li>
+        <li><a href="/">昆虫植物図鑑</a></li>
         <li><a href="/meta/${type}/index.html">${typeNames[type]}</a></li>
         <li aria-current="page">${insect.japaneseName}</li>
       </ol>
@@ -857,7 +857,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
-  <title>${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
+  <title>${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
   <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
@@ -865,17 +865,17 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
   
   <!-- Open Graph -->
-  <meta property="og:title" content="${displayPlantName} - 食草図鑑 | ${relatedInsects.length}種の昆虫が利用">
+  <meta property="og:title" content="${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用">
   <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
   ${mainImageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
-  <meta property="og:site_name" content="昆虫と食草の図鑑">
+  <meta property="og:site_name" content="昆虫植物図鑑">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${displayPlantName} - 食草図鑑">
+  <meta property="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
   <meta property="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
   ${mainImageUrl ? `<meta property="twitter:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
   
@@ -907,11 +907,11 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     ],
     "author": {
       "@type": "Organization",
-      "name": "昆虫食草図鑑"
+      "name": "昆虫植物図鑑"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "昆虫と食草の図鑑"
+      "name": "昆虫植物図鑑"
     }
   }
   </script>
@@ -920,7 +920,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <div class="meta-page">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
-        <li><a href="/">昆虫食草図鑑</a></li>
+        <li><a href="/">昆虫植物図鑑</a></li>
         <li><a href="/meta/plant/index.html">植物</a></li>
         <li aria-current="page">${displayPlantName}</li>
       </ol>

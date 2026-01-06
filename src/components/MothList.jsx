@@ -454,11 +454,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const canonicalUrl = (typeof window !== 'undefined' && window.location && window.location.origin
     ? window.location.origin
     : 'https://orau98.github.io') + (canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`);
-  const pageTitle = `${title}の一覧 | 昆虫食草図鑑`;
+  const pageTitle = `${title}の一覧 | 昆虫植物図鑑`;
   const pageDesc = `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
 
   const breadcrumbItems = useMemo(() => ([
-    { name: '昆虫食草図鑑', url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/' },
+    { name: '昆虫植物図鑑', url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/' },
     { name: title, url: canonicalUrl }
   ]), [canonicalUrl, title]);
 
