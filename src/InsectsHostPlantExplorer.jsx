@@ -678,9 +678,6 @@ const InsectsHostPlantExplorer = React.memo(
                     昆虫植物図鑑
                   </span>
                 </h1>
-                <p className="text-white/80 text-xs sm:text-sm md:text-base font-semibold tracking-widest">
-                  （昆虫食草図鑑）
-                </p>
 
                 <div className="flex flex-wrap gap-3 mt-3 md:mt-6">
                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
