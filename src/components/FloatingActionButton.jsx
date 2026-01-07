@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getBackTarget } from '../utils/navState';
 
 const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,12 +83,24 @@ const FloatingActionButton = () => {
   };
 
   const handleSearch = () => {
-    if (location.pathname === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
+    const isDetailPage = /\/(moth|butterfly|beetle|leafbeetle|plant)\//.test(location.pathname);
+    if (isDetailPage) {
       const isPlantContext = location.pathname.startsWith('/plant');
-      navigate(`/?tab=${isPlantContext ? 'plants' : 'insects'}`);
+      const fallback = `/?tab=${isPlantContext ? 'plants' : 'insects'}`;
+      const target = getBackTarget(location, fallback);
+      navigate(target);
+      setIsOpen(false);
+      return;
     }
+
+    if (location.pathname === '/' || location.pathname === '/moth' || location.pathname === '/plant') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsOpen(false);
+      return;
+    }
+
+    const isPlantContext = location.pathname.startsWith('/plant');
+    navigate(`/?tab=${isPlantContext ? 'plants' : 'insects'}`);
     setIsOpen(false);
   };
 
