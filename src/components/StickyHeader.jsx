@@ -110,10 +110,10 @@ const StickyHeader = ({
             <SearchInput
               value={searchTerm}
               onChange={onSearchChange}
-              placeholder={`${activeTab === 'plants' ? '食草' : '昆虫'}を検索...`}
+              placeholder={`${activeTab === 'plants' ? '植物' : '昆虫'}を検索...`}
               suggestions={suggestions}
               onSelectSuggestion={onSelectSuggestion}
-              ariaLabel={`${activeTab === 'plants' ? '食草' : '昆虫'}を検索`}
+              ariaLabel={`${activeTab === 'plants' ? '植物' : '昆虫'}を検索`}
             />
           </div>
 
@@ -144,13 +144,13 @@ const StickyHeader = ({
                     ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
-                aria-label="食草タブ"
+                aria-label="植物タブ"
               >
                 {/* Leaf Icon */}
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 512 512">
                   <path d="M377.478,0.174c-34.179-3.423-37.602,44.438-119.644,78.618c-83.543,34.808-166.39,80.55-167.693,254.14c-0.155,18.807-1.314,51.296-1.513,65.056c-0.276,19.691,0.287,40.872-8.69,51.738c-7.311,8.857-20.176,18.818-32.866,27.531L81.87,512c31.032-24.306,39.834-26.493,46.35-26.35c15.549,0.342,31.33,0.496,47.155-0.762c100.318-7.995,202.137-56.718,253.379-149.714C521.042,167.679,411.657,3.598,377.478,0.174z M368.81,109.802c-6.184,20.817-26.957,51.826-91.925,128.445c-33.517,39.535-72.158,107.672-99.743,168.344c-8.361,18.388-36.432,4.925-26.405-13.473c13.042-19.403,43.08-104.117,86.558-160.968c43.489-56.862,101.411-105.685,110.378-133.801C351.857,79.112,377.048,82.116,368.81,109.802z"/>
                 </svg>
-                <span className="hidden sm:inline">食草</span>
+                <span className="hidden sm:inline">植物</span>
               </button>
             </div>
 

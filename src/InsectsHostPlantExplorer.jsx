@@ -705,15 +705,15 @@ const InsectsHostPlantExplorer = React.memo(
                 {/* ヒーローセクション内の検索バー */}
                 <div className="max-w-2xl w-full mt-4 md:mt-8 mx-auto md:mx-0">
                   <SearchInput
-                    placeholder={`${activeTab === "plants" ? "食草" : "昆虫"}を検索 (和名・学名・分類)`}
+                    placeholder={`${activeTab === "plants" ? "植物" : "昆虫"}を検索 (和名・学名・分類)`}
                     value={globalSearchTerm}
                     onChange={handleGlobalSearch}
                     suggestions={suggestions}
                     onSelectSuggestion={handleSelectSuggestion}
-                    ariaLabel={`${activeTab === "plants" ? "食草" : "昆虫"}を検索`}
+                    ariaLabel={`${activeTab === "plants" ? "植物" : "昆虫"}を検索`}
                   />
                   <p className="mt-2 text-xs md:text-sm text-white/80">
-                    検索対象: {activeTab === "plants" ? "食草" : "昆虫"}（タブで切り替え）
+                    検索対象: {activeTab === "plants" ? "植物" : "昆虫"}（タブで切り替え）
                   </p>
                 </div>
               </div>
@@ -839,7 +839,7 @@ const InsectsHostPlantExplorer = React.memo(
                       c43.489-56.862,101.411-105.685,110.378-133.801C351.857,79.112,377.048,82.116,368.81,109.802z"
                     />
                   </svg>
-                  <span>食草 ({Object.keys(hostPlants).length})</span>
+                  <span>植物 ({mergedHostPlantCount})</span>
                 </div>
                 {activeTab === "plants" && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-t-lg"></div>
