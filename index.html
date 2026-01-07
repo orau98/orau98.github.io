@@ -12,8 +12,14 @@
     
     <!-- Performance optimization -->
     <!-- Use Vite's BASE_URL placeholder to support subpath deployments -->
-    <link rel="prefetch" href="%BASE_URL%images/resized/insects/Cucullia_argentea.640.jpg">
-    <link rel="preload" href="%BASE_URL%images/resized/insects/Cucullia_argentea.640.jpg" as="image" fetchpriority="high">
+    <link
+      rel="preload"
+      as="image"
+      fetchpriority="high"
+      href="%BASE_URL%images/insects/Cucullia_argentea.jpg"
+      imagesrcset="%BASE_URL%images/resized/insects/Cucullia_argentea.320.jpg 320w, %BASE_URL%images/resized/insects/Cucullia_argentea.640.jpg 640w, %BASE_URL%images/resized/insects/Cucullia_argentea.1024.jpg 1024w"
+      imagesizes="100vw"
+    >
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     <!-- Preconnect for embeds/CDNs (Instagram widgets / Analytics / Ads) -->
     <link rel="preconnect" href="https://www.instagram.com" crossorigin>

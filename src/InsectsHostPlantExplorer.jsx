@@ -382,13 +382,16 @@ const InsectsHostPlantExplorer = React.memo(
           : "https://orau98.github.io/") + "/",
     });
 
-    // Preload hero image on component mount (use relative path for subpath-safe resolution)
+    // Preload hero image on component mount (base-aware for subpath deployments)
     React.useEffect(() => {
-      const heroImageUrl = "images/insects/Cucullia_argentea.jpg";
+      const baseUrl = import.meta.env.BASE_URL || "/";
+      const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+      const heroImageUrl = `${normalizedBase}images/resized/insects/Cucullia_argentea.640.jpg`;
       const img = new Image();
       img.decoding = "async";
       img.fetchPriority = "high";
       img.onload = () => setHeroImageLoaded(true);
+      img.onerror = () => setHeroImageLoaded(true);
       img.src = heroImageUrl;
     }, []);
 
@@ -638,12 +641,14 @@ const InsectsHostPlantExplorer = React.memo(
               {(() => {
                 const base = "Cucullia_argentea";
                 // Use relative paths so it works under any base path
-                const src = `images/insects/${base}.jpg`;
+                const baseUrl = import.meta.env.BASE_URL || "/";
+                const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+                const src = `${normalizedBase}images/insects/${base}.jpg`;
                 // Use only sizes that actually exist to avoid 404s
                 const srcSet = [
-                  `images/resized/insects/${base}.320.jpg 320w`,
-                  `images/resized/insects/${base}.640.jpg 640w`,
-                  `images/resized/insects/${base}.1024.jpg 1024w`,
+                  `${normalizedBase}images/resized/insects/${base}.320.jpg 320w`,
+                  `${normalizedBase}images/resized/insects/${base}.640.jpg 640w`,
+                  `${normalizedBase}images/resized/insects/${base}.1024.jpg 1024w`,
                 ].join(", ");
                 const sizes = "100vw";
                 return (
@@ -674,11 +679,11 @@ const InsectsHostPlantExplorer = React.memo(
                         if (!imgEl.dataset.fallbackTried) {
                           imgEl.dataset.fallbackTried = "1";
                           imgEl.onerror = null; // prevent loop
-                          imgEl.src = "images/insects/Cucullia_argentea.jpg";
+                          imgEl.src = `${normalizedBase}images/insects/Cucullia_argentea.jpg`;
                         } else {
                           imgEl.onerror = null; // prevent loop
                           // Final fallback to a local placeholder (relative path)
-                          imgEl.src = "images/placeholder.jpg";
+                          imgEl.src = `${normalizedBase}images/placeholder.jpg`;
                           imgEl.alt = "画像が見つかりません";
                         }
                       } catch {}
