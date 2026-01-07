@@ -22,6 +22,32 @@ const normalizeLatinBinomialPlain = (name) => {
   return t;
 };
 
+// Normalize plant names to reduce mismatched keys across data sources
+const normalizePlantKey = (plantName) => {
+  if (!plantName || typeof plantName !== "string") {
+    return plantName || "";
+  }
+  // Preserve pure family names like "○○科"
+  if (plantName.match(/^[^（(]+科$/)) {
+    return plantName.trim();
+  }
+  let normalized = plantName;
+  // Remove family prefix like "アカネ科ミサオノキ" -> "ミサオノキ"
+  normalized = normalized.replace(/^([^（(科]+科)([のに]?)([^（(].+)$/, "$3");
+  // Remove family annotations in parentheses
+  normalized = normalized.replace(/^([^（(]+)（[^）]*科[^）]*）(.*)$/g, "$1$2");
+  normalized = normalized.replace(/^([^（(]+)\([^)]*科[^)]*\)(.*)$/g, "$1$2");
+  // Remove "以上○○科" patterns
+  normalized = normalized.replace(/\(以上[^)]*科\)/g, "");
+  normalized = normalized.replace(/（以上[^）]*科）/g, "");
+  // Remove trailing incomplete parentheses
+  normalized = normalized.replace(/（[^）]*$/g, "");
+  normalized = normalized.replace(/\([^)]*$/g, "");
+  // Remove orphaned closing parentheses at start
+  normalized = normalized.replace(/^[^（(]*[）)]/g, "");
+  return normalized.trim();
+};
+
 const HostPlantListItem = React.memo(
   ({
     plant,
@@ -207,7 +233,7 @@ const HostPlantListItem = React.memo(
                       d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                     />
                   </svg>
-                  {mothNames.length}種
+                  関連 {mothNames.length}種
                 </span>
               </div>
 
@@ -265,20 +291,61 @@ const HostPlantList = ({
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
   const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
 
+  const normalizedToCanonical = useMemo(() => {
+    const map = new Map();
+    Object.keys(safePlantDetails || {}).forEach((name) => {
+      if (!name) return;
+      const normalized = normalizePlantKey(name);
+      if (!normalized) return;
+      if (!map.has(normalized)) {
+        map.set(normalized, name);
+        return;
+      }
+      const existing = map.get(normalized);
+      if (existing === normalized) return;
+      if (name === normalized) {
+        map.set(normalized, name);
+        return;
+      }
+      const existingHasParen = /[（(].*[)）]/.test(existing);
+      const nameHasParen = /[（(].*[)）]/.test(name);
+      if (existingHasParen && !nameHasParen) {
+        map.set(normalized, name);
+      }
+    });
+    return map;
+  }, [safePlantDetails]);
+
   const mergedHostPlants = useMemo(() => {
-    const merged = { ...safeHostPlants };
-    Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {
-      if (!plant || plant === '不明') return;
-      const existing = Array.isArray(merged[plant]) ? new Set(merged[plant]) : new Set();
+    const merged = new Map();
+    const addEntry = (plantName, insects = []) => {
+      if (!plantName || plantName === '不明') return;
+      const normalized = normalizePlantKey(plantName);
+      if (!normalized || normalized === '不明') return;
+      const canonical = normalizedToCanonical.get(normalized) || normalized;
+      let set = merged.get(canonical);
+      if (!set) {
+        set = new Set();
+        merged.set(canonical, set);
+      }
       if (Array.isArray(insects)) {
         insects.forEach((name) => {
-          if (name) existing.add(name);
+          if (name) set.add(name);
         });
       }
-      merged[plant] = Array.from(existing);
+    };
+    Object.entries(safeHostPlants || {}).forEach(([plant, insects]) => {
+      addEntry(plant, insects);
     });
-    return merged;
-  }, [safeHostPlants, flowerVisitPlants]);
+    Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {
+      addEntry(plant, insects);
+    });
+    const obj = {};
+    merged.forEach((set, key) => {
+      obj[key] = Array.from(set);
+    });
+    return obj;
+  }, [safeHostPlants, flowerVisitPlants, normalizedToCanonical]);
 
   const plantCount = Object.keys(mergedHostPlants).length;
   const plantCanonicalUrl = absUrl("/plant");
@@ -657,11 +724,15 @@ const HostPlantList = ({
 
       // Apply Flower Visit Filter
       if (visitFilter !== 'all') {
-        const normalizedPlant = plantName
-          .replace(/[（(][^）)]*[）)]/g, '')
-          .trim();
-        const hasFlowerVisit = !!(flowerVisitPlants?.[plantName] || (normalizedPlant && flowerVisitPlants?.[normalizedPlant]));
-        const hasLarvalHost = !!(safeHostPlants?.[plantName] || (normalizedPlant && safeHostPlants?.[normalizedPlant]));
+        const normalizedPlant = normalizePlantKey(plantName);
+        const hasFlowerVisit = !!(
+          flowerVisitPlants?.[plantName] ||
+          (normalizedPlant && flowerVisitPlants?.[normalizedPlant])
+        );
+        const hasLarvalHost = !!(
+          safeHostPlants?.[plantName] ||
+          (normalizedPlant && safeHostPlants?.[normalizedPlant])
+        );
         const isFlowerOnly = hasFlowerVisit && !hasLarvalHost;
         if (!isFlowerOnly) return false;
       }

@@ -638,13 +638,26 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   
   // 植物名を正規化する関数（App.jsxと同じロジック）
   const normalizePlantName = (plantName) => {
-    if (!plantName) return '';
-    return plantName
-      .replace(/（[^）]*科[^）]*）/g, '') // 全角括弧の科名
-      .replace(/\([^)]*科[^)]*\)/g, '') // 半角括弧の科名
-      .replace(/（[^）]*）/g, '') // その他の全角括弧
-      .replace(/\([^)]*\)/g, '') // その他の半角括弧
-      .trim();
+    if (!plantName || typeof plantName !== 'string') return '';
+    // Keep pure family names like "○○科"
+    if (plantName.match(/^[^（(]+科$/)) {
+      return plantName.trim();
+    }
+    let normalized = plantName;
+    // Remove family prefix like "アカネ科ミサオノキ" -> "ミサオノキ"
+    normalized = normalized.replace(/^([^（(科]+科)([のに]?)([^（(].+)$/, '$3');
+    // Remove family annotations in parentheses
+    normalized = normalized.replace(/^([^（(]+)（[^）]*科[^）]*）(.*)$/g, '$1$2');
+    normalized = normalized.replace(/^([^（(]+)\([^)]*科[^)]*\)(.*)$/g, '$1$2');
+    // Remove "以上○○科" patterns
+    normalized = normalized.replace(/\(以上[^)]*科\)/g, '');
+    normalized = normalized.replace(/（以上[^）]*科）/g, '');
+    // Remove trailing incomplete parentheses
+    normalized = normalized.replace(/（[^）]*$/g, '');
+    normalized = normalized.replace(/\([^)]*$/g, '');
+    // Remove orphaned closing parentheses at start
+    normalized = normalized.replace(/^[^（(]*[）)]/g, '');
+    return normalized.trim();
   };
   
   // Debug: オニグルミを含む昆虫を探す
@@ -674,6 +687,24 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
 
   const targetNames = [decodedPlantName, canonicalName, ...aliasNames].filter(Boolean);
   const normalizedTargets = new Set(targetNames.map(normalizePlantName).filter(Boolean));
+  const normalizedFlowerVisitPlants = useMemo(() => {
+    const map = {};
+    Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {
+      const normalized = normalizePlantName(plant);
+      if (!normalized || normalized === '不明') return;
+      if (!map[normalized]) map[normalized] = new Set();
+      if (Array.isArray(insects)) {
+        insects.forEach((name) => {
+          if (name) map[normalized].add(name);
+        });
+      }
+    });
+    const obj = {};
+    Object.entries(map).forEach(([key, set]) => {
+      obj[key] = Array.from(set);
+    });
+    return obj;
+  }, [flowerVisitPlants]);
   const flowerVisitInsectSet = useMemo(() => {
     const set = new Set();
     const addList = (list) => {
@@ -685,10 +716,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const keys = new Set([...targetNames, ...normalizedTargets]);
     keys.forEach((key) => {
       if (!key) return;
-      addList(flowerVisitPlants?.[key]);
+      const normalizedKey = normalizePlantName(key);
+      addList(normalizedFlowerVisitPlants?.[normalizedKey] || normalizedFlowerVisitPlants?.[key]);
     });
     return set;
-  }, [flowerVisitPlants, targetNames, normalizedTargets]);
+  }, [normalizedFlowerVisitPlants, targetNames, normalizedTargets]);
 
   const matchesTargetPlant = (plant) => {
     if (!plant) return false;
@@ -712,7 +744,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
     const hostMapHit = () => {
       if (!insectDisplayName) return false;
       return targetNames.some(target => {
-        const list = hostPlants[target];
+        const normalizedTarget = normalizePlantName(target);
+        const list = hostPlants[target] || (normalizedTarget && hostPlants[normalizedTarget]);
         return Array.isArray(list) && list.includes(insectDisplayName);
       });
     };
@@ -789,6 +822,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
       if (flowerInsectKeys.has(key)) count += 1;
     });
     return count;
+  }, [hostInsectKeys, flowerInsectKeys]);
+  const totalInsectCount = useMemo(() => {
+    const set = new Set();
+    hostInsectKeys.forEach((key) => set.add(key));
+    flowerInsectKeys.forEach((key) => set.add(key));
+    return set.size;
   }, [hostInsectKeys, flowerInsectKeys]);
   
   // Debug logging for オニグルミ
@@ -1433,6 +1472,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
                 <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">食草・訪花ネットワーク</p>
                 <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">この植物に関わる昆虫</h2>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
+                    関連 {totalInsectCount}種
+                  </span>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
                     食草 {hostPlantInsects.length}種
                   </span>
