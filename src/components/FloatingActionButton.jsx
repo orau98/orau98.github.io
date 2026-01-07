@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { getBackTarget } from '../utils/navState';
+import { useLocation } from 'react-router-dom';
 
 const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [tocItems, setTocItems] = useState([]);
   const location = useLocation();
-  const navigate = useNavigate();
 
   // Show/hide based on scroll
   useEffect(() => {
@@ -82,28 +80,6 @@ const FloatingActionButton = () => {
     }
   };
 
-  const handleSearch = () => {
-    const isDetailPage = /\/(moth|butterfly|beetle|leafbeetle|plant)\//.test(location.pathname);
-    if (isDetailPage) {
-      const isPlantContext = location.pathname.startsWith('/plant');
-      const fallback = `/?tab=${isPlantContext ? 'plants' : 'insects'}`;
-      const target = getBackTarget(location, fallback);
-      navigate(target);
-      setIsOpen(false);
-      return;
-    }
-
-    if (location.pathname === '/' || location.pathname === '/moth' || location.pathname === '/plant') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setIsOpen(false);
-      return;
-    }
-
-    const isPlantContext = location.pathname.startsWith('/plant');
-    navigate(`/?tab=${isPlantContext ? 'plants' : 'insects'}`);
-    setIsOpen(false);
-  };
-
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -144,18 +120,6 @@ const FloatingActionButton = () => {
             ))}
           </div>
         )}
-
-        {/* Search Button */}
-        <button
-          onClick={handleSearch}
-          className="flex items-center justify-center w-12 h-12 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-          aria-label="検索"
-          title="検索トップへ"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </button>
 
         {/* Back to Top Button */}
         <button

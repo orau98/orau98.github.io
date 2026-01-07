@@ -761,17 +761,17 @@ const InsectsHostPlantExplorer = React.memo(
           {/* 主要カテゴリ導線セクションは不要のため削除 */}
 
           {/* タブナビゲーション */}
-          <div id="explorer-results" className="scroll-mt-24 bg-gradient-to-br from-white/90 to-white/80 dark:from-slate-800/90 dark:to-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
+          <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
             {/* タブヘッダー */}
-            <div className="flex border-b-2 border-gradient-to-r from-emerald-200/50 via-blue-200/50 to-emerald-200/50 dark:from-emerald-700/50 dark:via-blue-700/50 dark:to-emerald-700/50">
+            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70">
               <button
                 onClick={() => {
                   setActiveTabWithUrl("insects");
                 }}
-                className={`flex-1 px-6 py-5 text-base font-medium tracking-tight transition-all duration-300 relative ${
+                className={`flex-1 px-6 py-4 text-base font-medium tracking-tight transition-colors relative ${
                   activeTab === "insects"
-                    ? "text-emerald-600 dark:text-emerald-400 bg-gradient-to-br from-emerald-50/70 to-blue-50/70 dark:from-emerald-900/30 dark:to-blue-900/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50/40 hover:to-blue-50/40 dark:hover:from-emerald-900/20 dark:hover:to-blue-900/20"
+                    ? "text-emerald-600 dark:text-emerald-300 bg-white/70 dark:bg-slate-900/40"
+                    : "text-slate-600 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
                 }`}
               >
                 <div className="flex items-center justify-center space-x-3">
@@ -810,16 +810,16 @@ const InsectsHostPlantExplorer = React.memo(
                   </span>
                 </div>
                 {activeTab === "insects" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-500 rounded-t-lg shadow-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500/80"></div>
                 )}
               </button>
 
               <button
                 onClick={() => setActiveTabWithUrl("plants")}
-                className={`flex-1 px-6 py-5 text-base font-medium tracking-tight transition-all duration-300 relative ${
+                className={`flex-1 px-6 py-4 text-base font-medium tracking-tight transition-colors relative ${
                   activeTab === "plants"
-                    ? "text-blue-600 dark:text-blue-400 bg-gradient-to-br from-blue-50/70 to-emerald-50/70 dark:from-blue-900/30 dark:to-emerald-900/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-gradient-to-br hover:from-blue-50/40 hover:to-emerald-50/40 dark:hover:from-blue-900/20 dark:hover:to-emerald-900/20"
+                    ? "text-blue-600 dark:text-blue-300 bg-white/70 dark:bg-slate-900/40"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
                 }`}
               >
                 <div className="flex items-center justify-center space-x-3">
@@ -842,7 +842,7 @@ const InsectsHostPlantExplorer = React.memo(
                   <span>植物 ({mergedHostPlantCount})</span>
                 </div>
                 {activeTab === "plants" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-t-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500/80"></div>
                 )}
               </button>
             </div>

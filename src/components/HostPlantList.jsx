@@ -840,7 +840,7 @@ const HostPlantList = ({
     return (
       <div className="mt-4">
         <div className="sticky z-40" style={{ top: 'calc(var(--app-sticky-header-height, 0px) + 12px)' }}>
-          <div className="rounded-xl bg-white/85 dark:bg-slate-900/70 backdrop-blur border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 shadow-sm">
+          <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-3 py-2">
             {/* Active Filters & Toggle */}
             <div className="flex flex-wrap items-center gap-3">
           {/* Toggle Button */}
@@ -848,8 +848,8 @@ const HostPlantList = ({
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               isFiltersOpen 
-                ? 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-200' 
-                : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700'
+                ? 'bg-slate-200/80 text-slate-800 dark:bg-slate-700/80 dark:text-slate-200' 
+                : 'bg-white/70 text-slate-600 border border-slate-300/70 hover:bg-slate-50/80 dark:bg-slate-800/70 dark:text-slate-300 dark:border-slate-600/70 dark:hover:bg-slate-700/70'
             }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -867,11 +867,11 @@ const HostPlantList = ({
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
             )}
             {activeFilters.map((filter, idx) => (
-              <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50 transition-all hover:bg-emerald-200 dark:hover:bg-emerald-800/50">
+              <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 transition-all hover:bg-slate-200/70 dark:hover:bg-slate-800">
                 {filter.type}: {filter.value}
                 <button 
                   onClick={filter.clear}
-                  className="ml-1.5 text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-200 focus:outline-none"
+                  className="ml-1.5 text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-100 focus:outline-none"
                   aria-label={`${filter.type}フィルターを解除`}
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -884,7 +884,7 @@ const HostPlantList = ({
               <button
                 type="button"
                 onClick={resetAll}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/70 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                className="ui-btn ui-btn-secondary"
               >
                 すべてリセット
               </button>
@@ -965,7 +965,7 @@ const HostPlantList = ({
           </div>
         </div>
         
-        <div className="mt-3 text-right text-xs text-slate-400 dark:text-slate-500" role="status" aria-live="polite">
+        <div className="mt-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
           {filteredHostPlants?.length ?? 0} 件が見つかりました
         </div>
       </div>
@@ -984,7 +984,7 @@ const HostPlantList = ({
         <div className="p-6 bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
           <div className="flex items-center space-x-3 mb-4">
             <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">
-              食草リスト
+              植物リスト
             </h2>
           </div>
           {renderFilters()}
@@ -1030,7 +1030,7 @@ const HostPlantList = ({
                   <button
                     type="button"
                     onClick={resetAll}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                    className="ui-btn ui-btn-secondary"
                   >
                     すべてリセット
                   </button>
@@ -1038,7 +1038,7 @@ const HostPlantList = ({
                     <button
                       type="button"
                       onClick={clearSearch}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 text-emerald-700 dark:text-emerald-200 dark:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors"
+                      className="ui-btn ui-btn-secondary"
                     >
                       検索のみクリア
                     </button>
@@ -1047,7 +1047,7 @@ const HostPlantList = ({
                     <button
                       type="button"
                       onClick={clearSearch}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 text-emerald-700 dark:text-emerald-200 dark:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors"
+                      className="ui-btn ui-btn-secondary"
                     >
                       検索をクリア
                     </button>
@@ -1056,7 +1056,7 @@ const HostPlantList = ({
                     <button
                       type="button"
                       onClick={clearFilters}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200 text-emerald-700 dark:text-emerald-200 dark:border-emerald-500/60 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors"
+                      className="ui-btn ui-btn-secondary"
                     >
                       フィルター解除
                     </button>

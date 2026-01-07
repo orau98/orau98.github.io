@@ -804,7 +804,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
           <Link 
             to={getBackTarget(location, '/')} 
             state={makeDetailLinkState(location)}
-            className="inline-flex items-center px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-xl hover:bg-white/90 dark:hover:bg-slate-800/90 transition-all duration-200 shadow-sm hover:shadow-md text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
+            className="ui-btn ui-btn-secondary text-sm shadow-sm hover:shadow-md"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -1742,7 +1742,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 href={shareXUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                className="ui-btn bg-slate-900 text-white hover:bg-slate-800"
                 aria-label={`${moth.name}をXで共有`}
               >
                 Xで共有
@@ -1751,7 +1751,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                 href={shareLineUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+                className="ui-btn bg-emerald-500 text-white hover:bg-emerald-600"
                 aria-label={`${moth.name}をLINEで共有`}
               >
                 LINEで共有

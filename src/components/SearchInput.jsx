@@ -120,7 +120,7 @@ const SearchInput = ({
 
   return (
     <div className="relative group">
-      <div className={`relative z-30 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm ${showSuggestions && suggestions.length > 0 ? 'rounded-t-2xl rounded-b-none border-b-0 shadow-lg' : 'rounded-2xl hover:shadow-md'}`}>
+      <div className={`relative z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/60 dark:border-slate-600/60 transition-all duration-200 shadow-sm ${showSuggestions && suggestions.length > 0 ? 'rounded-t-2xl rounded-b-none border-b-0 shadow-lg' : 'rounded-2xl hover:shadow-md'}`}>
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -140,7 +140,7 @@ const SearchInput = ({
           aria-expanded={expanded}
           aria-controls={expanded ? listboxId : undefined}
           aria-activedescendant={activeDescendantId}
-          className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500"
+          className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
         />
         {value && value.length > 0 && (
           <button
