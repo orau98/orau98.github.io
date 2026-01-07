@@ -64,11 +64,19 @@ const FloatingActionButton = () => {
     setIsOpen(false);
   };
 
+  const getHeaderOffset = () => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return 0;
+    const styles = window.getComputedStyle(document.documentElement);
+    const main = parseFloat(styles.getPropertyValue('--app-main-header-height')) || 0;
+    const sticky = parseFloat(styles.getPropertyValue('--app-sticky-header-height')) || 0;
+    return main + sticky + 16;
+  };
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el) {
-      // Offset for sticky header
-      const headerOffset = 80;
+      // Offset for header + sticky header
+      const headerOffset = getHeaderOffset();
       const elementPosition = el.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       
@@ -87,10 +95,10 @@ const FloatingActionButton = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-6 right-6 z-[70] flex flex-col items-end gap-3">
       {/* Menu Items */}
       <div
-        className={`flex flex-col gap-3 transition-all duration-300 origin-bottom ${
+        className={`relative z-[70] flex flex-col gap-3 transition-all duration-300 origin-bottom ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
             : 'opacity-0 scale-90 translate-y-10 pointer-events-none'
@@ -137,7 +145,7 @@ const FloatingActionButton = () => {
       {/* Main FAB Toggle */}
       <button
         onClick={toggleMenu}
-        className={`flex items-center justify-center w-14 h-14 rounded-full shadow-xl transition-all duration-300 ${
+        className={`relative z-[70] flex items-center justify-center w-14 h-14 rounded-full shadow-xl transition-all duration-300 ${
           isOpen
             ? 'bg-slate-700 text-white rotate-45'
             : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
@@ -152,7 +160,7 @@ const FloatingActionButton = () => {
       {/* Overlay to close when clicking outside */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60]" 
           onClick={() => setIsOpen(false)}
         />
       )}

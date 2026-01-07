@@ -694,10 +694,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const getStickyHeaderOffset = useCallback(() => {
     if (typeof window === 'undefined') return 0;
-    const raw = getComputedStyle(document.documentElement)
-      .getPropertyValue('--app-sticky-header-height');
-    const parsed = parseInt(raw, 10);
-    if (Number.isFinite(parsed)) return parsed + 12;
+    const style = getComputedStyle(document.documentElement);
+    const stickyRaw = style.getPropertyValue('--app-sticky-header-height');
+    const mainRaw = style.getPropertyValue('--app-main-header-height');
+    const sticky = parseInt(stickyRaw, 10);
+    const main = parseInt(mainRaw, 10);
+    const total = (Number.isFinite(main) ? main : 0) + (Number.isFinite(sticky) ? sticky : 0);
+    if (total > 0) return total + 12;
     return 80;
   }, []);
 
@@ -1271,7 +1274,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const renderFilters = () => {
     return (
       <div className="mt-4">
-        <div className="sticky z-40" style={{ top: 'calc(var(--app-sticky-header-height, 0px) + 12px)' }}>
+        <div className="sticky z-40" style={{ top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)' }}>
           <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-3 py-2">
             {/* Active Filters & Toggle */}
           <div className="flex flex-wrap items-center gap-3">
@@ -1459,7 +1462,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           {!isImageIndexReady ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={`skeleton-${i}`} className="bg-white/60 dark:bg-slate-800/60 rounded-2xl h-64 animate-pulse border border-white/30 dark:border-slate-700/40" />
+                <div
+                  key={`skeleton-${i}`}
+                  className="rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 overflow-hidden shadow-md animate-pulse"
+                >
+                  <div className="aspect-[4/3] bg-slate-200/70 dark:bg-slate-700/60" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-4 w-3/4 bg-slate-200/70 dark:bg-slate-700/60 rounded-md" />
+                    <div className="h-3 w-1/2 bg-slate-200/60 dark:bg-slate-700/50 rounded-md" />
+                    <div className="h-3 w-2/3 bg-slate-200/60 dark:bg-slate-700/50 rounded-md" />
+                  </div>
+                </div>
               ))}
             </div>
           ) : currentMoths.length > 0 ? (

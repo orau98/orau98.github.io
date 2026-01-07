@@ -1,12 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const pageNumbers = [];
   const maxVisiblePages = 5;
   const maxVisiblePagesMobile = 5; // Increased from 3 to 5 for better mobile navigation
   
-  // スマホでは表示ページ数を減らす
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  // スマホでは表示ページ数を減らす（リサイズ追従）
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(max-width: 639px)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const media = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsMobile(media.matches);
+    update();
+    if (media.addEventListener) {
+      media.addEventListener('change', update);
+    } else {
+      media.addListener(update);
+    }
+    return () => {
+      if (media.addEventListener) {
+        media.removeEventListener('change', update);
+      } else {
+        media.removeListener(update);
+      }
+    };
+  }, []);
   const visiblePages = isMobile ? maxVisiblePagesMobile : maxVisiblePages;
   
   let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));

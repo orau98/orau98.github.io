@@ -13,7 +13,8 @@ const StickyHeader = ({
   theme,
   setTheme,
   heroId = 'hero-section',
-  scrollTargetId = 'explorer-results'
+  scrollTargetId = 'explorer-results',
+  onVisibilityChange
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const headerBarRef = useRef(null);
@@ -35,7 +36,7 @@ const StickyHeader = ({
           root: null,
           threshold: 0,
           // Start showing slightly before the hero fully disappears
-          rootMargin: '-48px 0px 0px 0px',
+          rootMargin: '-120px 0px 0px 0px',
         },
       );
       observer.observe(heroEl);
@@ -68,6 +69,12 @@ const StickyHeader = ({
     };
   }, [isVisible]);
 
+  useEffect(() => {
+    if (typeof onVisibilityChange === 'function') {
+      onVisibilityChange(isVisible);
+    }
+  }, [isVisible, onVisibilityChange]);
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === 'insects' && onNeedInsectsData) onNeedInsectsData();
@@ -85,8 +92,10 @@ const StickyHeader = ({
   return (
     <div 
       id="sticky-header"
+      aria-hidden={!isVisible}
+      inert={!isVisible}
       className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
+        isVisible ? 'translate-y-0' : '-translate-y-full pointer-events-none'
       }`}
     >
       <div

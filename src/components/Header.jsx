@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
@@ -89,9 +89,27 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
   };
 
   const speciesInfo = getCurrentSpeciesInfo();
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return undefined;
+    const root = document.documentElement;
+    const update = () => {
+      const h = headerRef.current
+        ? headerRef.current.getBoundingClientRect().height
+        : 0;
+      root.style.setProperty('--app-main-header-height', `${Math.max(0, Math.round(h))}px`);
+    };
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    return () => {
+      window.removeEventListener('resize', update);
+      root.style.setProperty('--app-main-header-height', '0px');
+    };
+  }, [speciesInfo]);
 
   return (
-    <header className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl sticky top-0 z-50">
+    <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="group flex items-center space-x-3 hover:scale-105 transition-transform duration-200">

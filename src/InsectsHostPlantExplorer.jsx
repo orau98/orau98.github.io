@@ -36,33 +36,40 @@ const InsectsHostPlantExplorer = React.memo(
     initialTab = "insects",
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [activeTab, setActiveTab] = useState(() => {
-      const tabParam = searchParams.get("tab");
-      if (tabParam === "plants" || tabParam === "insects") return tabParam;
-      return initialTab;
-    });
+    const normalizeTab = (value, fallback) => {
+      if (value === "plants" || value === "insects") return value;
+      return fallback;
+    };
+    const initialTabFromParams = normalizeTab(searchParams.get("tab"), initialTab);
+    const initialQuery = searchParams.get("q") || "";
+    const [activeTab, setActiveTab] = useState(() => initialTabFromParams);
     const [heroImageLoaded, setHeroImageLoaded] = useState(false);
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
     const [showBibliography, setShowBibliography] = useState(false);
     const [plantImageFilenames, setPlantImageFilenames] = useState([]);
-    const [globalSearchTerm, setGlobalSearchTerm] = useState(
-      searchParams.get("q") || "",
-    );
+    const [searchByTab, setSearchByTab] = useState(() => ({
+      insects: initialTabFromParams === "insects" ? initialQuery : "",
+      plants: initialTabFromParams === "plants" ? initialQuery : "",
+    }));
+    const activeSearchTerm = searchByTab[activeTab] || "";
+    const [isStickyHeaderVisible, setIsStickyHeaderVisible] = useState(false);
     const searchTimeoutRef = useRef(null);
 
-    // Sync global search term with URL
+    // Sync search term with URL (active tab only)
     useEffect(() => {
-      const q = searchParams.get("q");
-      if (q !== null && q !== globalSearchTerm) {
-        setGlobalSearchTerm(q);
-      }
-    }, [searchParams]); // Remove globalSearchTerm dependency to avoid loop
+      const tabParam = normalizeTab(searchParams.get("tab"), activeTab);
+      const q = searchParams.get("q") || "";
+      setSearchByTab((prev) => {
+        if ((prev[tabParam] || "") === q) return prev;
+        return { ...prev, [tabParam]: q };
+      });
+    }, [searchParams, activeTab]);
 
     const handleGlobalSearch = (e) => {
       const val = e.target.value;
-      setGlobalSearchTerm(val);
+      setSearchByTab((prev) => ({ ...prev, [activeTab]: val }));
 
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
@@ -70,6 +77,7 @@ const InsectsHostPlantExplorer = React.memo(
 
       searchTimeoutRef.current = setTimeout(() => {
         const newParams = new URLSearchParams(searchParams);
+        newParams.set("tab", activeTab);
         if (val) {
           newParams.set("q", val);
         } else {
@@ -81,9 +89,15 @@ const InsectsHostPlantExplorer = React.memo(
 
     const setActiveTabWithUrl = (tab) => {
       setActiveTab(tab);
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
       const newParams = new URLSearchParams(searchParams);
       if (tab) newParams.set("tab", tab);
       else newParams.delete("tab");
+      const nextSearch = (searchByTab[tab] || "").trim();
+      if (nextSearch) newParams.set("q", nextSearch);
+      else newParams.delete("q");
       setSearchParams(newParams, { replace: true });
     };
 
@@ -235,18 +249,23 @@ const InsectsHostPlantExplorer = React.memo(
     // Initialize tab from URL, fallback to prop when absent
     useEffect(() => {
       const tabParam = searchParams.get("tab");
-      if (tabParam === "plants" || tabParam === "insects") {
-        setActiveTab(tabParam);
+      const normalizedTab = normalizeTab(tabParam, "");
+      if (normalizedTab) {
+        if (normalizedTab !== activeTab) {
+          setActiveTab(normalizedTab);
+        }
         return;
       }
       // Ensure URL reflects requested initial tab so戻る/共有で維持される
       if (initialTab && !tabParam) {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("tab", initialTab);
+        const initSearch = (searchByTab[initialTab] || "").trim();
+        if (initSearch) newParams.set("q", initSearch);
         setSearchParams(newParams, { replace: true });
         setActiveTab(initialTab);
       }
-    }, [searchParams, initialTab, setSearchParams]);
+    }, [searchParams, initialTab, setSearchParams, activeTab, searchByTab]);
 
     useEffect(() => {
       if (activeTab === "insects" && typeof onNeedInsectsData === "function") {
@@ -475,9 +494,9 @@ const InsectsHostPlantExplorer = React.memo(
     }, [instagramInView]);
 
     const suggestions = useMemo(() => {
-      if (!globalSearchTerm || globalSearchTerm.trim() === "") return [];
-      const term = globalSearchTerm.toLowerCase();
-      const katakanaTerm = hiraganaToKatakana(globalSearchTerm).toLowerCase();
+      if (!activeSearchTerm || activeSearchTerm.trim() === "") return [];
+      const term = activeSearchTerm.toLowerCase();
+      const katakanaTerm = hiraganaToKatakana(activeSearchTerm).toLowerCase();
       const results = new Set();
 
       if (activeTab === "insects") {
@@ -548,7 +567,7 @@ const InsectsHostPlantExplorer = React.memo(
       }
       return Array.from(results);
     }, [
-      globalSearchTerm,
+      activeSearchTerm,
       activeTab,
       moths,
       butterflies,
@@ -560,8 +579,12 @@ const InsectsHostPlantExplorer = React.memo(
     ]);
 
     const handleSelectSuggestion = (value) => {
-      setGlobalSearchTerm(value);
+      setSearchByTab((prev) => ({ ...prev, [activeTab]: value }));
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
       const newParams = new URLSearchParams(searchParams);
+      newParams.set("tab", activeTab);
       if (value) {
         newParams.set("q", value);
       } else {
@@ -589,7 +612,7 @@ const InsectsHostPlantExplorer = React.memo(
         <StickyHeader 
           activeTab={activeTab} 
           setActiveTab={setActiveTabWithUrl} 
-          searchTerm={globalSearchTerm} 
+          searchTerm={activeSearchTerm} 
           onSearchChange={handleGlobalSearch}
           suggestions={suggestions}
           onSelectSuggestion={handleSelectSuggestion}
@@ -597,6 +620,7 @@ const InsectsHostPlantExplorer = React.memo(
           onNeedPlantsData={onNeedPlantsData}
           theme={theme}
           setTheme={setTheme}
+          onVisibilityChange={setIsStickyHeaderVisible}
         />
         {/* 構造化データ */}
         <MainStructuredData />
@@ -706,7 +730,7 @@ const InsectsHostPlantExplorer = React.memo(
                 <div className="max-w-2xl w-full mt-4 md:mt-8 mx-auto md:mx-0">
                   <SearchInput
                     placeholder={`${activeTab === "plants" ? "植物" : "昆虫"}を検索 (和名・学名・分類)`}
-                    value={globalSearchTerm}
+                    value={activeSearchTerm}
                     onChange={handleGlobalSearch}
                     suggestions={suggestions}
                     onSelectSuggestion={handleSelectSuggestion}
@@ -719,43 +743,45 @@ const InsectsHostPlantExplorer = React.memo(
               </div>
             </div>
 
-            <div className="absolute top-6 right-6 z-30">
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
-                aria-label="テーマを切り替え"
-              >
-                {theme === "dark" ? (
-                  <svg
-                    className="w-6 h-6 text-white/80"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-6 h-6 text-white/80"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
+            {!isStickyHeaderVisible && (
+              <div className="absolute top-6 right-6 z-30">
+                <button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
+                  aria-label="テーマを切り替え"
+                >
+                  {theme === "dark" ? (
+                    <svg
+                      className="w-6 h-6 text-white/80"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-6 h-6 text-white/80"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 主要カテゴリ導線セクションは不要のため削除 */}
@@ -763,12 +789,17 @@ const InsectsHostPlantExplorer = React.memo(
           {/* タブナビゲーション */}
           <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
             {/* タブヘッダー */}
-            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70">
+            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label="昆虫/植物の切り替え">
               <button
+                id="tab-insects"
+                role="tab"
+                aria-selected={activeTab === "insects"}
+                aria-controls="panel-insects"
+                type="button"
                 onClick={() => {
                   setActiveTabWithUrl("insects");
                 }}
-                className={`flex-1 px-6 py-4 text-base font-medium tracking-tight transition-colors relative ${
+                className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium tracking-tight transition-colors relative ${
                   activeTab === "insects"
                     ? "text-emerald-600 dark:text-emerald-300 bg-white/70 dark:bg-slate-900/40"
                     : "text-slate-600 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
@@ -777,7 +808,7 @@ const InsectsHostPlantExplorer = React.memo(
                 <div className="flex items-center justify-center space-x-3">
                   {/* Beautiful butterfly icon */}
                   <svg
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                     fill="currentColor"
                     viewBox="0 0 512 512"
                   >
@@ -800,13 +831,16 @@ const InsectsHostPlantExplorer = React.memo(
                       C262.492,186.777,267.602,184.246,268.305,179.339z"
                     />
                   </svg>
-                  <span>
-                    昆虫 (
-                    {moths.length +
-                      butterflies.length +
-                      beetles.length +
-                      leafbeetles.length}
-                    )
+                  <span className="flex items-center gap-1">
+                    <span>昆虫</span>
+                    <span className="hidden sm:inline">
+                      (
+                      {moths.length +
+                        butterflies.length +
+                        beetles.length +
+                        leafbeetles.length}
+                      )
+                    </span>
                   </span>
                 </div>
                 {activeTab === "insects" && (
@@ -815,8 +849,13 @@ const InsectsHostPlantExplorer = React.memo(
               </button>
 
               <button
+                id="tab-plants"
+                role="tab"
+                aria-selected={activeTab === "plants"}
+                aria-controls="panel-plants"
+                type="button"
                 onClick={() => setActiveTabWithUrl("plants")}
-                className={`flex-1 px-6 py-4 text-base font-medium tracking-tight transition-colors relative ${
+                className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium tracking-tight transition-colors relative ${
                   activeTab === "plants"
                     ? "text-blue-600 dark:text-blue-300 bg-white/70 dark:bg-slate-900/40"
                     : "text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
@@ -825,7 +864,7 @@ const InsectsHostPlantExplorer = React.memo(
                 <div className="flex items-center justify-center space-x-3">
                   {/* Beautiful leaf icon */}
                   <svg
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                     fill="currentColor"
                     viewBox="0 0 512 512"
                   >
@@ -839,7 +878,10 @@ const InsectsHostPlantExplorer = React.memo(
                       c43.489-56.862,101.411-105.685,110.378-133.801C351.857,79.112,377.048,82.116,368.81,109.802z"
                     />
                   </svg>
-                  <span>植物 ({mergedHostPlantCount})</span>
+                  <span className="flex items-center gap-1">
+                    <span>植物</span>
+                    <span className="hidden sm:inline">({mergedHostPlantCount})</span>
+                  </span>
                 </div>
                 {activeTab === "plants" && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500/80"></div>
@@ -850,6 +892,11 @@ const InsectsHostPlantExplorer = React.memo(
             {/* タブコンテンツ */}
             <div className="relative">
               <div
+                id="panel-insects"
+                role="tabpanel"
+                aria-labelledby="tab-insects"
+                aria-hidden={activeTab !== "insects"}
+                inert={activeTab !== "insects"}
                 className={`transition-all duration-300 ease-in-out ${
                   activeTab === "insects"
                     ? "opacity-100 translate-x-0"
@@ -875,7 +922,7 @@ const InsectsHostPlantExplorer = React.memo(
                         title="昆虫"
                         baseRoute=""
                         embedded={true}
-                        initialSearchTerm={globalSearchTerm}
+                        initialSearchTerm={activeSearchTerm}
                       />
                     </Suspense>
                   </div>
@@ -883,6 +930,11 @@ const InsectsHostPlantExplorer = React.memo(
               </div>
 
               <div
+                id="panel-plants"
+                role="tabpanel"
+                aria-labelledby="tab-plants"
+                aria-hidden={activeTab !== "plants"}
+                inert={activeTab !== "plants"}
                 className={`transition-all duration-300 ease-in-out ${
                   activeTab === "plants"
                     ? "opacity-100 translate-x-0"
@@ -904,7 +956,7 @@ const InsectsHostPlantExplorer = React.memo(
                         plantDetails={plantDetails}
                         embedded={true}
                         preloadedImageFilenames={plantImageFilenames}
-                        initialSearchTerm={globalSearchTerm}
+                        initialSearchTerm={activeSearchTerm}
                       />
                     </Suspense>
                   </div>
