@@ -52,6 +52,7 @@ const HostPlantListItem = React.memo(
   ({
     plant,
     mothNames,
+    relatedCount,
     plantDetails = {},
     imageFilename,
   }) => {
@@ -85,6 +86,13 @@ const HostPlantListItem = React.memo(
       setImageLoaded(false);
       setImageError(false);
     }, [imageFilename]);
+
+    const totalCount =
+      Number.isFinite(relatedCount) && relatedCount >= 0
+        ? relatedCount
+        : mothNames.length;
+    const visibleNames = mothNames.slice(0, 4);
+    const extraCount = Math.max(0, totalCount - visibleNames.length);
 
     return (
       <article className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
@@ -233,7 +241,7 @@ const HostPlantListItem = React.memo(
                       d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                     />
                   </svg>
-                  関連 {mothNames.length}種
+                  関連 {totalCount}種
                 </span>
               </div>
 
@@ -266,8 +274,8 @@ const HostPlantListItem = React.memo(
                     </svg>
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
-                    {mothNames.slice(0, 4).join("、")}
-                    {mothNames.length > 4 && `...他${mothNames.length - 4}種`}
+                    {visibleNames.join("、")}
+                    {extraCount > 0 && `...他${extraCount}種`}
                   </span>
                 </div>
               </div>
@@ -286,6 +294,7 @@ const HostPlantList = ({
   embedded = false,
   preloadedImageFilenames = [],
   initialSearchTerm = "",
+  plantInsectStats = null,
 }) => {
   // Canonical/OG/パンくず（フックで共通化）
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
@@ -1076,7 +1085,23 @@ const HostPlantList = ({
         <div>
           {currentHostPlants.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {currentHostPlants.map(([plant, mothList], index) => (
+              {currentHostPlants.map(([plant, mothList], index) => {
+                const normalizedPlant = normalizePlantKey(plant);
+                const statsNames =
+                  plantInsectStats?.namesByPlant?.[plant] ||
+                  (normalizedPlant && plantInsectStats?.namesByPlant?.[normalizedPlant]);
+                const displayNames =
+                  Array.isArray(statsNames) && statsNames.length > 0
+                    ? statsNames
+                    : mothList;
+                const statsCount =
+                  plantInsectStats?.countsByPlant?.[plant] ??
+                  (normalizedPlant && plantInsectStats?.countsByPlant?.[normalizedPlant]);
+                const relatedCount =
+                  Number.isFinite(statsCount) && statsCount >= 0
+                    ? statsCount
+                    : displayNames.length;
+                return (
                 <div
                   key={plant}
                   className="animate-fadeIn"
@@ -1084,12 +1109,14 @@ const HostPlantList = ({
                 >
                   <HostPlantListItem
                     plant={plant}
-                    mothNames={mothList}
+                    mothNames={displayNames}
+                    relatedCount={relatedCount}
                     plantDetails={safePlantDetails}
                     imageFilename={plantImageMap.get(plant)}
                   />
                 </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12">
