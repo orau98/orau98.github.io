@@ -84,6 +84,7 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
     moths: [],
     butterflies: [],
     beetles: [],
+    longhornbeetles: [],
     leafbeetles: []
   };
   
@@ -143,6 +144,9 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
         case 'タマムシ類':
           result.beetles.push(insectData);
           break;
+        case 'カミキリムシ類':
+          result.longhornbeetles.push(insectData);
+          break;
         case 'ハムシ類':
           result.leafbeetles.push(insectData);
           break;
@@ -159,8 +163,9 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
     moths: result.moths.length,
     butterflies: result.butterflies.length,
     beetles: result.beetles.length,
+    longhornbeetles: result.longhornbeetles.length,
     leafbeetles: result.leafbeetles.length,
-    total: result.moths.length + result.butterflies.length + result.beetles.length + result.leafbeetles.length
+    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.leafbeetles.length
   });
   
   return result;
@@ -176,6 +181,7 @@ const getInsectType = (classification) => {
     case '蛾類': return 'moth';
     case '蝶類': return 'butterfly';
     case 'タマムシ類': return 'beetle';
+    case 'カミキリムシ類': return 'longhornbeetle';
     case 'ハムシ類': return 'leafbeetle';
     default: return 'unknown';
   }
@@ -240,7 +246,7 @@ export const validateIntegratedData = (data) => {
     errors: []
   };
   
-  ['moths', 'butterflies', 'beetles', 'leafbeetles'].forEach(type => {
+  ['moths', 'butterflies', 'beetles', 'longhornbeetles', 'leafbeetles'].forEach(type => {
     if (data[type]) {
       data[type].forEach((item, index) => {
         report.totalRecords++;

@@ -9,9 +9,11 @@ const buildInsectMetaPath = (insect, fallbackType = 'moth') => {
       ? 'butterfly'
       : type === 'beetle'
         ? 'beetle'
-        : type === 'leafbeetle'
-          ? 'leafbeetle'
-          : 'moth';
+        : type === 'longhornbeetle'
+          ? 'longhornbeetle'
+          : type === 'leafbeetle'
+            ? 'leafbeetle'
+            : 'moth';
   const id = insect.id || '';
   if (!id) return '/';
   return `/meta/${base}/${encodeURIComponent(id)}.html`;
@@ -447,6 +449,133 @@ export const BeetleStructuredData = ({ beetle }) => {
   );
 };
 
+// Enhanced カミキリムシの構造化データ with Species and detailed taxonomy
+export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
+  if (!longhornbeetle) return null;
+
+  const detailUrl = absUrl(buildInsectMetaPath(longhornbeetle, 'longhornbeetle'));
+  const hostPlantsList = extractLarvalHostPlants(longhornbeetle.hostPlantsDetailed, longhornbeetle.hostPlants);
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": ["Animal", "Species"],
+    "name": longhornbeetle.name,
+    "alternateName": [longhornbeetle.scientificName, longhornbeetle.name],
+    "scientificName": longhornbeetle.scientificName,
+    "identifier": {
+      "@type": "PropertyValue",
+      "propertyID": "species_id",
+      "value": longhornbeetle.id
+    },
+    "classification": {
+      "@type": "Taxon",
+      "taxonRank": "species",
+      "parentTaxon": [
+        {
+          "@type": "Taxon",
+          "name": longhornbeetle.classification?.genus || longhornbeetle.scientificName?.split(' ')[0] || "unknown",
+          "taxonRank": "genus"
+        },
+        {
+          "@type": "Taxon",
+          "name": longhornbeetle.classification?.subfamily || "カミキリムシ亜科",
+          "taxonRank": "subfamily"
+        },
+        {
+          "@type": "Taxon",
+          "name": longhornbeetle.classification?.family || "カミキリムシ科",
+          "taxonRank": "family"
+        },
+        {
+          "@type": "Taxon",
+          "name": "鞘翅目",
+          "taxonRank": "order"
+        }
+      ]
+    },
+    "description": `${longhornbeetle.name}（${longhornbeetle.scientificName}）は${longhornbeetle.classification?.family || 'カミキリムシ科'}に属するカミキリムシの一種です。${hostPlantsList.length ? `主な食草：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    "url": detailUrl,
+    "sameAs": detailUrl,
+    "inLanguage": "ja",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "和名",
+        "value": longhornbeetle.name
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "学名",
+        "value": longhornbeetle.scientificName
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "分類",
+        "value": longhornbeetle.classification?.family || "カミキリムシ科"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "食草数",
+        "value": hostPlantsList.length || 0
+      }
+    ]
+  };
+
+  const safeFilename = longhornbeetle.scientificFilename || longhornbeetle.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+  if (safeFilename) {
+    structuredData.image = {
+      "@type": "ImageObject",
+      "url": `${absUrl(`/images/insects/${safeFilename}.jpg`)}`,
+      "caption": `${longhornbeetle.name}（${longhornbeetle.scientificName}）の写真`,
+      "description": `${longhornbeetle.name}の生態写真`
+    };
+  }
+
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map(plant => ({
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": ["Plant", "Species"],
+        "name": plant,
+        "taxonomicRank": "species"
+      },
+      "description": `${longhornbeetle.name}が${plant}を食草として利用`
+    }));
+  }
+
+  structuredData.breadcrumb = {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "昆虫植物図鑑",
+        "item": absUrl('/')
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "昆虫",
+        "item": absUrl('/meta/longhornbeetle/index.html')
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": longhornbeetle.name,
+        "item": detailUrl
+      }
+    ]
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+    />
+  );
+};
+
 // Enhanced ハムシの構造化データ with Species, detailed taxonomy and emergence time
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
@@ -728,7 +857,7 @@ export const MainStructuredData = () => {
     "name": "昆虫植物図鑑",
     "alternateName": "昆虫食草図鑑",
     "url": siteUrl,
-    "description": "昆虫植物図鑑（昆虫食草図鑑）として、昆虫と食草の美しい関係を探る。蛾、蝶、甲虫、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
+    "description": "昆虫植物図鑑（昆虫食草図鑑）として、昆虫と食草の美しい関係を探る。蛾、蝶、タマムシ、カミキリムシ、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
     "inLanguage": "ja",
     "author": {
       "@type": "Organization",
@@ -743,7 +872,7 @@ export const MainStructuredData = () => {
       "@type": "Dataset",
       "name": "昆虫植物・食草データベース",
       "description": "日本の昆虫と食草の関係を網羅的に収録したデータベース",
-      "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "ハムシ", "植物", "生態学"],
+      "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "カミキリムシ", "ハムシ", "植物", "生態学"],
       "creator": {
         "@type": "Organization",
         "name": "昆虫植物図鑑"

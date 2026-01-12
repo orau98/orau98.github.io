@@ -29,7 +29,7 @@ const FloatingActionButton = () => {
   // Generate Table of Contents (TOC) for detail pages
   useEffect(() => {
     // Only generate TOC for detail pages
-    if (!location.pathname.match(/\/(moth|butterfly|beetle|leafbeetle|plant)\//)) {
+    if (!location.pathname.match(/\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|plant)\//)) {
       setTocItems([]);
       return;
     }

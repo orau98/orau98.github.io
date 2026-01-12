@@ -418,7 +418,7 @@ const InsectCard = ({ insect, idx, imageFilenames = new Set(), imageExtensions =
   );
 };
 
-const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails, theme, flowerVisitPlants = {} }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, plantDetails, theme, flowerVisitPlants = {} }) => {
   const { plantName } = useParams();
   const rawDecodedPlantName = decodeURIComponent(plantName);
   const sanitizePlantParam = (s) => {
@@ -634,7 +634,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = 
   }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName]);
   
   // All insects for RelatedPlants component
-  const allInsects = [...moths, ...butterflies, ...beetles, ...leafbeetles];
+  const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles];
   
   // 植物名を正規化する関数（App.jsxと同じロジック）
   const normalizePlantName = (plantName) => {

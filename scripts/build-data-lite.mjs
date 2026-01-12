@@ -292,6 +292,7 @@ const slim = (arr) => (arr || []).map(i => ({
   const moths = slim(normalized.moths);
   const butterflies = slim(normalized.butterflies);
   const beetles = slim(normalized.beetles);
+  const longhornbeetles = slim(normalized.longhornbeetles);
   const leafbeetles = slim(normalized.leafbeetles);
 
   // Build lightweight host plant map using full normalized host plant data
@@ -306,7 +307,7 @@ const slim = (arr) => (arr || []).map(i => ({
       if (!hostPlantsMap[key].includes(insectName)) hostPlantsMap[key].push(insectName);
     });
   };
-  [...normalized.moths, ...normalized.butterflies, ...normalized.beetles, ...normalized.leafbeetles].forEach(addPlants);
+  [...normalized.moths, ...normalized.butterflies, ...normalized.beetles, ...normalized.longhornbeetles, ...normalized.leafbeetles].forEach(addPlants);
 
   // Ensure output dir
   fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -321,6 +322,7 @@ const slim = (arr) => (arr || []).map(i => ({
   write('moths.json', moths);
   write('butterflies.json', butterflies);
   write('beetles.json', beetles);
+  write('longhornbeetles.json', longhornbeetles);
   write('leafbeetles.json', leafbeetles);
   write('hostplants.json', hostPlantsMap);
   const manifest = {
@@ -328,6 +330,7 @@ const slim = (arr) => (arr || []).map(i => ({
       moths: moths.length,
       butterflies: butterflies.length,
       beetles: beetles.length,
+      longhornbeetles: longhornbeetles.length,
       leafbeetles: leafbeetles.length,
       hostPlants: Object.keys(hostPlantsMap).length
     },
@@ -336,7 +339,7 @@ const slim = (arr) => (arr || []).map(i => ({
   write('manifest.json', manifest);
 
   // Keep combined index for backward compatibility
-  const out = { moths, butterflies, beetles, leafbeetles, hostPlants: hostPlantsMap };
+  const out = { moths, butterflies, beetles, longhornbeetles, leafbeetles, hostPlants: hostPlantsMap };
   write('index.json', out);
 
   // Build and write full dataset for runtime consumption
@@ -345,9 +348,10 @@ const slim = (arr) => (arr || []).map(i => ({
   const processedMoths = processInsects(normalized.moths);
   const processedButterflies = processInsects(normalized.butterflies);
   const processedBeetles = processInsects(normalized.beetles);
+  const processedLonghornbeetles = processInsects(normalized.longhornbeetles);
   const processedLeafbeetles = processInsects(normalized.leafbeetles);
   const { hostPlantsMap: fullHostPlants, plantDetails, aliasToCanonical } = buildHostPlantDataset(
-    [...processedMoths, ...processedButterflies, ...processedBeetles, ...processedLeafbeetles],
+    [...processedMoths, ...processedButterflies, ...processedBeetles, ...processedLonghornbeetles, ...processedLeafbeetles],
     ylistLite
   );
   const fullDataset = {
@@ -356,12 +360,14 @@ const slim = (arr) => (arr || []).map(i => ({
       moths: processedMoths.length,
       butterflies: processedButterflies.length,
       beetles: processedBeetles.length,
+      longhornbeetles: processedLonghornbeetles.length,
       leafbeetles: processedLeafbeetles.length,
       hostPlants: Object.keys(fullHostPlants).length
     },
     moths: processedMoths,
     butterflies: processedButterflies,
     beetles: processedBeetles,
+    longhornbeetles: processedLonghornbeetles,
     leafbeetles: processedLeafbeetles,
     hostPlants: fullHostPlants,
     plantDetails,

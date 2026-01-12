@@ -565,6 +565,7 @@ function generateInsectHTML(insect, type) {
     moth: '蛾',
     butterfly: '蝶',
     beetle: 'タマムシ',
+    longhornbeetle: 'カミキリムシ',
     leafbeetle: 'ハムシ'
   };
   
@@ -609,6 +610,7 @@ function generateInsectHTML(insect, type) {
     moth: 'ヤガ科',
     butterfly: 'タテハチョウ科', 
     beetle: 'タマムシ科',
+    longhornbeetle: 'カミキリムシ科',
     leafbeetle: 'ハムシ科'
   }[type];
   
@@ -838,6 +840,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     moth: relatedInsects.filter(i => i.type === 'moth'),
     butterfly: relatedInsects.filter(i => i.type === 'butterfly'),
     beetle: relatedInsects.filter(i => i.type === 'beetle'),
+    longhornbeetle: relatedInsects.filter(i => i.type === 'longhornbeetle'),
     leafbeetle: relatedInsects.filter(i => i.type === 'leafbeetle')
   };
   
@@ -845,6 +848,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     moth: '蛾',
     butterfly: '蝶',
     beetle: 'タマムシ',
+    longhornbeetle: 'カミキリムシ',
     leafbeetle: 'ハムシ'
   };
   
@@ -858,7 +862,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
   <title>${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
-  <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、ハムシの生態と食草関係について。">
+  <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、カミキリムシ、ハムシの生態と食草関係について。">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
   <link rel="alternate" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}">
@@ -1047,7 +1051,7 @@ async function generateMetaPages() {
   // 既存のカスタムページ（*-support-test.html）を退避しておき、生成後に復元する
   const preserveMap = new Map();
   try {
-    ['moth', 'butterfly', 'beetle', 'leafbeetle', 'plant'].forEach(type => {
+    ['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'plant'].forEach(type => {
       const typeDir = path.join(metaDir, type);
       const preserve = [];
       if (fs.existsSync(typeDir)) {
@@ -1071,7 +1075,7 @@ async function generateMetaPages() {
     fs.mkdirSync(metaDir, { recursive: true });
   }
   
-  ['moth', 'butterfly', 'beetle', 'leafbeetle', 'plant'].forEach(type => {
+  ['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'plant'].forEach(type => {
     const typeDir = path.join(metaDir, type);
     if (fs.existsSync(typeDir)) {
       // 古いファイルを削除して再生成に備える
@@ -1105,7 +1109,7 @@ async function generateMetaPages() {
         normalizedInsectsData.forEach((row) => {
           const famLatin = (row.family || '').trim();
           const famJP = (row.family_jp || '').trim();
-          const isLeafbeetle = famJP === 'ハムシ科' || famLatin === 'Chrysomelidae';
+          const isLeafbeetle = famJP.includes('ハムシ') || famLatin === 'Chrysomelidae' || famLatin === 'Megalopodidae';
           const id = (row.insect_id || '').trim();
           if (!isLeafbeetle || !id || existingIds.has(id)) return;
           insectsData.push(row);
@@ -1206,6 +1210,8 @@ async function generateMetaPages() {
     // 昆虫データの処理（正規化データを使用）
     let mothCount = 0;
     let butterflyCountFromInsects = 0;
+    let beetleCountFromInsects = 0;
+    let longhornbeetleCountFromInsects = 0;
     let leafbeetleCountFromInsects = 0;
     const hostPlantsMap = new Map();
 
@@ -1252,9 +1258,16 @@ async function generateMetaPages() {
       const famLatin = (row.family || '').trim();
       const famJP = (row.family_jp || '').trim();
       const isButterfly = /チョウ科$/.test(famJP) || /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/.test(famLatin);
-      const isLeafBeetle = famJP === 'ハムシ科' || famLatin === 'Chrysomelidae';
+      const isLeafBeetle = famJP.includes('ハムシ') || famLatin === 'Chrysomelidae' || famLatin === 'Megalopodidae';
+      const isLonghornBeetle = famJP === 'カミキリムシ科' || famLatin === 'Cerambycidae';
       const isBeetle = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
-      const type = isButterfly ? 'butterfly' : (isLeafBeetle ? 'leafbeetle' : (isBeetle ? 'beetle' : 'moth'));
+      const type = isButterfly
+        ? 'butterfly'
+        : (isLeafBeetle
+          ? 'leafbeetle'
+          : (isLonghornBeetle
+            ? 'longhornbeetle'
+            : (isBeetle ? 'beetle' : 'moth')));
       
       // 成虫出現時期の検索（外部CSV→general_notesの順にフォールバック）
       let emergenceTime = emergenceTimeMap.get(japaneseName) || 
@@ -1305,6 +1318,8 @@ async function generateMetaPages() {
       fs.writeFileSync(filename, html);
       if (type === 'moth') mothCount++;
       else if (type === 'butterfly') butterflyCountFromInsects++;
+      else if (type === 'beetle') beetleCountFromInsects++;
+      else if (type === 'longhornbeetle') longhornbeetleCountFromInsects++;
       else if (type === 'leafbeetle') leafbeetleCountFromInsects++;
       
       // 食草マップに追加（植物ページ生成用）
@@ -1395,6 +1410,8 @@ async function generateMetaPages() {
     });
     
     // ハムシデータの処理（従来通り）
+    let beetleCount = beetleCountFromInsects;
+    let longhornbeetleCount = longhornbeetleCountFromInsects;
     let leafbeetleCount = leafbeetleCountFromInsects;
     
     hamushiData.forEach((row, index) => {
@@ -1499,6 +1516,8 @@ async function generateMetaPages() {
     console.log(`メタページ生成完了:`);
     console.log(`- 蛾: ${mothCount}種`);
     console.log(`- 蝶: ${butterflyCount}種`);
+    console.log(`- タマムシ: ${beetleCount}種`);
+    console.log(`- カミキリムシ: ${longhornbeetleCount}種`);
     console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- 食草: ${plantCount}種`);
     if (skippedPlants > 0) {
@@ -1636,7 +1655,8 @@ function generateMetaIndexes() {
   const sections = [
     { dir: 'moth', title: '蛾（メタページ一覧）' },
     { dir: 'butterfly', title: '蝶（メタページ一覧）' },
-    { dir: 'beetle', title: '甲虫（メタページ一覧）' },
+    { dir: 'beetle', title: 'タマムシ（メタページ一覧）' },
+    { dir: 'longhornbeetle', title: 'カミキリムシ（メタページ一覧）' },
     { dir: 'leafbeetle', title: 'ハムシ（メタページ一覧）' },
     { dir: 'plant', title: '植物（メタページ一覧）' }
   ];

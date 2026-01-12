@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
 
-const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
+const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const location = useLocation();
   
   // Get current moth or plant data for classification display
@@ -60,6 +60,16 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], leafbe
           name: beetle.name,
           scientificName: beetle.scientificName,
           classification: beetle.classification
+        };
+      }
+    } else if (pathParts[1] === 'longhornbeetle' && pathParts[2]) {
+      const longhorn = findBySlugOrId(longhornbeetles, pathParts[2]);
+      if (longhorn) {
+        return {
+          type: 'longhornbeetle',
+          name: longhorn.name,
+          scientificName: longhorn.scientificName,
+          classification: longhorn.classification
         };
       }
     } else if (pathParts[1] === 'leafbeetle' && pathParts[2]) {

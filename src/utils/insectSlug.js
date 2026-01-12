@@ -11,9 +11,11 @@ export const buildInsectPath = (insect) => {
       ? '/butterfly/'
       : insect.type === 'beetle'
         ? '/beetle/'
-        : insect.type === 'leafbeetle'
-          ? '/leafbeetle/'
-          : '/moth/';
+        : insect.type === 'longhornbeetle'
+          ? '/longhornbeetle/'
+          : insect.type === 'leafbeetle'
+            ? '/leafbeetle/'
+            : '/moth/';
   const slug = slugifyInsectName(insect.name) || insect.id;
   return `${base}${slug}`;
 };

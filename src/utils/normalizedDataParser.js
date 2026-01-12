@@ -16,12 +16,14 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     moths: [],
     butterflies: [],
     beetles: [],
+    longhornbeetles: [],
     leafbeetles: []
   };
   const dedupeMaps = {
     moths: new Map(),
     butterflies: new Map(),
     beetles: new Map(),
+    longhornbeetles: new Map(),
     leafbeetles: new Map()
   };
 
@@ -299,6 +301,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         const f = (fam || '').trim();
         if (fj.includes('チョウ') || fj.includes('シジミ') || fj.includes('セセリ')) return 'butterfly';
         if (f === 'Chrysomelidae' || fj.includes('ハムシ')) return 'leafbeetle';
+        if (f === 'Cerambycidae' || fj.includes('カミキリ')) return 'longhornbeetle';
         if (f === 'Buprestidae' || fj.includes('タマムシ')) return 'beetle';
         return 'moth';
       };
@@ -384,6 +387,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         case 'タマムシ類':
           pushWithDedupe(result.beetles, dedupeMaps.beetles);
           break;
+        case 'カミキリムシ類':
+          pushWithDedupe(result.longhornbeetles, dedupeMaps.longhornbeetles);
+          break;
         case 'ハムシ類':
           pushWithDedupe(result.leafbeetles, dedupeMaps.leafbeetles);
           break;
@@ -401,8 +407,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     moths: result.moths.length,
     butterflies: result.butterflies.length,
     beetles: result.beetles.length,
+    longhornbeetles: result.longhornbeetles.length,
     leafbeetles: result.leafbeetles.length,
-    total: result.moths.length + result.butterflies.length + result.beetles.length + result.leafbeetles.length
+    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.leafbeetles.length
   });
 
   return result;
@@ -426,9 +433,8 @@ const classifyInsect = (insect) => {
     return 'タマムシ類';
   }
   
-  // カミキリムシ（Cerambycidae）を甲虫（beetle）として扱う
   if (familyJp.includes('カミキリ')) {
-    return 'タマムシ類'; // beetle bucket（サイトでは beetles 集合に集約）
+    return 'カミキリムシ類';
   }
   
   if (familyJp.includes('ハムシ')) {
@@ -445,7 +451,7 @@ const classifyInsect = (insect) => {
   }
   
   if (family === 'Cerambycidae') {
-    return 'タマムシ類';
+    return 'カミキリムシ類';
   }
   
   // その他は蛾類として扱う
@@ -464,6 +470,10 @@ const getInsectTypeFromFamily = (family) => {
   
   if (family.includes('タマムシ')) {
     return 'beetle';
+  }
+
+  if (family.includes('カミキリ')) {
+    return 'longhornbeetle';
   }
   
   if (family.includes('ハムシ')) {
@@ -487,7 +497,7 @@ export const validateNormalizedData = (data) => {
     errors: []
   };
 
-  ['moths', 'butterflies', 'beetles', 'leafbeetles'].forEach(type => {
+  ['moths', 'butterflies', 'beetles', 'longhornbeetles', 'leafbeetles'].forEach(type => {
     if (data[type]) {
       data[type].forEach((item, index) => {
         report.totalRecords++;

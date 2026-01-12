@@ -171,6 +171,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                         relatedMoth.type === 'moth' ? 'border-blue-300 dark:border-blue-600 group-hover:border-blue-500 dark:group-hover:border-blue-400' :
                         relatedMoth.type === 'butterfly' ? 'border-pink-300 dark:border-pink-600 group-hover:border-pink-500 dark:group-hover:border-pink-400' :
                         relatedMoth.type === 'beetle' ? 'border-green-300 dark:border-green-600 group-hover:border-green-500 dark:group-hover:border-green-400' :
+                        relatedMoth.type === 'longhornbeetle' ? 'border-teal-300 dark:border-teal-600 group-hover:border-teal-500 dark:group-hover:border-teal-400' :
                         'border-amber-300 dark:border-amber-600 group-hover:border-amber-500 dark:group-hover:border-amber-400'
                       }`}>
                         {/* 昆虫画像 - 大きくしてカードの大部分を占める */}

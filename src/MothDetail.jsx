@@ -6,7 +6,7 @@ import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
 import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
-import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData } from './components/StructuredData';
+import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
 import { absUrl } from './utils/origin';
 import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
@@ -25,24 +25,24 @@ import { getBackTarget, makeDetailLinkState } from './utils/navState';
 // SupportEngagementSection is test-only and not used in SPA detail
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
-const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], hostPlants, flowerVisitPlants = {}, theme }) => {
+const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, flowerVisitPlants = {}, theme }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
 
   const isDevelopment = typeof import.meta !== 'undefined' && import.meta.env && !!import.meta.env.DEV;
   const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
   
-  const { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug } = useParams();
+  const { mothSlug, butterflySlug, beetleSlug, longhornbeetleSlug, leafbeetleSlug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const routeType = mothSlug ? 'moth' : butterflySlug ? 'butterfly' : beetleSlug ? 'beetle' : leafbeetleSlug ? 'leafbeetle' : '';
-  const rawRouteParam = mothSlug || butterflySlug || beetleSlug || leafbeetleSlug || '';
+  const routeType = mothSlug ? 'moth' : butterflySlug ? 'butterfly' : beetleSlug ? 'beetle' : longhornbeetleSlug ? 'longhornbeetle' : leafbeetleSlug ? 'leafbeetle' : '';
+  const rawRouteParam = mothSlug || butterflySlug || beetleSlug || longhornbeetleSlug || leafbeetleSlug || '';
   const decodedRouteParam = decodeSlug(rawRouteParam);
   const normalizedRouteSlug = slugifyInsectName(decodedRouteParam);
   const [fallbackHostPlants, setFallbackHostPlants] = useState([]);
 
   // 🔍 デバッグ：URLパラメータ確認
-  logger.debug('🔍 URL params:', { mothSlug, butterflySlug, beetleSlug, leafbeetleSlug, rawRouteParam, decodedRouteParam });
+  logger.debug('🔍 URL params:', { mothSlug, butterflySlug, beetleSlug, longhornbeetleSlug, leafbeetleSlug, rawRouteParam, decodedRouteParam });
   
   // ID mapping for compatibility between different data sources
   // Since moths array is built from insects.csv (species-XXX format)
@@ -54,7 +54,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   };
   
   // Helper: determine whether the parameter looks like an internal ID (species-XXXX etc.)
-  const isLikelyInsectId = (value = '') => /^(species|catalog|moth|butterfly|butterfly-csv|beetle|leafbeetle)[-_]?\d+/i.test(value);
+  const isLikelyInsectId = (value = '') => /^(species|catalog|moth|butterfly|butterfly-csv|beetle|longhornbeetle|leafbeetle)[-_]?\d+/i.test(value);
   
   // Apply ID mapping only when the route param looks like an ID
   const mappedInsectId = isLikelyInsectId(decodedRouteParam) ? (idMapping[decodedRouteParam] || decodedRouteParam) : decodedRouteParam;
@@ -76,12 +76,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     mothsLength: moths.length,
     butterfliesLength: butterflies.length,
     beetlesLength: beetles.length,
+    longhornbeetlesLength: longhornbeetles.length,
     leafbeetlesLength: leafbeetles.length,
-    totalDataLoaded: moths.length + butterflies.length + beetles.length + leafbeetles.length
+    totalDataLoaded: moths.length + butterflies.length + beetles.length + longhornbeetles.length + leafbeetles.length
   });
   
   // Check if data is still loading
-  const totalDataLoaded = moths.length + butterflies.length + beetles.length + leafbeetles.length;
+  const totalDataLoaded = moths.length + butterflies.length + beetles.length + longhornbeetles.length + leafbeetles.length;
   const isDataLoading = totalDataLoaded === 0;
   
   // Add debug logging for アオバシャチホコ
@@ -106,7 +107,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   }
   
   // Combine all insects for searching
-  const allInsects = React.useMemo(() => [...moths, ...butterflies, ...beetles, ...leafbeetles], [moths, butterflies, beetles, leafbeetles]);
+  const allInsects = React.useMemo(() => [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles], [moths, butterflies, beetles, longhornbeetles, leafbeetles]);
   
   // Sort for navigation
   const sortedInsects = React.useMemo(() => {
@@ -162,6 +163,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   const mothId = routeType === 'moth' ? resolvedInsectId : '';
   const butterflyId = routeType === 'butterfly' ? resolvedInsectId : '';
   const beetleId = routeType === 'beetle' ? resolvedInsectId : '';
+  const longhornbeetleId = routeType === 'longhornbeetle' ? resolvedInsectId : '';
   const leafbeetleId = routeType === 'leafbeetle' ? resolvedInsectId : '';
 
   // URL を和名スラグに正規化（idでアクセスされた場合でも置き換え）
@@ -578,11 +580,31 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
   };
 
   // SEO（メタ/カノニカル/パンくず）を共通フックで設定
-  const insectTypeLabel = moth?.type === 'butterfly' ? '蝶' : moth?.type === 'beetle' ? 'タマムシ' : moth?.type === 'leafbeetle' ? 'ハムシ' : '蛾';
+  const insectTypeLabel = moth?.type === 'butterfly'
+    ? '蝶'
+    : moth?.type === 'beetle'
+      ? 'タマムシ'
+      : moth?.type === 'longhornbeetle'
+        ? 'カミキリムシ'
+        : moth?.type === 'leafbeetle'
+          ? 'ハムシ'
+          : '蛾';
   const larvalHostPlants = extractLarvalHostPlants(moth);
   const hostPlantsText = larvalHostPlants.length > 0 ? larvalHostPlants.join('、') : '不明';
   const canonicalHref = moth
-    ? absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/${moth.id}.html`)
+    ? absUrl(
+        `/meta/${
+          moth.type === 'butterfly'
+            ? 'butterfly'
+            : moth.type === 'beetle'
+              ? 'beetle'
+              : moth.type === 'longhornbeetle'
+                ? 'longhornbeetle'
+                : moth.type === 'leafbeetle'
+                  ? 'leafbeetle'
+                  : 'moth'
+        }/${moth.id}.html`,
+      )
     : undefined;
   const pageTitle = moth
     ? `${displayName || moth.name} (${moth.scientificName}) | ${insectTypeLabel}の詳細 - 昆虫植物図鑑`
@@ -608,7 +630,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     url: canonicalHref,
     breadcrumbItems: moth ? [
       { name: '昆虫植物図鑑', url: absUrl('/') },
-      { name: insectTypeLabel, url: absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/index.html`) },
+      { name: insectTypeLabel, url: absUrl(`/meta/${moth.type === 'butterfly' ? 'butterfly' : moth.type === 'beetle' ? 'beetle' : moth.type === 'longhornbeetle' ? 'longhornbeetle' : moth.type === 'leafbeetle' ? 'leafbeetle' : 'moth'}/index.html`) },
       { name: displayName || moth.name, url: canonicalHref }
     ] : undefined,
     resetCanonicalTo: absUrl('/')
@@ -780,7 +802,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
     </div>
   );
   
-  if (moth?.type === 'beetle') {
+  if (moth?.type === 'beetle' || moth?.type === 'longhornbeetle') {
     allowDebugLogs && console.log('DEBUG: Beetle detail view:', {
       name: moth.name,
       scientificName: moth.scientificName,
@@ -798,7 +820,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
       {/* 構造化データ */}
       {mothId && moth && <MothStructuredData moth={moth} />}
       {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
-      {(beetleId || leafbeetleId) && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
+      {beetleId && moth && <BeetleStructuredData beetle={moth} />}
+      {longhornbeetleId && moth && <LonghornBeetleStructuredData longhornbeetle={moth} />}
+      {leafbeetleId && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
           <Link 
@@ -1293,7 +1317,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], leafbeetles = [], h
                     });
                   }
                   // geographicalRemarksと同じ内容の場合は表示しない（重複を避ける）
-                  return (moth.type === 'moth' || moth.type === 'beetle') && 
+                  return (moth.type === 'moth' || moth.type === 'beetle' || moth.type === 'longhornbeetle') && 
                          moth.remarks && moth.remarks.trim() && 
                          !moth.remarks.includes('|') &&
                          moth.remarks !== moth.geographicalRemarks;

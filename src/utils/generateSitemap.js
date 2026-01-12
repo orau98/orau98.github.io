@@ -1,5 +1,5 @@
 // サイトマップ生成ユーティリティ
-export const generateSitemap = (moths, butterflies, beetles, leafbeetles, hostPlants) => {
+export const generateSitemap = (moths, butterflies, beetles, longhornbeetles, leafbeetles, hostPlants) => {
   const baseUrl = 'https://orau98.github.io';
   const currentDate = new Date().toISOString().split('T')[0];
   
@@ -53,6 +53,19 @@ export const generateSitemap = (moths, butterflies, beetles, leafbeetles, hostPl
     }
   });
 
+  // カミキリムシの詳細ページ
+  longhornbeetles.forEach((longhorn, index) => {
+    if (longhorn.name) {
+      sitemap += `  <url>
+    <loc>${baseUrl}/#/longhornbeetle/longhornbeetle-${index}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+`;
+    }
+  });
+
   // ハムシの詳細ページ
   leafbeetles.forEach((leafbeetle, index) => {
     if (leafbeetle.name) {
@@ -86,8 +99,8 @@ export const generateSitemap = (moths, butterflies, beetles, leafbeetles, hostPl
 };
 
 // サイトマップをダウンロードする関数
-export const downloadSitemap = (moths, butterflies, beetles, leafbeetles, hostPlants) => {
-  const sitemapContent = generateSitemap(moths, butterflies, beetles, leafbeetles, hostPlants);
+export const downloadSitemap = (moths, butterflies, beetles, longhornbeetles, leafbeetles, hostPlants) => {
+  const sitemapContent = generateSitemap(moths, butterflies, beetles, longhornbeetles, leafbeetles, hostPlants);
   const blob = new Blob([sitemapContent], { type: 'application/xml' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

@@ -47,6 +47,7 @@ function generateSplitSitemaps() {
     moth: [],
     butterfly: [],
     beetle: [],
+    longhornbeetle: [],
     leafbeetle: [],
     plant: []
   };
@@ -136,6 +137,13 @@ function generateSplitSitemaps() {
     key: 'beetle',
     dir: '../public/meta/beetle',
     routePrefix: '/meta/beetle/',
+    priority: '0.7',
+    includeIndexInMain: true,
+  });
+  const longhornCount = addMetaDirToSitemap({
+    key: 'longhornbeetle',
+    dir: '../public/meta/longhornbeetle',
+    routePrefix: '/meta/longhornbeetle/',
     priority: '0.7',
     includeIndexInMain: true,
   });
@@ -251,7 +259,8 @@ function generateSplitSitemaps() {
   console.log('\n統計:');
   console.log(`- 蛾（meta）: ${mothCount} URL`);
   console.log(`- 蝶（meta）: ${butterflyCount} URL`);
-  console.log(`- 甲虫（meta）: ${beetleCount} URL`);
+  console.log(`- タマムシ（meta）: ${beetleCount} URL`);
+  console.log(`- カミキリムシ（meta）: ${longhornCount} URL`);
   console.log(`- ハムシ（meta）: ${leafCount} URL`);
   console.log(`- 植物（meta）: ${plantCount} URL`);
   console.log(`- 合計: ${Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0)} URLs`);
