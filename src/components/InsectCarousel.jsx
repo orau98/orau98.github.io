@@ -1,47 +1,73 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
+import ImageWithFallback from './ImageWithFallback';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../utils/insectImageResolver';
 
 const InsectCarousel = ({ insects, title, type = 'default' }) => {
   const location = useLocation();
   // 画像拡張子マッピングを読み込む（共通サービス）
   const [imageExtensions, setImageExtensions] = useState({});
+  const [imageBases, setImageBases] = useState(new Set());
   useEffect(() => {
     loadInsectImageIndexes()
-      .then(({ exts }) => setImageExtensions(exts || {}))
-      .catch(() => setImageExtensions({}));
+      .then(({ names, exts }) => {
+        setImageExtensions(exts || {});
+        setImageBases(new Set(names || []));
+      })
+      .catch(() => {
+        setImageExtensions({});
+        setImageBases(new Set());
+      });
   }, []);
 
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
 
-  const createSafeFilename = (scientificName) => {
-    if (!scientificName) return '';
-    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-    cleanedName = cleanedName.replace(/\s+/g, '_');
-    return cleanedName;
-  };
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const placeholderSrc = `${normalizedBase}images/placeholder.jpg${cacheBustRef.current}`;
 
-  // 画像パスを構築する関数
-  const getImagePath = (insect) => {
+  const normalizedEntries = useMemo(
+    () => buildNormalizedEntries(imageBases, imageExtensions),
+    [imageBases, imageExtensions],
+  );
+
+  const buildImageUrl = useCallback((base) => {
+    if (!base) return '';
+    const ext = imageExtensions[base] || '.jpg';
+    return `${normalizedBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBustRef.current}`;
+  }, [imageExtensions, normalizedBase]);
+
+  const getImageCandidates = useCallback((insect) => {
+    if (!insect) return [];
     const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
-    const safeFilename = insect.scientificFilename || mappedFilename || createSafeFilename(insect.scientificName);
-    const ext = imageExtensions[safeFilename] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}${cacheBustRef.current}`;
-  };
-
-  // フォールバック画像パスを取得する関数
-  const getFallbackImagePath = (insect) => {
-    const japaneseName = insect.name;
-    const ext = imageExtensions[japaneseName] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}${cacheBustRef.current}`;
-  };
+    const candidateBases = buildInsectImageBaseCandidates(insect, mappedFilename);
+    const resolvedBases = resolveImageBaseCandidates(candidateBases, {
+      imageExtensions,
+      imageNames: imageBases,
+      normalizedEntries,
+    });
+    if (resolvedBases.length === 0 && candidateBases.length > 0) {
+      resolvedBases.push(candidateBases[0]);
+    }
+    const urls = [];
+    const seen = new Set();
+    resolvedBases.forEach((base) => {
+      const url = buildImageUrl(base);
+      if (url && !seen.has(url)) {
+        seen.add(url);
+        urls.push(url);
+      }
+    });
+    return urls;
+  }, [buildImageUrl, imageBases, imageExtensions, normalizedEntries]);
 
   if (!insects || insects.length === 0) return null;
 
@@ -79,32 +105,25 @@ const InsectCarousel = ({ insects, title, type = 'default' }) => {
                       'border-amber-300 dark:border-amber-600 group-hover:border-amber-500 dark:group-hover:border-amber-400'
                   }`}>
                     <div className="relative w-full aspect-[3/2] overflow-hidden">
-                      <img 
-                        src={getImagePath(insect)}
-                        alt={`${insect.name}の写真`}
-                        width="400"
-                        height="300"
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        onError={(e) => {
-                          if (!e.target.dataset.triedFallback) {
-                            e.target.dataset.triedFallback = 'true';
-                            e.target.src = getFallbackImagePath(insect);
-                          } else {
-                            if (e.target && e.target.style) {
-                              e.target.style.display = 'none';
-                            }
-                            const sibling = e.target?.nextElementSibling;
-                            if (sibling && sibling.style) {
-                              sibling.style.display = 'flex';
-                            }
-                          }
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-slate-100 dark:bg-slate-700 flex items-center justify-center hidden">
-                        <svg className="w-10 h-10 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
+                      {(() => {
+                        const candidates = getImageCandidates(insect);
+                        const primarySrc = candidates[0] || placeholderSrc;
+                        return (
+                          <ImageWithFallback
+                            src={primarySrc}
+                            candidates={candidates.slice(1)}
+                            fallbackSrc={placeholderSrc}
+                            alt={`${insect.name}の写真`}
+                            width="400"
+                            height="300"
+                            className="w-full h-full"
+                            imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+                            fit="cover"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        );
+                      })()}
                       
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
                         <h5 className="text-white font-bold text-sm leading-tight line-clamp-2 drop-shadow-lg">

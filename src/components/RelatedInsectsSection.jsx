@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
+import ImageWithFallback from './ImageWithFallback';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../utils/insectImageResolver';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
   const location = useLocation();
@@ -41,39 +47,58 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
 
   // 画像拡張子マッピングを読み込む（共通サービス）
   const [imageExtensions, setImageExtensions] = useState({});
+  const [imageBases, setImageBases] = useState(new Set());
   useEffect(() => {
     loadInsectImageIndexes()
-      .then(({ exts }) => setImageExtensions(exts || {}))
-      .catch(() => setImageExtensions({}));
+      .then(({ names, exts }) => {
+        setImageExtensions(exts || {});
+        setImageBases(new Set(names || []));
+      })
+      .catch(() => {
+        setImageExtensions({});
+        setImageBases(new Set());
+      });
   }, []);
 
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : '');
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const placeholderSrc = `${normalizedBase}images/placeholder.jpg${cacheBustRef.current}`;
 
-  const createSafeFilename = (scientificName) => {
-    if (!scientificName) return '';
-    let cleanedName = scientificName.replace(/\s*\(.*?(?:\)|\s*$)/g, '');
-    cleanedName = cleanedName.replace(/\s*,\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '');
-    cleanedName = cleanedName.replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1');
-    cleanedName = cleanedName.replace(/[^a-zA-Z0-9\s]/g, '');
-    cleanedName = cleanedName.replace(/\s+/g, '_');
-    return cleanedName;
-  };
+  const normalizedEntries = useMemo(
+    () => buildNormalizedEntries(imageBases, imageExtensions),
+    [imageBases, imageExtensions],
+  );
 
-  // 画像パスを構築する関数（MothDetailと同じロジック）
-  const getImagePath = (insect) => {
+  const buildImageUrl = useCallback((base) => {
+    if (!base) return '';
+    const ext = imageExtensions[base] || '.jpg';
+    return `${normalizedBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBustRef.current}`;
+  }, [imageExtensions, normalizedBase]);
+
+  const getImageCandidates = useCallback((insect) => {
+    if (!insect) return [];
     const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
-    const safeFilename = insect.scientificFilename || mappedFilename || createSafeFilename(insect.scientificName);
-    const ext = imageExtensions[safeFilename] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(safeFilename)}${ext}${cacheBustRef.current}`;
-  };
-
-  // フォールバック画像パスを取得する関数
-  const getFallbackImagePath = (insect) => {
-    const japaneseName = insect.name;
-    const ext = imageExtensions[japaneseName] || '.jpg';
-    return `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(japaneseName)}${ext}${cacheBustRef.current}`;
-  };
+    const candidateBases = buildInsectImageBaseCandidates(insect, mappedFilename);
+    const resolvedBases = resolveImageBaseCandidates(candidateBases, {
+      imageExtensions,
+      imageNames: imageBases,
+      normalizedEntries,
+    });
+    if (resolvedBases.length === 0 && candidateBases.length > 0) {
+      resolvedBases.push(candidateBases[0]);
+    }
+    const urls = [];
+    const seen = new Set();
+    resolvedBases.forEach((base) => {
+      const url = buildImageUrl(base);
+      if (url && !seen.has(url)) {
+        seen.add(url);
+        urls.push(url);
+      }
+    });
+    return urls;
+  }, [buildImageUrl, imageBases, imageExtensions, normalizedEntries]);
 
   if (Object.keys(relatedMothsByPlant).length === 0) {
     return null;
@@ -176,37 +201,26 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                       }`}>
                         {/* 昆虫画像 - 大きくしてカードの大部分を占める */}
                         <div className="relative w-full aspect-[3/2] overflow-hidden">
-                          <img 
-                            src={getImagePath(relatedMoth)}
-                            alt={`${relatedMothName}（${relatedMoth.scientificName}）の写真`}
-                            width="600"
-                            height="400"
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            onError={(e) => {
-                              // 最初の画像パス（学名）が失敗した場合、和名で試行
-                              if (!e.target.dataset.triedFallback) {
-                                e.target.dataset.triedFallback = 'true';
-                                e.target.src = getFallbackImagePath(relatedMoth);
-                              } else {
-                                // 両方失敗した場合はデフォルトアイコンを表示
-                                // Safely hide the image
-                                if (e.target && e.target.style) {
-                                  e.target.style.display = 'none';
-                                }
-                                // Only access nextElementSibling if it exists
-                                const sibling = e.target?.nextElementSibling;
-                                if (sibling && sibling.style) {
-                                  sibling.style.display = 'flex';
-                                }
-                              }
-                            }}
-                          />
-                          {/* フォールバック用のアイコン表示エリア */}
-                          <div className="absolute inset-0 bg-slate-100 dark:bg-slate-700 flex items-center justify-center hidden">
-                            <svg className="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 01-2 2z" />
-                            </svg>
-                          </div>
+                          {(() => {
+                            const candidates = getImageCandidates(relatedMoth);
+                            const primarySrc = candidates[0] || placeholderSrc;
+                            return (
+                              <ImageWithFallback
+                                src={primarySrc}
+                                candidates={candidates.slice(1)}
+                                fallbackSrc={placeholderSrc}
+                                alt={`${relatedMothName}（${relatedMoth.scientificName}）の写真`}
+                                width="600"
+                                height="400"
+                                className="w-full h-full"
+                                imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+                                fit="cover"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            );
+                          })()}
+
                           
                           {/* 画像上に昆虫名をオーバーレイ表示 */}
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
