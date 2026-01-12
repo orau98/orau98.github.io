@@ -1,6 +1,6 @@
 # 昆虫植物図鑑（昆虫食草図鑑）
 
-7000種以上の蛾、蝶、タマムシと食草の関係を網羅した日本最大級の昆虫植物図鑑です。
+7000種以上の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の関係を網羅した日本最大級の昆虫植物図鑑です。
 
 ## 🌐 サイトURL
 
@@ -12,7 +12,8 @@ https://orau98.github.io/
 
 ### 主な機能
 
-- 4分類群を収録（蛾・蝶・甲虫・ハムシ／計7,000種超）
+- 5分類群を収録（蛾・蝶・タマムシ・カミキリムシ・ハムシ／計7,000種超）
+- アブラムシは昆虫データ内のサブカテゴリとして集計・表示
 - 和名・学名・分類群・食草のキーワード高速検索
 - 「食草あり／なし（プレースホルダー除外）」「科」「属」「出現期」での複合フィルタとヒット件数のリアルタイム表示
 - 出現期の正規化（「初旬→上旬」「頃」削除・全角/半角/波ダッシュ統一）とガントチャート表示
@@ -30,7 +31,7 @@ https://orau98.github.io/
 
 - ソースデータは `public/*.csv`（昆虫・食草・備考）。
 - `prebuild` フックで以下を自動生成してから `vite build` を実行します。
-  - `assets/data-lite/*.json`（moths/butterflies/beetles/leafbeetles/hostplants/full-dataset 等の軽量化データ）
+  - `assets/data-lite/*.json`（moths/butterflies/beetles/longhornbeetles/leafbeetles/hostplants/full-dataset 等の軽量化データ）
   - `assets/data-lite/ylist-lite.json`（植物データの科名補完用ライト版）
   - `assets/data-lite/image-index.json` + `public/images/**` のリサイズ画像
   - メタページとサイトマップ（`public/meta/**` と `public/sitemap*.xml`）
@@ -181,9 +182,9 @@ var BASE_PATH = '/repo-name/';
 ## 🧭 メタページとサイトマップ（種ID粒度）
 
 - 種IDページは静的に生成し、`public/meta/{type}/{insect_id}.html` に出力します。
-  - 例: `public/meta/butterfly/species-20179.html`、`public/meta/moth/species-0123.html`
+  - 例: `public/meta/butterfly/species-20179.html`、`public/meta/moth/species-0123.html`、`public/meta/longhornbeetle/species-10001.html`
 - サイトマップはメタページのみを対象に分割出力し、粒度を「種ページ」に統一しています。
-  - 出力先: `public/sitemap-moth.xml`、`public/sitemap-butterfly.xml`、`public/sitemap-leafbeetle.xml`、`public/sitemap-plant.xml`、およびインデックス `public/sitemap_index.xml`（エイリアスとして `public/sitemap.xml` も出力）
+  - 出力先: `public/sitemap-main.xml`、`public/sitemap-moth.xml`、`public/sitemap-butterfly.xml`、`public/sitemap-beetle.xml`、`public/sitemap-longhornbeetle.xml`、`public/sitemap-leafbeetle.xml`、`public/sitemap-plant.xml`、およびインデックス `public/sitemap.xml`
 - 生成コマンド（手動実行）
 
 ```bash
