@@ -176,16 +176,16 @@ const buildPlantInsectStats = (insects = [], plantDetails = {}) => {
   });
 
   const countsByPlant = {};
-  const namesByPlant = {};
+  const namesByPlantObj = {};
   idsByPlant.forEach((set, plant) => {
     countsByPlant[plant] = set.size;
   });
   namesByPlant.forEach((set, plant) => {
-    namesByPlant[plant] = Array.from(set).sort((a, b) =>
+    namesByPlantObj[plant] = Array.from(set).sort((a, b) =>
       a.localeCompare(b, "ja"),
     );
   });
-  return { countsByPlant, namesByPlant };
+  return { countsByPlant, namesByPlant: namesByPlantObj };
 };
 
 
