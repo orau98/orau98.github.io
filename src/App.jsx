@@ -548,6 +548,15 @@ function App() {
               if (Array.isArray(beetleArr)) setBeetles(beetleArr);
               if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
               if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+              // Keep summary counts in sync with loaded partitions (avoid stale cached counts)
+              setSummaryCounts((prev) => ({
+                ...(prev || {}),
+                moths: Array.isArray(mothArr) ? mothArr.length : 0,
+                butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
+                beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
+                longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
+                leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
+              }));
               const flowerMap = buildFlowerVisitMap([
                 ...(mothArr || []),
                 ...(butterArr || []),
