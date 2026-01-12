@@ -20,6 +20,9 @@ const ImageWithFallback = ({
 }) => {
   const [currentSrc, setCurrentSrc] = useState(src);
   const [currentCandidates, setCurrentCandidates] = useState(candidates);
+  const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
+  const [currentSizes, setCurrentSizes] = useState(sizes);
+  const [srcSetDisabled, setSrcSetDisabled] = useState(false);
   const [status, setStatus] = useState('loading'); // loading, loaded, error
 
   // Reset loading state only when the primary src actually changes.
@@ -28,8 +31,17 @@ const ImageWithFallback = ({
   // disappears after any parent state update.
   useEffect(() => {
     setCurrentSrc(src);
+    setCurrentSrcSet(srcSet);
+    setCurrentSizes(sizes);
+    setSrcSetDisabled(false);
     setStatus('loading');
   }, [src]);
+
+  // Keep srcset/sizes in sync without resetting the load status.
+  useEffect(() => {
+    setCurrentSrcSet(srcSet);
+    setCurrentSizes(sizes);
+  }, [srcSet, sizes]);
 
   // Keep the retry candidate list in sync without touching the load status.
   useEffect(() => {
@@ -42,14 +54,37 @@ const ImageWithFallback = ({
   };
 
   const handleError = (e) => {
+    // If a responsive srcset is present, drop it once and retry the same src.
+    if (!srcSetDisabled && currentSrcSet) {
+      setSrcSetDisabled(true);
+      setCurrentSrcSet(undefined);
+      setCurrentSizes(undefined);
+      if (currentSrc) {
+        const separator = currentSrc.includes('?') ? '&' : '?';
+        const retrySrc = currentSrc.includes('fallback=1')
+          ? currentSrc
+          : `${currentSrc}${separator}fallback=1`;
+        setCurrentSrc(retrySrc);
+      }
+      setStatus('loading');
+      return;
+    }
+
     if (currentCandidates && currentCandidates.length > 0) {
       const nextSrc = currentCandidates[0];
       setCurrentSrc(nextSrc);
       setCurrentCandidates(prev => prev.slice(1));
-      // status remains 'loading' or goes back to it? Image loading is async.
+      setCurrentSrcSet(undefined);
+      setCurrentSizes(undefined);
+      setSrcSetDisabled(true);
+      setStatus('loading');
       // The browser will try to load the new src.
     } else if (fallbackSrc && currentSrc !== fallbackSrc) {
       setCurrentSrc(fallbackSrc);
+      setCurrentSrcSet(undefined);
+      setCurrentSizes(undefined);
+      setSrcSetDisabled(true);
+      setStatus('loading');
       // fallbackSrc is the last resort
     } else {
       setStatus('error');
@@ -92,8 +127,8 @@ const ImageWithFallback = ({
       {/* Image */}
       <img
         src={currentSrc}
-        srcSet={status !== 'error' ? srcSet : undefined}
-        sizes={sizes}
+        srcSet={status !== 'error' && !srcSetDisabled ? currentSrcSet : undefined}
+        sizes={!srcSetDisabled ? currentSizes : undefined}
         alt={alt}
         className={`w-full h-full ${fitClass} transition-opacity duration-700 ${status === 'loaded' ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
         onLoad={handleLoad}
