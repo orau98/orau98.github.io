@@ -164,6 +164,7 @@ Fascellina_chromataria
 Fentonia_ocypete
 Flavocrambus striatellus Leech
 Gabala_argentata
+Garella_ruficirra
 Gigantalcis_flavolinearia
 Glyphodes_onychinalis
 Gonepatica_opalina
@@ -429,6 +430,7 @@ Volobilis_chloropterella
 Vulpechola_vulpecula
 Xanthia_icteritia
 Xanthia_togata
+Xanthogaleruca_maculicollis
 Xenotrachea_niphonica
 Xerodes_rufescentaria
 Xestia_c
@@ -441,3 +443,4 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
+ニセオクレクギエダシャク
