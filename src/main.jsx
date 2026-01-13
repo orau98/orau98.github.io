@@ -81,8 +81,15 @@ if (import.meta && import.meta.env && import.meta.env.PROD && typeof window !== 
 })();
 
 // Global error handler to suppress harmless browser extension errors
-const isExtensionLike = (text) =>
-  /(?:chrome|moz|safari)-extension:|extension:\\/\\//i.test(text || '');
+const isExtensionLike = (text) => {
+  const value = String(text || '');
+  return (
+    value.includes('chrome-extension://') ||
+    value.includes('moz-extension://') ||
+    value.includes('safari-extension://') ||
+    value.includes('extension://')
+  );
+};
 
 const isExtensionErrorEvent = (event) => {
   const filename = String(event?.filename || '');
