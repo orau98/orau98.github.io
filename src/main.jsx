@@ -60,37 +60,59 @@ if (import.meta && import.meta.env && import.meta.env.PROD && typeof window !== 
   const timeWindow = 3600000; // 1 hour
   
   const currentTime = Date.now();
-  const lastAccess = localStorage.getItem(timeKey);
-  const accessCount = parseInt(localStorage.getItem(accessKey) || '0');
-  
-  if (lastAccess && (currentTime - parseInt(lastAccess)) < timeWindow) {
-    if (accessCount > maxRequests) {
-      logger.warn('Rate limit would be triggered, but allowing access for debugging');
-      // TEMPORARILY DISABLED: document.body.innerHTML = '<div style="text-align:center;padding:50px;">Rate limit exceeded</div>';
-      // TEMPORARILY DISABLED: throw new Error('Rate limit exceeded');
+  try {
+    const lastAccess = localStorage.getItem(timeKey);
+    const accessCount = parseInt(localStorage.getItem(accessKey) || '0');
+    
+    if (lastAccess && (currentTime - parseInt(lastAccess)) < timeWindow) {
+      if (accessCount > maxRequests) {
+        logger.warn('Rate limit would be triggered, but allowing access for debugging');
+        // TEMPORARILY DISABLED: document.body.innerHTML = '<div style="text-align:center;padding:50px;">Rate limit exceeded</div>';
+        // TEMPORARILY DISABLED: throw new Error('Rate limit exceeded');
+      }
+      localStorage.setItem(accessKey, (accessCount + 1).toString());
+    } else {
+      localStorage.setItem(accessKey, '1');
+      localStorage.setItem(timeKey, currentTime.toString());
     }
-    localStorage.setItem(accessKey, (accessCount + 1).toString());
-  } else {
-    localStorage.setItem(accessKey, '1');
-    localStorage.setItem(timeKey, currentTime.toString());
+  } catch (error) {
+    logger.debug('LocalStorage unavailable for rate limiter:', error);
   }
 })();
 
 // Global error handler to suppress harmless browser extension errors
+const isExtensionLike = (text) =>
+  /chrome-extension|moz-extension|safari-extension|extension:\\/\\//i.test(text || '');
+
+const isExtensionErrorEvent = (event) => {
+  const filename = String(event?.filename || '');
+  const stack = String(event?.error?.stack || '');
+  return (
+    isExtensionLike(filename) ||
+    isExtensionLike(stack) ||
+    filename.includes('content.js')
+  );
+};
+
+const isExtensionRejection = (event) => {
+  const stack = String(event?.reason?.stack || '');
+  const message = String(event?.reason?.message || '');
+  return isExtensionLike(stack) || isExtensionLike(message);
+};
+
 window.addEventListener('error', (event) => {
   const errorMessage = event.error?.message || '';
+  const isExtension = isExtensionErrorEvent(event);
   
   // Suppress removeChild errors
-  if (errorMessage.includes('removeChild') && errorMessage.includes('not a child of this node')) {
+  if (isExtension && errorMessage.includes('removeChild') && errorMessage.includes('not a child of this node')) {
     logger.debug('Suppressed removeChild error (harmless):', errorMessage);
     event.preventDefault();
     return false;
   }
   
   // Suppress browser extension errors (Weblio, etc.)
-  if (errorMessage.includes('startContainer') || 
-      event.filename?.includes('content.js') ||
-      event.filename?.includes('extension')) {
+  if (isExtension && errorMessage.includes('startContainer')) {
     logger.debug('Suppressed browser extension error (harmless):', errorMessage);
     event.preventDefault();
     return false;
@@ -116,15 +138,16 @@ window.addEventListener('error', (event) => {
 // Also handle unhandled promise rejections
 window.addEventListener('unhandledrejection', (event) => {
   const reasonMessage = event.reason?.message || '';
+  const isExtension = isExtensionRejection(event);
   
-  if (reasonMessage.includes('removeChild') && reasonMessage.includes('not a child of this node')) {
+  if (isExtension && reasonMessage.includes('removeChild') && reasonMessage.includes('not a child of this node')) {
     logger.debug('Suppressed removeChild promise rejection (harmless):', reasonMessage);
     event.preventDefault();
     return false;
   }
   
   // Suppress extension-related promise rejections
-  if (reasonMessage.includes('startContainer') || reasonMessage.includes('extension')) {
+  if (isExtension && reasonMessage.includes('startContainer')) {
     logger.debug('Suppressed extension promise rejection (harmless):', reasonMessage);
     event.preventDefault();
     return false;

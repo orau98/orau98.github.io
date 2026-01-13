@@ -320,6 +320,26 @@ const InsectsHostPlantExplorer = React.memo(
           leafbeetles.length,
       });
 
+    const safeSessionGet = (key) => {
+      try {
+        return sessionStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    };
+
+    const safeSessionSet = (key, value) => {
+      try {
+        sessionStorage.setItem(key, value);
+      } catch {}
+    };
+
+    const safeSessionRemove = (key) => {
+      try {
+        sessionStorage.removeItem(key);
+      } catch {}
+    };
+
     // Save scroll position before navigating away (single source of truth)
     useEffect(() => {
       // Save scroll position on click of any link that navigates to detail page
@@ -341,18 +361,16 @@ const InsectsHostPlantExplorer = React.memo(
         if (url.origin !== window.location.origin) return;
         if (!/^\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|plant)\//.test(url.pathname)) return;
 
-        try {
-          sessionStorage.setItem(
-            SCROLL_RESTORE_KEY,
-            JSON.stringify({
-              y: window.scrollY,
-              tab: activeTab,
-              from: window.location.pathname + window.location.search,
-              to: url.pathname + url.search,
-              ts: Date.now(),
-            }),
-          );
-        } catch {}
+        safeSessionSet(
+          SCROLL_RESTORE_KEY,
+          JSON.stringify({
+            y: window.scrollY,
+            tab: activeTab,
+            from: window.location.pathname + window.location.search,
+            to: url.pathname + url.search,
+            ts: Date.now(),
+          }),
+        );
       };
 
       document.addEventListener("click", handleClick, true);
@@ -367,7 +385,7 @@ const InsectsHostPlantExplorer = React.memo(
       if (didRestoreScrollRef.current) return;
 
       let saved = null;
-      const raw = sessionStorage.getItem(SCROLL_RESTORE_KEY);
+      const raw = safeSessionGet(SCROLL_RESTORE_KEY);
       if (raw) {
         try {
           saved = JSON.parse(raw);
@@ -376,21 +394,21 @@ const InsectsHostPlantExplorer = React.memo(
         }
       } else {
         // Backward-compat fallback
-        const legacy = sessionStorage.getItem("insectExplorerScrollPosition");
+        const legacy = safeSessionGet("insectExplorerScrollPosition");
         if (legacy) saved = { y: parseInt(legacy, 10), legacy: true };
       }
 
       const currentPath = window.location.pathname + window.location.search;
       if (saved?.from && saved.from !== currentPath) {
-        sessionStorage.removeItem(SCROLL_RESTORE_KEY);
-        sessionStorage.removeItem("insectExplorerScrollPosition");
+        safeSessionRemove(SCROLL_RESTORE_KEY);
+        safeSessionRemove("insectExplorerScrollPosition");
         return;
       }
 
       const y = Number(saved?.y);
       if (!Number.isFinite(y)) {
-        sessionStorage.removeItem(SCROLL_RESTORE_KEY);
-        sessionStorage.removeItem("insectExplorerScrollPosition");
+        safeSessionRemove(SCROLL_RESTORE_KEY);
+        safeSessionRemove("insectExplorerScrollPosition");
         return;
       }
 
@@ -413,15 +431,15 @@ const InsectsHostPlantExplorer = React.memo(
             Date.now() - startedAt > maxWaitMs);
         if (done) {
           didRestoreScrollRef.current = true;
-          sessionStorage.removeItem(SCROLL_RESTORE_KEY);
-          sessionStorage.removeItem("insectExplorerScrollPosition");
+          safeSessionRemove(SCROLL_RESTORE_KEY);
+          safeSessionRemove("insectExplorerScrollPosition");
           return;
         }
 
         if (Date.now() - startedAt > maxWaitMs) {
           didRestoreScrollRef.current = true;
-          sessionStorage.removeItem(SCROLL_RESTORE_KEY);
-          sessionStorage.removeItem("insectExplorerScrollPosition");
+          safeSessionRemove(SCROLL_RESTORE_KEY);
+          safeSessionRemove("insectExplorerScrollPosition");
           return;
         }
 
@@ -871,6 +889,10 @@ const InsectsHostPlantExplorer = React.memo(
                     onError={(e) => {
                       try {
                         const imgEl = e.target;
+                        if (imgEl) {
+                          imgEl.srcset = '';
+                          imgEl.sizes = '';
+                        }
                         logger.warn("Hero image failed to load:", imgEl?.src);
                         // Try relative path first (works under subpath deployments)
                         if (!imgEl.dataset.fallbackTried) {

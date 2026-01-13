@@ -140,7 +140,13 @@ function App() {
   const pendingHostHydrationRef = useRef(null);
   const requestHostHydrationRef = useRef(() => {});
   const fetchDataRef = useRef(null);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('theme') || 'light';
+    } catch {
+      return 'light';
+    }
+  });
   const cacheLoadedRef = useRef(false);
   const cachedVersionRef = useRef(null);
   
@@ -148,6 +154,20 @@ function App() {
   const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
   
   const isExplorerPage = location.pathname === '/' || location.pathname === '/moth' || location.pathname === '/plant';
+
+  const shouldDeferHeavyWork = () => {
+    try {
+      if (typeof navigator === 'undefined') return false;
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const saveData = connection?.saveData;
+      const effectiveType = connection?.effectiveType || '';
+      const isSlowNetwork = /^(slow-2g|2g)$/i.test(effectiveType);
+      const lowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2;
+      return Boolean(saveData || isSlowNetwork || lowMemory);
+    } catch {
+      return false;
+    }
+  };
 
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
@@ -585,6 +605,7 @@ function App() {
             // 非同期・アイドル時にだけ full-dataset をプレフェッチし、IndexedDB キャッシュだけ温める
             const prefetchFullDataset = () => {
               if (typeof window === 'undefined') return;
+              if (shouldDeferHeavyWork()) return;
               const fire = async () => {
                 try {
                   const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
@@ -653,6 +674,7 @@ function App() {
             // Plantsタブ未訪問でも、アイドル時にバックグラウンドでホスト植物をマージしておく（非同期）
             const idleHydrateHostplants = () => {
               if (typeof window === 'undefined') return;
+              if (shouldDeferHeavyWork()) return;
               const fire = () => requestHostHydration();
               if ('requestIdleCallback' in window) {
                 window.requestIdleCallback(fire, { timeout: 10000 });
@@ -984,12 +1006,25 @@ function App() {
       try {
         // Fetch with timeout for all files to prevent hanging
         const fetchWithTimeout = (url, timeout = 15000) => {
-          return Promise.race([
-            fetch(url),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error(`Request timeout for ${url}`)), timeout)
-            )
-          ]);
+          if (typeof AbortController === 'undefined') {
+            return Promise.race([
+              fetch(url),
+              new Promise((_, reject) =>
+                setTimeout(() => reject(new Error(`Request timeout for ${url}`)), timeout),
+              ),
+            ]);
+          }
+
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), timeout);
+          return fetch(url, { signal: controller.signal })
+            .catch((error) => {
+              if (error?.name === 'AbortError') {
+                throw new Error(`Request timeout for ${url}`);
+              }
+              throw error;
+            })
+            .finally(() => clearTimeout(timer));
         };
 
         const safeFileLoad = async (path, name, timeout = 15000) => {
