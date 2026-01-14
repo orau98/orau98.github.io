@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
 
 // モバイル判定とサジェスト件数を返すフック
 const useIsMobile = () => {
@@ -15,6 +15,56 @@ const useIsMobile = () => {
   return isMobile;
 };
 
+// 検索履歴管理フック
+const SEARCH_HISTORY_KEY = 'ihpe-search-history';
+const MAX_HISTORY_ITEMS = 5;
+
+const useSearchHistory = () => {
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SEARCH_HISTORY_KEY);
+      if (saved) {
+        setHistory(JSON.parse(saved));
+      }
+    } catch {}
+  }, []);
+
+  const addToHistory = useCallback((term) => {
+    if (!term || term.trim().length < 2) return;
+    const trimmed = term.trim();
+
+    setHistory((prev) => {
+      const filtered = prev.filter((item) => item !== trimmed);
+      const updated = [trimmed, ...filtered].slice(0, MAX_HISTORY_ITEMS);
+      try {
+        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  }, []);
+
+  const removeFromHistory = useCallback((term) => {
+    setHistory((prev) => {
+      const updated = prev.filter((item) => item !== term);
+      try {
+        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  }, []);
+
+  const clearHistory = useCallback(() => {
+    setHistory([]);
+    try {
+      localStorage.removeItem(SEARCH_HISTORY_KEY);
+    } catch {}
+  }, []);
+
+  return { history, addToHistory, removeFromHistory, clearHistory };
+};
+
 const SearchInput = ({
   value,
   onChange,
@@ -28,6 +78,7 @@ const SearchInput = ({
   const listboxId = useId();
   const blurTimeoutRef = useRef(null);
   const isMobile = useIsMobile();
+  const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
 
   // モバイルではサジェスト件数を5件に制限
   const maxSuggestions = isMobile ? 5 : 10;
@@ -36,7 +87,9 @@ const SearchInput = ({
     [suggestions, maxSuggestions]
   );
 
-  const expanded = showSuggestions && displayedSuggestions.length > 0;
+  // 検索履歴と候補を組み合わせ（入力がない場合は履歴を表示）
+  const showHistory = !value && history.length > 0;
+  const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory);
   const activeDescendantId = useMemo(() => {
     if (!expanded || activeIndex < 0) return undefined;
     return `${listboxId}-option-${activeIndex}`;
@@ -65,6 +118,7 @@ const SearchInput = ({
   };
 
   const handleSelect = (suggestion) => {
+    addToHistory(suggestion);
     if (typeof onSelectSuggestion === "function") {
       onSelectSuggestion(suggestion);
     }
@@ -180,37 +234,92 @@ const SearchInput = ({
         )}
       </div>
       
-      {showSuggestions && displayedSuggestions.length > 0 && (
+      {showSuggestions && (displayedSuggestions.length > 0 || showHistory) && (
         <div
           className="absolute z-20 top-full left-0 right-0 -mt-px"
           onMouseDown={(e) => e.preventDefault()}
         >
           <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-t-0 border-slate-200/50 dark:border-slate-600/50 rounded-b-2xl shadow-lg overflow-hidden">
-            <ul id={listboxId} role="listbox" className="max-h-64 overflow-y-auto py-2">
-              {displayedSuggestions.map((suggestion, index) => (
-                <li key={`${suggestion}-${index}`} role="none">
+            {/* 検索履歴表示（入力がない場合） */}
+            {showHistory && (
+              <div className="py-2">
+                <div className="px-4 py-1 flex items-center justify-between">
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">最近の検索</span>
                   <button
                     type="button"
-                    role="option"
-                    id={`${listboxId}-option-${index}`}
-                    aria-selected={index === activeIndex}
-                    tabIndex={-1}
-                    onMouseDown={() => handleSelect(suggestion)}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    className={`w-full text-left px-4 py-3 min-h-[48px] text-slate-700 dark:text-slate-200 transition-colors flex items-center space-x-3 ${
-                      index === activeIndex
-                        ? "bg-slate-50 dark:bg-slate-700/50"
-                        : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
-                    }`}
+                    onMouseDown={clearHistory}
+                    className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                   >
-                    <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <span className="truncate font-medium">{suggestion}</span>
+                    履歴をクリア
                   </button>
-                </li>
-              ))}
-            </ul>
+                </div>
+                <ul id={listboxId} role="listbox">
+                  {history.map((term, index) => (
+                    <li key={`history-${term}-${index}`} role="none">
+                      <button
+                        type="button"
+                        role="option"
+                        id={`${listboxId}-option-${index}`}
+                        aria-selected={index === activeIndex}
+                        tabIndex={-1}
+                        onMouseDown={() => handleSelect(term)}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        className={`w-full text-left px-4 py-3 min-h-[48px] text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-between ${
+                          index === activeIndex
+                            ? "bg-slate-50 dark:bg-slate-700/50"
+                            : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="truncate font-medium">{term}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => { e.stopPropagation(); removeFromHistory(term); }}
+                          className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                          aria-label={`「${term}」を履歴から削除`}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {/* サジェスト表示（入力がある場合） */}
+            {!showHistory && displayedSuggestions.length > 0 && (
+              <ul id={listboxId} role="listbox" className="max-h-64 overflow-y-auto py-2">
+                {displayedSuggestions.map((suggestion, index) => (
+                  <li key={`${suggestion}-${index}`} role="none">
+                    <button
+                      type="button"
+                      role="option"
+                      id={`${listboxId}-option-${index}`}
+                      aria-selected={index === activeIndex}
+                      tabIndex={-1}
+                      onMouseDown={() => handleSelect(suggestion)}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      className={`w-full text-left px-4 py-3 min-h-[48px] text-slate-700 dark:text-slate-200 transition-colors flex items-center space-x-3 ${
+                        index === activeIndex
+                          ? "bg-slate-50 dark:bg-slate-700/50"
+                          : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                      }`}
+                    >
+                      <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      <span className="truncate font-medium">{suggestion}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       )}

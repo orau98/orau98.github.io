@@ -10,6 +10,7 @@ import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
+import LoadingBar from './components/LoadingBar';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { loadInsectImageIndexes } from './services/imageIndex';
@@ -6362,6 +6363,8 @@ function App() {
   
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
+      {/* グローバルローディングバー */}
+      <LoadingBar isLoading={loading} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-white focus:text-slate-900 focus:shadow-lg"

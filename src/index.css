@@ -6,15 +6,15 @@
 
 @layer components {
   .ui-btn {
-    @apply inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold transition-colors;
+    @apply inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold transition-all duration-150 active:scale-95;
   }
 
   .ui-btn-secondary {
-    @apply bg-white/85 dark:bg-slate-800/85 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70 hover:bg-white dark:hover:bg-slate-800;
+    @apply bg-white/85 dark:bg-slate-800/85 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md;
   }
 
   .ui-btn-primary {
-    @apply bg-emerald-600 text-white hover:bg-emerald-700;
+    @apply bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md;
   }
 
   .ui-btn-ghost {

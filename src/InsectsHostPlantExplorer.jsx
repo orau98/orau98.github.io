@@ -1083,7 +1083,7 @@ const InsectsHostPlantExplorer = React.memo(
                   </span>
                 </div>
                 {activeTab === "insects" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500/80"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-full shadow-sm shadow-emerald-500/50"></div>
                 )}
               </button>
 
@@ -1123,7 +1123,7 @@ const InsectsHostPlantExplorer = React.memo(
                   </span>
                 </div>
                 {activeTab === "plants" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500/80"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500 rounded-full shadow-sm shadow-blue-500/50"></div>
                 )}
               </button>
             </div>

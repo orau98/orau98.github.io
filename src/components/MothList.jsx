@@ -1504,14 +1504,21 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               })}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-blue-400 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+            <div className="text-center py-16">
+              {/* Empty state イラスト */}
+              <div className="w-24 h-24 mx-auto mb-6 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-emerald-100 dark:from-blue-900/30 dark:to-emerald-900/30 rounded-full animate-pulse" />
+                <div className="absolute inset-2 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
               </div>
-              <p className="text-slate-500 dark:text-slate-400 font-medium">該当する{title}が見つかりません</p>
-              <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">別のキーワードで検索してみてください</p>
+              <p className="text-lg text-slate-600 dark:text-slate-300 font-semibold mb-2">該当する{title}が見つかりません</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">別のキーワードで検索してみてください</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
+                例：「オオミズアオ」「ヤナギ」「ヤガ科」など
+              </p>
               {hasAnyCriteria && (
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                   <button
