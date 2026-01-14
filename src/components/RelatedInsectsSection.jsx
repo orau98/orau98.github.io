@@ -192,12 +192,12 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                         layout.startsWith('grid') ? 'w-full' : 'flex-shrink-0 w-56'
                       }`}
                     >
-                      <div className={`bg-white dark:bg-slate-800 rounded-xl overflow-hidden border-2 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02] ${
-                        relatedMoth.type === 'moth' ? 'border-blue-300 dark:border-blue-600 group-hover:border-blue-500 dark:group-hover:border-blue-400' :
-                        relatedMoth.type === 'butterfly' ? 'border-pink-300 dark:border-pink-600 group-hover:border-pink-500 dark:group-hover:border-pink-400' :
-                        relatedMoth.type === 'beetle' ? 'border-green-300 dark:border-green-600 group-hover:border-green-500 dark:group-hover:border-green-400' :
-                        relatedMoth.type === 'longhornbeetle' ? 'border-teal-300 dark:border-teal-600 group-hover:border-teal-500 dark:group-hover:border-teal-400' :
-                        'border-amber-300 dark:border-amber-600 group-hover:border-amber-500 dark:group-hover:border-amber-400'
+                      <div className={`relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden border shadow-sm transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 ${
+                        relatedMoth.type === 'moth' ? 'border-blue-200/60 dark:border-blue-700/60 hover:border-blue-400/80 dark:hover:border-blue-500/80 hover:shadow-blue-500/20' :
+                        relatedMoth.type === 'butterfly' ? 'border-pink-200/60 dark:border-pink-700/60 hover:border-pink-400/80 dark:hover:border-pink-500/80 hover:shadow-pink-500/20' :
+                        relatedMoth.type === 'beetle' ? 'border-emerald-200/60 dark:border-emerald-700/60 hover:border-emerald-400/80 dark:hover:border-emerald-500/80 hover:shadow-emerald-500/20' :
+                        relatedMoth.type === 'longhornbeetle' ? 'border-teal-200/60 dark:border-teal-700/60 hover:border-teal-400/80 dark:hover:border-teal-500/80 hover:shadow-teal-500/20' :
+                        'border-amber-200/60 dark:border-amber-700/60 hover:border-amber-400/80 dark:hover:border-amber-500/80 hover:shadow-amber-500/20'
                       }`}>
                         {/* 昆虫画像 - 大きくしてカードの大部分を占める */}
                         <div className="relative w-full aspect-[3/2] overflow-hidden">
@@ -213,7 +213,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                                 width="600"
                                 height="400"
                                 className="w-full h-full"
-                                imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+                                imgClassName="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                                 fit="cover"
                                 loading="lazy"
                                 decoding="async"

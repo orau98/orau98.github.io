@@ -203,11 +203,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   
   try {
     return (
-      <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] transform shadow-md list-none">
-            <Link 
-        to={route} 
+      <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+        {/* ホバー時のグラデーションオーバーレイ */}
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
+        <Link
+        to={route}
         state={makeDetailLinkState(location, { setFromList: true })}
-        className="block"
+        className="block relative z-0"
       >
         <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
@@ -229,7 +231,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         alt={`${moth.name}（${moth.scientificName}）の写真`}
                         width="800"
                         height="600"
-                        className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 gpu-accelerated ${
+                        className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 gpu-accelerated ${
                           imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
                         }`}
                         style={{ 

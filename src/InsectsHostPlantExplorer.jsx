@@ -13,28 +13,10 @@ import useSeoMeta from "./hooks/useSeoMeta";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./services/imageIndex";
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
+import { normalizePlantKey } from "./utils/plantNameUtils";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
-
-const normalizePlantKey = (plantName) => {
-  if (!plantName || typeof plantName !== "string") {
-    return plantName || "";
-  }
-  if (plantName.match(/^[^（(]+科$/)) {
-    return plantName.trim();
-  }
-  let normalized = plantName;
-  normalized = normalized.replace(/^([^（(科]+科)([のに]?)([^（(].+)$/, "$3");
-  normalized = normalized.replace(/^([^（(]+)（[^）]*科[^）]*）(.*)$/g, "$1$2");
-  normalized = normalized.replace(/^([^（(]+)\([^)]*科[^)]*\)(.*)$/g, "$1$2");
-  normalized = normalized.replace(/\(以上[^)]*科\)/g, "");
-  normalized = normalized.replace(/（以上[^）]*科）/g, "");
-  normalized = normalized.replace(/（[^）]*$/g, "");
-  normalized = normalized.replace(/\([^)]*$/g, "");
-  normalized = normalized.replace(/^[^（(]*[）)]/g, "");
-  return normalized.trim();
-};
 
 const buildAliasMap = (plantDetails = {}) => {
   const map = new Map();
@@ -713,7 +695,26 @@ const InsectsHostPlantExplorer = React.memo(
       if (!activeSearchTerm || activeSearchTerm.trim() === "") return [];
       const term = activeSearchTerm.toLowerCase();
       const katakanaTerm = hiraganaToKatakana(activeSearchTerm).toLowerCase();
-      const results = new Set();
+      const results = [];
+      const seenNames = new Set();
+
+      // ベースURL計算
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+
+      // 昆虫タイプを判定するヘルパー
+      const getInsectType = (insect) => {
+        if (butterflies.includes(insect)) return 'butterfly';
+        if (beetles.includes(insect) || longhornbeetles.includes(insect) || leafbeetles.includes(insect)) return 'beetle';
+        return 'moth';
+      };
+
+      // 昆虫画像URLを生成するヘルパー
+      const getInsectImageUrl = (insect) => {
+        const filename = insect.scientificFilename || insect.scientificName?.replace(/\s+/g, '_');
+        if (!filename) return null;
+        return `${normalizedBase}images/resized/insects/${encodeURIComponent(filename)}.320.jpg`;
+      };
 
       if (activeTab === "insects") {
         const allInsects = [
@@ -724,10 +725,19 @@ const InsectsHostPlantExplorer = React.memo(
           ...leafbeetles,
         ];
         for (const insect of allInsects) {
-          if (results.size >= 10) break;
+          if (results.length >= 10) break;
           // Name match
           if (insect.name && (insect.name.includes(term) || insect.name.includes(katakanaTerm))) {
-            results.add(insect.name);
+            if (!seenNames.has(insect.name)) {
+              seenNames.add(insect.name);
+              results.push({
+                name: insect.name,
+                value: insect.name,
+                type: getInsectType(insect),
+                subText: insect.scientificName,
+                image: getInsectImageUrl(insect),
+              });
+            }
             continue;
           }
           // Scientific name match
@@ -735,7 +745,16 @@ const InsectsHostPlantExplorer = React.memo(
             insect.scientificName &&
             insect.scientificName.toLowerCase().includes(term)
           ) {
-            results.add(insect.scientificName);
+            if (!seenNames.has(insect.name)) {
+              seenNames.add(insect.name);
+              results.push({
+                name: insect.name,
+                value: insect.name,
+                type: getInsectType(insect),
+                subText: insect.scientificName,
+                image: getInsectImageUrl(insect),
+              });
+            }
             continue;
           }
           // Family match
@@ -743,7 +762,16 @@ const InsectsHostPlantExplorer = React.memo(
             insect.classification?.familyJapanese &&
             (insect.classification.familyJapanese.includes(term) || insect.classification.familyJapanese.includes(katakanaTerm))
           ) {
-            results.add(insect.classification.familyJapanese);
+            const familyName = insect.classification.familyJapanese;
+            if (!seenNames.has(familyName)) {
+              seenNames.add(familyName);
+              results.push({
+                name: familyName,
+                value: familyName,
+                type: getInsectType(insect),
+                subText: `科で検索`,
+              });
+            }
             continue;
           }
         }
@@ -759,30 +787,50 @@ const InsectsHostPlantExplorer = React.memo(
           const lower = String(value).toLowerCase();
           return lower.includes(term) || lower.includes(katakanaTerm);
         };
+
+        // 植物画像URLを生成するヘルパー
+        const getPlantImageUrl = (plantName) => {
+          const baseName = plantName.replace(/[（(].*[）)]/g, '').trim();
+          return `${normalizedBase}images/plants/${encodeURIComponent(baseName)}_葉表.jpg`;
+        };
+
         for (const plant of plantNames) {
-          if (results.size >= 10) break;
+          if (results.length >= 10) break;
           if (matches(plant)) {
-            results.add(plant);
+            if (!seenNames.has(plant)) {
+              seenNames.add(plant);
+              const detail = plantDetails?.[plant] || {};
+              results.push({
+                name: plant,
+                value: plant,
+                type: 'plant',
+                subText: detail.family || detail.familyName,
+                image: getPlantImageUrl(plant),
+              });
+            }
           }
           const detail = plantDetails?.[plant] || {};
           const candidates = [
-            detail.family,
-            detail.familyName,
-            detail.familyLatin,
-            detail.order,
-            detail.orderLatin,
-            detail.genus,
-          ].filter(Boolean);
-          if (Array.isArray(detail.aliases)) {
-            candidates.push(...detail.aliases.filter(Boolean));
-          }
+            { value: detail.family, label: '科で検索' },
+            { value: detail.familyName, label: '科で検索' },
+            { value: detail.order, label: '目で検索' },
+            { value: detail.genus, label: '属で検索' },
+          ].filter(c => c.value);
           for (const candidate of candidates) {
-            if (results.size >= 10) break;
-            if (matches(candidate)) results.add(candidate);
+            if (results.length >= 10) break;
+            if (matches(candidate.value) && !seenNames.has(candidate.value)) {
+              seenNames.add(candidate.value);
+              results.push({
+                name: candidate.value,
+                value: candidate.value,
+                type: 'plant',
+                subText: candidate.label,
+              });
+            }
           }
         }
       }
-      return Array.from(results);
+      return results;
     }, [
       activeSearchTerm,
       activeTab,

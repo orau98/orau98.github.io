@@ -9,6 +9,7 @@ import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
 import { makeDetailLinkState } from "../utils/navState";
+import { normalizePlantKey } from "../utils/plantNameUtils";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -20,32 +21,6 @@ const normalizeLatinBinomialPlain = (name) => {
   const spaced = t.match(/^([A-Z][a-z]+)\s+([a-z-]{3,})(.*)$/);
   if (spaced) return `${spaced[1]} ${spaced[2]}${spaced[3] || ""}`.trim();
   return t;
-};
-
-// Normalize plant names to reduce mismatched keys across data sources
-const normalizePlantKey = (plantName) => {
-  if (!plantName || typeof plantName !== "string") {
-    return plantName || "";
-  }
-  // Preserve pure family names like "○○科"
-  if (plantName.match(/^[^（(]+科$/)) {
-    return plantName.trim();
-  }
-  let normalized = plantName;
-  // Remove family prefix like "アカネ科ミサオノキ" -> "ミサオノキ"
-  normalized = normalized.replace(/^([^（(科]+科)([のに]?)([^（(].+)$/, "$3");
-  // Remove family annotations in parentheses
-  normalized = normalized.replace(/^([^（(]+)（[^）]*科[^）]*）(.*)$/g, "$1$2");
-  normalized = normalized.replace(/^([^（(]+)\([^)]*科[^)]*\)(.*)$/g, "$1$2");
-  // Remove "以上○○科" patterns
-  normalized = normalized.replace(/\(以上[^)]*科\)/g, "");
-  normalized = normalized.replace(/（以上[^）]*科）/g, "");
-  // Remove trailing incomplete parentheses
-  normalized = normalized.replace(/（[^）]*$/g, "");
-  normalized = normalized.replace(/\([^)]*$/g, "");
-  // Remove orphaned closing parentheses at start
-  normalized = normalized.replace(/^[^（(]*[）)]/g, "");
-  return normalized.trim();
 };
 
 const HostPlantListItem = React.memo(
@@ -95,11 +70,13 @@ const HostPlantListItem = React.memo(
     const extraCount = Math.max(0, totalCount - visibleNames.length);
 
     return (
-      <article className="group relative overflow-hidden rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border-2 border-slate-200 dark:border-slate-600 hover:border-emerald-400 dark:hover:border-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transform shadow-md list-none">
+      <article className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+        {/* ホバー時のグラデーションオーバーレイ */}
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
           to={`/plant/${encodeURIComponent(plant)}`}
           state={makeDetailLinkState(location, { setFromList: true })}
-          className="block"
+          className="block relative z-0"
         >
           <div className="flex flex-col h-full">
             {/* Enhanced Plant Image/Icon section */}
@@ -115,7 +92,7 @@ const HostPlantListItem = React.memo(
                     width="800"
                     height="600"
                     data-fallback-idx="0"
-                    className={`w-full h-full object-cover transition-opacity duration-500 ${
+                    className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 ${
                       imageLoaded ? "opacity-100" : "opacity-0"
                     }`}
                     loading="lazy"
