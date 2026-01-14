@@ -827,6 +827,10 @@ const InsectsHostPlantExplorer = React.memo(
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        {/* Skip Link - キーボードユーザー向け */}
+        <a href="#explorer-results" className="skip-link">
+          メインコンテンツへスキップ
+        </a>
         <StickyHeader 
           activeTab={activeTab} 
           setActiveTab={setActiveTabWithUrl} 
@@ -843,7 +847,7 @@ const InsectsHostPlantExplorer = React.memo(
         {/* 構造化データ */}
         <MainStructuredData />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div id="hero-section" className="relative w-full h-[25rem] md:h-96 lg:h-[28rem] group">
+          <div id="hero-section" className="relative w-full h-[18rem] sm:h-[22rem] md:h-96 lg:h-[28rem] group">
             {/* Background Container - Handles clipping for image and gradients */}
             <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>

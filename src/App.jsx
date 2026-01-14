@@ -142,7 +142,14 @@ function App() {
   const fetchDataRef = useRef(null);
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem('theme') || 'light';
+      // 1. 保存された設定があればそれを使用
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+      // 2. OS設定を確認
+      if (typeof window !== 'undefined' && window.matchMedia) {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      return 'light';
     } catch {
       return 'light';
     }
@@ -215,6 +222,31 @@ function App() {
       logger.debug('Theme change error (harmless):', error);
     }
   }, [theme]);
+
+  // OS設定変更の監視（ユーザーが手動設定していない場合のみ）
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      try {
+        // 手動設定がない場合のみOS設定に追従
+        const saved = localStorage.getItem('theme');
+        if (!saved) {
+          setTheme(e.matches ? 'dark' : 'light');
+        }
+      } catch {}
+    };
+
+    // 新しいイベントリスナーAPI（Safari 14+対応）
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+    // 古いAPI（Safari 13以前）
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
 
   const isFlowerVisitRecord = (record) => {
     if (!record) return false;

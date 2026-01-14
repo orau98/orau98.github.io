@@ -1,10 +1,33 @@
 import React from 'react';
 
+// タイムアウト付きPromiseラッパー
+const withTimeout = (promise, timeoutMs, errorMessage = 'タイムアウトしました') => {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(errorMessage));
+    }, timeoutMs);
+
+    promise
+      .then((result) => {
+        clearTimeout(timer);
+        resolve(result);
+      })
+      .catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+  });
+};
+
 // A tiny helper that retries loading React.lazy chunks when transient
 // network/CDN errors (e.g., GitHub Pages 429) occur. It retries with
 // exponential backoff and surfaces the final error to React's error
 // boundary if all attempts fail.
-export default function lazyWithRetry(importer, { retries = 2, delay = 700 } = {}) {
+// タイムアウト設定付き（デフォルト15秒）
+export default function lazyWithRetry(
+  importer,
+  { retries = 2, delay = 700, timeout = 15000 } = {}
+) {
   let attempt = 0;
 
   const shouldRetry = (err) => {
@@ -15,18 +38,25 @@ export default function lazyWithRetry(importer, { retries = 2, delay = 700 } = {
       /Failed to fetch/i.test(message) ||
       /Loading chunk \d+ failed/i.test(message) ||
       /NetworkError/i.test(message) ||
-      /ERR_(INTERNET|CONNECTION)/i.test(message)
+      /ERR_(INTERNET|CONNECTION)/i.test(message) ||
+      /タイムアウト/i.test(message)
     );
   };
 
+  const importWithTimeout = () => withTimeout(
+    importer(),
+    timeout,
+    'コンポーネントの読み込みがタイムアウトしました'
+  );
+
   return React.lazy(() =>
-    importer().catch((error) => {
+    importWithTimeout().catch((error) => {
       if (attempt < retries && shouldRetry(error)) {
         const wait = delay * 2 ** attempt;
         attempt += 1;
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            importer().then(resolve).catch(reject);
+            importWithTimeout().then(resolve).catch(reject);
           }, wait);
         });
       }
