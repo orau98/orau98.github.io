@@ -325,7 +325,11 @@ const HostPlantList = ({
       if (!plantName || plantName === '不明') return;
       const normalized = normalizePlantKey(plantName);
       if (!normalized || normalized === '不明') return;
-      const canonical = normalizedToCanonical.get(normalized) || normalized;
+      const canonicalFromAlias =
+        aliasToCanonical.get(plantName) ||
+        aliasToCanonical.get(normalized) ||
+        null;
+      const canonical = canonicalFromAlias || normalizedToCanonical.get(normalized) || normalized;
       let set = merged.get(canonical);
       if (!set) {
         set = new Set();
@@ -348,7 +352,7 @@ const HostPlantList = ({
       obj[key] = Array.from(set);
     });
     return obj;
-  }, [safeHostPlants, flowerVisitPlants, normalizedToCanonical]);
+  }, [safeHostPlants, flowerVisitPlants, normalizedToCanonical, aliasToCanonical]);
 
   const plantCount = Object.keys(mergedHostPlants).length;
   const plantCanonicalUrl = absUrl("/plant");
