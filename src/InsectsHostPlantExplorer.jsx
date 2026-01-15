@@ -14,6 +14,7 @@ import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./ser
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
+import { createSafePlantFilename, splitFilenameBase } from "./utils/filename";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -714,6 +715,20 @@ const InsectsHostPlantExplorer = React.memo(
       const baseUrl = import.meta.env.BASE_URL || '/';
       const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
+      const plantImageIndex = Array.isArray(plantImageFilenames)
+        ? plantImageFilenames
+        : [];
+      const baseToPlantFiles = new Map();
+      if (plantImageIndex.length > 0) {
+        plantImageIndex.forEach((filename) => {
+          const base = splitFilenameBase(filename);
+          if (!baseToPlantFiles.has(base)) {
+            baseToPlantFiles.set(base, []);
+          }
+          baseToPlantFiles.get(base).push(filename);
+        });
+      }
+
       // 昆虫タイプを判定するヘルパー
       const getInsectType = (insect) => {
         if (butterflies.includes(insect)) return 'butterfly';
@@ -802,8 +817,52 @@ const InsectsHostPlantExplorer = React.memo(
 
         // 植物画像URLを生成するヘルパー
         const getPlantImageUrl = (plantName) => {
+          if (!plantName || baseToPlantFiles.size === 0) return null;
+          const detail = plantDetails?.[plantName] || {};
+          const aliasesRaw = detail.aliases || detail.aliasNames;
+          const aliases = Array.isArray(aliasesRaw)
+            ? aliasesRaw
+            : aliasesRaw instanceof Set
+              ? Array.from(aliasesRaw)
+              : [];
           const baseName = plantName.replace(/[（(].*[）)]/g, '').trim();
-          return `${normalizedBase}images/plants/${encodeURIComponent(baseName)}_葉表.jpg`;
+          const candidates = new Set([
+            plantName,
+            baseName,
+            createSafePlantFilename(plantName),
+            createSafePlantFilename(baseName),
+            ...aliases.flatMap((name) => {
+              const trimmed = (name || '').trim();
+              const base = trimmed.split(" ")[0];
+              const cleaned = createSafePlantFilename(trimmed);
+              const cleanedBase = createSafePlantFilename(base);
+              return [trimmed, base, cleaned, cleanedBase];
+            }),
+          ].filter(Boolean));
+          let matches = [];
+          for (const candidate of candidates) {
+            if (baseToPlantFiles.has(candidate)) {
+              matches.push(...baseToPlantFiles.get(candidate));
+            }
+          }
+          if (matches.length === 0) return null;
+          matches.sort((a, b) => {
+            const aHasLeafSurface = a.includes("葉表");
+            const bHasLeafSurface = b.includes("葉表");
+            if (aHasLeafSurface && !bHasLeafSurface) return -1;
+            if (!aHasLeafSurface && bHasLeafSurface) return 1;
+            const getPriority = (filename) => {
+              if (filename.includes("葉表")) return 1;
+              if (filename.includes("葉")) return 2;
+              if (filename.includes("花")) return 3;
+              if (filename.includes("実")) return 4;
+              if (filename.includes("樹皮")) return 5;
+              return 6;
+            };
+            return getPriority(a) - getPriority(b);
+          });
+          const filename = matches[0];
+          return `${normalizedBase}images/resized/plants/${encodeURIComponent(filename)}.320.jpg`;
         };
 
         for (const plant of plantNames) {
@@ -854,6 +913,7 @@ const InsectsHostPlantExplorer = React.memo(
       hostPlants,
       flowerVisitPlants,
       plantDetails,
+      plantImageFilenames,
     ]);
 
     const handleSelectSuggestion = (value) => {
