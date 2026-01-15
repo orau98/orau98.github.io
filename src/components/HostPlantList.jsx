@@ -276,6 +276,23 @@ const HostPlantList = ({
   // Canonical/OG/パンくず（フックで共通化）
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
   const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
+  const aliasToCanonical = useMemo(() => {
+    const map = new Map();
+    Object.entries(safePlantDetails || {}).forEach(([canonical, detail]) => {
+      if (!canonical || !detail) return;
+      const aliasesRaw = detail.aliases || detail.aliasNames;
+      const aliases = Array.isArray(aliasesRaw)
+        ? aliasesRaw
+        : aliasesRaw instanceof Set
+          ? Array.from(aliasesRaw)
+          : [];
+      aliases.forEach((alias) => {
+        const key = (alias || "").trim();
+        if (key) map.set(key, canonical);
+      });
+    });
+    return map;
+  }, [safePlantDetails]);
 
   const normalizedToCanonical = useMemo(() => {
     const map = new Map();
@@ -593,6 +610,10 @@ const HostPlantList = ({
       if (!plantName || plantName === "不明" || plantName.endsWith("科")) return;
 
       const detail = safePlantDetails[plantName] || {};
+      const canonicalFromAlias =
+        aliasToCanonical.get(plantName) ||
+        aliasToCanonical.get(normalizePlantKey(plantName)) ||
+        null;
       const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
       const synonymPairs = {
         ビナンカズラ: ["サネカズラ"],
@@ -606,6 +627,14 @@ const HostPlantList = ({
         plantName.split(" ")[0],
         createSafePlantFilename(plantName),
         createSafePlantFilename(plantName.split(" ")[0]),
+        ...(canonicalFromAlias
+          ? [
+              canonicalFromAlias,
+              canonicalFromAlias.split(" ")[0],
+              createSafePlantFilename(canonicalFromAlias),
+              createSafePlantFilename(canonicalFromAlias.split(" ")[0]),
+            ]
+          : []),
         ...aliases.flatMap((name) => {
           const base = (name || "").split(" ")[0];
           const cleaned = createSafePlantFilename(name);
@@ -649,7 +678,7 @@ const HostPlantList = ({
       }
     });
     return map;
-  }, [plantImageFilenames, mergedHostPlants, safePlantDetails]);
+  }, [plantImageFilenames, mergedHostPlants, safePlantDetails, aliasToCanonical]);
 
   // Generate filter options
   const familyOptions = useMemo(() => {
