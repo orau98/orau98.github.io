@@ -144,10 +144,20 @@ const SearchInput = ({
 }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  // IME composition状態を追跡（日本語入力の文字重複を防ぐ）
+  const [localValue, setLocalValue] = useState(value);
+  const isComposingRef = useRef(false);
   const listboxId = useId();
   const blurTimeoutRef = useRef(null);
   const isMobile = useIsMobile();
   const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
+
+  // 外部からvalueが変更された場合にローカル値を同期
+  useEffect(() => {
+    if (!isComposingRef.current) {
+      setLocalValue(value);
+    }
+  }, [value]);
 
   // モバイルではサジェスト件数を5件に制限
   const maxSuggestions = isMobile ? 5 : 10;
@@ -157,7 +167,7 @@ const SearchInput = ({
   );
 
   // 検索履歴と候補を組み合わせ（入力がない場合は履歴を表示）
-  const showHistory = !value && history.length > 0;
+  const showHistory = !localValue && history.length > 0;
   const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory);
   const activeDescendantId = useMemo(() => {
     if (!expanded || activeIndex < 0) return undefined;
@@ -165,9 +175,27 @@ const SearchInput = ({
   }, [activeIndex, expanded, listboxId]);
 
   const handleChange = (e) => {
-    // 入力値はそのまま保持（変換しない）
-    onChange(e);
+    const newValue = e.target.value;
+    // ローカル値は常に更新（IME変換中の表示用）
+    setLocalValue(newValue);
     setShowSuggestions(true);
+
+    // IME composition中は親コンポーネントに通知しない（重複防止）
+    if (!isComposingRef.current) {
+      onChange(e);
+    }
+  };
+
+  // IME composition開始時
+  const handleCompositionStart = () => {
+    isComposingRef.current = true;
+  };
+
+  // IME composition終了時（確定時）
+  const handleCompositionEnd = (e) => {
+    isComposingRef.current = false;
+    // composition終了後に親コンポーネントに最終値を通知
+    onChange(e);
   };
 
   const handleFocus = () => {
@@ -196,6 +224,7 @@ const SearchInput = ({
   };
 
   const handleClear = () => {
+    setLocalValue("");
     if (typeof onChange === "function") {
       onChange({ target: { value: "" } });
     }
@@ -276,8 +305,10 @@ const SearchInput = ({
         <input
           type="text"
           placeholder={placeholder}
-          value={value}
+          value={localValue}
           onChange={handleChange}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
@@ -289,7 +320,7 @@ const SearchInput = ({
           aria-activedescendant={activeDescendantId}
           className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
         />
-        {value && value.length > 0 && (
+        {localValue && localValue.length > 0 && (
           <button
             type="button"
             onClick={handleClear}
