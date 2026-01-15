@@ -1,22 +1,38 @@
-#!/usr/bin/env node
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const plantDir = path.join('public', 'images', 'plants');
-const outputFile = path.join('public', 'plant_image_filenames.txt');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT = path.join(__dirname, '..');
+const PUBLIC_DIR = path.join(ROOT, 'public');
+const PLANT_DIR = path.join(PUBLIC_DIR, 'images', 'plants');
+const OUT_FILE = path.join(PUBLIC_DIR, 'plant_image_filenames.txt');
 
-if (!fs.existsSync(plantDir)) {
-  console.error(`Plant images directory not found: ${plantDir}`);
-  process.exit(1);
+const ensureDir = (dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+};
+
+ensureDir(PUBLIC_DIR);
+
+if (!fs.existsSync(PLANT_DIR)) {
+  console.warn('[update_plant_image_filenames] plant images directory missing; writing empty index.');
+  fs.writeFileSync(OUT_FILE, '', 'utf-8');
+  process.exit(0);
 }
 
-const files = fs
-  .readdirSync(plantDir, { withFileTypes: true })
-  .filter((entry) => entry.isFile())
-  .map((entry) => entry.name)
-  .filter((file) => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
-  .map((file) => file.replace(/\.[^.]+$/, ''))
-  .sort((a, b) => a.localeCompare(b, 'ja'));
+const allowedExt = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif']);
+const files = fs.readdirSync(PLANT_DIR);
+const names = new Set();
+for (const file of files) {
+  const ext = path.extname(file).toLowerCase();
+  if (!allowedExt.has(ext)) continue;
+  const base = path.basename(file, ext);
+  if (base) names.add(base);
+}
 
-fs.writeFileSync(outputFile, files.join('\n') + '\n', 'utf8');
-console.log(`Updated ${outputFile} with ${files.length} entries.`);
+const sorted = Array.from(names).sort((a, b) => a.localeCompare(b, 'ja'));
+fs.writeFileSync(OUT_FILE, sorted.join('\n') + (sorted.length ? '\n' : ''), 'utf-8');
+console.log(`[update_plant_image_filenames] wrote ${sorted.length} entries to ${path.relative(ROOT, OUT_FILE)}`);
