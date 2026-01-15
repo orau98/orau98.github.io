@@ -366,6 +366,14 @@ const InsectsHostPlantExplorer = React.memo(
     useEffect(() => {
       if (didRestoreScrollRef.current) return;
 
+      let timeoutId = null;
+      let cancelled = false;
+      const schedule = (fn, delay) => {
+        if (cancelled) return;
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(fn, delay);
+      };
+
       let saved = null;
       const raw = safeSessionGet(SCROLL_RESTORE_KEY);
       if (raw) {
@@ -425,10 +433,14 @@ const InsectsHostPlantExplorer = React.memo(
           return;
         }
 
-        setTimeout(tryRestore, 60);
+        schedule(tryRestore, 60);
       };
 
-      setTimeout(tryRestore, 0);
+      schedule(tryRestore, 0);
+      return () => {
+        cancelled = true;
+        if (timeoutId) clearTimeout(timeoutId);
+      };
     }, [SCROLL_RESTORE_KEY, activeTab]);
 
     // Initialize tab from URL, fallback to prop when absent

@@ -141,6 +141,8 @@ function App() {
   const pendingHostHydrationRef = useRef(null);
   const requestHostHydrationRef = useRef(() => {});
   const fetchDataRef = useRef(null);
+  const fetchSeqRef = useRef(0);
+  const fetchAbortRef = useRef(null);
   const [theme, setTheme] = useState(() => {
     try {
       // 1. 保存された設定があればそれを使用
@@ -321,23 +323,60 @@ function App() {
 
   useEffect(() => {
     const fetchData = async (cachedVersion = null) => {
+      const fetchId = ++fetchSeqRef.current;
+      if (fetchAbortRef.current) {
+        try {
+          fetchAbortRef.current.abort();
+        } catch {}
+      }
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      fetchAbortRef.current = controller;
+      const externalSignal = controller?.signal || null;
+      const isCurrent = () => fetchId === fetchSeqRef.current;
+      const shouldContinue = () => (!externalSignal || !externalSignal.aborted) && isCurrent();
+
       if (!cacheLoadedRef.current) {
         setLoading(true);
       }
       setLoadError(null);
       const base = import.meta.env.BASE_URL || '/';
       let plantDetailsLite = {};
+      const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 300) => {
+        let lastErr = null;
+        for (let attempt = 0; attempt <= retries; attempt += 1) {
+          try {
+            const res = await fetch(url, { ...opts, signal: externalSignal || opts.signal });
+            if ([429, 502, 503, 504].includes(res.status) && attempt < retries) {
+              await sleep(delay * Math.pow(2, attempt));
+              continue;
+            }
+            return res;
+          } catch (error) {
+            lastErr = error;
+            if (externalSignal?.aborted) throw error;
+            if (attempt < retries) {
+              await sleep(delay * Math.pow(2, attempt));
+              continue;
+            }
+            throw error;
+          }
+        }
+        throw lastErr || new Error('fetch failed');
+      };
       // Try lightweight split JSON first to speed up initial paint
       try {
         const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
         const manifestUrl = `${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
         // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
-        const manifestRes = await fetch(manifestUrl, { cache: cacheMode });
+        const manifestRes = await fetchWithRetry(manifestUrl, { cache: cacheMode });
+        if (!shouldContinue()) return;
         let versionSuffix = import.meta.env.DEV ? `?v=${Date.now()}` : '';
         let manifest = null;
         let manifestVersion = null;
         if (manifestRes?.ok) {
           manifest = await manifestRes.json();
+          if (!shouldContinue()) return;
           manifestVersion = manifest?.version || null;
           versionSuffix = import.meta.env.DEV
             ? `?v=${Date.now()}`
@@ -348,19 +387,22 @@ function App() {
           const plantInfoUrl = `${base}assets/data-lite/ylist-lite.json${versionSuffix}`;
 
           const [hostRes, plantInfoRes] = await Promise.all([
-            fetch(hostUrl, { cache: cacheMode }),
-            fetch(plantInfoUrl, { cache: cacheMode }).catch((error) => {
+            fetchWithRetry(hostUrl, { cache: cacheMode }),
+            fetchWithRetry(plantInfoUrl, { cache: cacheMode }).catch((error) => {
               logger.debug('Plant taxonomy preload skipped:', error);
               return null;
             }),
           ]);
+          if (!shouldContinue()) return;
 
           if (hostRes?.ok) {
             const hostMap = await hostRes.json();
+            if (!shouldContinue()) return;
           const plantInfoPayload =
             plantInfoRes && plantInfoRes.ok ? await plantInfoRes.json() : null;
 
           if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+            if (!shouldContinue()) return;
             cachedVersionRef.current = manifestVersion;
             if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
               setSummaryCounts((prev) => prev || manifest.counts);
@@ -414,18 +456,22 @@ function App() {
 
             const hydrateHostPlantsFromNormalized = async (insectLookup) => {
               if (hostCsvExtendStartedRef.current) return;
+              if (!shouldContinue()) return;
               hostCsvExtendStartedRef.current = true;
               try {
                 const Papa = await getPapa();
+                if (!shouldContinue()) return;
                 if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
                   await new Promise((resolve) =>
                     window.requestIdleCallback(resolve, { timeout: 3000 }),
                   );
                 }
                 const normalizedUrl = `${base}hostplants.csv${versionSuffix}`;
-                const csvRes = await fetch(normalizedUrl, { cache: cacheMode });
+                const csvRes = await fetchWithRetry(normalizedUrl, { cache: cacheMode });
+                if (!shouldContinue()) return;
                 if (!csvRes.ok) return;
                 const csvText = await csvRes.text();
+                if (!shouldContinue()) return;
                 if (!csvText) return;
                 const parsed = await new Promise((resolve) => {
                   Papa.parse(csvText, {
@@ -437,6 +483,7 @@ function App() {
                     error: () => resolve(null),
                   });
                 });
+                if (!shouldContinue()) return;
                 if (!parsed || !Array.isArray(parsed.data)) return;
 
                 const additions = new Map();
@@ -495,6 +542,7 @@ function App() {
 
                 let updatedCount = null;
                 if (additions.size > 0) {
+                  if (!shouldContinue()) return;
                   setHostPlants((prev) => {
                     const next = { ...prev };
                     let changed = false;
@@ -516,6 +564,7 @@ function App() {
                 }
 
                 if (updatedCount !== null) {
+                  if (!shouldContinue()) return;
                   setSummaryCounts((prev) => {
                     if (!prev) return prev;
                     if (prev.hostPlants === updatedCount) return prev;
@@ -523,6 +572,7 @@ function App() {
                   });
                 }
 
+                if (!shouldContinue()) return;
                 setPlantDetails((prev) => {
                   let changed = false;
                   const next = { ...prev };
@@ -555,6 +605,7 @@ function App() {
                 });
 
                 if (flowerAdditions.size > 0) {
+                  if (!shouldContinue()) return;
                   setFlowerVisitPlants((prev) => {
                     const next = { ...prev };
                     let changed = false;
@@ -581,12 +632,13 @@ function App() {
 
             const loadTypePartitions = async () => {
               const responses = await Promise.all([
-                fetch(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
-                fetch(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
               ]);
+              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [] };
               const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes] = responses;
               const safeJson = async (res) => (res && res.ok ? res.json() : []);
               const [mothArr, butterArr, beetleArr, longhornArr, leafArr] = await Promise.all([
@@ -596,6 +648,7 @@ function App() {
                 safeJson(longhornRes),
                 safeJson(leafRes),
               ]);
+              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [] };
               if (Array.isArray(mothArr)) setMoths(mothArr);
               if (Array.isArray(butterArr)) setButterflies(butterArr);
               if (Array.isArray(beetleArr)) setBeetles(beetleArr);
@@ -641,11 +694,13 @@ function App() {
               if (shouldDeferHeavyWork()) return;
               const fire = async () => {
                 try {
-                  const fullRes = await fetch(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
+                  const fullRes = await fetchWithRetry(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
                     cache: cacheMode,
                   });
+                  if (!shouldContinue()) return;
                   if (!fullRes.ok) return;
                   const fullData = await fullRes.json();
+                  if (!shouldContinue()) return;
                   const fullFlowerVisits = buildFlowerVisitMap([
                     ...(fullData.moths || []),
                     ...(fullData.butterflies || []),
@@ -747,9 +802,11 @@ function App() {
       } else {
         // manifest.json が取得できなかった場合のフォールバック: 合成インデックスを利用
         const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || (import.meta.env.DEV ? `?v=${Date.now()}` : '')}`;
-        const res = await fetch(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        const res = await fetchWithRetry(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
+        if (!shouldContinue()) return;
         if (res.ok) {
           const lite = await res.json();
+          if (!shouldContinue()) return;
           if (lite && Array.isArray(lite.moths) && Array.isArray(lite.butterflies)) {
             setMoths(lite.moths);
             setButterflies(lite.butterflies);
@@ -1038,10 +1095,10 @@ function App() {
 
       try {
         // Fetch with timeout for all files to prevent hanging
-        const fetchWithTimeout = (url, timeout = 15000) => {
+        const fetchWithTimeoutOnce = (url, timeout = 15000) => {
           if (typeof AbortController === 'undefined') {
             return Promise.race([
-              fetch(url),
+              fetch(url, externalSignal ? { signal: externalSignal } : undefined),
               new Promise((_, reject) =>
                 setTimeout(() => reject(new Error(`Request timeout for ${url}`)), timeout),
               ),
@@ -1050,6 +1107,14 @@ function App() {
 
           const controller = new AbortController();
           const timer = setTimeout(() => controller.abort(), timeout);
+          const onAbort = () => controller.abort();
+          if (externalSignal) {
+            if (externalSignal.aborted) {
+              controller.abort();
+            } else {
+              externalSignal.addEventListener('abort', onAbort, { once: true });
+            }
+          }
           return fetch(url, { signal: controller.signal })
             .catch((error) => {
               if (error?.name === 'AbortError') {
@@ -1057,13 +1122,38 @@ function App() {
               }
               throw error;
             })
-            .finally(() => clearTimeout(timer));
+            .finally(() => {
+              clearTimeout(timer);
+              if (externalSignal) {
+                try {
+                  externalSignal.removeEventListener('abort', onAbort);
+                } catch {}
+              }
+            });
+        };
+
+        const fetchWithTimeout = async (url, timeout = 15000, retries = 1) => {
+          let lastErr = null;
+          for (let attempt = 0; attempt <= retries; attempt += 1) {
+            try {
+              return await fetchWithTimeoutOnce(url, timeout);
+            } catch (error) {
+              lastErr = error;
+              if (externalSignal?.aborted) throw error;
+              if (attempt < retries) {
+                await sleep(300 * Math.pow(2, attempt));
+                continue;
+              }
+              throw error;
+            }
+          }
+          throw lastErr || new Error(`Request timeout for ${url}`);
         };
 
         const safeFileLoad = async (path, name, timeout = 15000) => {
           try {
             logger.debug(`Loading ${name} from ${path}`);
-            const res = await fetchWithTimeout(path, timeout);
+            const res = await fetchWithTimeout(path, timeout, 2);
             if (!res.ok) {
               logger.error(`Failed to fetch ${name}: ${res.statusText}`);
               return null;
@@ -1097,6 +1187,7 @@ function App() {
             
             return text;
           } catch (error) {
+            if (externalSignal?.aborted) return null;
             logger.error(`Error loading ${name}:`, error);
             return null;
           }
@@ -1169,9 +1260,12 @@ function App() {
           normalizedHostplants: normalizedHostplantsText ? 'SUCCESS' : 'FAILED',
           normalizedNotes: normalizedNotesText ? 'SUCCESS' : 'FAILED'
         });
+
+        if (!shouldContinue()) return;
         
         // Process normalized CSV data if available
         let normalizedData = null;
+        let normalizedDataError = null;
         if (normalizedInsectsText && normalizedHostplantsText && normalizedNotesText) {
           try {
             logger.debug("正規化CSVファイルを処理中...");
@@ -1179,28 +1273,41 @@ function App() {
             // Import normalized data parser
             const { convertNormalizedDataToStandardFormat, validateNormalizedData } = await import('./utils/normalizedDataParser.js');
             
-            // Parse normalized CSVs
-            const insectsParsed = Papa.parse(normalizedInsectsText, {
-              header: true,
-              skipEmptyLines: true,
-              transformHeader: (header) => header.trim(),
-              transform: (value) => value?.trim() || ''
+            // Parse normalized CSVs (worker to reduce main-thread blocking)
+            const parseNormalizedCsv = (text, config) => new Promise((resolve) => {
+              Papa.parse(text, {
+                ...config,
+                worker: true,
+                complete: (results) => resolve(results),
+                error: () => resolve(null),
+              });
             });
-            
-            const hostplantsParsed = Papa.parse(normalizedHostplantsText, {
-              header: true,
-              skipEmptyLines: true,
-              transformHeader: (header) => header.trim()
-            });
-            
-            const notesParsed = Papa.parse(normalizedNotesText, {
-              header: true,
-              skipEmptyLines: true,
-              transformHeader: (header) => header.trim(),
-              transform: (value) => value?.trim() || ''
-            });
+
+            const [insectsParsed, hostplantsParsed, notesParsed] = await Promise.all([
+              parseNormalizedCsv(normalizedInsectsText, {
+                header: true,
+                skipEmptyLines: true,
+                transformHeader: (header) => header.trim(),
+                transform: (value) => value?.trim() || '',
+              }),
+              parseNormalizedCsv(normalizedHostplantsText, {
+                header: true,
+                skipEmptyLines: true,
+                transformHeader: (header) => header.trim(),
+              }),
+              parseNormalizedCsv(normalizedNotesText, {
+                header: true,
+                skipEmptyLines: true,
+                transformHeader: (header) => header.trim(),
+                transform: (value) => value?.trim() || '',
+              }),
+            ]);
+            if (!shouldContinue()) return;
+            if (!insectsParsed || !hostplantsParsed || !notesParsed) {
+              throw new Error('正規化CSVの解析に失敗しました');
+            }
             // Fallback: if parsing errors exist, manually parse lines to recover critical fields
-            let notesData = notesParsed.data;
+            let notesData = notesParsed?.data || [];
             try {
               const lines = normalizedNotesText.replace(/\r\n?|\n/g, '\n').split('\n');
               const nonEmptyCount = lines.filter(l => l && l.trim()).length;
@@ -1278,6 +1385,7 @@ function App() {
             // Validate data quality
             const qualityReport = validateNormalizedData(normalizedData);
             logger.debug("正規化データ品質レポート:", qualityReport);
+            if (!shouldContinue()) return;
             
             // Log first few entries for verification
             if (normalizedData.moths?.length > 0) {
@@ -1286,7 +1394,26 @@ function App() {
             
           } catch (error) {
             logger.error("正規化CSV処理エラー:", error);
+            normalizedDataError = error;
             normalizedData = null;
+          }
+        }
+
+        if (useNormalizedOnly) {
+          const normalizedTotal = normalizedData
+            ? (normalizedData.moths?.length || 0) +
+              (normalizedData.butterflies?.length || 0) +
+              (normalizedData.beetles?.length || 0) +
+              (normalizedData.longhornbeetles?.length || 0) +
+              (normalizedData.leafbeetles?.length || 0)
+            : 0;
+          if (!normalizedData || normalizedTotal === 0) {
+            const err = normalizedDataError || new Error('正規化データを読み込めませんでした');
+            if (shouldContinue()) {
+              setLoadError(err);
+              setLoading(false);
+            }
+            return;
           }
         }
 
@@ -6162,6 +6289,7 @@ function App() {
           logger.debug('UNIFIED HOST MAP: キョウチクトウ ->', unifiedHostPlantMap['キョウチクトウ']);
         }
 
+        if (!shouldContinue()) return;
         setMoths(finalMothData);
         setButterflies(finalButterflyData);
         setBeetles(finalBeetleData);
@@ -6225,6 +6353,9 @@ function App() {
           plantDetails: Object.keys(cleanedPlantDetailData).length
         });
       } catch (error) {
+        if (externalSignal?.aborted || !shouldContinue()) {
+          return;
+        }
         logger.error("Error fetching or parsing CSVs:", error);
         logger.error("Error details:", {
           message: error.message,
@@ -6261,6 +6392,11 @@ function App() {
     return () => {
       cancelled = true;
       fetchDataRef.current = null;
+      if (fetchAbortRef.current) {
+        try {
+          fetchAbortRef.current.abort();
+        } catch {}
+      }
     };
   }, []); // Close useEffect and add dependency array
 

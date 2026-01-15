@@ -200,7 +200,7 @@ const groupPlantsByName = (plants) => {
 /**
  * 個別食草情報の詳細表示コンポーネント（統合版）
  */
-const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
+const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) => {
   const location = useLocation();
   // 最優先の観察タイプを決定（野外（国内）を最優先）
   const primaryRecord = plantGroup.records.reduce((prev, current) => {
@@ -412,7 +412,7 @@ const HostPlantDetailCard = ({ plantGroup, isExpanded, onToggle }) => {
       })()}
     </div>
   );
-};
+});
 
 /**
  * 統合食草情報表示コンポーネント
