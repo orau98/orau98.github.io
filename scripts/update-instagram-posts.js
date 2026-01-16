@@ -29,19 +29,33 @@ const main = async () => {
     process.exit(0);
   }
 
-  const endpoint = new URL(`https://graph.instagram.com/${USER_ID}/media`);
-  endpoint.searchParams.set('fields', 'id,media_type,permalink,timestamp');
-  endpoint.searchParams.set('access_token', ACCESS_TOKEN);
-  endpoint.searchParams.set('limit', String(Math.max(POST_LIMIT, 20)));
+  const limit = String(Math.max(POST_LIMIT, 20));
+  const endpoints = [
+    // Instagram Graph API (Business/Creator via Facebook Graph)
+    `https://graph.facebook.com/v19.0/${USER_ID}/media?fields=id,media_type,permalink,timestamp&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
+    // Instagram Basic Display API
+    `https://graph.instagram.com/${USER_ID}/media?fields=id,media_type,permalink,timestamp&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
+    // Basic Display "me" fallback (some tokens only allow /me)
+    `https://graph.instagram.com/me/media?fields=id,media_type,permalink,timestamp&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
+  ];
 
-  const res = await fetch(endpoint.toString());
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`[instagram] Fetch failed: ${res.status} ${res.statusText} ${text}`);
+  let json = null;
+  const errors = [];
+  for (const url of endpoints) {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const text = await res.text().catch(() => '');
+      errors.push(`[instagram] ${res.status} ${res.statusText} ${text}`.trim());
+      continue;
+    }
+    json = await res.json();
+    if (Array.isArray(json?.data)) break;
+  }
+  if (!json || !Array.isArray(json?.data)) {
+    throw new Error(`[instagram] Fetch failed. ${errors.join(' | ')}`.trim());
   }
 
-  const json = await res.json();
-  const items = Array.isArray(json?.data) ? json.data : [];
+  const items = json.data;
 
   const urls = items
     .map((item) => (typeof item?.permalink === 'string' ? item.permalink.trim() : ''))
