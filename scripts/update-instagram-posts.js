@@ -49,6 +49,16 @@ const main = async () => {
 
   const unique = Array.from(new Set(urls)).slice(0, POST_LIMIT);
 
+  if (unique.length === 0) {
+    const existing = fs.existsSync(OUT_POSTS)
+      ? fs.readFileSync(OUT_POSTS, 'utf-8').trim()
+      : '';
+    if (existing) {
+      console.warn('[instagram] No new URLs found; keeping existing instagram_posts.txt');
+      process.exit(0);
+    }
+  }
+
   fs.writeFileSync(OUT_POSTS, unique.join('\n') + (unique.length ? '\n' : ''), 'utf-8');
   fs.writeFileSync(OUT_LATEST, unique[0] ? `${unique[0]}\n` : '', 'utf-8');
 
