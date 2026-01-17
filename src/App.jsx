@@ -375,9 +375,55 @@ function App() {
         }
         throw lastErr || new Error('fetch failed');
       };
+      const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
+      const fallbackVersionSuffix = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+      const applyLiteIndex = (lite) => {
+        if (!lite || !Array.isArray(lite.moths) || !Array.isArray(lite.butterflies)) return false;
+        setMoths(lite.moths);
+        setButterflies(lite.butterflies);
+        setBeetles(lite.beetles || []);
+        setLonghornbeetles(lite.longhornbeetles || []);
+        setLeafbeetles(lite.leafbeetles || []);
+        setHostPlants(lite.hostPlants || {});
+        setPlantDetails(lite.plantDetails || {});
+        if (lite.summaryCounts) setSummaryCounts(lite.summaryCounts);
+        setLoading(false);
+        ensureTypesLoaderRef.current = () => {
+          typesFetchStartedRef.current = true;
+          typesFetchPromiseRef.current = Promise.resolve(null);
+        };
+        return true;
+      };
+      const tryFullDataset = async (versionSuffix) => {
+        try {
+          const fullRes = await fetchWithRetry(
+            `${base}assets/data-lite/full-dataset.json${versionSuffix}`,
+            { cache: cacheMode },
+          );
+          if (!shouldContinue()) return false;
+          if (!fullRes.ok) return false;
+          const fullData = await fullRes.json();
+          if (!shouldContinue()) return false;
+          return applyLiteIndex(fullData);
+        } catch {
+          return false;
+        }
+      };
+      const tryLiteIndex = async (versionSuffix) => {
+        try {
+          const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || fallbackVersionSuffix}`;
+          const res = await fetchWithRetry(liteUrl, { cache: cacheMode });
+          if (!shouldContinue()) return false;
+          if (!res.ok) return false;
+          const lite = await res.json();
+          if (!shouldContinue()) return false;
+          return applyLiteIndex(lite);
+        } catch {
+          return false;
+        }
+      };
       // Try lightweight split JSON first to speed up initial paint
       try {
-        const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
         const manifestUrl = `${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
         // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
         const manifestRes = await fetchWithRetry(manifestUrl, { cache: cacheMode });
@@ -809,34 +855,26 @@ function App() {
 
             return;
           }
+          // manifest OK but hostplants failed -> fallback to full dataset or index
+          if (await tryFullDataset(versionSuffix)) return;
+          if (await tryLiteIndex(versionSuffix)) return;
         } // end if (hostRes?.ok)
       } else {
-        // manifest.json が取得できなかった場合のフォールバック: 合成インデックスを利用
-        const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || (import.meta.env.DEV ? `?v=${Date.now()}` : '')}`;
-        const res = await fetchWithRetry(liteUrl, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
-        if (!shouldContinue()) return;
-        if (res.ok) {
-          const lite = await res.json();
-          if (!shouldContinue()) return;
-          if (lite && Array.isArray(lite.moths) && Array.isArray(lite.butterflies)) {
-            setMoths(lite.moths);
-            setButterflies(lite.butterflies);
-            setBeetles(lite.beetles || []);
-            setLonghornbeetles(lite.longhornbeetles || []);
-            setLeafbeetles(lite.leafbeetles || []);
-            setHostPlants(lite.hostPlants || {});
-            setPlantDetails({});
-            setLoading(false);
-            // Provide no-op loader since combined index already has arrays
-            ensureTypesLoaderRef.current = () => {
-              typesFetchStartedRef.current = true;
-            };
-            // Continue to CSV background load
-          }
-        }
+        // manifest.json が取得できなかった場合のフォールバック
+        if (await tryFullDataset(versionSuffix)) return;
+        if (await tryLiteIndex(versionSuffix)) return;
       }
       } catch (_) {
+        if (await tryFullDataset(fallbackVersionSuffix)) return;
+        if (await tryLiteIndex(fallbackVersionSuffix)) return;
         // ignore and fallback to full pipeline
+      }
+      if (import.meta.env.PROD) {
+        if (shouldContinue() && !(cacheLoadedRef.current || hasDatasetRef.current)) {
+          setLoading(false);
+          setLoadError(new Error('Lite dataset unavailable'));
+        }
+        return;
       }
       let mainMothData = [];
       let hostPlantData = {};
