@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState, useMemo } from "react";
+import React, { Suspense, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramGallery from "./components/InstagramGallery";
