@@ -614,9 +614,10 @@ const HostPlantList = ({
       if (!plantName || plantName === "不明" || plantName.endsWith("科")) return;
 
       const detail = safePlantDetails[plantName] || {};
+      const normalized = normalizePlantKey(plantName);
       const canonicalFromAlias =
         aliasToCanonical.get(plantName) ||
-        aliasToCanonical.get(normalizePlantKey(plantName)) ||
+        aliasToCanonical.get(normalized) ||
         null;
       const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
       const synonymPairs = {
@@ -629,8 +630,12 @@ const HostPlantList = ({
       const candidates = new Set([
         plantName,
         plantName.split(" ")[0],
+        normalized,
+        normalized ? normalized.split(" ")[0] : null,
         createSafePlantFilename(plantName),
         createSafePlantFilename(plantName.split(" ")[0]),
+        normalized ? createSafePlantFilename(normalized) : null,
+        normalized ? createSafePlantFilename(normalized.split(" ")[0]) : null,
         ...(canonicalFromAlias
           ? [
               canonicalFromAlias,
@@ -819,6 +824,15 @@ const HostPlantList = ({
     orderFilter,
     visitFilter
   ]);
+
+  const hasImagePriority = plantImageMap.size > 0;
+  const imagePriorityRef = useRef(hasImagePriority);
+  useEffect(() => {
+    if (!imagePriorityRef.current && hasImagePriority) {
+      setPPage(1);
+    }
+    imagePriorityRef.current = hasImagePriority;
+  }, [hasImagePriority, setPPage]);
 
   // Add rel=prev/next for plant list pagination
   useEffect(() => {

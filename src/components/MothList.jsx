@@ -1035,6 +1035,14 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     }
   }, [imageFilenames, imageExtensions]);
 
+  const imageIndexReadyRef = useRef(isImageIndexReady);
+  useEffect(() => {
+    if (!imageIndexReadyRef.current && isImageIndexReady) {
+      setIPage(1);
+    }
+    imageIndexReadyRef.current = isImageIndexReady;
+  }, [isImageIndexReady, setIPage]);
+
   // Helper to find best image filename for a moth (moved from MothListItem for performance)
   // Returns the filename (without path, but with/without extension depending on source) or null
   const getBestImageForMoth = useCallback((insect) => {
