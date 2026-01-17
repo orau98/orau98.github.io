@@ -1657,7 +1657,7 @@ const InsectsHostPlantExplorer = React.memo(
 
                         {/* Instagram埋め込み */}
                         <div className="overflow-hidden rounded-lg shadow-sm">
-                          <div className="instagram-wrapper w-full bg-white dark:bg-slate-800">
+                          <div className="instagram-wrapper w-full bg-white dark:bg-slate-800 max-h-[60vh] lg:max-h-[70vh] overflow-y-auto overscroll-contain scrollbar-thin">
                             {(() => {
                               // 1) timeline from JSON (custom gallery)
                               if (
