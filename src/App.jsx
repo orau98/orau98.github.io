@@ -422,6 +422,11 @@ function App() {
           return false;
         }
       };
+      // Quick path in production: use combined index first to avoid multi-fetch failures
+      if (import.meta.env.PROD) {
+        const quickOk = await tryLiteIndex('');
+        if (quickOk) return;
+      }
       // Try lightweight split JSON first to speed up initial paint
       try {
         const manifestUrl = `${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
