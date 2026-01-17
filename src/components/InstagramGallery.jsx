@@ -58,9 +58,6 @@ const InstagramGallery = ({ posts = [], limit = 6, className = '' }) => {
                   </div>
                 </div>
               )}
-              <div className="absolute top-2 left-2 rounded-full bg-white/85 px-2 py-0.5 text-[11px] font-semibold text-slate-700 shadow-sm">
-                {type ? type.replace('_', ' ') : 'POST'}
-              </div>
             </div>
           </a>
         );
