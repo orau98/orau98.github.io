@@ -190,6 +190,14 @@ const InsectsHostPlantExplorer = React.memo(
     initialTab = "insects",
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const getCurrentParams = useCallback(() => {
+      try {
+        if (typeof window !== "undefined" && window.location?.search != null) {
+          return new URLSearchParams(window.location.search);
+        }
+      } catch {}
+      return new URLSearchParams(searchParams);
+    }, [searchParams]);
     const normalizeTab = (value, fallback) => {
       if (value === "plants" || value === "insects") return value;
       return fallback;
@@ -242,7 +250,7 @@ const InsectsHostPlantExplorer = React.memo(
       }
 
       searchTimeoutRef.current = setTimeout(() => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = getCurrentParams();
         newParams.set("tab", activeTab);
         if (val) {
           newParams.set("q", val);
@@ -258,7 +266,7 @@ const InsectsHostPlantExplorer = React.memo(
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
-      const newParams = new URLSearchParams(searchParams);
+      const newParams = getCurrentParams();
       if (tab) newParams.set("tab", tab);
       else newParams.delete("tab");
       const nextSearch = (searchByTab[tab] || "").trim();
@@ -948,7 +956,7 @@ const InsectsHostPlantExplorer = React.memo(
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
-      const newParams = new URLSearchParams(searchParams);
+      const newParams = getCurrentParams();
       newParams.set("tab", activeTab);
       if (value) {
         newParams.set("q", value);

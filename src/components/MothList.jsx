@@ -476,7 +476,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const updateSearchParams = useCallback((mutate) => {
-    const next = new URLSearchParams(searchParams);
+    let next;
+    try {
+      next = new URLSearchParams(window.location.search || '');
+    } catch {
+      next = new URLSearchParams(searchParams);
+    }
     try {
       mutate(next);
     } catch {}

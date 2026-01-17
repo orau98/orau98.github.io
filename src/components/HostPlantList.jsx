@@ -392,7 +392,12 @@ const HostPlantList = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const listTopRef = useRef(null);
   const updateSearchParams = useCallback((mutate) => {
-    const next = new URLSearchParams(searchParams);
+    let next;
+    try {
+      next = new URLSearchParams(window.location.search || '');
+    } catch {
+      next = new URLSearchParams(searchParams);
+    }
     try {
       mutate(next);
     } catch {}
