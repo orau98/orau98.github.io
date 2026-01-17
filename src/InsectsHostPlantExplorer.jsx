@@ -444,7 +444,7 @@ const InsectsHostPlantExplorer = React.memo(
       };
     }, [SCROLL_RESTORE_KEY, activeTab]);
 
-    // Initialize tab from URL, fallback to prop when absent
+    // Initialize tab from URL, fallback to current tab (or prop) when absent
     useEffect(() => {
       const tabParam = searchParams.get("tab");
       const normalizedTab = normalizeTab(tabParam, "");
@@ -454,14 +454,16 @@ const InsectsHostPlantExplorer = React.memo(
         }
         return;
       }
-      // Ensure URL reflects requested initial tab so戻る/共有で維持される
-      if (initialTab && !tabParam) {
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set("tab", initialTab);
-        const initSearch = (searchByTab[initialTab] || "").trim();
-        if (initSearch) newParams.set("q", initSearch);
-        setSearchParams(newParams, { replace: true });
-        setActiveTab(initialTab);
+      // Ensure URL reflects current tab so戻る/共有で維持される
+      const fallbackTab = normalizeTab(activeTab, "") || normalizeTab(initialTab, "") || "insects";
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("tab", fallbackTab);
+      const initSearch = (searchByTab[fallbackTab] || "").trim();
+      if (initSearch) newParams.set("q", initSearch);
+      else newParams.delete("q");
+      setSearchParams(newParams, { replace: true });
+      if (fallbackTab !== activeTab) {
+        setActiveTab(fallbackTab);
       }
     }, [searchParams, initialTab, setSearchParams, activeTab, searchByTab]);
 
