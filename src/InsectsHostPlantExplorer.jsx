@@ -1,8 +1,7 @@
 import React, { Suspense, useEffect, useRef, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
-import InstagramEmbed from "./components/InstagramEmbed";
-import InstagramTimeline from "./components/InstagramTimeline";
+import InstagramGallery from "./components/InstagramGallery";
 import SearchInput from "./components/SearchInput";
 import StickyHeader from "./components/StickyHeader";
 import { MainStructuredData } from "./components/StructuredData";
@@ -201,6 +200,7 @@ const InsectsHostPlantExplorer = React.memo(
     const [heroImageLoaded, setHeroImageLoaded] = useState(false);
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
+    const [instagramPostCards, setInstagramPostCards] = useState([]);
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
     const [showBibliography, setShowBibliography] = useState(false);
     const [plantImageFilenames, setPlantImageFilenames] = useState([]);
@@ -664,7 +664,32 @@ const InsectsHostPlantExplorer = React.memo(
           }
         }
 
-        // Timeline posts
+        // Timeline posts (JSON preferred)
+        try {
+          const res = await fetch(`${base}instagram_posts.json`, {
+            cache: cacheMode,
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const posts = Array.isArray(data) ? data : data?.posts;
+            if (Array.isArray(posts) && posts.length > 0) {
+              const normalized = posts.filter(
+                (post) =>
+                  typeof post?.permalink === "string" &&
+                  /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(
+                    post.permalink,
+                  ),
+              );
+              if (normalized.length > 0) {
+                setInstagramPostCards(normalized.slice(0, 12));
+              }
+            }
+          }
+        } catch {
+          // ignore
+        }
+
+        // Timeline posts (URL list fallback)
         try {
           const res = await fetch(`${base}instagram_posts.txt`, {
             cache: cacheMode,
@@ -1634,13 +1659,48 @@ const InsectsHostPlantExplorer = React.memo(
                         <div className="overflow-hidden rounded-lg shadow-sm">
                           <div className="instagram-wrapper w-full bg-white dark:bg-slate-800">
                             {(() => {
-                              // 1) timeline from file
-                              if (instagramPosts && instagramPosts.length > 0) {
+                              // 1) timeline from JSON (custom gallery)
+                              if (
+                                instagramPostCards &&
+                                instagramPostCards.length > 0
+                              ) {
                                 return (
-                                  <InstagramTimeline urls={instagramPosts} />
+                                  <InstagramGallery
+                                    posts={instagramPostCards}
+                                    className="p-3"
+                                  />
                                 );
                               }
-                              // 2) third-party widget
+                              // 2) URL list fallback (no embeds)
+                              if (instagramPosts && instagramPosts.length > 0) {
+                                return (
+                                  <ul className="space-y-2 p-2">
+                                    {instagramPosts
+                                      .slice(0, 6)
+                                      .map((url, index) => (
+                                        <li key={`${url}-${index}`}>
+                                          <a
+                                            href={url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-3 rounded-lg border border-slate-200/70 bg-white/90 px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:border-purple-300 hover:text-purple-600"
+                                          >
+                                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                                              <InstagramIcon className="h-4 w-4" />
+                                            </span>
+                                            <span className="flex-1 truncate">
+                                              Instagram投稿 {index + 1}
+                                            </span>
+                                            <span className="text-slate-400">
+                                              ↗
+                                            </span>
+                                          </a>
+                                        </li>
+                                      ))}
+                                  </ul>
+                                );
+                              }
+                              // 3) third-party widget
                               if (instagramWidgetHtml) {
                                 return (
                                   <div
@@ -1651,15 +1711,8 @@ const InsectsHostPlantExplorer = React.memo(
                                   />
                                 );
                               }
-                              // 3) single post permalink
+                              // 4) single URL fallback
                               if (instagramUrl) {
-                                const isPostPermalink =
-                                  /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(
-                                    instagramUrl,
-                                  );
-                                if (isPostPermalink)
-                                  return <InstagramEmbed url={instagramUrl} />;
-                                // Profile URL fallback: show a nice link card
                                 return (
                                   <a
                                     href={instagramUrl}
