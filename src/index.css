@@ -255,6 +255,15 @@
   background: rgba(100, 116, 139, 0.7);
 }
 
+/* Instagram embeds: keep within sidebar width */
+.instagram-embed-container .instagram-media,
+.instagram-embed-container .instagram-media > div,
+.instagram-embed-container iframe {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
 /* Text clamp utilities */
 .line-clamp-1 {
   display: -webkit-box;

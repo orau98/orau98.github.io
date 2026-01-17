@@ -61,10 +61,11 @@ const InstagramEmbed = ({ url, className = "" }) => {
             borderRadius: '8px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
             margin: '0 auto',
-            maxWidth: '540px',
-            minWidth: '260px',
+            maxWidth: '100%',
+            minWidth: '0',
             padding: '0',
-            width: '100%'
+            width: '100%',
+            overflow: 'hidden'
           }}
         >
           <div style={{ padding: '12px 12px 8px' }}>
