@@ -288,6 +288,7 @@ function App() {
     return map;
   };
 
+  const hasDatasetRef = useRef(false);
   const applyDataset = (data = {}) => {
     const mothArr = Array.isArray(data.moths) ? data.moths : [];
     const butterflyArr = Array.isArray(data.butterflies) ? data.butterflies : [];
@@ -314,6 +315,16 @@ function App() {
     if (data.summaryCounts) {
       setSummaryCounts(data.summaryCounts);
     }
+    const hasAny =
+      mothArr.length +
+        butterflyArr.length +
+        beetleArr.length +
+        longhornArr.length +
+        leafArr.length >
+        0 ||
+      Object.keys(data.hostPlants || {}).length > 0;
+    hasDatasetRef.current = hasAny;
+    cacheLoadedRef.current = cacheLoadedRef.current || hasAny;
   };
 
   useEffect(() => {
@@ -342,7 +353,7 @@ function App() {
       const base = import.meta.env.BASE_URL || '/';
       let plantDetailsLite = {};
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-      const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 300) => {
+      const fetchWithRetry = async (url, opts = {}, retries = 4, delay = 300) => {
         let lastErr = null;
         for (let attempt = 0; attempt <= retries; attempt += 1) {
           try {
@@ -6363,7 +6374,13 @@ function App() {
           name: error.name
         });
         setLoading(false); // Ensure loading is set to false even on error
-        // Set empty data to prevent app from hanging
+        // If we already have cached/previous data, keep it and avoid hard-fail
+        if (cacheLoadedRef.current || hasDatasetRef.current) {
+          logger.warn("Keeping existing dataset after fetch failure.");
+          setLoadError(null);
+          return;
+        }
+        // No data at all -> show error state
         setMoths([]);
         setButterflies([]);
         setBeetles([]);
