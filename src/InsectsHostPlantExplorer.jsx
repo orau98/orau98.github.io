@@ -18,6 +18,26 @@ import { createSafePlantFilename, splitFilenameBase } from "./utils/filename";
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
 
+const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
+  const trimmed = String(html || "").trim();
+  if (!trimmed) return "";
+  const normalizedBase = baseHref.endsWith("/") ? baseHref : `${baseHref}/`;
+  const safeBase = normalizedBase.replace(/"/g, "&quot;");
+  return [
+    "<!doctype html>",
+    "<html>",
+    "<head>",
+    "<meta charset=\"utf-8\">",
+    "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">",
+    `<base href=\"${safeBase}\">`,
+    "</head>",
+    "<body style=\"margin:0\">",
+    trimmed,
+    "</body>",
+    "</html>",
+  ].join("");
+};
+
 const buildAliasMap = (plantDetails = {}) => {
   const map = new Map();
   const canonicalByNormalized = new Map();
@@ -210,6 +230,12 @@ const InsectsHostPlantExplorer = React.memo(
     const [instagramPosts, setInstagramPosts] = useState([]);
     const [instagramPostCards, setInstagramPostCards] = useState([]);
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
+    const baseUrl = import.meta.env.BASE_URL || "/";
+    const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+    const instagramWidgetSrcDoc = useMemo(
+      () => buildInstagramWidgetSrcDoc(instagramWidgetHtml, normalizedBaseUrl),
+      [instagramWidgetHtml, normalizedBaseUrl],
+    );
     const [showBibliography, setShowBibliography] = useState(false);
     const [plantImageFilenames, setPlantImageFilenames] = useState([]);
     const [searchByTab, setSearchByTab] = useState(() => ({
@@ -1711,13 +1737,15 @@ const InsectsHostPlantExplorer = React.memo(
                                 );
                               }
                               // 3) third-party widget
-                              if (instagramWidgetHtml) {
+                              if (instagramWidgetSrcDoc) {
                                 return (
-                                  <div
-                                    className="bg-white dark:bg-slate-800 overflow-hidden p-0"
-                                    dangerouslySetInnerHTML={{
-                                      __html: instagramWidgetHtml,
-                                    }}
+                                  <iframe
+                                    title="Instagram widget"
+                                    className="bg-white dark:bg-slate-800 w-full min-h-[360px] h-[60vh] border-0"
+                                    sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    loading="lazy"
+                                    srcDoc={instagramWidgetSrcDoc}
                                   />
                                 );
                               }

@@ -1,6 +1,9 @@
 import React from 'react';
 import { absUrl } from '../utils/origin';
 
+const toJsonLd = (data) =>
+  JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+
 const buildInsectMetaPath = (insect, fallbackType = 'moth') => {
   if (!insect) return '/';
   const type = insect.type || fallbackType;
@@ -180,7 +183,7 @@ export const MothStructuredData = ({ moth }) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
@@ -312,7 +315,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
@@ -444,7 +447,7 @@ export const BeetleStructuredData = ({ beetle }) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
@@ -571,7 +574,7 @@ export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
@@ -722,7 +725,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
@@ -843,7 +846,7 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
@@ -883,7 +886,7 @@ export const MainStructuredData = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
   );
 };
