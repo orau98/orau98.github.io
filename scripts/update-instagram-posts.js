@@ -10,6 +10,7 @@ const PUBLIC_DIR = path.join(ROOT, 'public');
 const OUT_POSTS = path.join(PUBLIC_DIR, 'instagram_posts.txt');
 const OUT_LATEST = path.join(PUBLIC_DIR, 'instagram_latest.txt');
 const OUT_JSON = path.join(PUBLIC_DIR, 'instagram_posts.json');
+const OUT_MEDIA_DIR = path.join(PUBLIC_DIR, 'instagram');
 
 const ACCESS_TOKEN = process.env.IG_ACCESS_TOKEN;
 const USER_ID = process.env.IG_USER_ID;
@@ -22,8 +23,65 @@ const ensureDir = (dir) => {
 const isPostPermalink = (url) =>
   /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(url || '');
 
+const loadExistingMedia = () => {
+  const map = new Map();
+  if (!fs.existsSync(OUT_MEDIA_DIR)) return map;
+  fs.readdirSync(OUT_MEDIA_DIR).forEach((file) => {
+    const match = file.match(/^(.+?)\.[^.]+$/);
+    if (!match) return;
+    map.set(match[1], `/instagram/${file}`);
+  });
+  return map;
+};
+
+const guessExtension = (contentType, url) => {
+  const type = String(contentType || '').toLowerCase();
+  if (type.includes('image/png')) return '.png';
+  if (type.includes('image/webp')) return '.webp';
+  if (type.includes('image/gif')) return '.gif';
+  if (type.includes('image/jpeg') || type.includes('image/jpg')) return '.jpg';
+  if (type.includes('image/avif')) return '.avif';
+  const parsed = String(url || '').split('?')[0];
+  const extMatch = parsed.match(/\.(png|webp|gif|jpe?g|avif)$/i);
+  if (extMatch) return `.${extMatch[1].toLowerCase()}`;
+  return '.jpg';
+};
+
+const pickMediaUrl = (item) => {
+  const type = String(item?.media_type || '').toUpperCase();
+  if (type === 'VIDEO' || type === 'REEL') {
+    return item?.thumbnail_url || item?.media_url || '';
+  }
+  return item?.media_url || item?.thumbnail_url || '';
+};
+
+const downloadMedia = async (url, id, existingMedia) => {
+  if (!url || !id) return null;
+  if (existingMedia.has(id)) return existingMedia.get(id);
+  try {
+    const res = await fetch(url, {
+      redirect: 'follow',
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+    });
+    if (!res.ok) return null;
+    const contentType = res.headers.get('content-type') || '';
+    const ext = guessExtension(contentType, url);
+    const filename = `${id}${ext}`;
+    const destPath = path.join(OUT_MEDIA_DIR, filename);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    if (!buffer.length) return null;
+    fs.writeFileSync(destPath, buffer);
+    const rel = `/instagram/${filename}`;
+    existingMedia.set(id, rel);
+    return rel;
+  } catch {
+    return null;
+  }
+};
+
 const main = async () => {
   ensureDir(PUBLIC_DIR);
+  ensureDir(OUT_MEDIA_DIR);
 
   if (!ACCESS_TOKEN || !USER_ID) {
     console.warn('[instagram] Missing IG_ACCESS_TOKEN or IG_USER_ID. Skipping update.');
@@ -64,22 +122,38 @@ const main = async () => {
     .filter((url) => isPostPermalink(url));
 
   const unique = Array.from(new Set(urls)).slice(0, POST_LIMIT);
+  const existingMedia = loadExistingMedia();
   const posts = [];
   const seenPermalinks = new Set();
-  items.forEach((item) => {
+  for (const item of items) {
     const permalink = typeof item?.permalink === 'string' ? item.permalink.trim() : '';
-    if (!isPostPermalink(permalink) || seenPermalinks.has(permalink)) return;
+    if (!isPostPermalink(permalink) || seenPermalinks.has(permalink)) continue;
     seenPermalinks.add(permalink);
+    const id = item?.id || null;
+    const mediaUrl = pickMediaUrl(item);
+    const localUrl = await downloadMedia(mediaUrl, id, existingMedia);
     posts.push({
-      id: item?.id || null,
+      id,
       permalink,
       media_type: item?.media_type || null,
       media_url: item?.media_url || null,
       thumbnail_url: item?.thumbnail_url || null,
+      local_url: localUrl,
       caption: item?.caption || null,
       timestamp: item?.timestamp || null,
     });
-  });
+  }
+
+  const validIds = new Set(posts.map((post) => post.id).filter(Boolean));
+  if (fs.existsSync(OUT_MEDIA_DIR)) {
+    fs.readdirSync(OUT_MEDIA_DIR).forEach((file) => {
+      const match = file.match(/^(.+?)\.[^.]+$/);
+      if (!match) return;
+      if (!validIds.has(match[1])) {
+        fs.unlinkSync(path.join(OUT_MEDIA_DIR, file));
+      }
+    });
+  }
 
   if (unique.length === 0) {
     const existing = fs.existsSync(OUT_POSTS)
