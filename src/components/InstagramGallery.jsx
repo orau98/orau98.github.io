@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import InstagramIcon from './InstagramIcon';
 
 const normalizeAssetUrl = (value) => {
@@ -41,7 +41,7 @@ const pickImageUrl = (post) => {
   return post.media_url || post.thumbnail_url || '';
 };
 
-const InstagramGallery = ({ posts = [], limit = 6, className = '' }) => {
+const InstagramGallery = ({ posts = [], limit = 6, className = '', onAllFailed }) => {
   const visible = Array.isArray(posts) ? posts.slice(0, limit) : [];
   if (visible.length === 0) return null;
   const fallbackByKey = useMemo(() => {
@@ -54,7 +54,30 @@ const InstagramGallery = ({ posts = [], limit = 6, className = '' }) => {
     });
     return map;
   }, [visible]);
+  const keyList = useMemo(
+    () =>
+      visible.map((post, idx) => {
+        const permalink = post?.permalink || '';
+        return `${permalink}-${idx}`;
+      }),
+    [visible],
+  );
   const [failed, setFailed] = useState({});
+  const notifiedRef = useRef(false);
+
+  useEffect(() => {
+    notifiedRef.current = false;
+  }, [keyList]);
+
+  useEffect(() => {
+    if (typeof onAllFailed !== 'function') return;
+    if (keyList.length === 0) return;
+    const allFailed = keyList.every((key) => failed[key] === 'final');
+    if (allFailed && !notifiedRef.current) {
+      notifiedRef.current = true;
+      onAllFailed();
+    }
+  }, [failed, keyList, onAllFailed]);
 
   return (
     <div className={`grid grid-cols-2 gap-3 ${className}`}>
