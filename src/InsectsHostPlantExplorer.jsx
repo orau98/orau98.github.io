@@ -1449,9 +1449,9 @@ const InsectsHostPlantExplorer = React.memo(
             </div>
 
             <div className="p-6 md:p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-                {/* 左側：サイトポリシーと出典一覧 (2/3 width) */}
-                <div className="lg:col-span-2 space-y-8">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10">
+                {/* 左側：サイトポリシーと出典一覧 (wider on desktop) */}
+                <div className="lg:col-span-3 space-y-8">
                   {/* サイトポリシー */}
                   <section>
                     <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center border-b border-slate-200 dark:border-slate-700 pb-2">
@@ -1699,8 +1699,8 @@ const InsectsHostPlantExplorer = React.memo(
                   </section>
                 </div>
 
-                {/* 右側：Instagram (1/3 width) */}
-                <div className="lg:col-span-1">
+                {/* 右側：Instagram (give it more room on desktop) */}
+                <div className="lg:col-span-2">
                   <div className="sticky top-24 space-y-6">
                     <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-700/50 dark:to-slate-700/30 rounded-xl p-5 border border-purple-100 dark:border-slate-600">
                       {/* Instagram最新投稿 */}
