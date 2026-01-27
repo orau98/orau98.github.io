@@ -1777,9 +1777,6 @@ const InsectsHostPlantExplorer = React.memo(
                                           <InstagramIcon className="w-5 h-5 text-slate-400 group-hover:text-purple-500 transition-colors" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate group-hover:text-purple-600 transition-colors">
-                                            プロフィールを表示
-                                          </p>
                                           <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
                                             {instagramUrl.replace(
                                               /^https?:\/\//,
