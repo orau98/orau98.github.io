@@ -168,6 +168,8 @@ const SearchInput = ({
 
   // 検索履歴と候補を組み合わせ（入力がない場合は履歴を表示）
   const showHistory = !localValue && history.length > 0;
+  const activeItems = showHistory ? history : displayedSuggestions;
+  const activeItemsLength = activeItems.length;
   const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory);
   const activeDescendantId = useMemo(() => {
     if (!expanded || activeIndex < 0) return undefined;
@@ -234,7 +236,7 @@ const SearchInput = ({
 
   const handleKeyDown = (e) => {
     if (!expanded) {
-      if (e.key === "ArrowDown" && displayedSuggestions.length > 0) {
+      if (e.key === "ArrowDown" && activeItemsLength > 0) {
         setShowSuggestions(true);
         setActiveIndex(0);
         e.preventDefault();
@@ -243,25 +245,32 @@ const SearchInput = ({
     }
 
     if (e.key === "ArrowDown") {
+      if (activeItemsLength === 0) return;
       e.preventDefault();
       setActiveIndex((prev) => {
         const next = prev + 1;
-        return next >= displayedSuggestions.length ? 0 : next;
+        return next >= activeItemsLength ? 0 : next;
       });
       return;
     }
     if (e.key === "ArrowUp") {
+      if (activeItemsLength === 0) return;
       e.preventDefault();
       setActiveIndex((prev) => {
-        if (prev <= 0) return displayedSuggestions.length - 1;
+        if (prev <= 0) return activeItemsLength - 1;
         return prev - 1;
       });
       return;
     }
     if (e.key === "Enter") {
-      if (activeIndex >= 0 && activeIndex < displayedSuggestions.length) {
+      if (activeIndex >= 0 && activeIndex < activeItemsLength) {
         e.preventDefault();
-        handleSelect(displayedSuggestions[activeIndex]);
+        const selected = activeItems[activeIndex];
+        const selectValue =
+          typeof selected === "object" && selected !== null
+            ? selected.value || selected.name || ""
+            : selected;
+        if (selectValue) handleSelect(selectValue);
       }
       return;
     }
@@ -279,11 +288,11 @@ const SearchInput = ({
       return;
     }
     setActiveIndex((prev) => {
-      if (displayedSuggestions.length === 0) return -1;
-      if (prev >= displayedSuggestions.length) return displayedSuggestions.length - 1;
+      if (activeItemsLength === 0) return -1;
+      if (prev >= activeItemsLength) return activeItemsLength - 1;
       return prev;
     });
-  }, [expanded, displayedSuggestions.length]);
+  }, [expanded, activeItemsLength]);
 
   useEffect(() => {
     return () => {

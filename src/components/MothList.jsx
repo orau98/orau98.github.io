@@ -657,6 +657,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const familyFilterId = `${filterIdBase}-family`;
   const genusFilterId = `${filterIdBase}-genus`;
   const emergenceFilterId = `${filterIdBase}-emergence`;
+  const filtersPanelId = `${filterIdBase}-filters`;
 
   const classificationFilter = searchParams.get('classification');
   const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
@@ -1296,6 +1297,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           {/* Toggle Button - Moved to start */}
           <button 
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            type="button"
+            aria-expanded={isFiltersOpen}
+            aria-controls={filtersPanelId}
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               isFiltersOpen 
                 ? 'bg-slate-200/80 text-slate-800 dark:bg-slate-700/80 dark:text-slate-200' 
@@ -1346,96 +1350,104 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
         {/* Collapsible Controls */}
         <div 
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 transition-all duration-300 ease-in-out overflow-hidden ${
+          id={filtersPanelId}
+          aria-hidden={!isFiltersOpen}
+          inert={!isFiltersOpen ? '' : undefined}
+          className={`transition-all duration-300 ease-in-out overflow-hidden ${
             isFiltersOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>食草の有無</label>
-            <div className="relative">
-              <select
-                id={hostFilterId}
-                value={hostFilter}
-                onChange={(e) => setIHostFilter(e.target.value)}
-                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              >
-                <option value="all">すべて</option>
-                <option value="has">食草あり</option>
-                <option value="none">未登録のみ</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+          <fieldset
+            disabled={!isFiltersOpen}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+          >
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>食草の有無</label>
+              <div className="relative">
+                <select
+                  id={hostFilterId}
+                  value={hostFilter}
+                  onChange={(e) => setIHostFilter(e.target.value)}
+                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                  <option value="all">すべて</option>
+                  <option value="has">食草あり</option>
+                  <option value="none">未登録のみ</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>科 (Family)</label>
-            <div className="relative">
-              <select
-                id={familyFilterId}
-                value={familyFilter}
-                onChange={(e) => setIFamilyFilter(e.target.value)}
-                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              >
-                <option value="">指定なし</option>
-                {familyOptions.map((f) => (
-                  <option key={f} value={f}>{f}</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>科 (Family)</label>
+              <div className="relative">
+                <select
+                  id={familyFilterId}
+                  value={familyFilter}
+                  onChange={(e) => setIFamilyFilter(e.target.value)}
+                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                  <option value="">指定なし</option>
+                  {familyOptions.map((f) => (
+                    <option key={f} value={f}>{f}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={genusFilterId}>属 (Genus)</label>
-            <div className="relative">
-              <select
-                id={genusFilterId}
-                value={genusFilter}
-                onChange={(e) => setIGenusFilter(e.target.value)}
-                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              >
-                <option value="">指定なし</option>
-                {genusOptions.map((g) => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={genusFilterId}>属 (Genus)</label>
+              <div className="relative">
+                <select
+                  id={genusFilterId}
+                  value={genusFilter}
+                  onChange={(e) => setIGenusFilter(e.target.value)}
+                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                  <option value="">指定なし</option>
+                  {genusOptions.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>出現期</label>
-            <div className="relative">
-              <select
-                id={emergenceFilterId}
-                value={emergenceFilter}
-                onChange={(e) => setIEmergenceFilter(e.target.value)}
-                className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              >
-                <option value="">指定なし</option>
-                {emergenceOptions.map((em) => (
-                  <option key={em} value={em}>{em}</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>出現期</label>
+              <div className="relative">
+                <select
+                  id={emergenceFilterId}
+                  value={emergenceFilter}
+                  onChange={(e) => setIEmergenceFilter(e.target.value)}
+                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                  <option value="">指定なし</option>
+                  {emergenceOptions.map((em) => (
+                    <option key={em} value={em}>{em}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
+          </fieldset>
         </div>
         
         <div className="mt-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
