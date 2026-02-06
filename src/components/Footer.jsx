@@ -10,7 +10,7 @@ const Footer = () => {
             href="https://github.com/orau98/orau98.github.io" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="text-primary-600 dark:text-primary-400 hover:underline"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             GitHub
           </a>.
@@ -21,35 +21,35 @@ const Footer = () => {
         <div className="text-xs mt-3 space-x-4">
           <a 
             href={`${import.meta.env.BASE_URL}privacy-policy.html`}
-            className="text-primary-600 dark:text-primary-400 hover:underline"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             プライバシーポリシー
           </a>
           <span className="text-neutral-400">|</span>
           <a 
             href={`${import.meta.env.BASE_URL}terms-of-service.html`}
-            className="text-primary-600 dark:text-primary-400 hover:underline"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             利用規約
           </a>
           <span className="text-neutral-400">|</span>
           <a 
             href={`${import.meta.env.BASE_URL}sitemap.html`}
-            className="text-primary-600 dark:text-primary-400 hover:underline"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             サイトマップ
           </a>
           <span className="text-neutral-400">|</span>
           <a 
             href={`${import.meta.env.BASE_URL}meta/moth/index.html`}
-            className="text-primary-600 dark:text-primary-400 hover:underline"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             蛾メタ一覧
           </a>
           <span className="text-neutral-400">|</span>
           <a 
             href={`${import.meta.env.BASE_URL}meta/plant/index.html`}
-            className="text-primary-600 dark:text-primary-400 hover:underline"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             植物メタ一覧
           </a>

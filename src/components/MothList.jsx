@@ -14,6 +14,11 @@ import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../utils/insectImageResolver';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
@@ -131,29 +136,17 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     ? buildInsectPath(moth)
     : `${baseRoute}/${slugifyInsectName(moth.name) || moth.id}`;
   
-  // 画像ファイル名を動的に解決（index 未登録でも拡張子マップがあれば表示を試す）
+  // 画像ファイル名を動的に解決（学名表記ゆれ・著者名付きファイル名にも対応）
   const finalImageFilename = React.useMemo(() => {
-    if (imageFilename) return imageFilename;
-    const candidates = [];
-    // 和名→学名マッピング
-    const mapped = globalJapaneseToScientificMapping.get(moth?.name);
-    if (mapped) candidates.push(mapped);
-    // 提供されている scientificFilename
-    if (moth?.scientificFilename) candidates.push(moth.scientificFilename);
-    // 学名から安全なファイル名生成
-    const safeFromSci = createSafeInsectFilename(moth?.scientificName);
-    if (safeFromSci) candidates.push(safeFromSci);
-    // 和名そのもの
-    if (moth?.name) candidates.push(moth.name);
-    // 最終フォールバック
-    candidates.push(createSafeInsectFilename(moth?.name || ''));
-    // 拡張子マップに存在する最初の候補を採用
-    if (imageExtensions) {
-      const hit = candidates.find(c => c && imageExtensions[c]);
-      if (hit) return hit;
-    }
-    // どれも見つからなければ先頭候補（存在するかは onError に任せる）
-    return candidates.find(Boolean) || 'placeholder';
+    const mapped = globalJapaneseToScientificMapping.get(moth?.name || moth?.japaneseName || '');
+    const baseCandidates = buildInsectImageBaseCandidates(moth, mapped);
+    const candidateBases = imageFilename ? [imageFilename, ...baseCandidates] : baseCandidates;
+    const normalizedEntries = buildNormalizedEntries(null, imageExtensions);
+    const resolvedBases = resolveImageBaseCandidates(candidateBases, {
+      imageExtensions,
+      normalizedEntries,
+    });
+    return resolvedBases[0] || candidateBases.find(Boolean) || 'placeholder';
   }, [imageFilename, moth, imageExtensions]);
   
   // Determine the correct file extension using the extensions mapping

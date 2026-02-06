@@ -1347,7 +1347,6 @@ const InsectsHostPlantExplorer = React.memo(
                 role="tabpanel"
                 aria-labelledby="tab-insects"
                 aria-hidden={activeTab !== "insects"}
-                inert={activeTab !== "insects"}
                 className={`transition-all duration-300 ease-in-out ${
                   activeTab === "insects"
                     ? "opacity-100 translate-x-0"
@@ -1386,7 +1385,6 @@ const InsectsHostPlantExplorer = React.memo(
                 role="tabpanel"
                 aria-labelledby="tab-plants"
                 aria-hidden={activeTab !== "plants"}
-                inert={activeTab !== "plants"}
                 className={`transition-all duration-300 ease-in-out ${
                   activeTab === "plants"
                     ? "opacity-100 translate-x-0"

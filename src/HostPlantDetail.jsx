@@ -738,6 +738,58 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const shareText = `${decodedPlantName}｜昆虫植物図鑑`;
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
+  const [copyFeedback, setCopyFeedback] = useState('idle');
+  const copyFeedbackTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyFeedbackTimeoutRef.current) {
+        clearTimeout(copyFeedbackTimeoutRef.current);
+        copyFeedbackTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleCopyShareLink = useCallback(async () => {
+    if (!shareUrl) return;
+
+    const setFeedbackWithReset = (nextStatus) => {
+      setCopyFeedback(nextStatus);
+      if (copyFeedbackTimeoutRef.current) {
+        clearTimeout(copyFeedbackTimeoutRef.current);
+      }
+      copyFeedbackTimeoutRef.current = setTimeout(() => {
+        setCopyFeedback('idle');
+        copyFeedbackTimeoutRef.current = null;
+      }, 2000);
+    };
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        setFeedbackWithReset('success');
+        return;
+      }
+
+      if (typeof document !== 'undefined') {
+        const textarea = document.createElement('textarea');
+        textarea.value = shareUrl;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const copied = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setFeedbackWithReset(copied ? 'success' : 'error');
+        return;
+      }
+
+      setFeedbackWithReset('error');
+    } catch {
+      setFeedbackWithReset('error');
+    }
+  }, [shareUrl]);
 
   const { setOgTwitterImage } = useSeoMeta({
     title: pageTitle,
@@ -1758,31 +1810,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             {/* リンクコピーボタン */}
             <button
               type="button"
-              onClick={() => {
-                if (navigator.clipboard && shareUrl) {
-                  navigator.clipboard.writeText(shareUrl).then(() => {
-                    const btn = document.getElementById('copy-link-btn-plant');
-                    if (btn) {
-                      btn.textContent = 'コピーしました！';
-                      btn.classList.add('bg-emerald-600');
-                      btn.classList.remove('bg-slate-600', 'hover:bg-slate-500');
-                      setTimeout(() => {
-                        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>リンクをコピー`;
-                        btn.classList.remove('bg-emerald-600');
-                        btn.classList.add('bg-slate-600', 'hover:bg-slate-500');
-                      }, 2000);
-                    }
-                  });
-                }
-              }}
-              id="copy-link-btn-plant"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-600 text-white hover:bg-slate-500 transition-all duration-200 hover:scale-105 hover:shadow-lg font-medium text-sm"
-              aria-label="リンクをクリップボードにコピー"
+              onClick={handleCopyShareLink}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-white transition-all duration-200 hover:scale-105 hover:shadow-lg font-medium text-sm ${
+                copyFeedback === 'success'
+                  ? 'bg-emerald-600 hover:bg-emerald-500'
+                  : copyFeedback === 'error'
+                    ? 'bg-rose-600 hover:bg-rose-500'
+                    : 'bg-slate-600 hover:bg-slate-500'
+              }`}
+              aria-label={copyFeedback === 'success' ? 'リンクをコピーしました' : 'リンクをクリップボードにコピー'}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
               </svg>
-              リンクをコピー
+              {copyFeedback === 'success' ? 'コピーしました！' : copyFeedback === 'error' ? 'コピー失敗' : 'リンクをコピー'}
             </button>
           </div>
         </div>

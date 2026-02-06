@@ -53,7 +53,7 @@ const SuggestionThumbnail = ({ src, alt, type }) => {
   }
 
   return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 flex-shrink-0">
+    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 flex-shrink-0">
       <img
         src={src}
         alt={alt || ''}
@@ -365,37 +365,40 @@ const SearchInput = ({
                 <ul id={listboxId} role="listbox">
                   {history.map((term, index) => (
                     <li key={`history-${term}-${index}`} role="none">
-                      <button
-                        type="button"
-                        role="option"
-                        id={`${listboxId}-option-${index}`}
-                        aria-selected={index === activeIndex}
-                        tabIndex={-1}
-                        onMouseDown={() => handleSelect(term)}
-                        onMouseEnter={() => setActiveIndex(index)}
-                        className={`w-full text-left px-4 py-3 min-h-[48px] text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-between ${
+                      <div
+                        className={`w-full px-2 min-h-[48px] text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-between ${
                           index === activeIndex
                             ? "bg-slate-50 dark:bg-slate-700/50"
                             : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
                         }`}
                       >
-                        <div className="flex items-center space-x-3">
+                        <button
+                          type="button"
+                          role="option"
+                          id={`${listboxId}-option-${index}`}
+                          aria-selected={index === activeIndex}
+                          tabIndex={-1}
+                          onMouseDown={() => handleSelect(term)}
+                          onMouseEnter={() => setActiveIndex(index)}
+                          className="flex-1 min-w-0 text-left px-2 py-3 flex items-center space-x-3 rounded-md"
+                        >
                           <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <span className="truncate font-medium">{term}</span>
-                        </div>
+                        </button>
                         <button
                           type="button"
-                          onMouseDown={(e) => { e.stopPropagation(); removeFromHistory(term); }}
-                          className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                          onMouseDown={(e) => { e.preventDefault(); removeFromHistory(term); }}
+                          onMouseEnter={() => setActiveIndex(index)}
+                          className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-md"
                           aria-label={`「${term}」を履歴から削除`}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
-                      </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
