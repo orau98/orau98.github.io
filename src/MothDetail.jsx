@@ -287,11 +287,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
   const graphContainerRefDesktop = useRef(null);
   const graphContainerRefMobile = useRef(null);
-  const [mainImageLoaded, setMainImageLoaded] = useState(false);
   const [shouldLoadGraph, setShouldLoadGraph] = useState(false);
-
-  const markGraphReady = useCallback(() => {
-    setShouldLoadGraph(prev => prev || true);
+  const requestGraphLoad = useCallback(() => {
+    setShouldLoadGraph(true);
   }, []);
 
   useLayoutEffect(() => {
@@ -313,40 +311,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // グラフ読み込みを初期表示後に遅延させ、画像表示を優先
   useEffect(() => {
-    setMainImageLoaded(false);
     setShouldLoadGraph(false);
-
-    // 画像がなかなか読めなくても 4s 後には読み込み開始（フェイルセーフ）
-    const timer = setTimeout(() => markGraphReady(), 4000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [resolvedInsectId, markGraphReady]);
-
-  // グラフ領域が表示されたタイミングで読み込み開始（遅延ロード）
-  useEffect(() => {
-    if (shouldLoadGraph) return;
-    const targets = [graphContainerRefDesktop.current, graphContainerRefMobile.current].filter(Boolean);
-    if (targets.length === 0) return;
-    if (typeof IntersectionObserver === 'undefined') {
-      markGraphReady();
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          markGraphReady();
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-    targets.forEach((target) => observer.observe(target));
-    return () => observer.disconnect();
-  }, [markGraphReady, resolvedInsectId, shouldLoadGraph]);
+  }, [resolvedInsectId]);
 
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
@@ -871,7 +838,20 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         </div>
 
         <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
-          {!showGraph || graphDimensions.width === 0 ? (
+          {!showGraph ? (
+            <div className="w-full h-full flex flex-col items-center justify-center gap-4 px-6 text-center">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                ネットワーク図はサイズが大きいため、必要時のみ読み込みます。
+              </p>
+              <button
+                type="button"
+                onClick={requestGraphLoad}
+                className="ui-btn ui-btn-primary"
+              >
+                ネットワーク図を表示
+              </button>
+            </div>
+          ) : graphDimensions.width === 0 ? (
             <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
               <div className="w-24 h-24 mb-4 rounded-full bg-emerald-200/60 dark:bg-emerald-900/40"></div>
               <div className="h-3 w-40 rounded-full bg-slate-200 dark:bg-slate-700 mb-2"></div>
@@ -1022,15 +1002,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       fallbackSrc={null}
                       loading="eager"
                       fetchpriority="high"
-                      onLoad={() => {
-                        setMainImageLoaded(true);
-                        markGraphReady();
-                      }}
-                      onError={() => {
-                        // 画像が失敗してもグラフ読み込みは進める
-                        setMainImageLoaded(false);
-                        setShouldLoadGraph(true);
-                      }}
                     />
                     
                     {/* Elegant gradient overlay on hover */}

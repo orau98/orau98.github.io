@@ -251,7 +251,7 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
   );
 };
 
-const PlantImageGallery = ({ images }) => {
+const PlantImageGallery = ({ images, plantName = '' }) => {
   const [availableImages, setAvailableImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -352,9 +352,11 @@ const PlantImageGallery = ({ images }) => {
         {/* Main large image */}
         {mainImage && (
           <div className="relative">
-            <div 
-              className="group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl cursor-pointer"
+            <button
+              type="button"
+              className="group relative block w-full text-left bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900"
               onClick={() => handleImageClick(mainImage)}
+              aria-label={`${plantName || mainImage.alt}の写真を拡大表示`}
             >
               <div className="relative bg-emerald-50 dark:bg-emerald-900/20 overflow-hidden aspect-[16/10] min-h-[200px] md:min-h-[300px] lg:min-h-[400px]">
                 <img 
@@ -376,7 +378,7 @@ const PlantImageGallery = ({ images }) => {
                   <p className="text-white/90 text-sm drop-shadow-md mt-1">クリックで拡大表示</p>
                 </div>
               </div>
-            </div>
+            </button>
           </div>
         )}
 
@@ -387,10 +389,11 @@ const PlantImageGallery = ({ images }) => {
               その他の写真
             </h3>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {availableImages.map((image, index) => (
-                <div
-                  key={index}
-                  className={`group relative bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg cursor-pointer ${
+              {availableImages.map((image) => (
+                <button
+                  key={image.id}
+                  type="button"
+                  className={`group relative w-full text-left bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 ${
                     mainImage?.finalSrc === image.finalSrc 
                       ? 'ring-3 ring-emerald-500 ring-offset-2 dark:ring-offset-slate-900' 
                       : ''
@@ -399,6 +402,7 @@ const PlantImageGallery = ({ images }) => {
                     setMainImage(image);
                     setSelectedImage(image);
                   }}
+                  aria-label={`${image.label}をメイン画像に表示`}
                 >
                   <div className="relative aspect-square bg-emerald-50 dark:bg-emerald-900/20">
                     <img 
@@ -419,7 +423,7 @@ const PlantImageGallery = ({ images }) => {
                       {image.label}
                     </p>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -1026,6 +1030,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   // ネットワーク図サイズ
   const [graphSize, setGraphSize] = useState({ width: 0, height: 520 });
   const graphRef = useRef(null);
+  const [shouldLoadGraph, setShouldLoadGraph] = useState(false);
+
+  useEffect(() => {
+    setShouldLoadGraph(false);
+  }, [decodedPlantName]);
 
   useEffect(() => {
     const update = () => {
@@ -1698,24 +1707,39 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </div>
           <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25" ref={graphRef}>
             <div className="h-[540px]">
-              <React.Suspense fallback={
-                <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
-                  ネットワーク図を読み込み中...
+              {!shouldLoadGraph ? (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-4 px-6 text-center">
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                    ネットワーク図はサイズが大きいため、必要な時に読み込みます。
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShouldLoadGraph(true)}
+                    className="ui-btn ui-btn-primary"
+                  >
+                    ネットワーク図を表示
+                  </button>
                 </div>
-              }>
-                {graphSize.width > 0 && (
-                  <FoodWebGraph
-                    currentPlantName={decodedPlantName}
-                    plantInsects={classifiedInsects}
-                    allInsects={allInsects}
-                    hostPlantsMap={hostPlants}
-                    flowerVisitPlants={flowerVisitPlants}
-                    width={graphSize.width}
-                    height={graphSize.height}
-                    theme={theme}
-                  />
-                )}
-              </React.Suspense>
+              ) : (
+                <React.Suspense fallback={
+                  <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm">
+                    ネットワーク図を読み込み中...
+                  </div>
+                }>
+                  {graphSize.width > 0 && (
+                    <FoodWebGraph
+                      currentPlantName={decodedPlantName}
+                      plantInsects={classifiedInsects}
+                      allInsects={allInsects}
+                      hostPlantsMap={hostPlants}
+                      flowerVisitPlants={flowerVisitPlants}
+                      width={graphSize.width}
+                      height={graphSize.height}
+                      theme={theme}
+                    />
+                  )}
+                </React.Suspense>
+              )}
             </div>
           </div>
         </div>

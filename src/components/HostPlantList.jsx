@@ -518,6 +518,22 @@ const HostPlantList = ({
     setPOrderFilter,
     setPVisitFilter,
   ]);
+  const emptyStateHint = useMemo(() => {
+    if (!hasSearchQuery && !hasFilterCriteria) {
+      return '登録データを確認中です。時間をおいて再読み込みしてください。';
+    }
+    if (hasSearchQuery && hasFilterCriteria) {
+      return '検索語とフィルター条件を同時に絞り込んでいるため、結果が0件になっている可能性があります。';
+    }
+    if (hasSearchQuery) {
+      return '和名・学名・別名のいずれかで再検索すると見つかる場合があります。';
+    }
+    return 'フィルター条件を緩めると結果が表示される可能性があります。';
+  }, [hasFilterCriteria, hasSearchQuery]);
+  const activeFilterSummary = useMemo(
+    () => activeFilters.map((filter) => `${filter.type}:${filter.value}`).join(' / '),
+    [activeFilters],
+  );
   const filterIdBase = useId();
   const orderFilterId = `${filterIdBase}-order`;
   const familyFilterId = `${filterIdBase}-family`;
@@ -952,7 +968,7 @@ const HostPlantList = ({
   const renderFilters = () => {
     return (
       <div className="mt-4">
-          <div className="sticky z-40" style={{ top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)' }}>
+          <div className="md:sticky md:z-40" style={{ top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)' }}>
           <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-3 py-2">
             {/* Active Filters & Toggle */}
             <div className="flex flex-wrap items-center gap-3">
@@ -1164,9 +1180,12 @@ const HostPlantList = ({
               <p className="text-slate-500 dark:text-slate-400 font-medium">
                 結果が見つかりませんでした
               </p>
-              <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
-                別のキーワードで検索してみてください
-              </p>
+              <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{emptyStateHint}</p>
+              {hasAnyCriteria && (
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+                  現在の条件: {activeFilterSummary}
+                </p>
+              )}
               {hasAnyCriteria && (
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                   <button

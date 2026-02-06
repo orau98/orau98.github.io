@@ -133,7 +133,7 @@ const StickyHeader = ({
             />
             {/* 検索アクティブ状態のインジケーター */}
             {searchTerm && searchTerm.trim() && (
-              <div className="absolute -bottom-5 left-0 right-0 flex items-center justify-center">
+              <div className="hidden md:flex absolute -bottom-5 left-0 right-0 items-center justify-center">
                 <span className="text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
                   「{searchTerm.trim().length > 10 ? searchTerm.trim().slice(0, 10) + '...' : searchTerm.trim()}」で検索中
                 </span>

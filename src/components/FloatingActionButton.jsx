@@ -6,9 +6,15 @@ const FloatingActionButton = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [tocItems, setTocItems] = useState([]);
   const location = useLocation();
+  const isDetailPage = /\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|plant)\//.test(location.pathname);
 
   // Show/hide based on scroll
   useEffect(() => {
+    if (!isDetailPage) {
+      setIsVisible(false);
+      return undefined;
+    }
+
     const toggleVisibility = () => {
       if (window.pageYOffset > 300) {
         setIsVisible(true);
@@ -19,7 +25,7 @@ const FloatingActionButton = () => {
 
     window.addEventListener('scroll', toggleVisibility);
     return () => window.removeEventListener('scroll', toggleVisibility);
-  }, []);
+  }, [isDetailPage]);
 
   // Close menu when location changes
   useEffect(() => {
@@ -29,7 +35,7 @@ const FloatingActionButton = () => {
   // Generate Table of Contents (TOC) for detail pages
   useEffect(() => {
     // Only generate TOC for detail pages
-    if (!location.pathname.match(/\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|plant)\//)) {
+    if (!isDetailPage) {
       setTocItems([]);
       return;
     }
@@ -54,7 +60,13 @@ const FloatingActionButton = () => {
 
     const timer = setTimeout(checkSections, 500);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [isDetailPage, location.pathname]);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setIsOpen(false);
+    }
+  }, [isVisible]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -95,7 +107,7 @@ const FloatingActionButton = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[70] flex flex-col items-end gap-3">
+    <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 md:right-6 z-[70] flex flex-col items-end gap-3">
       {/* Menu Items */}
       <div
         className={`relative z-[70] flex flex-col gap-3 transition-all duration-300 origin-bottom ${

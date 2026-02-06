@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
 import LoadingBar from './components/LoadingBar';
+import NotFoundPage from './components/NotFoundPage';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { loadInsectImageIndexes } from './services/imageIndex';
@@ -6822,7 +6823,7 @@ function App() {
               </ChunkErrorBoundary>
             }
           />
-          <Route path="*" element={<SkeletonLoader />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
       </main>

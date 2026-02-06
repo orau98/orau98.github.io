@@ -478,34 +478,6 @@ img[loading="lazy"] {
   z-index: 10;
 }
 
-/* Skip Link - アクセシビリティ向上のためのスキップリンク */
-.skip-link {
-  position: absolute;
-  top: -100%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
-  padding: 12px 24px;
-  background: #059669;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 0 0 12px 12px;
-  text-decoration: none;
-  transition: top 0.2s ease-in-out;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.skip-link:focus {
-  top: 0;
-  outline: none;
-}
-
-.dark .skip-link {
-  background: #10b981;
-  color: #1e293b;
-}
-
 /* フォーカス表示の改善 */
 *:focus-visible {
   outline: 2px solid #10b981;

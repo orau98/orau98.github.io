@@ -681,6 +681,22 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     setIGenusFilter,
     setIEmergenceFilter,
   ]);
+  const emptyStateHint = useMemo(() => {
+    if (!hasSearchQuery && !hasFilterCriteria) {
+      return '登録データを確認中です。時間をおいて再読み込みしてください。';
+    }
+    if (hasSearchQuery && hasFilterCriteria) {
+      return '検索語とフィルターの組み合わせが絞り込みすぎている可能性があります。';
+    }
+    if (hasSearchQuery) {
+      return '検索語を短くするか、別の表記（和名/学名）で再検索してください。';
+    }
+    return 'フィルター条件を緩めると結果が表示される可能性があります。';
+  }, [hasFilterCriteria, hasSearchQuery]);
+  const activeFilterSummary = useMemo(
+    () => activeFilters.map((filter) => `${filter.type}:${filter.value}`).join(' / '),
+    [activeFilters],
+  );
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const filterCriteriaRef = useRef({
@@ -1283,7 +1299,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const renderFilters = () => {
     return (
       <div className="mt-4">
-        <div className="sticky z-40" style={{ top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)' }}>
+        <div className="md:sticky md:z-40" style={{ top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)' }}>
           <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-3 py-2">
             {/* Active Filters & Toggle */}
           <div className="flex flex-wrap items-center gap-3">
@@ -1535,7 +1551,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                 </div>
               </div>
               <p className="text-lg text-slate-600 dark:text-slate-300 font-semibold mb-2">該当する{title}が見つかりません</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">別のキーワードで検索してみてください</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">{emptyStateHint}</p>
+              {hasAnyCriteria && (
+                <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
+                  現在の条件: {activeFilterSummary}
+                </p>
+              )}
+              {!hasAnyCriteria && (
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">別のキーワードで検索してみてください</p>
+              )}
               <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
                 例：「オオミズアオ」「ヤナギ」「ヤガ科」など
               </p>

@@ -39,6 +39,18 @@ const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
   ].join("");
 };
 
+const getInstagramTimestampValue = (post) => {
+  const raw = post?.timestamp || post?.taken_at || post?.takenAt || "";
+  const parsed = Date.parse(raw);
+  if (Number.isFinite(parsed)) return parsed;
+  return 0;
+};
+
+const sortInstagramPostsByLatest = (posts = []) =>
+  posts
+    .slice()
+    .sort((a, b) => getInstagramTimestampValue(b) - getInstagramTimestampValue(a));
+
 const buildAliasMap = (plantDetails = {}) => {
   const map = new Map();
   const canonicalByNormalized = new Map();
@@ -246,6 +258,16 @@ const InsectsHostPlantExplorer = React.memo(
     }));
     const activeSearchTerm = searchByTab[activeTab] || "";
     const [isStickyHeaderVisible, setIsStickyHeaderVisible] = useState(false);
+    const [showAllHeroStats, setShowAllHeroStats] = useState(false);
+    const [showAboutDetails, setShowAboutDetails] = useState(false);
+    const [isDesktopLayout, setIsDesktopLayout] = useState(() => {
+      if (typeof window === "undefined") return false;
+      return window.matchMedia("(min-width: 1024px)").matches;
+    });
+    const [isInstagramExpanded, setIsInstagramExpanded] = useState(() => {
+      if (typeof window === "undefined") return false;
+      return window.matchMedia("(min-width: 1024px)").matches;
+    });
     const searchTimeoutRef = useRef(null);
     const plantInsectStats = useMemo(() => {
       const allInsects = [
@@ -310,6 +332,25 @@ const InsectsHostPlantExplorer = React.memo(
           clearTimeout(searchTimeoutRef.current);
         }
       };
+    }, []);
+
+    useEffect(() => {
+      if (typeof window === "undefined" || !window.matchMedia) return undefined;
+      const mediaQuery = window.matchMedia("(min-width: 1024px)");
+      const updateLayout = (event) => {
+        const desktop = Boolean(event?.matches);
+        setIsDesktopLayout(desktop);
+        if (desktop) {
+          setIsInstagramExpanded(true);
+        }
+      };
+      updateLayout(mediaQuery);
+      if (typeof mediaQuery.addEventListener === "function") {
+        mediaQuery.addEventListener("change", updateLayout);
+        return () => mediaQuery.removeEventListener("change", updateLayout);
+      }
+      mediaQuery.addListener(updateLayout);
+      return () => mediaQuery.removeListener(updateLayout);
     }, []);
 
     // Helper: detect profile URL (not a single post permalink)
@@ -621,6 +662,19 @@ const InsectsHostPlantExplorer = React.memo(
           leafbeetles: leafbeetles.length,
           hostPlants: mergedHostPlantCount,
         };
+    const heroStats = useMemo(
+      () => [
+        { label: "蝶・蛾", value: `${counts.moths + counts.butterflies}種` },
+        { label: "タマムシ", value: `${counts.beetles}種` },
+        { label: "カミキリムシ", value: `${counts.longhornbeetles}種` },
+        { label: "ハムシ", value: `${counts.leafbeetles}種` },
+        { label: "アブラムシ", value: `${aphidCount}種` },
+        { label: "食草", value: `${counts.hostPlants}種` },
+      ],
+      [aphidCount, counts],
+    );
+    const hasCollapsedHeroStats = heroStats.length > 3;
+    const visibleHeroStats = showAllHeroStats ? heroStats : heroStats.slice(0, 3);
     const desc = `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`;
     const { setOgTwitterImage } = useSeoMeta({
       title,
@@ -714,7 +768,7 @@ const InsectsHostPlantExplorer = React.memo(
           if (res.ok) {
             const data = await res.json();
             const posts = Array.isArray(data) ? data : data?.posts;
-            if (Array.isArray(posts) && posts.length > 0) {
+              if (Array.isArray(posts) && posts.length > 0) {
               const normalized = posts.filter(
                 (post) =>
                   typeof post?.permalink === "string" &&
@@ -723,7 +777,7 @@ const InsectsHostPlantExplorer = React.memo(
                   ),
               );
               if (normalized.length > 0) {
-                setInstagramPostCards(normalized.slice(0, 12));
+                setInstagramPostCards(sortInstagramPostsByLatest(normalized).slice(0, 12));
               }
             }
           }
@@ -771,21 +825,39 @@ const InsectsHostPlantExplorer = React.memo(
       loadInstagramResources();
     }, [instagramInView]);
 
-    const instagramPostCardsWithLocal = useMemo(() => {
+    const instagramTimelinePosts = useMemo(() => {
       if (!Array.isArray(instagramPostCards)) return [];
-      return instagramPostCards.filter((post) => {
-        const localUrl = post?.local_url || post?.localUrl;
-        return typeof localUrl === "string" && localUrl.trim() !== "";
+      return sortInstagramPostsByLatest(instagramPostCards).filter((post) => {
+        if (!isInstagramPostUrl(post?.permalink)) return false;
+        return Boolean(
+          post?.local_url ||
+            post?.localUrl ||
+            post?.media_url ||
+            post?.mediaUrl ||
+            post?.thumbnail_url ||
+            post?.thumbnailUrl,
+        );
       });
-    }, [instagramPostCards]);
+    }, [instagramPostCards, isInstagramPostUrl]);
+
+    const latestInstagramDateLabel = useMemo(() => {
+      const latestRaw = instagramTimelinePosts[0]?.timestamp;
+      const parsed = Date.parse(latestRaw || "");
+      if (!Number.isFinite(parsed)) return "";
+      return new Date(parsed).toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    }, [instagramTimelinePosts]);
 
     useEffect(() => {
       setInstagramGalleryFailed(false);
-    }, [instagramPostCardsWithLocal]);
+    }, [instagramTimelinePosts]);
 
     const instagramEmbedUrls = useMemo(() => {
-      const fromCards = Array.isArray(instagramPostCards)
-        ? instagramPostCards
+      const fromCards = Array.isArray(instagramTimelinePosts)
+        ? instagramTimelinePosts
             .map((post) => post?.permalink)
             .filter((url) => isInstagramPostUrl(url))
         : [];
@@ -794,7 +866,7 @@ const InsectsHostPlantExplorer = React.memo(
         : [];
       const base = fromCards.length > 0 ? fromCards : fromList;
       return Array.from(new Set(base)).slice(0, 4);
-    }, [instagramPostCards, instagramPosts, isInstagramPostUrl]);
+    }, [instagramTimelinePosts, instagramPosts, isInstagramPostUrl]);
 
     const suggestions = useMemo(() => {
       if (!activeSearchTerm || activeSearchTerm.trim() === "") return [];
@@ -1039,10 +1111,6 @@ const InsectsHostPlantExplorer = React.memo(
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-        {/* Skip Link - キーボードユーザー向け */}
-        <a href="#explorer-results" className="skip-link">
-          メインコンテンツへスキップ
-        </a>
         <StickyHeader 
           activeTab={activeTab} 
           setActiveTab={setActiveTabWithUrl} 
@@ -1143,37 +1211,29 @@ const InsectsHostPlantExplorer = React.memo(
                   </span>
                 </h1>
 
-                <div className="flex flex-wrap gap-3 mt-3 md:mt-6">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                    <span className="text-white/90 text-sm font-medium">
-                      蝶・蛾 {counts.moths + counts.butterflies}種
-                    </span>
+                <div className="mt-3 md:mt-6 space-y-2">
+                  <div className="flex flex-wrap gap-2.5">
+                    {visibleHeroStats.map((item) => (
+                      <div
+                        key={item.label}
+                        className="bg-white/20 backdrop-blur-sm rounded-full px-3.5 py-1.5 border border-white/30"
+                      >
+                        <span className="text-white/90 text-xs sm:text-sm font-medium">
+                          {item.label} {item.value}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                    <span className="text-white/90 text-sm font-medium">
-                      タマムシ {counts.beetles}種
-                    </span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                    <span className="text-white/90 text-sm font-medium">
-                      カミキリムシ {counts.longhornbeetles}種
-                    </span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                    <span className="text-white/90 text-sm font-medium">
-                      ハムシ {counts.leafbeetles}種
-                    </span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                    <span className="text-white/90 text-sm font-medium">
-                      アブラムシ {aphidCount}種
-                    </span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-                    <span className="text-white/90 text-sm font-medium">
-                      食草 {counts.hostPlants}種
-                    </span>
-                  </div>
+                  {hasCollapsedHeroStats && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllHeroStats((v) => !v)}
+                      className="inline-flex items-center gap-1 text-xs text-white/80 hover:text-white transition-colors"
+                    >
+                      <span>{showAllHeroStats ? "統計を簡易表示に戻す" : "統計をすべて表示"}</span>
+                      <span className={`transition-transform duration-200 ${showAllHeroStats ? "rotate-180" : ""}`}>⌄</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* ヒーローセクション内の検索バー */}
@@ -1456,58 +1516,74 @@ const InsectsHostPlantExplorer = React.memo(
                       <span className="bg-slate-200 dark:bg-slate-700 w-1 h-6 mr-3 rounded-full"></span>
                       サイトポリシー
                     </h3>
-                    <div className="space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                      <div>
-                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                          はじめに
-                        </p>
-                        <p>
-                          当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                          免責事項
-                        </p>
-                        <p>
-                          データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                          写真について
-                        </p>
-                        <p>
-                          掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、
-                          <a
-                            href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
-                          >
-                            こちらのGoogleフォーム
-                          </a>
-                          よりお気軽にご連絡ください。
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                          お問い合わせ
-                        </p>
-                        <p>
-                          誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、
-                          <a
-                            href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
-                          >
-                            こちらのGoogleフォーム
-                          </a>
-                          までお寄せください。
-                        </p>
-                      </div>
+                    <div className="rounded-xl border border-slate-200/70 dark:border-slate-700/70 bg-slate-50/70 dark:bg-slate-900/40 p-4">
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        図鑑・文献ベースで整理した「昆虫と植物の関係データ」を公開しています。学術利用時は必ず原典をご確認ください。
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setShowAboutDetails((v) => !v)}
+                        className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors"
+                        aria-expanded={showAboutDetails}
+                      >
+                        <span>{showAboutDetails ? "詳細を閉じる" : "詳細ポリシーを表示"}</span>
+                        <span className={`transition-transform duration-200 ${showAboutDetails ? "rotate-180" : ""}`}>⌄</span>
+                      </button>
                     </div>
+                    {showAboutDetails && (
+                      <div className="mt-4 space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <div>
+                          <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            はじめに
+                          </p>
+                          <p>
+                            当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。
+                          </p>
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            免責事項
+                          </p>
+                          <p>
+                            データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。
+                          </p>
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            写真について
+                          </p>
+                          <p>
+                            掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、
+                            <a
+                              href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                            >
+                              こちらのGoogleフォーム
+                            </a>
+                            よりお気軽にご連絡ください。
+                          </p>
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            お問い合わせ
+                          </p>
+                          <p>
+                            誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、
+                            <a
+                              href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
+                            >
+                              こちらのGoogleフォーム
+                            </a>
+                            までお寄せください。
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </section>
 
                   {/* 出典一覧 */}
@@ -1699,119 +1775,145 @@ const InsectsHostPlantExplorer = React.memo(
 
                 {/* 右側：Instagram (give it more room on desktop) */}
                 <div className="lg:col-span-2">
-                  <div className="sticky top-24 space-y-6">
+                  <div className="space-y-6 lg:sticky lg:top-24">
                     <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-700/50 dark:to-slate-700/30 rounded-xl p-5 border border-purple-100 dark:border-slate-600">
                       {/* Instagram最新投稿 */}
                       <div className="flex flex-col">
                         <div className="mb-4">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0 shadow-sm">
-                              <InstagramIcon
-                                className="w-4 h-4 text-white"
-                                alt="Instagramアイコン"
-                              />
+                          <div className="flex items-start justify-between gap-3 mb-2">
+                            <div className="flex items-center space-x-3">
+                              <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0 shadow-sm">
+                                <InstagramIcon
+                                  className="w-4 h-4 text-white"
+                                  alt="Instagramアイコン"
+                                />
+                              </div>
+                              <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
+                                Official Instagram
+                              </h3>
                             </div>
-                            <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
-                              Official Instagram
-                            </h3>
+                            {latestInstagramDateLabel && (
+                              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                                最新: {latestInstagramDateLabel}
+                              </span>
+                            )}
                           </div>
                           <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug">
                             野生生物の観察記録を投稿しています
                           </p>
-                        </div>
-
-                        {/* Instagram埋め込み */}
-                        <div className="overflow-hidden rounded-lg shadow-sm">
-                          <div className="instagram-wrapper w-full bg-white dark:bg-slate-800 max-h-[60vh] lg:max-h-[70vh] overflow-y-auto overscroll-contain scrollbar-thin">
-                            {(() => {
-                              // 1) timeline from JSON (custom gallery)
-                              if (
-                                instagramPostCardsWithLocal &&
-                                instagramPostCardsWithLocal.length > 0 &&
-                                !instagramGalleryFailed
-                              ) {
-                                return (
-                                  <InstagramGallery
-                                    posts={instagramPostCardsWithLocal}
-                                    className="p-3"
-                                    onAllFailed={() => setInstagramGalleryFailed(true)}
-                                  />
-                                );
-                              }
-                              // 2) Embed timeline (when local images are unavailable)
-                              if (instagramEmbedUrls && instagramEmbedUrls.length > 0) {
-                                return (
-                                  <InstagramTimeline
-                                    urls={instagramEmbedUrls}
-                                    className="p-3"
-                                  />
-                                );
-                              }
-                              // 3) third-party widget
-                              if (instagramWidgetSrcDoc) {
-                                return (
-                                  <iframe
-                                    title="Instagram widget"
-                                    className="bg-white dark:bg-slate-800 w-full min-h-[360px] h-[60vh] border-0"
-                                    sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-                                    referrerPolicy="strict-origin-when-cross-origin"
-                                    loading="lazy"
-                                    srcDoc={instagramWidgetSrcDoc}
-                                  />
-                                );
-                              }
-                              // 4) single URL fallback
-                              if (instagramUrl) {
-                                return (
-                                  <a
-                                    href={instagramUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block w-full group"
-                                  >
-                                    <div className="bg-white dark:bg-slate-800 p-4 border border-slate-200 dark:border-slate-600 group-hover:border-purple-300 transition-colors">
-                                      <div className="flex items-center space-x-3">
-                                        <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-full">
-                                          <InstagramIcon className="w-5 h-5 text-slate-400 group-hover:text-purple-500 transition-colors" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                          <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
-                                            {instagramUrl.replace(
-                                              /^https?:\/\//,
-                                              "",
-                                            )}
-                                          </p>
-                                        </div>
-                                        <span className="text-slate-400 group-hover:translate-x-1 transition-transform">
-                                          →
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </a>
-                                );
-                              }
-                              // 4) nothing configured
-                              return (
-                                <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
-                                  Instagramの投稿を表示できません
-                                </div>
-                              );
-                            })()}
-                          </div>
-                        </div>
-
-                        {/* アカウントリンク */}
-                        {isInstagramProfileUrl(instagramUrl) && (
-                          <div className="mt-4 text-center">
-                            <a
-                              href={instagramUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-purple-600 dark:hover:text-purple-400 transition-all shadow-sm"
+                          {!isDesktopLayout && (
+                            <button
+                              type="button"
+                              onClick={() => setIsInstagramExpanded((v) => !v)}
+                              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-purple-600 dark:hover:text-purple-300 transition-colors"
+                              aria-expanded={isInstagramExpanded}
                             >
-                              <InstagramIcon className="w-4 h-4" />
-                              <span>プロフィールへ移動</span>
-                            </a>
+                              <span>{isInstagramExpanded ? "Instagramを閉じる" : "Instagramを開く"}</span>
+                              <span className={`transition-transform duration-200 ${isInstagramExpanded ? "rotate-180" : ""}`}>⌄</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {(isDesktopLayout || isInstagramExpanded) ? (
+                          <>
+                            {/* Instagram埋め込み */}
+                            <div className="overflow-hidden rounded-lg shadow-sm">
+                              <div className="instagram-wrapper w-full bg-white dark:bg-slate-800 max-h-[60vh] lg:max-h-[70vh] overflow-y-auto overscroll-contain scrollbar-thin">
+                                {(() => {
+                                  // 1) timeline from JSON (custom gallery)
+                                  if (
+                                    instagramTimelinePosts &&
+                                    instagramTimelinePosts.length > 0 &&
+                                    !instagramGalleryFailed
+                                  ) {
+                                    return (
+                                      <InstagramGallery
+                                        posts={instagramTimelinePosts}
+                                        className="p-3"
+                                        onAllFailed={() => setInstagramGalleryFailed(true)}
+                                      />
+                                    );
+                                  }
+                                  // 2) Embed timeline (when image gallery is unavailable)
+                                  if (instagramEmbedUrls && instagramEmbedUrls.length > 0) {
+                                    return (
+                                      <InstagramTimeline
+                                        urls={instagramEmbedUrls}
+                                        className="p-3"
+                                      />
+                                    );
+                                  }
+                                  // 3) third-party widget
+                                  if (instagramWidgetSrcDoc) {
+                                    return (
+                                      <iframe
+                                        title="Instagram widget"
+                                        className="bg-white dark:bg-slate-800 w-full min-h-[360px] h-[60vh] border-0"
+                                        sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+                                        referrerPolicy="strict-origin-when-cross-origin"
+                                        loading="lazy"
+                                        srcDoc={instagramWidgetSrcDoc}
+                                      />
+                                    );
+                                  }
+                                  // 4) single URL fallback
+                                  if (instagramUrl) {
+                                    return (
+                                      <a
+                                        href={instagramUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block w-full group"
+                                      >
+                                        <div className="bg-white dark:bg-slate-800 p-4 border border-slate-200 dark:border-slate-600 group-hover:border-purple-300 transition-colors">
+                                          <div className="flex items-center space-x-3">
+                                            <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-full">
+                                              <InstagramIcon className="w-5 h-5 text-slate-400 group-hover:text-purple-500 transition-colors" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
+                                                {instagramUrl.replace(
+                                                  /^https?:\/\//,
+                                                  "",
+                                                )}
+                                              </p>
+                                            </div>
+                                            <span className="text-slate-400 group-hover:translate-x-1 transition-transform">
+                                              →
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </a>
+                                    );
+                                  }
+                                  // 5) nothing configured
+                                  return (
+                                    <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
+                                      Instagramの投稿を表示できません
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            </div>
+
+                            {/* アカウントリンク */}
+                            {isInstagramProfileUrl(instagramUrl) && (
+                              <div className="mt-4 text-center">
+                                <a
+                                  href={instagramUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-purple-600 dark:hover:text-purple-400 transition-all shadow-sm"
+                                >
+                                  <InstagramIcon className="w-4 h-4" />
+                                  <span>プロフィールへ移動</span>
+                                </a>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="rounded-lg border border-slate-200/80 dark:border-slate-600 bg-white/80 dark:bg-slate-800/70 p-3 text-xs text-slate-500 dark:text-slate-400">
+                            モバイルでは初期状態で非表示です。「Instagramを開く」から表示できます。
                           </div>
                         )}
                       </div>
