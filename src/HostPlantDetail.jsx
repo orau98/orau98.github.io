@@ -1693,7 +1693,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                       role="tooltip"
                       className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 w-56 -translate-x-1/2 rounded-lg border border-slate-200/70 bg-white/95 px-3 py-2 text-[11px] text-slate-600 shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 dark:border-slate-700/80 dark:bg-slate-900/95 dark:text-slate-200"
                     >
-                      ノード色で食草・訪花の区別を表示します（凡例で絞り込み可）。
+                      ノード色と線のスタイルで、食草・訪花の関係を表示します。
                     </span>
                   </span>
                 </div>

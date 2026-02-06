@@ -29,6 +29,52 @@ const isFlowerVisitRecord = (record) => {
   return isAdultOrUnknown && partCompact && partCompact.includes('花');
 };
 
+const getRelationType = (hasHost, hasFlowerVisit) => {
+  if (hasHost && hasFlowerVisit) return 'both';
+  if (hasFlowerVisit) return 'flower';
+  if (hasHost) return 'host';
+  return 'unknown';
+};
+
+const RELATION_STYLES = {
+  host: {
+    color: 'rgba(16,185,129,0.78)',
+    dimColor: 'rgba(16,185,129,0.22)',
+    activeColor: 'rgba(5,150,105,0.98)',
+    dash: [],
+    width: 1.35,
+    label: '食草（幼虫）の関係',
+    legendClass: 'border-emerald-500'
+  },
+  flower: {
+    color: 'rgba(245,158,11,0.78)',
+    dimColor: 'rgba(245,158,11,0.24)',
+    activeColor: 'rgba(217,119,6,0.98)',
+    dash: [6, 4],
+    width: 1.35,
+    label: '訪花の関係',
+    legendClass: 'border-amber-500'
+  },
+  both: {
+    color: 'rgba(139,92,246,0.82)',
+    dimColor: 'rgba(139,92,246,0.24)',
+    activeColor: 'rgba(124,58,237,0.98)',
+    dash: [2, 3],
+    width: 1.55,
+    label: '食草＋訪花の関係',
+    legendClass: 'border-violet-500'
+  },
+  unknown: {
+    color: 'rgba(148,163,184,0.65)',
+    dimColor: 'rgba(148,163,184,0.22)',
+    activeColor: 'rgba(56,189,248,0.95)',
+    dash: [],
+    width: 1.2,
+    label: '関係',
+    legendClass: 'border-slate-400'
+  }
+};
+
 const FoodWebGraph = React.memo(function FoodWebGraph({
   currentInsect,
   currentPlantName,
@@ -405,6 +451,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [isCompactPanel, setIsCompactPanel] = useState(false);
+  const [compactLegendOpen, setCompactLegendOpen] = useState(false);
   const showRelatedInsects = true;
   const linkDistance = 48;
 
@@ -437,6 +484,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!selectedNodeId) return;
     setPanelCollapsed(isCompactPanel);
   }, [selectedNodeId, isCompactPanel]);
+
+  useEffect(() => {
+    if (!isCompactPanel) return;
+    if (!selectedNodeId) return;
+    setCompactLegendOpen(false);
+  }, [isCompactPanel, selectedNodeId]);
 
   // load image indexes once
   useEffect(() => {
@@ -543,7 +596,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               ? 'insect-host'
               : 'insect';
         addNode(insectId, name, insectType, insectDetail);
-        links.push({ source: centerId, target: insectId, relation: insectType });
+        links.push({ source: centerId, target: insectId, relation: getRelationType(hasHost, hasFlower) });
       });
     } else if (currentInsect) {
       const centerId = `insect:${currentInsect.name}`;
@@ -563,7 +616,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             : 'plant-host';
         const plantId = `plant:${plantName}`;
         addNode(plantId, plantName, plantType);
-        links.push({ source: centerId, target: plantId });
+        links.push({ source: centerId, target: plantId, relation: getRelationType(isHost, isFlower) });
 
         if (showRelatedInsects) {
           const related = getPlantInsects(plantName)
@@ -578,7 +631,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             const insectDetail = allInsects?.find(i => i.name === name);
             const insectId = `insect:${name}`;
             addNode(insectId, name, 'insect', insectDetail);
-            links.push({ source: plantId, target: insectId });
+            const relatedHasHost = insectDetail ? hasLarvalHostForPlant(insectDetail, plantName) : false;
+            const relatedHasFlowerVisit = insectDetail ? hasFlowerVisitForPlant(insectDetail, plantName) : false;
+            links.push({
+              source: plantId,
+              target: insectId,
+              relation: getRelationType(relatedHasHost, relatedHasFlowerVisit)
+            });
           });
         }
       });
@@ -761,6 +820,22 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const showInsectHostLegend = legendTypeSet.has('insect-host');
   const showInsectFlowerLegend = legendTypeSet.has('insect-flower');
   const showInsectBothLegend = legendTypeSet.has('insect-both');
+  const legendRelationSet = useMemo(() => new Set(graphData.links.map((l) => l.relation || 'unknown')), [graphData.links]);
+  const showHostRelationLegend = legendRelationSet.has('host');
+  const showFlowerRelationLegend = legendRelationSet.has('flower');
+  const showBothRelationLegend = legendRelationSet.has('both');
+
+  const getLinkStyle = useCallback((relation) => RELATION_STYLES[relation] || RELATION_STYLES.unknown, []);
+
+  const toggleCompactLabelMode = useCallback(() => {
+    setLabelMode((prev) => (prev === 'none' ? 'auto' : 'none'));
+  }, []);
+
+  const compactLabelModeText = labelMode === 'none'
+    ? 'なし'
+    : labelMode === 'all'
+      ? '全て'
+      : '自動';
 
   const focusNodeById = useCallback((nodeId) => {
     if (!nodeId) return;
@@ -1138,6 +1213,96 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const allowPanZoom = useCallback(() => !isPinDraggingRef.current, []);
 
+  const legendBody = (
+    <>
+      <div className="space-y-1">
+        {currentInsect && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-rose-400"></span>
+            <span>現在の昆虫</span>
+          </div>
+        )}
+        {currentPlantName && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
+            <span>現在の植物</span>
+          </div>
+        )}
+        {showHostPlantLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+            <span>食草（幼虫）</span>
+          </div>
+        )}
+        {showFlowerPlantLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-amber-400"></span>
+            <span>訪花植物</span>
+          </div>
+        )}
+        {showBothPlantLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-lime-400"></span>
+            <span>食草＋訪花</span>
+          </div>
+        )}
+        {showInsectHostLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-sky-400"></span>
+            <span>食草昆虫</span>
+          </div>
+        )}
+        {showInsectFlowerLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-rose-400"></span>
+            <span>訪花昆虫</span>
+          </div>
+        )}
+        {showInsectBothLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-violet-400"></span>
+            <span>食草＋訪花昆虫</span>
+          </div>
+        )}
+        {showInsectLegend && (
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-sky-400"></span>
+            <span>関連する昆虫</span>
+          </div>
+        )}
+      </div>
+      {(showHostRelationLegend || showFlowerRelationLegend || showBothRelationLegend) && (
+        <div className="pt-2 mt-2 border-t border-slate-200/90 dark:border-slate-600/80 space-y-1">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">線の意味</div>
+          {showHostRelationLegend && (
+            <div className="flex items-center gap-2">
+              <span className={`inline-block w-7 border-t-2 ${RELATION_STYLES.host.legendClass}`}></span>
+              <span>{RELATION_STYLES.host.label}</span>
+            </div>
+          )}
+          {showFlowerRelationLegend && (
+            <div className="flex items-center gap-2">
+              <span
+                className={`inline-block w-7 border-t-2 ${RELATION_STYLES.flower.legendClass}`}
+                style={{ borderTopStyle: 'dashed' }}
+              ></span>
+              <span>{RELATION_STYLES.flower.label}</span>
+            </div>
+          )}
+          {showBothRelationLegend && (
+            <div className="flex items-center gap-2">
+              <span
+                className={`inline-block w-7 border-t-2 ${RELATION_STYLES.both.legendClass}`}
+                style={{ borderTopStyle: 'dotted', borderTopWidth: '2px' }}
+              ></span>
+              <span>{RELATION_STYLES.both.label}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+
   return (
     <div
       ref={containerRef}
@@ -1161,16 +1326,22 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         enableZoomInteraction={allowPanZoom}
         linkDistance={linkDistance}
         linkColor={link => {
+          const relationStyle = getLinkStyle(link?.relation);
           const highlighted = highlightLinks.has(link);
           const sId = typeof link.source === 'object' ? link.source.id : link.source;
           const tId = typeof link.target === 'object' ? link.target.id : link.target;
-          if (!sId || !tId) return 'rgba(148,163,184,0.65)';
+          if (!sId || !tId) return relationStyle.color;
           const dim = activeNodeId && !highlighted;
-          if (dim) return 'rgba(148,163,184,0.25)';
-          return highlighted ? '#38bdf8' : 'rgba(148,163,184,0.65)';
+          if (dim) return relationStyle.dimColor;
+          return highlighted ? relationStyle.activeColor : relationStyle.color;
         }}
-        linkWidth={link => (highlightLinks.has(link) ? 2.2 : 1.1)}
+        linkLineDash={link => getLinkStyle(link?.relation).dash}
+        linkWidth={link => {
+          const relationStyle = getLinkStyle(link?.relation);
+          return highlightLinks.has(link) ? relationStyle.width + 0.95 : relationStyle.width;
+        }}
         linkDirectionalParticles={link => (highlightLinks.has(link) ? 3 : 0)}
+        linkDirectionalParticleColor={link => getLinkStyle(link?.relation).activeColor}
         linkDirectionalParticleWidth={1.6}
         linkCurvature={0.18}
         backgroundColor={isDark ? '#0b1220' : '#f8fafc'}
@@ -1186,129 +1357,146 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
       {/* Toolbar */}
       <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
-        <div className="pointer-events-auto flex flex-wrap items-center gap-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-3 py-2 text-slate-700 dark:text-slate-200">
-          <button
-            type="button"
-            onClick={resetView}
-            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-            title="リセット（ズーム/中心）"
-          >
-            リセット
-          </button>
-          <button
-            type="button"
-            onClick={zoomOut}
-            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-            title="縮小"
-          >
-            －
-          </button>
-          <button
-            type="button"
-            onClick={zoomIn}
-            className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-            title="拡大"
-          >
-            ＋
-          </button>
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">ラベル</span>
-            <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
-              <button
-                type="button"
-                onClick={() => setLabelMode('auto')}
-                aria-pressed={labelMode === 'auto'}
-                className={`px-2.5 py-1.5 text-[12px] font-semibold ${labelMode === 'auto' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
-              >
-                自動
-              </button>
-              <button
-                type="button"
-                onClick={() => setLabelMode('none')}
-                aria-pressed={labelMode === 'none'}
-                className={`px-2.5 py-1.5 text-[12px] font-semibold border-l border-slate-200 dark:border-slate-600 ${labelMode === 'none' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
-              >
-                なし
-              </button>
-            </div>
-          </div>
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">関連数</span>
+        {isCompactPanel ? (
+          <div className="pointer-events-auto flex flex-nowrap items-center gap-1 overflow-x-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2 py-1.5 text-slate-700 dark:text-slate-200">
+            <button
+              type="button"
+              onClick={resetView}
+              className="shrink-0 px-2 py-1 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="リセット（ズーム/中心）"
+            >
+              リセット
+            </button>
+            <button
+              type="button"
+              onClick={zoomOut}
+              className="shrink-0 px-2 py-1 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="縮小"
+            >
+              －
+            </button>
+            <button
+              type="button"
+              onClick={zoomIn}
+              className="shrink-0 px-2 py-1 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="拡大"
+            >
+              ＋
+            </button>
+            <button
+              type="button"
+              onClick={toggleCompactLabelMode}
+              className="shrink-0 px-2 py-1 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="ラベル表示"
+            >
+              ラベル:{compactLabelModeText}
+            </button>
+            <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+              関連数
+            </label>
             <select
               value={relatedLimit}
               onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
-              className="text-[12px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 px-2 py-1"
+              className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-1.5 py-1"
+              aria-label="関連数"
             >
               {RELATED_LIMIT_OPTIONS.map((n) => (
                 <option key={n} value={n}>{n}</option>
               ))}
             </select>
+            <button
+              type="button"
+              onClick={() => setCompactLegendOpen((prev) => !prev)}
+              className="shrink-0 px-2 py-1 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              aria-expanded={compactLegendOpen}
+              aria-controls="foodweb-legend-mobile"
+            >
+              凡例
+            </button>
           </div>
-        </div>
+        ) : (
+          <div className="pointer-events-auto flex flex-wrap items-center gap-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-3 py-2 text-slate-700 dark:text-slate-200">
+            <button
+              type="button"
+              onClick={resetView}
+              className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="リセット（ズーム/中心）"
+            >
+              リセット
+            </button>
+            <button
+              type="button"
+              onClick={zoomOut}
+              className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="縮小"
+            >
+              －
+            </button>
+            <button
+              type="button"
+              onClick={zoomIn}
+              className="px-2.5 py-1.5 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+              title="拡大"
+            >
+              ＋
+            </button>
+            <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">ラベル</span>
+              <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
+                <button
+                  type="button"
+                  onClick={() => setLabelMode('auto')}
+                  aria-pressed={labelMode === 'auto'}
+                  className={`px-2.5 py-1.5 text-[12px] font-semibold ${labelMode === 'auto' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+                >
+                  自動
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLabelMode('none')}
+                  aria-pressed={labelMode === 'none'}
+                  className={`px-2.5 py-1.5 text-[12px] font-semibold border-l border-slate-200 dark:border-slate-600 ${labelMode === 'none' ? 'bg-slate-100 dark:bg-slate-700' : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'}`}
+                >
+                  なし
+                </button>
+              </div>
+            </div>
+            <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-0.5" />
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">関連数</span>
+              <select
+                value={relatedLimit}
+                onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                className="text-[12px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/40 px-2 py-1"
+              >
+                {RELATED_LIMIT_OPTIONS.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Legend */}
-      <div data-fg-ui className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
-        <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-        <div className="space-y-1">
-          {currentInsect && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-rose-400"></span>
-              <span>現在の昆虫</span>
-            </div>
-          )}
-          {currentPlantName && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
-              <span>現在の植物</span>
-            </div>
-          )}
-          {showHostPlantLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-              <span>食草（幼虫）</span>
-            </div>
-          )}
-          {showFlowerPlantLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-amber-400"></span>
-              <span>訪花植物</span>
-            </div>
-          )}
-          {showBothPlantLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-lime-400"></span>
-              <span>食草＋訪花</span>
-            </div>
-          )}
-          {showInsectHostLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-sky-400"></span>
-              <span>食草昆虫</span>
-            </div>
-          )}
-          {showInsectFlowerLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-rose-400"></span>
-              <span>訪花昆虫</span>
-            </div>
-          )}
-          {showInsectBothLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-violet-400"></span>
-              <span>食草＋訪花昆虫</span>
-            </div>
-          )}
-          {showInsectLegend && (
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-sky-400"></span>
-              <span>関連する昆虫</span>
-            </div>
-          )}
+      {isCompactPanel ? (
+        compactLegendOpen && (
+          <div
+            id="foodweb-legend-mobile"
+            data-fg-ui
+            className="absolute top-16 right-3 z-20 bg-white/94 dark:bg-slate-800/92 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2 max-w-[250px]"
+          >
+            <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+            {legendBody}
+          </div>
+        )
+      ) : (
+        <div data-fg-ui className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+          {legendBody}
         </div>
-      </div>
+      )}
 
       {/* Selection panel */}
       {selectedNode && (
