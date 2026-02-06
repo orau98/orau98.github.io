@@ -14,6 +14,7 @@ jobs:
     env:
       IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
       IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_USERNAME: ${{ secrets.IG_USERNAME }}
       POST_LIMIT: '10'
     steps:
       - name: Checkout
@@ -26,18 +27,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Check Instagram secrets
-        id: secret-check
-        run: |
-          if [ -z "${IG_ACCESS_TOKEN}" ] || [ -z "${IG_USER_ID}" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-            echo "Instagram secrets not set. Skipping."
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Update instagram_posts.txt (uses provided script or archive fallback)
-        if: steps.secret-check.outputs.skip != 'true'
         run: |
           if [ -f scripts/update-instagram-posts.js ]; then
             node scripts/update-instagram-posts.js
@@ -48,13 +38,12 @@ jobs:
           fi
 
       - name: Commit changes
-        if: steps.secret-check.outputs.skip != 'true'
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add public/instagram_posts.txt public/instagram_latest.txt public/instagram_posts.json
-            git commit -m "chore(instagram): update instagram posts via Graph API"
+            git add public/instagram_posts.txt public/instagram_latest.txt public/instagram_posts.json public/instagram
+            git commit -m "chore(instagram): update instagram posts"
             git push
           else
             echo "No instagram changes to commit."

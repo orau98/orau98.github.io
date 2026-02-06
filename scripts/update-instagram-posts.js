@@ -14,14 +14,215 @@ const OUT_MEDIA_DIR = path.join(PUBLIC_DIR, 'instagram');
 
 const ACCESS_TOKEN = process.env.IG_ACCESS_TOKEN;
 const USER_ID = process.env.IG_USER_ID;
+const IG_USERNAME = process.env.IG_USERNAME;
 const POST_LIMIT = Math.max(1, parseInt(process.env.POST_LIMIT || '10', 10) || 10);
+const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+const USERNAME_PATTERN = /^[A-Za-z0-9._]+$/;
 
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
+const normalizeUsername = (raw) => {
+  const cleaned = String(raw || '').trim().replace(/^@/, '');
+  if (!cleaned) return '';
+  const normalized = cleaned.split(/[/?#]/)[0];
+  if (!USERNAME_PATTERN.test(normalized)) return '';
+  return normalized;
+};
+
 const isPostPermalink = (url) =>
   /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(url || '');
+
+const parseUsernameFromInstagramUrl = (url) => {
+  if (!/^https?:\/\/(www\.)?instagram\.com\//.test(url || '')) return '';
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    if (parts.length === 0) return '';
+    const first = parts[0];
+    if (first === 'p' || first === 'reel' || first === 'tv') return '';
+    if (parts.length >= 3 && (parts[1] === 'p' || parts[1] === 'reel' || parts[1] === 'tv')) {
+      return normalizeUsername(first);
+    }
+    return normalizeUsername(first);
+  } catch {
+    return '';
+  }
+};
+
+const loadExistingUrls = () => {
+  const out = [];
+  if (fs.existsSync(OUT_LATEST)) {
+    const latest = fs.readFileSync(OUT_LATEST, 'utf-8').trim();
+    if (latest) out.push(latest);
+  }
+  if (fs.existsSync(OUT_POSTS)) {
+    const lines = fs.readFileSync(OUT_POSTS, 'utf-8')
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    out.push(...lines);
+  }
+  if (fs.existsSync(OUT_JSON)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(OUT_JSON, 'utf-8'));
+      const posts = Array.isArray(parsed) ? parsed : parsed?.posts;
+      if (Array.isArray(posts)) {
+        posts.forEach((post) => {
+          const permalink = typeof post?.permalink === 'string' ? post.permalink.trim() : '';
+          if (permalink) out.push(permalink);
+        });
+      }
+    } catch {
+      // ignore malformed JSON
+    }
+  }
+  return Array.from(new Set(out)).filter((url) => /^https?:\/\/(www\.)?instagram\.com\//.test(url));
+};
+
+const extractUsernameFromPostHtml = (html = '') => {
+  if (!html) return '';
+  const patterns = [
+    /property="og:url"\s+content="https:\/\/www\.instagram\.com\/([^/"?#]+)\/(?:p|reel|tv)\//i,
+    /property="og:description"\s+content="[^"]*\((?:@|&#064;)([^)"\s]+)\)/i,
+    /name="description"\s+content="[^"]*\((?:@|&#064;)([^)"\s]+)\)/i,
+    /name="description"\s+content="[^"]*-\s*([A-Za-z0-9._]+)\s+on\s+/i,
+    /A post shared by [^(]+\(\s*(?:@|&#064;)([A-Za-z0-9._]+)\s*\)/i,
+  ];
+  for (const pattern of patterns) {
+    const match = html.match(pattern);
+    if (match && match[1]) {
+      const normalized = normalizeUsername(match[1]);
+      if (normalized) return normalized;
+    }
+  }
+  return '';
+};
+
+const resolveUsernameFromOembed = async (postUrl) => {
+  if (!isPostPermalink(postUrl)) return '';
+  try {
+    const endpoint = `https://www.instagram.com/api/v1/oembed/?url=${encodeURIComponent(postUrl)}`;
+    const res = await fetch(endpoint, {
+      headers: {
+        'User-Agent': USER_AGENT,
+        'Accept': 'application/json',
+        'Referer': postUrl,
+      },
+    });
+    if (!res.ok) return '';
+    const data = await res.json().catch(() => null);
+    const fromAuthorName = normalizeUsername(data?.author_name);
+    if (fromAuthorName) return fromAuthorName;
+    const fromAuthorUrl = parseUsernameFromInstagramUrl(data?.author_url || '');
+    if (fromAuthorUrl) return fromAuthorUrl;
+    const html = typeof data?.html === 'string' ? data.html : '';
+    const fromHtml = extractUsernameFromPostHtml(html);
+    if (fromHtml) return fromHtml;
+    return '';
+  } catch {
+    return '';
+  }
+};
+
+const resolveInstagramUsername = async () => {
+  const envUsername = normalizeUsername(IG_USERNAME);
+  if (envUsername) return envUsername;
+  const seedUrls = loadExistingUrls();
+  for (const url of seedUrls) {
+    const usernameFromUrl = parseUsernameFromInstagramUrl(url);
+    if (usernameFromUrl) return usernameFromUrl;
+  }
+  for (const url of seedUrls) {
+    if (!isPostPermalink(url)) continue;
+    const oembedUsername = await resolveUsernameFromOembed(url);
+    if (oembedUsername) return oembedUsername;
+  }
+  for (const url of seedUrls) {
+    if (!isPostPermalink(url)) continue;
+    try {
+      const res = await fetch(url, {
+        redirect: 'follow',
+        headers: { 'User-Agent': USER_AGENT },
+      });
+      if (!res.ok) continue;
+      const html = await res.text();
+      const username = extractUsernameFromPostHtml(html);
+      if (username) return username;
+    } catch {
+      // ignore and try next seed
+    }
+  }
+  return '';
+};
+
+const getCaptionText = (node) => {
+  const edgeCaption = node?.edge_media_to_caption?.edges;
+  if (Array.isArray(edgeCaption) && edgeCaption[0]?.node?.text) {
+    return edgeCaption[0].node.text;
+  }
+  return null;
+};
+
+const mapWebProfileMediaType = (typename = '') => {
+  if (typename === 'GraphVideo') return 'VIDEO';
+  if (typename === 'GraphSidecar') return 'CAROUSEL_ALBUM';
+  return 'IMAGE';
+};
+
+const fetchPostsFromPublicProfile = async (username, limit) => {
+  const normalizedUsername = normalizeUsername(username);
+  if (!normalizedUsername) throw new Error('[instagram] Public profile fallback failed: username is empty');
+  const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${encodeURIComponent(normalizedUsername)}`;
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': USER_AGENT,
+      'x-ig-app-id': '936619743392459',
+      'Accept': 'application/json',
+      'Referer': `https://www.instagram.com/${normalizedUsername}/`,
+      'Accept-Language': 'en-US,en;q=0.9',
+      'x-asbd-id': '129477',
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`[instagram] Public profile fallback failed: ${res.status} ${res.statusText} ${text}`.trim());
+  }
+  const json = await res.json();
+  const edges = json?.data?.user?.edge_owner_to_timeline_media?.edges;
+  if (!Array.isArray(edges) || edges.length === 0) {
+    throw new Error('[instagram] Public profile fallback failed: timeline media is empty');
+  }
+  const mapped = edges
+    .map((edge) => edge?.node)
+    .filter(Boolean)
+    .slice(0, limit)
+    .map((node) => {
+      const shortcode = node?.shortcode ? String(node.shortcode) : '';
+      const mediaUrl = node?.display_url || node?.thumbnail_src || '';
+      const timestamp = Number.isFinite(node?.taken_at_timestamp)
+        ? new Date(node.taken_at_timestamp * 1000).toISOString()
+        : null;
+      return {
+        id: shortcode || String(node?.id || ''),
+        media_type: mapWebProfileMediaType(node?.__typename),
+        permalink: shortcode ? `https://www.instagram.com/p/${shortcode}/` : '',
+        media_url: mediaUrl || null,
+        thumbnail_url: (node?.thumbnail_src || mediaUrl) || null,
+        caption: getCaptionText(node),
+        timestamp,
+      };
+    })
+    .filter((item) => isPostPermalink(item.permalink));
+  return mapped.sort((a, b) => {
+    const aTime = Date.parse(a?.timestamp || '');
+    const bTime = Date.parse(b?.timestamp || '');
+    const aScore = Number.isFinite(aTime) ? aTime : -Infinity;
+    const bScore = Number.isFinite(bTime) ? bTime : -Infinity;
+    return bScore - aScore;
+  });
+};
 
 const loadExistingMedia = () => {
   const map = new Map();
@@ -83,39 +284,55 @@ const main = async () => {
   ensureDir(PUBLIC_DIR);
   ensureDir(OUT_MEDIA_DIR);
 
-  if (!ACCESS_TOKEN || !USER_ID) {
-    console.warn('[instagram] Missing IG_ACCESS_TOKEN or IG_USER_ID. Skipping update.');
-    process.exit(0);
-  }
-
-  const limit = String(Math.max(POST_LIMIT, 20));
-  const fields = 'id,media_type,permalink,media_url,thumbnail_url,caption,timestamp';
-  const endpoints = [
-    // Instagram Graph API (Business/Creator via Facebook Graph)
-    `https://graph.facebook.com/v19.0/${USER_ID}/media?fields=${fields}&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
-    // Instagram Basic Display API
-    `https://graph.instagram.com/${USER_ID}/media?fields=${fields}&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
-    // Basic Display "me" fallback (some tokens only allow /me)
-    `https://graph.instagram.com/me/media?fields=${fields}&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
-  ];
-
-  let json = null;
+  const minFetchCount = Math.max(POST_LIMIT, 20);
+  let items = [];
   const errors = [];
-  for (const url of endpoints) {
-    const res = await fetch(url);
-    if (!res.ok) {
-      const text = await res.text().catch(() => '');
-      errors.push(`[instagram] ${res.status} ${res.statusText} ${text}`.trim());
-      continue;
+
+  if (ACCESS_TOKEN && USER_ID) {
+    const limit = String(minFetchCount);
+    const fields = 'id,media_type,permalink,media_url,thumbnail_url,caption,timestamp';
+    const endpoints = [
+      // Instagram Graph API (Business/Creator via Facebook Graph)
+      `https://graph.facebook.com/v19.0/${USER_ID}/media?fields=${fields}&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
+      // Instagram Basic Display API
+      `https://graph.instagram.com/${USER_ID}/media?fields=${fields}&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
+      // Basic Display "me" fallback (some tokens only allow /me)
+      `https://graph.instagram.com/me/media?fields=${fields}&access_token=${encodeURIComponent(ACCESS_TOKEN)}&limit=${limit}`,
+    ];
+
+    for (const url of endpoints) {
+      const res = await fetch(url);
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        errors.push(`[instagram] ${res.status} ${res.statusText} ${text}`.trim());
+        continue;
+      }
+      const json = await res.json();
+      if (Array.isArray(json?.data)) {
+        items = json.data;
+        break;
+      }
     }
-    json = await res.json();
-    if (Array.isArray(json?.data)) break;
-  }
-  if (!json || !Array.isArray(json?.data)) {
-    throw new Error(`[instagram] Fetch failed. ${errors.join(' | ')}`.trim());
+  } else {
+    errors.push('[instagram] Missing IG_ACCESS_TOKEN or IG_USER_ID');
   }
 
-  const items = json.data;
+  if (items.length === 0) {
+    const username = await resolveInstagramUsername();
+    if (!username) {
+      throw new Error(`[instagram] Fetch failed. ${errors.join(' | ')} | Could not resolve Instagram username for public fallback.`.trim());
+    }
+    console.warn(`[instagram] Falling back to public profile scraping for @${username}`);
+    items = await fetchPostsFromPublicProfile(username, minFetchCount);
+  }
+
+  items = [...items].sort((a, b) => {
+    const aTime = Date.parse(a?.timestamp || '');
+    const bTime = Date.parse(b?.timestamp || '');
+    const aScore = Number.isFinite(aTime) ? aTime : -Infinity;
+    const bScore = Number.isFinite(bTime) ? bTime : -Infinity;
+    return bScore - aScore;
+  });
 
   const urls = items
     .map((item) => (typeof item?.permalink === 'string' ? item.permalink.trim() : ''))
@@ -126,6 +343,7 @@ const main = async () => {
   const posts = [];
   const seenPermalinks = new Set();
   for (const item of items) {
+    if (posts.length >= POST_LIMIT) break;
     const permalink = typeof item?.permalink === 'string' ? item.permalink.trim() : '';
     if (!isPostPermalink(permalink) || seenPermalinks.has(permalink)) continue;
     seenPermalinks.add(permalink);

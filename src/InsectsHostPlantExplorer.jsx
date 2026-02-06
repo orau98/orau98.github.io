@@ -685,7 +685,7 @@ const InsectsHostPlantExplorer = React.memo(
 
       const loadInstagramResources = async () => {
         const base = import.meta.env.BASE_URL || "/";
-        const cacheMode = import.meta.env.DEV ? "no-store" : "default";
+        const cacheMode = "no-store";
 
         // Latest profile/post
         try {
