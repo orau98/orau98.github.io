@@ -452,8 +452,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       push(build(name, '.jpeg'));
     };
 
-    addNameCandidates(safeFilename);
-    addNameCandidates(japaneseName);
+    const baseNameCandidates = [safeFilename, japaneseName]
+      .filter(Boolean)
+      .sort((a, b) => {
+        const aKnown = Boolean(exts[a] || imageBaseSet.has(a));
+        const bKnown = Boolean(exts[b] || imageBaseSet.has(b));
+        if (aKnown === bKnown) return 0;
+        return bKnown ? 1 : -1;
+      });
+    baseNameCandidates.forEach(addNameCandidates);
 
     try {
       if (imageBases && imageBases.length > 0 && moth.scientificName) {
@@ -481,6 +488,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
     return Array.from(uniq);
   }, [imageExtensions, imageBases, safeFilename, japaneseName, moth, isImageIndexReady]);
+
+  const fallbackImageCandidates = React.useMemo(
+    () => possibleImagePaths.slice(1),
+    [possibleImagePaths],
+  );
 
   const mainImageProps = React.useMemo(() => {
     const firstUrl = possibleImagePaths[0];
@@ -984,7 +996,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       width="1200"
                       height="900"
                       className="w-full h-full object-contain transition-all duration-700 group-hover:scale-105"
-                      candidates={possibleImagePaths.slice(1)}
+                      candidates={fallbackImageCandidates}
                       fallbackSrc={null}
                       loading="eager"
                       fetchpriority="high"

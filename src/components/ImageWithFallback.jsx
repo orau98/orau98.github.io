@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
+const IMAGE_LOAD_TIMEOUT_MS = 12000;
+
+const normalizeCandidates = (list) => {
+  if (!Array.isArray(list) || list.length === 0) return [];
+  const uniq = new Set();
+  const out = [];
+  for (const item of list) {
+    if (!item || uniq.has(item)) continue;
+    uniq.add(item);
+    out.push(item);
+  }
+  return out;
+};
+
 const ImageWithFallback = ({ 
   src, 
   srcSet,
@@ -18,35 +32,40 @@ const ImageWithFallback = ({
   onError,
   ...props 
 }) => {
-  const [currentSrc, setCurrentSrc] = useState(src);
-  const [currentCandidates, setCurrentCandidates] = useState(candidates);
+  const normalizedCandidates = normalizeCandidates(candidates);
+  const candidatesSignature = normalizedCandidates.join('\u0001');
+  const initialSrc = src || normalizedCandidates[0] || fallbackSrc || '';
+
+  const [currentSrc, setCurrentSrc] = useState(initialSrc || src);
+  const [currentCandidates, setCurrentCandidates] = useState(
+    normalizedCandidates.filter((candidate) => candidate !== initialSrc),
+  );
   const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
   const [currentSizes, setCurrentSizes] = useState(sizes);
   const [srcSetDisabled, setSrcSetDisabled] = useState(false);
-  const [status, setStatus] = useState('loading'); // loading, loaded, error
+  const [status, setStatus] = useState(initialSrc ? 'loading' : 'error'); // loading, loaded, error
 
   // Reset loading state only when the primary src actually changes.
   // Changing just the candidates array (which is often recreated on every parent render)
   // should NOT force the image back to the loading skeleton, otherwise a loaded image
   // disappears after any parent state update.
   useEffect(() => {
-    setCurrentSrc(src);
+    const nextCandidates = normalizeCandidates(candidates);
+    const nextSrc = src || nextCandidates[0] || fallbackSrc || '';
+
+    setCurrentSrc(nextSrc);
+    setCurrentCandidates(nextCandidates.filter((candidate) => candidate !== nextSrc));
     setCurrentSrcSet(srcSet);
     setCurrentSizes(sizes);
     setSrcSetDisabled(false);
-    setStatus('loading');
-  }, [src]);
+    setStatus(nextSrc ? 'loading' : 'error');
+  }, [src, candidatesSignature, fallbackSrc, srcSet, sizes]);
 
   // Keep srcset/sizes in sync without resetting the load status.
   useEffect(() => {
     setCurrentSrcSet(srcSet);
     setCurrentSizes(sizes);
   }, [srcSet, sizes]);
-
-  // Keep the retry candidate list in sync without touching the load status.
-  useEffect(() => {
-    setCurrentCandidates(candidates);
-  }, [candidates]);
 
   const handleLoad = (e) => {
     setStatus('loaded');
@@ -70,10 +89,11 @@ const ImageWithFallback = ({
       return;
     }
 
-    if (currentCandidates && currentCandidates.length > 0) {
-      const nextSrc = currentCandidates[0];
+    const nextCandidates = Array.isArray(currentCandidates) ? currentCandidates : [];
+    if (nextCandidates.length > 0) {
+      const nextSrc = nextCandidates[0];
       setCurrentSrc(nextSrc);
-      setCurrentCandidates(prev => prev.slice(1));
+      setCurrentCandidates(nextCandidates.slice(1));
       setCurrentSrcSet(undefined);
       setCurrentSizes(undefined);
       setSrcSetDisabled(true);
@@ -91,6 +111,14 @@ const ImageWithFallback = ({
       if (onError) onError(e);
     }
   };
+
+  useEffect(() => {
+    if (status !== 'loading' || !currentSrc) return undefined;
+    const timer = setTimeout(() => {
+      handleError();
+    }, IMAGE_LOAD_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [status, currentSrc, currentSrcSet, srcSetDisabled, currentCandidates, fallbackSrc]);
 
   const fitClass =
     fit === 'cover'
