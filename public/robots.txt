@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Primary sitemap index
+Sitemap: https://orau98.github.io/sitemap.xml
