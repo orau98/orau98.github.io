@@ -430,7 +430,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
     const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
 
-  const addNameCandidates = (name) => {
+    const addNameCandidates = (name) => {
       if (!name) return;
       const knownExt = exts[name];
       const existsInIndex = imageBaseSet.has(name);
@@ -438,11 +438,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         push(build(name, knownExt));
         return;
       }
-      // インデックス未準備なら後でリトライ（404を量産しない）
-      if (!ready) return;
+      // インデックス未準備、または新規追加画像でインデックス未反映でも .jpg/.jpeg を試す
+      if (!ready) {
+        push(build(name, '.jpg'));
+        push(build(name, '.jpeg'));
+        return;
+      }
       if (existsInIndex) {
         tryExts.forEach(ext => push(build(name, ext)));
+        return;
       }
+      push(build(name, '.jpg'));
+      push(build(name, '.jpeg'));
     };
 
     addNameCandidates(safeFilename);

@@ -57,7 +57,6 @@ Camptomastix_hisbonalis
 Capua_vulgana
 Cassida_lineola
 Catocala_bella
-Catocala_bella
 Cerastis_leucographa
 Cerastis_rubricosa
 Ceroprepes_ophthalmicella
@@ -164,6 +163,7 @@ Fascellina_chromataria
 Fentonia_ocypete
 Flavocrambus striatellus Leech
 Gabala_argentata
+Garella_ruficirra
 Gigantalcis_flavolinearia
 Glyphodes_onychinalis
 Gonepatica_opalina
@@ -202,6 +202,7 @@ Kawabeia_razowskii_3
 Kentrochrysalis_consimilis
 Kerala_decipiens
 Krananda_latimarginaria
+Krananda_latimarginaria_1
 Krananda_semihyalina
 Labdia_citracma
 Labdia_semicoccinea
@@ -242,7 +243,6 @@ Mecodina_cineracea
 Meganola_fumosa
 Melapia_electaria
 Mesoplectra_griselda
-Mesorhynchaglaea_pacifica
 Mesorhynchaglaea_pacifica
 Microleon_longipalpis
 Micromelalopha_troglodyta
@@ -340,6 +340,7 @@ Plutella_xylostella
 Polytremis_pellucida
 Problepsis_albidior
 Prometopus_flavicollis
+Protoboarmia_faustinata
 Protomiselia_bilinea
 Pseuderannis_amplipennis
 Pseuderannis_lomozemia
@@ -429,6 +430,7 @@ Volobilis_chloropterella
 Vulpechola_vulpecula
 Xanthia_icteritia
 Xanthia_togata
+Xanthogaleruca_maculicollis
 Xenotrachea_niphonica
 Xerodes_rufescentaria
 Xestia_c
@@ -441,7 +443,7 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
-Xanthogaleruca_maculicollis
-Garella_ruficirra
-Krananda_latimarginaria_1
-Protoboarmia_faustinata
+ウチジロコヤガ
+キボシノメイガ
+クロスカシトガリノメイガ
+リンゴコブガ

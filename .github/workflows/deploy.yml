@@ -38,6 +38,9 @@ jobs:
       - name: Refresh plant image filename index
         run: node scripts/update_plant_image_filenames.mjs
 
+      - name: Refresh insect image indexes
+        run: npm run build:image-index
+
       - name: Build data-lite
         run: npm run build:data-lite
 
