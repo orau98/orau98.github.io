@@ -1030,11 +1030,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   // ネットワーク図サイズ
   const [graphSize, setGraphSize] = useState({ width: 0, height: 520 });
   const graphRef = useRef(null);
-  const [shouldLoadGraph, setShouldLoadGraph] = useState(false);
-
-  useEffect(() => {
-    setShouldLoadGraph(false);
-  }, [decodedPlantName]);
 
   useEffect(() => {
     const update = () => {
@@ -1707,18 +1702,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </div>
           <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25" ref={graphRef}>
             <div className="h-[540px]">
-              {!shouldLoadGraph ? (
-                <div className="w-full h-full flex flex-col items-center justify-center gap-4 px-6 text-center">
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    ネットワーク図はサイズが大きいため、必要な時に読み込みます。
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setShouldLoadGraph(true)}
-                    className="ui-btn ui-btn-primary"
-                  >
-                    ネットワーク図を表示
-                  </button>
+              {graphSize.width === 0 ? (
+                <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
+                  <div className="w-24 h-24 mb-4 rounded-full bg-emerald-200/60 dark:bg-emerald-900/40"></div>
+                  <div className="h-3 w-40 rounded-full bg-slate-200 dark:bg-slate-700 mb-2"></div>
+                  <div className="h-3 w-24 rounded-full bg-slate-200 dark:bg-slate-700"></div>
                 </div>
               ) : (
                 <React.Suspense fallback={
@@ -1726,18 +1714,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                     ネットワーク図を読み込み中...
                   </div>
                 }>
-                  {graphSize.width > 0 && (
-                    <FoodWebGraph
-                      currentPlantName={decodedPlantName}
-                      plantInsects={classifiedInsects}
-                      allInsects={allInsects}
-                      hostPlantsMap={hostPlants}
-                      flowerVisitPlants={flowerVisitPlants}
-                      width={graphSize.width}
-                      height={graphSize.height}
-                      theme={theme}
-                    />
-                  )}
+                  <FoodWebGraph
+                    currentPlantName={decodedPlantName}
+                    plantInsects={classifiedInsects}
+                    allInsects={allInsects}
+                    hostPlantsMap={hostPlants}
+                    flowerVisitPlants={flowerVisitPlants}
+                    width={graphSize.width}
+                    height={graphSize.height}
+                    theme={theme}
+                  />
                 </React.Suspense>
               )}
             </div>

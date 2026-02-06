@@ -287,10 +287,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
   const graphContainerRefDesktop = useRef(null);
   const graphContainerRefMobile = useRef(null);
-  const [shouldLoadGraph, setShouldLoadGraph] = useState(false);
-  const requestGraphLoad = useCallback(() => {
-    setShouldLoadGraph(true);
-  }, []);
 
   useLayoutEffect(() => {
     const updateSize = () => {
@@ -310,10 +306,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     
     return () => window.removeEventListener('resize', updateSize);
   }, []);
-
-  useEffect(() => {
-    setShouldLoadGraph(false);
-  }, [resolvedInsectId]);
 
   // Debug logging for ID mapping
   if (insectId !== mappedInsectId) {
@@ -820,7 +812,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   logger.debug('Instagram URL:', moth?.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
 
-  const renderFoodWebCard = (containerRef, className, showGraph) => (
+  const renderFoodWebCard = (containerRef, className) => (
     <div className={className} ref={containerRef}>
       <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
@@ -838,20 +830,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         </div>
 
         <div className="h-[540px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
-          {!showGraph ? (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-4 px-6 text-center">
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                ネットワーク図はサイズが大きいため、必要時のみ読み込みます。
-              </p>
-              <button
-                type="button"
-                onClick={requestGraphLoad}
-                className="ui-btn ui-btn-primary"
-              >
-                ネットワーク図を表示
-              </button>
-            </div>
-          ) : graphDimensions.width === 0 ? (
+          {graphDimensions.width === 0 ? (
             <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
               <div className="w-24 h-24 mb-4 rounded-full bg-emerald-200/60 dark:bg-emerald-900/40"></div>
               <div className="h-3 w-40 rounded-full bg-slate-200 dark:bg-slate-700 mb-2"></div>
@@ -1055,7 +1034,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             </div>
 
             {/* PC: 食草ネットワークを左カラムに配置 */}
-            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6", shouldLoadGraph)}
+            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6")}
           </div>
 
           {/* 情報セクション */}
@@ -1752,7 +1731,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               allInsects={allInsects} 
             />
             {/* Mobile: 食草ネットワークを同じ食草の昆虫セクションの後に配置 */}
-            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10", shouldLoadGraph)}
+            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10")}
 
           </div>
         </div>
