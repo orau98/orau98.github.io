@@ -857,18 +857,27 @@ export const MainStructuredData = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${siteUrl}#website`,
     "name": "昆虫植物図鑑",
     "alternateName": "昆虫食草図鑑",
     "url": siteUrl,
     "description": "昆虫植物図鑑（昆虫食草図鑑）として、昆虫と食草の美しい関係を探る。蛾、蝶、タマムシ、カミキリムシ、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
     "inLanguage": "ja",
+    "sameAs": [
+      "https://www.instagram.com/onychodactylus_nipponoborealis/"
+    ],
     "author": {
       "@type": "Organization",
       "name": "昆虫植物図鑑"
     },
+    "publisher": {
+      "@type": "Organization",
+      "name": "昆虫植物図鑑",
+      "url": siteUrl
+    },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": `${siteUrl}search/?q={search_term_string}`,
+      "target": `${siteUrl}?q={search_term_string}`,
       "query-input": "required name=search_term_string"
     },
     "mainEntity": {

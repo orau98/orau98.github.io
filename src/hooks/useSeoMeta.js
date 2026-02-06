@@ -43,6 +43,7 @@ export default function useSeoMeta(rawOptions) {
     'meta[property="og:type"]',
     'meta[property="og:url"]',
     'meta[property="og:image"]',
+    'meta[property="og:image:alt"]',
     'meta[property="og:site_name"]',
     'meta[property="og:locale"]',
     'meta[name="twitter:card"]',
@@ -94,6 +95,8 @@ export default function useSeoMeta(rawOptions) {
     if (imageUrl) {
       ensureMeta('meta[property="og:image"]', { property: 'og:image' });
       setMetaContent('meta[property="og:image"]', imageUrl);
+      ensureMeta('meta[property="og:image:alt"]', { property: 'og:image:alt' });
+      setMetaContent('meta[property="og:image:alt"]', imageAlt || title || '');
       ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });
       setMetaContent('meta[name="twitter:image"]', imageUrl);
       ensureMeta('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' });
@@ -122,13 +125,24 @@ export default function useSeoMeta(rawOptions) {
         document.head.appendChild(s);
       }
       const pageUrl = url || (typeof window !== 'undefined' ? window.location.href : undefined) || '';
+      const schemaLanguage = locale ? String(locale).replace('_', '-') : 'ja-JP';
+      const pageLastModified = (() => {
+        try {
+          const raw = typeof document !== 'undefined' ? document.lastModified : '';
+          const ms = Date.parse(raw || '');
+          return Number.isFinite(ms) ? new Date(ms).toISOString() : undefined;
+        } catch {
+          return undefined;
+        }
+      })();
       s.textContent = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         url: pageUrl,
         name: title || '',
         description: description || '',
-        inLanguage: 'ja'
+        inLanguage: schemaLanguage,
+        ...(pageLastModified ? { dateModified: pageLastModified } : {}),
       });
       insertedScriptIdsRef.current.push(id);
     } catch {}
@@ -182,6 +196,8 @@ export default function useSeoMeta(rawOptions) {
     if (!imgUrl) return;
     ensureMeta('meta[property="og:image"]', { property: 'og:image' });
     setMetaContent('meta[property="og:image"]', imgUrl);
+    ensureMeta('meta[property="og:image:alt"]', { property: 'og:image:alt' });
+    setMetaContent('meta[property="og:image:alt"]', alt || '');
     ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card' });
     setMetaContent('meta[name="twitter:card"]', 'summary_large_image');
     ensureMeta('meta[name="twitter:image"]', { name: 'twitter:image' });

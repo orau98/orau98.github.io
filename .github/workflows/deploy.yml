@@ -59,6 +59,8 @@ jobs:
           test -f dist/index.html
           test -f dist/robots.txt
           test -f dist/sitemap.xml
+          test -f dist/opensearch.xml
+          test -f dist/sitemap.html
           ls -lah dist/assets || true
           test -n "$(ls dist/assets/index-*.js 2>/dev/null | head -n1)"
           test -n "$(ls dist/assets/index-*.css 2>/dev/null | head -n1)"

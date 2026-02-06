@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>昆虫植物図鑑</ShortName>
+  <Description>昆虫植物図鑑（昆虫食草図鑑）を検索</Description>
+  <Tags>昆虫 食草 図鑑</Tags>
+  <Contact>https://orau98.github.io/</Contact>
+  <Url
+    type="text/html"
+    method="get"
+    template="https://orau98.github.io/?q={searchTerms}"
+  />
+  <InputEncoding>UTF-8</InputEncoding>
+  <OutputEncoding>UTF-8</OutputEncoding>
+</OpenSearchDescription>

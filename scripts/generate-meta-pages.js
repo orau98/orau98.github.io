@@ -1045,6 +1045,22 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 // メインの生成処理
 async function generateMetaPages() {
   console.log('メタページ生成を開始します...');
+
+  // 先に必須CSVの存在を確認（欠損時に既存メタページを消さない）
+  const requiredCsvPaths = [
+    path.join(__dirname, '../public/insects.csv'),
+    path.join(__dirname, '../public/hostplants.csv'),
+    path.join(__dirname, '../public/general_notes.csv'),
+  ];
+  const missingRequiredCsvs = requiredCsvPaths.filter((p) => !fs.existsSync(p));
+  if (missingRequiredCsvs.length > 0) {
+    console.error('[meta] 必須CSVが見つからないため、メタページ生成を中止します。');
+    missingRequiredCsvs.forEach((p) => {
+      console.error(`  - ${p}`);
+    });
+    process.exitCode = 1;
+    return;
+  }
   
   // 出力ディレクトリを作成
   const metaDir = path.join(__dirname, '../public/meta');
@@ -1553,6 +1569,7 @@ async function generateMetaPages() {
     
   } catch (error) {
     console.error('メタページ生成中にエラーが発生しました:', error);
+    process.exitCode = 1;
   }
 }
 

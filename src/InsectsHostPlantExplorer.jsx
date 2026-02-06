@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
@@ -15,6 +15,7 @@ import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
 import { createSafePlantFilename, splitFilenameBase } from "./utils/filename";
+import { absUrl } from "./utils/origin";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -39,15 +40,90 @@ const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
   ].join("");
 };
 
+const parseInstagramTimestampValue = (value) => {
+  if (value == null) return 0;
+  if (typeof value === "number" && Number.isFinite(value)) {
+    if (value > 1e12) return Math.trunc(value);
+    if (value > 1e9) return Math.trunc(value * 1000);
+    return 0;
+  }
+  const text = String(value).trim();
+  if (!text) return 0;
+  if (/^\d+$/.test(text)) {
+    const numeric = Number(text);
+    if (Number.isFinite(numeric)) {
+      if (numeric > 1e12) return Math.trunc(numeric);
+      if (numeric > 1e9) return Math.trunc(numeric * 1000);
+    }
+    return 0;
+  }
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const toIsoFromTimestamp = (value) => {
+  const ms = parseInstagramTimestampValue(value);
+  if (!ms) return "";
+  try {
+    return new Date(ms).toISOString();
+  } catch {
+    return "";
+  }
+};
+
 const getInstagramTimestampValue = (post) => {
-  const raw = post?.timestamp || post?.taken_at || post?.takenAt || "";
-  const parsed = Date.parse(raw);
-  if (Number.isFinite(parsed)) return parsed;
-  return 0;
+  if (!post) return 0;
+  return (
+    parseInstagramTimestampValue(post.timestamp) ||
+    parseInstagramTimestampValue(post.taken_at) ||
+    parseInstagramTimestampValue(post.takenAt) ||
+    parseInstagramTimestampValue(post.taken_at_timestamp) ||
+    parseInstagramTimestampValue(post.takenAtTimestamp) ||
+    0
+  );
+};
+
+const normalizeInstagramPostCard = (post) => {
+  if (!post || typeof post !== "object") return null;
+  const permalink = typeof post.permalink === "string" ? post.permalink.trim() : "";
+  if (!/^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(permalink)) {
+    return null;
+  }
+  const normalizedTimestamp =
+    toIsoFromTimestamp(post.timestamp) ||
+    toIsoFromTimestamp(post.taken_at) ||
+    toIsoFromTimestamp(post.takenAt) ||
+    toIsoFromTimestamp(post.taken_at_timestamp) ||
+    toIsoFromTimestamp(post.takenAtTimestamp);
+  return {
+    ...post,
+    permalink,
+    media_type: post.media_type || post.mediaType || null,
+    media_url: post.media_url || post.mediaUrl || null,
+    thumbnail_url: post.thumbnail_url || post.thumbnailUrl || null,
+    local_url: post.local_url || post.localUrl || null,
+    timestamp: normalizedTimestamp || post.timestamp || null,
+  };
+};
+
+const dedupeInstagramPostsByPermalink = (posts = []) => {
+  const map = new Map();
+  posts.forEach((post) => {
+    if (!post?.permalink) return;
+    if (!map.has(post.permalink)) {
+      map.set(post.permalink, post);
+      return;
+    }
+    const existing = map.get(post.permalink);
+    if (getInstagramTimestampValue(post) > getInstagramTimestampValue(existing)) {
+      map.set(post.permalink, post);
+    }
+  });
+  return Array.from(map.values());
 };
 
 const sortInstagramPostsByLatest = (posts = []) =>
-  posts
+  dedupeInstagramPostsByPermalink(posts)
     .slice()
     .sort((a, b) => getInstagramTimestampValue(b) - getInstagramTimestampValue(a));
 
@@ -223,6 +299,7 @@ const InsectsHostPlantExplorer = React.memo(
     initialTab = "insects",
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
     const getCurrentParams = useCallback(() => {
       try {
         if (typeof window !== "undefined" && window.location?.search != null) {
@@ -242,6 +319,7 @@ const InsectsHostPlantExplorer = React.memo(
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
     const [instagramPostCards, setInstagramPostCards] = useState([]);
+    const [instagramFeedUpdatedAt, setInstagramFeedUpdatedAt] = useState("");
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
     const [instagramGalleryFailed, setInstagramGalleryFailed] = useState(false);
     const baseUrl = import.meta.env.BASE_URL || "/";
@@ -643,8 +721,7 @@ const InsectsHostPlantExplorer = React.memo(
       return seen.size;
     }, [moths, butterflies, beetles, longhornbeetles, leafbeetles]);
 
-    // SEO for Home (トップページ)
-    const title = "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシと食草の繋がりを探索";
+    // SEO for list pages (トップ/昆虫/植物)
     const counts = summaryCounts
       ? {
           moths: summaryCounts.moths ?? moths.length,
@@ -675,15 +752,45 @@ const InsectsHostPlantExplorer = React.memo(
     );
     const hasCollapsedHeroStats = heroStats.length > 3;
     const visibleHeroStats = showAllHeroStats ? heroStats : heroStats.slice(0, 3);
-    const desc = `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`;
+
+    const listSeo = useMemo(() => {
+      if (location.pathname === "/moth") {
+        return {
+          title: "昆虫一覧（蛾・蝶・甲虫）| 昆虫植物図鑑",
+          description: `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種を和名/学名/分類で検索できます。`,
+          canonical: absUrl("/meta/moth/index.html"),
+          breadcrumbItems: [
+            { name: "昆虫植物図鑑", url: absUrl("/") },
+            { name: "昆虫", url: absUrl("/meta/moth/index.html") },
+          ],
+        };
+      }
+      if (location.pathname === "/plant") {
+        return {
+          title: "植物一覧（食草・訪花）| 昆虫植物図鑑",
+          description: `植物一覧ページ。食草・訪花植物 ${counts.hostPlants}種を和名/学名/分類で検索し、関連昆虫を確認できます。`,
+          canonical: absUrl("/meta/plant/index.html"),
+          breadcrumbItems: [
+            { name: "昆虫植物図鑑", url: absUrl("/") },
+            { name: "植物", url: absUrl("/meta/plant/index.html") },
+          ],
+        };
+      }
+      return {
+        title: "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシと食草の繋がりを探索",
+        description: `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`,
+        canonical: absUrl("/"),
+        breadcrumbItems: [{ name: "昆虫植物図鑑", url: absUrl("/") }],
+      };
+    }, [counts, location.pathname]);
+
     const { setOgTwitterImage } = useSeoMeta({
-      title,
-      description: desc,
+      title: listSeo.title,
+      description: listSeo.description,
       ogType: "website",
-      url:
-        (typeof window !== "undefined"
-          ? window.location.origin
-          : "https://orau98.github.io/") + "/",
+      url: listSeo.canonical,
+      breadcrumbItems: listSeo.breadcrumbItems,
+      resetCanonicalTo: absUrl("/"),
     });
 
     // Preload hero image on component mount (base-aware for subpath deployments)
@@ -768,16 +875,25 @@ const InsectsHostPlantExplorer = React.memo(
           if (res.ok) {
             const data = await res.json();
             const posts = Array.isArray(data) ? data : data?.posts;
-              if (Array.isArray(posts) && posts.length > 0) {
-              const normalized = posts.filter(
-                (post) =>
-                  typeof post?.permalink === "string" &&
-                  /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(
-                    post.permalink,
-                  ),
-              );
+            if (!Array.isArray(data)) {
+              const updatedAtRaw = data?.generatedAt || data?.updatedAt || data?.fetchedAt;
+              const updatedAtIso = toIsoFromTimestamp(updatedAtRaw);
+              if (updatedAtIso) {
+                setInstagramFeedUpdatedAt(updatedAtIso);
+              }
+            }
+            if (Array.isArray(posts) && posts.length > 0) {
+              const normalized = posts
+                .map(normalizeInstagramPostCard)
+                .filter(Boolean);
               if (normalized.length > 0) {
-                setInstagramPostCards(sortInstagramPostsByLatest(normalized).slice(0, 12));
+                const sorted = sortInstagramPostsByLatest(normalized);
+                setInstagramPostCards(sorted.slice(0, 12));
+                const latestTimestamp = sorted[0]?.timestamp;
+                const latestIso = toIsoFromTimestamp(latestTimestamp);
+                if (latestIso) {
+                  setInstagramFeedUpdatedAt((prev) => prev || latestIso);
+                }
               }
             }
           }
@@ -840,16 +956,23 @@ const InsectsHostPlantExplorer = React.memo(
       });
     }, [instagramPostCards, isInstagramPostUrl]);
 
-    const latestInstagramDateLabel = useMemo(() => {
-      const latestRaw = instagramTimelinePosts[0]?.timestamp;
-      const parsed = Date.parse(latestRaw || "");
-      if (!Number.isFinite(parsed)) return "";
+    const formatInstagramDateLabel = useCallback((rawValue) => {
+      const parsed = parseInstagramTimestampValue(rawValue);
+      if (!parsed) return "";
       return new Date(parsed).toLocaleDateString("ja-JP", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       });
-    }, [instagramTimelinePosts]);
+    }, []);
+
+    const latestInstagramDateLabel = useMemo(() => {
+      return formatInstagramDateLabel(instagramTimelinePosts[0]?.timestamp);
+    }, [instagramTimelinePosts, formatInstagramDateLabel]);
+
+    const instagramFeedUpdatedDateLabel = useMemo(() => {
+      return formatInstagramDateLabel(instagramFeedUpdatedAt);
+    }, [instagramFeedUpdatedAt, formatInstagramDateLabel]);
 
     useEffect(() => {
       setInstagramGalleryFailed(false);
@@ -1792,9 +1915,11 @@ const InsectsHostPlantExplorer = React.memo(
                                 Official Instagram
                               </h3>
                             </div>
-                            {latestInstagramDateLabel && (
+                            {(latestInstagramDateLabel || instagramFeedUpdatedDateLabel) && (
                               <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                                最新: {latestInstagramDateLabel}
+                                {latestInstagramDateLabel
+                                  ? `最新: ${latestInstagramDateLabel}`
+                                  : `更新: ${instagramFeedUpdatedDateLabel}`}
                               </span>
                             )}
                           </div>

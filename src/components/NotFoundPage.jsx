@@ -1,8 +1,26 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const NotFoundPage = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    const prevTitle = document.title;
+    const robots = document.querySelector('meta[name="robots"]');
+    const prevRobots = robots ? robots.getAttribute('content') : null;
+    if (robots) {
+      robots.setAttribute('content', 'noindex, nofollow, max-image-preview:none');
+    }
+    document.title = '404 | ページが見つかりません - 昆虫植物図鑑';
+
+    return () => {
+      document.title = prevTitle;
+      if (robots && prevRobots != null) {
+        robots.setAttribute('content', prevRobots);
+      }
+    };
+  }, []);
 
   return (
     <section className="min-h-[60vh] px-4 py-12 flex items-center justify-center">

@@ -34,6 +34,48 @@ const normalizeUsername = (raw) => {
 const isPostPermalink = (url) =>
   /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(url || '');
 
+const parseTimestampToMs = (value) => {
+  if (value == null) return 0;
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    if (value > 1e12) return Math.trunc(value);
+    if (value > 1e9) return Math.trunc(value * 1000);
+    return 0;
+  }
+  const text = String(value).trim();
+  if (!text) return 0;
+  if (/^\d+$/.test(text)) {
+    const n = Number(text);
+    if (Number.isFinite(n)) {
+      if (n > 1e12) return Math.trunc(n);
+      if (n > 1e9) return Math.trunc(n * 1000);
+    }
+    return 0;
+  }
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const toIsoTimestamp = (...values) => {
+  for (const value of values) {
+    const ms = parseTimestampToMs(value);
+    if (!ms) continue;
+    try {
+      return new Date(ms).toISOString();
+    } catch {
+      // continue
+    }
+  }
+  return null;
+};
+
+const getPostTimestampMs = (post) =>
+  parseTimestampToMs(post?.timestamp) ||
+  parseTimestampToMs(post?.taken_at) ||
+  parseTimestampToMs(post?.takenAt) ||
+  parseTimestampToMs(post?.taken_at_timestamp) ||
+  parseTimestampToMs(post?.takenAtTimestamp) ||
+  0;
+
 const parseUsernameFromInstagramUrl = (url) => {
   if (!/^https?:\/\/(www\.)?instagram\.com\//.test(url || '')) return '';
   try {
@@ -215,13 +257,7 @@ const fetchPostsFromPublicProfile = async (username, limit) => {
       };
     })
     .filter((item) => isPostPermalink(item.permalink));
-  return mapped.sort((a, b) => {
-    const aTime = Date.parse(a?.timestamp || '');
-    const bTime = Date.parse(b?.timestamp || '');
-    const aScore = Number.isFinite(aTime) ? aTime : -Infinity;
-    const bScore = Number.isFinite(bTime) ? bTime : -Infinity;
-    return bScore - aScore;
-  });
+  return mapped.sort((a, b) => getPostTimestampMs(b) - getPostTimestampMs(a));
 };
 
 const loadExistingMedia = () => {
@@ -286,6 +322,7 @@ const main = async () => {
 
   const minFetchCount = Math.max(POST_LIMIT, 20);
   let items = [];
+  let fetchSource = 'graph-api';
   const errors = [];
 
   if (ACCESS_TOKEN && USER_ID) {
@@ -324,15 +361,10 @@ const main = async () => {
     }
     console.warn(`[instagram] Falling back to public profile scraping for @${username}`);
     items = await fetchPostsFromPublicProfile(username, minFetchCount);
+    fetchSource = 'public-profile-fallback';
   }
 
-  items = [...items].sort((a, b) => {
-    const aTime = Date.parse(a?.timestamp || '');
-    const bTime = Date.parse(b?.timestamp || '');
-    const aScore = Number.isFinite(aTime) ? aTime : -Infinity;
-    const bScore = Number.isFinite(bTime) ? bTime : -Infinity;
-    return bScore - aScore;
-  });
+  items = [...items].sort((a, b) => getPostTimestampMs(b) - getPostTimestampMs(a));
 
   const urls = items
     .map((item) => (typeof item?.permalink === 'string' ? item.permalink.trim() : ''))
@@ -350,6 +382,13 @@ const main = async () => {
     const id = item?.id || null;
     const mediaUrl = pickMediaUrl(item);
     const localUrl = await downloadMedia(mediaUrl, id, existingMedia);
+    const normalizedTimestamp = toIsoTimestamp(
+      item?.timestamp,
+      item?.taken_at,
+      item?.takenAt,
+      item?.taken_at_timestamp,
+      item?.takenAtTimestamp,
+    );
     posts.push({
       id,
       permalink,
@@ -358,7 +397,7 @@ const main = async () => {
       thumbnail_url: item?.thumbnail_url || null,
       local_url: localUrl,
       caption: item?.caption || null,
-      timestamp: item?.timestamp || null,
+      timestamp: normalizedTimestamp,
     });
   }
 
@@ -383,17 +422,25 @@ const main = async () => {
     }
   }
 
+  const limitedPosts = posts.slice(0, POST_LIMIT);
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    source: fetchSource,
+    count: limitedPosts.length,
+    posts: limitedPosts,
+  };
+
   fs.writeFileSync(OUT_POSTS, unique.join('\n') + (unique.length ? '\n' : ''), 'utf-8');
   fs.writeFileSync(OUT_LATEST, unique[0] ? `${unique[0]}\n` : '', 'utf-8');
   fs.writeFileSync(
     OUT_JSON,
-    JSON.stringify(posts.slice(0, POST_LIMIT), null, 2) + '\n',
+    JSON.stringify(payload, null, 2) + '\n',
     'utf-8',
   );
 
   console.log(`[instagram] Wrote ${unique.length} post URL(s) to ${path.relative(ROOT, OUT_POSTS)}`);
   console.log(`[instagram] Latest URL ${unique[0] ? 'set' : 'empty'} in ${path.relative(ROOT, OUT_LATEST)}`);
-  console.log(`[instagram] Wrote ${Math.min(posts.length, POST_LIMIT)} post record(s) to ${path.relative(ROOT, OUT_JSON)}`);
+  console.log(`[instagram] Wrote ${limitedPosts.length} post record(s) to ${path.relative(ROOT, OUT_JSON)}`);
 };
 
 main().catch((err) => {
