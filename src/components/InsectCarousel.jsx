@@ -1,73 +1,15 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { loadInsectImageIndexes } from '../services/imageIndex';
-import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
 import ImageWithFallback from './ImageWithFallback';
-import {
-  buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
-  resolveImageBaseCandidates,
-} from '../utils/insectImageResolver';
+import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
 const InsectCarousel = ({ insects, title, type = 'default' }) => {
   const location = useLocation();
-  // 画像拡張子マッピングを読み込む（共通サービス）
-  const [imageExtensions, setImageExtensions] = useState({});
-  const [imageBases, setImageBases] = useState(new Set());
-  useEffect(() => {
-    loadInsectImageIndexes()
-      .then(({ names, exts }) => {
-        setImageExtensions(exts || {});
-        setImageBases(new Set(names || []));
-      })
-      .catch(() => {
-        setImageExtensions({});
-        setImageBases(new Set());
-      });
-  }, []);
-
-  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
-
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const placeholderSrc = `${normalizedBase}images/placeholder.jpg${cacheBustRef.current}`;
-
-  const normalizedEntries = useMemo(
-    () => buildNormalizedEntries(imageBases, imageExtensions),
-    [imageBases, imageExtensions],
-  );
-
-  const buildImageUrl = useCallback((base) => {
-    if (!base) return '';
-    const ext = imageExtensions[base] || '.jpg';
-    return `${normalizedBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBustRef.current}`;
-  }, [imageExtensions, normalizedBase]);
-
-  const getImageCandidates = useCallback((insect) => {
-    if (!insect) return [];
-    const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
-    const candidateBases = buildInsectImageBaseCandidates(insect, mappedFilename);
-    const resolvedBases = resolveImageBaseCandidates(candidateBases, {
-      imageExtensions,
-      imageNames: imageBases,
-      normalizedEntries,
-    });
-    if (resolvedBases.length === 0 && candidateBases.length > 0) {
-      resolvedBases.push(candidateBases[0]);
-    }
-    const urls = [];
-    const seen = new Set();
-    resolvedBases.forEach((base) => {
-      const url = buildImageUrl(base);
-      if (url && !seen.has(url)) {
-        seen.add(url);
-        urls.push(url);
-      }
-    });
-    return urls;
-  }, [buildImageUrl, imageBases, imageExtensions, normalizedEntries]);
+  const { placeholderSrc, getImageCandidates } = useInsectImageCandidates({
+    useAssetVersionInProd: true,
+  });
 
   if (!insects || insects.length === 0) return null;
 

@@ -34,6 +34,8 @@ const HostPlantListItem = React.memo(
     const location = useLocation();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const imgRef = useRef(null);
+    const prevImageFilenameRef = useRef(imageFilename);
 
     const safePlantName = createSafePlantFilename(plant);
     const baseUrl = import.meta.env.BASE_URL || "/";
@@ -58,9 +60,19 @@ const HostPlantListItem = React.memo(
       : [];
 
     React.useEffect(() => {
+      if (prevImageFilenameRef.current === imageFilename) return;
+      prevImageFilenameRef.current = imageFilename;
       setImageLoaded(false);
       setImageError(false);
     }, [imageFilename]);
+
+    // Handle cached images where onLoad may not fire again after rerender.
+    React.useEffect(() => {
+      const imgEl = imgRef.current;
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        setImageLoaded(true);
+      }
+    }, [imageFilename, resizedSrc, resizedSrcSet]);
 
     const totalCount =
       Number.isFinite(relatedCount) && relatedCount >= 0
@@ -85,6 +97,7 @@ const HostPlantListItem = React.memo(
                 // Actual plant image
                 <div className="relative w-full aspect-[4/3]">
                   <img
+                    ref={imgRef}
                     src={resizedSrc}
                     srcSet={resizedSrcSet}
                     sizes={resizedSizes}
@@ -158,8 +171,8 @@ const HostPlantListItem = React.memo(
               {!imageLoaded && imageFilename && !imageError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-emerald-50/80 dark:bg-emerald-900/40">
                   <div className="relative">
-                    <div className="w-8 h-8 border-3 border-emerald-200 dark:border-emerald-700 rounded-full"></div>
-                    <div className="absolute top-0 left-0 w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-[3px] border-emerald-200 dark:border-emerald-700 rounded-full"></div>
+                    <div className="absolute top-0 left-0 w-8 h-8 border-[3px] border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 </div>
               )}
