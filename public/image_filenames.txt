@@ -19,6 +19,7 @@ Amphitrogia_amphidecta
 Amraica superans superans Butler
 Amraica_asahinai
 Anacronicta nitida Butler
+Analthes_insignis
 Anatatha_wilemani
 Anorthoa_angustipennis
 Apamea_aquila
@@ -67,6 +68,7 @@ Chasminodes_nervosus
 Chilades_pandava
 Chilodes_pacifica
 Chlorissa_obliterata
+Chorsia_albicincta
 Chrysobothris_succedanea
 Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
@@ -93,6 +95,7 @@ Cosmia_pyralina_2
 Cosmia_restituta
 Cosmia_restituta_2
 Cosmia_trapezina
+Cotachena_alysoni
 Crambus argyrophorus Butler
 Crambus_humidellus
 Crambus_pseudargyrophorus
@@ -159,6 +162,7 @@ Eupsilia_strigifera
 Eupsilia_tripunctata
 Eurema_laeta
 Evecliptopera_illitata
+Evonima_mandschuriana
 Fascellina_chromataria
 Fentonia_ocypete
 Flavocrambus striatellus Leech
@@ -443,7 +447,3 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
-ウチジロコヤガ
-キボシノメイガ
-クロスカシトガリノメイガ
-リンゴコブガ

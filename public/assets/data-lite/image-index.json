@@ -21,6 +21,7 @@
     "Amraica superans superans Butler",
     "Amraica_asahinai",
     "Anacronicta nitida Butler",
+    "Analthes_insignis",
     "Anatatha_wilemani",
     "Anorthoa_angustipennis",
     "Apamea_aquila",
@@ -69,6 +70,7 @@
     "Chilades_pandava",
     "Chilodes_pacifica",
     "Chlorissa_obliterata",
+    "Chorsia_albicincta",
     "Chrysobothris_succedanea",
     "Chrysorithrum amatum Bremer & Grey",
     "Chrysoteuchia diplogramma Zeller",
@@ -95,6 +97,7 @@
     "Cosmia_restituta",
     "Cosmia_restituta_2",
     "Cosmia_trapezina",
+    "Cotachena_alysoni",
     "Crambus argyrophorus Butler",
     "Crambus_humidellus",
     "Crambus_pseudargyrophorus",
@@ -161,6 +164,7 @@
     "Eupsilia_tripunctata",
     "Eurema_laeta",
     "Evecliptopera_illitata",
+    "Evonima_mandschuriana",
     "Fascellina_chromataria",
     "Fentonia_ocypete",
     "Flavocrambus striatellus Leech",
@@ -444,11 +448,7 @@
     "Zanclognatha_yaeyamalis",
     "Zaranga_permagna",
     "Zeiraphera_caeruleumana",
-    "Zeiraphera_demutata",
-    "ウチジロコヤガ",
-    "キボシノメイガ",
-    "クロスカシトガリノメイガ",
-    "リンゴコブガ"
+    "Zeiraphera_demutata"
   ],
   "exts": {
     "Acanthoplusia_agnata": ".jpg",
@@ -472,6 +472,7 @@
     "Amraica superans superans Butler": ".jpg",
     "Amraica_asahinai": ".jpg",
     "Anacronicta nitida Butler": ".jpg",
+    "Analthes_insignis": ".jpg",
     "Anatatha_wilemani": ".jpg",
     "Anorthoa_angustipennis": ".jpg",
     "Apamea_aquila": ".jpg",
@@ -520,6 +521,7 @@
     "Chilades_pandava": ".jpg",
     "Chilodes_pacifica": ".jpg",
     "Chlorissa_obliterata": ".jpg",
+    "Chorsia_albicincta": ".jpg",
     "Chrysobothris_succedanea": ".jpg",
     "Chrysorithrum amatum Bremer & Grey": ".jpg",
     "Chrysoteuchia diplogramma Zeller": ".jpg",
@@ -546,6 +548,7 @@
     "Cosmia_restituta": ".jpg",
     "Cosmia_restituta_2": ".jpg",
     "Cosmia_trapezina": ".jpg",
+    "Cotachena_alysoni": ".jpg",
     "Crambus argyrophorus Butler": ".jpg",
     "Crambus_humidellus": ".jpg",
     "Crambus_pseudargyrophorus": ".jpg",
@@ -612,6 +615,7 @@
     "Eupsilia_tripunctata": ".jpg",
     "Eurema_laeta": ".jpg",
     "Evecliptopera_illitata": ".jpg",
+    "Evonima_mandschuriana": ".jpg",
     "Fascellina_chromataria": ".jpg",
     "Fentonia_ocypete": ".jpg",
     "Flavocrambus striatellus Leech": ".jpg",
@@ -895,10 +899,6 @@
     "Zanclognatha_yaeyamalis": ".jpg",
     "Zaranga_permagna": ".jpg",
     "Zeiraphera_caeruleumana": ".jpg",
-    "Zeiraphera_demutata": ".jpg",
-    "ウチジロコヤガ": ".jpg",
-    "キボシノメイガ": ".jpg",
-    "クロスカシトガリノメイガ": ".jpg",
-    "リンゴコブガ": ".jpg"
+    "Zeiraphera_demutata": ".jpg"
   }
 }
