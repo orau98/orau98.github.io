@@ -158,6 +158,7 @@ Euplexia_lucipara
 Euplexidia_angusta
 Eupoecilia_citrinana
 Eupsilia_boursini
+Eupsilia_quadrilinea
 Eupsilia_strigifera
 Eupsilia_tripunctata
 Eurema_laeta
@@ -189,6 +190,7 @@ Homodes_vivida
 Hydraecia_petasitis
 Hypena_amica
 Hypena_strigata
+Hypena_subcyanea
 Hypephyra_terrosa
 Hyperstrotia_flavipuncta
 Hypocala_deflorata
@@ -340,6 +342,7 @@ Plagodis_dolabraria
 Plesiomorpha_flaviceps
 Pleuroptya_chlorophanta
 Plodia_interpunctella
+Plusiodonta_coelonota
 Plutella_xylostella
 Polytremis_pellucida
 Problepsis_albidior
@@ -383,6 +386,7 @@ Simplicia_niphona
 Simplicia_xanthoma
 Sinarella_rotundipennis
 Sineugraphe_oceanica
+Sitochroa_palealis
 Spatalia_doerriesi
 Spatulipalpia_albistrialis
 Sphragifera_sigillata
