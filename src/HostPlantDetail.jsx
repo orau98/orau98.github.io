@@ -875,8 +875,29 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     return isAdultOrUnknown && partCompact && partCompact.includes('花');
   };
 
-  const targetNames = [decodedPlantName, canonicalName, ...aliasNames].filter(Boolean);
-  const normalizedTargets = new Set(targetNames.map(normalizePlantName).filter(Boolean));
+  const detailAliasNames = useMemo(() => {
+    const aliasesRaw = resolvedPlantDetail?.aliases || resolvedPlantDetail?.aliasNames;
+    const aliases = Array.isArray(aliasesRaw)
+      ? aliasesRaw
+      : aliasesRaw instanceof Set
+        ? Array.from(aliasesRaw)
+        : [];
+    return aliases
+      .map((name) => String(name || '').trim())
+      .filter(Boolean);
+  }, [resolvedPlantDetail]);
+  const relatedAliasNames = useMemo(
+    () => Array.from(new Set([...aliasNames, ...detailAliasNames].filter(Boolean))),
+    [aliasNames, detailAliasNames],
+  );
+  const targetNames = useMemo(
+    () => Array.from(new Set([decodedPlantName, canonicalName, ...relatedAliasNames].filter(Boolean))),
+    [decodedPlantName, canonicalName, relatedAliasNames],
+  );
+  const normalizedTargets = useMemo(
+    () => new Set(targetNames.map(normalizePlantName).filter(Boolean)),
+    [targetNames],
+  );
   const normalizedFlowerVisitPlants = useMemo(() => {
     const map = {};
     Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {

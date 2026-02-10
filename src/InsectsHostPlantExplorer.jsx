@@ -127,114 +127,82 @@ const sortInstagramPostsByLatest = (posts = []) =>
     .slice()
     .sort((a, b) => getInstagramTimestampValue(b) - getInstagramTimestampValue(a));
 
-const buildAliasMap = (plantDetails = {}) => {
-  const map = new Map();
-  const canonicalByNormalized = new Map();
-  const preferCanonical = (normalized, name) => {
-    if (!normalized || !name) return;
-    if (!canonicalByNormalized.has(normalized)) {
-      canonicalByNormalized.set(normalized, name);
-      return;
-    }
-    const existing = canonicalByNormalized.get(normalized);
-    if (existing === normalized) return;
-    if (name === normalized) {
-      canonicalByNormalized.set(normalized, name);
-      return;
-    }
-    const existingHasParen = /[（(].*[)）]/.test(existing);
-    const nameHasParen = /[（(].*[)）]/.test(name);
-    if (existingHasParen && !nameHasParen) {
-      canonicalByNormalized.set(normalized, name);
-    }
-  };
-
-  Object.keys(plantDetails || {}).forEach((name) => {
-    const normalized = normalizePlantKey(name);
-    preferCanonical(normalized, name);
-  });
-
-  Object.entries(plantDetails || {}).forEach(([canonical, detail]) => {
-    if (!canonical) return;
-    const normalizedCanonical = normalizePlantKey(canonical);
-    const pickedCanonical =
-      canonicalByNormalized.get(normalizedCanonical) || canonical;
-    map.set(canonical, pickedCanonical);
-    if (normalizedCanonical && !map.has(normalizedCanonical)) {
-      map.set(normalizedCanonical, pickedCanonical);
-    }
-    const aliasesRaw = detail?.aliases || detail?.aliasNames;
-    const aliases = Array.isArray(aliasesRaw)
-      ? aliasesRaw
-      : aliasesRaw instanceof Set
-        ? Array.from(aliasesRaw)
-        : [];
-    aliases.forEach((alias) => {
-      const cleaned = (alias || "").trim();
-      if (!cleaned) return;
-      map.set(cleaned, pickedCanonical);
-      const normalizedAlias = normalizePlantKey(cleaned);
-      if (normalizedAlias && !map.has(normalizedAlias)) {
-        map.set(normalizedAlias, pickedCanonical);
-      }
-    });
-  });
-  return map;
-};
-
-const buildPlantInsectStats = (insects = [], plantDetails = {}) => {
+const buildPlantInsectStats = (
+  insects = [],
+  plantDetails = {},
+  hostPlantsMap = {},
+  flowerVisitPlantsMap = {},
+) => {
   if (!Array.isArray(insects) || insects.length === 0) {
     return { countsByPlant: {}, namesByPlant: {} };
   }
-  const aliasMap = buildAliasMap(plantDetails);
-  const idsByPlant = new Map();
-  const namesByPlant = new Map();
-
-  const canonicalize = (plantName) => {
-    if (!plantName) return "";
-    const normalized = normalizePlantKey(plantName);
-    return (
-      aliasMap.get(plantName) ||
-      (normalized ? aliasMap.get(normalized) : "") ||
-      normalized ||
-      plantName
-    );
-  };
-
-  const addToPlant = (plantName, insectId, insectName) => {
-    const canonical = canonicalize(plantName);
-    if (!canonical || canonical === "不明") return;
-    let idSet = idsByPlant.get(canonical);
-    if (!idSet) {
-      idSet = new Set();
-      idsByPlant.set(canonical, idSet);
+  const insectNameToIds = new Map();
+  const insectIdToName = new Map();
+  insects.forEach((insect) => {
+    if (!insect) return;
+    const insectName = (insect.name || insect.japaneseName || "").trim();
+    const insectId = String(
+      insect.id || insect.name || insect.japaneseName || "",
+    ).trim();
+    if (!insectId) return;
+    if (insectName) {
+      if (!insectNameToIds.has(insectName)) {
+        insectNameToIds.set(insectName, new Set());
+      }
+      insectNameToIds.get(insectName).add(insectId);
+      if (!insectIdToName.has(insectId)) {
+        insectIdToName.set(insectId, insectName);
+      }
     }
-    if (insectId) idSet.add(insectId);
-    let nameSet = namesByPlant.get(canonical);
-    if (!nameSet) {
-      nameSet = new Set();
-      namesByPlant.set(canonical, nameSet);
-    }
-    if (insectName) nameSet.add(insectName);
-  };
+  });
 
-  const addPlantVariants = (rawPlant, insectId, insectName) => {
+  const idsByNormalizedPlant = new Map();
+  const addIdsToPlant = (rawPlant, ids = []) => {
     const raw = String(rawPlant || "").trim();
     if (!raw || raw === "不明") return;
     const cleaned = raw.replace(/[(（][^)）]*[)）]/g, "").trim();
     const normalizedRaw = normalizePlantKey(raw);
     const normalizedClean = normalizePlantKey(cleaned);
-    const candidates = new Set(
-      [raw, cleaned, normalizedRaw, normalizedClean].filter(Boolean),
+    const normalizedPlants = [normalizedRaw, normalizedClean].filter(
+      (name) => name && name !== "不明",
     );
-    candidates.forEach((candidate) =>
-      addToPlant(candidate, insectId, insectName),
-    );
+    normalizedPlants.forEach((plantName) => {
+      if (!idsByNormalizedPlant.has(plantName)) {
+        idsByNormalizedPlant.set(plantName, new Set());
+      }
+      const set = idsByNormalizedPlant.get(plantName);
+      ids.forEach((id) => {
+        if (id) set.add(id);
+      });
+    });
   };
+  const addPlantByInsectName = (plantName, insectName) => {
+    const ids = insectNameToIds.get(String(insectName || "").trim());
+    if (!ids || ids.size === 0) return;
+    addIdsToPlant(plantName, Array.from(ids));
+  };
+  const addPlantByInsectId = (plantName, insectId) => {
+    if (!insectId) return;
+    addIdsToPlant(plantName, [insectId]);
+  };
+
+  Object.entries(hostPlantsMap || {}).forEach(([plantName, insectNames]) => {
+    if (!Array.isArray(insectNames)) return;
+    insectNames.forEach((insectName) =>
+      addPlantByInsectName(plantName, insectName),
+    );
+  });
+  Object.entries(flowerVisitPlantsMap || {}).forEach(
+    ([plantName, insectNames]) => {
+      if (!Array.isArray(insectNames)) return;
+      insectNames.forEach((insectName) =>
+        addPlantByInsectName(plantName, insectName),
+      );
+    },
+  );
 
   insects.forEach((insect) => {
     if (!insect) return;
-    const insectName = (insect.name || insect.japaneseName || "").trim();
     const insectId = String(
       insect.id || insect.name || insect.japaneseName || "",
     ).trim();
@@ -244,35 +212,66 @@ const buildPlantInsectStats = (insects = [], plantDetails = {}) => {
       records.forEach((record) => {
         const plantName =
           record?.name || record?.displayName || record?.plant || "";
-        addPlantVariants(plantName, insectId, insectName);
+        addPlantByInsectId(plantName, insectId);
       });
       return;
     }
-    const hostPlants = insect.hostPlants;
-    if (Array.isArray(hostPlants)) {
-      hostPlants.forEach((plant) =>
-        addPlantVariants(plant, insectId, insectName),
+    const hostPlantsRaw = insect.hostPlants;
+    if (Array.isArray(hostPlantsRaw)) {
+      hostPlantsRaw.forEach((plant) =>
+        addPlantByInsectId(plant, insectId),
       );
       return;
     }
-    if (typeof hostPlants === "string") {
-      hostPlants
+    if (typeof hostPlantsRaw === "string") {
+      hostPlantsRaw
         .split(/[;；、，,]/)
-        .forEach((plant) => addPlantVariants(plant, insectId, insectName));
+        .forEach((plant) => addPlantByInsectId(plant, insectId));
       return;
     }
-    if (hostPlants) {
-      addPlantVariants(String(hostPlants), insectId, insectName);
+    if (hostPlantsRaw) {
+      addPlantByInsectId(String(hostPlantsRaw), insectId);
     }
   });
 
+  const candidatePlants = new Set([
+    ...Object.keys(plantDetails || {}),
+    ...Object.keys(hostPlantsMap || {}),
+    ...Object.keys(flowerVisitPlantsMap || {}),
+  ]);
+
   const countsByPlant = {};
   const namesByPlantObj = {};
-  idsByPlant.forEach((set, plant) => {
-    countsByPlant[plant] = set.size;
-  });
-  namesByPlant.forEach((set, plant) => {
-    namesByPlantObj[plant] = Array.from(set).sort((a, b) =>
+  candidatePlants.forEach((plantName) => {
+    const canonical = String(plantName || "").trim();
+    if (!canonical || canonical === "不明") return;
+    const detail = plantDetails?.[canonical] || {};
+    const aliasesRaw = detail.aliases || detail.aliasNames;
+    const aliases = Array.isArray(aliasesRaw)
+      ? aliasesRaw
+      : aliasesRaw instanceof Set
+        ? Array.from(aliasesRaw)
+        : [];
+    const targetNames = [canonical, ...aliases].filter(Boolean);
+    const relatedIds = new Set();
+    targetNames.forEach((targetName) => {
+      const normalized = normalizePlantKey(targetName);
+      if (!normalized || normalized === "不明") return;
+      const ids = idsByNormalizedPlant.get(normalized);
+      if (!ids) return;
+      ids.forEach((id) => relatedIds.add(id));
+    });
+    countsByPlant[canonical] = relatedIds.size;
+    if (relatedIds.size === 0) {
+      namesByPlantObj[canonical] = [];
+      return;
+    }
+    const relatedNames = new Set();
+    relatedIds.forEach((id) => {
+      const name = insectIdToName.get(id);
+      if (name) relatedNames.add(name);
+    });
+    namesByPlantObj[canonical] = Array.from(relatedNames).sort((a, b) =>
       a.localeCompare(b, "ja"),
     );
   });
@@ -347,17 +346,6 @@ const InsectsHostPlantExplorer = React.memo(
       return window.matchMedia("(min-width: 1024px)").matches;
     });
     const searchTimeoutRef = useRef(null);
-    const plantInsectStats = useMemo(() => {
-      const allInsects = [
-        ...moths,
-        ...butterflies,
-        ...beetles,
-        ...longhornbeetles,
-        ...leafbeetles,
-      ];
-      if (allInsects.length === 0) return null;
-      return buildPlantInsectStats(allInsects, plantDetails);
-    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles, plantDetails]);
 
     // Sync search term with URL (active tab only)
     useEffect(() => {
@@ -685,6 +673,31 @@ const InsectsHostPlantExplorer = React.memo(
       });
       return merged;
     }, [flowerVisitPlantsProp, computedFlowerVisitPlants]);
+    const plantInsectStats = useMemo(() => {
+      const allInsects = [
+        ...moths,
+        ...butterflies,
+        ...beetles,
+        ...longhornbeetles,
+        ...leafbeetles,
+      ];
+      if (allInsects.length === 0) return null;
+      return buildPlantInsectStats(
+        allInsects,
+        plantDetails,
+        hostPlants,
+        flowerVisitPlants,
+      );
+    }, [
+      moths,
+      butterflies,
+      beetles,
+      longhornbeetles,
+      leafbeetles,
+      plantDetails,
+      hostPlants,
+      flowerVisitPlants,
+    ]);
     const mergedHostPlantCount = useMemo(() => {
       const names = new Set(Object.keys(hostPlants || {}));
       Object.keys(flowerVisitPlants || {}).forEach((name) => {
