@@ -335,7 +335,6 @@ const InsectsHostPlantExplorer = React.memo(
     }));
     const activeSearchTerm = searchByTab[activeTab] || "";
     const [isStickyHeaderVisible, setIsStickyHeaderVisible] = useState(false);
-    const [showAllHeroStats, setShowAllHeroStats] = useState(false);
     const [showAboutDetails, setShowAboutDetails] = useState(false);
     const [isDesktopLayout, setIsDesktopLayout] = useState(() => {
       if (typeof window === "undefined") return false;
@@ -763,8 +762,6 @@ const InsectsHostPlantExplorer = React.memo(
       ],
       [aphidCount, counts],
     );
-    const hasCollapsedHeroStats = heroStats.length > 3;
-    const visibleHeroStats = showAllHeroStats ? heroStats : heroStats.slice(0, 3);
 
     const listSeo = useMemo(() => {
       if (location.pathname === "/moth") {
@@ -1349,7 +1346,7 @@ const InsectsHostPlantExplorer = React.memo(
 
                 <div className="mt-3 md:mt-6 space-y-2">
                   <div className="flex flex-wrap gap-2.5">
-                    {visibleHeroStats.map((item) => (
+                    {heroStats.map((item) => (
                       <div
                         key={item.label}
                         className="bg-white/20 backdrop-blur-sm rounded-full px-3.5 py-1.5 border border-white/30"
@@ -1360,16 +1357,6 @@ const InsectsHostPlantExplorer = React.memo(
                       </div>
                     ))}
                   </div>
-                  {hasCollapsedHeroStats && (
-                    <button
-                      type="button"
-                      onClick={() => setShowAllHeroStats((v) => !v)}
-                      className="inline-flex items-center gap-1 text-xs text-white/80 hover:text-white transition-colors"
-                    >
-                      <span>{showAllHeroStats ? "統計を簡易表示に戻す" : "統計をすべて表示"}</span>
-                      <span className={`transition-transform duration-200 ${showAllHeroStats ? "rotate-180" : ""}`}>⌄</span>
-                    </button>
-                  )}
                 </div>
 
                 {/* ヒーローセクション内の検索バー */}
