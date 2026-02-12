@@ -127,6 +127,9 @@ const sortInstagramPostsByLatest = (posts = []) =>
     .slice()
     .sort((a, b) => getInstagramTimestampValue(b) - getInstagramTimestampValue(a));
 
+const DEFAULT_INSTAGRAM_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
+const MIN_INSTAGRAM_REFRESH_INTERVAL_MS = 60 * 1000;
+
 const buildPlantInsectStats = (
   insects = [],
   plantDetails = {},
@@ -833,7 +836,7 @@ const InsectsHostPlantExplorer = React.memo(
 
     const instagramSectionRef = useRef(null);
     const [instagramInView, setInstagramInView] = useState(false);
-    const instagramFetchedRef = useRef(false);
+    const instagramRefreshInFlightRef = useRef(false);
 
     useEffect(() => {
       if (!instagramSectionRef.current) return;
@@ -851,104 +854,145 @@ const InsectsHostPlantExplorer = React.memo(
     }, []);
 
     useEffect(() => {
-      if (!instagramInView || instagramFetchedRef.current) return;
-      instagramFetchedRef.current = true;
+      if (!instagramInView) return;
+      if (typeof window === "undefined") return;
+
+      let active = true;
+      const base = import.meta.env.BASE_URL || "/";
+      const cacheMode = "no-store";
+      const fallbackInstagramUrl = import.meta.env.VITE_INSTAGRAM_URL || "";
+      const rawInterval = Number(import.meta.env.VITE_INSTAGRAM_REFRESH_INTERVAL_MS);
+      const refreshIntervalMs =
+        Number.isFinite(rawInterval) && rawInterval >= MIN_INSTAGRAM_REFRESH_INTERVAL_MS
+          ? rawInterval
+          : DEFAULT_INSTAGRAM_REFRESH_INTERVAL_MS;
 
       const loadInstagramResources = async () => {
-        const base = import.meta.env.BASE_URL || "/";
-        const cacheMode = "no-store";
-
-        // Latest profile/post
+        if (instagramRefreshInFlightRef.current) return;
+        instagramRefreshInFlightRef.current = true;
         try {
-          const res = await fetch(`${base}instagram_latest.txt`, {
-            cache: cacheMode,
-          });
-          if (res.ok) {
-            const text = (await res.text()).trim();
-            if (/^https?:\/\/(www\.)?instagram\.com\//.test(text)) {
-              setInstagramUrl(text);
-            } else if (import.meta.env.VITE_INSTAGRAM_URL) {
-              setInstagramUrl(import.meta.env.VITE_INSTAGRAM_URL);
-            }
-          }
-        } catch {
-          if (import.meta.env.VITE_INSTAGRAM_URL) {
-            setInstagramUrl(import.meta.env.VITE_INSTAGRAM_URL);
-          }
-        }
+          const cacheBust = Date.now();
+          const withCacheBust = (path) => `${base}${path}?t=${cacheBust}`;
 
-        // Timeline posts (JSON preferred)
-        try {
-          const res = await fetch(`${base}instagram_posts.json`, {
-            cache: cacheMode,
-          });
-          if (res.ok) {
-            const data = await res.json();
-            const posts = Array.isArray(data) ? data : data?.posts;
-            if (!Array.isArray(data)) {
-              const updatedAtRaw = data?.generatedAt || data?.updatedAt || data?.fetchedAt;
-              const updatedAtIso = toIsoFromTimestamp(updatedAtRaw);
-              if (updatedAtIso) {
-                setInstagramFeedUpdatedAt(updatedAtIso);
+          // Latest profile/post
+          try {
+            const res = await fetch(withCacheBust("instagram_latest.txt"), {
+              cache: cacheMode,
+            });
+            if (res.ok) {
+              const text = (await res.text()).trim();
+              if (!active) return;
+              if (/^https?:\/\/(www\.)?instagram\.com\//.test(text)) {
+                setInstagramUrl(text);
+              } else if (fallbackInstagramUrl) {
+                setInstagramUrl(fallbackInstagramUrl);
               }
             }
-            if (Array.isArray(posts) && posts.length > 0) {
-              const normalized = posts
-                .map(normalizeInstagramPostCard)
-                .filter(Boolean);
-              if (normalized.length > 0) {
-                const sorted = sortInstagramPostsByLatest(normalized);
-                setInstagramPostCards(sorted.slice(0, 12));
-                const latestTimestamp = sorted[0]?.timestamp;
-                const latestIso = toIsoFromTimestamp(latestTimestamp);
-                if (latestIso) {
-                  setInstagramFeedUpdatedAt((prev) => prev || latestIso);
+          } catch {
+            if (active && fallbackInstagramUrl) {
+              setInstagramUrl(fallbackInstagramUrl);
+            }
+          }
+
+          // Timeline posts (JSON preferred)
+          try {
+            const res = await fetch(withCacheBust("instagram_posts.json"), {
+              cache: cacheMode,
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (!active) return;
+              const posts = Array.isArray(data) ? data : data?.posts;
+              if (!Array.isArray(data)) {
+                const updatedAtRaw = data?.generatedAt || data?.updatedAt || data?.fetchedAt;
+                const updatedAtIso = toIsoFromTimestamp(updatedAtRaw);
+                if (updatedAtIso) {
+                  setInstagramFeedUpdatedAt(updatedAtIso);
+                }
+              }
+              if (Array.isArray(posts) && posts.length > 0) {
+                const normalized = posts
+                  .map(normalizeInstagramPostCard)
+                  .filter(Boolean);
+                if (normalized.length > 0) {
+                  const sorted = sortInstagramPostsByLatest(normalized);
+                  setInstagramPostCards(sorted.slice(0, 12));
+                  const latestTimestamp = sorted[0]?.timestamp;
+                  const latestIso = toIsoFromTimestamp(latestTimestamp);
+                  if (latestIso) {
+                    setInstagramFeedUpdatedAt((prev) => {
+                      const prevMs = parseInstagramTimestampValue(prev);
+                      const nextMs = parseInstagramTimestampValue(latestIso);
+                      if (!prevMs || nextMs >= prevMs) return latestIso;
+                      return prev;
+                    });
+                  }
                 }
               }
             }
+          } catch {
+            // ignore
           }
-        } catch {
-          // ignore
-        }
 
-        // Timeline posts (URL list fallback)
-        try {
-          const res = await fetch(`${base}instagram_posts.txt`, {
-            cache: cacheMode,
-          });
-          if (res.ok) {
-            const text = await res.text();
-            const urls = text
-              .split(/\r?\n/)
-              .map((s) => s.trim())
-              .filter((s) =>
-                /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(s),
-              );
-            if (urls.length > 0) {
-              setInstagramPosts(urls.slice(0, 24));
+          // Timeline posts (URL list fallback)
+          try {
+            const res = await fetch(withCacheBust("instagram_posts.txt"), {
+              cache: cacheMode,
+            });
+            if (res.ok) {
+              const text = await res.text();
+              if (!active) return;
+              const urls = text
+                .split(/\r?\n/)
+                .map((s) => s.trim())
+                .filter((s) =>
+                  /^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(s),
+                );
+              if (urls.length > 0) {
+                setInstagramPosts(urls.slice(0, 24));
+              }
             }
+          } catch {
+            // ignore
           }
-        } catch {
-          // ignore
-        }
 
-        // Optional widget
-        try {
-          const res = await fetch(`${base}instagram_widget.html`, {
-            cache: cacheMode,
-          });
-          if (res.ok) {
-            const html = (await res.text()).trim();
-            if (html) {
-              setInstagramWidgetHtml(html);
+          // Optional widget
+          try {
+            const res = await fetch(withCacheBust("instagram_widget.html"), {
+              cache: cacheMode,
+            });
+            if (res.ok) {
+              const html = (await res.text()).trim();
+              if (active && html) {
+                setInstagramWidgetHtml(html);
+              }
             }
+          } catch {
+            // ignore
           }
-        } catch {
-          // ignore
+        } finally {
+          instagramRefreshInFlightRef.current = false;
+        }
+      };
+
+      const handleResumeFetch = () => {
+        if (document.visibilityState === "visible") {
+          loadInstagramResources();
         }
       };
 
       loadInstagramResources();
+      const intervalId = window.setInterval(loadInstagramResources, refreshIntervalMs);
+      window.addEventListener("focus", handleResumeFetch);
+      document.addEventListener("visibilitychange", handleResumeFetch);
+
+      return () => {
+        active = false;
+        window.clearInterval(intervalId);
+        window.removeEventListener("focus", handleResumeFetch);
+        document.removeEventListener("visibilitychange", handleResumeFetch);
+        instagramRefreshInFlightRef.current = false;
+      };
     }, [instagramInView]);
 
     const instagramTimelinePosts = useMemo(() => {

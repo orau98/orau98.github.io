@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   fetch:
@@ -38,6 +39,7 @@ jobs:
           fi
 
       - name: Commit changes
+        id: commit_changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
@@ -45,6 +47,20 @@ jobs:
             git add public/instagram_posts.txt public/instagram_latest.txt public/instagram_posts.json public/instagram
             git commit -m "chore(instagram): update instagram posts"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No instagram changes to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Trigger deploy workflow
+        if: steps.commit_changes.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: 'main',
+            });
