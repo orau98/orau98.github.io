@@ -58,6 +58,7 @@ Camptomastix_hisbonalis
 Capua_vulgana
 Cassida_lineola
 Catocala_bella
+Catocala_bella
 Cerastis_leucographa
 Cerastis_rubricosa
 Ceroprepes_ophthalmicella
@@ -247,6 +248,7 @@ Mecodina_cineracea
 Meganola_fumosa
 Melapia_electaria
 Mesoplectra_griselda
+Mesorhynchaglaea_pacifica
 Mesorhynchaglaea_pacifica
 Microleon_longipalpis
 Micromelalopha_troglodyta
@@ -447,3 +449,7 @@ Zanclognatha_yaeyamalis
 Zaranga_permagna
 Zeiraphera_caeruleumana
 Zeiraphera_demutata
+アオアツバ
+ウラグロシロノメイガ
+キンモンエグリバ
+ヨスジノコメキリガ

@@ -179,6 +179,34 @@ function loadCSVOptional(filePath) {
   }
 }
 
+function pickFirstExistingPath(candidates) {
+  for (const candidate of candidates) {
+    if (candidate && fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+function findLatestBackupPath(dirPath, prefix) {
+  try {
+    if (!fs.existsSync(dirPath)) return null;
+    const files = fs
+      .readdirSync(dirPath)
+      .filter((name) => name.startsWith(prefix))
+      .map((name) => ({
+        name,
+        fullPath: path.join(dirPath, name),
+        mtimeMs: fs.statSync(path.join(dirPath, name)).mtimeMs || 0,
+      }))
+      .sort((a, b) => b.mtimeMs - a.mtimeMs);
+    if (files.length === 0) return null;
+    return files[0].fullPath;
+  } catch {
+    return null;
+  }
+}
+
 // 植物名として有効かどうかを検証
 function isValidPlantName(plantName) {
   if (!plantName || typeof plantName !== 'string') {
@@ -601,6 +629,8 @@ function generateInsectHTML(insect, type) {
         if (/^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(p)) return false;
         // Must have at least one Japanese or alphabetic character
         if (!/[ぁ-んァ-ヶー一-龠a-zA-Z]/.test(p)) return false;
+        const normalized = normalizePlantName(p);
+        if (!isValidPlantName(normalized)) return false;
         return true;
       }))]
       : [];
@@ -641,9 +671,9 @@ function generateInsectHTML(insect, type) {
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta property="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
-  ${imageUrl ? `<meta property="twitter:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
+  <meta name="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
+  <meta name="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
+  ${imageUrl ? `<meta name="twitter:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
   ${imageUrl ? `<meta name="twitter:image:alt" content="${insect.japaneseName}（${scientificName}）の写真">` : ''}
   
   <!-- Enhanced Structured Data -->
@@ -756,8 +786,12 @@ function generateInsectHTML(insect, type) {
         <p>${insect.japaneseName}は以下の植物を食草として利用します：</p>
         <ul>
           ${hostPlantsArray.map(plant => {
-            const safePlantName = plant.replace(/[/\\?%*:|"<>]/g, '-');
-            return `<li><a href="/meta/plant/${encodeURIComponent(safePlantName)}.html">${plant}</a></li>`;
+            const normalizedPlant = normalizePlantName(plant);
+            if (!isValidPlantName(normalizedPlant)) {
+              return `<li>${plant}</li>`;
+            }
+            const safePlantName = normalizedPlant.replace(/[/\\?%*:|"<>]/g, '-');
+            return `<li><a href="/meta/plant/${encodeURIComponent(safePlantName)}.html">${normalizedPlant}</a></li>`;
           }).join('')}
         </ul>` : `
         <p>食草情報は現在調査中です。</p>`}
@@ -879,9 +913,10 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
-  <meta property="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
-  ${mainImageUrl ? `<meta property="twitter:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
+  <meta name="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
+  <meta name="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
+  ${mainImageUrl ? `<meta name="twitter:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
+  ${mainImageUrl ? `<meta name="twitter:image:alt" content="${displayPlantName}の写真">` : ''}
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -1047,19 +1082,45 @@ async function generateMetaPages() {
   console.log('メタページ生成を開始します...');
 
   // 先に必須CSVの存在を確認（欠損時に既存メタページを消さない）
-  const requiredCsvPaths = [
+  // public に無い場合は normalized_data をフォールバックに使う
+  const insectsCsvPath = pickFirstExistingPath([
     path.join(__dirname, '../public/insects.csv'),
+    path.join(__dirname, '../normalized_data/insects.csv'),
+  ]);
+  const hostplantsCsvPath = pickFirstExistingPath([
     path.join(__dirname, '../public/hostplants.csv'),
-    path.join(__dirname, '../public/general_notes.csv'),
+    path.join(__dirname, '../normalized_data/hostplants.csv'),
+  ]);
+  const generalNotesCsvPath =
+    pickFirstExistingPath([
+      path.join(__dirname, '../public/general_notes.csv'),
+      path.join(__dirname, '../normalized_data/general_notes.csv'),
+    ]) ||
+    findLatestBackupPath(
+      path.join(__dirname, '../normalized_data'),
+      'general_notes.csv.bak.',
+    );
+
+  const requiredCsvs = [
+    { label: 'insects', path: insectsCsvPath },
+    { label: 'hostplants', path: hostplantsCsvPath },
   ];
-  const missingRequiredCsvs = requiredCsvPaths.filter((p) => !fs.existsSync(p));
+  const missingRequiredCsvs = requiredCsvs.filter((item) => !item.path);
   if (missingRequiredCsvs.length > 0) {
     console.error('[meta] 必須CSVが見つからないため、メタページ生成を中止します。');
-    missingRequiredCsvs.forEach((p) => {
-      console.error(`  - ${p}`);
+    missingRequiredCsvs.forEach((item) => {
+      console.error(`  - ${item.label}`);
     });
     process.exitCode = 1;
     return;
+  }
+
+  console.log(`[meta] insects CSV: ${insectsCsvPath}`);
+  console.log(`[meta] hostplants CSV: ${hostplantsCsvPath}`);
+  if (generalNotesCsvPath) {
+    console.log(`[meta] general_notes CSV: ${generalNotesCsvPath}`);
+  } else {
+    console.warn('[meta] general_notes CSV が見つからないため、一般備考なしで生成します。');
   }
   
   // 出力ディレクトリを作成
@@ -1111,7 +1172,7 @@ async function generateMetaPages() {
     console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
 
     // 正規化された3つのCSVファイルを読み込み
-    const insectsData = loadCSV(path.join(__dirname, '../public/insects.csv'));
+    const insectsData = loadCSV(insectsCsvPath);
     // leafbeetle（ハムシ）は運用上 `hamushi_integrated_master.csv` 側に存在することがあるため、
     // `public/insects.csv` に含まれない分は `normalized_data/insects.csv` から不足分を補う。
     // （SEO向け静的メタページの欠落・リンク切れを防ぐ）
@@ -1139,8 +1200,8 @@ async function generateMetaPages() {
     } catch (e) {
       console.warn('[meta] leafbeetle merge warn:', e?.message || e);
     }
-    const hostplantsData = loadCSV(path.join(__dirname, '../public/hostplants.csv'));
-    const generalNotesData = loadCSV(path.join(__dirname, '../public/general_notes.csv'));
+    const hostplantsData = loadCSV(hostplantsCsvPath);
+    const generalNotesData = generalNotesCsvPath ? loadCSV(generalNotesCsvPath) : [];
     
     // バタフライとハムシの従来データも読み込み
     const butterflyData = loadCSVOptional(path.join(__dirname, '../public/butterfly_host.csv'));

@@ -7,6 +7,8 @@ Sitemap: https://orau98.github.io/sitemap.xml
 # Child sitemaps (fallback for crawlers that fail sitemap index fetch)
 Sitemap: https://orau98.github.io/sitemap-main.xml
 Sitemap: https://orau98.github.io/sitemap-moth.xml
+Sitemap: https://orau98.github.io/sitemap-butterfly.xml
+Sitemap: https://orau98.github.io/sitemap-beetle.xml
 Sitemap: https://orau98.github.io/sitemap-longhornbeetle.xml
 Sitemap: https://orau98.github.io/sitemap-leafbeetle.xml
 Sitemap: https://orau98.github.io/sitemap-plant.xml
