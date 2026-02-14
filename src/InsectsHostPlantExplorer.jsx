@@ -321,7 +321,6 @@ const InsectsHostPlantExplorer = React.memo(
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
     const [instagramPostCards, setInstagramPostCards] = useState([]);
-    const [instagramFeedUpdatedAt, setInstagramFeedUpdatedAt] = useState("");
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
     const [instagramGalleryFailed, setInstagramGalleryFailed] = useState(false);
     const baseUrl = import.meta.env.BASE_URL || "/";
@@ -903,13 +902,6 @@ const InsectsHostPlantExplorer = React.memo(
               const data = await res.json();
               if (!active) return;
               const posts = Array.isArray(data) ? data : data?.posts;
-              if (!Array.isArray(data)) {
-                const updatedAtRaw = data?.generatedAt || data?.updatedAt || data?.fetchedAt;
-                const updatedAtIso = toIsoFromTimestamp(updatedAtRaw);
-                if (updatedAtIso) {
-                  setInstagramFeedUpdatedAt(updatedAtIso);
-                }
-              }
               if (Array.isArray(posts) && posts.length > 0) {
                 const normalized = posts
                   .map(normalizeInstagramPostCard)
@@ -917,16 +909,6 @@ const InsectsHostPlantExplorer = React.memo(
                 if (normalized.length > 0) {
                   const sorted = sortInstagramPostsByLatest(normalized);
                   setInstagramPostCards(sorted.slice(0, 12));
-                  const latestTimestamp = sorted[0]?.timestamp;
-                  const latestIso = toIsoFromTimestamp(latestTimestamp);
-                  if (latestIso) {
-                    setInstagramFeedUpdatedAt((prev) => {
-                      const prevMs = parseInstagramTimestampValue(prev);
-                      const nextMs = parseInstagramTimestampValue(latestIso);
-                      if (!prevMs || nextMs >= prevMs) return latestIso;
-                      return prev;
-                    });
-                  }
                 }
               }
             }
@@ -1009,24 +991,6 @@ const InsectsHostPlantExplorer = React.memo(
         );
       });
     }, [instagramPostCards, isInstagramPostUrl]);
-
-    const formatInstagramDateLabel = useCallback((rawValue) => {
-      const parsed = parseInstagramTimestampValue(rawValue);
-      if (!parsed) return "";
-      return new Date(parsed).toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
-    }, []);
-
-    const latestInstagramDateLabel = useMemo(() => {
-      return formatInstagramDateLabel(instagramTimelinePosts[0]?.timestamp);
-    }, [instagramTimelinePosts, formatInstagramDateLabel]);
-
-    const instagramFeedUpdatedDateLabel = useMemo(() => {
-      return formatInstagramDateLabel(instagramFeedUpdatedAt);
-    }, [instagramFeedUpdatedAt, formatInstagramDateLabel]);
 
     useEffect(() => {
       setInstagramGalleryFailed(false);
@@ -1959,13 +1923,6 @@ const InsectsHostPlantExplorer = React.memo(
                                 Official Instagram
                               </h3>
                             </div>
-                            {(latestInstagramDateLabel || instagramFeedUpdatedDateLabel) && (
-                              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                                {latestInstagramDateLabel
-                                  ? `最新: ${latestInstagramDateLabel}`
-                                  : `更新: ${instagramFeedUpdatedDateLabel}`}
-                              </span>
-                            )}
                           </div>
                           <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug">
                             野生生物の観察記録を投稿しています
@@ -1987,7 +1944,7 @@ const InsectsHostPlantExplorer = React.memo(
                           <>
                             {/* Instagram埋め込み */}
                             <div className="overflow-hidden rounded-lg shadow-sm">
-                              <div className="instagram-wrapper w-full bg-white dark:bg-slate-800 max-h-[60vh] lg:max-h-[70vh] overflow-y-auto overscroll-contain scrollbar-thin">
+                              <div className="instagram-wrapper w-full bg-white dark:bg-slate-800 max-h-[55vh] lg:max-h-[60vh] overflow-y-auto overscroll-contain scrollbar-thin">
                                 {(() => {
                                   // 1) timeline from JSON (custom gallery)
                                   if (
@@ -1998,7 +1955,7 @@ const InsectsHostPlantExplorer = React.memo(
                                     return (
                                       <InstagramGallery
                                         posts={instagramTimelinePosts}
-                                        className="p-3"
+                                        className="p-3 lg:grid-cols-3"
                                         onAllFailed={() => setInstagramGalleryFailed(true)}
                                       />
                                     );
