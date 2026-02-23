@@ -44,6 +44,9 @@ jobs:
       - name: Build data-lite
         run: npm run build:data-lite
 
+      - name: Generate meta pages
+        run: npm run generate-meta
+
       - name: Build (vite only)
         run: npm run build:app
 
@@ -61,6 +64,7 @@ jobs:
         run: |
           test -f dist/index.html
           test -f dist/robots.txt
+          test -f dist/ads.txt
           test -f dist/sitemap.xml
           test -f dist/opensearch.xml
           test -f dist/sitemap.html

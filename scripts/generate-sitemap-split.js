@@ -35,6 +35,15 @@ function getFileLastmod(filePath) {
   }
 }
 
+function isNoindexPage(filePath) {
+  try {
+    const html = fs.readFileSync(filePath, 'utf-8');
+    return /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+  } catch {
+    return false;
+  }
+}
+
 // サイトマップを分割して生成
 function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
@@ -91,6 +100,16 @@ function generateSplitSitemaps() {
         if (!isFamilyVariant && aliasBases.has(base)) return false;
         return true;
       });
+    }
+
+    const preNoindexCount = files.length;
+    files = files.filter((file) => {
+      if (file === 'index.html') return true;
+      return !isNoindexPage(path.join(absDir, file));
+    });
+    const removedByNoindex = preNoindexCount - files.length;
+    if (removedByNoindex > 0) {
+      console.log(`[sitemap] ${key}: excluded noindex pages = ${removedByNoindex}`);
     }
 
     // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）

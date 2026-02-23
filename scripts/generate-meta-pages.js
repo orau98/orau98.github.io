@@ -587,6 +587,37 @@ function resolveInsectImageUrl(insect) {
   return '';
 }
 
+function normalizedTextLength(value) {
+  if (!value) return 0;
+  return String(value).replace(/\s+/g, '').length;
+}
+
+function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
+  const hasHostPlants = Array.isArray(hostPlantsArray) && hostPlantsArray.length > 0;
+  const hasImage = Boolean(imageUrl);
+  const emergence = String(insect?.emergenceTime || '').trim();
+  const hasEmergence = emergence !== '' && emergence !== '不明';
+  const hasRichRemarks = normalizedTextLength(insect?.remarks) >= 80;
+
+  // 検索流入に寄与しづらい薄いページは noindex へ
+  if (!hasHostPlants && !hasImage && !hasEmergence && !hasRichRemarks) {
+    return 'noindex, follow';
+  }
+  return 'index, follow';
+}
+
+function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles }) {
+  if (isAlias) return 'noindex, follow';
+  const insectCount = Array.isArray(relatedInsects) ? relatedInsects.length : 0;
+  const hasImage = Array.isArray(plantImageFiles) && plantImageFiles.length > 0;
+
+  // 1種のみ + 画像なし は薄いページとして noindex
+  if (insectCount <= 1 && !hasImage) {
+    return 'noindex, follow';
+  }
+  return 'index, follow';
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
 function generateInsectHTML(insect, type) {
   const typeNames = {
@@ -643,13 +674,14 @@ function generateInsectHTML(insect, type) {
     longhornbeetle: 'カミキリムシ科',
     leafbeetle: 'ハムシ科'
   }[type];
+  const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
   
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="${robotsContent}">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
@@ -857,7 +889,6 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const canonicalPlantName = originalPlantName || displayPlantName;
   const safePlantName = displayPlantName.replace(/[/\\?%*:|"<>]/g, '-');
   const safeCanonicalName = canonicalPlantName.replace(/[/\\?%*:|"<>]/g, '-');
-  const robotsContent = isAlias ? 'noindex, follow' : 'index, follow';
 
   // 植物の別名を取得（データ用の名前で取得）
   const plantAliases = getPlantAliases(dataPlantName);
@@ -868,6 +899,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const mainImageUrl = plantImageFiles.length > 0 
     ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
     : '';
+  const robotsContent = computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles });
 
   // 昆虫を種類別に分類
   const insectsByType = {
