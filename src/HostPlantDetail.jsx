@@ -1089,6 +1089,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const nameIndexSet = Array.isArray(nameIndex)
       ? new Set(nameIndex.filter(Boolean))
       : null;
+    const hasUsableIndex = Boolean(nameIndexSet && nameIndexSet.size > 0);
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
@@ -1101,7 +1102,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
 
     const resolveNameWithIndex = (base, suffix) => {
-      if (!nameIndexSet) return `${base}${suffix}`;
+      if (!hasUsableIndex) return `${base}${suffix}`;
       if (!suffix) return has(base) ? base : null;
       const suffixCore = suffix.startsWith('_') ? suffix.slice(1) : suffix;
       const candidates = new Set();
@@ -1127,6 +1128,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       extensions.forEach((ext) => {
         variations.push(`${baseUrl}images/plants/${name}${ext}`);
       });
+      // Fallback: some plant photos may be placed under insects directory
+      extensions.forEach((ext) => {
+        variations.push(`${baseUrl}images/insects/${encodedName}${ext}`);
+      });
+      extensions.forEach((ext) => {
+        variations.push(`${baseUrl}images/insects/${name}${ext}`);
+      });
       return Array.from(new Set(variations.filter(Boolean)));
     };
 
@@ -1148,29 +1156,47 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     };
 
     bases.forEach((base) => {
+      let matchedFromIndex = false;
       suffixes.forEach(({ suffix, label }) => {
-        const finalName = nameIndexSet
+        const finalName = hasUsableIndex
           ? resolveNameWithIndex(base, suffix)
           : `${base}${suffix}`;
         if (finalName && has(finalName)) {
+          matchedFromIndex = true;
           const appliedSuffix = finalName.startsWith(base) ? finalName.slice(base.length) : '';
           pushImage(finalName, base, label, appliedSuffix);
-        } else if (!nameIndexSet && suffix === '') {
+        } else if (!hasUsableIndex && suffix === '') {
           // When no index is available, still attempt the base filename once
           pushImage(base, base, label, '');
         }
       });
 
-      if (nameIndexSet) {
+      if (hasUsableIndex) {
         // Include any additional suffix variants present in the index (e.g., _紅葉)
         nameIndex
           .filter((name) => name && name.startsWith(base))
           .forEach((name) => {
+            matchedFromIndex = true;
             if (addedNames.has(name)) return;
             const suffixPart = name.startsWith(base) ? name.slice(base.length) : '';
             const label = buildLabelFromSuffix(suffixPart, '画像');
             pushImage(name, base, label, suffixPart);
           });
+      }
+
+      // Index can be stale in production cache. Try common fallback names anyway.
+      if (!matchedFromIndex) {
+        const fallbackSuffixes = ['', '_葉表', '_葉裏', '_葉', '_樹皮', '_花', '_実'];
+        fallbackSuffixes.forEach((suffix) => {
+          if (!suffix) {
+            pushImage(base, base, '全体', '');
+            return;
+          }
+          const core = suffix.startsWith('_') ? suffix.slice(1) : suffix;
+          pushImage(`${base}${suffix}`, base, buildLabelFromSuffix(suffix, '画像'), suffix);
+          pushImage(`${base}＿${core}`, base, buildLabelFromSuffix(`＿${core}`, '画像'), `＿${core}`);
+          pushImage(`${base}${core}`, base, buildLabelFromSuffix(core, '画像'), core);
+        });
       }
     });
     return images;
