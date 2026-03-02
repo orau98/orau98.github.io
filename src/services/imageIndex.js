@@ -5,44 +5,7 @@ const ASSET_VERSION = import.meta.env.VITE_ASSET_VERSION || 'dev';
 let _plantImageNames = null; // array of strings without extension
 let _plantImageLoading = null;
 let _plantImageVersion = null;
-
-export const loadPlantImageFilenames = async () => {
-  if (_plantImageVersion !== ASSET_VERSION) {
-    _plantImageNames = null;
-    _plantImageLoading = null;
-    _plantImageVersion = ASSET_VERSION;
-  }
-  if (_plantImageNames) return _plantImageNames;
-  if (_plantImageLoading) return _plantImageLoading;
-  _plantImageLoading = (async () => {
-    try {
-      const base = import.meta.env.BASE_URL || '/';
-      const ver = import.meta.env.DEV ? `${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION || '');
-      const bust = ver ? `?v=${ver}` : '';
-      const url = `${base}plant_image_filenames.txt${bust}`;
-      const res = await fetch(url, { cache: import.meta.env.DEV ? 'no-store' : 'default' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      const list = text.split('\n')
-        .map(s => s.trim())
-        .filter(Boolean)
-        .map(line => (line.includes('→') ? line.split('→')[1].trim() : line));
-      _plantImageNames = list;
-      _plantImageVersion = ASSET_VERSION;
-      return _plantImageNames;
-    } catch (e) {
-      _plantImageNames = [];
-      return _plantImageNames;
-    } finally {
-      _plantImageLoading = null;
-    }
-  })();
-  return _plantImageLoading;
-};
-
-let _insectImageNames = null; // set of bases for insects
-let _insectExtMap = null; // map base -> extension (e.g., .jpg)
-let _insectLoading = null;
+let _plantImageErrorAt = 0;
 
 const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 250) => {
   let lastErr;
@@ -61,6 +24,59 @@ const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 250) => {
   }
   throw lastErr;
 };
+
+export const loadPlantImageFilenames = async () => {
+  if (_plantImageVersion !== ASSET_VERSION) {
+    _plantImageNames = null;
+    _plantImageLoading = null;
+    _plantImageVersion = ASSET_VERSION;
+    _plantImageErrorAt = 0;
+  }
+  // If previous load failed, allow periodic retry instead of caching [] forever.
+  if (Array.isArray(_plantImageNames) && _plantImageNames.length === 0) {
+    const retryAfterMs = 30 * 1000;
+    if (Date.now() - _plantImageErrorAt < retryAfterMs) {
+      return _plantImageNames;
+    }
+    _plantImageNames = null;
+  }
+  if (_plantImageNames) return _plantImageNames;
+  if (_plantImageLoading) return _plantImageLoading;
+  _plantImageLoading = (async () => {
+    try {
+      const base = import.meta.env.BASE_URL || '/';
+      const ver = import.meta.env.DEV ? `${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION || '');
+      const bust = ver ? `?v=${ver}` : '';
+      const url = `${base}plant_image_filenames.txt${bust}`;
+      const res = await fetchWithRetry(
+        url,
+        { cache: import.meta.env.DEV ? 'no-store' : 'default' },
+        2,
+        200
+      );
+      const text = await res.text();
+      const list = text.split('\n')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(line => (line.includes('→') ? line.split('→')[1].trim() : line));
+      _plantImageNames = list;
+      _plantImageVersion = ASSET_VERSION;
+      _plantImageErrorAt = 0;
+      return _plantImageNames;
+    } catch {
+      _plantImageNames = [];
+      _plantImageErrorAt = Date.now();
+      return _plantImageNames;
+    } finally {
+      _plantImageLoading = null;
+    }
+  })();
+  return _plantImageLoading;
+};
+
+let _insectImageNames = null; // set of bases for insects
+let _insectExtMap = null; // map base -> extension (e.g., .jpg)
+let _insectLoading = null;
 
 export const loadInsectImageIndexes = async () => {
   if (_insectImageNames && _insectExtMap) return { names: _insectImageNames, exts: _insectExtMap };
