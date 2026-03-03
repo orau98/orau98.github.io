@@ -12,12 +12,21 @@ const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 250) => {
   for (let i = 0; i <= retries; i++) {
     try {
       const res = await fetch(url, opts);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const err = new Error(`HTTP ${res.status}`);
+        err.status = res.status;
+        throw err;
+      }
       return res;
     } catch (e) {
       lastErr = e;
       if (i < retries) {
-        await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+        const status = Number(e?.status || 0);
+        const isProtected = status === 429 || status === 503;
+        const waitMs = isProtected
+          ? Math.max(3000, delay * Math.pow(2, i))
+          : delay * Math.pow(2, i);
+        await new Promise(r => setTimeout(r, waitMs));
         continue;
       }
     }

@@ -257,96 +257,37 @@ const PlantImageGallery = ({ images, plantName = '' }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [mainImage, setMainImage] = useState(null);
-  const probeCacheRef = useRef(new Map());
-
-  const probeImage = useCallback((url) => {
-    if (!url || typeof Image === 'undefined') return Promise.resolve(false);
-    const cache = probeCacheRef.current;
-    if (cache.has(url)) return cache.get(url);
-
-    const promise = new Promise((resolve) => {
-      const img = new Image();
-      const done = (ok) => {
-        img.onload = null;
-        img.onerror = null;
-        resolve(ok);
-      };
-      img.onload = () => done(true);
-      img.onerror = () => done(false);
-      img.src = url;
-    });
-    cache.set(url, promise);
-    return promise;
-  }, []);
-
-  const resolveFirstAvailableCandidate = useCallback(async (image) => {
-    const uniqueCandidates = Array.from(
-      new Set((Array.isArray(image?.candidates) ? image.candidates : []).filter(Boolean))
-    );
-    for (let i = 0; i < uniqueCandidates.length; i += 1) {
-      const ok = await probeImage(uniqueCandidates[i]);
-      if (ok) {
-        return {
-          ...image,
-          candidates: uniqueCandidates,
-          candidateIndex: i,
-          finalSrc: uniqueCandidates[i],
-        };
-      }
-    }
-    return null;
-  }, [probeImage]);
 
   useEffect(() => {
-    let cancelled = false;
-
-    const prepareImages = async () => {
-      if (!Array.isArray(images) || images.length === 0) {
-        if (cancelled) return;
-        setAvailableImages([]);
-        setMainImage(null);
-        setSelectedImage(null);
-        setModalOpen(false);
-        setLoading(false);
-        return;
-      }
-
-      if (!cancelled) setLoading(true);
-
-      const normalized = images.map((image, idx) => {
-        const candidates = Array.isArray(image.candidates) && image.candidates.length
-          ? image.candidates
-          : [image.src, image.srcJPG].filter(Boolean);
-        const uniqueCandidates = Array.from(new Set(candidates.filter(Boolean)));
-        return {
-          ...image,
-          id: image.id || `${image.alt || 'plant'}-${idx}`,
-          candidates: uniqueCandidates,
-          candidateIndex: 0,
-          finalSrc: uniqueCandidates[0],
-        };
-      });
-
-      const resolved = await Promise.all(
-        normalized.map((image) => resolveFirstAvailableCandidate(image))
-      );
-      if (cancelled) return;
-
-      const filtered = resolved.filter(Boolean);
-      const firstImage = filtered[0] || null;
-      setAvailableImages(filtered);
-      setMainImage(firstImage);
-      setSelectedImage(firstImage);
+    if (!Array.isArray(images) || images.length === 0) {
+      setAvailableImages([]);
+      setMainImage(null);
+      setSelectedImage(null);
       setModalOpen(false);
       setLoading(false);
-    };
+      return;
+    }
 
-    prepareImages();
+    const normalized = images.map((image, idx) => {
+      const candidates = Array.isArray(image.candidates) && image.candidates.length
+        ? image.candidates
+        : [image.src, image.srcJPG].filter(Boolean);
+      const uniqueCandidates = Array.from(new Set(candidates.filter(Boolean)));
+      return {
+        ...image,
+        id: image.id || `${image.alt || 'plant'}-${idx}`,
+        candidates: uniqueCandidates,
+        candidateIndex: 0,
+        finalSrc: uniqueCandidates[0],
+      };
+    });
 
-    return () => {
-      cancelled = true;
-    };
-  }, [images, resolveFirstAvailableCandidate]);
+    setAvailableImages(normalized);
+    setMainImage(normalized[0] || null);
+    setSelectedImage(normalized[0] || null);
+    setModalOpen(false);
+    setLoading(false);
+  }, [images]);
 
   const handleImageError = (imageId, event) => {
     setAvailableImages((prev) => {
@@ -1150,19 +1091,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       ? new Set(nameIndex.filter(Boolean))
       : null;
     const hasUsableIndex = Boolean(nameIndexSet && nameIndexSet.size > 0);
+    if (!hasUsableIndex) return [];
+
     const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
     const addedNames = new Set();
 
-    const has = (fullName) => {
-      if (!nameIndexSet) return true; // allow optimistic fetch when index missing
-      return nameIndexSet.has(fullName);
-    };
+    const has = (fullName) => nameIndexSet.has(fullName);
     const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
 
     const resolveNameWithIndex = (base, suffix) => {
-      if (!hasUsableIndex) return `${base}${suffix}`;
       if (!suffix) return has(base) ? base : null;
       const suffixCore = suffix.startsWith('_') ? suffix.slice(1) : suffix;
       const candidates = new Set();
@@ -1182,28 +1121,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const encodedName = encodeURIComponent(name);
       const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
       const variations = [];
+      // Prefer resized image first to reduce transfer size and burst load.
+      variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.jpg`);
       extensions.forEach((ext) => {
         variations.push(`${baseUrl}images/plants/${encodedName}${ext}`);
       });
-      extensions.forEach((ext) => {
-        variations.push(`${baseUrl}images/plants/${name}${ext}`);
-      });
-      // Fallback: some plant photos may be placed under insects directory
-      extensions.forEach((ext) => {
-        variations.push(`${baseUrl}images/insects/${encodedName}${ext}`);
-      });
-      extensions.forEach((ext) => {
-        variations.push(`${baseUrl}images/insects/${name}${ext}`);
-      });
       return Array.from(new Set(variations.filter(Boolean)));
-    };
-
-    const buildCandidatesFromNames = (names = []) => {
-      const merged = [];
-      Array.from(new Set(names.filter(Boolean))).forEach((name) => {
-        merged.push(...buildCandidates(name));
-      });
-      return Array.from(new Set(merged));
     };
 
     const buildLabelFromSuffix = (suffix, fallback = '画像') => {
@@ -1216,63 +1139,33 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const pushImage = (finalName, base, label, appliedSuffix = '', customCandidates = null) => {
       if (!finalName || addedNames.has(finalName)) return;
       addedNames.add(finalName);
+      const candidateList = Array.isArray(customCandidates) && customCandidates.length
+        ? customCandidates
+        : buildCandidates(finalName);
       images.push({
         label: label || buildLabelFromSuffix(appliedSuffix || ''),
         alt: `${base}${appliedSuffix ? ` (${label || buildLabelFromSuffix(appliedSuffix || '')})` : ''}`,
-        candidates: Array.isArray(customCandidates) && customCandidates.length
-          ? customCandidates
-          : buildCandidates(finalName)
+        candidates: candidateList.slice(0, 8),
       });
     };
 
     bases.forEach((base) => {
-      let matchedFromIndex = false;
       suffixes.forEach(({ suffix, label }) => {
-        const finalName = hasUsableIndex
-          ? resolveNameWithIndex(base, suffix)
-          : `${base}${suffix}`;
+        const finalName = resolveNameWithIndex(base, suffix);
         if (finalName && has(finalName)) {
-          matchedFromIndex = true;
           const appliedSuffix = finalName.startsWith(base) ? finalName.slice(base.length) : '';
           pushImage(finalName, base, label, appliedSuffix);
-        } else if (!hasUsableIndex && suffix === '') {
-          // When no index is available, still attempt the base filename once
-          pushImage(base, base, label, '');
         }
       });
-
-      if (hasUsableIndex) {
-        // Include any additional suffix variants present in the index (e.g., _紅葉)
-        nameIndex
-          .filter((name) => name && name.startsWith(base))
-          .forEach((name) => {
-            matchedFromIndex = true;
-            if (addedNames.has(name)) return;
-            const suffixPart = name.startsWith(base) ? name.slice(base.length) : '';
-            const label = buildLabelFromSuffix(suffixPart, '画像');
-            pushImage(name, base, label, suffixPart);
-          });
-      }
-
-      // Index can be stale in production cache. Try common fallback names anyway.
-      if (!matchedFromIndex && (hasUsableIndex || base === bases[0])) {
-        const fallbackSuffixes = ['', '_葉表', '_葉裏', '_葉', '_樹皮', '_花', '_実'];
-        fallbackSuffixes.forEach((suffix) => {
-          const core = suffix.startsWith('_') ? suffix.slice(1) : suffix;
-          const names = suffix
-            ? [`${base}${suffix}`, `${base}＿${core}`, `${base}${core}`]
-            : [base];
-          const candidates = buildCandidatesFromNames(names);
-          const representative = suffix ? `${base}${suffix}` : base;
-          pushImage(
-            representative,
-            base,
-            buildLabelFromSuffix(suffix, '画像'),
-            suffix,
-            candidates
-          );
+      // Include additional suffix variants present in the index (e.g., _紅葉)
+      nameIndex
+        .filter((name) => name && name.startsWith(base))
+        .forEach((name) => {
+          if (addedNames.has(name)) return;
+          const suffixPart = name.startsWith(base) ? name.slice(base.length) : '';
+          const label = buildLabelFromSuffix(suffixPart, '画像');
+          pushImage(name, base, label, suffixPart);
         });
-      }
     });
     return images;
   };
