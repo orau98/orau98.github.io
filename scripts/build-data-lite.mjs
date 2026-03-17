@@ -25,8 +25,28 @@ function readFirstExistingText(paths) {
 }
 
 function parseCsv(text, opts = {}) {
-  const result = Papa.parse(text, { header: true, skipEmptyLines: true, transformHeader: (h)=>h.trim(), ...opts });
+  const normalizedText = (text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const result = Papa.parse(normalizedText, { header: true, skipEmptyLines: true, transformHeader: (h)=>h.trim(), ...opts });
   return result.data || [];
+}
+
+function mergeRowsById(primaryRows = [], secondaryRows = [], idKey = 'insect_id') {
+  if (!Array.isArray(primaryRows) || primaryRows.length === 0) {
+    return Array.isArray(secondaryRows) ? [...secondaryRows] : [];
+  }
+  const merged = [...primaryRows];
+  const seen = new Set(
+    primaryRows
+      .map((row) => cleanString(row?.[idKey]))
+      .filter(Boolean),
+  );
+  (secondaryRows || []).forEach((row) => {
+    const id = cleanString(row?.[idKey]);
+    if (!id || seen.has(id)) return;
+    merged.push(row);
+    seen.add(id);
+  });
+  return merged;
 }
 
 function normalizePlantNameLite(plantName) {
@@ -262,25 +282,26 @@ function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
 
 async function build() {
   console.log('[data-lite] start');
-  const insectsCsv = readFirstExistingText([
-    path.join(PUBLIC_DIR, 'insects.csv'),
-    path.join(ROOT, 'normalized_data', 'insects.csv'),
-  ]);
+  const normalizedInsectsCsv = readText(path.join(ROOT, 'normalized_data', 'insects.csv'));
+  const publicInsectsCsv = readText(path.join(PUBLIC_DIR, 'insects.csv'));
   const hostplantsCsv = readFirstExistingText([
-    path.join(PUBLIC_DIR, 'hostplants.csv'),
     path.join(ROOT, 'normalized_data', 'hostplants.csv'),
+    path.join(PUBLIC_DIR, 'hostplants.csv'),
   ]);
   const notesCsv = readFirstExistingText([
-    path.join(PUBLIC_DIR, 'general_notes.csv'),
     path.join(ROOT, 'normalized_data', 'general_notes.csv'),
+    path.join(PUBLIC_DIR, 'general_notes.csv'),
   ]);
 
-  if (!insectsCsv || !hostplantsCsv) {
+  if ((!normalizedInsectsCsv && !publicInsectsCsv) || !hostplantsCsv) {
     console.warn('[data-lite] required normalized CSVs not found; skipping');
     return;
   }
 
-  const insects = parseCsv(insectsCsv);
+  const insects = mergeRowsById(
+    parseCsv(normalizedInsectsCsv || publicInsectsCsv),
+    normalizedInsectsCsv && publicInsectsCsv ? parseCsv(publicInsectsCsv) : [],
+  );
   const hostplants = parseCsv(hostplantsCsv);
   const notes = parseCsv(notesCsv);
   const ylistCsv = readText(path.join(PUBLIC_DIR, '20210514YList_download.csv'));

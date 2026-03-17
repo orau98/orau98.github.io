@@ -102,6 +102,7 @@ function loadCSV(filePath) {
       throw new Error(`Missing CSV: ${filePath}`);
     }
     let csvContent = fs.readFileSync(filePath, 'utf-8');
+    csvContent = csvContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     
     // Remove BOM if present
     if (csvContent.charCodeAt(0) === 0xFEFF) {
@@ -195,6 +196,25 @@ function pickFirstExistingPath(candidates) {
     }
   }
   return null;
+}
+
+function mergeRowsById(primaryRows = [], secondaryRows = [], idKey = 'insect_id') {
+  if (!Array.isArray(primaryRows) || primaryRows.length === 0) {
+    return Array.isArray(secondaryRows) ? [...secondaryRows] : [];
+  }
+  const merged = [...primaryRows];
+  const seen = new Set(
+    primaryRows
+      .map((row) => (row?.[idKey] || '').toString().trim())
+      .filter(Boolean),
+  );
+  (secondaryRows || []).forEach((row) => {
+    const id = (row?.[idKey] || '').toString().trim();
+    if (!id || seen.has(id)) return;
+    merged.push(row);
+    seen.add(id);
+  });
+  return merged;
 }
 
 function findLatestBackupPath(dirPath, prefix) {
@@ -1110,19 +1130,19 @@ async function generateMetaPages() {
   console.log('メタページ生成を開始します...');
 
   // 先に必須CSVの存在を確認（欠損時に既存メタページを消さない）
-  // public に無い場合は normalized_data をフォールバックに使う
+  // 正規化データを優先し、public 側は不足IDの補完にのみ使う
   const insectsCsvPath = pickFirstExistingPath([
-    path.join(__dirname, '../public/insects.csv'),
     path.join(__dirname, '../normalized_data/insects.csv'),
+    path.join(__dirname, '../public/insects.csv'),
   ]);
   const hostplantsCsvPath = pickFirstExistingPath([
-    path.join(__dirname, '../public/hostplants.csv'),
     path.join(__dirname, '../normalized_data/hostplants.csv'),
+    path.join(__dirname, '../public/hostplants.csv'),
   ]);
   const generalNotesCsvPath =
     pickFirstExistingPath([
-      path.join(__dirname, '../public/general_notes.csv'),
       path.join(__dirname, '../normalized_data/general_notes.csv'),
+      path.join(__dirname, '../public/general_notes.csv'),
     ]) ||
     findLatestBackupPath(
       path.join(__dirname, '../normalized_data'),
@@ -1200,33 +1220,21 @@ async function generateMetaPages() {
     console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
 
     // 正規化された3つのCSVファイルを読み込み
-    const insectsData = loadCSV(insectsCsvPath);
-    // leafbeetle（ハムシ）は運用上 `hamushi_integrated_master.csv` 側に存在することがあるため、
-    // `public/insects.csv` に含まれない分は `normalized_data/insects.csv` から不足分を補う。
-    // （SEO向け静的メタページの欠落・リンク切れを防ぐ）
+    let insectsData = loadCSV(insectsCsvPath);
+    // public 側にだけ残っているIDがあるため、不足分のみ補完する。
     try {
-      const normalizedInsectsData = loadCSVOptional(
-        path.join(__dirname, '../normalized_data/insects.csv'),
-      );
-      if (normalizedInsectsData.length > 0) {
-        const existingIds = new Set(insectsData.map((row) => row.insect_id).filter(Boolean));
-        let added = 0;
-        normalizedInsectsData.forEach((row) => {
-          const famLatin = (row.family || '').trim();
-          const famJP = (row.family_jp || '').trim();
-          const isLeafbeetle = famJP.includes('ハムシ') || famLatin === 'Chrysomelidae' || famLatin === 'Megalopodidae';
-          const id = (row.insect_id || '').trim();
-          if (!isLeafbeetle || !id || existingIds.has(id)) return;
-          insectsData.push(row);
-          existingIds.add(id);
-          added++;
-        });
+      const publicInsectsPath = path.join(__dirname, '../public/insects.csv');
+      if (insectsCsvPath !== publicInsectsPath) {
+        const publicInsectsData = loadCSVOptional(publicInsectsPath);
+        const merged = mergeRowsById(insectsData, publicInsectsData);
+        const added = merged.length - insectsData.length;
         if (added > 0) {
-          console.log(`[meta] leafbeetle rows added from normalized_data: ${added}`);
+          insectsData = merged;
+          console.log(`[meta] insect rows added from public fallback: ${added}`);
         }
       }
     } catch (e) {
-      console.warn('[meta] leafbeetle merge warn:', e?.message || e);
+      console.warn('[meta] public insect fallback warn:', e?.message || e);
     }
     const hostplantsData = loadCSV(hostplantsCsvPath);
     const generalNotesData = generalNotesCsvPath ? loadCSV(generalNotesCsvPath) : [];
