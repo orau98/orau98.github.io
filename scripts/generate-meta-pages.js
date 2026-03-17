@@ -219,25 +219,6 @@ function pickFirstExistingPath(candidates) {
   return null;
 }
 
-function mergeRowsById(primaryRows = [], secondaryRows = [], idKey = 'insect_id') {
-  if (!Array.isArray(primaryRows) || primaryRows.length === 0) {
-    return Array.isArray(secondaryRows) ? [...secondaryRows] : [];
-  }
-  const merged = [...primaryRows];
-  const seen = new Set(
-    primaryRows
-      .map((row) => (row?.[idKey] || '').toString().trim())
-      .filter(Boolean),
-  );
-  (secondaryRows || []).forEach((row) => {
-    const id = (row?.[idKey] || '').toString().trim();
-    if (!id || seen.has(id)) return;
-    merged.push(row);
-    seen.add(id);
-  });
-  return merged;
-}
-
 function findLatestBackupPath(dirPath, prefix) {
   try {
     if (!fs.existsSync(dirPath)) return null;
@@ -1164,7 +1145,7 @@ async function generateMetaPages() {
   console.log('メタページ生成を開始します...');
 
   // 先に必須CSVの存在を確認（欠損時に既存メタページを消さない）
-  // 正規化データを優先し、public 側は不足IDの補完にのみ使う
+  // 正規化データを正とし、public 側は完全な代替ソースとしてのみ使う
   const insectsCsvPath = pickFirstExistingPath([
     path.join(__dirname, '../normalized_data/insects.csv'),
     path.join(__dirname, '../public/insects.csv'),
@@ -1254,22 +1235,7 @@ async function generateMetaPages() {
     console.log(`${allPlantImages.length}件の植物画像を読み込みました。`);
 
     // 正規化された3つのCSVファイルを読み込み
-    let insectsData = loadCSV(insectsCsvPath);
-    // public 側にだけ残っているIDがあるため、不足分のみ補完する。
-    try {
-      const publicInsectsPath = path.join(__dirname, '../public/insects.csv');
-      if (insectsCsvPath !== publicInsectsPath) {
-        const publicInsectsData = loadCSVOptional(publicInsectsPath);
-        const merged = mergeRowsById(insectsData, publicInsectsData);
-        const added = merged.length - insectsData.length;
-        if (added > 0) {
-          insectsData = merged;
-          console.log(`[meta] insect rows added from public fallback: ${added}`);
-        }
-      }
-    } catch (e) {
-      console.warn('[meta] public insect fallback warn:', e?.message || e);
-    }
+    const insectsData = loadCSV(insectsCsvPath);
     const hostplantsDataRaw = loadCSV(hostplantsCsvPath);
     const hostplantsData = hostplantsDataRaw.filter((row) => !SUSPICIOUS_PLANT_NAME_SET.has((row.plant_name || '').trim()));
     const filteredHostplants = hostplantsDataRaw.length - hostplantsData.length;
