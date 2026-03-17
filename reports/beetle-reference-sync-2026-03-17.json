@@ -1,0 +1,1241 @@
+{
+  "reference_taxa_count": 2505,
+  "reports": {
+    "normalized_data/insects.csv": {
+      "normalized_existing_fields": 0,
+      "cleared_year_only_changes": 144,
+      "updated_existing": 62,
+      "merged_by_japanese_name": 4,
+      "added_new": 0,
+      "split_conflicts": [
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) hederae hederae E. Saunders, 1873",
+          "japanese_name": "ミスジツブタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) princeps princeps Y. Kurosawa, 1976",
+          "japanese_name": "オオシマツブタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) princeps chujoi Y. Kurosawa, 1976",
+          "japanese_name": "オオシマツブタマムシ 沖縄石垣亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) princeps kasaharai Y. Kurosawa, 1985",
+          "japanese_name": "オオシマツブタマムシ 与那国島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica japonica (Gory, 1840)",
+          "japanese_name": "ウバタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica kumejimanan Y. Kurosawa, 1974",
+          "japanese_name": "ウバタマムシ 久米島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica miwai Y. Kurosawa, 1974",
+          "japanese_name": "ウバタマムシ 八重山・台湾亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica oshimana Schönfeldt, 1890",
+          "japanese_name": "ウバタマムシ 奄美・沖縄亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica takarajimana Y. Kurosawa, 1974",
+          "japanese_name": "ウバタマムシ トカラ宝島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana abnormalis Miwa & Chûjô, 1935",
+          "japanese_name": "サツマウバタマムシ 沖縄・八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana insularis Théry, 1908",
+          "japanese_name": "サツマウバタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana nakanei Y. Kurosawa, 1974",
+          "japanese_name": "サツマウバタマムシ 吐噶喇亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana satzumae Lewis, 1896",
+          "japanese_name": "サツマウバタマムシ 本土亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Tamamushia virida virida Miwa & Chûjô, 1935",
+          "japanese_name": "ツマベニタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Tamamushia virida fujitai Ohmomo & Karube, 2004",
+          "japanese_name": "ツマベニタマムシ 聟島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima fulgidissima (Schönherr, 1817)",
+          "japanese_name": "ヤマトタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima adachii Akiyama & Ohmomo, 1998",
+          "japanese_name": "ヤマトタマムシ 男女群島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima alternans Watterhouse, 1888",
+          "japanese_name": "ヤマトタマムシ 奄美・沖縄亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima coeruleocephala Motschulsky, 1861",
+          "japanese_name": "ヤマトタマムシ 対馬亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Dicerca furcata aino Lewis, 1893",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Lamprodila) decipiens kamikochiana (Obenberger, 1940)",
+          "japanese_name": "エサキキンヘリタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Lamprodila) pretiosa bellula (Lewis, 1893)",
+          "japanese_name": "キンヘリタマムシ 北日本亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Lamprodila) pretiosa inexpecta (Y. Kurosawa, 1953)",
+          "japanese_name": "キンヘリタマムシ 九州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Palmar) davidis intermedia (Y. Kurosawa, 1956)",
+          "japanese_name": "キュウシュウクロホシタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Anthaxia (Melanthaxia) reticulata aino Y. Kurosawa, 1963",
+          "japanese_name": "クロヒメヒラタタマムシ 北海道亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Anthaxia (Melanthaxia) reticulata shinano Y. Kurosawa, 1963",
+          "japanese_name": "クロヒメヒラタタマムシ 本州中部亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Anthaxia (Melanthaxia) reticulata yamato Y. Kurosawa, 1963",
+          "japanese_name": "クロヒメヒラタタマムシ 本州西部亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis arakii Y. Kurosawa, 1942",
+          "japanese_name": "クロタマムシ 琉球亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis coreana Obenberger, 1917",
+          "japanese_name": "クロタマムシ 対馬・朝鮮亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis japanensis E. Saunders, 1873",
+          "japanese_name": "クロタマムシ 本土亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Buprestis) haemorrhoidalis japanensis E. Saunders, 1873",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Cypriacis) splendens niponica Hoscheck, 1931",
+          "japanese_name": "アカヘリミドリタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) amurensis ohmomoi Akiyama, 1993",
+          "japanese_name": "アムールムツボシタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) boninensis boninensis Y. Kurosawa, 1975",
+          "japanese_name": "オガサワラムツボシタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) boninensis suzukii Y. Kurosawa, 1975",
+          "japanese_name": "オガサワラムツボシタマムシ 母島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) chrysostigma yezostigma Y. Kurosawa, 1963",
+          "japanese_name": "カクムネムツボシタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) saliaris saliaris Y. Kurosawa, 1948",
+          "japanese_name": "オキナワムツボシタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) saliaris yaeyamana Y. Kurosawa, 1975",
+          "japanese_name": "オキナワムツボシタマムシ 八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus alesi sacchari Obenberger, 1940",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus asiaticus igai Y. Kurosawa, 1963",
+          "japanese_name": "オオウグイスナガタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus auroapicalis ishigakianus Tôyama, 1985",
+          "japanese_name": "ツマキナガタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus auropictus kanohi Y. Kurosawa, 1954; Agrilus auropictus ryukyuensis Tôyama, 1985",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus decoloratus alazon Lewis, 1893",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus okinawensis okinawensis Miwa, 1933",
+          "japanese_name": "オキナワナガタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus okinawensis shiozakii Tôyama, 1985",
+          "japanese_name": "オキナワナガタマムシ 奄美沖縄亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus orestes takaii Nakane, 1983",
+          "japanese_name": "リュウキュウナガタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus sekii sekii Ohmomo, 2004",
+          "japanese_name": "セキナガタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus sekii yaeyamanus Ohmomo, 2004",
+          "japanese_name": "セキナガタマムシ 沖縄・八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) collaris collaris (E. Saunders, 1873)",
+          "japanese_name": "キンイロエグリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) collaris kerremansi Thery, 1927",
+          "japanese_name": "キンイロエグリタマムシ 琉球・台湾亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) pyrrosiae pyrrosiae Y. Kurosawa, 1985",
+          "japanese_name": "アカガネエグリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) pyrrosiae aokii Y. Kurosawa, 1985",
+          "japanese_name": "アカガネエグリタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus formosanus heikichii Akiyama, 1987",
+          "japanese_name": "タイワンナカボソタマムシ 沖縄島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus formosanus nishiyamai Akiyama, 1987",
+          "japanese_name": "タイワンナカボソタマムシ 八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus formosanus oshimensis Akiyama, 1987",
+          "japanese_name": "タイワンナカボソタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus hastanus oberthueri Lewis, 1896",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus ignotus E. Saunders, 1873",
+          "japanese_name": "カラカネナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus matsudai Y. Kurosawa, 1953",
+          "japanese_name": "カラカネナカボソタマムシ 薩南諸島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus okinawanus Y. Kurosawa, 1985",
+          "japanese_name": "カラカネナカボソタマムシ 沖縄島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus shibatai Y. Kurosawa, 1963",
+          "japanese_name": "カラカネナカボソタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus iriei iriei Y. Kurosawa, 1985",
+          "japanese_name": "ヒメナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus iriei yoshimotoi Y. Kurosawa, 1985",
+          "japanese_name": "ヒメナカボソタマムシ 屋久・奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus rusticanus rusticanus Lewis, 1893",
+          "japanese_name": "ルイスナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus rusticanus fujiyamai Y. Kurosawa, 1953",
+          "japanese_name": "ルイスナカボソタマムシ 伊豆諸島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus sakagutii sakagutii Y. Kurosawa, 1962",
+          "japanese_name": "ホソナカボソタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Nalanda rutilicollis rutilicollis (Obenberger, 1914)",
+          "japanese_name": "ムネアカチビナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Nalanda rutilicollis ryukyuensis Y. Kurosawa, 1985",
+          "japanese_name": "ムネアカチビナカボソタマムシ 琉球亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis akiyamai Y. Kurosawa, 1977",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus auriceps auriceps (E. Saunders, 1874)",
+          "japanese_name": "クリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus auriceps tokarensis Y. Kurosawa, 1977",
+          "japanese_name": "クリタマムシ 吐噶喇亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus miwai miwai Y. Kurosawa, 1977",
+          "japanese_name": "ヤエヤマクリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus miwai makiharai Y. Kurosawa, 1977",
+          "japanese_name": "ヤエヤマクリタマムシ 与那国島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis yakushimensis Y. Kurosawa, 1977",
+          "japanese_name": "ヤクシマクリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis gressitti Y. Kurosawa, 1977",
+          "japanese_name": "ヤクシマクリタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis hatayamai Y. Kurosawa, 1977",
+          "japanese_name": "ヤクシマクリタマムシ 本州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Habroloma (Parahabroloma) eximium eximium (Lewis, 1893)",
+          "japanese_name": "ツマキヒラタチビタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Habroloma (Parahabroloma) eximium eupoetum (Obenberger, 1929)",
+          "japanese_name": "ツマキヒラタチビタマムシ 八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Trachys minutus salicis (Lewis, 1893)",
+          "japanese_name": "ヤナギチビタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Plagiosterna aenea aenea (Linnaeus, 1758)",
+          "japanese_name": "ルリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Plagiosterna aenea insularis (Chûjô, 1940)",
+          "japanese_name": "ルリハムシ 四国九州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Plagiosterna aenea tsutsuii (Nakane, 1955)",
+          "japanese_name": "ルリハムシ 本州南部亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Altica latericosta latericosta (Jacoby, 1885)",
+          "japanese_name": "スジカミナリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Altica latericosta subcostata Ohno, 1960",
+          "japanese_name": "スジカミナリハムシ 本州四国九州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Aphthona formosana yakuana Nakane, 1958",
+          "japanese_name": "シワハダツブノミハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Halticorcus sauteri sauteri (S. -H. Chen, 1934)",
+          "japanese_name": "ムツボシニセマルトビハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Hemipyxis cinctipennis cinctipennis (Weise, 1890)",
+          "japanese_name": "キベリヒラタノミハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Hemipyxis foveolata foveolata (Chûjô, 1958)",
+          "japanese_name": "キイロミゾアシノミハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Pseudoliprus hirtus flaviceps (Ohno, 1959); Pseudoliprus hirtus tosanus Ohno, 1966",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Pseudoliprus nigritus nigritus (Jacoby, 1885)",
+          "japanese_name": "アラメクビボソトビハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Pseudoliprus suturalis flavus Ohno, 1966",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Zipanginia picipes picipes (Baly, 1874)",
+          "japanese_name": "チビカミナリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Aulacophora nigripennis nigripennis Motschulsky, 1858",
+          "japanese_name": "クロウリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Luperus laricis laricis Motschulsky, 1859",
+          "japanese_name": "ムナキホソヒゲナガハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Crioceris orientalis orientalis Jacoby, 1885",
+          "japanese_name": "カタボシクビナガハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Lema (Petauristes) pectoralis unicolor Clark, 1991",
+          "japanese_name": "オオクビボソハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Oulema (Oulema) tristis kuwayamai Ohno, 1962",
+          "japanese_name": "キアシクビボソハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Cassida rubiginosa rubiginosa Müller, 1776",
+          "japanese_name": "アオカメノコハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Trichochrysea okinawana okinawana Nakane, 1956",
+          "japanese_name": "オキナワトビサルハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Platycorynus japonicus japonicus (Jacoby, 1896)",
+          "japanese_name": "オオミドリサルハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Cryptocephalus (Cryptocephalus) luridipennis pallescens Kraatz, 1879",
+          "japanese_name": "クロボシツツハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        }
+      ],
+      "name_only_matches": [],
+      "added_ids": [],
+      "family_additions": {},
+      "family_updates": {
+        "Buprestidae": 4,
+        "Cerambycidae": 32,
+        "Chrysomelidae": 26
+      },
+      "split_species_annotated": 1
+    },
+    "public/insects.csv": {
+      "normalized_existing_fields": 0,
+      "cleared_year_only_changes": 144,
+      "updated_existing": 62,
+      "merged_by_japanese_name": 4,
+      "added_new": 0,
+      "split_conflicts": [
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) hederae hederae E. Saunders, 1873",
+          "japanese_name": "ミスジツブタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) princeps princeps Y. Kurosawa, 1976",
+          "japanese_name": "オオシマツブタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) princeps chujoi Y. Kurosawa, 1976",
+          "japanese_name": "オオシマツブタマムシ 沖縄石垣亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Paratrachys (Paratrachys) princeps kasaharai Y. Kurosawa, 1985",
+          "japanese_name": "オオシマツブタマムシ 与那国島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica japonica (Gory, 1840)",
+          "japanese_name": "ウバタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica kumejimanan Y. Kurosawa, 1974",
+          "japanese_name": "ウバタマムシ 久米島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica miwai Y. Kurosawa, 1974",
+          "japanese_name": "ウバタマムシ 八重山・台湾亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica oshimana Schönfeldt, 1890",
+          "japanese_name": "ウバタマムシ 奄美・沖縄亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora japonica takarajimana Y. Kurosawa, 1974",
+          "japanese_name": "ウバタマムシ トカラ宝島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana abnormalis Miwa & Chûjô, 1935",
+          "japanese_name": "サツマウバタマムシ 沖縄・八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana insularis Théry, 1908",
+          "japanese_name": "サツマウバタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana nakanei Y. Kurosawa, 1974",
+          "japanese_name": "サツマウバタマムシ 吐噶喇亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chalcophora yunnana satzumae Lewis, 1896",
+          "japanese_name": "サツマウバタマムシ 本土亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Tamamushia virida virida Miwa & Chûjô, 1935",
+          "japanese_name": "ツマベニタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Tamamushia virida fujitai Ohmomo & Karube, 2004",
+          "japanese_name": "ツマベニタマムシ 聟島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima fulgidissima (Schönherr, 1817)",
+          "japanese_name": "ヤマトタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima adachii Akiyama & Ohmomo, 1998",
+          "japanese_name": "ヤマトタマムシ 男女群島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima alternans Watterhouse, 1888",
+          "japanese_name": "ヤマトタマムシ 奄美・沖縄亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysochroa fulgidissima coeruleocephala Motschulsky, 1861",
+          "japanese_name": "ヤマトタマムシ 対馬亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Dicerca furcata aino Lewis, 1893",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Lamprodila) decipiens kamikochiana (Obenberger, 1940)",
+          "japanese_name": "エサキキンヘリタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Lamprodila) pretiosa bellula (Lewis, 1893)",
+          "japanese_name": "キンヘリタマムシ 北日本亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Lamprodila) pretiosa inexpecta (Y. Kurosawa, 1953)",
+          "japanese_name": "キンヘリタマムシ 九州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Lamprodila (Palmar) davidis intermedia (Y. Kurosawa, 1956)",
+          "japanese_name": "キュウシュウクロホシタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Anthaxia (Melanthaxia) reticulata aino Y. Kurosawa, 1963",
+          "japanese_name": "クロヒメヒラタタマムシ 北海道亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Anthaxia (Melanthaxia) reticulata shinano Y. Kurosawa, 1963",
+          "japanese_name": "クロヒメヒラタタマムシ 本州中部亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Anthaxia (Melanthaxia) reticulata yamato Y. Kurosawa, 1963",
+          "japanese_name": "クロヒメヒラタタマムシ 本州西部亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis arakii Y. Kurosawa, 1942",
+          "japanese_name": "クロタマムシ 琉球亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis coreana Obenberger, 1917",
+          "japanese_name": "クロタマムシ 対馬・朝鮮亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis japanensis E. Saunders, 1873",
+          "japanese_name": "クロタマムシ 本土亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Buprestis) haemorrhoidalis japanensis E. Saunders, 1873",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Buprestis (Cypriacis) splendens niponica Hoscheck, 1931",
+          "japanese_name": "アカヘリミドリタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) amurensis ohmomoi Akiyama, 1993",
+          "japanese_name": "アムールムツボシタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) boninensis boninensis Y. Kurosawa, 1975",
+          "japanese_name": "オガサワラムツボシタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) boninensis suzukii Y. Kurosawa, 1975",
+          "japanese_name": "オガサワラムツボシタマムシ 母島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) chrysostigma yezostigma Y. Kurosawa, 1963",
+          "japanese_name": "カクムネムツボシタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) saliaris saliaris Y. Kurosawa, 1948",
+          "japanese_name": "オキナワムツボシタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Chrysobothris (Chrysobothris) saliaris yaeyamana Y. Kurosawa, 1975",
+          "japanese_name": "オキナワムツボシタマムシ 八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus alesi sacchari Obenberger, 1940",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus asiaticus igai Y. Kurosawa, 1963",
+          "japanese_name": "オオウグイスナガタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus auroapicalis ishigakianus Tôyama, 1985",
+          "japanese_name": "ツマキナガタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus auropictus kanohi Y. Kurosawa, 1954; Agrilus auropictus ryukyuensis Tôyama, 1985",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus decoloratus alazon Lewis, 1893",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus okinawensis okinawensis Miwa, 1933",
+          "japanese_name": "オキナワナガタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus okinawensis shiozakii Tôyama, 1985",
+          "japanese_name": "オキナワナガタマムシ 奄美沖縄亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus orestes takaii Nakane, 1983",
+          "japanese_name": "リュウキュウナガタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus sekii sekii Ohmomo, 2004",
+          "japanese_name": "セキナガタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Agrilus sekii yaeyamanus Ohmomo, 2004",
+          "japanese_name": "セキナガタマムシ 沖縄・八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) collaris collaris (E. Saunders, 1873)",
+          "japanese_name": "キンイロエグリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) collaris kerremansi Thery, 1927",
+          "japanese_name": "キンイロエグリタマムシ 琉球・台湾亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) pyrrosiae pyrrosiae Y. Kurosawa, 1985",
+          "japanese_name": "アカガネエグリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Endelus (Endelus) pyrrosiae aokii Y. Kurosawa, 1985",
+          "japanese_name": "アカガネエグリタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus formosanus heikichii Akiyama, 1987",
+          "japanese_name": "タイワンナカボソタマムシ 沖縄島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus formosanus nishiyamai Akiyama, 1987",
+          "japanese_name": "タイワンナカボソタマムシ 八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus formosanus oshimensis Akiyama, 1987",
+          "japanese_name": "タイワンナカボソタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus hastanus oberthueri Lewis, 1896",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus ignotus E. Saunders, 1873",
+          "japanese_name": "カラカネナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus matsudai Y. Kurosawa, 1953",
+          "japanese_name": "カラカネナカボソタマムシ 薩南諸島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus okinawanus Y. Kurosawa, 1985",
+          "japanese_name": "カラカネナカボソタマムシ 沖縄島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus ignotus shibatai Y. Kurosawa, 1963",
+          "japanese_name": "カラカネナカボソタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus iriei iriei Y. Kurosawa, 1985",
+          "japanese_name": "ヒメナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus iriei yoshimotoi Y. Kurosawa, 1985",
+          "japanese_name": "ヒメナカボソタマムシ 屋久・奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus rusticanus rusticanus Lewis, 1893",
+          "japanese_name": "ルイスナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus rusticanus fujiyamai Y. Kurosawa, 1953",
+          "japanese_name": "ルイスナカボソタマムシ 伊豆諸島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Coraebus sakagutii sakagutii Y. Kurosawa, 1962",
+          "japanese_name": "ホソナカボソタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Nalanda rutilicollis rutilicollis (Obenberger, 1914)",
+          "japanese_name": "ムネアカチビナカボソタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Nalanda rutilicollis ryukyuensis Y. Kurosawa, 1985",
+          "japanese_name": "ムネアカチビナカボソタマムシ 琉球亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis akiyamai Y. Kurosawa, 1977",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus auriceps auriceps (E. Saunders, 1874)",
+          "japanese_name": "クリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus auriceps tokarensis Y. Kurosawa, 1977",
+          "japanese_name": "クリタマムシ 吐噶喇亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus miwai miwai Y. Kurosawa, 1977",
+          "japanese_name": "ヤエヤマクリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus miwai makiharai Y. Kurosawa, 1977",
+          "japanese_name": "ヤエヤマクリタマムシ 与那国島亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis yakushimensis Y. Kurosawa, 1977",
+          "japanese_name": "ヤクシマクリタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis gressitti Y. Kurosawa, 1977",
+          "japanese_name": "ヤクシマクリタマムシ 奄美亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Toxoscelus yakushimensis hatayamai Y. Kurosawa, 1977",
+          "japanese_name": "ヤクシマクリタマムシ 本州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Habroloma (Parahabroloma) eximium eximium (Lewis, 1893)",
+          "japanese_name": "ツマキヒラタチビタマムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Habroloma (Parahabroloma) eximium eupoetum (Obenberger, 1929)",
+          "japanese_name": "ツマキヒラタチビタマムシ 八重山亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Buprestidae",
+          "scientific_name": "Trachys minutus salicis (Lewis, 1893)",
+          "japanese_name": "ヤナギチビタマムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Plagiosterna aenea aenea (Linnaeus, 1758)",
+          "japanese_name": "ルリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Plagiosterna aenea insularis (Chûjô, 1940)",
+          "japanese_name": "ルリハムシ 四国九州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Plagiosterna aenea tsutsuii (Nakane, 1955)",
+          "japanese_name": "ルリハムシ 本州南部亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Altica latericosta latericosta (Jacoby, 1885)",
+          "japanese_name": "スジカミナリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Altica latericosta subcostata Ohno, 1960",
+          "japanese_name": "スジカミナリハムシ 本州四国九州亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Aphthona formosana yakuana Nakane, 1958",
+          "japanese_name": "シワハダツブノミハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Halticorcus sauteri sauteri (S. -H. Chen, 1934)",
+          "japanese_name": "ムツボシニセマルトビハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Hemipyxis cinctipennis cinctipennis (Weise, 1890)",
+          "japanese_name": "キベリヒラタノミハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Hemipyxis foveolata foveolata (Chûjô, 1958)",
+          "japanese_name": "キイロミゾアシノミハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Pseudoliprus hirtus flaviceps (Ohno, 1959); Pseudoliprus hirtus tosanus Ohno, 1966",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Pseudoliprus nigritus nigritus (Jacoby, 1885)",
+          "japanese_name": "アラメクビボソトビハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Pseudoliprus suturalis flavus Ohno, 1966",
+          "japanese_name": "",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Zipanginia picipes picipes (Baly, 1874)",
+          "japanese_name": "チビカミナリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Aulacophora nigripennis nigripennis Motschulsky, 1858",
+          "japanese_name": "クロウリハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Luperus laricis laricis Motschulsky, 1859",
+          "japanese_name": "ムナキホソヒゲナガハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Crioceris orientalis orientalis Jacoby, 1885",
+          "japanese_name": "カタボシクビナガハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Lema (Petauristes) pectoralis unicolor Clark, 1991",
+          "japanese_name": "オオクビボソハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Oulema (Oulema) tristis kuwayamai Ohno, 1962",
+          "japanese_name": "キアシクビボソハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Cassida rubiginosa rubiginosa Müller, 1776",
+          "japanese_name": "アオカメノコハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Trichochrysea okinawana okinawana Nakane, 1956",
+          "japanese_name": "オキナワトビサルハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Platycorynus japonicus japonicus (Jacoby, 1896)",
+          "japanese_name": "オオミドリサルハムシ 基亜種",
+          "reason": "local species-level row exists; skipped subspecies split"
+        },
+        {
+          "family": "Chrysomelidae",
+          "scientific_name": "Cryptocephalus (Cryptocephalus) luridipennis pallescens Kraatz, 1879",
+          "japanese_name": "クロボシツツハムシ",
+          "reason": "local species-level row exists; skipped subspecies split"
+        }
+      ],
+      "name_only_matches": [],
+      "added_ids": [],
+      "family_additions": {},
+      "family_updates": {
+        "Buprestidae": 4,
+        "Cerambycidae": 32,
+        "Chrysomelidae": 26
+      },
+      "split_species_annotated": 1
+    }
+  }
+}
