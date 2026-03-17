@@ -1,5 +1,7 @@
 import React from 'react';
 import { absUrl } from '../utils/origin';
+import { createSafeInsectFilename } from '../utils/image';
+import { getMappedScientificFilename } from '../utils/insectImageMappings';
 import {
   buildInsectMetaPagePath,
   buildPlantMetaPagePath,
@@ -37,8 +39,9 @@ const extractLarvalHostPlants = (hostPlantsDetailed, hostPlantsFallback) => {
 };
 
 const resolveInsectImageFilename = (insect) =>
+  getMappedScientificFilename(insect?.name || insect?.japaneseName || '') ||
   insect?.scientificFilename ||
-  insect?.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_') ||
+  createSafeInsectFilename(insect?.scientificName || '') ||
   '';
 
 const buildInsectImageObject = (insect, caption, description) => {

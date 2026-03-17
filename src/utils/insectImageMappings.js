@@ -1,7 +1,10 @@
 // Shared mapping between Japanese common names and the actual insect image basenames.
 // Values intentionally match keys in public/image_extensions.json so downstream lookup works.
 export const globalJapaneseToScientificMapping = new Map([
+  ['アオアツバ', 'アオアツバ'],
   ['ウスムラサキケンモン', 'Acronicta_subpurpurea'],
+  ['ウスクモエダシャク', 'ウスクモエダシャク'],
+  ['ウラグロシロノメイガ', 'ウラグロシロノメイガ'],
   ['オオマエベニトガリバ', 'Tethea_consimilis'],
   ['ショウブオオヨトウ', 'Helotropha_leucostigma'],
   ['シラオビキリガ', 'Cosmia_camptostigma'],
@@ -14,7 +17,11 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ノコメセダカヨトウ', 'Orthogonia_sera'],
   ['ハスモンヨトウ', 'Spodoptera_litura'],
   ['マエジロシャチホコ', 'Notodonta_albicosta'],
+  ['キンモンエグリバ', 'キンモンエグリバ'],
+  ['クロオビシロフタオ', 'クロオビシロフタオ'],
   ['クロハナコヤガ', 'Aventiola_pusilla'],
+  ['ケブトハナカミキリ 基亜種', 'ケブトハナカミキリ基亜種'],
+  ['コブヤハズカミキリ 佐渡島亜種', 'コブヤハズカミキリ佐渡島亜種'],
   ['フタスジエグリアツバ', 'Gonepatica_opalina'],
   ['クロモクメヨトウ', 'Dypterygia_caliginosa'],
   ['コスジシロエダシャク', 'Cabera_purus'],
@@ -33,6 +40,7 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ミヤマナカボソタマムシ', 'Coraebus_daisenensis'],
   ['オカモトトゲエダシャク', 'Apochima juglansiaria (Graeser, 1889)'],
   ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
+  ['ヨスジノコメキリガ', 'ヨスジノコメキリガ'],
   // --- Frequently accessed top-page species ---
   ['アオスジアゲハ', 'Graphium_sarpedon'],
   ['アオバシャチホコ', 'Zaranga_permagna'],

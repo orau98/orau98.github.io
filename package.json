@@ -19,6 +19,7 @@
     "deploy": "echo 'Use GitHub Actions: push to main to deploy.'",
     "build:data-lite": "node scripts/build-data-lite.mjs",
     "build:image-index": "node scripts/build-image-index.mjs",
+    "audit:image-resolution": "node scripts/audit-insect-image-resolution.mjs",
     "rename:plant-images": "node scripts/rename-plant-images-from-japanese.mjs",
     "build:plant-image-index": "node scripts/update_plant_image_filenames.mjs",
     "build:images:responsive": "node scripts/build-responsive-images.mjs",

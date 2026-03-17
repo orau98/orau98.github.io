@@ -21,7 +21,6 @@ jobs:
       CI: true
       TZ: UTC
       NODE_OPTIONS: --max-old-space-size=4096
-      SKIP_RESPONSIVE_IMAGES: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,6 +39,11 @@ jobs:
 
       - name: Refresh insect image indexes
         run: npm run build:image-index
+
+      - name: Build responsive images
+        env:
+          FORCE_RESPONSIVE_IMAGES: "1"
+        run: npm run build:images:responsive
 
       - name: Build data-lite
         run: npm run build:data-lite

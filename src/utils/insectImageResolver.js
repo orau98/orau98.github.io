@@ -1,15 +1,34 @@
-import { createSafeInsectFilename } from './image';
+import { createSafeInsectFilename } from './image.js';
 
 export const normalizeImageBase = (name) => {
   if (!name) return '';
-  return String(name).trim().replace(/\s+/g, '_');
+  return String(name)
+    .normalize('NFC')
+    .trim()
+    .replace(/[＿]/g, '_')
+    .replace(/\s+/g, '_');
+};
+
+export const normalizeCompactImageBase = (name) => {
+  if (!name) return '';
+  return String(name)
+    .normalize('NFC')
+    .trim()
+    .replace(/[＿_]/g, '')
+    .replace(/[\s・･\-−‐ー]/g, '')
+    .replace(/[()（）[\]【】]/g, '')
+    .toLowerCase();
 };
 
 export const buildNormalizedEntries = (imageNames, imageExtensions) => {
   const list = imageNames && imageNames.size
     ? Array.from(imageNames)
     : Object.keys(imageExtensions || {});
-  return list.map((name) => [normalizeImageBase(name), name]);
+  return list.map((name) => ({
+    name,
+    normalized: normalizeImageBase(name),
+    compact: normalizeCompactImageBase(name),
+  }));
 };
 
 export const buildInsectImageBaseCandidates = (insect, mappedFilename) => {
@@ -44,10 +63,19 @@ export const resolveImageBaseCandidates = (
     } else {
       const normalized = normalizeImageBase(candidate);
       const prefix = `${normalized}_`;
-      for (const [norm, actual] of normalizedEntries) {
-        if (norm === normalized || norm.startsWith(prefix)) {
-          resolved = actual;
+      for (const entry of normalizedEntries) {
+        if (entry.normalized === normalized || entry.normalized.startsWith(prefix)) {
+          resolved = entry.name;
           break;
+        }
+      }
+      if (!resolved) {
+        const compact = normalizeCompactImageBase(candidate);
+        for (const entry of normalizedEntries) {
+          if (entry.compact === compact || entry.compact.startsWith(compact)) {
+            resolved = entry.name;
+            break;
+          }
         }
       }
     }

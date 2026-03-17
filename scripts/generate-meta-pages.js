@@ -4,6 +4,11 @@ import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
 import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
 import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../src/utils/insectImageResolver.js';
+import {
   INSECT_SECTION_CONFIGS,
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
@@ -19,6 +24,7 @@ const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
 const insectResizedBaseSet = new Set(
   insectResizedFiles.map(file => file.replace(/\.(320|640|1024)\.jpg$/i, '')),
 );
+const insectResizedEntries = buildNormalizedEntries(insectResizedBaseSet);
 
 const META_SECTION_KEYS = META_PAGE_SECTIONS.map(({ key }) => key);
 const INSECT_TYPE_NAMES = Object.fromEntries(
@@ -602,26 +608,25 @@ function getPlantAliases(plantName) {
 
 function resolveInsectImageUrl(insect) {
   if (!insect) return '';
-  const candidates = [];
   const jpName = (insect.japaneseName || insect.name || '').trim();
   const mapped = jpName ? globalJapaneseToScientificMapping.get(jpName) : undefined;
-  if (mapped) candidates.push(mapped);
-  if (insect.scientificFilename) candidates.push(insect.scientificFilename);
-  if (insect.scientificName) {
-    const sci = insect.scientificName.replace(/\s*\(.*$/, '').trim();
-    const [genus, species] = sci.split(/\s+/);
-    if (genus && species) {
-      const matches = Array.from(insectResizedBaseSet).filter(base => base.includes(genus) && base.includes(species));
-      matches.sort((a, b) => a.length - b.length);
-      candidates.push(...matches);
+  const candidates = buildInsectImageBaseCandidates(insect, mapped);
+  const resolvedBases = resolveImageBaseCandidates(candidates, {
+    imageNames: insectResizedBaseSet,
+    normalizedEntries: insectResizedEntries,
+  });
+
+  for (const base of resolvedBases) {
+    if (!insectResizedBaseSet.has(base)) continue;
+    for (const width of [1024, 640, 320]) {
+      const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
+      if (fs.existsSync(resizedPath)) {
+        return `/images/resized/insects/${encodeURIComponent(base)}.${width}.jpg`;
+      }
     }
   }
-  if (jpName) candidates.push(jpName);
-
-  const tried = new Set();
   for (const base of candidates) {
-    if (!base || tried.has(base)) continue;
-    tried.add(base);
+    if (!base || !insectResizedBaseSet.has(base)) continue;
     if (insectResizedBaseSet.has(base)) {
       for (const width of [1024, 640, 320]) {
         const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
