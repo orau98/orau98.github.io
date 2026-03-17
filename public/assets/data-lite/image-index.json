@@ -448,7 +448,14 @@
     "Zanclognatha_yaeyamalis",
     "Zaranga_permagna",
     "Zeiraphera_caeruleumana",
-    "Zeiraphera_demutata"
+    "Zeiraphera_demutata",
+    "アオアツバ",
+    "ウラグロシロノメイガ",
+    "キンモンエグリバ",
+    "スダジイ＿樹皮",
+    "スダジイ＿葉表",
+    "スダジイ＿葉裏",
+    "ヨスジノコメキリガ"
   ],
   "exts": {
     "Acanthoplusia_agnata": ".jpg",
@@ -899,6 +906,13 @@
     "Zanclognatha_yaeyamalis": ".jpg",
     "Zaranga_permagna": ".jpg",
     "Zeiraphera_caeruleumana": ".jpg",
-    "Zeiraphera_demutata": ".jpg"
+    "Zeiraphera_demutata": ".jpg",
+    "アオアツバ": ".jpg",
+    "ウラグロシロノメイガ": ".jpg",
+    "キンモンエグリバ": ".jpg",
+    "スダジイ＿樹皮": ".jpg",
+    "スダジイ＿葉表": ".jpg",
+    "スダジイ＿葉裏": ".jpg",
+    "ヨスジノコメキリガ": ".jpg"
   }
 }

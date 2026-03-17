@@ -53,3 +53,12 @@ tmp_xlsx_cli/
 # Local caches / deploy artifacts
 cache/
 _deploy/
+
+# Python virtual environment
+.venv/
+
+# Downloaded PDFs (too large for Git)
+pdfs/
+
+# Backup directory created by apply_updates.py
+public/backup/
