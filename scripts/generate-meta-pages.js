@@ -1310,6 +1310,21 @@ async function generateMetaPages() {
         if (cleaned && cleaned !== s) emergenceTimeMap.set(cleaned, t);
       }
     };
+    // general_notesから出現時期タイプのレコードをemergenceTimeMapに投入
+    const emergenceTypes = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期'];
+    generalNotesData.forEach(row => {
+      const noteType = (row.note_type || '').trim();
+      const content = (row.content || '').trim();
+      if (!content || content === '不明') return;
+      const isEmergence = emergenceTypes.some(k => noteType.includes(k))
+        || (!noteType && /\d+\s*月|春|夏|秋|冬|上旬|中旬|下旬|頃/.test(content));
+      if (!isEmergence) return;
+      const insectId = (row.insect_id || '').trim();
+      const insect = insectsData.find(r => r.insect_id === insectId);
+      if (insect) {
+        addEmergenceFromRow(insect.japanese_name, insect.scientific_name, content);
+      }
+    });
     console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました（general_notesのみ）`);
     
     // 昆虫データの処理（正規化データを使用）
