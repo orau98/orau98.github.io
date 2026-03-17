@@ -30,6 +30,7 @@ export const globalJapaneseToScientificMapping = new Map([
   ['ノコメキシタバ', 'Catocala_bella'],
   ['ハマオモトヨトウ', 'Brithys_crini'],
   ['アオマダラタマムシ', 'Nipponobuprestis_amabilis'],
+  ['ミヤマナカボソタマムシ', 'Coraebus_daisenensis'],
   ['オカモトトゲエダシャク', 'Apochima juglansiaria (Graeser, 1889)'],
   ['ルイスヒラタチビタマムシ', 'Habroloma_lewisii'],
   // --- Frequently accessed top-page species ---
