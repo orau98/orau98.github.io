@@ -131,13 +131,81 @@ def save_json(path: Path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def extract_relevant_text_from_pdf(pdf_path: Path, use_filter: bool = True) -> tuple[str, dict]:
+def _load_ocr_text(ocr_path: Path, use_filter: bool) -> tuple[str, dict]:
+    """OCR済みテキストファイルを読み込み、キーワードフィルタを適用。"""
+    raw = ocr_path.read_text(encoding="utf-8")
+    # "--- ページ N ---" 区切りでパース
+    pages: list[tuple[int, str]] = []
+    current_page = 0
+    current_lines: list[str] = []
+    for line in raw.split("\n"):
+        m = re.match(r"^---\s*ページ\s*(\d+)\s*---$", line)
+        if m:
+            if current_page and current_lines:
+                pages.append((current_page, "\n".join(current_lines)))
+            current_page = int(m.group(1))
+            current_lines = []
+        else:
+            current_lines.append(line)
+    if current_page and current_lines:
+        pages.append((current_page, "\n".join(current_lines)))
+
+    # テキストがないページを除外
+    pages = [(n, t) for n, t in pages if t.strip()]
+    total_pages = len(pages)
+    total_chars = sum(len(t) for _, t in pages)
+
+    if not use_filter or not pages:
+        full_text = "\n\n".join(f"--- ページ {n} ---\n{t}" for n, t in pages)
+        return full_text, {
+            "total_pages": total_pages, "total_chars": total_chars,
+            "relevant_pages": total_pages, "relevant_chars": total_chars,
+            "reduction_pct": 0,
+        }
+
+    # キーワードフィルタ
+    hit_indices: set[int] = set()
+    for i, (_, text) in enumerate(pages):
+        if any(kw in text for kw in RELEVANCE_KEYWORDS):
+            hit_indices.add(i)
+    if not hit_indices:
+        return "", {
+            "total_pages": total_pages, "total_chars": total_chars,
+            "relevant_pages": 0, "relevant_chars": 0, "reduction_pct": 100,
+        }
+    context_indices: set[int] = set()
+    for i in hit_indices:
+        for offset in (-1, 0, 1):
+            idx = i + offset
+            if 0 <= idx < len(pages):
+                context_indices.add(idx)
+    selected = sorted(context_indices)
+    text_parts = [f"--- ページ {pages[i][0]} ---\n{pages[i][1]}" for i in selected]
+    filtered_text = "\n\n".join(text_parts)
+    relevant_chars = len(filtered_text)
+    reduction_pct = round((1 - relevant_chars / total_chars) * 100) if total_chars else 0
+    return filtered_text, {
+        "total_pages": total_pages, "total_chars": total_chars,
+        "relevant_pages": len(selected), "relevant_chars": relevant_chars,
+        "reduction_pct": reduction_pct,
+    }
+
+
+def extract_relevant_text_from_pdf(pdf_path: Path, use_filter: bool = True, ocr_dir: Path | None = None) -> tuple[str, dict]:
     """PDFからテキスト抽出し、キーワードフィルタを適用。
+
+    OCRテキストファイルが ocr_dir に存在する場合はそちらを優先使用する。
 
     Returns:
         (filtered_text, stats) — stats は {"total_pages", "total_chars",
         "relevant_pages", "relevant_chars", "reduction_pct"}
     """
+    # OCRテキストファイルがあれば優先使用
+    if ocr_dir:
+        ocr_txt = ocr_dir / f"{pdf_path.stem}.txt"
+        if ocr_txt.exists():
+            return _load_ocr_text(ocr_txt, use_filter)
+
     try:
         doc = fitz.open(str(pdf_path))
     except Exception as e:
@@ -277,6 +345,37 @@ def analyze_with_claude(text: str, source_file: str, source_name: str,
         print(f"  JSON解析エラー: {e}")
         print(f"  レスポンス: {content[:200]}")
         return []
+    except anthropic.RateLimitError as e:
+        # 429: リトライ（最大3回、指数バックオフ）
+        for attempt in range(1, 4):
+            wait = 60 * attempt
+            print(f"  レートリミット: {wait}秒待機してリトライ ({attempt}/3)...")
+            import time; time.sleep(wait)
+            try:
+                response = client.messages.create(
+                    model="claude-sonnet-4-20250514",
+                    max_tokens=4096,
+                    system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
+                content = response.content[0].text.strip()
+                if content.startswith("```"):
+                    content = re.sub(r"^```(?:json)?\s*", "", content)
+                    content = re.sub(r"\s*```$", "", content)
+                result = json.loads(content)
+                items = result.get("items", [])
+                for item in items:
+                    item["source_file"] = source_file
+                    item["source_name"] = source_name
+                    item["issue_number"] = issue_number
+                return items
+            except anthropic.RateLimitError:
+                continue
+            except Exception as e2:
+                print(f"  リトライ失敗: {e2}")
+                return []
+        print(f"  リトライ上限到達")
+        return []
     except anthropic.APIError as e:
         print(f"  Claude APIエラー: {e}")
         return []
@@ -394,6 +493,8 @@ def main():
                         help="処理済み管理ファイル（並列実行時に分離するため）")
     parser.add_argument("--no-filter", action="store_true",
                         help="キーワード事前フィルタを無効化（デバッグ用）")
+    parser.add_argument("--ocr-dir",
+                        help="OCR済みテキストディレクトリ（スキャンPDF用）")
     args = parser.parse_args()
 
     api_key = os.environ.get("ANTHROPIC_API_KEY")
@@ -447,7 +548,8 @@ def main():
     total_saved_chars = 0
 
     for pdf_path in pdf_files:
-        text, stats = extract_relevant_text_from_pdf(pdf_path, use_filter=use_filter)
+        ocr_dir = Path(args.ocr_dir) if args.ocr_dir else None
+        text, stats = extract_relevant_text_from_pdf(pdf_path, use_filter=use_filter, ocr_dir=ocr_dir)
 
         if use_filter and stats["total_chars"] > 0:
             total_saved_chars += stats["total_chars"] - stats["relevant_chars"]
