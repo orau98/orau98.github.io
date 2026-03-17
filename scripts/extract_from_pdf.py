@@ -32,6 +32,7 @@ REPORTS_DIR = ROOT / "reports"
 # PDFフォルダの想定構成
 PDF_DIRS = {
     "ga-tsushin": "蛾類通信",
+    "tinea": "Tinea",
     "cho-to-ga": "蝶と蛾",
     "elytra": "Elytra",
     "tsukimushi": "月刊むし",
