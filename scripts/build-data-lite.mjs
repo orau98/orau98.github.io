@@ -61,6 +61,23 @@ function normalizePlantNameLite(plantName) {
 }
 
 const cleanString = (value) => (value ?? '').toString().trim();
+const SUSPICIOUS_PLANT_NAME_SET = new Set([
+  '葉',
+  '葉裏',
+  '葉表',
+  '茎',
+  '茎と葉裏',
+  '主として茎',
+  '根',
+  '成葉の裏面',
+  '生長部の茎と葉裏',
+  '新梢の生長部',
+  '新梢の茎',
+  '穂',
+  '地中の根',
+]);
+
+const isSuspiciousPlantName = (value) => SUSPICIOUS_PLANT_NAME_SET.has(cleanString(value));
 
 const isFlowerVisitRecord = (record) => {
   if (!record) return false;
@@ -302,7 +319,12 @@ async function build() {
     parseCsv(normalizedInsectsCsv || publicInsectsCsv),
     normalizedInsectsCsv && publicInsectsCsv ? parseCsv(publicInsectsCsv) : [],
   );
-  const hostplants = parseCsv(hostplantsCsv);
+  const hostplantsRaw = parseCsv(hostplantsCsv);
+  const suspiciousHostplants = hostplantsRaw.filter((row) => isSuspiciousPlantName(row?.plant_name));
+  if (suspiciousHostplants.length > 0) {
+    console.warn(`[data-lite] filtered suspicious hostplant rows: ${suspiciousHostplants.length}`);
+  }
+  const hostplants = hostplantsRaw.filter((row) => !isSuspiciousPlantName(row?.plant_name));
   const notes = parseCsv(notesCsv);
   const ylistCsv = readText(path.join(PUBLIC_DIR, '20210514YList_download.csv'));
   const ylistRows = ylistCsv ? parseCsv(ylistCsv) : [];
@@ -376,7 +398,11 @@ const slim = (arr) => (arr || []).map(i => ({
   write('index.json', out);
 
   // Build and write full dataset for runtime consumption
-  const hostPlantTargets = new Set(hostplants.map(r => cleanString(r.plant_name)).filter(name => name && name !== '不明'));
+  const hostPlantTargets = new Set(
+    hostplants
+      .map(r => cleanString(r.plant_name))
+      .filter(name => name && name !== '不明' && !isSuspiciousPlantName(name))
+  );
   const ylistLite = buildYListLite(ylistRows, hostPlantTargets);
   const processedCollections = Object.fromEntries(
     INSECT_COLLECTION_KEYS.map((key) => [key, processInsects(normalized[key])]),

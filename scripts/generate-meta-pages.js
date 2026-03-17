@@ -27,6 +27,21 @@ const INSECT_TYPE_NAMES = Object.fromEntries(
 const INSECT_DEFAULT_FAMILIES = Object.fromEntries(
   INSECT_SECTION_CONFIGS.map(({ type, defaultFamilyName }) => [type, defaultFamilyName]),
 );
+const SUSPICIOUS_PLANT_NAME_SET = new Set([
+  '葉',
+  '葉裏',
+  '葉表',
+  '茎',
+  '茎と葉裏',
+  '主として茎',
+  '根',
+  '成葉の裏面',
+  '生長部の茎と葉裏',
+  '新梢の生長部',
+  '新梢の茎',
+  '穂',
+  '地中の根',
+]);
 
 // 英語単語をイタリック体にフォーマットする関数
 function formatEnglishWordsInItalic(text) {
@@ -251,6 +266,10 @@ function isValidPlantName(plantName) {
   
   // 「不明」を除外
   if (trimmed === '不明') {
+    return false;
+  }
+
+  if (SUSPICIOUS_PLANT_NAME_SET.has(trimmed)) {
     return false;
   }
   
@@ -1236,7 +1255,12 @@ async function generateMetaPages() {
     } catch (e) {
       console.warn('[meta] public insect fallback warn:', e?.message || e);
     }
-    const hostplantsData = loadCSV(hostplantsCsvPath);
+    const hostplantsDataRaw = loadCSV(hostplantsCsvPath);
+    const hostplantsData = hostplantsDataRaw.filter((row) => !SUSPICIOUS_PLANT_NAME_SET.has((row.plant_name || '').trim()));
+    const filteredHostplants = hostplantsDataRaw.length - hostplantsData.length;
+    if (filteredHostplants > 0) {
+      console.warn(`[meta] filtered suspicious hostplant rows: ${filteredHostplants}`);
+    }
     const generalNotesData = generalNotesCsvPath ? loadCSV(generalNotesCsvPath) : [];
     
     // バタフライとハムシの従来データも読み込み

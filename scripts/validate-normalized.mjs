@@ -37,14 +37,41 @@ const parseCsv = (text) => {
   return Papa.parse(normalizedText, { header: true, skipEmptyLines: true }).data || [];
 };
 const cleanString = (value) => (value ?? '').toString().trim();
+const SUSPICIOUS_PLANT_NAME_SET = new Set([
+  '葉',
+  '葉裏',
+  '葉表',
+  '茎',
+  '茎と葉裏',
+  '主として茎',
+  '根',
+  '成葉の裏面',
+  '生長部の茎と葉裏',
+  '新梢の生長部',
+  '新梢の茎',
+  '穂',
+  '地中の根',
+]);
+const escapeCsv = (value) => `"${(value ?? '').toString().replace(/"/g, '""')}"`;
+
+const writeCsvReport = (filename, headers, rows) => {
+  const fullPath = path.join(REPORTS_DIR, filename);
+  const headerLine = headers.join(',') + '\n';
+  const body = rows
+    .map((row) => headers.map((header) => escapeCsv(row[header] ?? '')).join(','))
+    .join('\n');
+  fs.writeFileSync(fullPath, headerLine + (body ? body + '\n' : ''), 'utf-8');
+};
 
 const insectsText = fs.readFileSync(insectsPath, 'utf-8');
 const insects = parseCsv(insectsText);
 const insectIdCounts = new Map();
+const insectsById = new Map();
 insects.forEach((row) => {
   const id = cleanString(row.insect_id);
   if (!id) return;
   insectIdCounts.set(id, (insectIdCounts.get(id) || 0) + 1);
+  insectsById.set(id, row);
 });
 const insectIds = new Set(
   insects.map((row) => (row.insect_id || '').trim()).filter(Boolean)
@@ -54,6 +81,9 @@ const duplicateInsectIds = Array.from(insectIdCounts.entries())
   .map(([insect_id, count]) => ({ insect_id, count }));
 
 const missingIds = [];
+const hostplantCounts = new Map();
+const generalNoteCounts = new Map();
+const suspiciousHostplantRows = [];
 const recordMissing = (source, row) => {
   const id = (row.insect_id || '').trim();
   if (!id || insectIds.has(id)) return;
@@ -63,7 +93,26 @@ const recordMissing = (source, row) => {
 if (hostplantsPath) {
   const hostText = fs.readFileSync(hostplantsPath, 'utf-8');
   const hostRows = parseCsv(hostText);
-  hostRows.forEach((row) => recordMissing('hostplants', row));
+  hostRows.forEach((row) => {
+    const insectId = cleanString(row.insect_id);
+    if (insectId) {
+      hostplantCounts.set(insectId, (hostplantCounts.get(insectId) || 0) + 1);
+    }
+    if (SUSPICIOUS_PLANT_NAME_SET.has(cleanString(row.plant_name))) {
+      suspiciousHostplantRows.push({
+        record_id: cleanString(row.record_id),
+        insect_id: insectId,
+        plant_name: cleanString(row.plant_name),
+        plant_family: cleanString(row.plant_family),
+        observation_type: cleanString(row.observation_type),
+        plant_part: cleanString(row.plant_part),
+        life_stage: cleanString(row.life_stage),
+        reference: cleanString(row.reference),
+        notes: cleanString(row.notes),
+      });
+    }
+    recordMissing('hostplants', row);
+  });
 } else {
   console.warn('[validate-normalized] hostplants.csv not found; skipping hostplant reference checks.');
 }
@@ -71,7 +120,13 @@ if (hostplantsPath) {
 if (notesPath) {
   const notesText = fs.readFileSync(notesPath, 'utf-8');
   const noteRows = parseCsv(notesText);
-  noteRows.forEach((row) => recordMissing('general_notes', row));
+  noteRows.forEach((row) => {
+    const insectId = cleanString(row.insect_id);
+    if (insectId) {
+      generalNoteCounts.set(insectId, (generalNoteCounts.get(insectId) || 0) + 1);
+    }
+    recordMissing('general_notes', row);
+  });
 } else {
   console.warn('[validate-normalized] general_notes.csv not found; skipping notes reference checks.');
 }
@@ -92,6 +147,67 @@ fs.writeFileSync(
   duplicateReportPath,
   duplicateHeader + (duplicateBody ? duplicateBody + '\n' : ''),
   'utf-8',
+);
+
+const blankJapaneseNameLinkedRows = insects
+  .filter((row) =>
+    !cleanString(row.japanese_name) &&
+    ((hostplantCounts.get(cleanString(row.insect_id)) || 0) > 0 ||
+      (generalNoteCounts.get(cleanString(row.insect_id)) || 0) > 0)
+  )
+  .map((row) => ({
+    insect_id: cleanString(row.insect_id),
+    family_jp: cleanString(row.family_jp),
+    scientific_name: cleanString(row.scientific_name),
+    hostplant_count: hostplantCounts.get(cleanString(row.insect_id)) || 0,
+    general_note_count: generalNoteCounts.get(cleanString(row.insect_id)) || 0,
+    notes: cleanString(row.notes),
+  }));
+
+const placeholderNoteMismatchRows = insects
+  .filter((row) => {
+    const insectId = cleanString(row.insect_id);
+    const note = cleanString(row.notes);
+    return note.includes('食草・生態情報は未入力') &&
+      ((hostplantCounts.get(insectId) || 0) > 0 || (generalNoteCounts.get(insectId) || 0) > 0);
+  })
+  .map((row) => ({
+    insect_id: cleanString(row.insect_id),
+    japanese_name: cleanString(row.japanese_name),
+    scientific_name: cleanString(row.scientific_name),
+    hostplant_count: hostplantCounts.get(cleanString(row.insect_id)) || 0,
+    general_note_count: generalNoteCounts.get(cleanString(row.insect_id)) || 0,
+    notes: cleanString(row.notes),
+  }));
+
+const missingFamilyRows = insects
+  .filter((row) => !cleanString(row.family))
+  .map((row) => ({
+    insect_id: cleanString(row.insect_id),
+    japanese_name: cleanString(row.japanese_name),
+    scientific_name: cleanString(row.scientific_name),
+    family_jp: cleanString(row.family_jp),
+  }));
+
+writeCsvReport(
+  'suspicious_hostplants.csv',
+  ['record_id', 'insect_id', 'plant_name', 'plant_family', 'observation_type', 'plant_part', 'life_stage', 'reference', 'notes'],
+  suspiciousHostplantRows,
+);
+writeCsvReport(
+  'blank_japanese_name_links.csv',
+  ['insect_id', 'family_jp', 'scientific_name', 'hostplant_count', 'general_note_count', 'notes'],
+  blankJapaneseNameLinkedRows,
+);
+writeCsvReport(
+  'placeholder_note_mismatch.csv',
+  ['insect_id', 'japanese_name', 'scientific_name', 'hostplant_count', 'general_note_count', 'notes'],
+  placeholderNoteMismatchRows,
+);
+writeCsvReport(
+  'missing_family_insects.csv',
+  ['insect_id', 'japanese_name', 'scientific_name', 'family_jp'],
+  missingFamilyRows,
 );
 
 if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)) {
@@ -145,7 +261,6 @@ if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)
     'normalized_scientific_name',
     'public_scientific_name',
   ].join(',') + '\n';
-  const escapeCsv = (value) => `"${(value ?? '').toString().replace(/"/g, '""')}"`;
   const mismatchBody = mismatchRows
     .map((row) => [
       row.kind,
@@ -178,6 +293,22 @@ if (missingIds.length > 0) {
 if (duplicateInsectIds.length > 0) {
   console.error(`[validate-normalized] duplicate insect_id rows: ${duplicateInsectIds.length}`);
   process.exit(1);
+}
+
+if (suspiciousHostplantRows.length > 0) {
+  console.warn(`[validate-normalized] suspicious hostplant rows: ${suspiciousHostplantRows.length}`);
+}
+
+if (blankJapaneseNameLinkedRows.length > 0) {
+  console.warn(`[validate-normalized] blank japanese_name rows with linked data: ${blankJapaneseNameLinkedRows.length}`);
+}
+
+if (placeholderNoteMismatchRows.length > 0) {
+  console.warn(`[validate-normalized] placeholder notes mismatching linked data: ${placeholderNoteMismatchRows.length}`);
+}
+
+if (missingFamilyRows.length > 0) {
+  console.warn(`[validate-normalized] insects missing family: ${missingFamilyRows.length}`);
 }
 
 console.log('[validate-normalized] OK');
