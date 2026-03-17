@@ -578,7 +578,7 @@ const InsectCard = React.memo(({ insect, idx, imageFilenames = new Set(), imageE
   );
 });
 
-const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, plantDetails, theme, flowerVisitPlants = {} }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {} }) => {
   const { plantName } = useParams();
   const rawDecodedPlantName = decodeURIComponent(plantName);
   const sanitizePlantParam = (s) => {
@@ -846,7 +846,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName]);
   
   // All insects for RelatedPlants component
-  const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles];
+  const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles, ...aphids];
   
   // Debug: オニグルミを含む昆虫を探す
   if (decodedPlantName === 'オニグルミ') {

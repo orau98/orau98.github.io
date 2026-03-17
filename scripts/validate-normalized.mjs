@@ -79,11 +79,16 @@ const insectIds = new Set(
 const duplicateInsectIds = Array.from(insectIdCounts.entries())
   .filter(([, count]) => count > 1)
   .map(([insect_id, count]) => ({ insect_id, count }));
+const isAphidLinkedRow = (row) => {
+  if (!row) return false;
+  return cleanString(row.family) === 'Aphididae' || cleanString(row.family_jp).includes('アブラムシ');
+};
 
 const missingIds = [];
 const hostplantCounts = new Map();
 const generalNoteCounts = new Map();
 const suspiciousHostplantRows = [];
+const aphidWrongLinkRows = [];
 const recordMissing = (source, row) => {
   const id = (row.insect_id || '').trim();
   if (!id || insectIds.has(id)) return;
@@ -97,6 +102,20 @@ if (hostplantsPath) {
     const insectId = cleanString(row.insect_id);
     if (insectId) {
       hostplantCounts.set(insectId, (hostplantCounts.get(insectId) || 0) + 1);
+    }
+    if (cleanString(row.reference) === '日本原色アブラムシ図鑑') {
+      const linkedInsect = insectsById.get(insectId);
+      if (!isAphidLinkedRow(linkedInsect)) {
+        aphidWrongLinkRows.push({
+          record_id: cleanString(row.record_id),
+          insect_id: insectId,
+          plant_name: cleanString(row.plant_name),
+          plant_part: cleanString(row.plant_part),
+          linked_family_jp: cleanString(linkedInsect?.family_jp),
+          linked_japanese_name: cleanString(linkedInsect?.japanese_name),
+          linked_scientific_name: cleanString(linkedInsect?.scientific_name),
+        });
+      }
     }
     if (SUSPICIOUS_PLANT_NAME_SET.has(cleanString(row.plant_name))) {
       suspiciousHostplantRows.push({
@@ -209,6 +228,11 @@ writeCsvReport(
   ['insect_id', 'japanese_name', 'scientific_name', 'family_jp'],
   missingFamilyRows,
 );
+writeCsvReport(
+  'aphid_wrong_links.csv',
+  ['record_id', 'insect_id', 'plant_name', 'plant_part', 'linked_family_jp', 'linked_japanese_name', 'linked_scientific_name'],
+  aphidWrongLinkRows,
+);
 
 if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)) {
   const normalizedRows = parseCsv(fs.readFileSync(NORMALIZED_INSECTS_PATH, 'utf-8'));
@@ -309,6 +333,10 @@ if (placeholderNoteMismatchRows.length > 0) {
 
 if (missingFamilyRows.length > 0) {
   console.warn(`[validate-normalized] insects missing family: ${missingFamilyRows.length}`);
+}
+
+if (aphidWrongLinkRows.length > 0) {
+  console.warn(`[validate-normalized] aphid atlas rows linked to non-aphids: ${aphidWrongLinkRows.length}`);
 }
 
 console.log('[validate-normalized] OK');

@@ -54,6 +54,17 @@ const insectSections = [
     defaultFamilyName: 'ハムシ科',
     sitemapPriority: '0.7',
   },
+  {
+    type: 'aphid',
+    collectionKey: 'aphids',
+    routeSegment: 'aphid',
+    detailParam: 'aphidSlug',
+    label: 'アブラムシ',
+    searchLabel: 'アブラムシ',
+    metaIndexTitle: 'アブラムシ（メタページ一覧）',
+    defaultFamilyName: 'アブラムシ科',
+    sitemapPriority: '0.7',
+  },
 ].map((section) => Object.freeze(section));
 
 export const INSECT_SECTION_CONFIGS = Object.freeze(insectSections);

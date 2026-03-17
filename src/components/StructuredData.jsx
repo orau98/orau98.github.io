@@ -734,6 +734,134 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   );
 };
 
+export const AphidStructuredData = ({ aphid }) => {
+  if (!aphid) return null;
+
+  const detailUrl = absUrl(
+    buildInsectMetaPagePath(aphid.type, aphid.id, 'aphid'),
+  );
+
+  const hostPlantsList = extractLarvalHostPlants(
+    aphid.hostPlantsDetailed,
+    aphid.hostPlants,
+  );
+  const familyName =
+    aphid.classification?.familyJapanese || aphid.family || 'アブラムシ科';
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": ["Animal", "Species"],
+    "name": aphid.name,
+    "alternateName": [aphid.scientificName, aphid.name],
+    "scientificName": aphid.scientificName,
+    "identifier": {
+      "@type": "PropertyValue",
+      "propertyID": "species_id",
+      "value": aphid.id
+    },
+    "classification": {
+      "@type": "Taxon",
+      "taxonRank": "species",
+      "parentTaxon": [
+        {
+          "@type": "Taxon",
+          "name": aphid.classification?.genus || aphid.scientificName?.split(' ')[0] || "unknown",
+          "taxonRank": "genus"
+        },
+        {
+          "@type": "Taxon",
+          "name": familyName,
+          "taxonRank": "family"
+        },
+        {
+          "@type": "Taxon",
+          "name": "カメムシ目",
+          "taxonRank": "order"
+        }
+      ]
+    },
+    "description": `${aphid.name}（${aphid.scientificName}）は${familyName}に属するアブラムシの一種です。${hostPlantsList.length ? `主な寄主植物：${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}種の植物を利用します。` : '寄主植物情報は現在調査中です。'}`,
+    "url": detailUrl,
+    "sameAs": detailUrl,
+    "inLanguage": "ja",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "和名",
+        "value": aphid.name
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "学名",
+        "value": aphid.scientificName
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "分類",
+        "value": familyName
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "寄主植物数",
+        "value": hostPlantsList.length || 0
+      }
+    ]
+  };
+
+  const imageObject = buildInsectImageObject(
+    aphid,
+    `${aphid.name}（${aphid.scientificName}）の写真`,
+    `${aphid.name}の生態写真`,
+  );
+  if (imageObject) {
+    structuredData.image = imageObject;
+  }
+
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map((plant) => ({
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": ["Plant", "Species"],
+        "name": plant,
+        "taxonomicRank": "species"
+      },
+      "description": `${aphid.name}が${plant}を寄主植物として利用`
+    }));
+  }
+
+  structuredData.breadcrumb = {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "昆虫植物図鑑",
+        "item": absUrl('/')
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "昆虫",
+        "item": absUrl('/meta/aphid/index.html')
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": aphid.name,
+        "item": detailUrl
+      }
+    ]
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
+    />
+  );
+};
+
 // Enhanced 植物の構造化データ with Species and detailed taxonomy
 export const PlantStructuredData = ({ plant, relatedInsects }) => {
   if (!plant) return null;

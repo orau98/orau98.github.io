@@ -292,6 +292,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         const fj = (famJp || '').trim();
         const f = (fam || '').trim();
         if (fj.includes('チョウ') || fj.includes('シジミ') || fj.includes('セセリ')) return 'butterfly';
+        if (fj.includes('アブラムシ') || f === 'Aphididae') return 'aphid';
         if (f === 'Chrysomelidae' || fj.includes('ハムシ')) return 'leafbeetle';
         if (f === 'Cerambycidae' || fj.includes('カミキリ')) return 'longhornbeetle';
         if (f === 'Buprestidae' || fj.includes('タマムシ')) return 'beetle';
@@ -385,6 +386,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         case 'ハムシ類':
           pushWithDedupe(result.leafbeetles, dedupeMaps.leafbeetles);
           break;
+        case 'アブラムシ類':
+          pushWithDedupe(result.aphids, dedupeMaps.aphids);
+          break;
         default:
           // デフォルトは蛾類として扱う
           pushWithDedupe(result.moths, dedupeMaps.moths);
@@ -401,7 +405,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     beetles: result.beetles.length,
     longhornbeetles: result.longhornbeetles.length,
     leafbeetles: result.leafbeetles.length,
-    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.leafbeetles.length
+    aphids: result.aphids.length,
+    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.leafbeetles.length + result.aphids.length
   });
 
   return result;
@@ -424,6 +429,10 @@ const classifyInsect = (insect) => {
   if (familyJp.includes('タマムシ')) {
     return 'タマムシ類';
   }
+
+  if (familyJp.includes('アブラムシ')) {
+    return 'アブラムシ類';
+  }
   
   if (familyJp.includes('カミキリ')) {
     return 'カミキリムシ類';
@@ -444,6 +453,10 @@ const classifyInsect = (insect) => {
   
   if (family === 'Cerambycidae') {
     return 'カミキリムシ類';
+  }
+
+  if (family === 'Aphididae') {
+    return 'アブラムシ類';
   }
   
   // その他は蛾類として扱う
@@ -466,6 +479,10 @@ const getInsectTypeFromFamily = (family) => {
 
   if (family.includes('カミキリ')) {
     return 'longhornbeetle';
+  }
+
+  if (family.includes('アブラムシ')) {
+    return 'aphid';
   }
   
   if (family.includes('ハムシ')) {

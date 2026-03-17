@@ -133,6 +133,7 @@ function App() {
   const [beetles, setBeetles] = useState([]);
   const [longhornbeetles, setLonghornbeetles] = useState([]);
   const [leafbeetles, setLeafbeetles] = useState([]);
+  const [aphids, setAphids] = useState([]);
   const [hostPlants, setHostPlants] = useState({});
   const [flowerVisitPlants, setFlowerVisitPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
@@ -320,11 +321,13 @@ function App() {
     const beetleArr = Array.isArray(data.beetles) ? data.beetles : [];
     const longhornArr = Array.isArray(data.longhornbeetles) ? data.longhornbeetles : [];
     const leafArr = Array.isArray(data.leafbeetles) ? data.leafbeetles : [];
+    const aphidArr = Array.isArray(data.aphids) ? data.aphids : [];
     setMoths(mothArr);
     setButterflies(butterflyArr);
     setBeetles(beetleArr);
     setLonghornbeetles(longhornArr);
     setLeafbeetles(leafArr);
+    setAphids(aphidArr);
     setHostPlants(data.hostPlants || {});
     setFlowerVisitPlants(
       data.flowerVisitPlants ||
@@ -334,6 +337,7 @@ function App() {
           ...beetleArr,
           ...longhornArr,
           ...leafArr,
+          ...aphidArr,
         ]),
     );
     setPlantDetails(data.plantDetails || {});
@@ -345,7 +349,8 @@ function App() {
         butterflyArr.length +
         beetleArr.length +
         longhornArr.length +
-        leafArr.length >
+        leafArr.length +
+        aphidArr.length >
         0 ||
       Object.keys(data.hostPlants || {}).length > 0;
     hasDatasetRef.current = hasAny;
@@ -409,6 +414,7 @@ function App() {
         setBeetles(lite.beetles || []);
         setLonghornbeetles(lite.longhornbeetles || []);
         setLeafbeetles(lite.leafbeetles || []);
+        setAphids(lite.aphids || []);
         setHostPlants(lite.hostPlants || {});
         setPlantDetails(lite.plantDetails || {});
         if (lite.summaryCounts) setSummaryCounts(lite.summaryCounts);
@@ -724,23 +730,26 @@ function App() {
                 fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
                 fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
                 fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/aphids.json${versionSuffix}`, { cache: cacheMode }),
               ]);
-              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [] };
-              const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes] = responses;
+              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+              const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes, aphidRes] = responses;
               const safeJson = async (res) => (res && res.ok ? res.json() : []);
-              const [mothArr, butterArr, beetleArr, longhornArr, leafArr] = await Promise.all([
+              const [mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr] = await Promise.all([
                 safeJson(mothRes),
                 safeJson(butterflyRes),
                 safeJson(beetleRes),
                 safeJson(longhornRes),
                 safeJson(leafRes),
+                safeJson(aphidRes),
               ]);
-              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [] };
+              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
               if (Array.isArray(mothArr)) setMoths(mothArr);
               if (Array.isArray(butterArr)) setButterflies(butterArr);
               if (Array.isArray(beetleArr)) setBeetles(beetleArr);
               if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
               if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+              if (Array.isArray(aphidArr)) setAphids(aphidArr);
               // Keep summary counts in sync with loaded partitions (avoid stale cached counts)
               setSummaryCounts((prev) => ({
                 ...(prev || {}),
@@ -749,6 +758,7 @@ function App() {
                 beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
                 longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
                 leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
+                aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
               }));
               const flowerMap = buildFlowerVisitMap([
                 ...(mothArr || []),
@@ -756,10 +766,11 @@ function App() {
                 ...(beetleArr || []),
                 ...(longhornArr || []),
                 ...(leafArr || []),
+                ...(aphidArr || []),
               ]);
               setFlowerVisitPlants(flowerMap);
               const lookup = new Map();
-              [...(mothArr || []), ...(butterArr || []), ...(beetleArr || []), ...(longhornArr || []), ...(leafArr || [])].forEach(
+              [...(mothArr || []), ...(butterArr || []), ...(beetleArr || []), ...(longhornArr || []), ...(leafArr || []), ...(aphidArr || [])].forEach(
                 (insect) => {
                   if (insect && insect.id && insect.name) {
                     lookup.set(insect.id, insect.name);
@@ -772,7 +783,7 @@ function App() {
                 pendingHostHydrationRef.current();
                 pendingHostHydrationRef.current = null;
               }
-              return { mothArr, butterArr, beetleArr, longhornArr, leafArr };
+              return { mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr };
             };
 
             // 非同期・アイドル時にだけ full-dataset をプレフェッチし、IndexedDB キャッシュだけ温める
@@ -794,6 +805,7 @@ function App() {
                     ...(fullData.beetles || []),
                     ...(fullData.longhornbeetles || []),
                     ...(fullData.leafbeetles || []),
+                    ...(fullData.aphids || []),
                   ]);
                   await saveDatasetToCache(manifest.version || null, {
                     moths: fullData.moths,
@@ -801,6 +813,7 @@ function App() {
                     beetles: fullData.beetles,
                     longhornbeetles: fullData.longhornbeetles,
                     leafbeetles: fullData.leafbeetles,
+                    aphids: fullData.aphids,
                     hostPlants: fullData.hostPlants || hostMap,
                     flowerVisitPlants: fullFlowerVisits,
                     plantDetails: fullData.plantDetails || plantDetailsLite,
@@ -1484,7 +1497,8 @@ function App() {
               (normalizedData.butterflies?.length || 0) +
               (normalizedData.beetles?.length || 0) +
               (normalizedData.longhornbeetles?.length || 0) +
-              (normalizedData.leafbeetles?.length || 0)
+              (normalizedData.leafbeetles?.length || 0) +
+              (normalizedData.aphids?.length || 0)
             : 0;
           if (!normalizedData || normalizedTotal === 0) {
             const err = normalizedDataError || new Error('正規化データを読み込めませんでした');
@@ -6151,7 +6165,7 @@ function App() {
         });
         
         // Decide whether to use normalized data or legacy data
-        let finalMothData, finalButterflyData, finalBeetleData, finalLonghornbeetleData, finalLeafbeetleData;
+        let finalMothData, finalButterflyData, finalBeetleData, finalLonghornbeetleData, finalLeafbeetleData, finalAphidData;
         
         if (normalizedData && normalizedData.moths?.length > 0) {
           logger.debug("正規化データを使用します");
@@ -6162,6 +6176,7 @@ function App() {
           finalBeetleData = normalizedData.beetles;
           finalLonghornbeetleData = normalizedData.longhornbeetles || [];
           finalLeafbeetleData = normalizedData.leafbeetles;
+          finalAphidData = normalizedData.aphids || [];
           
               logger.debug("正規化データ使用状況:", {
             moths: finalMothData.length,
@@ -6169,7 +6184,8 @@ function App() {
             beetles: finalBeetleData.length,
             longhornbeetles: finalLonghornbeetleData.length,
             leafbeetles: finalLeafbeetleData.length,
-            total: finalMothData.length + finalButterflyData.length + finalBeetleData.length + finalLonghornbeetleData.length + finalLeafbeetleData.length
+            aphids: finalAphidData.length,
+            total: finalMothData.length + finalButterflyData.length + finalBeetleData.length + finalLonghornbeetleData.length + finalLeafbeetleData.length + finalAphidData.length
           });
           
         } else {
@@ -6181,6 +6197,7 @@ function App() {
             finalBeetleData = [];
             finalLonghornbeetleData = [];
             finalLeafbeetleData = [];
+            finalAphidData = [];
           } else {
             // Fallback to legacy data
             finalMothData = deduplicatedMoths;
@@ -6188,6 +6205,7 @@ function App() {
             finalBeetleData = combinedBeetleData;
             finalLonghornbeetleData = [];
             finalLeafbeetleData = combinedLeafbeetleData;
+            finalAphidData = [];
             
             // Enhance legacy data with integrated format for compatibility
             try {
@@ -6198,6 +6216,7 @@ function App() {
               finalBeetleData = convertLegacyToIntegratedFormat(finalBeetleData, 'beetle');
               finalLonghornbeetleData = convertLegacyToIntegratedFormat(finalLonghornbeetleData, 'longhornbeetle');
               finalLeafbeetleData = convertLegacyToIntegratedFormat(finalLeafbeetleData, 'leafbeetle');
+              finalAphidData = convertLegacyToIntegratedFormat(finalAphidData, 'aphid');
               
               logger.debug("レガシーデータを統合形式に変換完了");
             } catch (error) {
@@ -6229,6 +6248,7 @@ function App() {
         finalBeetleData = fixScientificNames(finalBeetleData);
         finalLonghornbeetleData = fixScientificNames(finalLonghornbeetleData);
         finalLeafbeetleData = fixScientificNames(finalLeafbeetleData);
+        finalAphidData = fixScientificNames(finalAphidData);
 
         // Parse user-provided emergence overrides CSV (robust to extra commas)
         const splitCsvLine = (line) => {
@@ -6284,6 +6304,7 @@ function App() {
         finalBeetleData = fillEmergenceFromNotes(finalBeetleData);
         finalLonghornbeetleData = fillEmergenceFromNotes(finalLonghornbeetleData);
         finalLeafbeetleData = fillEmergenceFromNotes(finalLeafbeetleData);
+        finalAphidData = fillEmergenceFromNotes(finalAphidData);
 
         // Unify host plant mapping with normalized/integrated data to avoid discrepancies
         const unifiedHostPlantMap = { ...cleanedHostPlantData };
@@ -6338,8 +6359,8 @@ function App() {
             }
           });
         };
-        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalLeafbeetleData].forEach(addInsectPlants);
-        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalLeafbeetleData].forEach((insect) => {
+        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalLeafbeetleData, ...finalAphidData].forEach(addInsectPlants);
+        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalLeafbeetleData, ...finalAphidData].forEach((insect) => {
           pruneFlowerOnlyHosts(unifiedHostPlantMap, insect);
         });
 
@@ -6354,6 +6375,7 @@ function App() {
         setBeetles(finalBeetleData);
         setLonghornbeetles(finalLonghornbeetleData);
         setLeafbeetles(finalLeafbeetleData);
+        setAphids(finalAphidData);
         setFlowerVisitPlants(
           buildFlowerVisitMap([
             ...finalMothData,
@@ -6361,6 +6383,7 @@ function App() {
             ...finalBeetleData,
             ...finalLonghornbeetleData,
             ...finalLeafbeetleData,
+            ...finalAphidData,
           ]),
         );
         setHostPlants(unifiedHostPlantMap);
@@ -6371,6 +6394,7 @@ function App() {
           beetles: finalBeetleData.length,
           longhornbeetles: finalLonghornbeetleData.length,
           leafbeetles: finalLeafbeetleData.length,
+          aphids: finalAphidData.length,
           hostPlants: Object.keys(unifiedHostPlantMap).length,
         };
         try {
@@ -6386,6 +6410,7 @@ function App() {
               beetles: finalBeetleData,
               longhornbeetles: finalLonghornbeetleData,
               leafbeetles: finalLeafbeetleData,
+              aphids: finalAphidData,
               hostPlants: cleanedHostPlantData,
               flowerVisitPlants: buildFlowerVisitMap([
                 ...finalMothData,
@@ -6393,6 +6418,7 @@ function App() {
                 ...finalBeetleData,
                 ...finalLonghornbeetleData,
                 ...finalLeafbeetleData,
+                ...finalAphidData,
               ]),
               plantDetails: cleanedPlantDetailData,
               summaryCounts: finalSummaryCounts,
@@ -6408,6 +6434,7 @@ function App() {
           butterflies: butterflyData.length, 
           beetles: combinedBeetleData.length,
           leafbeetles: combinedLeafbeetleData.length,
+          aphids: finalAphidData.length,
           hostPlants: Object.keys(cleanedHostPlantData).length,
           plantDetails: Object.keys(cleanedPlantDetailData).length
         });
@@ -6434,6 +6461,7 @@ function App() {
         setBeetles([]);
         setLonghornbeetles([]);
         setLeafbeetles([]);
+        setAphids([]);
         setHostPlants({});
         setPlantDetails({});
         setLoadError(error);
@@ -6589,6 +6617,7 @@ function App() {
     beetles,
     longhornbeetles,
     leafbeetles,
+    aphids,
     hostPlants,
     flowerVisitPlants,
     plantDetails,
@@ -6605,6 +6634,7 @@ function App() {
     beetles,
     longhornbeetles,
     leafbeetles,
+    aphids,
     hostPlants,
     flowerVisitPlants,
     plantDetails,
@@ -6654,6 +6684,7 @@ function App() {
           beetles={beetles}
           longhornbeetles={longhornbeetles}
           leafbeetles={leafbeetles}
+          aphids={aphids}
           hostPlants={hostPlants}
           plantDetails={plantDetails}
         />

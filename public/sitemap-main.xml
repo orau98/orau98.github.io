@@ -37,6 +37,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://orau98.github.io/meta/aphid/index.html</loc>
+    <lastmod>2026-03-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://orau98.github.io/meta/plant/index.html</loc>
     <lastmod>2026-03-17</lastmod>
     <changefreq>weekly</changefreq>

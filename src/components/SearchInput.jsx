@@ -19,6 +19,7 @@ const CategoryIcon = ({ type, className = "w-4 h-4" }) => {
     case 'beetle':
     case 'longhornbeetle':
     case 'leafbeetle':
+    case 'aphid':
       return (
         <svg className={className} viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C9.8 2 8 3.8 8 6v1H6c-1.1 0-2 .9-2 2v2c0 .6.4 1 1 1h1v6c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4v-6h1c.6 0 1-.4 1-1V9c0-1.1-.9-2-2-2h-2V6c0-2.2-1.8-4-4-4zm-1 6h2v2h-2V8z"/>
@@ -105,6 +106,8 @@ const getSuggestionBadgeClass = (type) => {
       return 'bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300';
     case 'leafbeetle':
       return 'bg-lime-100 dark:bg-lime-900/50 text-lime-700 dark:text-lime-300';
+    case 'aphid':
+      return 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300';
     default:
       return 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300';
   }

@@ -292,6 +292,7 @@ const InsectsHostPlantExplorer = React.memo(
     beetles,
     longhornbeetles,
     leafbeetles,
+    aphids = [],
     hostPlants,
     flowerVisitPlants: flowerVisitPlantsProp = {},
     plantDetails,
@@ -461,12 +462,14 @@ const InsectsHostPlantExplorer = React.memo(
         beetles: beetles.length,
         longhornbeetles: longhornbeetles.length,
         leafbeetles: leafbeetles.length,
+        aphids: aphids.length,
         total:
           moths.length +
           butterflies.length +
           beetles.length +
           longhornbeetles.length +
-          leafbeetles.length,
+          leafbeetles.length +
+          aphids.length,
       });
 
     const safeSessionGet = (key) => {
@@ -650,6 +653,7 @@ const InsectsHostPlantExplorer = React.memo(
         ...beetles,
         ...longhornbeetles,
         ...leafbeetles,
+        ...aphids,
       ];
       const normalizePlant = (value) => {
         if (!value || typeof value !== "string") return "";
@@ -677,7 +681,7 @@ const InsectsHostPlantExplorer = React.memo(
         });
       });
       return map;
-    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles]);
+    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
     const flowerVisitPlants = useMemo(() => {
       const merged = { ...(flowerVisitPlantsProp || {}) };
       Object.entries(computedFlowerVisitPlants || {}).forEach(([plant, insects]) => {
@@ -699,6 +703,7 @@ const InsectsHostPlantExplorer = React.memo(
         ...beetles,
         ...longhornbeetles,
         ...leafbeetles,
+        ...aphids,
       ];
       if (allInsects.length === 0) return null;
       return buildPlantInsectStats(
@@ -713,6 +718,7 @@ const InsectsHostPlantExplorer = React.memo(
       beetles,
       longhornbeetles,
       leafbeetles,
+      aphids,
       plantDetails,
       hostPlants,
       flowerVisitPlants,
@@ -724,35 +730,6 @@ const InsectsHostPlantExplorer = React.memo(
       });
       return names.size;
     }, [hostPlants, flowerVisitPlants]);
-    const aphidCount = useMemo(() => {
-      const allInsects = [
-        ...moths,
-        ...butterflies,
-        ...beetles,
-        ...longhornbeetles,
-        ...leafbeetles,
-      ];
-      const seen = new Set();
-      allInsects.forEach((insect) => {
-        if (!insect) return;
-        const familyJp = (
-          insect.classification?.familyJapanese ||
-          insect.family ||
-          ""
-        ).toString();
-        const familyLatin = (
-          insect.classification?.family ||
-          ""
-        ).toString();
-        const isAphid =
-          familyJp.includes("アブラムシ") || familyLatin === "Aphididae";
-        if (!isAphid) return;
-        const key = insect.id || insect.name;
-        if (key) seen.add(key);
-      });
-      return seen.size;
-    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles]);
-
     // SEO for list pages (トップ/昆虫/植物)
     const counts = summaryCounts
       ? {
@@ -761,6 +738,7 @@ const InsectsHostPlantExplorer = React.memo(
           beetles: summaryCounts.beetles ?? beetles.length,
           longhornbeetles: summaryCounts.longhornbeetles ?? longhornbeetles.length,
           leafbeetles: summaryCounts.leafbeetles ?? leafbeetles.length,
+          aphids: summaryCounts.aphids ?? aphids.length,
           hostPlants: mergedHostPlantCount,
         }
       : {
@@ -769,6 +747,7 @@ const InsectsHostPlantExplorer = React.memo(
           beetles: beetles.length,
           longhornbeetles: longhornbeetles.length,
           leafbeetles: leafbeetles.length,
+          aphids: aphids.length,
           hostPlants: mergedHostPlantCount,
         };
     const heroStats = useMemo(
@@ -777,17 +756,17 @@ const InsectsHostPlantExplorer = React.memo(
         { label: "タマムシ", value: `${counts.beetles}種` },
         { label: "カミキリムシ", value: `${counts.longhornbeetles}種` },
         { label: "ハムシ", value: `${counts.leafbeetles}種` },
-        { label: "アブラムシ", value: `${aphidCount}種` },
+        { label: "アブラムシ", value: `${counts.aphids}種` },
         { label: "食草", value: `${counts.hostPlants}種` },
       ],
-      [aphidCount, counts],
+      [counts],
     );
 
     const listSeo = useMemo(() => {
       if (location.pathname === "/moth") {
         return {
-          title: "昆虫一覧（蛾・蝶・甲虫）| 昆虫植物図鑑",
-          description: `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種を和名/学名/分類で検索できます。`,
+          title: "昆虫一覧（蛾・蝶・甲虫・アブラムシ）| 昆虫植物図鑑",
+          description: `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
           canonical: absUrl("/meta/moth/index.html"),
           breadcrumbItems: [
             { name: "昆虫植物図鑑", url: absUrl("/") },
@@ -807,8 +786,8 @@ const InsectsHostPlantExplorer = React.memo(
         };
       }
       return {
-        title: "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシと食草の繋がりを探索",
-        description: `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`,
+        title: "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の繋がりを探索",
+        description: `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`,
         canonical: absUrl("/"),
         breadcrumbItems: [{ name: "昆虫植物図鑑", url: absUrl("/") }],
       };
@@ -1089,7 +1068,8 @@ const InsectsHostPlantExplorer = React.memo(
           insect?.type === 'butterfly' ||
           insect?.type === 'beetle' ||
           insect?.type === 'longhornbeetle' ||
-          insect?.type === 'leafbeetle'
+          insect?.type === 'leafbeetle' ||
+          insect?.type === 'aphid'
         ) {
           return insect.type;
         }
@@ -1097,6 +1077,7 @@ const InsectsHostPlantExplorer = React.memo(
         if (beetles.includes(insect)) return 'beetle';
         if (longhornbeetles.includes(insect)) return 'longhornbeetle';
         if (leafbeetles.includes(insect)) return 'leafbeetle';
+        if (aphids.includes(insect)) return 'aphid';
         return 'moth';
       };
 
@@ -1119,6 +1100,7 @@ const InsectsHostPlantExplorer = React.memo(
           ...beetles,
           ...longhornbeetles,
           ...leafbeetles,
+          ...aphids,
         ];
         for (const insect of allInsects) {
           const insectType = getInsectType(insect);
@@ -1289,6 +1271,7 @@ const InsectsHostPlantExplorer = React.memo(
       beetles,
       longhornbeetles,
       leafbeetles,
+      aphids,
       hostPlants,
       flowerVisitPlants,
       plantDetails,
@@ -1539,7 +1522,8 @@ const InsectsHostPlantExplorer = React.memo(
                         butterflies.length +
                         beetles.length +
                         longhornbeetles.length +
-                        leafbeetles.length}
+                        leafbeetles.length +
+                        aphids.length}
                       )
                     </span>
                   </span>
@@ -1619,6 +1603,7 @@ const InsectsHostPlantExplorer = React.memo(
                           ...beetles,
                           ...longhornbeetles,
                           ...leafbeetles,
+                          ...aphids,
                         ]}
                         title="昆虫"
                         baseRoute=""

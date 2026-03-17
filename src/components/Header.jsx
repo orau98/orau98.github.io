@@ -4,7 +4,7 @@ import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
 import { getSectionConfigByRouteSegment } from '../utils/siteTaxonomy';
 
-const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
+const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails }) => {
   const location = useLocation();
   const insectListsByType = {
     moth: moths,
@@ -12,6 +12,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
     beetle: beetles,
     longhornbeetle: longhornbeetles,
     leafbeetle: leafbeetles,
+    aphid: aphids,
   };
   
   // Get current moth or plant data for classification display

@@ -9661,3 +9661,65 @@ species-23087,Aphididae,アブラムシ科,,,,,Toxoptera,,sp. A,,,,,,,,Toxoptera
 species-23088,Aphididae,アブラムシ科,,,,,Toxoptera,,sp. B,,,,,,,,Toxoptera sp. B,,,日本原色アブラムシ図鑑の未解決記録（No.197）を一意IDで暫定追加。
 species-23089,Aphididae,アブラムシ科,,,,,Aleurodaphis,,sp.,,,,,,,,Aleurodaphis sp.,,,日本原色アブラムシ図鑑の未解決記録（No.211）を一意IDで暫定追加。
 species-23090,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Eriosoma,,sp.,,,,,,,,Eriosoma sp.,,,日本原色アブラムシ図鑑の未解決記録（No.232）を一意IDで暫定追加。
+species-23091,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,juniperi,,,,ネズミサシオオアブラムシ,,,,Cinara juniperi (de Geer),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.1）。
+species-23092,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,longipennis,,,,ハネナガオオアブラムシ,,,,Cinara longipennis (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.2）。
+species-23093,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,pini,,,,マツオオアブラムシ,,,,Cinara pini (Linné),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.3）。
+species-23094,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,grandicauda,,,,ヨモギオナガヒメヒゲナガアブラムシ,,,,Macrosiphoniella grandicauda Takahashi et Moritsu,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.45）。
+species-23095,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,hikosanensis,,,,ヒコサンヒメヒゲナガアブラムシ,,,,Macrosiphoniella hikosanensis Moritsu,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.46）。
+species-23096,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,kuwayamai,,,,クワヤマヒメヒゲナガアブラムシ,,,,Macrosiphoniella kuwayamai Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.47）。
+species-23097,Aphididae,アブラムシ科,,,,,Dactynotus,,adenophorae,,,,シャジンヒゲナガアブラムシ,,,,Dactynotus adenophorae (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.51）。
+species-23098,Aphididae,アブラムシ科,,,,,Dactynotus,,amamianus,,,,アマミヒゲナガアブラムシ,,,,Dactynotus amamianus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.52）。
+species-23099,Aphididae,アブラムシ科,,,,,Dactynotus,,cephalonopli,,,,ノゲシヒゲナガアブラムシ,,,,Dactynotus cephalonopli Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.53）。
+species-23100,Aphididae,アブラムシ科,,,,,Dactynotus,,formosanus,,,,タイワンヒゲナガアブラムシ,,,,Dactynotus formosanus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.54）。
+species-23101,Aphididae,アブラムシ科,,,,,Dactynotus,,giganteus,,,,アザミヒゲナガアブラムシ,,,,Dactynotus giganteus (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.55）。
+species-23102,Aphididae,アブラムシ科,,,,,Dactynotus,,gobonis,,,,ゴボウヒゲナガアブラムシ,,,,Dactynotus gobonis (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.56）。
+species-23103,Aphididae,アブラムシ科,,,,,Dactynotus,,kikioensis,,,,キキョウヒゲナガアブラムシ,,,,Dactynotus kikioensis (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.57）。
+species-23104,Aphididae,アブラムシ科,,,,,Dactynotus,,lactucicola,,,,アキノキリンソウクロヒゲナガアブラムシ,,,,Dactynotus lactucicola (Strand),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.58）。
+species-23105,Aphididae,アブラムシ科,,,,,Dactynotus,,monticola,,,,シロヤマギクヒゲナガアブラムシ,,,,Dactynotus monticola (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.59）。
+species-23106,Aphididae,アブラムシ科,,,,,Dactynotus,,picridis,,,,コウゾリナヒゲナガアブラムシ,,,,Dactynotus picridis (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.60）。
+species-23107,Aphididae,アブラムシ科,,,,,Dactynotus,,solidaginis,,,,アキノキリンソウヒゲナガアブラムシ,,,,Dactynotus solidaginis (Fabricius)?,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.61）。
+species-23108,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,asteris,,,,ヨメナアミナシヒゲナガアブラムシ,,,,Acyrthosiphon asteris (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.67）。
+species-23109,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,cirsicola,,,,アザミアミナシヒゲナガアブラムシ,,,,Acyrthosiphon cirsicola (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.68）。
+species-23110,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,glechomae,,,,カキドオシヒゲナガアブラムシ,,,,Acyrthosiphon glechomae (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.69）。
+species-23111,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,kondoi,,,,コンドウヒゲナガアブラムシ,,,,Acyrthosiphon kondoi Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.71）。
+species-23112,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,pisum,,,,エンドウヒゲナガアブラムシ,,,,Acyrthosiphon pisum (Harris),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.78）。
+species-23113,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Rhopalosiphoninus,Rhopalosiphoninus,deutzifoliae,,,,ウツギトックリアブラムシ,,,,Rhopalosiphoninus deutzifoliae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.90）。
+species-23114,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,asteriae,,,,ヨメナコブアブラムシ,,,,Myzus asteriae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.93）。
+species-23115,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,boehmeriae,,,,カラムシコブアブラムシ,,,,Myzus boehmeriae Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.94）。
+species-23116,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,cerasi,,,,ニワウメクロコブアブラムシ,,,,Myzus cerasi (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.95）。
+species-23117,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,hemerocallidis,,,,カンゾウコブアブラムシ,,,,Myzus hemerocallidis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.96）。
+species-23118,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,lactucicola,,,,ワダンコブアブラムシ,,,,Myzus lactucicola Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.97）。
+species-23119,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,mumecola,,,,ウメコブアブラムシ,,,,Myzus mumecola (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.99）。
+species-23120,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,mushaensis,,,,ムシャコブアブラムシ,,,,Myzus mushaensis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.100）。
+species-23121,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,persicae,,,,モモアカアブラムシ,,,,Myzus persicae (Sulzer),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.101）。
+species-23122,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,siegesbeckiae,,,,ヒキオコシコブアブラムシ,,,,Myzus siegesbeckiae Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.103）。
+species-23123,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,varians,,,,ハンショウヅルコブアブラムシ,,,,Myzus varians Davidson,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.104）。
+species-23124,Aphididae,アブラムシ科,,,,,Eomyzus,,kuwanusae,,,,クワクサヒゲナガアブラムシ,,,,Eomyzus kuwanusae (Uye),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.106）。
+species-23125,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,fragariaefolii,,,,イチゴケナガアブラムシ,,,,Capitophorus fragariaefolii (Cockerell),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.112）。
+species-23126,Aphididae,アブラムシ科,,,,,Chaetomyzus,,hirticornis,,,,アキノタムラソウコブアブラムシ,,,,Chaetomyzus hirticornis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.114）。
+species-23127,Aphididae,アブラムシ科,,,,,Neomyzus,,circumflexus,,,,シクラメンコブアブラムシ,,,,Neomyzus circumflexus (Buckton),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.115）。
+species-23128,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Phorodon,Paraphorodon,humuli,,,,ホップイボアブラムシ,,,,Phorodon humuli Schrank,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.116）。
+species-23129,Aphididae,アブラムシ科,,,,,Micromyzus,,diervillae,,,,ウツギアブラムシ,,,,Micromyzus diervillae (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.119）。
+species-23130,Aphididae,アブラムシ科,,,,,Akkaia,,polygoni,,,,タデヨソオヒゲナガアブラムシ,,,,Akkaia polygoni Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.131）。
+species-23131,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,ishimikawae,,,,イシミカワイボアブラムシ,,,,Trichosiphonaphis ishimikawae (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.139）。
+species-23132,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,lonicerae,,,,スイカズラヒゲナガアブラムシ,,,,Trichosiphonaphis lonicerae (Uye),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.140）。
+species-23133,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,polygoniformosanus,,,,タデケクダヒゲナガアブラムシ,,,,Trichosiphonaphis polygoniformosanus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.142）。
+species-23134,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,tade,,,,タデヒゲナガアブラムシ,,,,Trichosiphonaphis tade (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.143）。
+species-23135,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Coloradoa,,artemisiae,,,,ヨモギクレアブラムシ,,,,Coloradoa artemisiae (Del Guercio),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.155）。
+species-23136,Aphididae,アブラムシ科,,,,,Micraphis,,artemisiae,,,,ヨモギコアブラムシ,,,,Micraphis artemisiae (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.157）。
+species-23137,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,justiceae,,,,キツネノマゴアブラムシ,,,,Aphis justiceae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.172）。
+species-23138,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,sambuci,,,,ニワトコアブラムシ,,,,Aphis sambuci Linné,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.179）。
+species-23139,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Rhopalosiphini,クビレアブラムシ族,Melanaphis,,formosana,,,,タイワンススキアブラムシ,,,,Melanaphis formosana (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.185）。
+species-23140,Aphididae,アブラムシ科,,,,,Aleurodaphis,,blumeae,,,,ヤブタバココナジラミモドキ,,,,Aleurodaphis blumeae van der Goot,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.210）。
+species-23141,Aphididae,アブラムシ科,,,,,Anoecia,,corni,,,,ミズキヒラタアブラムシ,,,,Anoecia corni (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.212）。
+species-23142,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,autumnalis,,,,イスノフキアブラムシ,,,,Nipponaphis autumnalis Monzen,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.215）。
+species-23143,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,cuspidatae,,,,シイムネアブラムシ,,,,Nipponaphis cuspidatae Essig et Kuwana,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.216）。
+species-23144,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,globuli,,,,イスノタマフシアブラムシ,,,,Nipponaphis globuli (Monzen),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.219）。
+species-23145,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,monzeni,,,,モンゼンイスアブラムシ,,,,Nipponaphis monzeni Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.221）。
+species-23146,Aphididae,アブラムシ科,,,,,Thoracaphis,,kashifoliae,,,,クスマルアブラムシ,,,,Thoracaphis kashifoliae Uye?,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.223）。
+species-23147,Aphididae,アブラムシ科,Mandarinae,トワタムシ亜科,,,Mindarus,,abietinus,japonicus,,,トドマツワタムシ,,,,Mindarus abietinus japonicus Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.224）。
+species-23148,Aphididae,アブラムシ科,,,,,Glyphina,,onigurumi,,,,サワグルミミツアブラムシ,,,,Glyphina onigurumi (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.225）。
+species-23149,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Eriosoma,,clematis,,,,ハンショウヅルノオオワタムシ,,,,Eriosoma clematis (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.230）。
+species-23150,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Schlechtendalia,,chinensis,,,,ヌルデノオオミミフシアブラムシ,,,,Schlechtendalia chinensis (Bell),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.236）。
+species-23151,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,sorini,,,,ニレナガフシヨスジメンチュウ,,,,Tetraneura sorini Hille Ris Lambers,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.238）。
+species-23152,Aphididae,アブラムシ科,,,,,Watabura,,nishiyae,,,,ニシヤワタアブラムシ,,,,Watabura nishiyae Matsumura,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.239）。
