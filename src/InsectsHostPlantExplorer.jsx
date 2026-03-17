@@ -5,7 +5,7 @@ import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
 import SearchInput from "./components/SearchInput";
 import StickyHeader from "./components/StickyHeader";
-import { MainStructuredData } from "./components/StructuredData";
+import { ExplorerStructuredData, MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink } from "./utils/sourceLinks";
@@ -40,6 +40,20 @@ const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
     "</body>",
     "</html>",
   ].join("");
+};
+
+const isEditableElement = (element) => {
+  if (!element) return false;
+  if (typeof HTMLElement !== "undefined" && !(element instanceof HTMLElement)) {
+    return false;
+  }
+  const tagName = element.tagName || "";
+  return (
+    element.isContentEditable ||
+    tagName === "INPUT" ||
+    tagName === "TEXTAREA" ||
+    tagName === "SELECT"
+  );
 };
 
 const parseInstagramTimestampValue = (value) => {
@@ -350,6 +364,8 @@ const InsectsHostPlantExplorer = React.memo(
       return window.matchMedia("(min-width: 1024px)").matches;
     });
     const searchTimeoutRef = useRef(null);
+    const heroSearchInputRef = useRef(null);
+    const stickySearchInputRef = useRef(null);
 
     // Sync search term with URL (active tab only)
     useEffect(() => {
@@ -761,6 +777,43 @@ const InsectsHostPlantExplorer = React.memo(
       ],
       [counts],
     );
+    const featuredInsects = useMemo(
+      () =>
+        [
+          ...moths,
+          ...butterflies,
+          ...beetles,
+          ...longhornbeetles,
+          ...leafbeetles,
+          ...aphids,
+        ]
+          .filter(Boolean)
+          .slice(0, 10),
+      [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids],
+    );
+    const featuredPlants = useMemo(() => {
+      const merged = new Map();
+      Object.entries(hostPlants || {}).forEach(([name, relatedInsects]) => {
+        if (!name) return;
+        const count =
+          plantInsectStats?.countsByPlant?.[name] ??
+          (Array.isArray(relatedInsects) ? relatedInsects.length : 0);
+        merged.set(name, count);
+      });
+      Object.entries(flowerVisitPlants || {}).forEach(([name, relatedInsects]) => {
+        if (!name) return;
+        const fallbackCount = Array.isArray(relatedInsects) ? relatedInsects.length : 0;
+        const count = plantInsectStats?.countsByPlant?.[name] ?? fallbackCount;
+        merged.set(name, Math.max(merged.get(name) || 0, count));
+      });
+      return Array.from(merged.entries())
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => {
+          if (b.count !== a.count) return b.count - a.count;
+          return a.name.localeCompare(b.name, "ja");
+        })
+        .slice(0, 10);
+    }, [hostPlants, flowerVisitPlants, plantInsectStats]);
 
     const listSeo = useMemo(() => {
       if (location.pathname === "/moth") {
@@ -801,6 +854,37 @@ const InsectsHostPlantExplorer = React.memo(
       breadcrumbItems: listSeo.breadcrumbItems,
       resetCanonicalTo: absUrl("/"),
     });
+
+    useEffect(() => {
+      if (typeof window === "undefined") return undefined;
+
+      const handleShortcut = (event) => {
+        if (event.defaultPrevented || event.isComposing) return;
+        const key = String(event.key || "");
+        const isSlashShortcut =
+          key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey;
+        const isCommandShortcut =
+          !event.altKey &&
+          (event.metaKey || event.ctrlKey) &&
+          key.toLowerCase() === "k";
+        if (!isSlashShortcut && !isCommandShortcut) return;
+        if (isEditableElement(event.target)) return;
+
+        const targetInput = isStickyHeaderVisible
+          ? stickySearchInputRef.current || heroSearchInputRef.current
+          : heroSearchInputRef.current || stickySearchInputRef.current;
+        if (!targetInput) return;
+
+        event.preventDefault();
+        targetInput.focus();
+        if (typeof targetInput.select === "function") {
+          targetInput.select();
+        }
+      };
+
+      window.addEventListener("keydown", handleShortcut);
+      return () => window.removeEventListener("keydown", handleShortcut);
+    }, [isStickyHeaderVisible]);
 
     // Preload hero image on component mount (base-aware for subpath deployments)
     React.useEffect(() => {
@@ -1310,10 +1394,19 @@ const InsectsHostPlantExplorer = React.memo(
           onNeedPlantsData={onNeedPlantsData}
           theme={theme}
           setTheme={setTheme}
+          inputRef={stickySearchInputRef}
           onVisibilityChange={setIsStickyHeaderVisible}
         />
         {/* 構造化データ */}
         <MainStructuredData />
+        <ExplorerStructuredData
+          pathname={location.pathname}
+          pageTitle={listSeo.title}
+          pageDescription={listSeo.description}
+          counts={counts}
+          featuredInsects={featuredInsects}
+          featuredPlants={featuredPlants}
+        />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
           <div id="hero-section" className="relative w-full h-[18rem] sm:h-[22rem] md:h-96 lg:h-[28rem] group">
             {/* Background Container - Handles clipping for image and gradients */}
@@ -1410,6 +1503,7 @@ const InsectsHostPlantExplorer = React.memo(
                 {/* ヒーローセクション内の検索バー */}
                 <div className="max-w-2xl w-full mt-4 md:mt-8 mx-auto md:mx-0">
                   <SearchInput
+                    ref={heroSearchInputRef}
                     placeholder={`${activeTab === "plants" ? "植物" : "昆虫"}を検索 (和名・学名・分類)`}
                     value={activeSearchTerm}
                     onChange={handleGlobalSearch}
@@ -1419,7 +1513,10 @@ const InsectsHostPlantExplorer = React.memo(
                     ariaLabel={`${activeTab === "plants" ? "植物" : "昆虫"}を検索`}
                     historyScope={activeTab}
                   />
-                  <p className="mt-2 text-xs md:text-sm text-white/80">
+                  <p className="mt-2 text-[11px] md:text-xs text-white/70">
+                    「/」または Ctrl/Cmd + K で検索にフォーカス。Esc で候補を閉じ、もう一度押すと入力をクリアできます。
+                  </p>
+                  <p className="mt-1 text-xs md:text-sm text-white/80">
                     検索対象: {activeTab === "plants" ? "植物" : "昆虫"}（タブで切り替え）
                   </p>
                 </div>

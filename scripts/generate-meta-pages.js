@@ -1856,6 +1856,29 @@ function generateMetaIndexes() {
     const relLinks = files.slice(0, 2000) // 安全のため上限（十分な内部リンク確保）
       .map(f => `<li><a href="/${['meta', sec.dir, f].join('/')}">${f.replace(/\.html$/,'')}</a></li>`) // ファイル名表示
       .join('\n');
+    const listUrl = `${BASE_ORIGIN}/meta/${sec.dir}/index.html`;
+    const pageDescription = `${sec.title}への内部リンクページ。検索エンジン用に静的URLを明示します。`;
+    const listStructuredData = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: sec.title,
+      description: pageDescription,
+      url: listUrl,
+      inLanguage: 'ja',
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: Math.min(files.length, 20),
+        itemListElement: files.slice(0, 20).map((file, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'WebPage',
+            name: file.replace(/\.html$/i, ''),
+            url: `${BASE_ORIGIN}/meta/${sec.dir}/${encodeURIComponent(file)}`,
+          },
+        })),
+      },
+    }, null, 2);
 
     const html = `<!DOCTYPE html>
 <html lang="ja">
@@ -1864,8 +1887,18 @@ function generateMetaIndexes() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
   <title>${sec.title}</title>
-  <meta name="description" content="${sec.title}への内部リンクページ。検索エンジン用に静的URLを明示します。">
-  <link rel="canonical" href="${BASE_ORIGIN}/meta/${sec.dir}/index.html">
+  <meta name="description" content="${pageDescription}">
+  <link rel="canonical" href="${listUrl}">
+  <meta property="og:title" content="${sec.title}">
+  <meta property="og:description" content="${pageDescription}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="${listUrl}">
+  <meta property="og:site_name" content="昆虫植物図鑑">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${sec.title}">
+  <meta name="twitter:description" content="${pageDescription}">
+  <script type="application/ld+json">${listStructuredData}</script>
   <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:16px}h1{font-size:20px}ul{columns:2;gap:24px;line-height:1.8}</style>
 </head>
 <body>

@@ -3,6 +3,7 @@ import { absUrl } from '../utils/origin';
 import { createSafeInsectFilename } from '../utils/image';
 import { getMappedScientificFilename } from '../utils/insectImageMappings';
 import {
+  INSECT_SECTION_CONFIGS,
   buildInsectMetaPagePath,
   buildPlantMetaPagePath,
 } from '../utils/siteTaxonomy';
@@ -53,6 +54,12 @@ const buildInsectImageObject = (insect, caption, description) => {
     "caption": caption,
     "description": description,
   };
+};
+
+const buildExplorerCanonicalUrl = (pathname = '/') => {
+  if (pathname === '/moth') return absUrl('/meta/moth/index.html');
+  if (pathname === '/plant') return absUrl('/meta/plant/index.html');
+  return absUrl('/');
 };
 
 // Enhanced 蛾の構造化データ with Species and detailed taxonomy
@@ -1032,5 +1039,135 @@ export const MainStructuredData = () => {
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
     />
+  );
+};
+
+export const ExplorerStructuredData = ({
+  pathname = '/',
+  pageTitle,
+  pageDescription,
+  counts,
+  featuredInsects = [],
+  featuredPlants = [],
+}) => {
+  if (!counts) return null;
+
+  const pageUrl = buildExplorerCanonicalUrl(pathname);
+  const siteUrl = absUrl('/');
+  const totalInsects =
+    (counts.moths || 0) +
+    (counts.butterflies || 0) +
+    (counts.beetles || 0) +
+    (counts.longhornbeetles || 0) +
+    (counts.leafbeetles || 0) +
+    (counts.aphids || 0);
+
+  const buildListItem = (entry, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'WebPage',
+      name: entry.name,
+      url: entry.url,
+      ...(entry.description ? { description: entry.description } : {}),
+    },
+  });
+
+  let listName = '主要カテゴリ';
+  let listDescription = '主要な分類ページ一覧';
+  let itemEntries = [];
+
+  if (pathname === '/moth') {
+    listName = '昆虫一覧の代表種';
+    listDescription = '昆虫一覧ページから参照できる代表的な昆虫メタページ';
+    itemEntries = featuredInsects.slice(0, 10).map((insect) => ({
+      name: insect?.name || insect?.japaneseName || '',
+      url: absUrl(buildInsectMetaPagePath(insect?.type, insect?.id, 'moth')),
+      description: insect?.scientificName || '',
+    })).filter((entry) => entry.name && entry.url);
+  } else if (pathname === '/plant') {
+    listName = '植物一覧の代表種';
+    listDescription = '植物一覧ページから参照できる代表的な植物メタページ';
+    itemEntries = featuredPlants.slice(0, 10).map((plant) => ({
+      name: plant?.name || '',
+      url: absUrl(buildPlantMetaPagePath(plant?.name)),
+      description: Number.isFinite(plant?.count)
+        ? `${plant.count}種の昆虫が関連`
+        : '',
+    })).filter((entry) => entry.name && entry.url);
+  } else {
+    itemEntries = [
+      ...INSECT_SECTION_CONFIGS.map((section) => ({
+        name: `${section.label} ${counts[section.collectionKey] || 0}種`,
+        url: absUrl(`/meta/${section.routeSegment}/index.html`),
+        description: `${section.label}のメタページ一覧`,
+      })),
+      {
+        name: `植物 ${counts.hostPlants || 0}種`,
+        url: absUrl('/meta/plant/index.html'),
+        description: '食草・訪花植物のメタページ一覧',
+      },
+    ];
+  }
+
+  const itemList = itemEntries.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        '@id': `${pageUrl}#itemlist`,
+        name: listName,
+        description: listDescription,
+        numberOfItems: itemEntries.length,
+        itemListElement: itemEntries.map(buildListItem),
+      }
+    : null;
+
+  const aboutEntries =
+    pathname === '/plant'
+      ? [
+          {
+            '@type': 'Thing',
+            name: `食草・訪花植物 ${counts.hostPlants || 0}種`,
+          },
+        ]
+      : [
+          {
+            '@type': 'Thing',
+            name: `昆虫 ${totalInsects}種`,
+          },
+          {
+            '@type': 'Thing',
+            name: `植物 ${counts.hostPlants || 0}種`,
+          },
+        ];
+
+  const collectionPage = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${pageUrl}#collection`,
+    name: pageTitle,
+    description: pageDescription,
+    url: pageUrl,
+    inLanguage: 'ja',
+    isPartOf: {
+      '@id': `${siteUrl}#website`,
+    },
+    about: aboutEntries,
+    ...(itemList ? { mainEntity: { '@id': `${pageUrl}#itemlist` } } : {}),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(collectionPage) }}
+      />
+      {itemList && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toJsonLd(itemList) }}
+        />
+      )}
+    </>
   );
 };

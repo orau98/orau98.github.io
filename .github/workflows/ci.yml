@@ -31,5 +31,17 @@ jobs:
       - name: Build lite datasets
         run: npm run build:data-lite
 
+      - name: Build image index
+        run: npm run build:image-index
+
+      - name: Generate meta pages
+        run: npm run generate-meta
+
+      - name: Audit image resolution
+        run: npm run audit:image-resolution
+
       - name: Build app
         run: npm run build:app
+
+      - name: Audit SEO output
+        run: npm run audit:seo

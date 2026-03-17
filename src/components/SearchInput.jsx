@@ -1,6 +1,15 @@
 import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
 import { getSearchTypeLabel } from '../utils/siteTaxonomy';
 
+const assignRef = (ref, value) => {
+  if (!ref) return;
+  if (typeof ref === 'function') {
+    ref(value);
+    return;
+  }
+  ref.current = value;
+};
+
 // カテゴリアイコンコンポーネント
 const CategoryIcon = ({ type, className = "w-4 h-4" }) => {
   switch (type) {
@@ -167,7 +176,7 @@ const useSearchHistory = (scope = 'default') => {
   return { history, addToHistory, removeFromHistory, clearHistory };
 };
 
-const SearchInput = ({
+const SearchInput = React.forwardRef(({
   value,
   onChange,
   placeholder,
@@ -176,16 +185,21 @@ const SearchInput = ({
   onSubmit,
   ariaLabel,
   historyScope = 'default',
-}) => {
+}, forwardedRef) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   // IME composition状態を追跡（日本語入力の文字重複を防ぐ）
   const [localValue, setLocalValue] = useState(value);
   const isComposingRef = useRef(false);
+  const inputRef = useRef(null);
   const listboxId = useId();
   const blurTimeoutRef = useRef(null);
   const isMobile = useIsMobile();
   const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory(historyScope);
+  const setInputRef = useCallback((node) => {
+    inputRef.current = node;
+    assignRef(forwardedRef, node);
+  }, [forwardedRef]);
 
   // 外部からvalueが変更された場合にローカル値を同期
   useEffect(() => {
@@ -267,6 +281,13 @@ const SearchInput = ({
     }
     setShowSuggestions(false);
     setActiveIndex(-1);
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    } else {
+      inputRef.current?.focus();
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -324,6 +345,10 @@ const SearchInput = ({
     }
     if (e.key === "Escape") {
       e.preventDefault();
+      if (!expanded && localValue) {
+        handleClear();
+        return;
+      }
       setShowSuggestions(false);
       setActiveIndex(-1);
       return;
@@ -360,6 +385,7 @@ const SearchInput = ({
           </svg>
         </div>
         <input
+          ref={setInputRef}
           type="text"
           placeholder={placeholder}
           value={localValue}
@@ -380,6 +406,7 @@ const SearchInput = ({
           aria-expanded={expanded}
           aria-controls={expanded ? listboxId : undefined}
           aria-activedescendant={activeDescendantId}
+          aria-keyshortcuts="/ Control+K Meta+K Escape"
           className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
         />
         {localValue && localValue.length > 0 && (
@@ -521,6 +548,8 @@ const SearchInput = ({
       )}
     </div>
   );
-};
+});
+
+SearchInput.displayName = 'SearchInput';
 
 export default SearchInput;

@@ -13,6 +13,7 @@ const StickyHeader = ({
   onNeedPlantsData,
   theme,
   setTheme,
+  inputRef,
   heroId = 'hero-section',
   scrollTargetId = 'explorer-results',
   onVisibilityChange
@@ -125,6 +126,7 @@ const StickyHeader = ({
           {/* Search Bar - Compact */}
           <div className="flex-1 max-w-2xl relative">
             <SearchInput
+              ref={inputRef}
               value={searchTerm}
               onChange={onSearchChange}
               placeholder={`${activeTab === 'plants' ? '植物' : '昆虫'}を検索...`}
