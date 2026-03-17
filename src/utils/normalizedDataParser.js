@@ -10,22 +10,14 @@
 import logger from './logger.js';
 import { createSafeInsectFilename } from './image.js';
 import { splitJapaneseNameAliases } from './insectNameAliases.js';
+import {
+  INSECT_COLLECTION_KEYS,
+  createEmptyInsectCollections,
+} from './siteTaxonomy.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
-  const result = {
-    moths: [],
-    butterflies: [],
-    beetles: [],
-    longhornbeetles: [],
-    leafbeetles: []
-  };
-  const dedupeMaps = {
-    moths: new Map(),
-    butterflies: new Map(),
-    beetles: new Map(),
-    longhornbeetles: new Map(),
-    leafbeetles: new Map()
-  };
+  const result = createEmptyInsectCollections(() => []);
+  const dedupeMaps = createEmptyInsectCollections(() => new Map());
 
   const normalizeScientificBase = (name = '') => {
     const s = (name || '').toString().trim();
@@ -497,7 +489,7 @@ export const validateNormalizedData = (data) => {
     errors: []
   };
 
-  ['moths', 'butterflies', 'beetles', 'longhornbeetles', 'leafbeetles'].forEach(type => {
+  INSECT_COLLECTION_KEYS.forEach(type => {
     if (data[type]) {
       data[type].forEach((item, index) => {
         report.totalRecords++;

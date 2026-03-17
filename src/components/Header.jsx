@@ -2,9 +2,17 @@ import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
+import { getSectionConfigByRouteSegment } from '../utils/siteTaxonomy';
 
 const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, plantDetails }) => {
   const location = useLocation();
+  const insectListsByType = {
+    moth: moths,
+    butterfly: butterflies,
+    beetle: beetles,
+    longhornbeetle: longhornbeetles,
+    leafbeetle: leafbeetles,
+  };
   
   // Get current moth or plant data for classification display
   const repairLatinBinomial = (s) => {
@@ -30,60 +38,10 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
   };
 
   const getCurrentSpeciesInfo = () => {
-    const pathParts = location.pathname.split('/');
-    
-    if (pathParts[1] === 'moth' && pathParts[2]) {
-      const moth = findBySlugOrId(moths, pathParts[2]);
-      if (moth) {
-        return {
-          type: 'moth',
-          name: moth.name,
-          scientificName: moth.scientificName,
-          classification: moth.classification
-        };
-      }
-    } else if (pathParts[1] === 'butterfly' && pathParts[2]) {
-      const butterfly = findBySlugOrId(butterflies, pathParts[2]);
-      if (butterfly) {
-        return {
-          type: 'butterfly',
-          name: butterfly.name,
-          scientificName: butterfly.scientificName,
-          classification: butterfly.classification
-        };
-      }
-    } else if (pathParts[1] === 'beetle' && pathParts[2]) {
-      const beetle = findBySlugOrId(beetles, pathParts[2]);
-      if (beetle) {
-        return {
-          type: 'beetle',
-          name: beetle.name,
-          scientificName: beetle.scientificName,
-          classification: beetle.classification
-        };
-      }
-    } else if (pathParts[1] === 'longhornbeetle' && pathParts[2]) {
-      const longhorn = findBySlugOrId(longhornbeetles, pathParts[2]);
-      if (longhorn) {
-        return {
-          type: 'longhornbeetle',
-          name: longhorn.name,
-          scientificName: longhorn.scientificName,
-          classification: longhorn.classification
-        };
-      }
-    } else if (pathParts[1] === 'leafbeetle' && pathParts[2]) {
-      const leafbeetle = findBySlugOrId(leafbeetles, pathParts[2]);
-      if (leafbeetle) {
-        return {
-          type: 'leafbeetle',
-          name: leafbeetle.name,
-          scientificName: leafbeetle.scientificName,
-          classification: leafbeetle.classification
-        };
-      }
-    } else if (pathParts[1] === 'plant' && pathParts[2]) {
-      const plantName = decodeURIComponent(pathParts[2]);
+    const [, routeSegment, slug] = location.pathname.split('/');
+
+    if (routeSegment === 'plant' && slug) {
+      const plantName = decodeURIComponent(slug);
       const displayName = repairLatinBinomial(plantName);
       const plantDetail = plantDetails[plantName];
       if (plantDetail) {
@@ -94,6 +52,22 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
           genus: plantDetail.genus
         };
       }
+      return null;
+    }
+
+    const section = getSectionConfigByRouteSegment(routeSegment);
+    if (!section || section.type === 'plant' || !slug) {
+      return null;
+    }
+
+    const insect = findBySlugOrId(insectListsByType[section.type], slug);
+    if (insect) {
+      return {
+        type: section.type,
+        name: insect.name,
+        scientificName: insect.scientificName,
+        classification: insect.classification
+      };
     }
     return null;
   };
@@ -150,16 +124,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
             {/* Dynamic species classification info */}
             {speciesInfo && (
               <div className="hidden lg:flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl px-5 py-2.5 border border-emerald-400/20 shadow-lg">
-                {speciesInfo.type === 'moth' ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="text-sm">
-                      <span className="text-white font-medium">{speciesInfo.name}</span>
-                      {speciesInfo.classification?.familyJapanese && (
-                        <span className="text-slate-300 ml-2">({speciesInfo.classification.familyJapanese})</span>
-                      )}
-                    </div>
-                  </div>
-                ) : (
+                {speciesInfo.type === 'plant' ? (
                   <div className="flex items-center space-x-2">
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
@@ -174,6 +139,15 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
                             ({speciesInfo.family})
                           </Link>
                         </>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <div className="text-sm">
+                      <span className="text-white font-medium">{speciesInfo.name}</span>
+                      {speciesInfo.classification?.familyJapanese && (
+                        <span className="text-slate-300 ml-2">({speciesInfo.classification.familyJapanese})</span>
                       )}
                     </div>
                   </div>

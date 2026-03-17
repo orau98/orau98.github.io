@@ -1,4 +1,9 @@
 // 統合CSVデータの解析・処理ユーティリティ
+import logger from './logger';
+import {
+  INSECT_COLLECTION_KEYS,
+  createEmptyInsectCollections,
+} from './siteTaxonomy.js';
 
 /**
  * 統合CSVの食草データを解析して標準形式に変換
@@ -77,16 +82,9 @@ export const parseIntegratedEmergenceTime = (row) => {
  * @param {Array} csvData - 統合CSVの解析済みデータ
  * @returns {Object} - 分類群別に整理されたデータ
  */
-import logger from './logger';
 
 export const convertIntegratedDataToStandardFormat = (csvData) => {
-  const result = {
-    moths: [],
-    butterflies: [],
-    beetles: [],
-    longhornbeetles: [],
-    leafbeetles: []
-  };
+  const result = createEmptyInsectCollections(() => []);
   
   csvData.forEach((row, index) => {
     try {
@@ -246,7 +244,7 @@ export const validateIntegratedData = (data) => {
     errors: []
   };
   
-  ['moths', 'butterflies', 'beetles', 'longhornbeetles', 'leafbeetles'].forEach(type => {
+  INSECT_COLLECTION_KEYS.forEach(type => {
     if (data[type]) {
       data[type].forEach((item, index) => {
         report.totalRecords++;

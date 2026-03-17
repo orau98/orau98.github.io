@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { META_PAGE_SECTIONS } from '../src/utils/siteTaxonomy.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,12 +54,7 @@ function generateSplitSitemaps() {
   // 各カテゴリごとのサイトマップを格納
   const sitemaps = {
     main: [],
-    moth: [],
-    butterfly: [],
-    beetle: [],
-    longhornbeetle: [],
-    leafbeetle: [],
-    plant: []
+    ...Object.fromEntries(META_PAGE_SECTIONS.map(({ key }) => [key, []])),
   };
   const today = formatDate(new Date());
   
@@ -138,48 +134,18 @@ function generateSplitSitemaps() {
     return count;
   };
 
-  const mothCount = addMetaDirToSitemap({
-    key: 'moth',
-    dir: '../public/meta/moth',
-    routePrefix: '/meta/moth/',
-    priority: '0.8',
-    includeIndexInMain: true,
-  });
-  const butterflyCount = addMetaDirToSitemap({
-    key: 'butterfly',
-    dir: '../public/meta/butterfly',
-    routePrefix: '/meta/butterfly/',
-    priority: '0.8',
-    includeIndexInMain: true,
-  });
-  const beetleCount = addMetaDirToSitemap({
-    key: 'beetle',
-    dir: '../public/meta/beetle',
-    routePrefix: '/meta/beetle/',
-    priority: '0.7',
-    includeIndexInMain: true,
-  });
-  const longhornCount = addMetaDirToSitemap({
-    key: 'longhornbeetle',
-    dir: '../public/meta/longhornbeetle',
-    routePrefix: '/meta/longhornbeetle/',
-    priority: '0.7',
-    includeIndexInMain: true,
-  });
-  const leafCount = addMetaDirToSitemap({
-    key: 'leafbeetle',
-    dir: '../public/meta/leafbeetle',
-    routePrefix: '/meta/leafbeetle/',
-    priority: '0.7',
-    includeIndexInMain: true,
-  });
-  const plantCount = addMetaDirToSitemap({
-    key: 'plant',
-    dir: '../public/meta/plant',
-    routePrefix: '/meta/plant/',
-    priority: '0.6',
-    includeIndexInMain: true,
-  });
+  const sectionCounts = Object.fromEntries(
+    META_PAGE_SECTIONS.map((section) => [
+      section.key,
+      addMetaDirToSitemap({
+        key: section.key,
+        dir: `../public/meta/${section.dir}`,
+        routePrefix: section.routePrefix,
+        priority: section.priority,
+        includeIndexInMain: true,
+      }),
+    ]),
+  );
   
   // XMLを生成する関数
   const generateXML = (urls) => {
@@ -276,12 +242,10 @@ function generateSplitSitemaps() {
   });
   
   console.log('\n統計:');
-  console.log(`- 蛾（meta）: ${mothCount} URL`);
-  console.log(`- 蝶（meta）: ${butterflyCount} URL`);
-  console.log(`- タマムシ（meta）: ${beetleCount} URL`);
-  console.log(`- カミキリムシ（meta）: ${longhornCount} URL`);
-  console.log(`- ハムシ（meta）: ${leafCount} URL`);
-  console.log(`- 植物（meta）: ${plantCount} URL`);
+  META_PAGE_SECTIONS.forEach((section) => {
+    const label = section.title.replace('（メタページ一覧）', '');
+    console.log(`- ${label}（meta）: ${sectionCounts[section.key] || 0} URL`);
+  });
   console.log(`- 合計: ${Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0)} URLs`);
 }
 

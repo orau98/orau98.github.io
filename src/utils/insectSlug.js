@@ -1,3 +1,5 @@
+import { getInsectRouteBase } from './siteTaxonomy';
+
 export const slugifyInsectName = (name = '') => {
   if (!name) return '';
   // encodeURIComponent handles most cases; normalize spaces just in case
@@ -6,16 +8,7 @@ export const slugifyInsectName = (name = '') => {
 
 export const buildInsectPath = (insect) => {
   if (!insect) return '/moth/unknown';
-  const base =
-    insect.type === 'butterfly'
-      ? '/butterfly/'
-      : insect.type === 'beetle'
-        ? '/beetle/'
-        : insect.type === 'longhornbeetle'
-          ? '/longhornbeetle/'
-          : insect.type === 'leafbeetle'
-            ? '/leafbeetle/'
-            : '/moth/';
+  const base = getInsectRouteBase(insect.type);
   const slug = slugifyInsectName(insect.name) || insect.id;
   return `${base}${slug}`;
 };

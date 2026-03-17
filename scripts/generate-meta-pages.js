@@ -3,6 +3,10 @@ import path from 'path';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
 import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
+import {
+  INSECT_SECTION_CONFIGS,
+  META_PAGE_SECTIONS,
+} from '../src/utils/siteTaxonomy.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +22,14 @@ insectImageFiles.forEach(file => {
   const base = file.replace(/\.[^.]+$/, '');
   insectImageExtMap[base] = path.extname(file);
 });
+
+const META_SECTION_KEYS = META_PAGE_SECTIONS.map(({ key }) => key);
+const INSECT_TYPE_NAMES = Object.fromEntries(
+  INSECT_SECTION_CONFIGS.map(({ type, label }) => [type, label]),
+);
+const INSECT_DEFAULT_FAMILIES = Object.fromEntries(
+  INSECT_SECTION_CONFIGS.map(({ type, defaultFamilyName }) => [type, defaultFamilyName]),
+);
 
 // 英語単語をイタリック体にフォーマットする関数
 function formatEnglishWordsInItalic(text) {
@@ -620,13 +632,7 @@ function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles })
 
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
 function generateInsectHTML(insect, type) {
-  const typeNames = {
-    moth: '蛾',
-    butterfly: '蝶',
-    beetle: 'タマムシ',
-    longhornbeetle: 'カミキリムシ',
-    leafbeetle: 'ハムシ'
-  };
+  const typeNames = INSECT_TYPE_NAMES;
   
   const hostPlants = insect.hostPlants || '不明';
   const scientificName = insect.scientificName || '';
@@ -667,13 +673,7 @@ function generateInsectHTML(insect, type) {
       : [];
   
   // 分類情報の生成
-  const familyName = insect.family || {
-    moth: 'ヤガ科',
-    butterfly: 'タテハチョウ科', 
-    beetle: 'タマムシ科',
-    longhornbeetle: 'カミキリムシ科',
-    leafbeetle: 'ハムシ科'
-  }[type];
+  const familyName = insect.family || INSECT_DEFAULT_FAMILIES[type];
   const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
   
   return `<!DOCTYPE html>
@@ -1160,7 +1160,7 @@ async function generateMetaPages() {
   // 既存のカスタムページ（*-support-test.html）を退避しておき、生成後に復元する
   const preserveMap = new Map();
   try {
-    ['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'plant'].forEach(type => {
+    META_SECTION_KEYS.forEach(type => {
       const typeDir = path.join(metaDir, type);
       const preserve = [];
       if (fs.existsSync(typeDir)) {
@@ -1184,7 +1184,7 @@ async function generateMetaPages() {
     fs.mkdirSync(metaDir, { recursive: true });
   }
   
-  ['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'plant'].forEach(type => {
+  META_SECTION_KEYS.forEach(type => {
     const typeDir = path.join(metaDir, type);
     if (fs.existsSync(typeDir)) {
       // 古いファイルを削除して再生成に備える
@@ -1762,14 +1762,7 @@ function generateImageFileLists() {
 // メタページ用の簡易インデックスを生成
 function generateMetaIndexes() {
   const base = path.join(__dirname, '../public/meta');
-  const sections = [
-    { dir: 'moth', title: '蛾（メタページ一覧）' },
-    { dir: 'butterfly', title: '蝶（メタページ一覧）' },
-    { dir: 'beetle', title: 'タマムシ（メタページ一覧）' },
-    { dir: 'longhornbeetle', title: 'カミキリムシ（メタページ一覧）' },
-    { dir: 'leafbeetle', title: 'ハムシ（メタページ一覧）' },
-    { dir: 'plant', title: '植物（メタページ一覧）' }
-  ];
+  const sections = META_PAGE_SECTIONS;
 
   for (const sec of sections) {
     const dirPath = path.join(base, sec.dir);

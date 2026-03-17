@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
+import { getSearchTypeLabel } from '../utils/siteTaxonomy';
 
 // カテゴリアイコンコンポーネント
 const CategoryIcon = ({ type, className = "w-4 h-4" }) => {
@@ -16,6 +17,8 @@ const CategoryIcon = ({ type, className = "w-4 h-4" }) => {
         </svg>
       );
     case 'beetle':
+    case 'longhornbeetle':
+    case 'leafbeetle':
       return (
         <svg className={className} viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C9.8 2 8 3.8 8 6v1H6c-1.1 0-2 .9-2 2v2c0 .6.4 1 1 1h1v6c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4v-6h1c.6 0 1-.4 1-1V9c0-1.1-.9-2-2-2h-2V6c0-2.2-1.8-4-4-4zm-1 6h2v2h-2V8z"/>
@@ -87,18 +90,45 @@ const useIsMobile = () => {
 // 検索履歴管理フック
 const SEARCH_HISTORY_KEY = 'ihpe-search-history';
 const MAX_HISTORY_ITEMS = 5;
+const getHistoryStorageKey = (scope = 'default') =>
+  `${SEARCH_HISTORY_KEY}:${scope || 'default'}`;
 
-const useSearchHistory = () => {
+const getSuggestionBadgeClass = (type) => {
+  switch (type) {
+    case 'plant':
+      return 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300';
+    case 'butterfly':
+      return 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300';
+    case 'beetle':
+      return 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300';
+    case 'longhornbeetle':
+      return 'bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300';
+    case 'leafbeetle':
+      return 'bg-lime-100 dark:bg-lime-900/50 text-lime-700 dark:text-lime-300';
+    default:
+      return 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300';
+  }
+};
+
+const useSearchHistory = (scope = 'default') => {
   const [history, setHistory] = useState([]);
+  const storageKey = useMemo(() => getHistoryStorageKey(scope), [scope]);
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(SEARCH_HISTORY_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         setHistory(JSON.parse(saved));
+        return;
+      }
+      if (scope === 'default') {
+        const legacy = localStorage.getItem(SEARCH_HISTORY_KEY);
+        if (legacy) {
+          setHistory(JSON.parse(legacy));
+        }
       }
     } catch {}
-  }, []);
+  }, [scope, storageKey]);
 
   const addToHistory = useCallback((term) => {
     if (!term || term.trim().length < 2) return;
@@ -108,28 +138,28 @@ const useSearchHistory = () => {
       const filtered = prev.filter((item) => item !== trimmed);
       const updated = [trimmed, ...filtered].slice(0, MAX_HISTORY_ITEMS);
       try {
-        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
+        localStorage.setItem(storageKey, JSON.stringify(updated));
       } catch {}
       return updated;
     });
-  }, []);
+  }, [storageKey]);
 
   const removeFromHistory = useCallback((term) => {
     setHistory((prev) => {
       const updated = prev.filter((item) => item !== term);
       try {
-        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(updated));
+        localStorage.setItem(storageKey, JSON.stringify(updated));
       } catch {}
       return updated;
     });
-  }, []);
+  }, [storageKey]);
 
   const clearHistory = useCallback(() => {
     setHistory([]);
     try {
-      localStorage.removeItem(SEARCH_HISTORY_KEY);
+      localStorage.removeItem(storageKey);
     } catch {}
-  }, []);
+  }, [storageKey]);
 
   return { history, addToHistory, removeFromHistory, clearHistory };
 };
@@ -140,7 +170,9 @@ const SearchInput = ({
   placeholder,
   suggestions = [],
   onSelectSuggestion,
+  onSubmit,
   ariaLabel,
+  historyScope = 'default',
 }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -150,7 +182,7 @@ const SearchInput = ({
   const listboxId = useId();
   const blurTimeoutRef = useRef(null);
   const isMobile = useIsMobile();
-  const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
+  const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory(historyScope);
 
   // 外部からvalueが変更された場合にローカル値を同期
   useEffect(() => {
@@ -167,7 +199,7 @@ const SearchInput = ({
   );
 
   // 検索履歴と候補を組み合わせ（入力がない場合は履歴を表示）
-  const showHistory = !localValue && history.length > 0;
+  const showHistory = !localValue.trim() && history.length > 0;
   const activeItems = showHistory ? history : displayedSuggestions;
   const activeItemsLength = activeItems.length;
   const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory);
@@ -263,15 +295,28 @@ const SearchInput = ({
       return;
     }
     if (e.key === "Enter") {
+      e.preventDefault();
       if (activeIndex >= 0 && activeIndex < activeItemsLength) {
-        e.preventDefault();
         const selected = activeItems[activeIndex];
         const selectValue =
           typeof selected === "object" && selected !== null
             ? selected.value || selected.name || ""
             : selected;
         if (selectValue) handleSelect(selectValue);
+        return;
       }
+      const trimmed = localValue.trim();
+      if (!trimmed) {
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+        return;
+      }
+      addToHistory(trimmed);
+      if (typeof onSubmit === "function") {
+        onSubmit(trimmed);
+      }
+      setShowSuggestions(false);
+      setActiveIndex(-1);
       return;
     }
     if (e.key === "Escape") {
@@ -305,7 +350,7 @@ const SearchInput = ({
 
   return (
     <div className="relative group">
-      <div className={`relative z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/60 dark:border-slate-600/60 transition-all duration-200 shadow-sm ${showSuggestions && suggestions.length > 0 ? 'rounded-t-2xl rounded-b-none border-b-0 shadow-lg' : 'rounded-2xl hover:shadow-md'}`}>
+      <div className={`relative z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/60 dark:border-slate-600/60 transition-all duration-200 shadow-sm ${expanded ? 'rounded-t-2xl rounded-b-none border-b-0 shadow-lg' : 'rounded-2xl hover:shadow-md'}`}>
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -315,6 +360,11 @@ const SearchInput = ({
           type="text"
           placeholder={placeholder}
           value={localValue}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          enterKeyHint="search"
+          spellCheck={false}
           onChange={handleChange}
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
@@ -453,16 +503,8 @@ const SearchInput = ({
 
                         {/* カテゴリバッジ */}
                         {type && (
-                          <span className={`flex-shrink-0 px-2 py-0.5 text-xs rounded-full font-medium ${
-                            type === 'plant'
-                              ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300'
-                              : type === 'butterfly'
-                              ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300'
-                              : type === 'beetle'
-                              ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300'
-                              : 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                          }`}>
-                            {type === 'moth' ? '蛾' : type === 'butterfly' ? '蝶' : type === 'beetle' ? '甲虫' : type === 'plant' ? '植物' : type}
+                          <span className={`flex-shrink-0 px-2 py-0.5 text-xs rounded-full font-medium ${getSuggestionBadgeClass(type)}`}>
+                            {getSearchTypeLabel(type)}
                           </span>
                         )}
                       </button>

@@ -15,6 +15,11 @@ import NotFoundPage from './components/NotFoundPage';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { loadInsectImageIndexes } from './services/imageIndex';
+import {
+  EXPLORER_ROUTE_CONFIGS,
+  INSECT_DETAIL_ROUTE_PATTERNS,
+  isExplorerRoutePath,
+} from './utils/siteTaxonomy';
 
 const DATA_CACHE_DB = 'ihpe-cache';
 const DATA_CACHE_STORE = 'datasets';
@@ -164,7 +169,7 @@ function App() {
   const isDevelopment = import.meta.env.DEV;
   const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
   
-  const isExplorerPage = location.pathname === '/' || location.pathname === '/moth' || location.pathname === '/plant';
+  const isExplorerPage = isExplorerRoutePath(location.pathname);
 
   const collectAlternativeNames = (row, options = {}) => {
     const { dedupe = false, excludePrimary = '' } = options;
@@ -6606,18 +6611,28 @@ function App() {
     theme,
   };
 
-  const explorerRoutes = [
-    { path: '/', initialTab: 'insects' },
-    { path: '/moth', initialTab: 'insects' },
-    { path: '/plant', initialTab: 'plants' },
-  ];
-
-  const insectDetailRoutes = [
-    '/moth/:mothSlug',
-    '/butterfly/:butterflySlug',
-    '/beetle/:beetleSlug',
-    '/longhornbeetle/:longhornbeetleSlug',
-    '/leafbeetle/:leafbeetleSlug',
+  const routeConfigs = [
+    ...EXPLORER_ROUTE_CONFIGS.map(({ path, initialTab }) => ({
+      path,
+      element: (
+        <InsectsHostPlantExplorer
+          {...explorerBaseProps}
+          initialTab={initialTab}
+        />
+      ),
+    })),
+    ...INSECT_DETAIL_ROUTE_PATTERNS.map((path) => ({
+      path,
+      element: <MothDetail {...detailBaseProps} />,
+    })),
+    {
+      path: '/plant/:plantName',
+      element: <HostPlantDetail {...detailBaseProps} />,
+    },
+    {
+      path: '*',
+      element: <NotFoundPage />,
+    },
   ];
   
   return (
@@ -6673,35 +6688,13 @@ function App() {
           <SkeletonLoader />
         ) : (
         <Routes>
-          {explorerRoutes.map(({ path, initialTab }) => (
+          {routeConfigs.map(({ path, element }) => (
             <Route
               key={path}
               path={path}
-              element={renderWithChunkBoundary(
-                <InsectsHostPlantExplorer
-                  {...explorerBaseProps}
-                  initialTab={initialTab}
-                />,
-              )}
+              element={renderWithChunkBoundary(element)}
             />
           ))}
-          {insectDetailRoutes.map((path) => (
-            <Route
-              key={path}
-              path={path}
-              element={renderWithChunkBoundary(<MothDetail {...detailBaseProps} />)}
-            />
-          ))}
-          <Route
-            path="/plant/:plantName"
-            element={renderWithChunkBoundary(
-              <HostPlantDetail
-                {...detailBaseProps}
-                plantDetails={plantDetails}
-              />,
-            )}
-          />
-          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
       </main>

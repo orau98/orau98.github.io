@@ -808,10 +808,18 @@ const HostPlantList = ({
 
       const family = (detail.family || "").toLowerCase();
       const familyLatin = (detail.familyLatin || "").toLowerCase();
+      const scientificName = normalizeLatinBinomialPlain(
+        detail.scientificName || "",
+      ).toLowerCase();
       const genus = (detail.genus || "").toLowerCase();
       const order = (detail.order || "").toLowerCase();
       const orderLatin = (detail.orderLatin || "").toLowerCase();
-      const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
+      const aliasesRaw = detail.aliases || detail.aliasNames;
+      const aliases = Array.isArray(aliasesRaw)
+        ? aliasesRaw
+        : aliasesRaw instanceof Set
+          ? Array.from(aliasesRaw)
+          : [];
       const aliasHit = aliases.some((a) => {
         const aLower = (a || "").toLowerCase();
         return (
@@ -827,6 +835,7 @@ const HostPlantList = ({
         family.includes(lowerCaseSearchTerm) ||
         family.includes(katakanaSearchTerm) ||
         familyLatin.includes(lowerCaseSearchTerm) ||
+        scientificName.includes(lowerCaseSearchTerm) ||
         genus.includes(lowerCaseSearchTerm) ||
         genus.includes(katakanaSearchTerm) ||
         order.includes(lowerCaseSearchTerm) ||
@@ -880,12 +889,14 @@ const HostPlantList = ({
         .querySelectorAll('link[rel="prev"], link[rel="next"]')
         .forEach((n) => n.remove());
       const url = new URL(window.location.href);
-      url.searchParams.delete("page");
+      url.searchParams.delete("ppage");
       if (currentPage > 1) {
         const prev = document.createElement("link");
         prev.rel = "prev";
         const prevUrl = new URL(url.href);
-        prevUrl.searchParams.set("page", String(currentPage - 1));
+        if (currentPage - 1 > 1) {
+          prevUrl.searchParams.set("ppage", String(currentPage - 1));
+        }
         prev.href = prevUrl.toString();
         document.head.appendChild(prev);
       }
@@ -893,7 +904,7 @@ const HostPlantList = ({
         const next = document.createElement("link");
         next.rel = "next";
         const nextUrl = new URL(url.href);
-        nextUrl.searchParams.set("page", String(currentPage + 1));
+        nextUrl.searchParams.set("ppage", String(currentPage + 1));
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
@@ -931,8 +942,25 @@ const HostPlantList = ({
       ) {
         suggestions.add(detail.genus);
       }
-      if (Array.isArray(detail.aliases)) {
-        detail.aliases.forEach((a) => {
+      if (
+        detail.order?.toLowerCase().includes(lowerCaseSearchTerm) ||
+        detail.order?.toLowerCase().includes(katakanaSearchTerm)
+      ) {
+        suggestions.add(detail.order);
+      }
+      if (
+        detail.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)
+      ) {
+        suggestions.add(normalizeLatinBinomialPlain(detail.scientificName));
+      }
+      const aliasesRaw = detail.aliases || detail.aliasNames;
+      const aliases = Array.isArray(aliasesRaw)
+        ? aliasesRaw
+        : aliasesRaw instanceof Set
+          ? Array.from(aliasesRaw)
+          : [];
+      if (aliases.length > 0) {
+        aliases.forEach((a) => {
           if (!a) return;
           const lower = a.toLowerCase();
           if (

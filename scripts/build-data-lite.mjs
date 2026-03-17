@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
+import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,6 +14,14 @@ const OUT_DIR = path.join(PUBLIC_DIR, 'assets', 'data-lite');
 function readText(filePath) {
   if (!fs.existsSync(filePath)) return '';
   return fs.readFileSync(filePath, 'utf-8');
+}
+
+function readFirstExistingText(paths) {
+  for (const filePath of paths) {
+    const text = readText(filePath);
+    if (text) return text;
+  }
+  return '';
 }
 
 function parseCsv(text, opts = {}) {
@@ -253,9 +262,18 @@ function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
 
 async function build() {
   console.log('[data-lite] start');
-  const insectsCsv = readText(path.join(PUBLIC_DIR, 'insects.csv'));
-  const hostplantsCsv = readText(path.join(PUBLIC_DIR, 'hostplants.csv'));
-  const notesCsv = readText(path.join(PUBLIC_DIR, 'general_notes.csv'));
+  const insectsCsv = readFirstExistingText([
+    path.join(PUBLIC_DIR, 'insects.csv'),
+    path.join(ROOT, 'normalized_data', 'insects.csv'),
+  ]);
+  const hostplantsCsv = readFirstExistingText([
+    path.join(PUBLIC_DIR, 'hostplants.csv'),
+    path.join(ROOT, 'normalized_data', 'hostplants.csv'),
+  ]);
+  const notesCsv = readFirstExistingText([
+    path.join(PUBLIC_DIR, 'general_notes.csv'),
+    path.join(ROOT, 'normalized_data', 'general_notes.csv'),
+  ]);
 
   if (!insectsCsv || !hostplantsCsv) {
     console.warn('[data-lite] required normalized CSVs not found; skipping');
@@ -289,11 +307,9 @@ const slim = (arr) => (arr || []).map(i => ({
     emergenceTime: i.emergenceTime || ''
   }));
 
-  const moths = slim(normalized.moths);
-  const butterflies = slim(normalized.butterflies);
-  const beetles = slim(normalized.beetles);
-  const longhornbeetles = slim(normalized.longhornbeetles);
-  const leafbeetles = slim(normalized.leafbeetles);
+  const slimmedCollections = Object.fromEntries(
+    INSECT_COLLECTION_KEYS.map((key) => [key, slim(normalized[key])]),
+  );
 
   // Build lightweight host plant map using full normalized host plant data
   const hostPlantsMap = {};
@@ -307,7 +323,7 @@ const slim = (arr) => (arr || []).map(i => ({
       if (!hostPlantsMap[key].includes(insectName)) hostPlantsMap[key].push(insectName);
     });
   };
-  [...normalized.moths, ...normalized.butterflies, ...normalized.beetles, ...normalized.longhornbeetles, ...normalized.leafbeetles].forEach(addPlants);
+  INSECT_COLLECTION_KEYS.flatMap((key) => normalized[key] || []).forEach(addPlants);
 
   // Ensure output dir
   fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -319,19 +335,15 @@ const slim = (arr) => (arr || []).map(i => ({
     console.log('[data-lite] wrote', p, `size=${size} bytes`);
   };
 
-  write('moths.json', moths);
-  write('butterflies.json', butterflies);
-  write('beetles.json', beetles);
-  write('longhornbeetles.json', longhornbeetles);
-  write('leafbeetles.json', leafbeetles);
+  INSECT_COLLECTION_KEYS.forEach((key) => {
+    write(`${key}.json`, slimmedCollections[key]);
+  });
   write('hostplants.json', hostPlantsMap);
   const manifest = {
     counts: {
-      moths: moths.length,
-      butterflies: butterflies.length,
-      beetles: beetles.length,
-      longhornbeetles: longhornbeetles.length,
-      leafbeetles: leafbeetles.length,
+      ...Object.fromEntries(
+        INSECT_COLLECTION_KEYS.map((key) => [key, slimmedCollections[key].length]),
+      ),
       hostPlants: Object.keys(hostPlantsMap).length
     },
     version: Date.now()
@@ -339,36 +351,28 @@ const slim = (arr) => (arr || []).map(i => ({
   write('manifest.json', manifest);
 
   // Keep combined index for backward compatibility
-  const out = { moths, butterflies, beetles, longhornbeetles, leafbeetles, hostPlants: hostPlantsMap };
+  const out = { ...slimmedCollections, hostPlants: hostPlantsMap };
   write('index.json', out);
 
   // Build and write full dataset for runtime consumption
   const hostPlantTargets = new Set(hostplants.map(r => cleanString(r.plant_name)).filter(name => name && name !== '不明'));
   const ylistLite = buildYListLite(ylistRows, hostPlantTargets);
-  const processedMoths = processInsects(normalized.moths);
-  const processedButterflies = processInsects(normalized.butterflies);
-  const processedBeetles = processInsects(normalized.beetles);
-  const processedLonghornbeetles = processInsects(normalized.longhornbeetles);
-  const processedLeafbeetles = processInsects(normalized.leafbeetles);
+  const processedCollections = Object.fromEntries(
+    INSECT_COLLECTION_KEYS.map((key) => [key, processInsects(normalized[key])]),
+  );
   const { hostPlantsMap: fullHostPlants, plantDetails, aliasToCanonical } = buildHostPlantDataset(
-    [...processedMoths, ...processedButterflies, ...processedBeetles, ...processedLonghornbeetles, ...processedLeafbeetles],
+    INSECT_COLLECTION_KEYS.flatMap((key) => processedCollections[key]),
     ylistLite
   );
   const fullDataset = {
     version: Date.now(),
     summaryCounts: {
-      moths: processedMoths.length,
-      butterflies: processedButterflies.length,
-      beetles: processedBeetles.length,
-      longhornbeetles: processedLonghornbeetles.length,
-      leafbeetles: processedLeafbeetles.length,
+      ...Object.fromEntries(
+        INSECT_COLLECTION_KEYS.map((key) => [key, processedCollections[key].length]),
+      ),
       hostPlants: Object.keys(fullHostPlants).length
     },
-    moths: processedMoths,
-    butterflies: processedButterflies,
-    beetles: processedBeetles,
-    longhornbeetles: processedLonghornbeetles,
-    leafbeetles: processedLeafbeetles,
+    ...processedCollections,
     hostPlants: fullHostPlants,
     plantDetails,
     aliasToCanonical

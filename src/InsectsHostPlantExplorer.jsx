@@ -16,6 +16,7 @@ import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "./utils/filename";
 import { absUrl } from "./utils/origin";
+import { isKnownDetailPath } from "./utils/siteTaxonomy";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -378,6 +379,22 @@ const InsectsHostPlantExplorer = React.memo(
       }, 300);
     };
 
+    const commitSearchValue = useCallback((value) => {
+      const nextValue = String(value || "");
+      setSearchByTab((prev) => ({ ...prev, [activeTab]: nextValue }));
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+      const newParams = getCurrentParams();
+      newParams.set("tab", activeTab);
+      if (nextValue) {
+        newParams.set("q", nextValue);
+      } else {
+        newParams.delete("q");
+      }
+      setSearchParams(newParams, { replace: true });
+    }, [activeTab, getCurrentParams, setSearchParams]);
+
     const setActiveTabWithUrl = (tab) => {
       setActiveTab(tab);
       if (searchTimeoutRef.current) {
@@ -490,7 +507,7 @@ const InsectsHostPlantExplorer = React.memo(
           return;
         }
         if (url.origin !== window.location.origin) return;
-        if (!/^\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|plant)\//.test(url.pathname)) return;
+        if (!isKnownDetailPath(url.pathname)) return;
 
         safeSessionSet(
           SCROLL_RESTORE_KEY,
@@ -1013,8 +1030,8 @@ const InsectsHostPlantExplorer = React.memo(
       if (!activeSearchTerm || activeSearchTerm.trim() === "") return [];
       const term = activeSearchTerm.toLowerCase();
       const katakanaTerm = hiraganaToKatakana(activeSearchTerm).toLowerCase();
-      const results = [];
-      const seenNames = new Set();
+      const suggestionsByKey = new Map();
+      let sequence = 0;
 
       // ベースURL計算
       const baseUrl = import.meta.env.BASE_URL || '/';
@@ -1034,10 +1051,51 @@ const InsectsHostPlantExplorer = React.memo(
         });
       }
 
+      const matchesSearch = (value) => {
+        if (!value) return false;
+        const lower = String(value).toLowerCase();
+        return lower.includes(term) || lower.includes(katakanaTerm);
+      };
+
+      const getMatchScore = (value) => {
+        if (!value) return 0;
+        const lower = String(value).toLowerCase();
+        if (!lower) return 0;
+        if (lower === term || lower === katakanaTerm) return 500;
+        if (lower.startsWith(term) || lower.startsWith(katakanaTerm)) return 350;
+        if (lower.includes(term) || lower.includes(katakanaTerm)) return 200;
+        return 0;
+      };
+
+      const registerSuggestion = (item, dedupeKey = item?.name, score = 0) => {
+        const key = String(dedupeKey || "").trim();
+        if (!key || score <= 0) return false;
+        const existing = suggestionsByKey.get(key);
+        if (!existing || score > existing.score) {
+          suggestionsByKey.set(key, {
+            item,
+            score,
+            order: sequence++,
+          });
+        }
+        return true;
+      };
+
       // 昆虫タイプを判定するヘルパー
       const getInsectType = (insect) => {
+        if (
+          insect?.type === 'moth' ||
+          insect?.type === 'butterfly' ||
+          insect?.type === 'beetle' ||
+          insect?.type === 'longhornbeetle' ||
+          insect?.type === 'leafbeetle'
+        ) {
+          return insect.type;
+        }
         if (butterflies.includes(insect)) return 'butterfly';
-        if (beetles.includes(insect) || longhornbeetles.includes(insect) || leafbeetles.includes(insect)) return 'beetle';
+        if (beetles.includes(insect)) return 'beetle';
+        if (longhornbeetles.includes(insect)) return 'longhornbeetle';
+        if (leafbeetles.includes(insect)) return 'leafbeetle';
         return 'moth';
       };
 
@@ -1057,54 +1115,50 @@ const InsectsHostPlantExplorer = React.memo(
           ...leafbeetles,
         ];
         for (const insect of allInsects) {
-          if (results.length >= 10) break;
-          // Name match
-          if (insect.name && (insect.name.includes(term) || insect.name.includes(katakanaTerm))) {
-            if (!seenNames.has(insect.name)) {
-              seenNames.add(insect.name);
-              results.push({
-                name: insect.name,
-                value: insect.name,
-                type: getInsectType(insect),
-                subText: insect.scientificName,
-                image: getInsectImageUrl(insect),
-              });
-            }
-            continue;
+          const insectType = getInsectType(insect);
+          const insectSuggestion = {
+            name: insect.name,
+            value: insect.name,
+            type: insectType,
+            subText: insect.scientificName,
+            image: getInsectImageUrl(insect),
+          };
+          const alternativeNames = String(insect.alternativeNames || '')
+            .split(/[、,，]/)
+            .map((name) => name.trim())
+            .filter(Boolean);
+          const insectScore = Math.max(
+            getMatchScore(insect.name),
+            getMatchScore(insect.scientificName),
+            ...alternativeNames.map((name) => getMatchScore(name)),
+          );
+
+          if (insectScore > 0) {
+            registerSuggestion(insectSuggestion, `insect:${insect.name}`, insectScore);
           }
-          // Scientific name match
-          if (
-            insect.scientificName &&
-            insect.scientificName.toLowerCase().includes(term)
-          ) {
-            if (!seenNames.has(insect.name)) {
-              seenNames.add(insect.name);
-              results.push({
-                name: insect.name,
-                value: insect.name,
-                type: getInsectType(insect),
-                subText: insect.scientificName,
-                image: getInsectImageUrl(insect),
-              });
-            }
-            continue;
-          }
-          // Family match
-          if (
-            insect.classification?.familyJapanese &&
-            (insect.classification.familyJapanese.includes(term) || insect.classification.familyJapanese.includes(katakanaTerm))
-          ) {
-            const familyName = insect.classification.familyJapanese;
-            if (!seenNames.has(familyName)) {
-              seenNames.add(familyName);
-              results.push({
-                name: familyName,
-                value: familyName,
-                type: getInsectType(insect),
-                subText: `科で検索`,
-              });
-            }
-            continue;
+
+          const classificationSuggestions = [
+            { value: insect.classification?.familyJapanese, label: '科で検索' },
+            { value: insect.classification?.subfamilyJapanese, label: '亜科で検索' },
+            { value: insect.classification?.tribeJapanese, label: '族で検索' },
+            { value: insect.classification?.genus, label: '属で検索' },
+            { value: insect.classification?.family, label: '科名(学名)で検索' },
+            { value: insect.classification?.subfamily, label: '亜科名(学名)で検索' },
+            { value: insect.classification?.tribe, label: '族名(学名)で検索' },
+          ];
+          for (const candidate of classificationSuggestions) {
+            const candidateScore = getMatchScore(candidate.value);
+            if (candidateScore <= 0) continue;
+            registerSuggestion(
+              {
+                name: candidate.value,
+                value: candidate.value,
+                type: insectType,
+                subText: candidate.label,
+              },
+              `${insectType}:${candidate.value}`,
+              candidateScore,
+            );
           }
         }
       } else {
@@ -1114,11 +1168,6 @@ const InsectsHostPlantExplorer = React.memo(
           if (name) plantNameSet.add(name);
         });
         const plantNames = Array.from(plantNameSet);
-        const matches = (value) => {
-          if (!value) return false;
-          const lower = String(value).toLowerCase();
-          return lower.includes(term) || lower.includes(katakanaTerm);
-        };
 
         // 植物画像URLを生成するヘルパー
         const getPlantImageUrl = (plantName) => {
@@ -1173,42 +1222,59 @@ const InsectsHostPlantExplorer = React.memo(
         };
 
         for (const plant of plantNames) {
-          if (results.length >= 10) break;
-          if (matches(plant)) {
-            if (!seenNames.has(plant)) {
-              seenNames.add(plant);
-              const detail = plantDetails?.[plant] || {};
-              results.push({
-                name: plant,
-                value: plant,
-                type: 'plant',
-                subText: detail.family || detail.familyName,
-                image: getPlantImageUrl(plant),
-              });
-            }
-          }
           const detail = plantDetails?.[plant] || {};
+          const aliasesRaw = detail.aliases || detail.aliasNames;
+          const aliases = Array.isArray(aliasesRaw)
+            ? aliasesRaw
+            : aliasesRaw instanceof Set
+              ? Array.from(aliasesRaw)
+              : [];
+          const canonicalSuggestion = {
+            name: plant,
+            value: plant,
+            type: 'plant',
+            subText: detail.scientificName || detail.family || detail.familyName,
+            image: getPlantImageUrl(plant),
+          };
+          const plantScore = Math.max(
+            getMatchScore(plant),
+            getMatchScore(detail.scientificName),
+            ...aliases.map((alias) => getMatchScore(alias)),
+          );
+
+          if (plantScore > 0) {
+            registerSuggestion(canonicalSuggestion, `plant:${plant}`, plantScore);
+          }
+
           const candidates = [
             { value: detail.family, label: '科で検索' },
             { value: detail.familyName, label: '科で検索' },
+            { value: detail.familyLatin, label: '科名(学名)で検索' },
             { value: detail.order, label: '目で検索' },
+            { value: detail.orderLatin, label: '目名(学名)で検索' },
             { value: detail.genus, label: '属で検索' },
           ].filter(c => c.value);
           for (const candidate of candidates) {
-            if (results.length >= 10) break;
-            if (matches(candidate.value) && !seenNames.has(candidate.value)) {
-              seenNames.add(candidate.value);
-              results.push({
+            const candidateScore = getMatchScore(candidate.value);
+            if (candidateScore > 0) {
+              registerSuggestion({
                 name: candidate.value,
                 value: candidate.value,
                 type: 'plant',
                 subText: candidate.label,
-              });
+              }, `plant:${candidate.value}`, candidateScore);
             }
           }
         }
       }
-      return results;
+      return Array.from(suggestionsByKey.values())
+        .sort((a, b) =>
+          b.score - a.score ||
+          a.order - b.order ||
+          String(a.item?.name || '').localeCompare(String(b.item?.name || ''), 'ja')
+        )
+        .slice(0, 10)
+        .map((entry) => entry.item);
     }, [
       activeSearchTerm,
       activeTab,
@@ -1224,18 +1290,7 @@ const InsectsHostPlantExplorer = React.memo(
     ]);
 
     const handleSelectSuggestion = (value) => {
-      setSearchByTab((prev) => ({ ...prev, [activeTab]: value }));
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-      const newParams = getCurrentParams();
-      newParams.set("tab", activeTab);
-      if (value) {
-        newParams.set("q", value);
-      } else {
-        newParams.delete("q");
-      }
-      setSearchParams(newParams, { replace: true });
+      commitSearchValue(value);
     };
 
     useEffect(() => {
@@ -1261,6 +1316,7 @@ const InsectsHostPlantExplorer = React.memo(
           onSearchChange={handleGlobalSearch}
           suggestions={suggestions}
           onSelectSuggestion={handleSelectSuggestion}
+          onSubmitSearch={commitSearchValue}
           onNeedInsectsData={onNeedInsectsData}
           onNeedPlantsData={onNeedPlantsData}
           theme={theme}
@@ -1377,7 +1433,9 @@ const InsectsHostPlantExplorer = React.memo(
                     onChange={handleGlobalSearch}
                     suggestions={suggestions}
                     onSelectSuggestion={handleSelectSuggestion}
+                    onSubmit={commitSearchValue}
                     ariaLabel={`${activeTab === "plants" ? "植物" : "昆虫"}を検索`}
+                    historyScope={activeTab}
                   />
                   <p className="mt-2 text-xs md:text-sm text-white/80">
                     検索対象: {activeTab === "plants" ? "植物" : "昆虫"}（タブで切り替え）

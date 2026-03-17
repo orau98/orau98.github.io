@@ -1,31 +1,12 @@
 import React from 'react';
 import { absUrl } from '../utils/origin';
+import {
+  buildInsectMetaPagePath,
+  buildPlantMetaPagePath,
+} from '../utils/siteTaxonomy';
 
 const toJsonLd = (data) =>
   JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
-
-const buildInsectMetaPath = (insect, fallbackType = 'moth') => {
-  if (!insect) return '/';
-  const type = insect.type || fallbackType;
-  const base =
-    type === 'butterfly'
-      ? 'butterfly'
-      : type === 'beetle'
-        ? 'beetle'
-        : type === 'longhornbeetle'
-          ? 'longhornbeetle'
-          : type === 'leafbeetle'
-            ? 'leafbeetle'
-            : 'moth';
-  const id = insect.id || '';
-  if (!id) return '/';
-  return `/meta/${base}/${encodeURIComponent(id)}.html`;
-};
-
-const buildPlantMetaPath = (plantName) => {
-  if (!plantName) return '/';
-  return `/meta/plant/${encodeURIComponent(plantName)}.html`;
-};
 
 const isFlowerVisitRecord = (record) => {
   if (!record) return false;
@@ -59,7 +40,7 @@ const extractLarvalHostPlants = (hostPlantsDetailed, hostPlantsFallback) => {
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
 
-  const detailUrl = absUrl(buildInsectMetaPath(moth, 'moth'));
+  const detailUrl = absUrl(buildInsectMetaPagePath(moth.type, moth.id, 'moth'));
 
   // Normalize hostPlants to an array for safe operations
   const hostPlantsList = extractLarvalHostPlants(moth.hostPlantsDetailed, moth.hostPlants);
@@ -192,7 +173,9 @@ export const MothStructuredData = ({ moth }) => {
 export const ButterflyStructuredData = ({ butterfly }) => {
   if (!butterfly) return null;
 
-  const detailUrl = absUrl(buildInsectMetaPath(butterfly, 'butterfly'));
+  const detailUrl = absUrl(
+    buildInsectMetaPagePath(butterfly.type, butterfly.id, 'butterfly'),
+  );
 
   const hostPlantsList = extractLarvalHostPlants(butterfly.hostPlantsDetailed, butterfly.hostPlants);
 
@@ -324,7 +307,9 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 export const BeetleStructuredData = ({ beetle }) => {
   if (!beetle) return null;
 
-  const detailUrl = absUrl(buildInsectMetaPath(beetle, 'beetle'));
+  const detailUrl = absUrl(
+    buildInsectMetaPagePath(beetle.type, beetle.id, 'beetle'),
+  );
 
   const hostPlantsList = extractLarvalHostPlants(beetle.hostPlantsDetailed, beetle.hostPlants);
 
@@ -456,7 +441,13 @@ export const BeetleStructuredData = ({ beetle }) => {
 export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
   if (!longhornbeetle) return null;
 
-  const detailUrl = absUrl(buildInsectMetaPath(longhornbeetle, 'longhornbeetle'));
+  const detailUrl = absUrl(
+    buildInsectMetaPagePath(
+      longhornbeetle.type,
+      longhornbeetle.id,
+      'longhornbeetle',
+    ),
+  );
   const hostPlantsList = extractLarvalHostPlants(longhornbeetle.hostPlantsDetailed, longhornbeetle.hostPlants);
 
   const structuredData = {
@@ -583,7 +574,9 @@ export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
 
-  const detailUrl = absUrl(buildInsectMetaPath(leafbeetle, 'leafbeetle'));
+  const detailUrl = absUrl(
+    buildInsectMetaPagePath(leafbeetle.type, leafbeetle.id, 'leafbeetle'),
+  );
 
   const hostPlantsList = extractLarvalHostPlants(leafbeetle.hostPlantsDetailed, leafbeetle.hostPlants);
 
@@ -735,7 +728,7 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
   if (!plant) return null;
 
   const canonicalPlantName = plant.canonicalName || plant.name;
-  const plantMetaUrl = absUrl(buildPlantMetaPath(canonicalPlantName));
+  const plantMetaUrl = absUrl(buildPlantMetaPagePath(canonicalPlantName));
 
   // Create comprehensive plant species schema with detailed information
   const structuredData = {

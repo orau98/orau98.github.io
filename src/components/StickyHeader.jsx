@@ -8,6 +8,7 @@ const StickyHeader = ({
   onSearchChange,
   suggestions = [],
   onSelectSuggestion,
+  onSubmitSearch,
   onNeedInsectsData,
   onNeedPlantsData,
   theme,
@@ -129,7 +130,9 @@ const StickyHeader = ({
               placeholder={`${activeTab === 'plants' ? '植物' : '昆虫'}を検索...`}
               suggestions={suggestions}
               onSelectSuggestion={onSelectSuggestion}
+              onSubmit={onSubmitSearch}
               ariaLabel={`${activeTab === 'plants' ? '植物' : '昆虫'}を検索`}
+              historyScope={activeTab}
             />
             {/* 検索アクティブ状態のインジケーター */}
             {searchTerm && searchTerm.trim() && (
