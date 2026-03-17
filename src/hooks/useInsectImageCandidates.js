@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
+import { buildResizedImageUrl } from '../utils/imageSrcset';
 import {
   buildInsectImageBaseCandidates,
   buildNormalizedEntries,
@@ -44,9 +45,14 @@ const useInsectImageCandidates = (options = {}) => {
 
   const buildImageUrl = useCallback((base) => {
     if (!base) return '';
-    const ext = imageExtensions[base] || '.jpg';
-    return `${normalizedBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBustRef.current}`;
-  }, [imageExtensions, normalizedBase]);
+    return buildResizedImageUrl({
+      baseUrl: normalizedBase,
+      folder: 'insects',
+      filename: base,
+      width: 1024,
+      query: cacheBustRef.current,
+    });
+  }, [normalizedBase]);
 
   const getImageCandidates = useCallback((insect) => {
     if (!insect) return [];

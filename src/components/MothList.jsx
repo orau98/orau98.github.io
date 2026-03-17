@@ -9,7 +9,7 @@ import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
-import { buildResponsiveSrcset } from '../utils/imageSrcset';
+import { buildResponsiveSrcset, buildResizedImageUrl } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
@@ -158,8 +158,20 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const imageFolder = 'insects';
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const imageUrl = `${normalizedBase}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}${imageExtension}${cacheBustRef.current}`;
-  const responsivePreloadUrl = `${normalizedBase}images/resized/${imageFolder}/${encodeURIComponent(finalImageFilename)}.640.jpg${cacheBustRef.current}`;
+  const imageUrl = buildResizedImageUrl({
+    baseUrl: normalizedBase,
+    folder: imageFolder,
+    filename: finalImageFilename,
+    width: 1024,
+    query: cacheBustRef.current,
+  });
+  const responsivePreloadUrl = buildResizedImageUrl({
+    baseUrl: normalizedBase,
+    folder: imageFolder,
+    filename: finalImageFilename,
+    width: 640,
+    query: cacheBustRef.current,
+  });
   
   // Check if we have an actual match (passed filename implies existence)
   const hasImageFilename = !!finalImageFilename;
@@ -246,12 +258,23 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           const attempted = e.target.dataset.attempted || '';
                           const attempts = attempted.split(',').filter(Boolean);
                           
-                          // 候補リスト: 1) 拡張子違い 2) フォルダ違い(insects固定) 3) 最後にプレースホルダー
+                          // 候補リスト: 生成済みの縮小画像を順に試し、それでも駄目ならプレースホルダーへ落とす
                           const tryList = [
-                            `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}.jpg${cacheBustRef.current}`,
-                            `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}.jpeg${cacheBustRef.current}`,
-                            `${import.meta.env.BASE_URL}images/${imageFolder}/${encodeURIComponent(finalImageFilename)}.png${cacheBustRef.current}`,
-                            `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(finalImageFilename)}.jpg${cacheBustRef.current}`, // 異なるtypeでもinsectsに多く格納
+                            buildResizedImageUrl({
+                              baseUrl: import.meta.env.BASE_URL || '/',
+                              folder: 'insects',
+                              filename: finalImageFilename,
+                              width: 640,
+                              query: cacheBustRef.current,
+                            }),
+                            buildResizedImageUrl({
+                              baseUrl: import.meta.env.BASE_URL || '/',
+                              folder: 'insects',
+                              filename: finalImageFilename,
+                              width: 320,
+                              query: cacheBustRef.current,
+                            }),
+                            `${import.meta.env.BASE_URL}images/placeholder.jpg${cacheBustRef.current}`,
                           ].filter((u) => u && !attempts.includes(u));
                           
                           if (tryList.length > 0) {

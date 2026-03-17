@@ -4,6 +4,7 @@ import ForceGraph2D from 'react-force-graph-2d';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 import { createSafeScientificPlantFilename } from '../utils/filename';
+import { buildResizedImageUrl } from '../utils/imageSrcset';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
 
@@ -548,7 +549,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const insectImageCandidates = useCallback((detail) => {
     if (!detail) return [];
-    if (detail.image) return [detail.image];
+    if (detail.image) {
+      const rawUrl = String(detail.image);
+      const match = rawUrl.match(/\/images\/insects\/([^/?#]+?)(?:\.[^.\/?#]+)(?:\?.*)?$/i);
+      if (match) {
+        const base = decodeURIComponent(match[1]);
+        return [
+          buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 640, query: cacheBust }),
+          buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 320, query: cacheBust }),
+        ];
+      }
+      return [detail.image];
+    }
 
     const candidates = [
       detail.scientificFilename,
@@ -559,16 +571,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
     const urls = [];
     for (const base of candidates) {
-      const ext = imageExtMap[base];
-      if (ext) {
-        // Prefer resized thumbnails first (used for node avatars)
-        urls.push(`${assetBase}images/resized/insects/${encodeURIComponent(base)}.320.jpg${cacheBust}`);
-        urls.push(`${assetBase}images/resized/insects/${encodeURIComponent(base)}.640.jpg${cacheBust}`);
-        urls.push(`${assetBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBust}`);
-      } else if (imageBaseSet.has(base)) {
-        urls.push(`${assetBase}images/resized/insects/${encodeURIComponent(base)}.320.jpg${cacheBust}`);
-        urls.push(`${assetBase}images/resized/insects/${encodeURIComponent(base)}.640.jpg${cacheBust}`);
-        urls.push(`${assetBase}images/insects/${encodeURIComponent(base)}.jpg${cacheBust}`);
+      if (imageExtMap[base] || imageBaseSet.has(base)) {
+        urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 320, query: cacheBust }));
+        urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 640, query: cacheBust }));
+        urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 1024, query: cacheBust }));
       }
     }
     return urls;

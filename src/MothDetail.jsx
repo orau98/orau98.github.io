@@ -12,7 +12,7 @@ import { absUrl } from './utils/origin';
 import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
-import { buildResponsiveSrcset } from './utils/imageSrcset';
+import { buildResponsiveSrcset, buildResizedImageUrl } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
@@ -425,31 +425,39 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
     const exts = imageExtensions || {};
     const ready = isImageIndexReady;
-    const build = (name, ext) => `${import.meta.env.BASE_URL}images/insects/${encodeURIComponent(name)}${ext}${cacheBustRef.current}`;
+    const build = (name, width = 1024) => buildResizedImageUrl({
+      baseUrl: import.meta.env.BASE_URL || '/',
+      folder: 'insects',
+      filename: name,
+      width,
+      query: cacheBustRef.current,
+    });
     const uniq = new Set();
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
-    const tryExts = ['.jpg', '.jpeg', '.png', '.webp'];
+    const pushResizedSet = (name) => {
+      push(build(name, 1024));
+      push(build(name, 640));
+      push(build(name, 320));
+    };
 
     const addNameCandidates = (name) => {
       if (!name) return;
       const knownExt = exts[name];
       const existsInIndex = imageBaseSet.has(name);
       if (knownExt) {
-        push(build(name, knownExt));
+        pushResizedSet(name);
         return;
       }
-      // インデックス未準備、または新規追加画像でインデックス未反映でも .jpg/.jpeg を試す
+      // インデックス未準備でも生成済み縮小画像を試す
       if (!ready) {
-        push(build(name, '.jpg'));
-        push(build(name, '.jpeg'));
+        pushResizedSet(name);
         return;
       }
       if (existsInIndex) {
-        tryExts.forEach(ext => push(build(name, ext)));
+        pushResizedSet(name);
         return;
       }
-      push(build(name, '.jpg'));
-      push(build(name, '.jpeg'));
+      pushResizedSet(name);
     };
 
     const baseNameCandidates = [safeFilename, japaneseName]
@@ -470,10 +478,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           const candidates = imageBases.filter(base => base.includes(genus) && base.includes(species));
           candidates.sort((a, b) => a.length - b.length);
           for (const base of candidates) {
-            if (exts[base]) {
-              push(build(base, exts[base]));
-            } else {
-              tryExts.forEach(ext => push(build(base, ext)));
+            if (exts[base] || !ready || imageBaseSet.has(base)) {
+              pushResizedSet(base);
             }
           }
         }
@@ -498,17 +504,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     const firstUrl = possibleImagePaths[0];
     if (!firstUrl) return { src: null };
     
-    const m = firstUrl.match(/\/images\/insects\/([^/?#]+)\.(jpg|jpeg|png|webp|JPG|PNG|WEBP)/i);
+    const m = firstUrl.match(/\/images\/resized\/insects\/([^/?#]+)\.(320|640|1024)\.jpg/i);
     if (m) {
        const base = decodeURIComponent(m[1]);
-       const ext = '.' + m[2].toLowerCase();
        if (imageBaseSet.has(base)) {
+         const ext = imageExtensions[base] || '.jpg';
          const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext, widths: [320, 640, 1024], sizes: '100vw' });
          return { src, srcSet, sizes };
        }
     }
     return { src: firstUrl };
-  }, [possibleImagePaths, imageBaseSet]);
+  }, [possibleImagePaths, imageBaseSet, imageExtensions]);
 
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 

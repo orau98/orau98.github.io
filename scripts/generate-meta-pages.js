@@ -12,16 +12,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 
-const INSECT_IMAGE_DIR = path.join(__dirname, '../public/images/insects');
-const insectImageFiles = fs.existsSync(INSECT_IMAGE_DIR)
-  ? fs.readdirSync(INSECT_IMAGE_DIR).filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
+const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
+  ? fs.readdirSync(INSECT_RESIZED_DIR).filter(file => file.match(/\.(320|640|1024)\.jpg$/i))
   : [];
-const insectImageBaseSet = new Set(insectImageFiles.map(file => file.replace(/\.[^.]+$/, '')));
-const insectImageExtMap = {};
-insectImageFiles.forEach(file => {
-  const base = file.replace(/\.[^.]+$/, '');
-  insectImageExtMap[base] = path.extname(file);
-});
+const insectResizedBaseSet = new Set(
+  insectResizedFiles.map(file => file.replace(/\.(320|640|1024)\.jpg$/i, '')),
+);
 
 const META_SECTION_KEYS = META_PAGE_SECTIONS.map(({ key }) => key);
 const INSECT_TYPE_NAMES = Object.fromEntries(
@@ -575,7 +572,7 @@ function resolveInsectImageUrl(insect) {
     const sci = insect.scientificName.replace(/\s*\(.*$/, '').trim();
     const [genus, species] = sci.split(/\s+/);
     if (genus && species) {
-      const matches = Array.from(insectImageBaseSet).filter(base => base.includes(genus) && base.includes(species));
+      const matches = Array.from(insectResizedBaseSet).filter(base => base.includes(genus) && base.includes(species));
       matches.sort((a, b) => a.length - b.length);
       candidates.push(...matches);
     }
@@ -586,13 +583,12 @@ function resolveInsectImageUrl(insect) {
   for (const base of candidates) {
     if (!base || tried.has(base)) continue;
     tried.add(base);
-    const ext = insectImageExtMap[base];
-    if (ext) {
-      return `/images/insects/${encodeURIComponent(base)}${ext}`;
-    }
-    for (const e of ['.jpg', '.jpeg', '.png', '.webp']) {
-      if (fs.existsSync(path.join(INSECT_IMAGE_DIR, `${base}${e}`))) {
-        return `/images/insects/${encodeURIComponent(base)}${e}`;
+    if (insectResizedBaseSet.has(base)) {
+      for (const width of [1024, 640, 320]) {
+        const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
+        if (fs.existsSync(resizedPath)) {
+          return `/images/resized/insects/${encodeURIComponent(base)}.${width}.jpg`;
+        }
       }
     }
   }

@@ -3,9 +3,10 @@
 import fs from 'fs';
 import path from 'path';
 
+const MAX_PAGES_DIST_BYTES = 900 * 1024 * 1024;
 const targets = [
-  path.join('dist', 'images', 'insects', 'backup_japanese_names'),
-  // Keep small index files for client-side image detection
+  // Serve only generated responsive insect images on GitHub Pages.
+  path.join('dist', 'images', 'insects'),
 ];
 
 const syncPlantImages = () => {
@@ -46,6 +47,38 @@ const ensureSpa404 = () => {
   }
 };
 
+const getDirectorySizeBytes = (dirPath) => {
+  if (!fs.existsSync(dirPath)) return 0;
+  let total = 0;
+  const stack = [dirPath];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(fullPath);
+      } else if (entry.isFile()) {
+        total += fs.statSync(fullPath).size;
+      }
+    }
+  }
+  return total;
+};
+
+const formatMiB = (bytes) => `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
+
+const assertPagesSizeBudget = () => {
+  const distDir = path.join('dist');
+  const sizeBytes = getDirectorySizeBytes(distDir);
+  console.log(`[postbuild] dist size after cleanup: ${formatMiB(sizeBytes)}`);
+  if (sizeBytes > MAX_PAGES_DIST_BYTES) {
+    throw new Error(
+      `dist is still too large for GitHub Pages safety budget: ${formatMiB(sizeBytes)} > ${formatMiB(MAX_PAGES_DIST_BYTES)}.`,
+    );
+  }
+};
+
 for (const p of targets) {
   try {
     if (fs.existsSync(p)) {
@@ -65,3 +98,4 @@ for (const p of targets) {
 
 syncPlantImages();
 ensureSpa404();
+assertPagesSizeBudget();

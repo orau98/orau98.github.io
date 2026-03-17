@@ -15,6 +15,7 @@ import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "./utils/filename";
+import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { absUrl } from "./utils/origin";
 import { isKnownDetailPath } from "./utils/siteTaxonomy";
 
@@ -844,7 +845,7 @@ const InsectsHostPlantExplorer = React.memo(
           const src =
             hero?.currentSrc ||
             hero?.src ||
-            "images/insects/Cucullia_argentea.jpg";
+            "images/resized/insects/Cucullia_argentea.1024.jpg";
           setOgTwitterImage(src, "昆虫植物図鑑 メインビジュアル");
         } catch {}
       }
@@ -1103,7 +1104,12 @@ const InsectsHostPlantExplorer = React.memo(
       const getInsectImageUrl = (insect) => {
         const filename = insect.scientificFilename || insect.scientificName?.replace(/\s+/g, '_');
         if (!filename) return null;
-        return `${normalizedBase}images/resized/insects/${encodeURIComponent(filename)}.320.jpg`;
+        return buildResizedImageUrl({
+          baseUrl: normalizedBase,
+          folder: 'insects',
+          filename,
+          width: 320,
+        });
       };
 
       if (activeTab === "insects") {
@@ -1341,7 +1347,7 @@ const InsectsHostPlantExplorer = React.memo(
                 // Use relative paths so it works under any base path
                 const baseUrl = import.meta.env.BASE_URL || "/";
                 const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-                const src = `${normalizedBase}images/insects/${base}.jpg`;
+                const src = `${normalizedBase}images/resized/insects/${base}.1024.jpg`;
                 // Use only sizes that actually exist to avoid 404s
                 const srcSet = [
                   `${normalizedBase}images/resized/insects/${base}.320.jpg 320w`,
@@ -1377,17 +1383,10 @@ const InsectsHostPlantExplorer = React.memo(
                           imgEl.sizes = '';
                         }
                         logger.warn("Hero image failed to load:", imgEl?.src);
-                        // Try relative path first (works under subpath deployments)
-                        if (!imgEl.dataset.fallbackTried) {
-                          imgEl.dataset.fallbackTried = "1";
-                          imgEl.onerror = null; // prevent loop
-                          imgEl.src = `${normalizedBase}images/insects/Cucullia_argentea.jpg`;
-                        } else {
-                          imgEl.onerror = null; // prevent loop
-                          // Final fallback to a local placeholder (relative path)
-                          imgEl.src = `${normalizedBase}images/placeholder.jpg`;
-                          imgEl.alt = "画像が見つかりません";
-                        }
+                        imgEl.onerror = null; // prevent loop
+                        // Final fallback to a local placeholder (relative path)
+                        imgEl.src = `${normalizedBase}images/placeholder.jpg`;
+                        imgEl.alt = "画像が見つかりません";
                       } catch {}
                       setHeroImageLoaded(true);
                     }}

@@ -36,6 +36,22 @@ const extractLarvalHostPlants = (hostPlantsDetailed, hostPlantsFallback) => {
   return [];
 };
 
+const resolveInsectImageFilename = (insect) =>
+  insect?.scientificFilename ||
+  insect?.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_') ||
+  '';
+
+const buildInsectImageObject = (insect, caption, description) => {
+  const safeFilename = resolveInsectImageFilename(insect);
+  if (!safeFilename) return null;
+  return {
+    "@type": "ImageObject",
+    "url": absUrl(`/images/resized/insects/${encodeURIComponent(safeFilename)}.1024.jpg`),
+    "caption": caption,
+    "description": description,
+  };
+};
+
 // Enhanced 蛾の構造化データ with Species and detailed taxonomy
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
@@ -112,14 +128,13 @@ export const MothStructuredData = ({ moth }) => {
   };
 
   // Add image if available
-  const safeFilename = moth.scientificFilename || moth.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-  if (safeFilename) {
-    structuredData.image = {
-      "@type": "ImageObject",
-      "url": `${absUrl(`/images/insects/${safeFilename}.jpg`)}`,
-      "caption": `${moth.name}（${moth.scientificName}）の写真`,
-      "description": `${moth.name}の生態写真`
-    };
+  const imageObject = buildInsectImageObject(
+    moth,
+    `${moth.name}（${moth.scientificName}）の写真`,
+    `${moth.name}の生態写真`,
+  );
+  if (imageObject) {
+    structuredData.image = imageObject;
   }
 
   // Enhanced host plant interactions
@@ -246,14 +261,13 @@ export const ButterflyStructuredData = ({ butterfly }) => {
   };
 
   // Add image if available
-  const safeFilename = butterfly.scientificFilename || butterfly.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-  if (safeFilename) {
-    structuredData.image = {
-      "@type": "ImageObject",
-      "url": `${absUrl(`/images/insects/${safeFilename}.jpg`)}`,
-      "caption": `${butterfly.name}（${butterfly.scientificName}）の写真`,
-      "description": `${butterfly.name}の生態写真`
-    };
+  const imageObject = buildInsectImageObject(
+    butterfly,
+    `${butterfly.name}（${butterfly.scientificName}）の写真`,
+    `${butterfly.name}の生態写真`,
+  );
+  if (imageObject) {
+    structuredData.image = imageObject;
   }
 
   // Enhanced host plant interactions
@@ -380,14 +394,13 @@ export const BeetleStructuredData = ({ beetle }) => {
   };
 
   // Add image if available
-  const safeFilename = beetle.scientificFilename || beetle.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-  if (safeFilename) {
-    structuredData.image = {
-      "@type": "ImageObject",
-      "url": `${absUrl(`/images/insects/${safeFilename}.jpg`)}`,
-      "caption": `${beetle.name}（${beetle.scientificName}）の写真`,
-      "description": `${beetle.name}の生態写真`
-    };
+  const imageObject = buildInsectImageObject(
+    beetle,
+    `${beetle.name}（${beetle.scientificName}）の写真`,
+    `${beetle.name}の生態写真`,
+  );
+  if (imageObject) {
+    structuredData.image = imageObject;
   }
 
   // Enhanced host plant interactions
@@ -515,14 +528,13 @@ export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
     ]
   };
 
-  const safeFilename = longhornbeetle.scientificFilename || longhornbeetle.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-  if (safeFilename) {
-    structuredData.image = {
-      "@type": "ImageObject",
-      "url": `${absUrl(`/images/insects/${safeFilename}.jpg`)}`,
-      "caption": `${longhornbeetle.name}（${longhornbeetle.scientificName}）の写真`,
-      "description": `${longhornbeetle.name}の生態写真`
-    };
+  const imageObject = buildInsectImageObject(
+    longhornbeetle,
+    `${longhornbeetle.name}（${longhornbeetle.scientificName}）の写真`,
+    `${longhornbeetle.name}の生態写真`,
+  );
+  if (imageObject) {
+    structuredData.image = imageObject;
   }
 
   if (hostPlantsList.length) {
@@ -666,14 +678,13 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   }
 
   // Add image if available
-  const safeFilename = leafbeetle.scientificFilename || leafbeetle.scientificName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-  if (safeFilename) {
-    structuredData.image = {
-      "@type": "ImageObject",
-      "url": `${absUrl(`/images/insects/${safeFilename}.jpg`)}`,
-      "caption": `${leafbeetle.name}（${leafbeetle.scientificName}）の写真`,
-      "description": `${leafbeetle.name}の生態写真`
-    };
+  const imageObject = buildInsectImageObject(
+    leafbeetle,
+    `${leafbeetle.name}（${leafbeetle.scientificName}）の写真`,
+    `${leafbeetle.name}の生態写真`,
+  );
+  if (imageObject) {
+    structuredData.image = imageObject;
   }
 
   // Enhanced host plant interactions
