@@ -60,6 +60,14 @@ function normalizePlantNameLite(plantName) {
   return s.trim();
 }
 
+function normalizeScientificPlantAlias(name) {
+  const trimmed = cleanString(name).replace(/\s+/g, ' ');
+  if (!trimmed) return '';
+  return trimmed
+    .replace(/\s+(subsp\.|var\.|f\.)\s+[A-Za-z-]+.*$/i, '')
+    .trim();
+}
+
 const cleanString = (value) => (value ?? '').toString().trim();
 const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '葉',
@@ -145,6 +153,41 @@ function buildYListLite(rows, targets) {
   });
 
   return { plants, familiesMap, ordersMap, aliasToCanonical };
+}
+
+function augmentYListLiteWithScientificAliases(lite = {}) {
+  const plants = lite?.plants && typeof lite.plants === 'object' ? lite.plants : {};
+  const scientificAliasBuckets = new Map();
+
+  Object.entries(plants).forEach(([canonical, detail]) => {
+    const scientificName = cleanString(detail?.scientificName);
+    if (!canonical || !scientificName) return;
+    const aliasCandidates = new Set([
+      scientificName,
+      normalizeScientificPlantAlias(scientificName),
+    ].filter(Boolean));
+
+    aliasCandidates.forEach((alias) => {
+      if (!scientificAliasBuckets.has(alias)) {
+        scientificAliasBuckets.set(alias, new Set());
+      }
+      scientificAliasBuckets.get(alias).add(canonical);
+    });
+  });
+
+  const aliasToCanonical = { ...(lite?.aliasToCanonical || {}) };
+  scientificAliasBuckets.forEach((canonicals, alias) => {
+    if (canonicals.size !== 1) return;
+    if (aliasToCanonical[alias]) return;
+    aliasToCanonical[alias] = Array.from(canonicals)[0];
+  });
+
+  return {
+    plants,
+    familiesMap: lite?.familiesMap && typeof lite.familiesMap === 'object' ? lite.familiesMap : {},
+    ordersMap: lite?.ordersMap && typeof lite.ordersMap === 'object' ? lite.ordersMap : {},
+    aliasToCanonical,
+  };
 }
 
 const repairScientificBinomial = (name) => {
@@ -309,6 +352,7 @@ async function build() {
     path.join(ROOT, 'normalized_data', 'general_notes.csv'),
     path.join(PUBLIC_DIR, 'general_notes.csv'),
   ]);
+  const ylistLitePath = path.join(OUT_DIR, 'ylist-lite.json');
 
   if ((!normalizedInsectsCsv && !publicInsectsCsv) || !hostplantsCsv) {
     console.warn('[data-lite] required normalized CSVs not found; skipping');
@@ -398,12 +442,31 @@ const slim = (arr) => (arr || []).map(i => ({
   write('index.json', out);
 
   // Build and write full dataset for runtime consumption
+  const existingYListLiteText = readText(ylistLitePath);
+  const existingYListLite = (() => {
+    if (!existingYListLiteText) return null;
+    try {
+      return JSON.parse(existingYListLiteText);
+    } catch (error) {
+      console.warn('[data-lite] failed to parse existing ylist-lite.json:', error?.message || error);
+      return null;
+    }
+  })();
   const hostPlantTargets = new Set(
     hostplants
       .map(r => cleanString(r.plant_name))
       .filter(name => name && name !== '不明' && !isSuspiciousPlantName(name))
   );
-  const ylistLite = buildYListLite(ylistRows, hostPlantTargets);
+  const builtYListLite = ylistRows.length > 0
+    ? buildYListLite(ylistRows, hostPlantTargets)
+    : (existingYListLite || { plants: {}, familiesMap: {}, ordersMap: {}, aliasToCanonical: {} });
+  const ylistLite = augmentYListLiteWithScientificAliases(builtYListLite);
+  if (
+    Object.keys(ylistLite.plants || {}).length > 0 ||
+    Object.keys(ylistLite.aliasToCanonical || {}).length > 0
+  ) {
+    write('ylist-lite.json', ylistLite);
+  }
   const processedCollections = Object.fromEntries(
     INSECT_COLLECTION_KEYS.map((key) => [key, processInsects(normalized[key])]),
   );

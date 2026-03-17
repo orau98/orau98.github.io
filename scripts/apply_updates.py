@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 REPORTS_DIR = ROOT / "reports"
 BACKUP_DIR = ROOT / "public" / "backup"
 DEFAULT_INPUT = REPORTS_DIR / "update_candidates.csv"
+YLIST_LITE_PATH = ROOT / "public" / "assets" / "data-lite" / "ylist-lite.json"
 
 # CSVの場所（validate-normalized.mjs と同じロジック）
 CSV_CANDIDATES_DIRS = [ROOT / "normalized_data", ROOT / "public"]
@@ -125,6 +126,49 @@ def build_hostplant_family_lookup(rows: list[dict]) -> dict[str, str]:
     return lookup
 
 
+def normalize_scientific_plant_name(value: str) -> str:
+    normalized = re.sub(r"\s+", " ", (value or "").strip())
+    normalized = re.sub(r"\s+(?:subsp\.|var\.|f\.)\s+[A-Za-z-]+.*$", "", normalized, flags=re.IGNORECASE)
+    return normalized.strip()
+
+
+def build_ylist_scientific_lookup() -> dict[str, dict]:
+    if not YLIST_LITE_PATH.exists():
+        return {}
+
+    with open(YLIST_LITE_PATH, encoding="utf-8") as f:
+        payload = json.load(f)
+
+    buckets: dict[str, list[dict]] = {}
+    for japanese_name, detail in (payload.get("plants") or {}).items():
+        scientific_name = (detail or {}).get("scientificName", "").strip()
+        if not japanese_name or not scientific_name:
+            continue
+
+        family = ((detail or {}).get("familyJp") or "").strip()
+        for alias in {scientific_name, normalize_scientific_plant_name(scientific_name)}:
+            if not alias:
+                continue
+            buckets.setdefault(alias, []).append(
+                {
+                    "plant_name": japanese_name.strip(),
+                    "plant_family": family,
+                }
+            )
+
+    lookup: dict[str, dict] = {}
+    for alias, entries in buckets.items():
+        unique_names = {entry["plant_name"] for entry in entries if entry["plant_name"]}
+        if len(unique_names) != 1:
+            continue
+        first = entries[0]
+        lookup[alias] = {
+            "plant_name": first["plant_name"],
+            "plant_family": first.get("plant_family", ""),
+        }
+    return lookup
+
+
 def extract_japanese_plant_name(text: str) -> str:
     text = text.strip()
     if not text:
@@ -136,7 +180,12 @@ def extract_japanese_plant_name(text: str) -> str:
     return jp_tokens[-1] if jp_tokens else text
 
 
-def parse_hostplant_token(token: str, family_lookup: dict[str, str], default_family: str = "") -> dict | None:
+def parse_hostplant_token(
+    token: str,
+    family_lookup: dict[str, str],
+    default_family: str = "",
+    scientific_lookup: dict[str, dict] | None = None,
+) -> dict | None:
     token = token.strip(" 、。")
     if not token:
         return None
@@ -151,7 +200,12 @@ def parse_hostplant_token(token: str, family_lookup: dict[str, str], default_fam
 
     plant_name = extract_japanese_plant_name(name_text)
     if not plant_name:
-        return None
+        resolved = (scientific_lookup or {}).get(normalize_scientific_plant_name(name_text))
+        if not resolved:
+            return None
+        plant_name = resolved["plant_name"]
+        if not family:
+            family = resolved.get("plant_family", "")
     if not family:
         family = family_lookup.get(plant_name, "")
 
@@ -162,7 +216,11 @@ def parse_hostplant_token(token: str, family_lookup: dict[str, str], default_fam
     }
 
 
-def normalize_hostplant_additions(proposed: str, family_lookup: dict[str, str]) -> list[dict]:
+def normalize_hostplant_additions(
+    proposed: str,
+    family_lookup: dict[str, str],
+    scientific_lookup: dict[str, dict] | None = None,
+) -> list[dict]:
     proposed = proposed.strip()
     if not proposed:
         return []
@@ -176,14 +234,14 @@ def normalize_hostplant_additions(proposed: str, family_lookup: dict[str, str]) 
             entries = []
             default_family = ""
             for token in payload.split("、"):
-                entry = parse_hostplant_token(token, family_lookup, default_family)
+                entry = parse_hostplant_token(token, family_lookup, default_family, scientific_lookup)
                 if not entry:
                     continue
                 entries.append(entry)
                 if entry["plant_family"]:
                     default_family = entry["plant_family"]
             return entries
-        entry = parse_hostplant_token(payload, family_lookup)
+        entry = parse_hostplant_token(payload, family_lookup, scientific_lookup=scientific_lookup)
         return [entry] if entry else []
 
     match = re.match(r"^食草が(.+?)[（(]([^）)]+科)[）)](?:と判明|であることが判明)", proposed)
@@ -204,7 +262,7 @@ def normalize_hostplant_additions(proposed: str, family_lookup: dict[str, str]) 
             "notes": proposed,
         }]
 
-    simple_entry = parse_hostplant_token(proposed, family_lookup)
+    simple_entry = parse_hostplant_token(proposed, family_lookup, scientific_lookup=scientific_lookup)
     if simple_entry and simple_entry["plant_name"] == proposed:
         return [simple_entry]
 
@@ -245,7 +303,8 @@ def apply_hostplant_addition(row: dict, hostplants_path: Path):
         fieldnames = reader.fieldnames
 
     family_lookup = build_hostplant_family_lookup(rows)
-    normalized_entries = normalize_hostplant_additions(proposed, family_lookup)
+    scientific_lookup = build_ylist_scientific_lookup()
+    normalized_entries = normalize_hostplant_additions(proposed, family_lookup, scientific_lookup)
     if not normalized_entries:
         print(f"    スキップ（食草名を抽出できず手修正が必要）: {proposed}")
         return False
