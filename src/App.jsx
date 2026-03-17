@@ -413,6 +413,18 @@ function App() {
           ? `?v=${encodeURIComponent(APP_BUILD_ID)}`
           : '';
       const fallbackVersionSuffix = appVersionSuffix;
+      const buildLiteSummaryCounts = (lite = {}) => ({
+        moths: Array.isArray(lite.moths) ? lite.moths.length : 0,
+        butterflies: Array.isArray(lite.butterflies) ? lite.butterflies.length : 0,
+        beetles: Array.isArray(lite.beetles) ? lite.beetles.length : 0,
+        longhornbeetles: Array.isArray(lite.longhornbeetles) ? lite.longhornbeetles.length : 0,
+        leafbeetles: Array.isArray(lite.leafbeetles) ? lite.leafbeetles.length : 0,
+        aphids: Array.isArray(lite.aphids) ? lite.aphids.length : 0,
+        hostPlants:
+          lite.hostPlants && typeof lite.hostPlants === 'object'
+            ? Object.keys(lite.hostPlants).length
+            : 0,
+      });
       const applyLiteIndex = (lite) => {
         if (!lite || !Array.isArray(lite.moths) || !Array.isArray(lite.butterflies)) return false;
         setMoths(lite.moths);
@@ -423,7 +435,7 @@ function App() {
         setAphids(lite.aphids || []);
         setHostPlants(lite.hostPlants || {});
         setPlantDetails(lite.plantDetails || {});
-        if (lite.summaryCounts) setSummaryCounts(lite.summaryCounts);
+        setSummaryCounts(lite.summaryCounts || buildLiteSummaryCounts(lite));
         setLoading(false);
         ensureTypesLoaderRef.current = () => {
           typesFetchStartedRef.current = true;
