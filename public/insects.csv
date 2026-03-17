@@ -3310,7 +3310,7 @@ species-1134,Momphidae,アカバナキバガ科,,,,,Cyphophora,,minorella,,Sinev
 species-1135,Momphidae,アカバナキバガ科,,,,,Mompha,Mompha,glaucella,,Sinev,1986,ハイイロアカバナキバガ,,,,"Mompha glaucella Sinev, 1986",,,
 species-1136,Momphidae,アカバナキバガ科,,,,,Mompha,Psacaphora,locupletella,,(Denis & Schiffermüller),1775,アカガネアカバナキバガ,,,,"Mompha locupletella (Denis & Schiffermüller, 1775)",,,
 species-1137,Momphidae,アカバナキバガ科,,,,,Mompha,Psacaphora,ludwigiae,,(Bradley),1973,クロガネアカバナキバガ,,,,"Mompha ludwigiae (Bradley, 1973)",,,
-species-21730,Momphidae,アカバナキバガ科,,,,,Mompha,Mompha,raschkiella,,(Zeller),1839,ヤナギランアカバナキバガ,,,,"Mompha raschkiella (Zeller, 1839)","Elachista raschkiella Zeller, 1839",日本新記録（蛾類通信305号 2023）,北海道・秋田県から記録
+species-21730,Momphidae,アカバナキバガ科,,,,,Mompha,Mompha,raschkiella,,(Zeller),1839,ヤナギランアカバナキバガ,,,,"Mompha raschkiella (Zeller, 1839)","Elachista raschkiella Zeller, 1839","日本新記録（梅津一史, 2023）",北海道・秋田県から記録
 species-1138,Blastobasidae,ネマルハキバガ科,Blastobasinae,ネマルハキバガ亜科,,,Neoblastobasis,,spiniharpella,,Kuznetzov & Sinev,1985,ウスイロネマルハキバガ,,,,"Neoblastobasis spiniharpella Kuznetzov & Sinev, 1985",,,
 species-1139,Blastobasidae,ネマルハキバガ科,Blastobasinae,ネマルハキバガ亜科,,,Neoblastobasis,,brevicornis,,Moriuti,1987,リュウキュウネマルハキバガ,,ミナミネマルハキバガ,,"Neoblastobasis brevicornis Moriuti, 1987",,,
 species-1140,Blastobasidae,ネマルハキバガ科,Blastobasinae,ネマルハキバガ亜科,,,Neoblastobasis,,decolor,,(Meyrick),1907,ウスオビネマルハキバガ,,,,"Neoblastobasis decolor (Meyrick, 1907)",,,
@@ -9644,3 +9644,4 @@ species-21722,Noctuidae,ヤガ科,Xyleninae,モンヤガ亜科,Apameini,カド�
 species-21726,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Apameini,カドモンヨトウ族,Litoligia,,fodinae,,(Oberthür),1880,セアカヨトウ,,,,"Litoligia fodinae (Oberthür, 1880)",,,
 species-21728,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Apameini,カドモンヨトウ族,Amphipoea,,sp.,,,,タカネショウブヨトウ類,,,,Amphipoea sp.,,,
 species-21729,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Phlogophorini,アカガネヨトウ族,Euplexia,,angusta,,,,ホソバミドリヨトウ,,,,Euplexia angusta,,,
+species-23073,Gracillariidae,ホソガ科,Lithocolletinae,キンモンホソガ亜科,,,Chrysaster,,ostensackenella,,(Fitch),1859,ハリエンジュギンモンツヤホソガ,,,,"Chrysaster ostensackenella (Fitch, 1859)",,"日本新記録（平野, 2023）",長野県から記録

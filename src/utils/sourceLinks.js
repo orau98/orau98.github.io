@@ -11,7 +11,8 @@ export const sourceLinks = {
   "日本産タマムシ大図鑑": "https://amzn.to/4m2vPWp",
   "ハムシハンドブック": "https://amzn.to/456YVhu",
   "日本の冬夜蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000506/ct6/page1/recommend/",
-  "日本の冬尺蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000509/ct6/page1/recommend/"
+  "日本の冬尺蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000509/ct6/page1/recommend/",
+  "蛾類通信": "http://publ.moth.jp/tsushin/"
 };
 
 // 出典から参考リンクを取得する関数

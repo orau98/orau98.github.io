@@ -178,5 +178,245 @@ export const bibliography = [
     journal: '神奈川虫報',
     issue: '182',
     pages: '37-46'
+  },
+  {
+    key: 'ga-tsushin-303-eda-2022a',
+    type: 'article',
+    title: '利尻島で採集された日本未記録のMetaxmeste phrygialis (Hübner) リシリノクルマメイガ（新称）について',
+    authors: ['枝恵太郎'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '77-78'
+  },
+  {
+    key: 'ga-tsushin-303-osada-2022a',
+    type: 'article',
+    title: '九州におけるアケビヒメハマキの記録',
+    authors: ['長田庸平'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '78'
+  },
+  {
+    key: 'ga-tsushin-303-sakamoto-2022',
+    type: 'article',
+    title: '八重山諸島で得られた注目すべき蛾類',
+    authors: ['阪本優介', '志田智義', '枝恵太郎'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '79-80'
+  },
+  {
+    key: 'ga-tsushin-303-uno-2022',
+    type: 'article',
+    title: '兵庫県宝塚市におけるエグリイチモジエダシャクの記録',
+    authors: ['宇野宏樹'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '80'
+  },
+  {
+    key: 'ga-tsushin-303-miyano-2022',
+    type: 'article',
+    title: '日本未記録のネマルハキバガ科Lateantenna属の1種',
+    authors: ['宮野昭彦'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '88'
+  },
+  {
+    key: 'ga-tsushin-303-saito-2022',
+    type: 'article',
+    title: 'キバガ科の1種Ephysteris insulella (Heinemann, 1870) の日本からの初記録',
+    authors: ['斉藤修'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '89-91'
+  },
+  {
+    key: 'ga-tsushin-303-watanabe-2022',
+    type: 'article',
+    title: 'ヤマトハガタヨトウの愛知県・静岡県における採集記録',
+    authors: ['渡邊瑛太', '神澤由己', '山本稜士', '安西稔'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '92'
+  },
+  {
+    key: 'ga-tsushin-303-hirano-2022',
+    type: 'article',
+    title: '日本未記録の2種を含むキバガ科の5種について',
+    authors: ['平野長男'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '123-127'
+  },
+  {
+    key: 'ga-tsushin-303-osada-2022b',
+    type: 'article',
+    title: '四国におけるオオウスオビヒメハマキの記録',
+    authors: ['長田庸平'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '121'
+  },
+  {
+    key: 'ga-tsushin-303-niitsu-2022',
+    type: 'article',
+    title: '青森県で採集された東北地方初記録のタイリクヒメミノガ',
+    authors: ['新津修平'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '303',
+    pages: '122'
+  },
+  {
+    key: 'ga-tsushin-304-hori-2022',
+    type: 'article',
+    title: '札幌市のシベチャキリガの記録',
+    authors: ['堀繁久'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '129-130'
+  },
+  {
+    key: 'ga-tsushin-304-kishida-2022',
+    type: 'article',
+    title: '対馬で採集されたマツカレハの色彩異常型',
+    authors: ['岸田泰則'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '130-131'
+  },
+  {
+    key: 'ga-tsushin-304-matsumoto-2022',
+    type: 'article',
+    title: 'ヨモギキリガの飛翔個体多数および交尾を観察',
+    authors: ['松本浩一'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '132-133'
+  },
+  {
+    key: 'ga-tsushin-304-inukai-2022',
+    type: 'article',
+    title: '京都府，福井県におけるハマヤガの記録',
+    authors: ['犬飼拓展'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '133'
+  },
+  {
+    key: 'ga-tsushin-304-keino-2022',
+    type: 'article',
+    title: 'カバシタムクゲエダシャクの長野県における新産地と天敵について',
+    authors: ['慶野友和'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '136-137'
+  },
+  {
+    key: 'ga-tsushin-304-oka-2022',
+    type: 'article',
+    title: '東京都でチャオビフユエダシャクを採集',
+    authors: ['岡太陽'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '137'
+  },
+  {
+    key: 'ga-tsushin-304-yagi-2022',
+    type: 'article',
+    title: '南大東島のリュウキュウコノハズクの巣から羽化したヒロズコガ科2種',
+    authors: ['屋宜禎央', '澤田明', '白岩颯', '金杉尚紀'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '138-139'
+  },
+  {
+    key: 'ga-tsushin-304-osada-2022',
+    type: 'article',
+    title: '新潟県におけるセギンモンヒメハマキの記録',
+    authors: ['長田庸平'],
+    year: '2022',
+    journal: '蛾類通信',
+    issue: '304',
+    pages: '145'
+  },
+  {
+    key: 'ga-tsushin-305-umetsu-2023',
+    type: 'article',
+    title: '日本未記録のMompha raschkiella (Zeller, 1839)（アカバナキバガ科）について',
+    authors: ['梅津一史'],
+    year: '2023',
+    journal: '蛾類通信',
+    issue: '305',
+    pages: '149-151'
+  },
+  {
+    key: 'ga-tsushin-305-yagi-2023',
+    type: 'article',
+    title: 'アキヨシヒゲナガの宮崎県からの記録',
+    authors: ['屋宜禎央', '石綿深志', '小川浩太'],
+    year: '2023',
+    journal: '蛾類通信',
+    issue: '305',
+    pages: '152-153'
+  },
+  {
+    key: 'ga-tsushin-305-tomisawa-2023',
+    type: 'article',
+    title: 'カバシャクを石川県で採集',
+    authors: ['富沢章', '福富宏和'],
+    year: '2023',
+    journal: '蛾類通信',
+    issue: '305',
+    pages: '153'
+  },
+  {
+    key: 'ga-tsushin-305-hirano-2023',
+    type: 'article',
+    title: '長野県で採集したCaloptilia 2種とRobinia pseudoacacia ハリエンジュの葉に潜るChrysaster 2種の記録（ホソガ科）',
+    authors: ['平野長男'],
+    year: '2023',
+    journal: '蛾類通信',
+    issue: '305',
+    pages: '154-158'
+  },
+  {
+    key: 'ga-tsushin-305-kohno-2023',
+    type: 'article',
+    title: 'Memorandum on an occurrence of Dendrolimus punctatus larvae on Ishigaki-jima Island',
+    authors: ['河野勝行'],
+    year: '2023',
+    journal: '蛾類通信',
+    issue: '305',
+    pages: '161-162'
+  },
+  {
+    key: 'ga-tsushin-305-matsui-2023',
+    type: 'article',
+    title: 'サザナミノメイガの幼生期と寄主植物',
+    authors: ['松井悠樹', '冨永智', '中秀司'],
+    year: '2023',
+    journal: '蛾類通信',
+    issue: '305',
+    pages: '164-166'
   }
 ];

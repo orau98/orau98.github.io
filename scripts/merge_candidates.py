@@ -67,6 +67,21 @@ def load_insects_index() -> dict:
     return index
 
 
+def _format_citation(item: dict) -> str:
+    """Format citation in author (year) style.
+    Falls back to 'source_name issue_number号' if author/year unavailable."""
+    author = item.get("article_author", "").strip()
+    year = item.get("publication_year", "").strip()
+    if author and year:
+        return f"{author} ({year})"
+    if author:
+        source_name = item.get("source_name", "")
+        issue = item.get("issue_number", "")
+        return f"{author} ({source_name}{issue}号)"
+    # fallback to old format
+    return f"{item.get('source_name', '')} {item.get('issue_number', '')}号"
+
+
 def load_pdf_candidates() -> list[dict]:
     """PDF抽出結果を読み込み"""
     if not PDF_CANDIDATES.exists():
@@ -86,12 +101,12 @@ def load_pdf_candidates() -> list[dict]:
             "change_type": change_type,
             "current_value": "",
             "proposed_value": item.get("content", ""),
-            "source": f"{item.get('source_name', '')} {item.get('issue_number', '')}号",
+            "source": _format_citation(item),
             "source_url": "",
             "confidence": item.get("confidence", "low"),
             "review_required": "YES" if change_type in FORCE_REVIEW else "",
             "approved": "",
-            "note": f"ページ: {item.get('page', '不明')}, ファイル: {item.get('source_file', '')}",
+            "note": f"ページ: {item.get('page', '不明')}, {item.get('source_name', '')} {item.get('issue_number', '')}号, ファイル: {item.get('source_file', '')}",
         }
         rows.append(row)
     return rows
