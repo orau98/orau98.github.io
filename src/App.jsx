@@ -25,6 +25,7 @@ const DATA_CACHE_DB = 'ihpe-cache';
 const DATA_CACHE_STORE = 'datasets';
 const DATA_CACHE_KEY = 'full-dataset';
 const CACHE_SCHEMA_VERSION = 1;
+const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
 
 let cachedPapa = null;
 const getPapa = async () => {
@@ -406,7 +407,12 @@ function App() {
         throw lastErr || new Error('fetch failed');
       };
       const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
-      const fallbackVersionSuffix = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+      const appVersionSuffix = import.meta.env.DEV
+        ? `?v=${Date.now()}`
+        : APP_BUILD_ID
+          ? `?v=${encodeURIComponent(APP_BUILD_ID)}`
+          : '';
+      const fallbackVersionSuffix = appVersionSuffix;
       const applyLiteIndex = (lite) => {
         if (!lite || !Array.isArray(lite.moths) || !Array.isArray(lite.butterflies)) return false;
         setMoths(lite.moths);
@@ -455,12 +461,12 @@ function App() {
       };
       // Quick path in production: use combined index first to avoid multi-fetch failures
       if (import.meta.env.PROD) {
-        const quickOk = await tryLiteIndex('');
+        const quickOk = await tryLiteIndex(appVersionSuffix);
         if (quickOk) return;
       }
       // Try lightweight split JSON first to speed up initial paint
       try {
-        const manifestUrl = `${base}assets/data-lite/manifest.json${import.meta.env.DEV ? `?v=${Date.now()}` : ''}`;
+        const manifestUrl = `${base}assets/data-lite/manifest.json${appVersionSuffix}`;
         // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
         const manifestRes = await fetchWithRetry(manifestUrl, { cache: cacheMode });
         if (!shouldContinue()) return;
