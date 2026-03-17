@@ -62,3 +62,15 @@ pdfs/
 
 # Backup directory created by apply_updates.py
 public/backup/
+
+# Python cache
+scripts/__pycache__/
+
+# Intermediate extraction/API reports
+reports/api_log_*.txt
+reports/api_check_progress.json
+reports/api_update_candidates.csv
+reports/extracted_test*.json
+reports/processed_test*.json
+reports/download_errors.txt
+reports/reference_cache/
