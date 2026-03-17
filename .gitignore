@@ -70,7 +70,11 @@ scripts/__pycache__/
 reports/api_log_*.txt
 reports/api_check_progress.json
 reports/api_update_candidates.csv
-reports/extracted_test*.json
-reports/processed_test*.json
+reports/extracted_*.json
+reports/processed_*.json
+reports/agent_extract_*.json
+reports/extracted_candidates.json
 reports/download_errors.txt
 reports/reference_cache/
+reports/butterfly_book_ocr/
+reports/butterfly_book_samples/
