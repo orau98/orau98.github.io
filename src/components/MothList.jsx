@@ -23,6 +23,61 @@ import {
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
 
+const isFlowerVisitRecord = (record) => {
+  if (!record) return false;
+  if (record.isFlowerVisit === true) return true;
+  const lifeStage = (record.lifeStage || '').trim();
+  const plantPart = (record.plantPart || '').trim();
+  const partCompact = plantPart.replace(/\s+/g, '');
+  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
+  return isAdultOrUnknown && partCompact && partCompact.includes('花');
+};
+
+const cleanPlantName = (plant) => {
+  if (!plant || typeof plant !== 'string') return '';
+  if (plant === '不明') return '不明';
+  return plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
+};
+
+const filterUnknownPlantNames = (names = []) => {
+  const hasSpecific = names.some((name) => name && name !== '不明');
+  return hasSpecific ? names.filter((name) => name !== '不明') : names;
+};
+
+const buildPlantDisplayData = (moth) => {
+  let hostNames = [];
+  let flowerNames = [];
+
+  if (Array.isArray(moth?.hostPlantsDetailed) && moth.hostPlantsDetailed.length > 0) {
+    moth.hostPlantsDetailed.forEach((record) => {
+      const raw = record.displayName || record.name || '';
+      const cleaned = cleanPlantName(String(raw).trim());
+      if (!cleaned) return;
+      if (isFlowerVisitRecord(record)) {
+        flowerNames.push(cleaned);
+      } else {
+        hostNames.push(cleaned);
+      }
+    });
+  } else if (moth?.hostPlants) {
+    if (typeof moth.hostPlants === 'string') {
+      hostNames = moth.hostPlants
+        .split(/[;；、,]/)
+        .map((plant) => cleanPlantName(plant.trim()))
+        .filter(Boolean);
+    } else if (Array.isArray(moth.hostPlants)) {
+      hostNames = moth.hostPlants
+        .map((plant) => cleanPlantName(String(plant || '').trim()))
+        .filter(Boolean);
+    }
+  }
+
+  return {
+    hostNames: [...new Set(filterUnknownPlantNames(hostNames))],
+    flowerNames: [...new Set(filterUnknownPlantNames(flowerNames))],
+  };
+};
+
 const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, currentPage = 1 }) => {
   const location = useLocation();
   // Heuristic: insert a space between genus and species if missing
@@ -201,6 +256,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     }
   }, [isPriority, hasImageFilename, responsivePreloadUrl, imageUrl]);
   
+  const plantDisplay = useMemo(() => buildPlantDisplayData(moth), [moth]);
+
   // Error boundary for individual moth items
   if (!moth) {
     return null;
@@ -347,84 +404,47 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
 
             <div className="mt-auto space-y-2">
               <div>
-                <div className="flex items-start space-x-2 text-sm">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
-                    </svg>
-                  </span>
-                  <span className="text-slate-600 dark:text-slate-300 leading-snug">
-                  {(() => {
-                    const isFlowerVisitRecord = (record) => {
-                      if (!record) return false;
-                      if (record.isFlowerVisit === true) return true;
-                      const lifeStage = (record.lifeStage || '').trim();
-                      const plantPart = (record.plantPart || '').trim();
-                      const partCompact = plantPart.replace(/\s+/g, '');
-                      const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-                      return isAdultOrUnknown && partCompact && partCompact.includes('花');
-                    };
+                <div className="space-y-1.5 text-sm">
+                  {plantDisplay.hostNames.length > 0 && (
+                    <div className="flex items-start space-x-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                        </svg>
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-300 leading-snug">
+                        {plantDisplay.hostNames.join('、')}
+                      </span>
+                    </div>
+                  )}
 
-                    // Repair function for collapsed Latin binomials in plant names
-                    const repairPlantLatinBinomial = (plant) => {
-                      if (!plant || typeof plant !== 'string') return plant;
-                      return plant.trim();
-                    };
+                  {plantDisplay.flowerNames.length > 0 && (
+                    <div className="flex items-start space-x-2">
+                      <span
+                        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-[13px] dark:bg-rose-900/30 flex-shrink-0 mt-0.5"
+                        role="img"
+                        aria-label="訪花"
+                      >
+                        🌸
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-300 leading-snug">
+                        {plantDisplay.flowerNames.join('、')}
+                      </span>
+                    </div>
+                  )}
 
-                    const cleanPlantName = (plant) => {
-                      if (!plant || typeof plant !== 'string') return '';
-                      if (plant === '不明') return '不明';
-                      const cleaned = plant.replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
-                      return repairPlantLatinBinomial(cleaned);
-                    };
-
-                    let larvalNames = [];
-                    let flowerNames = [];
-
-                    if (Array.isArray(moth.hostPlantsDetailed) && moth.hostPlantsDetailed.length > 0) {
-                      moth.hostPlantsDetailed.forEach((record) => {
-                        const raw = record.displayName || record.name || '';
-                        const cleaned = cleanPlantName(String(raw).trim());
-                        if (!cleaned) return;
-                        if (isFlowerVisitRecord(record)) {
-                          flowerNames.push(cleaned);
-                        } else {
-                          larvalNames.push(cleaned);
-                        }
-                      });
-                    } else if (moth.hostPlants) {
-                      // hostPlants が文字列の場合と配列の場合を処理
-                      let plantNames;
-                      if (typeof moth.hostPlants === 'string') {
-                        plantNames = moth.hostPlants.split(/[;；、,]/)
-                          .map(plant => cleanPlantName(plant.trim()))
-                          .filter(plant => plant);
-                      } else if (Array.isArray(moth.hostPlants)) {
-                        plantNames = moth.hostPlants
-                          .map(plant => cleanPlantName(String(plant || '').trim()))
-                          .filter(plant => plant);
-                      } else {
-                        plantNames = [];
-                      }
-                      larvalNames = plantNames;
-                    }
-
-                    // 「不明」植物のフィルタリング：具体的な食草情報がある場合は「不明」を除外
-                    const filterUnknown = (names) => {
-                      const hasSpecific = names.some(name => name && name !== '不明');
-                      return hasSpecific ? names.filter(name => name !== '不明') : names;
-                    };
-                    larvalNames = filterUnknown(larvalNames);
-                    flowerNames = filterUnknown(flowerNames);
-                    
-                    // 重複を除去
-                    const uniqueLarvalNames = [...new Set(larvalNames)];
-                    const uniqueFlowerNames = [...new Set(flowerNames)];
-                    if (uniqueLarvalNames.length > 0) return uniqueLarvalNames.join('、');
-                    if (uniqueFlowerNames.length > 0) return `訪花: ${uniqueFlowerNames.join('、')}`;
-                    return '情報なし';
-                  })()}
-                  </span>
+                  {plantDisplay.hostNames.length === 0 && plantDisplay.flowerNames.length === 0 && (
+                    <div className="flex items-start space-x-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                        </svg>
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-300 leading-snug">
+                        情報なし
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               
