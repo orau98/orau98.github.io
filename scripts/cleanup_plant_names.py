@@ -15,6 +15,43 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HOSTPLANTS_CSV = ROOT / "normalized_data" / "hostplants.csv"
 
+DELETE_RECORD_IDS = {
+    # Re-imported sentence-like rows when an equivalent canonical hostplant already exists.
+    "hostplant-905998", "hostplant-906197", "hostplant-906396", "hostplant-906595", "hostplant-906868", "hostplant-907142",
+    "hostplant-906000", "hostplant-906199", "hostplant-906398", "hostplant-906597", "hostplant-906870", "hostplant-907144",
+    "hostplant-906004", "hostplant-906203", "hostplant-906402", "hostplant-906601", "hostplant-906874", "hostplant-907148",
+    "hostplant-906202", "hostplant-906401", "hostplant-906600", "hostplant-906873", "hostplant-907147",
+    "hostplant-906204", "hostplant-906403", "hostplant-906602", "hostplant-906875", "hostplant-907149",
+    "hostplant-906205", "hostplant-906404", "hostplant-906603", "hostplant-906876", "hostplant-907150",
+    "hostplant-906206", "hostplant-906405", "hostplant-906604", "hostplant-906877", "hostplant-907151",
+    "hostplant-906008", "hostplant-906207", "hostplant-906406", "hostplant-906605", "hostplant-906878", "hostplant-907152",
+    "hostplant-906208", "hostplant-906407", "hostplant-906606", "hostplant-906879", "hostplant-907153",
+    "hostplant-906010", "hostplant-906209", "hostplant-906408", "hostplant-906607", "hostplant-906880", "hostplant-907154",
+    "hostplant-906011", "hostplant-906210", "hostplant-906409", "hostplant-906608", "hostplant-906881", "hostplant-907155",
+    "hostplant-906035", "hostplant-906234", "hostplant-906433", "hostplant-906632", "hostplant-906905", "hostplant-907179",
+    "hostplant-906038", "hostplant-906237", "hostplant-906436", "hostplant-906635", "hostplant-906908", "hostplant-907182",
+    "hostplant-906639", "hostplant-906912", "hostplant-907186",
+    "hostplant-906723", "hostplant-906996", "hostplant-907270",
+    "hostplant-906729", "hostplant-907002", "hostplant-907276",
+    "hostplant-907281",
+}
+
+TARGETED_REPLACEMENTS = {
+    # Keep one canonical row for re-imported 1986 additions that had no prior clean row.
+    "hostplant-906003": [{"plant_name": "ネジキ", "plant_family": "ツツジ科"}],
+    "hostplant-906005": [{"plant_name": "シシウド", "plant_family": "セリ科"}],
+    "hostplant-906006": [{"plant_name": "ヤマブキショウマ", "plant_family": "バラ科", "notes": "初記録"}],
+    "hostplant-906007": [{"plant_name": "キュウリ", "plant_family": "ウリ科", "notes": "既知：ワタ、アオイ、ヘチマ"}],
+    "hostplant-906009": [{"plant_name": "ヤマモミジ", "plant_family": "ムクロジ科"}],
+    # Split one representative 1989 sentence into concrete plants and drop the duplicate imports.
+    "hostplant-906042": [{"plant_name": "オトギリソウ", "plant_family": "オトギリソウ科", "notes": "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属"}],
+    "hostplant-906241": [{"plant_name": "イワオトギリ", "plant_family": "オトギリソウ科", "notes": "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属"}],
+    "hostplant-906440": [{"plant_name": "シナノオトギリ", "plant_family": "オトギリソウ科", "notes": "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属"}],
+    # Keep additional 1999 hosts that were embedded in a sentence.
+    "hostplant-906734": [{"plant_name": "ハルニレ", "plant_family": "ニレ科", "notes": "食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食"}],
+    "hostplant-907007": [{"plant_name": "エノキ", "plant_family": "アサ科", "notes": "食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食"}],
+}
+
 # 科名マッピング（主要な科）
 FAMILY_MAP = {
     # ブナ科
@@ -187,6 +224,36 @@ def extract_plant_names(text: str) -> list[dict]:
     return results
 
 
+def merge_notes(*parts: str) -> str:
+    merged = []
+    for part in parts:
+        cleaned = (part or "").strip()
+        if cleaned and cleaned not in merged:
+            merged.append(cleaned)
+    return " ".join(merged)
+
+
+def apply_targeted_fix(row: dict) -> list[dict]:
+    record_id = row.get("record_id", "")
+    if record_id in DELETE_RECORD_IDS:
+        return []
+
+    replacements = TARGETED_REPLACEMENTS.get(record_id)
+    if not replacements:
+        return [row]
+
+    original_text = row.get("plant_name", "").strip()
+    existing_notes = row.get("notes", "").strip()
+    fixed_rows = []
+    for replacement in replacements:
+        fixed = dict(row)
+        fixed["plant_name"] = replacement["plant_name"]
+        fixed["plant_family"] = replacement["plant_family"]
+        fixed["notes"] = replacement.get("notes", existing_notes)
+        fixed_rows.append(fixed)
+    return fixed_rows
+
+
 def main():
     rows = []
     with open(HOSTPLANTS_CSV) as f:
@@ -197,6 +264,8 @@ def main():
     new_rows = []
     modified = 0
     split_count = 0
+    targeted_modified = 0
+    targeted_deleted = 0
     numeric_ids = []
     for r in rows:
         rid = r["record_id"]
@@ -206,7 +275,25 @@ def main():
                 numeric_ids.append(int(suffix))
     next_id = max(numeric_ids) + 1 if numeric_ids else 1000000
 
+    expected_replacement_ids = set(TARGETED_REPLACEMENTS.keys())
+    seen_replacement_ids = set()
+
     for row in rows:
+        record_id = row.get("record_id", "")
+        if record_id in expected_replacement_ids:
+            seen_replacement_ids.add(record_id)
+
+        targeted_rows = apply_targeted_fix(row)
+        if not targeted_rows:
+            targeted_deleted += 1
+            continue
+        if len(targeted_rows) != 1 or targeted_rows[0] != row:
+            targeted_modified += 1
+        if len(targeted_rows) != 1:
+            new_rows.extend(targeted_rows)
+            continue
+        row = targeted_rows[0]
+
         plant_name = row.get("plant_name", "")
 
         if not is_sentence_like(plant_name):
@@ -251,12 +338,20 @@ def main():
                 new_row["notes"] = original_text
                 new_rows.append(new_row)
 
+    missing_replacement_ids = sorted(expected_replacement_ids - seen_replacement_ids)
+    if missing_replacement_ids:
+        print("Missing targeted replacement rows:")
+        for record_id in missing_replacement_ids:
+            print(f"  - {record_id}")
+        sys.exit(1)
+
     # 書き出し
     with open(HOSTPLANTS_CSV, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(new_rows)
 
+    print(f"Targeted modified: {targeted_modified}, targeted deleted: {targeted_deleted}")
     print(f"Modified: {modified}, Split into new records: {split_count}")
     print(f"Total rows: {len(rows)} -> {len(new_rows)}")
 

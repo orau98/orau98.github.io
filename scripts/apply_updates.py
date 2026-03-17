@@ -14,6 +14,7 @@ import argparse
 import csv
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -31,6 +32,27 @@ CSV_CANDIDATES_DIRS = [ROOT / "normalized_data", ROOT / "public"]
 
 # 学名・和名変更は --force 必須
 FORCE_REQUIRED_TYPES = {"学名変更", "和名変更"}
+
+HOSTPLANT_PROPOSED_OVERRIDES = {
+    "食草はキク科のCentaurea属が知られているが、日本では食草は未知": [],
+    "食草は外国ではキク科のCarduus, Centaurea, Arctium, Serratula属": [],
+    "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属": [
+        {"plant_name": "オトギリソウ", "plant_family": "オトギリソウ科", "notes": "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属"},
+        {"plant_name": "イワオトギリ", "plant_family": "オトギリソウ科", "notes": "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属"},
+        {"plant_name": "シナノオトギリ", "plant_family": "オトギリソウ科", "notes": "食草はオトギリソウ、イワオトギリ、シナノオトギリなどのオトギリソウ科オトギリソウ属"},
+    ],
+    "食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食": [
+        {"plant_name": "ケヤキ", "plant_family": "ニレ科", "notes": "食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食"},
+        {"plant_name": "ハルニレ", "plant_family": "ニレ科", "notes": "食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食"},
+        {"plant_name": "エノキ", "plant_family": "アサ科", "notes": "食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食"},
+    ],
+    "食草がイボタ（モクセイ科）と判明": [
+        {"plant_name": "イボタノキ", "plant_family": "モクセイ科", "notes": "食草がイボタ（モクセイ科）と判明"},
+    ],
+    "クロツバラ Rhamnus davurica（クロウメモドキ科）であることが判明": [
+        {"plant_name": "クロツバラ", "plant_family": "クロウメモドキ科", "notes": "クロツバラ Rhamnus davurica（クロウメモドキ科）であることが判明"},
+    ],
+}
 
 
 def find_csv(filename: str) -> Path | None:
@@ -90,6 +112,122 @@ def load_candidates(input_path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def build_hostplant_family_lookup(rows: list[dict]) -> dict[str, str]:
+    lookup = {}
+    for row in rows:
+        plant_name = row.get("plant_name", "").strip()
+        plant_family = row.get("plant_family", "").strip()
+        if plant_name and plant_family and plant_name not in lookup:
+            lookup[plant_name] = plant_family
+    lookup.setdefault("オトギリソウ", "オトギリソウ科")
+    lookup.setdefault("イワオトギリ", "オトギリソウ科")
+    lookup.setdefault("シナノオトギリ", "オトギリソウ科")
+    return lookup
+
+
+def extract_japanese_plant_name(text: str) -> str:
+    text = text.strip()
+    if not text:
+        return ""
+    leading_match = re.match(r"^([一-龯ぁ-んァ-ヶー]+)", text)
+    if leading_match and re.search(r"[A-Za-z]", text):
+        return leading_match.group(1)
+    jp_tokens = re.findall(r"[一-龯ぁ-んァ-ヶー]+", text)
+    return jp_tokens[-1] if jp_tokens else text
+
+
+def parse_hostplant_token(token: str, family_lookup: dict[str, str], default_family: str = "") -> dict | None:
+    token = token.strip(" 、。")
+    if not token:
+        return None
+
+    family = default_family
+    name_text = token
+
+    paren_match = re.match(r"^(.+?)[（(]([^）)]+科)[）)]$", token)
+    if paren_match:
+        name_text = paren_match.group(1).strip()
+        family = paren_match.group(2).strip()
+
+    plant_name = extract_japanese_plant_name(name_text)
+    if not plant_name:
+        return None
+    if not family:
+        family = family_lookup.get(plant_name, "")
+
+    return {
+        "plant_name": plant_name,
+        "plant_family": family,
+        "notes": "",
+    }
+
+
+def normalize_hostplant_additions(proposed: str, family_lookup: dict[str, str]) -> list[dict]:
+    proposed = proposed.strip()
+    if not proposed:
+        return []
+
+    if proposed in HOSTPLANT_PROPOSED_OVERRIDES:
+        return [dict(entry) for entry in HOSTPLANT_PROPOSED_OVERRIDES[proposed]]
+
+    if proposed.startswith("食草："):
+        payload = proposed.split("：", 1)[1].strip()
+        if "、" in payload:
+            entries = []
+            default_family = ""
+            for token in payload.split("、"):
+                entry = parse_hostplant_token(token, family_lookup, default_family)
+                if not entry:
+                    continue
+                entries.append(entry)
+                if entry["plant_family"]:
+                    default_family = entry["plant_family"]
+            return entries
+        entry = parse_hostplant_token(payload, family_lookup)
+        return [entry] if entry else []
+
+    match = re.match(r"^食草が(.+?)[（(]([^）)]+科)[）)](?:と判明|であることが判明)", proposed)
+    if match:
+        plant_name = extract_japanese_plant_name(match.group(1))
+        if plant_name:
+            return [{
+                "plant_name": plant_name,
+                "plant_family": match.group(2).strip(),
+                "notes": proposed,
+            }]
+
+    match = re.match(r"^([一-龯ぁ-んァ-ヶー]+)\s+[A-Za-z][^（(]*[（(]([^）)]+科)[）)]であることが判明$", proposed)
+    if match:
+        return [{
+            "plant_name": match.group(1).strip(),
+            "plant_family": match.group(2).strip(),
+            "notes": proposed,
+        }]
+
+    simple_entry = parse_hostplant_token(proposed, family_lookup)
+    if simple_entry and simple_entry["plant_name"] == proposed:
+        return [simple_entry]
+
+    if any(marker in proposed for marker in ("食草：", "食草は", "食草が", "判明", "確認", "記録", "採集", "摂食")):
+        return []
+
+    return [simple_entry] if simple_entry else []
+
+
+def hostplant_row_exists(rows: list[dict], insect_id: str, plant_name: str, plant_family: str, source: str) -> bool:
+    for row in rows:
+        if row.get("insect_id", "").strip() != insect_id:
+            continue
+        if row.get("plant_name", "").strip() != plant_name:
+            continue
+        if row.get("reference", "").strip() != source:
+            continue
+        if row.get("plant_family", "").strip() != plant_family:
+            continue
+        return True
+    return False
+
+
 def apply_hostplant_addition(row: dict, hostplants_path: Path):
     """食草追加: hostplants.csv に新レコードを追加"""
     insect_id = row.get("insect_id", "").strip()
@@ -106,6 +244,12 @@ def apply_hostplant_addition(row: dict, hostplants_path: Path):
         rows = list(reader)
         fieldnames = reader.fieldnames
 
+    family_lookup = build_hostplant_family_lookup(rows)
+    normalized_entries = normalize_hostplant_additions(proposed, family_lookup)
+    if not normalized_entries:
+        print(f"    スキップ（食草名を抽出できず手修正が必要）: {proposed}")
+        return False
+
     # 新しいrecord_idを生成
     max_id = 0
     for r in rows:
@@ -117,32 +261,37 @@ def apply_hostplant_addition(row: dict, hostplants_path: Path):
                     max_id = num
             except ValueError:
                 pass
-    new_id = f"hostplant-{max_id + 1:06d}"
+    next_id = max_id + 1
+    added_rows = []
 
-    # 植物名と科名を分離（"ノイバラ(バラ科)" → name="ノイバラ", family="バラ科"）
-    plant_name = proposed
-    plant_family = ""
-    if "(" in proposed and proposed.endswith(")"):
-        parts = proposed.rsplit("(", 1)
-        plant_name = parts[0]
-        plant_family = parts[1].rstrip(")")
-    elif "（" in proposed and proposed.endswith("）"):
-        parts = proposed.rsplit("（", 1)
-        plant_name = parts[0]
-        plant_family = parts[1].rstrip("）")
+    for entry in normalized_entries:
+        plant_name = entry.get("plant_name", "").strip()
+        plant_family = entry.get("plant_family", "").strip()
+        notes = entry.get("notes", "").strip()
+        if not plant_name:
+            continue
+        if hostplant_row_exists(rows, insect_id, plant_name, plant_family, source):
+            print(f"    重複スキップ: {insect_id}: {plant_name}")
+            continue
 
-    new_row = {
-        "record_id": new_id,
-        "insect_id": insect_id,
-        "plant_name": plant_name,
-        "plant_family": plant_family,
-        "observation_type": "",
-        "plant_part": "",
-        "life_stage": "",
-        "reference": source,
-        "notes": "",
-    }
-    rows.append(new_row)
+        new_row = {
+            "record_id": f"hostplant-{next_id:06d}",
+            "insect_id": insect_id,
+            "plant_name": plant_name,
+            "plant_family": plant_family,
+            "observation_type": "",
+            "plant_part": "",
+            "life_stage": "",
+            "reference": source,
+            "notes": notes,
+        }
+        rows.append(new_row)
+        added_rows.append(new_row)
+        next_id += 1
+
+    if not added_rows:
+        print("    追加対象なし")
+        return False
 
     # 書き出し
     with open(hostplants_path, "w", encoding="utf-8", newline="") as f:
@@ -150,7 +299,8 @@ def apply_hostplant_addition(row: dict, hostplants_path: Path):
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f"    食草追加: {new_id} → {insect_id}: {plant_name}")
+    for added in added_rows:
+        print(f"    食草追加: {added['record_id']} → {insect_id}: {added['plant_name']}")
     return True
 
 
