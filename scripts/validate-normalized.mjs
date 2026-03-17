@@ -40,9 +40,18 @@ const cleanString = (value) => (value ?? '').toString().trim();
 
 const insectsText = fs.readFileSync(insectsPath, 'utf-8');
 const insects = parseCsv(insectsText);
+const insectIdCounts = new Map();
+insects.forEach((row) => {
+  const id = cleanString(row.insect_id);
+  if (!id) return;
+  insectIdCounts.set(id, (insectIdCounts.get(id) || 0) + 1);
+});
 const insectIds = new Set(
   insects.map((row) => (row.insect_id || '').trim()).filter(Boolean)
 );
+const duplicateInsectIds = Array.from(insectIdCounts.entries())
+  .filter(([, count]) => count > 1)
+  .map(([insect_id, count]) => ({ insect_id, count }));
 
 const missingIds = [];
 const recordMissing = (source, row) => {
@@ -75,6 +84,15 @@ const reportPath = path.join(REPORTS_DIR, 'missing_ids.csv');
 const header = 'source,insect_id\n';
 const body = missingIds.map((row) => `${row.source},${row.insect_id}`).join('\n');
 fs.writeFileSync(reportPath, header + (body ? body + '\n' : ''), 'utf-8');
+
+const duplicateReportPath = path.join(REPORTS_DIR, 'duplicate_insect_ids.csv');
+const duplicateHeader = 'insect_id,count\n';
+const duplicateBody = duplicateInsectIds.map((row) => `${row.insect_id},${row.count}`).join('\n');
+fs.writeFileSync(
+  duplicateReportPath,
+  duplicateHeader + (duplicateBody ? duplicateBody + '\n' : ''),
+  'utf-8',
+);
 
 if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)) {
   const normalizedRows = parseCsv(fs.readFileSync(NORMALIZED_INSECTS_PATH, 'utf-8'));
@@ -155,6 +173,11 @@ if (missingIds.length > 0) {
   if (strict) {
     process.exit(1);
   }
+}
+
+if (duplicateInsectIds.length > 0) {
+  console.error(`[validate-normalized] duplicate insect_id rows: ${duplicateInsectIds.length}`);
+  process.exit(1);
 }
 
 console.log('[validate-normalized] OK');
