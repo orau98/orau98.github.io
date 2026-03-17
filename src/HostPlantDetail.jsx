@@ -7,7 +7,7 @@ import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
 import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
-import { PLANT_IMAGE_SUFFIXES } from './utils/filename';
+import { createSafeScientificPlantFilename, PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
@@ -1086,14 +1086,22 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   }, [decodedPlantName]);
 
   // Get all available images for this plant (try canonical + aliases)
-  const getPlantImages = (plantName, altNames = [], nameIndex = null) => {
+  const getPlantImages = (plantName, altNames = [], nameIndex = null, scientificName = '') => {
     const nameIndexSet = Array.isArray(nameIndex)
       ? new Set(nameIndex.filter(Boolean))
       : null;
     const hasUsableIndex = Boolean(nameIndexSet && nameIndexSet.size > 0);
     if (!hasUsableIndex) return [];
 
-    const bases = Array.from(new Set([plantName, ...altNames].filter(Boolean)));
+    const scientificBase = createSafeScientificPlantFilename(scientificName);
+    const baseEntries = Array.from(new Map([
+      ...[plantName, ...altNames]
+        .filter(Boolean)
+        .map((name) => [name, { lookupBase: name, displayBase: plantName || name }]),
+      ...(scientificBase
+        ? [[scientificBase, { lookupBase: scientificBase, displayBase: plantName || scientificName || scientificBase }]]
+        : []),
+    ]).values());
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
     const addedNames = new Set();
@@ -1149,31 +1157,37 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       });
     };
 
-    bases.forEach((base) => {
+    baseEntries.forEach(({ lookupBase, displayBase }) => {
       suffixes.forEach(({ suffix, label }) => {
-        const finalName = resolveNameWithIndex(base, suffix);
+        const finalName = resolveNameWithIndex(lookupBase, suffix);
         if (finalName && has(finalName)) {
-          const appliedSuffix = finalName.startsWith(base) ? finalName.slice(base.length) : '';
-          pushImage(finalName, base, label, appliedSuffix);
+          const appliedSuffix = finalName.startsWith(lookupBase) ? finalName.slice(lookupBase.length) : '';
+          pushImage(finalName, displayBase, label, appliedSuffix);
         }
       });
       // Include additional suffix variants present in the index (e.g., _紅葉)
       nameIndex
-        .filter((name) => name && name.startsWith(base))
+        .filter((name) => name && name.startsWith(lookupBase))
         .forEach((name) => {
           if (addedNames.has(name)) return;
-          const suffixPart = name.startsWith(base) ? name.slice(base.length) : '';
+          const suffixPart = name.startsWith(lookupBase) ? name.slice(lookupBase.length) : '';
           const label = buildLabelFromSuffix(suffixPart, '画像');
-          pushImage(name, base, label, suffixPart);
+          pushImage(name, displayBase, label, suffixPart);
         });
     });
     return images;
   };
 
+  const plantScientificName =
+    resolvedPlantDetail?.scientificName ||
+    details?.scientificName ||
+    taxonomy.scientificName ||
+    '';
+
   const plantImages = useMemo(() => {
     if (!plantImageIndexReady) return [];
-    return getPlantImages(decodedPlantName, aliasNames, plantImageNames);
-  }, [decodedPlantName, aliasNames, plantImageNames, plantImageIndexReady]);
+    return getPlantImages(decodedPlantName, relatedAliasNames, plantImageNames, plantScientificName);
+  }, [decodedPlantName, relatedAliasNames, plantImageNames, plantImageIndexReady, plantScientificName]);
 
   // (no sticky tabs; aligns with insect page)
 
@@ -1733,6 +1747,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                     currentPlantName={decodedPlantName}
                     plantInsects={classifiedInsects}
                     allInsects={allInsects}
+                    plantDetails={plantDetails}
                     hostPlantsMap={hostPlants}
                     flowerVisitPlants={flowerVisitPlants}
                     width={graphSize.width}

@@ -59,7 +59,7 @@ const extractPlantPartsFromNotes = (notes) => {
   );
 };
 
-const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, flowerVisitPlants = {}, theme }) => {
+const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], hostPlants, flowerVisitPlants = {}, plantDetails = {}, theme }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
 
@@ -864,6 +864,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               <FoodWebGraph
                 currentInsect={moth}
                 allInsects={allInsects}
+                plantDetails={plantDetails}
                 hostPlantsMap={hostPlants}
                 flowerVisitPlants={flowerVisitPlants}
                 width={graphDimensions.width}

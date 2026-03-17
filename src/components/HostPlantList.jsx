@@ -4,7 +4,7 @@ import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
 import { absUrl } from "../utils/origin";
 import useDebounce from "../hooks/useDebounce";
-import { createSafePlantFilename, splitFilenameBase } from "../utils/filename";
+import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
@@ -660,6 +660,7 @@ const HostPlantList = ({
         サネカズラ: ["ビナンカズラ"],
       };
       const extraSynonyms = synonymPairs[plantName] || [];
+      const scientificBase = createSafeScientificPlantFilename(detail.scientificName || '');
       
       // Build candidate bases
       const candidates = new Set([
@@ -671,6 +672,7 @@ const HostPlantList = ({
         createSafePlantFilename(plantName.split(" ")[0]),
         normalized ? createSafePlantFilename(normalized) : null,
         normalized ? createSafePlantFilename(normalized.split(" ")[0]) : null,
+        scientificBase,
         ...(canonicalFromAlias
           ? [
               canonicalFromAlias,

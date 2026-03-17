@@ -14,7 +14,7 @@ import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./ser
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
-import { createSafePlantFilename, splitFilenameBase } from "./utils/filename";
+import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "./utils/filename";
 import { absUrl } from "./utils/origin";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
@@ -1131,11 +1131,13 @@ const InsectsHostPlantExplorer = React.memo(
               ? Array.from(aliasesRaw)
               : [];
           const baseName = plantName.replace(/[（(].*[）)]/g, '').trim();
+          const scientificBase = createSafeScientificPlantFilename(detail.scientificName || '');
           const candidates = new Set([
             plantName,
             baseName,
             createSafePlantFilename(plantName),
             createSafePlantFilename(baseName),
+            scientificBase,
             ...aliases.flatMap((name) => {
               const trimmed = (name || '').trim();
               const base = trimmed.split(" ")[0];

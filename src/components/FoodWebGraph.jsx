@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
+import { createSafeScientificPlantFilename } from '../utils/filename';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
 
@@ -80,6 +81,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   currentPlantName,
   plantInsects,
   allInsects,
+  plantDetails = {},
   hostPlantsMap,
   flowerVisitPlants,
   theme,
@@ -544,10 +546,44 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return urls;
   }, [assetBase, cacheBust, imageBaseSet, imageExtMap]);
 
+  const plantScientificBaseMap = useMemo(() => {
+    const map = new Map();
+    Object.entries(plantDetails || {}).forEach(([name, detail]) => {
+      const scientificBase = createSafeScientificPlantFilename(detail?.scientificName || '');
+      if (!scientificBase) return;
+
+      const aliasesRaw = detail?.aliases || detail?.aliasNames;
+      const aliases = Array.isArray(aliasesRaw)
+        ? aliasesRaw
+        : aliasesRaw instanceof Set
+          ? Array.from(aliasesRaw)
+          : [];
+
+      [name, normalizePlantName(name), ...aliases, ...aliases.map((alias) => normalizePlantName(alias))]
+        .filter(Boolean)
+        .forEach((key) => {
+          if (!map.has(key)) {
+            map.set(key, scientificBase);
+          }
+        });
+    });
+    return map;
+  }, [plantDetails]);
+
   const plantImageCandidates = useCallback((plantName) => {
     if (!plantName || plantImageNames.length === 0) return [];
     const norm = normalizePlantName(plantName);
-    const variants = [plantName, norm, plantName.replace(/＿/g, '_'), norm.replace(/＿/g, '_')];
+    const scientificBase =
+      plantScientificBaseMap.get(plantName) ||
+      plantScientificBaseMap.get(norm) ||
+      null;
+    const variants = [
+      plantName,
+      norm,
+      plantName.replace(/＿/g, '_'),
+      norm.replace(/＿/g, '_'),
+      scientificBase,
+    ].filter(Boolean);
 
     const hits = plantImageNames.filter(n => variants.some(v => v && n.startsWith(v)));
     if (hits.length === 0) return [];
@@ -559,7 +595,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}.jpg${cacheBust}`);
     });
     return urls;
-  }, [assetBase, cacheBust, plantImageNames]);
+  }, [assetBase, cacheBust, plantImageNames, plantScientificBaseMap]);
 
   // graph data with image candidates embedded
   const graphData = useMemo(() => {

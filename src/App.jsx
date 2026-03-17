@@ -6602,6 +6602,7 @@ function App() {
     leafbeetles,
     hostPlants,
     flowerVisitPlants,
+    plantDetails,
     theme,
   };
 
