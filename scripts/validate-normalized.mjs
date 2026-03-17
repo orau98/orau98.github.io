@@ -52,7 +52,42 @@ const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '穂',
   '地中の根',
 ]);
+const SUSPICIOUS_PLANT_NAME_MARKERS = [
+  'として',
+  'では',
+  '確認',
+  '記録',
+  '有名',
+  '判明',
+  'との区別',
+  '次種',
+  '前種',
+  '国内では不明',
+  '日本では不明',
+  'ヨーロッパでは',
+  '欧州では',
+  '国外では',
+];
+const NON_PLANT_HOST_NAME_SET = new Set([
+  'サナギ',
+  '蛹',
+  'ハビロキバガ',
+  'チャミノ',
+]);
 const escapeCsv = (value) => `"${(value ?? '').toString().replace(/"/g, '""')}"`;
+const hasJapaneseChars = (value) => /[\u3040-\u30ff\u3400-\u9fff]/.test(cleanString(value));
+const hasScientificNameNoise = (row) => {
+  const scientificName = cleanString(row.scientific_name);
+  const author = cleanString(row.author);
+  const year = cleanString(row.year);
+  return (
+    /[;；]/.test(scientificName) ||
+    (hasJapaneseChars(scientificName) && /\b[A-Z][a-z]+/.test(scientificName)) ||
+    /[;；]/.test(author) ||
+    (hasJapaneseChars(author) && /\d{4}/.test(author)) ||
+    /[;；]/.test(year)
+  );
+};
 
 const writeCsvReport = (filename, headers, rows) => {
   const fullPath = path.join(REPORTS_DIR, filename);
@@ -89,6 +124,17 @@ const hostplantCounts = new Map();
 const generalNoteCounts = new Map();
 const suspiciousHostplantRows = [];
 const aphidWrongLinkRows = [];
+const suspiciousScientificNameRows = insects
+  .filter((row) => hasScientificNameNoise(row))
+  .map((row) => ({
+    insect_id: cleanString(row.insect_id),
+    japanese_name: cleanString(row.japanese_name),
+    scientific_name: cleanString(row.scientific_name),
+    author: cleanString(row.author),
+    year: cleanString(row.year),
+    changes_since_standard: cleanString(row.changes_since_standard),
+    notes: cleanString(row.notes),
+  }));
 const recordMissing = (source, row) => {
   const id = (row.insect_id || '').trim();
   if (!id || insectIds.has(id)) return;
@@ -117,11 +163,18 @@ if (hostplantsPath) {
         });
       }
     }
-    if (SUSPICIOUS_PLANT_NAME_SET.has(cleanString(row.plant_name))) {
+    const plantName = cleanString(row.plant_name);
+    const isSentenceLikePlantName = SUSPICIOUS_PLANT_NAME_MARKERS.some((marker) => plantName.includes(marker));
+    if (
+      SUSPICIOUS_PLANT_NAME_SET.has(plantName) ||
+      NON_PLANT_HOST_NAME_SET.has(plantName) ||
+      plantName.endsWith('の葉') ||
+      isSentenceLikePlantName
+    ) {
       suspiciousHostplantRows.push({
         record_id: cleanString(row.record_id),
         insect_id: insectId,
-        plant_name: cleanString(row.plant_name),
+        plant_name: plantName,
         plant_family: cleanString(row.plant_family),
         observation_type: cleanString(row.observation_type),
         plant_part: cleanString(row.plant_part),
@@ -233,6 +286,11 @@ writeCsvReport(
   ['record_id', 'insect_id', 'plant_name', 'plant_part', 'linked_family_jp', 'linked_japanese_name', 'linked_scientific_name'],
   aphidWrongLinkRows,
 );
+writeCsvReport(
+  'suspicious_scientific_names.csv',
+  ['insect_id', 'japanese_name', 'scientific_name', 'author', 'year', 'changes_since_standard', 'notes'],
+  suspiciousScientificNameRows,
+);
 
 if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)) {
   const normalizedRows = parseCsv(fs.readFileSync(NORMALIZED_INSECTS_PATH, 'utf-8'));
@@ -337,6 +395,10 @@ if (missingFamilyRows.length > 0) {
 
 if (aphidWrongLinkRows.length > 0) {
   console.warn(`[validate-normalized] aphid atlas rows linked to non-aphids: ${aphidWrongLinkRows.length}`);
+}
+
+if (suspiciousScientificNameRows.length > 0) {
+  console.warn(`[validate-normalized] suspicious scientific_name rows: ${suspiciousScientificNameRows.length}`);
 }
 
 console.log('[validate-normalized] OK');

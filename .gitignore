@@ -43,6 +43,7 @@ reports/cleanup-inventory.json
 
 # Local backup artifacts from fix scripts
 *.bak.*
+public/assets/data-lite/*.pptx
 
 # Local temp artifacts
 tmp/
