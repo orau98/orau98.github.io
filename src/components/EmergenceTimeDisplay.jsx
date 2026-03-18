@@ -59,18 +59,13 @@ const addMonthRangePeriods = (monthSet, periodSet, startMonth, endMonth) => {
   }
 };
 
-const extractMentionedMonths = (text = '') =>
-  Array.from(text.matchAll(/(\d{1,2})月/g))
-    .map((match) => parseInt(match[1], 10))
-    .filter((month) => month >= 1 && month <= 12);
-
 const shouldAnalyzeEmergenceHint = (text = '', isPrimary = false) => {
   if (!text) return false;
   if (isPrimary) return true;
   return EMERGENCE_HINT_PATTERN.test(text);
 };
 
-const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorMonths = []) => {
+const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = []) => {
   const fuzzyMonths = new Set();
   const fuzzyPeriods = new Set();
   const texts = [primaryText, ...supplementalTexts]
@@ -86,24 +81,6 @@ const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorM
         months.forEach((month) => addMonthPeriods(fuzzyMonths, fuzzyPeriods, month));
       }
     });
-
-    const mentionedMonths = extractMentionedMonths(text);
-    const anchorMonth = mentionedMonths.length > 0
-      ? mentionedMonths[mentionedMonths.length - 1]
-      : (anchorMonths.length > 0 ? anchorMonths[anchorMonths.length - 1] : null);
-
-    if (anchorMonth && /(翌春|春にも|春まで)/.test(text) && /(越冬|越年|翌春)/.test(text)) {
-      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 5);
-    }
-    if (anchorMonth && /(翌夏|夏にも|夏まで)/.test(text) && /(越冬|越年|越夏|翌夏)/.test(text)) {
-      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 8);
-    }
-    if (anchorMonth && /(翌秋|秋にも|秋まで)/.test(text) && /(越冬|越年|越夏|翌秋)/.test(text)) {
-      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 11);
-    }
-    if (anchorMonth && /(翌冬|冬にも|冬まで)/.test(text) && /(越年|越夏|翌冬)/.test(text)) {
-      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 2);
-    }
   });
 
   return {
@@ -684,8 +661,7 @@ const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
   
   const fuzzyData = collectFuzzyEmergenceHints(
     emergenceTime,
-    supplementalTexts,
-    Array.from(activeMonths).sort((a, b) => a - b)
+    supplementalTexts
   );
   
   // Debug log for specific species
