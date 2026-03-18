@@ -1,0 +1,1013 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../src/utils/insectImageResolver.js';
+import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import {
+  cleanString,
+  isFlowerVisitRecord,
+  normalizePlantNameLite,
+} from './lib/dataLiteBuilders.mjs';
+import {
+  buildJapaneseReferenceLabel,
+  ENGLISH_NAMING_NOTICE,
+  EN_SITE_NAME,
+  EN_TYPE_LABELS,
+  EN_TYPE_PLURALS,
+  getPrimaryEnglishName,
+  slugifyScientificLabel,
+} from './lib/englishNaming.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
+const DATA_LITE_DIR = path.join(__dirname, '../public/assets/data-lite');
+const PUBLIC_EN_DIR = path.join(__dirname, '../public/en');
+const EN_META_DIR = path.join(PUBLIC_EN_DIR, 'meta');
+const EN_META_STYLE_PATH = '/assets/meta-styles.css?v=3';
+const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
+const PLANT_IMAGES_DIR = path.join(__dirname, '../public/images/plants');
+
+const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
+  ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.jpg$/i))
+  : [];
+const insectResizedBaseSet = new Set(
+  insectResizedFiles.map((file) => file.replace(/\.(320|640|1024)\.jpg$/i, '')),
+);
+const insectResizedEntries = buildNormalizedEntries(insectResizedBaseSet);
+
+const SECTION_CONFIGS = Object.freeze(
+  INSECT_SECTION_CONFIGS.map((section) => ({
+    type: section.type,
+    routeSegment: section.routeSegment,
+    singularLabel: EN_TYPE_LABELS[section.type],
+    pluralLabel: EN_TYPE_PLURALS[section.type],
+  })),
+);
+
+function loadJson(fileName, fallback = null) {
+  const filePath = path.join(DATA_LITE_DIR, fileName);
+  if (!fs.existsSync(filePath)) {
+    if (fallback !== null) return fallback;
+    throw new Error(`Missing JSON: ${filePath}`);
+  }
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function escapeAttr(value = '') {
+  return escapeHtml(value);
+}
+
+function renderJsonLd(data) {
+  return JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+}
+
+function formatScientificNameHTML(scientificName = '') {
+  const trimmed = String(scientificName || '').trim();
+  if (!trimmed) return '';
+  const authorMatch = trimmed.match(/^(.+?)\s*(\([^)]+\))?\s*$/);
+  if (authorMatch) {
+    const nameWithoutAuthor = authorMatch[1].trim();
+    const authorInfo = authorMatch[2] || '';
+    const gss = nameWithoutAuthor.match(/^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/);
+    if (gss) {
+      const genus = escapeHtml(gss[1]);
+      const subgenus = escapeHtml(gss[2]);
+      const species = escapeHtml(gss[3]);
+      const extraInfo = escapeHtml((gss[4] || '').trim());
+      const author = escapeHtml(authorInfo);
+      return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extraInfo ? ` ${extraInfo}` : ''}${author ? ` ${author}` : ''}`;
+    }
+    const nameParts = nameWithoutAuthor.split(/\s+/);
+    if (nameParts.length >= 2) {
+      const binomial = escapeHtml(`${nameParts[0]} ${nameParts[1]}`);
+      const extraInfo = escapeHtml(nameParts.slice(2).join(' '));
+      const author = escapeHtml(authorInfo);
+      return `<em>${binomial}</em>${extraInfo ? ` ${extraInfo}` : ''}${author ? ` ${author}` : ''}`;
+    }
+  }
+  return `<em>${escapeHtml(trimmed)}</em>`;
+}
+
+function ensureDir(dirPath) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
+function createSafeFileName(value = '') {
+  return String(value || '').replace(/[/\\?%*:|"<>]/g, '-').trim();
+}
+
+function buildAlternateLanguageLinks(jaPath, enPath) {
+  return [
+    `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}${escapeAttr(jaPath)}">`,
+    `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${escapeAttr(enPath)}">`,
+    `<link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}${escapeAttr(enPath)}">`,
+  ].join('\n  ');
+}
+
+function normalizedTextLength(value) {
+  return String(value || '').replace(/\s+/g, '').length;
+}
+
+function buildRobotsContent(shouldIndex) {
+  return `${shouldIndex ? 'index' : 'noindex'}, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1`;
+}
+
+function resolveInsectImageUrl(insect) {
+  if (!insect) return '';
+  const japaneseName = cleanString(insect.name || insect.japaneseName);
+  const mapped = japaneseName ? globalJapaneseToScientificMapping.get(japaneseName) : undefined;
+  const candidates = buildInsectImageBaseCandidates(insect, mapped);
+  const resolvedBases = resolveImageBaseCandidates(candidates, {
+    imageNames: insectResizedBaseSet,
+    normalizedEntries: insectResizedEntries,
+  });
+  for (const base of resolvedBases) {
+    if (!insectResizedBaseSet.has(base)) continue;
+    for (const width of [1024, 640, 320]) {
+      const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
+      if (fs.existsSync(resizedPath)) {
+        return `/images/resized/insects/${encodeURIComponent(base)}.${width}.jpg`;
+      }
+    }
+  }
+  return '';
+}
+
+function extractLarvalHostPlants(insect) {
+  const detailed = Array.isArray(insect?.hostPlantsDetailed) ? insect.hostPlantsDetailed : [];
+  if (detailed.length > 0) {
+    const plants = detailed
+      .filter((record) => !isFlowerVisitRecord(record))
+      .map((record) => normalizePlantNameLite(cleanString(record?.name || record?.displayName || record?.plant)))
+      .filter(Boolean)
+      .filter((name) => name !== '不明');
+    if (plants.length > 0) {
+      return Array.from(new Set(plants));
+    }
+  }
+  const hostPlants = insect?.hostPlants;
+  if (Array.isArray(hostPlants)) {
+    return Array.from(new Set(hostPlants.map((name) => normalizePlantNameLite(cleanString(name))).filter(Boolean)));
+  }
+  if (typeof hostPlants === 'string') {
+    return Array.from(
+      new Set(
+        hostPlants
+          .split(/[;；、,，]/)
+          .map((name) => normalizePlantNameLite(cleanString(name)))
+          .filter(Boolean),
+      ),
+    );
+  }
+  return [];
+}
+
+function normalizeInsectFamilyLabels(insect) {
+  const classification = insect?.classification || {};
+  return {
+    familyLatin: cleanString(classification.family || insect.familyLatin || ''),
+    familyJapanese: cleanString(classification.familyJapanese || insect.familyJapanese || insect.family || ''),
+  };
+}
+
+function normalizePlantDetail(plantName, plantDetails) {
+  return plantDetails?.[plantName] || {
+    name: plantName,
+    family: '',
+    familyName: '',
+    familyLatin: '',
+    order: '',
+    orderLatin: '',
+    scientificName: '',
+    genus: '',
+    aliases: [plantName],
+  };
+}
+
+function buildPlantDisplay(detail, plantName) {
+  const japaneseName = cleanString(detail?.name || plantName);
+  const scientificName = cleanString(detail?.scientificName);
+  const primaryName = getPrimaryEnglishName({
+    scientificName,
+    japaneseName,
+    fallback: 'Unknown plant',
+  });
+  return {
+    primaryName,
+    scientificName,
+    japaneseName,
+    japaneseReference: buildJapaneseReferenceLabel(japaneseName),
+    familyLatin: cleanString(detail?.familyLatin),
+    familyJapanese: cleanString(detail?.familyName || detail?.family),
+    orderLatin: cleanString(detail?.orderLatin),
+    orderJapanese: cleanString(detail?.order),
+    genus: cleanString(detail?.genus),
+    aliases: Array.isArray(detail?.aliases) ? detail.aliases.filter(Boolean) : [],
+  };
+}
+
+function createUniqueSlug(baseSlug, usedSlugs, fallbackPrefix) {
+  let base = cleanString(baseSlug) || fallbackPrefix;
+  if (!base) base = fallbackPrefix;
+  let candidate = base;
+  let index = 2;
+  while (usedSlugs.has(candidate)) {
+    candidate = `${base}-${index}`;
+    index += 1;
+  }
+  usedSlugs.add(candidate);
+  return candidate;
+}
+
+function getPlantImageFiles(plantName, plantDetail, allPlantImages) {
+  if (!Array.isArray(allPlantImages) || allPlantImages.length === 0) return [];
+  const baseJapanese = cleanString(plantName).split(/[（(]/)[0].trim();
+  const baseScientific = slugifyScientificLabel(plantDetail?.scientificName);
+  return allPlantImages.filter((file) => {
+    const raw = file.replace(/\.[^.]+$/i, '');
+    return raw.startsWith(baseJapanese) || (baseScientific && raw.includes(baseScientific.replace(/-/g, '_')));
+  });
+}
+
+function buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite) {
+  const aliasToCanonical = { ...(ylistLite?.aliasToCanonical || {}) };
+  const usedSlugs = new Set();
+  const plantRecords = new Map();
+
+  Object.keys(hostPlantsMap)
+    .sort((a, b) => a.localeCompare(b, 'ja'))
+    .forEach((plantName) => {
+      const normalized = normalizePlantNameLite(plantName) || plantName;
+      const canonical = aliasToCanonical[plantName] || aliasToCanonical[normalized] || normalized;
+      const detail = normalizePlantDetail(canonical, plantDetails);
+      const scientificSlug = slugifyScientificLabel(detail?.scientificName || canonical);
+      const fileBase = scientificSlug || createSafeFileName(canonical);
+      const slug = createUniqueSlug(fileBase, usedSlugs, `plant-${usedSlugs.size + 1}`);
+      plantRecords.set(canonical, {
+        canonicalName: canonical,
+        detail,
+        slug,
+        href: `/en/meta/plant/${encodeURIComponent(slug)}.html`,
+      });
+    });
+
+  return { plantRecords, aliasToCanonical };
+}
+
+function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
+  const hasHostPlants = hostPlantsArray.length > 0;
+  const hasImage = Boolean(imageUrl);
+  const hasEmergence = cleanString(insect?.emergenceTime) && cleanString(insect?.emergenceTime) !== '不明';
+  const hasRichNotes = normalizedTextLength(insect?.notes || insect?.remarks) >= 80;
+  return buildRobotsContent(hasHostPlants || hasImage || hasEmergence || hasRichNotes);
+}
+
+function computePlantRobotsContent({ relatedInsects, plantImageFiles }) {
+  const insectCount = Array.isArray(relatedInsects) ? relatedInsects.length : 0;
+  const hasImage = Array.isArray(plantImageFiles) && plantImageFiles.length > 0;
+  return buildRobotsContent(insectCount > 1 || hasImage);
+}
+
+function buildPlantListItems(hostPlantsArray, plantRecords, plantDetails, aliasToCanonical) {
+  return hostPlantsArray.map((plantName) => {
+    const normalized = normalizePlantNameLite(plantName) || plantName;
+    const canonical = aliasToCanonical[plantName] || aliasToCanonical[normalized] || normalized;
+    const record = plantRecords.get(canonical);
+    const detail = normalizePlantDetail(canonical, plantDetails);
+    const display = buildPlantDisplay(detail, canonical);
+    const href = record ? record.href : null;
+    return {
+      href,
+      primaryName: display.primaryName,
+      scientificName: display.scientificName,
+      japaneseName: display.japaneseName,
+      japaneseReference: display.japaneseReference,
+    };
+  });
+}
+
+function buildEnglishInsectPage({
+  insect,
+  section,
+  englishSlug,
+  plantRecords,
+  plantDetails,
+  aliasToCanonical,
+}) {
+  const scientificName = cleanString(insect.scientificName);
+  const japaneseName = cleanString(insect.name || insect.japaneseName);
+  const primaryName = getPrimaryEnglishName({
+    scientificName,
+    japaneseName,
+    fallback: insect.id || 'Unknown species',
+  });
+  const japaneseReference = buildJapaneseReferenceLabel(japaneseName);
+  const familyLabels = normalizeInsectFamilyLabels(insect);
+  const imageUrl = resolveInsectImageUrl(insect);
+  const socialImageUrl = `${BASE_ORIGIN}${imageUrl || '/favicon.svg'}`;
+  const socialImageAlt = imageUrl
+    ? `${primaryName} photograph`
+    : `${primaryName} reference image`;
+  const hostPlantsArray = extractLarvalHostPlants(insect);
+  const hostPlantItems = buildPlantListItems(
+    hostPlantsArray,
+    plantRecords,
+    plantDetails,
+    aliasToCanonical,
+  );
+  const pagePath = `/en/meta/${section.routeSegment}/${encodeURIComponent(englishSlug)}.html`;
+  const japanesePagePath = `/meta/${section.routeSegment}/${encodeURIComponent(insect.id)}.html`;
+  const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
+  const seasonText = cleanString(insect.emergenceTime);
+  const description = [
+    japaneseReference,
+    `${primaryName} is listed here as a ${section.singularLabel.toLowerCase()} from Japan.`,
+    hostPlantItems.length > 0
+      ? `Recorded larval host plants: ${hostPlantItems
+          .slice(0, 3)
+          .map((item) => item.primaryName)
+          .join(', ')}${hostPlantItems.length > 3 ? ` and ${hostPlantItems.length - 3} more` : ''}.`
+      : 'Larval host plant information is currently limited on this page.',
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
+  const title = `${primaryName} | ${section.singularLabel} profile from Japan`;
+  const summaryParagraphs = [
+    `${primaryName} is documented here as a ${section.singularLabel.toLowerCase()} associated with plants recorded in Japan.`,
+    scientificName
+      ? 'The scientific name is used as the primary identifier because a stable English common name is not always available for Japanese taxa.'
+      : ENGLISH_NAMING_NOTICE,
+  ];
+  if (familyLabels.familyLatin || familyLabels.familyJapanese) {
+    summaryParagraphs.push(
+      `Family: ${familyLabels.familyLatin || familyLabels.familyJapanese}${
+        familyLabels.familyLatin && familyLabels.familyJapanese
+          ? ` (${familyLabels.familyJapanese})`
+          : ''
+      }.`,
+    );
+  }
+  if (seasonText && seasonText !== '不明') {
+    summaryParagraphs.push(`Adult season in the source dataset: ${seasonText}.`);
+  }
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': ['Animal', 'Species'],
+    name: primaryName,
+    alternateName: [japaneseName, scientificName].filter(Boolean),
+    scientificName: scientificName || undefined,
+    description,
+    url: canonicalUrl,
+    inLanguage: 'en',
+    image: imageUrl ? `${BASE_ORIGIN}${imageUrl}` : undefined,
+    classification: {
+      '@type': 'Taxon',
+      taxonRank: 'species',
+      parentTaxon: familyLabels.familyLatin || familyLabels.familyJapanese
+        ? {
+            '@type': 'Taxon',
+            name: familyLabels.familyLatin || familyLabels.familyJapanese,
+            alternateName:
+              familyLabels.familyLatin && familyLabels.familyJapanese
+                ? familyLabels.familyJapanese
+                : undefined,
+            taxonRank: 'family',
+          }
+        : undefined,
+    },
+  };
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: EN_SITE_NAME,
+        item: `${BASE_ORIGIN}/en/`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: section.pluralLabel,
+        item: `${BASE_ORIGIN}/en/meta/${section.routeSegment}/index.html`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: primaryName,
+        item: canonicalUrl,
+      },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="${escapeAttr(robotsContent)}">
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeAttr(description)}">
+  <meta name="keywords" content="${escapeAttr([primaryName, scientificName, japaneseName, section.singularLabel, familyLabels.familyLatin || familyLabels.familyJapanese].filter(Boolean).join(', '))}">
+  <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+  ${buildAlternateLanguageLinks(japanesePagePath, pagePath)}
+  <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
+  <meta property="og:title" content="${escapeAttr(title)}">
+  <meta property="og:description" content="${escapeAttr(description)}">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+  <meta property="og:image" content="${escapeAttr(socialImageUrl)}">
+  <meta property="og:image:alt" content="${escapeAttr(socialImageAlt)}">
+  <meta property="og:site_name" content="${escapeAttr(EN_SITE_NAME)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeAttr(title)}">
+  <meta name="twitter:description" content="${escapeAttr(description)}">
+  <meta name="twitter:image" content="${escapeAttr(socialImageUrl)}">
+  <meta name="twitter:image:alt" content="${escapeAttr(socialImageAlt)}">
+  <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
+  <script type="application/ld+json">${renderJsonLd(breadcrumbData)}</script>
+</head>
+<body>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
+      </a>
+      <a href="${escapeAttr(japanesePagePath)}" class="meta-site-header-link">Japanese page</a>
+    </div>
+  </header>
+
+  <div class="meta-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/en/">${escapeHtml(EN_SITE_NAME)}</a></li>
+        <li><a href="/en/meta/${escapeAttr(section.routeSegment)}/index.html">${escapeHtml(section.pluralLabel)}</a></li>
+        <li aria-current="page">${escapeHtml(primaryName)}</li>
+      </ol>
+    </nav>
+
+    <header class="meta-header">
+      <h1>${escapeHtml(primaryName)}</h1>
+      ${scientificName && scientificName !== primaryName ? `<h2>${formatScientificNameHTML(scientificName)}</h2>` : ''}
+      ${japaneseReference ? `<p class="meta-note">${escapeHtml(japaneseReference)}</p>` : ''}
+      <p class="meta-note">${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
+    </header>
+
+    <main class="meta-content">
+      <section class="basic-info">
+        <h3>Overview</h3>
+        <dl>
+          ${scientificName ? `<dt>Scientific name</dt><dd>${formatScientificNameHTML(scientificName)}</dd>` : ''}
+          ${japaneseName ? `<dt>Japanese name</dt><dd>${escapeHtml(japaneseName)}</dd>` : ''}
+          <dt>Group</dt>
+          <dd>${escapeHtml(section.singularLabel)}</dd>
+          ${(familyLabels.familyLatin || familyLabels.familyJapanese)
+            ? `<dt>Family</dt><dd>${escapeHtml(familyLabels.familyLatin || familyLabels.familyJapanese)}${
+                familyLabels.familyLatin && familyLabels.familyJapanese
+                  ? ` <span class="meta-note">(${escapeHtml(familyLabels.familyJapanese)})</span>`
+                  : ''
+              }</dd>`
+            : ''}
+          <dt>Recorded larval host plants</dt>
+          <dd>${hostPlantItems.length}</dd>
+          ${seasonText && seasonText !== '不明' ? `<dt>Adult season</dt><dd>${escapeHtml(seasonText)}</dd>` : ''}
+        </dl>
+      </section>
+
+      ${imageUrl ? `
+      <section class="image-section">
+        <img src="${escapeAttr(imageUrl)}" alt="${escapeAttr(socialImageAlt)}" loading="eager">
+        <div class="image-caption">${escapeHtml(primaryName)}</div>
+      </section>` : ''}
+
+      <section class="description">
+        <h3>Summary</h3>
+        ${summaryParagraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('\n        ')}
+      </section>
+
+      <section class="host-plants">
+        <h3>Recorded larval host plants</h3>
+        ${hostPlantItems.length > 0 ? `
+        <ul>
+          ${hostPlantItems.map((item) => `<li>
+            ${item.href ? `<a href="${escapeAttr(item.href)}">${escapeHtml(item.primaryName)}</a>` : escapeHtml(item.primaryName)}
+            ${item.scientificName && item.primaryName !== item.scientificName ? `<div class="insect-scientific">${formatScientificNameHTML(item.scientificName)}</div>` : ''}
+            ${item.japaneseReference ? `<div class="meta-note">${escapeHtml(item.japaneseReference)}</div>` : ''}
+          </li>`).join('\n          ')}
+        </ul>` : `
+        <p>Larval host plant information is currently limited in the source dataset for this entry.</p>`}
+      </section>
+
+      ${cleanString(insect.notes || insect.remarks) ? `
+      <section class="description">
+        <h3>Original source note</h3>
+        <p>${escapeHtml(cleanString(insect.notes || insect.remarks))}</p>
+      </section>` : ''}
+    </main>
+
+    <section class="navigation">
+      <a href="/en/meta/${escapeAttr(section.routeSegment)}/index.html" class="back-link">Browse ${escapeHtml(section.pluralLabel)}</a>
+      <a href="${escapeAttr(japanesePagePath)}" class="detail-link">Open Japanese page</a>
+    </section>
+  </div>
+</body>
+</html>`;
+}
+
+function buildEnglishPlantPage({
+  canonicalName,
+  detail,
+  relatedInsects,
+  plantImageFiles,
+  plantRecord,
+  insectEntriesById,
+}) {
+  const display = buildPlantDisplay(detail, canonicalName);
+  const pagePath = plantRecord.href;
+  const japanesePagePath = `/meta/plant/${encodeURIComponent(createSafeFileName(canonicalName))}.html`;
+  const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
+  const robotsContent = computePlantRobotsContent({ relatedInsects, plantImageFiles });
+  const mainImageUrl = plantImageFiles.length > 0
+    ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}`
+    : '';
+  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}`;
+  const socialImageAlt = mainImageUrl
+    ? `${display.primaryName} photograph`
+    : `${display.primaryName} reference image`;
+  const title = `${display.primaryName} | Host plant profile from Japan`;
+  const description = [
+    display.japaneseReference,
+    `${display.primaryName} is documented here as a plant associated with ${relatedInsects.length} insect records from Japan.`,
+    display.scientificName
+      ? 'Scientific names are used as the primary identifier on English pages.'
+      : ENGLISH_NAMING_NOTICE,
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const grouped = Object.entries(
+    relatedInsects.reduce((acc, insect) => {
+      const type = cleanString(insect.type) || 'moth';
+      if (!acc[type]) acc[type] = [];
+      acc[type].push(insect);
+      return acc;
+    }, {}),
+  ).sort((a, b) => String(a[0]).localeCompare(String(b[0]), 'en'));
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': ['Plant', 'Species'],
+    name: display.primaryName,
+    alternateName: [display.japaneseName, display.scientificName].filter(Boolean),
+    description,
+    url: canonicalUrl,
+    image: mainImageUrl ? `${BASE_ORIGIN}${mainImageUrl}` : undefined,
+    inLanguage: 'en',
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="${escapeAttr(robotsContent)}">
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeAttr(description)}">
+  <meta name="keywords" content="${escapeAttr([display.primaryName, display.scientificName, display.japaneseName, display.familyLatin, display.familyJapanese, 'host plant'].filter(Boolean).join(', '))}">
+  <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+  ${buildAlternateLanguageLinks(japanesePagePath, pagePath)}
+  <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
+  <meta property="og:title" content="${escapeAttr(title)}">
+  <meta property="og:description" content="${escapeAttr(description)}">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+  <meta property="og:image" content="${escapeAttr(socialImageUrl)}">
+  <meta property="og:image:alt" content="${escapeAttr(socialImageAlt)}">
+  <meta property="og:site_name" content="${escapeAttr(EN_SITE_NAME)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeAttr(title)}">
+  <meta name="twitter:description" content="${escapeAttr(description)}">
+  <meta name="twitter:image" content="${escapeAttr(socialImageUrl)}">
+  <meta name="twitter:image:alt" content="${escapeAttr(socialImageAlt)}">
+  <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
+</head>
+<body>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
+      </a>
+      <a href="${escapeAttr(japanesePagePath)}" class="meta-site-header-link">Japanese page</a>
+    </div>
+  </header>
+
+  <div class="meta-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/en/">${escapeHtml(EN_SITE_NAME)}</a></li>
+        <li><a href="/en/meta/plant/index.html">Plants</a></li>
+        <li aria-current="page">${escapeHtml(display.primaryName)}</li>
+      </ol>
+    </nav>
+
+    <header class="meta-header">
+      <h1>${escapeHtml(display.primaryName)}</h1>
+      ${display.scientificName && display.scientificName !== display.primaryName ? `<h2>${formatScientificNameHTML(display.scientificName)}</h2>` : ''}
+      ${display.japaneseReference ? `<p class="meta-note">${escapeHtml(display.japaneseReference)}</p>` : ''}
+      <p class="meta-note">${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
+    </header>
+
+    <main class="meta-content">
+      <section class="basic-info">
+        <h3>Overview</h3>
+        <dl>
+          ${display.scientificName ? `<dt>Scientific name</dt><dd>${formatScientificNameHTML(display.scientificName)}</dd>` : ''}
+          ${display.japaneseName ? `<dt>Japanese name</dt><dd>${escapeHtml(display.japaneseName)}</dd>` : ''}
+          ${display.familyLatin || display.familyJapanese ? `<dt>Family</dt><dd>${escapeHtml(display.familyLatin || display.familyJapanese)}${display.familyLatin && display.familyJapanese ? ` <span class="meta-note">(${escapeHtml(display.familyJapanese)})</span>` : ''}</dd>` : ''}
+          ${display.orderLatin || display.orderJapanese ? `<dt>Order</dt><dd>${escapeHtml(display.orderLatin || display.orderJapanese)}${display.orderLatin && display.orderJapanese ? ` <span class="meta-note">(${escapeHtml(display.orderJapanese)})</span>` : ''}</dd>` : ''}
+          ${display.genus ? `<dt>Genus</dt><dd>${escapeHtml(display.genus)}</dd>` : ''}
+          <dt>Recorded insect associations</dt>
+          <dd>${relatedInsects.length}</dd>
+        </dl>
+      </section>
+
+      ${plantImageFiles.length > 0 ? `
+      <section class="image-gallery">
+        <h3>Images</h3>
+        <div class="gallery-container">
+          ${plantImageFiles.slice(0, 6).map((file) => `
+            <div class="gallery-item">
+              <a href="/images/plants/${encodeURIComponent(file)}" target="_blank" rel="noopener noreferrer">
+                <img src="/images/plants/${encodeURIComponent(file)}" alt="${escapeAttr(`${display.primaryName} photograph`)}" loading="lazy">
+              </a>
+            </div>`).join('')}
+        </div>
+      </section>` : ''}
+
+      <section class="description">
+        <h3>Summary</h3>
+        <p>${escapeHtml(`${display.primaryName} is listed here as a plant associated with insect records from Japan.`)}</p>
+        <p>${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
+      </section>
+
+      <section class="related-insects">
+        <h3>Associated insects</h3>
+        ${grouped.map(([type, insects]) => {
+          const label = EN_TYPE_PLURALS[type] || EN_TYPE_LABELS[type] || 'Insects';
+          return `<h4>${escapeHtml(label)} (${insects.length})</h4>
+          <ul>
+            ${insects.map((insect) => {
+              const entry = insectEntriesById.get(insect.id);
+              const primaryName = getPrimaryEnglishName({
+                scientificName: insect.scientificName,
+                japaneseName: insect.name || insect.japaneseName,
+                fallback: insect.id,
+              });
+              const japaneseReference = buildJapaneseReferenceLabel(insect.name || insect.japaneseName);
+              const href = entry ? entry.href : null;
+              return `<li>
+                <div class="insect-name">${href ? `<a href="${escapeAttr(href)}">${escapeHtml(primaryName)}</a>` : escapeHtml(primaryName)}</div>
+                ${insect.scientificName && insect.scientificName !== primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>` : ''}
+                ${japaneseReference ? `<div class="meta-note">${escapeHtml(japaneseReference)}</div>` : ''}
+              </li>`;
+            }).join('\n            ')}
+          </ul>`;
+        }).join('\n        ')}
+      </section>
+    </main>
+
+    <section class="navigation">
+      <a href="/en/meta/plant/index.html" class="back-link">Browse Plants</a>
+      <a href="${escapeAttr(japanesePagePath)}" class="detail-link">Open Japanese page</a>
+    </section>
+  </div>
+</body>
+</html>`;
+}
+
+function buildEnglishSectionIndex(section, entries) {
+  const listDescription = `English index for ${section.pluralLabel.toLowerCase()} pages from Japan. Scientific names are used as the primary identifier when available.`;
+  const indexPath = `/en/meta/${section.routeSegment}/index.html`;
+  const canonicalUrl = `${BASE_ORIGIN}${indexPath}`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${section.pluralLabel} | ${EN_SITE_NAME}`,
+    description: listDescription,
+    url: canonicalUrl,
+    inLanguage: 'en',
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="${buildRobotsContent(true)}">
+  <title>${escapeHtml(section.pluralLabel)} | ${escapeHtml(EN_SITE_NAME)}</title>
+  <meta name="description" content="${escapeAttr(listDescription)}">
+  <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+  <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
+  <meta property="og:title" content="${escapeAttr(`${section.pluralLabel} | ${EN_SITE_NAME}`)}">
+  <meta property="og:description" content="${escapeAttr(listDescription)}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+  <meta property="og:site_name" content="${escapeAttr(EN_SITE_NAME)}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${escapeAttr(`${section.pluralLabel} | ${EN_SITE_NAME}`)}">
+  <meta name="twitter:description" content="${escapeAttr(listDescription)}">
+  <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
+</head>
+<body>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
+      </a>
+    </div>
+  </header>
+  <div class="meta-page">
+    <header class="meta-header">
+      <h1>${escapeHtml(section.pluralLabel)}</h1>
+      <p class="meta-note">${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
+    </header>
+    <main>
+      <section style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:1rem 1.25rem 1.25rem;">
+        <p>${escapeHtml(listDescription)}</p>
+        <ul style="list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;padding:0;margin:1rem 0 0;">
+          ${entries.slice(0, 1500).map((entry) => `<li style="border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.9rem 1rem;">
+            <a href="${escapeAttr(entry.href)}" style="font-weight:700;display:block;margin-bottom:0.25rem;">${escapeHtml(entry.primaryName)}</a>
+            ${entry.scientificName && entry.scientificName !== entry.primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(entry.scientificName)}</div>` : ''}
+            ${entry.japaneseReference ? `<div class="meta-note">${escapeHtml(entry.japaneseReference)}</div>` : ''}
+          </li>`).join('\n          ')}
+        </ul>
+      </section>
+    </main>
+    <section class="navigation">
+      <a href="/en/" class="back-link">English home</a>
+    </section>
+  </div>
+</body>
+</html>`;
+}
+
+function buildEnglishHomePage(counts) {
+  const description = `English entry pages for insects and host plants recorded in Japan. Scientific names are used as the main identifier to avoid assigning unstable English common names.`;
+  const canonicalUrl = `${BASE_ORIGIN}/en/`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: EN_SITE_NAME,
+    description,
+    url: canonicalUrl,
+    inLanguage: 'en',
+  };
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="${buildRobotsContent(true)}">
+  <title>${escapeHtml(EN_SITE_NAME)}</title>
+  <meta name="description" content="${escapeAttr(description)}">
+  <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+  <link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/">
+  <link rel="alternate" hreflang="en" href="${canonicalUrl}">
+  <link rel="alternate" hreflang="x-default" href="${canonicalUrl}">
+  <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
+  <meta property="og:title" content="${escapeAttr(EN_SITE_NAME)}">
+  <meta property="og:description" content="${escapeAttr(description)}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+  <meta property="og:site_name" content="${escapeAttr(EN_SITE_NAME)}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${escapeAttr(EN_SITE_NAME)}">
+  <meta name="twitter:description" content="${escapeAttr(description)}">
+  <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
+</head>
+<body>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
+      </a>
+      <a href="/" class="meta-site-header-link">Japanese home</a>
+    </div>
+  </header>
+
+  <div class="meta-page">
+    <header class="meta-header">
+      <h1>${escapeHtml(EN_SITE_NAME)}</h1>
+      <p>${escapeHtml(description)}</p>
+      <p class="meta-note">${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
+    </header>
+
+    <main class="meta-content">
+      <section class="basic-info">
+        <h3>Coverage</h3>
+        <dl>
+          <dt>Moths</dt><dd>${counts.moths}</dd>
+          <dt>Butterflies</dt><dd>${counts.butterflies}</dd>
+          <dt>Jewel beetles</dt><dd>${counts.beetles}</dd>
+          <dt>Longhorn beetles</dt><dd>${counts.longhornbeetles}</dd>
+          <dt>Leaf beetles</dt><dd>${counts.leafbeetles}</dd>
+          <dt>Aphids</dt><dd>${counts.aphids}</dd>
+          <dt>Host plants</dt><dd>${counts.hostPlants}</dd>
+        </dl>
+      </section>
+
+      <section class="quick-links">
+        <h3>Browse English pages</h3>
+        <ul>
+          <li><a href="/en/meta/moth/index.html">Moths</a></li>
+          <li><a href="/en/meta/butterfly/index.html">Butterflies</a></li>
+          <li><a href="/en/meta/beetle/index.html">Jewel beetles</a></li>
+          <li><a href="/en/meta/longhornbeetle/index.html">Longhorn beetles</a></li>
+          <li><a href="/en/meta/leafbeetle/index.html">Leaf beetles</a></li>
+          <li><a href="/en/meta/aphid/index.html">Aphids</a></li>
+          <li><a href="/en/meta/plant/index.html">Plants</a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>`;
+}
+
+async function generateEnglishMetaPages() {
+  console.log('[meta-en] Generating English meta pages...');
+
+  const allPlantImages = fs.existsSync(PLANT_IMAGES_DIR)
+    ? fs.readdirSync(PLANT_IMAGES_DIR).filter((file) => /\.(jpe?g|png|gif|webp)$/i.test(file))
+    : [];
+
+  const insectsByType = {
+    moth: loadJson('moths.json', []),
+    butterfly: loadJson('butterflies.json', []),
+    beetle: loadJson('beetles.json', []),
+    longhornbeetle: loadJson('longhornbeetles.json', []),
+    leafbeetle: loadJson('leafbeetles.json', []),
+    aphid: loadJson('aphids.json', []),
+  };
+  const hostPlantsMap = loadJson('hostplants.json', {});
+  const plantDetails = loadJson('plant-details.json', {});
+  const ylistLite = loadJson('ylist-lite.json', { plants: {}, aliasToCanonical: {} });
+
+  fs.rmSync(PUBLIC_EN_DIR, { recursive: true, force: true });
+  ensureDir(EN_META_DIR);
+  Object.keys(insectsByType).forEach((type) => ensureDir(path.join(EN_META_DIR, type)));
+  ensureDir(path.join(EN_META_DIR, 'plant'));
+
+  const { plantRecords, aliasToCanonical } = buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite);
+
+  const insectEntriesByType = new Map();
+  const insectEntriesById = new Map();
+  const insectObjectsByJapaneseName = new Map();
+  const usedInsectSlugsByType = new Map(Object.keys(insectsByType).map((type) => [type, new Set()]));
+
+  Object.entries(insectsByType).forEach(([type, insects]) => {
+    const section = SECTION_CONFIGS.find((entry) => entry.type === type);
+    insectEntriesByType.set(type, []);
+    insects.forEach((insect) => {
+      const scientificSlug = slugifyScientificLabel(insect.scientificName);
+      const slug = createUniqueSlug(
+        scientificSlug || cleanString(insect.id),
+        usedInsectSlugsByType.get(type),
+        `${type}-${usedInsectSlugsByType.get(type).size + 1}`,
+      );
+      const html = buildEnglishInsectPage({
+        insect,
+        section,
+        englishSlug: slug,
+        plantRecords,
+        plantDetails,
+        aliasToCanonical,
+      });
+      const outputPath = path.join(EN_META_DIR, type, `${slug}.html`);
+      fs.writeFileSync(outputPath, html);
+      const entry = {
+        id: insect.id,
+        href: `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
+        primaryName: getPrimaryEnglishName({
+          scientificName: insect.scientificName,
+          japaneseName: insect.name || insect.japaneseName,
+          fallback: insect.id,
+        }),
+        scientificName: cleanString(insect.scientificName),
+        japaneseReference: buildJapaneseReferenceLabel(insect.name || insect.japaneseName),
+      };
+      insectEntriesByType.get(type).push(entry);
+      insectEntriesById.set(insect.id, entry);
+      const japaneseName = cleanString(insect.name || insect.japaneseName);
+      if (japaneseName) {
+        if (!insectObjectsByJapaneseName.has(japaneseName)) {
+          insectObjectsByJapaneseName.set(japaneseName, []);
+        }
+        insectObjectsByJapaneseName.get(japaneseName).push({ ...insect, type });
+      }
+    });
+  });
+
+  const plantEntries = [];
+  Array.from(plantRecords.values())
+    .sort((a, b) => a.canonicalName.localeCompare(b.canonicalName, 'ja'))
+    .forEach((plantRecord) => {
+      const relatedNames = hostPlantsMap[plantRecord.canonicalName] || [];
+      const relatedInsects = relatedNames
+        .flatMap((name) => insectObjectsByJapaneseName.get(name) || [])
+        .filter(Boolean)
+        .filter((insect, index, array) => array.findIndex((candidate) => candidate.id === insect.id) === index);
+      const plantImageFiles = getPlantImageFiles(
+        plantRecord.canonicalName,
+        plantRecord.detail,
+        allPlantImages,
+      );
+      const html = buildEnglishPlantPage({
+        canonicalName: plantRecord.canonicalName,
+        detail: plantRecord.detail,
+        relatedInsects,
+        plantImageFiles,
+        plantRecord,
+        insectEntriesById,
+      });
+      const outputPath = path.join(EN_META_DIR, 'plant', `${plantRecord.slug}.html`);
+      fs.writeFileSync(outputPath, html);
+      const display = buildPlantDisplay(plantRecord.detail, plantRecord.canonicalName);
+      plantEntries.push({
+        href: plantRecord.href,
+        primaryName: display.primaryName,
+        scientificName: display.scientificName,
+        japaneseReference: display.japaneseReference,
+      });
+    });
+
+  SECTION_CONFIGS.forEach((section) => {
+    const indexHtml = buildEnglishSectionIndex(section, insectEntriesByType.get(section.type) || []);
+    fs.writeFileSync(path.join(EN_META_DIR, section.routeSegment, 'index.html'), indexHtml);
+  });
+  const plantSection = {
+    routeSegment: 'plant',
+    singularLabel: EN_TYPE_LABELS.plant,
+    pluralLabel: EN_TYPE_PLURALS.plant,
+  };
+  fs.writeFileSync(
+    path.join(EN_META_DIR, 'plant', 'index.html'),
+    buildEnglishSectionIndex(plantSection, plantEntries),
+  );
+
+  const counts = {
+    moths: insectsByType.moth.length,
+    butterflies: insectsByType.butterfly.length,
+    beetles: insectsByType.beetle.length,
+    longhornbeetles: insectsByType.longhornbeetle.length,
+    leafbeetles: insectsByType.leafbeetle.length,
+    aphids: insectsByType.aphid.length,
+    hostPlants: plantEntries.length,
+  };
+  fs.writeFileSync(path.join(PUBLIC_EN_DIR, 'index.html'), buildEnglishHomePage(counts));
+
+  console.log('[meta-en] done');
+  console.log(`[meta-en] moths: ${counts.moths}`);
+  console.log(`[meta-en] butterflies: ${counts.butterflies}`);
+  console.log(`[meta-en] beetles: ${counts.beetles}`);
+  console.log(`[meta-en] longhorn beetles: ${counts.longhornbeetles}`);
+  console.log(`[meta-en] leaf beetles: ${counts.leafbeetles}`);
+  console.log(`[meta-en] aphids: ${counts.aphids}`);
+  console.log(`[meta-en] plants: ${counts.hostPlants}`);
+}
+
+generateEnglishMetaPages().catch((error) => {
+  console.error('[meta-en] failed:', error);
+  process.exitCode = 1;
+});
