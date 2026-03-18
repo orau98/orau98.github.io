@@ -212,6 +212,7 @@ def logical_pages(ocr_pages):
         joined = "\n".join(line["text"] for line in lines)
         is_explanation = bool(re.search(r"解[説悦]", top_text or " ".join(top_lines)))
         is_plate = "図版" in (top_text or " ".join(top_lines))
+        is_supplemental = "追補・迷チョウ" in (top_text or " ".join(top_lines))
         items.append(
             {
                 "page": page["page"],
@@ -221,6 +222,7 @@ def logical_pages(ocr_pages):
                 "text": joined,
                 "is_explanation": is_explanation,
                 "is_plate": is_plate,
+                "is_supplemental": is_supplemental,
             }
         )
     return items
@@ -266,6 +268,112 @@ def best_japanese_match(lines, butterflies):
                         "butterfly": butterfly,
                     }
     return best
+
+
+def find_species_mentions(text: str, butterflies):
+    mentions = []
+    occupied = []
+    for butterfly in sorted(butterflies, key=lambda row: len(row["name"]), reverse=True):
+        name = butterfly["name"]
+        start = text.find(name)
+        while start != -1:
+            end = start + len(name)
+            if not any(not (end <= left or start >= right) for left, right in occupied):
+                mentions.append(
+                    {
+                        "start": start,
+                        "end": end,
+                        "name": name,
+                        "butterfly": butterfly,
+                    }
+                )
+                occupied.append((start, end))
+            start = text.find(name, start + 1)
+    mentions.sort(key=lambda row: (row["start"], -len(row["name"])))
+    return mentions
+
+
+def select_heading_occurrence(occurrences):
+    def key(row):
+        return (
+            1 if row["dedicated"] else 0,
+            1 if row["has_plate_marker"] else 0,
+            row["score"],
+            -row["line_index"],
+        )
+
+    return max(occurrences, key=key)
+
+
+def extract_species_blocks(item, butterflies):
+    occurrences_by_id = defaultdict(list)
+    lines = item["lines"]
+
+    for index, line in enumerate(lines):
+        text = line["text"].strip()
+        if not text:
+            continue
+        mentions = find_species_mentions(text, butterflies)
+        if not mentions:
+            continue
+        mention_names = {mention["butterfly"]["insect_id"] for mention in mentions}
+        for mention in mentions:
+            line_starts_with_name = text.startswith(mention["name"])
+            dedicated = line_starts_with_name and len(mention_names) == 1
+            has_plate_marker = "図版" in text or "版" in text
+            score = 0
+            if index < 6:
+                score += 4
+            if dedicated:
+                score += 5
+            elif line_starts_with_name:
+                score += 3
+            if has_plate_marker:
+                score += 2
+            if len(text) <= len(mention["name"]) + 24:
+                score += 2
+            if line["y"] >= 0.55:
+                score += 1
+            occurrences_by_id[mention["butterfly"]["insect_id"]].append(
+                {
+                    "line_index": index,
+                    "text": text,
+                    "score": score,
+                    "dedicated": dedicated,
+                    "has_plate_marker": has_plate_marker,
+                    "butterfly": mention["butterfly"],
+                }
+            )
+
+    if not occurrences_by_id:
+        return []
+
+    headings = []
+    for insect_id, occurrences in occurrences_by_id.items():
+        selected = select_heading_occurrence(occurrences)
+        headings.append(selected)
+
+    headings.sort(key=lambda row: row["line_index"])
+    blocks = []
+    for idx, heading in enumerate(headings):
+        start = heading["line_index"]
+        end = headings[idx + 1]["line_index"] if idx + 1 < len(headings) else len(lines)
+        block_lines = lines[start:end]
+        block_text = "\n".join(line["text"] for line in block_lines).strip()
+        if len(block_text) < 40 and not TIMING_CUE_RE.search(block_text):
+            continue
+        blocks.append(
+            {
+                "insect": heading["butterfly"],
+                "match_kind": "block_heading",
+                "score": round(0.8 + (heading["score"] * 0.02), 3),
+                "match_line": heading["text"],
+                "page": item["page"],
+                "side": item["side"],
+                "block_text": block_text,
+            }
+        )
+    return blocks
 
 
 def identify_species(item, butterflies):
@@ -327,6 +435,21 @@ def normalize_month_token(token: str) -> str:
     same_month_plain = re.fullmatch(r"(\d{1,2}月)～(\d{1,2}月)", token)
     if same_month_plain and same_month_plain.group(1) == same_month_plain.group(2):
         return same_month_plain.group(1)
+    cross_year_short = re.fullmatch(r"(\d{1,2})～(\d{1,2})月", token)
+    if cross_year_short:
+        start = int(cross_year_short.group(1))
+        end = int(cross_year_short.group(2))
+        if start > end:
+            return f"{start}月～翌{end}月"
+    cross_year_full = re.fullmatch(
+        r"(\d{1,2}月(?:上旬|中旬|下旬|上中旬|中下旬|上下旬)?)～(\d{1,2}月(?:上旬|中旬|下旬|上中旬|中下旬|上下旬)?)",
+        token,
+    )
+    if cross_year_full:
+        start_month = int(re.match(r"(\d{1,2})月", cross_year_full.group(1)).group(1))
+        end_month = int(re.match(r"(\d{1,2})月", cross_year_full.group(2)).group(1))
+        if start_month > end_month:
+            return f"{cross_year_full.group(1)}～翌{cross_year_full.group(2)}"
     return token
 
 
@@ -562,8 +685,24 @@ def main():
         for item in items:
             if not item["is_explanation"]:
                 continue
-            matched = identify_species(item, butterflies)
-            if not matched:
+            if item["is_supplemental"]:
+                continue
+            blocks = extract_species_blocks(item, butterflies)
+            if not blocks:
+                matched = identify_species(item, butterflies)
+                if matched:
+                    blocks = [
+                        {
+                            "insect": matched["insect"],
+                            "match_kind": matched["match_kind"],
+                            "score": matched["score"],
+                            "match_line": matched["match_line"],
+                            "page": item["page"],
+                            "side": item["side"],
+                            "block_text": item["text"],
+                        }
+                    ]
+            if not blocks:
                 unmatched_pages.append(
                     {
                         "page": item["page"],
@@ -572,21 +711,24 @@ def main():
                     }
                 )
                 continue
-            ecology = extract_ecology_section(item["text"])
-            emergence = summarize_emergence(ecology)
-            record = {
-                "page": item["page"],
-                "side": item["side"],
-                "name": matched["insect"]["name"],
-                "insect_id": matched["insect"]["insect_id"],
-                "scientific": matched["insect"]["scientific"],
-                "match_kind": matched["match_kind"],
-                "score": matched["score"],
-                "match_line": matched["match_line"],
-                "ecology": ecology,
-                "emergence": emergence,
-            }
-            candidates_by_id[record["insect_id"]].append(record)
+            for block in blocks:
+                ecology = extract_ecology_section(block["block_text"])
+                emergence = summarize_emergence(ecology)
+                if not emergence and TIMING_CUE_RE.search(block["block_text"]):
+                    emergence = summarize_emergence(block["block_text"])
+                record = {
+                    "page": block["page"],
+                    "side": block["side"],
+                    "name": block["insect"]["name"],
+                    "insect_id": block["insect"]["insect_id"],
+                    "scientific": block["insect"]["scientific"],
+                    "match_kind": block["match_kind"],
+                    "score": block["score"],
+                    "match_line": block["match_line"],
+                    "ecology": ecology or block["block_text"][:800],
+                    "emergence": emergence,
+                }
+                candidates_by_id[record["insect_id"]].append(record)
 
         additions = []
         unresolved = []
