@@ -35,7 +35,7 @@ BUTTERFLY_FAMILIES = {
 SECTION_STOP_RE = re.compile(
     r"[\[【(]?(?:食草|寄主|分布|変異|分類|生活史|文献|備考|図版|解説)[\]】)]?"
 )
-ECOLOGY_START_RE = re.compile(r"[\[【(]?(?:生態|生憩|生観|生期|生境)[\]】)]?")
+ECOLOGY_START_RE = re.compile(r"[\[【(]?(?:生態|生憩|生観|生期|生境|生想|生熱)[\]】)]?")
 TOP_ASCII_RE = re.compile(r"[A-Za-z]{4,}")
 TIMING_CUE_RE = re.compile(
     r"(?:\d{1,2}月|年[0-9一二三四五六七八九十]+(?:[〜～,、][0-9一二三四五六七八九十]+)?[回化]|"
@@ -70,6 +70,8 @@ def normalize_ocr_text(text: str) -> str:
         "生観": "生態",
         "生期": "生態",
         "生境": "生態",
+        "生想": "生態",
+        "生熱": "生態",
         "図版I": "図版1",
         "区版": "図版",
         "版I": "図版1",
@@ -293,6 +295,60 @@ def find_species_mentions(text: str, butterflies):
     return mentions
 
 
+def heading_line_matches_species(text: str, species_name: str) -> bool:
+    stripped = normalize_text(text).strip()
+    if stripped == species_name:
+        return True
+    if not stripped.startswith(species_name):
+        return False
+    rest = stripped[len(species_name) :].strip()
+    if not rest:
+        return True
+    if rest[:1] not in "([（【":
+        return False
+    if any(token in rest for token in ("の分布", "分布図", "見分け方", "食草", "生態", "変異", "解説")):
+        return False
+    normalized = rest
+    for token in (
+        "図版",
+        "区版",
+        "固版",
+        "国版",
+        "以版",
+        "火版",
+        "税",
+        "版",
+        "枚",
+    ):
+        normalized = normalized.replace(token, "")
+    normalized = re.sub(r"[0-9IVXivx〜～・、,./()（）\[\]【】\-ー\s]+", "", normalized)
+    return normalized == ""
+
+
+def find_heading_mentions(text: str, butterflies):
+    mentions = []
+    for butterfly in butterflies:
+        if heading_line_matches_species(text, butterfly["name"]):
+            mentions.append({"name": butterfly["name"], "butterfly": butterfly})
+    return mentions
+
+
+def has_scientific_followup(lines, index: int, butterfly) -> bool:
+    target = butterfly["binomial"]
+    if not target:
+        return False
+    for line in lines[index + 1 : index + 5]:
+        candidate = normalize_scientific_binomial(line["text"])
+        if not candidate:
+            continue
+        score = difflib.SequenceMatcher(None, candidate, target).ratio()
+        if candidate.split()[0] == target.split()[0]:
+            score += 0.08
+        if score >= 0.78:
+            return True
+    return False
+
+
 def select_heading_occurrence(occurrences):
     def key(row):
         return (
@@ -313,27 +369,26 @@ def extract_species_blocks(item, butterflies):
         text = line["text"].strip()
         if not text:
             continue
-        mentions = find_species_mentions(text, butterflies)
+        mentions = find_heading_mentions(text, butterflies)
         if not mentions:
             continue
-        mention_names = {mention["butterfly"]["insect_id"] for mention in mentions}
         for mention in mentions:
-            line_starts_with_name = text.startswith(mention["name"])
-            dedicated = line_starts_with_name and len(mention_names) == 1
+            dedicated = text == mention["name"]
             has_plate_marker = "図版" in text or "版" in text
+            has_followup = has_scientific_followup(lines, index, mention["butterfly"])
             score = 0
             if index < 6:
                 score += 4
             if dedicated:
                 score += 5
-            elif line_starts_with_name:
+            elif text.startswith(mention["name"]):
+                score += 2
+            if has_followup:
                 score += 3
             if has_plate_marker:
                 score += 2
             if len(text) <= len(mention["name"]) + 24:
                 score += 2
-            if line["y"] >= 0.55:
-                score += 1
             occurrences_by_id[mention["butterfly"]["insect_id"]].append(
                 {
                     "line_index": index,
@@ -371,9 +426,36 @@ def extract_species_blocks(item, butterflies):
                 "page": item["page"],
                 "side": item["side"],
                 "block_text": block_text,
+                "end_index": end,
             }
         )
     return blocks
+
+
+def leading_content_start(line_items):
+    for index, line in enumerate(line_items):
+        if line["y"] < 0.94:
+            return index
+    return 0
+
+
+def first_heading_index(item, butterflies):
+    for index, line in enumerate(item["lines"]):
+        if find_heading_mentions(line["text"].strip(), butterflies):
+            return index
+    return None
+
+
+def next_page_prefix(item, butterflies):
+    if not item or not item["is_explanation"] or item["is_supplemental"]:
+        return ""
+    start = leading_content_start(item["lines"])
+    end = first_heading_index(item, butterflies)
+    if end is None:
+        end = len(item["lines"])
+    if end <= start:
+        return ""
+    return "\n".join(line["text"] for line in item["lines"][start:end]).strip()
 
 
 def identify_species(item, butterflies):
@@ -682,7 +764,7 @@ def main():
         candidates_by_id = defaultdict(list)
         unmatched_pages = []
 
-        for item in items:
+        for item_index, item in enumerate(items):
             if not item["is_explanation"]:
                 continue
             if item["is_supplemental"]:
@@ -712,10 +794,15 @@ def main():
                 )
                 continue
             for block in blocks:
-                ecology = extract_ecology_section(block["block_text"])
+                block_text = block["block_text"]
+                if block.get("end_index") == len(item["lines"]):
+                    continuation = next_page_prefix(items[item_index + 1], butterflies) if item_index + 1 < len(items) else ""
+                    if continuation:
+                        block_text = f"{block_text}\n{continuation}"
+                ecology = extract_ecology_section(block_text)
                 emergence = summarize_emergence(ecology)
-                if not emergence and TIMING_CUE_RE.search(block["block_text"]):
-                    emergence = summarize_emergence(block["block_text"])
+                if not emergence and TIMING_CUE_RE.search(block_text):
+                    emergence = summarize_emergence(block_text)
                 record = {
                     "page": block["page"],
                     "side": block["side"],
@@ -725,7 +812,7 @@ def main():
                     "match_kind": block["match_kind"],
                     "score": block["score"],
                     "match_line": block["match_line"],
-                    "ecology": ecology or block["block_text"][:800],
+                    "ecology": ecology or block_text[:800],
                     "emergence": emergence,
                 }
                 candidates_by_id[record["insect_id"]].append(record)
@@ -738,6 +825,8 @@ def main():
             insect_id = butterfly["insect_id"]
             candidates = candidates_by_id.get(insect_id, [])
             if not candidates:
+                if insect_id in existing_emergence:
+                    continue
                 unresolved.append(
                     {
                         "name": butterfly["name"],
@@ -748,6 +837,8 @@ def main():
                 continue
             best = choose_best_candidate(candidates)
             if not best["emergence"]:
+                if insect_id in existing_emergence:
+                    continue
                 unresolved.append(
                     {
                         "name": butterfly["name"],
