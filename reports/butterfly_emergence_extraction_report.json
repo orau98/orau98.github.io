@@ -1,0 +1,801 @@
+{
+  "reference": "日本産蝶類標準図鑑",
+  "pdf": "/Users/akimotohiroki/Downloads/pdf/日本産蝶類標準図鑑_compressed.pdf",
+  "butterfly_count": 270,
+  "logical_pages": 340,
+  "matched_species": 267,
+  "added_count": 36,
+  "unresolved_count": 14,
+  "added_preview": [
+    {
+      "record_id": "note-1005140",
+      "insect_id": "species-20176",
+      "note_type": "出現時期",
+      "content": "年3回",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "16",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005141",
+      "insect_id": "species-20177",
+      "note_type": "出現時期",
+      "content": "5月上旬、8月上旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "16",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005142",
+      "insect_id": "species-20186",
+      "note_type": "出現時期",
+      "content": "4～6月、9～10月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "21",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005143",
+      "insect_id": "species-20190",
+      "note_type": "出現時期",
+      "content": "4～5月、7～8月、7月中旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "24",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005144",
+      "insect_id": "species-20199",
+      "note_type": "出現時期",
+      "content": "一年中",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "31",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005145",
+      "insect_id": "species-20208",
+      "note_type": "出現時期",
+      "content": "一年中",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "35",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005146",
+      "insect_id": "species-20214",
+      "note_type": "出現時期",
+      "content": "6～7月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "38",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005147",
+      "insect_id": "species-20217",
+      "note_type": "出現時期",
+      "content": "8月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "41",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005148",
+      "insect_id": "species-20226",
+      "note_type": "出現時期",
+      "content": "5月下旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "47",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005149",
+      "insect_id": "species-20231",
+      "note_type": "出現時期",
+      "content": "5月中旬、7月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "51",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005150",
+      "insect_id": "species-20240",
+      "note_type": "出現時期",
+      "content": "6月、7～8月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "55",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005151",
+      "insect_id": "species-20243",
+      "note_type": "出現時期",
+      "content": "6月中旬～8月、9月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "58",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005152",
+      "insect_id": "species-20249",
+      "note_type": "出現時期",
+      "content": "6月、7月中下旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "63",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005153",
+      "insect_id": "species-20259",
+      "note_type": "出現時期",
+      "content": "3～4月、5月下旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "69",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005154",
+      "insect_id": "species-20268",
+      "note_type": "出現時期",
+      "content": "6月、7月、9月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "75",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005155",
+      "insect_id": "species-20273",
+      "note_type": "出現時期",
+      "content": "一年中",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "76",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005156",
+      "insect_id": "species-20277",
+      "note_type": "出現時期",
+      "content": "3月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "78",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005157",
+      "insect_id": "species-20281",
+      "note_type": "出現時期",
+      "content": "2月～10月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "79",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005158",
+      "insect_id": "species-20288",
+      "note_type": "出現時期",
+      "content": "3月、8月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "84",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005159",
+      "insect_id": "species-20291",
+      "note_type": "出現時期",
+      "content": "6～8月、6月、7月中旬～8月上旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "84",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005160",
+      "insect_id": "species-20297",
+      "note_type": "出現時期",
+      "content": "5月、8月、6月下旬、6月上中旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "86",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005161",
+      "insect_id": "species-20319",
+      "note_type": "出現時期",
+      "content": "一年中",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "101",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005162",
+      "insect_id": "species-20327",
+      "note_type": "出現時期",
+      "content": "5月下旬、6月上旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "107",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005163",
+      "insect_id": "species-20335",
+      "note_type": "出現時期",
+      "content": "5月、6月上旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "110",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005164",
+      "insect_id": "species-20357",
+      "note_type": "出現時期",
+      "content": "5～6月、7～8月、8～9月、10月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "122",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005165",
+      "insect_id": "species-20364",
+      "note_type": "出現時期",
+      "content": "6月中下旬、6月下旬～7月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "127",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005166",
+      "insect_id": "species-20382",
+      "note_type": "出現時期",
+      "content": "5～6月、8～9月、7月上旬、8月中旬～10月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "139",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005167",
+      "insect_id": "species-20388",
+      "note_type": "出現時期",
+      "content": "4～6月、5月下旬～6月上旬",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "142",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005168",
+      "insect_id": "species-20399",
+      "note_type": "出現時期",
+      "content": "7月、12月、1月、3月、4月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "146",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005169",
+      "insect_id": "species-20403",
+      "note_type": "出現時期",
+      "content": "5月下旬、6月下旬、8月",
+      "reference": "日本産蝶類標準図鑑",
+      "page": "150",
+      "year": ""
+    }
+  ],
+  "candidate_preview": [
+    {
+      "page": 11,
+      "side": "L",
+      "name": "ギフチョウ",
+      "insect_id": "species-20167",
+      "scientific": "Luehdorfia japonica Leech, 1889",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ギフチョウ",
+      "ecology": "長野県飯田市などの天竜川中流城の個体",
+      "emergence": "3月下旬～4月下旬、4月上旬、4月下旬～5月下旬、5月上旬、6月"
+    },
+    {
+      "page": 11,
+      "side": "L",
+      "name": "ヒメギフチョウ",
+      "insect_id": "species-20168",
+      "scientific": "Luehdorfia puziloi Erschoff, 1872",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "ヒメギフチョウ",
+      "ecology": "運伝型が、同じように見られる。 年1回発生。本州では4～5月、北海道では早出の記録として、2002 ギフチョウ属2種の見分け方など 年4月、4日23、1998年4月、6日18(ともに石狩市派益区)があるが、通 常は4月下旬から出現し、多くの産地がエゾヤマザクラの咲き始めた ギフチョウとヒメギフチョウは、前細亜外緑の黄条の先瑠付 頃に最盛期になる。沢筋や渓谷では残雪の状態で発生態がおくれ、 近での並び方と、後翅外縁校の他で見分けることができる(黒字 で示す)。ヒメギフチョウの本州産と北海道産は、前週の黒条な 瀬日缶など高標高の場所では7月に入ってからも新鮮な箇体が見ら どで因別できる(赤字で示す)。 れることがある。越冬類は期。飼育下での蛹の2年越しの羽化報告も ある。記録での最大産卵数は87。交尾飛囲は←早＋8。本種の正落 この費条は先端",
+      "emergence": "4～5月、4月下旬"
+    },
+    {
+      "page": 11,
+      "side": "R",
+      "name": "ホソオチョウ",
+      "insect_id": "species-20169",
+      "scientific": "Sericinus montela Gray, 1853",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "ホソオチョウ",
+      "ecology": "使入し、定着した。もともと飛現能力は大きくないので、人 年2回発生。4月下旬より第1化が発生し、6～8月に第2化が発 為的に持ち込まれたものと思われる。みは白い地色に細い黒 生する。ウマノスズクサが生える河川敷などに生品し、飛期 糸があり、後翅肛角付近に赤斑がある。早は黒条が発達し、 はゆるやか。交尾飛用形式は←学＋す。 黒く見える。お早とも居状突起が発達して長く、本種に似た",
+      "emergence": "4月下旬、6～8月"
+    },
+    {
+      "page": 12,
+      "side": "L",
+      "name": "ウスバアゲハ",
+      "insect_id": "species-20170",
+      "scientific": "Parnassius citrinarius Motschulsky, 1866",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ウスバアゲハ",
+      "ecology": "形費であることがわかっている。環境条件を変えた飼育では、 年1回の発生で、東京付造の低山地では4月下旬・5月上旬より5月 わずかではあるが黒化と白化との間の変動がみられることから、 遺伝だけでなく環境要因も翅の色彩に影響を与えるものと考え 下旬・6月上旬(5月上～中旬が取込期)に出現、西南日本の低山地希 における発生態もおおよそこれに答しい。長野県長野市付近では5 られる。 月中旬～6月中句が最盛期。北海道の平地から低山地帯では6月上 本種は国内だけでも多くの名称があるが、現在では名義タイ 旬～7月上旬、本州の高地帯では6月中旬ごろよりあらわれ7月末に プ亜種の同物異名(symonym)として用いられていない。また、 もなお見られることがある。高地での違い記録は北岳(約2600m) 本種の種小名はglacialis Butler,1866 が長い問用いられてきた が、Motschuiskyによって記載された citrinarius が先行するこ 1968年8月、7日18、飛山脈捨ヶ居付近(約2500m)1949年8月、9日1早、 福島県会津駒ヶ缶1200m付込1974年8月、8日1gがある。高知でも高 とが最近判明し、本費でもこの説に従った。 ヒメウスバアゲハ Parnassius hoenei Schweitzer, 1912 [別名]ヒメウスパシロチョウ ウスパアゲハ、ヒメウスパアゲハの の前製許、別部側面、腹部後半下面および後翅裏面に生ず",
+      "emergence": "4月下旬、6月上旬、5月、6月"
+    },
+    {
+      "page": 12,
+      "side": "L",
+      "name": "ヒメウスパアゲハ",
+      "insect_id": "species-20171",
+      "scientific": "Parnassius hoenei",
+      "match_kind": "block_heading",
+      "score": 0.94,
+      "match_line": "ヒメウスパアゲハ",
+      "ecology": "前胸部、腹部 産部休面に 側面の体毛は 年1回の発生で、平地から任山地規では5月下旬～6月下旬、 黄色い体毛 黄色。 山地帯では6月下旬～7月中旬に多く、亜高山容では7月下包あ がある。 るいは8月上旬まで見られる。幼虫4船。越冬感は卵。 ヒメウスバアゲハ",
+      "emergence": "5月下旬～6月下旬、8月上旬"
+    },
+    {
+      "page": 12,
+      "side": "R",
+      "name": "キイロウスパアゲハ",
+      "insect_id": "species-20172",
+      "scientific": "Parnassius eversmanni Ménétriès, 1851",
+      "match_kind": "block_heading",
+      "score": 0.94,
+      "match_line": "キイロウスパアゲハ",
+      "ecology": "キイロウスパアゲハ\n大雪山では早い場合にはみは5月下旬ごろから、早はそれよ\nの分布\nりおくれて発生し、およそ6月中旬から下旬ごろが最盛期、生\nき娘りは7月下旬まで見られるが、8月に入るとほほ姿を消す。\nコマクサを生ずる高地益の石保地に発生し、陽光をあびて地上\nに静止することが多い。飛期は日本産同拭のほかの2種に比べ\nて敏活である。吸法植物はキバナシャクナゲ、イワウメ、エソ\nツガザクラ、エゾコザクラ、キパナシオガマ、ウラジロナナカ\nマド、イワウメ、エゾノツガザクラ、ミヤマリンドウなどが記\n録されている。ときに吸水が観される。卵はふつうコマクサ\n根際の石業に産みつけられる。食草の葉に咲みつけることもあ\nる。第1年日はそのまま明感で起年、翌保報化して包速に破長\nして、晩豆には相崎をつくって始化、第2年目の冬は無態です\nごし、翌夏(すなわち第3年日)にいたって出化出現する。さわ\nめてまれに9月に新鮮な個体が観察されているが、これは確明\n21",
+      "emergence": "5月下旬～7月下旬、8月、9月"
+    },
+    {
+      "page": 14,
+      "side": "L",
+      "name": "ジャコウアゲハ",
+      "insect_id": "species-20173",
+      "scientific": "Byasa alcinous Klug, 1836",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ジャコウアゲハ",
+      "ecology": "ふくまれるという結果が持られている。名養タイプ亜族と八派 山亜種との交配では、八重山亜触早と名義タイプ亜種るのFはは 本州の北部や山地帝では、年2回(5～6月、7～8月)の発生。 西前日本ではふつう年4回(第1化4～5月、第216～7月、第31E8 すべて成育良好でる早とも生珈能力がある。しかし、名義タイ 月、第49月)。しかし暖地においても第2化を生ずべきが休 プ亜種子と八重山亜種みのF」は成管経が2つのグループに分 眠して秋季に羽化する場合(この場合は年2回発生となる)もあ かれ、ふつうの度で成書したものはで生殖能力があり、成 り、さらに長く休配してそのまま冬を越し、春にいたって明 育の進いものは巨大幼虫になり早が羽化したという。上記の八 重山産と名義タイプ亜種の交結果は両亜種にかなり額著な違 化する場合(この場合は年1回の発生となる)もまれに存在する。 日本産黒色のアゲハ類中、飛理はもっとも級慢で、路傍や草地 伝的な造異があることを示しており、同一種の別車種にこれだ を低く飛ぶ。各種の花を訪れて吸索するが、混地におりて吸水 けの違いがあることは注目すべき点であると思われる。 するものはまだ観察しない。これをとらえれば、一種の香気を ジャコウアゲハの",
+      "emergence": "5～6月、7～8月、4～5月、6～7月、9月"
+    },
+    {
+      "page": 14,
+      "side": "R",
+      "name": "ベニモンアゲハ",
+      "insect_id": "species-20174",
+      "scientific": "Pachliopta aristolochiae Fabricius, 1775",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ベニモンアゲハ",
+      "ecology": "成虫の飛び方はジャコウアゲハに似て遅く、各種の花を訪れ て吸法する。多化性で2月より11月にわたって連続的に発生す る。卵は",
+      "emergence": "2月～11月"
+    },
+    {
+      "page": 14,
+      "side": "R",
+      "name": "キシタアゲハ",
+      "insect_id": "species-20175",
+      "scientific": "Troides aeacus C. Felder et R. Felder, 1860",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "キシタアゲハ",
+      "ecology": "」 本種は山川、方湾からインドシナ半島、インド、マレー半 話発に発用する、国行による経過を見ると、5月始化の節は 島に",
+      "emergence": "5月"
+    },
+    {
+      "page": 16,
+      "side": "L",
+      "name": "アオスジアゲハ",
+      "insect_id": "species-20176",
+      "scientific": "Graphium sarpedon Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "アオスジアゲハ",
+      "ecology": "日本西南紙の軽地ではふつう年3回の発生。越冬節より羽化した (八丈島・三七島・神津島・鍋蔵島",
+      "emergence": "年3回"
+    },
+    {
+      "page": 16,
+      "side": "L",
+      "name": "ミカドアゲハ",
+      "insect_id": "species-20177",
+      "scientific": "Graphium doson C. Felder et R. Felder, 1864",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "ミカドアゲハ",
+      "ecology": "版7～15)である。屋久島産は後選外線の白色縁毛が着しく目立 第1化(春型)は、九州北部ではふつう5月上旬ごろから、第2化は6 つものが多い。沖縄島・八重山諸島(国版7～23～28)に厳するる 月下旬ころから、第3化は8月上旬ごろから発生するが、すべてがこ の翅表の校は奄美大島およびそれ以北の産地のもの",
+      "emergence": "5月上旬、8月上旬"
+    },
+    {
+      "page": 16,
+      "side": "R",
+      "name": "コモンタイマイ",
+      "insect_id": "species-20178",
+      "scientific": "Graphium agamemnon Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "コモンタイマイ",
+      "ecology": "麺形、色利載はお早ともほほ同じである。るでは、アオ スジアゲハやミカドアゲハと同じく後翅内縁部が上方に折り 飛期は阿属のアオスジアゲハよりも敏捷で、よく訪花するの 返り、その中に黄細色の長毛を生ずるので、る子の判別は容 が観察されている。 易である。",
+      "emergence": "9月、5月"
+    },
+    {
+      "page": 17,
+      "side": "L",
+      "name": "アゲハ",
+      "insect_id": "species-20179",
+      "scientific": "Papilio xuthus Linnaeus, 1767",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "アゲハ",
+      "ecology": "アゲハ\nPapilio suthus Linnaeus, 1767\n[食草]\n[別名]ナミアゲハ\n幼虫はカラタチ・サルカケミカン・サンショウ・イメザンショウ・\ng子による翅形、麹のちがいは、春型ではほとんど認められな\nフユザンショウ・イワザンショウ・テリバザンショウ・キハダ・ヒロ\nいが、夏型では子の地色は白味が強く(早は一般にくすんだ黄色を\nハノキハダ・ナツミカン・ユズ・ウンシュウミカン・ブンタン(ザボ\nおびる)、後前縁中央部に明象に黒遊をあらわし(早では不鮮明、\nン)・キンコウジ・ダイダイ・ヒュウガナツ・レモン・ゴシュユ・ハマセ\nもしくはこれがない)、後麹肛角部の役色は消失して地色と同じ\nンダン・カラスザンショウ・キンカン類・ツルシキミ・ミヤマシキミ・\n黄白色(早では春型のる早と同じくこの相色産が残る)、したがっ\nアサクラザンショウ・グレープフルーツ・ヒラミレモン(シークワー\nてる名は翅斑によって一見して区別される。\nサー)・コレア・ヨウシュハクセン・ヘンルーダなど各種のミカン科\n[分布]\nを食べる。小笠原では、アコウザンショウより卵・幼虫が記録され\n我が国では北海道より九州、さらに南西諸島・小笠原諸島にわた\nている。クスノキ(クスノキ料)で創育可能、同じ料のタブノキで\nって全国に広く分布、平地から低山地に多い。しかしキアゲハのよ\n産明、摂食の報告もある。ウスバサイシン・アツバサイシン(以上\nうに標高の高い地城には生息しない。北海道では一般に少なく、と\nウマノスズクサ料)から幼虫が発見されたことがあり、全幼虫期飼\nくに北部、東北部の寒冷な地城ではまれであるが、札幌以済の道南\n育可能である。タチバナ(ミカン料)、ホウセンカ(ツリフネソウ料)。\nの市街地では、庭のサンショウなどで発生し、比較的ふつうに見ら\nポタン(ボタン料)で幼虫が見つかった例がある。野外においてコ\nれる。国",
+      "emergence": "3月下旬～5月、5月下旬～6月上旬、5～6月、8月～翌2月、4月"
+    },
+    {
+      "page": 17,
+      "side": "L",
+      "name": "キアゲハ",
+      "insect_id": "species-20180",
+      "scientific": "Papilio machaon Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "キアゲハ",
+      "ecology": "(キク料)を野外で食べる場合も知られている。飼育の際に与え 北海道あたりの寒冷地では第1化(作型)は5～6月に、第2化(夏 ればオクエゾサイシン(ウマノスズクサ料)は摂食するが願潤に 型)は7～8月に出現し、ふつう年2回の発生。九州あたりの吸地 成付しない場合が多い。異常産卵として、シロツメクサ(マメ料)、 では第1化は3～4月、第2化は6～7月に出現、以後引き続いて発 ケイトウの花聴(ヒユ料)が記録されている。 生を繰り返し秋季におよび、年3、4回の発生の場合が多いと考",
+      "emergence": "5～6月、7～8月、3～4月、6～7月"
+    },
+    {
+      "page": 17,
+      "side": "R",
+      "name": "オナシアゲハ",
+      "insect_id": "species-20181",
+      "scientific": "Papilio demoleus Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "オナシアゲハ",
+      "ecology": "に鮮明ではない。",
+      "emergence": "8月、5月"
+    },
+    {
+      "page": 19,
+      "side": "L",
+      "name": "ナガサキアゲハ",
+      "insect_id": "species-20182",
+      "scientific": "Papilio memnon Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ナガサキアゲハ",
+      "ecology": "九州北部ではふつう年3回の発生で、越冬麺より羽化した型 (第1化)は4月下旬～5月上旬より、第2化(現型)は6月下旬～7 月上包より、第3化(豆型)は8月中～下旬より発生する。また 現在の",
+      "emergence": "4月下旬～5月上旬、6月下旬～7月、8月"
+    },
+    {
+      "page": 19,
+      "side": "R",
+      "name": "モンキアゲハ",
+      "insect_id": "species-20183",
+      "scientific": "Papilio helenus Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "モンキアゲハ",
+      "ecology": "九州およびそれ以北の地城ではふつう年2回の発生で、第1化 (春型)は5～6月に、第2化(豆型)は7～8月に出現するが、まれに 9～10月にもその姿を見ることがあり、これは部分的な第3化を あらわしているものと考えられる。奄美大島あたりでは3月よ り出現し、また布の終焉も違く、さらに発生同数をますもの であろう。山林中の道路・空地などに沿って飛用する姿を見る ことがもっとも多く、チョウ道のもっとも期域に見られる種の 35",
+      "emergence": "5～6月、7～8月、9～10月、3月"
+    },
+    {
+      "page": 21,
+      "side": "L",
+      "name": "シロオビアゲハ",
+      "insect_id": "species-20184",
+      "scientific": "Papilio polytes Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "シロオビアゲハ",
+      "ecology": "奄丈品貼で第」化の発生は3月上中旬から、以物の烏線ではさ らに出現は早く、沖縄品では2月から、以後連統約に発生を繰り返",
+      "emergence": "3月上中旬、2月"
+    },
+    {
+      "page": 21,
+      "side": "L",
+      "name": "クロアゲハ",
+      "insect_id": "species-20185",
+      "scientific": "Papilio protenor Cramer, 1775",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "クロアゲハ",
+      "ecology": "されるのみであるが、八重山話島の小浜島では高半で保集され 関東地方より九州にいたる日本西南部では、ふつう年3回の ていたことがある。野外で探集した無尾型1早より探那飼音、 次代はすべて有尾型(435早)、この中の3早1対を交関して、さ 発生で、春数(茶1化)は4～5月、第2化の以型は6月中下旬～ 7月、第3化の支型は8月に批現する。",
+      "emergence": "4～5月、6月中下旬～7月、8月"
+    },
+    {
+      "page": 21,
+      "side": "R",
+      "name": "オナガアゲハ",
+      "insect_id": "species-20186",
+      "scientific": "Papilio macilentus Janson, 1877",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "オナガアゲハ",
+      "ecology": "mactentus， ふつう年2川の発生で、谷型(第1化)は4～6月、豆型(す2化)は7 ～8月に書現するが、吸地では9～10月に第3化と推定される新鮮な 39",
+      "emergence": "4～6月、9～10月"
+    },
+    {
+      "page": 23,
+      "side": "R",
+      "name": "カラスアゲハ",
+      "insect_id": "species-20187",
+      "scientific": "Papilio dehaanii C. Felder et R. Felder, 1864",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "カラスアゲハ",
+      "ecology": "ヤエヤマカラスアゲハの",
+      "emergence": "3～6月、8月上旬～下旬、7月中旬、6～7月、8～9月、7月下旬"
+    },
+    {
+      "page": 23,
+      "side": "R",
+      "name": "オキナワカラスアゲハ",
+      "insect_id": "species-20188",
+      "scientific": "Papilio okinawensis",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "オキナワカラスアゲハ",
+      "ecology": "本種のタイプ産地である沖縄島やその周辺離島に産するもの(図 3月上旬一3月下旬が第1化(春型)の最整期である。それ以降代を 版14～6～8)は、前規裏面の黄白帯は鮮明でほほ同幅、外縁と平行に 重ね、10月中下旬まで発生する。おそらく年4回の発生と思われる。 走り、後類外緑凹入部の黄白部は大きく新者。前麹裏面白番はほ 成虫は料報、林道などを飛閉し、ハイビスカスなどに訪花する。 ほ並行で、一見ミヤマカラスアゲハのそれに似る。低美諸品に座す",
+      "emergence": "3月上旬、3月下旬、10月中下旬"
+    },
+    {
+      "page": 24,
+      "side": "L",
+      "name": "ヤエヤマカラスアゲハ",
+      "insect_id": "species-20189",
+      "scientific": "Papilio bianor Cramer, 1777",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "ヤエヤマカラスアゲハ",
+      "ecology": "3月上～中旬が第1化(春型)の最盛期である。それから代を重",
+      "emergence": "3月"
+    },
+    {
+      "page": 24,
+      "side": "L",
+      "name": "ミヤマカラスアゲハ",
+      "insect_id": "species-20190",
+      "scientific": "Papilio maackii Ménétriès, 1858",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "ミヤマカラスアゲハ",
+      "ecology": "前麹外線と白色帯内開線は平行ではないが、ミヤマカラスアゲ ふつう年2回の発生で、吸地では春型(第1化)は4～5月、夏型 ハではこの白色帯はふつうほとんと同じ転で、その内舗線は 中室にかかることがなく、外緑にほほ平行(この特徴は、子に は7～8月に発生、北海道の山地帯では春型は6中イ～7月中旬、 関しては",
+      "emergence": "4～5月、7～8月、7月中旬"
+    },
+    {
+      "page": 27,
+      "side": "R",
+      "name": "ヒメシロチョウ",
+      "insect_id": "species-20191",
+      "scientific": "Leptidea amurensis Ménétriès, 1858",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ヒメシロチョウ",
+      "ecology": "ふつう年3回の発生で、春型(第1化)は4月中旬～5月下旬(早い地 城では4月上旬から)、第2化の夏型は6月下旬～8月上旬、第3化の夏 型は8月中旬～9月下旬に出現する。岐阜県高山市では第4化が見ら れたこともある。北海道では、歯館市で3化がふつうに見られるが、 千線市あたりでも、夏の気温が高い年には3化が見られる。草原上 を弱く低く飛ぶ。本種の幼虫輪数は4節、日本産シロチョウ料(つね に5齢)中の例外である。越想は処。",
+      "emergence": "4月中旬～5月下旬、4月上旬、6月下旬～8月上旬、8月中旬～9月下旬"
+    },
+    {
+      "page": 27,
+      "side": "R",
+      "name": "エゾヒメシロチョウ",
+      "insect_id": "species-20192",
+      "scientific": "Leptidea morsei Fenton, 1882",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "エゾヒメシロチョウ",
+      "ecology": "と後題全面はやや黄色をおび、後麺では麺座上り中室機様をと ふつう年2回の発生で、春型(第1化)は5～6月、夏型(第2化)は おり第5駅上を走る直線状をな寸暗色条、外級後半の趣絡にはぼ 7～8月に出現するが、温暖な道南面館地方、本平洋岸の酵内町な 平行に走る2色条はやや願者である。早はとくに麺形が細広い。 どでは年3化がふつう(第1化4月下旬～6月中旬、第2化7月中旬～ 地理的",
+      "emergence": "5～6月、7～8月、4月下旬～6月中旬、7月中旬"
+    },
+    {
+      "page": 28,
+      "side": "L",
+      "name": "ツマキチョウ",
+      "insect_id": "species-20193",
+      "scientific": "Anthocharis scolymus Butler, 1866",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ツマキチョウ",
+      "ecology": "年1回早券に発生し、日本西南部の暖地では3月下旬～4月、北海 北海道産",
+      "emergence": "3月下旬～4月"
+    },
+    {
+      "page": 28,
+      "side": "L",
+      "name": "クモマツマキチョウ",
+      "insect_id": "species-20194",
+      "scientific": "Anthocharis cardamines Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "クモマツマキチョウ",
+      "ecology": "ヨーロッパより東アジア北部にわたりユーラシア大降の北部に 年1回の発生で、1000m以下の山地では4月下旬～5月上旬に、標 広く",
+      "emergence": "4月下旬～5月上旬"
+    },
+    {
+      "page": 28,
+      "side": "R",
+      "name": "ツマベニチョウ",
+      "insect_id": "species-20195",
+      "scientific": "Hebomoia glaucippe Linnaeus, 1758",
+      "match_kind": "block_heading",
+      "score": 1.0,
+      "match_line": "ツマベニチョウ",
+      "ecology": "屋久島、大隅半島および降摩半島の観察では、4～5月、6～7月、 9月、10～11月に多く、これらの地城では、おそらく年4、5回程度 の発生と推察される。飛期は歓活で、高飛するが、ブッソウゲ・ サンダンカ・ヒギリ・ルコウソウ・フジウツギ・アザミ類などの 花によく訪れる。るはときに醤地にもおりる。卵は食章の新芽・ 若葉・成界に1個ずつ産みつけられる。越冬想は期または幼虫。",
+      "emergence": "4～5月、6～7月、9月、10～11月"
+    },
+    {
+      "page": 31,
+      "side": "L",
+      "name": "ナミエシロチョウ",
+      "insect_id": "species-20196",
+      "scientific": "Appias paulina Cramer, 1777",
+      "match_kind": "block_heading",
+      "score": 1.08,
+      "match_line": "ナミエシロチョウ",
+      "ecology": "八重山話島では第1化の春型は2月より出現、3月上何ごろが第」 化の最盛期である。以段連続的に発生して12月まで見られるが、 発生態、発生同数の詳細は不明である。",
+      "emergence": "2月～12月"
+    }
+  ],
+  "unresolved_preview": [
+    {
+      "name": "ウラナミシロチョウ",
+      "insect_id": "species-20218",
+      "reason": "no_emergence_extracted",
+      "page": 41,
+      "side": "L",
+      "ecology": "飛掛力は強いか化に楽まる。ウスキシロチョウは世林性の種、 78 いかあるいは微小(ずはふつうこの門数がない)。触角は暗色。 裏面の斑は挑色をおびて強く発達し(夏型ではまったく続 るは早に比べて前題装雑の黒点が大きく、亜外様黒茶(または をおびない)、触角も強く挑色をおびる。早の前組中室確の黒 その義除)があらわれ、その強く発達したものでは外縁黒帯と 点がるに比べて大型なこと、裏面枚の発達がより強いことは、 酸合して船広い黒縁を形成、前後裏面中室糧に微小な円校を 夏型におけるお"
+    },
+    {
+      "name": "ハマヤマトシジミ",
+      "insect_id": "species-20263",
+      "reason": "no_emergence_extracted",
+      "page": 71,
+      "side": "R",
+      "ecology": "おびて後色、外縁の黒縁もより広い。お早を通じてヤマトシジミと 多化性。早春より晩秋まで連続的に発生を繰り返すが、発生 のもっとも重要な区別点は裏面の班にある。すなわち本種では 期・発生回数などの詳梱は不用。卵は"
+    },
+    {
+      "name": "マルバネウラナミシジミ",
+      "insect_id": "species-20282",
+      "reason": "no_emergence_extracted",
+      "page": 79,
+      "side": "R",
+      "ecology": "マルバネウラナミシジミ\nPetrelaea tombugensis (C.Felder, 1860)\n島にもっとも近い産地はマリアナ諸島。\n[別名]オガサワラウラナミシジミ\n多化性で、日間活動は朝から夕方まで行われ、成虫はよくモモタ\nは鈍い光沢のある淡整色、早は黒制色で前題中央部に淡音他\nマナの花で吸表するという。子は古有性を示すという報告がある。\nをあらわす。ヒメウラナミシジミに似るが、るの過表はより空色\n小笠原諸島における食草はモモタマナ(シクンシ料)が記録され\nに返く、"
+    },
+    {
+      "name": "ルリウラナミシジミ",
+      "insect_id": "species-20284",
+      "reason": "no_emergence_extracted",
+      "page": 80,
+      "side": "L",
+      "ecology": "ルリウラナミシジミの"
+    },
+    {
+      "name": "シロウラナミシジミ",
+      "insect_id": "species-20285",
+      "reason": "no_emergence_extracted",
+      "page": 80,
+      "side": "R",
+      "ecology": "や報広く、後理では外線の細盟線の内側に黒産列が並ぶ。子の麹 成虫の飛び方はウラナミシジミに似てきわめて遠い。基本的に 表の青白色部はるに比べて青味が少なく、棚糸状の光沢が弱く、 食京群詰から種れない。発生態については報告がなく、詳細は不 前週外線の黒常はきわめて幅広く、規頂部より前縁に沿い翅底部 用である。 に向かってのびる。後亜外緑の黒送列はるに比べて大きく発達"
+    },
+    {
+      "name": "ソテツシジミ",
+      "insect_id": "species-20289",
+      "reason": "no_page_match"
+    },
+    {
+      "name": "クロマダラソテツシジミ",
+      "insect_id": "species-20290",
+      "reason": "no_emergence_extracted",
+      "page": 84,
+      "side": "L",
+      "ecology": "クロマダラソテツシジミ\nChilades pandaua (Horsfield, 1829)\n子は恋色の提表で、黒線に縁取られる。後想には尾状突起がある。\n根際の石の間などで行う。発生地における食車はソテツ(ソテツ料)\n早は堪表中央部に青色があり、後週外線部には黒点列がある。裏\nの若葉®インゲンマメ(マメ料)で成育良好、よい代用食となる。\n面はオナガウラナミシジミム、オジロシジミ風のような政校をして\n明味な季節型があり、低温期型は高温期製と比べて、る翅表の外\nおり、近味種のソ"
+    },
+    {
+      "name": "ムラサキテングチョウ",
+      "insect_id": "species-20301",
+      "reason": "no_emergence_extracted",
+      "page": 93,
+      "side": "R",
+      "ecology": "日本で探された個体はフィリピン亜種 philippina Staudinger， 1889と考えられる。 図示した関体は、リュウキュウヒヨドリバナで吸載中であったと"
+    },
+    {
+      "name": "ヤエヤマムラサキ",
+      "insect_id": "species-20324",
+      "reason": "no_emergence_extracted",
+      "page": 102,
+      "side": "L",
+      "ecology": "ヤエヤマムラサキ\nHypolimnas anomala\n(Wallace,1869)\n一見してリュウキュウムラサキに似るが還形が細長で、早はもち\n合もあるが、年によってはほとんど発生しない場合もあり、同地に\nろんのことるも前後麺中火の白達がなく、早は前題の斜白番がない。\nおいても土着種ではなく、フィリピン地区からの迷チョウに由来す\n早の前場表外半は広く、強い紫色の光沢をそなえるが、みにはこれ\nる一時的な発生ではないかと推定される。九州本土以北では鹿児時、\nかないか、少ししかな"
+    },
+    {
+      "name": "ヤエヤマイチモンジ",
+      "insect_id": "species-20344",
+      "reason": "no_emergence_extracted",
+      "page": 118,
+      "side": "L",
+      "ecology": "ヤエヤマイチモンジ\nAthyma selenophora(Kollar, 1844)\n色彩校はお早によって若しく異なり、るの麹表は前後翅をつら\n[食草]\nぬく1本の白番をそなえるが、早はミスジチョウ型の3白希であり、\n幼虫の食草はアカミスキ・ヤエヤマコンロンカ・コンロンカな\n一見したところではる早は別種のように見える。和名ヤエヤマイチ\nどのアカ料料。\nモンジは”八重山詰島に産するイチモンジチョヴの意である。\n[分布]\nヤエヤマイチモンジ、\nシロミスジの分布\n日本では沖縄の八重"
+    },
+    {
+      "name": "リュウキュウアサギマダラ",
+      "insect_id": "species-20389",
+      "reason": "no_emergence_extracted",
+      "page": 142,
+      "side": "R",
+      "ecology": "さらに 1910)という車積名がつけられているが、使用されない はDNA解折などの研究で発明されることを期待したい。"
+    },
+    {
+      "name": "ミナミムラサキマダラ",
+      "insect_id": "species-20395",
+      "reason": "no_page_match"
+    },
+    {
+      "name": "ツマムラサキマダラ",
+      "insect_id": "species-20398",
+      "reason": "no_emergence_extracted",
+      "page": 146,
+      "side": "L",
+      "ecology": "色条および白選がない。表面では早の白条はいっそう額者である。"
+    },
+    {
+      "name": "コキマダラセセリ",
+      "insect_id": "species-20422",
+      "reason": "no_emergence_extracted",
+      "page": 158,
+      "side": "R",
+      "ecology": "コキマダラセセリ\nOchlodes venatus(Bremer & Grey, 1852)\n色彩校は3早によって着しく異なる。なの前後表面は、殺色\n[食草]\nから濃投色で前翅中室下方を斜走する黒色の性標が目立つ。さら\n幼虫の食草はススキ・オオアブラススキ・ヒメノガリヤス・オオア\nに前縁から外緑部にかけての黒色部の発現には変異が多い。餌体\nワガエリ(チモシー)・イワノガリヤス・オニノガリヤス・アシ・エゾカ\nによってはこの部分の黒帯が幅広く鮮明となるものや、黒色の性物\nモジグサ"
+    }
+  ],
+  "unmatched_page_preview": [
+    {
+      "page": 4,
+      "side": "R",
+      "top_lines": [
+        "タテハチョウ科",
+        "・172～289",
+        "粭論…",
+        "・172",
+        "・176",
+        "図版と解説・"
+      ]
+    },
+    {
+      "page": 6,
+      "side": "L",
+      "top_lines": [
+        "用語解説",
+        "この図能で使われている用語や用語の用法、蝶の研究に覚えておきたい用語などを、こ",
+        "こに五十音期にまとめた。一部の用語については、参考に写真や図を載せた。",
+        "[かみん(夏眠)]夏になって適温以上に温度が上がると、",
+        "[あか(亜科)]動物分類学上の単位。科の下に設けられる",
+        "昆虫の種によっては活動をやめて不活動状態になる。たとえ"
+      ]
+    },
+    {
+      "page": 125,
+      "side": "R",
+      "top_lines": [
+        "タテハチョウ科 解説129",
+        "ベニヒカゲの裏面など",
+        "図版では義面の部合上、おもに表面の変異を続せた。しかし、貴面の変異も重要な",
+        "ので、ここにおもに裏面を頼せる。最下段の標本は、北海道の高山で持られたもの。",
+        "早・裏",
+        "す・"
+      ]
+    },
+    {
+      "page": 145,
+      "side": "R",
+      "top_lines": [
+        "スジグロシロマダラ(版]1)ミダムスルリマダラ(図版日1)",
+        "タテハチョウ科 解説154",
+        "[食草]",
+        "スングロカバマダラの分布図",
+        "石垣島で製祭された幼虫の食章はガガイモ料のリュウキュウガシ",
+        "ワ・アマミイケマ。ソメモノカズラより幼虫が見つかった例がある。"
+      ]
+    }
+  ]
+}

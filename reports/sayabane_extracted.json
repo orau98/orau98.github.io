@@ -1,0 +1,503 @@
+[
+  {
+    "japanese_name": "シラホシカミキリ 伊豆諸島中南部亜種",
+    "scientific_name": "Glenea (Glenea) relicta izuinsulana Fujita, 1980",
+    "family_jp": "カミキリムシ科",
+    "host_plants": [
+      {"name": "タマアジサイ", "family": "ユキノシタ科"},
+      {"name": "ラセイタソウ", "family": "イラクサ科"},
+      {"name": "ハチジョウイチゴ", "family": "バラ科"},
+      {"name": "オオムラサキシキブ", "family": "クマツヅラ科"},
+      {"name": "オオシマザクラ", "family": "バラ科"},
+      {"name": "ゴトウヅル", "family": "ユキノシタ科"}
+    ],
+    "ecological_notes": "伊豆諸島御蔵島に分布。後食対象としてタマアジサイを最も好み、ラセイタソウ・ハチジョウイチゴなどにも後食。成虫は6〜7月に観察。同所に生育するガクアジサイからは後食痕が確認されない。",
+    "article_title": "御蔵島におけるシラホシカミキリ属2種の後食植物",
+    "authors": ["高桑正敏", "岸本年郎", "岸田泰則", "須田真一"],
+    "year": "2011",
+    "issue": "さやばね ニューシリーズ No.1",
+    "pages": "18-21",
+    "insect_id": "species-23008"
+  },
+  {
+    "japanese_name": "リュウキュウルリボシカミキリ 伊豆諸島亜種",
+    "scientific_name": "Glenea (Glenea) chlorospila hachijonis Matsumura et Matsushita",
+    "family_jp": "カミキリムシ科",
+    "host_plants": [
+      {"name": "タマアジサイ", "family": "ユキノシタ科"},
+      {"name": "ラセイタソウ", "family": "イラクサ科"},
+      {"name": "ハチジョウイチゴ", "family": "バラ科"},
+      {"name": "オオムラサキシキブ", "family": "クマツヅラ科"},
+      {"name": "オオシマザクラ", "family": "バラ科"},
+      {"name": "エビヅル", "family": "ブドウ科"},
+      {"name": "ノブドウ", "family": "ブドウ科"},
+      {"name": "ツタ", "family": "ブドウ科"},
+      {"name": "ゴトウヅル", "family": "ユキノシタ科"}
+    ],
+    "ecological_notes": "伊豆諸島御蔵島に分布。ブドウ類（エビヅル・ノブドウ・ツタ）を主な後食対象とするが、タマアジサイ・ラセイタソウ等にも後食。成虫は6〜7月に観察。",
+    "article_title": "御蔵島におけるシラホシカミキリ属2種の後食植物",
+    "authors": ["高桑正敏", "岸本年郎", "岸田泰則", "須田真一"],
+    "year": "2011",
+    "issue": "さやばね ニューシリーズ No.1",
+    "pages": "18-21",
+    "insect_id": "species-22995"
+  },
+  {
+    "japanese_name": "ツヤナガタマムシ",
+    "scientific_name": "Agrilus cupes Lewis, 1893",
+    "family_jp": "タマムシ科",
+    "host_plants": [
+      {"name": "バイカウツギ", "family": "ユキノシタ科"}
+    ],
+    "ecological_notes": "兵庫県において採集。成虫がバイカウツギの生葉を加害しているのが確認され、バイカウツギの枯れ枝より羽化脱出。成虫・幼虫ともにバイカウツギを加害植物として利用。羽化脱出時期は5〜6月。",
+    "article_title": "ツヤナガタマムシの寄主植物について（短報）",
+    "authors": ["栗原隆", "福富宏和"],
+    "year": "2011",
+    "issue": "さやばね ニューシリーズ No.1",
+    "pages": "27",
+    "insect_id": "species-21751"
+  },
+  {
+    "japanese_name": "ツマキナガタマムシ",
+    "scientific_name": "Agrilus auroapicalis ishigakianus Tôyama, 1985",
+    "family_jp": "タマムシ科",
+    "host_plants": [
+      {"name": "ハマセンダン", "family": "ミカン科"}
+    ],
+    "ecological_notes": "沖縄県石垣島・西表島に分布する日本亜種。ハマセンダンの枯れ枝より羽化脱出し、成虫がハマセンダンの生葉上でも確認。羽化脱出時期は4〜5月。",
+    "article_title": "日本におけるツマキナガタマムシの寄主植物および西表島からの記録（短報）",
+    "authors": ["福富宏和", "栗原隆"],
+    "year": "2011",
+    "issue": "さやばね ニューシリーズ No.1",
+    "pages": "27",
+    "insect_id": "species-10102"
+  },
+  {
+    "japanese_name": "クロホシクチブトサルゾウムシ",
+    "scientific_name": "Pelenomus canaliculatus (Fåhraeus, 1843)",
+    "family_jp": "ゾウムシ科",
+    "host_plants": [
+      {"name": "オオフサモ", "family": "アリノトウグサ科"}
+    ],
+    "ecological_notes": "本州各地の湖沼・河川・用水路に繁茂するオオフサモ（特定外来生物）を寄主とする日本在来種。成虫は水上葉を摂食し、幼虫は外食性で葉を食べ、茎上に繭を形成して蛹化。成虫出現期は5〜8月（ドイツでの記録）、日本では5〜9月に確認。",
+    "article_title": "特定外来生物オオフサモを食害する日本産クチブトサルゾウムシ族2種に関する覚書",
+    "authors": ["吉武啓"],
+    "year": "2011",
+    "issue": "さやばね ニューシリーズ No.3",
+    "pages": "1-7",
+    "insect_id": null
+  },
+  {
+    "japanese_name": "ヤマトクチブトサルゾウムシ",
+    "scientific_name": "Phytobius japonicus (Roelofs, 1875)",
+    "family_jp": "ゾウムシ科",
+    "host_plants": [
+      {"name": "オオフサモ", "family": "アリノトウグサ科"}
+    ],
+    "ecological_notes": "南千島・本州・四国に分布。本州各地でオオフサモを寄主として利用していることが確認された日本在来種。成虫は水上葉を摂食し、幼虫は外食性。老熟幼虫は寄主植物の茎を削り半球形の繭を形成して蛹化。年2化以上の可能性あり（5月・8月に成虫・幼虫が確認）。",
+    "article_title": "特定外来生物オオフサモを食害する日本産クチブトサルゾウムシ族2種に関する覚書",
+    "authors": ["吉武啓"],
+    "year": "2011",
+    "issue": "さやばね ニューシリーズ No.3",
+    "pages": "1-7",
+    "insect_id": null
+  },
+  {
+    "japanese_name": "サツマイモヒサゴトビハムシ",
+    "scientific_name": "Chaetocnema (Tlanoma) confinis Crotch, 1873",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ヨウサイ（エンサイ・空心菜）", "family": "ヒルガオ科"},
+      {"name": "サツマイモ", "family": "ヒルガオ科"},
+      {"name": "ヒルガオ", "family": "ヒルガオ科"}
+    ],
+    "ecological_notes": "北アメリカ原産で日本には単為生殖個体群が侵入。九州・種子島・沖縄諸島等に分布。成虫は成虫越冬と考えられ、秋季（10〜11月）に活発に活動。葉面に茶黄色の傷痕を多数残す食害をおこなう。日本産個体は全て雌のみの単為生殖個体群。",
+    "article_title": "サツマイモヒサゴトビハムシのエンサイへの加害，および国内における分布と単為生殖個体群の存在について",
+    "authors": ["今坂正一", "石関博"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.5",
+    "pages": "18-21",
+    "insect_id": "species-H057"
+  },
+  {
+    "japanese_name": "アザミオオハムシ",
+    "scientific_name": "Galeruca (Galeruca) dahlii vicina Solsky, 1872",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "アザミ属", "family": "キク科"},
+      {"name": "トリカブト属", "family": "キンポウゲ科"},
+      {"name": "フキ", "family": "キク科"},
+      {"name": "ギボウシ", "family": "ユリ科"}
+    ],
+    "ecological_notes": "神奈川・静岡・山梨県境の西丹沢地域（標高800〜1300m）で観察。本来の寄主アザミ類が少ない環境で、シカの採食を受けないトリカブト属植物を後食することが確認された。7〜10月に活動。産卵実験ではトリカブトへの産卵は確認されなかった。",
+    "article_title": "シカの採食に伴う林床植生の単純化がハムシ科甲虫数種の食性に及ぼす影響",
+    "authors": ["日下部良康"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.5",
+    "pages": "22-27",
+    "insect_id": "species-H254"
+  },
+  {
+    "japanese_name": "ヒゲナガルリマルノミハムシ",
+    "scientific_name": "Hemipyxis plagioderoides (Motschulsky, 1861)",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "テンニンソウ", "family": "シソ科"},
+      {"name": "ミヤマイボタ", "family": "モクセイ科"},
+      {"name": "ヒメシャラ", "family": "ツバキ科"},
+      {"name": "トリカブト属", "family": "キンポウゲ科"},
+      {"name": "オオバコ", "family": "オオバコ科"},
+      {"name": "クサギ", "family": "クマツヅラ科"},
+      {"name": "ムラサキシキブ", "family": "クマツヅラ科"}
+    ],
+    "ecological_notes": "西丹沢地域（標高800〜1300m）で観察。本来の寄主テンニンソウが優占する環境ではテンニンソウを最も好み、ミヤマイボタにも後食。両植物間を飛翔して移動する行動が観察された。7月に成虫が多数確認。",
+    "article_title": "シカの採食に伴う林床植生の単純化がハムシ科甲虫数種の食性に及ぼす影響",
+    "authors": ["日下部良康"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.5",
+    "pages": "22-27",
+    "insect_id": "species-H089"
+  },
+  {
+    "japanese_name": "アカイロマルノミハムシ",
+    "scientific_name": "Argopus punctipennis punctipennis (Motschulsky, 1866)",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "トリカブト属", "family": "キンポウゲ科"},
+      {"name": "アザミ属", "family": "キク科"}
+    ],
+    "ecological_notes": "西丹沢地域（標高800〜1300m）で観察。シカの採食を受けないトリカブト属と、アザミ類のみを後食（選択実験でも同様）。成虫はほぼ全てトリカブトの葉裏に静止。幼虫は潜葉性。後翅が発達しており飛翔可能。7〜10月に成虫が確認。",
+    "article_title": "シカの採食に伴う林床植生の単純化がハムシ科甲虫数種の食性に及ぼす影響",
+    "authors": ["日下部良康"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.5",
+    "pages": "22-27",
+    "insect_id": "species-H040"
+  },
+  {
+    "japanese_name": "シラホシカミキリ 伊豆諸島中南部亜種（追加知見）",
+    "scientific_name": "Glenea (Glenea) relicta izuinsulana Fujita, 1980",
+    "family_jp": "カミキリムシ科",
+    "host_plants": [
+      {"name": "タマアジサイ", "family": "ユキノシタ科"},
+      {"name": "ハクサンボク", "family": "スイカズラ科"},
+      {"name": "オオムラサキシキブ", "family": "クマツヅラ科"},
+      {"name": "オオシマザクラ", "family": "バラ科"},
+      {"name": "ハチジョウイチゴ", "family": "バラ科"},
+      {"name": "ハチジョウイボタ", "family": "モクセイ科"}
+    ],
+    "ecological_notes": "御蔵島の樹林内でハクサンボクが新たな後食植物として追加確認。タマアジサイに最も多く後食痕が認められ、次いでハクサンボクに多い。活動期は4〜8月。三宅島ではカラムシへの後食痕も確認。",
+    "article_title": "御蔵島および三宅島におけるシラホシカミキリ属の後食植物の追加知見（短報）",
+    "authors": ["高桑正敏"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.5",
+    "pages": "53-54",
+    "insect_id": "species-23008"
+  },
+  {
+    "japanese_name": "リュウキュウルリボシカミキリ 伊豆諸島亜種（追加知見）",
+    "scientific_name": "Glenea (Glenea) chlorospila hachijonis Matsumura et Matsushita",
+    "family_jp": "カミキリムシ科",
+    "host_plants": [
+      {"name": "タマアジサイ", "family": "ユキノシタ科"},
+      {"name": "ラセイタソウ", "family": "イラクサ科"},
+      {"name": "ハクサンボク", "family": "スイカズラ科"},
+      {"name": "オオムラサキシキブ", "family": "クマツヅラ科"},
+      {"name": "ハチジョウイチゴ", "family": "バラ科"},
+      {"name": "カラムシ", "family": "イラクサ科"}
+    ],
+    "ecological_notes": "御蔵島および三宅島に分布。三宅島ではカラムシへの後食痕も確認。活動期は4〜8月（活動末期）。",
+    "article_title": "御蔵島および三宅島におけるシラホシカミキリ属の後食植物の追加知見（短報）",
+    "authors": ["高桑正敏"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.5",
+    "pages": "53-54",
+    "insect_id": "species-22995"
+  },
+  {
+    "japanese_name": "ルリカミキリ",
+    "scientific_name": "Bacchisa (Bacchisa) fortunei japonica (Gahan, 1901)",
+    "family_jp": "カミキリムシ科",
+    "host_plants": [
+      {"name": "セイヨウベニカナメモチ（レッドロビン）", "family": "バラ科"},
+      {"name": "カマツカ（ウシコロシ）", "family": "バラ科"}
+    ],
+    "ecological_notes": "神奈川県内3箇所でセイヨウベニカナメモチ（Photinia glabra × P. serrulata）への加害を確認。幼虫は主幹部または太い枝を加害し、繊維状の木屑を噴出させる。成虫は5月頃に確認。都市近郊の植栽樹への侵入・定着が増加傾向。",
+    "article_title": "神奈川県におけるルリカミキリによるセイヨウベニカナメモチへの加害例（短報）",
+    "authors": ["日下部良康"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.6",
+    "pages": "35",
+    "insect_id": "species-22647"
+  },
+  {
+    "japanese_name": "アオナガタマムシ",
+    "scientific_name": "Agrilus planipennis Fairmaire, 1888",
+    "family_jp": "タマムシ科",
+    "host_plants": [
+      {"name": "シオジ", "family": "モクセイ科"},
+      {"name": "サワグルミ", "family": "クルミ科"},
+      {"name": "オニグルミ", "family": "クルミ科"},
+      {"name": "ハルニレ", "family": "ニレ科"},
+      {"name": "ヤチダモ", "family": "モクセイ科"}
+    ],
+    "ecological_notes": "兵庫県宍粟市氷ノ山で7〜8月にシオジの衰弱木から多数採集。成虫は気温が高くなる11時頃から樹幹に飛来し産卵行動・交尾行動を示す。羽化時期は7月下旬〜8月中旬。日当たりの悪い場所でも午後4時頃まで活動することがある。シオジはトネリコ属として従来の生態知識と整合的。北米では街路樹への甚大な被害が知られている外来種。",
+    "article_title": "アオナガタマムシの寄主植物について（短報）",
+    "authors": ["森正人"],
+    "year": "2012",
+    "issue": "さやばね ニューシリーズ No.8",
+    "pages": "50-51",
+    "insect_id": "species-10080"
+  },
+  {
+    "japanese_name": "チュウジョウアシナガトビハムシ",
+    "scientific_name": "Longitarsus (Longitarsus) ohnoi Gruev, 1995",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ハマヒルガオ", "family": "ヒルガオ科"}
+    ],
+    "ecological_notes": "北海道利尻島の海岸部でハマヒルガオ上に多数が見られた（2012年8月）。北海道では焼尻島・釧路地方等での記録があるが、利尻島では初記録と思われる。",
+    "article_title": "北海道におけるアシナガトビハムシ属Longitarsus4種の分布記録と生態に関する知見",
+    "authors": ["末長晴輝", "堀繁久"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.10",
+    "pages": "20-22",
+    "insect_id": "species-H130"
+  },
+  {
+    "japanese_name": "ヒナノウスツボアシナガトビハムシ",
+    "scientific_name": "Longitarsus (Longitarsus) okushiriensis Gruev, 1995",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "エゾヒナノウスツボ", "family": "ゴマノハグサ科"},
+      {"name": "ゴマノハグサ属", "family": "ゴマノハグサ科"}
+    ],
+    "ecological_notes": "北海道利尻島の海岸部礫浜でエゾヒナノウスツボ葉上に多数の成虫と食痕を確認（2012年8月）。北海道では原記載（1968年）以来の再確認で、北海道レッドリスト希少種。食草のエゾヒナノウスツボが礫浜という特定環境にのみ生育するため生息地が限定される。九州ではゴマノハグサ属植物上でも見られる。",
+    "article_title": "北海道におけるアシナガトビハムシ属Longitarsus4種の分布記録と生態に関する知見",
+    "authors": ["末長晴輝", "堀繁久"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.10",
+    "pages": "20-22",
+    "insect_id": "species-H131"
+  },
+  {
+    "japanese_name": "タツナミソウアシナガトビハムシ",
+    "scientific_name": "Longitarsus (Longitarsus) scutellariae Ohno, 1968",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ナミキソウ", "family": "シソ科"},
+      {"name": "タツナミソウ類", "family": "シソ科"}
+    ],
+    "ecological_notes": "北海道ウトナイ湖でシソ科のナミキソウを含む草地のスイーピングで得られた（1992年・2012年）。ナミキソウにノミハムシ特有の食痕が認められた。北海道では原記載以来の再確認で、北海道レッドリスト希少種。標本数が少ない稀少種。",
+    "article_title": "北海道におけるアシナガトビハムシ属Longitarsus4種の分布記録と生態に関する知見",
+    "authors": ["末長晴輝", "堀繁久"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.10",
+    "pages": "20-22",
+    "insect_id": "species-H135"
+  },
+  {
+    "japanese_name": "ナガコメツキダマシ",
+    "scientific_name": "Isorhipis banghaasi (Reitter, 1899)",
+    "family_jp": "コメツキダマシ科",
+    "host_plants": [
+      {"name": "リョウブ", "family": "リョウブ科"},
+      {"name": "シデ（クマシデ属の一種）", "family": "カバノキ科"}
+    ],
+    "ecological_notes": "静岡県遠笠山・徳島県阿波町妙体山の材から羽化脱出。リョウブ材から1968年5月材採集・7月羽化脱出、シデ類材から2004年5月採集・羽化脱出。枯れ木・材に依存する木材食性種。",
+    "article_title": "3種のコメツキダマシの食樹について（短報）",
+    "authors": ["鈴木亙"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.10",
+    "pages": "12",
+    "insect_id": null
+  },
+  {
+    "japanese_name": "オニコメツキダマシ",
+    "scientific_name": "Hylochares harmandi Fleutiaux, 1900",
+    "family_jp": "コメツキダマシ科",
+    "host_plants": [
+      {"name": "ブドウ属の一種", "family": "ブドウ科"},
+      {"name": "ケヤキ", "family": "ニレ科"}
+    ],
+    "ecological_notes": "栃木県中禅寺湖の材から1968年5月材採集・7月羽化脱出。過去にニレ科ケヤキの枯れ枝からの羽化脱出記録あり（山上1989）。枯れ木・材に依存する木材食性種。",
+    "article_title": "3種のコメツキダマシの食樹について（短報）",
+    "authors": ["鈴木亙"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.10",
+    "pages": "12",
+    "insect_id": null
+  },
+  {
+    "japanese_name": "ナガミゾコメツキダマシ",
+    "scientific_name": "Dirrhagofarsus lewisi (Fleutiaux, 1900)",
+    "family_jp": "コメツキダマシ科",
+    "host_plants": [
+      {"name": "オニグルミ", "family": "クルミ科"}
+    ],
+    "ecological_notes": "徳島県西祖谷山村祖谷浜のオニグルミ材から2000年5月羽化脱出。北米ではアメリカブナ材へ侵入することが知られている。日本からは本種が北米に移入した記録がある。枯れ木・材に依存する木材食性種。",
+    "article_title": "3種のコメツキダマシの食樹について（短報）",
+    "authors": ["鈴木亙"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.10",
+    "pages": "12",
+    "insect_id": null
+  },
+  {
+    "japanese_name": "サクラサルハムシ",
+    "scientific_name": "Cleoporus variabilis (Baly, 1874)",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "イロハモミジ", "family": "カエデ科"},
+      {"name": "キヅタ", "family": "ウコギ科"},
+      {"name": "ハンノキ", "family": "カバノキ科"},
+      {"name": "ヤマボウシ", "family": "ミズキ科"},
+      {"name": "ツツジ属の1種", "family": "ツツジ科"},
+      {"name": "クリ", "family": "ブナ科"},
+      {"name": "コナラ", "family": "ブナ科"},
+      {"name": "オトギリソウ", "family": "オトギリソウ科"},
+      {"name": "キンシバイ", "family": "オトギリソウ科"},
+      {"name": "ヒュウガミズキ", "family": "マンサク科"},
+      {"name": "ヤマハギ", "family": "マメ科"},
+      {"name": "サルスベリ", "family": "ミソハギ科"},
+      {"name": "マルバアオダモ", "family": "モクセイ科"},
+      {"name": "カマツカ", "family": "バラ科"},
+      {"name": "ウメ", "family": "バラ科"},
+      {"name": "ウワミズザクラ", "family": "バラ科"},
+      {"name": "カスミサクラ", "family": "バラ科"},
+      {"name": "ソメイヨシノ", "family": "バラ科"},
+      {"name": "ノイバラ", "family": "バラ科"},
+      {"name": "ワレモコウ", "family": "バラ科"},
+      {"name": "ナナカマド", "family": "バラ科"},
+      {"name": "シモツケ", "family": "バラ科"},
+      {"name": "ヤナギ属の1種", "family": "ヤナギ科"},
+      {"name": "ケヤキ", "family": "ニレ科"}
+    ],
+    "ecological_notes": "本州・四国・九州に分布。富山県射水市の県民公園「太閤山ランド」で大発生し、14科20属24種の植物への加害が2011〜2013年に観察された。成虫活動期は6月上旬〜9月中旬で、ピークは6月下旬〜7月下旬。年1化性。幼虫は土中で寄主植物の根を摂食。全既知寄主植物は27科40属60種以上に及ぶ広食性種。",
+    "article_title": "サクラサルハムシ（ハムシ科，サルハムシ亜科）の寄主植物選好性－富山県射水市の県民公園「太閤山ランド」における大発生をめぐって－",
+    "authors": ["鈴木邦雄", "南雅之", "増岡裕大"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.12",
+    "pages": "38-55",
+    "insect_id": "species-H943"
+  },
+  {
+    "japanese_name": "ニホンケブカサルハムシ",
+    "scientific_name": "Fidia japonica (Ohno, 1958)",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ケヤキ", "family": "ニレ科"},
+      {"name": "ヤブツバキ", "family": "ツバキ科"},
+      {"name": "トウカエデ", "family": "カエデ科"},
+      {"name": "イロハモミジ", "family": "カエデ科"},
+      {"name": "ソメイヨシノ", "family": "バラ科"},
+      {"name": "カスミサクラ", "family": "バラ科"}
+    ],
+    "ecological_notes": "本州・九州・佐渡・伊豆諸島・対馬・屋久島に分布。富山県射水市太閤山ランドで5月に採集。成虫は直接摂食を確認。新寄主植物として4科を追加（カエデ科・バラ科）。幼虫は土中で根を摂食する可能性が高い。分断狭食性（disjunctive oligophagy）を示し、系統的に近縁でない4科以上の植物を利用。産卵時に葉裏にぶら下がり卵に糞を塗り付け地上に落下させる習性を持つ。",
+    "article_title": "ニホンケブカサルハムシ（ハムシ科，サルハムシ亜科）の新寄主植物（短報）",
+    "authors": ["鈴木邦雄"],
+    "year": "2013",
+    "issue": "さやばね ニューシリーズ No.12",
+    "pages": "55",
+    "insect_id": "species-H507"
+  },
+  {
+    "japanese_name": "アオバネサルハムシ",
+    "scientific_name": "Basilepta fulvipes (Motschulsky, 1860)",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ヤマハハコ", "family": "キク科"},
+      {"name": "ヨモギ類", "family": "キク科"},
+      {"name": "キク類", "family": "キク科"},
+      {"name": "ヒマワリ", "family": "キク科"},
+      {"name": "ハンノキ類", "family": "カバノキ科"},
+      {"name": "ミヤマハンノキ", "family": "カバノキ科"},
+      {"name": "ハンノキ", "family": "カバノキ科"},
+      {"name": "ガマズミ", "family": "スイカズラ科"},
+      {"name": "ヒルガオ", "family": "ヒルガオ科"},
+      {"name": "ヤマボウシ", "family": "ミズキ科"},
+      {"name": "ナツグミ", "family": "グミ科"},
+      {"name": "ツツジの1種", "family": "ツツジ科"},
+      {"name": "クリ", "family": "ブナ科"},
+      {"name": "コナラ", "family": "ブナ科"},
+      {"name": "オトギリソウ", "family": "オトギリソウ科"},
+      {"name": "キンシバイ", "family": "オトギリソウ科"},
+      {"name": "ヒュウガミズキ", "family": "マンサク科"},
+      {"name": "ツルマメ（ダイズ）", "family": "マメ科"},
+      {"name": "ハギ類", "family": "マメ科"},
+      {"name": "ヤマハギ", "family": "マメ科"},
+      {"name": "サルスベリ", "family": "ミソハギ科"},
+      {"name": "イチジク", "family": "クワ科"},
+      {"name": "マルバアオダモ", "family": "モクセイ科"},
+      {"name": "オオマツヨイグサ", "family": "アカバナ科"},
+      {"name": "イヌタデ", "family": "タデ科"},
+      {"name": "イタドリ", "family": "タデ科"},
+      {"name": "ギシギシ", "family": "タデ科"},
+      {"name": "オランダイチゴ", "family": "バラ科"},
+      {"name": "セイヨウリンゴ", "family": "バラ科"},
+      {"name": "ウワミズザクラ", "family": "バラ科"},
+      {"name": "ニワウメ", "family": "バラ科"},
+      {"name": "ウメ", "family": "バラ科"},
+      {"name": "カスミサクラ", "family": "バラ科"},
+      {"name": "ナシ", "family": "バラ科"},
+      {"name": "ノイバラ", "family": "バラ科"},
+      {"name": "キイチゴ類（ナワシロイチゴ）", "family": "バラ科"},
+      {"name": "ワレモコウ", "family": "バラ科"},
+      {"name": "ナナカマド", "family": "バラ科"},
+      {"name": "シモツケ", "family": "バラ科"},
+      {"name": "ヤマナラシ（ハコヤナギ）類", "family": "ヤナギ科"},
+      {"name": "ヤナギ類", "family": "ヤナギ科"}
+    ],
+    "ecological_notes": "富山県各地で長年調査。少なくとも18科33属38種（新記録27種を含む）の植物を寄主として利用する著しく多食性の種。成虫活動期は6〜9月。幼虫は土中で寄主植物の根を摂食すると推定される。富山県神通川・常願寺川の河川敷でナツグミやイタドリ・ヤナギ類等を好食しているのが頻繁に観察される。",
+    "article_title": "アオバネサルハムシ（ハムシ科，サルハムシ亜科）の寄主植物選好性（予報）",
+    "authors": ["鈴木邦雄"],
+    "year": "2015",
+    "issue": "さやばね ニューシリーズ No.17",
+    "pages": "17-21",
+    "insect_id": "species-H536"
+  },
+  {
+    "japanese_name": "ニホンケブカサルハムシ（追加記録）",
+    "scientific_name": "Fidia japonica (Ohno, 1958)",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ケヤキ", "family": "ニレ科"},
+      {"name": "ヤブツバキ", "family": "ツバキ科"},
+      {"name": "トウカエデ", "family": "カエデ科"},
+      {"name": "イロハモミジ", "family": "カエデ科"},
+      {"name": "ソメイヨシノ", "family": "バラ科"},
+      {"name": "カスミサクラ", "family": "バラ科"},
+      {"name": "ヒュウガミズキ", "family": "マンサク科"},
+      {"name": "コナラ", "family": "ブナ科"},
+      {"name": "オニグルミ", "family": "クルミ科"}
+    ],
+    "ecological_notes": "富山県射水市太閤山ランド内（2014年4月）および千葉県市川市国府台（2014年5月）で追加寄主植物を確認。ヒュウガミズキ・コナラからも成虫を採集し好食を確認。千葉県市川市でケヤキの他にオニグルミの葉を摂食中の成虫を複数個体観察。計7科の植物を利用する多食性種であることが判明。",
+    "article_title": "ニホンケブカサルハムシ（ハムシ科，サルハムシ亜科）の新寄主植物（追加）（短報）",
+    "authors": ["鈴木邦雄"],
+    "year": "2015",
+    "issue": "さやばね ニューシリーズ No.17",
+    "pages": "21",
+    "insect_id": "species-H507"
+  },
+  {
+    "japanese_name": "ヘリグロテントウトビハムシ",
+    "scientific_name": "Argopistes coccinelliformis Csiki, 1940",
+    "family_jp": "ハムシ科",
+    "host_plants": [
+      {"name": "ネズミモチ", "family": "モクセイ科"},
+      {"name": "イボタノキ", "family": "モクセイ科"},
+      {"name": "キンモクセイ", "family": "モクセイ科"},
+      {"name": "ギンモクセイ", "family": "モクセイ科"},
+      {"name": "マルバヒイラギ", "family": "モクセイ科"},
+      {"name": "ヒイラギ", "family": "モクセイ科"},
+      {"name": "ヒイラギモクセイ", "family": "モクセイ科"}
+    ],
+    "ecological_notes": "極東〜東南アジアに広く分布し、日本では本州以西・南西諸島に分布。富山県への公式記録はなかったが、富山市・射水市を中心に県下各地の植栽モクセイ科植物で10年以上前から確認されていた。成虫は葉に特徴的な円形の食痕を残す。成虫活動期は4月〜（冬期はケヤキ等の樹皮下で越冬）。モクセイ科の数属のみを利用する狭食性種。",
+    "article_title": "富山県におけるヘリグロテントウトビハムシ（ハムシ科，トビハムシ亜科）の寄主植物",
+    "authors": ["鈴木邦雄"],
+    "year": "2015",
+    "issue": "さやばね ニューシリーズ No.17",
+    "pages": "22-23",
+    "insect_id": "species-H808"
+  }
+]

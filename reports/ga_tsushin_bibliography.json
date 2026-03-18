@@ -1,0 +1,1578 @@
+[
+  {
+    "key": "ga-tsushin-103-yamamoto-1979",
+    "type": "article",
+    "title": "ミヤマオビキリガの幼虫",
+    "authors": [
+      "山本光人"
+    ],
+    "year": "1979",
+    "journal": "蛾類通信",
+    "issue": "103",
+    "pages": "14",
+    "csv_reference": "山本光人 (1979)"
+  },
+  {
+    "key": "ga-tsushin-103-sugi-1979",
+    "type": "article",
+    "title": "リュウキュウキノカワガの幼期について",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1979",
+    "journal": "蛾類通信",
+    "issue": "103",
+    "pages": "16",
+    "csv_reference": "杉繁郎 (1979)"
+  },
+  {
+    "key": "ga-tsushin-108-iijima-1980",
+    "type": "article",
+    "title": "本邦から再発見されたナワメナミシャク",
+    "authors": [
+      "飯島一雄"
+    ],
+    "year": "1980",
+    "journal": "蛾類通信",
+    "issue": "108",
+    "pages": "13",
+    "csv_reference": "飯島一雄 (1980)"
+  },
+  {
+    "key": "ga-tsushin-111-shimbo-1981",
+    "type": "article",
+    "title": "木曾御岳の高山蛾（2）ならびに高山植物を食餌とする蛾の幼虫について（3）",
+    "authors": [
+      "神保一義",
+      "柳田慶浩"
+    ],
+    "year": "1981",
+    "journal": "蛾類通信",
+    "issue": "111",
+    "pages": "173-176",
+    "csv_reference": "神保一義・柳田慶浩 (1981)"
+  },
+  {
+    "key": "ga-tsushin-114-sugi-1982a",
+    "type": "article",
+    "title": "沖縄本島のMasca abactalis Walkerウラモンシロクチバ（新称）",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1982",
+    "journal": "蛾類通信",
+    "issue": "114",
+    "pages": "213-214",
+    "csv_reference": "杉繁郎 (1982)"
+  },
+  {
+    "key": "ga-tsushin-114-togashi-1982",
+    "type": "article",
+    "title": "石川県産蛾類の食草1",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1982",
+    "journal": "蛾類通信",
+    "issue": "114",
+    "pages": "214-216",
+    "csv_reference": "富樫 (1982)"
+  },
+  {
+    "key": "ga-tsushin-114-ogi-1982",
+    "type": "article",
+    "title": "オビウスイロヨトウの幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1982",
+    "journal": "蛾類通信",
+    "issue": "114",
+    "pages": "222",
+    "csv_reference": "小木広行 (1982)"
+  },
+  {
+    "key": "ga-tsushin-116-shimbo-1982",
+    "type": "article",
+    "title": "高山植物を食餌とする蛾の幼虫（4）",
+    "authors": [
+      "神保一義",
+      "柳田慶浩"
+    ],
+    "year": "1982",
+    "journal": "蛾類通信",
+    "issue": "116",
+    "pages": "246-258",
+    "csv_reference": "神保一義・柳田慶浩 (1982)"
+  },
+  {
+    "key": "ga-tsushin-118-ohwada-1982b",
+    "type": "article",
+    "title": "オオキイロアツバの予想外の食草",
+    "authors": [
+      "大和田守"
+    ],
+    "year": "1982",
+    "journal": "蛾類通信",
+    "issue": "118",
+    "pages": "288",
+    "csv_reference": "大和田守 (1982)"
+  },
+  {
+    "key": "ga-tsushin-119-yamamoto-1982",
+    "type": "article",
+    "title": "フタテンアツバの幼虫と食草",
+    "authors": [
+      "山本光人"
+    ],
+    "year": "1982",
+    "journal": "蛾類通信",
+    "issue": "119",
+    "pages": "297",
+    "csv_reference": "山本光人 (1982)"
+  },
+  {
+    "key": "ga-tsushin-120-ogi-1983",
+    "type": "article",
+    "title": "キイロトガリヨトウの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1983",
+    "journal": "蛾類通信",
+    "issue": "120",
+    "pages": "319",
+    "csv_reference": "小木広行 (1983)"
+  },
+  {
+    "key": "ga-tsushin-121-togashi-1983",
+    "type": "article",
+    "title": "石川県産蛾類の食草2",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1983",
+    "journal": "蛾類通信",
+    "issue": "121",
+    "pages": "4",
+    "csv_reference": "富樫一次 (1983)"
+  },
+  {
+    "key": "ga-tsushin-121-ogi-1983",
+    "type": "article",
+    "title": "ヒメモクメヨトウの幼虫と食草",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1983",
+    "journal": "蛾類通信",
+    "issue": "121",
+    "pages": "335",
+    "csv_reference": "小木広行 (1983)"
+  },
+  {
+    "key": "ga-tsushin-122-ohwada-yamamoto-1983",
+    "type": "article",
+    "title": "\"岩場の蛾\"に関する新知見",
+    "authors": [
+      "大和田守",
+      "山本光人"
+    ],
+    "year": "1983",
+    "journal": "蛾類通信",
+    "issue": "122",
+    "pages": "345-352",
+    "csv_reference": "大和田守,山本光人 (1983)"
+  },
+  {
+    "key": "ga-tsushin-123-kita-1983",
+    "type": "article",
+    "title": "イブキシモツケよりナマリキシタバ幼虫を採る",
+    "authors": [
+      "喜多斉"
+    ],
+    "year": "1983",
+    "journal": "蛾類通信",
+    "issue": "123",
+    "pages": "11",
+    "csv_reference": "喜多斉 (1983)"
+  },
+  {
+    "key": "ga-tsushin-124-watanabe-1984",
+    "type": "article",
+    "title": "浜松市の中心部にツキワクチバ多数飛来",
+    "authors": [
+      "渡辺一雄"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "124",
+    "pages": "389",
+    "csv_reference": "渡辺一雄 (1984)"
+  },
+  {
+    "key": "ga-tsushin-126-ogi-1984",
+    "type": "article",
+    "title": "シラクモアツバの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "126",
+    "pages": "1",
+    "csv_reference": "小木広行 (1984)"
+  },
+  {
+    "key": "ga-tsushin-126-gyotoku-1984",
+    "type": "article",
+    "title": "クロモンシタバ幼虫の食草と採集資料",
+    "authors": [
+      "行徳直巳"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "126",
+    "pages": "8-9",
+    "csv_reference": "行徳直巳 (1984)"
+  },
+  {
+    "key": "ga-tsushin-126-togashi-1984",
+    "type": "article",
+    "title": "石川県産蛾類の食草3",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "126",
+    "pages": "9-11",
+    "csv_reference": "富樫一次 (1984)"
+  },
+  {
+    "key": "ga-tsushin-127-nakamura-1984",
+    "type": "article",
+    "title": "ミヤマゴマキリガの幼虫と蛹",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "127",
+    "pages": "27-29",
+    "csv_reference": "中村正直 (1984)"
+  },
+  {
+    "key": "ga-tsushin-128-nakamura-1984",
+    "type": "article",
+    "title": "ケンモンキリガの食草追加",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "128",
+    "pages": "35-42",
+    "csv_reference": "中村正直 (1984)"
+  },
+  {
+    "key": "ga-tsushin-129-ito-1984",
+    "type": "article",
+    "title": "アベマキを食するフシキキシタバ幼虫の発見",
+    "authors": [
+      "伊藤国彦"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "129",
+    "pages": "51-52",
+    "csv_reference": "伊藤国彦 (1984)"
+  },
+  {
+    "key": "ga-tsushin-129-togashi-1984",
+    "type": "article",
+    "title": "ブナを食害する蛾類",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1984",
+    "journal": "蛾類通信",
+    "issue": "129",
+    "pages": "59-62",
+    "csv_reference": "富樫一次 (1984)"
+  },
+  {
+    "key": "ga-tsushin-130-fujisawa-1985a",
+    "type": "article",
+    "title": "松村松年博士の記載したマルハキバガ科Depressaria属2種について",
+    "authors": [
+      "藤沢勝利"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "130",
+    "pages": "65-67",
+    "csv_reference": "藤沢勝利 (1985)"
+  },
+  {
+    "key": "ga-tsushin-130-ogi-1985a",
+    "type": "article",
+    "title": "スジクロモメヨトウの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "130",
+    "pages": "68",
+    "csv_reference": "小木広行 (1985)"
+  },
+  {
+    "key": "ga-tsushin-131-ogi-1985a",
+    "type": "article",
+    "title": "シロスジキリガの幼虫と食草",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "131",
+    "pages": "83",
+    "csv_reference": "小木広行 (1985)"
+  },
+  {
+    "key": "ga-tsushin-131-sugi-1985",
+    "type": "article",
+    "title": "日本産ヤガ科の3新種の記載",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "131",
+    "pages": "89-91",
+    "csv_reference": "杉繁郎 (1985)"
+  },
+  {
+    "key": "ga-tsushin-132-ogi-1985b",
+    "type": "article",
+    "title": "ウスグロアツバ及びハスオビアツバの幼虫と食草",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "132",
+    "pages": "97-98",
+    "csv_reference": "小木広行 (1985)"
+  },
+  {
+    "key": "ga-tsushin-132-togashi-1985",
+    "type": "article",
+    "title": "石川県産蛾類の食草4",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "132",
+    "pages": "109-111",
+    "csv_reference": "富樫一次 (1985)"
+  },
+  {
+    "key": "ga-tsushin-133-yasuda-watanabe-1985",
+    "type": "article",
+    "title": "北海道大雪山系ニセイカウシュッペ山の蛾類",
+    "authors": [
+      "保田信紀",
+      "渡辺康之"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "133",
+    "pages": "118-121",
+    "csv_reference": "保田信紀,渡辺康之 (1985)"
+  },
+  {
+    "key": "ga-tsushin-133-ogi-1985",
+    "type": "article",
+    "title": "Mythimna属4種の幼虫と食草",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1985",
+    "journal": "蛾類通信",
+    "issue": "133",
+    "pages": "123-124",
+    "csv_reference": "小木広行 (1985)"
+  },
+  {
+    "key": "ga-tsushin-134-ogi-1986a",
+    "type": "article",
+    "title": "モンヤガ亜科3種の食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "134",
+    "pages": "142-143",
+    "csv_reference": "小木広行 (1986)"
+  },
+  {
+    "key": "ga-tsushin-134-ogi-1986b",
+    "type": "article",
+    "title": "ヒメモクメヨトウの幼生期と前報の訂正",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "134",
+    "pages": "143",
+    "csv_reference": "小木広行 (1986)"
+  },
+  {
+    "key": "ga-tsushin-135-ogi-1986",
+    "type": "article",
+    "title": "マガリキンウワバおよびシロスジキンウワバの幼虫と食草",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "135",
+    "pages": "145-146",
+    "csv_reference": "小木広行 (1986)"
+  },
+  {
+    "key": "ga-tsushin-135-sato-1986",
+    "type": "article",
+    "title": "日本と台湾のネグロウスベニナミシャクとその近縁種",
+    "authors": [
+      "佐藤力夫"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "135",
+    "pages": "147-154",
+    "csv_reference": "佐藤力夫 (1986)"
+  },
+  {
+    "key": "ga-tsushin-137-togashi-1986",
+    "type": "article",
+    "title": "石川県産蛾類の食草5",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "137",
+    "pages": "7",
+    "csv_reference": "富樫一次 (1986)"
+  },
+  {
+    "key": "ga-tsushin-137-sato-1986",
+    "type": "article",
+    "title": "日本産Medasina属の一新種",
+    "authors": [
+      "佐藤力夫"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "137",
+    "pages": "186-188",
+    "csv_reference": "佐藤力夫 (1986)"
+  },
+  {
+    "key": "ga-tsushin-139-kudo-1986",
+    "type": "article",
+    "title": "スゲドクガの幼生期について",
+    "authors": [
+      "工藤広悦"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "139",
+    "pages": "209-210",
+    "csv_reference": "工藤広悦 (1986)"
+  },
+  {
+    "key": "ga-tsushin-139-nishio-1986",
+    "type": "article",
+    "title": "オレクギリンガの営巣",
+    "authors": [
+      "西尾規孝"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "139",
+    "pages": "216",
+    "csv_reference": "西尾規孝 (1986)"
+  },
+  {
+    "key": "ga-tsushin-139-nozaki-miyata-1986",
+    "type": "article",
+    "title": "コエビガラスズメの幼虫アベリアを食す",
+    "authors": [
+      "野崎敦士",
+      "宮田彬"
+    ],
+    "year": "1986",
+    "journal": "蛾類通信",
+    "issue": "139",
+    "pages": "216",
+    "csv_reference": "野崎敦士, 宮田彬 (1986)"
+  },
+  {
+    "key": "ga-tsushin-140-nozaki-1987",
+    "type": "article",
+    "title": "ナカシロテンアツバの幼虫，食草と未記載の雌",
+    "authors": [
+      "野崎敦士"
+    ],
+    "year": "1987",
+    "journal": "蛾類通信",
+    "issue": "140",
+    "pages": "225-227",
+    "csv_reference": "野崎敦士 (1987)"
+  },
+  {
+    "key": "ga-tsushin-140-ogi-1987a",
+    "type": "article",
+    "title": "ハマニンニクを食草とするヤガ科の幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1987",
+    "journal": "蛾類通信",
+    "issue": "140",
+    "pages": "236-239",
+    "csv_reference": "小木広行 (1987)"
+  },
+  {
+    "key": "ga-tsushin-141-ogi-1987",
+    "type": "article",
+    "title": "コキマエヤガの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1987",
+    "journal": "蛾類通信",
+    "issue": "141",
+    "pages": "244",
+    "csv_reference": "小木広行 (1987)"
+  },
+  {
+    "key": "ga-tsushin-142-nakamura-1987",
+    "type": "article",
+    "title": "フジシロミャクヨトウの幼虫と蛹（富士山亜高山帯砂礫地帯の蛾I）",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1987",
+    "journal": "蛾類通信",
+    "issue": "142",
+    "pages": "267-270",
+    "csv_reference": "中村正直 (1987)"
+  },
+  {
+    "key": "ga-tsushin-148-ogi-1988",
+    "type": "article",
+    "title": "タイリクウスイロヨトウの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1988",
+    "journal": "蛾類通信",
+    "issue": "148",
+    "pages": "362",
+    "csv_reference": "小木広行 (1988)"
+  },
+  {
+    "key": "ga-tsushin-148a-ogi-1988",
+    "type": "article",
+    "title": "タイリクウスイロヨトウの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1988",
+    "journal": "蛾類通信",
+    "issue": "148",
+    "pages": "362",
+    "csv_reference": "小木 (1988)"
+  },
+  {
+    "key": "ga-tsushin-149-nakamura-yamamoto-1988",
+    "type": "article",
+    "title": "ウスクビグロクチバの幼生期の記載（富士山亜高山帯砂礫地帯の蛾III）",
+    "authors": [
+      "中村正直",
+      "山本光人"
+    ],
+    "year": "1988",
+    "journal": "蛾類通信",
+    "issue": "149",
+    "pages": "369-372",
+    "csv_reference": "中村正直, 山本光人 (1988)"
+  },
+  {
+    "key": "ga-tsushin-149-togashi-1988",
+    "type": "article",
+    "title": "石川県産蛾類の食草6",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1988",
+    "journal": "蛾類通信",
+    "issue": "149",
+    "pages": "382-383",
+    "csv_reference": "富樫一次 (1988)"
+  },
+  {
+    "key": "ga-tsushin-150-ogi-1988",
+    "type": "article",
+    "title": "シベチャキリガの食草とその幼生期",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1988",
+    "journal": "蛾類通信",
+    "issue": "150",
+    "pages": "390-391",
+    "csv_reference": "小木広行 (1988)"
+  },
+  {
+    "key": "ga-tsushin-150-ogi-1988-abbrev",
+    "type": "article",
+    "title": "シベチャキリガの食草とその幼生期",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1988",
+    "journal": "蛾類通信",
+    "issue": "150",
+    "pages": "390-391",
+    "csv_reference": "小木 (1988)"
+  },
+  {
+    "key": "ga-tsushin-152-funakoshi-1989",
+    "type": "article",
+    "title": "ニセシロマダラコヤガ（新称）の幼虫と蛹",
+    "authors": [
+      "船越進太郎"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "152",
+    "pages": "17-18",
+    "csv_reference": "船越 (1989)"
+  },
+  {
+    "key": "ga-tsushin-153-fujisawa-1989",
+    "type": "article",
+    "title": "日本未記録種9種を含む19種のAgonopterix（マルハキバガ科）について",
+    "authors": [
+      "藤沢勝利"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "153",
+    "pages": "2",
+    "csv_reference": "藤沢勝利 (1989)"
+  },
+  {
+    "key": "ga-tsushin-154-ogi-1989",
+    "type": "article",
+    "title": "クモガタキリガの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "154",
+    "pages": "61",
+    "csv_reference": "小木広行 (1989)"
+  },
+  {
+    "key": "ga-tsushin-155-fujisawa-1989",
+    "type": "article",
+    "title": "日本未記録のDepressaria（マルハキバガ科）4種の記録",
+    "authors": [
+      "藤沢勝利"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "155",
+    "pages": "1",
+    "csv_reference": "藤沢勝利 (1989)"
+  },
+  {
+    "key": "ga-tsushin-156-iwasaki-1989",
+    "type": "article",
+    "title": "キタミスジアツバの幼虫飼育の1例",
+    "authors": [
+      "岩崎史郎"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "156",
+    "pages": "81-82",
+    "csv_reference": "岩崎史郎 (1989)"
+  },
+  {
+    "key": "ga-tsushin-156-nakamura-sugi-1989",
+    "type": "article",
+    "title": "プライヤアオシャチホコの新食草",
+    "authors": [
+      "中村正直",
+      "杉繁郎"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "156",
+    "pages": "86",
+    "csv_reference": "中村正直, 杉繁郎 (1989)"
+  },
+  {
+    "key": "ga-tsushin-156-nakamura-1989",
+    "type": "article",
+    "title": "クモマウスグロヤガの幼虫と蛹（富士山亜高山帯砂礫地帯の蛾IV）",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1989",
+    "journal": "蛾類通信",
+    "issue": "156",
+    "pages": "87-89",
+    "csv_reference": "中村正直 (1989)"
+  },
+  {
+    "key": "ga-tsushin-158-ogi-1990",
+    "type": "article",
+    "title": "ツメクサキシタバの食草と幼虫",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1990",
+    "journal": "蛾類通信",
+    "issue": "158",
+    "pages": "129",
+    "csv_reference": "小木広行 (1990)"
+  },
+  {
+    "key": "ga-tsushin-158-watanabe-1990",
+    "type": "article",
+    "title": "ビロードハマキの幼虫",
+    "authors": [
+      "渡辺一雄"
+    ],
+    "year": "1990",
+    "journal": "蛾類通信",
+    "issue": "158",
+    "pages": "140-141",
+    "csv_reference": "渡辺一雄 (1990)"
+  },
+  {
+    "key": "ga-tsushin-159-nakamura-funakoshi-1990",
+    "type": "article",
+    "title": "夏のニセタマナヤガ",
+    "authors": [
+      "中村正直",
+      "船越進太郎"
+    ],
+    "year": "1990",
+    "journal": "蛾類通信",
+    "issue": "159",
+    "pages": "152-153",
+    "csv_reference": "中村正直,船越進太郎 (1990)"
+  },
+  {
+    "key": "ga-tsushin-161-sugi-1991",
+    "type": "article",
+    "title": "石垣島のババアシブトクチバの記録",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1991",
+    "journal": "蛾類通信",
+    "issue": "161",
+    "pages": "177-179",
+    "csv_reference": "杉繁郎 (1991)"
+  },
+  {
+    "key": "ga-tsushin-163-sugi-1991",
+    "type": "article",
+    "title": "ツリフネソウトラガについて",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1991",
+    "journal": "蛾類通信",
+    "issue": "163",
+    "pages": "216-219",
+    "csv_reference": "杉繁郎 (1991)"
+  },
+  {
+    "key": "ga-tsushin-165-sugi-1991",
+    "type": "article",
+    "title": "ハンノキ林に棲むキハダケンモンの幼虫",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1991",
+    "journal": "蛾類通信",
+    "issue": "165",
+    "pages": "269-270",
+    "csv_reference": "杉繁郎 (1991)"
+  },
+  {
+    "key": "ga-tsushin-166-nakamura-1992",
+    "type": "article",
+    "title": "キタキバラケンモンと推定される幼虫についての一資料",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "166",
+    "pages": "286-287",
+    "csv_reference": "中村正直 (1992)"
+  },
+  {
+    "key": "ga-tsushin-167-nakamura-1992",
+    "type": "article",
+    "title": "スズキドクガの飼育と幼虫・蛹の記載",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "167",
+    "pages": "289-293",
+    "csv_reference": "中村正直 (1992)"
+  },
+  {
+    "key": "ga-tsushin-169-nishihara-1992a",
+    "type": "article",
+    "title": "スカシコケガの幼生期について",
+    "authors": [
+      "西原かよ子"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "169",
+    "pages": "331-333",
+    "csv_reference": "西原かよ子 (1992)"
+  },
+  {
+    "key": "ga-tsushin-169-sugi-1992a",
+    "type": "article",
+    "title": "台湾産Melapiaの一種",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "169",
+    "pages": "331-333",
+    "csv_reference": "杉繁郎 (1992)"
+  },
+  {
+    "key": "ga-tsushin-170-nishihara-1992",
+    "type": "article",
+    "title": "ヒメホシキコケガの幼生期",
+    "authors": [
+      "西原かよ子"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "170",
+    "pages": "353-355",
+    "csv_reference": "西原かよ子 (1992)"
+  },
+  {
+    "key": "ga-tsushin-170-sugi-1992",
+    "type": "article",
+    "title": "硫黄鳥島の鱗翅類続報",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "170",
+    "pages": "355",
+    "csv_reference": "杉繁郎 (1992)"
+  },
+  {
+    "key": "ga-tsushin-171-nishihara-1992",
+    "type": "article",
+    "title": "ヤクシマドクガの幼生期",
+    "authors": [
+      "西原かよ子"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "171",
+    "pages": "375-376",
+    "csv_reference": "西原かよ子 (1992)"
+  },
+  {
+    "key": "ga-tsushin-171-nakamura-1992",
+    "type": "article",
+    "title": "オオアヤトガリバの幼虫と蛹",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "171",
+    "pages": "377-380",
+    "csv_reference": "中村正直 (1992)"
+  },
+  {
+    "key": "ga-tsushin-171-sugi-1992",
+    "type": "article",
+    "title": "クロシモフリアツバの属名の変更",
+    "authors": [
+      "杉繁郎"
+    ],
+    "year": "1992",
+    "journal": "蛾類通信",
+    "issue": "171",
+    "pages": "382-383",
+    "csv_reference": "杉繁郎 (1992)"
+  },
+  {
+    "key": "ga-tsushin-174-nakamura-1993",
+    "type": "article",
+    "title": "針葉の葉に潜るコハモグリガの幼生期",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1993",
+    "journal": "蛾類通信",
+    "issue": "174",
+    "pages": "10-12",
+    "csv_reference": "中村正直 (1993)"
+  },
+  {
+    "key": "ga-tsushin-175-sugi-yamamoto-1993",
+    "type": "article",
+    "title": "針葉につくフタスジョトウ",
+    "authors": [
+      "杉繁郎",
+      "山本光人"
+    ],
+    "year": "1993",
+    "journal": "蛾類通信",
+    "issue": "175",
+    "pages": "433-435",
+    "csv_reference": "杉繁郎・山本光人 (1993)"
+  },
+  {
+    "key": "ga-tsushin-175-nakamura-1993",
+    "type": "article",
+    "title": "葦毛第2湿原（指定外地）の蛾類調査報告，1",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1993",
+    "journal": "蛾類通信",
+    "issue": "175",
+    "pages": "439-443",
+    "csv_reference": "中村正直 (1993)"
+  },
+  {
+    "key": "ga-tsushin-176-nakamura-1994",
+    "type": "article",
+    "title": "葦毛第2湿原（指定外地）の蛾類調査報告，2",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "176",
+    "pages": "3-6",
+    "csv_reference": "中村正直 (1994)"
+  },
+  {
+    "key": "ga-tsushin-177-torikura-1994a",
+    "type": "article",
+    "title": "キンスジコウモリの幼生期",
+    "authors": [
+      "鳥倉英徳"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "177",
+    "pages": "24-25",
+    "csv_reference": "鳥倉英徳 (1994)"
+  },
+  {
+    "key": "ga-tsushin-178-torikura-1994a",
+    "type": "article",
+    "title": "スギキタヨトウの野生寄主",
+    "authors": [
+      "鳥倉英徳"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "178",
+    "pages": "35",
+    "csv_reference": "鳥倉英徳 (1994)"
+  },
+  {
+    "key": "ga-tsushin-178-torikura-1994b",
+    "type": "article",
+    "title": "ナカオビチャイロヤガの幼生期",
+    "authors": [
+      "鳥倉英徳"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "178",
+    "pages": "40",
+    "csv_reference": "鳥倉英徳 (1994)"
+  },
+  {
+    "key": "ga-tsushin-179-nakamura-1994",
+    "type": "article",
+    "title": "朝霧高原でヨモギから獲られた3種のヤガ科幼虫",
+    "authors": [
+      "中村正直"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "179",
+    "pages": "50-55",
+    "csv_reference": "中村正直 (1994)"
+  },
+  {
+    "key": "ga-tsushin-179-nakamura-kudo-1994",
+    "type": "article",
+    "title": "朝霧高原でヨモギから獲られた3種のヤガ科幼虫",
+    "authors": [
+      "中村正直",
+      "工藤広悦"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "179",
+    "pages": "50-55",
+    "csv_reference": "中村正直・工藤広悦 (1994)"
+  },
+  {
+    "key": "ga-tsushin-179-torikura-1994",
+    "type": "article",
+    "title": "オビグロスズメの幼虫",
+    "authors": [
+      "鳥倉英徳"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "179",
+    "pages": "56",
+    "csv_reference": "鳥倉英徳 (1994)"
+  },
+  {
+    "key": "ga-tsushin-179-murase-1994",
+    "type": "article",
+    "title": "キスジツマキリヨトウの終齢幼虫",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "179",
+    "pages": "60",
+    "csv_reference": "村瀬ますみ (1994)"
+  },
+  {
+    "key": "ga-tsushin-181-yano-1994",
+    "type": "article",
+    "title": "フトオビホソバスズメの幼虫",
+    "authors": [
+      "矢野高広"
+    ],
+    "year": "1994",
+    "journal": "蛾類通信",
+    "issue": "181",
+    "pages": "83-84",
+    "csv_reference": "矢野高広 (1994)"
+  },
+  {
+    "key": "ga-tsushin-190-shimbo-1996",
+    "type": "article",
+    "title": "北海道低地のホクトギンウワバの記録",
+    "authors": [
+      "神保一義",
+      "中谷正彦",
+      "小木広行"
+    ],
+    "year": "1996",
+    "journal": "蛾類通信",
+    "issue": "190",
+    "pages": "239-241",
+    "csv_reference": "神保一義・中谷正彦・小木広行 (1996)"
+  },
+  {
+    "key": "ga-tsushin-191-nakamura-kudo-1996",
+    "type": "article",
+    "title": "ホソバスズメ幼虫の確認",
+    "authors": [
+      "中村正直",
+      "工藤広悦",
+      "内孝之助"
+    ],
+    "year": "1996",
+    "journal": "蛾類通信",
+    "issue": "191",
+    "pages": "257-259",
+    "csv_reference": "中村正直, 工藤広悦, 内孝之助 (1996)"
+  },
+  {
+    "key": "ga-tsushin-191-togashi-1996",
+    "type": "article",
+    "title": "石川県産蛾類の食草9",
+    "authors": [
+      "富樫一次"
+    ],
+    "year": "1996",
+    "journal": "蛾類通信",
+    "issue": "191",
+    "pages": "260-261",
+    "csv_reference": "富樫一次 (1996)"
+  },
+  {
+    "key": "ga-tsushin-192-mitamura-1997",
+    "type": "article",
+    "title": "ヤママユのイヌブナへの産卵例",
+    "authors": [
+      "三田村敏正"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "192",
+    "pages": "275-285",
+    "csv_reference": "三田村敏正 (1997)"
+  },
+  {
+    "key": "ga-tsushin-193-tominaga-1997",
+    "type": "article",
+    "title": "キバラケンモンを沖縄本島で採集",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "193",
+    "pages": "10",
+    "csv_reference": "富永 (1997)"
+  },
+  {
+    "key": "ga-tsushin-193-ogi-1997",
+    "type": "article",
+    "title": "Hadena属（ヤガ科）3種の幼虫と食草",
+    "authors": [
+      "小木広行"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "193",
+    "pages": "289-290",
+    "csv_reference": "小木広行 (1997)"
+  },
+  {
+    "key": "ga-tsushin-195-murase-1997a",
+    "type": "article",
+    "title": "ヤガ科Abrostola属3種の幼虫",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "195",
+    "pages": "323-324",
+    "csv_reference": "村瀬ますみ (1997)"
+  },
+  {
+    "key": "ga-tsushin-195-murase-abbrev-1997",
+    "type": "article",
+    "title": "ヤガ科Abrostola属3種の幼虫",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "195",
+    "pages": "323-324",
+    "csv_reference": "村瀬 (1997)"
+  },
+  {
+    "key": "ga-tsushin-195-matsuura-1997",
+    "type": "article",
+    "title": "ウスアオリンガの食草",
+    "authors": [
+      "松浦友紀子"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "195",
+    "pages": "333",
+    "csv_reference": "松浦 (1997)"
+  },
+  {
+    "key": "ga-tsushin-196-murase-1997",
+    "type": "article",
+    "title": "ウスアオリンガの幼虫と繭",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "196",
+    "pages": "349-350",
+    "csv_reference": "村瀬ますみ (1997)"
+  },
+  {
+    "key": "ga-tsushin-196-murase-abbrev-1997",
+    "type": "article",
+    "title": "ウスアオリンガの幼虫と繭",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1997",
+    "journal": "蛾類通信",
+    "issue": "196",
+    "pages": "349-350",
+    "csv_reference": "村瀬 (1997)"
+  },
+  {
+    "key": "ga-tsushin-197-tominaga-1998",
+    "type": "article",
+    "title": "ツマキモンシロモドキの食草はウスベニニガナ",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "197",
+    "pages": "353-354",
+    "csv_reference": "富永智 (1998)"
+  },
+  {
+    "key": "ga-tsushin-197-sasaki-1998",
+    "type": "article",
+    "title": "日本未記録種トガリヒロバキバガ",
+    "authors": [
+      "佐々木明夫"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "197",
+    "pages": "367",
+    "csv_reference": "佐々木明夫 (1998)"
+  },
+  {
+    "key": "ga-tsushin-198-tanahara-1998a",
+    "type": "article",
+    "title": "沖縄本島におけるリュウキュウオオスカシバの幼虫と食草について",
+    "authors": [
+      "棚原功"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "198",
+    "pages": "377-378",
+    "csv_reference": "棚原功 (1998)"
+  },
+  {
+    "key": "ga-tsushin-198-tanahara-e-1998a",
+    "type": "article",
+    "title": "沖縄本島におけるリュウキュウオオスカシバの幼虫と食草について",
+    "authors": [
+      "棚原恵"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "198",
+    "pages": "377-378",
+    "csv_reference": "棚原恵 (1998)"
+  },
+  {
+    "key": "ga-tsushin-198-tominaga-1998",
+    "type": "article",
+    "title": "イチモンジホウジャクの食草について",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "198",
+    "pages": "379",
+    "csv_reference": "富永智 (1998)"
+  },
+  {
+    "key": "ga-tsushin-199-tanahara-1998",
+    "type": "article",
+    "title": "沖縄本島におけるシタベニセスジスズメの幼虫と食草について",
+    "authors": [
+      "棚原功"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "199",
+    "pages": "408-409",
+    "csv_reference": "棚原功 (1998)"
+  },
+  {
+    "key": "ga-tsushin-199-tanahara-e-1998",
+    "type": "article",
+    "title": "沖縄本島におけるシタベニセスジスズメの幼虫と食草について",
+    "authors": [
+      "棚原恵"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "199",
+    "pages": "408-409",
+    "csv_reference": "棚原恵 (1998)"
+  },
+  {
+    "key": "ga-tsushin-200-tanahara-e-1998",
+    "type": "article",
+    "title": "沖縄本島におけるホウジャク属6種の幼虫と食草",
+    "authors": [
+      "棚原恵"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "200",
+    "pages": "16",
+    "csv_reference": "棚原恵 (1998)"
+  },
+  {
+    "key": "ga-tsushin-200-tominaga-1998",
+    "type": "article",
+    "title": "コシロモンドクガの雌と幼虫",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "200",
+    "pages": "415-416",
+    "csv_reference": "富永智 (1998)"
+  },
+  {
+    "key": "ga-tsushin-201-tominaga-sugi-1998",
+    "type": "article",
+    "title": "ヘリグロキイロノメイガの食草はクサトベラ",
+    "authors": [
+      "富永智",
+      "杉繁郎"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "201",
+    "pages": "3",
+    "csv_reference": "富永智, 杉繁郎 (1998)"
+  },
+  {
+    "key": "ga-tsushin-201a-tominaga-1998",
+    "type": "article",
+    "title": "オオサビイロナミシャクの食草について",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "201",
+    "pages": "4",
+    "csv_reference": "富永智 (1998)"
+  },
+  {
+    "key": "ga-tsushin-201b-tominaga-1998",
+    "type": "article",
+    "title": "沖縄本島および石垣島産のマルバネキノカワガの飼育",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "201",
+    "pages": "9-10",
+    "csv_reference": "富永智 (1998)"
+  },
+  {
+    "key": "ga-tsushin-201-tanahara-e-1998",
+    "type": "article",
+    "title": "タイワンアヤシャクの食草について",
+    "authors": [
+      "棚原恵"
+    ],
+    "year": "1998",
+    "journal": "蛾類通信",
+    "issue": "201",
+    "pages": "12",
+    "csv_reference": "棚原恵 (1998)"
+  },
+  {
+    "key": "ga-tsushin-202-sasaki-1999",
+    "type": "article",
+    "title": "クシロツマジロケンモンの幼虫と食草",
+    "authors": [
+      "佐々木明夫"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "202",
+    "pages": "17-18",
+    "csv_reference": "佐々木明夫 (1999)"
+  },
+  {
+    "key": "ga-tsushin-202a-tominaga-1999",
+    "type": "article",
+    "title": "マエウストガリコヤガの沖縄本島からの記録",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "202",
+    "pages": "21-22",
+    "csv_reference": "富永智 (1999)"
+  },
+  {
+    "key": "ga-tsushin-202a-tominaga-tomei-1999",
+    "type": "article",
+    "title": "マエウストガリコヤガの沖縄本島からの記録",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "202",
+    "pages": "21-22",
+    "csv_reference": "冨永智 (1999)"
+  },
+  {
+    "key": "ga-tsushin-202b-tominaga-1999",
+    "type": "article",
+    "title": "沖縄本島におけるハスオビイラガとその幼虫",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "202",
+    "pages": "36",
+    "csv_reference": "富永智 (1999)"
+  },
+  {
+    "key": "ga-tsushin-203-tominaga-1999",
+    "type": "article",
+    "title": "トビモンコブガの食草はサルスベリ",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "203",
+    "pages": "41-42",
+    "csv_reference": "富永智 (1999)"
+  },
+  {
+    "key": "ga-tsushin-203-murase-1999a",
+    "type": "article",
+    "title": "西表島産オヒルギからヒルギアシブトヒメハマキ（新称）が羽化",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "203",
+    "pages": "49-50",
+    "csv_reference": "村瀬ますみ (1999)"
+  },
+  {
+    "key": "ga-tsushin-204-koshino-1999",
+    "type": "article",
+    "title": "シラキハマキホソガ（新称）の季節型について",
+    "authors": [
+      "越野誠一郎"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "204",
+    "pages": "73-75",
+    "csv_reference": "越野誠一郎 (1999)"
+  },
+  {
+    "key": "ga-tsushin-204-tominaga-1999",
+    "type": "article",
+    "title": "ヒロバキノカワガの食草はオオハマボウ",
+    "authors": [
+      "富永智"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "204",
+    "pages": "76",
+    "csv_reference": "富永智 (1999)"
+  },
+  {
+    "key": "ga-tsushin-205-takeuchi-1999",
+    "type": "article",
+    "title": "オガサワラチズモンアオシャクの幼虫と食草について",
+    "authors": [
+      "竹内浩二",
+      "大林隆司"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "205",
+    "pages": "92",
+    "csv_reference": "竹内浩二・大林隆司 (1999)"
+  },
+  {
+    "key": "ga-tsushin-206-sasaki-1999",
+    "type": "article",
+    "title": "ツマグロキリガの幼期について",
+    "authors": [
+      "佐々木明夫"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "206",
+    "pages": "100",
+    "csv_reference": "佐々木明夫 (1999)"
+  },
+  {
+    "key": "ga-tsushin-206-murase-1999",
+    "type": "article",
+    "title": "ヤガ科Callopistria属2種の幼虫",
+    "authors": [
+      "村瀬ますみ"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "206",
+    "pages": "101-102",
+    "csv_reference": "村瀬ますみ (1999)"
+  },
+  {
+    "key": "ga-tsushin-206-miyata-1999",
+    "type": "article",
+    "title": "アカヒトリの生活史",
+    "authors": [
+      "宮田彬"
+    ],
+    "year": "1999",
+    "journal": "蛾類通信",
+    "issue": "206",
+    "pages": "116-118",
+    "csv_reference": "宮田彬 (1999)"
+  }
+]
