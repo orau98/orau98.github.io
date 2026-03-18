@@ -782,6 +782,18 @@ function generateInsectHTML(insect, type) {
   </script>
 </head>
 <body>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">昆虫植物図鑑</span>
+      </a>
+      <a href="/${type}/${insect.id}" class="meta-site-header-link">図鑑で見る →</a>
+    </div>
+  </header>
+
   <div class="meta-page">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
@@ -790,7 +802,7 @@ function generateInsectHTML(insect, type) {
         <li aria-current="page">${insect.japaneseName}</li>
       </ol>
     </nav>
-    
+
     <header class="meta-header">
       <h1>${insect.japaneseName}</h1>
       <h2>${formatScientificNameHTML(scientificName)}</h2>
@@ -1019,6 +1031,18 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   </script>
 </head>
 <body>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">昆虫植物図鑑</span>
+      </a>
+      <a href="/plant/${encodeURIComponent(safePlantName)}" class="meta-site-header-link">図鑑で見る →</a>
+    </div>
+  </header>
+
   <div class="meta-page">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
@@ -1027,7 +1051,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         <li aria-current="page">${displayPlantName}</li>
       </ol>
     </nav>
-    
+
     <header class="meta-header">
       <h1>${displayPlantName}</h1>
       <h2>食草植物の詳細情報</h2>
@@ -1865,13 +1889,34 @@ function generateMetaIndexes() {
   <meta name="twitter:title" content="${sec.title}">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
-  <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:16px}h1{font-size:20px}ul{columns:2;gap:24px;line-height:1.8}</style>
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
 </head>
 <body>
-  <h1>${sec.title}</h1>
-  <ul>
-    ${relLinks}
-  </ul>
+  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">昆虫植物図鑑</span>
+      </a>
+    </div>
+  </header>
+  <div class="meta-page">
+    <header class="meta-header">
+      <h1>${sec.title}</h1>
+    </header>
+    <main>
+      <section style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:1rem 1.25rem 1.25rem;">
+        <ul style="list-style:none;columns:2;gap:1.5rem;line-height:1.9;">
+          ${relLinks}
+        </ul>
+      </section>
+    </main>
+    <section class="navigation">
+      <a href="/" class="back-link">図鑑トップへ</a>
+    </section>
+  </div>
 </body>
 </html>`;
     fs.writeFileSync(path.join(dirPath, 'index.html'), html);
