@@ -973,7 +973,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 画像セクション */}
           <div id="plant-photos" className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div>
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
                 {hasInstagramPost ? (
                   <div className="p-3">
