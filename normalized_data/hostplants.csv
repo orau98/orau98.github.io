@@ -1,4 +1,4 @@
-﻿record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
+record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
 host-B1B7-20251121002628-0001,species-3996,フタバガキ科サラノキ属,,文献,,,日本産蛾類標準図鑑1,
 host-B1B7-20251121002628-0002,species-3996,マメ科ドクフジ属,,文献,,,日本産蛾類標準図鑑1,
 host-B1B7-20251121002628-0003,species-3997,シマニッケイ,クスノキ科,文献,,,日本産蛾類標準図鑑1,
@@ -14484,3 +14484,9 @@ hostplant-909149,species-22950,オオハマボウ,アオイ科,文献,,幼虫,�
 hostplant-909150,species-22950,テイカカズラ,キョウチクトウ科,文献,,幼虫,日本産カミキリムシ,
 hostplant-909151,species-22938,アマシバ,ハイノキ科,文献,,幼虫,日本産カミキリムシ,
 hostplant-909152,species-22938,ヒロハノミミズバイ,ハイノキ科,文献,,幼虫,日本産カミキリムシ,
+hostplant-909153,species-20432,イネ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909154,species-20432,ススキ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909155,species-20432,アシ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909156,species-20432,ヨシ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909157,species-20432,ジュズダマ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909158,species-20432,マコモ,イネ科,,,幼虫,日本産蝶類標準図鑑,
