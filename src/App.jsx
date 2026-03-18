@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import logger from './utils/logger';
 import lazyWithRetry from './utils/lazyWithRetry';
@@ -12,19 +12,30 @@ import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
 import LoadingBar from './components/LoadingBar';
 import NotFoundPage from './components/NotFoundPage';
+import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
+import { buildFlowerVisitMap, isFlowerVisitRecord } from './utils/flowerVisitPlants';
+import {
+  INDEX_FOLLOW_ROBOTS,
+  NOINDEX_FOLLOW_ROBOTS,
+  setRobotsMetaContent,
+} from './utils/robotsMeta';
+import {
+  collectAlternativeNames,
+  plantFamilyMap,
+  plantScientificNameMap,
+  safeDeepClone,
+  shouldDeferHeavyWork,
+} from './utils/plantMetadata';
 import { extractEmergenceTime } from './utils/emergenceTimeUtils';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { loadInsectImageIndexes } from './services/imageIndex';
+import { getLocaleFromPath, isEnglishLocale } from './utils/locale';
 import {
   EXPLORER_ROUTE_CONFIGS,
   INSECT_DETAIL_ROUTE_PATTERNS,
   isExplorerRoutePath,
 } from './utils/siteTaxonomy';
 
-const DATA_CACHE_DB = 'ihpe-cache';
-const DATA_CACHE_STORE = 'datasets';
-const DATA_CACHE_KEY = 'full-dataset';
-const CACHE_SCHEMA_VERSION = 1;
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
 
 let cachedPapa = null;
@@ -35,100 +46,10 @@ const getPapa = async () => {
   return cachedPapa;
 };
 
-const openCacheDb = () => {
-  if (typeof window === 'undefined' || !window.indexedDB) return Promise.resolve(null);
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DATA_CACHE_DB, CACHE_SCHEMA_VERSION);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(DATA_CACHE_STORE)) {
-        db.createObjectStore(DATA_CACHE_STORE);
-      }
-    };
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-  });
-};
-
-const loadDatasetFromCache = async () => {
-  try {
-    const db = await openCacheDb();
-    if (!db) return null;
-    return await new Promise((resolve, reject) => {
-      const tx = db.transaction(DATA_CACHE_STORE, 'readonly');
-      const store = tx.objectStore(DATA_CACHE_STORE);
-      const req = store.get(DATA_CACHE_KEY);
-      req.onerror = () => reject(req.error);
-      req.onsuccess = () => resolve(req.result || null);
-    });
-  } catch (error) {
-    logger.debug('Dataset cache load failed:', error);
-    return null;
-  }
-};
-
-const saveDatasetToCache = async (version, payload) => {
-  try {
-    const db = await openCacheDb();
-    if (!db) return;
-    await new Promise((resolve, reject) => {
-      const tx = db.transaction(DATA_CACHE_STORE, 'readwrite');
-      const store = tx.objectStore(DATA_CACHE_STORE);
-      const req = store.put(
-        {
-          version,
-          timestamp: Date.now(),
-          payload,
-        },
-        DATA_CACHE_KEY,
-      );
-      req.onerror = () => reject(req.error);
-      req.onsuccess = () => resolve();
-    });
-  } catch (error) {
-    logger.debug('Dataset cache save failed:', error);
-  }
-};
-
-// This map can be a fallback, but the primary source is now the wamei_checklist.csv.
-const plantFamilyMap = {
-  'ヤナギ': 'ヤナギ科', 'ヤナギ類': 'ヤナギ科', 'クリ': 'ブナ科', 'クヌギ': 'ブナ科', 'コナラ': 'ブナ科',
-  'ブナ': 'ブナ科', 'カシワ': 'ブナ科', 'アラカシ': 'ブナ科', 'スダジイ': 'ブナ科', 'リンゴ': 'バラ科',
-  'サクラ': 'バラ科', 'ズミ': 'バラ科', 'ナナカマド': 'バラ科', 'マツ': 'マツ科', 'アカマツ': 'マツ科',
-  'トドマツ': 'マツ科', 'スギ': 'スギ科', 'ヒノキ': 'ヒノキ科', 'ヨモギ': 'キク科', 'キク': 'キク科',
-  'アザミ': 'キク科', 'イネ': 'イネ科', 'ススキ': 'イネ科', 'ヨシ': 'イネ科', 'ササ': 'イネ科',
-  'ハンノキ': 'カバノキ科', 'シラカンバ': 'カバノキ科', 'ダケカンバ': 'カバノキ科', 'カエデ': 'ムクロジ科',
-  'イタヤカエデ': 'ムクロジ科', 'ツタ': 'ブドウ科', 'ブドウ': 'ブドウ科', 'ヌルデ': 'ウルシ科',
-  'ウルシ': 'ウルシ科', 'ツツジ': 'ツツジ科', 'アセビ': 'ツツジ科', 'スイカズラ': 'スイカズラ科',
-  'ガマズミ': 'スイカズラ科', 'クズ': 'マメ科', 'ハギ': 'マメ科', 'フジ': 'マメ科',
-};
-
-// 植物の学名マッピング（手動補完）
-const plantScientificNameMap = {
-  'サクラ': 'Cerasus',
-  'ソメイヨシノ': 'Cerasus × yedoensis',
-  'ヤマザクラ': 'Cerasus serrulata',
-  'リンゴ': 'Malus domestica',
-  'マツ': 'Pinus',
-  'アカマツ': 'Pinus densiflora',
-  'スギ': 'Cryptomeria japonica',
-  'クリ': 'Castanea crenata',
-  'クヌギ': 'Quercus acutissima',
-  'コナラ': 'Quercus serrata',
-};
-
-const safeDeepClone = (obj) => {
-  if (!obj) return {};
-  try {
-    return JSON.parse(JSON.stringify(obj));
-  } catch (error) {
-    logger.debug('safeDeepClone fallback due to error:', error);
-    return { ...obj };
-  }
-};
-
 function App() {
   const location = useLocation();
+  const locale = getLocaleFromPath(location.pathname);
+  const isEnglish = isEnglishLocale(locale);
   const [moths, setMoths] = useState([]);
   const [butterflies, setButterflies] = useState([]);
   const [beetles, setBeetles] = useState([]);
@@ -144,10 +65,6 @@ function App() {
   const typesFetchStartedRef = useRef(false);
   const typesFetchPromiseRef = useRef(null);
   const ensureTypesLoaderRef = useRef(null);
-  const hostCsvExtendStartedRef = useRef(false);
-  const hostHydrationRequestedRef = useRef(false);
-  const pendingHostHydrationRef = useRef(null);
-  const requestHostHydrationRef = useRef(() => {});
   const fetchDataRef = useRef(null);
   const fetchSeqRef = useRef(0);
   const fetchAbortRef = useRef(null);
@@ -168,43 +85,7 @@ function App() {
   const cacheLoadedRef = useRef(false);
   const cachedVersionRef = useRef(null);
   
-  const isDevelopment = import.meta.env.DEV;
-  const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
-  
   const isExplorerPage = isExplorerRoutePath(location.pathname);
-
-  const collectAlternativeNames = (row, options = {}) => {
-    const { dedupe = false, excludePrimary = '' } = options;
-    const names = [];
-    const oldName = (row['旧和名'] || '').trim();
-    const alias = (row['別名'] || '').trim();
-    const others = (row['その他の和名'] || '').trim();
-    if (oldName) names.push(oldName);
-    if (alias) names.push(...alias.split(/[、,，]/).map((s) => s.trim()).filter(Boolean));
-    if (others) names.push(...others.split(/[、,，]/).map((s) => s.trim()).filter(Boolean));
-    let merged = names;
-    if (excludePrimary) {
-      merged = merged.filter((name) => name !== excludePrimary);
-    }
-    if (dedupe) {
-      merged = Array.from(new Set(merged));
-    }
-    return merged.join('、');
-  };
-
-  const shouldDeferHeavyWork = () => {
-    try {
-      if (typeof navigator === 'undefined') return false;
-      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      const saveData = connection?.saveData;
-      const effectiveType = connection?.effectiveType || '';
-      const isSlowNetwork = /^(slow-2g|2g)$/i.test(effectiveType);
-      const lowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2;
-      return Boolean(saveData || isSlowNetwork || lowMemory);
-    } catch {
-      return false;
-    }
-  };
 
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
@@ -226,17 +107,7 @@ function App() {
         params.has('porder') ||
         params.has('pvisit') ||
         params.has('redirect');
-      let robots = document.querySelector('meta[name="robots"]');
-      if (!robots) {
-        robots = document.createElement('meta');
-        robots.name = 'robots';
-        document.head.appendChild(robots);
-      }
-      if (hasSearch) {
-        robots.content = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
-      } else {
-        robots.content = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
-      }
+      setRobotsMetaContent(hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS);
     } catch {}
   }, [location.search]);
 
@@ -277,43 +148,6 @@ function App() {
     mediaQuery.addListener(handleChange);
     return () => mediaQuery.removeListener(handleChange);
   }, []);
-
-  const isFlowerVisitRecord = (record) => {
-    if (!record) return false;
-    if (record.isFlowerVisit === true) return true;
-    const lifeStage = (record?.lifeStage || '').trim();
-    const plantPart = (record?.plantPart || '').trim();
-    const partCompact = plantPart.replace(/\s+/g, '');
-    const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-    return isAdultOrUnknown && partCompact && partCompact.includes('花');
-  };
-
-  const buildFlowerVisitMap = (insects = []) => {
-    const map = {};
-    const normalizePlant = (value) => {
-      if (!value || typeof value !== 'string') return '';
-      return value
-        .replace(/[（(][^）)]*科[^）)]*[）)]/g, '')
-        .replace(/[（(][^）)]*[）)]/g, '')
-        .trim();
-    };
-    (insects || []).forEach((insect) => {
-      if (!insect) return;
-      const insectName = (insect.name || insect.japaneseName || '').trim();
-      if (!insectName) return;
-      const records = insect.hostPlantsDetailed;
-      if (!Array.isArray(records) || records.length === 0) return;
-      records.forEach((record) => {
-        if (!isFlowerVisitRecord(record)) return;
-        const rawPlant = record?.name || record?.displayName || record?.plant || '';
-        const plantName = normalizePlant(String(rawPlant || '').trim());
-        if (!plantName || plantName === '不明') return;
-        if (!map[plantName]) map[plantName] = [];
-        if (!map[plantName].includes(insectName)) map[plantName].push(insectName);
-      });
-    });
-    return map;
-  };
 
   const hasDatasetRef = useRef(false);
   const applyDataset = (data = {}) => {
@@ -365,6 +199,9 @@ function App() {
 
   useEffect(() => {
     const fetchData = async (cachedVersion = null) => {
+      const isDevelopment = import.meta.env.DEV;
+      const allowDebugLogs =
+        isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
       const fetchId = ++fetchSeqRef.current;
       if (fetchAbortRef.current) {
         try {
@@ -471,12 +308,7 @@ function App() {
           return false;
         }
       };
-      // Quick path in production: use combined index first to avoid multi-fetch failures
-      if (import.meta.env.PROD) {
-        const quickOk = await tryLiteIndex(appVersionSuffix);
-        if (quickOk) return;
-      }
-      // Try lightweight split JSON first to speed up initial paint
+      // Prefer split JSON in production and fall back to the combined index only if needed.
       try {
         const manifestUrl = `${base}assets/data-lite/manifest.json${appVersionSuffix}`;
         // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
@@ -495,12 +327,17 @@ function App() {
               ? `?v=${manifestVersion}`
               : '';
           const hostUrl = `${base}assets/data-lite/hostplants.json${versionSuffix}`;
-          const plantInfoUrl = `${base}assets/data-lite/ylist-lite.json${versionSuffix}`;
+          const plantDetailsUrl = `${base}assets/data-lite/plant-details.json${versionSuffix}`;
+          const flowerVisitUrl = `${base}assets/data-lite/flower-visit-plants.json${versionSuffix}`;
 
-          const [hostRes, plantInfoRes] = await Promise.all([
+          const [hostRes, plantDetailsRes, flowerVisitRes] = await Promise.all([
             fetchWithRetry(hostUrl, { cache: cacheMode }),
-            fetchWithRetry(plantInfoUrl, { cache: cacheMode }).catch((error) => {
-              logger.debug('Plant taxonomy preload skipped:', error);
+            fetchWithRetry(plantDetailsUrl, { cache: cacheMode }).catch((error) => {
+              logger.debug('Plant details preload skipped:', error);
+              return null;
+            }),
+            fetchWithRetry(flowerVisitUrl, { cache: cacheMode }).catch((error) => {
+              logger.debug('Flower-visit preload skipped:', error);
               return null;
             }),
           ]);
@@ -509,418 +346,198 @@ function App() {
           if (hostRes?.ok) {
             const hostMap = await hostRes.json();
             if (!shouldContinue()) return;
-          const plantInfoPayload =
-            plantInfoRes && plantInfoRes.ok ? await plantInfoRes.json() : null;
-
-          if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+            const plantDetailsPayload =
+              plantDetailsRes && plantDetailsRes.ok ? await plantDetailsRes.json() : {};
             if (!shouldContinue()) return;
-            cachedVersionRef.current = manifestVersion;
-            if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
-              setSummaryCounts((prev) => prev || manifest.counts);
-              setLoading(false);
-              ensureTypesLoaderRef.current = () => {
+            const flowerVisitPayload =
+              flowerVisitRes && flowerVisitRes.ok ? await flowerVisitRes.json() : {};
+
+            if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
+              if (!shouldContinue()) return;
+              cachedVersionRef.current = manifestVersion;
+              if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
+                setSummaryCounts((prev) => prev || manifest.counts);
+                setLoading(false);
+                ensureTypesLoaderRef.current = () => {
+                  typesFetchStartedRef.current = true;
+                  typesFetchPromiseRef.current = Promise.resolve(null);
+                };
                 typesFetchStartedRef.current = true;
                 typesFetchPromiseRef.current = Promise.resolve(null);
+                return;
+              }
+
+              plantDetailsLite =
+                plantDetailsPayload && typeof plantDetailsPayload === 'object'
+                  ? plantDetailsPayload
+                  : {};
+              const preloadedFlowerVisitPlants =
+                flowerVisitPayload && typeof flowerVisitPayload === 'object'
+                  ? flowerVisitPayload
+                  : {};
+
+              const computedCounts = {
+                ...manifest.counts,
+                hostPlants: Object.keys(hostMap || {}).length,
               };
-              typesFetchStartedRef.current = true;
-              typesFetchPromiseRef.current = Promise.resolve(null);
-              return;
-            }
-            const plantInfoRaw = plantInfoPayload && typeof plantInfoPayload === 'object'
-              ? plantInfoPayload.plants || {}
-              : {};
-            plantDetailsLite = {};
-            Object.entries(plantInfoRaw).forEach(([name, detail]) => {
-              if (!name) return;
-              const familyJp = detail?.familyJp || '';
-              const familyLatin = detail?.familyEn || '';
-              const scientific = detail?.scientificName || '';
-              const genus = scientific ? scientific.split(' ')[0] : '';
-              const aliases = Array.isArray(detail?.aliases) ? detail.aliases.filter(Boolean) : [];
-              const orderLatin = detail?.orderEn || '';
-              plantDetailsLite[name] = {
-                family: familyJp || '不明',
-                familyName: familyJp || '不明',
-                familyLatin: familyLatin || '',
-                scientificName: scientific,
-                genus,
-                order: detail?.orderJp || '',
-                orderLatin: orderLatin || '',
-                aliases,
-              };
-            });
 
-            // NOTE: full-dataset.json (約10MB) は初期描画の阻害要因になるためロードをスキップ。
-            // オフラインキャッシュ用途で欲しい場合は下の idle プレフェッチを有効にする。
+              if (!cacheLoadedRef.current) {
+                setSummaryCounts(computedCounts);
+                setHostPlants(hostMap);
+                setPlantDetails(plantDetailsLite);
+                setFlowerVisitPlants(preloadedFlowerVisitPlants);
+              }
+              setLoading(false);
 
-            const computedCounts = {
-              ...manifest.counts,
-              hostPlants: Object.keys(hostMap || {}).length,
-            };
+              // Reset fetch guards for fresh lifecycle
+              typesFetchStartedRef.current = false;
+              typesFetchPromiseRef.current = null;
 
-            if (!cacheLoadedRef.current) {
-              setSummaryCounts(computedCounts);
-              setHostPlants(hostMap);
-              setPlantDetails(plantDetailsLite);
-            }
-            setLoading(false);
-
-            const hydrateHostPlantsFromNormalized = async (insectLookup) => {
-              if (hostCsvExtendStartedRef.current) return;
-              if (!shouldContinue()) return;
-              hostCsvExtendStartedRef.current = true;
-              try {
-                const Papa = await getPapa();
-                if (!shouldContinue()) return;
-                if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-                  await new Promise((resolve) =>
-                    window.requestIdleCallback(resolve, { timeout: 3000 }),
+              const loadTypePartitions = async () => {
+                const responses = await Promise.all([
+                  fetchWithRetry(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
+                  fetchWithRetry(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
+                  fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
+                  fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                  fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                  fetchWithRetry(`${base}assets/data-lite/aphids.json${versionSuffix}`, { cache: cacheMode }),
+                ]);
+                if (!shouldContinue()) {
+                  return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+                }
+                const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes, aphidRes] = responses;
+                const safeJson = async (res) => (res && res.ok ? res.json() : []);
+                const [mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr] = await Promise.all([
+                  safeJson(mothRes),
+                  safeJson(butterflyRes),
+                  safeJson(beetleRes),
+                  safeJson(longhornRes),
+                  safeJson(leafRes),
+                  safeJson(aphidRes),
+                ]);
+                if (!shouldContinue()) {
+                  return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+                }
+                if (Array.isArray(mothArr)) setMoths(mothArr);
+                if (Array.isArray(butterArr)) setButterflies(butterArr);
+                if (Array.isArray(beetleArr)) setBeetles(beetleArr);
+                if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
+                if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+                if (Array.isArray(aphidArr)) setAphids(aphidArr);
+                setSummaryCounts((prev) => ({
+                  ...(prev || {}),
+                  moths: Array.isArray(mothArr) ? mothArr.length : 0,
+                  butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
+                  beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
+                  longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
+                  leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
+                  aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
+                }));
+                if (Object.keys(preloadedFlowerVisitPlants).length === 0) {
+                  setFlowerVisitPlants(
+                    buildFlowerVisitMap([
+                      ...(mothArr || []),
+                      ...(butterArr || []),
+                      ...(beetleArr || []),
+                      ...(longhornArr || []),
+                      ...(leafArr || []),
+                      ...(aphidArr || []),
+                    ]),
                   );
                 }
-                const normalizedUrl = `${base}hostplants.csv${versionSuffix}`;
-                const csvRes = await fetchWithRetry(normalizedUrl, { cache: cacheMode });
-                if (!shouldContinue()) return;
-                if (!csvRes.ok) return;
-                const csvText = await csvRes.text();
-                if (!shouldContinue()) return;
-                if (!csvText) return;
-                const parsed = await new Promise((resolve) => {
-                  Papa.parse(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                    worker: true, // offload large CSV parsing off the main thread to keep UI responsive
-                    fastMode: true,
-                    complete: (results) => resolve(results),
-                    error: () => resolve(null),
-                  });
-                });
-                if (!shouldContinue()) return;
-                if (!parsed || !Array.isArray(parsed.data)) return;
+                return { mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr };
+              };
 
-                const additions = new Map();
-                const flowerAdditions = new Map();
-                const plantMeta = new Map();
-                const normalizePlant = (value) => {
-                  if (!value || typeof value !== 'string') return '';
-                  return value
-                    .replace(/[（(][^）)]*科[^）)]*[）)]/g, '')
-                    .replace(/[（(][^）)]*[）)]/g, '')
-                    .trim();
+              const prefetchFullDataset = () => {
+                if (typeof window === 'undefined') return;
+                if (shouldDeferHeavyWork()) return;
+                const fire = async () => {
+                  try {
+                    const fullRes = await fetchWithRetry(
+                      `${base}assets/data-lite/full-dataset.json${versionSuffix}`,
+                      { cache: cacheMode },
+                    );
+                    if (!shouldContinue()) return;
+                    if (!fullRes.ok) return;
+                    const fullData = await fullRes.json();
+                    if (!shouldContinue()) return;
+                    await saveDatasetToCache(manifest.version || null, {
+                      moths: fullData.moths,
+                      butterflies: fullData.butterflies,
+                      beetles: fullData.beetles,
+                      longhornbeetles: fullData.longhornbeetles,
+                      leafbeetles: fullData.leafbeetles,
+                      aphids: fullData.aphids,
+                      hostPlants: fullData.hostPlants || hostMap,
+                      flowerVisitPlants:
+                        fullData.flowerVisitPlants ||
+                        preloadedFlowerVisitPlants ||
+                        {},
+                      plantDetails: fullData.plantDetails || plantDetailsLite,
+                      summaryCounts: fullData.summaryCounts || manifest.counts,
+                    });
+                  } catch (error) {
+                    if (import.meta.env.DEV) logger.debug('Idle prefetch full-dataset skipped:', error);
+                  }
                 };
-                parsed.data.forEach((row) => {
-                  if (!row) return;
-                  const plantNameRaw = (row.plant_name || '').trim();
-                  const plantName = normalizePlant(plantNameRaw);
-                  const insectId = (row.insect_id || '').trim();
-                  const familyName = (row.plant_family || '').trim();
-                  const lifeStage = (row.life_stage || '').trim();
-                  const plantPart = (row.plant_part || '').trim();
-                  if (!plantName || !insectId) return;
-                  const insectName = insectLookup.get(insectId);
-                  if (!insectName) return;
-                  if (!plantMeta.has(plantName)) {
-                    plantMeta.set(plantName, { family: familyName });
-                  } else if (familyName && !plantMeta.get(plantName).family) {
-                    plantMeta.get(plantName).family = familyName;
-                  }
-
-                  const plantPartCompact = plantPart.replace(/\s+/g, '');
-                  const isFlowerVisit =
-                    (lifeStage === '成虫' || !lifeStage) &&
-                    plantPartCompact &&
-                    plantPartCompact.includes('花');
-                  if (isFlowerVisit) {
-                    if (!flowerAdditions.has(plantName)) {
-                      flowerAdditions.set(plantName, new Set());
-                    }
-                    flowerAdditions.get(plantName).add(insectName);
-                    return;
-                  }
-
-                  if (!additions.has(plantName)) {
-                    additions.set(plantName, {
-                      insects: new Set(),
-                      family: familyName,
-                    });
-                  }
-                  const entry = additions.get(plantName);
-                  entry.insects.add(insectName);
-                  if (!entry.family && familyName) {
-                    entry.family = familyName;
-                  }
-                });
-                if (additions.size === 0 && flowerAdditions.size === 0 && plantMeta.size === 0) return;
-
-                let updatedCount = null;
-                if (additions.size > 0) {
-                  if (!shouldContinue()) return;
-                  setHostPlants((prev) => {
-                    const next = { ...prev };
-                    let changed = false;
-                    additions.forEach(({ insects }, plant) => {
-                      const existing = Array.isArray(next[plant]) ? new Set(next[plant]) : new Set();
-                      const beforeSize = existing.size;
-                      insects.forEach((name) => existing.add(name));
-                      if (!next[plant] || existing.size !== beforeSize) {
-                        next[plant] = Array.from(existing);
-                        changed = true;
-                      }
-                    });
-                    if (changed) {
-                      updatedCount = Object.keys(next).length;
-                      return next;
-                    }
-                    return prev;
-                  });
+                if ('requestIdleCallback' in window) {
+                  window.requestIdleCallback(() => fire(), { timeout: 5000 });
+                } else {
+                  setTimeout(fire, 5000);
                 }
+              };
 
-                if (updatedCount !== null) {
-                  if (!shouldContinue()) return;
-                  setSummaryCounts((prev) => {
-                    if (!prev) return prev;
-                    if (prev.hostPlants === updatedCount) return prev;
-                    return { ...prev, hostPlants: updatedCount };
-                  });
+              const startFetchTypes = () => {
+                if (typesFetchStartedRef.current && typesFetchPromiseRef.current) {
+                  return typesFetchPromiseRef.current;
                 }
-
-                if (!shouldContinue()) return;
-                setPlantDetails((prev) => {
-                  let changed = false;
-                  const next = { ...prev };
-                  plantMeta.forEach(({ family }, plant) => {
-                    if (!next[plant]) {
-                      next[plant] = plantDetailsLite[plant] || {
-                        family: family || '不明',
-                        familyName: family || '不明',
-                        familyLatin: '',
-                        scientificName: '',
-                        genus: '',
-                        order: '',
-                        orderLatin: '',
-                        aliases: [],
-                      };
-                      changed = true;
-                    } else if (
-                      family &&
-                      (!next[plant].family || next[plant].family === '不明')
-                    ) {
-                      next[plant] = {
-                        ...next[plant],
-                        family,
-                        familyName: family,
-                      };
-                      changed = true;
-                    }
-                  });
-                  return changed ? next : prev;
+                if (typesFetchStartedRef.current) {
+                  return Promise.resolve(null);
+                }
+                typesFetchStartedRef.current = true;
+                const promise = loadTypePartitions().catch((error) => {
+                  logger.warn('Failed to load insect partitions:', error);
+                  typesFetchStartedRef.current = false;
+                  typesFetchPromiseRef.current = null;
+                  return null;
                 });
+                typesFetchPromiseRef.current = promise;
+                return promise;
+              };
 
-                if (flowerAdditions.size > 0) {
-                  if (!shouldContinue()) return;
-                  setFlowerVisitPlants((prev) => {
-                    const next = { ...prev };
-                    let changed = false;
-                    flowerAdditions.forEach((insects, plant) => {
-                      const existing = Array.isArray(next[plant]) ? new Set(next[plant]) : new Set();
-                      const beforeSize = existing.size;
-                      insects.forEach((name) => existing.add(name));
-                      if (!next[plant] || existing.size !== beforeSize) {
-                        next[plant] = Array.from(existing);
-                        changed = true;
-                      }
-                    });
-                    return changed ? next : prev;
-                  });
+              ensureTypesLoaderRef.current = startFetchTypes;
+
+              try {
+                const params = new URLSearchParams(
+                  typeof window !== 'undefined' ? window.location.search || '' : '',
+                );
+                const initialTab = params.get('tab') || 'insects';
+                if (initialTab !== 'plants') {
+                  startFetchTypes();
+                } else {
+                  const delay = 5000;
+                  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+                    setTimeout(
+                      () => window.requestIdleCallback(() => startFetchTypes(), { timeout: 2000 }),
+                      delay,
+                    );
+                  } else {
+                    setTimeout(() => startFetchTypes(), delay);
+                  }
                 }
               } catch (error) {
-                logger.debug('Failed to hydrate host plants from normalized CSV:', error);
-              }
-            };
-
-            // Reset fetch guards for fresh lifecycle
-            typesFetchStartedRef.current = false;
-            typesFetchPromiseRef.current = null;
-
-            const loadTypePartitions = async () => {
-              const responses = await Promise.all([
-                fetchWithRetry(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
-                fetchWithRetry(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
-                fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
-                fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
-                fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
-                fetchWithRetry(`${base}assets/data-lite/aphids.json${versionSuffix}`, { cache: cacheMode }),
-              ]);
-              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
-              const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes, aphidRes] = responses;
-              const safeJson = async (res) => (res && res.ok ? res.json() : []);
-              const [mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr] = await Promise.all([
-                safeJson(mothRes),
-                safeJson(butterflyRes),
-                safeJson(beetleRes),
-                safeJson(longhornRes),
-                safeJson(leafRes),
-                safeJson(aphidRes),
-              ]);
-              if (!shouldContinue()) return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
-              if (Array.isArray(mothArr)) setMoths(mothArr);
-              if (Array.isArray(butterArr)) setButterflies(butterArr);
-              if (Array.isArray(beetleArr)) setBeetles(beetleArr);
-              if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
-              if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
-              if (Array.isArray(aphidArr)) setAphids(aphidArr);
-              // Keep summary counts in sync with loaded partitions (avoid stale cached counts)
-              setSummaryCounts((prev) => ({
-                ...(prev || {}),
-                moths: Array.isArray(mothArr) ? mothArr.length : 0,
-                butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
-                beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
-                longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
-                leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
-                aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
-              }));
-              const flowerMap = buildFlowerVisitMap([
-                ...(mothArr || []),
-                ...(butterArr || []),
-                ...(beetleArr || []),
-                ...(longhornArr || []),
-                ...(leafArr || []),
-                ...(aphidArr || []),
-              ]);
-              setFlowerVisitPlants(flowerMap);
-              const lookup = new Map();
-              [...(mothArr || []), ...(butterArr || []), ...(beetleArr || []), ...(longhornArr || []), ...(leafArr || []), ...(aphidArr || [])].forEach(
-                (insect) => {
-                  if (insect && insect.id && insect.name) {
-                    lookup.set(insect.id, insect.name);
-                  }
-                },
-              );
-              // Plantsタブが開かれるまでホスト植物の詳細パースを遅延
-              pendingHostHydrationRef.current = () => hydrateHostPlantsFromNormalized(lookup);
-              if (hostHydrationRequestedRef.current && pendingHostHydrationRef.current) {
-                pendingHostHydrationRef.current();
-                pendingHostHydrationRef.current = null;
-              }
-              return { mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr };
-            };
-
-            // 非同期・アイドル時にだけ full-dataset をプレフェッチし、IndexedDB キャッシュだけ温める
-            const prefetchFullDataset = () => {
-              if (typeof window === 'undefined') return;
-              if (shouldDeferHeavyWork()) return;
-              const fire = async () => {
-                try {
-                  const fullRes = await fetchWithRetry(`${base}assets/data-lite/full-dataset.json${versionSuffix}`, {
-                    cache: cacheMode,
-                  });
-                  if (!shouldContinue()) return;
-                  if (!fullRes.ok) return;
-                  const fullData = await fullRes.json();
-                  if (!shouldContinue()) return;
-                  const fullFlowerVisits = buildFlowerVisitMap([
-                    ...(fullData.moths || []),
-                    ...(fullData.butterflies || []),
-                    ...(fullData.beetles || []),
-                    ...(fullData.longhornbeetles || []),
-                    ...(fullData.leafbeetles || []),
-                    ...(fullData.aphids || []),
-                  ]);
-                  await saveDatasetToCache(manifest.version || null, {
-                    moths: fullData.moths,
-                    butterflies: fullData.butterflies,
-                    beetles: fullData.beetles,
-                    longhornbeetles: fullData.longhornbeetles,
-                    leafbeetles: fullData.leafbeetles,
-                    aphids: fullData.aphids,
-                    hostPlants: fullData.hostPlants || hostMap,
-                    flowerVisitPlants: fullFlowerVisits,
-                    plantDetails: fullData.plantDetails || plantDetailsLite,
-                    summaryCounts: fullData.summaryCounts || manifest.counts,
-                  });
-                } catch (error) {
-                  if (import.meta.env.DEV) logger.debug('Idle prefetch full-dataset skipped:', error);
-                }
-              };
-              if ('requestIdleCallback' in window) {
-                window.requestIdleCallback(() => fire(), { timeout: 5000 });
-              } else {
-                setTimeout(fire, 5000);
-              }
-            };
-
-            const startFetchTypes = () => {
-              if (typesFetchStartedRef.current && typesFetchPromiseRef.current) {
-                return typesFetchPromiseRef.current;
-              }
-              if (typesFetchStartedRef.current) {
-                return Promise.resolve(null);
-              }
-              typesFetchStartedRef.current = true;
-              const promise = loadTypePartitions().catch((error) => {
-                logger.warn('Failed to load insect partitions:', error);
-                typesFetchStartedRef.current = false;
-                typesFetchPromiseRef.current = null;
-                return null;
-              });
-              typesFetchPromiseRef.current = promise;
-              return promise;
-            };
-
-            ensureTypesLoaderRef.current = startFetchTypes;
-
-            const requestHostHydration = () => {
-              hostHydrationRequestedRef.current = true;
-              if (pendingHostHydrationRef.current) {
-                pendingHostHydrationRef.current();
-                pendingHostHydrationRef.current = null;
-              }
-            };
-            requestHostHydrationRef.current = requestHostHydration;
-
-            // Plantsタブ未訪問でも、アイドル時にバックグラウンドでホスト植物をマージしておく（非同期）
-            const idleHydrateHostplants = () => {
-              if (typeof window === 'undefined') return;
-              if (shouldDeferHeavyWork()) return;
-              const fire = () => requestHostHydration();
-              if ('requestIdleCallback' in window) {
-                window.requestIdleCallback(fire, { timeout: 10000 });
-              } else {
-                setTimeout(fire, 10000);
-              }
-            };
-
-            try {
-              const params = new URLSearchParams(location.search || '');
-              const initialTab = params.get('tab') || 'insects';
-              if (initialTab !== 'plants') {
+                logger.debug('Failed to interpret initial tab, fetching insects immediately:', error);
                 startFetchTypes();
-                idleHydrateHostplants();
-              } else {
-                const delay = 5000;
-                if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-                  setTimeout(
-                    () => window.requestIdleCallback(() => startFetchTypes(), { timeout: 2000 }),
-                    delay,
-                  );
-                } else {
-                  setTimeout(() => startFetchTypes(), delay);
-                }
               }
-            } catch (error) {
-              logger.debug('Failed to interpret initial tab, fetching insects immediately:', error);
-              startFetchTypes();
-              idleHydrateHostplants();
+
+              prefetchFullDataset();
+
+              return;
             }
-
-            prefetchFullDataset();
-
-            return;
           }
-          // manifest OK but hostplants failed -> fallback to full dataset or index
           if (await tryFullDataset(versionSuffix)) return;
           if (await tryLiteIndex(versionSuffix)) return;
-        } // end if (hostRes?.ok)
-      } else {
+        } else {
         // manifest.json が取得できなかった場合のフォールバック
         if (await tryFullDataset(versionSuffix)) return;
         if (await tryLiteIndex(versionSuffix)) return;
@@ -937,7 +554,6 @@ function App() {
         }
         return;
       }
-      let mainMothData = [];
       let hostPlantData = {};
         let plantDetailData = safeDeepClone(plantDetailsLite);
       const wameiCsvPath = `${import.meta.env.BASE_URL}wamei_checklist_ver.1.10.csv`;
@@ -3059,10 +2675,11 @@ function App() {
             
             // COLUMN MISALIGNMENT FIX - Fix rows where scientific names are shifted to wrong columns
             // CSV修正により不要になった列位置ずれ修正処理
-            allowDebugLogs && console.log('=== COLUMN MISALIGNMENT FIX (DISABLED - fixed in CSV) ===');
-            let fixedRows = 0;
-            // Column misalignment fix disabled - issues resolved in CSV files
-            if (false) { // Disabled: CSV files have been pre-cleaned
+	            allowDebugLogs && console.log('=== COLUMN MISALIGNMENT FIX (DISABLED - fixed in CSV) ===');
+	            let fixedRows = 0;
+	            const enableColumnMisalignmentFix = false;
+	            // Column misalignment fix disabled - issues resolved in CSV files
+	            if (enableColumnMisalignmentFix) {
               results.data.forEach((row, index) => {
                 const japaneseName = row['和名']?.trim();
                 const scientificName = row['学名']?.trim();
@@ -3095,7 +2712,7 @@ function App() {
             allowDebugLogs && console.log('=== END COLUMN MISALIGNMENT FIX ===');
             
             results.data.forEach((row, index) => {
-              const catalogNo = row['大図鑑カタログNo']?.trim();
+              const _catalogNo = row['大図鑑カタログNo']?.trim();
               // Some rows have the Japanese name in the '属名' field instead of '和名'
               const originalMothName = row['和名']?.trim() || row['属名']?.trim();
               
@@ -3143,7 +2760,7 @@ function App() {
               let scientificName = processScientificName(row['学名'], genus, species, author, year, 'moth');
               
               // Validate scientific name quality
-              const validationResult = validateScientificName(scientificName, mothName, 'moth');
+              const _validationResult = validateScientificName(scientificName, mothName, 'moth');
               
               // 和名→学名ファイル名マッピングを優先使用
               const scientificFilename = globalJapaneseToScientificMapping.get(mothName) || formatScientificNameForFilename(scientificName);
@@ -4347,9 +3964,9 @@ function App() {
                   tempHostPlant = removeDuplicatePhrases(tempHostPlant);
                   
                   // Pre-process to handle "(以上〇〇科)" pattern - extract it as a separate note
-                  let familyNote = '';
+                  let _familyNote = '';
                   tempHostPlant = tempHostPlant.replace(/([^;；、，,]+)\s*[\(（]\s*以上([^）\)]*科)\s*[\)）]/g, (match, plant, family) => {
-                    familyNote = `以上${family}`;
+                    _familyNote = `以上${family}`;
                     // Return just the plant name, family note will be handled separately
                     return plant.trim();
                   });
@@ -4376,7 +3993,6 @@ function App() {
                   
                   
                   plants.forEach(plant => {
-                    const originalPlant = plant;
                     plant = plant.trim();
                     
                     // Remove trailing patterns like "などの農作物", "などの野菜", "につく"
@@ -4485,7 +4101,7 @@ function App() {
                 
                 // Look for existing entries with similar normalized names
                 let existingKey = null;
-                for (const [key, existingEntry] of plantMap.entries()) {
+                for (const [key] of plantMap.entries()) {
                   const existingNormalized = normalizePlantName(key);
                   if (existingNormalized === normalizedBasePlant || 
                       (existingNormalized.includes(normalizedBasePlant) && normalizedBasePlant.length > 2) ||
@@ -4610,10 +4226,6 @@ function App() {
                                         fuyushakuRemarksMap.get(mothName) || 
                                         fuyushakuRemarksMap.get(scientificName) ||
                                         fuyushakuRemarksMap.get(cleanedScientificName);
-                const hasEmergenceData = emergenceTimeMap.get(mothName) || 
-                                        emergenceTimeMap.get(scientificName) ||
-                                        emergenceTimeMap.get(cleanedScientificName);
-                
                 // Determine the source based on whether we have specialized data
                 // フユシャクデータを最優先にする
                 let sourceToUse = row['出典'] || '不明';
@@ -4808,7 +4420,7 @@ function App() {
                 mainMothData.push(mothData);
               }
 
-              hostPlantEntries.forEach(({ plant, familyFromMainCsv }) => {
+              hostPlantEntries.forEach(({ plant }) => {
                 // Final validation to ensure we don't add invalid plant names
                 if (plant && 
                     typeof plant === 'string' && 
@@ -4955,9 +4567,22 @@ function App() {
           const author = row['著者'] || '';
           const year = row['公表年'] || '';
           
-          if (japaneseName === 'オオゴマシジミ') {
-            allowDebugLogs && console.log(`=== BUTTERFLY DATA LOADING for ${japaneseName} ===`);
-            allowDebugLogs && console.log(`Butterfly row ${index}:`, { source, family, subfamily, genus, species, japaneseName, hostPlants, remarks, author, year });
+	          if (japaneseName === 'オオゴマシジミ') {
+	            allowDebugLogs && console.log(`=== BUTTERFLY DATA LOADING for ${japaneseName} ===`);
+	            allowDebugLogs &&
+	              console.log(`Butterfly row ${index}:`, {
+	                source,
+	                family,
+	                subfamilyLatin,
+	                subfamilyJapanese,
+	                genus,
+	                species,
+	                japaneseName,
+	                hostPlants,
+	                remarks,
+	                author,
+	                year,
+	              });
             allowDebugLogs && console.log(`Processed remarks:`, remarks);
             allowDebugLogs && console.log(`Full row object:`, row);
           }
@@ -4997,7 +4622,7 @@ function App() {
           let scientificName = processScientificName('', genus, species, author, year, 'butterfly');
           
           // Validate scientific name quality
-          const validationResult = validateScientificName(scientificName, japaneseName, 'butterfly');
+          const _validationResult = validateScientificName(scientificName, japaneseName, 'butterfly');
           
           const id = `butterfly-csv-${index}`;
           
@@ -5616,7 +5241,7 @@ function App() {
           let scientificName = processScientificName('', genus, species, author, year, 'beetle');
           
           // Validate scientific name quality
-          const validationResult = validateScientificName(scientificName, japaneseName, 'beetle');
+          const _validationResult = validateScientificName(scientificName, japaneseName, 'beetle');
           
           const id = `beetle-${index}`;
           
@@ -5754,8 +5379,6 @@ function App() {
         if (!useNormalizedOnly && hamushiParsedData.length > 0) {
           try {
             allowDebugLogs && console.log("Processing leafbeetle data from integrated hamushi file...");
-            let processedCount = 0;
-            let skippedCount = 0;
             hamushiParsedData.forEach((row, index) => {
           const catalogId = row['大図鑑カタログNo']?.trim();  // CSVのIDカラム
           const japaneseName = row['和名']?.trim();
@@ -5771,25 +5394,21 @@ function App() {
           
           // 和名が空の場合はスキップ
           if (!japaneseName) {
-            skippedCount++;
             if (allowDebugLogs) console.log("Skipping leafbeetle row - no Japanese name:", { japaneseName, scientificName, rowIndex: index });
             return;
           }
           
           // 学名が空の場合もスキップ
           if (!scientificName) {
-            skippedCount++;
             if (allowDebugLogs) console.log("Skipping leafbeetle row - no scientific name:", { japaneseName, scientificName, rowIndex: index });
             return;
           }
           
           
-          processedCount++;
-          
           // CSVデータクリーニング後は学名がすでに正しい形式のため、追加処理不要
           
           // Validate scientific name quality
-          const validationResult = validateScientificName(scientificName, japaneseName, 'leafbeetle');
+          const _validationResult = validateScientificName(scientificName, japaneseName, 'leafbeetle');
           
           // IDを生成 - CSVのIDを使用、なければindexベース
           let id;
@@ -6268,30 +5887,6 @@ function App() {
         finalLeafbeetleData = fixScientificNames(finalLeafbeetleData);
         finalAphidData = fixScientificNames(finalAphidData);
 
-        // Parse user-provided emergence overrides CSV (robust to extra commas)
-        const splitCsvLine = (line) => {
-          const out = [];
-          let buf = '';
-          let inQuotes = false;
-          for (let i = 0; i < line.length; i++) {
-            const ch = line[i];
-            if (ch === '"') {
-              inQuotes = !inQuotes;
-              continue;
-            }
-            if (ch === ',' && !inQuotes) {
-              out.push(buf);
-              buf = '';
-            } else {
-              buf += ch;
-            }
-          }
-          out.push(buf);
-          return out.map(s => s.trim());
-        };
-
-        // overrides パーサは不要になったため削除
-
         // overrides の適用は廃止。以下の general_notes からの抽出で付与する。
 
         // Fallback: if no emergenceTime after overrides, fill from general_notes
@@ -6616,9 +6211,6 @@ function App() {
 
   const triggerPlantsDataLoad = () => {
     triggerInsectsDataLoad();
-    try {
-      requestHostHydrationRef.current && requestHostHydrationRef.current();
-    } catch {}
   };
 
   const renderWithChunkBoundary = (element) => (
@@ -6642,6 +6234,7 @@ function App() {
     theme,
     setTheme,
     summaryCounts,
+    locale,
     onNeedInsectsData: triggerInsectsDataLoad,
     onNeedPlantsData: triggerPlantsDataLoad,
   };
@@ -6657,6 +6250,7 @@ function App() {
     flowerVisitPlants,
     plantDetails,
     theme,
+    locale,
   };
 
   const routeConfigs = [
@@ -6678,8 +6272,12 @@ function App() {
       element: <HostPlantDetail {...detailBaseProps} />,
     },
     {
+      path: '/en/plant/:plantName',
+      element: <HostPlantDetail {...detailBaseProps} />,
+    },
+    {
       path: '*',
-      element: <NotFoundPage />,
+      element: <NotFoundPage locale={locale} />,
     },
   ];
   
@@ -6691,10 +6289,11 @@ function App() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-white focus:text-slate-900 focus:shadow-lg"
       >
-        本文へスキップ
+        {isEnglish ? 'Skip to main content' : '本文へスキップ'}
       </a>
       {!isExplorerPage && (
         <Header
+          locale={locale}
           theme={theme}
           setTheme={setTheme}
           moths={moths}
@@ -6715,7 +6314,9 @@ function App() {
             className="max-w-6xl mx-auto rounded-2xl border border-red-200/70 dark:border-red-700/60 bg-red-50/90 dark:bg-red-900/30 px-4 py-3 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
           >
             <div className="text-sm text-red-700 dark:text-red-200">
-              データの読み込みに失敗しました。通信状態を確認して再試行してください。
+              {isEnglish
+                ? 'Failed to load the dataset. Check the network connection and retry.'
+                : 'データの読み込みに失敗しました。通信状態を確認して再試行してください。'}
             </div>
             <button
               type="button"
@@ -6726,7 +6327,7 @@ function App() {
               }}
               className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors shadow-sm"
             >
-              再読み込み
+              {isEnglish ? 'Retry' : '再読み込み'}
             </button>
           </div>
         </div>
@@ -6748,7 +6349,7 @@ function App() {
       )}
       </main>
         <FloatingActionButton />
-      <Footer />
+      <Footer locale={locale} />
     </div>
   );
 }

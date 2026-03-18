@@ -30,6 +30,8 @@ export default function useSeoMeta(rawOptions) {
     imageAlt,
     siteName = '昆虫植物図鑑',
     locale = 'ja_JP',
+    htmlLang,
+    alternates,
     breadcrumbItems, // [{name, url}] order is important
     resetCanonicalTo = absUrl('/'),
   } = options;
@@ -37,6 +39,7 @@ export default function useSeoMeta(rawOptions) {
   const isActive = enabled !== false;
 
   const insertedScriptIdsRef = useRef([]);
+  const previousHtmlLangRef = useRef(null);
   const managedMetaSelectorsRef = useRef([
     'meta[property="og:title"]',
     'meta[property="og:description"]',
@@ -54,6 +57,10 @@ export default function useSeoMeta(rawOptions) {
   ]);
 
   const breadcrumbSignature = useMemo(() => JSON.stringify(breadcrumbItems), [breadcrumbItems]);
+  const alternateSignature = useMemo(
+    () => JSON.stringify(Array.isArray(alternates) ? alternates : []),
+    [alternates],
+  );
 
   useEffect(() => {
     if (!isActive) {
@@ -61,6 +68,15 @@ export default function useSeoMeta(rawOptions) {
     }
     const managedMetaSelectors = managedMetaSelectorsRef.current;
     if (title) document.title = title;
+    if (typeof document !== 'undefined' && document.documentElement) {
+      previousHtmlLangRef.current = document.documentElement.getAttribute('lang');
+      const nextHtmlLang =
+        htmlLang ||
+        (locale ? String(locale).replace('_', '-').split('-')[0] : 'ja');
+      if (nextHtmlLang) {
+        document.documentElement.setAttribute('lang', nextHtmlLang);
+      }
+    }
 
     // description
     let descMeta = document.querySelector('meta[name="description"]');
@@ -112,6 +128,21 @@ export default function useSeoMeta(rawOptions) {
         document.head.appendChild(canon);
       }
       canon.href = url;
+    }
+
+    const managedAlternateSelector = 'link[rel="alternate"][data-managed-seo-alt="true"]';
+    document.querySelectorAll(managedAlternateSelector).forEach((node) => node.remove());
+    if (Array.isArray(alternates)) {
+      alternates
+        .filter((entry) => entry?.href && entry?.hreflang)
+        .forEach((entry) => {
+          const link = document.createElement('link');
+          link.rel = 'alternate';
+          link.setAttribute('hreflang', entry.hreflang);
+          link.href = entry.href;
+          link.setAttribute('data-managed-seo-alt', 'true');
+          document.head.appendChild(link);
+        });
     }
 
     // Minimal WebPage structured data fallback for better eligibility
@@ -176,6 +207,16 @@ export default function useSeoMeta(rawOptions) {
         const c = document.querySelector('link[rel="canonical"]');
         if (c) c.href = resetCanonicalTo;
       }
+      if (typeof document !== 'undefined' && document.documentElement) {
+        if (previousHtmlLangRef.current) {
+          document.documentElement.setAttribute('lang', previousHtmlLangRef.current);
+        } else {
+          document.documentElement.removeAttribute('lang');
+        }
+      }
+      document
+        .querySelectorAll('link[rel="alternate"][data-managed-seo-alt="true"]')
+        .forEach((node) => node.remove());
       // remove managed meta tags we may have inserted
       managedMetaSelectors.forEach((sel) => {
         const el = document.querySelector(sel);
@@ -188,7 +229,23 @@ export default function useSeoMeta(rawOptions) {
       });
       insertedScriptIdsRef.current = [];
     };
-  }, [isActive, title, description, ogType, url, imageUrl, imageAlt, breadcrumbItems, breadcrumbSignature, resetCanonicalTo]);
+  }, [
+    alternates,
+    alternateSignature,
+    breadcrumbItems,
+    breadcrumbSignature,
+    description,
+    htmlLang,
+    imageAlt,
+    imageUrl,
+    isActive,
+    locale,
+    ogType,
+    resetCanonicalTo,
+    siteName,
+    title,
+    url,
+  ]);
 
   // Expose helper to set/update OG/Twitter image later (e.g., after <img> loads)
   const setOgTwitterImage = (imgUrl, alt) => {

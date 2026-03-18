@@ -64,7 +64,8 @@ function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {
   if (!fs.existsSync(filePath) || isNoindexPage(filePath)) {
     return false;
   }
-  sitemaps.main.push({
+  const targetKey = options.targetKey || 'main';
+  sitemaps[targetKey].push({
     loc: `${baseUrl}${routePath}`,
     lastmod: getFileLastmod(filePath),
     changefreq: options.changefreq || 'monthly',
@@ -91,6 +92,14 @@ function addStaticDirectoryToMain(sitemaps, baseUrl, absDir, routePrefix, option
   return count;
 }
 
+const EN_META_PAGE_SECTIONS = META_PAGE_SECTIONS.map((section) => ({
+  ...section,
+  key: `en-${section.key}`,
+  dir: section.dir,
+  title: `English ${section.title}`,
+  routePrefix: `/en/meta/${section.dir}/`,
+}));
+
 // サイトマップを分割して生成
 function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
@@ -100,9 +109,10 @@ function generateSplitSitemaps() {
   // 各カテゴリごとのサイトマップを格納
   const sitemaps = {
     main: [],
+    'en-main': [],
     ...Object.fromEntries(META_PAGE_SECTIONS.map(({ key }) => [key, []])),
+    ...Object.fromEntries(EN_META_PAGE_SECTIONS.map(({ key }) => [key, []])),
   };
-  const today = formatDate(new Date());
   
   const topLevelFile = path.join(__dirname, '../public/index.html');
   sitemaps.main.push({
@@ -111,6 +121,14 @@ function generateSplitSitemaps() {
     changefreq: 'weekly',
     priority: '1.0'
   });
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/index.html',
+    path.join(__dirname, '../public/en/index.html'),
+    { changefreq: 'weekly', priority: '0.9', targetKey: 'en-main' },
+  );
 
   addStaticPageToMain(
     sitemaps,
@@ -173,7 +191,8 @@ function generateSplitSitemaps() {
     // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）
     if (includeIndexInMain && files.includes('index.html')) {
       const indexPath = path.join(absDir, 'index.html');
-      sitemaps.main.push({
+      const targetMain = routePrefix.startsWith('/en/') ? sitemaps['en-main'] : sitemaps.main;
+      targetMain.push({
         loc: `${baseUrl}${routePrefix}index.html`,
         lastmod: getFileLastmod(indexPath),
         changefreq: 'weekly',
@@ -202,6 +221,18 @@ function generateSplitSitemaps() {
       addMetaDirToSitemap({
         key: section.key,
         dir: `../public/meta/${section.dir}`,
+        routePrefix: section.routePrefix,
+        priority: section.priority,
+        includeIndexInMain: true,
+      }),
+    ]),
+  );
+  const englishSectionCounts = Object.fromEntries(
+    EN_META_PAGE_SECTIONS.map((section) => [
+      section.key,
+      addMetaDirToSitemap({
+        key: section.key,
+        dir: `../public/en/meta/${section.dir}`,
         routePrefix: section.routePrefix,
         priority: section.priority,
         includeIndexInMain: true,
@@ -315,6 +346,12 @@ function generateSplitSitemaps() {
   META_PAGE_SECTIONS.forEach((section) => {
     const label = section.title.replace('（メタページ一覧）', '');
     console.log(`- ${label}（meta）: ${sectionCounts[section.key] || 0} URL`);
+  });
+  EN_META_PAGE_SECTIONS.forEach((section) => {
+    const label = section.dir === 'plant'
+      ? 'Plants'
+      : `English ${section.dir}`;
+    console.log(`- ${label}（en meta）: ${englishSectionCounts[section.key] || 0} URL`);
   });
   console.log(`- 合計: ${Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0)} URLs`);
 }

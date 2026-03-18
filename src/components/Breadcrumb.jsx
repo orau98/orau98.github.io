@@ -1,15 +1,16 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { isEnglishLocale } from '../utils/locale';
 
 /**
  * パンくずリストコンポーネント
  * @param {Array} items - [{label: string, path?: string}]
  */
-const Breadcrumb = ({ items = [] }) => {
+const Breadcrumb = ({ items = [], locale = 'ja' }) => {
   if (!items || items.length === 0) return null;
+  const isEnglish = isEnglishLocale(locale);
 
   return (
-    <nav aria-label="パンくずリスト" className="mb-4">
+    <nav aria-label={isEnglish ? 'Breadcrumb' : 'パンくずリスト'} className="mb-4">
       <ol className="flex flex-wrap items-center gap-1 text-sm text-slate-600 dark:text-slate-400">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

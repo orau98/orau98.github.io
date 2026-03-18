@@ -134,6 +134,11 @@ if (fs.existsSync(rootIndexPath)) {
   validateHtml(rootIndexPath, readFile(rootIndexPath));
 }
 
+const englishRootIndexPath = path.join(DIST_DIR, 'en', 'index.html');
+if (fs.existsSync(englishRootIndexPath)) {
+  validateHtml(englishRootIndexPath, readFile(englishRootIndexPath));
+}
+
 const metaDir = path.join(DIST_DIR, 'meta');
 const metaFiles = collectHtmlFiles(metaDir).filter(
   (filePath) => !filePath.endsWith('support-test.html'),
@@ -142,6 +147,17 @@ ensure(metaFiles.length > 0, 'dist/meta HTML files not found');
 
 for (const filePath of metaFiles) {
   validateHtml(filePath, readFile(filePath));
+}
+
+const englishMetaDir = path.join(DIST_DIR, 'en', 'meta');
+const englishMetaFiles = collectHtmlFiles(englishMetaDir).filter(
+  (filePath) => !filePath.endsWith('support-test.html'),
+);
+if (fs.existsSync(englishMetaDir)) {
+  ensure(englishMetaFiles.length > 0, 'dist/en/meta HTML files not found');
+  for (const filePath of englishMetaFiles) {
+    validateHtml(filePath, readFile(filePath));
+  }
 }
 
 if (failures.length > 0) {
@@ -153,4 +169,9 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`[audit-seo] ok: checked ${1 + metaFiles.length} HTML files`);
+const checkedCount =
+  1 +
+  (fs.existsSync(englishRootIndexPath) ? 1 : 0) +
+  metaFiles.length +
+  englishMetaFiles.length;
+console.log(`[audit-seo] ok: checked ${checkedCount} HTML files`);

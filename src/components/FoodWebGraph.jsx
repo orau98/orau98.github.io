@@ -525,7 +525,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   useEffect(() => {
     if (!searchMessage) return;
     setSearchMessage('');
-  }, [searchQuery]);
+  }, [searchMessage, searchQuery]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -754,7 +754,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     return { nodes, links, summary };
-  }, [currentInsect, currentPlantName, hostPlantsMap, insectImageCandidates, insectLookup, plantImageCandidates, plantInsectMeta, relatedLimit, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems]);
+  }, [currentInsect, currentPlantName, hostPlantsMap, insectImageCandidates, insectLookup, plantImageCandidates, plantInsectMeta, relatedLimit, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems, showRelatedInsects]);
 
   const relationFilterConfig = useMemo(
     () => RELATION_FILTERS.find((item) => item.value === relationFilter) || RELATION_FILTERS[0],
@@ -1016,12 +1016,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, [baseGraphData.nodes, isNodePinned]);
 
   const pinnedNodeCount = useMemo(
-    () => baseGraphData.nodes.reduce((count, node) => count + (isNodePinned(node) ? 1 : 0), 0),
+    () => {
+      void pinVersion;
+      return baseGraphData.nodes.reduce((count, node) => count + (isNodePinned(node) ? 1 : 0), 0);
+    },
     [baseGraphData.nodes, isNodePinned, pinVersion]
   );
 
   const selectedNodePinned = useMemo(
-    () => (selectedNode ? isNodePinned(selectedNode) : false),
+    () => {
+      void pinVersion;
+      return selectedNode ? isNodePinned(selectedNode) : false;
+    },
     [selectedNode, isNodePinned, pinVersion]
   );
 

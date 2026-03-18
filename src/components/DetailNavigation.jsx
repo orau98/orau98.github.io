@@ -1,7 +1,7 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
+import { buildPlantPath } from '../utils/siteTaxonomy';
 
 // Helper to get previous and next items from a sorted list
 // `items` should be sorted in the desired order (e.g., alphabetical or taxonomic)
@@ -20,17 +20,21 @@ const useNeighborItems = (items, currentItemIdentifier, identifierKey = 'id') =>
 };
 
 // Navigation Link Component
-const NeighborLink = ({ item, direction, type = 'insect' }) => {
-  if (!item) return <div className="flex-1" />; // Placeholder for alignment
+const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
   const location = useLocation();
+  const isEnglish = locale === 'en';
+  if (!item) return <div className="flex-1" />; // Placeholder for alignment
 
   const getRoute = (item, type) => {
-    if (type === 'plant') return `/plant/${encodeURIComponent(item.name)}`;
-    return buildInsectPath(item);
+    if (type === 'plant') return buildPlantPath(item.name, locale);
+    return buildInsectPath(item, locale);
   };
 
   const route = getRoute(item, type);
   const isPrev = direction === 'prev';
+  const displayName = isEnglish && type === 'insect'
+    ? item.scientificName || item.name
+    : item.name;
 
   return (
     <Link
@@ -48,10 +52,16 @@ const NeighborLink = ({ item, direction, type = 'insect' }) => {
       
       <div className={`flex flex-col ${isPrev ? 'items-start' : 'items-end'}`}>
         <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-0.5">
-          {isPrev ? '前の種' : '次の種'}
+          {isPrev
+            ? isEnglish
+              ? 'Previous'
+              : '前の種'
+            : isEnglish
+              ? 'Next'
+              : '次の種'}
         </span>
         <span className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-1">
-          {item.name}
+          {displayName}
         </span>
       </div>
 
@@ -67,7 +77,7 @@ const NeighborLink = ({ item, direction, type = 'insect' }) => {
 };
 
 // Main Component
-const DetailNavigation = ({ allItems, currentId, type = 'insect' }) => {
+const DetailNavigation = ({ allItems, currentId, type = 'insect', locale = 'ja' }) => {
   // Sort items for consistent navigation order (e.g., alphabetical by Japanese name)
   // Assuming 'allItems' might be unsorted, let's sort by name if not already.
   // For insects, usually passed sorted or we sort here.
@@ -85,8 +95,8 @@ const DetailNavigation = ({ allItems, currentId, type = 'insect' }) => {
 
   return (
     <div className="flex justify-between gap-4 mt-12 border-t border-slate-200/50 dark:border-slate-700/50 pt-8">
-      <NeighborLink item={prevItem} direction="prev" type={type} />
-      <NeighborLink item={nextItem} direction="next" type={type} />
+      <NeighborLink item={prevItem} direction="prev" type={type} locale={locale} />
+      <NeighborLink item={nextItem} direction="next" type={type} locale={locale} />
     </div>
   );
 };

@@ -94,7 +94,7 @@ function loadBatch2Data() {
     process.exit(1);
   }
   const raw = fs.readFileSync(DATA_PATH, 'utf8').split(/\r?\n/);
-  const header = raw.shift();
+  raw.shift();
   const rows = [];
   for (const line of raw) {
     if (!line || !line.trim()) continue;

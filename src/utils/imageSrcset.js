@@ -19,7 +19,7 @@ export function buildResponsiveSrcset({
   baseUrl = import.meta.env.BASE_URL || '/',
   folder = 'insects',
   filename,
-  ext = '.jpg',
+  ext: _ext = '.jpg',
   widths = [320, 640, 1024],
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
   query,

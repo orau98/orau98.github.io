@@ -3,6 +3,9 @@ import logger from '../utils/logger';
 import { Link, useLocation } from 'react-router-dom';
 import { getSourceLink, normalizeReference } from '../utils/sourceLinks';
 import { makeDetailLinkState } from '../utils/navState';
+import { buildPlantPath } from '../utils/siteTaxonomy';
+import { isEnglishLocale } from '../utils/locale';
+import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -111,11 +114,11 @@ const isFlowerVisitRecord = (record) => {
 /**
  * 観察タイプ別のスタイルを取得
  */
-const getObservationTypeStyle = (observationType) => {
+const getObservationTypeStyle = (observationType, isEnglish = false) => {
   switch (observationType) {
     case '文献':
       return {
-        label: '文献',
+        label: isEnglish ? 'Literature' : '文献',
         bgColor: 'bg-amber-50 dark:bg-amber-900/20',
         textColor: 'text-amber-700 dark:text-amber-300',
         borderColor: 'border-amber-200 dark:border-amber-700'
@@ -123,14 +126,14 @@ const getObservationTypeStyle = (observationType) => {
     case '飼育':
     case '飼育記録':
       return {
-        label: '飼育',
+        label: isEnglish ? 'Reared' : '飼育',
         bgColor: 'bg-blue-50 dark:bg-blue-900/20',
         textColor: 'text-blue-700 dark:text-blue-300',
         borderColor: 'border-blue-200 dark:border-blue-700'
       };
     case '野外（国内）':
       return {
-        label: '野外',
+        label: isEnglish ? 'Field' : '野外',
         bgColor: 'bg-green-50 dark:bg-green-900/20',
         textColor: 'text-green-700 dark:text-green-300',
         borderColor: 'border-green-200 dark:border-green-700'
@@ -139,14 +142,14 @@ const getObservationTypeStyle = (observationType) => {
     case '国外':
     case '野外（国外）':
       return {
-        label: '海外',
+        label: isEnglish ? 'Overseas' : '海外',
         bgColor: 'bg-purple-50 dark:bg-purple-900/20',
         textColor: 'text-purple-700 dark:text-purple-300',
         borderColor: 'border-purple-200 dark:border-purple-700'
       };
     default:
       return {
-        label: 'その他',
+        label: isEnglish ? 'Other' : 'その他',
         bgColor: 'bg-gray-50 dark:bg-gray-900/20',
         textColor: 'text-gray-700 dark:text-gray-300',
         borderColor: 'border-gray-200 dark:border-gray-700'
@@ -200,8 +203,34 @@ const groupPlantsByName = (plants) => {
 /**
  * 個別食草情報の詳細表示コンポーネント（統合版）
  */
-const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) => {
+const getLifeStageLabel = (lifeStage, isEnglish = false) => {
+  if (!isEnglish) return lifeStage;
+  return ({
+    幼虫: 'Larva',
+    成虫: 'Adult',
+    蛹: 'Pupa',
+    卵: 'Egg',
+  })[lifeStage] || lifeStage;
+};
+
+const getPlantPartLabel = (plantPart, isEnglish = false) => {
+  if (!isEnglish) return plantPart;
+  return ({
+    葉: 'Leaf',
+    花: 'Flower',
+    実: 'Fruit',
+    果実: 'Fruit',
+    樹皮: 'Bark',
+    茎: 'Stem',
+    根: 'Root',
+    新芽: 'Bud',
+    芽: 'Bud',
+  })[plantPart] || plantPart;
+};
+
+const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetails = {} }) => {
   const location = useLocation();
+  const isEnglish = isEnglishLocale(locale);
   // 最優先の観察タイプを決定（野外（国内）を最優先）
   const primaryRecord = plantGroup.records.reduce((prev, current) => {
     const prevPriority = getObservationTypePriority(prev.observationType);
@@ -229,7 +258,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) =>
     });
   }
   
-  const obsStyle = getObservationTypeStyle(primaryRecord.observationType);
+  const obsStyle = getObservationTypeStyle(primaryRecord.observationType, isEnglish);
   const isDomesticWild = primaryRecord.observationType === '野外（国内）';
   
   // 利用情報をグループ化
@@ -255,16 +284,14 @@ const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) =>
   }, {});
   
   const usageInfoArray = Object.values(usageInfo);
-  const hasMultipleUsages = usageInfoArray.length > 1;
-  
   // インライン用バッジを事前計算（上限2件 + 余剰表示）
   const badges = usageInfoArray.map((usage) => {
     const ls = usage.lifeStage ? getLifeStageIcon(usage.lifeStage) : null;
     const pp = usage.plantPart ? getPlantPartIcon(usage.plantPart) : null;
     const isFlowerVisit = isFlowerVisitRecord({ lifeStage: usage.lifeStage, plantPart: usage.plantPart });
     const label = isFlowerVisit
-      ? '訪花'
-      : ([usage.lifeStage, usage.plantPart].filter(Boolean).join('・') || '');
+      ? (isEnglish ? 'Flower visit' : '訪花')
+      : ([getLifeStageLabel(usage.lifeStage, isEnglish), getPlantPartLabel(usage.plantPart, isEnglish)].filter(Boolean).join(isEnglish ? ' / ' : '・') || '');
     return { label, ls, pp };
   }).filter(b => b.label);
   const maxBadges = 2;
@@ -284,20 +311,38 @@ const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) =>
     return t;
   };
   const displayPlantName = repairPlantLatinBinomial(plantGroup.name);
+  const plantDetail = plantDetails?.[plantGroup.name] || {};
+  const primaryPlantName = isEnglish
+    ? getPrimaryEnglishName({
+        scientificName: plantDetail.scientificName,
+        japaneseName: displayPlantName,
+        fallback: displayPlantName,
+      })
+    : displayPlantName;
+  const japaneseReference = isEnglish && /[\u3040-\u30FF\u3400-\u9FFF]/.test(displayPlantName)
+    ? buildJapaneseReferenceLabel(displayPlantName)
+    : '';
 
   return (
     <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
       {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示） */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <Link
-            to={`/plant/${encodeURIComponent(plantGroup.name)}`}
-            state={makeDetailLinkState(location)}
-            className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
-            title={`${displayPlantName} の詳細へ`}
-          >
-            {displayPlantName}
-          </Link>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2 min-w-0 flex-1">
+          <div className="min-w-0">
+            <Link
+              to={buildPlantPath(plantGroup.name, locale)}
+              state={makeDetailLinkState(location)}
+              className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
+              title={isEnglish ? `${primaryPlantName}${japaneseReference ? ` (${displayPlantName})` : ''}` : `${displayPlantName} の詳細へ`}
+            >
+              {primaryPlantName}
+            </Link>
+            {japaneseReference && (
+              <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                {japaneseReference}
+              </div>
+            )}
+          </div>
           {plantGroup.family && (
             <span className={`text-sm shrink-0 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
               {plantGroup.family}
@@ -317,7 +362,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) =>
               ))}
               {extra > 0 && (
                 <span className="text-[11px] leading-5 px-1 py-[1px] rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  他+{extra}
+                  {isEnglish ? `+${extra} more` : `他+${extra}`}
                 </span>
               )}
             </div>
@@ -359,7 +404,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) =>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <div className="text-sm text-slate-600 dark:text-slate-300">
-                  <span className="font-medium text-slate-500 dark:text-slate-400">出典:</span>{' '}
+                  <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
                   {Array.from(allReferences).map((ref, index) => {
                     const displayRef = normalizeReference(ref);
                     const sourceLink = getSourceLink(displayRef);
@@ -398,7 +443,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, isExpanded, onToggle }) =>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2z" />
                 </svg>
                 <div className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
-                  <div className="font-medium">備考:</div>
+                  <div className="font-medium">{isEnglish ? 'Notes:' : '備考:'}</div>
                   <ul className="list-disc pl-5 space-y-0.5">
                     {Array.from(filteredNotesSet).map((note, idx) => (
                       <li key={idx}>{note}</li>
@@ -421,8 +466,11 @@ const EnhancedHostPlantDisplay = ({
   hostPlants = [], 
   hostPlantsDetailed = [], 
   showDetailsByDefault = false,
-  maxDisplayCount = 5 
+  maxDisplayCount = 5,
+  locale = 'ja',
+  plantDetails = {},
 }) => {
+  const isEnglish = isEnglishLocale(locale);
   const [expandedItems, setExpandedItems] = useState(new Set());
   const [showAllHost, setShowAllHost] = useState(false);
   const [showAllFlower, setShowAllFlower] = useState(false);
@@ -482,7 +530,7 @@ const EnhancedHostPlantDisplay = ({
   if (!plantsToDisplay || plantsToDisplay.length === 0) {
     return (
       <div className="text-sm text-slate-500 dark:text-slate-400 italic">
-        食草情報なし
+        {isEnglish ? 'No plant-use records available.' : '食草情報なし'}
       </div>
     );
   }
@@ -510,7 +558,7 @@ const EnhancedHostPlantDisplay = ({
       {hostGroups.length > 0 && (
         <div className="space-y-2">
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-            幼虫の食草・食樹
+            {isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
           </div>
           <div className="space-y-2">
             {hostGroups.slice(0, hostDisplayCount).map((plantGroup, index) => {
@@ -521,6 +569,8 @@ const EnhancedHostPlantDisplay = ({
                   plantGroup={plantGroup}
                   isExpanded={expandedItems.has(key) || showDetailsByDefault}
                   onToggle={() => toggleExpanded(key)}
+                  locale={locale}
+                  plantDetails={plantDetails}
                 />
               );
             })}
@@ -531,7 +581,7 @@ const EnhancedHostPlantDisplay = ({
                 onClick={() => setShowAllHost(!showAllHost)}
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
               >
-                {showAllHost ? '簡略表示' : `他${hostGroups.length - maxDisplayCount}種を表示`}
+                {showAllHost ? (isEnglish ? 'Show less' : '簡略表示') : (isEnglish ? `Show ${hostGroups.length - maxDisplayCount} more` : `他${hostGroups.length - maxDisplayCount}種を表示`)}
                 <svg 
                   className={`ml-1 w-4 h-4 transition-transform ${showAllHost ? 'rotate-180' : ''}`}
                   fill="none" 
@@ -549,7 +599,7 @@ const EnhancedHostPlantDisplay = ({
       {flowerGroups.length > 0 && (
         <div className="space-y-2">
           <div className="text-xs font-semibold text-pink-600 dark:text-pink-300 uppercase tracking-wide">
-            成虫の訪花
+            {isEnglish ? 'Adult flower visits' : '成虫の訪花'}
           </div>
           <div className="space-y-2">
             {flowerGroups.slice(0, flowerDisplayCount).map((plantGroup, index) => {
@@ -560,6 +610,8 @@ const EnhancedHostPlantDisplay = ({
                   plantGroup={plantGroup}
                   isExpanded={expandedItems.has(key) || showDetailsByDefault}
                   onToggle={() => toggleExpanded(key)}
+                  locale={locale}
+                  plantDetails={plantDetails}
                 />
               );
             })}
@@ -570,7 +622,7 @@ const EnhancedHostPlantDisplay = ({
                 onClick={() => setShowAllFlower(!showAllFlower)}
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-lg transition-colors"
               >
-                {showAllFlower ? '簡略表示' : `他${flowerGroups.length - maxDisplayCount}種を表示`}
+                {showAllFlower ? (isEnglish ? 'Show less' : '簡略表示') : (isEnglish ? `Show ${flowerGroups.length - maxDisplayCount} more` : `他${flowerGroups.length - maxDisplayCount}種を表示`)}
                 <svg 
                   className={`ml-1 w-4 h-4 transition-transform ${showAllFlower ? 'rotate-180' : ''}`}
                   fill="none" 

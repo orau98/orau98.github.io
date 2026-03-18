@@ -1,18 +1,23 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  NOINDEX_NOFOLLOW_ROBOTS,
+  setRobotsMetaContent,
+} from '../utils/robotsMeta';
+import { isEnglishLocale, localizePath } from '../utils/locale';
 
-const NotFoundPage = () => {
+const NotFoundPage = ({ locale = 'ja' }) => {
   const location = useLocation();
+  const isEnglish = isEnglishLocale(locale);
 
   useEffect(() => {
     const prevTitle = document.title;
     const robots = document.querySelector('meta[name="robots"]');
     const prevRobots = robots ? robots.getAttribute('content') : null;
-    if (robots) {
-      robots.setAttribute('content', 'noindex, nofollow, max-image-preview:none');
-    }
-    document.title = '404 | ページが見つかりません - 昆虫植物図鑑';
+    setRobotsMetaContent(NOINDEX_NOFOLLOW_ROBOTS);
+    document.title = isEnglish
+      ? '404 | Page not found - Insects and Host Plants of Japan'
+      : '404 | ページが見つかりません - 昆虫植物図鑑';
 
     return () => {
       document.title = prevTitle;
@@ -20,7 +25,7 @@ const NotFoundPage = () => {
         robots.setAttribute('content', prevRobots);
       }
     };
-  }, []);
+  }, [isEnglish]);
 
   return (
     <section className="min-h-[60vh] px-4 py-12 flex items-center justify-center">
@@ -29,10 +34,12 @@ const NotFoundPage = () => {
           404 Not Found
         </p>
         <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-3">
-          ページが見つかりません
+          {isEnglish ? 'Page not found' : 'ページが見つかりません'}
         </h1>
         <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-          指定されたURLは移動したか、存在しない可能性があります。
+          {isEnglish
+            ? 'The requested URL may have moved or does not exist.'
+            : '指定されたURLは移動したか、存在しない可能性があります。'}
         </p>
         {location?.pathname && (
           <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-6 break-all">
@@ -40,14 +47,14 @@ const NotFoundPage = () => {
           </p>
         )}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link to="/" className="ui-btn ui-btn-primary">
-            トップページへ戻る
+          <Link to={localizePath('/', locale)} className="ui-btn ui-btn-primary">
+            {isEnglish ? 'Go to homepage' : 'トップページへ戻る'}
           </Link>
-          <Link to="/?tab=insects" className="ui-btn ui-btn-secondary">
-            昆虫一覧へ
+          <Link to={localizePath('/?tab=insects', locale)} className="ui-btn ui-btn-secondary">
+            {isEnglish ? 'Browse insects' : '昆虫一覧へ'}
           </Link>
-          <Link to="/?tab=plants" className="ui-btn ui-btn-secondary">
-            植物一覧へ
+          <Link to={localizePath('/?tab=plants', locale)} className="ui-btn ui-btn-secondary">
+            {isEnglish ? 'Browse plants' : '植物一覧へ'}
           </Link>
         </div>
       </div>

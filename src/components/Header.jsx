@@ -1,11 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
 import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
+import {
+  isEnglishLocale,
+  localizePath,
+  stripLocalePrefix,
+} from '../utils/locale';
 import { getSectionConfigByRouteSegment } from '../utils/siteTaxonomy';
+import LocaleSwitcher from './LocaleSwitcher';
 
-const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails }) => {
+const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants: _hostPlants, plantDetails }) => {
   const location = useLocation();
+  const isEnglish = isEnglishLocale(locale);
   const insectListsByType = {
     moth: moths,
     butterfly: butterflies,
@@ -39,17 +46,21 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
   };
 
   const getCurrentSpeciesInfo = () => {
-    const [, routeSegment, slug] = location.pathname.split('/');
+    const normalizedPath = stripLocalePrefix(location.pathname || '/');
+    const [, routeSegment, slug] = normalizedPath.split('/');
 
     if (routeSegment === 'plant' && slug) {
       const plantName = decodeURIComponent(slug);
       const displayName = repairLatinBinomial(plantName);
       const plantDetail = plantDetails[plantName];
       if (plantDetail) {
+        const scientificPlantName = repairLatinBinomial(plantDetail.scientificName || '');
         return {
           type: 'plant',
-          name: displayName,
-          family: plantDetail.family,
+          name: isEnglish ? (scientificPlantName || displayName) : displayName,
+          family: isEnglish
+            ? (plantDetail.familyLatin || plantDetail.family || '')
+            : plantDetail.family,
           genus: plantDetail.genus
         };
       }
@@ -63,11 +74,17 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
 
     const insect = findBySlugOrId(insectListsByType[section.type], slug);
     if (insect) {
+      const familyLabel = isEnglish
+        ? (insect.classification?.family || insect.classification?.familyJapanese || '')
+        : (insect.classification?.familyJapanese || insect.classification?.family || '');
       return {
         type: section.type,
-        name: insect.name,
+        name: isEnglish ? (insect.scientificName || insect.name) : insect.name,
         scientificName: insect.scientificName,
-        classification: insect.classification
+        classification: {
+          ...insect.classification,
+          familyLabel,
+        }
       };
     }
     return null;
@@ -75,6 +92,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
 
   const speciesInfo = getCurrentSpeciesInfo();
   const headerRef = useRef(null);
+  const homePath = localizePath('/', locale);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return undefined;
@@ -97,7 +115,7 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
     <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl relative z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-20">
-          <Link to="/" className="group flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
+          <Link to={homePath} className="group flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 group-hover:shadow-2xl transition-all duration-300 group-hover:rotate-3">
                 <svg className="w-7 h-7 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,16 +125,27 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
             </div>
             <div className="hidden sm:block">
               <h1 className="text-3xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight">
-                "繋がり"が見える昆虫植物図鑑
+                {isEnglish
+                  ? 'Insects and Host Plants of Japan'
+                  : '"繋がり"が見える昆虫植物図鑑'}
               </h1>
               <p className="text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
-                Insect Host Plant Explorer
+                {isEnglish ? 'Scientific names first' : 'Insect Host Plant Explorer'}
               </p>
             </div>
             <div className="sm:hidden">
               <h1 className="text-lg font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent">
-                <span className="block">"繋がり"が見える</span>
-                <span className="block">昆虫植物図鑑</span>
+                {isEnglish ? (
+                  <>
+                    <span className="block">Insects &amp;</span>
+                    <span className="block">Host Plants</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">"繋がり"が見える</span>
+                    <span className="block">昆虫植物図鑑</span>
+                  </>
+                )}
               </h1>
             </div>
           </Link>
@@ -133,9 +162,13 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
                         <>
                           {' '}
                           <Link
-                            to={`/?tab=plants&pfamily=${encodeURIComponent(speciesInfo.family)}`}
+                            to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(speciesInfo.family)}`, locale)}
                             className="text-slate-300 ml-2 underline decoration-emerald-300/60 hover:decoration-emerald-400"
-                            aria-label={`${speciesInfo.family} の植物を検索`}
+                            aria-label={
+                              isEnglish
+                                ? `Search plants in ${speciesInfo.family}`
+                                : `${speciesInfo.family} の植物を検索`
+                            }
                           >
                             ({speciesInfo.family})
                           </Link>
@@ -147,19 +180,21 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
                   <div className="flex items-center space-x-2">
                     <div className="text-sm">
                       <span className="text-white font-medium">{speciesInfo.name}</span>
-                      {speciesInfo.classification?.familyJapanese && (
-                        <span className="text-slate-300 ml-2">({speciesInfo.classification.familyJapanese})</span>
+                      {speciesInfo.classification?.familyLabel && (
+                        <span className="text-slate-300 ml-2">({speciesInfo.classification.familyLabel})</span>
                       )}
                     </div>
                   </div>
                 )}
               </div>
             )}
+
+            <LocaleSwitcher locale={locale} />
             
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="group relative p-3 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 dark:from-emerald-500/10 dark:to-blue-500/10 backdrop-blur-sm rounded-2xl border border-emerald-400/30 dark:border-emerald-400/20 hover:from-emerald-500/30 hover:to-blue-500/30 dark:hover:from-emerald-500/20 dark:hover:to-blue-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-emerald-500/30"
-              aria-label="テーマを切り替え"
+              aria-label={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
             >
               <div className="relative">
                 {theme === 'dark' ? (

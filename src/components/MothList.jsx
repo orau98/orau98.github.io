@@ -11,8 +11,14 @@ import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 import { buildResponsiveSrcset, buildResizedImageUrl } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
+import {
+  buildJapaneseReferenceLabel,
+  EN_SITE_NAME,
+  getPrimaryEnglishName,
+} from '../utils/englishNaming';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
+import { isEnglishLocale, localizePath } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
 import {
   buildInsectImageBaseCandidates,
@@ -78,8 +84,9 @@ const buildPlantDisplayData = (moth) => {
   };
 };
 
-const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, currentPage = 1 }) => {
+const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, locale = 'ja' }) => {
   const location = useLocation();
+  const isEnglish = isEnglishLocale(locale);
   // Heuristic: insert a space between genus and species if missing
   const repairScientificBinomial = (name) => {
     if (!name || typeof name !== 'string') return name;
@@ -188,8 +195,18 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }, [handleIntersection, isPriority]);
   // Determine the correct route based on insect type
   const route = baseRoute === ""
-    ? buildInsectPath(moth)
-    : `${baseRoute}/${slugifyInsectName(moth.name) || moth.id}`;
+    ? buildInsectPath(moth, locale)
+    : `${localizePath(baseRoute, locale)}/${slugifyInsectName(moth.name) || moth.id}`;
+  const primaryName = isEnglish
+    ? getPrimaryEnglishName({
+        scientificName: moth.scientificName,
+        japaneseName: moth.name,
+        fallback: moth.id,
+      })
+    : moth.name;
+  const secondaryName = isEnglish
+    ? buildJapaneseReferenceLabel(moth.name)
+    : moth.scientificName;
   
   // 画像ファイル名を動的に解決（学名表記ゆれ・著者名付きファイル名にも対応）
   const finalImageFilename = React.useMemo(() => {
@@ -290,7 +307,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         src={src}
                         srcSet={srcSet}
                         sizes={sizes}
-                        alt={`${moth.name}（${moth.scientificName}）の写真`}
+                        alt={
+                          isEnglish
+                            ? `${primaryName} photograph`
+                            : `${moth.name}（${moth.scientificName}）の写真`
+                        }
                         width="800"
                         height="600"
                         className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 gpu-accelerated ${
@@ -381,7 +402,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
                     </svg>
-                    画像準備中
+                    {isEnglish ? 'Image pending' : '画像準備中'}
                   </span>
                 </div>
               </div>
@@ -393,13 +414,17 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           <div className="p-4 flex flex-col flex-grow">
             <div className="mb-3">
               <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1 leading-tight">
-                {moth.name}
+                {isEnglish ? formatScientificNameReact(primaryName) : moth.name}
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm italic">
-                {formatScientificNameReact(
-                  dropSubspecies(repairScientificBinomial(moth.scientificName))
-                )}
-              </p>
+              {secondaryName && (
+                <p className={`text-slate-600 dark:text-slate-400 text-sm ${isEnglish ? '' : 'italic'}`}>
+                  {isEnglish
+                    ? secondaryName
+                    : formatScientificNameReact(
+                        dropSubspecies(repairScientificBinomial(moth.scientificName))
+                      )}
+                </p>
+              )}
             </div>
 
             <div className="mt-auto space-y-2">
@@ -423,7 +448,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       <span
                         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-[13px] dark:bg-rose-900/30 flex-shrink-0 mt-0.5"
                         role="img"
-                        aria-label="訪花"
+                        aria-label={isEnglish ? "Flower visit" : "訪花"}
                       >
                         🌸
                       </span>
@@ -441,7 +466,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         </svg>
                       </span>
                       <span className="text-slate-600 dark:text-slate-300 leading-snug">
-                        情報なし
+                        {isEnglish ? 'No plant record' : '情報なし'}
                       </span>
                     </div>
                   )}
@@ -487,26 +512,61 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     return (
       <article className="group relative overflow-hidden rounded-xl bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border-2 border-red-200 dark:border-red-600 p-4">
         <div className="text-red-600 dark:text-red-400 text-sm">
-          表示エラーが発生しました: {moth?.name || '不明な昆虫'}
+          {isEnglish
+            ? `Render error: ${moth?.name || 'Unknown insect'}`
+            : `表示エラーが発生しました: ${moth?.name || '不明な昆虫'}`}
         </div>
       </article>
     );
   }
 });
 
-const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "" }) => {
+const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", locale = 'ja' }) => {
+  const isEnglish = isEnglishLocale(locale);
+  const ui = useMemo(
+    () => ({
+      filterTitle: isEnglish ? 'Advanced filters' : '詳細フィルタ',
+      filteredBy: isEnglish ? 'Filtered by:' : '絞り込み:',
+      resetAll: isEnglish ? 'Reset all' : 'すべてリセット',
+      hostPlantFilter: isEnglish ? 'Host plant record' : '食草の有無',
+      all: isEnglish ? 'All' : 'すべて',
+      hasHostPlant: isEnglish ? 'Has host plant' : '食草あり',
+      unregisteredOnly: isEnglish ? 'Unregistered only' : '未登録のみ',
+      any: isEnglish ? 'Any' : '指定なし',
+      emergence: isEnglish ? 'Adult season' : '出現期',
+      resultCount: (value) =>
+        isEnglish ? `${value} results` : `${value} 件が見つかりました`,
+      listTitle: isEnglish ? `${title} list` : `${title}のリスト`,
+      renderError: (name) =>
+        isEnglish ? `Render error: ${name}` : `表示エラー: ${name}`,
+      emptyTitle: isEnglish ? `No matching ${title.toLowerCase()} found` : `該当する${title}が見つかりません`,
+      activeFilters: isEnglish ? 'Current filters:' : '現在の条件:',
+      tryAnother: isEnglish ? 'Try another keyword.' : '別のキーワードで検索してみてください',
+      searchOnlyClear: isEnglish ? 'Clear search only' : '検索のみクリア',
+      clearSearch: isEnglish ? 'Clear search' : '検索をクリア',
+      clearFilters: isEnglish ? 'Clear filters' : 'フィルター解除',
+      examples: isEnglish
+        ? 'Examples: Japanese name, scientific name, family, or host plant'
+        : '例：「オオミズアオ」「ヤナギ」「ヤガ科」など',
+      listPageTitle: isEnglish ? `${title} index | ${EN_SITE_NAME}` : `${title}の一覧 | 昆虫植物図鑑`,
+      listPageDesc: isEnglish
+        ? `${moths?.length || 0} entries. Search by Japanese name, scientific name, family, subfamily, or genus.`
+        : `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`,
+    }),
+    [isEnglish, moths?.length, title],
+  );
   // Canonical/OG/パンくず（一覧ページ）
-  const canonicalPath = baseRoute === '/' || baseRoute === '' ? '/' : baseRoute;
+  const canonicalPath = baseRoute === '/' || baseRoute === '' ? localizePath('/', locale) : localizePath(baseRoute, locale);
   const canonicalUrl = (typeof window !== 'undefined' && window.location && window.location.origin
     ? window.location.origin
     : 'https://orau98.github.io') + (canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`);
-  const pageTitle = `${title}の一覧 | 昆虫植物図鑑`;
-  const pageDesc = `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`;
+  const pageTitle = ui.listPageTitle;
+  const pageDesc = ui.listPageDesc;
 
   const breadcrumbItems = useMemo(() => ([
-    { name: '昆虫植物図鑑', url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/' },
+    { name: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑', url: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + localizePath('/', locale) },
     { name: title, url: canonicalUrl }
-  ]), [canonicalUrl, title]);
+  ]), [canonicalUrl, isEnglish, locale, title]);
 
   useSeoMeta({
     enabled: !embedded,
@@ -514,8 +574,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     description: pageDesc,
     ogType: 'website',
     url: canonicalUrl,
+    locale: isEnglish ? 'en_US' : 'ja_JP',
+    htmlLang: locale,
+    siteName: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑',
     breadcrumbItems,
-    resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + '/'
+    resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + localizePath('/', locale)
   });
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -668,9 +731,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
   }, [moths]);
 
-  const emergenceOptions = useMemo(() => {
-    return ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-  }, []);
+  const emergenceOptions = useMemo(
+    () =>
+      isEnglish
+        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        : ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    [isEnglish],
+  );
 
   // Helper to check if a moth appears in a specific month
   const checkEmergenceMatch = useCallback((moth, monthFilter) => {
@@ -683,8 +750,23 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     const months = getEmergenceMonths(normalized);
     if (!months || months.length === 0) return false;
 
-    const targetMonth = parseInt(monthFilter.replace('月', ''), 10);
-    if (Number.isNaN(targetMonth)) return false;
+    const monthMap = {
+      Jan: 1,
+      Feb: 2,
+      Mar: 3,
+      Apr: 4,
+      May: 5,
+      Jun: 6,
+      Jul: 7,
+      Aug: 8,
+      Sep: 9,
+      Oct: 10,
+      Nov: 11,
+      Dec: 12,
+    };
+    const targetMonth =
+      parseInt(monthFilter.replace('月', ''), 10) || monthMap[monthFilter] || 0;
+    if (!targetMonth) return false;
 
     return months.includes(targetMonth);
   }, []);
@@ -710,12 +792,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
   const activeFilters = useMemo(() => {
     const filters = [];
-    if (hasSearchQuery) filters.push({ type: '検索', value: searchQuery, clear: clearSearch });
-    if (hostFilter !== 'all') filters.push({ type: '食草', value: hostFilter === 'has' ? 'あり' : 'なし', clear: () => setIHostFilter('all') });
-    if (familyFilter) filters.push({ type: '科', value: familyFilter, clear: () => setIFamilyFilter('') });
-    if (genusFilter) filters.push({ type: '属', value: genusFilter, clear: () => setIGenusFilter('') });
-    if (emergenceFilter) filters.push({ type: '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
-    if (classificationFilter) filters.push({ type: '分類', value: classificationFilter, clear: clearClassification });
+    if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
+    if (hostFilter !== 'all') filters.push({ type: isEnglish ? 'Host plant' : '食草', value: hostFilter === 'has' ? (isEnglish ? 'Yes' : 'あり') : (isEnglish ? 'No' : 'なし'), clear: () => setIHostFilter('all') });
+    if (familyFilter) filters.push({ type: isEnglish ? 'Family' : '科', value: familyFilter, clear: () => setIFamilyFilter('') });
+    if (genusFilter) filters.push({ type: isEnglish ? 'Genus' : '属', value: genusFilter, clear: () => setIGenusFilter('') });
+    if (emergenceFilter) filters.push({ type: isEnglish ? 'Season' : '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
+    if (classificationFilter) filters.push({ type: isEnglish ? 'Taxonomy' : '分類', value: classificationFilter, clear: clearClassification });
     return filters;
   }, [
     hasSearchQuery,
@@ -731,19 +813,28 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     setIFamilyFilter,
     setIGenusFilter,
     setIEmergenceFilter,
+    isEnglish,
   ]);
   const emptyStateHint = useMemo(() => {
     if (!hasSearchQuery && !hasFilterCriteria) {
-      return '登録データを確認中です。時間をおいて再読み込みしてください。';
+      return isEnglish
+        ? 'The list is still loading. Please try again shortly.'
+        : '登録データを確認中です。時間をおいて再読み込みしてください。';
     }
     if (hasSearchQuery && hasFilterCriteria) {
-      return '検索語とフィルターの組み合わせが絞り込みすぎている可能性があります。';
+      return isEnglish
+        ? 'The current search plus filters may be too restrictive.'
+        : '検索語とフィルターの組み合わせが絞り込みすぎている可能性があります。';
     }
     if (hasSearchQuery) {
-      return '検索語を短くするか、別の表記（和名/学名）で再検索してください。';
+      return isEnglish
+        ? 'Try a shorter query or search again with a Japanese name or scientific name.'
+        : '検索語を短くするか、別の表記（和名/学名）で再検索してください。';
     }
-    return 'フィルター条件を緩めると結果が表示される可能性があります。';
-  }, [hasFilterCriteria, hasSearchQuery]);
+    return isEnglish
+      ? 'Relax one or more filters to see results.'
+      : 'フィルター条件を緩めると結果が表示される可能性があります。';
+  }, [hasFilterCriteria, hasSearchQuery, isEnglish]);
   const activeFilterSummary = useMemo(
     () => activeFilters.map((filter) => `${filter.type}:${filter.value}`).join(' / '),
     [activeFilters],
@@ -882,23 +973,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return plantNames.some((p) => p && !isPlaceholderHost(p));
   }, [isPlaceholderHost]);
 
-  // extractEmergence function defined within component to access props if needed
-  // Actually extractEmergenceTime and normalizeEmergenceTime are imported
-  // This local helper just wraps them to handle nulls safely and consistent logic
-  const extractEmergence = useCallback((moth) => {
-    try {
-      // Prefer pre-calculated emergenceTime
-      if (moth.emergenceTime) {
-        return normalizeEmergenceTime(moth.emergenceTime);
-      }
-      // Fallback to re-extraction
-      const { emergenceTime } = extractEmergenceTime(moth?.notes || '');
-      return normalizeEmergenceTime(emergenceTime) || '';
-    } catch {
-      return '';
-    }
-  }, []);
-
   const filteredMoths = useMemo(() => {
     try {
       logger.debug('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
@@ -995,64 +1069,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, checkEmergenceMatch, extractEmergence, normalizeText]);
-
-  // ... (allSuggestions, image indexes, render, etc.)
-  // Since I'm overwriting the whole file, I must include the rest of the content.
-  // I will use the content from the previous read_file output as the base.
-  
-  const allSuggestions = useMemo(() => {
-    try {
-      if (!searchTerm || !moths || moths.length === 0) return [];
-      
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      // ひらがなをカタカナに変換した検索語も用意
-      const katakanaSearchTerm = hiraganaToKatakana(searchTerm).toLowerCase();
-      const uniqueSuggestions = new Set();
-
-      moths.forEach(moth => {
-        try {
-          if (!moth) return;
-          
-          // Check both original and katakana converted search terms
-          if (moth.name?.toLowerCase().includes(lowerCaseSearchTerm) || 
-              moth.name?.toLowerCase().includes(katakanaSearchTerm)) {
-            uniqueSuggestions.add(moth.name);
-          }
-          const alt = (moth.alternativeNames || '').toLowerCase();
-          if (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) {
-            uniqueSuggestions.add(moth.scientificName);
-          }
-          if (alt && (alt.includes(lowerCaseSearchTerm) || alt.includes(katakanaSearchTerm))) {
-            // 別名は「、」区切りで複数含む可能性
-            (moth.alternativeNames.split(/[、,，]/).map(s => s.trim()).filter(Boolean)).forEach(a => uniqueSuggestions.add(a));
-          }
-          if (moth.classification?.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm) ||
-              moth.classification?.familyJapanese?.toLowerCase().includes(katakanaSearchTerm)) {
-            uniqueSuggestions.add(moth.classification.familyJapanese);
-          }
-          if (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm) ||
-              moth.classification?.subfamilyJapanese?.toLowerCase().includes(katakanaSearchTerm)) {
-            uniqueSuggestions.add(moth.classification.subfamilyJapanese);
-          }
-          if (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm) ||
-              moth.classification?.tribeJapanese?.toLowerCase().includes(katakanaSearchTerm)) {
-            uniqueSuggestions.add(moth.classification.tribeJapanese);
-          }
-          if (moth.classification?.genus?.toLowerCase().includes(lowerCaseSearchTerm)) {
-            uniqueSuggestions.add(moth.classification.genus);
-          }
-        } catch (error) {
-          logger.error('Error processing moth for suggestions:', moth, error);
-        }
-      });
-      
-      return Array.from(uniqueSuggestions).slice(0, 10);
-    } catch (error) {
-      logger.error('Error in allSuggestions calculation:', error);
-      return [];
-    }
-  }, [moths, searchTerm]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, checkEmergenceMatch, normalizeText]);
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
@@ -1369,7 +1386,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
-            詳細フィルタ
+            {ui.filterTitle}
             <svg className={`w-3 h-3 transition-transform duration-200 ${isFiltersOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
@@ -1378,7 +1395,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           {/* Chips - Chips next */}
           <div className="flex flex-wrap gap-2 items-center flex-1">
             {hasAnyCriteria && (
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">{ui.filteredBy}</span>
             )}
             {activeFilters.map((filter, idx) => (
               <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 transition-all hover:bg-slate-200/70 dark:hover:bg-slate-800">
@@ -1386,7 +1403,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                 <button 
                   onClick={filter.clear}
                   className="ml-1.5 text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-100 focus:outline-none"
-                  aria-label={`${filter.type}フィルターを解除`}
+                  aria-label={isEnglish ? `Clear ${filter.type} filter` : `${filter.type}フィルターを解除`}
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1400,7 +1417,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                 onClick={resetAll}
                 className="ui-btn ui-btn-secondary"
               >
-                すべてリセット
+                {ui.resetAll}
               </button>
             )}
           </div>
@@ -1422,7 +1439,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
           >
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>食草の有無</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>{ui.hostPlantFilter}</label>
               <div className="relative">
                 <select
                   id={hostFilterId}
@@ -1430,9 +1447,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   onChange={(e) => setIHostFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 >
-                  <option value="all">すべて</option>
-                  <option value="has">食草あり</option>
-                  <option value="none">未登録のみ</option>
+                  <option value="all">{ui.all}</option>
+                  <option value="has">{ui.hasHostPlant}</option>
+                  <option value="none">{ui.unregisteredOnly}</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1451,7 +1468,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   onChange={(e) => setIFamilyFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 >
-                  <option value="">指定なし</option>
+                  <option value="">{ui.any}</option>
                   {familyOptions.map((f) => (
                     <option key={f} value={f}>{f}</option>
                   ))}
@@ -1473,7 +1490,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   onChange={(e) => setIGenusFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 >
-                  <option value="">指定なし</option>
+                  <option value="">{ui.any}</option>
                   {genusOptions.map((g) => (
                     <option key={g} value={g}>{g}</option>
                   ))}
@@ -1487,7 +1504,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>出現期</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>{ui.emergence}</label>
               <div className="relative">
                 <select
                   id={emergenceFilterId}
@@ -1495,7 +1512,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   onChange={(e) => setIEmergenceFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 >
-                  <option value="">指定なし</option>
+                  <option value="">{ui.any}</option>
                   {emergenceOptions.map((em) => (
                     <option key={em} value={em}>{em}</option>
                   ))}
@@ -1511,7 +1528,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         </div>
         
         <div className="mt-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
-          {filteredMoths?.length ?? 0} 件が見つかりました
+          {ui.resultCount(filteredMoths?.length ?? 0)}
         </div>
       </div>
     );
@@ -1529,7 +1546,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-tight">
-                {title}のリスト
+                {ui.listTitle}
               </h2>
             </div>
           </div>
@@ -1583,7 +1600,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   return (
                     <div key={`error-${index}`} className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-600">
                       <div className="text-red-600 dark:text-red-400 text-sm">
-                        表示エラー: {moth?.name || `昆虫 #${index}`}
+                        {ui.renderError(moth?.name || (isEnglish ? `Insect #${index}` : `昆虫 #${index}`))}
                       </div>
                     </div>
                   );
@@ -1601,18 +1618,18 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   </svg>
                 </div>
               </div>
-              <p className="text-lg text-slate-600 dark:text-slate-300 font-semibold mb-2">該当する{title}が見つかりません</p>
+              <p className="text-lg text-slate-600 dark:text-slate-300 font-semibold mb-2">{ui.emptyTitle}</p>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">{emptyStateHint}</p>
               {hasAnyCriteria && (
                 <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
-                  現在の条件: {activeFilterSummary}
+                  {ui.activeFilters} {activeFilterSummary}
                 </p>
               )}
               {!hasAnyCriteria && (
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">別のキーワードで検索してみてください</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{ui.tryAnother}</p>
               )}
               <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
-                例：「オオミズアオ」「ヤナギ」「ヤガ科」など
+                {ui.examples}
               </p>
               {hasAnyCriteria && (
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
@@ -1621,7 +1638,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                     onClick={resetAll}
                     className="ui-btn ui-btn-secondary"
                   >
-                    すべてリセット
+                    {ui.resetAll}
                   </button>
                   {hasSearchQuery && hasFilterCriteria && (
                     <button
@@ -1629,7 +1646,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                       onClick={clearSearch}
                       className="ui-btn ui-btn-secondary"
                     >
-                      検索のみクリア
+                      {ui.searchOnlyClear}
                     </button>
                   )}
                   {hasSearchQuery && !hasFilterCriteria && (
@@ -1638,7 +1655,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                       onClick={clearSearch}
                       className="ui-btn ui-btn-secondary"
                     >
-                      検索をクリア
+                      {ui.clearSearch}
                     </button>
                   )}
                   {!hasSearchQuery && hasFilterCriteria && (
@@ -1647,7 +1664,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                       onClick={clearFilters}
                       className="ui-btn ui-btn-secondary"
                     >
-                      フィルター解除
+                      {ui.clearFilters}
                     </button>
                   )}
                 </div>
@@ -1662,6 +1679,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
+              locale={locale}
             />
           </div>
         )}

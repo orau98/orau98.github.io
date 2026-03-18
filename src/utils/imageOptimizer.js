@@ -30,7 +30,7 @@ export const getOptimizedImageUrl = async (baseUrl, filename, extension = '.jpg'
       if (response.ok) {
         return webpUrl;
       }
-    } catch (e) {
+    } catch (_e) {
       // WebP version doesn't exist, fall back to original
     }
   }

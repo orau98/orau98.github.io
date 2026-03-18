@@ -4,12 +4,19 @@ import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
 import { absUrl } from "../utils/origin";
 import useDebounce from "../hooks/useDebounce";
+import {
+  buildJapaneseReferenceLabel,
+  EN_SITE_NAME,
+  getPrimaryEnglishName,
+} from "../utils/englishNaming";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
+import { isEnglishLocale } from "../utils/locale";
 import { makeDetailLinkState } from "../utils/navState";
 import { normalizePlantKey } from "../utils/plantNameUtils";
+import { buildPlantPath } from "../utils/siteTaxonomy";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -32,8 +39,10 @@ const HostPlantListItem = React.memo(
     imageFilename,
     hasLarvalHost = false,
     hasFlowerVisit = false,
+    locale = "ja",
   }) => {
     const location = useLocation();
+    const isEnglish = isEnglishLocale(locale);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
     const imgRef = useRef(null);
@@ -82,13 +91,24 @@ const HostPlantListItem = React.memo(
         : mothNames.length;
     const visibleNames = mothNames.slice(0, 4);
     const extraCount = Math.max(0, totalCount - visibleNames.length);
+    const detail = plantDetails[plant] || {};
+    const primaryName = isEnglish
+      ? getPrimaryEnglishName({
+          scientificName: detail.scientificName,
+          japaneseName: plant,
+          fallback: plant,
+        })
+      : /[A-Za-z]/.test(plant) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant)
+        ? normalizeLatinBinomialPlain(plant)
+        : plant;
+    const secondaryName = isEnglish ? buildJapaneseReferenceLabel(plant) : detail.familyName;
 
     return (
       <article className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
-          to={`/plant/${encodeURIComponent(plant)}`}
+          to={buildPlantPath(plant, locale)}
           state={makeDetailLinkState(location, { setFromList: true })}
           className="block relative z-0"
         >
@@ -103,7 +123,7 @@ const HostPlantListItem = React.memo(
                     src={resizedSrc}
                     srcSet={resizedSrcSet}
                     sizes={resizedSizes}
-                    alt={`${plant}の写真`}
+                    alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                     width="800"
                     height="600"
                     data-fallback-idx="0"
@@ -163,7 +183,7 @@ const HostPlantListItem = React.memo(
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      画像準備中
+                      {isEnglish ? "Image pending" : "画像準備中"}
                     </span>
                   </div>
                 </div>
@@ -233,7 +253,7 @@ const HostPlantListItem = React.memo(
                       d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                     />
                   </svg>
-                  関連 {totalCount}種
+                  {isEnglish ? `${totalCount} linked species` : `関連 ${totalCount}種`}
                 </span>
               </div>
 
@@ -244,14 +264,11 @@ const HostPlantListItem = React.memo(
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-3">
                 <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-1 leading-tight tracking-tight">
-                  {/[A-Za-z]/.test(plant) &&
-                  !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant)
-                    ? normalizeLatinBinomialPlain(plant)
-                    : plant}
+                  {isEnglish ? primaryName : primaryName}
                 </h3>
-                {plantDetails[plant]?.familyName && (
+                {secondaryName && (
                   <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
-                    {plantDetails[plant].familyName}
+                    {secondaryName}
                   </p>
                 )}
                 {(hasLarvalHost || hasFlowerVisit) && (
@@ -261,7 +278,7 @@ const HostPlantListItem = React.memo(
                         <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                           <path d="M8 1C5.5 1 3.5 3 3.5 5.5c0 1.2.4 2.3 1.1 3.1L3 12h10l-1.6-3.4c.7-.8 1.1-1.9 1.1-3.1C12.5 3 10.5 1 8 1zm0 1.5c1.7 0 3 1.3 3 3S9.7 8.5 8 8.5 5 7.2 5 5.5s1.3-3 3-3z"/>
                         </svg>
-                        食草
+                        {isEnglish ? "Host plant" : "食草"}
                       </span>
                     )}
                     {hasFlowerVisit && (
@@ -269,7 +286,7 @@ const HostPlantListItem = React.memo(
                         <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                           <path d="M8 2a1 1 0 0 1 .894.553l1.382 2.764 3.09.447a1 1 0 0 1 .553 1.706L11.5 9.763l.528 3.078a1 1 0 0 1-1.45 1.054L8 12.347l-2.578 1.548a1 1 0 0 1-1.45-1.054l.528-3.078-2.419-2.293a1 1 0 0 1 .553-1.706l3.09-.447L7.106 2.553A1 1 0 0 1 8 2z"/>
                         </svg>
-                        訪花
+                        {isEnglish ? "Flower visit" : "訪花"}
                       </span>
                     )}
                   </div>
@@ -287,7 +304,7 @@ const HostPlantListItem = React.memo(
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
                     {visibleNames.join("、")}
-                    {extraCount > 0 && `...他${extraCount}種`}
+                    {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
                   </span>
                 </div>
               </div>
@@ -307,7 +324,29 @@ const HostPlantList = ({
   preloadedImageFilenames = [],
   initialSearchTerm = "",
   plantInsectStats = null,
+  locale = "ja",
 }) => {
+  const isEnglish = isEnglishLocale(locale);
+  const ui = useMemo(
+    () => ({
+      filterTitle: isEnglish ? 'Advanced filters' : '詳細フィルタ',
+      filteredBy: isEnglish ? 'Filtered by:' : '絞り込み:',
+      resetAll: isEnglish ? 'Reset all' : 'すべてリセット',
+      any: isEnglish ? 'Any' : '指定なし',
+      order: isEnglish ? 'Order' : '目',
+      family: isEnglish ? 'Family' : '科',
+      flowerVisit: isEnglish ? 'Flower visit' : '訪花',
+      flowerOnly: isEnglish ? 'Flower visits only' : '訪花のみ',
+      resultCount: (value) => (isEnglish ? `${value} results` : `${value} 件が見つかりました`),
+      listTitle: isEnglish ? 'Plant list' : '植物リスト',
+      emptyTitle: isEnglish ? 'No matching plants found' : '結果が見つかりませんでした',
+      activeFilters: isEnglish ? 'Current filters:' : '現在の条件:',
+      searchOnlyClear: isEnglish ? 'Clear search only' : '検索のみクリア',
+      clearSearch: isEnglish ? 'Clear search' : '検索をクリア',
+      clearFilters: isEnglish ? 'Clear filters' : 'フィルター解除',
+    }),
+    [isEnglish],
+  );
   // Canonical/OG/パンくず（フックで共通化）
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
   const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
@@ -390,15 +429,17 @@ const HostPlantList = ({
   }, [safeHostPlants, flowerVisitPlants, normalizedToCanonical, aliasToCanonical]);
 
   const plantCount = Object.keys(mergedHostPlants).length;
-  const plantCanonicalUrl = absUrl("/plant");
-  const plantPageTitle = "植物（食草）一覧 | 昆虫植物図鑑";
-  const plantPageDesc = `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
+  const plantCanonicalUrl = absUrl(locale === "en" ? "/en/plant" : "/plant");
+  const plantPageTitle = isEnglish ? `Plant index | ${EN_SITE_NAME}` : "植物（食草）一覧 | 昆虫植物図鑑";
+  const plantPageDesc = isEnglish
+    ? `Browse ${plantCount} plant entries and review the insects associated with each plant. Scientific names are used when available.`
+    : `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
   const plantBreadcrumbItems = useMemo(
     () => [
-      { name: "昆虫植物図鑑", url: absUrl("/") },
-      { name: "植物", url: plantCanonicalUrl },
+      { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(locale === "en" ? "/en/" : "/") },
+      { name: isEnglish ? "Plants" : "植物", url: plantCanonicalUrl },
     ],
-    [plantCanonicalUrl],
+    [isEnglish, locale, plantCanonicalUrl],
   );
 
   useSeoMeta({
@@ -407,8 +448,11 @@ const HostPlantList = ({
     description: plantPageDesc,
     ogType: "website",
     url: plantCanonicalUrl,
+    locale: isEnglish ? "en_US" : "ja_JP",
+    htmlLang: locale,
+    siteName: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑",
     breadcrumbItems: plantBreadcrumbItems,
-    resetCanonicalTo: absUrl("/"),
+    resetCanonicalTo: absUrl(locale === "en" ? "/en/" : "/"),
   });
   // Responsive items-per-page to avoid empty grid slots on last row
   const computeItemsPerPage = useCallback(() => {
@@ -537,10 +581,10 @@ const HostPlantList = ({
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
   const activeFilters = useMemo(() => {
     const filters = [];
-    if (hasSearchQuery) filters.push({ type: '検索', value: searchQuery, clear: clearSearch });
-    if (familyFilter) filters.push({ type: '科', value: familyFilter, clear: () => setPFamilyFilter('') });
-    if (orderFilter) filters.push({ type: '目', value: orderFilter, clear: () => setPOrderFilter('') });
-    if (visitFilter !== 'all') filters.push({ type: '訪花', value: 'のみ', clear: () => setPVisitFilter('all') });
+    if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
+    if (familyFilter) filters.push({ type: ui.family, value: familyFilter, clear: () => setPFamilyFilter('') });
+    if (orderFilter) filters.push({ type: ui.order, value: orderFilter, clear: () => setPOrderFilter('') });
+    if (visitFilter !== 'all') filters.push({ type: ui.flowerVisit, value: isEnglish ? 'Only' : 'のみ', clear: () => setPVisitFilter('all') });
     return filters;
   }, [
     hasSearchQuery,
@@ -552,19 +596,31 @@ const HostPlantList = ({
     setPFamilyFilter,
     setPOrderFilter,
     setPVisitFilter,
+    isEnglish,
+    ui.family,
+    ui.flowerVisit,
+    ui.order,
   ]);
   const emptyStateHint = useMemo(() => {
     if (!hasSearchQuery && !hasFilterCriteria) {
-      return '登録データを確認中です。時間をおいて再読み込みしてください。';
+      return isEnglish
+        ? 'The list is still loading. Please try again shortly.'
+        : '登録データを確認中です。時間をおいて再読み込みしてください。';
     }
     if (hasSearchQuery && hasFilterCriteria) {
-      return '検索語とフィルター条件を同時に絞り込んでいるため、結果が0件になっている可能性があります。';
+      return isEnglish
+        ? 'The current search plus filters may be too restrictive.'
+        : '検索語とフィルター条件を同時に絞り込んでいるため、結果が0件になっている可能性があります。';
     }
     if (hasSearchQuery) {
-      return '和名・学名・別名のいずれかで再検索すると見つかる場合があります。';
+      return isEnglish
+        ? 'Try searching again with a Japanese name, scientific name, or alias.'
+        : '和名・学名・別名のいずれかで再検索すると見つかる場合があります。';
     }
-    return 'フィルター条件を緩めると結果が表示される可能性があります。';
-  }, [hasFilterCriteria, hasSearchQuery]);
+    return isEnglish
+      ? 'Relax one or more filters to see results.'
+      : 'フィルター条件を緩めると結果が表示される可能性があります。';
+  }, [hasFilterCriteria, hasSearchQuery, isEnglish]);
   const activeFilterSummary = useMemo(
     () => activeFilters.map((filter) => `${filter.type}:${filter.value}`).join(' / '),
     [activeFilters],
@@ -937,66 +993,6 @@ const HostPlantList = ({
       );
     }
   }, [currentPage, itemsPerPage, filteredHostPlants.length]);
-
-  const plantNameSuggestions = useMemo(() => {
-    if (!initialSearchTerm) return [];
-    const lowerCaseSearchTerm = initialSearchTerm.toLowerCase();
-    const katakanaSearchTerm =
-      hiraganaToKatakana(initialSearchTerm).toLowerCase();
-    const suggestions = new Set();
-    Object.keys(mergedHostPlants).forEach((plant) => {
-      if (
-        plant.toLowerCase().includes(lowerCaseSearchTerm) ||
-        plant.toLowerCase().includes(katakanaSearchTerm)
-      ) {
-        suggestions.add(plant);
-      }
-      const detail = safePlantDetails[plant] || {};
-      if (
-        detail.family?.toLowerCase().includes(lowerCaseSearchTerm) ||
-        detail.family?.toLowerCase().includes(katakanaSearchTerm)
-      ) {
-        suggestions.add(detail.family);
-      }
-      if (
-        detail.genus?.toLowerCase().includes(lowerCaseSearchTerm) ||
-        detail.genus?.toLowerCase().includes(katakanaSearchTerm)
-      ) {
-        suggestions.add(detail.genus);
-      }
-      if (
-        detail.order?.toLowerCase().includes(lowerCaseSearchTerm) ||
-        detail.order?.toLowerCase().includes(katakanaSearchTerm)
-      ) {
-        suggestions.add(detail.order);
-      }
-      if (
-        detail.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)
-      ) {
-        suggestions.add(normalizeLatinBinomialPlain(detail.scientificName));
-      }
-      const aliasesRaw = detail.aliases || detail.aliasNames;
-      const aliases = Array.isArray(aliasesRaw)
-        ? aliasesRaw
-        : aliasesRaw instanceof Set
-          ? Array.from(aliasesRaw)
-          : [];
-      if (aliases.length > 0) {
-        aliases.forEach((a) => {
-          if (!a) return;
-          const lower = a.toLowerCase();
-          if (
-            lower.includes(lowerCaseSearchTerm) ||
-            lower.includes(katakanaSearchTerm)
-          ) {
-            suggestions.add(a);
-          }
-        });
-      }
-    });
-    return Array.from(suggestions).slice(0, 10);
-  }, [mergedHostPlants, safePlantDetails, initialSearchTerm]);
-
   const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
   const currentHostPlants = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -1028,7 +1024,7 @@ const HostPlantList = ({
 
     if (currentPage === 1) return;
     setPPage(1);
-  }, [debouncedPlantSearch, familyFilter, orderFilter, currentPage, setPPage]);
+  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, currentPage, setPPage]);
 
   const renderFilters = () => {
     return (
@@ -1052,7 +1048,7 @@ const HostPlantList = ({
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
-            詳細フィルタ
+            {ui.filterTitle}
             <svg className={`w-3 h-3 transition-transform duration-200 ${isFiltersOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
@@ -1061,7 +1057,7 @@ const HostPlantList = ({
           {/* Chips */}
           <div className="flex flex-wrap gap-2 items-center flex-1">
             {hasAnyCriteria && (
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">絞り込み:</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">{ui.filteredBy}</span>
             )}
             {activeFilters.map((filter, idx) => (
               <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 transition-all hover:bg-slate-200/70 dark:hover:bg-slate-800">
@@ -1069,7 +1065,7 @@ const HostPlantList = ({
                 <button 
                   onClick={filter.clear}
                   className="ml-1.5 text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-100 focus:outline-none"
-                  aria-label={`${filter.type}フィルターを解除`}
+                  aria-label={isEnglish ? `Clear ${filter.type} filter` : `${filter.type}フィルターを解除`}
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1083,7 +1079,7 @@ const HostPlantList = ({
                 onClick={resetAll}
                 className="ui-btn ui-btn-secondary"
               >
-                すべてリセット
+                {ui.resetAll}
               </button>
             )}
           </div>
@@ -1105,7 +1101,7 @@ const HostPlantList = ({
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
           >
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={orderFilterId}>目 (Order)</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={orderFilterId}>{ui.order}</label>
               <div className="relative">
                 <select
                   id={orderFilterId}
@@ -1113,7 +1109,7 @@ const HostPlantList = ({
                   onChange={(e) => setPOrderFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                 >
-                  <option value="">指定なし</option>
+                  <option value="">{ui.any}</option>
                   {orderOptions.map((o) => (
                     <option key={o} value={o}>{o}</option>
                   ))}
@@ -1127,7 +1123,7 @@ const HostPlantList = ({
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>科 (Family)</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>{ui.family}</label>
               <div className="relative">
                 <select
                   id={familyFilterId}
@@ -1135,7 +1131,7 @@ const HostPlantList = ({
                   onChange={(e) => setPFamilyFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                 >
-                  <option value="">指定なし</option>
+                  <option value="">{ui.any}</option>
                   {familyOptions.map((f) => (
                     <option key={f} value={f}>{f}</option>
                   ))}
@@ -1149,7 +1145,7 @@ const HostPlantList = ({
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>訪花</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>{ui.flowerVisit}</label>
               <div className="relative">
                 <select
                   id={visitFilterId}
@@ -1157,8 +1153,8 @@ const HostPlantList = ({
                   onChange={(e) => setPVisitFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                 >
-                  <option value="all">指定なし</option>
-                  <option value="flower">訪花のみ</option>
+                  <option value="all">{ui.any}</option>
+                  <option value="flower">{ui.flowerOnly}</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1171,7 +1167,7 @@ const HostPlantList = ({
         </div>
         
         <div className="mt-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
-          {filteredHostPlants?.length ?? 0} 件が見つかりました
+          {ui.resultCount(filteredHostPlants?.length ?? 0)}
         </div>
       </div>
     );
@@ -1189,7 +1185,7 @@ const HostPlantList = ({
         <div className="p-6 bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
           <div className="flex items-center space-x-3 mb-4">
             <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">
-              植物リスト
+              {ui.listTitle}
             </h2>
           </div>
           {renderFilters()}
@@ -1245,6 +1241,7 @@ const HostPlantList = ({
                     imageFilename={plantImageMap.get(plant)}
                     hasLarvalHost={hasLarvalHost}
                     hasFlowerVisit={hasFlowerVisit}
+                    locale={locale}
                   />
                 </div>
                 );
@@ -1253,12 +1250,12 @@ const HostPlantList = ({
           ) : (
             <div className="text-center py-12">
               <p className="text-slate-500 dark:text-slate-400 font-medium">
-                結果が見つかりませんでした
+                {ui.emptyTitle}
               </p>
               <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{emptyStateHint}</p>
               {hasAnyCriteria && (
                 <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
-                  現在の条件: {activeFilterSummary}
+                  {ui.activeFilters} {activeFilterSummary}
                 </p>
               )}
               {hasAnyCriteria && (
@@ -1268,7 +1265,7 @@ const HostPlantList = ({
                     onClick={resetAll}
                     className="ui-btn ui-btn-secondary"
                   >
-                    すべてリセット
+                    {ui.resetAll}
                   </button>
                   {hasSearchQuery && hasFilterCriteria && (
                     <button
@@ -1276,7 +1273,7 @@ const HostPlantList = ({
                       onClick={clearSearch}
                       className="ui-btn ui-btn-secondary"
                     >
-                      検索のみクリア
+                      {ui.searchOnlyClear}
                     </button>
                   )}
                   {hasSearchQuery && !hasFilterCriteria && (
@@ -1285,7 +1282,7 @@ const HostPlantList = ({
                       onClick={clearSearch}
                       className="ui-btn ui-btn-secondary"
                     >
-                      検索をクリア
+                      {ui.clearSearch}
                     </button>
                   )}
                   {!hasSearchQuery && hasFilterCriteria && (
@@ -1294,7 +1291,7 @@ const HostPlantList = ({
                       onClick={clearFilters}
                       className="ui-btn ui-btn-secondary"
                     >
-                      フィルター解除
+                      {ui.clearFilters}
                     </button>
                   )}
                 </div>
@@ -1309,6 +1306,7 @@ const HostPlantList = ({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
+              locale={locale}
             />
           </div>
         )}

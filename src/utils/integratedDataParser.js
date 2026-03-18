@@ -191,7 +191,7 @@ const getInsectType = (classification) => {
  * @returns {Array} - 統合データ形式に変換されたデータ
  */
 export const convertLegacyToIntegratedFormat = (legacyData, insectType = 'moth') => {
-  return legacyData.map((item, index) => {
+  return legacyData.map((item) => {
     // 食草データを新形式に変換
     const hostPlantsDetailed = (item.hostPlants || []).map(plantText => ({
       name: plantText.replace(/（.*）$/, ''), // 科名を除去

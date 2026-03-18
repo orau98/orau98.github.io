@@ -1,11 +1,11 @@
-import React from 'react';
+import { memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
 import ImageWithFallback from './ImageWithFallback';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
-const InsectCarousel = ({ insects, title, type = 'default' }) => {
+const InsectCarousel = ({ insects, title, type: _type = 'default' }) => {
   const location = useLocation();
   const { placeholderSrc, getImageCandidates } = useInsectImageCandidates({
     useAssetVersionInProd: true,
@@ -84,4 +84,4 @@ const InsectCarousel = ({ insects, title, type = 'default' }) => {
   );
 };
 
-export default InsectCarousel;
+export default memo(InsectCarousel);

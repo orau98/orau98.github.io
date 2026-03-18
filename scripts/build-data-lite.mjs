@@ -3,6 +3,12 @@ import path from 'path';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
+import {
+  buildFlowerVisitPlantDataset,
+  buildHostPlantDataset,
+  cleanString,
+  isSuspiciousPlantName,
+} from './lib/dataLiteBuilders.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,17 +55,6 @@ function mergeRowsById(primaryRows = [], secondaryRows = [], idKey = 'insect_id'
   return merged;
 }
 
-function normalizePlantNameLite(plantName) {
-  if (!plantName || typeof plantName !== 'string') return '';
-  let s = plantName.trim();
-  if (!s || s === '不明') return '';
-  // Remove (科) annotations and trailing/leading parens
-  s = s.replace(/[（(][^）)]*科[^）)]*[）)]/g, '');
-  s = s.replace(/[（(][^）)]*[）)]$/g, '');
-  s = s.replace(/^[）)]/, '');
-  return s.trim();
-}
-
 function normalizeScientificPlantAlias(name) {
   const trimmed = cleanString(name).replace(/\s+/g, ' ');
   if (!trimmed) return '';
@@ -67,35 +62,6 @@ function normalizeScientificPlantAlias(name) {
     .replace(/\s+(subsp\.|var\.|f\.)\s+[A-Za-z-]+.*$/i, '')
     .trim();
 }
-
-const cleanString = (value) => (value ?? '').toString().trim();
-const SUSPICIOUS_PLANT_NAME_SET = new Set([
-  '葉',
-  '葉裏',
-  '葉表',
-  '茎',
-  '茎と葉裏',
-  '主として茎',
-  '根',
-  '成葉の裏面',
-  '生長部の茎と葉裏',
-  '新梢の生長部',
-  '新梢の茎',
-  '穂',
-  '地中の根',
-]);
-
-const isSuspiciousPlantName = (value) => SUSPICIOUS_PLANT_NAME_SET.has(cleanString(value));
-
-const isFlowerVisitRecord = (record) => {
-  if (!record) return false;
-  if (record.isFlowerVisit === true) return true;
-  const lifeStage = cleanString(record.lifeStage);
-  const plantPart = cleanString(record.plantPart);
-  const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
-};
 
 const firstNonEmpty = (...values) => {
   for (const v of values) {
@@ -233,113 +199,6 @@ const fillEmergenceFromNotes = (records = []) => records.map(item => {
 
 const processInsects = (records = []) => fillEmergenceFromNotes(fixScientificNames(records));
 
-function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
-  const hostPlantsMap = {};
-  const plantDetailsRaw = {};
-  const aliasToCanonical = { ...(ylistLite.aliasToCanonical || {}) };
-  const ylistPlants = ylistLite.plants || {};
-
-  const ensureDetail = (name) => {
-    if (!plantDetailsRaw[name]) {
-      plantDetailsRaw[name] = {
-        family: '',
-        familyName: '',
-        familyLatin: '',
-        order: '',
-        orderLatin: '',
-        scientificName: '',
-        genus: '',
-        aliases: new Set()
-      };
-    }
-    return plantDetailsRaw[name];
-  };
-
-  const registerInsect = (plantName, insectName) => {
-    if (!plantName) return;
-    if (!hostPlantsMap[plantName]) hostPlantsMap[plantName] = [];
-    if (!hostPlantsMap[plantName].includes(insectName)) {
-      hostPlantsMap[plantName].push(insectName);
-    }
-  };
-
-  allInsects.forEach(insect => {
-    const insectName = insect?.name;
-    if (!insectName) return;
-    (insect.hostPlantsDetailed || []).forEach(hp => {
-      const rawName = cleanString(hp?.name);
-      if (!rawName) return;
-      const normalized = normalizePlantNameLite(rawName) || rawName;
-      const canonical = aliasToCanonical[normalized] || aliasToCanonical[rawName] || normalized;
-      const detail = ensureDetail(canonical);
-      if (hp.family && hp.family !== '不明') {
-        detail.family = detail.family && detail.family !== '不明' ? detail.family : hp.family;
-        detail.familyName = detail.familyName || hp.family;
-      }
-      detail.aliases.add(rawName);
-      if (canonical !== normalized) {
-        detail.aliases.add(normalized);
-        if (!aliasToCanonical[normalized]) aliasToCanonical[normalized] = canonical;
-      }
-      if (rawName !== canonical && !aliasToCanonical[rawName]) {
-        aliasToCanonical[rawName] = canonical;
-      }
-      if (!isFlowerVisitRecord(hp)) {
-        registerInsect(canonical, insectName);
-      }
-    });
-  });
-
-  Object.entries(plantDetailsRaw).forEach(([name, detail]) => {
-    const canonical = aliasToCanonical[name] || name;
-    const yDetail = ylistPlants[canonical] || ylistPlants[name];
-    if (yDetail) {
-      detail.family = detail.family && detail.family !== '不明' ? detail.family : yDetail.familyJp || detail.family;
-      detail.familyName = detail.familyName || yDetail.familyJp || detail.family;
-      detail.familyLatin = detail.familyLatin || yDetail.familyEn || '';
-      detail.order = detail.order || yDetail.orderJp || '';
-      detail.orderLatin = detail.orderLatin || yDetail.orderEn || '';
-      const sci = yDetail.scientificName || detail.scientificName || '';
-      detail.scientificName = sci || detail.scientificName || '';
-      if (sci && !detail.genus) {
-        detail.genus = sci.split(/\s+/)[0] || '';
-      }
-      (yDetail.aliases || []).forEach(alias => {
-        const aliasTrimmed = alias.trim();
-        if (!aliasTrimmed) return;
-        detail.aliases.add(aliasTrimmed);
-        if (!aliasToCanonical[aliasTrimmed]) aliasToCanonical[aliasTrimmed] = canonical;
-      });
-    }
-    detail.aliases.add(name);
-    if (!aliasToCanonical[name]) aliasToCanonical[name] = canonical;
-  });
-
-  const plantDetails = {};
-  Object.entries(plantDetailsRaw).forEach(([name, detail]) => {
-    const aliases = Array.from(detail.aliases)
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, 'ja'));
-    plantDetails[name] = {
-      name,
-      family: detail.family || detail.familyName || '',
-      familyName: detail.familyName || detail.family || '',
-      familyLatin: detail.familyLatin || '',
-      order: detail.order || '',
-      orderLatin: detail.orderLatin || '',
-      scientificName: detail.scientificName || '',
-      genus: detail.genus || '',
-      aliases
-    };
-  });
-
-  Object.keys(hostPlantsMap).forEach(key => {
-    hostPlantsMap[key] = Array.from(new Set(hostPlantsMap[key])).sort((a, b) => a.localeCompare(b, 'ja'));
-  });
-
-  return { hostPlantsMap, plantDetails, aliasToCanonical };
-}
-
 async function build() {
   console.log('[data-lite] start');
   const normalizedInsectsCsv = readText(path.join(ROOT, 'normalized_data', 'insects.csv'));
@@ -398,20 +257,6 @@ const slim = (arr) => (arr || []).map(i => ({
     INSECT_COLLECTION_KEYS.map((key) => [key, slim(normalized[key])]),
   );
 
-  // Build lightweight host plant map using full normalized host plant data
-  const hostPlantsMap = {};
-  const addPlants = (insect) => {
-    const insectName = insect.name?.trim();
-    if (!insectName) return;
-    (insect.hostPlants || []).forEach(raw => {
-      const key = normalizePlantNameLite(raw);
-      if (!key) return;
-      if (!hostPlantsMap[key]) hostPlantsMap[key] = [];
-      if (!hostPlantsMap[key].includes(insectName)) hostPlantsMap[key].push(insectName);
-    });
-  };
-  INSECT_COLLECTION_KEYS.flatMap((key) => normalized[key] || []).forEach(addPlants);
-
   // Ensure output dir
   fs.mkdirSync(OUT_DIR, { recursive: true });
   // Write split files for lazy loading
@@ -425,21 +270,6 @@ const slim = (arr) => (arr || []).map(i => ({
   INSECT_COLLECTION_KEYS.forEach((key) => {
     write(`${key}.json`, slimmedCollections[key]);
   });
-  write('hostplants.json', hostPlantsMap);
-  const manifest = {
-    counts: {
-      ...Object.fromEntries(
-        INSECT_COLLECTION_KEYS.map((key) => [key, slimmedCollections[key].length]),
-      ),
-      hostPlants: Object.keys(hostPlantsMap).length
-    },
-    version: Date.now()
-  };
-  write('manifest.json', manifest);
-
-  // Keep combined index for backward compatibility
-  const out = { ...slimmedCollections, hostPlants: hostPlantsMap };
-  write('index.json', out);
 
   // Build and write full dataset for runtime consumption
   const existingYListLiteText = readText(ylistLitePath);
@@ -470,22 +300,46 @@ const slim = (arr) => (arr || []).map(i => ({
   const processedCollections = Object.fromEntries(
     INSECT_COLLECTION_KEYS.map((key) => [key, processInsects(normalized[key])]),
   );
-  const { hostPlantsMap: fullHostPlants, plantDetails, aliasToCanonical } = buildHostPlantDataset(
-    INSECT_COLLECTION_KEYS.flatMap((key) => processedCollections[key]),
-    ylistLite
+  const allProcessedInsects = INSECT_COLLECTION_KEYS.flatMap(
+    (key) => processedCollections[key],
   );
-  const fullDataset = {
+  const { hostPlantsMap: fullHostPlants, plantDetails, aliasToCanonical } = buildHostPlantDataset(
+    allProcessedInsects,
+    ylistLite,
+  );
+  const flowerVisitPlants = buildFlowerVisitPlantDataset(allProcessedInsects, ylistLite);
+  write('hostplants.json', fullHostPlants);
+  write('plant-details.json', plantDetails);
+  write('flower-visit-plants.json', flowerVisitPlants);
+  const summaryCounts = {
+    ...Object.fromEntries(
+      INSECT_COLLECTION_KEYS.map((key) => [key, processedCollections[key].length]),
+    ),
+    hostPlants: Object.keys(fullHostPlants).length,
+  };
+  const manifest = {
+    counts: summaryCounts,
     version: Date.now(),
-    summaryCounts: {
-      ...Object.fromEntries(
-        INSECT_COLLECTION_KEYS.map((key) => [key, processedCollections[key].length]),
-      ),
-      hostPlants: Object.keys(fullHostPlants).length
-    },
-    ...processedCollections,
+  };
+  write('manifest.json', manifest);
+
+  // Keep combined index for backward compatibility and fast single-fetch fallback
+  const out = {
+    ...slimmedCollections,
     hostPlants: fullHostPlants,
     plantDetails,
-    aliasToCanonical
+    flowerVisitPlants,
+    summaryCounts,
+  };
+  write('index.json', out);
+  const fullDataset = {
+    version: Date.now(),
+    summaryCounts,
+    ...processedCollections,
+    hostPlants: fullHostPlants,
+    flowerVisitPlants,
+    plantDetails,
+    aliasToCanonical,
   };
   write('full-dataset.json', fullDataset);
 }

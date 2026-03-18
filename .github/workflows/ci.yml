@@ -25,23 +25,41 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run unit tests
+        run: npm test
+
       - name: Data validation (normalized CSV)
         run: npm run validate-normalized
 
       - name: Build lite datasets
         run: npm run build:data-lite
 
+      - name: Refresh plant image filename index
+        run: npm run build:plant-image-index
+
       - name: Build image index
         run: npm run build:image-index
 
-      - name: Generate meta pages
-        run: npm run generate-meta
+      - name: Build responsive images
+        run: npm run build:images:responsive
 
-      - name: Audit image resolution
-        run: npm run audit:image-resolution
+      - name: Generate meta pages
+        run: npm run generate-meta:all
 
       - name: Build app
         run: npm run build:app
+
+      - name: Generate sitemaps
+        run: npm run generate-sitemap
+
+      - name: Post-build cleanup
+        run: node scripts/postbuild-cleanup.mjs
+
+      - name: Smoke check
+        run: npm run smoke:dist
+
+      - name: Audit image resolution
+        run: npm run audit:image-resolution
 
       - name: Audit SEO output
         run: npm run audit:seo

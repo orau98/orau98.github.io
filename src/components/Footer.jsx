@@ -1,11 +1,13 @@
-import React from 'react';
+import { isEnglishLocale } from '../utils/locale';
 
-const Footer = () => {
+const Footer = ({ locale = 'ja' }) => {
+  const isEnglish = isEnglishLocale(locale);
+  const metaBase = isEnglish ? 'en/meta' : 'meta';
   return (
     <footer className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">
       <div className="container mx-auto px-4 py-6 text-center text-neutral-500 dark:text-neutral-400">
         <p className="text-sm">
-          Private collection data. Open source on {' '}
+          {isEnglish ? 'Private collection data. Open source on ' : 'Private collection data. Open source on '}
           <a 
             href="https://github.com/orau98/orau98.github.io" 
             target="_blank" 
@@ -16,42 +18,42 @@ const Footer = () => {
           </a>.
         </p>
         <p className="text-xs mt-2">
-          Built with React and Tailwind CSS. 
+          {isEnglish ? 'Built with React and Tailwind CSS.' : 'Built with React and Tailwind CSS.'}
         </p>
         <div className="text-xs mt-3 space-x-4">
           <a 
             href={`${import.meta.env.BASE_URL}privacy-policy.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            プライバシーポリシー
+            {isEnglish ? 'Privacy policy' : 'プライバシーポリシー'}
           </a>
           <span className="text-neutral-400">|</span>
           <a 
             href={`${import.meta.env.BASE_URL}terms-of-service.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            利用規約
+            {isEnglish ? 'Terms' : '利用規約'}
           </a>
           <span className="text-neutral-400">|</span>
           <a 
             href={`${import.meta.env.BASE_URL}sitemap.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            サイトマップ
+            {isEnglish ? 'Sitemap' : 'サイトマップ'}
           </a>
           <span className="text-neutral-400">|</span>
           <a 
-            href={`${import.meta.env.BASE_URL}meta/moth/index.html`}
+            href={`${import.meta.env.BASE_URL}${metaBase}/moth/index.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            蛾メタ一覧
+            {isEnglish ? 'Moth meta pages' : '蛾メタ一覧'}
           </a>
           <span className="text-neutral-400">|</span>
           <a 
-            href={`${import.meta.env.BASE_URL}meta/plant/index.html`}
+            href={`${import.meta.env.BASE_URL}${metaBase}/plant/index.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            植物メタ一覧
+            {isEnglish ? 'Plant meta pages' : '植物メタ一覧'}
           </a>
         </div>
         <div className="text-xs mt-3 space-x-4">
@@ -59,21 +61,21 @@ const Footer = () => {
             href={`${import.meta.env.BASE_URL}topics/index.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            特集ページ一覧
+            {isEnglish ? 'Topics' : '特集ページ一覧'}
           </a>
           <span className="text-neutral-400">|</span>
           <a
             href={`${import.meta.env.BASE_URL}topics/sakura-insects.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            サクラにつく虫
+            {isEnglish ? 'Insects on cherry trees' : 'サクラにつく虫'}
           </a>
           <span className="text-neutral-400">|</span>
           <a
             href={`${import.meta.env.BASE_URL}topics/kunugi-insects.html`}
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            クヌギにつく虫
+            {isEnglish ? 'Insects on sawtooth oak' : 'クヌギにつく虫'}
           </a>
         </div>
       </div>

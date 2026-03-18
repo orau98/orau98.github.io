@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Instagram Embed Component (render only when a permalink URL is provided)
 const InstagramEmbed = ({ url, className = "" }) => {

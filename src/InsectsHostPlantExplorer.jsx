@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { Suspense, memo, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramGallery from "./components/InstagramGallery";
@@ -6,6 +6,7 @@ import InstagramTimeline from "./components/InstagramTimeline";
 import SearchInput from "./components/SearchInput";
 import StickyHeader from "./components/StickyHeader";
 import InfoPopover from "./components/InfoPopover";
+import LocaleSwitcher from "./components/LocaleSwitcher";
 import { ExplorerStructuredData, MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
@@ -19,6 +20,12 @@ import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilena
 import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { absUrl } from "./utils/origin";
 import { isKnownDetailPath } from "./utils/siteTaxonomy";
+import { EN_SITE_NAME, ENGLISH_NAMING_NOTICE } from "./utils/englishNaming";
+import {
+  isEnglishLocale,
+  localizePath,
+  stripLocalePrefix,
+} from "./utils/locale";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -143,6 +150,77 @@ const sortInstagramPostsByLatest = (posts = []) =>
   dedupeInstagramPostsByPermalink(posts)
     .slice()
     .sort((a, b) => getInstagramTimestampValue(b) - getInstagramTimestampValue(a));
+
+const joinBibliographyNames = (arr) =>
+  Array.isArray(arr)
+    ? arr.filter(Boolean).join(", ")
+    : typeof arr === "string"
+      ? arr
+      : "";
+
+const renderBibliographyTitle = (titlePlain, href) => {
+  if (!titlePlain) return null;
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline decoration-slate-300 hover:decoration-slate-500 hover:text-emerald-600 transition-colors"
+      >
+        {titlePlain}
+      </a>
+    );
+  }
+  return <span>{titlePlain}</span>;
+};
+
+const renderEnglishBibliographyEntry = (entry, href) => {
+  const authorStr =
+    joinBibliographyNames(entry.authors) ||
+    (entry.editors ? `${joinBibliographyNames(entry.editors)} (ed.)` : "");
+  const titlePlain = entry.title
+    ? `${entry.title}${entry.note ? ` ${entry.note}` : ""}`
+    : "";
+  const publisherStr = entry.publisher || "";
+  const yearStr = entry.year || "";
+  const isArticle = entry.type === "article" || !!entry.journal;
+  const journalStr = entry.journal || "";
+  const volumeStr = entry.volume || "";
+  const issueStr = entry.issue || "";
+  const pagesStr = entry.pages || "";
+  const issueDisplay = issueStr
+    ? volumeStr
+      ? `(${issueStr})`
+      : `No. ${issueStr}`
+    : "";
+
+  if (isArticle) {
+    const lead = `${authorStr ? `${authorStr}. ` : ""}${yearStr ? `(${yearStr}). ` : ""}`;
+    const tailParts = [];
+    if (journalStr) tailParts.push(journalStr);
+    if (volumeStr || issueDisplay) tailParts.push(`${volumeStr}${issueDisplay}`.trim());
+    if (pagesStr) tailParts.push(`pp. ${pagesStr}`);
+
+    return (
+      <>
+        {lead && <span>{lead}</span>}
+        {renderBibliographyTitle(titlePlain, href)}
+        {tailParts.length > 0 ? <span>{`. ${tailParts.join(", ")}.`}</span> : <span>.</span>}
+      </>
+    );
+  }
+
+  const lead = authorStr ? `${authorStr}. ` : "";
+  const tail = [publisherStr, yearStr].filter(Boolean).join(", ");
+  return (
+    <>
+      {lead && <span>{lead}</span>}
+      {renderBibliographyTitle(titlePlain, href)}
+      {tail ? <span>{`. ${tail}.`}</span> : <span>.</span>}
+    </>
+  );
+};
 
 const DEFAULT_INSTAGRAM_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 const MIN_INSTAGRAM_REFRESH_INTERVAL_MS = 60 * 1000;
@@ -300,7 +378,7 @@ const buildPlantInsectStats = (
 
 
 
-const InsectsHostPlantExplorer = React.memo(
+const InsectsHostPlantExplorer = memo(
   ({
     moths,
     butterflies,
@@ -314,12 +392,22 @@ const InsectsHostPlantExplorer = React.memo(
     theme,
     setTheme,
     summaryCounts,
+    locale = "ja",
     onNeedInsectsData,
     onNeedPlantsData,
     initialTab = "insects",
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
+    const isEnglish = isEnglishLocale(locale);
+    const strippedPathname = stripLocalePrefix(location.pathname || "/");
+    const countLabel = useCallback(
+      (value) =>
+        isEnglish
+          ? `${Number(value || 0).toLocaleString("en-US")} species`
+          : `${value}種`,
+      [isEnglish],
+    );
     const getCurrentParams = useCallback(() => {
       try {
         if (typeof window !== "undefined" && window.location?.search != null) {
@@ -367,6 +455,89 @@ const InsectsHostPlantExplorer = React.memo(
     const searchTimeoutRef = useRef(null);
     const heroSearchInputRef = useRef(null);
     const stickySearchInputRef = useRef(null);
+    const ui = useMemo(
+      () => ({
+        siteTitle: isEnglish
+          ? "Insects and Host Plants of Japan"
+          : "昆虫植物図鑑",
+        heroLead: isEnglish ? "Scientific names first" : '"繋がり"が見える',
+        searchPlaceholder:
+          activeTab === "plants"
+            ? isEnglish
+              ? "Search plants (Japanese name, scientific name, taxonomy)"
+              : "植物を検索 (和名・学名・分類)"
+            : isEnglish
+              ? "Search insects (Japanese name, scientific name, taxonomy)"
+              : "昆虫を検索 (和名・学名・分類)",
+        searchTargetLabel:
+          activeTab === "plants"
+            ? isEnglish
+              ? "Plants"
+              : "植物"
+            : isEnglish
+              ? "Insects"
+              : "昆虫",
+        searchHelpTitle: isEnglish ? "Search tips" : "検索の使い方",
+        searchHelpAria: isEnglish ? "Show search tips" : "検索の使い方を表示",
+        searchShortcut1: isEnglish
+          ? 'Press "/" or Ctrl/Cmd + K to focus the search box.'
+          : "「/」または Ctrl/Cmd + K で検索欄にフォーカスします。",
+        searchShortcut2: isEnglish
+          ? "Press Esc once to close suggestions, then again to clear the input."
+          : "Esc を 1 回押すと候補を閉じ、続けて押すと入力をクリアします。",
+        searchShortcut3: isEnglish
+          ? "Use the tabs above to switch between insects and plants."
+          : "検索対象は上のタブで、昆虫と植物を切り替えできます。",
+        themeAria: isEnglish ? "Toggle theme" : "テーマを切り替え",
+        insectsTab: isEnglish ? "Insects" : "昆虫",
+        plantsTab: isEnglish ? "Plants" : "植物",
+        loadingInsects: isEnglish ? "Loading insect data..." : "昆虫データを読み込んでいます…",
+        loadingPlants: isEnglish ? "Loading plant data..." : "植物データを読み込んでいます…",
+      }),
+      [activeTab, isEnglish],
+    );
+    const infoUi = useMemo(
+      () => ({
+        sectionTitle: isEnglish ? "Site information" : "サイトについて",
+        policyTitle: isEnglish ? "Site policy" : "サイトポリシー",
+        policySummary: isEnglish
+          ? "This site publishes curated insect-plant relationship data compiled from field guides and academic literature. Please verify the original references for academic use."
+          : "図鑑・文献ベースで整理した「昆虫と植物の関係データ」を公開しています。学術利用時は必ず原典をご確認ください。",
+        policyToggle: (open) => (isEnglish ? (open ? "Hide details" : "Show full policy") : (open ? "詳細を閉じる" : "詳細ポリシーを表示")),
+        introTitle: isEnglish ? "Introduction" : "はじめに",
+        introBody: isEnglish
+          ? "This site aims to make insect-plant relationships easier to browse. The published records are compiled by the site owner from existing field guides and academic references."
+          : "当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。",
+        disclaimerTitle: isEnglish ? "Disclaimer" : "免責事項",
+        disclaimerBody: isEnglish
+          ? "The data is curated carefully, but some cited literature may be old and some interpretations may still be imperfect. Please confirm the original references before using the data for research or other critical purposes."
+          : "データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。",
+        photosTitle: isEnglish ? "Photos" : "写真について",
+        photosBodyBeforeLink: isEnglish
+          ? "All photos on this site were taken by the site owner. Copyright remains with the owner. Reuse without permission is not allowed. For reuse requests, please contact us through"
+          : "掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、",
+        photosBodyAfterLink: isEnglish ? "." : "よりお気軽にご連絡ください。",
+        contactTitle: isEnglish ? "Contact" : "お問い合わせ",
+        contactBodyBeforeLink: isEnglish
+          ? "Corrections and typo reports help improve the quality of the site. If you notice an issue, please send it through"
+          : "誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、",
+        contactBodyAfterLink: isEnglish ? "." : "までお寄せください。",
+        formLinkLabel: isEnglish ? "this Google Form" : "こちらのGoogleフォーム",
+        referencesTitle: isEnglish ? "Bibliography" : "出典一覧",
+        bibliographyToggle: (open) => (isEnglish ? (open ? "Hide bibliography" : "Show selected bibliography") : "主要引用文献リストを表示"),
+        otherTitle: isEnglish ? "Other" : "その他",
+        otherItem: isEnglish ? "Additional academic papers and references" : "各種学術論文等",
+        instagramTagline: isEnglish ? "Field notes and wildlife observation posts" : "野生生物の観察記録を投稿しています",
+        instagramToggle: (open) => (isEnglish ? (open ? "Close Instagram" : "Open Instagram") : (open ? "Instagramを閉じる" : "Instagramを開く")),
+        instagramUnavailable: isEnglish ? "Instagram posts are unavailable right now" : "Instagramの投稿を表示できません",
+        instagramProfile: isEnglish ? "Open profile" : "プロフィールへ移動",
+        instagramCollapsedHint: isEnglish
+          ? 'On mobile, Instagram is collapsed by default. Use "Open Instagram" to expand it.'
+          : 'モバイルでは初期状態で非表示です。「Instagramを開く」から表示できます。',
+        instagramIconAlt: isEnglish ? "Instagram icon" : "Instagramアイコン",
+      }),
+      [isEnglish],
+    );
 
     // Sync search term with URL (active tab only)
     useEffect(() => {
@@ -748,35 +919,55 @@ const InsectsHostPlantExplorer = React.memo(
       return names.size;
     }, [hostPlants, flowerVisitPlants]);
     // SEO for list pages (トップ/昆虫/植物)
-    const counts = summaryCounts
-      ? {
-          moths: summaryCounts.moths ?? moths.length,
-          butterflies: summaryCounts.butterflies ?? butterflies.length,
-          beetles: summaryCounts.beetles ?? beetles.length,
-          longhornbeetles: summaryCounts.longhornbeetles ?? longhornbeetles.length,
-          leafbeetles: summaryCounts.leafbeetles ?? leafbeetles.length,
-          aphids: summaryCounts.aphids ?? aphids.length,
-          hostPlants: mergedHostPlantCount,
-        }
-      : {
-          moths: moths.length,
-          butterflies: butterflies.length,
-          beetles: beetles.length,
-          longhornbeetles: longhornbeetles.length,
-          leafbeetles: leafbeetles.length,
-          aphids: aphids.length,
-          hostPlants: mergedHostPlantCount,
-        };
+    const counts = useMemo(
+      () => ({
+        moths: summaryCounts?.moths ?? moths.length,
+        butterflies: summaryCounts?.butterflies ?? butterflies.length,
+        beetles: summaryCounts?.beetles ?? beetles.length,
+        longhornbeetles: summaryCounts?.longhornbeetles ?? longhornbeetles.length,
+        leafbeetles: summaryCounts?.leafbeetles ?? leafbeetles.length,
+        aphids: summaryCounts?.aphids ?? aphids.length,
+        hostPlants: mergedHostPlantCount,
+      }),
+      [
+        summaryCounts,
+        moths.length,
+        butterflies.length,
+        beetles.length,
+        longhornbeetles.length,
+        leafbeetles.length,
+        aphids.length,
+        mergedHostPlantCount,
+      ],
+    );
     const heroStats = useMemo(
       () => [
-        { label: "蝶・蛾", value: `${counts.moths + counts.butterflies}種` },
-        { label: "タマムシ", value: `${counts.beetles}種` },
-        { label: "カミキリムシ", value: `${counts.longhornbeetles}種` },
-        { label: "ハムシ", value: `${counts.leafbeetles}種` },
-        { label: "アブラムシ", value: `${counts.aphids}種` },
-        { label: "食草", value: `${counts.hostPlants}種` },
+        {
+          label: isEnglish ? "Butterflies & moths" : "蝶・蛾",
+          value: countLabel(counts.moths + counts.butterflies),
+        },
+        {
+          label: isEnglish ? "Jewel beetles" : "タマムシ",
+          value: countLabel(counts.beetles),
+        },
+        {
+          label: isEnglish ? "Longhorn beetles" : "カミキリムシ",
+          value: countLabel(counts.longhornbeetles),
+        },
+        {
+          label: isEnglish ? "Leaf beetles" : "ハムシ",
+          value: countLabel(counts.leafbeetles),
+        },
+        {
+          label: isEnglish ? "Aphids" : "アブラムシ",
+          value: countLabel(counts.aphids),
+        },
+        {
+          label: isEnglish ? "Host plants" : "食草",
+          value: countLabel(counts.hostPlants),
+        },
       ],
-      [counts],
+      [countLabel, counts, isEnglish],
     );
     const featuredInsects = useMemo(
       () =>
@@ -817,41 +1008,93 @@ const InsectsHostPlantExplorer = React.memo(
     }, [hostPlants, flowerVisitPlants, plantInsectStats]);
 
     const listSeo = useMemo(() => {
-      if (location.pathname === "/moth") {
+      if (strippedPathname === "/moth") {
         return {
-          title: "昆虫一覧（蛾・蝶・甲虫・アブラムシ）| 昆虫植物図鑑",
-          description: `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
-          canonical: absUrl("/meta/moth/index.html"),
+          title: isEnglish
+            ? "Insect index | Insects and Host Plants of Japan"
+            : "昆虫一覧（蛾・蝶・甲虫・アブラムシ）| 昆虫植物図鑑",
+          description: isEnglish
+            ? `Browse insects from Japan. Search ${countLabel(
+                counts.moths + counts.butterflies,
+              )} of butterflies and moths, ${countLabel(
+                counts.beetles,
+              )} of jewel beetles, ${countLabel(
+                counts.longhornbeetles,
+              )} of longhorn beetles, ${countLabel(
+                counts.leafbeetles,
+              )} of leaf beetles, and ${countLabel(
+                counts.aphids,
+              )} of aphids by Japanese name, scientific name, or taxonomy.`
+            : `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
+          canonical: absUrl(localizePath("/meta/moth/index.html", locale)),
           breadcrumbItems: [
-            { name: "昆虫植物図鑑", url: absUrl("/") },
-            { name: "昆虫", url: absUrl("/meta/moth/index.html") },
+            { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
+            {
+              name: isEnglish ? "Insects" : "昆虫",
+              url: absUrl(localizePath("/meta/moth/index.html", locale)),
+            },
           ],
         };
       }
-      if (location.pathname === "/plant") {
+      if (strippedPathname === "/plant") {
         return {
-          title: "植物一覧（食草・訪花）| 昆虫植物図鑑",
-          description: `植物一覧ページ。食草・訪花植物 ${counts.hostPlants}種を和名/学名/分類で検索し、関連昆虫を確認できます。`,
-          canonical: absUrl("/meta/plant/index.html"),
+          title: isEnglish
+            ? "Plant index | Insects and Host Plants of Japan"
+            : "植物一覧（食草・訪花）| 昆虫植物図鑑",
+          description: isEnglish
+            ? `Browse ${countLabel(
+                counts.hostPlants,
+              )} of host plants and flower-visit plants recorded in Japan, then review the related insects for each plant.`
+            : `植物一覧ページ。食草・訪花植物 ${counts.hostPlants}種を和名/学名/分類で検索し、関連昆虫を確認できます。`,
+          canonical: absUrl(localizePath("/meta/plant/index.html", locale)),
           breadcrumbItems: [
-            { name: "昆虫植物図鑑", url: absUrl("/") },
-            { name: "植物", url: absUrl("/meta/plant/index.html") },
+            { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
+            {
+              name: isEnglish ? "Plants" : "植物",
+              url: absUrl(localizePath("/meta/plant/index.html", locale)),
+            },
           ],
         };
       }
       return {
-        title: "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の繋がりを探索",
-        description: `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`,
-        canonical: absUrl("/"),
-        breadcrumbItems: [{ name: "昆虫植物図鑑", url: absUrl("/") }],
+        title: isEnglish
+          ? "Insects and Host Plants of Japan"
+          : "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の繋がりを探索",
+        description: isEnglish
+          ? `Explore insects and host plants recorded in Japan. Includes ${countLabel(
+              counts.moths + counts.butterflies,
+            )} of butterflies and moths, ${countLabel(
+              counts.beetles,
+            )} of jewel beetles, ${countLabel(
+              counts.longhornbeetles,
+            )} of longhorn beetles, ${countLabel(
+              counts.leafbeetles,
+            )} of leaf beetles, ${countLabel(
+              counts.aphids,
+            )} of aphids, and ${countLabel(
+              counts.hostPlants,
+            )} of plants.`
+          : `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`,
+        canonical: absUrl(localizePath("/", locale)),
+        breadcrumbItems: [
+          { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
+        ],
       };
-    }, [counts, location.pathname]);
+    }, [countLabel, counts, isEnglish, locale, strippedPathname]);
 
     const { setOgTwitterImage } = useSeoMeta({
       title: listSeo.title,
       description: listSeo.description,
       ogType: "website",
       url: listSeo.canonical,
+      locale: isEnglish ? "en_US" : "ja_JP",
+      htmlLang: locale,
+      siteName: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑",
+      alternates: [
+        { hreflang: "ja", href: absUrl(localizePath(strippedPathname, "ja")) },
+        { hreflang: "en", href: absUrl(localizePath(strippedPathname, "en")) },
+        { hreflang: "x-default", href: absUrl(localizePath(strippedPathname, "en")) },
+      ],
       breadcrumbItems: listSeo.breadcrumbItems,
       resetCanonicalTo: absUrl("/"),
     });
@@ -888,7 +1131,7 @@ const InsectsHostPlantExplorer = React.memo(
     }, [isStickyHeaderVisible]);
 
     // Preload hero image on component mount (base-aware for subpath deployments)
-    React.useEffect(() => {
+    useEffect(() => {
       const baseUrl = import.meta.env.BASE_URL || "/";
       const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
       const heroImageUrl = `${normalizedBase}images/resized/insects/Cucullia_argentea.640.jpg`;
@@ -904,16 +1147,23 @@ const InsectsHostPlantExplorer = React.memo(
     useEffect(() => {
       if (heroImageLoaded) {
         try {
-          const hero = document.querySelector('img[alt*="メインビジュアル"]');
+          const hero =
+            document.querySelector('#hero-section img') ||
+            document.querySelector('img[alt*="メインビジュアル"]');
           // Prefer resolved absolute URL from currentSrc/src
           const src =
             hero?.currentSrc ||
             hero?.src ||
             "images/resized/insects/Cucullia_argentea.1024.jpg";
-          setOgTwitterImage(src, "昆虫植物図鑑 メインビジュアル");
+          setOgTwitterImage(
+            src,
+            isEnglish
+              ? "Hero image for Insects and Host Plants of Japan"
+              : "昆虫植物図鑑 メインビジュアル",
+          );
         } catch {}
       }
-    }, [heroImageLoaded, setOgTwitterImage]);
+    }, [heroImageLoaded, isEnglish, setOgTwitterImage]);
 
     const instagramSectionRef = useRef(null);
     const [instagramInView, setInstagramInView] = useState(false);
@@ -1116,12 +1366,6 @@ const InsectsHostPlantExplorer = React.memo(
         });
       }
 
-      const matchesSearch = (value) => {
-        if (!value) return false;
-        const lower = String(value).toLowerCase();
-        return lower.includes(term) || lower.includes(katakanaTerm);
-      };
-
       const getMatchScore = (value) => {
         if (!value) return 0;
         const lower = String(value).toLowerCase();
@@ -1211,13 +1455,13 @@ const InsectsHostPlantExplorer = React.memo(
           }
 
           const classificationSuggestions = [
-            { value: insect.classification?.familyJapanese, label: '科で検索' },
-            { value: insect.classification?.subfamilyJapanese, label: '亜科で検索' },
-            { value: insect.classification?.tribeJapanese, label: '族で検索' },
-            { value: insect.classification?.genus, label: '属で検索' },
-            { value: insect.classification?.family, label: '科名(学名)で検索' },
-            { value: insect.classification?.subfamily, label: '亜科名(学名)で検索' },
-            { value: insect.classification?.tribe, label: '族名(学名)で検索' },
+            { value: insect.classification?.familyJapanese, label: isEnglish ? 'Search family' : '科で検索' },
+            { value: insect.classification?.subfamilyJapanese, label: isEnglish ? 'Search subfamily' : '亜科で検索' },
+            { value: insect.classification?.tribeJapanese, label: isEnglish ? 'Search tribe' : '族で検索' },
+            { value: insect.classification?.genus, label: isEnglish ? 'Search genus' : '属で検索' },
+            { value: insect.classification?.family, label: isEnglish ? 'Search family (Latin)' : '科名(学名)で検索' },
+            { value: insect.classification?.subfamily, label: isEnglish ? 'Search subfamily (Latin)' : '亜科名(学名)で検索' },
+            { value: insect.classification?.tribe, label: isEnglish ? 'Search tribe (Latin)' : '族名(学名)で検索' },
           ];
           for (const candidate of classificationSuggestions) {
             const candidateScore = getMatchScore(candidate.value);
@@ -1320,12 +1564,12 @@ const InsectsHostPlantExplorer = React.memo(
           }
 
           const candidates = [
-            { value: detail.family, label: '科で検索' },
-            { value: detail.familyName, label: '科で検索' },
-            { value: detail.familyLatin, label: '科名(学名)で検索' },
-            { value: detail.order, label: '目で検索' },
-            { value: detail.orderLatin, label: '目名(学名)で検索' },
-            { value: detail.genus, label: '属で検索' },
+            { value: detail.family, label: isEnglish ? 'Search family' : '科で検索' },
+            { value: detail.familyName, label: isEnglish ? 'Search family' : '科で検索' },
+            { value: detail.familyLatin, label: isEnglish ? 'Search family (Latin)' : '科名(学名)で検索' },
+            { value: detail.order, label: isEnglish ? 'Search order' : '目で検索' },
+            { value: detail.orderLatin, label: isEnglish ? 'Search order (Latin)' : '目名(学名)で検索' },
+            { value: detail.genus, label: isEnglish ? 'Search genus' : '属で検索' },
           ].filter(c => c.value);
           for (const candidate of candidates) {
             const candidateScore = getMatchScore(candidate.value);
@@ -1344,7 +1588,7 @@ const InsectsHostPlantExplorer = React.memo(
         .sort((a, b) =>
           b.score - a.score ||
           a.order - b.order ||
-          String(a.item?.name || '').localeCompare(String(b.item?.name || ''), 'ja')
+          String(a.item?.name || '').localeCompare(String(b.item?.name || ''), isEnglish ? 'en' : 'ja')
         )
         .slice(0, 10)
         .map((entry) => entry.item);
@@ -1361,6 +1605,7 @@ const InsectsHostPlantExplorer = React.memo(
       flowerVisitPlants,
       plantDetails,
       plantImageFilenames,
+      isEnglish,
     ]);
 
     const handleSelectSuggestion = (value) => {
@@ -1396,6 +1641,7 @@ const InsectsHostPlantExplorer = React.memo(
           theme={theme}
           setTheme={setTheme}
           inputRef={stickySearchInputRef}
+          locale={locale}
           onVisibilityChange={setIsStickyHeaderVisible}
         />
         {/* 構造化データ */}
@@ -1437,7 +1683,9 @@ const InsectsHostPlantExplorer = React.memo(
                     src={src}
                     srcSet={srcSet}
                     sizes={sizes}
-                    alt="昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
+                    alt={isEnglish
+                      ? "Hero image for Insects and Host Plants of Japan - Cucullia argentea"
+                      : "昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"}
                     width="1600"
                     height="900"
                     className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
@@ -1463,7 +1711,7 @@ const InsectsHostPlantExplorer = React.memo(
                         imgEl.onerror = null; // prevent loop
                         // Final fallback to a local placeholder (relative path)
                         imgEl.src = `${normalizedBase}images/placeholder.jpg`;
-                        imgEl.alt = "画像が見つかりません";
+                        imgEl.alt = isEnglish ? "Image unavailable" : "画像が見つかりません";
                       } catch {}
                       setHeroImageLoaded(true);
                     }}
@@ -1479,10 +1727,10 @@ const InsectsHostPlantExplorer = React.memo(
               <div className="max-w-6xl mx-auto">
                 <h1 className="font-extrabold text-white mb-2 md:mb-4 leading-tight tracking-tight">
                   <span className="block bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl animate-gradient-x font-bold text-[6vw] sm:text-3xl md:text-5xl lg:text-6xl">
-                    "繋がり"が見える
+                    {ui.heroLead}
                   </span>
                   <span className="block bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl mt-2 font-extrabold text-[10vw] sm:text-5xl md:text-6xl lg:text-7xl">
-                    昆虫植物図鑑
+                    {ui.siteTitle}
                   </span>
                 </h1>
 
@@ -1505,31 +1753,37 @@ const InsectsHostPlantExplorer = React.memo(
                 <div className="max-w-2xl w-full mt-4 md:mt-8 mx-auto md:mx-0">
                   <SearchInput
                     ref={heroSearchInputRef}
-                    placeholder={`${activeTab === "plants" ? "植物" : "昆虫"}を検索 (和名・学名・分類)`}
+                    placeholder={ui.searchPlaceholder}
                     value={activeSearchTerm}
                     onChange={handleGlobalSearch}
                     suggestions={suggestions}
                     onSelectSuggestion={handleSelectSuggestion}
                     onSubmit={commitSearchValue}
-                    ariaLabel={`${activeTab === "plants" ? "植物" : "昆虫"}を検索`}
+                    ariaLabel={isEnglish ? `Search ${ui.searchTargetLabel.toLowerCase()}` : `${ui.searchTargetLabel}を検索`}
                     historyScope={activeTab}
+                    locale={locale}
                   />
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs md:text-sm text-white/85">
                     <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                      検索対象: {activeTab === "plants" ? "植物" : "昆虫"}
+                      {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
                     </span>
+                    {isEnglish && (
+                      <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
+                        {ENGLISH_NAMING_NOTICE}
+                      </span>
+                    )}
                     <InfoPopover
-                      title="検索の使い方"
+                      title={ui.searchHelpTitle}
                       align="left"
-                      buttonAriaLabel="検索の使い方を表示"
+                      buttonAriaLabel={ui.searchHelpAria}
                       buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
                       panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
                       contentClassName="space-y-2 text-slate-100"
                       titleClassName="text-white"
                     >
-                      <p>「/」または Ctrl/Cmd + K で検索欄にフォーカスします。</p>
-                      <p>Esc を 1 回押すと候補を閉じ、続けて押すと入力をクリアします。</p>
-                      <p>検索対象は上のタブで、昆虫と植物を切り替えできます。</p>
+                      <p>{ui.searchShortcut1}</p>
+                      <p>{ui.searchShortcut2}</p>
+                      <p>{ui.searchShortcut3}</p>
                     </InfoPopover>
                   </div>
                 </div>
@@ -1537,11 +1791,12 @@ const InsectsHostPlantExplorer = React.memo(
             </div>
 
             {!isStickyHeaderVisible && (
-              <div className="absolute top-6 right-6 z-30">
+              <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
+                <LocaleSwitcher locale={locale} />
                 <button
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                   className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
-                  aria-label="テーマを切り替え"
+                  aria-label={ui.themeAria}
                 >
                   {theme === "dark" ? (
                     <svg
@@ -1582,7 +1837,7 @@ const InsectsHostPlantExplorer = React.memo(
           {/* タブナビゲーション */}
           <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
             {/* タブヘッダー */}
-            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label="昆虫/植物の切り替え">
+            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label={isEnglish ? "Switch between insects and plants" : "昆虫/植物の切り替え"}>
               <button
                 id="tab-insects"
                 role="tab"
@@ -1625,7 +1880,7 @@ const InsectsHostPlantExplorer = React.memo(
                     />
                   </svg>
                   <span className="flex items-center gap-1">
-                    <span>昆虫</span>
+                    <span>{ui.insectsTab}</span>
                     <span className="hidden sm:inline">
                       (
                       {moths.length +
@@ -1674,7 +1929,7 @@ const InsectsHostPlantExplorer = React.memo(
                     />
                   </svg>
                   <span className="flex items-center gap-1">
-                    <span>植物</span>
+                    <span>{ui.plantsTab}</span>
                     <span className="hidden sm:inline">({mergedHostPlantCount})</span>
                   </span>
                 </div>
@@ -1702,7 +1957,7 @@ const InsectsHostPlantExplorer = React.memo(
                     <Suspense
                       fallback={
                         <div className="p-6 text-center text-slate-500 dark:text-slate-300">
-                          昆虫データを読み込んでいます…
+                          {ui.loadingInsects}
                         </div>
                       }
                     >
@@ -1715,10 +1970,11 @@ const InsectsHostPlantExplorer = React.memo(
                           ...leafbeetles,
                           ...aphids,
                         ]}
-                        title="昆虫"
+                        title={ui.insectsTab}
                         baseRoute=""
                         embedded={true}
                         initialSearchTerm={activeSearchTerm}
+                        locale={locale}
                       />
                     </Suspense>
                   </div>
@@ -1741,7 +1997,7 @@ const InsectsHostPlantExplorer = React.memo(
                     <Suspense
                       fallback={
                         <div className="p-6 text-center text-slate-500 dark:text-slate-300">
-                          植物データを読み込んでいます…
+                          {ui.loadingPlants}
                         </div>
                       }
                     >
@@ -1753,6 +2009,7 @@ const InsectsHostPlantExplorer = React.memo(
                         preloadedImageFilenames={plantImageFilenames}
                         initialSearchTerm={activeSearchTerm}
                         plantInsectStats={plantInsectStats}
+                        locale={locale}
                       />
                     </Suspense>
                   </div>
@@ -1785,7 +2042,7 @@ const InsectsHostPlantExplorer = React.memo(
                 </div>
                 <div className="flex-1">
                   <h2 className="text-xl font-bold text-slate-700 dark:text-slate-300">
-                    サイトについて
+                    {infoUi.sectionTitle}
                   </h2>
                 </div>
               </div>
@@ -1799,11 +2056,11 @@ const InsectsHostPlantExplorer = React.memo(
                   <section>
                     <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center border-b border-slate-200 dark:border-slate-700 pb-2">
                       <span className="bg-slate-200 dark:bg-slate-700 w-1 h-6 mr-3 rounded-full"></span>
-                      サイトポリシー
+                      {infoUi.policyTitle}
                     </h3>
                     <div className="rounded-xl border border-slate-200/70 dark:border-slate-700/70 bg-slate-50/70 dark:bg-slate-900/40 p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        図鑑・文献ベースで整理した「昆虫と植物の関係データ」を公開しています。学術利用時は必ず原典をご確認ください。
+                        {infoUi.policySummary}
                       </p>
                       <button
                         type="button"
@@ -1811,7 +2068,7 @@ const InsectsHostPlantExplorer = React.memo(
                         className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors"
                         aria-expanded={showAboutDetails}
                       >
-                        <span>{showAboutDetails ? "詳細を閉じる" : "詳細ポリシーを表示"}</span>
+                        <span>{infoUi.policyToggle(showAboutDetails)}</span>
                         <span className={`transition-transform duration-200 ${showAboutDetails ? "rotate-180" : ""}`}>⌄</span>
                       </button>
                     </div>
@@ -1819,52 +2076,52 @@ const InsectsHostPlantExplorer = React.memo(
                       <div className="mt-4 space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                         <div>
                           <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                            はじめに
+                            {infoUi.introTitle}
                           </p>
                           <p>
-                            当サイトは、昆虫と植物の関係を、誰もが手軽に調べられるデータベースを目指して作成しています。掲載されている情報は、管理者が既存の図鑑や学術文献などを基にまとめたものです。
+                            {infoUi.introBody}
                           </p>
                         </div>
                         <div>
                           <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                            免責事項
+                            {infoUi.disclaimerTitle}
                           </p>
                           <p>
-                            データの正確性には細心の注意を払っておりますが、参照した文献が古かったり、解釈に誤りが含まれていたりする可能性があります。学術研究やその他重要な目的でデータを利用される場合は、必ずご自身で原典をご確認いただきますようお願いいたします。
+                            {infoUi.disclaimerBody}
                           </p>
                         </div>
                         <div>
                           <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                            写真について
+                            {infoUi.photosTitle}
                           </p>
                           <p>
-                            掲載している写真は、すべて管理者自身が撮影したものです。写真の著作権は管理者に帰属します。無断での転載・利用は固くお断りいたします。写真の利用をご希望の場合は、
+                            {infoUi.photosBodyBeforeLink}{' '}
                             <a
                               href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
                             >
-                              こちらのGoogleフォーム
+                              {infoUi.formLinkLabel}
                             </a>
-                            よりお気軽にご連絡ください。
+                            {infoUi.photosBodyAfterLink}
                           </p>
                         </div>
                         <div>
                           <p className="font-bold text-slate-700 dark:text-slate-300 mb-1">
-                            お問い合わせ
+                            {infoUi.contactTitle}
                           </p>
                           <p>
-                            誤植・情報の修正依頼は、サイトの品質向上のために大変助かります。お気づきの点がありましたら、
+                            {infoUi.contactBodyBeforeLink}{' '}
                             <a
                               href="https://docs.google.com/forms/d/e/1FAIpQLSfNf5n59JWmiYpH6ImyAQsIy00PK_fMk_lHVP5nbxzfwuoA4w/viewform?usp=header"
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-blue-300 hover:decoration-blue-500 transition-colors ml-1"
                             >
-                              こちらのGoogleフォーム
+                              {infoUi.formLinkLabel}
                             </a>
-                            までお寄せください。
+                            {infoUi.contactBodyAfterLink}
                           </p>
                         </div>
                       </div>
@@ -1875,7 +2132,7 @@ const InsectsHostPlantExplorer = React.memo(
                   <section>
                     <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center border-b border-slate-200 dark:border-slate-700 pb-2">
                       <span className="bg-slate-200 dark:bg-slate-700 w-1 h-6 mr-3 rounded-full"></span>
-                      出典一覧
+                      {infoUi.referencesTitle}
                     </h3>
                     <div className="space-y-2">
                       <button
@@ -1885,7 +2142,7 @@ const InsectsHostPlantExplorer = React.memo(
                         aria-controls="bibliography-list"
                         className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                       >
-                        <span>主要引用文献リストを表示</span>
+                        <span>{infoUi.bibliographyToggle(showBibliography)}</span>
                         <span
                           className={`ml-3 transform transition-transform duration-300 ${showBibliography ? "rotate-90" : ""}`}
                         >
@@ -1923,16 +2180,12 @@ const InsectsHostPlantExplorer = React.memo(
                               return bibliography.map((b) => {
                                 const href =
                                   b.url || getSourceLink(b.title) || undefined;
-                                const joinNames = (arr) =>
-                                  Array.isArray(arr)
-                                    ? arr.filter(Boolean).join(", ")
-                                    : typeof arr === "string"
-                                      ? arr
-                                      : "";
                                 const authorStr =
-                                  joinNames(b.authors) ||
+                                  joinBibliographyNames(b.authors) ||
                                   (b.editors
-                                    ? `${joinNames(b.editors)}（編）`
+                                    ? isEnglish
+                                      ? `${joinBibliographyNames(b.editors)} (ed.)`
+                                      : `${joinBibliographyNames(b.editors)}（編）`
                                     : "");
                                 const titlePlain = b.title
                                   ? `${b.title}${b.note ? " " + b.note : ""}`
@@ -1954,7 +2207,9 @@ const InsectsHostPlantExplorer = React.memo(
                                       •
                                     </span>
                                     <div className="text-slate-700 dark:text-slate-300">
-                                      {isArticle ? (
+                                      {isEnglish ? (
+                                        renderEnglishBibliographyEntry(b, href)
+                                      ) : isArticle ? (
                                         // 著者名(年)論文名. 誌名, 巻(号): 頁.
                                         <>
                                           {authorStr && (
@@ -2041,14 +2296,14 @@ const InsectsHostPlantExplorer = React.memo(
                           </ul>
                           <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700/50">
                             <p className="font-medium text-xs mb-2 text-slate-500 dark:text-slate-400">
-                              その他
+                              {infoUi.otherTitle}
                             </p>
                             <ul className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
                               <li className="flex items-start">
                                 <span className="text-slate-400 mr-2">
                                   •
                                 </span>
-                                <span>各種学術論文等</span>
+                                <span>{infoUi.otherItem}</span>
                               </li>
                             </ul>
                           </div>
@@ -2070,7 +2325,7 @@ const InsectsHostPlantExplorer = React.memo(
                               <div className="p-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-lg flex-shrink-0 shadow-sm">
                                 <InstagramIcon
                                   className="w-4 h-4 text-white"
-                                  alt="Instagramアイコン"
+                                  alt={infoUi.instagramIconAlt}
                                 />
                               </div>
                               <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
@@ -2079,7 +2334,7 @@ const InsectsHostPlantExplorer = React.memo(
                             </div>
                           </div>
                           <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug">
-                            野生生物の観察記録を投稿しています
+                            {infoUi.instagramTagline}
                           </p>
                           {!isDesktopLayout && (
                             <button
@@ -2088,7 +2343,7 @@ const InsectsHostPlantExplorer = React.memo(
                               className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-purple-600 dark:hover:text-purple-300 transition-colors"
                               aria-expanded={isInstagramExpanded}
                             >
-                              <span>{isInstagramExpanded ? "Instagramを閉じる" : "Instagramを開く"}</span>
+                              <span>{infoUi.instagramToggle(isInstagramExpanded)}</span>
                               <span className={`transition-transform duration-200 ${isInstagramExpanded ? "rotate-180" : ""}`}>⌄</span>
                             </button>
                           )}
@@ -2169,7 +2424,7 @@ const InsectsHostPlantExplorer = React.memo(
                                   // 5) nothing configured
                                   return (
                                     <div className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 py-8 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
-                                      Instagramの投稿を表示できません
+                                      {infoUi.instagramUnavailable}
                                     </div>
                                   );
                                 })()}
@@ -2186,14 +2441,14 @@ const InsectsHostPlantExplorer = React.memo(
                                   className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-purple-600 dark:hover:text-purple-400 transition-all shadow-sm"
                                 >
                                   <InstagramIcon className="w-4 h-4" />
-                                  <span>プロフィールへ移動</span>
+                                  <span>{infoUi.instagramProfile}</span>
                                 </a>
                               </div>
                             )}
                           </>
                         ) : (
                           <div className="rounded-lg border border-slate-200/80 dark:border-slate-600 bg-white/80 dark:bg-slate-800/70 p-3 text-xs text-slate-500 dark:text-slate-400">
-                            モバイルでは初期状態で非表示です。「Instagramを開く」から表示できます。
+                            {infoUi.instagramCollapsedHint}
                           </div>
                         )}
                       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const SUPPORT_PLANS = [
   { value: '1000', label: 'ライトプラン', description: '幼虫観察会の運営サポート', amount: '¥1,000 / 月' },

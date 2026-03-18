@@ -464,35 +464,6 @@ const classifyInsect = (insect) => {
 };
 
 /**
- * 科名から昆虫タイプを決定（後方互換性のため）
- * @param {string} family - 科名
- * @returns {string} - 昆虫タイプ
- */
-const getInsectTypeFromFamily = (family) => {
-  if (family.includes('チョウ') || family.includes('シジミ') || family.includes('セセリ')) {
-    return 'butterfly';
-  }
-  
-  if (family.includes('タマムシ')) {
-    return 'beetle';
-  }
-
-  if (family.includes('カミキリ')) {
-    return 'longhornbeetle';
-  }
-
-  if (family.includes('アブラムシ')) {
-    return 'aphid';
-  }
-  
-  if (family.includes('ハムシ')) {
-    return 'leafbeetle';
-  }
-  
-  return 'moth';
-};
-
-/**
  * データ品質チェック
  * @param {Object} data - 正規化データ
  * @returns {Object} - 品質レポート

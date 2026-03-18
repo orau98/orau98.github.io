@@ -1,4 +1,5 @@
-import { getInsectRouteBase } from './siteTaxonomy';
+import { getCurrentLocale } from './locale';
+import { getLocalizedInsectRouteBase } from './siteTaxonomy';
 
 export const slugifyInsectName = (name = '') => {
   if (!name) return '';
@@ -6,9 +7,11 @@ export const slugifyInsectName = (name = '') => {
   return encodeURIComponent(name.trim());
 };
 
-export const buildInsectPath = (insect) => {
-  if (!insect) return '/moth/unknown';
-  const base = getInsectRouteBase(insect.type);
+export const buildInsectPath = (insect, locale = getCurrentLocale()) => {
+  if (!insect) {
+    return locale === 'en' ? '/en/moth/unknown' : '/moth/unknown';
+  }
+  const base = getLocalizedInsectRouteBase(insect.type, 'moth', locale);
   const slug = slugifyInsectName(insect.name) || insect.id;
   return `${base}${slug}`;
 };

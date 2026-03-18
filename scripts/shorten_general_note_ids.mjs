@@ -8,8 +8,6 @@ const TARGET_FILES = [
   path.join('normalized_data', 'general_notes.csv'),
 ];
 const REPORT_PATH = path.join('reports', 'shortened_general_note_ids.json');
-const TIMESTAMP_REGEX = /-20\d{10,14}(?=-)/g;
-
 function readCsv(file) {
   const text = fs.readFileSync(file, 'utf8');
   const parsed = Papa.parse(text, { header: true, skipEmptyLines: false });

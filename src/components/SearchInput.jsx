@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
 import { getSearchTypeLabel } from '../utils/siteTaxonomy';
+import { isEnglishLocale } from '../utils/locale';
 
 const assignRef = (ref, value) => {
   if (!ref) return;
@@ -185,7 +186,21 @@ const SearchInput = React.forwardRef(({
   onSubmit,
   ariaLabel,
   historyScope = 'default',
+  locale = 'ja',
 }, forwardedRef) => {
+  const isEnglish = isEnglishLocale(locale);
+  const labels = useMemo(
+    () => ({
+      search: isEnglish ? 'Search' : '検索',
+      clearInput: isEnglish ? 'Clear search input' : '検索入力をクリア',
+      recentSearches: isEnglish ? 'Recent searches' : '最近の検索',
+      clearHistory: isEnglish ? 'Clear history' : '履歴をクリア',
+      removeHistory: (term) =>
+        isEnglish ? `Remove "${term}" from search history` : `「${term}」を履歴から削除`,
+      noResults: isEnglish ? 'No matching suggestions' : '一致する候補がありません',
+    }),
+    [isEnglish],
+  );
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   // IME composition状態を追跡（日本語入力の文字重複を防ぐ）
@@ -406,7 +421,7 @@ const SearchInput = React.forwardRef(({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           role="combobox"
-          aria-label={ariaLabel || placeholder || "検索"}
+          aria-label={ariaLabel || placeholder || labels.search}
           aria-autocomplete="list"
           aria-expanded={expanded}
           aria-controls={expanded ? listboxId : undefined}
@@ -419,7 +434,7 @@ const SearchInput = React.forwardRef(({
             type="button"
             onClick={handleClear}
             className="absolute inset-y-0 right-1 flex items-center justify-center w-10 h-10 min-w-[44px] min-h-[44px] my-auto rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-slate-700/70 transition-colors"
-            aria-label="検索入力をクリア"
+            aria-label={labels.clearInput}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -438,13 +453,13 @@ const SearchInput = React.forwardRef(({
             {showHistory && (
               <div className="py-2">
                 <div className="px-4 py-1 flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">最近の検索</span>
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{labels.recentSearches}</span>
                   <button
                     type="button"
                     onMouseDown={clearHistory}
                     className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                   >
-                    履歴をクリア
+                    {labels.clearHistory}
                   </button>
                 </div>
                 <ul id={listboxId} role="listbox">
@@ -477,7 +492,7 @@ const SearchInput = React.forwardRef(({
                           onMouseDown={(e) => { e.preventDefault(); removeFromHistory(term); }}
                           onMouseEnter={() => setActiveIndex(index)}
                           className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-md"
-                          aria-label={`「${term}」を履歴から削除`}
+                          aria-label={labels.removeHistory(term)}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -539,7 +554,7 @@ const SearchInput = React.forwardRef(({
                         {/* カテゴリバッジ */}
                         {type && (
                           <span className={`flex-shrink-0 px-2 py-0.5 text-xs rounded-full font-medium ${getSuggestionBadgeClass(type)}`}>
-                            {getSearchTypeLabel(type)}
+                            {getSearchTypeLabel(type, locale)}
                           </span>
                         )}
                       </button>
@@ -551,7 +566,7 @@ const SearchInput = React.forwardRef(({
             {/* 候補なしメッセージ（入力2文字以上かつIME入力中でない場合） */}
             {showNoResults && (
               <div className="py-4 text-center text-sm text-slate-400 dark:text-slate-500">
-                一致する候補がありません
+                {labels.noResults}
               </div>
             )}
           </div>

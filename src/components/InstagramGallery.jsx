@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import InstagramIcon from './InstagramIcon';
 
 const normalizeAssetUrl = (value) => {
@@ -42,8 +42,10 @@ const pickImageUrl = (post) => {
 };
 
 const InstagramGallery = ({ posts = [], limit = 6, className = '', onAllFailed }) => {
-  const visible = Array.isArray(posts) ? posts.slice(0, limit) : [];
-  if (visible.length === 0) return null;
+  const visible = useMemo(
+    () => (Array.isArray(posts) ? posts.slice(0, limit) : []),
+    [posts, limit],
+  );
   const fallbackByKey = useMemo(() => {
     const map = new Map();
     visible.forEach((post, idx) => {
@@ -78,6 +80,8 @@ const InstagramGallery = ({ posts = [], limit = 6, className = '', onAllFailed }
       onAllFailed();
     }
   }, [failed, keyList, onAllFailed]);
+
+  if (visible.length === 0) return null;
 
   return (
     <div className={`grid grid-cols-2 gap-3 ${className}`}>

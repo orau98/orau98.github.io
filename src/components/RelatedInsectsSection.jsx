@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { buildInsectPath } from '../utils/insectSlug';
+import { isEnglishLocale } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
+import { buildPlantPath } from '../utils/siteTaxonomy';
+import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 import ImageWithFallback from './ImageWithFallback';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
-const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
+const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' }) => {
   const location = useLocation();
+  const isEnglish = isEnglishLocale(locale);
   // 各植物の展開状態を管理
   const [expandedPlants, setExpandedPlants] = useState(new Set());
   
@@ -55,7 +59,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
             </svg>
           </div>
           <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">
-            同じ食草の昆虫
+            {isEnglish ? 'Insects sharing the same host plant' : '同じ食草の昆虫'}
           </h2>
         </div>
       </div>
@@ -72,14 +76,14 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Link
-                    to={`/plant/${encodeURIComponent(plant)}`}
+                    to={buildPlantPath(plant, locale)}
                     state={makeDetailLinkState(location)}
                     className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
                   >
                     {plant}
                   </Link>
                   <span className="text-sm text-slate-500 dark:text-slate-400">
-                    ({relatedMothNames.length}種)
+                    {isEnglish ? `(${relatedMothNames.length} species)` : `(${relatedMothNames.length}種)`}
                   </span>
                 </div>
                 
@@ -89,7 +93,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                     onClick={() => togglePlantExpansion(plant)}
                     className="flex items-center space-x-1 px-3 py-1 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
                   >
-                    <span>{isExpanded ? '少なく表示' : 'もっと見る'}</span>
+                    <span>{isExpanded ? (isEnglish ? 'Show less' : '少なく表示') : (isEnglish ? 'Show more' : 'もっと見る')}</span>
                     <svg 
                       className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                       fill="none" 
@@ -123,11 +127,19 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                     relatedMoth = allInsects.find(m => m.name === alt);
                   }
                   if (!relatedMoth) return null;
+                  const primaryName = isEnglish
+                    ? getPrimaryEnglishName({
+                        scientificName: relatedMoth.scientificName,
+                        japaneseName: relatedMothName,
+                        fallback: relatedMothName,
+                      })
+                    : relatedMothName;
+                  const secondaryName = isEnglish ? buildJapaneseReferenceLabel(relatedMothName) : '';
                   
                   return (
                     <Link
                       key={relatedMoth.id}
-                      to={buildInsectPath(relatedMoth)}
+                      to={buildInsectPath(relatedMoth, locale)}
                       state={makeDetailLinkState(location)}
                       className={`insect-card group ${
                         layout.startsWith('grid') ? 'w-full' : 'flex-shrink-0 w-56'
@@ -150,7 +162,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                                 src={primarySrc}
                                 candidates={candidates.slice(1)}
                                 fallbackSrc={placeholderSrc}
-                                alt={`${relatedMothName}（${relatedMoth.scientificName}）の写真`}
+                                alt={isEnglish ? `${primaryName} photograph` : `${relatedMothName}（${relatedMoth.scientificName}）の写真`}
                                 width="600"
                                 height="400"
                                 className="w-full h-full"
@@ -166,8 +178,13 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects }) => {
                           {/* 画像上に昆虫名をオーバーレイ表示 */}
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
                             <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
-                              {relatedMothName}
+                              {primaryName}
                             </h5>
+                            {secondaryName && (
+                              <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
+                                {secondaryName}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>

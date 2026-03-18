@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import logger from '../utils/logger';
 import { getSourceLink, normalizeReference } from '../utils/sourceLinks';
+import { isEnglishLocale } from '../utils/locale';
 
 // 月名と色のマッピング - 薄い色で統一
 const MONTHS = [
@@ -132,34 +133,6 @@ const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorM
     bridgedMonths: Array.from(bridgedMonths).sort((a, b) => a - b),
     bridgedPeriods: Array.from(bridgedPeriods).sort((a, b) => a - b)
   };
-};
-
-// 季節アイコン
-const SeasonIcon = ({ season, className = "w-4 h-4" }) => {
-  const icons = {
-    spring: (
-      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L13.5 2.5L16.17 5.17C15.24 5.06 14.32 5 13.38 5C10.38 5 7.5 6.5 6 9C7.5 11.5 10.38 13 13.38 13C14.32 13 15.24 12.94 16.17 12.83L13.5 15.5L15 17L21 11V9ZM12.5 7.5C12.5 8.33 11.83 9 11 9S9.5 8.33 9.5 7.5S10.17 6 11 6S12.5 6.67 12.5 7.5Z"/>
-      </svg>
-    ),
-    summer: (
-      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>
-      </svg>
-    ),
-    autumn: (
-      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
-      </svg>
-    ),
-    winter: (
-      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12,11L14,8.5L16.5,11L18,9.5L15.5,7L18,4.5L16.5,3L14,5.5L12,3L10,5.5L7.5,3L6,4.5L8.5,7L6,9.5L7.5,11L10,8.5L12,11M12,13L10,15.5L7.5,13L6,14.5L8.5,17L6,19.5L7.5,21L10,18.5L12,21L14,18.5L16.5,21L18,19.5L15.5,17L18,14.5L16.5,13L14,15.5L12,13Z"/>
-      </svg>
-    )
-  };
-  
-  return icons[season] || null;
 };
 
 // 成虫発生時期を解析する関数（旬単位対応）
@@ -345,9 +318,6 @@ const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
     const startPeriodNum = startPeriod === '上旬' ? 1 : startPeriod === '中旬' ? 2 : 3;
     const endPeriodNum = endPeriod === '上旬' ? 1 : endPeriod === '中旬' ? 2 : 3;
     
-    const startValue = startMonth + startPeriodNum * 0.1;
-    const endValue = endMonth + endPeriodNum * 0.1;
-    
     // 同じ月内の場合
     if (startMonth === endMonth) {
       activeMonths.add(startMonth);
@@ -513,7 +483,6 @@ const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
   });
   
   // カンマで区切られた複数の範囲/月を処理（例：10-12、1-5月）
-  let processedText = emergenceTime;
   const commaSeparatedPattern = /(\d{1,2})[-－](\d{1,2})[、，,]\s*(\d{1,2})[-－](\d{1,2})月/g;
   let hasCommaSeparatedPattern = false;
   while ((match = commaSeparatedPattern.exec(emergenceTime)) !== null) {
@@ -729,34 +698,20 @@ const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
   };
 };
 
-// 連続する月の期間を取得する関数
-const getActiveRanges = (activeMonths) => {
-  if (activeMonths.length === 0) return [];
-  
-  const ranges = [];
-  let currentRange = { start: activeMonths[0], end: activeMonths[0] };
-  
-  for (let i = 1; i < activeMonths.length; i++) {
-    const currentMonth = activeMonths[i];
-    const prevMonth = activeMonths[i - 1];
-    
-    // 連続する月かチェック（年をまたぐ場合も考慮）
-    const isConsecutive = currentMonth === prevMonth + 1 || 
-                         (prevMonth === 12 && currentMonth === 1);
-    
-    if (isConsecutive) {
-      currentRange.end = currentMonth;
-    } else {
-      ranges.push({ ...currentRange });
-      currentRange = { start: currentMonth, end: currentMonth };
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, supplementalTexts = [], locale = 'ja' }) => {
+  const isEnglish = isEnglishLocale(locale);
+  const getPeriodLabel = (periodNum) => {
+    if (!isEnglish) return periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
+    return periodNum === 1 ? 'early' : periodNum === 2 ? 'mid' : 'late';
+  };
+  const getMonthLabel = (month, mode = 'full') => {
+    if (!month) return '';
+    if (!isEnglish) {
+      if (mode === 'header') return `${month.number}月`;
+      return month.name;
     }
-  }
-  
-  ranges.push(currentRange);
-  return ranges;
-};
-
-const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, supplementalTexts = [] }) => {
+    return mode === 'header' ? month.short : month.short;
+  };
   const emergenceData = useMemo(
     () => parseEmergenceTime(emergenceTime, supplementalTexts),
     [emergenceTime, supplementalTexts]
@@ -765,7 +720,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
   const activePeriods = emergenceData.periods;
   const fuzzyMonths = emergenceData.fuzzyMonths || [];
   const fuzzyPeriods = emergenceData.fuzzyPeriods || [];
-  const activeRanges = useMemo(() => getActiveRanges(activeMonths), [activeMonths]);
   const displayText = useMemo(() => {
     const primary = String(emergenceTime || '').trim();
     if (primary && primary !== '不明') return primary;
@@ -781,7 +735,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="text-sm">時期不明</span>
+        <span className="text-sm">{isEnglish ? 'Season unknown' : '時期不明'}</span>
       </div>
     );
   }
@@ -806,7 +760,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                   const periodValue = month.number + periodNum * 0.1;
                   const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
                   const isFuzzy = !isActive && fuzzyPeriods.some(p => Math.abs(p - periodValue) < 0.05);
-                  const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
+                  const periodName = getPeriodLabel(periodNum);
                   
                   const dividerClass = periodNum < 3 ? 'border-r border-white/30 dark:border-slate-600/50' : '';
                   
@@ -819,7 +773,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                         transition-all duration-200
                         ${dividerClass}
                       `}
-                      title={`${month.name}${periodName} ${isActive ? '(発生期)' : isFuzzy ? '(月幅のある記述)' : ''}`}
+                      title={`${getMonthLabel(month)} ${periodName}${isActive ? (isEnglish ? ' (adult season)' : ' (発生期)') : isFuzzy ? (isEnglish ? ' (broad seasonal note)' : ' (月幅のある記述)') : ''}`}
                     >
                     </div>
                   );
@@ -832,7 +786,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
           <div className="flex justify-between mt-1.5 px-0.5">
             {[1, 3, 6, 9, 12].map(monthNum => (
               <span key={monthNum} className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                {monthNum}月
+                {getMonthLabel(MONTHS[monthNum - 1], 'header')}
               </span>
             ))}
           </div>
@@ -846,7 +800,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
               <div className="text-sm text-slate-500 dark:text-slate-400">
-                <span className="font-medium text-slate-500 dark:text-slate-400">出典:</span>{' '}
+                <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
                 {(() => {
                   const displaySource = normalizeReference(source);
                   const sourceLink = getSourceLink(displaySource);
@@ -886,8 +840,8 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
           {MONTHS.map((month) => (
             <div key={month.number} className="text-xs font-medium text-slate-600 dark:text-slate-400">
               <div className="flex flex-col items-center">
-                <span className="hidden sm:block">{month.number}月</span>
-                <span className="sm:hidden">{month.number}</span>
+                <span className="hidden sm:block">{getMonthLabel(month, 'header')}</span>
+                <span className="sm:hidden">{isEnglish ? month.number : month.number}</span>
               </div>
             </div>
           ))}
@@ -927,7 +881,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                     <div
                       key={periodNum}
                       className="bg-gradient-to-b from-orange-200/85 to-orange-50/10 rounded-sm min-h-[32px] border border-dashed border-orange-200/80"
-                      title={`${month.name} - 月幅のある記述`}
+                      title={`${getMonthLabel(month)} - ${isEnglish ? 'broad seasonal note' : '月幅のある記述'}`}
                     />
                   );
                 })}
@@ -941,7 +895,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                 {[1, 2, 3].map((periodNum) => {
                   const periodValue = month.number + periodNum * 0.1;
                   const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
-                  const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
+                  const periodName = getPeriodLabel(periodNum);
                   
                   if (!isActive) return <div key={periodNum} />;
                   
@@ -958,7 +912,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                         opacity-70
                         border border-orange-400/30
                       `}
-                      title={`${month.name}${periodName} - 成虫発生期`}
+                      title={`${getMonthLabel(month)} ${periodName} - ${isEnglish ? 'adult season' : '成虫発生期'}`}
                     >
                     </div>
                   );
@@ -986,7 +940,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
               <div className="text-sm text-slate-500 dark:text-slate-400">
-                <span className="font-medium text-slate-500 dark:text-slate-400">出典:</span>{' '}
+                <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
                 {(() => {
                   const displaySource = normalizeReference(source);
                   const sourceLink = getSourceLink(displaySource);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 const IMAGE_LOAD_TIMEOUT_MS = 12000;
 
@@ -32,8 +32,10 @@ const ImageWithFallback = ({
   onError,
   ...props 
 }) => {
-  const normalizedCandidates = normalizeCandidates(candidates);
-  const candidatesSignature = normalizedCandidates.join('\u0001');
+  const normalizedCandidates = useMemo(
+    () => normalizeCandidates(candidates),
+    [candidates],
+  );
   const initialSrc = src || normalizedCandidates[0] || fallbackSrc || '';
 
   const [currentSrc, setCurrentSrc] = useState(initialSrc || src);
@@ -50,7 +52,7 @@ const ImageWithFallback = ({
   // should NOT force the image back to the loading skeleton, otherwise a loaded image
   // disappears after any parent state update.
   useEffect(() => {
-    const nextCandidates = normalizeCandidates(candidates);
+    const nextCandidates = normalizedCandidates;
     const nextSrc = src || nextCandidates[0] || fallbackSrc || '';
 
     setCurrentSrc(nextSrc);
@@ -59,7 +61,7 @@ const ImageWithFallback = ({
     setCurrentSizes(sizes);
     setSrcSetDisabled(false);
     setStatus(nextSrc ? 'loading' : 'error');
-  }, [src, candidatesSignature, fallbackSrc, srcSet, sizes]);
+  }, [src, normalizedCandidates, fallbackSrc, srcSet, sizes]);
 
   // Keep srcset/sizes in sync without resetting the load status.
   useEffect(() => {
@@ -72,7 +74,7 @@ const ImageWithFallback = ({
     if (onLoad) onLoad(e);
   };
 
-  const handleError = (e) => {
+  const handleError = useCallback((e) => {
     // If a responsive srcset is present, drop it once and retry the same src.
     if (!srcSetDisabled && currentSrcSet) {
       setSrcSetDisabled(true);
@@ -110,7 +112,14 @@ const ImageWithFallback = ({
       setStatus('error');
       if (onError) onError(e);
     }
-  };
+  }, [
+    currentCandidates,
+    currentSrc,
+    currentSrcSet,
+    fallbackSrc,
+    onError,
+    srcSetDisabled,
+  ]);
 
   useEffect(() => {
     if (status !== 'loading' || !currentSrc) return undefined;
@@ -118,7 +127,7 @@ const ImageWithFallback = ({
       handleError();
     }, IMAGE_LOAD_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [status, currentSrc, currentSrcSet, srcSetDisabled, currentCandidates, fallbackSrc]);
+  }, [status, currentSrc, handleError]);
 
   const fitClass =
     fit === 'cover'

@@ -424,7 +424,7 @@ function normalizePlantName(plantName) {
 }
 
 // 備考欄から食草情報を抽出する関数
-function extractHostPlantsFromRemarks(remarks) {
+function _extractHostPlantsFromRemarks(remarks) {
   if (!remarks || typeof remarks !== 'string') {
     return [];
   }
@@ -503,7 +503,7 @@ function extractHostPlantsFromRemarks(remarks) {
 }
 
 // 学名を正しく構築する関数 - SPAと同じロジック
-function processScientificName(existingScientificName, genusName, speciesName, authorName, yearName) {
+function _processScientificName(existingScientificName, genusName, speciesName, authorName, yearName) {
   // Clean up inputs
   const cleanGenus = genusName?.trim() || '';
   const cleanSpecies = speciesName?.trim() || '';
@@ -1103,7 +1103,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
           <dt>昆虫の種類</dt>
           <dd>
             ${Object.entries(insectsByType)
-              .filter(([type, insects]) => insects.length > 0)
+              .filter(([_type, insects]) => insects.length > 0)
               .map(([type, insects]) => `${typeNames[type]}: ${insects.length}種`)
               .join(', ')}
           </dd>
@@ -1131,7 +1131,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         <p>${displayPlantName}は、昆虫の食草として重要な役割を果たしている植物です。</p>
         <p>この植物を食草として利用する昆虫は${relatedInsects.length}種確認されており、生態系において多様な昆虫の生活を支える重要な植物資源となっています。</p>
         ${Object.entries(insectsByType)
-          .filter(([type, insects]) => insects.length > 0)
+          .filter(([_type, insects]) => insects.length > 0)
           .map(([type, insects]) => 
             `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => `<a href=\"/meta/${getInsectMetaRouteType(i)}/${i.id}.html\">${i.japaneseName}</a>`).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
           ).join('')}
@@ -1140,7 +1140,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       <section class="related-insects">
         <h3>この植物を利用する昆虫（${relatedInsects.length}種）</h3>
         ${Object.entries(insectsByType)
-          .filter(([type, insects]) => insects.length > 0)
+          .filter(([_type, insects]) => insects.length > 0)
           .map(([type, insects]) => `
         <h4>${typeNames[type]}（${insects.length}種）</h4>
         <ul>
@@ -1398,16 +1398,16 @@ async function generateMetaPages() {
     // e.g. "1758)" / "[1799])" / "1978"
     const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(String(value || '').trim());
     
-    insectsData.forEach((row, index) => {
+    insectsData.forEach((row) => {
       const insectId = row.insect_id;
       let japaneseName = (row.japanese_name || '').trim();
       const scientificName = (row.scientific_name || '').trim();
       const familyJapanese = row.family_jp || row.family || '';
       const subfamily = row.subfamily_jp || row.subfamily || '';
-      const genus = row.genus || '';
-      const species = row.species || '';
-      const author = row.author || '';
-      const year = row.year || '';
+      const _genus = row.genus || '';
+      const _species = row.species || '';
+      const _author = row.author || '';
+      const _year = row.year || '';
       const notes = row.notes || '';
       const alternativeNames = row.alternative_name || '';
       
@@ -1772,7 +1772,7 @@ function generateImageFileLists() {
             nameMapping.set(japaneseName, `${genus}_${species}`);
           }
         });
-      } catch (e) {
+      } catch (_e) {
         console.warn('ListMJ_hostplants_master.csv が無いため、昆虫画像の和名→学名マッピングは手動追加分のみ使用します');
       }
       // 手動で追加する必要のあるマッピング（ファイル名変更対応）

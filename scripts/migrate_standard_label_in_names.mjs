@@ -37,11 +37,10 @@ function cleanupDelimiters(s){
 }
 
 function migrateOneFile(fp){
-  const { rows, fields } = readCsv(fp);
+  const { rows } = readCsv(fp);
   const out = [];
   const changed = [];
   for(const row of rows){
-    const orig = { ...row };
     let moved = [];
     for(const f of NAME_FIELDS){
       let val = row[f] || '';
@@ -88,4 +87,3 @@ function main(){
 }
 
 main();
-

@@ -1,4 +1,3 @@
-import React from 'react';
 import { absUrl } from '../utils/origin';
 import { createSafeInsectFilename } from '../utils/image';
 import { getMappedScientificFilename } from '../utils/insectImageMappings';
