@@ -59,15 +59,45 @@ const addMonthRangePeriods = (monthSet, periodSet, startMonth, endMonth) => {
   }
 };
 
+const getNextMonth = (month) => (month === 12 ? 1 : month + 1);
+
+const findNextTargetMonth = (anchorMonth, targetMonths = []) => {
+  const targetSet = new Set((targetMonths || []).filter((month) => month >= 1 && month <= 12));
+  if (!anchorMonth || targetSet.size === 0) return null;
+  let month = getNextMonth(anchorMonth);
+  for (let i = 0; i < 12; i++) {
+    if (targetSet.has(month)) return month;
+    month = getNextMonth(month);
+  }
+  return null;
+};
+
+const addBridgePeriodsUntilSeason = (monthSet, periodSet, anchorMonth, targetMonths = []) => {
+  const targetMonth = findNextTargetMonth(anchorMonth, targetMonths);
+  if (!targetMonth) return;
+  let month = getNextMonth(anchorMonth);
+  while (month !== targetMonth) {
+    addMonthPeriods(monthSet, periodSet, month);
+    month = getNextMonth(month);
+  }
+};
+
+const extractMentionedMonths = (text = '') =>
+  Array.from(text.matchAll(/(\d{1,2})月/g))
+    .map((match) => parseInt(match[1], 10))
+    .filter((month) => month >= 1 && month <= 12);
+
 const shouldAnalyzeEmergenceHint = (text = '', isPrimary = false) => {
   if (!text) return false;
   if (isPrimary) return true;
   return EMERGENCE_HINT_PATTERN.test(text);
 };
 
-const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = []) => {
+const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorMonths = []) => {
   const fuzzyMonths = new Set();
   const fuzzyPeriods = new Set();
+  const bridgedMonths = new Set();
+  const bridgedPeriods = new Set();
   const texts = [primaryText, ...supplementalTexts]
     .map((text) => String(text || '').trim())
     .filter(Boolean);
@@ -76,16 +106,31 @@ const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = []) => {
     const isPrimary = index === 0;
     if (!shouldAnalyzeEmergenceHint(text, isPrimary)) return;
 
+    const matchedSeasonMonths = [];
     FUZZY_SEASON_CUES.forEach(({ pattern, months }) => {
       if (pattern.test(text)) {
+        matchedSeasonMonths.push(months);
         months.forEach((month) => addMonthPeriods(fuzzyMonths, fuzzyPeriods, month));
       }
     });
+
+    const mentionedMonths = extractMentionedMonths(text);
+    const anchorMonth = mentionedMonths.length > 0
+      ? mentionedMonths[mentionedMonths.length - 1]
+      : (anchorMonths.length > 0 ? anchorMonths[anchorMonths.length - 1] : null);
+
+    if (anchorMonth && /(越冬|越年)/.test(text)) {
+      matchedSeasonMonths.forEach((months) => {
+        addBridgePeriodsUntilSeason(bridgedMonths, bridgedPeriods, anchorMonth, months);
+      });
+    }
   });
 
   return {
     months: Array.from(fuzzyMonths).sort((a, b) => a - b),
-    periods: Array.from(fuzzyPeriods).sort((a, b) => a - b)
+    periods: Array.from(fuzzyPeriods).sort((a, b) => a - b),
+    bridgedMonths: Array.from(bridgedMonths).sort((a, b) => a - b),
+    bridgedPeriods: Array.from(bridgedPeriods).sort((a, b) => a - b)
   };
 };
 
@@ -661,8 +706,12 @@ const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
   
   const fuzzyData = collectFuzzyEmergenceHints(
     emergenceTime,
-    supplementalTexts
+    supplementalTexts,
+    Array.from(activeMonths).sort((a, b) => a - b)
   );
+
+  fuzzyData.bridgedMonths.forEach((month) => activeMonths.add(month));
+  fuzzyData.bridgedPeriods.forEach((period) => activePeriods.add(period));
   
   // Debug log for specific species
   if (isDebugSpecies) {
