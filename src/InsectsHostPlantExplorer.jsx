@@ -1523,8 +1523,8 @@ const InsectsHostPlantExplorer = React.memo(
                       align="left"
                       buttonAriaLabel="検索の使い方を表示"
                       buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
-                      panelClassName="border-white/15 bg-slate-950/96 text-white"
-                      contentClassName="space-y-2 text-white/90"
+                      panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
+                      contentClassName="space-y-2 text-slate-100"
                       titleClassName="text-white"
                     >
                       <p>「/」または Ctrl/Cmd + K で検索欄にフォーカスします。</p>
