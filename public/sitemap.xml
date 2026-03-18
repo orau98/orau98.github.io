@@ -5,6 +5,10 @@
     <lastmod>2026-03-18</lastmod>
   </sitemap>
   <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-main.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
     <loc>https://orau98.github.io/sitemap-moth.xml</loc>
     <lastmod>2026-03-18</lastmod>
   </sitemap>
@@ -30,6 +34,34 @@
   </sitemap>
   <sitemap>
     <loc>https://orau98.github.io/sitemap-plant.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-moth.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-butterfly.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-beetle.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-longhornbeetle.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-leafbeetle.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-aphid.xml</loc>
+    <lastmod>2026-03-18</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://orau98.github.io/sitemap-en-plant.xml</loc>
     <lastmod>2026-03-18</lastmod>
   </sitemap>
 </sitemapindex>
