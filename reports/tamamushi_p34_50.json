@@ -1,0 +1,1754 @@
+[
+  {
+    "number": 1,
+    "latin_name": "Ptosima chinensis pallidipennis",
+    "japanese_name": "キボシフナガタタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "アデク、ハマボウの生木に集まる。",
+    "host_plants": ["アデク", "ハマボウ"]
+  },
+  {
+    "number": 2,
+    "latin_name": "Dicerca aino",
+    "japanese_name": "モンキタマムシ",
+    "emergence_time": "5〜6月",
+    "ecological_notes": "5〜6月に現れ、モモの木に集まる。",
+    "host_plants": ["モモ"]
+  },
+  {
+    "number": 3,
+    "latin_name": "Chrysobothris nipponensis",
+    "japanese_name": "ケシツブタマムシ",
+    "emergence_time": "4月上旬〜6月上旬",
+    "ecological_notes": "4月上旬〜6月上旬に現れ、シパニッケイ、マルバニッケイの生木に集まる。",
+    "host_plants": ["シパニッケイ", "マルバニッケイ"]
+  },
+  {
+    "number": 4,
+    "latin_name": "Chrysobothris succedanea",
+    "japanese_name": "ウリハダタマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月に現れ、ハゼノキ、ウルシ類の生木に集まる。",
+    "host_plants": ["ハゼノキ", "ウルシ類", "ヌルデ", "ツタウルシ"]
+  },
+  {
+    "number": 5,
+    "latin_name": "Chrysobothris ohbayashii",
+    "japanese_name": "オオバヤシケシツブタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "奄美大島・沖縄産の種。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 6,
+    "latin_name": "Chrysobothris affinis",
+    "japanese_name": "ムツボシタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、各種広葉樹の枯れ木、伐採木に集まる。",
+    "host_plants": ["クルミ", "クリ", "コナラ", "ミズナラ", "シデ類", "ハンノキ類", "カバノキ類", "サクラ類"]
+  },
+  {
+    "number": 7,
+    "latin_name": "Chrysochroa fulgidissima",
+    "japanese_name": "タマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月に現れ、エノキやケヤキなどの衰弱した木に飛来し、枯れ木に産卵する。",
+    "host_plants": ["エノキ", "リュウキュウエノキ", "ケヤキ", "サクラ類", "カシ類", "カキ", "クワ", "ハリエンジュ"]
+  },
+  {
+    "number": 8,
+    "latin_name": "Chrysochroa saundersii",
+    "japanese_name": "ルリタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、クワ科樹木に集まる。",
+    "host_plants": ["イヌビワ", "アコウ", "クワ類"]
+  },
+  {
+    "number": 9,
+    "latin_name": "Chrysochroa buqueti",
+    "japanese_name": "ミヤマタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、クワ科樹木の衰弱木に集まる。",
+    "host_plants": ["イヌビワ", "アコウ"]
+  },
+  {
+    "number": 10,
+    "latin_name": "Buprestis haemorrhoidalis",
+    "japanese_name": "エゾヒメタマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月に現れ、カラマツやエゾマツなどの針葉樹に集まる。",
+    "host_plants": ["カラマツ", "エゾマツ", "アカエゾマツ"]
+  },
+  {
+    "number": 11,
+    "latin_name": "Buprestis splendens",
+    "japanese_name": "オオヒメタマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月に現れ、針葉樹に集まる。",
+    "host_plants": ["アカマツ", "クロマツ"]
+  },
+  {
+    "number": 12,
+    "latin_name": "Chalcophora japonica",
+    "japanese_name": "ウバタマムシ",
+    "emergence_time": "4月頃",
+    "ecological_notes": "4月頃に現れ、マツ類の衰弱木や伐採木に集まる。幼虫はマツ材の中を食い進む。",
+    "host_plants": ["アカマツ", "クロマツ", "リュウキュウマツ"]
+  },
+  {
+    "number": 13,
+    "latin_name": "Eurythyrea eoa",
+    "japanese_name": "シラタマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月に現れ、カラマツなどの針葉樹の枯れ木や伐採木に集まる。",
+    "host_plants": ["カラマツ", "モミ類"]
+  },
+  {
+    "number": 14,
+    "latin_name": "Coraebus rusticanus",
+    "japanese_name": "ヒョウタンナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ナラ類の枯れ木に集まる。",
+    "host_plants": ["コナラ", "ミズナラ", "クヌギ"]
+  },
+  {
+    "number": 15,
+    "latin_name": "Coraebus gracilipes",
+    "japanese_name": "ヤマトナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、カシ類の枯れ枝に集まる。",
+    "host_plants": ["カシ類", "コナラ"]
+  },
+  {
+    "number": 16,
+    "latin_name": "Coraebus cavifrons",
+    "japanese_name": "ホソヤマトナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ナラ類に集まる。",
+    "host_plants": ["ナラ類"]
+  },
+  {
+    "number": 17,
+    "latin_name": "Coraebus christophi",
+    "japanese_name": "シナノヤマトナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ナラ類の枯れ木に集まる。",
+    "host_plants": ["コナラ", "ミズナラ"]
+  },
+  {
+    "number": 18,
+    "latin_name": "Coraebus sp.",
+    "japanese_name": "チャバネヤマトナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、広葉樹の枯れ木に集まる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 19,
+    "latin_name": "Coraebus anatolicus",
+    "japanese_name": "ウスバヤマトナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ナラ類に集まる。",
+    "host_plants": ["ナラ類"]
+  },
+  {
+    "number": 20,
+    "latin_name": "Coraebus rubi",
+    "japanese_name": "バラナガタマムシ",
+    "emergence_time": "4〜6月",
+    "ecological_notes": "4〜6月に現れ、バラ科植物の細い枝に産卵する。幼虫は枝の中を食う。",
+    "host_plants": ["バラ類", "ノイバラ", "ナシ", "リンゴ", "ウメ", "サクラ"]
+  },
+  {
+    "number": 21,
+    "latin_name": "Coraebus elatus",
+    "japanese_name": "ビロウドナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ナラ類に集まる。",
+    "host_plants": ["ナラ類"]
+  },
+  {
+    "number": 22,
+    "latin_name": "Acmaeoderella (Omphaloptera) obscuripennis",
+    "japanese_name": "クロフナガタタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、広葉樹に集まる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 23,
+    "latin_name": "Acmaeodera sauteri",
+    "japanese_name": "サウタータマムシ",
+    "emergence_time": "4〜7月",
+    "ecological_notes": "4〜7月に現れ、広葉樹に集まる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 24,
+    "latin_name": "Acmaeodera sp.",
+    "japanese_name": "ルソンタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "南西諸島産の種。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 25,
+    "latin_name": "Acmaeodera plagiata",
+    "japanese_name": "ヒメタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、各種広葉樹の花に集まる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 26,
+    "latin_name": "Meliboeus sulcatulus",
+    "japanese_name": "スジヒラタタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ハンノキ類の衰弱木に集まる。",
+    "host_plants": ["ハンノキ", "ヤシャブシ"]
+  },
+  {
+    "number": 27,
+    "latin_name": "Meliboeus japonicus",
+    "japanese_name": "ヤポニクスヒラタタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ハンノキ類に集まる。",
+    "host_plants": ["ハンノキ類"]
+  },
+  {
+    "number": 28,
+    "latin_name": "Meliboeus amurensis",
+    "japanese_name": "アムールヒラタタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 29,
+    "latin_name": "Meliboeus okinawanus",
+    "japanese_name": "オキナワヒラタタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "沖縄産の種。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 30,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ベニカミキリモドキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 31,
+    "latin_name": "Agrilus cavifrons",
+    "japanese_name": "エグリナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、イヌシデ、クマシデなどのカバノキ科樹木の枯れ木に集まる。",
+    "host_plants": ["イヌシデ", "クマシデ", "カバノキ類"]
+  },
+  {
+    "number": 32,
+    "latin_name": "Agrilus discalis",
+    "japanese_name": "クロホソナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、クマシデの衰弱木に集まる。",
+    "host_plants": ["クマシデ", "イヌシデ"]
+  },
+  {
+    "number": 33,
+    "latin_name": "Agrilus koreanus",
+    "japanese_name": "コウライナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、カエデ類の枯れ木に集まる。",
+    "host_plants": ["カエデ類"]
+  },
+  {
+    "number": 34,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメコウライナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 35,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウスアオナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ヤナギ類の枯れ木に集まる。",
+    "host_plants": ["ヤナギ類"]
+  },
+  {
+    "number": 36,
+    "latin_name": "Agrilus subrobustus",
+    "japanese_name": "ウグイスナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、カシ類の枯れ木に集まる。",
+    "host_plants": ["カシ類", "コナラ", "シラカシ"]
+  },
+  {
+    "number": 37,
+    "latin_name": "Agrilus sp.1",
+    "japanese_name": "ルイスナガタマムシ",
+    "emergence_time": "5〜9月",
+    "ecological_notes": "5〜9月に現れ、ヤナギ類、シラカバなどの広葉樹に集まる。",
+    "host_plants": ["ヤナギ類", "シラカバ"]
+  },
+  {
+    "number": 38,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ルリタヌキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 39,
+    "latin_name": "Agrilus lewisi",
+    "japanese_name": "ルリナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、各種広葉樹のひこばえやそだに集まる。",
+    "host_plants": ["カシ類", "ナラ類"]
+  },
+  {
+    "number": 40,
+    "latin_name": "Agrilus latipennis",
+    "japanese_name": "ヒロハナガタマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月に現れ、ヤナギ類の枯れ木に集まる。",
+    "host_plants": ["ヤナギ類"]
+  },
+  {
+    "number": 41,
+    "latin_name": "Agrilus maruyamae",
+    "japanese_name": "マルヤマナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ケヤキの枯れ木に集まる。",
+    "host_plants": ["ケヤキ"]
+  },
+  {
+    "number": 42,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チビマルヤマナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 43,
+    "latin_name": "Agrilus cyaneoniger",
+    "japanese_name": "アオチビナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、エノキのひこばえやそだに集まる。",
+    "host_plants": ["エノキ", "ケヤキ"]
+  },
+  {
+    "number": 44,
+    "latin_name": "Agrilus oenochrous",
+    "japanese_name": "ブドウトラナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ブドウ類に集まる。",
+    "host_plants": ["ブドウ", "ノブドウ", "ヤマブドウ"]
+  },
+  {
+    "number": 45,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "テングナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 46,
+    "latin_name": "Agrilus sericans",
+    "japanese_name": "シロハナナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、シデ類のひこばえに集まる。",
+    "host_plants": ["シデ類", "カバノキ類"]
+  },
+  {
+    "number": 47,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ニセシロハナナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 48,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウスキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 49,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウラジロウスキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 50,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "フタスジナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 51,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメフタスジナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 52,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "アカメガシワナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、アカメガシワに集まる。",
+    "host_plants": ["アカメガシワ"]
+  },
+  {
+    "number": 53,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒロオビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 54,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "オキナワヒロオビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 55,
+    "latin_name": "Agrilus tokioensis",
+    "japanese_name": "トウキョウナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ヤナギ類に集まる。",
+    "host_plants": ["ヤナギ類"]
+  },
+  {
+    "number": 56,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒョウモンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 57,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "アマミヒョウモンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 58,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "オキナワヒョウモンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 59,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ハチジョウナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 60,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "クスナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、クスノキに集まる。",
+    "host_plants": ["クスノキ"]
+  },
+  {
+    "number": 61,
+    "latin_name": "Agrilus spinipennis",
+    "japanese_name": "ハリナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、各種広葉樹の枯れ木に集まる。",
+    "host_plants": ["カシ類", "ナラ類"]
+  },
+  {
+    "number": 62,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "コナラナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、コナラに集まる。",
+    "host_plants": ["コナラ"]
+  },
+  {
+    "number": 63,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒゲナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 64,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒナナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 65,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ツシマナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 66,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チャナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、チャの枯れ木に集まる。",
+    "host_plants": ["チャ"]
+  },
+  {
+    "number": 67,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメチャナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 68,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "エゾノキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 69,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヤエヤマナガタマムシ（旧名）",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 70,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ツシマクスナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 71,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ムラサキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 72,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "クビアカナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 73,
+    "latin_name": "Agrilus subauratus",
+    "japanese_name": "ニレナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ニレ類の枯れ木に集まる。",
+    "host_plants": ["ハルニレ", "オヒョウ"]
+  },
+  {
+    "number": 74,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "アカアシナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 75,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 76,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ニセヒメキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 77,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "コマキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 78,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウスモンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 79,
+    "latin_name": "Agrilus mali",
+    "japanese_name": "リンゴナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、リンゴ、ナシ、サクラ類のひこばえに集まる。",
+    "host_plants": ["リンゴ", "ナシ", "サクラ類", "ウメ"]
+  },
+  {
+    "number": 80,
+    "latin_name": "Agrilus coxalis",
+    "japanese_name": "クロナガタマムシ",
+    "emergence_time": "5〜9月",
+    "ecological_notes": "5〜9月に現れ、クリ、ナラ類の枯れ木に集まる。",
+    "host_plants": ["クリ", "コナラ", "ミズナラ", "クヌギ"]
+  },
+  {
+    "number": 81,
+    "latin_name": "Agrilus chikushiensis",
+    "japanese_name": "チクシナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ネムノキに集まる。",
+    "host_plants": ["ネムノキ"]
+  },
+  {
+    "number": 82,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ゲジゲジナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 83,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "モロコシナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 84,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメニレナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 85,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ケヤキナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ケヤキのひこばえに集まる。",
+    "host_plants": ["ケヤキ"]
+  },
+  {
+    "number": 86,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チビケヤキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 87,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "コシロナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 88,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒロコシロナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 89,
+    "latin_name": "Agrilus planipennis",
+    "japanese_name": "トネリコナガタマムシ（ナラタマムシ）",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ヤチダモ、トネリコ類の枯れ木に集まる。",
+    "host_plants": ["ヤチダモ", "トネリコ類"]
+  },
+  {
+    "number": 90,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヨツモンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 91,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウラモンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 92,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チャイロナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 93,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "コナラトラナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 94,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "クリナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、クリのひこばえに集まる。",
+    "host_plants": ["クリ"]
+  },
+  {
+    "number": 95,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ルリチビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 96,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "オキナワルリチビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 97,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "オガサワラナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 98,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "スギナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、スギの枯れ木に集まる。",
+    "host_plants": ["スギ"]
+  },
+  {
+    "number": 99,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チビスギナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 100,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒノキナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、ヒノキの枯れ木に集まる。",
+    "host_plants": ["ヒノキ"]
+  },
+  {
+    "number": 101,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "タイワンナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 102,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "イソノキナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 103,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウツギナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ウツギ類のひこばえに集まる。",
+    "host_plants": ["ウツギ類"]
+  },
+  {
+    "number": 104,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメウツギナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 105,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ミヤコナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 106,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒシウウォーカーナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 107,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメルリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 108,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "カスミナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 109,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメカスミナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 110,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ホソミドリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 111,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "クビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 112,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "アカナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 113,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "オキナワナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 114,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヤエヤマルリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 115,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメヤエヤマルリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 116,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "マダラナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 117,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ホシナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 118,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チャイロツヤナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 119,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ナカスジナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 120,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウスアオナガタマムシ（別種）",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 121,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヨモギナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、ヨモギに集まる。",
+    "host_plants": ["ヨモギ"]
+  },
+  {
+    "number": 122,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヨツボシナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 123,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ミドリナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、各種広葉樹に集まる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 124,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒメミドリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 125,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヒラシマヒメナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 126,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "チビヒメナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 127,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "クビチビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 128,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ホソチビナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 129,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ウエノヤエヤマナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 130,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "クロミドリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 131,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "ヤエヤマミドリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 132,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "リュウキュウミドリナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 133,
+    "latin_name": "Agrilus sp.",
+    "japanese_name": "オキナワミドリナガタマムシ（旧名）",
+    "emergence_time": "",
+    "ecological_notes": "",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 134,
+    "latin_name": "Agrilus amamioshimanus",
+    "japanese_name": "アマミナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れる。奄美大島産の種。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 135,
+    "latin_name": "Agrilus walanukiorum",
+    "japanese_name": "ワタヌキミドリナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "6〜7月に現れ、サワシバのスウィーピングで採集される。原産地は新潟県長岡市鋸山。非常に近縁と考えられるA. peregrinus はハンノキ類を寄主植物としている。",
+    "host_plants": ["サワシバ"]
+  },
+  {
+    "number": 136,
+    "latin_name": "Agrilus viridis",
+    "japanese_name": "シンリョクナガタマムシ",
+    "emergence_time": "6〜9月",
+    "ecological_notes": "北海道と関東地方以北の山間部に6〜9月に現れ、ヤナギ類のスウィーピングで採集されることが多い。体色は唐金色・緑色・青色・鋼赤色・鉄錆色など変化に富む。体長・前胸背板や前胸腹板突起の形状などの変異幅が大きく、ヤナギ属・シラカバ属・ニレ属・コナラ属などの広況な広葉樹の食品を食害することによる寄主植物依存の表現形質の違いを現す。",
+    "host_plants": ["ヤナギ属", "シラカバ属", "ニレ属", "コナラ属"]
+  },
+  {
+    "number": 137,
+    "latin_name": "Agrilus chujoi",
+    "japanese_name": "チュウジョウナガタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "7〜8月に現れ、やや弱気味のクズの葉に集まる。原産地は長崎県対馬仁位。",
+    "host_plants": ["クズ"]
+  },
+  {
+    "number": 138,
+    "latin_name": "Agrilus motobuanus",
+    "japanese_name": "オキナワミドリナガタマムシ",
+    "emergence_time": "3〜6月",
+    "ecological_notes": "3〜6月に現れ、クスノハカエデの生薬や新鮮な枯れ枝に飛来する。原産地は沖縄今帰仁村。",
+    "host_plants": ["クスノハカエデ"]
+  },
+  {
+    "number": 139,
+    "latin_name": "Agrilus asakinai",
+    "japanese_name": "アサヒナルリナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "6〜7月に現れるが少ない。愛知県と静岡県ではツクバネウツギ、北海道ではエゾヒョウタンポクの生葉に飛来する個体が採集され、これらの植物を寄主としていることが確認された。",
+    "host_plants": ["ツクバネウツギ", "エゾヒョウタンポク"]
+  },
+  {
+    "number": 140,
+    "latin_name": "Agrilus cupes",
+    "japanese_name": "ツヤナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ミツバウツギやバイカウツギの生葉のスウィーピングで採集されるが少ない。幼虫はバイカウツギを食害することが確認された。",
+    "host_plants": ["バイカウツギ", "ミツバウツギ"]
+  },
+  {
+    "number": 141,
+    "latin_name": "Agrilus sibiricus",
+    "japanese_name": "ミドリツヤナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に現れ、衰弱したカエデに集まる。西南日本では山間部に限られるが、本州中部以北では丘陵地帯から山間部に普通。",
+    "host_plants": ["カエデ類"]
+  },
+  {
+    "number": 142,
+    "latin_name": "Agrilus ogatai",
+    "japanese_name": "オガタナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ミドリツヤナガタマムシ日本・極東亜種によく似るが、前胸腹板突起の広がり方、雄交尾器の形から区別できる。7〜8月にアカメカシワの枝先のスウィーピングで採集される。原産地は大分県久住黒岳。",
+    "host_plants": ["カエデ類", "キハダ"]
+  },
+  {
+    "number": 143,
+    "latin_name": "Agrilus micolanis",
+    "japanese_name": "ロニノナガタマムシ",
+    "emergence_time": "3〜7月",
+    "ecological_notes": "3〜7月に平野部から中山間部に現れ、クヌギ、ハルニレ、ナラ類のひこばえやそだに集まる。原産地はシベリア東部。",
+    "host_plants": ["ハルニレ", "クヌギ"]
+  },
+  {
+    "number": 144,
+    "latin_name": "Agrilus ribbei",
+    "japanese_name": "ホソアシナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に平野部から中山間地域に現れ、シデ類、カシ属、ナラ類などの各種広葉のひこばえ、そだ、採水、枯れ木に集まる。本州中部以北では本属中の最普通種。",
+    "host_plants": ["シデ類", "カシ類"]
+  },
+  {
+    "number": 145,
+    "latin_name": "Agrilus adelphinus",
+    "japanese_name": "ニセホソアシナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ホソアシナガタマムシと混生することが多い。ロシア極東部から中国、朝鮮半島を経て日本まで分布する。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 146,
+    "latin_name": "Agrilus friebi",
+    "japanese_name": "クヌギナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に平野部から山間部に現れ、クヌギやナラ類のひこばえやそだ類に集まる。原産地はシベリア東部。",
+    "host_plants": ["クヌギ", "ミズナラ", "コナラ", "クロウメモドキ"]
+  },
+  {
+    "number": 147,
+    "latin_name": "Agrilus marginicollis",
+    "japanese_name": "ブドウナガタマムシ",
+    "emergence_time": "5〜8月",
+    "ecological_notes": "5〜8月に平地から山間部に現れ、ブドウのスウィーピングで採集される。原産地は兵庫県。",
+    "host_plants": ["ノブドウ", "ヤマブドウ"]
+  },
+  {
+    "number": 148,
+    "latin_name": "Agrilus takahashii",
+    "japanese_name": "ニセウグイスナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "6〜7月に現れ、シア類を食習する。原産地は兵庫県赤西。",
+    "host_plants": ["シア類", "ケヤキ"]
+  },
+  {
+    "number": 149,
+    "latin_name": "Agrilus trinotatus",
+    "japanese_name": "ミツボシナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に平野部から中山間部に現れ、カシ類のそだや伐採木に集まる。西南日本に多い種で、北限は栃木県茂木町木戸。",
+    "host_plants": ["カシ類"]
+  },
+  {
+    "number": 150,
+    "latin_name": "Agrilus ussuricus",
+    "japanese_name": "ヒメクロナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "6〜7月に現れ、クヌギやナラ類のひこばえやそだのスウィーピングで採集されるが少ない。原産地はウラジオストック。",
+    "host_plants": ["カシ類"]
+  },
+  {
+    "number": 151,
+    "latin_name": "Agrilus yakushimensis",
+    "japanese_name": "ヤクシマナガタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "7〜8月に現れ、アカメガシワの生葉に集まるが少ない。原産地は屋久島宮之浦。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 152,
+    "latin_name": "Agrilus watanabei",
+    "japanese_name": "ワタナベナガタマムシ",
+    "emergence_time": "7月",
+    "ecological_notes": "7月に現れるが少ない。原産地は屋久島大川。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 153,
+    "latin_name": "Agrilus shimabarensis",
+    "japanese_name": "シマバラナガタマムシ",
+    "emergence_time": "6月",
+    "ecological_notes": "6月に採集されているが稀。ブドウナガタマムシに似るが前胸背板は全体に高まって中央部が平圧されることはなく、内側隆線は前半が不鮮明となることなどで区別される。原産地は長崎県島原市普賢岳。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 154,
+    "latin_name": "Agrilus yameji",
+    "japanese_name": "ヤマジナガタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "7〜8月に中山間部に現れ、エゾエノキの生葉のスウィーピングで採集されるが少ない。原産地は鳥取県高山。",
+    "host_plants": ["エゾエノキ"]
+  },
+  {
+    "number": 155,
+    "latin_name": "Agrilus moerens",
+    "japanese_name": "アサギナガタマムシ",
+    "emergence_time": "4〜8月",
+    "ecological_notes": "4〜8月に平地から山間地に現れ、クヌギ、カシワ、ナラ類のひこばえやそだに集まる。時にはナシ畑に発生することもある。",
+    "host_plants": ["コナラ", "ミズナラ", "カシワ", "クヌギ"]
+  },
+  {
+    "number": 156,
+    "latin_name": "Agrilus sp.2",
+    "japanese_name": "ツヤケシアサギナガタマムシ",
+    "emergence_time": "6月",
+    "ecological_notes": "6月に、シラカバのスウィーピングで採集されているが少ない。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 157,
+    "latin_name": "Agrilus hattorii",
+    "japanese_name": "ヒメアサギナガタマムシ",
+    "emergence_time": "4〜6月",
+    "ecological_notes": "4〜6月に平地から山間部に現れ、クヌギ、カシワ、ナラ類等のひこばえやそだに集まる。原産地は名古屋市汐見町。",
+    "host_plants": ["クヌギ", "ミズナラ", "コナラ", "カシワ"]
+  },
+  {
+    "number": 158,
+    "latin_name": "Agrilus viridiobrscurus",
+    "japanese_name": "アオグロナガタマムシ",
+    "emergence_time": "3〜8月",
+    "ecological_notes": "3〜8月に平野部から中山間地域に現れ、ケヤキ、アブラチャン、シデ類などの各種広葉のひこばえに集まる。",
+    "host_plants": ["ヒメヤシャブシ", "イヌシデ", "アブラチャン", "オニグルミ", "マンサク", "ケヤキ"]
+  },
+  {
+    "number": 159,
+    "latin_name": "Agrilus kurumi",
+    "japanese_name": "クルミナガタマムシ",
+    "emergence_time": "6〜8月",
+    "ecological_notes": "6〜8月にオニグルミの枝先生葉をスウィーピングすることによって採集できるが、産地は局所的である。原産地は長野県駒ノ湯。",
+    "host_plants": ["オニグルミ"]
+  },
+  {
+    "number": 160,
+    "latin_name": "Agrilus mullorielus",
+    "japanese_name": "クモガタナガタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "7〜8月にアカメガシワの枝先のスウィーピングで採集される。原産地は屋久島尾之。クルミナガタマムシに似るが、上翅紋は褐色毛の多いより鮮明な雲状紋を形成する。",
+    "host_plants": ["アカメガシワ"]
+  },
+  {
+    "number": 161,
+    "latin_name": "Agrilus sp.3",
+    "japanese_name": "ニガキナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "ニガキから羽化脱出した記録があり、成虫は6〜7月にニガキの生葉に集まる。",
+    "host_plants": ["ニガキ"]
+  },
+  {
+    "number": 162,
+    "latin_name": "Agrilus uenoi",
+    "japanese_name": "ウエノナガタマムシ",
+    "emergence_time": "4〜8月",
+    "ecological_notes": "4〜8月に現れ、アカメガシワ、ヤシイ類の生葉のスウィーピングで採集されるが少ない。",
+    "host_plants": ["ヤエヤマセンニンソウ", "ヒメイタビ", "テイカカズラ"]
+  },
+  {
+    "number": 163,
+    "latin_name": "Agrilus carinihumeralis",
+    "japanese_name": "カタスジナガタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "成虫は7〜8月に現れ、ナカハラクロキの生葉に集まるが少ない。原産地は奄美大島湯湾岳。",
+    "host_plants": ["アマシバ", "ナカハラクロキ"]
+  },
+  {
+    "number": 164,
+    "latin_name": "Agrilus japanocarinatus",
+    "japanese_name": "ニッポンカタスジナガタマムシ",
+    "emergence_time": "3月末〜7月",
+    "ecological_notes": "3月末〜7月に現れるが少ない。カタスジナガタマムシに似るが、雄の触角は長くて末節まで達すること、前胸背板側隆線・前胸腹板突起・交尾器の形状などで容易に区別される。原産地は福島県南会津館岩村。",
+    "host_plants": ["ヤチダモ"]
+  },
+  {
+    "number": 165,
+    "latin_name": "Agrilus pilosovinatus",
+    "japanese_name": "シラケナガタマムシ",
+    "emergence_time": "4〜8月",
+    "ecological_notes": "4〜8月に平地から中山間部に現れ、ノフジに集まる。原産地は兵庫県神戸市。",
+    "host_plants": ["フジ"]
+  },
+  {
+    "number": 166,
+    "latin_name": "Agrilus masumotoi",
+    "japanese_name": "ニセシラケナガタマムシ",
+    "emergence_time": "6月",
+    "ecological_notes": "シラケナガタマムシによく似て混生しているが、前胸腹板突起の形・交尾器の側片が中央付近でくびれないことなどで区別される。原産地は福島県館岩村新田原で、6月に採集されている。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 167,
+    "latin_name": "Agrilus komareki",
+    "japanese_name": "クワナガタマムシ",
+    "emergence_time": "4〜8月",
+    "ecological_notes": "4〜8月に平地から山間部に現れ、クワ畑に多く見出されるが、山間部ではハルニレやヤマグワのスウィーピングでも採集される。原名亜種の原産地は東京都中野。",
+    "host_plants": ["クワ", "ハルニレ", "ハイノキ"]
+  },
+  {
+    "number": 168,
+    "latin_name": "Agrilus koyoi",
+    "japanese_name": "コーヨーナガタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "7〜8月に中山間部に現れ、ヤチダモのスウィーピングで得られているが少ない。原産地は福島県南会津館岩村。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 169,
+    "latin_name": "Agrilus sugiurai",
+    "japanese_name": "スギウラナガタマムシ",
+    "emergence_time": "7月中旬〜8月中旬",
+    "ecological_notes": "7月中旬〜8月中旬に宮城県の限られた地域に現れ、トネリコの混ざる広葉林でのスウィーピングで採集される。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 170,
+    "latin_name": "Agrilus hirashimai",
+    "japanese_name": "ヒラシマナガタマムシ",
+    "emergence_time": "4〜7月",
+    "ecological_notes": "4〜7月に現れるが少ない。原産地は奄美大島湯湾岳。",
+    "host_plants": ["スダジイ"]
+  },
+  {
+    "number": 171,
+    "latin_name": "Agrilus suzukii",
+    "japanese_name": "シラフオガサワラナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "6〜7月に現れ、センダンを加害する。原産地は小笠原母島。",
+    "host_plants": ["センダン"]
+  },
+  {
+    "number": 172,
+    "latin_name": "Agrilus deguchii",
+    "japanese_name": "デグチナガタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月に現れ、リュウキュウエノキの生葉に集まる。原産地は奄美大島小湊。",
+    "host_plants": ["リュウキュウエノキ"]
+  },
+  {
+    "number": 173,
+    "latin_name": "Agrilus babai",
+    "japanese_name": "ババナガタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "原産地は石垣島高田。ミカン類のスウィーピングや材採集で得られている。",
+    "host_plants": ["ミカン類"]
+  },
+  {
+    "number": 174,
+    "latin_name": "Agrilus amamioshimanus",
+    "japanese_name": "（和名なし）",
+    "emergence_time": "7月",
+    "ecological_notes": "原産地は奄美大島八津野で、7月に現れるが少ない。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 175,
+    "latin_name": "Agrilus yasumatsui",
+    "japanese_name": "ヤスマツナガタマムシ",
+    "emergence_time": "6〜7月",
+    "ecological_notes": "6〜7月に現れるが少ない。原産地は奄美大島役感。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 176,
+    "latin_name": "Agrilus yonahaensis",
+    "japanese_name": "ヨナハナガタマムシ",
+    "emergence_time": "6月",
+    "ecological_notes": "6月に現れ、ハゼノキのスウィーピングで採集されるが少ない。原産地は沖縄島与那覇岳。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 177,
+    "latin_name": "Agrilus iriei",
+    "japanese_name": "イリエナガタマムシ",
+    "emergence_time": "4月",
+    "ecological_notes": "4月に現れるが少ない。原産地は石垣島オモト岳。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 178,
+    "latin_name": "Agrilus samuelsoni",
+    "japanese_name": "ヤエヤマナガタマムシ",
+    "emergence_time": "4〜9月",
+    "ecological_notes": "4〜9月に広葉樹林のスウィーピングで採集されるが少ない。原産地は西表島ウシク森。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 179,
+    "latin_name": "Aphanisticus antennatus",
+    "japanese_name": "ヒゲブトケシタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "シバ類のみならず各種のイネ科植物をも利用し、新芽あるいは刈り込んだ後の葉のスウィーピングで採集される。インド、中国、タイなどのインドシナ地域に広く分布し、パラオ諸島やドミニカでも確認された。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 180,
+    "latin_name": "Aphanisticus congener",
+    "japanese_name": "クロケシタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "初秋に現れて成虫で越冬し、3〜5月頃に再活動する。河川敷や草地などのイネ科植物、特に刈り込んだ後の柔らかい再生草のスウィーピングで採集されるが少ない。時に越冬中の個体が河原の石の下などから発見される。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 181,
+    "latin_name": "Aphanisticus okinawanus",
+    "japanese_name": "チュウジョウケシタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "秋期および4〜5月頃にイネ科草地のスウィーピングで採集される。原産地は沖縄島国頭村。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 182,
+    "latin_name": "Aphanisticus yasumatsui",
+    "japanese_name": "ヤスマツケシタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "初秋に現れ、成虫越冬後の4〜5月頃に再活動し、谷沿いの木漏れ日の射すカンスゲの葉上などに見られる。幼虫はカンスゲの葉虫で、九州では決して少なくない。分布の北限は秋田県。",
+    "host_plants": ["カンスゲ"]
+  },
+  {
+    "number": 183,
+    "latin_name": "Endelus (Kubaniellus) opacipennis",
+    "japanese_name": "キヌツヤエグリタマムシ",
+    "emergence_time": "4〜5月",
+    "ecological_notes": "成虫は4〜5月頃に現れ、シダ類の葉上で発見されるが稀。原産地は石垣島オモト岳。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 184,
+    "latin_name": "Endelus (Endelus) bicarinatus",
+    "japanese_name": "クロエグリタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月頃に現れ、シダ類のスウィーピングで採集されるが少ない。原産地はベトナム北部。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 185,
+    "latin_name": "Endelus (Endelus) collaris",
+    "japanese_name": "キンイロエグリタマムシ",
+    "emergence_time": "3〜6月",
+    "ecological_notes": "3〜6月頃に現れ、ベニシダ、オニヤブソテツ、コモチシダなどのシダ類のスウィーピングによって採集される。原産地は長崎県。",
+    "host_plants": ["ベニシダ", "オニヤブソテツ", "コモチシダ"]
+  },
+  {
+    "number": 186,
+    "latin_name": "Endelus (Endelus) pyrrosiae",
+    "japanese_name": "アカガネエグリタマムシ",
+    "emergence_time": "8月下旬〜10月",
+    "ecological_notes": "新成虫は8月下旬頃から現れ、ヒトツバの葉上で発見される。原名種では成虫越冬し、3〜5月頃に活動する。奄美亜種では8〜10月にかけて成虫を確認。北限は福島県飯館村（阿武山地）。",
+    "host_plants": ["ヒトツバ"]
+  },
+  {
+    "number": 187,
+    "latin_name": "Paracylindromorphus japanensis",
+    "japanese_name": "ホソツツタマムシ",
+    "emergence_time": "5〜7月",
+    "ecological_notes": "5〜7月頃に平野部から中山間地域の広い河川敷やマツなどの疎林に現れ、ススキ（カヤ）などのイネ科植物あるいはその周辺の葉上で採集されるが産地は局所的である。",
+    "host_plants": ["カヤ（ススキ）"]
+  },
+  {
+    "number": 188,
+    "latin_name": "Trachys cuneiferus",
+    "japanese_name": "クサビチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "体形はクズノチビタマムシに、上翅の毛や前胸腹板突起の形状はソーンダースチビタマムシによく似て、両種の中間的特徴を備えている。非常に稀で、原産地の福島県会津若松市小田山の他には長野県下で採集された1例しか記録がない。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 189,
+    "latin_name": "Trachys toringoi",
+    "japanese_name": "ズミチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部から中山間地域のクサボケ、ズミ、マルメロ、サイフリボクなどの葉上に見られる。原産地は福島県会津若松市。",
+    "host_plants": ["マルメロ", "クサボケ", "ズミ", "リンゴ", "ナシ", "ザイフリボク"]
+  },
+  {
+    "number": 190,
+    "latin_name": "Trachys auricollis",
+    "japanese_name": "クズノチビタマムシ",
+    "emergence_time": "3〜6月",
+    "ecological_notes": "3〜6月にクズの葉上で普通に見つかるが、東北地方北部から北海道では稀。中国からインドシナ地域に広く分布する。",
+    "host_plants": ["クズ"]
+  },
+  {
+    "number": 191,
+    "latin_name": "Trachys saundersi",
+    "japanese_name": "ソーンダースチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "本州ではウツギやヒメウツギの葉上にアカガネチビタマムシとともに普通に見られる。原産地は山梨県から長野県の中山道沿い。",
+    "host_plants": ["ウツギ", "ヒメウツギ"]
+  },
+  {
+    "number": 192,
+    "latin_name": "Trachys inconspicuus",
+    "japanese_name": "ウメチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "南暖地に多く、福島県福島市が北限の産地。ウメやアンズの葉上に見られる。",
+    "host_plants": ["ウメ", "アンズ"]
+  },
+  {
+    "number": 193,
+    "latin_name": "Trachys pseudoscrobiculatus",
+    "japanese_name": "クロチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "草地のスウィーピングや地表を通っている個体が偶然に採集されていたが、幼虫はスミレ、タチツボスミレの葉虫であることが明らかとなり、各地で記録されるようになった。原産地は東京都高尾山。",
+    "host_plants": ["スミレ", "タチツボスミレ"]
+  },
+  {
+    "number": 194,
+    "latin_name": "Trachys minutus",
+    "japanese_name": "ヤナギチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "本属の基準種で、ヨーロッパから日本まで広く分布する。本州〜九州の平野部から山間地では各種のヤナギ類の葉上に普通に見られるが、北海道では少ない。",
+    "host_plants": ["ドロノキ", "ヤナギ類"]
+  },
+  {
+    "number": 195,
+    "latin_name": "Trachys aurifluus",
+    "japanese_name": "シナノキチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "日本産本属の最大種で、本州の東北地方から北陸地方の山間地のオオバボダイジュやシナノキの葉上に見られるが少なく、産地も局所的である。原産地はシベリア（沿海州）。",
+    "host_plants": ["シナノキ", "オオバボダイジュ"]
+  },
+  {
+    "number": 196,
+    "latin_name": "Trachys cupricolor",
+    "japanese_name": "ドウイロチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "東北地方南部から西の地域に分布し、平地から中山間地域のケヤキの葉上に普通に見られるが産地は局所的で、一般に同所的に生息するヤノナミガタチビタマムシよりも少ない。",
+    "host_plants": ["ケヤキ"]
+  },
+  {
+    "number": 197,
+    "latin_name": "Trachys pecirkai",
+    "japanese_name": "キタドウイロチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "山間地域のハルニレの葉上に見られるが少ない。原産地はシベリアバイカル地方。",
+    "host_plants": ["ハルニレ"]
+  },
+  {
+    "number": 198,
+    "latin_name": "Trachys reitteri",
+    "japanese_name": "マメチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部から中山間地域の日当たりの良いヤブマメやタンキリマメの葉上に普通に見られる。原産地は朝鮮半島鎮南浦。",
+    "host_plants": ["ヤブマメ", "クズ", "タンキリマメ", "ダイズ"]
+  },
+  {
+    "number": 199,
+    "latin_name": "Trachys tokyoensis",
+    "japanese_name": "ヌスビトハギチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部から中山間地域のやや日陰のヌスビトハギの葉上に見られるが、多くはない。原産地は東京都。",
+    "host_plants": ["ヌスビトハギ"]
+  },
+  {
+    "number": 200,
+    "latin_name": "Trachys atushimae",
+    "japanese_name": "アカガネチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部から中山間地域のウツギ類の葉上にソーンダースチビタマムシとともに普通に見られる。原産地は長崎県対馬。",
+    "host_plants": ["ウツギ"]
+  },
+  {
+    "number": 201,
+    "latin_name": "Trachys ineditus",
+    "japanese_name": "マルガタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "西南地に多く、北限は茨城県土浦市。ムクノキの葉上に発見される。",
+    "host_plants": ["ムクノキ"]
+  },
+  {
+    "number": 202,
+    "latin_name": "Trachys broussonetiae",
+    "japanese_name": "コウゾチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "コウゾ、カジノキ、ツルコウゾ、ヤマクワなどに普通に見られる。種小名は食草であるコウゾの属名に由来する。原産地は東京都世田谷区砧。",
+    "host_plants": ["コウゾ", "ツルコウゾ", "クワ"]
+  },
+  {
+    "number": 203,
+    "latin_name": "Trachys robustus",
+    "japanese_name": "サシゲチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "分布は概ねスダジイのそれに一致し、太平洋岸は茨城県北部、日本海岸は石川県がそれぞれ分布の北限で、黒潮の流れる地域と重なる。原産地は長崎市。",
+    "host_plants": ["スダジイ"]
+  },
+  {
+    "number": 204,
+    "latin_name": "Trachys variolaris",
+    "japanese_name": "ダンダラチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部から中山間地域のクヌギ、カシワ、アベマキなどのナラ類の葉上に普通に見られるが、群生することはない。",
+    "host_plants": ["アラカシ", "コナラ", "ミズナラ", "カシワ", "クヌギ", "アベマキ"]
+  },
+  {
+    "number": 205,
+    "latin_name": "Trachys dilaticeps",
+    "japanese_name": "オオダンダラチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "スダジイのスウィーピングによって採集される。原産地は中国浙江省杭州で、九州南部から琉球列島、台湾を経てインドシナ地域まで広く分布する。",
+    "host_plants": ["シイ類"]
+  },
+  {
+    "number": 206,
+    "latin_name": "Trachys griseofasciatus",
+    "japanese_name": "ナミガタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "エノキやムクノキの葉上に見られ、西南地に多い。",
+    "host_plants": ["ムクノキ", "エノキ"]
+  },
+  {
+    "number": 207,
+    "latin_name": "Trachys yanoi",
+    "japanese_name": "ヤノナミガタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平地から中山間地域のケヤキの葉上に普通に見られ、時に大発生することがある。種小名は幼虫の生態を解明した矢野郎氏に献名された。",
+    "host_plants": ["ケヤキ"]
+  },
+  {
+    "number": 208,
+    "latin_name": "Habroloma (Habroloma) bifrons",
+    "japanese_name": "スジチビタマムシ",
+    "emergence_time": "7〜8月",
+    "ecological_notes": "長野県軽井沢で7月中旬に記録され、その後に栃木県那須でも記録（7〜8月）された不思議な分布をしている。軽井沢から那須への開拓にともなって植物・土壌が持ち込まれた時にスジチビタマムシも持ち込まれた可能性がある。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 209,
+    "latin_name": "Habroloma (Parahabroloma) lewisii",
+    "japanese_name": "ルイスヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "日本産本属の種としては例外的に上翅が青藍色を呈する。ノイバラの葉上に見られる。東限は房総半島先端部。",
+    "host_plants": ["ノイバラ"]
+  },
+  {
+    "number": 210,
+    "latin_name": "Habroloma (Parahabroloma) eximium",
+    "japanese_name": "ツマキヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ハイノキやシロバイのスウィーピングによって採集されるが少ない。原産地は熊本県肥後地方。",
+    "host_plants": ["ハイノキ", "シロバイ"]
+  },
+  {
+    "number": 211,
+    "latin_name": "Habroloma (Parahabroloma) liukiuense",
+    "japanese_name": "オキナワツマキヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ツマキヒラタチビタマムシの原名亜種と八重山・台湾亜種との中間地域に代置種的に分布し、リュウキュウハイノキ、アマシバのスウィーピングによって採集される。原産地は奄美大島。",
+    "host_plants": ["リュウキュウハイノキ"]
+  },
+  {
+    "number": 212,
+    "latin_name": "Habroloma (Parahabroloma) griseonigrum",
+    "japanese_name": "ハイイロヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部から中山間地域のアカガシ、クヌギなどの枝先を揺って採集されるが多くない。原産地は長崎市で、宮城県奥新川（作並温泉）が北限の産地。",
+    "host_plants": ["コナラ", "クヌギ", "アカガシ", "アラカシ"]
+  },
+  {
+    "number": 213,
+    "latin_name": "Habroloma (Parahabroloma) nixilla",
+    "japanese_name": "カラカネヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "シマサルスベリのスウィーピングによって採集される。日本産は上翅の毛が鮮明で複眼内縁の突出が強いことなどから別亜種とされる。原産地は台湾の大亀四社。",
+    "host_plants": ["シマサルスベリ"]
+  },
+  {
+    "number": 214,
+    "latin_name": "Habroloma (Parahabroloma) marginocoile",
+    "japanese_name": "シロズヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ホウロクイチゴなどのイチゴ類の葉上に普通。アサヒナヒラタチビタマムシに似るが複眼内縁の突出は弱く、前胸背板側縁は湾曲し、前角近くはやや窪み、その周辺は同心円状の隆起条を伴うことで区別される。",
+    "host_plants": ["ホウロクイチゴ"]
+  },
+  {
+    "number": 215,
+    "latin_name": "Habroloma (Parahabroloma) asahinai",
+    "japanese_name": "アサヒナヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ホウロクイチゴの葉上に見られる。原産地は沖縄島。",
+    "host_plants": ["ホウロクイチゴ"]
+  },
+  {
+    "number": 216,
+    "latin_name": "Habroloma (Parahabroloma) hikosanense",
+    "japanese_name": "ヒコサンヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "福岡県英彦山で採集された1頭に基づいて記載され、その後もわずかな個体が記録されているだけにすぎない。ナガヒラタチビタマムシに似るが、複眼の内縁が弧状に前方に突出することで区別される。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 217,
+    "latin_name": "Habroloma (Parahabroloma) yuasai",
+    "japanese_name": "ナガヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "東北地方南部から西方の地域に分布し、ノグルミなどのスウィーピングで採集されるが少ない。原産地は島根県金城町美又。",
+    "host_plants": ["ノグルミ"]
+  },
+  {
+    "number": 218,
+    "latin_name": "Habroloma (Parahabroloma) subbicorne",
+    "japanese_name": "ヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "ナワシロイチゴなどの草本性キイチゴ類の葉上に多いが、木本性のキイチゴ類にも見られる。日本産本属の最普通種。",
+    "host_plants": ["ナワシロイチゴ", "ナガバモミジイチゴ", "フユイチゴ", "イチゴ類"]
+  },
+  {
+    "number": 219,
+    "latin_name": "Habroloma (Parahabroloma) atronitidum",
+    "japanese_name": "ヒメヒラタチビタマムシ",
+    "emergence_time": "",
+    "ecological_notes": "平野部のキイチゴ類の葉上に見られるが少ない。ヒラタチビタマムシに似るが小型で、上翅の後方への狭まりが強く、前胸背板後縁の幅は上翅基部より広いことで区別される。原産地は中国杭州。",
+    "host_plants": ["キイチゴ類"]
+  }
+]

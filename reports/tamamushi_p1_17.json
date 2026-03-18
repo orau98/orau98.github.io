@@ -1,0 +1,730 @@
+[
+  {
+    "number": 1,
+    "scientific_name": "Acmaeodera (Cobosiella) luzonica Nonfried, 1895",
+    "japanese_name": "キボシフナガタタマムシ",
+    "emergence_time": "不明",
+    "ecological_notes": "波照間島では成虫がハマボウの花弁を後食する様子が観察された。アデクより羽化脱出した個体を確認。フィリピンに分布する近縁種はマメ科木の花に集まり、同木の充した幹に産卵する。",
+    "host_plants": ["アデク", "ハマボウ"]
+  },
+  {
+    "number": 2,
+    "scientific_name": "Prosima chinensis Marseul, 1867",
+    "japanese_name": "モンキタマムシ",
+    "emergence_time": "5月〜6月",
+    "ecological_notes": "成虫は5〜6月に発生し、モモなどを後食する。日本では長崎県・鹿児島県・東京都などから記録されており、中国大陸由来の外来種と推察される。",
+    "host_plants": ["モモ"]
+  },
+  {
+    "number": 3,
+    "scientific_name": "Mastogenius insperatus Y. Kurosawa, 1972",
+    "japanese_name": "ケシツブタマムシ",
+    "emergence_time": "4月〜6月",
+    "ecological_notes": "4月上旬〜6月上旬に現れ、林縁部の広葉樹をスウィーピングして採集されるが少ない。沖縄島ではマルバニッケイの枯れ枝から羽化した。",
+    "host_plants": ["シバニッケイ", "マルバニッケイ"]
+  },
+  {
+    "number": 4,
+    "scientific_name": "Paratrachys hederae E. Saunders, 1873",
+    "japanese_name": "ミスジツブタマムシ",
+    "emergence_time": "3月〜6月",
+    "ecological_notes": "幼虫はオオイタビ、イヌビワなどのクワ科イチジク属植物の葉虫として葉に潜り込み、内部組織を食害する。成虫はこれらの葉上に3〜6月頃に現れる。",
+    "host_plants": ["オオイタビ", "イタビカズラ"]
+  },
+  {
+    "number": 5,
+    "scientific_name": "Paratrachys micropubescens Y. Kurosawa, 1985",
+    "japanese_name": "ダイトウツブタマムシ",
+    "emergence_time": "3月〜6月",
+    "ecological_notes": "北大東島の固有種で、岩場のイチジク属植物の葉上に現れる。成虫は3〜6月頃に現れるが、秋期に発生している可能性もある。オオイタビの葉より成虫を羽化脱出させた。",
+    "host_plants": ["オオイタビ"]
+  },
+  {
+    "number": 6,
+    "scientific_name": "Paratrachys princeps Y. Kurosawa, 1976",
+    "japanese_name": "オオシマツブタマムシ",
+    "emergence_time": "3月〜6月",
+    "ecological_notes": "幼虫はイチジク属植物の葉虫で、成虫はこれらの葉上に3〜6月頃に現れる。沖縄島産・石垣島産・与那国島産はそれぞれ別亜種とされる。",
+    "host_plants": ["オオイタビ", "イタビカズラ", "ヒメイタビ"]
+  },
+  {
+    "number": 7,
+    "scientific_name": "Chrysochroa fulgidissima (Schönherr, 1817)",
+    "japanese_name": "タマムシ（ヤマトタマムシ）",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "南東北地方以南に産し、6〜8月にエノキ、ケヤキ、サクラ類などの木々の太めの枯れ枝に集まる。",
+    "host_plants": ["エノキ", "リュウキュウエノキ", "ケヤキ", "サクラ類", "カシ類", "カキ", "クワ", "ハリエンジュ（ニセアカシア）"]
+  },
+  {
+    "number": 8,
+    "scientific_name": "Chrysochroa holstii Waterhouse, 1890",
+    "japanese_name": "オガサワラタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、ムニンエノキに集まる。小笠原諸島の固有種。父島産は母島産と比較して前胸背板に薄く2本の赤色横帯部が現れる個体も出現する。",
+    "host_plants": ["ムニンエノキ"]
+  },
+  {
+    "number": 9,
+    "scientific_name": "Chrysodema dalmanni (Eschscholtz, 1837)",
+    "japanese_name": "アオムネスジタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月に発生し、マテバシイ、ウバメガシ、スダジイ、ホルトノキ、カシ類などに集まる。奄美大島以西の島々に産し、台湾・フィリピン・セレベスまで広く分布する。",
+    "host_plants": ["モモタマナ"]
+  },
+  {
+    "number": 10,
+    "scientific_name": "Chrysodema lewisii E. Saunders, 1873",
+    "japanese_name": "ムネスジタマムシ",
+    "emergence_time": "4月〜8月",
+    "ecological_notes": "日本では琉球列島から伊豆諸島の八丈島までの黒潮に洗われる地域に分布し、4〜8月に発生する。タブノキやモモタマナなどに集まる。",
+    "host_plants": ["スダジイ", "マテバシイ", "ウバメガシ", "カシ類"]
+  },
+  {
+    "number": 11,
+    "scientific_name": "Tamamushia virida Miwa et Chûjô, 1935",
+    "japanese_name": "ツマベニタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月に発生し、アアクヤシマシャリンパイに集まる。小笠原諸島の固有種で、父島と母島には原名亜種が分布し、媒島には全体が黒茶色となる亜種が分布する。",
+    "host_plants": ["シマシャリンパイ"]
+  },
+  {
+    "number": 12,
+    "scientific_name": "Chalcophora japonica (Gory, 1840)",
+    "japanese_name": "ウバタマムシ",
+    "emergence_time": "4月",
+    "ecological_notes": "成虫は、羽化後そのまま材中で越冬して4月頃に野外に現れるが、2〜3月頃の暖かい日に発見されることもある。マツ類を食害する。",
+    "host_plants": ["アカマツ", "クロマツ", "リュウキュウマツ"]
+  },
+  {
+    "number": 13,
+    "scientific_name": "Chalcophora yunnana Fairmaire, 1888",
+    "japanese_name": "サツマウバタマムシ",
+    "emergence_time": "4月〜8月",
+    "ecological_notes": "4〜8月に発生し、マツ類を食する。",
+    "host_plants": ["アカマツ", "クロマツ", "リュウキュウマツ"]
+  },
+  {
+    "number": 14,
+    "scientific_name": "Nipponobuprestis (Nipponobuprestis) amabilis (Vollenhoven, 1864)",
+    "japanese_name": "アオマダラタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "成虫は5月中旬〜8月上旬に現れ、アオハダ、クロガネモチ、ソヨゴ、ツゲ、ソメイヨシノなどに集まる。分布の北限は山形県小国町。",
+    "host_plants": ["アオハダ", "クロガネモチ", "ソヨゴ", "ソメイヨシノ"]
+  },
+  {
+    "number": 15,
+    "scientific_name": "Nipponobuprestis (Nipponobuprestis) quercea (E. Saunders, 1873)",
+    "japanese_name": "クロマダラタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "成虫は5月中旬〜7月に現れ、エノキの太い枯れ枝やウロに飛来するが、前種アオマダラタマムシよりはるかに少ない。分布の中心は西南日本で、茨城県水戸市が東限。",
+    "host_plants": ["エノキ"]
+  },
+  {
+    "number": 16,
+    "scientific_name": "Lamprodila (Palmar) virgata (Motschulsky, 1859)",
+    "japanese_name": "クロホシタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5月下旬〜8月上旬に現れ、ミズナラやクリの枯れ枝に集まる。関西以西ではほとんど採集されていない。原産地はシベリア東部のアムール。",
+    "host_plants": ["ミズナラ"]
+  },
+  {
+    "number": 17,
+    "scientific_name": "Lamprodila (Palmar) davidis (Fairmaire, 1887)",
+    "japanese_name": "キュウシュウクロホシタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に発生し、九州の海岸部および屋久島と琉球列島で記録されているが少ない。原産地はベトナム北部で、日本産は日本亜種とされる。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 18,
+    "scientific_name": "Lamprodila (Palmar) wivata (Lewis, 1893)",
+    "japanese_name": "マスダクロホシタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "成虫は5〜8月に発生してハゼノキなどの生葉を後食する。幼虫はヒノキ、スギ、ネズなどを食害し、近年は森林害虫として分布を拡大している。岩手県以南に分布する。",
+    "host_plants": ["ヒノキ", "スギ", "ネズ"]
+  },
+  {
+    "number": 19,
+    "scientific_name": "Lamprodila (Lamprodila) pretiosa (Mannerheim, 1852)",
+    "japanese_name": "キンヘリタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、ハルニレの枯れ枝や伐水に集まる。シベリア東部から朝鮮半島を経て九州に分布する個体は九州・大陸亜種で、北海道と本州北部に分布する北日本亜種と区別される。",
+    "host_plants": ["ハルニレ"]
+  },
+  {
+    "number": 20,
+    "scientific_name": "Lamprodila (Lamprodila) nipponensis (Y. Kurosawa, 1953)",
+    "japanese_name": "ハビロキンヘリタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月にハルニレ高木上に見られるが、現在知られる産地は長野県、群馬県武山、岩手県と北部北上山地だけで、珍しい種である。",
+    "host_plants": ["ハルニレ"]
+  },
+  {
+    "number": 21,
+    "scientific_name": "Lamprodila (Lamprodila) decipiens (Gebler, 1847)",
+    "japanese_name": "エサキキンヘリタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "成虫は6〜8月にミヤマハンノキ、ヤマハンノキ、ミネヤナギ、ネコヤナギなどの生葉に集まり、同木の木を食害する。日本産亜種の原産地は長野県上高地。",
+    "host_plants": ["ヤマハンノキ", "ミヤマハンノキ", "ミネヤナギ", "ネコヤナギ"]
+  },
+  {
+    "number": 22,
+    "scientific_name": "Poecilonota variolosa (Paykull, 1799)",
+    "japanese_name": "クロコモンタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月に発生。北日本亜種はドロノキおよびヤマナラシ、西日本亜種はヤマナラシの木に集まる。日本産は東日本亜種と西日本亜種の2亜種とされる。",
+    "host_plants": ["ドロノキ", "ヤマナラシ"]
+  },
+  {
+    "number": 23,
+    "scientific_name": "Dicerca furcata (Thunberg, 1787)",
+    "japanese_name": "フタオタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、軽やかに飛翔し、カンバ類、ヤナギ類、ハンノキ類の衰弱木、枯れ木、伐採木等に集まる。焼けたカンバ類の立ち枯れに多数飛来した記録もある。",
+    "host_plants": ["ダケカンバ", "シラカンバ"]
+  },
+  {
+    "number": 24,
+    "scientific_name": "Dicerca tibialis Lewis, 1893",
+    "japanese_name": "トゲフタオタマムシ",
+    "emergence_time": "晩夏",
+    "ecological_notes": "幼虫はモミ、スギ、ツガの枯れ木を食害し、成虫は晩夏に羽化脱出する。羽化した成虫は、スギやヒノキ、モミの樹皮下で越冬し、翌年に活動する。原産地は奈良県柏木。",
+    "host_plants": ["モミ", "ヒノキ", "ツガ"]
+  },
+  {
+    "number": 25,
+    "scientific_name": "Tokaranodicerca nishidai (Tôyama, 1986)",
+    "japanese_name": "キンモンフタオタマムシ",
+    "emergence_time": "7月",
+    "ecological_notes": "7月に発生し、シマグワの古木の幹に飛来する個体が採集される。トカラ列島（中之島）の固有種。種小名は発見者である西田信夫氏に献名された。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 26,
+    "scientific_name": "Tokaranodicerca shimonoi Hattori, 2005",
+    "japanese_name": "アマミキンモンフタオタマムシ",
+    "emergence_time": "不明",
+    "ecological_notes": "前種と同様に大きなシマグワの幹に飛来する個体が採集される。種小名は第一の発見者である下野賢之氏に献名された。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 27,
+    "scientific_name": "Buprestis (Ancylocheira) esakii Y. Kurosawa, 1954",
+    "japanese_name": "エサキクロタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に現れ、リュウキュウマツの立ち枯れや伐採木に集まる。沖縄では材から割り出しされた。台湾産に基づいて記載された種で、日本では沖縄に分布する。種小名は江崎悌三博士に献名された。",
+    "host_plants": []
+  },
+  {
+    "number": 28,
+    "scientific_name": "Buprestis (Ancylocheira) haemorrhoidalis Herbst, 1780",
+    "japanese_name": "クロタマムシ",
+    "emergence_time": "5月〜9月",
+    "ecological_notes": "5〜9月に現れ、マツ類やモミの枯れ木に集まる。琉球亜種は奄美大島名瀬市産に基づいて記載され、亜種名は荒木東氏に献名された。",
+    "host_plants": ["リュウキュウマツ", "アカマツ", "モミ"]
+  },
+  {
+    "number": 29,
+    "scientific_name": "Buprestis (Cypriacis) splendens Fabricius, 1775",
+    "japanese_name": "アカヘリミドリタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月にマツ類の枯れ木や伐採木に集まり、特に後半はヒメコマツやゴヨウマツの衰立木樹冠に集まる。日本を代表する珍品美麗種。",
+    "host_plants": ["アカマツ", "ヒメコマツ"]
+  },
+  {
+    "number": 30,
+    "scientific_name": "Eurythyrea coa Semenov, 1895",
+    "japanese_name": "エゾアオタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月にドロノキの木幹に飛来する個体が採集され、生葉に飛来した記録もある。北海道から僅かな個体が稀に採集されただけで、非常に美しいタマムシ。",
+    "host_plants": ["ドロノキ"]
+  },
+  {
+    "number": 31,
+    "scientific_name": "Eurythyrea tenuistriata Lewis, 1893",
+    "japanese_name": "アオタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に現れ、モミやマツ類の枯れ木や伐採木に集まり、灯火に飛来することもある。最近、成虫はブナの生葉を後食するために樹冠部に集まることが観察された。",
+    "host_plants": ["モミ", "マツ類"]
+  },
+  {
+    "number": 32,
+    "scientific_name": "Melanophila obscurata Lewis, 1893",
+    "japanese_name": "ツメアカナガヒラタタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月にマツ類の衰弱木や新鮮な伐採木に集まり、焦げた立木や煙に飛来した記録がある。",
+    "host_plants": ["マツ類", "カラマツ", "モミ", "トドマツ"]
+  },
+  {
+    "number": 33,
+    "scientific_name": "Philanthaxia iriei Y. Kurosawa, 1985",
+    "japanese_name": "イリエヒメマルタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月に現れ、各種の花に集まり、コクタンを食害する。原産地は与那国島で、種小名は第一発見者の入江平吉氏に献名された。",
+    "host_plants": ["ヤエヤマコクタン"]
+  },
+  {
+    "number": 34,
+    "scientific_name": "Kurosawaia yanoi (Y. Kurosawa, 1963)",
+    "japanese_name": "ツヤヒメマルタマムシ",
+    "emergence_time": "6月〜7月",
+    "ecological_notes": "6〜7月に現れ、各種の花に集まり、アデクやムニンエノキを食害する。",
+    "host_plants": ["アデク", "ムニンエノキ", "アカテツ"]
+  },
+  {
+    "number": 35,
+    "scientific_name": "Anthaxia (Melanthaxia) reticulata Motschulsky, 1859",
+    "japanese_name": "クロヒメヒラタタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月にマツ類の枯れ木や伐採木に集まり、その頃に咲く日当たりの良い各種の花にも集まる。日本産は3亜種とされるがその差異は微弱で連続的に変化する。",
+    "host_plants": ["トドマツ"]
+  },
+  {
+    "number": 36,
+    "scientific_name": "Anthaxia (Haplanthaxia) rubromarginata Miwa et Chûjô, 1935",
+    "japanese_name": "フチトリヒメヒラタタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月にアベマキ、コナラ、クヌギなどのひこばえに集まり、ノイバラなどの花にも集まるが多くない。原産地は札幌市円山。",
+    "host_plants": ["コナラ", "クヌギ", "アベマキ", "クリ"]
+  },
+  {
+    "number": 37,
+    "scientific_name": "Anthaxia (Haplanthaxia) proteus E. Saunders, 1873",
+    "japanese_name": "ヒメヒラタタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "本属中の最普通種で、5〜8月に現れ、各種の花やマツ類の枯れ枝に集まる。",
+    "host_plants": ["アカマツ"]
+  },
+  {
+    "number": 38,
+    "scientific_name": "Anthaxia (Haplanthaxia) arakii Y. Kurosawa, 1956",
+    "japanese_name": "アマミヒメヒラタタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月にリュウキュウマツの枯れ木や各種の花に集まる。原産地は奄美大島名瀬市で、種小名は採集者である荒木東氏に献名された。",
+    "host_plants": ["リュウキュウマツ"]
+  },
+  {
+    "number": 39,
+    "scientific_name": "Anthaxia (Haplanthaxia) ihamasumi Chûjô, 1970",
+    "japanese_name": "オキナワヒメヒラタタマムシ",
+    "emergence_time": "4月〜7月",
+    "ecological_notes": "4〜7月にリュウキュウマツの枯れ枝や各種の花に集まる。原産地は沖縄島の中城公園。種小名は伊波夏美氏に献名された。",
+    "host_plants": ["リュウキュウマツ"]
+  },
+  {
+    "number": 40,
+    "scientific_name": "Anthaxia (Haplanthaxia) maya Chûjô, 1970",
+    "japanese_name": "ヤエヤマヒメヒラタタマムシ",
+    "emergence_time": "4月〜6月",
+    "ecological_notes": "4〜6月にリュウキュウマツの枯れ枝や各種の花に集まる。原産地は石垣島バンナ。",
+    "host_plants": ["リュウキュウマツ"]
+  },
+  {
+    "number": 41,
+    "scientific_name": "Chrysobothris succedanea E. Saunders, 1873",
+    "japanese_name": "ムツボシタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "本属中の最普通種で、5〜8月に平野部から山間部の各地に現れ、イヌシデ、ビワ、ウメ、カシ類などの各種広葉樹やマツ類、時にはイチョウの枯れ枝や伐採木に集まる。",
+    "host_plants": ["カシ類", "クリ", "イヌシデ", "ウメ", "ソメイヨシノ", "ビワ", "モミ", "ヒマラヤスギ"]
+  },
+  {
+    "number": 42,
+    "scientific_name": "Chrysobothris amurensis Pic, 1904",
+    "japanese_name": "アムールムツボシタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月にブナ帯に現れ、ダケカンバやカエデ類の枯れ木に飛来する個体が採集される。日本産亜種の原産地は東京都日原。",
+    "host_plants": ["コハウチワカエデ", "ダケカンバ"]
+  },
+  {
+    "number": 43,
+    "scientific_name": "Chrysobothris pulchripes Fairmaire, 1887",
+    "japanese_name": "チョウセンムツボシタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月に現れ、マツ類の枯れ木や伐採木に集まる。日本では対馬にのみ産するが少ない。",
+    "host_plants": ["マツ類"]
+  },
+  {
+    "number": 44,
+    "scientific_name": "Chrysobothris igai Y. Kurosawa, 1948",
+    "japanese_name": "ヤマムツボシタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に平地から山間部に現れ、モミやマツ類の枯れ木や伐採木に集まる。山間部には少なくないが平地では稀。岩手県以南に分布する。種小名は第一発見者の伊賀正沢氏に献名された。",
+    "host_plants": ["モミ", "アカマツ"]
+  },
+  {
+    "number": 45,
+    "scientific_name": "Chrysobothris samurai Obenberger, 1935",
+    "japanese_name": "ツシマムツボシタマムシ",
+    "emergence_time": "4月〜6月",
+    "ecological_notes": "4月末〜6月頃に平野部から中山間部に現れ、クリやアベマキの枯れ枝や伐採木に集まる。",
+    "host_plants": ["クリ", "アベマキ"]
+  },
+  {
+    "number": 46,
+    "scientific_name": "Chrysobothris ohnoi Y. Kurosawa, 1975",
+    "japanese_name": "アマミムツボシタマムシ（オオシマムツボシタマムシ）",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月に現れ、ツブラジイ、マテバシイ、ミカン類あるいはマツ類の枯れ木に集まる。奄美諸島の固有種で、種小名は発見者の大野正男氏に献名された。",
+    "host_plants": ["ツブラジイ", "マテバシイ", "ミカン類", "マツ類"]
+  },
+  {
+    "number": 47,
+    "scientific_name": "Chrysobothris saliaris Y. Kurosawa, 1948",
+    "japanese_name": "オキナワムツボシタマムシ",
+    "emergence_time": "3月〜9月",
+    "ecological_notes": "3〜9月に現れ、カシ類やシイ類の枯れ木に集まる。八重山諸島には4枚型のみを産し、別亜種として区別される。",
+    "host_plants": ["ツブラジイ", "ヤンバルアワブキ"]
+  },
+  {
+    "number": 48,
+    "scientific_name": "Chrysobothris boninensis Y. Kurosawa, 1975",
+    "japanese_name": "オガサワラムツボシタマムシ",
+    "emergence_time": "6月",
+    "ecological_notes": "6月に現れ、ムニンエノキやモモタマナの枯れ木に集まる。日本産本属中の最美種。母島産は前胸背板や上翅の点刻および色が父島産の原名亜種とは異なることから別亜種とされる。",
+    "host_plants": ["ムニンエノキ"]
+  },
+  {
+    "number": 49,
+    "scientific_name": "Chrysobothris chrysostigma (Linnaeus, 1758)",
+    "japanese_name": "カクムネムツポシタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に現れ、マツ類の衰弱木、枯れ木、伐採木に集まる。ユーラシア大陸に広く分布し、日本は分布の東限。",
+    "host_plants": ["トウヒ", "アオトド"]
+  },
+  {
+    "number": 50,
+    "scientific_name": "Chrysobothris ohbayashii Y. Kurosawa, 1948",
+    "japanese_name": "オオムツボシタマムシ",
+    "emergence_time": "5月〜9月",
+    "ecological_notes": "5〜9月に現れ、クスギやアカガシなどの伐採木や枯れ木に集まるが少なく、東日本では非常に稀。福島県北会津（愛山地）が北限の記録。原産地は京都市花見町。種小名は大林一夫氏に献名された。",
+    "host_plants": ["クスギ", "アカガシ"]
+  },
+  {
+    "number": 51,
+    "scientific_name": "Nalanda lagerstraemiae Ohmomo et Akiyama, 1989",
+    "japanese_name": "オオムネアカチビナカボソタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5〜7月に現れ、サルスベリの生葉に集まり、種小名の由来となっている。原産地は台湾南山渓。",
+    "host_plants": ["サルスベリ"]
+  },
+  {
+    "number": 52,
+    "scientific_name": "Nalanda ruilicollis (Obenberger, 1914)",
+    "japanese_name": "ムネアカチビナカボソタマムシ",
+    "emergence_time": "5月〜9月",
+    "ecological_notes": "5〜9月に現れ、アカメガシワを食害し、その生葉をスウィーピングすることによって採集される。分布の北限は福島県いわき市。",
+    "host_plants": ["アカメガシワ"]
+  },
+  {
+    "number": 53,
+    "scientific_name": "Nalanda chinensis (Obenberger, 1927)",
+    "japanese_name": "クロチビナカボソタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "日本では長崎県対馬の固有種で、5〜7月に現れ、クヌギ、コナラ、アベマキなどの生葉のスウィーピングで採集されるが生息域は局所的。原産地は長崎県対馬厳原。",
+    "host_plants": ["アベマキ", "コナラ"]
+  },
+  {
+    "number": 54,
+    "scientific_name": "Nalanda ohbayashii Y. Kurosawa, 1957",
+    "japanese_name": "カラカネチビナカボソタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、山間地のオニグルミの生葉をスウィーピングすることによって採集されるが産地は局所的。原産地は岐阜県須原。種小名は大林一夫氏に献名された。",
+    "host_plants": ["オニグルミ"]
+  },
+  {
+    "number": 55,
+    "scientific_name": "Nalanda primoriensis Alexeev, 1979",
+    "japanese_name": "ヤナギチビナカボソタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月に現れ、山間地の河原のネコヤナギやケショウヤナギなどの細葉のヤナギ類の生葉をスウィーピングすることによって採集されるが産地は局所的。ネコヤナギからの割り出しや羽化脱出した個体を確認している。原産地は極東ロシア。",
+    "host_plants": ["ネコヤナギ"]
+  },
+  {
+    "number": 56,
+    "scientific_name": "Toxoscelus auriceps (E. Saunders, 1873)",
+    "japanese_name": "クリタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、クリの害虫とされるが、むしろカシワ、ナラガシワ、コナラ、スダジイ、ツブラジイなどの生葉のスウィーピングで採集されることが多い。",
+    "host_plants": ["クリ", "ツブラジイ", "スダジイ", "コナラ", "ナラガシワ"]
+  },
+  {
+    "number": 57,
+    "scientific_name": "Toxoscelus matobai Tôyama, 1985",
+    "japanese_name": "ホソクリタマムシ",
+    "emergence_time": "7月",
+    "ecological_notes": "7月にブナ帯のスウィーピングで採集されるが少ない。原産地は和歌山県護摩増山。種小名は発見者である的場績氏に献名された。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 58,
+    "scientific_name": "Toxoscelus sasakii Y. Kurosawa, 1957",
+    "japanese_name": "カラカネクリタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に現れ、シイ類のスウィーピングで採集されるが非常に少ない。原産地は鹿児島県霧島山栗野岳。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 59,
+    "scientific_name": "Toxoscelus nakajimai Ohmomo, 2002",
+    "japanese_name": "リュウキュウクリタマムシ",
+    "emergence_time": "不明",
+    "ecological_notes": "奄美大島瀬戸内町や沖縄島国頭村において、採取されたイスノキの新鮮な枯れ枝から脱出しており、成虫はイスノキの生葉に集まる。沖縄島産は奄美大島産に比べて大型。種小名は発見者の中島忠和博士に献名された。",
+    "host_plants": ["イスノキ"]
+  },
+  {
+    "number": 60,
+    "scientific_name": "Toxoscelus amamiensis Y. Kurosawa, 1963",
+    "japanese_name": "アマミクリタマムシ",
+    "emergence_time": "5月〜6月",
+    "ecological_notes": "5〜6月に現れ、シイ類やカシ類の生葉をスウィーピングすることによって採集されるが少ない。原産地は奄美大島名瀬市。",
+    "host_plants": ["カシ類", "シイ類"]
+  },
+  {
+    "number": 61,
+    "scientific_name": "Toxoscelus yakushimensis Y. Kurosawa, 1957",
+    "japanese_name": "ヤクシマクリタマムシ（ドウイロクリタマムシ）",
+    "emergence_time": "6月〜7月",
+    "ecological_notes": "6〜7月に現れ、ツブラジイなどのシイ類のスウィーピングで採集される。原産地は屋久島安房。",
+    "host_plants": ["シイ類"]
+  },
+  {
+    "number": 62,
+    "scientific_name": "Toxoscelus miwai Y. Kurosawa, 1977",
+    "japanese_name": "ヤエヤマクリタマムシ",
+    "emergence_time": "5月〜6月",
+    "ecological_notes": "5〜6月に現れ、ツブラジイなどのシイ類のスウィーピングで採集される。原産地は石垣島オモト岳。",
+    "host_plants": ["シイ類"]
+  },
+  {
+    "number": 63,
+    "scientific_name": "Coraebus iriei Y. Kurosawa, 1985",
+    "japanese_name": "ヒメナカボソタマムシ",
+    "emergence_time": "4月〜7月",
+    "ecological_notes": "4〜7月に現れ、イスノキやシイ類のスウィーピングで採集される。原産地は石垣島オモト岳。種小名は第一の発見者である入江平吉氏に献名された。",
+    "host_plants": ["シイ類"]
+  },
+  {
+    "number": 64,
+    "scientific_name": "Coraebus jukamachii Akiyama, 1987",
+    "japanese_name": "イシガキナカボソタマムシ（ヤエヤマナカボソタマムシ）",
+    "emergence_time": "5月",
+    "ecological_notes": "原産地（石垣島オモト）で5月に採集された1雄体が唯一の記録。種小名は採集者の深町通氏に献名された。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 65,
+    "scientific_name": "Coraebus quadriundulatus Motschulsky, 1866",
+    "japanese_name": "シロオビナカボソタマムシ",
+    "emergence_time": "4月〜8月",
+    "ecological_notes": "日本産本属中の最普通種で、北海道から九州の平地から山間部に広く分布する。4〜8月に現れ、幼虫はクマイチゴなどのキイチゴ類の茎部を加害し、成虫はその生葉上に多い。",
+    "host_plants": ["クマイチゴ", "キイチゴ類"]
+  },
+  {
+    "number": 66,
+    "scientific_name": "Coraebus niponicus Lewis, 1894",
+    "japanese_name": "ルリナカボソタマムシ",
+    "emergence_time": "3月〜7月",
+    "ecological_notes": "3〜7月に現れ、ホウロクイチゴなどのキイチゴ類を加害し、その葉上に多い。九州の南端から奄美大島に分布する。原産地は奄美大島。",
+    "host_plants": ["ホウロクイチゴ", "キイチゴ類"]
+  },
+  {
+    "number": 67,
+    "scientific_name": "Coraebus nigromaculatus Y. Kurosawa, 1953",
+    "japanese_name": "シリグロナカボソタマムシ",
+    "emergence_time": "6月〜9月",
+    "ecological_notes": "6〜9月にブナ帯に現れるが少ない。従来はブナ科の木に飛来した個体や飛翔中の個体が偶然に採集されていたが、最近はミズナラの高所枝先のスウィーピングによって採集できることがわかってきた。原産地は和歌山県護摩増山。",
+    "host_plants": ["ミズナラ"]
+  },
+  {
+    "number": 68,
+    "scientific_name": "Coraebus daisenensis Miwa, 1940",
+    "japanese_name": "ミヤマナカボソタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、タンナサワフタギを加害し、その生葉のスウィーピングによって採集されるが少ない。原産地は鳥取県大山。関東平野北縁の山地帯から西の地域に分布する。",
+    "host_plants": ["タンナサワフタギ"]
+  },
+  {
+    "number": 69,
+    "scientific_name": "Coraebus loochooensis Kano, 1929",
+    "japanese_name": "オキナワナカボソタマムシ",
+    "emergence_time": "5月〜7月",
+    "ecological_notes": "5月中旬〜7月上旬に北部沖縄島で採集される。最近になってナカハラクロキを寄主植物としていることが確認され、成虫も生葉のスウィーピングによって採集されるようになった。",
+    "host_plants": ["ナカハラクロキ"]
+  },
+  {
+    "number": 70,
+    "scientific_name": "Coraebus amamianus Y. Kurosawa, 1985",
+    "japanese_name": "アマミナカボソタマムシ",
+    "emergence_time": "4月〜7月",
+    "ecological_notes": "成虫は4〜7月に現れるが稀で、九州（熊本県、大分県）と奄美大島から僅かな個体が記録されただけ。大分県の久住高原ではエゴノキのスウィーピングで得られている。原産地は奄美大島高田山。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 71,
+    "scientific_name": "Coraebus rusticanus Lewis, 1893",
+    "japanese_name": "ルイスナカボソタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "北海道から九州の主として山間部に6〜8月に現れ、ヤマハンノキやオオバヤシャブシなどのハンノキ類の生葉のスウィーピングで採集される。衰弱した太いブナの幹にも集まる。伊豆諸島産の雌は赤色が強く体形も短太で、伊豆八丈亜種として区別される。原産地は北海道七飯町水薬沼。",
+    "host_plants": ["ヤマハンノキ", "ウダイカンバ", "ヤシャブシ", "オオバヤシャブシ", "ブナ"]
+  },
+  {
+    "number": 72,
+    "scientific_name": "Coraebus ishiharai Y. Kurosawa, 1953",
+    "japanese_name": "サビナカボソナガタマムシ",
+    "emergence_time": "6月〜7月",
+    "ecological_notes": "6〜7月に現れるが産地は非常に局所的。ヤマボウシの衰弱木を食害し、その生葉や花を後食する。原産地は広島県道後山。近年は本州の各地からも記録されるようになった（北限は岩手県）が、食樹のヤマボウシが庭木として移植され、同時に本種も移動した可能性がある。種小名は石原保博士に献名された。",
+    "host_plants": ["ヤマボウシ"]
+  },
+  {
+    "number": 73,
+    "scientific_name": "Coraebus sakagutii Y. Kurosawa, 1963",
+    "japanese_name": "ホソナカボソタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "関東地方から中部地方の限られた地域に限って5〜8月に現れ、近年は九州の久住高原（大分県）でも発見された。ナワシロイチゴの生葉上に見られる。原産地は山梨県三ツ峠。種小名は阪口平博士に献名された。",
+    "host_plants": ["ナワシロイチゴ"]
+  },
+  {
+    "number": 74,
+    "scientific_name": "Coraebus ignotus E. Saunders, 1873",
+    "japanese_name": "カラカネナカボソタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月に現れ、スダジイのスウィーピングで採集される。原名亜種は本州および九州に産し、屋久島〜琉球列島に産する個体群は3亜種に分かれる。台湾に産する個体群は原名亜種によく似る。",
+    "host_plants": ["イタジイ", "シイ類"]
+  },
+  {
+    "number": 75,
+    "scientific_name": "Coraebus hastanus Gory et Laporte, 1839",
+    "japanese_name": "ミドリナカボソタマムシ",
+    "emergence_time": "3月〜8月",
+    "ecological_notes": "3〜8月に現れ、アカメガシワを食し、その生葉上でよく見かける。インドから東南アジアを経て琉球まで広く分布し、日本はその東北限となる。",
+    "host_plants": ["アカメガシワ"]
+  },
+  {
+    "number": 76,
+    "scientific_name": "Coraebus formosanus Miwa et Chûjô, 1935",
+    "japanese_name": "タイワンナカボソタマムシ",
+    "emergence_time": "3月〜6月",
+    "ecological_notes": "3〜6月に現れ、シャリンバイなどのスウィーピングで採集されるが少ない。奄美大島・沖縄島・石垣島では舗装道路脇の植栽されたシャリンバイから多数の個体が得られており、幼虫がシャリンバイの木を食害することから、植栽とともに運ばれた可能性もある。",
+    "host_plants": ["シャリンバイ"]
+  },
+  {
+    "number": 77,
+    "scientific_name": "Sambus quadricolor E. Saunders, 1873",
+    "japanese_name": "アヤムナビロタマムシ",
+    "emergence_time": "4月〜7月",
+    "ecological_notes": "4〜7月に現れ、イスビワ、イタビカズラ、オオイタビなどのイチジク植物の生葉のスウィーピングで採集される。九州以南に分布するが、特異な生息地として東京湾の猿島が知られる。",
+    "host_plants": ["オオイタビ", "イチジク", "イスビワ", "イタビカズラ"]
+  },
+  {
+    "number": 78,
+    "scientific_name": "Sambus jaeyamanus Y. Kurosawa, 1985",
+    "japanese_name": "ヤエヤマムナビロタマムシ",
+    "emergence_time": "4月〜7月",
+    "ecological_notes": "4〜7月に現れ、各種木のスウィーピングで採集される。幼虫はクサギ属のタイワンウオクサギの生葉を後食する。原産地は石垣島高田。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 79,
+    "scientific_name": "Agrilus discalis E. Saunders, 1873",
+    "japanese_name": "ヒシモンナガタマムシ",
+    "emergence_time": "4月〜5月",
+    "ecological_notes": "新成虫は秋に羽化脱出してエノキの生葉を後食し、樹皮下などで野外越冬をする。越冬後、4〜5月にエノキやケヤキなどのひこばえや若芽に集まる。日本産ナガタマムシ属では唯一の特異的な生態が知られている。",
+    "host_plants": ["ケヤキ", "エノキ"]
+  },
+  {
+    "number": 80,
+    "scientific_name": "Agrilus cyaneoniger E. Saunders, 1873",
+    "japanese_name": "クロナガタマムシ",
+    "emergence_time": "3月〜8月",
+    "ecological_notes": "平地から山間部まで広く産し、3〜8月にクスギやナラ類のひこばえや若芽に集まる。日本産ナガタマムシ属の最大種。",
+    "host_plants": ["ミズナラ", "クスギ", "コナラ", "アベマキ"]
+  },
+  {
+    "number": 81,
+    "scientific_name": "Agrilus planipennis Fairmaire, 1888",
+    "japanese_name": "アオナガタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に山間部に現れ、サワグルミ、ハルニレ、シオジ、ヤチダモなどの木に集まる。近年、アメリカ大陸に移入し、街路樹であるトネリコの仲間を食害し枯死させ、害虫としてさまざまな研究がなされている。",
+    "host_plants": ["ヤチダモ", "ハルニレ", "サワグルミ", "オニグルミ"]
+  },
+  {
+    "number": 82,
+    "scientific_name": "Agrilus sinensis J. Thomson, 1879",
+    "japanese_name": "オオムネアカナガタマムシ",
+    "emergence_time": "不明",
+    "ecological_notes": "日本からは栃木県日光からの1例が記録されているが、その後はまったく記録がない。原産地は中国の上海。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 83,
+    "scientific_name": "Agrilus okinawensis Miwa, 1933",
+    "japanese_name": "オキナワナガタマムシ",
+    "emergence_time": "4月〜7月",
+    "ecological_notes": "4〜7月に現れ、アカメガシワやクロヨナに集まる。原産地は西表島。",
+    "host_plants": ["アカメガシワ", "クロヨナ", "ムクゲ類", "ハイビスカス"]
+  },
+  {
+    "number": 84,
+    "scientific_name": "Agrilus decoloratus Kerremans, 1892",
+    "japanese_name": "シラホシナガタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "平野部から中山間部に産し、5〜8月にエノキの衰弱木や枯れ木に集まる。福島県以西に分布し、西南日本に多いが、近年関東地方の平野部各地でも記録されるようになった。",
+    "host_plants": ["エノキ", "エゾエノキ"]
+  },
+  {
+    "number": 85,
+    "scientific_name": "Agrilus ventricosus Fairmaire, 1888",
+    "japanese_name": "トオヤマシラホシナガタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に山間部のエゾエノキの太い幹に飛来するが少ない。",
+    "host_plants": ["エゾエノキ"]
+  },
+  {
+    "number": 86,
+    "scientific_name": "Agrilus fleischeri Obenberger, 1925",
+    "japanese_name": "フライシャーナガタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に現れ、ドロノキやヤマナラシ等の伐採木に集まる。北海道と本州の数カ所で記録されているだけの珍しい種。原産地はシベリア東部。",
+    "host_plants": ["ヤマナラシ"]
+  },
+  {
+    "number": 87,
+    "scientific_name": "Agrilus kawarai Y. Kurosawa, 1963",
+    "japanese_name": "ホソクロナガタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に現れるが稀。岡山県では、フジキやユクノキに飛来した個体が採集されている。原産地は静岡県型岳。",
+    "host_plants": ["不明"]
+  },
+  {
+    "number": 88,
+    "scientific_name": "Agrilus sachalinicola Obenberger, 1940",
+    "japanese_name": "スジバナガタマムシ",
+    "emergence_time": "7月〜8月",
+    "ecological_notes": "7〜8月に山間部に現れ、ヤマハンノキの精のスウィーピングで採集されるが少ない。原産地はサハリン。",
+    "host_plants": ["ヤマハンノキ", "バッコヤナギ"]
+  },
+  {
+    "number": 89,
+    "scientific_name": "Agrilus spinipennis Lewis, 1893",
+    "japanese_name": "ケヤキナガタマムシ",
+    "emergence_time": "5月〜8月",
+    "ecological_notes": "5〜8月に平野部から中山間部に現れ、ケヤキの伐採木や枯れ木に集まる。本州では各地の平野部から山間部に普通に見られるが、四国や九州ではやや少ない。原産地は神奈川県大山。",
+    "host_plants": ["ケヤキ"]
+  },
+  {
+    "number": 90,
+    "scientific_name": "Agrilus tokyoensis Y. Kurosawa, 1985",
+    "japanese_name": "トガリバシラホシナガタマムシ",
+    "emergence_time": "6月〜8月",
+    "ecological_notes": "6〜8月に中山間部に現れ、クヌギの太い幹に飛来する個体が採集されるが少ない。原産地は山梨県日野春。",
+    "host_plants": ["クヌギ"]
+  },
+  {
+    "number": 91,
+    "scientific_name": "Agrilus auropictus Kerremans, 1912",
+    "japanese_name": "キンモンナガタマムシ",
+    "emergence_time": "4月〜8月",
+    "ecological_notes": "5〜8月に現れるが少ない。ハゼノキのスウィーピングで得られているほか、大分県ではタブノキの衰弱木に集まることが観察された。琉球では4〜5月ごろ現れ、九州以北では6〜8月ごろ見られる。",
+    "host_plants": ["不明"]
+  }
+]
