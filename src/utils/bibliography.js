@@ -453,10 +453,135 @@ export const bibliography = [
     isbn13: '978-4-943955-35-1'
   },
   {
-    key: 'tinea',
-    type: 'journal',
-    title: 'Tinea',
-    note: '日本蛾類学会の学術誌。Vol.21 (2010) 〜 Vol.26 (2023) の記事から食草情報を抽出',
-    url: 'https://www.jstage.jst.go.jp/browse/tinea'
+    key: 'tinea-21-2-kishida-2010',
+    type: 'article',
+    title: 'Descriptions of new species and new subspecies of Japanese Macrolepidoptera (1)',
+    authors: ['Kishida, Y.'],
+    year: '2010',
+    journal: 'Tinea',
+    volume: '21',
+    issue: '2',
+    pages: '57-69'
+  },
+  {
+    key: 'tinea-21-5-sato-2011',
+    type: 'article',
+    title: 'Description of a new species of the genus Scardamia Guenée (Geometridae, Ennominae) from Japan and Taiwan, with taxonomic notes on the related species',
+    authors: ['Sato, R.', 'Fu, C.-M.', 'Kawakami, Y.'],
+    year: '2011',
+    journal: 'Tinea',
+    volume: '21',
+    issue: '5',
+    pages: '259-267'
+  },
+  {
+    key: 'tinea-22-1-nasu-2012',
+    type: 'article',
+    title: 'New olethreutine moths from Japan (Lepidoptera, Tortricidae, Olethreutinae)',
+    authors: ['Nasu, Y.'],
+    year: '2012',
+    journal: 'Tinea',
+    volume: '22',
+    issue: '1',
+    pages: '12-24'
+  },
+  {
+    key: 'tinea-22-3-gielis-2013',
+    type: 'article',
+    title: 'Additions to the Pterophoridae fauna of Japan (Lepidoptera)',
+    authors: ['Gielis, C.', 'Mano, T.'],
+    year: '2013',
+    journal: 'Tinea',
+    volume: '22',
+    issue: '3',
+    pages: '149-155'
+  },
+  {
+    key: 'tinea-23-1-kishida-2014',
+    type: 'article',
+    title: 'A new species of Nokona Matsumura from Japan (Lepidoptera, Sesiidae)',
+    authors: ['Kishida, Y.', 'Kudo, T.', 'Kudo, S.'],
+    year: '2014',
+    journal: 'Tinea',
+    volume: '23',
+    issue: '1',
+    pages: '4-9'
+  },
+  {
+    key: 'tinea-23-1-hirano-2014',
+    type: 'article',
+    title: 'Six new and an unrecorded species of Stigmella Schrank, 1802 from Japan (Lepidoptera, Nepticulidae)',
+    authors: ['Hirano, N.'],
+    year: '2014',
+    journal: 'Tinea',
+    volume: '23',
+    issue: '1',
+    pages: '19-32'
+  },
+  {
+    key: 'tinea-23-4-arita-2016',
+    type: 'article',
+    title: 'Vicariance in the Macroscelesia japona species-group (Lepidoptera, Sesiidae) in the Ryukyus, Japan',
+    authors: ['Arita, Y.', 'Kimura, M.', 'Yata, N.', 'Nagase, M.'],
+    year: '2016',
+    journal: 'Tinea',
+    volume: '23',
+    issue: '4',
+    pages: '184-198'
+  },
+  {
+    key: 'tinea-23-4-nakao-2016',
+    type: 'article',
+    title: 'One new species and a newly recorded species of the genus Risoba Walker (Nolidae, Risobinae) from Japan',
+    authors: ['Nakao, K.', 'Fukuda, T.', 'Hayashi, E.'],
+    year: '2016',
+    journal: 'Tinea',
+    volume: '23',
+    issue: '4',
+    pages: '205-210'
+  },
+  {
+    key: 'tinea-23-4-yamanaka-2016',
+    type: 'article',
+    title: 'Descriptions of two new species of the subfamily Phycitinae (Pyralidae) from Japan',
+    authors: ['Yamanaka, H.'],
+    year: '2016',
+    journal: 'Tinea',
+    volume: '23',
+    issue: '4',
+    pages: '216-219'
+  },
+  {
+    key: 'tinea-25-1-hashimoto-2019',
+    type: 'article',
+    title: 'New and newly recorded species of the genus Sauris Guenée (Geometridae: Larentiinae) from Japan, with a taxonomic review of S. hirudinata Guenée',
+    authors: ['Hashimoto, S.'],
+    year: '2019',
+    journal: 'Tinea',
+    volume: '25',
+    issue: '1',
+    pages: '45-65'
+  },
+  {
+    key: 'tinea-26-1-nasu-2021',
+    type: 'article',
+    title: 'Japanese Polyorthini (Tortricidae, Chlidanotinae), with descriptions of four new species and on two newly recorded species from Japan',
+    authors: ['Nasu, Y.'],
+    year: '2021',
+    journal: 'Tinea',
+    volume: '26',
+    issue: '1',
+    pages: '66-78'
+  },
+  {
+    key: 'tinea-26-4-yata-2023',
+    type: 'article',
+    title: 'Discovery of Tinthia cuprealis (Moore, 1877) (Lepidoptera, Sesiidae) in Shikoku, Japan',
+    authors: ['Yata, N.', 'Yoshitomi, H.', 'Arita, Y.'],
+    year: '2023',
+    journal: 'Tinea',
+    volume: '26',
+    issue: '4',
+    pages: '392-399'
   }
 ];
