@@ -1736,7 +1736,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             </div>
           </div>
           <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25" ref={graphRef}>
-            <div className="h-[540px]">
+            <div className="h-[560px] lg:h-[820px]">
               {graphSize.width === 0 ? (
                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
                   <div className="w-24 h-24 mb-4 rounded-full bg-emerald-200/60 dark:bg-emerald-900/40"></div>

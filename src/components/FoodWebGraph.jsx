@@ -2136,10 +2136,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         </div>
       )}
 
-      <div className={`min-h-0 flex-1 ${isCompactPanel ? 'flex flex-col' : 'flex min-h-0'}`}>
+      <div className="min-h-0 flex-1 flex flex-col">
         <div
           ref={containerRef}
-          className={`relative min-h-0 min-w-0 ${isCompactPanel ? '' : 'flex-1'}`}
+          className={`relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[340px] flex-1'}`}
           style={{ height: graphViewportHeight }}
           role="region"
           aria-label={graphAriaLabel}
@@ -2372,23 +2372,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         </div>
 
         {!isCompactPanel && (
-          <aside className="min-h-0 w-[300px] flex flex-col border-l border-slate-200/80 bg-white/72 dark:border-slate-700/80 dark:bg-slate-950/55 xl:w-[340px]">
-            <div className="border-b border-slate-200/80 px-4 py-4 dark:border-slate-700/80">
-              <div className="rounded-xl border border-slate-200/90 bg-white/88 p-4 text-xs text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/82 dark:text-slate-200">
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">PC では右側に固定表示</div>
-                </div>
-                {legendBody}
-              </div>
-            </div>
-
-            <div className="min-h-0 flex-1 p-4">
-              <div className="h-full rounded-xl border border-slate-200/90 bg-white/92 p-4 text-sm text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-100">
+          <div className="shrink-0 border-t border-slate-200/80 bg-white/78 px-4 py-4 backdrop-blur dark:border-slate-700/80 dark:bg-slate-950/55">
+            <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
+              <div className="rounded-xl border border-slate-200/90 bg-white/92 p-4 text-sm text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-100">
                 {selectedNode ? (
                   selectionPanelContent
                 ) : (
-                  <div className="flex h-full flex-col justify-between gap-4">
+                  <div className="flex min-h-[150px] flex-col justify-between gap-4">
                     <div>
                       <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">選択中のノード</div>
                       <h3 className="mt-1 text-base font-bold text-slate-800 dark:text-slate-100">詳細パネル</h3>
@@ -2402,8 +2392,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   </div>
                 )}
               </div>
+
+              <div className="rounded-xl border border-slate-200/90 bg-white/88 p-4 text-xs text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/82 dark:text-slate-200">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">グラフを広く表示</div>
+                </div>
+                {legendBody}
+              </div>
             </div>
-          </aside>
+          </div>
         )}
       </div>
 
