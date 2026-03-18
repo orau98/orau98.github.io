@@ -259,9 +259,9 @@ def extract_emergence(text: str) -> str:
         return ""
     text = normalize_month_ocr(text)
     if re.search(r"(ほ[ぼはほ]?|ほぼ)1年中|ほ[ぼはほ]?周年", text):
-        return "ほぼ周年"
+        return "一年中"
     if "1年中" in text or "通年" in text or "周年" in text:
-        return "通年"
+        return "一年中"
     text = re.sub(r"(?<=\d)\.(?=\d)", "月、", text)
     text = re.sub(r"(?<=\d),(?=\d)", "月、", text)
     sentences = [seg.strip() for seg in re.split(r"[。．]", text) if seg.strip()]
