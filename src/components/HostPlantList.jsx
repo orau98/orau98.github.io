@@ -30,6 +30,8 @@ const HostPlantListItem = React.memo(
     relatedCount,
     plantDetails = {},
     imageFilename,
+    hasLarvalHost = false,
+    hasFlowerVisit = false,
   }) => {
     const location = useLocation();
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -251,6 +253,26 @@ const HostPlantListItem = React.memo(
                   <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
                     {plantDetails[plant].familyName}
                   </p>
+                )}
+                {(hasLarvalHost || hasFlowerVisit) && (
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {hasLarvalHost && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-green-200/60 dark:border-green-700/50">
+                        <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                          <path d="M8 1C5.5 1 3.5 3 3.5 5.5c0 1.2.4 2.3 1.1 3.1L3 12h10l-1.6-3.4c.7-.8 1.1-1.9 1.1-3.1C12.5 3 10.5 1 8 1zm0 1.5c1.7 0 3 1.3 3 3S9.7 8.5 8 8.5 5 7.2 5 5.5s1.3-3 3-3z"/>
+                        </svg>
+                        食草
+                      </span>
+                    )}
+                    {hasFlowerVisit && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border border-yellow-200/60 dark:border-yellow-700/50">
+                        <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                          <path d="M8 2a1 1 0 0 1 .894.553l1.382 2.764 3.09.447a1 1 0 0 1 .553 1.706L11.5 9.763l.528 3.078a1 1 0 0 1-1.45 1.054L8 12.347l-2.578 1.548a1 1 0 0 1-1.45-1.054l.528-3.078-2.419-2.293a1 1 0 0 1 .553-1.706l3.09-.447L7.106 2.553A1 1 0 0 1 8 2z"/>
+                        </svg>
+                        訪花
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 
@@ -1201,6 +1223,14 @@ const HostPlantList = ({
                   Number.isFinite(statsCount) && statsCount >= 0
                     ? statsCount
                     : displayNames.length;
+                const hasLarvalHost = !!(
+                  safeHostPlants?.[plant] ||
+                  (normalizedPlant && safeHostPlants?.[normalizedPlant])
+                );
+                const hasFlowerVisit = !!(
+                  flowerVisitPlants?.[plant] ||
+                  (normalizedPlant && flowerVisitPlants?.[normalizedPlant])
+                );
                 return (
                 <div
                   key={plant}
@@ -1213,6 +1243,8 @@ const HostPlantList = ({
                     relatedCount={relatedCount}
                     plantDetails={safePlantDetails}
                     imageFilename={plantImageMap.get(plant)}
+                    hasLarvalHost={hasLarvalHost}
+                    hasFlowerVisit={hasFlowerVisit}
                   />
                 </div>
                 );

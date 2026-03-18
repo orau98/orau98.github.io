@@ -98,10 +98,32 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 }) {
   const fgRef = useRef(null);
   const containerRef = useRef(null);
+  const graphWrapperRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isDark = theme === 'dark';
   const searchListId = useId();
+
+  // モバイルレスポンシブ: コンテナ幅を監視してグラフサイズを動的に決定
+  const [graphSize, setGraphSize] = useState(() => ({ width, height }));
+  useEffect(() => {
+    const el = graphWrapperRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const updateSize = (containerWidth) => {
+      if (containerWidth > 0 && containerWidth <= 640) {
+        setGraphSize({ width: containerWidth - 32, height: 400 });
+      } else {
+        setGraphSize({ width, height });
+      }
+    };
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) updateSize(entry.contentRect.width);
+    });
+    ro.observe(el);
+    updateSize(el.getBoundingClientRect().width);
+    return () => ro.disconnect();
+  }, [width, height]);
 
   const matchesPlantName = useCallback((plantName, targetName) => {
     if (!plantName || !targetName) return false;
@@ -1505,13 +1527,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const compactSelectionHeight = useMemo(() => {
     if (!isCompactPanel || !selectedNode) return 0;
     if (panelCollapsed) return MOBILE_PANEL_COLLAPSED_HEIGHT;
-    return Math.min(260, Math.max(188, Math.round(height * 0.4)));
-  }, [height, isCompactPanel, panelCollapsed, selectedNode]);
+    return Math.min(260, Math.max(188, Math.round(graphSize.height * 0.4)));
+  }, [graphSize.height, isCompactPanel, panelCollapsed, selectedNode]);
 
   const graphViewportHeight = useMemo(() => {
-    if (!isCompactPanel || !selectedNode) return height;
-    return Math.max(250, height - compactSelectionHeight);
-  }, [compactSelectionHeight, height, isCompactPanel, selectedNode]);
+    if (!isCompactPanel || !selectedNode) return graphSize.height;
+    return Math.max(250, graphSize.height - compactSelectionHeight);
+  }, [compactSelectionHeight, graphSize.height, isCompactPanel, selectedNode]);
 
   const statsChips = useMemo(() => {
     const chips = [];
@@ -1632,8 +1654,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">線の意味</div>
           {showHostRelationLegend && (
             <div className="flex items-center gap-2">
-              <span className={`inline-block w-7 border-t-2 ${RELATION_STYLES.host.legendClass}`}></span>
-              <span>{RELATION_STYLES.host.label}</span>
+              <span className={`inline-block w-7 border-t-2 ${RELATION_STYLES.host.legendClass}`} aria-hidden="true"></span>
+              <span>{RELATION_STYLES.host.label}<span className="sr-only">（実線・緑）</span></span>
             </div>
           )}
           {showFlowerRelationLegend && (
@@ -1641,8 +1663,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               <span
                 className={`inline-block w-7 border-t-2 ${RELATION_STYLES.flower.legendClass}`}
                 style={{ borderTopStyle: 'dashed' }}
+                aria-hidden="true"
               ></span>
-              <span>{RELATION_STYLES.flower.label}</span>
+              <span>{RELATION_STYLES.flower.label}<span className="sr-only">（破線・黄）</span></span>
             </div>
           )}
           {showBothRelationLegend && (
@@ -1650,8 +1673,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               <span
                 className={`inline-block w-7 border-t-2 ${RELATION_STYLES.both.legendClass}`}
                 style={{ borderTopStyle: 'dotted', borderTopWidth: '2px' }}
+                aria-hidden="true"
               ></span>
-              <span>{RELATION_STYLES.both.label}</span>
+              <span>{RELATION_STYLES.both.label}<span className="sr-only">（点線・紫）</span></span>
             </div>
           )}
         </div>
@@ -1857,20 +1881,40 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     </div>
   ) : null;
 
+  const insectNodeCount = graphData.nodes.filter(n => n.type.startsWith('insect')).length;
+  const plantNodeCount = graphData.nodes.filter(n => n.type.startsWith('plant')).length;
+  const graphAriaLabel = `食物網グラフ: ${insectNodeCount}種の昆虫と${plantNodeCount}種の植物の関係を表示`;
+
+  const selectedNodeAnnouncement = selectedNode
+    ? (() => {
+        const typeLabel = selectedNode.type.startsWith('plant') ? '植物' : '昆虫';
+        const degree = selectedStats?.degree ?? 0;
+        return `${typeLabel}「${selectedNode.name}」を選択中。接続数: ${degree}`;
+      })()
+    : '';
+
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 shadow-md flex flex-col">
+    <div ref={graphWrapperRef} className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 shadow-md flex flex-col">
       <div
         ref={containerRef}
         className="relative min-h-0"
         style={{ height: graphViewportHeight }}
+        role="region"
+        aria-label={graphAriaLabel}
         onPointerDownCapture={handlePointerDownCapture}
         onPointerMoveCapture={handlePointerMoveCapture}
         onPointerUpCapture={handlePointerUpCapture}
         onPointerCancelCapture={handlePointerUpCapture}
       >
+        <p className="sr-only">
+          {`この食物網グラフには${insectNodeCount}種の昆虫と${plantNodeCount}種の植物の関係が表示されています。`}
+        </p>
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+          {selectedNodeAnnouncement}
+        </div>
         <ForceGraph2D
           ref={fgRef}
-          width={width}
+          width={graphSize.width}
           height={graphViewportHeight}
           graphData={graphData}
           nodeLabel="name"

@@ -103,7 +103,7 @@ const StickyHeader = ({
       id="sticky-header"
       aria-hidden={!isVisible}
       inert={!isVisible ? '' : undefined}
-      className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-[60] transform transition-transform duration-300 ease-in-out ${
         isVisible ? 'translate-y-0' : '-translate-y-full pointer-events-none'
       }`}
     >

@@ -711,22 +711,22 @@ function generateInsectHTML(insect, type) {
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
   <link rel="canonical" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
   <link rel="alternate" href="${BASE_ORIGIN}/${type}/${insect.id}">
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
-  
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+
   <!-- Open Graph -->
   <meta property="og:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta property="og:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
-  ${imageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
+  <meta property="og:image" content="${BASE_ORIGIN}${imageUrl || (type === 'moth' ? '/images/og-default-moth.svg' : type === 'butterfly' ? '/images/og-default-butterfly.svg' : '/favicon.svg')}">
   <meta property="og:site_name" content="昆虫植物図鑑">
-  
+
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta name="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
-  ${imageUrl ? `<meta name="twitter:image" content="${BASE_ORIGIN}${imageUrl}">` : ''}
+  <meta name="twitter:image" content="${BASE_ORIGIN}${imageUrl || (type === 'moth' ? '/images/og-default-moth.svg' : type === 'butterfly' ? '/images/og-default-butterfly.svg' : '/favicon.svg')}">
   ${imageUrl ? `<meta name="twitter:image:alt" content="${insect.japaneseName}（${scientificName}）の写真">` : ''}
   
   <!-- Enhanced Structured Data -->
@@ -963,22 +963,22 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
   <link rel="alternate" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}">
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=2">
-  
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+
   <!-- Open Graph -->
   <meta property="og:title" content="${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用">
   <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
-  ${mainImageUrl ? `<meta property="og:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
+  <meta property="og:image" content="${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}">
   <meta property="og:site_name" content="昆虫植物図鑑">
-  
+
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
   <meta name="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
-  ${mainImageUrl ? `<meta name="twitter:image" content="${BASE_ORIGIN}${mainImageUrl}">` : ''}
+  <meta name="twitter:image" content="${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}">
   ${mainImageUrl ? `<meta name="twitter:image:alt" content="${displayPlantName}の写真">` : ''}
   
   <!-- Enhanced Structured Data -->

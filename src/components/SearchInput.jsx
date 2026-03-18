@@ -190,6 +190,7 @@ const SearchInput = React.forwardRef(({
   const [activeIndex, setActiveIndex] = useState(-1);
   // IME composition状態を追跡（日本語入力の文字重複を防ぐ）
   const [localValue, setLocalValue] = useState(value);
+  const [isComposing, setIsComposing] = useState(false);
   const isComposingRef = useRef(false);
   const inputRef = useRef(null);
   const listboxId = useId();
@@ -217,9 +218,11 @@ const SearchInput = React.forwardRef(({
 
   // 検索履歴と候補を組み合わせ（入力がない場合は履歴を表示）
   const showHistory = !localValue.trim() && history.length > 0;
+  const showNoResults = showSuggestions && !showHistory && !isComposing
+    && localValue.trim().length >= 2 && displayedSuggestions.length === 0;
   const activeItems = showHistory ? history : displayedSuggestions;
   const activeItemsLength = activeItems.length;
-  const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory);
+  const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory || showNoResults);
   const activeDescendantId = useMemo(() => {
     if (!expanded || activeIndex < 0) return undefined;
     return `${listboxId}-option-${activeIndex}`;
@@ -240,11 +243,13 @@ const SearchInput = React.forwardRef(({
   // IME composition開始時
   const handleCompositionStart = () => {
     isComposingRef.current = true;
+    setIsComposing(true);
   };
 
   // IME composition終了時（確定時）
   const handleCompositionEnd = (e) => {
     isComposingRef.current = false;
+    setIsComposing(false);
     // composition終了後に親コンポーネントに最終値を通知
     onChange(e);
   };
@@ -423,7 +428,7 @@ const SearchInput = React.forwardRef(({
         )}
       </div>
       
-      {showSuggestions && (displayedSuggestions.length > 0 || showHistory) && (
+      {showSuggestions && (displayedSuggestions.length > 0 || showHistory || showNoResults) && (
         <div
           className="absolute z-20 top-full left-0 right-0 -mt-px"
           onMouseDown={(e) => e.preventDefault()}
@@ -542,6 +547,12 @@ const SearchInput = React.forwardRef(({
                   );
                 })}
               </ul>
+            )}
+            {/* 候補なしメッセージ（入力2文字以上かつIME入力中でない場合） */}
+            {showNoResults && (
+              <div className="py-4 text-center text-sm text-slate-400 dark:text-slate-500">
+                一致する候補がありません
+              </div>
             )}
           </div>
         </div>

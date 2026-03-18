@@ -94,9 +94,9 @@ const Header = ({ theme, setTheme, moths, butterflies = [], beetles = [], longho
   }, [speciesInfo]);
 
   return (
-    <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl sticky top-0 z-50">
+    <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl relative z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-14 sm:h-20">
           <Link to="/" className="group flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-emerald-500/50 group-hover:shadow-2xl transition-all duration-300 group-hover:rotate-3">

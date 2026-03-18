@@ -18,6 +18,7 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
+import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
 let genusMappingPromise = null;
@@ -1605,7 +1606,15 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       {/* 概要セクション（和名＋学名のみ） */}
       <div id="basic-info" className="mt-4 md:mt-6 scroll-mt-24">
       <div className="mb-6">
-        {/* Breadcrumb UI removed per request */}
+        {/* パンくずリスト */}
+        <Breadcrumb
+          items={[
+            { label: 'ホーム', path: '/' },
+            { label: '植物', path: '/?tab=plants' },
+            ...(familyLabel && !isFamily && !isOrder ? [{ label: familyLabel, path: `/plant/${encodeURIComponent(familyLabel)}` }] : []),
+            { label: decodedPlantName },
+          ]}
+        />
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
             {/^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
               ? decodedPlantName
