@@ -269,18 +269,26 @@ const PlantImageGallery = ({ images, plantName = '' }) => {
       return;
     }
 
-    const normalized = images.map((image, idx) => {
+    const seenSlotKeys = new Set();
+    const normalized = images.flatMap((image, idx) => {
       const candidates = Array.isArray(image.candidates) && image.candidates.length
         ? image.candidates
         : [image.src, image.srcJPG].filter(Boolean);
       const uniqueCandidates = Array.from(new Set(candidates.filter(Boolean)));
-      return {
+      const slotKey =
+        String(image.slotKey || `${plantName || ''}::${image.label || image.alt || idx}`).trim();
+      if (seenSlotKeys.has(slotKey)) {
+        return [];
+      }
+      seenSlotKeys.add(slotKey);
+      return [{
         ...image,
         id: image.id || `${image.alt || 'plant'}-${idx}`,
+        slotKey,
         candidates: uniqueCandidates,
         candidateIndex: 0,
         finalSrc: uniqueCandidates[0],
-      };
+      }];
     });
 
     setAvailableImages(normalized);
@@ -1103,6 +1111,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
     const addedNames = new Set();
+    const addedSlots = new Set();
 
     const has = (fullName) => nameIndexSet.has(fullName);
     const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
@@ -1142,15 +1151,28 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       return trimmed.replace(/[_＿]+/g, '・') || fallback;
     };
 
+    const buildSlotKey = (base, label, appliedSuffix = '') => {
+      const baseKey = String(base || plantName || '').trim();
+      const slotLabel = String(label || buildLabelFromSuffix(appliedSuffix || '') || '全体')
+        .replace(/[_＿]+/g, '・')
+        .trim();
+      return `${baseKey}::${slotLabel}`;
+    };
+
     const pushImage = (finalName, base, label, appliedSuffix = '', customCandidates = null) => {
       if (!finalName || addedNames.has(finalName)) return;
+      const resolvedLabel = label || buildLabelFromSuffix(appliedSuffix || '');
+      const slotKey = buildSlotKey(base, resolvedLabel, appliedSuffix);
+      if (addedSlots.has(slotKey)) return;
       addedNames.add(finalName);
+      addedSlots.add(slotKey);
       const candidateList = Array.isArray(customCandidates) && customCandidates.length
         ? customCandidates
         : buildCandidates(finalName);
       images.push({
-        label: label || buildLabelFromSuffix(appliedSuffix || ''),
+        label: resolvedLabel,
         alt: `${base}${appliedSuffix ? ` (${label || buildLabelFromSuffix(appliedSuffix || '')})` : ''}`,
+        slotKey,
         candidates: candidateList.slice(0, 8),
       });
     };
