@@ -31,6 +31,8 @@ export const normalizePlantKey = (plantName) => {
   normalized = normalized.replace(/\([^)]*$/g, "");
   // 括弧の後半のみを除去
   normalized = normalized.replace(/^[^（(]*[）)]/g, "");
+  // 末尾の ? / ？ は植物名ではなく注記として扱う
+  normalized = normalized.replace(/[？?]+$/g, "");
   return normalized.trim();
 };
 
@@ -59,6 +61,7 @@ export const normalizePlantName = (plantName) => {
   normalized = normalized.replace(/（[^）]*$/g, '');
   normalized = normalized.replace(/\([^)]*$/g, '');
   normalized = normalized.replace(/^[^（(]*[）)]/g, '');
+  normalized = normalized.replace(/[？?]+$/g, '');
 
   return normalized.trim();
 };

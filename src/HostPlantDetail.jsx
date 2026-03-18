@@ -708,7 +708,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     return { detail: null, canonical: '' };
   };
 
-  const { detail: resolvedPlantDetail, canonical: resolvedCanonicalName } = resolvePlantDetail(decodedPlantName);
+  const normalizedDecodedPlantName = normalizePlantName(decodedPlantName);
+  const primaryResolvedPlant = resolvePlantDetail(decodedPlantName);
+  const fallbackResolvedPlant = (
+    primaryResolvedPlant.detail ||
+    !normalizedDecodedPlantName ||
+    normalizedDecodedPlantName === decodedPlantName
+  )
+    ? { detail: null, canonical: '' }
+    : resolvePlantDetail(normalizedDecodedPlantName);
+  const { detail: resolvedPlantDetail, canonical: resolvedCanonicalName } = primaryResolvedPlant.detail
+    ? primaryResolvedPlant
+    : fallbackResolvedPlant;
   const details = resolvedPlantDetail || { family: '不明' };
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
@@ -1292,8 +1303,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         const plants = lite?.plants || {};
         const aliasToCanonical = lite?.aliasToCanonical || {};
         const target = decodedPlantName;
+        const normalizedTarget = normalizePlantName(target);
         if (!isTaxonListPage) {
-          const canonical = plants[target] ? target : (aliasToCanonical[target] || '');
+          const lookupCandidates = Array.from(new Set([target, normalizedTarget].filter(Boolean)));
+          let canonical = '';
+          for (const candidate of lookupCandidates) {
+            if (plants[candidate]) {
+              canonical = candidate;
+              break;
+            }
+            if (aliasToCanonical[candidate]) {
+              canonical = aliasToCanonical[candidate];
+              break;
+            }
+          }
           const info = canonical ? plants[canonical] : null;
           if (!info) return false;
           setTaxonomy({
@@ -1308,7 +1331,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           const aliases = Array.isArray(info.aliases) ? info.aliases.filter(a => a && a !== canonical) : [];
           setAliasNames(aliases);
           // If the URL contained stray characters or an alias, redirect to canonical clean URL
-          if ((rawDecodedPlantName && rawDecodedPlantName !== target) || (canonical && canonical !== target)) {
+          if (
+            (rawDecodedPlantName && rawDecodedPlantName !== target) ||
+            (normalizedTarget && normalizedTarget !== target) ||
+            (canonical && canonical !== target)
+          ) {
             navigate(buildPlantPath(canonical || target, locale), { replace: true, state: location.state });
           }
           return true;
