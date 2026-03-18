@@ -625,6 +625,13 @@ function normalizedTextLength(value) {
   return String(value).replace(/\s+/g, '').length;
 }
 
+const ROBOTS_PREVIEW_DIRECTIVES =
+  'follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+function buildRobotsContent(shouldIndex) {
+  return `${shouldIndex ? 'index' : 'noindex'}, ${ROBOTS_PREVIEW_DIRECTIVES}`;
+}
+
 function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
   const hasHostPlants = Array.isArray(hostPlantsArray) && hostPlantsArray.length > 0;
   const hasImage = Boolean(imageUrl);
@@ -634,21 +641,21 @@ function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
 
   // 検索流入に寄与しづらい薄いページは noindex へ
   if (!hasHostPlants && !hasImage && !hasEmergence && !hasRichRemarks) {
-    return 'noindex, follow';
+    return buildRobotsContent(false);
   }
-  return 'index, follow';
+  return buildRobotsContent(true);
 }
 
 function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles }) {
-  if (isAlias) return 'noindex, follow';
+  if (isAlias) return buildRobotsContent(false);
   const insectCount = Array.isArray(relatedInsects) ? relatedInsects.length : 0;
   const hasImage = Array.isArray(plantImageFiles) && plantImageFiles.length > 0;
 
   // 1種のみ + 画像なし は薄いページとして noindex
   if (insectCount <= 1 && !hasImage) {
-    return 'noindex, follow';
+    return buildRobotsContent(false);
   }
-  return 'index, follow';
+  return buildRobotsContent(true);
 }
 
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
@@ -659,6 +666,17 @@ function generateInsectHTML(insect, type) {
   const scientificName = insect.scientificName || '';
   const source = insect.source || '不明';
   const imageUrl = resolveInsectImageUrl(insect);
+  const socialImageUrl = `${BASE_ORIGIN}${
+    imageUrl ||
+    (type === 'moth'
+      ? '/images/og-default-moth.svg'
+      : type === 'butterfly'
+        ? '/images/og-default-butterfly.svg'
+        : '/favicon.svg')
+  }`;
+  const socialImageAlt = imageUrl
+    ? `${insect.japaneseName}（${scientificName}）の写真`
+    : `${insect.japaneseName}のイメージ画像`;
   
   // 食草リストを配列として処理
   // セミコロン区切りも処理する（例：センモンヤガの場合）
@@ -710,7 +728,6 @@ function generateInsectHTML(insect, type) {
   <meta name="description" content="${insect.japaneseName}の詳細情報、分類、食草について。${hostPlantsArray.length > 0 ? `食草: ${hostPlantsArray.slice(0, 3).join('、')}など` : ''}">
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
   <link rel="canonical" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
-  <link rel="alternate" href="${BASE_ORIGIN}/${type}/${insect.id}">
   <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
 
   <!-- Open Graph -->
@@ -719,15 +736,16 @@ function generateInsectHTML(insect, type) {
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
-  <meta property="og:image" content="${BASE_ORIGIN}${imageUrl || (type === 'moth' ? '/images/og-default-moth.svg' : type === 'butterfly' ? '/images/og-default-butterfly.svg' : '/favicon.svg')}">
+  <meta property="og:image" content="${socialImageUrl}">
+  <meta property="og:image:alt" content="${socialImageAlt}">
   <meta property="og:site_name" content="昆虫植物図鑑">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
   <meta name="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
-  <meta name="twitter:image" content="${BASE_ORIGIN}${imageUrl || (type === 'moth' ? '/images/og-default-moth.svg' : type === 'butterfly' ? '/images/og-default-butterfly.svg' : '/favicon.svg')}">
-  ${imageUrl ? `<meta name="twitter:image:alt" content="${insect.japaneseName}（${scientificName}）の写真">` : ''}
+  <meta name="twitter:image" content="${socialImageUrl}">
+  <meta name="twitter:image:alt" content="${socialImageAlt}">
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
@@ -932,6 +950,10 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const mainImageUrl = plantImageFiles.length > 0 
     ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
     : '';
+  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}`;
+  const socialImageAlt = mainImageUrl
+    ? `${displayPlantName}の写真`
+    : `${displayPlantName}のイメージ画像`;
   const robotsContent = computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles });
 
   const getPlantGroupingType = (insect) => {
@@ -974,7 +996,6 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、カミキリムシ、ハムシ、アブラムシの生態と食草関係について。">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
-  <link rel="alternate" href="https://orau98.github.io/plant/${encodeURIComponent(safePlantName)}">
   <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
 
   <!-- Open Graph -->
@@ -983,15 +1004,16 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
-  <meta property="og:image" content="${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}">
+  <meta property="og:image" content="${socialImageUrl}">
+  <meta property="og:image:alt" content="${socialImageAlt}">
   <meta property="og:site_name" content="昆虫植物図鑑">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
   <meta name="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
-  <meta name="twitter:image" content="${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}">
-  ${mainImageUrl ? `<meta name="twitter:image:alt" content="${displayPlantName}の写真">` : ''}
+  <meta name="twitter:image" content="${socialImageUrl}">
+  <meta name="twitter:image:alt" content="${socialImageAlt}">
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">

@@ -45,6 +45,21 @@ function isNoindexPage(filePath) {
   }
 }
 
+function buildRobotsTxt(baseUrl, sitemapFiles) {
+  const lines = [
+    'User-agent: *',
+    'Allow: /',
+    '',
+    '# Primary sitemap index',
+    `Sitemap: ${baseUrl}/sitemap.xml`,
+    '',
+    '# Child sitemaps (fallback for crawlers that fail sitemap index fetch)',
+    ...sitemapFiles.map((sitemap) => `Sitemap: ${sitemap.loc}`),
+    '',
+  ];
+  return lines.join('\n');
+}
+
 // サイトマップを分割して生成
 function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
@@ -233,6 +248,14 @@ function generateSplitSitemaps() {
   if (fs.existsSync(distPath)) {
     const distIndexPath = path.join(distPath, 'sitemap.xml');
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
+  }
+
+  const robotsTxt = buildRobotsTxt(baseUrl, sitemapFiles);
+  const robotsPath = path.join(__dirname, '../public/robots.txt');
+  fs.writeFileSync(robotsPath, robotsTxt, 'utf-8');
+  if (fs.existsSync(distPath)) {
+    const distRobotsPath = path.join(distPath, 'robots.txt');
+    fs.writeFileSync(distRobotsPath, robotsTxt, 'utf-8');
   }
 
   console.log('\nサイトマップインデックス生成完了');
