@@ -970,14 +970,6 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
         
         
       </div>
-
-      {fuzzyPeriods.length > 0 && (
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-          <span className="inline-block h-3 w-6 rounded-sm bg-gradient-to-r from-orange-200/90 to-orange-50/10 border border-dashed border-orange-200/80" />
-          <span>グラデーションは、春・翌春など月が明示されない記述です。</span>
-        </div>
-      )}
-      
       {/* 原文表示 - 食草セクションと同じ構造で色違い */}
       <div>
         <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-emerald-200/50 dark:border-emerald-700/50">
