@@ -4,7 +4,7 @@ export const bibliography = [
   {
     key: 'nihonsan-garui-hyojun-1',
     title: '日本産蛾類標準図鑑 1',
-    authors: ['岸田 泰則'],
+    authors: ['岸田泰則'],
     year: '2011',
     publisher: '学研教育出版',
     isbn10: '405403845X',
@@ -65,7 +65,7 @@ export const bibliography = [
   {
     key: 'nihonsan-garui-hyojun-2',
     title: '日本産蛾類標準図鑑 2',
-    authors: ['岸田 泰則'],
+    authors: ['岸田泰則'],
     year: '2011',
     publisher: '学研教育出版',
     isbn10: '4054038468',
@@ -89,7 +89,7 @@ export const bibliography = [
     title: '花を訪れる蛾たち',
     note: '知られざる姿を求めて',
     authors: ['池ノ上 利幸'],
-    year: '2008.11',
+    year: '2008',
     publisher: '昆虫文献六本脚',
     pages: '215p',
     size: '31cm',
@@ -119,7 +119,7 @@ export const bibliography = [
     key: 'nihon-no-hamakiga-1',
     title: '日本のハマキガ 1',
     authors: ['那須 義次'],
-    year: '2021-10',
+    year: '2021',
     publisher: '日本蛾類学会',
     place: 'つくば'
   },
@@ -127,14 +127,14 @@ export const bibliography = [
     key: 'nihon-no-hamakiga-2',
     title: '日本のハマキガ 2',
     authors: ['那須 義次'],
-    year: '2023-07',
+    year: '2023',
     publisher: '日本蛾類学会',
     place: 'つくば'
   },
   {
     key: 'nihonsan-tamamushi-daizukan',
     title: '日本産タマムシ大図鑑',
-    authors: ['大桃 定洋', '福富 宏和', '藤田 宏'],
+    authors: ['大桃 定洋', '福富宏和', '藤田 宏'],
     year: '2013',
     publisher: 'むし社',
     isbn13: '978-4-943955-06-1',
@@ -447,7 +447,7 @@ export const bibliography = [
   {
     key: 'nihon-no-kiriga',
     title: '日本のキリガ',
-    authors: ['四方 圭一郎', '枝 恵太郎'],
+    authors: ['四方 圭一郎', '枝恵太郎'],
     year: '2015',
     publisher: 'むし社',
     isbn13: '978-4-943955-35-1'
@@ -1036,16 +1036,6 @@ export const bibliography = [
     pages: '362'
   },
   {
-    key: 'ga-tsushin-148a-ogi-1988',
-    type: 'article',
-    title: 'タイリクウスイロヨトウの食草と幼虫',
-    authors: ['小木広行'],
-    year: '1988',
-    journal: '蛾類通信',
-    issue: '148',
-    pages: '362'
-  },
-  {
     key: 'ga-tsushin-149-nakamura-yamamoto-1988',
     type: 'article',
     title: 'ウスクビグロクチバの幼生期の記載（富士山亜高山帯砂礫地帯の蛾III）',
@@ -1067,16 +1057,6 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-150-ogi-1988',
-    type: 'article',
-    title: 'シベチャキリガの食草とその幼生期',
-    authors: ['小木広行'],
-    year: '1988',
-    journal: '蛾類通信',
-    issue: '150',
-    pages: '390-391'
-  },
-  {
-    key: 'ga-tsushin-150-ogi-1988-abbrev',
     type: 'article',
     title: 'シベチャキリガの食草とその幼生期',
     authors: ['小木広行'],
@@ -1496,16 +1476,6 @@ export const bibliography = [
     pages: '323-324'
   },
   {
-    key: 'ga-tsushin-195-murase-abbrev-1997',
-    type: 'article',
-    title: 'ヤガ科Abrostola属3種の幼虫',
-    authors: ['村瀬ますみ'],
-    year: '1997',
-    journal: '蛾類通信',
-    issue: '195',
-    pages: '323-324'
-  },
-  {
     key: 'ga-tsushin-195-matsuura-1997',
     type: 'article',
     title: 'ウスアオリンガの食草',
@@ -1517,16 +1487,6 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-196-murase-1997',
-    type: 'article',
-    title: 'ウスアオリンガの幼虫と繭',
-    authors: ['村瀬ますみ'],
-    year: '1997',
-    journal: '蛾類通信',
-    issue: '196',
-    pages: '349-350'
-  },
-  {
-    key: 'ga-tsushin-196-murase-abbrev-1997',
     type: 'article',
     title: 'ウスアオリンガの幼虫と繭',
     authors: ['村瀬ますみ'],
@@ -1677,16 +1637,6 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-202a-tominaga-1999',
-    type: 'article',
-    title: 'マエウストガリコヤガの沖縄本島からの記録',
-    authors: ['富永智'],
-    year: '1999',
-    journal: '蛾類通信',
-    issue: '202',
-    pages: '21-22'
-  },
-  {
-    key: 'ga-tsushin-202a-tominaga-tomei-1999',
     type: 'article',
     title: 'マエウストガリコヤガの沖縄本島からの記録',
     authors: ['富永智'],
