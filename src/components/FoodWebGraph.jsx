@@ -1552,6 +1552,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     : '操作: クリックで選択、2回で詳細、背景クリックで解除。拡大縮小は上部ボタンを使用';
 
   const enableDirectGraphManipulation = isCompactPanel && !isPinDragging;
+  const desktopControlButtonClass = 'shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800';
+  const desktopControlSurfaceClass = 'rounded-xl border border-slate-200/90 bg-white/94 px-3 py-3 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-200';
+
+  const handleGraphWheelCapture = useCallback((event) => {
+    if (isCompactPanel) return;
+    event.stopPropagation();
+    if (typeof event.nativeEvent?.stopImmediatePropagation === 'function') {
+      event.nativeEvent.stopImmediatePropagation();
+    }
+  }, [isCompactPanel]);
 
   const relationFilterButtons = (
     <div className="inline-flex flex-wrap rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
@@ -1682,6 +1692,96 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         </div>
       )}
     </>
+  );
+
+  const nodeListPanel = (
+    <div className="pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/92 shadow-sm backdrop-blur overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-slate-200 dark:border-slate-700">
+        <div>
+          <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">キーボードでも使えるノード一覧</div>
+          <div className="text-sm font-bold text-slate-800 dark:text-slate-100">現在表示中のノード</div>
+        </div>
+        <button
+          type="button"
+          className="p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+          onClick={() => setNodeListOpen(false)}
+          aria-label="ノード一覧を閉じる"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="max-h-[280px] overflow-y-auto px-3 py-3 space-y-3">
+        {filteredNodeGroups.current.length === 0 && filteredNodeGroups.plants.length === 0 && filteredNodeGroups.insects.length === 0 ? (
+          <div className="text-[12px] text-slate-500 dark:text-slate-400">一致するノードがありません。</div>
+        ) : (
+          <>
+            {filteredNodeGroups.current.length > 0 && (
+              <div>
+                <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">中心ノード</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {filteredNodeGroups.current.map((node) => (
+                    <button
+                      key={node.id}
+                      type="button"
+                      onClick={() => {
+                        setSearchMessage('');
+                        focusNodeById(node.id);
+                        setNodeListOpen(false);
+                      }}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold border border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+                    >
+                      {node.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {filteredNodeGroups.plants.length > 0 && (
+              <div>
+                <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">植物</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {filteredNodeGroups.plants.map((node) => (
+                    <button
+                      key={node.id}
+                      type="button"
+                      onClick={() => {
+                        setSearchMessage('');
+                        focusNodeById(node.id);
+                        setNodeListOpen(false);
+                      }}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
+                    >
+                      {node.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {filteredNodeGroups.insects.length > 0 && (
+              <div>
+                <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">昆虫</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {filteredNodeGroups.insects.map((node) => (
+                    <button
+                      key={node.id}
+                      type="button"
+                      onClick={() => {
+                        setSearchMessage('');
+                        focusNodeById(node.id);
+                        setNodeListOpen(false);
+                      }}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200"
+                    >
+                      {node.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
   );
 
   const selectionPanelContent = selectedNode ? (
@@ -1896,6 +1996,146 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 shadow-md flex flex-col">
+      {!isCompactPanel && (
+        <div className="shrink-0 border-b border-slate-200/80 bg-white/80 px-4 py-4 backdrop-blur dark:border-slate-700/80 dark:bg-slate-950/55">
+          <div className="space-y-3">
+            <div className={`${desktopControlSurfaceClass} flex flex-wrap items-center gap-2`}>
+              <button
+                type="button"
+                onClick={resetView}
+                className={desktopControlButtonClass}
+                title="リセット（ズーム/中心）"
+              >
+                リセット
+              </button>
+              <button
+                type="button"
+                onClick={zoomOut}
+                className={desktopControlButtonClass}
+                title="縮小"
+              >
+                －
+              </button>
+              <button
+                type="button"
+                onClick={zoomIn}
+                className={desktopControlButtonClass}
+                title="拡大"
+              >
+                ＋
+              </button>
+              <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
+                {['auto', 'all', 'none'].map((mode, index) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setLabelMode(mode)}
+                    aria-pressed={labelMode === mode}
+                    className={`px-2.5 py-1.5 text-[11px] font-semibold ${index > 0 ? 'border-l border-slate-200 dark:border-slate-600' : ''} ${
+                      labelMode === mode
+                        ? 'bg-slate-100 dark:bg-slate-700'
+                        : 'bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {mode === 'auto' ? 'ラベル: 自動' : mode === 'all' ? 'ラベル: 全て' : 'ラベル: なし'}
+                  </button>
+                ))}
+              </div>
+              <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                関連数
+              </label>
+              <select
+                value={relatedLimit}
+                onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 px-2 py-1"
+                aria-label="関連数"
+              >
+                {RELATED_LIMIT_OPTIONS.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={() => setNodeListOpen((prev) => !prev)}
+                className={desktopControlButtonClass}
+                aria-expanded={nodeListOpen}
+              >
+                {nodeListOpen ? '一覧を閉じる' : 'ノード一覧'}
+              </button>
+              {pinnedNodeCount > 0 && (
+                <button
+                  type="button"
+                  onClick={clearPinnedNodes}
+                  className={desktopControlButtonClass}
+                >
+                  全固定解除
+                </button>
+              )}
+            </div>
+
+            <div className={`${desktopControlSurfaceClass} flex flex-col gap-3`}>
+              <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
+                <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
+                  <input
+                    type="search"
+                    list={searchListId}
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="現在表示中のノードを検索"
+                    className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
+                    aria-label="現在表示中のノードを検索"
+                  />
+                  <datalist id={searchListId}>
+                    {graphData.nodes.map((node) => (
+                      <option key={node.id} value={node.name} />
+                    ))}
+                  </datalist>
+                  <button
+                    type="submit"
+                    className={desktopControlButtonClass}
+                  >
+                    移動
+                  </button>
+                </form>
+
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {statsChips.map((label) => (
+                    <span
+                      key={label}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+                    >
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
+                  {relationFilterButtons}
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                  {relationFilter !== 'all' ? relationFilterConfig.helper : interactionHint}
+                </div>
+              </div>
+            </div>
+
+            {searchMessage && (
+              <div className="max-w-[640px] rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow-sm dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
+                {searchMessage}
+              </div>
+            )}
+
+            {nodeListOpen && (
+              <div className="max-w-[840px]">
+                {nodeListPanel}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className={`min-h-0 flex-1 ${isCompactPanel ? 'flex flex-col' : 'flex min-h-0'}`}>
         <div
           ref={containerRef}
@@ -1903,6 +2143,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           style={{ height: graphViewportHeight }}
           role="region"
           aria-label={graphAriaLabel}
+          onWheelCapture={handleGraphWheelCapture}
           onPointerDownCapture={handlePointerDownCapture}
           onPointerMoveCapture={handlePointerMoveCapture}
           onPointerUpCapture={handlePointerUpCapture}
@@ -1927,6 +2168,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             onBackgroundClick={handleBackgroundClick}
             enablePanInteraction={enableDirectGraphManipulation}
             enableZoomInteraction={enableDirectGraphManipulation}
+            enableNodeDrag={enableDirectGraphManipulation}
             linkDistance={linkDistance}
             linkColor={link => {
               const relationStyle = getLinkStyle(link?.relation);
@@ -1958,35 +2200,35 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             }}
           />
 
-          <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
-            <div className="mx-auto flex max-w-[900px] flex-col gap-2">
-              <div className="pointer-events-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2.5 py-2 text-slate-700 dark:text-slate-200">
-                <div className={`flex items-center gap-1.5 ${isCompactPanel ? 'overflow-x-auto flex-nowrap pb-1' : 'flex-wrap'}`}>
-                  <button
-                    type="button"
-                    onClick={resetView}
-                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                    title="リセット（ズーム/中心）"
-                  >
-                    リセット
-                  </button>
-                  <button
-                    type="button"
-                    onClick={zoomOut}
-                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                    title="縮小"
-                  >
-                    －
-                  </button>
-                  <button
-                    type="button"
-                    onClick={zoomIn}
-                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                    title="拡大"
-                  >
-                    ＋
-                  </button>
-                  {isCompactPanel ? (
+          {isCompactPanel && (
+            <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
+              <div className="mx-auto flex max-w-[900px] flex-col gap-2">
+                <div className="pointer-events-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2.5 py-2 text-slate-700 dark:text-slate-200">
+                  <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap pb-1">
+                    <button
+                      type="button"
+                      onClick={resetView}
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      title="リセット（ズーム/中心）"
+                    >
+                      リセット
+                    </button>
+                    <button
+                      type="button"
+                      onClick={zoomOut}
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      title="縮小"
+                    >
+                      －
+                    </button>
+                    <button
+                      type="button"
+                      onClick={zoomIn}
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      title="拡大"
+                    >
+                      ＋
+                    </button>
                     <button
                       type="button"
                       onClick={toggleCompactLabelMode}
@@ -1995,59 +2237,39 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     >
                       ラベル:{compactLabelModeText}
                     </button>
-                  ) : (
-                    <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
-                      {['auto', 'all', 'none'].map((mode, index) => (
-                        <button
-                          key={mode}
-                          type="button"
-                          onClick={() => setLabelMode(mode)}
-                          aria-pressed={labelMode === mode}
-                          className={`px-2.5 py-1.5 text-[11px] font-semibold ${index > 0 ? 'border-l border-slate-200 dark:border-slate-600' : ''} ${
-                            labelMode === mode
-                              ? 'bg-slate-100 dark:bg-slate-700'
-                              : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'
-                          }`}
-                        >
-                          {mode === 'auto' ? '自動' : mode === 'all' ? '全て' : 'なし'}
-                        </button>
+                    <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                      関連数
+                    </label>
+                    <select
+                      value={relatedLimit}
+                      onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                      className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1"
+                      aria-label="関連数"
+                    >
+                      {RELATED_LIMIT_OPTIONS.map((n) => (
+                        <option key={n} value={n}>{n}</option>
                       ))}
-                    </div>
-                  )}
-                  <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                    関連数
-                  </label>
-                  <select
-                    value={relatedLimit}
-                    onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
-                    className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1"
-                    aria-label="関連数"
-                  >
-                    {RELATED_LIMIT_OPTIONS.map((n) => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setNodeListOpen((prev) => !prev);
-                      setCompactLegendOpen(false);
-                    }}
-                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                    aria-expanded={nodeListOpen}
-                  >
-                    {nodeListOpen ? '一覧を閉じる' : '一覧'}
-                  </button>
-                  {pinnedNodeCount > 0 && (
+                    </select>
                     <button
                       type="button"
-                      onClick={clearPinnedNodes}
+                      onClick={() => {
+                        setNodeListOpen((prev) => !prev);
+                        setCompactLegendOpen(false);
+                      }}
                       className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      aria-expanded={nodeListOpen}
                     >
-                      全固定解除
+                      {nodeListOpen ? '一覧を閉じる' : '一覧'}
                     </button>
-                  )}
-                  {isCompactPanel && (
+                    {pinnedNodeCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={clearPinnedNodes}
+                        className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      >
+                        全固定解除
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => {
@@ -2060,161 +2282,75 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     >
                       凡例
                     </button>
-                  )}
-                </div>
+                  </div>
 
-                <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
-                  <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
-                    <input
-                      type="search"
-                      list={searchListId}
-                      value={searchQuery}
-                      onChange={(event) => setSearchQuery(event.target.value)}
-                      placeholder="現在表示中のノードを検索"
-                      className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white/85 dark:bg-slate-900/50 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
-                      aria-label="現在表示中のノードを検索"
-                    />
-                    <datalist id={searchListId}>
-                      {graphData.nodes.map((node) => (
-                        <option key={node.id} value={node.name} />
-                      ))}
-                    </datalist>
-                    <button
-                      type="submit"
-                      className="shrink-0 px-3 py-2 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                    >
-                      移動
-                    </button>
-                  </form>
-
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {statsChips.map((label) => (
-                      <span
-                        key={label}
-                        className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+                  <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
+                    <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
+                      <input
+                        type="search"
+                        list={searchListId}
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder="現在表示中のノードを検索"
+                        className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white/85 dark:bg-slate-900/50 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
+                        aria-label="現在表示中のノードを検索"
+                      />
+                      <datalist id={searchListId}>
+                        {graphData.nodes.map((node) => (
+                          <option key={node.id} value={node.name} />
+                        ))}
+                      </datalist>
+                      <button
+                        type="submit"
+                        className="shrink-0 px-3 py-2 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
                       >
-                        {label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                        移動
+                      </button>
+                    </form>
 
-                <div className="mt-2 flex flex-col gap-1.5 xl:flex-row xl:items-center xl:justify-between">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
-                    {relationFilterButtons}
-                  </div>
-                  {relationFilter !== 'all' && (
-                    <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                      {relationFilterConfig.helper}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {statsChips.map((label) => (
+                        <span
+                          key={label}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+                        >
+                          {label}
+                        </span>
+                      ))}
                     </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="pointer-events-auto inline-flex max-w-full flex-wrap items-center gap-2 self-start rounded-full bg-slate-900/72 px-3 py-1.5 text-[11px] text-white shadow dark:bg-slate-100/92 dark:text-slate-900">
-                <span className="font-semibold">使い方</span>
-                <span>{interactionHint}</span>
-              </div>
-
-              {searchMessage && (
-                <div className="pointer-events-auto max-w-[560px] self-start rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
-                  {searchMessage}
-                </div>
-              )}
-
-              {nodeListOpen && (
-                <div className="pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/92 shadow-lg backdrop-blur max-h-[min(52vh,360px)] overflow-hidden">
-                  <div className="flex items-center justify-between px-3 py-2 border-b border-slate-200 dark:border-slate-700">
-                    <div>
-                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">キーボードでも使えるノード一覧</div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-slate-100">現在表示中のノード</div>
-                    </div>
-                    <button
-                      type="button"
-                      className="p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                      onClick={() => setNodeListOpen(false)}
-                      aria-label="ノード一覧を閉じる"
-                    >
-                      ✕
-                    </button>
                   </div>
-                  <div className="max-h-[280px] overflow-y-auto px-3 py-3 space-y-3">
-                    {filteredNodeGroups.current.length === 0 && filteredNodeGroups.plants.length === 0 && filteredNodeGroups.insects.length === 0 ? (
-                      <div className="text-[12px] text-slate-500 dark:text-slate-400">一致するノードがありません。</div>
-                    ) : (
-                      <>
-                        {filteredNodeGroups.current.length > 0 && (
-                          <div>
-                            <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">中心ノード</div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {filteredNodeGroups.current.map((node) => (
-                                <button
-                                  key={node.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setSearchMessage('');
-                                    focusNodeById(node.id);
-                                    setNodeListOpen(false);
-                                  }}
-                                  className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold border border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-                                >
-                                  {node.name}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {filteredNodeGroups.plants.length > 0 && (
-                          <div>
-                            <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">植物</div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {filteredNodeGroups.plants.map((node) => (
-                                <button
-                                  key={node.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setSearchMessage('');
-                                    focusNodeById(node.id);
-                                    setNodeListOpen(false);
-                                  }}
-                                  className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
-                                >
-                                  {node.name}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {filteredNodeGroups.insects.length > 0 && (
-                          <div>
-                            <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">昆虫</div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {filteredNodeGroups.insects.map((node) => (
-                                <button
-                                  key={node.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setSearchMessage('');
-                                    focusNodeById(node.id);
-                                    setNodeListOpen(false);
-                                  }}
-                                  className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200"
-                                >
-                                  {node.name}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </>
+
+                  <div className="mt-2 flex flex-col gap-1.5 xl:flex-row xl:items-center xl:justify-between">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
+                      {relationFilterButtons}
+                    </div>
+                    {relationFilter !== 'all' && (
+                      <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                        {relationFilterConfig.helper}
+                      </div>
                     )}
                   </div>
                 </div>
-              )}
 
-              {isCompactPanel ? (
-                compactLegendOpen && (
+                <div className="pointer-events-auto inline-flex max-w-full flex-wrap items-center gap-2 self-start rounded-full bg-slate-900/72 px-3 py-1.5 text-[11px] text-white shadow dark:bg-slate-100/92 dark:text-slate-900">
+                  <span className="font-semibold">使い方</span>
+                  <span>{interactionHint}</span>
+                </div>
+
+                {searchMessage && (
+                  <div className="pointer-events-auto max-w-[560px] self-start rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
+                    {searchMessage}
+                  </div>
+                )}
+
+                {nodeListOpen && (
+                  <div className="pointer-events-auto max-h-[min(52vh,360px)] max-w-[560px] overflow-hidden">
+                    {nodeListPanel}
+                  </div>
+                )}
+
+                {compactLegendOpen && (
                   <div
                     id="foodweb-legend-mobile"
                     data-fg-ui
@@ -2223,10 +2359,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
                     {legendBody}
                   </div>
-                )
-              ) : null}
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {relationFilter !== 'all' && graphData.links.length === 0 && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 rounded-full border border-amber-200 bg-amber-50/95 px-4 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
@@ -2236,12 +2372,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         </div>
 
         {!isCompactPanel && (
-          <aside className="min-h-0 w-[280px] flex flex-col border-l border-slate-200/80 bg-white/72 dark:border-slate-700/80 dark:bg-slate-950/55 lg:w-[320px] xl:w-[360px]">
+          <aside className="min-h-0 w-[300px] flex flex-col border-l border-slate-200/80 bg-white/72 dark:border-slate-700/80 dark:bg-slate-950/55 xl:w-[340px]">
             <div className="border-b border-slate-200/80 px-4 py-4 dark:border-slate-700/80">
               <div className="rounded-xl border border-slate-200/90 bg-white/88 p-4 text-xs text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/82 dark:text-slate-200">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">PCでは固定レーン表示</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">PC では右側に固定表示</div>
                 </div>
                 {legendBody}
               </div>
