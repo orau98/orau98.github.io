@@ -418,5 +418,45 @@ export const bibliography = [
     journal: '蛾類通信',
     issue: '305',
     pages: '164-166'
+  },
+  {
+    key: 'nihonsan-kamikiri',
+    title: '日本産カミキリムシ',
+    authors: ['日本鞘翅学会 カミキリムシ部会'],
+    year: '2018',
+    publisher: '昆虫文献六本脚',
+    isbn13: '978-4-902649-14-7'
+  },
+  {
+    key: 'nihonsan-chorui-hyojun',
+    title: '日本産蝶類標準図鑑',
+    authors: ['白水 隆'],
+    year: '2006',
+    publisher: '学研教育出版',
+    isbn13: '978-4-05-202296-9',
+    url: 'https://www.amazon.co.jp/日本産蝶類標準図鑑-白水-隆/dp/4052022963'
+  },
+  {
+    key: 'nihon-genshoku-aburamushi',
+    title: '日本原色アブラムシ図鑑',
+    authors: ['森津 孫四郎'],
+    year: '2009',
+    publisher: '全国農村教育協会',
+    isbn13: '978-4-88137-153-1'
+  },
+  {
+    key: 'nihon-no-kiriga',
+    title: '日本のキリガ',
+    authors: ['四方 圭一郎', '枝 恵太郎'],
+    year: '2015',
+    publisher: 'むし社',
+    isbn13: '978-4-943955-35-1'
+  },
+  {
+    key: 'tinea',
+    type: 'journal',
+    title: 'Tinea',
+    note: '日本蛾類学会の学術誌。Vol.21 (2010) 〜 Vol.26 (2023) の記事から食草情報を抽出',
+    url: 'https://www.jstage.jst.go.jp/browse/tinea'
   }
 ];

@@ -12,7 +12,14 @@ export const sourceLinks = {
   "ハムシハンドブック": "https://amzn.to/456YVhu",
   "日本の冬夜蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000506/ct6/page1/recommend/",
   "日本の冬尺蛾": "https://www.mushi-sha.co.jp/shopdetail/000000000509/ct6/page1/recommend/",
-  "蛾類通信": "http://publ.moth.jp/tsushin/"
+  "蛾類通信": "http://publ.moth.jp/tsushin/",
+  "日本産カミキリムシ": "https://kawamo.co.jp/roppon-ashi/sub300.htm",
+  "日本産蝶類標準図鑑": "https://www.amazon.co.jp/日本産蝶類標準図鑑-白水-隆/dp/4052022963",
+  "日本原色アブラムシ図鑑": "https://www.amazon.co.jp/dp/4881371533",
+  "日本のキリガ": "https://www.mushi-sha.co.jp/",
+  "日本のハマキガ1": "https://www.moth.jp/",
+  "日本のハマキガ2": "https://www.moth.jp/",
+  "Tinea": "https://www.jstage.jst.go.jp/browse/tinea"
 };
 
 // 出典から参考リンクを取得する関数
