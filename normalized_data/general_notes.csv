@@ -1,4 +1,4 @@
-record_id,insect_id,note_type,content,reference,page,year
+﻿record_id,insect_id,note_type,content,reference,page,year
 note-1000835,1-1,出現時期,5〜9月,日本産カミキリムシ,,
 note-1000827,10-1,出現時期,7〜8月,日本産カミキリムシ,,
 note-1000838,12,出現時期,5月,日本産カミキリムシ,,
@@ -6246,3 +6246,5 @@ note-1004916,species-20438,出現時期,3～5月,日本のキリガ,,
 note-1004917,species-20438,生態,灯火に飛染する。Ceral M3種の中でもっと も分布が広くさまざまな環境で得られる普通種であるが、 モンヤからしい説は好感が持てる。,日本のキリガ,,
 note-1004918,species-20439,出現時期,発生時期はかなり早く 4月下旬～5月上旬 に得られている,日本のキリガ,,
 note-1004919,species-20440,生態,"灯火採集で得られているが、産地は北海道東 北部の湿地に局限され、発生時期も短いことからきわめ て得難い種である。自ら探集したことがある鏡屋はわず 4exs. 北海道造頃町湧.4.V,2005.ライトトラップ（小林） 24713号．北海道教払村浅茅野、27.V.2006、ライトト ネムロウスモンヤが分布図 3103 --- ページ 26 --- Handbook Series of Insects 8 Winter noctuid moths of Japan ISBN 978-4-943955-48-1 Date of publication: 3 February, 2016 Editor: Hideki Kobayashi Publisher: Hiroshi Fujita Printed by Shinano Co. Ltd.， Tokyo Published by Mushi-Sh...",日本のキリガ,,
+cleanup-hostplant-000269,species-0292,生態情報,幼虫は乾燥または腐敗した植物質を食べる。,日本産蛾類標準図鑑3,,
+cleanup-hostplant-901825,species-0932,生態情報,幼虫は乾燥した蘚苔類を食べる。,日本産蛾類標準図鑑3,,

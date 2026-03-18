@@ -57,6 +57,14 @@ const SUSPICIOUS_PLANT_NAME_MARKERS = [
   'では',
   '確認',
   '記録',
+  '採集',
+  '飛来',
+  '普通種',
+  '得られる',
+  'という',
+  'である',
+  '屋台',
+  'ページ',
   '有名',
   '判明',
   'との区別',
@@ -74,6 +82,15 @@ const NON_PLANT_HOST_NAME_SET = new Set([
   'ハビロキバガ',
   'チャミノ',
 ]);
+const hasSuspiciousKirigaPattern = (row, plantName) => {
+  if (cleanString(row.reference) !== '日本のキリガ') return false;
+  return (
+    /[ぁ-ん]/.test(plantName) ||
+    /[0-9A-Za-z]/.test(plantName) ||
+    /[<>:：!！]/.test(plantName) ||
+    plantName.length >= 16
+  );
+};
 const escapeCsv = (value) => `"${(value ?? '').toString().replace(/"/g, '""')}"`;
 const hasJapaneseChars = (value) => /[\u3040-\u30ff\u3400-\u9fff]/.test(cleanString(value));
 const hasScientificNameNoise = (row) => {
@@ -169,7 +186,8 @@ if (hostplantsPath) {
       SUSPICIOUS_PLANT_NAME_SET.has(plantName) ||
       NON_PLANT_HOST_NAME_SET.has(plantName) ||
       plantName.endsWith('の葉') ||
-      isSentenceLikePlantName
+      isSentenceLikePlantName ||
+      hasSuspiciousKirigaPattern(row, plantName)
     ) {
       suspiciousHostplantRows.push({
         record_id: cleanString(row.record_id),
