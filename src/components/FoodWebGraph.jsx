@@ -103,25 +103,34 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const isDark = theme === 'dark';
   const searchListId = useId();
   const [isCompactPanel, setIsCompactPanel] = useState(false);
+  const [desktopControlsOpen, setDesktopControlsOpen] = useState(false);
 
   // モバイルレスポンシブ: コンテナ幅を監視してグラフサイズを動的に決定
   const [graphSize, setGraphSize] = useState(() => ({ width, height }));
   useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return undefined;
-    const updateSize = (containerWidth) => {
+    const updateSize = (containerWidth, containerHeight) => {
       if (containerWidth <= 0) return;
-      setGraphSize({
+      const next = {
         width: Math.max(1, Math.floor(containerWidth)),
-        height: isCompactPanel ? 400 : height
-      });
+        height: isCompactPanel
+          ? 400
+          : Math.max(320, Math.floor(containerHeight || height))
+      };
+      setGraphSize((prev) => (
+        prev.width === next.width && prev.height === next.height
+          ? prev
+          : next
+      ));
     };
     const ro = new ResizeObserver((entries) => {
       const entry = entries[0];
-      if (entry) updateSize(entry.contentRect.width);
+      if (entry) updateSize(entry.contentRect.width, entry.contentRect.height);
     });
     ro.observe(el);
-    updateSize(el.getBoundingClientRect().width);
+    const rect = el.getBoundingClientRect();
+    updateSize(rect.width, rect.height);
     return () => ro.disconnect();
   }, [height, isCompactPanel]);
 
@@ -1999,82 +2008,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       {!isCompactPanel && (
         <div className="shrink-0 border-b border-slate-200/80 bg-white/80 px-4 py-4 backdrop-blur dark:border-slate-700/80 dark:bg-slate-950/55">
           <div className="space-y-3">
-            <div className={`${desktopControlSurfaceClass} flex flex-wrap items-center gap-2`}>
-              <button
-                type="button"
-                onClick={resetView}
-                className={desktopControlButtonClass}
-                title="リセット（ズーム/中心）"
-              >
-                リセット
-              </button>
-              <button
-                type="button"
-                onClick={zoomOut}
-                className={desktopControlButtonClass}
-                title="縮小"
-              >
-                －
-              </button>
-              <button
-                type="button"
-                onClick={zoomIn}
-                className={desktopControlButtonClass}
-                title="拡大"
-              >
-                ＋
-              </button>
-              <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
-                {['auto', 'all', 'none'].map((mode, index) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={() => setLabelMode(mode)}
-                    aria-pressed={labelMode === mode}
-                    className={`px-2.5 py-1.5 text-[11px] font-semibold ${index > 0 ? 'border-l border-slate-200 dark:border-slate-600' : ''} ${
-                      labelMode === mode
-                        ? 'bg-slate-100 dark:bg-slate-700'
-                        : 'bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    {mode === 'auto' ? 'ラベル: 自動' : mode === 'all' ? 'ラベル: 全て' : 'ラベル: なし'}
-                  </button>
-                ))}
-              </div>
-              <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                関連数
-              </label>
-              <select
-                value={relatedLimit}
-                onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
-                className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 px-2 py-1"
-                aria-label="関連数"
-              >
-                {RELATED_LIMIT_OPTIONS.map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => setNodeListOpen((prev) => !prev)}
-                className={desktopControlButtonClass}
-                aria-expanded={nodeListOpen}
-              >
-                {nodeListOpen ? '一覧を閉じる' : 'ノード一覧'}
-              </button>
-              {pinnedNodeCount > 0 && (
-                <button
-                  type="button"
-                  onClick={clearPinnedNodes}
-                  className={desktopControlButtonClass}
-                >
-                  全固定解除
-                </button>
-              )}
-            </div>
-
             <div className={`${desktopControlSurfaceClass} flex flex-col gap-3`}>
-              <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
+              <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
                 <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
                   <input
                     type="search"
@@ -2096,6 +2031,14 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   >
                     移動
                   </button>
+                  <button
+                    type="button"
+                    onClick={resetView}
+                    className={desktopControlButtonClass}
+                    title="リセット（ズーム/中心）"
+                  >
+                    リセット
+                  </button>
                 </form>
 
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -2107,17 +2050,27 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                       {label}
                     </span>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDesktopControlsOpen((prev) => {
+                        const next = !prev;
+                        if (!next) setNodeListOpen(false);
+                        return next;
+                      });
+                    }}
+                    className={desktopControlButtonClass}
+                    aria-expanded={desktopControlsOpen}
+                  >
+                    {desktopControlsOpen ? '設定を閉じる' : '表示設定'}
+                  </button>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
-                  {relationFilterButtons}
-                </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                  {relationFilter !== 'all' ? relationFilterConfig.helper : interactionHint}
-                </div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                {relationFilter !== 'all'
+                  ? relationFilterConfig.helper
+                  : 'クリックで関係確認。絞り込みと凡例は表示設定から開けます。'}
               </div>
             </div>
 
@@ -2127,9 +2080,94 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               </div>
             )}
 
-            {nodeListOpen && (
-              <div className="max-w-[840px]">
-                {nodeListPanel}
+            {desktopControlsOpen && (
+              <div className={`${desktopControlSurfaceClass} space-y-3`}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={zoomOut}
+                    className={desktopControlButtonClass}
+                    title="縮小"
+                  >
+                    －
+                  </button>
+                  <button
+                    type="button"
+                    onClick={zoomIn}
+                    className={desktopControlButtonClass}
+                    title="拡大"
+                  >
+                    ＋
+                  </button>
+                  <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
+                    {['auto', 'all', 'none'].map((mode, index) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => setLabelMode(mode)}
+                        aria-pressed={labelMode === mode}
+                        className={`px-2.5 py-1.5 text-[11px] font-semibold ${index > 0 ? 'border-l border-slate-200 dark:border-slate-600' : ''} ${
+                          labelMode === mode
+                            ? 'bg-slate-100 dark:bg-slate-700'
+                            : 'bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {mode === 'auto' ? 'ラベル: 自動' : mode === 'all' ? 'ラベル: 全て' : 'ラベル: なし'}
+                      </button>
+                    ))}
+                  </div>
+                  <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                    関連数
+                  </label>
+                  <select
+                    value={relatedLimit}
+                    onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                    className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 px-2 py-1"
+                    aria-label="関連数"
+                  >
+                    {RELATED_LIMIT_OPTIONS.map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setNodeListOpen((prev) => !prev)}
+                    className={desktopControlButtonClass}
+                    aria-expanded={nodeListOpen}
+                  >
+                    {nodeListOpen ? '一覧を閉じる' : 'ノード一覧'}
+                  </button>
+                  {pinnedNodeCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={clearPinnedNodes}
+                      className={desktopControlButtonClass}
+                    >
+                      全固定解除
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
+                    {relationFilterButtons}
+                  </div>
+                  <div className="max-w-[320px] rounded-lg border border-slate-200/90 bg-slate-50/90 p-3 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-200">
+                    <div className="mb-2 text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+                    {legendBody}
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                  {interactionHint}
+                </div>
+
+                {nodeListOpen && (
+                  <div className="max-w-[840px]">
+                    {nodeListPanel}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -2139,8 +2177,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       <div className="min-h-0 flex-1 flex flex-col">
         <div
           ref={containerRef}
-          className={`relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[340px] flex-1'}`}
-          style={{ height: graphViewportHeight }}
+          className={`relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[420px] flex-1'}`}
+          style={isCompactPanel ? { height: graphViewportHeight } : undefined}
           role="region"
           aria-label={graphAriaLabel}
           onWheelCapture={handleGraphWheelCapture}
@@ -2158,7 +2196,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           <ForceGraph2D
             ref={fgRef}
             width={graphSize.width}
-            height={graphViewportHeight}
+            height={isCompactPanel ? graphViewportHeight : graphSize.height}
             graphData={graphData}
             nodeLabel="name"
             nodeCanvasObject={nodeCanvasObject}
@@ -2196,7 +2234,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             onEngineStop={() => {
               if (!fgRef.current) return;
               if (hasUserInteractedRef.current) return;
-              fgRef.current.zoomToFit(400, 60);
+              fgRef.current.zoomToFit(400, isCompactPanel ? 60 : 24);
             }}
           />
 
@@ -2371,35 +2409,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           )}
         </div>
 
-        {!isCompactPanel && (
+        {!isCompactPanel && selectedNode && (
           <div className="shrink-0 border-t border-slate-200/80 bg-white/78 px-4 py-4 backdrop-blur dark:border-slate-700/80 dark:bg-slate-950/55">
-            <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_280px]">
-              <div className="rounded-xl border border-slate-200/90 bg-white/92 p-4 text-sm text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-100">
-                {selectedNode ? (
-                  selectionPanelContent
-                ) : (
-                  <div className="flex min-h-[150px] flex-col justify-between gap-4">
-                    <div>
-                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">選択中のノード</div>
-                      <h3 className="mt-1 text-base font-bold text-slate-800 dark:text-slate-100">詳細パネル</h3>
-                      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                        ノードをクリックすると、食草・訪花の関係と詳細リンクをここに表示します。
-                      </p>
-                    </div>
-                    <div className="rounded-lg border border-slate-200/90 bg-slate-50/90 px-3 py-3 text-[12px] leading-5 text-slate-600 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
-                      PCではグラフのドラッグ移動とホイール拡大を無効にしています。拡大縮小や位置調整は上部ボタンと検索から行えます。
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="rounded-xl border border-slate-200/90 bg-white/88 p-4 text-xs text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/82 dark:text-slate-200">
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">グラフを広く表示</div>
-                </div>
-                {legendBody}
-              </div>
+            <div className="rounded-xl border border-slate-200/90 bg-white/92 p-4 text-sm text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-100">
+              {selectionPanelContent}
             </div>
           </div>
         )}
