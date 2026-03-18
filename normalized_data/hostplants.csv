@@ -1,4 +1,4 @@
-﻿record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
+record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
 host-B1B7-20251121002628-0001,species-3996,フタバガキ科サラノキ属,,文献,,,日本産蛾類標準図鑑1,
 host-B1B7-20251121002628-0002,species-3996,マメ科ドクフジ属,,文献,,,日本産蛾類標準図鑑1,
 host-B1B7-20251121002628-0003,species-3997,シマニッケイ,クスノキ科,文献,,,日本産蛾類標準図鑑1,
@@ -12507,9 +12507,6 @@ hostplant-908285,species-0148,ツタ,ブドウ科,文献,,幼虫,日本産蛾類
 hostplant-908286,species-0151,アジサイ,アジサイ科,文献,,幼虫,日本産蛾類標準図鑑3,
 hostplant-908287,species-0173,オトコエシ,オミナエシ科,文献,,幼虫,日本産蛾類標準図鑑3,
 hostplant-908288,species-0179,トチノキ,ムクロジ科,文献,,幼虫,日本産蛾類標準図鑑3,
-hostplant-908289,species-1154,ノメイガ科植物,不明,文献,,幼虫,日本産蝶類標準図鑑,
-hostplant-908290,species-1164,日本産、植ガヤツリ,カヤツリグサ科,文献,,幼虫,日本産蝶類標準図鑑,
-hostplant-908291,species-1164,マツ科の Cajanus属の未かのキツネ,不明,文献,,幼虫,日本産蝶類標準図鑑,
 hostplant-908293,species-2112,クロウメモドキ,クロウメモドキ科,野外（国内）,新芽、葉,幼虫,日本のハマキガ1,
 hostplant-908294,species-2112,イソノキ,クロウメモドキ科,野外（国内）,新芽、葉,幼虫,日本のハマキガ1,
 hostplant-908295,species-2125,ツノハシバミ,カバノキ科,野外（国内）,葉,幼虫,日本のハマキガ1,
@@ -14736,3 +14733,9 @@ hostplant-909149,species-22950,オオハマボウ,アオイ科,文献,,幼虫,�
 hostplant-909150,species-22950,テイカカズラ,キョウチクトウ科,文献,,幼虫,日本産カミキリムシ,
 hostplant-909151,species-22938,アマシバ,ハイノキ科,文献,,幼虫,日本産カミキリムシ,
 hostplant-909152,species-22938,ヒロハノミミズバイ,ハイノキ科,文献,,幼虫,日本産カミキリムシ,
+hostplant-909153,species-20432,イネ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909154,species-20432,ススキ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909155,species-20432,アシ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909156,species-20432,ヨシ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909157,species-20432,ジュズダマ,イネ科,,,幼虫,日本産蝶類標準図鑑,
+hostplant-909158,species-20432,マコモ,イネ科,,,幼虫,日本産蝶類標準図鑑,
