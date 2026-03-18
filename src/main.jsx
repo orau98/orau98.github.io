@@ -3,6 +3,7 @@ import logger from './utils/logger';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import PageViewTracker from './components/PageViewTracker';
 import './index.css';
 
 // Enable debug logs via query param (?debug=1) in production
@@ -182,6 +183,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <PageViewTracker />
     <App />
   </BrowserRouter>
 );

@@ -60,6 +60,37 @@ function buildRobotsTxt(baseUrl, sitemapFiles) {
   return lines.join('\n');
 }
 
+function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {}) {
+  if (!fs.existsSync(filePath) || isNoindexPage(filePath)) {
+    return false;
+  }
+  sitemaps.main.push({
+    loc: `${baseUrl}${routePath}`,
+    lastmod: getFileLastmod(filePath),
+    changefreq: options.changefreq || 'monthly',
+    priority: options.priority || '0.6',
+  });
+  return true;
+}
+
+function addStaticDirectoryToMain(sitemaps, baseUrl, absDir, routePrefix, options = {}) {
+  if (!fs.existsSync(absDir)) return 0;
+
+  const files = fs
+    .readdirSync(absDir)
+    .filter((name) => name.endsWith('.html'))
+    .sort((a, b) => a.localeCompare(b, 'en'));
+
+  let count = 0;
+  files.forEach((file) => {
+    const filePath = path.join(absDir, file);
+    const routePath = `${routePrefix}${encodeFilename(file)}`;
+    const added = addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options);
+    if (added) count++;
+  });
+  return count;
+}
+
 // サイトマップを分割して生成
 function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
@@ -80,6 +111,22 @@ function generateSplitSitemaps() {
     changefreq: 'weekly',
     priority: '1.0'
   });
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/sitemap.html',
+    path.join(__dirname, '../public/sitemap.html'),
+    { changefreq: 'monthly', priority: '0.5' },
+  );
+
+  addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/topics'),
+    '/topics/',
+    { changefreq: 'monthly', priority: '0.7' },
+  );
 
   // NOTE:
   // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、

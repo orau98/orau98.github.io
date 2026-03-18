@@ -7,6 +7,36 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://orau98.github.io/sitemap.html</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/topics/garden-tree-caterpillars.html</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/topics/index.html</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/topics/kunugi-insects.html</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orau98.github.io/topics/sakura-insects.html</loc>
+    <lastmod>2026-03-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://orau98.github.io/meta/moth/index.html</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>

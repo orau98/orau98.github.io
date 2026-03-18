@@ -54,6 +54,28 @@ const Footer = () => {
             植物メタ一覧
           </a>
         </div>
+        <div className="text-xs mt-3 space-x-4">
+          <a
+            href={`${import.meta.env.BASE_URL}topics/index.html`}
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            特集ページ一覧
+          </a>
+          <span className="text-neutral-400">|</span>
+          <a
+            href={`${import.meta.env.BASE_URL}topics/sakura-insects.html`}
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            サクラにつく虫
+          </a>
+          <span className="text-neutral-400">|</span>
+          <a
+            href={`${import.meta.env.BASE_URL}topics/kunugi-insects.html`}
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            クヌギにつく虫
+          </a>
+        </div>
       </div>
     </footer>
   );
