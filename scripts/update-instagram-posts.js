@@ -16,11 +16,57 @@ const ACCESS_TOKEN = process.env.IG_ACCESS_TOKEN;
 const USER_ID = process.env.IG_USER_ID;
 const IG_USERNAME = process.env.IG_USERNAME;
 const POST_LIMIT = Math.max(1, parseInt(process.env.POST_LIMIT || '10', 10) || 10);
+const REQUEST_RETRY_LIMIT = Math.max(0, parseInt(process.env.IG_REQUEST_RETRY_LIMIT || '2', 10) || 2);
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const USERNAME_PATTERN = /^[A-Za-z0-9._]+$/;
+const MAX_RETRY_WAIT_MS = 15000;
 
 const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+};
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const clampRetryWaitMs = (ms) => {
+  if (!Number.isFinite(ms)) return 0;
+  return Math.max(0, Math.min(Math.trunc(ms), MAX_RETRY_WAIT_MS));
+};
+
+const parseRetryAfterMs = (raw) => {
+  if (!raw) return 0;
+  const text = String(raw).trim();
+  if (!text) return 0;
+  if (/^\d+$/.test(text)) {
+    return clampRetryWaitMs(Number(text) * 1000);
+  }
+  const at = Date.parse(text);
+  if (!Number.isFinite(at)) return 0;
+  return clampRetryWaitMs(at - Date.now());
+};
+
+const fetchWithRetry = async (url, options = {}, { label = 'request', retries = REQUEST_RETRY_LIMIT } = {}) => {
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      const res = await fetch(url, options);
+      const retryable = res.status === 429 || res.status >= 500;
+      if (!retryable || attempt === retries) return res;
+
+      const retryAfterMs = parseRetryAfterMs(res.headers.get('retry-after'));
+      const waitMs = retryAfterMs || clampRetryWaitMs(1500 * (attempt + 1));
+      console.warn(
+        `[instagram] ${label} throttled (${res.status} ${res.statusText}). retry ${attempt + 1}/${retries} in ${waitMs}ms`,
+      );
+      await sleep(waitMs);
+    } catch (error) {
+      if (attempt === retries) throw error;
+      const waitMs = clampRetryWaitMs(1500 * (attempt + 1));
+      console.warn(
+        `[instagram] ${label} network error. retry ${attempt + 1}/${retries} in ${waitMs}ms: ${error?.message || error}`,
+      );
+      await sleep(waitMs);
+    }
+  }
+  throw new Error(`[instagram] ${label} failed after retry exhaustion`);
 };
 
 const normalizeUsername = (raw) => {
@@ -123,6 +169,23 @@ const loadExistingUrls = () => {
   return Array.from(new Set(out)).filter((url) => /^https?:\/\/(www\.)?instagram\.com\//.test(url));
 };
 
+const loadExistingCacheInfo = () => {
+  const urls = loadExistingUrls();
+  let postCount = 0;
+  let generatedAt = '';
+  if (fs.existsSync(OUT_JSON)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(OUT_JSON, 'utf-8'));
+      const posts = Array.isArray(parsed) ? parsed : parsed?.posts;
+      if (Array.isArray(posts)) postCount = posts.length;
+      generatedAt = typeof parsed?.generatedAt === 'string' ? parsed.generatedAt : '';
+    } catch {
+      // ignore malformed JSON
+    }
+  }
+  return { urlCount: urls.length, postCount, generatedAt };
+};
+
 const extractUsernameFromPostHtml = (html = '') => {
   if (!html) return '';
   const patterns = [
@@ -146,13 +209,13 @@ const resolveUsernameFromOembed = async (postUrl) => {
   if (!isPostPermalink(postUrl)) return '';
   try {
     const endpoint = `https://www.instagram.com/api/v1/oembed/?url=${encodeURIComponent(postUrl)}`;
-    const res = await fetch(endpoint, {
+    const res = await fetchWithRetry(endpoint, {
       headers: {
         'User-Agent': USER_AGENT,
         'Accept': 'application/json',
         'Referer': postUrl,
       },
-    });
+    }, { label: 'Instagram oEmbed' });
     if (!res.ok) return '';
     const data = await res.json().catch(() => null);
     const fromAuthorName = normalizeUsername(data?.author_name);
@@ -185,8 +248,8 @@ const resolveInstagramUsername = async () => {
     if (!isPostPermalink(url)) continue;
     try {
       const res = await fetch(url, {
-        redirect: 'follow',
         headers: { 'User-Agent': USER_AGENT },
+        redirect: 'follow',
       });
       if (!res.ok) continue;
       const html = await res.text();
@@ -217,7 +280,7 @@ const fetchPostsFromPublicProfile = async (username, limit) => {
   const normalizedUsername = normalizeUsername(username);
   if (!normalizedUsername) throw new Error('[instagram] Public profile fallback failed: username is empty');
   const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${encodeURIComponent(normalizedUsername)}`;
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url, {
     headers: {
       'User-Agent': USER_AGENT,
       'x-ig-app-id': '936619743392459',
@@ -226,7 +289,7 @@ const fetchPostsFromPublicProfile = async (username, limit) => {
       'Accept-Language': 'en-US,en;q=0.9',
       'x-asbd-id': '129477',
     },
-  });
+  }, { label: `public profile @${normalizedUsername}` });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`[instagram] Public profile fallback failed: ${res.status} ${res.statusText} ${text}`.trim());
@@ -338,7 +401,7 @@ const main = async () => {
     ];
 
     for (const url of endpoints) {
-      const res = await fetch(url);
+      const res = await fetchWithRetry(url, {}, { label: 'Instagram Graph API' });
       if (!res.ok) {
         const text = await res.text().catch(() => '');
         errors.push(`[instagram] ${res.status} ${res.statusText} ${text}`.trim());
@@ -355,6 +418,9 @@ const main = async () => {
   }
 
   if (items.length === 0) {
+    if (errors.length > 0) {
+      console.warn(errors.join(' | '));
+    }
     const username = await resolveInstagramUsername();
     if (!username) {
       throw new Error(`[instagram] Fetch failed. ${errors.join(' | ')} | Could not resolve Instagram username for public fallback.`.trim());
@@ -444,6 +510,16 @@ const main = async () => {
 };
 
 main().catch((err) => {
-  console.error(err?.message || err);
+  const message = err?.message || String(err);
+  const cache = loadExistingCacheInfo();
+  if (message.includes('[instagram]') && (cache.urlCount > 0 || cache.postCount > 0)) {
+    const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
+    console.warn(message);
+    console.warn(
+      `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
+    );
+    process.exit(0);
+  }
+  console.error(message);
   process.exit(1);
 });
