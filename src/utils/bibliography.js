@@ -1735,4 +1735,155 @@ export const bibliography = [
     issue: '206',
     pages: '116-118'
   }
+,
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.1-2011',
+    type: 'article',
+    title: '御蔵島におけるシラホシカミキリ属2種の後食植物',
+    authors: ['高桑正敏', '岸本年郎', '岸田泰則', '須田真一'],
+    year: '2011',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.1',
+    pages: '18-21'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.1-2011',
+    type: 'article',
+    title: 'ツヤナガタマムシの寄主植物について（短報）',
+    authors: ['栗原隆', '福富宏和'],
+    year: '2011',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.1',
+    pages: '27'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.3-2011',
+    type: 'article',
+    title: '特定外来生物オオフサモを食害する日本産クチブトサルゾウムシ族2種に関する覚書',
+    authors: ['吉武啓'],
+    year: '2011',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.3',
+    pages: '1-7'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.5-2012',
+    type: 'article',
+    title: 'サツマイモヒサゴトビハムシのエンサイへの加害，および国内における分布と単為生殖個体群の存在について',
+    authors: ['今坂正一', '石関博'],
+    year: '2012',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.5',
+    pages: '18-21'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.5-2012',
+    type: 'article',
+    title: 'シカの採食に伴う林床植生の単純化がハムシ科甲虫数種の食性に及ぼす影響',
+    authors: ['日下部良康'],
+    year: '2012',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.5',
+    pages: '22-27'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.5-2012',
+    type: 'article',
+    title: '御蔵島および三宅島におけるシラホシカミキリ属の後食植物の追加知見（短報）',
+    authors: ['高桑正敏'],
+    year: '2012',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.5',
+    pages: '53-54'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.6-2012',
+    type: 'article',
+    title: '神奈川県におけるルリカミキリによるセイヨウベニカナメモチへの加害例（短報）',
+    authors: ['日下部良康'],
+    year: '2012',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.6',
+    pages: '35'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.8-2012',
+    type: 'article',
+    title: 'アオナガタマムシの寄主植物について（短報）',
+    authors: ['森正人'],
+    year: '2012',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.8',
+    pages: '50-51'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.10-2013',
+    type: 'article',
+    title: '北海道におけるアシナガトビハムシ属Longitarsus4種の分布記録と生態に関する知見',
+    authors: ['末長晴輝', '堀繁久'],
+    year: '2013',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.10',
+    pages: '20-22'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.10-2013',
+    type: 'article',
+    title: '3種のコメツキダマシの食樹について（短報）',
+    authors: ['鈴木亙'],
+    year: '2013',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.10',
+    pages: '12'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.12-2013',
+    type: 'article',
+    title: 'サクラサルハムシ（ハムシ科，サルハムシ亜科）の寄主植物選好性－富山県射水市の県民公園「太閤山ランド」における大発生をめぐって－',
+    authors: ['鈴木邦雄', '南雅之', '増岡裕大'],
+    year: '2013',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.12',
+    pages: '38-55'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.12-2013',
+    type: 'article',
+    title: 'ニホンケブカサルハムシ（ハムシ科，サルハムシ亜科）の新寄主植物（短報）',
+    authors: ['鈴木邦雄'],
+    year: '2013',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.12',
+    pages: '55'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.17-2015',
+    type: 'article',
+    title: 'アオバネサルハムシ（ハムシ科，サルハムシ亜科）の寄主植物選好性（予報）',
+    authors: ['鈴木邦雄'],
+    year: '2015',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.17',
+    pages: '17-21'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.17-2015',
+    type: 'article',
+    title: 'ニホンケブカサルハムシ（ハムシ科，サルハムシ亜科）の新寄主植物（追加）（短報）',
+    authors: ['鈴木邦雄'],
+    year: '2015',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.17',
+    pages: '21'
+  },
+  {
+    key: 'sayabane-さやばね ニューシリーズ No.17-2015',
+    type: 'article',
+    title: '富山県におけるヘリグロテントウトビハムシ（ハムシ科，トビハムシ亜科）の寄主植物',
+    authors: ['鈴木邦雄'],
+    year: '2015',
+    journal: 'さやばね ニューシリーズ',
+    issue: 'さやばね ニューシリーズ No.17',
+    pages: '22-23'
+  }
 ];

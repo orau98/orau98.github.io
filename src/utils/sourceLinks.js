@@ -19,7 +19,8 @@ export const sourceLinks = {
   "日本のキリガ": "https://www.mushi-sha.co.jp/",
   "日本のハマキガ1": "https://www.moth.jp/",
   "日本のハマキガ2": "https://www.moth.jp/",
-  "Tinea": "https://www.jstage.jst.go.jp/browse/tinea"
+  "Tinea": "https://www.jstage.jst.go.jp/browse/tinea",
+  "さやばね": "https://coleoptera.sakura.ne.jp/publication/sayabane/sayabane-bibliography.html"
 };
 
 // 出典から参考リンクを取得する関数
