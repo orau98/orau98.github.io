@@ -21,7 +21,7 @@ ZUKAN2_OCR = BASE / "pdfs" / "zukan2-ocr" / "日本産蛾類標準図鑑2.txt"
 def load_moth_name_map():
     """蛾の和名→insect_idマッピング"""
     name_map = {}
-    with open(INSECTS_CSV, encoding="utf-8") as f:
+    with open(INSECTS_CSV, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
             # 蛾のみ（カミキリ、ハムシ、タマムシ、アブラムシ、蝶を除外）
@@ -45,7 +45,7 @@ def load_existing_notes():
     rows = []
     max_id = 0
     existing_keys = set()
-    with open(NOTES_CSV, encoding="utf-8") as f:
+    with open(NOTES_CSV, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         fieldnames = reader.fieldnames
         for row in reader:
@@ -104,10 +104,10 @@ def extract_ecology_from_block(block_text):
     CLOSE = r'[\]\uff3d\u3011）\)]'  # 全ての閉じ括弧バリエーション
     eco_markers = [
         r'【生' + CLOSE,                    # 【生］ 【生】 【生]
-        r'【生[態期■意観]' + CLOSE + '?',   # 【生期］ 【生態】 【生■
+        r'【生[態期■意観糖題]' + CLOSE + '?',   # 【生期］ 【生態】 【生■ 【生糖 【生題
         r'\[生[態期意観]?\]',               # [生態] [生]
         r'生■(?=' + CLOSE + '?[ァ-ヶー\d年平低山関北本全暖成多5-9])',  # 生■年1化
-        r'【生(?=[年\d多5-9成])',             # 【生年1化 (bracket missing)
+        r'【生(?=[年\d多5-9成日関本北全低平])',  # 【生年1化 【生成虫は (bracket missing)
     ]
     eco_pattern = '|'.join(eco_markers)
 
@@ -440,7 +440,7 @@ def main():
     print(f"合計ノート数: {len(existing_rows)}")
 
     # 6. 書き出し
-    with open(NOTES_CSV, 'w', encoding='utf-8', newline='') as f:
+    with open(NOTES_CSV, 'w', encoding='utf-8-sig', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for row in existing_rows:
