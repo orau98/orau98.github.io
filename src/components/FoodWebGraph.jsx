@@ -98,23 +98,23 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 }) {
   const fgRef = useRef(null);
   const containerRef = useRef(null);
-  const graphWrapperRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isDark = theme === 'dark';
   const searchListId = useId();
+  const [isCompactPanel, setIsCompactPanel] = useState(false);
 
   // モバイルレスポンシブ: コンテナ幅を監視してグラフサイズを動的に決定
   const [graphSize, setGraphSize] = useState(() => ({ width, height }));
   useEffect(() => {
-    const el = graphWrapperRef.current;
+    const el = containerRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return undefined;
     const updateSize = (containerWidth) => {
-      if (containerWidth > 0 && containerWidth <= 640) {
-        setGraphSize({ width: containerWidth - 32, height: 400 });
-      } else {
-        setGraphSize({ width, height });
-      }
+      if (containerWidth <= 0) return;
+      setGraphSize({
+        width: Math.max(1, Math.floor(containerWidth)),
+        height: isCompactPanel ? 400 : height
+      });
     };
     const ro = new ResizeObserver((entries) => {
       const entry = entries[0];
@@ -123,7 +123,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ro.observe(el);
     updateSize(el.getBoundingClientRect().width);
     return () => ro.disconnect();
-  }, [width, height]);
+  }, [height, isCompactPanel]);
 
   const matchesPlantName = useCallback((plantName, targetName) => {
     if (!plantName || !targetName) return false;
@@ -484,7 +484,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [relationFilter, setRelationFilter] = useState('all');
   const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
-  const [isCompactPanel, setIsCompactPanel] = useState(false);
   const [compactLegendOpen, setCompactLegendOpen] = useState(false);
   const [nodeListOpen, setNodeListOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -1550,7 +1549,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const interactionHint = isCompactPanel
     ? '操作: タップで選択、2回で詳細、長押しで固定、背景で解除'
-    : '操作: クリックで選択、2回で詳細、長押しで固定ドラッグ、背景クリックで解除';
+    : '操作: クリックで選択、2回で詳細、背景クリックで解除。拡大縮小は上部ボタンを使用';
+
+  const enableDirectGraphManipulation = isCompactPanel && !isPinDragging;
 
   const relationFilterButtons = (
     <div className="inline-flex flex-wrap rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
@@ -1894,356 +1895,379 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     : '';
 
   return (
-    <div ref={graphWrapperRef} className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 shadow-md flex flex-col">
-      <div
-        ref={containerRef}
-        className="relative min-h-0"
-        style={{ height: graphViewportHeight }}
-        role="region"
-        aria-label={graphAriaLabel}
-        onPointerDownCapture={handlePointerDownCapture}
-        onPointerMoveCapture={handlePointerMoveCapture}
-        onPointerUpCapture={handlePointerUpCapture}
-        onPointerCancelCapture={handlePointerUpCapture}
-      >
-        <p className="sr-only">
-          {`この食物網グラフには${insectNodeCount}種の昆虫と${plantNodeCount}種の植物の関係が表示されています。`}
-        </p>
-        <div aria-live="polite" aria-atomic="true" className="sr-only">
-          {selectedNodeAnnouncement}
-        </div>
-        <ForceGraph2D
-          ref={fgRef}
-          width={graphSize.width}
-          height={graphViewportHeight}
-          graphData={graphData}
-          nodeLabel="name"
-          nodeCanvasObject={nodeCanvasObject}
-          nodePointerAreaPaint={nodePointerAreaPaint}
-          onNodeHover={handleNodeHover}
-          onNodeClick={handleNodeClick}
-          onBackgroundClick={handleBackgroundClick}
-          enablePanInteraction={!isPinDragging}
-          enableZoomInteraction={!isPinDragging}
-          linkDistance={linkDistance}
-          linkColor={link => {
-            const relationStyle = getLinkStyle(link?.relation);
-            const highlighted = highlightLinks.has(link);
-            const sId = typeof link.source === 'object' ? link.source.id : link.source;
-            const tId = typeof link.target === 'object' ? link.target.id : link.target;
-            if (!sId || !tId) return relationStyle.color;
-            const dim = activeNodeId && !highlighted;
-            if (dim) return relationStyle.dimColor;
-            return highlighted ? relationStyle.activeColor : relationStyle.color;
-          }}
-          linkLineDash={link => getLinkStyle(link?.relation).dash}
-          linkWidth={link => {
-            const relationStyle = getLinkStyle(link?.relation);
-            return highlightLinks.has(link) ? relationStyle.width + 0.95 : relationStyle.width;
-          }}
-          linkDirectionalParticles={link => (highlightLinks.has(link) ? 3 : 0)}
-          linkDirectionalParticleColor={link => getLinkStyle(link?.relation).activeColor}
-          linkDirectionalParticleWidth={1.6}
-          linkCurvature={0.18}
-          backgroundColor={isDark ? '#0b1220' : '#f8fafc'}
-          cooldownTicks={80}
-          d3VelocityDecay={0.35}
-          onZoom={markUserInteracted}
-          onEngineStop={() => {
-            if (!fgRef.current) return;
-            if (hasUserInteractedRef.current) return;
-            fgRef.current.zoomToFit(400, 60);
-          }}
-        />
+    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 shadow-md flex flex-col">
+      <div className={`min-h-0 flex-1 ${isCompactPanel ? 'flex flex-col' : 'flex min-h-0'}`}>
+        <div
+          ref={containerRef}
+          className={`relative min-h-0 min-w-0 ${isCompactPanel ? '' : 'flex-1'}`}
+          style={{ height: graphViewportHeight }}
+          role="region"
+          aria-label={graphAriaLabel}
+          onPointerDownCapture={handlePointerDownCapture}
+          onPointerMoveCapture={handlePointerMoveCapture}
+          onPointerUpCapture={handlePointerUpCapture}
+          onPointerCancelCapture={handlePointerUpCapture}
+        >
+          <p className="sr-only">
+            {`この食物網グラフには${insectNodeCount}種の昆虫と${plantNodeCount}種の植物の関係が表示されています。`}
+          </p>
+          <div aria-live="polite" aria-atomic="true" className="sr-only">
+            {selectedNodeAnnouncement}
+          </div>
+          <ForceGraph2D
+            ref={fgRef}
+            width={graphSize.width}
+            height={graphViewportHeight}
+            graphData={graphData}
+            nodeLabel="name"
+            nodeCanvasObject={nodeCanvasObject}
+            nodePointerAreaPaint={nodePointerAreaPaint}
+            onNodeHover={handleNodeHover}
+            onNodeClick={handleNodeClick}
+            onBackgroundClick={handleBackgroundClick}
+            enablePanInteraction={enableDirectGraphManipulation}
+            enableZoomInteraction={enableDirectGraphManipulation}
+            linkDistance={linkDistance}
+            linkColor={link => {
+              const relationStyle = getLinkStyle(link?.relation);
+              const highlighted = highlightLinks.has(link);
+              const sId = typeof link.source === 'object' ? link.source.id : link.source;
+              const tId = typeof link.target === 'object' ? link.target.id : link.target;
+              if (!sId || !tId) return relationStyle.color;
+              const dim = activeNodeId && !highlighted;
+              if (dim) return relationStyle.dimColor;
+              return highlighted ? relationStyle.activeColor : relationStyle.color;
+            }}
+            linkLineDash={link => getLinkStyle(link?.relation).dash}
+            linkWidth={link => {
+              const relationStyle = getLinkStyle(link?.relation);
+              return highlightLinks.has(link) ? relationStyle.width + 0.95 : relationStyle.width;
+            }}
+            linkDirectionalParticles={link => (highlightLinks.has(link) ? 3 : 0)}
+            linkDirectionalParticleColor={link => getLinkStyle(link?.relation).activeColor}
+            linkDirectionalParticleWidth={1.6}
+            linkCurvature={0.18}
+            backgroundColor={isDark ? '#0b1220' : '#f8fafc'}
+            cooldownTicks={80}
+            d3VelocityDecay={0.35}
+            onZoom={markUserInteracted}
+            onEngineStop={() => {
+              if (!fgRef.current) return;
+              if (hasUserInteractedRef.current) return;
+              fgRef.current.zoomToFit(400, 60);
+            }}
+          />
 
-        <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none space-y-2">
-          <div className="pointer-events-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2.5 py-2 text-slate-700 dark:text-slate-200">
-            <div className={`flex items-center gap-1.5 ${isCompactPanel ? 'overflow-x-auto flex-nowrap pb-1' : 'flex-wrap'}`}>
-              <button
-                type="button"
-                onClick={resetView}
-                className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                title="リセット（ズーム/中心）"
-              >
-                リセット
-              </button>
-              <button
-                type="button"
-                onClick={zoomOut}
-                className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                title="縮小"
-              >
-                －
-              </button>
-              <button
-                type="button"
-                onClick={zoomIn}
-                className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                title="拡大"
-              >
-                ＋
-              </button>
-              {isCompactPanel ? (
-                <button
-                  type="button"
-                  onClick={toggleCompactLabelMode}
-                  className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                  title="ラベル表示"
-                >
-                  ラベル:{compactLabelModeText}
-                </button>
-              ) : (
-                <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
-                  {['auto', 'all', 'none'].map((mode, index) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setLabelMode(mode)}
-                      aria-pressed={labelMode === mode}
-                      className={`px-2.5 py-1.5 text-[11px] font-semibold ${index > 0 ? 'border-l border-slate-200 dark:border-slate-600' : ''} ${
-                        labelMode === mode
-                          ? 'bg-slate-100 dark:bg-slate-700'
-                          : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      {mode === 'auto' ? '自動' : mode === 'all' ? '全て' : 'なし'}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                関連数
-              </label>
-              <select
-                value={relatedLimit}
-                onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
-                className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1"
-                aria-label="関連数"
-              >
-                {RELATED_LIMIT_OPTIONS.map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => {
-                  setNodeListOpen((prev) => !prev);
-                  setCompactLegendOpen(false);
-                }}
-                className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                aria-expanded={nodeListOpen}
-              >
-                {nodeListOpen ? '一覧を閉じる' : '一覧'}
-              </button>
-              {pinnedNodeCount > 0 && (
-                <button
-                  type="button"
-                  onClick={clearPinnedNodes}
-                  className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                >
-                  全固定解除
-                </button>
-              )}
-              {isCompactPanel && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCompactLegendOpen((prev) => !prev);
-                    setNodeListOpen(false);
-                  }}
-                  className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                  aria-expanded={compactLegendOpen}
-                  aria-controls="foodweb-legend-mobile"
-                >
-                  凡例
-                </button>
-              )}
-            </div>
-
-            <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
-              <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
-                <input
-                  type="search"
-                  list={searchListId}
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="現在表示中のノードを検索"
-                  className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white/85 dark:bg-slate-900/50 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
-                  aria-label="現在表示中のノードを検索"
-                />
-                <datalist id={searchListId}>
-                  {graphData.nodes.map((node) => (
-                    <option key={node.id} value={node.name} />
-                  ))}
-                </datalist>
-                <button
-                  type="submit"
-                  className="shrink-0 px-3 py-2 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                >
-                  移動
-                </button>
-              </form>
-
-              <div className="flex flex-wrap items-center gap-1.5">
-                {statsChips.map((label) => (
-                  <span
-                    key={label}
-                    className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+          <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
+            <div className="mx-auto flex max-w-[900px] flex-col gap-2">
+              <div className="pointer-events-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2.5 py-2 text-slate-700 dark:text-slate-200">
+                <div className={`flex items-center gap-1.5 ${isCompactPanel ? 'overflow-x-auto flex-nowrap pb-1' : 'flex-wrap'}`}>
+                  <button
+                    type="button"
+                    onClick={resetView}
+                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                    title="リセット（ズーム/中心）"
                   >
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
+                    リセット
+                  </button>
+                  <button
+                    type="button"
+                    onClick={zoomOut}
+                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                    title="縮小"
+                  >
+                    －
+                  </button>
+                  <button
+                    type="button"
+                    onClick={zoomIn}
+                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                    title="拡大"
+                  >
+                    ＋
+                  </button>
+                  {isCompactPanel ? (
+                    <button
+                      type="button"
+                      onClick={toggleCompactLabelMode}
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      title="ラベル表示"
+                    >
+                      ラベル:{compactLabelModeText}
+                    </button>
+                  ) : (
+                    <div className="inline-flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
+                      {['auto', 'all', 'none'].map((mode, index) => (
+                        <button
+                          key={mode}
+                          type="button"
+                          onClick={() => setLabelMode(mode)}
+                          aria-pressed={labelMode === mode}
+                          className={`px-2.5 py-1.5 text-[11px] font-semibold ${index > 0 ? 'border-l border-slate-200 dark:border-slate-600' : ''} ${
+                            labelMode === mode
+                              ? 'bg-slate-100 dark:bg-slate-700'
+                              : 'bg-white/70 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          {mode === 'auto' ? '自動' : mode === 'all' ? '全て' : 'なし'}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                    関連数
+                  </label>
+                  <select
+                    value={relatedLimit}
+                    onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                    className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1"
+                    aria-label="関連数"
+                  >
+                    {RELATED_LIMIT_OPTIONS.map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNodeListOpen((prev) => !prev);
+                      setCompactLegendOpen(false);
+                    }}
+                    className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                    aria-expanded={nodeListOpen}
+                  >
+                    {nodeListOpen ? '一覧を閉じる' : '一覧'}
+                  </button>
+                  {pinnedNodeCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={clearPinnedNodes}
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                    >
+                      全固定解除
+                    </button>
+                  )}
+                  {isCompactPanel && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCompactLegendOpen((prev) => !prev);
+                        setNodeListOpen(false);
+                      }}
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                      aria-expanded={compactLegendOpen}
+                      aria-controls="foodweb-legend-mobile"
+                    >
+                      凡例
+                    </button>
+                  )}
+                </div>
 
-            <div className="mt-2 flex flex-col gap-1.5 xl:flex-row xl:items-center xl:justify-between">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
-                {relationFilterButtons}
+                <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
+                  <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
+                    <input
+                      type="search"
+                      list={searchListId}
+                      value={searchQuery}
+                      onChange={(event) => setSearchQuery(event.target.value)}
+                      placeholder="現在表示中のノードを検索"
+                      className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white/85 dark:bg-slate-900/50 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
+                      aria-label="現在表示中のノードを検索"
+                    />
+                    <datalist id={searchListId}>
+                      {graphData.nodes.map((node) => (
+                        <option key={node.id} value={node.name} />
+                      ))}
+                    </datalist>
+                    <button
+                      type="submit"
+                      className="shrink-0 px-3 py-2 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                    >
+                      移動
+                    </button>
+                  </form>
+
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {statsChips.map((label) => (
+                      <span
+                        key={label}
+                        className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-2 flex flex-col gap-1.5 xl:flex-row xl:items-center xl:justify-between">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
+                    {relationFilterButtons}
+                  </div>
+                  {relationFilter !== 'all' && (
+                    <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                      {relationFilterConfig.helper}
+                    </div>
+                  )}
+                </div>
               </div>
-              {relationFilter !== 'all' && (
-                <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                  {relationFilterConfig.helper}
+
+              <div className="pointer-events-auto inline-flex max-w-full flex-wrap items-center gap-2 self-start rounded-full bg-slate-900/72 px-3 py-1.5 text-[11px] text-white shadow dark:bg-slate-100/92 dark:text-slate-900">
+                <span className="font-semibold">使い方</span>
+                <span>{interactionHint}</span>
+              </div>
+
+              {searchMessage && (
+                <div className="pointer-events-auto max-w-[560px] self-start rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
+                  {searchMessage}
                 </div>
               )}
-            </div>
-          </div>
 
-          <div className="pointer-events-auto inline-flex max-w-full flex-wrap items-center gap-2 rounded-full bg-slate-900/72 px-3 py-1.5 text-[11px] text-white shadow dark:bg-slate-100/92 dark:text-slate-900">
-            <span className="font-semibold">使い方</span>
-            <span>{interactionHint}</span>
-          </div>
-
-          {searchMessage && (
-            <div className="pointer-events-auto rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
-              {searchMessage}
-            </div>
-          )}
-
-          {nodeListOpen && (
-            <div className="pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/92 shadow-lg backdrop-blur max-h-[min(52vh,360px)] overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-2 border-b border-slate-200 dark:border-slate-700">
-                <div>
-                  <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">キーボードでも使えるノード一覧</div>
-                  <div className="text-sm font-bold text-slate-800 dark:text-slate-100">現在表示中のノード</div>
+              {nodeListOpen && (
+                <div className="pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/92 shadow-lg backdrop-blur max-h-[min(52vh,360px)] overflow-hidden">
+                  <div className="flex items-center justify-between px-3 py-2 border-b border-slate-200 dark:border-slate-700">
+                    <div>
+                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">キーボードでも使えるノード一覧</div>
+                      <div className="text-sm font-bold text-slate-800 dark:text-slate-100">現在表示中のノード</div>
+                    </div>
+                    <button
+                      type="button"
+                      className="p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                      onClick={() => setNodeListOpen(false)}
+                      aria-label="ノード一覧を閉じる"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="max-h-[280px] overflow-y-auto px-3 py-3 space-y-3">
+                    {filteredNodeGroups.current.length === 0 && filteredNodeGroups.plants.length === 0 && filteredNodeGroups.insects.length === 0 ? (
+                      <div className="text-[12px] text-slate-500 dark:text-slate-400">一致するノードがありません。</div>
+                    ) : (
+                      <>
+                        {filteredNodeGroups.current.length > 0 && (
+                          <div>
+                            <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">中心ノード</div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {filteredNodeGroups.current.map((node) => (
+                                <button
+                                  key={node.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setSearchMessage('');
+                                    focusNodeById(node.id);
+                                    setNodeListOpen(false);
+                                  }}
+                                  className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold border border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+                                >
+                                  {node.name}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {filteredNodeGroups.plants.length > 0 && (
+                          <div>
+                            <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">植物</div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {filteredNodeGroups.plants.map((node) => (
+                                <button
+                                  key={node.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setSearchMessage('');
+                                    focusNodeById(node.id);
+                                    setNodeListOpen(false);
+                                  }}
+                                  className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
+                                >
+                                  {node.name}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {filteredNodeGroups.insects.length > 0 && (
+                          <div>
+                            <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">昆虫</div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {filteredNodeGroups.insects.map((node) => (
+                                <button
+                                  key={node.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setSearchMessage('');
+                                    focusNodeById(node.id);
+                                    setNodeListOpen(false);
+                                  }}
+                                  className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200"
+                                >
+                                  {node.name}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  className="p-2 -m-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                  onClick={() => setNodeListOpen(false)}
-                  aria-label="ノード一覧を閉じる"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="max-h-[280px] overflow-y-auto px-3 py-3 space-y-3">
-                {filteredNodeGroups.current.length === 0 && filteredNodeGroups.plants.length === 0 && filteredNodeGroups.insects.length === 0 ? (
-                  <div className="text-[12px] text-slate-500 dark:text-slate-400">一致するノードがありません。</div>
-                ) : (
-                  <>
-                    {filteredNodeGroups.current.length > 0 && (
-                      <div>
-                        <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">中心ノード</div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {filteredNodeGroups.current.map((node) => (
-                            <button
-                              key={node.id}
-                              type="button"
-                              onClick={() => {
-                                setSearchMessage('');
-                                focusNodeById(node.id);
-                                setNodeListOpen(false);
-                              }}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-semibold border border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-                            >
-                              {node.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {filteredNodeGroups.plants.length > 0 && (
-                      <div>
-                        <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">植物</div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {filteredNodeGroups.plants.map((node) => (
-                            <button
-                              key={node.id}
-                              type="button"
-                              onClick={() => {
-                                setSearchMessage('');
-                                focusNodeById(node.id);
-                                setNodeListOpen(false);
-                              }}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
-                            >
-                              {node.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {filteredNodeGroups.insects.length > 0 && (
-                      <div>
-                        <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">昆虫</div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {filteredNodeGroups.insects.map((node) => (
-                            <button
-                              key={node.id}
-                              type="button"
-                              onClick={() => {
-                                setSearchMessage('');
-                                focusNodeById(node.id);
-                                setNodeListOpen(false);
-                              }}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-[11px] border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200"
-                            >
-                              {node.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
+              )}
+
+              {isCompactPanel ? (
+                compactLegendOpen && (
+                  <div
+                    id="foodweb-legend-mobile"
+                    data-fg-ui
+                    className="pointer-events-auto bg-white/94 dark:bg-slate-800/92 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2 max-w-[280px]"
+                  >
+                    <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+                    {legendBody}
+                  </div>
+                )
+              ) : null}
+            </div>
+          </div>
+
+          {relationFilter !== 'all' && graphData.links.length === 0 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 rounded-full border border-amber-200 bg-amber-50/95 px-4 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
+              この絞り込み条件では表示できる関係がありません。
             </div>
           )}
-
-          {isCompactPanel ? (
-            compactLegendOpen && (
-              <div
-                id="foodweb-legend-mobile"
-                data-fg-ui
-                className="pointer-events-auto bg-white/94 dark:bg-slate-800/92 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2 max-w-[280px]"
-              >
-                <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-                {legendBody}
-              </div>
-            )
-          ) : null}
         </div>
 
         {!isCompactPanel && (
-          <div data-fg-ui className="absolute bottom-4 left-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2">
-            <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-            {legendBody}
-          </div>
-        )}
+          <aside className="min-h-0 w-[280px] flex flex-col border-l border-slate-200/80 bg-white/72 dark:border-slate-700/80 dark:bg-slate-950/55 lg:w-[320px] xl:w-[360px]">
+            <div className="border-b border-slate-200/80 px-4 py-4 dark:border-slate-700/80">
+              <div className="rounded-xl border border-slate-200/90 bg-white/88 p-4 text-xs text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/82 dark:text-slate-200">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">PCでは固定レーン表示</div>
+                </div>
+                {legendBody}
+              </div>
+            </div>
 
-        {relationFilter !== 'all' && graphData.links.length === 0 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 rounded-full border border-amber-200 bg-amber-50/95 px-4 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
-            この絞り込み条件では表示できる関係がありません。
-          </div>
-        )}
-
-        {!isCompactPanel && selectedNode && (
-          <div
-            data-fg-ui
-            className="absolute bottom-4 right-4 left-4 sm:left-auto sm:w-[360px] bg-white/95 dark:bg-slate-900/90 backdrop-blur rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-800 dark:text-slate-100 max-h-[70vh]"
-          >
-            {selectionPanelContent}
-          </div>
+            <div className="min-h-0 flex-1 p-4">
+              <div className="h-full rounded-xl border border-slate-200/90 bg-white/92 p-4 text-sm text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-100">
+                {selectedNode ? (
+                  selectionPanelContent
+                ) : (
+                  <div className="flex h-full flex-col justify-between gap-4">
+                    <div>
+                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">選択中のノード</div>
+                      <h3 className="mt-1 text-base font-bold text-slate-800 dark:text-slate-100">詳細パネル</h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                        ノードをクリックすると、食草・訪花の関係と詳細リンクをここに表示します。
+                      </p>
+                    </div>
+                    <div className="rounded-lg border border-slate-200/90 bg-slate-50/90 px-3 py-3 text-[12px] leading-5 text-slate-600 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
+                      PCではグラフのドラッグ移動とホイール拡大を無効にしています。拡大縮小や位置調整は上部ボタンと検索から行えます。
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </aside>
         )}
       </div>
 
