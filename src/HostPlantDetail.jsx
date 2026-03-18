@@ -18,6 +18,7 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
+import InfoPopover from './components/InfoPopover';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -1751,23 +1752,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 </div>
                 <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                   <span>凡例の使い方</span>
-                  <span className="relative inline-flex items-center group">
-                    <button
-                      type="button"
-                      className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300/80 bg-white/80 text-[11px] font-bold text-slate-600 shadow-sm transition-colors hover:border-slate-400 hover:text-slate-700 dark:border-slate-600/80 dark:bg-slate-800/80 dark:text-slate-200"
-                      aria-describedby="legend-tip"
-                      aria-label="凡例の説明を表示"
-                    >
-                      ?
-                    </button>
-                    <span
-                      id="legend-tip"
-                      role="tooltip"
-                      className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 w-56 -translate-x-1/2 rounded-lg border border-slate-200/70 bg-white/95 px-3 py-2 text-[11px] text-slate-600 shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 dark:border-slate-700/80 dark:bg-slate-900/95 dark:text-slate-200"
-                    >
-                      ノード色と線のスタイルで、食草・訪花の関係を表示します。
-                    </span>
-                  </span>
+                  <InfoPopover
+                    title="凡例"
+                    align="center"
+                    buttonAriaLabel="凡例の説明を表示"
+                    buttonClassName="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300/80 bg-white/90 text-[11px] font-bold text-slate-700 shadow-sm transition-colors hover:border-slate-400 hover:bg-white dark:border-slate-600/80 dark:bg-slate-900/85 dark:text-slate-100 dark:hover:bg-slate-800"
+                    panelClassName="w-[min(18rem,calc(100vw-1.5rem))]"
+                    contentClassName="text-[11px] leading-5"
+                  >
+                    ノード色と線のスタイルで、食草・訪花の関係を表示します。
+                  </InfoPopover>
                 </div>
               </div>
             </div>
