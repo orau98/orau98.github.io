@@ -22,6 +22,21 @@
 
 /* モダンなフォントスタックで洗練されたデザイン */
 @layer base {
+  html {
+    background:
+      radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 32%),
+      linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+    color-scheme: light;
+  }
+
+  html.dark {
+    background:
+      radial-gradient(circle at top, rgba(16, 185, 129, 0.14), transparent 30%),
+      radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.12), transparent 24%),
+      linear-gradient(180deg, #020617 0%, #0b1120 46%, #111827 100%);
+    color-scheme: dark;
+  }
+
   body {
     font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 
                  "Helvetica Neue", "Segoe UI", "Hiragino Kaku Gothic ProN",
@@ -33,6 +48,31 @@
     font-weight: 400;
     font-size: 16px;
     letter-spacing: -0.011em; /* モダンなタイトな文字間隔 */
+    min-height: 100vh;
+    background: transparent;
+    color: rgb(15 23 42);
+    transition:
+      background-color 220ms ease,
+      color 220ms ease,
+      border-color 220ms ease;
+  }
+
+  html.dark body {
+    color: rgb(226 232 240);
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(16, 185, 129, 0.22);
+    color: inherit;
+  }
+
+  html.dark ::selection {
+    background: rgba(52, 211, 153, 0.28);
+    color: rgb(241 245 249);
   }
   
   /* 日本語テキストの最適化 */
