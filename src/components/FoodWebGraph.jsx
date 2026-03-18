@@ -7,6 +7,7 @@ import { createSafeScientificPlantFilename } from '../utils/filename';
 import { buildResizedImageUrl } from '../utils/imageSrcset';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
+import InfoPopover from './InfoPopover';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
@@ -493,7 +494,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [relationFilter, setRelationFilter] = useState('all');
   const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
-  const [compactLegendOpen, setCompactLegendOpen] = useState(false);
   const [nodeListOpen, setNodeListOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchMessage, setSearchMessage] = useState('');
@@ -519,7 +519,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setSearchQuery('');
     setSearchMessage('');
     setNodeListOpen(false);
-    setCompactLegendOpen(false);
     setIsPinDragging(false);
   }, [currentInsect?.name, currentPlantName]);
 
@@ -545,12 +544,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!selectedNodeId) return;
     setPanelCollapsed(isCompactPanel);
   }, [selectedNodeId, isCompactPanel]);
-
-  useEffect(() => {
-    if (!isCompactPanel) return;
-    if (!selectedNodeId) return;
-    setCompactLegendOpen(false);
-  }, [isCompactPanel, selectedNodeId]);
 
   // load image indexes once
   useEffect(() => {
@@ -1703,6 +1696,34 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     </>
   );
 
+  const graphHelpPopoverContent = (
+    <div className="space-y-3">
+      <div className="space-y-1">
+        <div className="font-semibold text-slate-900 dark:text-white">操作</div>
+        <p>{interactionHint}</p>
+      </div>
+
+      <div className="space-y-1">
+        <div className="font-semibold text-slate-900 dark:text-white">絞り込み</div>
+        <div className="space-y-1.5">
+          {RELATION_FILTERS.map((item) => (
+            <div key={item.value}>
+              <span className="font-medium text-slate-800 dark:text-slate-100">{item.label}</span>
+              <span className="text-slate-500 dark:text-slate-300">: {item.helper}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="font-semibold text-slate-900 dark:text-white">凡例</div>
+        <div className="rounded-xl border border-slate-200/90 bg-slate-50/90 p-3 text-[11px] text-slate-700 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-200">
+          {legendBody}
+        </div>
+      </div>
+    </div>
+  );
+
   const nodeListPanel = (
     <div className="pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/92 shadow-sm backdrop-blur overflow-hidden">
       <div className="flex items-center justify-between px-3 py-2 border-b border-slate-200 dark:border-slate-700">
@@ -2064,14 +2085,23 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   >
                     {desktopControlsOpen ? '設定を閉じる' : '表示設定'}
                   </button>
+                  <InfoPopover
+                    title="ネットワーク図の見方"
+                    buttonAriaLabel="ネットワーク図の使い方を表示"
+                    buttonClassName={`${desktopControlButtonClass} inline-flex h-8 w-8 items-center justify-center px-0 text-sm`}
+                    panelClassName="w-[min(24rem,calc(100vw-2rem))]"
+                    buttonContent={<span aria-hidden="true">?</span>}
+                  >
+                    {graphHelpPopoverContent}
+                  </InfoPopover>
                 </div>
               </div>
 
-              <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                {relationFilter !== 'all'
-                  ? relationFilterConfig.helper
-                  : 'クリックで関係確認。絞り込みと凡例は表示設定から開けます。'}
-              </div>
+              {relationFilter !== 'all' && (
+                <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                  {relationFilterConfig.helper}
+                </div>
+              )}
             </div>
 
             {searchMessage && (
@@ -2153,14 +2183,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
                     {relationFilterButtons}
                   </div>
-                  <div className="max-w-[320px] rounded-lg border border-slate-200/90 bg-slate-50/90 p-3 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-200">
-                    <div className="mb-2 text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-                    {legendBody}
+                  <div className="text-[11px] text-slate-500 dark:text-slate-300">
+                    凡例と操作方法は上段の ? ボタンから確認できます。
                   </div>
-                </div>
-
-                <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                  {interactionHint}
                 </div>
 
                 {nodeListOpen && (
@@ -2292,7 +2317,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                       type="button"
                       onClick={() => {
                         setNodeListOpen((prev) => !prev);
-                        setCompactLegendOpen(false);
                       }}
                       className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
                       aria-expanded={nodeListOpen}
@@ -2308,18 +2332,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                         全固定解除
                       </button>
                     )}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCompactLegendOpen((prev) => !prev);
-                        setNodeListOpen(false);
-                      }}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      aria-expanded={compactLegendOpen}
-                      aria-controls="foodweb-legend-mobile"
+                    <InfoPopover
+                      title="ネットワーク図の見方"
+                      align="right"
+                      buttonAriaLabel="ネットワーク図の使い方を表示"
+                      buttonClassName="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 text-sm font-semibold hover:bg-white dark:hover:bg-slate-800"
+                      panelClassName="w-[min(22rem,calc(100vw-2rem))]"
+                      buttonContent={<span aria-hidden="true">?</span>}
                     >
-                      凡例
-                    </button>
+                      {graphHelpPopoverContent}
+                    </InfoPopover>
                   </div>
 
                   <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
@@ -2371,11 +2393,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   </div>
                 </div>
 
-                <div className="pointer-events-auto inline-flex max-w-full flex-wrap items-center gap-2 self-start rounded-full bg-slate-900/72 px-3 py-1.5 text-[11px] text-white shadow dark:bg-slate-100/92 dark:text-slate-900">
-                  <span className="font-semibold">使い方</span>
-                  <span>{interactionHint}</span>
-                </div>
-
                 {searchMessage && (
                   <div className="pointer-events-auto max-w-[560px] self-start rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
                     {searchMessage}
@@ -2385,17 +2402,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 {nodeListOpen && (
                   <div className="pointer-events-auto max-h-[min(52vh,360px)] max-w-[560px] overflow-hidden">
                     {nodeListPanel}
-                  </div>
-                )}
-
-                {compactLegendOpen && (
-                  <div
-                    id="foodweb-legend-mobile"
-                    data-fg-ui
-                    className="pointer-events-auto bg-white/94 dark:bg-slate-800/92 backdrop-blur rounded-lg shadow border border-slate-200 dark:border-slate-600 p-3 text-xs text-slate-700 dark:text-slate-200 space-y-2 max-w-[280px]"
-                  >
-                    <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-300">凡例</div>
-                    {legendBody}
                   </div>
                 )}
               </div>

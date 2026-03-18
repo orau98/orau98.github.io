@@ -5,6 +5,7 @@ import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
 import SearchInput from "./components/SearchInput";
 import StickyHeader from "./components/StickyHeader";
+import InfoPopover from "./components/InfoPopover";
 import { ExplorerStructuredData, MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
@@ -1513,12 +1514,24 @@ const InsectsHostPlantExplorer = React.memo(
                     ariaLabel={`${activeTab === "plants" ? "植物" : "昆虫"}を検索`}
                     historyScope={activeTab}
                   />
-                  <p className="mt-2 text-[11px] md:text-xs text-white/70">
-                    「/」または Ctrl/Cmd + K で検索にフォーカス。Esc で候補を閉じ、もう一度押すと入力をクリアできます。
-                  </p>
-                  <p className="mt-1 text-xs md:text-sm text-white/80">
-                    検索対象: {activeTab === "plants" ? "植物" : "昆虫"}（タブで切り替え）
-                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs md:text-sm text-white/85">
+                    <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
+                      検索対象: {activeTab === "plants" ? "植物" : "昆虫"}
+                    </span>
+                    <InfoPopover
+                      title="検索の使い方"
+                      align="left"
+                      buttonAriaLabel="検索の使い方を表示"
+                      buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
+                      panelClassName="border-white/15 bg-slate-950/96 text-white"
+                      contentClassName="space-y-2 text-white/90"
+                      titleClassName="text-white"
+                    >
+                      <p>「/」または Ctrl/Cmd + K で検索欄にフォーカスします。</p>
+                      <p>Esc を 1 回押すと候補を閉じ、続けて押すと入力をクリアします。</p>
+                      <p>検索対象は上のタブで、昆虫と植物を切り替えできます。</p>
+                    </InfoPopover>
+                  </div>
                 </div>
               </div>
             </div>
