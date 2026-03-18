@@ -18,6 +18,100 @@ const MONTHS = [
   { name: '12月', short: 'Dec', number: 12, color: 'bg-orange-300', lightColor: 'bg-orange-100', textColor: 'text-orange-700', season: 'winter' }
 ];
 
+const FULL_YEAR_PATTERN = /(一年中|周年|通年|年中)/;
+const EMERGENCE_HINT_PATTERN = /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中)/;
+const FUZZY_SEASON_CUES = [
+  { pattern: /(初春|早春)/, months: [2, 3] },
+  { pattern: /(晩春)/, months: [4, 5] },
+  { pattern: /(翌春|春にも|春まで|春ごろ|春頃|春先|春に|春の|春型|春季|春期|春)/, months: [3, 4, 5] },
+  { pattern: /(初夏)/, months: [5, 6] },
+  { pattern: /(盛夏)/, months: [7, 8] },
+  { pattern: /(晩夏)/, months: [8, 9] },
+  { pattern: /(翌夏|夏にも|夏まで|夏ごろ|夏頃|夏に|夏の|夏型|夏季|夏期|夏)/, months: [6, 7, 8] },
+  { pattern: /(初秋)/, months: [9, 10] },
+  { pattern: /(晩秋)/, months: [10, 11] },
+  { pattern: /(翌秋|秋にも|秋まで|秋ごろ|秋頃|秋に|秋の|秋型|秋季|秋期|秋)/, months: [9, 10, 11] },
+  { pattern: /(初冬|晩冬|真冬|厳冬)/, months: [12, 1, 2] },
+  { pattern: /(翌冬|冬にも|冬まで|冬ごろ|冬頃|冬に|冬の|冬型|冬季|冬期)/, months: [12, 1, 2] }
+];
+
+const addMonthPeriods = (monthSet, periodSet, month) => {
+  if (!(month >= 1 && month <= 12)) return;
+  monthSet.add(month);
+  for (let p = 1; p <= 3; p++) {
+    periodSet.add(month + p * 0.1);
+  }
+};
+
+const addMonthRangePeriods = (monthSet, periodSet, startMonth, endMonth) => {
+  if (!(startMonth >= 1 && startMonth <= 12) || !(endMonth >= 1 && endMonth <= 12)) return;
+  if (startMonth <= endMonth) {
+    for (let month = startMonth; month <= endMonth; month++) {
+      addMonthPeriods(monthSet, periodSet, month);
+    }
+    return;
+  }
+  for (let month = startMonth; month <= 12; month++) {
+    addMonthPeriods(monthSet, periodSet, month);
+  }
+  for (let month = 1; month <= endMonth; month++) {
+    addMonthPeriods(monthSet, periodSet, month);
+  }
+};
+
+const extractMentionedMonths = (text = '') =>
+  Array.from(text.matchAll(/(\d{1,2})月/g))
+    .map((match) => parseInt(match[1], 10))
+    .filter((month) => month >= 1 && month <= 12);
+
+const shouldAnalyzeEmergenceHint = (text = '', isPrimary = false) => {
+  if (!text) return false;
+  if (isPrimary) return true;
+  return EMERGENCE_HINT_PATTERN.test(text);
+};
+
+const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorMonths = []) => {
+  const fuzzyMonths = new Set();
+  const fuzzyPeriods = new Set();
+  const texts = [primaryText, ...supplementalTexts]
+    .map((text) => String(text || '').trim())
+    .filter(Boolean);
+
+  texts.forEach((text, index) => {
+    const isPrimary = index === 0;
+    if (!shouldAnalyzeEmergenceHint(text, isPrimary)) return;
+
+    FUZZY_SEASON_CUES.forEach(({ pattern, months }) => {
+      if (pattern.test(text)) {
+        months.forEach((month) => addMonthPeriods(fuzzyMonths, fuzzyPeriods, month));
+      }
+    });
+
+    const mentionedMonths = extractMentionedMonths(text);
+    const anchorMonth = mentionedMonths.length > 0
+      ? mentionedMonths[mentionedMonths.length - 1]
+      : (anchorMonths.length > 0 ? anchorMonths[anchorMonths.length - 1] : null);
+
+    if (anchorMonth && /(翌春|春にも|春まで)/.test(text) && /(越冬|越年|翌春)/.test(text)) {
+      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 5);
+    }
+    if (anchorMonth && /(翌夏|夏にも|夏まで)/.test(text) && /(越冬|越年|越夏|翌夏)/.test(text)) {
+      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 8);
+    }
+    if (anchorMonth && /(翌秋|秋にも|秋まで)/.test(text) && /(越冬|越年|越夏|翌秋)/.test(text)) {
+      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 11);
+    }
+    if (anchorMonth && /(翌冬|冬にも|冬まで)/.test(text) && /(越年|越夏|翌冬)/.test(text)) {
+      addMonthRangePeriods(fuzzyMonths, fuzzyPeriods, anchorMonth === 12 ? 1 : anchorMonth + 1, 2);
+    }
+  });
+
+  return {
+    months: Array.from(fuzzyMonths).sort((a, b) => a - b),
+    periods: Array.from(fuzzyPeriods).sort((a, b) => a - b)
+  };
+};
+
 // 季節アイコン
 const SeasonIcon = ({ season, className = "w-4 h-4" }) => {
   const icons = {
@@ -47,8 +141,12 @@ const SeasonIcon = ({ season, className = "w-4 h-4" }) => {
 };
 
 // 成虫発生時期を解析する関数（旬単位対応）
-const parseEmergenceTime = (emergenceTime) => {
-  if (!emergenceTime || emergenceTime === '不明') return { months: [], periods: [] };
+const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
+  if ((!emergenceTime || emergenceTime === '不明') && (!supplementalTexts || supplementalTexts.length === 0)) {
+    return { months: [], periods: [], fuzzyMonths: [], fuzzyPeriods: [] };
+  }
+
+  emergenceTime = String(emergenceTime || '');
   
   // Debug log for specific species
   const isDebugSpecies = emergenceTime.includes('3月') || emergenceTime.includes('丘陵地') || emergenceTime.includes('山地') || emergenceTime.includes('10-12、1-5月');
@@ -58,6 +156,11 @@ const parseEmergenceTime = (emergenceTime) => {
   
   const activeMonths = new Set();
   const activePeriods = new Set(); // 月.旬の形式 (例: 3.1 = 3月上旬, 3.2 = 3月中旬, 3.3 = 3月下旬)
+
+  const hintTexts = [emergenceTime, ...(supplementalTexts || [])].filter(Boolean);
+  if (hintTexts.some((text) => FULL_YEAR_PATTERN.test(String(text)))) {
+    addMonthRangePeriods(activeMonths, activePeriods, 1, 12);
+  }
   
   // 月の漢数字を数字に変換
   const kanjiToNumber = {
@@ -579,34 +682,11 @@ const parseEmergenceTime = (emergenceTime) => {
     }
   }
   
-  // 季節表現を月に変換
-  const seasonMap = {
-    '春': [3, 4, 5],
-    '夏': [6, 7, 8],
-    '秋': [9, 10, 11],
-    '冬': [12, 1, 2],
-    '初春': [2, 3],
-    '晩春': [4, 5],
-    '初夏': [5, 6],
-    '盛夏': [7, 8],
-    '晩夏': [8, 9],
-    '初秋': [9, 10],
-    '晩秋': [10, 11],
-    '初冬': [11, 12],
-    '真冬': [12, 1, 2]
-  };
-  
-  Object.entries(seasonMap).forEach(([season, months]) => {
-    if (emergenceTime.includes(season)) {
-      months.forEach(month => {
-        activeMonths.add(month);
-        // 全旬を追加
-        for (let p = 1; p <= 3; p++) {
-          activePeriods.add(month + p * 0.1);
-        }
-      });
-    }
-  });
+  const fuzzyData = collectFuzzyEmergenceHints(
+    emergenceTime,
+    supplementalTexts,
+    Array.from(activeMonths).sort((a, b) => a - b)
+  );
   
   // Debug log for specific species
   if (isDebugSpecies) {
@@ -618,7 +698,9 @@ const parseEmergenceTime = (emergenceTime) => {
   
   return {
     months: Array.from(activeMonths).sort((a, b) => a - b),
-    periods: Array.from(activePeriods).sort((a, b) => a - b)
+    periods: Array.from(activePeriods).sort((a, b) => a - b),
+    fuzzyMonths: fuzzyData.months,
+    fuzzyPeriods: fuzzyData.periods
   };
 };
 
@@ -649,13 +731,26 @@ const getActiveRanges = (activeMonths) => {
   return ranges;
 };
 
-const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
-  const emergenceData = useMemo(() => parseEmergenceTime(emergenceTime), [emergenceTime]);
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, supplementalTexts = [] }) => {
+  const emergenceData = useMemo(
+    () => parseEmergenceTime(emergenceTime, supplementalTexts),
+    [emergenceTime, supplementalTexts]
+  );
   const activeMonths = emergenceData.months;
   const activePeriods = emergenceData.periods;
+  const fuzzyMonths = emergenceData.fuzzyMonths || [];
+  const fuzzyPeriods = emergenceData.fuzzyPeriods || [];
   const activeRanges = useMemo(() => getActiveRanges(activeMonths), [activeMonths]);
+  const displayText = useMemo(() => {
+    const primary = String(emergenceTime || '').trim();
+    if (primary && primary !== '不明') return primary;
+    const emergenceHintText = (supplementalTexts || [])
+      .map((text) => String(text || '').trim())
+      .find((text) => shouldAnalyzeEmergenceHint(text));
+    return emergenceHintText || (supplementalTexts || []).map((text) => String(text || '').trim()).find(Boolean) || '';
+  }, [emergenceTime, supplementalTexts]);
   
-  if (!emergenceTime || emergenceTime === '不明' || activeMonths.length === 0) {
+  if ((!displayText || displayText === '不明') && activeMonths.length === 0 && fuzzyMonths.length === 0) {
     return (
       <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -685,6 +780,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
                 {[1, 2, 3].map((periodNum) => {
                   const periodValue = month.number + periodNum * 0.1;
                   const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                  const isFuzzy = !isActive && fuzzyPeriods.some(p => Math.abs(p - periodValue) < 0.05);
                   const periodName = periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
                   
                   const dividerClass = periodNum < 3 ? 'border-r border-white/30 dark:border-slate-600/50' : '';
@@ -694,11 +790,11 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
                       key={periodNum}
                       className={`
                         flex-1 
-                        ${isActive ? `${month.color} opacity-60` : 'bg-transparent'} 
+                        ${isActive ? `${month.color} opacity-60` : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
                         transition-all duration-200
                         ${dividerClass}
                       `}
-                      title={`${month.name}${periodName} ${isActive ? '(発生期)' : ''}`}
+                      title={`${month.name}${periodName} ${isActive ? '(発生期)' : isFuzzy ? '(月幅のある記述)' : ''}`}
                     >
                     </div>
                   );
@@ -794,6 +890,28 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
           {/* アクティブ期間のバー（旬単位） */}
           <div className="absolute inset-2 grid grid-cols-12 gap-1">
             {MONTHS.map((month) => (
+              <div key={`fuzzy-${month.number}`} className="grid grid-cols-3 gap-px p-px">
+                {[1, 2, 3].map((periodNum) => {
+                  const periodValue = month.number + periodNum * 0.1;
+                  const isExact = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                  const isFuzzy = !isExact && fuzzyPeriods.some(p => Math.abs(p - periodValue) < 0.05);
+
+                  if (!isFuzzy) return <div key={periodNum} />;
+
+                  return (
+                    <div
+                      key={periodNum}
+                      className="bg-gradient-to-b from-orange-200/85 to-orange-50/10 rounded-sm min-h-[32px] border border-dashed border-orange-200/80"
+                      title={`${month.name} - 月幅のある記述`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          <div className="absolute inset-2 grid grid-cols-12 gap-1">
+            {MONTHS.map((month) => (
               <div key={month.number} className="grid grid-cols-3 gap-px p-px">
                 {[1, 2, 3].map((periodNum) => {
                   const periodValue = month.number + periodNum * 0.1;
@@ -827,13 +945,20 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false }) => {
         
         
       </div>
+
+      {fuzzyPeriods.length > 0 && (
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <span className="inline-block h-3 w-6 rounded-sm bg-gradient-to-r from-orange-200/90 to-orange-50/10 border border-dashed border-orange-200/80" />
+          <span>グラデーションは、春・翌春など月が明示されない記述です。</span>
+        </div>
+      )}
       
       {/* 原文表示 - 食草セクションと同じ構造で色違い */}
       <div>
         <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-emerald-200/50 dark:border-emerald-700/50">
           <div className="flex items-center space-x-3">
             <span className="font-medium text-slate-700 dark:text-slate-300">
-              {emergenceTime}
+              {displayText}
             </span>
           </div>
         </div>

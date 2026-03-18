@@ -1559,6 +1559,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               const { emergenceTime } = extractEmergenceTime(moth.notes || '');
               const normalizedTime = normalizeEmergenceTime(emergenceTime);
               const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
+              const supplementalEmergenceTexts = Array.from(new Set([
+                moth.notes || '',
+                ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.map((note) => note?.content || '') : [])
+              ].map((text) => String(text || '').trim()).filter(Boolean)));
+              const hasSupplementalEmergenceHint = supplementalEmergenceTexts.some((text) =>
+                /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中|翌春|翌夏|翌秋|翌冬)/.test(text)
+              );
               
               // generalNotesから出現時期を抽出（共通関数で柔軟に判定）
               const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
@@ -1569,7 +1576,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 return t.includes('出現時期') || t.includes('成虫発生時期') || t.includes('発生時期') || t.includes('出現');
               });
               
-              return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote;
+              return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote || hasSupplementalEmergenceHint;
             })() && (
               <div id="emergence-time" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
@@ -1659,12 +1666,28 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       const withSource = allEmergenceTimeData.find(i => i.source && i.source.trim());
                       if (withSource) primarySource = withSource.source;
                     }
+                    if (!primarySource) {
+                      const noteWithSource = Array.isArray(moth.generalNotes)
+                        ? moth.generalNotes.find((note) => note?.reference && String(note.reference).trim())
+                        : null;
+                      if (noteWithSource) primarySource = noteWithSource.reference;
+                    }
+                    if (!primarySource) {
+                      primarySource = moth.source || '';
+                    }
+
+                    const supplementalEmergenceTexts = Array.from(new Set([
+                      moth.notes || '',
+                      ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.map((note) => note?.content || '') : []),
+                      ...allEmergenceTimeData.map((item) => item?.period || '')
+                    ].map((text) => String(text || '').trim()).filter(Boolean)));
                     
                     return (
                       <EmergenceTimeDisplay
                         emergenceTime={primaryEmergenceTime}
                         source={primarySource}
                         compact={false}
+                        supplementalTexts={supplementalEmergenceTexts}
                       />
                     );
                   })()}

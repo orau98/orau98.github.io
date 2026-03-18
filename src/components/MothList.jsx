@@ -453,14 +453,22 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 // Use emergenceTime property if available (priority over re-extraction)
                 const emergenceTime = moth.emergenceTime || extractEmergenceTime(moth.notes || '').emergenceTime;
                 const normalizedTime = normalizeEmergenceTime(emergenceTime);
+                const supplementalEmergenceTexts = Array.from(new Set([
+                  moth.notes || '',
+                  ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.map((note) => note?.content || '') : [])
+                ].map((text) => String(text || '').trim()).filter(Boolean)));
+                const hasSupplementalEmergenceHint = supplementalEmergenceTexts.some((text) =>
+                  /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中)/.test(text)
+                );
                 
-                if (normalizedTime) {
+                if (normalizedTime || hasSupplementalEmergenceHint) {
                   return (
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-700/50">
                       <EmergenceTimeDisplay 
-                        emergenceTime={normalizedTime} 
+                        emergenceTime={normalizedTime || ''}
                         source={moth.source}
                         compact={true}
+                        supplementalTexts={supplementalEmergenceTexts}
                       />
                     </div>
                   );

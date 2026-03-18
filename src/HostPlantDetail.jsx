@@ -573,15 +573,30 @@ const InsectCard = React.memo(({ insect, idx, imageFilenames = new Set(), imageE
           <p className="text-slate-600 dark:text-slate-400 text-sm italic mb-3">{formatScientificNameReact(insect.scientificName)}</p>
         )}
         
-        {normalizedTime && (
+        {(() => {
+          const supplementalEmergenceTexts = Array.from(new Set([
+            insect.notes || '',
+            ...(Array.isArray(insect.generalNotes) ? insect.generalNotes.map((note) => note?.content || '') : [])
+          ].map((text) => String(text || '').trim()).filter(Boolean)));
+          const hasSupplementalEmergenceHint = supplementalEmergenceTexts.some((text) =>
+            /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中)/.test(text)
+          );
+
+          if (!normalizedTime && !hasSupplementalEmergenceHint) {
+            return null;
+          }
+
+          return (
           <div className="mt-auto pt-2 border-t border-slate-100 dark:border-slate-700/50">
             <EmergenceTimeDisplay 
-              emergenceTime={normalizedTime} 
+              emergenceTime={normalizedTime || ''}
               source={insect.source} 
-              compact={true} 
+              compact={true}
+              supplementalTexts={supplementalEmergenceTexts}
             />
           </div>
-        )}
+          );
+        })()}
       </div>
     </Link>
   );
