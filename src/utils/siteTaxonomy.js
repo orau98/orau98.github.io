@@ -1,3 +1,6 @@
+import { EN_TYPE_LABELS, EN_TYPE_PLURALS } from './englishNaming.js';
+import { DEFAULT_LOCALE, localizePath, normalizeLocale, stripLocalePrefix } from './locale.js';
+
 const insectSections = [
   {
     type: 'moth',
@@ -5,8 +8,11 @@ const insectSections = [
     routeSegment: 'moth',
     detailParam: 'mothSlug',
     label: '蛾',
+    labelEn: EN_TYPE_LABELS.moth,
     searchLabel: '蛾',
+    searchLabelEn: 'Moth',
     metaIndexTitle: '蛾（メタページ一覧）',
+    metaIndexTitleEn: `${EN_TYPE_PLURALS.moth} (meta index)`,
     defaultFamilyName: 'ヤガ科',
     sitemapPriority: '0.8',
   },
@@ -16,8 +22,11 @@ const insectSections = [
     routeSegment: 'butterfly',
     detailParam: 'butterflySlug',
     label: '蝶',
+    labelEn: EN_TYPE_LABELS.butterfly,
     searchLabel: '蝶',
+    searchLabelEn: 'Butterfly',
     metaIndexTitle: '蝶（メタページ一覧）',
+    metaIndexTitleEn: `${EN_TYPE_PLURALS.butterfly} (meta index)`,
     defaultFamilyName: 'タテハチョウ科',
     sitemapPriority: '0.8',
   },
@@ -27,8 +36,11 @@ const insectSections = [
     routeSegment: 'beetle',
     detailParam: 'beetleSlug',
     label: 'タマムシ',
+    labelEn: EN_TYPE_LABELS.beetle,
     searchLabel: '甲虫',
+    searchLabelEn: 'Jewel beetle',
     metaIndexTitle: 'タマムシ（メタページ一覧）',
+    metaIndexTitleEn: `${EN_TYPE_PLURALS.beetle} (meta index)`,
     defaultFamilyName: 'タマムシ科',
     sitemapPriority: '0.7',
   },
@@ -38,8 +50,11 @@ const insectSections = [
     routeSegment: 'longhornbeetle',
     detailParam: 'longhornbeetleSlug',
     label: 'カミキリムシ',
+    labelEn: EN_TYPE_LABELS.longhornbeetle,
     searchLabel: 'カミキリ',
+    searchLabelEn: 'Longhorn beetle',
     metaIndexTitle: 'カミキリムシ（メタページ一覧）',
+    metaIndexTitleEn: `${EN_TYPE_PLURALS.longhornbeetle} (meta index)`,
     defaultFamilyName: 'カミキリムシ科',
     sitemapPriority: '0.7',
   },
@@ -49,8 +64,11 @@ const insectSections = [
     routeSegment: 'leafbeetle',
     detailParam: 'leafbeetleSlug',
     label: 'ハムシ',
+    labelEn: EN_TYPE_LABELS.leafbeetle,
     searchLabel: 'ハムシ',
+    searchLabelEn: 'Leaf beetle',
     metaIndexTitle: 'ハムシ（メタページ一覧）',
+    metaIndexTitleEn: `${EN_TYPE_PLURALS.leafbeetle} (meta index)`,
     defaultFamilyName: 'ハムシ科',
     sitemapPriority: '0.7',
   },
@@ -60,8 +78,11 @@ const insectSections = [
     routeSegment: 'aphid',
     detailParam: 'aphidSlug',
     label: 'アブラムシ',
+    labelEn: EN_TYPE_LABELS.aphid,
     searchLabel: 'アブラムシ',
+    searchLabelEn: 'Aphid',
     metaIndexTitle: 'アブラムシ（メタページ一覧）',
+    metaIndexTitleEn: `${EN_TYPE_PLURALS.aphid} (meta index)`,
     defaultFamilyName: 'アブラムシ科',
     sitemapPriority: '0.7',
   },
@@ -74,8 +95,11 @@ export const PLANT_SECTION_CONFIG = Object.freeze({
   routeSegment: 'plant',
   detailParam: 'plantName',
   label: '植物',
+  labelEn: EN_TYPE_LABELS.plant,
   searchLabel: '植物',
+  searchLabelEn: 'Plant',
   metaIndexTitle: '植物（メタページ一覧）',
+  metaIndexTitleEn: `${EN_TYPE_PLURALS.plant} (meta index)`,
   sitemapPriority: '0.6',
 });
 
@@ -83,6 +107,9 @@ export const EXPLORER_ROUTE_CONFIGS = Object.freeze([
   Object.freeze({ path: '/', initialTab: 'insects' }),
   Object.freeze({ path: '/moth', initialTab: 'insects' }),
   Object.freeze({ path: '/plant', initialTab: 'plants' }),
+  Object.freeze({ path: '/en', initialTab: 'insects' }),
+  Object.freeze({ path: '/en/moth', initialTab: 'insects' }),
+  Object.freeze({ path: '/en/plant', initialTab: 'plants' }),
 ]);
 
 export const INSECT_COLLECTION_KEYS = Object.freeze(
@@ -90,9 +117,14 @@ export const INSECT_COLLECTION_KEYS = Object.freeze(
 );
 
 export const INSECT_DETAIL_ROUTE_PATTERNS = Object.freeze(
-  INSECT_SECTION_CONFIGS.map(
-    (section) => `/${section.routeSegment}/:${section.detailParam}`,
-  ),
+  [
+    ...INSECT_SECTION_CONFIGS.map(
+      (section) => `/${section.routeSegment}/:${section.detailParam}`,
+    ),
+    ...INSECT_SECTION_CONFIGS.map(
+      (section) => `/en/${section.routeSegment}/:${section.detailParam}`,
+    ),
+  ],
 );
 
 export const META_PAGE_SECTIONS = Object.freeze([
@@ -141,35 +173,65 @@ export const getSectionConfigByRouteSegment = (routeSegment) =>
 export const getInsectRouteBase = (type, fallbackType = 'moth') =>
   `/${getInsectSectionConfig(type, fallbackType).routeSegment}/`;
 
+export const getLocalizedInsectRouteBase = (
+  type,
+  fallbackType = 'moth',
+  locale = DEFAULT_LOCALE,
+) => localizePath(getInsectRouteBase(type, fallbackType), locale);
+
 export const buildInsectMetaPagePath = (
   type,
   id,
   fallbackType = 'moth',
+  locale = DEFAULT_LOCALE,
 ) => {
   if (!id) return '/';
   const { routeSegment } = getInsectSectionConfig(type, fallbackType);
-  return `/meta/${routeSegment}/${encodeURIComponent(id)}.html`;
+  return localizePath(
+    `/meta/${routeSegment}/${encodeURIComponent(id)}.html`,
+    locale,
+  );
 };
 
-export const buildPlantMetaPagePath = (plantName) => {
+export const buildPlantMetaPagePath = (
+  plantName,
+  locale = DEFAULT_LOCALE,
+) => {
   if (!plantName) return '/';
-  return `/meta/${PLANT_SECTION_CONFIG.routeSegment}/${encodeURIComponent(
-    plantName,
-  )}.html`;
+  return localizePath(
+    `/meta/${PLANT_SECTION_CONFIG.routeSegment}/${encodeURIComponent(
+      plantName,
+    )}.html`,
+    locale,
+  );
 };
 
-export const getSearchTypeLabel = (type) => {
+export const buildPlantPath = (plantName, locale = DEFAULT_LOCALE) => {
+  if (!plantName) return localizePath('/plant', locale);
+  return localizePath(
+    `/${PLANT_SECTION_CONFIG.routeSegment}/${encodeURIComponent(plantName)}`,
+    locale,
+  );
+};
+
+export const getSearchTypeLabel = (type, locale = DEFAULT_LOCALE) => {
+  const normalizedLocale = normalizeLocale(locale);
   if (type === PLANT_SECTION_CONFIG.type) {
-    return PLANT_SECTION_CONFIG.searchLabel;
+    return normalizedLocale === 'en'
+      ? PLANT_SECTION_CONFIG.searchLabelEn
+      : PLANT_SECTION_CONFIG.searchLabel;
   }
   if (!type) return '';
-  return getInsectSectionConfig(type).searchLabel;
+  const section = getInsectSectionConfig(type);
+  return normalizedLocale === 'en' ? section.searchLabelEn : section.searchLabel;
 };
 
 export const isExplorerRoutePath = (pathname = '') =>
   EXPLORER_ROUTE_CONFIGS.some((route) => route.path === pathname);
 
-export const isKnownDetailPath = (pathname = '') =>
-  [...INSECT_SECTION_CONFIGS, PLANT_SECTION_CONFIG].some((section) =>
-    pathname.startsWith(`/${section.routeSegment}/`),
+export const isKnownDetailPath = (pathname = '') => {
+  const strippedPath = stripLocalePrefix(pathname);
+  return [...INSECT_SECTION_CONFIGS, PLANT_SECTION_CONFIG].some((section) =>
+    strippedPath.startsWith(`/${section.routeSegment}/`),
   );
+};
