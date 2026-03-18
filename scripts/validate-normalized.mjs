@@ -82,6 +82,7 @@ const NON_PLANT_HOST_NAME_SET = new Set([
   'ハビロキバガ',
   'チャミノ',
 ]);
+const hasEmbeddedObservationType = (plantName) => /（飼育(?:可|では[^）]+)?）/.test(plantName);
 const hasSuspiciousKirigaPattern = (row, plantName) => {
   if (cleanString(row.reference) !== '日本のキリガ') return false;
   return (
@@ -185,6 +186,7 @@ if (hostplantsPath) {
     if (
       SUSPICIOUS_PLANT_NAME_SET.has(plantName) ||
       NON_PLANT_HOST_NAME_SET.has(plantName) ||
+      hasEmbeddedObservationType(plantName) ||
       plantName.endsWith('の葉') ||
       isSentenceLikePlantName ||
       hasSuspiciousKirigaPattern(row, plantName)
