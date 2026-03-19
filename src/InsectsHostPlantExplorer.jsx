@@ -3,10 +3,8 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
-import SearchInput from "./components/SearchInput";
+import ExplorerHero from "./components/ExplorerHero";
 import StickyHeader from "./components/StickyHeader";
-import InfoPopover from "./components/InfoPopover";
-import LocaleSwitcher from "./components/LocaleSwitcher";
 import { ExplorerStructuredData, MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
@@ -22,7 +20,6 @@ import { absUrl } from "./utils/origin";
 import { isKnownDetailPath } from "./utils/siteTaxonomy";
 import {
   EN_SITE_NAME,
-  ENGLISH_NAMING_NOTICE,
   buildJapaneseReferenceLabel,
   getPrimaryEnglishName,
 } from "./utils/englishNaming";
@@ -1735,209 +1732,24 @@ const InsectsHostPlantExplorer = memo(
           featuredPlants={featuredPlants}
         />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div
-            id="hero-section"
-            className={`group relative w-full ${
-              isEnglish
-                ? "min-h-[32rem] sm:min-h-[34rem] md:min-h-[38rem] lg:min-h-[40rem]"
-                : "min-h-[23rem] sm:min-h-[25rem] md:min-h-[27rem] lg:min-h-[29rem]"
-            }`}
-          >
-            {/* Background Container - Handles clipping for image and gradients */}
-            <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
-
-              {/* Show skeleton while loading */}
-              {!heroImageLoaded && (
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 animate-pulse z-5" />
-              )}
-
-              {(() => {
-                const base = "Cucullia_argentea";
-                // Use relative paths so it works under any base path
-                const baseUrl = import.meta.env.BASE_URL || "/";
-                const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-                const src = `${normalizedBase}images/resized/insects/${base}.1024.jpg`;
-                // Use only sizes that actually exist to avoid 404s
-                const srcSet = [
-                  `${normalizedBase}images/resized/insects/${base}.320.jpg 320w`,
-                  `${normalizedBase}images/resized/insects/${base}.640.jpg 640w`,
-                  `${normalizedBase}images/resized/insects/${base}.1024.jpg 1024w`,
-                ].join(", ");
-                const sizes = "100vw";
-                return (
-                  <img
-                    src={src}
-                    srcSet={srcSet}
-                    sizes={sizes}
-                    alt={isEnglish
-                      ? "Hero image for Insects and Host Plants of Japan - Cucullia argentea"
-                      : "昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"}
-                    width="1600"
-                    height="900"
-                    className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
-                      heroImageLoaded ? "opacity-100" : "opacity-0"
-                    }`}
-                    style={{
-                      imageRendering: "auto",
-                      willChange: heroImageLoaded ? "auto" : "opacity, transform",
-                      contain: "layout style paint",
-                    }}
-                    loading="eager"
-                    decoding="async"
-                    fetchpriority="high"
-                    onLoad={() => setHeroImageLoaded(true)}
-                    onError={(e) => {
-                      try {
-                        const imgEl = e.target;
-                        if (imgEl) {
-                          imgEl.srcset = '';
-                          imgEl.sizes = '';
-                        }
-                        logger.warn("Hero image failed to load:", imgEl?.src);
-                        imgEl.onerror = null; // prevent loop
-                        // Final fallback to a local placeholder (relative path)
-                        imgEl.src = `${normalizedBase}images/placeholder.jpg`;
-                        imgEl.alt = isEnglish ? "Image unavailable" : "画像が見つかりません";
-                      } catch {}
-                      setHeroImageLoaded(true);
-                    }}
-                  />
-                );
-              })()}
-
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
-            </div>
-
-            {/* Content Container - Allows overflow for search suggestions */}
-            <div className="absolute inset-0 z-30 p-4 md:p-8">
-              <div
-                className={`flex h-full flex-col ${
-                  isEnglish
-                    ? "justify-between"
-                    : "justify-start gap-5 md:gap-7 lg:gap-8"
-                }`}
-              >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="max-w-4xl pt-1 md:pt-2">
-                    <p
-                      className={`bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text font-bold tracking-tight text-transparent drop-shadow-2xl ${
-                        isEnglish
-                          ? "text-[clamp(1.25rem,2.6vw,2.25rem)] leading-tight"
-                          : "text-[clamp(1.4rem,3vw,2.8rem)] leading-tight"
-                      }`}
-                    >
-                      {ui.heroLead}
-                    </p>
-                    <h1
-                      className={`mt-2 max-w-4xl bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl ${
-                        isEnglish
-                          ? "text-[clamp(2.4rem,4.8vw,4.9rem)] leading-[0.94]"
-                          : "pb-2 text-[clamp(3rem,7.5vw,6.2rem)] leading-[0.98]"
-                      }`}
-                    >
-                      {ui.siteTitle}
-                    </h1>
-                  </div>
-
-                  {!isStickyHeaderVisible && (
-                    <div className="flex items-center gap-2 self-start lg:pt-1">
-                      <LocaleSwitcher locale={locale} />
-                      <button
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
-                        aria-label={ui.themeAria}
-                      >
-                        {theme === "dark" ? (
-                          <svg
-                            className="w-6 h-6 text-white/80"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                            />
-                          </svg>
-                        ) : (
-                          <svg
-                            className="w-6 h-6 text-white/80"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <div className={`${isEnglish ? "mt-5" : "mt-1"} space-y-4 md:space-y-5`}>
-                  <div className="flex max-w-5xl flex-wrap gap-2.5">
-                    {heroStats.map((item) => (
-                      <div
-                        key={item.label}
-                        className="bg-white/20 backdrop-blur-sm rounded-full px-3.5 py-1.5 border border-white/30"
-                      >
-                        <span className="text-white/90 text-xs sm:text-sm font-medium">
-                          {item.label} {item.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* ヒーローセクション内の検索バー */}
-                  <div className="max-w-2xl w-full">
-                    <SearchInput
-                      ref={heroSearchInputRef}
-                      placeholder={ui.searchPlaceholder}
-                      value={activeSearchTerm}
-                      onChange={handleGlobalSearch}
-                      suggestions={suggestions}
-                      onSelectSuggestion={handleSelectSuggestion}
-                      onSubmit={commitSearchValue}
-                      ariaLabel={isEnglish ? `Search ${ui.searchTargetLabel.toLowerCase()}` : `${ui.searchTargetLabel}を検索`}
-                      historyScope={activeTab}
-                      locale={locale}
-                    />
-                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs md:text-sm text-white/85">
-                      <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                        {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
-                      </span>
-                      {isEnglish && (
-                        <span className="inline-flex max-w-full items-center rounded-[1.4rem] border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm sm:max-w-2xl">
-                          <span className="text-pretty">{ENGLISH_NAMING_NOTICE}</span>
-                        </span>
-                      )}
-                      <InfoPopover
-                        title={ui.searchHelpTitle}
-                        align="left"
-                        buttonAriaLabel={ui.searchHelpAria}
-                        buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
-                        panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
-                        contentClassName="space-y-2 text-slate-100"
-                        titleClassName="text-white"
-                      >
-                        <p>{ui.searchShortcut1}</p>
-                        <p>{ui.searchShortcut2}</p>
-                        <p>{ui.searchShortcut3}</p>
-                      </InfoPopover>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ExplorerHero
+            activeSearchTerm={activeSearchTerm}
+            activeTab={activeTab}
+            commitSearchValue={commitSearchValue}
+            handleGlobalSearch={handleGlobalSearch}
+            handleSelectSuggestion={handleSelectSuggestion}
+            heroImageLoaded={heroImageLoaded}
+            heroSearchInputRef={heroSearchInputRef}
+            heroStats={heroStats}
+            isEnglish={isEnglish}
+            isStickyHeaderVisible={isStickyHeaderVisible}
+            locale={locale}
+            setHeroImageLoaded={setHeroImageLoaded}
+            setTheme={setTheme}
+            suggestions={suggestions}
+            theme={theme}
+            ui={ui}
+          />
 
           {/* 主要カテゴリ導線セクションは不要のため削除 */}
 
