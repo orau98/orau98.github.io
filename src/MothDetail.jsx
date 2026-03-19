@@ -25,7 +25,6 @@ import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import Breadcrumb from './components/Breadcrumb';
-import LocaleSwitcher from './components/LocaleSwitcher';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
 const PLANT_PART_KEYWORDS = ['花', '実', '果実', '葉', '茎', '根', '枝', '樹皮', '蕾', '若葉'];
@@ -1007,7 +1006,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           
           {/* 分類情報をヘッダーに表示 */}
           <div className="flex flex-wrap items-center gap-2">
-            <LocaleSwitcher locale={locale} showLabel={true} />
             {moth.classification.familyJapanese && (
               <Link
                 to={localizePath(`/?classification=${encodeURIComponent(moth.classification.familyJapanese)}`, locale)}

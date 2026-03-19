@@ -27,7 +27,6 @@ import {
 } from './utils/robotsMeta';
 import { buildPlantPath } from './utils/siteTaxonomy';
 import Breadcrumb from './components/Breadcrumb';
-import LocaleSwitcher from './components/LocaleSwitcher';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
 let genusMappingPromise = null;
@@ -1657,7 +1656,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {isEnglish ? 'Back to list' : '一覧に戻る'}
         </Link>
         <div className="flex flex-wrap items-center gap-2">
-          <LocaleSwitcher locale={locale} showLabel={true} />
           {taxonomy.orderJp && (
             <Link
               to={localizePath(`/?tab=plants&porder=${encodeURIComponent(taxonomy.orderJp)}`, locale)}
