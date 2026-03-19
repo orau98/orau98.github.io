@@ -1,4 +1,4 @@
-import { isEnglishLocale } from './locale';
+import { isEnglishLocale } from './locale.js';
 
 export const EN_SITE_NAME = 'Insects and Host Plants of Japan';
 

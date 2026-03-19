@@ -1,4 +1,4 @@
-import logger from './logger';
+import logger from './logger.js';
 
 export const plantFamilyMap = {
   'ヤナギ': 'ヤナギ科', 'ヤナギ類': 'ヤナギ科', 'クリ': 'ブナ科', 'クヌギ': 'ブナ科', 'コナラ': 'ブナ科',

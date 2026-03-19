@@ -1,5 +1,5 @@
-import { getCurrentLocale } from './locale';
-import { getLocalizedInsectRouteBase } from './siteTaxonomy';
+import { getCurrentLocale } from './locale.js';
+import { getLocalizedInsectRouteBase } from './siteTaxonomy.js';
 
 export const slugifyInsectName = (name = '') => {
   if (!name) return '';

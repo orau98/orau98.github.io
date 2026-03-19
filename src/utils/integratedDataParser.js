@@ -1,5 +1,5 @@
 // 統合CSVデータの解析・処理ユーティリティ
-import logger from './logger';
+import logger from './logger.js';
 import {
   INSECT_COLLECTION_KEYS,
   createEmptyInsectCollections,

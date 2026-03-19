@@ -5,7 +5,7 @@
  * @param {string} notes - 備考文字列
  * @returns {object} - { emergenceTime: string, notes: string }
  */
-import logger from './logger';
+import logger from './logger.js';
 
 export const extractEmergenceTime = (notes) => {
   if (!notes || typeof notes !== 'string') {
