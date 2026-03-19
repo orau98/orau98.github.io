@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '15 3 * * *'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 concurrency:
   group: fetch-instagram
   cancel-in-progress: true
@@ -24,12 +27,12 @@ jobs:
       POST_LIMIT: '10'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
 
@@ -62,7 +65,7 @@ jobs:
 
       - name: Trigger deploy workflow
         if: steps.commit_changes.outputs.changed == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.actions.createWorkflowDispatch({
