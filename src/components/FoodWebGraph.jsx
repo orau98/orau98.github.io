@@ -23,6 +23,92 @@ const RELATION_FILTERS = [
 ];
 const MOBILE_PANEL_COLLAPSED_HEIGHT = 86;
 
+const getRadialPoint = (index, total, radius, angleOffset = -Math.PI / 2) => {
+  const count = Math.max(total, 1);
+  const angle = angleOffset + (index / count) * Math.PI * 2;
+  return {
+    x: Math.cos(angle) * radius,
+    y: Math.sin(angle) * radius
+  };
+};
+
+const getNodeCenter = (nodes) => {
+  if (!Array.isArray(nodes) || nodes.length === 0) return null;
+  const points = nodes.filter((node) => Number.isFinite(node?.x) && Number.isFinite(node?.y));
+  if (points.length === 0) return { x: 0, y: 0 };
+  const totals = points.reduce((acc, node) => ({
+    x: acc.x + node.x,
+    y: acc.y + node.y
+  }), { x: 0, y: 0 });
+  return {
+    x: totals.x / points.length,
+    y: totals.y / points.length
+  };
+};
+
+const seedGraphNodePositions = ({
+  nodes,
+  centerNodeId,
+  currentPlantName,
+  width,
+  height,
+  isCompactPanel
+}) => {
+  if (!Array.isArray(nodes) || nodes.length === 0) return;
+
+  const centerNode = centerNodeId ? nodes.find((node) => node.id === centerNodeId) : null;
+  if (centerNode) {
+    centerNode.x = 0;
+    centerNode.y = 0;
+    centerNode.vx = 0;
+    centerNode.vy = 0;
+  }
+
+  const viewport = Math.max(300, Math.min(width || 720, height || 520));
+
+  if (currentPlantName) {
+    const insects = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('insect'));
+    const ringRadius = Math.max(
+      isCompactPanel ? 118 : 190,
+      Math.min(viewport * (isCompactPanel ? 0.42 : 0.5), isCompactPanel ? 170 : 280)
+    );
+    insects.forEach((node, index) => {
+      const point = getRadialPoint(index, insects.length, ringRadius);
+      node.x = point.x;
+      node.y = point.y;
+    });
+    return;
+  }
+
+  const plants = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('plant'));
+  const insects = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('insect'));
+  const primaryRadius = Math.max(
+    isCompactPanel ? 112 : 165,
+    Math.min(viewport * (isCompactPanel ? 0.38 : 0.44), isCompactPanel ? 162 : 240)
+  );
+  const outerRadius = Math.max(
+    primaryRadius + (isCompactPanel ? 84 : 118),
+    Math.min(viewport * (isCompactPanel ? 0.64 : 0.8), isCompactPanel ? 236 : 380)
+  );
+
+  plants.forEach((node, index) => {
+    const point = getRadialPoint(index, plants.length, primaryRadius);
+    node.x = point.x;
+    node.y = point.y;
+  });
+
+  insects.forEach((node, index) => {
+    const point = getRadialPoint(
+      index,
+      insects.length,
+      outerRadius,
+      -Math.PI / 2 + Math.PI / Math.max(insects.length, 2)
+    );
+    node.x = point.x;
+    node.y = point.y;
+  });
+};
+
 const normalizePlantName = (name = '') =>
   name
     .replace(/（[^）]*）/g, '')
@@ -500,7 +586,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [pinVersion, setPinVersion] = useState(0);
   const [isPinDragging, setIsPinDragging] = useState(false);
   const showRelatedInsects = true;
-  const linkDistance = 48;
+  const linkDistance = useMemo(() => {
+    if (currentPlantName) {
+      return isCompactPanel ? 84 : 122;
+    }
+    return isCompactPanel ? 76 : 104;
+  }, [currentPlantName, isCompactPanel]);
 
   const [ylistData, setYlistData] = useState(null);
 
@@ -753,8 +844,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     }
 
+    seedGraphNodePositions({
+      nodes,
+      centerNodeId: currentCenterNodeId,
+      currentPlantName,
+      width,
+      height,
+      isCompactPanel
+    });
+
     return { nodes, links, summary };
-  }, [currentInsect, currentPlantName, hostPlantsMap, insectImageCandidates, insectLookup, plantImageCandidates, plantInsectMeta, relatedLimit, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, getInsectPlantItems, showRelatedInsects]);
+  }, [currentCenterNodeId, currentInsect, currentPlantName, getInsectPlantItems, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, height, hostPlantsMap, insectImageCandidates, insectLookup, isCompactPanel, plantImageCandidates, plantInsectMeta, relatedLimit, showRelatedInsects, width]);
 
   const relationFilterConfig = useMemo(
     () => RELATION_FILTERS.find((item) => item.value === relationFilter) || RELATION_FILTERS[0],
@@ -798,6 +898,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     visibleLinks: graphData.links.length,
     totalLinks: baseGraphData.links.length
   }), [baseGraphData, graphData]);
+
+  const graphLayoutMetrics = useMemo(() => {
+    const nodeCount = graphData.nodes.length;
+    return {
+      chargeStrength: isCompactPanel ? -240 : nodeCount > 28 ? -320 : -280,
+      denseLabelThreshold: isCompactPanel ? 12 : 16,
+      focusZoom: isCompactPanel ? 1.85 : nodeCount > 28 ? 1.7 : 2,
+      minimumZoom: isCompactPanel ? 0.95 : nodeCount > 32 ? 1.1 : nodeCount > 18 ? 1.28 : 1.45,
+      zoomPadding: isCompactPanel ? 60 : nodeCount > 24 ? 30 : 18
+    };
+  }, [graphData.nodes.length, isCompactPanel]);
 
   // selection safety: clear when graph changes
   useEffect(() => {
@@ -1141,10 +1252,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       if (fgRef.current && typeof node.x === 'number' && typeof node.y === 'number') {
         fgRef.current.centerAt(node.x, node.y, 280);
         const currentZoom = fgRef.current.zoom ? fgRef.current.zoom() : 1;
-        fgRef.current.zoom(Math.max(currentZoom, 1.75), 280);
+        fgRef.current.zoom(Math.max(currentZoom, graphLayoutMetrics.focusZoom), 280);
       }
     } catch { /* ignore */ }
-  }, [graphData.nodes]);
+  }, [graphData.nodes, graphLayoutMetrics.focusZoom]);
 
   const focusNodeByName = useCallback((name, typeHint) => {
     if (!name) return;
@@ -1164,15 +1275,49 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setNodeListOpen(false);
   }, [findMatchingNode, focusNodeById, searchQuery]);
 
+  const fitGraphToViewport = useCallback((duration = 400) => {
+    if (!fgRef.current || graphData.nodes.length === 0) return;
+    try {
+      fgRef.current.zoomToFit(duration, graphLayoutMetrics.zoomPadding);
+      const currentZoom = fgRef.current.zoom ? fgRef.current.zoom() : 1;
+      if (currentZoom < graphLayoutMetrics.minimumZoom) {
+        const center = getNodeCenter(graphData.nodes);
+        if (center) {
+          fgRef.current.centerAt(center.x, center.y, Math.round(duration * 0.7));
+        }
+        fgRef.current.zoom(graphLayoutMetrics.minimumZoom, Math.round(duration * 0.7));
+      }
+    } catch {
+      // ignore
+    }
+  }, [graphData.nodes, graphLayoutMetrics.minimumZoom, graphLayoutMetrics.zoomPadding]);
+
+  useEffect(() => {
+    if (!fgRef.current) return;
+    try {
+      const chargeForce = fgRef.current.d3Force?.('charge');
+      if (chargeForce?.strength) {
+        chargeForce.strength(graphLayoutMetrics.chargeStrength);
+      }
+      const linkForce = fgRef.current.d3Force?.('link');
+      if (linkForce?.distance) {
+        linkForce.distance(linkDistance);
+      }
+      fgRef.current.d3ReheatSimulation?.();
+    } catch {
+      // ignore
+    }
+  }, [graphData.links.length, graphData.nodes.length, graphLayoutMetrics.chargeStrength, linkDistance]);
+
   // initial fit
   useEffect(() => {
     if (!fgRef.current) return;
     if (hasUserInteractedRef.current) return;
     const t = setTimeout(() => {
-      try { fgRef.current.zoomToFit(400, 60); } catch { /* ignore */ }
+      fitGraphToViewport(420);
     }, 250);
     return () => clearTimeout(t);
-  }, [graphData]);
+  }, [fitGraphToViewport]);
 
   // hover highlight (preview only; selection takes precedence)
   const handleNodeHover = useCallback((node) => {
@@ -1307,14 +1452,14 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
     const dim = dimByHighlight;
     const alpha = dim ? 0.25 : 1;
-    const dense = labelMode === 'auto' && graphData.nodes.length > 28;
+    const dense = labelMode === 'auto' && graphData.nodes.length > graphLayoutMetrics.denseLabelThreshold;
     const showLabel = labelMode !== 'none' && (
       labelMode === 'all'
       || isCurrent
       || selectedNodeId === node.id
       || (activeNodeId && inHighlight)
       || (!dense && !dim)
-      || (globalScale > 1.8 && !dim)
+      || (globalScale > 1.35 && !dim)
     );
 
     // try to ensure image is loaded
@@ -1367,7 +1512,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
 
     if (showLabel) drawLabel(node.x, node.y, node.name, dim);
-  }, [activeNodeId, graphData.nodes.length, highlightNodeIds, isDark, labelMode, selectedNodeId]);
+  }, [activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, labelMode, selectedNodeId]);
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
     const isCurrent = node.type.includes('current');
@@ -1392,8 +1537,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const resetView = useCallback(() => {
     if (!fgRef.current) return;
     markUserInteracted();
-    fgRef.current.zoomToFit(400, 60);
-  }, [markUserInteracted]);
+    fitGraphToViewport(400);
+  }, [fitGraphToViewport, markUserInteracted]);
   // touch interactions: long-press to pin-drag
   const cancelLongPress = useCallback(() => {
     if (longPressTimerRef.current) {
@@ -2208,7 +2353,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       <div className="min-h-0 flex-1 flex flex-col">
         <div
           ref={containerRef}
-          className={`relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[420px] flex-1'}`}
+          className={`relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[500px] lg:min-h-[640px] flex-1'}`}
           style={isCompactPanel ? { height: graphViewportHeight } : undefined}
           role="region"
           aria-label={graphAriaLabel}
@@ -2259,13 +2404,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             linkDirectionalParticleWidth={1.6}
             linkCurvature={0.18}
             backgroundColor={isDark ? '#0b1220' : '#f8fafc'}
-            cooldownTicks={80}
+            cooldownTicks={110}
             d3VelocityDecay={0.35}
             onZoom={markUserInteracted}
             onEngineStop={() => {
               if (!fgRef.current) return;
               if (hasUserInteractedRef.current) return;
-              fgRef.current.zoomToFit(400, isCompactPanel ? 60 : 24);
+              fitGraphToViewport(420);
             }}
           />
 
