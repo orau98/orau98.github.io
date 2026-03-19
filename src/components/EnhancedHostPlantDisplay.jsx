@@ -6,6 +6,7 @@ import { makeDetailLinkState } from '../utils/navState';
 import { buildPlantPath } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -335,7 +336,9 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
               className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
               title={isEnglish ? `${primaryPlantName}${japaneseReference ? ` (${displayPlantName})` : ''}` : `${displayPlantName} の詳細へ`}
             >
-              {primaryPlantName}
+              {isEnglish && plantDetail.scientificName
+                ? formatScientificNameReact(primaryPlantName)
+                : primaryPlantName}
             </Link>
             {japaneseReference && (
               <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">

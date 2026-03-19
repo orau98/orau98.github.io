@@ -1,5 +1,14 @@
+import React from 'react';
+import { isEnglishLocale } from './locale.js';
+
 // 学名フォーマッティングユーティリティ
 // 属名と種小名のみをイタリック体にし、著者名と年は通常体にする
+
+export const isScientificNameLike = (value = '') => {
+  const text = typeof value === 'string' ? value.trim() : '';
+  if (!text) return false;
+  return /[A-Za-z]/.test(text) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(text);
+};
 
 /**
  * 学名を正しくフォーマットする関数
@@ -262,4 +271,20 @@ export const formatScientificNameReact = (scientificName) => {
   
   // それ以外の場合は全体をイタリック体にする
   return <em>{trimmed}</em>;
+};
+
+export const renderLocalizedScientificNameListReact = (values = [], locale = 'ja') => {
+  const items = Array.isArray(values)
+    ? values
+        .map((value) => String(value || '').trim())
+        .filter(Boolean)
+    : [];
+  const separator = isEnglishLocale(locale) ? ', ' : '、';
+
+  return items.map((value, index) => (
+    <React.Fragment key={`${value}-${index}`}>
+      {index > 0 && separator}
+      {isScientificNameLike(value) ? formatScientificNameReact(value) : value}
+    </React.Fragment>
+  ));
 };

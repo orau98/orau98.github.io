@@ -579,7 +579,11 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
       </div>
       
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1 leading-tight">{primaryName}</h3>
+        <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1 leading-tight">
+          {isEnglish && insect.scientificName
+            ? formatScientificNameReact(primaryName)
+            : primaryName}
+        </h3>
         {isEnglish ? (
           secondaryName && (
             <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">{secondaryName}</p>
@@ -1727,7 +1731,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             { label: isEnglish ? 'Home' : 'ホーム', path: localizePath('/', locale) },
             { label: isEnglish ? 'Plants' : '植物', path: localizePath('/?tab=plants', locale) },
             ...(familyLabel && !isFamily && !isOrder ? [{ label: familyLabel, path: buildPlantPath(familyLabel, locale) }] : []),
-            { label: primaryPlantName },
+            {
+              label: isEnglish && !isFamily && !isOrder && /[A-Za-z]/.test(primaryPlantName)
+                ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryPlantName)}</span>
+                : primaryPlantName,
+            },
           ]}
         />
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
@@ -1765,7 +1773,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         <section id="classification-members" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6">
             {isEnglish
-              ? `${primaryPlantName} group plants (${classificationMembers.length})`
+              ? (
+                  <>
+                    {(!isFamily && !isOrder && /[A-Za-z]/.test(primaryPlantName))
+                      ? formatScientificNameReact(primaryPlantName)
+                      : primaryPlantName}
+                    {` group plants (${classificationMembers.length})`}
+                  </>
+                )
               : `${isFamily ? 'この科に属する植物一覧' : isOrder ? 'この目に属する植物一覧' : 'この属に属する植物一覧'}（${classificationMembers.length}種）`}
           </h2>
           {(isOrder && classificationGroups && classificationGroups.length > 0) ? (

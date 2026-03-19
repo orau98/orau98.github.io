@@ -2,7 +2,10 @@ import React, { useState, useMemo, useEffect, useRef, useCallback, useId } from 
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import Pagination from './Pagination';
-import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
+import {
+  formatScientificNameReact,
+  renderLocalizedScientificNameListReact,
+} from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 import ListFilterPanel from './ListFilterPanel';
 import logger from '../utils/logger';
@@ -17,7 +20,6 @@ import {
   EN_SITE_NAME,
   getPrimaryEnglishName,
   getLocalizedTaxonomyLabel,
-  joinLocalizedNameList,
 } from '../utils/englishNaming';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
@@ -457,7 +459,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         </svg>
                       </span>
                       <span className="text-slate-600 dark:text-slate-300 leading-snug">
-                        {joinLocalizedNameList(localizedPlantDisplay.hostNames, locale)}
+                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
                       </span>
                     </div>
                   )}
@@ -472,7 +474,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         🌸
                       </span>
                       <span className="text-slate-600 dark:text-slate-300 leading-snug">
-                        {joinLocalizedNameList(localizedPlantDisplay.flowerNames, locale)}
+                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
                       </span>
                     </div>
                   )}

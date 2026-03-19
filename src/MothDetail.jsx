@@ -1013,7 +1013,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                   path: localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale),
                 }]
               : []),
-            { label: primaryName || moth.name }
+            {
+              label: isEnglish && moth.scientificName
+                ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryName)}</span>
+                : (primaryName || moth.name),
+            }
           ]}
         />
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">

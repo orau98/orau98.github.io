@@ -8,7 +8,6 @@ import {
   buildJapaneseReferenceLabel,
   EN_SITE_NAME,
   getPrimaryEnglishName,
-  joinLocalizedNameList,
 } from "../utils/englishNaming";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
@@ -19,6 +18,10 @@ import { isEnglishLocale } from "../utils/locale";
 import { makeDetailLinkState } from "../utils/navState";
 import { normalizePlantKey } from "../utils/plantNameUtils";
 import { buildPlantPath } from "../utils/siteTaxonomy";
+import {
+  formatScientificNameReact,
+  renderLocalizedScientificNameListReact,
+} from "../utils/scientificNameFormatter.jsx";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -276,7 +279,9 @@ const HostPlantListItem = React.memo(
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-3">
                 <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-1 leading-tight tracking-tight">
-                  {isEnglish ? primaryName : primaryName}
+                  {isEnglish && detail.scientificName
+                    ? formatScientificNameReact(primaryName)
+                    : primaryName}
                 </h3>
                 {secondaryName && (
                   <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
@@ -315,7 +320,7 @@ const HostPlantListItem = React.memo(
                     </svg>
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
-                    {joinLocalizedNameList(visibleDisplayNames, locale)}
+                    {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
                     {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
                   </span>
                 </div>

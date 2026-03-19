@@ -8,6 +8,7 @@ import {
   stripLocalePrefix,
 } from '../utils/locale';
 import { getSectionConfigByRouteSegment } from '../utils/siteTaxonomy';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import LocaleSwitcher from './LocaleSwitcher';
 
 const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants: _hostPlants, plantDetails }) => {
@@ -58,6 +59,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
         return {
           type: 'plant',
           name: isEnglish ? (scientificPlantName || displayName) : displayName,
+          scientificName: scientificPlantName,
           family: isEnglish
             ? (plantDetail.familyLatin || plantDetail.family || '')
             : plantDetail.family,
@@ -157,7 +159,11 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                 {speciesInfo.type === 'plant' ? (
                   <div className="flex items-center space-x-2">
                     <div className="text-sm">
-                      <span className="text-white font-medium">{speciesInfo.name}</span>
+                      <span className="text-white font-medium">
+                        {isEnglish && speciesInfo.scientificName
+                          ? formatScientificNameReact(speciesInfo.name)
+                          : speciesInfo.name}
+                      </span>
                       {speciesInfo.family && (
                         <>
                           {' '}
@@ -179,7 +185,11 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                 ) : (
                   <div className="flex items-center space-x-2">
                     <div className="text-sm">
-                      <span className="text-white font-medium">{speciesInfo.name}</span>
+                      <span className="text-white font-medium">
+                        {isEnglish && speciesInfo.scientificName
+                          ? formatScientificNameReact(speciesInfo.name)
+                          : speciesInfo.name}
+                      </span>
                       {speciesInfo.classification?.familyLabel && (
                         <span className="text-slate-300 ml-2">({speciesInfo.classification.familyLabel})</span>
                       )}

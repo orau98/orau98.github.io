@@ -5,6 +5,7 @@ import { isEnglishLocale } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
 import { buildPlantPath } from '../utils/siteTaxonomy';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import ImageWithFallback from './ImageWithFallback';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
@@ -178,7 +179,9 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                           {/* 画像上に昆虫名をオーバーレイ表示 */}
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
                             <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
-                              {primaryName}
+                              {isEnglish && relatedMoth.scientificName
+                                ? formatScientificNameReact(primaryName)
+                                : primaryName}
                             </h5>
                             {secondaryName && (
                               <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
