@@ -119,10 +119,6 @@ console.log(`OCR対象行数: ${rawLines.length}`);
 // ===================================================================
 const SKIP_RE = /^(---|寄主植物一覧|寄上植物一覧|寄王植物一覧|寺主植物一覧|\d{3,4})(\s|$)/;
 
-const filtered = rawLines
-  .map(l => l.trim())
-  .filter(l => l !== '' && !SKIP_RE.test(l) && !l.startsWith('--- ページ'));
-
 // 空行で区切ってセグメント化
 const segments = [];
 let buf = [];
