@@ -132,7 +132,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                   : '"繋がり"が見える昆虫植物図鑑'}
               </h1>
               <p className="text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
-                {isEnglish ? 'Scientific names first' : 'Insect Host Plant Explorer'}
+                {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
               </p>
             </div>
             <div className="sm:hidden">
