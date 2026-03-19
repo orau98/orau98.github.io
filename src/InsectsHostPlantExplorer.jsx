@@ -1740,7 +1740,7 @@ const InsectsHostPlantExplorer = memo(
             className={`group relative w-full ${
               isEnglish
                 ? "min-h-[32rem] sm:min-h-[34rem] md:min-h-[38rem] lg:min-h-[40rem]"
-                : "min-h-[24rem] sm:min-h-[28rem] md:min-h-[32rem] lg:min-h-[34rem]"
+                : "min-h-[23rem] sm:min-h-[25rem] md:min-h-[27rem] lg:min-h-[29rem]"
             }`}
           >
             {/* Background Container - Handles clipping for image and gradients */}
@@ -1811,7 +1811,13 @@ const InsectsHostPlantExplorer = memo(
 
             {/* Content Container - Allows overflow for search suggestions */}
             <div className="absolute inset-0 z-30 p-4 md:p-8">
-              <div className="flex h-full flex-col justify-between">
+              <div
+                className={`flex h-full flex-col ${
+                  isEnglish
+                    ? "justify-between"
+                    : "justify-start gap-5 md:gap-7 lg:gap-8"
+                }`}
+              >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="max-w-4xl pt-1 md:pt-2">
                     <p
@@ -1827,7 +1833,7 @@ const InsectsHostPlantExplorer = memo(
                       className={`mt-2 max-w-4xl bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl ${
                         isEnglish
                           ? "text-[clamp(2.4rem,4.8vw,4.9rem)] leading-[0.94]"
-                          : "text-[clamp(3rem,8vw,6.5rem)] leading-[0.9]"
+                          : "pb-2 text-[clamp(3rem,7.5vw,6.2rem)] leading-[0.98]"
                       }`}
                     >
                       {ui.siteTitle}
@@ -1876,7 +1882,7 @@ const InsectsHostPlantExplorer = memo(
                   )}
                 </div>
 
-                <div className="mt-5 space-y-4 md:space-y-5">
+                <div className={`${isEnglish ? "mt-5" : "mt-1"} space-y-4 md:space-y-5`}>
                   <div className="flex max-w-5xl flex-wrap gap-2.5">
                     {heroStats.map((item) => (
                       <div
