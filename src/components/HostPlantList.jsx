@@ -14,6 +14,7 @@ import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilena
 import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
+import ListFilterPanel from "./ListFilterPanel";
 import { isEnglishLocale } from "../utils/locale";
 import { makeDetailLinkState } from "../utils/navState";
 import { normalizePlantKey } from "../utils/plantNameUtils";
@@ -1094,78 +1095,22 @@ const HostPlantList = ({
 
   const renderFilters = () => {
     return (
-      <div className="mt-4">
-          <div className="md:sticky md:z-40" style={{ top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)' }}>
-          <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-3 py-2">
-            {/* Active Filters & Toggle */}
-            <div className="flex flex-wrap items-center gap-3">
-          {/* Toggle Button */}
-          <button 
-            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-            type="button"
-            aria-expanded={isFiltersOpen}
-            aria-controls={filtersPanelId}
-            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              isFiltersOpen 
-                ? 'bg-slate-200/80 text-slate-800 dark:bg-slate-700/80 dark:text-slate-200' 
-                : 'bg-white/70 text-slate-600 border border-slate-300/70 hover:bg-slate-50/80 dark:bg-slate-800/70 dark:text-slate-300 dark:border-slate-600/70 dark:hover:bg-slate-700/70'
-            }`}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            {ui.filterTitle}
-            <svg className={`w-3 h-3 transition-transform duration-200 ${isFiltersOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Chips */}
-          <div className="flex flex-wrap gap-2 items-center flex-1">
-            {hasAnyCriteria && (
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">{ui.filteredBy}</span>
-            )}
-            {activeFilters.map((filter, idx) => (
-              <span key={`${filter.type}-${idx}`} className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 transition-all hover:bg-slate-200/70 dark:hover:bg-slate-800">
-                {filter.type}: {filter.value}
-                <button 
-                  onClick={filter.clear}
-                  className="ml-1.5 text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-100 focus:outline-none"
-                  aria-label={isEnglish ? `Clear ${filter.type} filter` : `${filter.type}フィルターを解除`}
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </span>
-            ))}
-            {hasAnyCriteria && (
-              <button
-                type="button"
-                onClick={resetAll}
-                className="ui-btn ui-btn-secondary"
-              >
-                {ui.resetAll}
-              </button>
-            )}
-          </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Collapsible Controls */}
-        <div 
-          id={filtersPanelId}
-          aria-hidden={!isFiltersOpen}
-          inert={!isFiltersOpen ? '' : undefined}
-          className={`transition-all duration-300 ease-in-out overflow-hidden ${
-            isFiltersOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          <fieldset
-            disabled={!isFiltersOpen}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
-          >
+      <ListFilterPanel
+        title={ui.filterTitle}
+        isOpen={isFiltersOpen}
+        onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
+        panelId={filtersPanelId}
+        hasAnyCriteria={hasAnyCriteria}
+        filteredByLabel={ui.filteredBy}
+        activeFilters={activeFilters}
+        onResetAll={resetAll}
+        resetAllLabel={ui.resetAll}
+        getClearFilterLabel={(type) =>
+          isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
+        }
+        controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+        resultsLabel={ui.resultCount(filteredHostPlants?.length ?? 0)}
+      >
             <div className="space-y-1">
               <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={orderFilterId}>{ui.order}</label>
               <div className="relative">
@@ -1188,54 +1133,48 @@ const HostPlantList = ({
               </div>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>{ui.family}</label>
-              <div className="relative">
-                <select
-                  id={familyFilterId}
-                  value={familyFilter}
-                  onChange={(e) => setPFamilyFilter(e.target.value)}
-                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
-                >
-                  <option value="">{ui.any}</option>
-                  {familyOptions.map((f) => (
-                    <option key={f} value={f}>{f}</option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>{ui.family}</label>
+          <div className="relative">
+            <select
+              id={familyFilterId}
+              value={familyFilter}
+              onChange={(e) => setPFamilyFilter(e.target.value)}
+              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+            >
+              <option value="">{ui.any}</option>
+              {familyOptions.map((f) => (
+                <option key={f} value={f}>{f}</option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </div>
+          </div>
+        </div>
 
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>{ui.flowerVisit}</label>
-              <div className="relative">
-                <select
-                  id={visitFilterId}
-                  value={visitFilter}
-                  onChange={(e) => setPVisitFilter(e.target.value)}
-                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
-                >
-                  <option value="all">{ui.any}</option>
-                  <option value="flower">{ui.flowerOnly}</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>{ui.flowerVisit}</label>
+          <div className="relative">
+            <select
+              id={visitFilterId}
+              value={visitFilter}
+              onChange={(e) => setPVisitFilter(e.target.value)}
+              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+            >
+              <option value="all">{ui.any}</option>
+              <option value="flower">{ui.flowerOnly}</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </div>
-          </fieldset>
+          </div>
         </div>
-        
-        <div className="mt-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
-          {ui.resultCount(filteredHostPlants?.length ?? 0)}
-        </div>
-      </div>
+      </ListFilterPanel>
     );
   };
 
