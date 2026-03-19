@@ -9,6 +9,7 @@ export default [
     ignores: [
       'archive/**',
       'dist/**',
+      'dist-check*/**',
       'node_modules/**',
       'public/assets/data-lite/**',
       'public/meta/**',
