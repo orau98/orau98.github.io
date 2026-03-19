@@ -5,7 +5,12 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
-import { EN_SITE_NAME, buildJapaneseReferenceLabel, getPrimaryEnglishName } from './utils/englishNaming';
+import {
+  EN_SITE_NAME,
+  buildLocalizedTaxonomyChip,
+  buildJapaneseReferenceLabel,
+  getPrimaryEnglishName,
+} from './utils/englishNaming';
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
@@ -728,6 +733,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const navigate = useNavigate();
   const location = useLocation();
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
+  const orderChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: taxonomy.orderJp,
+    scientificName: taxonomy.orderEn,
+  });
+  const familyChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: familyLabel,
+    scientificName: taxonomy.familyEn,
+  });
 
   const displayLatin = resolvedPlantDetail ? (resolvedCanonicalName || decodedPlantName) : repairLatinBinomial(decodedPlantName);
 
@@ -1656,27 +1671,27 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {isEnglish ? 'Back to list' : '一覧に戻る'}
         </Link>
         <div className="flex flex-wrap items-center gap-2">
-          {taxonomy.orderJp && (
+          {orderChip.label && orderChip.queryValue && (
             <Link
-              to={localizePath(`/?tab=plants&porder=${encodeURIComponent(taxonomy.orderJp)}`, locale)}
+              to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
               className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:bg-emerald-200/70 dark:hover:bg-emerald-900/50"
-              aria-label={isEnglish ? `Search plants in ${taxonomy.orderJp}` : `${taxonomy.orderJp} の植物を検索`}
+              aria-label={isEnglish ? `Search plants in ${orderChip.label}` : `${orderChip.label} の植物を検索`}
             >
-              <span className="font-medium">{taxonomy.orderJp}</span>
-              {taxonomy.orderEn && (
-                <span className="ml-1 text-xs italic opacity-80">{taxonomy.orderEn}</span>
+              <span className="font-medium">{orderChip.label}</span>
+              {orderChip.referenceLabel && (
+                <span className="ml-1 text-xs opacity-80">{orderChip.referenceLabel}</span>
               )}
             </Link>
           )}
-          {familyLabel && (
+          {familyChip.label && familyChip.queryValue && (
             <Link
-              to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyLabel)}`, locale)}
+              to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyChip.queryValue)}`, locale)}
               className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50 hover:bg-blue-200/70 dark:hover:bg-blue-900/50"
-              aria-label={isEnglish ? `Search plants in ${familyLabel}` : `${familyLabel} の植物を検索`}
+              aria-label={isEnglish ? `Search plants in ${familyChip.label}` : `${familyChip.label} の植物を検索`}
             >
-              <span className="font-medium">{familyLabel}</span>
-              {taxonomy.familyEn && (
-                <span className="ml-1 text-xs italic opacity-80">{taxonomy.familyEn}</span>
+              <span className="font-medium">{familyChip.label}</span>
+              {familyChip.referenceLabel && (
+                <span className="ml-1 text-xs opacity-80">{familyChip.referenceLabel}</span>
               )}
             </Link>
           )}

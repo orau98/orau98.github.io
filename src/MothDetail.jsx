@@ -8,7 +8,12 @@ import { getSourceLink, normalizeReference } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
-import { EN_SITE_NAME, buildJapaneseReferenceLabel, getPrimaryEnglishName } from './utils/englishNaming';
+import {
+  EN_SITE_NAME,
+  buildLocalizedTaxonomyChip,
+  buildJapaneseReferenceLabel,
+  getPrimaryEnglishName,
+} from './utils/englishNaming';
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
 import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
@@ -618,6 +623,22 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const japaneseReference = isEnglish
     ? buildJapaneseReferenceLabel(displayName || moth?.name || '')
     : '';
+  const familyChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: moth?.classification?.familyJapanese,
+    scientificName: moth?.classification?.family,
+    fallback: moth?.family,
+  });
+  const subfamilyChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: moth?.classification?.subfamilyJapanese,
+    scientificName: moth?.classification?.subfamily,
+  });
+  const tribeChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: moth?.classification?.tribeJapanese,
+    scientificName: moth?.classification?.tribe,
+  });
   const canonicalHref = moth
     ? (isEnglish
       ? absUrl(localizePath(location.pathname || buildInsectPath(moth, locale), locale))
@@ -986,7 +1007,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           items={[
             { label: isEnglish ? 'Home' : 'ホーム', path: localizePath('/', locale) },
             { label: insectTypeLabel, path: localizePath(`/?tab=insects`, locale) },
-            ...(moth.classification?.familyJapanese ? [{ label: moth.classification.familyJapanese, path: localizePath(`/?classification=${encodeURIComponent(moth.classification.familyJapanese)}`, locale) }] : []),
+            ...(familyChip.label && familyChip.queryValue
+              ? [{
+                  label: familyChip.label,
+                  path: localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale),
+                }]
+              : []),
             { label: primaryName || moth.name }
           ]}
         />
@@ -1004,36 +1030,36 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           
           {/* 分類情報をヘッダーに表示 */}
           <div className="flex flex-wrap items-center gap-2">
-            {moth.classification.familyJapanese && (
+            {familyChip.label && familyChip.queryValue && (
               <Link
-                to={localizePath(`/?classification=${encodeURIComponent(moth.classification.familyJapanese)}`, locale)}
+                to={localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale)}
                 className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
               >
-                <span className="font-medium">{moth.classification.familyJapanese}</span>
-                {moth.classification.family && (
-                  <span className="ml-1 text-xs italic opacity-80">{moth.classification.family}</span>
+                <span className="font-medium">{familyChip.label}</span>
+                {familyChip.referenceLabel && (
+                  <span className="ml-1 text-xs opacity-80">{familyChip.referenceLabel}</span>
                 )}
               </Link>
             )}
-            {moth.classification.subfamilyJapanese && (
+            {subfamilyChip.label && subfamilyChip.queryValue && (
               <Link
-                to={localizePath(`/?classification=${encodeURIComponent(moth.classification.subfamilyJapanese)}`, locale)}
+                to={localizePath(`/?classification=${encodeURIComponent(subfamilyChip.queryValue)}`, locale)}
                 className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
               >
-                <span className="font-medium">{moth.classification.subfamilyJapanese}</span>
-                {moth.classification.subfamily && (
-                  <span className="ml-1 text-xs italic opacity-80">{moth.classification.subfamily}</span>
+                <span className="font-medium">{subfamilyChip.label}</span>
+                {subfamilyChip.referenceLabel && (
+                  <span className="ml-1 text-xs opacity-80">{subfamilyChip.referenceLabel}</span>
                 )}
               </Link>
             )}
-            {moth.classification.tribeJapanese && (
+            {tribeChip.label && tribeChip.queryValue && (
               <Link
-                to={localizePath(`/?classification=${encodeURIComponent(moth.classification.tribeJapanese)}`, locale)}
+                to={localizePath(`/?classification=${encodeURIComponent(tribeChip.queryValue)}`, locale)}
                 className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
               >
-                <span className="font-medium">{moth.classification.tribeJapanese}</span>
-                {moth.classification.tribe && (
-                  <span className="ml-1 text-xs italic opacity-80">{moth.classification.tribe}</span>
+                <span className="font-medium">{tribeChip.label}</span>
+                {tribeChip.referenceLabel && (
+                  <span className="ml-1 text-xs opacity-80">{tribeChip.referenceLabel}</span>
                 )}
               </Link>
             )}

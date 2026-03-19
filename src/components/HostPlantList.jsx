@@ -8,6 +8,7 @@ import {
   buildJapaneseReferenceLabel,
   EN_SITE_NAME,
   getPrimaryEnglishName,
+  joinLocalizedNameList,
 } from "../utils/englishNaming";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
@@ -36,6 +37,7 @@ const HostPlantListItem = React.memo(
     mothNames,
     relatedCount,
     plantDetails = {},
+    insectDisplayNameMap = null,
     imageFilename,
     hasLarvalHost = false,
     hasFlowerVisit = false,
@@ -90,6 +92,15 @@ const HostPlantListItem = React.memo(
         ? relatedCount
         : mothNames.length;
     const visibleNames = mothNames.slice(0, 4);
+    const visibleDisplayNames = useMemo(
+      () =>
+        visibleNames
+          .map((name) =>
+            isEnglish ? insectDisplayNameMap?.get(name) || name : name,
+          )
+          .filter(Boolean),
+      [visibleNames, insectDisplayNameMap, isEnglish],
+    );
     const extraCount = Math.max(0, totalCount - visibleNames.length);
     const detail = plantDetails[plant] || {};
     const primaryName = isEnglish
@@ -303,7 +314,7 @@ const HostPlantListItem = React.memo(
                     </svg>
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
-                    {visibleNames.join("、")}
+                    {joinLocalizedNameList(visibleDisplayNames, locale)}
                     {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
                   </span>
                 </div>
@@ -320,6 +331,7 @@ const HostPlantList = ({
   hostPlants = {},
   flowerVisitPlants = {},
   plantDetails = {},
+  insectDisplayNameMap = null,
   embedded = false,
   preloadedImageFilenames = [],
   initialSearchTerm = "",
@@ -392,6 +404,43 @@ const HostPlantList = ({
     });
     return map;
   }, [safePlantDetails]);
+  const compareLocalizedValues = useCallback(
+    (a, b) =>
+      String(a || "").localeCompare(String(b || ""), isEnglish ? "en" : "ja"),
+    [isEnglish],
+  );
+  const getPlantPrimaryName = useCallback(
+    (plantName) => {
+      const detail = safePlantDetails[plantName] || {};
+      if (isEnglish) {
+        return getPrimaryEnglishName({
+          scientificName: detail.scientificName,
+          japaneseName: plantName,
+          fallback: plantName,
+        });
+      }
+      return /[A-Za-z]/.test(plantName) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plantName)
+        ? normalizeLatinBinomialPlain(plantName)
+        : plantName;
+    },
+    [isEnglish, safePlantDetails],
+  );
+  const getFamilyDisplayValue = useCallback(
+    (detail = {}) => {
+      const localized = (detail.family || detail.familyName || "").trim();
+      const latin = (detail.familyLatin || "").trim();
+      return isEnglish ? latin || localized : localized || latin;
+    },
+    [isEnglish],
+  );
+  const getOrderDisplayValue = useCallback(
+    (detail = {}) => {
+      const localized = (detail.order || "").trim();
+      const latin = (detail.orderLatin || "").trim();
+      return isEnglish ? latin || localized : localized || latin;
+    },
+    [isEnglish],
+  );
 
   const mergedHostPlants = useMemo(() => {
     const merged = new Map();
@@ -808,20 +857,20 @@ const HostPlantList = ({
   const familyOptions = useMemo(() => {
     const set = new Set();
     Object.values(safePlantDetails).forEach((d) => {
-      const fam = (d.family || d.familyName || '').trim();
+      const fam = getFamilyDisplayValue(d);
       if (fam && fam !== '不明') set.add(fam);
     });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
-  }, [safePlantDetails]);
+    return Array.from(set).sort(compareLocalizedValues);
+  }, [safePlantDetails, getFamilyDisplayValue, compareLocalizedValues]);
 
   const orderOptions = useMemo(() => {
     const set = new Set();
     Object.values(safePlantDetails).forEach((d) => {
-      const ord = (d.order || '').trim();
+      const ord = getOrderDisplayValue(d);
       if (ord && ord !== '不明') set.add(ord);
     });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
-  }, [safePlantDetails]);
+    return Array.from(set).sort(compareLocalizedValues);
+  }, [safePlantDetails, getOrderDisplayValue, compareLocalizedValues]);
 
   const filteredHostPlants = useMemo(() => {
     logger.debug(
@@ -854,14 +903,27 @@ const HostPlantList = ({
       
       // Apply Family Filter
       if (familyFilter) {
-        const fam = (detail.family || detail.familyName || '').trim();
-        if (fam !== familyFilter) return false;
+        const familyValues = [
+          getFamilyDisplayValue(detail),
+          detail.family,
+          detail.familyName,
+          detail.familyLatin,
+        ]
+          .map((value) => String(value || "").trim())
+          .filter(Boolean);
+        if (!familyValues.includes(familyFilter)) return false;
       }
 
       // Apply Order Filter
       if (orderFilter) {
-        const ord = (detail.order || '').trim();
-        if (ord !== orderFilter) return false;
+        const orderValues = [
+          getOrderDisplayValue(detail),
+          detail.order,
+          detail.orderLatin,
+        ]
+          .map((value) => String(value || "").trim())
+          .filter(Boolean);
+        if (!orderValues.includes(orderFilter)) return false;
       }
 
       // Apply Flower Visit Filter
@@ -933,7 +995,7 @@ const HostPlantList = ({
       if (b === "不明") return -1;
       if (aHasImage && !bHasImage) return -1;
       if (!aHasImage && bHasImage) return 1;
-      return a.localeCompare(b, "ja");
+      return compareLocalizedValues(getPlantPrimaryName(a), getPlantPrimaryName(b));
     });
 
     return sorted;
@@ -946,7 +1008,11 @@ const HostPlantList = ({
     plantImageMap,
     familyFilter,
     orderFilter,
-    visitFilter
+    visitFilter,
+    compareLocalizedValues,
+    getFamilyDisplayValue,
+    getOrderDisplayValue,
+    getPlantPrimaryName,
   ]);
 
   const hasImagePriority = plantImageMap.size > 0;
@@ -1238,6 +1304,7 @@ const HostPlantList = ({
                     mothNames={displayNames}
                     relatedCount={relatedCount}
                     plantDetails={safePlantDetails}
+                    insectDisplayNameMap={insectDisplayNameMap}
                     imageFilename={plantImageMap.get(plant)}
                     hasLarvalHost={hasLarvalHost}
                     hasFlowerVisit={hasFlowerVisit}

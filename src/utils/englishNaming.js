@@ -1,3 +1,5 @@
+import { isEnglishLocale } from './locale';
+
 export const EN_SITE_NAME = 'Insects and Host Plants of Japan';
 
 export const EN_TYPE_LABELS = Object.freeze({
@@ -55,4 +57,53 @@ export function getPrimaryEnglishName({
 export function buildJapaneseReferenceLabel(japaneseName = '') {
   const value = String(japaneseName || '').trim();
   return value ? `Japanese name: ${value}` : '';
+}
+
+export function getLocalizedTaxonomyLabel({
+  locale = 'ja',
+  japaneseName = '',
+  scientificName = '',
+  fallback = '',
+} = {}) {
+  const japanese = String(japaneseName || '').trim();
+  const scientific = String(scientificName || '').trim();
+  const fallbackValue = String(fallback || '').trim();
+  if (isEnglishLocale(locale)) {
+    return scientific || japanese || fallbackValue;
+  }
+  return japanese || scientific || fallbackValue;
+}
+
+export function buildLocalizedTaxonomyChip({
+  locale = 'ja',
+  japaneseName = '',
+  scientificName = '',
+  fallback = '',
+} = {}) {
+  const label = getLocalizedTaxonomyLabel({
+    locale,
+    japaneseName,
+    scientificName,
+    fallback,
+  });
+  const queryValue = isEnglishLocale(locale)
+    ? String(scientificName || japaneseName || fallback || '').trim()
+    : String(japaneseName || scientificName || fallback || '').trim();
+  const referenceLabel =
+    isEnglishLocale(locale) &&
+    japaneseName &&
+    label &&
+    label !== String(japaneseName || '').trim()
+      ? String(japaneseName || '').trim()
+      : '';
+  return { label, queryValue, referenceLabel };
+}
+
+export function joinLocalizedNameList(values = [], locale = 'ja') {
+  const items = Array.isArray(values)
+    ? values
+        .map((value) => String(value || '').trim())
+        .filter(Boolean)
+    : [];
+  return items.join(isEnglishLocale(locale) ? ', ' : '、');
 }

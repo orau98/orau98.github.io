@@ -15,6 +15,8 @@ import {
   buildJapaneseReferenceLabel,
   EN_SITE_NAME,
   getPrimaryEnglishName,
+  getLocalizedTaxonomyLabel,
+  joinLocalizedNameList,
 } from '../utils/englishNaming';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
@@ -84,7 +86,7 @@ const buildPlantDisplayData = (moth) => {
   };
 };
 
-const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, locale = 'ja' }) => {
+const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, plantDetails = {}, locale = 'ja' }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   // Heuristic: insert a space between genus and species if missing
@@ -274,6 +276,22 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }, [isPriority, hasImageFilename, responsivePreloadUrl, imageUrl]);
   
   const plantDisplay = useMemo(() => buildPlantDisplayData(moth), [moth]);
+  const localizedPlantDisplay = useMemo(() => {
+    const toDisplayName = (name) => {
+      const normalized = cleanPlantName(name);
+      const detail = plantDetails[normalized] || plantDetails[name] || {};
+      if (!isEnglish) return normalized;
+      return getPrimaryEnglishName({
+        scientificName: detail.scientificName,
+        japaneseName: normalized,
+        fallback: normalized,
+      });
+    };
+    return {
+      hostNames: plantDisplay.hostNames.map(toDisplayName).filter(Boolean),
+      flowerNames: plantDisplay.flowerNames.map(toDisplayName).filter(Boolean),
+    };
+  }, [plantDetails, plantDisplay.flowerNames, plantDisplay.hostNames, isEnglish]);
 
   // Error boundary for individual moth items
   if (!moth) {
@@ -438,7 +456,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         </svg>
                       </span>
                       <span className="text-slate-600 dark:text-slate-300 leading-snug">
-                        {plantDisplay.hostNames.join('、')}
+                        {joinLocalizedNameList(localizedPlantDisplay.hostNames, locale)}
                       </span>
                     </div>
                   )}
@@ -453,12 +471,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         🌸
                       </span>
                       <span className="text-slate-600 dark:text-slate-300 leading-snug">
-                        {plantDisplay.flowerNames.join('、')}
+                        {joinLocalizedNameList(localizedPlantDisplay.flowerNames, locale)}
                       </span>
                     </div>
                   )}
 
-                  {plantDisplay.hostNames.length === 0 && plantDisplay.flowerNames.length === 0 && (
+                  {localizedPlantDisplay.hostNames.length === 0 && localizedPlantDisplay.flowerNames.length === 0 && (
                     <div className="flex items-start space-x-2">
                       <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -521,7 +539,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }
 });
 
-const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", locale = 'ja' }) => {
+const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const ui = useMemo(
     () => ({
@@ -533,6 +551,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       hasHostPlant: isEnglish ? 'Has host plant' : '食草あり',
       unregisteredOnly: isEnglish ? 'Unregistered only' : '未登録のみ',
       any: isEnglish ? 'Any' : '指定なし',
+      family: isEnglish ? 'Family' : '科',
+      genus: isEnglish ? 'Genus' : '属',
       emergence: isEnglish ? 'Adult season' : '出現期',
       resultCount: (value) =>
         isEnglish ? `${value} results` : `${value} 件が見つかりました`,
@@ -594,6 +614,49 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     } catch {}
     setSearchParams(next, { replace: true });
   }, [searchParams, setSearchParams]);
+  const compareLocalizedValues = useCallback(
+    (a, b) =>
+      String(a || '').localeCompare(String(b || ''), isEnglish ? 'en' : 'ja'),
+    [isEnglish],
+  );
+  const getVisibleName = useCallback(
+    (insect) =>
+      isEnglish
+        ? getPrimaryEnglishName({
+            scientificName: insect?.scientificName,
+            japaneseName: insect?.name,
+            fallback: insect?.id,
+          })
+        : insect?.name || insect?.scientificName || insect?.id || '',
+    [isEnglish],
+  );
+  const getFamilyLabel = useCallback(
+    (insect) =>
+      getLocalizedTaxonomyLabel({
+        locale,
+        japaneseName: insect?.classification?.familyJapanese || insect?.family,
+        scientificName: insect?.classification?.family,
+      }),
+    [locale],
+  );
+  const getSubfamilyLabel = useCallback(
+    (insect) =>
+      getLocalizedTaxonomyLabel({
+        locale,
+        japaneseName: insect?.classification?.subfamilyJapanese,
+        scientificName: insect?.classification?.subfamily,
+      }),
+    [locale],
+  );
+  const getTribeLabel = useCallback(
+    (insect) =>
+      getLocalizedTaxonomyLabel({
+        locale,
+        japaneseName: insect?.classification?.tribeJapanese,
+        scientificName: insect?.classification?.tribe,
+      }),
+    [locale],
+  );
 
   const currentPage = useMemo(() => {
     const raw = searchParams.get('ipage');
@@ -706,12 +769,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const familyOptions = useMemo(() => {
     const set = new Set();
     moths.forEach((m) => {
-      // Try multiple sources for family name
-      const fam = (m?.family || m?.classification?.familyJapanese || m?.classification?.family || '').trim();
+      const fam = getFamilyLabel(m);
       if (fam && fam !== '不明') set.add(fam);
     });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
-  }, [moths]);
+    return Array.from(set).sort(compareLocalizedValues);
+  }, [moths, getFamilyLabel, compareLocalizedValues]);
 
   const genusOptions = useMemo(() => {
     const set = new Set();
@@ -728,8 +790,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       
       if (gen) set.add(gen);
     });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'));
-  }, [moths]);
+    return Array.from(set).sort(compareLocalizedValues);
+  }, [moths, compareLocalizedValues]);
 
   const emergenceOptions = useMemo(
     () =>
@@ -1262,19 +1324,24 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         if (isSearching) {
           const getClassificationPriority = (insect) => {
             const classification = insect.classification;
-            if (!classification) return { level: 5, name: insect.name };
-            if (classification.familyJapanese) return { level: 1, name: classification.familyJapanese };
-            if (classification.subfamilyJapanese) return { level: 2, name: classification.subfamilyJapanese };
-            if (classification.tribeJapanese) return { level: 3, name: classification.tribeJapanese };
+            if (!classification) return { level: 5, name: getVisibleName(insect) };
+            const familyLabel = getFamilyLabel(insect);
+            if (familyLabel) return { level: 1, name: familyLabel };
+            const subfamilyLabel = getSubfamilyLabel(insect);
+            if (subfamilyLabel) return { level: 2, name: subfamilyLabel };
+            const tribeLabel = getTribeLabel(insect);
+            if (tribeLabel) return { level: 3, name: tribeLabel };
             if (classification.genus) return { level: 4, name: classification.genus };
-            return { level: 5, name: insect.name };
+            return { level: 5, name: getVisibleName(insect) };
           };
           const priorityA = getClassificationPriority(a);
           const priorityB = getClassificationPriority(b);
           if (priorityA.level !== priorityB.level) return priorityA.level - priorityB.level;
-          if (priorityA.name !== priorityB.name) return priorityA.name.localeCompare(priorityB.name, 'ja');
+          if (priorityA.name !== priorityB.name) {
+            return compareLocalizedValues(priorityA.name, priorityB.name);
+          }
         }
-        return a.name.localeCompare(b.name, 'ja');
+        return compareLocalizedValues(getVisibleName(a), getVisibleName(b));
       });
 
       return sorted;
@@ -1282,7 +1349,18 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in sortedMoths calculation:', error);
       return filteredMoths || [];
     }
-  }, [filteredMoths, debouncedSearchTerm, classificationFilter, isImageIndexReady, mothImageMap]);
+  }, [
+    filteredMoths,
+    debouncedSearchTerm,
+    classificationFilter,
+    isImageIndexReady,
+    mothImageMap,
+    compareLocalizedValues,
+    getFamilyLabel,
+    getSubfamilyLabel,
+    getTribeLabel,
+    getVisibleName,
+  ]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
   const currentMoths = useMemo(() => {
@@ -1460,7 +1538,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>科 (Family)</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>{ui.family}</label>
               <div className="relative">
                 <select
                   id={familyFilterId}
@@ -1482,7 +1560,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={genusFilterId}>属 (Genus)</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={genusFilterId}>{ui.genus}</label>
               <div className="relative">
                 <select
                   id={genusFilterId}
@@ -1591,7 +1669,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         isPriority={index < 12} 
                         imageFilename={mothImageMap.get(moth.id)}
                         imageExtensions={imageExtensions}
-                        currentPage={currentPage}
+                        plantDetails={plantDetails}
+                        locale={locale}
                       />
                     </div>
                   );

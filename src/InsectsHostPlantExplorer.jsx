@@ -20,7 +20,12 @@ import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilena
 import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { absUrl } from "./utils/origin";
 import { isKnownDetailPath } from "./utils/siteTaxonomy";
-import { EN_SITE_NAME, ENGLISH_NAMING_NOTICE } from "./utils/englishNaming";
+import {
+  EN_SITE_NAME,
+  ENGLISH_NAMING_NOTICE,
+  buildJapaneseReferenceLabel,
+  getPrimaryEnglishName,
+} from "./utils/englishNaming";
 import {
   isEnglishLocale,
   localizePath,
@@ -940,6 +945,29 @@ const InsectsHostPlantExplorer = memo(
         mergedHostPlantCount,
       ],
     );
+    const insectDisplayNameMap = useMemo(() => {
+      const map = new Map();
+      [
+        ...moths,
+        ...butterflies,
+        ...beetles,
+        ...longhornbeetles,
+        ...leafbeetles,
+        ...aphids,
+      ].forEach((insect) => {
+        const japaneseName = String(insect?.name || "").trim();
+        if (!japaneseName) return;
+        map.set(
+          japaneseName,
+          getPrimaryEnglishName({
+            scientificName: insect?.scientificName,
+            japaneseName,
+            fallback: japaneseName,
+          }),
+        );
+      });
+      return map;
+    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
     const heroStats = useMemo(
       () => [
         {
@@ -1433,11 +1461,24 @@ const InsectsHostPlantExplorer = memo(
         ];
         for (const insect of allInsects) {
           const insectType = getInsectType(insect);
+          const insectPrimaryName = isEnglish
+            ? getPrimaryEnglishName({
+                scientificName: insect.scientificName,
+                japaneseName: insect.name,
+                fallback: insect.name,
+              })
+            : insect.name;
+          const insectSecondaryName = isEnglish
+            ? buildJapaneseReferenceLabel(insect.name)
+            : insect.scientificName;
           const insectSuggestion = {
-            name: insect.name,
-            value: insect.name,
+            name: insectPrimaryName,
+            value:
+              isEnglish && insect.scientificName
+                ? insect.scientificName
+                : insect.name,
             type: insectType,
-            subText: insect.scientificName,
+            subText: insectSecondaryName,
             image: getInsectImageUrl(insect),
           };
           const alternativeNames = String(insect.alternativeNames || '')
@@ -1454,15 +1495,25 @@ const InsectsHostPlantExplorer = memo(
             registerSuggestion(insectSuggestion, `insect:${insect.name}`, insectScore);
           }
 
-          const classificationSuggestions = [
-            { value: insect.classification?.familyJapanese, label: isEnglish ? 'Search family' : '科で検索' },
-            { value: insect.classification?.subfamilyJapanese, label: isEnglish ? 'Search subfamily' : '亜科で検索' },
-            { value: insect.classification?.tribeJapanese, label: isEnglish ? 'Search tribe' : '族で検索' },
-            { value: insect.classification?.genus, label: isEnglish ? 'Search genus' : '属で検索' },
-            { value: insect.classification?.family, label: isEnglish ? 'Search family (Latin)' : '科名(学名)で検索' },
-            { value: insect.classification?.subfamily, label: isEnglish ? 'Search subfamily (Latin)' : '亜科名(学名)で検索' },
-            { value: insect.classification?.tribe, label: isEnglish ? 'Search tribe (Latin)' : '族名(学名)で検索' },
-          ];
+          const classificationSuggestions = isEnglish
+            ? [
+                { value: insect.classification?.family, label: 'Search family' },
+                { value: insect.classification?.subfamily, label: 'Search subfamily' },
+                { value: insect.classification?.tribe, label: 'Search tribe' },
+                { value: insect.classification?.genus, label: 'Search genus' },
+                { value: insect.classification?.familyJapanese, label: 'Search family (Japanese)' },
+                { value: insect.classification?.subfamilyJapanese, label: 'Search subfamily (Japanese)' },
+                { value: insect.classification?.tribeJapanese, label: 'Search tribe (Japanese)' },
+              ]
+            : [
+                { value: insect.classification?.familyJapanese, label: '科で検索' },
+                { value: insect.classification?.subfamilyJapanese, label: '亜科で検索' },
+                { value: insect.classification?.tribeJapanese, label: '族で検索' },
+                { value: insect.classification?.genus, label: '属で検索' },
+                { value: insect.classification?.family, label: '科名(学名)で検索' },
+                { value: insect.classification?.subfamily, label: '亜科名(学名)で検索' },
+                { value: insect.classification?.tribe, label: '族名(学名)で検索' },
+              ];
           for (const candidate of classificationSuggestions) {
             const candidateScore = getMatchScore(candidate.value);
             if (candidateScore <= 0) continue;
@@ -1546,11 +1597,23 @@ const InsectsHostPlantExplorer = memo(
             : aliasesRaw instanceof Set
               ? Array.from(aliasesRaw)
               : [];
+          const plantPrimaryName = isEnglish
+            ? getPrimaryEnglishName({
+                scientificName: detail.scientificName,
+                japaneseName: plant,
+                fallback: plant,
+              })
+            : plant;
           const canonicalSuggestion = {
-            name: plant,
-            value: plant,
+            name: plantPrimaryName,
+            value:
+              isEnglish && detail.scientificName
+                ? detail.scientificName
+                : plant,
             type: 'plant',
-            subText: detail.scientificName || detail.family || detail.familyName,
+            subText: isEnglish
+              ? buildJapaneseReferenceLabel(plant)
+              : detail.scientificName || detail.family || detail.familyName,
             image: getPlantImageUrl(plant),
           };
           const plantScore = Math.max(
@@ -1563,14 +1626,25 @@ const InsectsHostPlantExplorer = memo(
             registerSuggestion(canonicalSuggestion, `plant:${plant}`, plantScore);
           }
 
-          const candidates = [
-            { value: detail.family, label: isEnglish ? 'Search family' : '科で検索' },
-            { value: detail.familyName, label: isEnglish ? 'Search family' : '科で検索' },
-            { value: detail.familyLatin, label: isEnglish ? 'Search family (Latin)' : '科名(学名)で検索' },
-            { value: detail.order, label: isEnglish ? 'Search order' : '目で検索' },
-            { value: detail.orderLatin, label: isEnglish ? 'Search order (Latin)' : '目名(学名)で検索' },
-            { value: detail.genus, label: isEnglish ? 'Search genus' : '属で検索' },
-          ].filter(c => c.value);
+          const candidates = (
+            isEnglish
+              ? [
+                  { value: detail.familyLatin, label: 'Search family' },
+                  { value: detail.orderLatin, label: 'Search order' },
+                  { value: detail.genus, label: 'Search genus' },
+                  { value: detail.family, label: 'Search family (Japanese)' },
+                  { value: detail.familyName, label: 'Search family (Japanese)' },
+                  { value: detail.order, label: 'Search order (Japanese)' },
+                ]
+              : [
+                  { value: detail.family, label: '科で検索' },
+                  { value: detail.familyName, label: '科で検索' },
+                  { value: detail.familyLatin, label: '科名(学名)で検索' },
+                  { value: detail.order, label: '目で検索' },
+                  { value: detail.orderLatin, label: '目名(学名)で検索' },
+                  { value: detail.genus, label: '属で検索' },
+                ]
+          ).filter(c => c.value);
           for (const candidate of candidates) {
             const candidateScore = getMatchScore(candidate.value);
             if (candidateScore > 0) {
@@ -1974,6 +2048,7 @@ const InsectsHostPlantExplorer = memo(
                         baseRoute=""
                         embedded={true}
                         initialSearchTerm={activeSearchTerm}
+                        plantDetails={plantDetails}
                         locale={locale}
                       />
                     </Suspense>
@@ -2005,6 +2080,7 @@ const InsectsHostPlantExplorer = memo(
                         hostPlants={hostPlants}
                         flowerVisitPlants={flowerVisitPlants}
                         plantDetails={plantDetails}
+                        insectDisplayNameMap={insectDisplayNameMap}
                         embedded={true}
                         preloadedImageFilenames={plantImageFilenames}
                         initialSearchTerm={activeSearchTerm}
