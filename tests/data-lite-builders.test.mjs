@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
+  isSuspiciousPlantName,
 } from '../scripts/lib/dataLiteBuilders.mjs';
 
 test('buildHostPlantDataset canonicalizes aliases and excludes flower visits from host plants', () => {
@@ -71,4 +72,13 @@ test('buildFlowerVisitPlantDataset canonicalizes aliases and sorts insect names'
   assert.deepEqual(flowerVisitPlants, {
     ヤナギ: ['ガA', 'チョウB'],
   });
+});
+
+test('isSuspiciousPlantName filters fragmentary substrate notes but keeps coarse host groups', () => {
+  assert.equal(isSuspiciousPlantName('の樹皮下'), true);
+  assert.equal(isSuspiciousPlantName('ヤマザクラなどの枯れ木'), true);
+  assert.equal(isSuspiciousPlantName('これらの植物と混生していれば'), true);
+  assert.equal(isSuspiciousPlantName(',コウマゴヤシ'), true);
+  assert.equal(isSuspiciousPlantName('アザミの一種'), false);
+  assert.equal(isSuspiciousPlantName('コナラ属の一種'), false);
 });

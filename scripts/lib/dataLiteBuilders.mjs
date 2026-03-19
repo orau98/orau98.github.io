@@ -16,6 +16,14 @@ const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '地中の根',
 ]);
 
+const SUSPICIOUS_PLANT_NAME_PATTERNS = [
+  /^[,、]/,
+  /^の/,
+  /^(および|およぴ|と)/,
+  /^(であり|であるが|には少ない|に多く|これらの植物と混生していれば|の一種)$/,
+  /菌類に侵された|枯れ(?:葉|木|枝|菜)|朽ち木|樹皮下|樹皮|材部|被害果|落ち葉/,
+];
+
 export function normalizePlantNameLite(plantName) {
   if (!plantName || typeof plantName !== 'string') return '';
   let value = plantName.trim();
@@ -26,8 +34,14 @@ export function normalizePlantNameLite(plantName) {
   return value.trim();
 }
 
-export const isSuspiciousPlantName = (value) =>
-  SUSPICIOUS_PLANT_NAME_SET.has(cleanString(value));
+export const isSuspiciousPlantName = (value) => {
+  const normalized = cleanString(value);
+  if (!normalized) return false;
+  return (
+    SUSPICIOUS_PLANT_NAME_SET.has(normalized) ||
+    SUSPICIOUS_PLANT_NAME_PATTERNS.some((pattern) => pattern.test(normalized))
+  );
+};
 
 export const isFlowerVisitRecord = (record) => {
   if (!record) return false;
