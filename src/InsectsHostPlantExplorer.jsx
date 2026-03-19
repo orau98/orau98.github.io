@@ -1479,6 +1479,8 @@ const InsectsHostPlantExplorer = memo(
                 : insect.name,
             type: insectType,
             subText: insectSecondaryName,
+            nameIsScientific: isEnglish && Boolean(insect.scientificName),
+            subTextIsScientific: !isEnglish && Boolean(insect.scientificName),
             image: getInsectImageUrl(insect),
           };
           const alternativeNames = String(insect.alternativeNames || '')
@@ -1500,7 +1502,7 @@ const InsectsHostPlantExplorer = memo(
                 { value: insect.classification?.family, label: 'Search family' },
                 { value: insect.classification?.subfamily, label: 'Search subfamily' },
                 { value: insect.classification?.tribe, label: 'Search tribe' },
-                { value: insect.classification?.genus, label: 'Search genus' },
+                { value: insect.classification?.genus, label: 'Search genus', nameIsScientific: true },
                 { value: insect.classification?.familyJapanese, label: 'Search family (Japanese)' },
                 { value: insect.classification?.subfamilyJapanese, label: 'Search subfamily (Japanese)' },
                 { value: insect.classification?.tribeJapanese, label: 'Search tribe (Japanese)' },
@@ -1509,7 +1511,7 @@ const InsectsHostPlantExplorer = memo(
                 { value: insect.classification?.familyJapanese, label: '科で検索' },
                 { value: insect.classification?.subfamilyJapanese, label: '亜科で検索' },
                 { value: insect.classification?.tribeJapanese, label: '族で検索' },
-                { value: insect.classification?.genus, label: '属で検索' },
+                { value: insect.classification?.genus, label: '属で検索', nameIsScientific: true },
                 { value: insect.classification?.family, label: '科名(学名)で検索' },
                 { value: insect.classification?.subfamily, label: '亜科名(学名)で検索' },
                 { value: insect.classification?.tribe, label: '族名(学名)で検索' },
@@ -1523,6 +1525,7 @@ const InsectsHostPlantExplorer = memo(
                 value: candidate.value,
                 type: insectType,
                 subText: candidate.label,
+                nameIsScientific: Boolean(candidate.nameIsScientific),
               },
               `${insectType}:${candidate.value}`,
               candidateScore,
@@ -1614,6 +1617,8 @@ const InsectsHostPlantExplorer = memo(
             subText: isEnglish
               ? buildJapaneseReferenceLabel(plant)
               : detail.scientificName || detail.family || detail.familyName,
+            nameIsScientific: isEnglish && Boolean(detail.scientificName),
+            subTextIsScientific: !isEnglish && Boolean(detail.scientificName),
             image: getPlantImageUrl(plant),
           };
           const plantScore = Math.max(
@@ -1631,7 +1636,7 @@ const InsectsHostPlantExplorer = memo(
               ? [
                   { value: detail.familyLatin, label: 'Search family' },
                   { value: detail.orderLatin, label: 'Search order' },
-                  { value: detail.genus, label: 'Search genus' },
+                  { value: detail.genus, label: 'Search genus', nameIsScientific: true },
                   { value: detail.family, label: 'Search family (Japanese)' },
                   { value: detail.familyName, label: 'Search family (Japanese)' },
                   { value: detail.order, label: 'Search order (Japanese)' },
@@ -1642,7 +1647,7 @@ const InsectsHostPlantExplorer = memo(
                   { value: detail.familyLatin, label: '科名(学名)で検索' },
                   { value: detail.order, label: '目で検索' },
                   { value: detail.orderLatin, label: '目名(学名)で検索' },
-                  { value: detail.genus, label: '属で検索' },
+                  { value: detail.genus, label: '属で検索', nameIsScientific: true },
                 ]
           ).filter(c => c.value);
           for (const candidate of candidates) {
@@ -1653,6 +1658,7 @@ const InsectsHostPlantExplorer = memo(
                 value: candidate.value,
                 type: 'plant',
                 subText: candidate.label,
+                nameIsScientific: Boolean(candidate.nameIsScientific),
               }, `plant:${candidate.value}`, candidateScore);
             }
           }
@@ -1729,7 +1735,14 @@ const InsectsHostPlantExplorer = memo(
           featuredPlants={featuredPlants}
         />
         <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
-          <div id="hero-section" className="relative w-full h-[18rem] sm:h-[22rem] md:h-96 lg:h-[28rem] group">
+          <div
+            id="hero-section"
+            className={`group relative w-full ${
+              isEnglish
+                ? "min-h-[32rem] sm:min-h-[34rem] md:min-h-[38rem] lg:min-h-[40rem]"
+                : "min-h-[24rem] sm:min-h-[28rem] md:min-h-[32rem] lg:min-h-[34rem]"
+            }`}
+          >
             {/* Background Container - Handles clipping for image and gradients */}
             <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
@@ -1797,19 +1810,74 @@ const InsectsHostPlantExplorer = memo(
             </div>
 
             {/* Content Container - Allows overflow for search suggestions */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
-              <div className="max-w-6xl mx-auto">
-                <h1 className="font-extrabold text-white mb-2 md:mb-4 leading-tight tracking-tight">
-                  <span className="block bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent drop-shadow-2xl animate-gradient-x font-bold text-[6vw] sm:text-3xl md:text-5xl lg:text-6xl">
-                    {ui.heroLead}
-                  </span>
-                  <span className="block bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text text-transparent drop-shadow-2xl mt-2 font-extrabold text-[10vw] sm:text-5xl md:text-6xl lg:text-7xl">
-                    {ui.siteTitle}
-                  </span>
-                </h1>
+            <div className="absolute inset-0 z-30 p-4 md:p-8">
+              <div className="flex h-full flex-col justify-between">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="max-w-4xl pt-1 md:pt-2">
+                    <p
+                      className={`bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text font-bold tracking-tight text-transparent drop-shadow-2xl ${
+                        isEnglish
+                          ? "text-[clamp(1.25rem,2.6vw,2.25rem)] leading-tight"
+                          : "text-[clamp(1.4rem,3vw,2.8rem)] leading-tight"
+                      }`}
+                    >
+                      {ui.heroLead}
+                    </p>
+                    <h1
+                      className={`mt-2 max-w-4xl bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl ${
+                        isEnglish
+                          ? "text-[clamp(2.4rem,4.8vw,4.9rem)] leading-[0.94]"
+                          : "text-[clamp(3rem,8vw,6.5rem)] leading-[0.9]"
+                      }`}
+                    >
+                      {ui.siteTitle}
+                    </h1>
+                  </div>
 
-                <div className="mt-3 md:mt-6 space-y-2">
-                  <div className="flex flex-wrap gap-2.5">
+                  {!isStickyHeaderVisible && (
+                    <div className="flex items-center gap-2 self-start lg:pt-1">
+                      <LocaleSwitcher locale={locale} />
+                      <button
+                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                        className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
+                        aria-label={ui.themeAria}
+                      >
+                        {theme === "dark" ? (
+                          <svg
+                            className="w-6 h-6 text-white/80"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="w-6 h-6 text-white/80"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-5 space-y-4 md:space-y-5">
+                  <div className="flex max-w-5xl flex-wrap gap-2.5">
                     {heroStats.map((item) => (
                       <div
                         key={item.label}
@@ -1821,89 +1889,48 @@ const InsectsHostPlantExplorer = memo(
                       </div>
                     ))}
                   </div>
-                </div>
 
-                {/* ヒーローセクション内の検索バー */}
-                <div className="max-w-2xl w-full mt-4 md:mt-8 mx-auto md:mx-0">
-                  <SearchInput
-                    ref={heroSearchInputRef}
-                    placeholder={ui.searchPlaceholder}
-                    value={activeSearchTerm}
-                    onChange={handleGlobalSearch}
-                    suggestions={suggestions}
-                    onSelectSuggestion={handleSelectSuggestion}
-                    onSubmit={commitSearchValue}
-                    ariaLabel={isEnglish ? `Search ${ui.searchTargetLabel.toLowerCase()}` : `${ui.searchTargetLabel}を検索`}
-                    historyScope={activeTab}
-                    locale={locale}
-                  />
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs md:text-sm text-white/85">
-                    <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                      {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
-                    </span>
-                    {isEnglish && (
+                  {/* ヒーローセクション内の検索バー */}
+                  <div className="max-w-2xl w-full">
+                    <SearchInput
+                      ref={heroSearchInputRef}
+                      placeholder={ui.searchPlaceholder}
+                      value={activeSearchTerm}
+                      onChange={handleGlobalSearch}
+                      suggestions={suggestions}
+                      onSelectSuggestion={handleSelectSuggestion}
+                      onSubmit={commitSearchValue}
+                      ariaLabel={isEnglish ? `Search ${ui.searchTargetLabel.toLowerCase()}` : `${ui.searchTargetLabel}を検索`}
+                      historyScope={activeTab}
+                      locale={locale}
+                    />
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs md:text-sm text-white/85">
                       <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                        {ENGLISH_NAMING_NOTICE}
+                        {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
                       </span>
-                    )}
-                    <InfoPopover
-                      title={ui.searchHelpTitle}
-                      align="left"
-                      buttonAriaLabel={ui.searchHelpAria}
-                      buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
-                      panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
-                      contentClassName="space-y-2 text-slate-100"
-                      titleClassName="text-white"
-                    >
-                      <p>{ui.searchShortcut1}</p>
-                      <p>{ui.searchShortcut2}</p>
-                      <p>{ui.searchShortcut3}</p>
-                    </InfoPopover>
+                      {isEnglish && (
+                        <span className="inline-flex max-w-full items-center rounded-[1.4rem] border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm sm:max-w-2xl">
+                          <span className="text-pretty">{ENGLISH_NAMING_NOTICE}</span>
+                        </span>
+                      )}
+                      <InfoPopover
+                        title={ui.searchHelpTitle}
+                        align="left"
+                        buttonAriaLabel={ui.searchHelpAria}
+                        buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
+                        panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
+                        contentClassName="space-y-2 text-slate-100"
+                        titleClassName="text-white"
+                      >
+                        <p>{ui.searchShortcut1}</p>
+                        <p>{ui.searchShortcut2}</p>
+                        <p>{ui.searchShortcut3}</p>
+                      </InfoPopover>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            {!isStickyHeaderVisible && (
-              <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
-                <LocaleSwitcher locale={locale} />
-                <button
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
-                  aria-label={ui.themeAria}
-                >
-                  {theme === "dark" ? (
-                    <svg
-                      className="w-6 h-6 text-white/80"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-6 h-6 text-white/80"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                      />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            )}
           </div>
 
           {/* 主要カテゴリ導線セクションは不要のため削除 */}

@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
 import { getSearchTypeLabel } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
+import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
 const assignRef = (ref, value) => {
   if (!ref) return;
@@ -121,6 +122,11 @@ const getSuggestionBadgeClass = (type) => {
     default:
       return 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300';
   }
+};
+
+const renderSuggestionScientificText = (text, isScientific = false) => {
+  if (!text) return null;
+  return isScientific ? formatScientificNameReact(text) : text;
 };
 
 const useSearchHistory = (scope = 'default') => {
@@ -514,6 +520,8 @@ const SearchInput = React.forwardRef(({
                   const type = isObject ? suggestion.type : null;
                   const image = isObject ? suggestion.image : null;
                   const subText = isObject ? suggestion.subText : null;
+                  const nameIsScientific = isObject ? Boolean(suggestion.nameIsScientific) : false;
+                  const subTextIsScientific = isObject ? Boolean(suggestion.subTextIsScientific) : false;
                   const selectValue = isObject ? (suggestion.value || suggestion.name) : suggestion;
 
                   return (
@@ -545,9 +553,13 @@ const SearchInput = React.forwardRef(({
 
                         {/* テキスト部分 */}
                         <div className="flex-1 min-w-0">
-                          <div className="truncate font-medium text-sm">{name}</div>
+                          <div className="truncate font-medium text-sm">
+                            {renderSuggestionScientificText(name, nameIsScientific)}
+                          </div>
                           {subText && (
-                            <div className="truncate text-xs text-slate-500 dark:text-slate-400 mt-0.5">{subText}</div>
+                            <div className="truncate text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                              {renderSuggestionScientificText(subText, subTextIsScientific)}
+                            </div>
                           )}
                         </div>
 
