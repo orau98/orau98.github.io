@@ -13,7 +13,8 @@ export const buildInsectPath = (insect, locale = getCurrentLocale()) => {
   }
   const base = getLocalizedInsectRouteBase(insect.type, 'moth', locale);
   const slug = slugifyInsectName(insect.name) || insect.id;
-  return `${base}${slug}`;
+  const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+  return `${normalizedBase}${slug}`;
 };
 
 export const decodeSlug = (slug = '') => {

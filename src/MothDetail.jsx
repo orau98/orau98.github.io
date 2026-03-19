@@ -530,20 +530,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   const displayName = nameAliasInfo?.name || moth?.name || '';
 
-  useEffect(() => {
-    if (!moth) return;
-    if (mainImageProps.src) {
-      setOgTwitterImage(
-        mainImageProps.src,
-        isEnglish
-          ? `${moth.scientificName || moth.name} photograph`
-          : `${moth.name}（${moth.scientificName}）の写真`,
-      );
-      return;
-    }
-    // Fallback to DOM extraction if needed (though useSeoMeta likely handles it if mainImageProps is passed elsewhere or if we just skip this fallback)
-  }, [isEnglish, mainImageProps.src, moth, setOgTwitterImage]);
-
   // Filter alternative names to exclude duplicates of the primary name
   const alternativeNamesFiltered = React.useMemo(() => {
     const raw = (moth?.alternativeNames || '').trim();
@@ -765,6 +751,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     ] : undefined,
     resetCanonicalTo: absUrl(localizePath('/', locale))
   });
+
+  useEffect(() => {
+    if (!moth) return;
+    if (mainImageProps.src) {
+      setOgTwitterImage(
+        mainImageProps.src,
+        isEnglish
+          ? `${moth.scientificName || moth.name} photograph`
+          : `${moth.name}（${moth.scientificName}）の写真`,
+      );
+    }
+  }, [isEnglish, mainImageProps.src, moth, setOgTwitterImage]);
 
   // Show loading state if data is still loading
   if (isDataLoading) {
