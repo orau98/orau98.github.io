@@ -26,8 +26,8 @@ const ExplorerHero = ({
     id="hero-section"
     className={`group relative w-full ${
       isEnglish
-        ? "min-h-[32rem] sm:min-h-[34rem] md:min-h-[38rem] lg:min-h-[40rem]"
-        : "min-h-[23rem] sm:min-h-[25rem] md:min-h-[27rem] lg:min-h-[29rem]"
+        ? "min-h-[34rem] sm:min-h-[34rem] md:min-h-[38rem] lg:min-h-[40rem]"
+        : "min-h-[25rem] sm:min-h-[25rem] md:min-h-[27rem] lg:min-h-[29rem]"
     }`}
   >
     <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
@@ -98,10 +98,10 @@ const ExplorerHero = ({
         className={`flex h-full flex-col ${
           isEnglish
             ? "justify-between"
-            : "justify-start gap-5 md:gap-7 lg:gap-8"
+            : "justify-start gap-4 md:gap-7 lg:gap-8"
         }`}
       >
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-4xl pt-1 md:pt-2">
             <p
               className={`bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text font-bold tracking-tight text-transparent drop-shadow-2xl ${
@@ -124,16 +124,16 @@ const ExplorerHero = ({
           </div>
 
           {!isStickyHeaderVisible && (
-            <div className="flex items-center gap-2 self-start lg:pt-1">
-              <LocaleSwitcher locale={locale} />
+            <div className="flex w-full items-center justify-between gap-2 self-start sm:w-auto sm:justify-start lg:pt-1">
+              <LocaleSwitcher locale={locale} compact />
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/30 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 hover:scale-110 shadow-xl"
+                className="rounded-2xl border border-white/30 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 p-3 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:from-emerald-500/30 hover:to-blue-500/30 sm:p-3.5"
                 aria-label={ui.themeAria}
               >
                 {theme === "dark" ? (
                   <svg
-                    className="w-6 h-6 text-white/80"
+                    className="h-5 w-5 text-white/80 sm:h-6 sm:w-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -147,7 +147,7 @@ const ExplorerHero = ({
                   </svg>
                 ) : (
                   <svg
-                    className="w-6 h-6 text-white/80"
+                    className="h-5 w-5 text-white/80 sm:h-6 sm:w-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -165,14 +165,14 @@ const ExplorerHero = ({
           )}
         </div>
 
-        <div className={`${isEnglish ? "mt-5" : "mt-1"} space-y-4 md:space-y-5`}>
-          <div className="flex max-w-5xl flex-wrap gap-2.5">
+        <div className={`${isEnglish ? "mt-4 sm:mt-5" : "mt-1"} space-y-3.5 md:space-y-5`}>
+          <div className="flex max-w-5xl flex-wrap gap-2 sm:gap-2.5">
             {heroStats.map((item) => (
               <div
                 key={item.label}
-                className="bg-white/20 backdrop-blur-sm rounded-full px-3.5 py-1.5 border border-white/30"
+                className="rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:px-3.5 sm:py-1.5"
               >
-                <span className="text-white/90 text-xs sm:text-sm font-medium">
+                <span className="text-[11px] font-medium text-white/90 sm:text-sm">
                   {item.label} {item.value}
                 </span>
               </div>
@@ -192,12 +192,12 @@ const ExplorerHero = ({
               historyScope={activeTab}
               locale={locale}
             />
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs md:text-sm text-white/85">
-              <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm">
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-white/85 sm:gap-2 sm:text-sm">
+              <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:px-3">
                 {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
               </span>
               {isEnglish && (
-                <span className="inline-flex max-w-full items-center rounded-[1.4rem] border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm sm:max-w-2xl">
+                <span className="hidden max-w-2xl items-center rounded-[1.4rem] border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm sm:inline-flex">
                   <span className="text-pretty">{ENGLISH_NAMING_NOTICE}</span>
                 </span>
               )}
@@ -205,7 +205,7 @@ const ExplorerHero = ({
                 title={ui.searchHelpTitle}
                 align="left"
                 buttonAriaLabel={ui.searchHelpAria}
-                buttonClassName="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20"
+                buttonClassName="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20 sm:h-7 sm:w-7"
                 panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
                 contentClassName="space-y-2 text-slate-100"
                 titleClassName="text-white"
@@ -213,6 +213,7 @@ const ExplorerHero = ({
                 <p>{ui.searchShortcut1}</p>
                 <p>{ui.searchShortcut2}</p>
                 <p>{ui.searchShortcut3}</p>
+                {isEnglish && <p className="sm:hidden">{ENGLISH_NAMING_NOTICE}</p>}
               </InfoPopover>
             </div>
           </div>

@@ -193,6 +193,7 @@ const SearchInput = React.forwardRef(({
   ariaLabel,
   historyScope = 'default',
   locale = 'ja',
+  compact = false,
 }, forwardedRef) => {
   const isEnglish = isEnglishLocale(locale);
   const labels = useMemo(
@@ -248,6 +249,16 @@ const SearchInput = React.forwardRef(({
     if (!expanded || activeIndex < 0) return undefined;
     return `${listboxId}-option-${activeIndex}`;
   }, [activeIndex, expanded, listboxId]);
+  const shellClass = compact
+    ? expanded
+      ? 'rounded-t-xl rounded-b-none border-b-0 shadow-lg'
+      : 'rounded-xl hover:shadow-md'
+    : expanded
+      ? 'rounded-t-xl sm:rounded-t-2xl rounded-b-none border-b-0 shadow-lg'
+      : 'rounded-xl sm:rounded-2xl hover:shadow-md';
+  const inputClass = compact
+    ? 'w-full bg-transparent border-none py-2.5 pl-10 pr-11 text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 dark:text-slate-100 dark:placeholder-slate-400 sm:py-3 sm:pl-11 sm:pr-12'
+    : 'w-full bg-transparent border-none py-3 pl-10 pr-11 text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 dark:text-slate-100 dark:placeholder-slate-400 sm:py-3.5 sm:pl-11 sm:pr-12 sm:text-base';
 
   const handleChange = (e) => {
     const newValue = e.target.value;
@@ -404,9 +415,9 @@ const SearchInput = React.forwardRef(({
 
   return (
     <div className="relative group">
-      <div className={`relative z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/60 dark:border-slate-600/60 transition-all duration-200 shadow-sm ${expanded ? 'rounded-t-2xl rounded-b-none border-b-0 shadow-lg' : 'rounded-2xl hover:shadow-md'}`}>
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className={`relative z-30 border border-slate-200/60 bg-white/90 shadow-sm backdrop-blur-sm transition-all duration-200 dark:border-slate-600/60 dark:bg-slate-800/90 ${shellClass}`}>
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4">
+          <svg className="h-[18px] w-[18px] text-slate-400 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
@@ -433,16 +444,16 @@ const SearchInput = React.forwardRef(({
           aria-controls={expanded ? listboxId : undefined}
           aria-activedescendant={activeDescendantId}
           aria-keyshortcuts="/ Control+K Meta+K Escape"
-          className="w-full pl-11 pr-12 py-3.5 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:ring-offset-0 text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
+          className={inputClass}
         />
         {localValue && localValue.length > 0 && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute inset-y-0 right-1 flex items-center justify-center w-10 h-10 min-w-[44px] min-h-[44px] my-auto rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-slate-700/70 transition-colors"
+            className="absolute inset-y-0 right-0.5 my-auto flex h-9 w-9 min-h-[42px] min-w-[42px] items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100/70 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700/70 dark:hover:text-slate-200 sm:right-1 sm:h-10 sm:w-10 sm:min-h-[44px] sm:min-w-[44px]"
             aria-label={labels.clearInput}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-[18px] w-[18px] sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -454,11 +465,11 @@ const SearchInput = React.forwardRef(({
           className="absolute z-20 top-full left-0 right-0 -mt-px"
           onMouseDown={(e) => e.preventDefault()}
         >
-          <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-t-0 border-slate-200/50 dark:border-slate-600/50 rounded-b-2xl shadow-lg overflow-hidden">
+          <div className="overflow-hidden rounded-b-xl border border-t-0 border-slate-200/50 bg-white/95 shadow-lg backdrop-blur-xl dark:border-slate-600/50 dark:bg-slate-800/95 sm:rounded-b-2xl">
             {/* 検索履歴表示（入力がない場合） */}
             {showHistory && (
               <div className="py-2">
-                <div className="px-4 py-1 flex items-center justify-between">
+                <div className="flex items-center justify-between px-3 py-1 sm:px-4">
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{labels.recentSearches}</span>
                   <button
                     type="button"
@@ -472,7 +483,7 @@ const SearchInput = React.forwardRef(({
                   {history.map((term, index) => (
                     <li key={`history-${term}-${index}`} role="none">
                       <div
-                        className={`w-full px-2 min-h-[48px] text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-between ${
+                        className={`flex min-h-[44px] w-full items-center justify-between px-1.5 text-slate-700 transition-colors dark:text-slate-200 sm:min-h-[48px] sm:px-2 ${
                           index === activeIndex
                             ? "bg-slate-50 dark:bg-slate-700/50"
                             : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
@@ -486,7 +497,7 @@ const SearchInput = React.forwardRef(({
                           tabIndex={-1}
                           onMouseDown={() => handleSelect(term)}
                           onMouseEnter={() => setActiveIndex(index)}
-                          className="flex-1 min-w-0 text-left px-2 py-3 flex items-center space-x-3 rounded-md"
+                          className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-2.5 text-left sm:gap-3 sm:px-2 sm:py-3"
                         >
                           <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -497,7 +508,7 @@ const SearchInput = React.forwardRef(({
                           type="button"
                           onMouseDown={(e) => { e.preventDefault(); removeFromHistory(term); }}
                           onMouseEnter={() => setActiveIndex(index)}
-                          className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-md"
+                          className="rounded-md p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                           aria-label={labels.removeHistory(term)}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -512,7 +523,7 @@ const SearchInput = React.forwardRef(({
             )}
             {/* サジェスト表示（入力がある場合） */}
             {!showHistory && displayedSuggestions.length > 0 && (
-              <ul id={listboxId} role="listbox" className="max-h-80 overflow-y-auto py-2">
+              <ul id={listboxId} role="listbox" className="max-h-72 overflow-y-auto py-1.5 sm:max-h-80 sm:py-2">
                 {displayedSuggestions.map((suggestion, index) => {
                   // サジェストがオブジェクトか文字列かを判定
                   const isObject = typeof suggestion === 'object' && suggestion !== null;
@@ -534,7 +545,7 @@ const SearchInput = React.forwardRef(({
                         tabIndex={-1}
                         onMouseDown={() => handleSelect(selectValue)}
                         onMouseEnter={() => setActiveIndex(index)}
-                        className={`w-full text-left px-4 py-2.5 min-h-[56px] text-slate-700 dark:text-slate-200 transition-all duration-150 flex items-center gap-3 ${
+                        className={`flex min-h-[52px] w-full items-center gap-2.5 px-3 py-2 text-left text-slate-700 transition-all duration-150 dark:text-slate-200 sm:min-h-[56px] sm:gap-3 sm:px-4 sm:py-2.5 ${
                           index === activeIndex
                             ? "bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-700/70 dark:to-slate-700/30"
                             : "hover:bg-slate-50 dark:hover:bg-slate-700/50"
@@ -553,7 +564,7 @@ const SearchInput = React.forwardRef(({
 
                         {/* テキスト部分 */}
                         <div className="flex-1 min-w-0">
-                          <div className="truncate font-medium text-sm">
+                          <div className="truncate text-sm font-medium">
                             {renderSuggestionScientificText(name, nameIsScientific)}
                           </div>
                           {subText && (
@@ -565,7 +576,7 @@ const SearchInput = React.forwardRef(({
 
                         {/* カテゴリバッジ */}
                         {type && (
-                          <span className={`flex-shrink-0 px-2 py-0.5 text-xs rounded-full font-medium ${getSuggestionBadgeClass(type)}`}>
+                          <span className={`hidden flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium sm:inline-flex ${getSuggestionBadgeClass(type)}`}>
                             {getSearchTypeLabel(type, locale)}
                           </span>
                         )}

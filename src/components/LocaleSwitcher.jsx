@@ -5,6 +5,7 @@ const LocaleSwitcher = ({
   locale = 'ja',
   className = '',
   showLabel = false,
+  compact = false,
 }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
@@ -12,15 +13,19 @@ const LocaleSwitcher = ({
   const jaPath = localizePath(currentPath, 'ja');
   const enPath = localizePath(currentPath, ENGLISH_LOCALE);
 
-  const baseItemClass =
-    'inline-flex items-center rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors';
+  const baseItemClass = compact
+    ? 'inline-flex items-center whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-semibold transition-colors sm:rounded-lg sm:px-2.5 sm:text-xs'
+    : 'inline-flex items-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors';
   const activeItemClass = 'bg-emerald-600 text-white shadow-sm';
   const inactiveItemClass =
     'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800';
+  const containerClass = compact
+    ? 'inline-flex max-w-full items-center gap-0.5 rounded-lg border border-slate-200/80 bg-white/85 p-0.5 text-slate-700 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/75 dark:text-slate-100 sm:gap-1 sm:rounded-xl sm:p-1'
+    : 'inline-flex max-w-full items-center gap-1 rounded-xl border border-slate-200/80 bg-white/85 p-1 text-slate-700 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/75 dark:text-slate-100';
 
   return (
     <div
-      className={`inline-flex items-center gap-1 rounded-xl border border-slate-200/80 bg-white/85 p-1 text-slate-700 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/75 dark:text-slate-100 ${className}`.trim()}
+      className={`${containerClass} ${className}`.trim()}
       aria-label={isEnglish ? 'Language switcher' : '言語切り替え'}
     >
       {showLabel && (

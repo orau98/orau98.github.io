@@ -115,58 +115,61 @@ const StickyHeader = ({
     >
       <div
         ref={headerBarRef}
-        className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-slate-200 dark:border-slate-700 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]"
+        className="border-b border-slate-200 bg-white/95 px-3 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] shadow-lg backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95 sm:px-4"
       >
-        <div className="max-w-6xl mx-auto flex items-center gap-3 sm:gap-4">
-          {/* Logo / Top Button */}
-          <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex-shrink-0 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-emerald-600 dark:text-emerald-400"
-            aria-label={isEnglish ? 'Back to top' : 'トップへ戻る'}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-            </svg>
-          </button>
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4 lg:flex-1">
+            {/* Logo / Top Button */}
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex-shrink-0 rounded-full p-2 text-emerald-600 transition-colors hover:bg-slate-100 dark:text-emerald-400 dark:hover:bg-slate-800"
+              aria-label={isEnglish ? 'Back to top' : 'トップへ戻る'}
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            </button>
 
-          {/* Search Bar - Compact */}
-          <div className="flex-1 max-w-2xl relative">
-            <SearchInput
-              ref={inputRef}
-              value={searchTerm}
-              onChange={onSearchChange}
-              placeholder={`${activeTab === 'plants'
-                ? isEnglish ? 'plants' : '植物'
-                : isEnglish ? 'insects' : '昆虫'}${isEnglish ? ' search...' : 'を検索...'}`}
-              suggestions={suggestions}
-              onSelectSuggestion={onSelectSuggestion}
-              onSubmit={onSubmitSearch}
-              ariaLabel={
-                activeTab === 'plants'
-                  ? isEnglish ? 'Search plants' : '植物を検索'
-                  : isEnglish ? 'Search insects' : '昆虫を検索'
-              }
-              historyScope={activeTab}
-              locale={locale}
-            />
-            {/* 検索アクティブ状態のインジケーター */}
-            {searchTerm && searchTerm.trim() && (
-              <div className="hidden md:flex absolute -bottom-5 left-0 right-0 items-center justify-center">
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
-                  {isEnglish
-                    ? `Searching: ${searchTerm.trim().length > 10 ? `${searchTerm.trim().slice(0, 10)}...` : searchTerm.trim()}`
-                    : `「${searchTerm.trim().length > 10 ? searchTerm.trim().slice(0, 10) + '...' : searchTerm.trim()}」で検索中`}
-                </span>
-              </div>
-            )}
+            {/* Search Bar - Compact */}
+            <div className="relative min-w-0 flex-1 lg:max-w-2xl">
+              <SearchInput
+                ref={inputRef}
+                value={searchTerm}
+                onChange={onSearchChange}
+                placeholder={`${activeTab === 'plants'
+                  ? isEnglish ? 'plants' : '植物'
+                  : isEnglish ? 'insects' : '昆虫'}${isEnglish ? ' search...' : 'を検索...'}`}
+                suggestions={suggestions}
+                onSelectSuggestion={onSelectSuggestion}
+                onSubmit={onSubmitSearch}
+                ariaLabel={
+                  activeTab === 'plants'
+                    ? isEnglish ? 'Search plants' : '植物を検索'
+                    : isEnglish ? 'Search insects' : '昆虫を検索'
+                }
+                historyScope={activeTab}
+                locale={locale}
+                compact
+              />
+              {/* 検索アクティブ状態のインジケーター */}
+              {searchTerm && searchTerm.trim() && (
+                <div className="absolute left-0 right-0 -bottom-5 hidden items-center justify-center md:flex">
+                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    {isEnglish
+                      ? `Searching: ${searchTerm.trim().length > 10 ? `${searchTerm.trim().slice(0, 10)}...` : searchTerm.trim()}`
+                      : `「${searchTerm.trim().length > 10 ? searchTerm.trim().slice(0, 10) + '...' : searchTerm.trim()}」で検索中`}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:justify-end">
             {/* Tabs - Compact (Icon only on mobile, Text on desktop) */}
-            <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 flex-shrink-0">
+            <div className="flex flex-shrink-0 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
               <button
                 onClick={() => handleTabChange('insects')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-all sm:px-3 ${
                   activeTab === 'insects'
                     ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -183,7 +186,7 @@ const StickyHeader = ({
               </button>
               <button
                 onClick={() => handleTabChange('plants')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-all sm:px-3 ${
                   activeTab === 'plants'
                     ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -198,27 +201,29 @@ const StickyHeader = ({
               </button>
             </div>
 
-            <LocaleSwitcher locale={locale} />
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <LocaleSwitcher locale={locale} compact />
 
-            {/* Theme toggle */}
-            {theme && setTheme && (
-              <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                aria-label={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
-                title={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
-              >
-                {theme === 'dark' ? (
-                  <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4 text-slate-700 dark:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                  </svg>
-                )}
-              </button>
-            )}
+              {/* Theme toggle */}
+              {theme && setTheme && (
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="rounded-lg border border-slate-200 bg-slate-100 p-2 transition-colors hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
+                  aria-label={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
+                  title={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
+                >
+                  {theme === 'dark' ? (
+                    <svg className="h-4 w-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4 text-slate-700 dark:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                    </svg>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
