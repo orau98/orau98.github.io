@@ -14,6 +14,20 @@ const TARGETS = [
 ];
 
 const WIDTHS = [320, 640, 1024];
+const FORMATS = [
+  {
+    ext: 'jpg',
+    transform: (pipeline) => pipeline.jpeg({ quality: 82, progressive: true }),
+  },
+  {
+    ext: 'webp',
+    transform: (pipeline) => pipeline.webp({ quality: 78, effort: 4 }),
+  },
+  {
+    ext: 'avif',
+    transform: (pipeline) => pipeline.avif({ quality: 56, effort: 4 }),
+  },
+];
 
 function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 
@@ -33,16 +47,21 @@ async function processImage(srcPath, outBase, widths = WIDTHS) {
       console.warn('[responsive] skip', srcPath, 'Input file too small or not a regular file');
       return;
     }
-    const input = sharp(srcPath, { failOnError: false });
     for (const w of widths) {
-      const outPath = `${outBase}.${w}.jpg`;
-      const outStat = statOrNull(outPath);
-      if (outStat && outStat.mtimeMs >= srcStat.mtimeMs) continue; // up-to-date
-      await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
-      await input.resize({ width: w }).jpeg({ quality: 82, progressive: true }).toFile(outPath);
-      // Reload input to avoid cumulative resampling
-      input.rotate(0); // no-op to keep pipeline valid
-      console.log('[responsive]', path.relative(PUBLIC_DIR, outPath));
+      for (const format of FORMATS) {
+        const outPath = `${outBase}.${w}.${format.ext}`;
+        const outStat = statOrNull(outPath);
+        if (outStat && outStat.mtimeMs >= srcStat.mtimeMs) continue; // up-to-date
+        await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
+        await format.transform(
+          sharp(srcPath, { failOnError: false }).rotate().resize({
+            width: w,
+            withoutEnlargement: true,
+            fit: 'inside',
+          }),
+        ).toFile(outPath);
+        console.log('[responsive]', path.relative(PUBLIC_DIR, outPath));
+      }
     }
   } catch (e) {
     console.warn('[responsive] skip', srcPath, e.message);

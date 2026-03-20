@@ -22,6 +22,10 @@ import {
   formatScientificNameReact,
   renderLocalizedScientificNameListReact,
 } from "../utils/scientificNameFormatter.jsx";
+import {
+  buildResponsivePicture,
+  restoreResponsiveImageFallback,
+} from "../utils/imageSrcset";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -59,17 +63,17 @@ const HostPlantListItem = React.memo(
     const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
     const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : "";
     const encoded = imageFilename ? encodeURIComponent(imageFilename) : "";
-    const resizedBaseUrl = `${normalizedBase}images/resized/plants/`;
     const originalBaseUrl = `${normalizedBase}images/plants/`;
-    const resizedSrc = imageFilename
-      ? `${resizedBaseUrl}${encoded}.640.jpg${assetVer}`
-      : "";
-    const resizedSrcSet = imageFilename
-      ? [320, 640, 1024]
-          .map((w) => `${resizedBaseUrl}${encoded}.${w}.jpg${assetVer} ${w}w`)
-          .join(", ")
-      : "";
-    const resizedSizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw";
+    const responsiveImage = imageFilename
+      ? buildResponsivePicture({
+          baseUrl: normalizedBase,
+          folder: "plants",
+          filename: imageFilename,
+          widths: [320, 640, 1024],
+          sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",
+          query: assetVer,
+        })
+      : null;
     const originalFallbackUrls = imageFilename
       ? ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG"].map(
           (ext) => `${originalBaseUrl}${encoded}.${ext}${assetVer}`,
@@ -89,7 +93,7 @@ const HostPlantListItem = React.memo(
       if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
         setImageLoaded(true);
       }
-    }, [imageFilename, resizedSrc, resizedSrcSet]);
+    }, [imageFilename, responsiveImage?.src, responsiveImage?.srcSet]);
 
     const totalCount =
       Number.isFinite(relatedCount) && relatedCount >= 0
@@ -133,34 +137,51 @@ const HostPlantListItem = React.memo(
               {imageFilename && !imageError ? (
                 // Actual plant image
                 <div className="relative w-full aspect-[4/3]">
-                  <img
-                    ref={imgRef}
-                    src={resizedSrc}
-                    srcSet={resizedSrcSet}
-                    sizes={resizedSizes}
-                    alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
-                    width="800"
-                    height="600"
-                    data-fallback-idx="0"
-                    className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 ${
-                      imageLoaded ? "opacity-100" : "opacity-0"
-                    }`}
-                    loading="lazy"
-                    decoding="async"
-                    onLoad={() => setImageLoaded(true)}
-                    onError={(e) => {
-                      const imgEl = e.currentTarget;
-                      const idx = Number.parseInt(imgEl.dataset.fallbackIdx || "0", 10);
-                      if (idx < originalFallbackUrls.length) {
-                        imgEl.dataset.fallbackIdx = String(idx + 1);
-                        imgEl.srcset = "";
-                        imgEl.sizes = "";
-                        imgEl.src = originalFallbackUrls[idx];
-                        return;
-                      }
-                      setImageError(true);
-                    }}
-                  />
+                  <picture>
+                    {responsiveImage?.sources?.map((source) => (
+                      <source
+                        key={source.type}
+                        data-next-gen="1"
+                        type={source.type}
+                        srcSet={source.srcSet}
+                        sizes={source.sizes}
+                      />
+                    ))}
+                    <img
+                      ref={imgRef}
+                      src={responsiveImage?.src}
+                      srcSet={responsiveImage?.srcSet}
+                      sizes={responsiveImage?.sizes}
+                      data-fallback-src={responsiveImage?.src || ""}
+                      data-fallback-srcset={responsiveImage?.srcSet || ""}
+                      data-fallback-sizes={responsiveImage?.sizes || ""}
+                      alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
+                      width="800"
+                      height="600"
+                      data-fallback-idx="0"
+                      className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 ${
+                        imageLoaded ? "opacity-100" : "opacity-0"
+                      }`}
+                      loading="lazy"
+                      decoding="async"
+                      onLoad={() => setImageLoaded(true)}
+                      onError={(e) => {
+                        const imgEl = e.currentTarget;
+                        if (restoreResponsiveImageFallback(imgEl)) {
+                          return;
+                        }
+                        const idx = Number.parseInt(imgEl.dataset.fallbackIdx || "0", 10);
+                        if (idx < originalFallbackUrls.length) {
+                          imgEl.dataset.fallbackIdx = String(idx + 1);
+                          imgEl.srcset = "";
+                          imgEl.sizes = "";
+                          imgEl.src = originalFallbackUrls[idx];
+                          return;
+                        }
+                        setImageError(true);
+                      }}
+                    />
+                  </picture>
                 </div>
               ) : (
                 // Fallback to beautiful plant icon with better layout
@@ -487,7 +508,7 @@ const HostPlantList = ({
   const plantCanonicalUrl = absUrl(locale === "en" ? "/en/plant" : "/plant");
   const plantPageTitle = isEnglish ? `Plant index | ${EN_SITE_NAME}` : "植物（食草）一覧 | 昆虫植物図鑑";
   const plantPageDesc = isEnglish
-    ? `Browse ${plantCount} plant entries and review the insects associated with each plant. Scientific names are used when available.`
+    ? `Browse ${plantCount} plant entries and review the insects associated with each plant. Search by scientific name, genus, family, alias, or Japanese name.`
     : `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
   const plantBreadcrumbItems = useMemo(
     () => [
@@ -669,7 +690,7 @@ const HostPlantList = ({
     }
     if (hasSearchQuery) {
       return isEnglish
-        ? 'Try searching again with a Japanese name, scientific name, or alias.'
+        ? 'Try searching again with a scientific name, genus, family, alias, or Japanese name.'
         : '和名・学名・別名のいずれかで再検索すると見つかる場合があります。';
     }
     return isEnglish

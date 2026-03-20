@@ -14,10 +14,29 @@ const normalizeCandidates = (list) => {
   return out;
 };
 
+const normalizeSources = (list) => {
+  if (!Array.isArray(list) || list.length === 0) return [];
+  const uniq = new Set();
+  const out = [];
+  for (const item of list) {
+    if (!item?.srcSet) continue;
+    const key = `${item.type || ''}::${item.srcSet}`;
+    if (uniq.has(key)) continue;
+    uniq.add(key);
+    out.push({
+      type: item.type || '',
+      srcSet: item.srcSet,
+      sizes: item.sizes,
+    });
+  }
+  return out;
+};
+
 const ImageWithFallback = ({ 
   src, 
   srcSet,
   sizes,
+  sources = [],
   alt, 
   className = '', 
   imgClassName = '',
@@ -36,6 +55,10 @@ const ImageWithFallback = ({
     () => normalizeCandidates(candidates),
     [candidates],
   );
+  const normalizedSources = useMemo(
+    () => normalizeSources(sources),
+    [sources],
+  );
   const initialSrc = src || normalizedCandidates[0] || fallbackSrc || '';
 
   const [currentSrc, setCurrentSrc] = useState(initialSrc || src);
@@ -44,6 +67,8 @@ const ImageWithFallback = ({
   );
   const [currentSrcSet, setCurrentSrcSet] = useState(srcSet);
   const [currentSizes, setCurrentSizes] = useState(sizes);
+  const [currentSources, setCurrentSources] = useState(normalizedSources);
+  const [pictureSourcesDisabled, setPictureSourcesDisabled] = useState(false);
   const [srcSetDisabled, setSrcSetDisabled] = useState(false);
   const [status, setStatus] = useState(initialSrc ? 'loading' : 'error'); // loading, loaded, error
 
@@ -59,9 +84,11 @@ const ImageWithFallback = ({
     setCurrentCandidates(nextCandidates.filter((candidate) => candidate !== nextSrc));
     setCurrentSrcSet(srcSet);
     setCurrentSizes(sizes);
+    setCurrentSources(normalizedSources);
+    setPictureSourcesDisabled(false);
     setSrcSetDisabled(false);
     setStatus(nextSrc ? 'loading' : 'error');
-  }, [src, normalizedCandidates, fallbackSrc, srcSet, sizes]);
+  }, [src, normalizedCandidates, fallbackSrc, srcSet, sizes, normalizedSources]);
 
   // Keep srcset/sizes in sync without resetting the load status.
   useEffect(() => {
@@ -75,6 +102,20 @@ const ImageWithFallback = ({
   };
 
   const handleError = useCallback((e) => {
+    if (!pictureSourcesDisabled && currentSources.length > 0) {
+      setCurrentSources([]);
+      setPictureSourcesDisabled(true);
+      if (currentSrc) {
+        const separator = currentSrc.includes('?') ? '&' : '?';
+        const retrySrc = currentSrc.includes('fallback=1')
+          ? currentSrc
+          : `${currentSrc}${separator}fallback=1`;
+        setCurrentSrc(retrySrc);
+      }
+      setStatus('loading');
+      return;
+    }
+
     // If a responsive srcset is present, drop it once and retry the same src.
     if (!srcSetDisabled && currentSrcSet) {
       setSrcSetDisabled(true);
@@ -115,9 +156,11 @@ const ImageWithFallback = ({
   }, [
     currentCandidates,
     currentSrc,
+    currentSources,
     currentSrcSet,
     fallbackSrc,
     onError,
+    pictureSourcesDisabled,
     srcSetDisabled,
   ]);
 
@@ -139,6 +182,20 @@ const ImageWithFallback = ({
           : fit === 'scale-down'
             ? 'object-scale-down'
             : 'object-contain';
+
+  const imageElement = (
+    <img
+      src={currentSrc}
+      srcSet={status !== 'error' && !srcSetDisabled ? currentSrcSet : undefined}
+      sizes={!srcSetDisabled ? currentSizes : undefined}
+      alt={alt}
+      className={`w-full h-full ${fitClass} transition-opacity duration-700 ${status === 'loaded' ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
+      onLoad={handleLoad}
+      onError={handleError}
+      loading={loading}
+      {...props}
+    />
+  );
 
   return (
     <div className={`relative overflow-hidden bg-gray-100 dark:bg-gray-800 ${className}`} style={{ width, height }}>
@@ -162,17 +219,21 @@ const ImageWithFallback = ({
       )}
 
       {/* Image */}
-      <img
-        src={currentSrc}
-        srcSet={status !== 'error' && !srcSetDisabled ? currentSrcSet : undefined}
-        sizes={!srcSetDisabled ? currentSizes : undefined}
-        alt={alt}
-        className={`w-full h-full ${fitClass} transition-opacity duration-700 ${status === 'loaded' ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
-        onLoad={handleLoad}
-        onError={handleError}
-        loading={loading}
-        {...props}
-      />
+      {!pictureSourcesDisabled && currentSources.length > 0 ? (
+        <picture className="block w-full h-full">
+          {currentSources.map((source) => (
+            <source
+              key={`${source.type}:${source.srcSet}`}
+              type={source.type}
+              srcSet={source.srcSet}
+              sizes={source.sizes}
+            />
+          ))}
+          {imageElement}
+        </picture>
+      ) : (
+        imageElement
+      )}
     </div>
   );
 };

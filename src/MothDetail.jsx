@@ -19,7 +19,7 @@ import { absUrl } from './utils/origin';
 import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
 import { loadInsectImageIndexes } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
-import { buildResponsiveSrcset, buildResizedImageUrl } from './utils/imageSrcset';
+import { buildResponsivePicture, buildResizedImageUrl } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
 import { buildInsectMetaPagePath, getInsectSectionConfig } from './utils/siteTaxonomy';
@@ -519,13 +519,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     if (m) {
        const base = decodeURIComponent(m[1]);
        if (imageBaseSet.has(base)) {
-         const ext = imageExtensions[base] || '.jpg';
-         const { src, srcSet, sizes } = buildResponsiveSrcset({ folder: 'insects', filename: base, ext, widths: [320, 640, 1024], sizes: '100vw' });
-         return { src, srcSet, sizes };
+         const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, widths: [320, 640, 1024], sizes: '100vw' });
+         return { src, srcSet, sizes, sources };
        }
     }
-    return { src: firstUrl };
-  }, [possibleImagePaths, imageBaseSet, imageExtensions]);
+    return { src: firstUrl, sources: [] };
+  }, [possibleImagePaths, imageBaseSet]);
 
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 
@@ -928,10 +927,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                {isEnglish ? 'Host plant record' : '食草・食樹'}
+                {isEnglish ? 'Plant relationships' : '食草・食樹'}
               </p>
               <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                {isEnglish ? 'Host plant network' : '食草ネットワーク'}
+                {isEnglish ? 'Plants used by this species' : '食草ネットワーク'}
               </h2>
             </div>
           </div>
@@ -1093,12 +1092,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       src={mainImageProps.src}
                       srcSet={mainImageProps.srcSet}
                       sizes={mainImageProps.sizes}
+                      sources={mainImageProps.sources}
                       alt={isEnglish
                         ? `${primaryName} photograph`
                         : `${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
                       width="1200"
                       height="900"
-                      className="w-full h-full object-contain transition-all duration-700 group-hover:scale-105"
+                      className="w-full h-full"
+                      imgClassName="transition-all duration-700 group-hover:scale-105"
                       candidates={fallbackImageCandidates}
                       fallbackSrc={null}
                       loading="eager"
@@ -1200,7 +1201,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                    {isEnglish ? 'Host plants / flower visits' : '食草・食樹 / 訪花'}
+                    {isEnglish ? 'Host plants and flower visits' : '食草・食樹 / 訪花'}
                     {moth.isMonophagous && (
                       <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
                         {isEnglish ? 'Monophagous' : '単食性'}

@@ -3,6 +3,7 @@ import LocaleSwitcher from "./LocaleSwitcher";
 import SearchInput from "./SearchInput";
 import logger from "../utils/logger";
 import { ENGLISH_NAMING_NOTICE } from "../utils/englishNaming";
+import { buildResponsivePicture } from "../utils/imageSrcset";
 
 const ExplorerHero = ({
   activeSearchTerm,
@@ -41,52 +42,74 @@ const ExplorerHero = ({
         const base = "Cucullia_argentea";
         const baseUrl = import.meta.env.BASE_URL || "/";
         const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-        const src = `${normalizedBase}images/resized/insects/${base}.1024.jpg`;
-        const srcSet = [
-          `${normalizedBase}images/resized/insects/${base}.320.jpg 320w`,
-          `${normalizedBase}images/resized/insects/${base}.640.jpg 640w`,
-          `${normalizedBase}images/resized/insects/${base}.1024.jpg 1024w`,
-        ].join(", ");
+        const { src, srcSet, sizes, sources } = buildResponsivePicture({
+          baseUrl: normalizedBase,
+          folder: "insects",
+          filename: base,
+          widths: [320, 640, 1024],
+          sizes: "100vw",
+        });
 
         return (
-          <img
-            src={src}
-            srcSet={srcSet}
-            sizes="100vw"
-            alt={
-              isEnglish
-                ? "Hero image for Insects and Host Plants of Japan - Cucullia argentea"
-                : "昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
-            }
-            width="1600"
-            height="900"
-            className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
-              heroImageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            style={{
-              imageRendering: "auto",
-              willChange: heroImageLoaded ? "auto" : "opacity, transform",
-              contain: "layout style paint",
-            }}
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            onLoad={() => setHeroImageLoaded(true)}
-            onError={(event) => {
-              try {
-                const imgEl = event.target;
-                if (imgEl) {
+          <picture>
+            {sources.map((source) => (
+              <source
+                key={source.type}
+                data-next-gen="1"
+                type={source.type}
+                srcSet={source.srcSet}
+                sizes={source.sizes}
+              />
+            ))}
+            <img
+              src={src}
+              srcSet={srcSet}
+              sizes={sizes}
+              data-fallback-src={src}
+              data-fallback-srcset={srcSet}
+              data-fallback-sizes={sizes}
+              alt={
+                isEnglish
+                  ? "Hero image for Insects and Host Plants of Japan - Cucullia argentea"
+                  : "昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
+              }
+              width="1600"
+              height="900"
+              className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
+                heroImageLoaded ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                imageRendering: "auto",
+                willChange: heroImageLoaded ? "auto" : "opacity, transform",
+                contain: "layout style paint",
+              }}
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+              onLoad={() => setHeroImageLoaded(true)}
+              onError={(event) => {
+                try {
+                  const imgEl = event.target;
+                  if (imgEl?.dataset?.nextGenFallbackRestored !== "1") {
+                    const picture = imgEl.closest("picture");
+                    picture?.querySelectorAll('source[data-next-gen="1"]').forEach((source) => source.remove());
+                    imgEl.dataset.nextGenFallbackRestored = "1";
+                    imgEl.src = src;
+                    imgEl.srcset = srcSet;
+                    imgEl.sizes = sizes;
+                    return;
+                  }
+                  logger.warn("Hero image failed to load:", imgEl?.src);
+                  imgEl.onerror = null;
                   imgEl.srcset = "";
                   imgEl.sizes = "";
-                }
-                logger.warn("Hero image failed to load:", imgEl?.src);
-                imgEl.onerror = null;
-                imgEl.src = `${normalizedBase}images/placeholder.jpg`;
-                imgEl.alt = isEnglish ? "Image unavailable" : "画像が見つかりません";
-              } catch {}
-              setHeroImageLoaded(true);
-            }}
-          />
+                  imgEl.src = `${normalizedBase}images/placeholder.jpg`;
+                  imgEl.alt = isEnglish ? "Image unavailable" : "画像が見つかりません";
+                } catch {}
+                setHeroImageLoaded(true);
+              }}
+            />
+          </picture>
         );
       })()}
 

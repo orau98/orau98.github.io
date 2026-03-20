@@ -13,7 +13,11 @@ import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
-import { buildResponsiveSrcset, buildResizedImageUrl } from '../utils/imageSrcset';
+import {
+  buildResponsivePicture,
+  buildResizedImageUrl,
+  restoreResponsiveImageFallback,
+} from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import {
   buildJapaneseReferenceLabel,
@@ -226,12 +230,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     return resolvedBases[0] || candidateBases.find(Boolean) || 'placeholder';
   }, [imageFilename, moth, imageExtensions]);
   
-  // Determine the correct file extension using the extensions mapping
-  let imageExtension = '.jpg'; // default
-  if (imageExtensions && imageExtensions[finalImageFilename]) {
-    imageExtension = imageExtensions[finalImageFilename];
-  }
-  
   const imageFolder = 'insects';
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
@@ -318,83 +316,98 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               <div className="relative w-full aspect-[4/3]">
                 {isVisible ? (
                   (() => {
-                    const { src, srcSet, sizes } = buildResponsiveSrcset({
-                      folder: 'insects', filename: finalImageFilename, ext: imageExtension,
+                    const { src, srcSet, sizes, sources } = buildResponsivePicture({
+                      folder: 'insects', filename: finalImageFilename,
                       widths: [320, 640, 1024],
                       sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
+                      query: cacheBustRef.current,
                     });
                     return (
-                      <img
-                        src={src}
-                        srcSet={srcSet}
-                        sizes={sizes}
-                        alt={
-                          isEnglish
-                            ? `${primaryName} photograph`
-                            : `${moth.name}（${moth.scientificName}）の写真`
-                        }
-                        width="800"
-                        height="600"
-                        className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 gpu-accelerated ${
-                          imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
-                        }`}
-                        style={{ 
-                          imageRendering: 'auto',
-                          willChange: imageLoaded ? 'auto' : 'opacity, transform',
-                          contain: 'layout style paint'
-                        }}
-                        loading={isPriority ? "eager" : "lazy"}
-                        decoding="async"
-                        fetchpriority={isPriority ? "high" : "auto"}
-                        onLoad={() => setImageLoaded(true)}
-                        onError={(e) => {
-                          // まず srcset/sizes をクリアし、以降は単一 src だけを使う（生成済みリサイズ画像が無い場合のループ防止）
-                          if (e.target) {
-                            e.target.srcset = '';
-                            e.target.sizes = '';
+                      <picture>
+                        {sources.map((source) => (
+                          <source
+                            key={source.type}
+                            data-next-gen="1"
+                            type={source.type}
+                            srcSet={source.srcSet}
+                            sizes={source.sizes}
+                          />
+                        ))}
+                        <img
+                          src={src}
+                          srcSet={srcSet}
+                          sizes={sizes}
+                          data-fallback-src={src}
+                          data-fallback-srcset={srcSet}
+                          data-fallback-sizes={sizes}
+                          alt={
+                            isEnglish
+                              ? `${primaryName} photograph`
+                              : `${moth.name}（${moth.scientificName}）の写真`
                           }
-                          // Robust多段フォールバック
-                          const attempted = e.target.dataset.attempted || '';
-                          const attempts = attempted.split(',').filter(Boolean);
-                          
-                          // 候補リスト: 生成済みの縮小画像を順に試し、それでも駄目ならプレースホルダーへ落とす
-                          const tryList = [
-                            buildResizedImageUrl({
-                              baseUrl: import.meta.env.BASE_URL || '/',
-                              folder: 'insects',
-                              filename: finalImageFilename,
-                              width: 640,
-                              query: cacheBustRef.current,
-                            }),
-                            buildResizedImageUrl({
-                              baseUrl: import.meta.env.BASE_URL || '/',
-                              folder: 'insects',
-                              filename: finalImageFilename,
-                              width: 320,
-                              query: cacheBustRef.current,
-                            }),
-                            `${import.meta.env.BASE_URL}images/placeholder.jpg${cacheBustRef.current}`,
-                          ].filter((u) => u && !attempts.includes(u));
-                          
-                          if (tryList.length > 0) {
-                            const next = tryList[0];
-                            attempts.push(next);
-                            e.target.dataset.attempted = attempts.join(',');
-                            e.target.src = next;
-                            return;
-                          }
+                          width="800"
+                          height="600"
+                          className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 gpu-accelerated ${
+                            imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
+                          }`}
+                          style={{
+                            imageRendering: 'auto',
+                            willChange: imageLoaded ? 'auto' : 'opacity, transform',
+                            contain: 'layout style paint'
+                          }}
+                          loading={isPriority ? "eager" : "lazy"}
+                          decoding="async"
+                          fetchpriority={isPriority ? "high" : "auto"}
+                          onLoad={() => setImageLoaded(true)}
+                          onError={(e) => {
+                            const imgEl = e.currentTarget;
+                            if (restoreResponsiveImageFallback(imgEl)) {
+                              return;
+                            }
+                            imgEl.srcset = '';
+                            imgEl.sizes = '';
+                            const attempted = imgEl.dataset.attempted || '';
+                            const attempts = attempted.split(',').filter(Boolean);
 
-                          // フォールバックも尽きたら非表示に
-                          if (e.target && e.target.style) {
-                            e.target.style.display = 'none';
-                          }
-                          const parent = e.target?.parentElement;
-                          const sibling = parent?.nextSibling;
-                          if (sibling && sibling.style) {
-                            sibling.style.display = 'flex';
-                          }
-                        }}
-                      />
+                            const tryList = [
+                              buildResizedImageUrl({
+                                baseUrl: import.meta.env.BASE_URL || '/',
+                                folder: 'insects',
+                                filename: finalImageFilename,
+                                width: 640,
+                                query: cacheBustRef.current,
+                                format: 'jpg',
+                              }),
+                              buildResizedImageUrl({
+                                baseUrl: import.meta.env.BASE_URL || '/',
+                                folder: 'insects',
+                                filename: finalImageFilename,
+                                width: 320,
+                                query: cacheBustRef.current,
+                                format: 'jpg',
+                              }),
+                              `${import.meta.env.BASE_URL}images/placeholder.jpg${cacheBustRef.current}`,
+                            ].filter((u) => u && !attempts.includes(u));
+
+                            if (tryList.length > 0) {
+                              const next = tryList[0];
+                              attempts.push(next);
+                              imgEl.dataset.attempted = attempts.join(',');
+                              imgEl.src = next;
+                              return;
+                            }
+
+                            if (imgEl.style) {
+                              imgEl.style.display = 'none';
+                            }
+                            const parent = imgEl.parentElement;
+                            const sibling = parent?.nextSibling;
+                            if (sibling && sibling.style) {
+                              sibling.style.display = 'flex';
+                            }
+                          }}
+                        />
+                      </picture>
                     );
                   })()
                 ) : (
@@ -569,11 +582,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       clearSearch: isEnglish ? 'Clear search' : '検索をクリア',
       clearFilters: isEnglish ? 'Clear filters' : 'フィルター解除',
       examples: isEnglish
-        ? 'Examples: Japanese name, scientific name, family, or host plant'
+        ? 'Examples: scientific name, family, host plant, or Japanese name'
         : '例：「オオミズアオ」「ヤナギ」「ヤガ科」など',
       listPageTitle: isEnglish ? `${title} index | ${EN_SITE_NAME}` : `${title}の一覧 | 昆虫植物図鑑`,
       listPageDesc: isEnglish
-        ? `${moths?.length || 0} entries. Search by Japanese name, scientific name, family, subfamily, or genus.`
+        ? `${moths?.length || 0} entries. Search by scientific name, family, subfamily, genus, host plant, or Japanese name.`
         : `${title}の一覧ページ。${moths?.length || 0}種から検索・絞り込み。和名/学名/科・亜科・属で高速検索可能。`,
     }),
     [isEnglish, moths?.length, title],
@@ -893,7 +906,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     }
     if (hasSearchQuery) {
       return isEnglish
-        ? 'Try a shorter query or search again with a Japanese name or scientific name.'
+        ? 'Try a shorter query or search again with a scientific name, family, host plant, or Japanese name.'
         : '検索語を短くするか、別の表記（和名/学名）で再検索してください。';
     }
     return isEnglish

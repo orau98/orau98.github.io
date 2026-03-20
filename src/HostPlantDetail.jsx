@@ -18,7 +18,11 @@ import { createSafeScientificPlantFilename, PLANT_IMAGE_SUFFIXES } from './utils
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
 import { createSafeInsectFilename } from './utils/image';
-import { buildResponsiveSrcset, buildResizedImageUrl } from './utils/imageSrcset';
+import {
+  buildResponsivePicture,
+  buildResizedImageUrl,
+  restoreResponsiveImageFallback,
+} from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
@@ -499,15 +503,13 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
     (imageExtensions && imageExtensions[filename]) ||
     (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(filename))
   );
-  const ext = (imageExtensions && imageExtensions[filename]) || '.jpg';
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';
   const responsive = filename
-    ? buildResponsiveSrcset({
+    ? buildResponsivePicture({
         folder: 'insects',
         filename,
-        ext,
         widths: [320, 640, 1024],
         sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
       })
@@ -550,20 +552,37 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
-            <img
-              src={imgSrc}
-              srcSet={responsive.srcSet}
-              sizes={responsive.sizes}
-              alt={isEnglish ? `${primaryName} photograph` : name}
-              width="1200"
-              height="900"
-              className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
-              onError={() => {
-                setImgError(true);
-              }}
-              loading="lazy"
-              decoding="async"
-            />
+            <picture>
+              {(responsive.sources || []).map((source) => (
+                <source
+                  key={source.type}
+                  data-next-gen="1"
+                  type={source.type}
+                  srcSet={source.srcSet}
+                  sizes={source.sizes}
+                />
+              ))}
+              <img
+                src={imgSrc}
+                srcSet={responsive.srcSet}
+                sizes={responsive.sizes}
+                data-fallback-src={imgSrc}
+                data-fallback-srcset={responsive.srcSet || ''}
+                data-fallback-sizes={responsive.sizes || ''}
+                alt={isEnglish ? `${primaryName} photograph` : name}
+                width="1200"
+                height="900"
+                className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
+                onError={(event) => {
+                  if (restoreResponsiveImageFallback(event.currentTarget)) {
+                    return;
+                  }
+                  setImgError(true);
+                }}
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
             {/* Hover gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent hidden"></div>
           </div>
@@ -1223,6 +1242,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
       const variations = [];
       // Prefer resized image first to reduce transfer size and burst load.
+      variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.avif`);
+      variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.webp`);
       variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.jpg`);
       extensions.forEach((ext) => {
         variations.push(`${baseUrl}images/plants/${encodedName}${ext}`);
@@ -1840,20 +1861,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
               </div>
               <div>
                 <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                  {isEnglish ? 'Host plant / flower-visit network' : '食草・訪花ネットワーク'}
+                  {isEnglish ? 'Plant relationships' : '食草・訪花ネットワーク'}
                 </p>
                 <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                  {isEnglish ? 'Insects linked to this plant' : 'この植物に関わる昆虫'}
+                  {isEnglish ? 'Insects associated with this plant' : 'この植物に関わる昆虫'}
                 </h2>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
-                    {isEnglish ? `${totalInsectCount} linked species` : `関連 ${totalInsectCount}種`}
+                    {isEnglish ? `${totalInsectCount} species` : `関連 ${totalInsectCount}種`}
                   </span>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
-                    {isEnglish ? `Host plant ${hostPlantInsects.length}` : `食草 ${hostPlantInsects.length}種`}
+                    {isEnglish ? `Larval hosts ${hostPlantInsects.length}` : `食草 ${hostPlantInsects.length}種`}
                   </span>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-900/30 dark:text-rose-200">
-                    {isEnglish ? `Flower visit ${flowerVisitInsects.length}` : `訪花 ${flowerVisitInsects.length}種`}
+                    {isEnglish ? `Flower visitors ${flowerVisitInsects.length}` : `訪花 ${flowerVisitInsects.length}種`}
                   </span>
                   {bothInsectCount > 0 && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-800 dark:bg-violet-900/30 dark:text-violet-200">
