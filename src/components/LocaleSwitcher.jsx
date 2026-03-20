@@ -22,6 +22,22 @@ const LocaleSwitcher = ({
   const containerClass = compact
     ? 'inline-flex max-w-full items-center gap-0.5 rounded-lg border border-slate-200/80 bg-white/85 p-0.5 text-slate-700 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/75 dark:text-slate-100 sm:gap-1 sm:rounded-xl sm:p-1'
     : 'inline-flex max-w-full items-center gap-1 rounded-xl border border-slate-200/80 bg-white/85 p-1 text-slate-700 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/75 dark:text-slate-100';
+  const japaneseLabel = compact
+    ? (
+        <>
+          <span className="sm:hidden">JP</span>
+          <span className="hidden sm:inline">日本語</span>
+        </>
+      )
+    : '日本語';
+  const englishLabel = compact
+    ? (
+        <>
+          <span className="sm:hidden">EN</span>
+          <span className="hidden sm:inline">English</span>
+        </>
+      )
+    : 'English';
 
   return (
     <div
@@ -40,14 +56,14 @@ const LocaleSwitcher = ({
           className={`${baseItemClass} ${inactiveItemClass}`}
           aria-label="Switch to Japanese"
         >
-          日本語
+          {japaneseLabel}
         </Link>
       ) : (
         <span
           className={`${baseItemClass} ${activeItemClass}`}
           aria-current="page"
         >
-          日本語
+          {japaneseLabel}
         </span>
       )}
 
@@ -56,7 +72,7 @@ const LocaleSwitcher = ({
           className={`${baseItemClass} ${activeItemClass}`}
           aria-current="page"
         >
-          English
+          {englishLabel}
         </span>
       ) : (
         <Link
@@ -64,7 +80,7 @@ const LocaleSwitcher = ({
           className={`${baseItemClass} ${inactiveItemClass}`}
           aria-label="Switch to English"
         >
-          English
+          {englishLabel}
         </Link>
       )}
     </div>
