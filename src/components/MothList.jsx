@@ -13,10 +13,10 @@ import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
+import ImageWithFallback from './ImageWithFallback';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,
-  restoreResponsiveImageFallback,
 } from '../utils/imageSrcset';
 import useSeoMeta from '../hooks/useSeoMeta';
 import {
@@ -112,7 +112,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     return t;
   };
   const [isVisible, setIsVisible] = useState(isPriority);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const imgRef = useRef(null);
   const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
 
@@ -250,6 +249,36 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   
   // Check if we have an actual match (passed filename implies existence)
   const hasImageFilename = !!finalImageFilename;
+  const responsiveImage = hasImageFilename
+    ? buildResponsivePicture({
+        folder: 'insects',
+        filename: finalImageFilename,
+        widths: [320, 640, 1024],
+        sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
+        query: cacheBustRef.current,
+      })
+    : null;
+  const imageFallbackCandidates = hasImageFilename
+    ? [
+        buildResizedImageUrl({
+          baseUrl: normalizedBase,
+          folder: imageFolder,
+          filename: finalImageFilename,
+          width: 640,
+          query: cacheBustRef.current,
+          format: 'jpg',
+        }),
+        buildResizedImageUrl({
+          baseUrl: normalizedBase,
+          folder: imageFolder,
+          filename: finalImageFilename,
+          width: 320,
+          query: cacheBustRef.current,
+          format: 'jpg',
+        }),
+      ].filter((url, index, list) => url && url !== responsiveImage?.src && list.indexOf(url) === index)
+    : [];
+  const placeholderFallbackSrc = `${normalizedBase}images/placeholder.jpg${cacheBustRef.current}`;
   
   
   // Preload priority images with better performance
@@ -315,101 +344,31 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             {hasImageFilename ? (
               <div className="relative w-full aspect-[4/3]">
                 {isVisible ? (
-                  (() => {
-                    const { src, srcSet, sizes, sources } = buildResponsivePicture({
-                      folder: 'insects', filename: finalImageFilename,
-                      widths: [320, 640, 1024],
-                      sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
-                      query: cacheBustRef.current,
-                    });
-                    return (
-                      <picture>
-                        {sources.map((source) => (
-                          <source
-                            key={source.type}
-                            data-next-gen="1"
-                            type={source.type}
-                            srcSet={source.srcSet}
-                            sizes={source.sizes}
-                          />
-                        ))}
-                        <img
-                          src={src}
-                          srcSet={srcSet}
-                          sizes={sizes}
-                          data-fallback-src={src}
-                          data-fallback-srcset={srcSet}
-                          data-fallback-sizes={sizes}
-                          alt={
-                            isEnglish
-                              ? `${primaryName} photograph`
-                              : `${moth.name}（${moth.scientificName}）の写真`
-                          }
-                          width="800"
-                          height="600"
-                          className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 gpu-accelerated ${
-                            imageLoaded ? 'opacity-100 loaded' : 'opacity-0 loading'
-                          }`}
-                          style={{
-                            imageRendering: 'auto',
-                            willChange: imageLoaded ? 'auto' : 'opacity, transform',
-                            contain: 'layout style paint'
-                          }}
-                          loading={isPriority ? "eager" : "lazy"}
-                          decoding="async"
-                          fetchpriority={isPriority ? "high" : "auto"}
-                          onLoad={() => setImageLoaded(true)}
-                          onError={(e) => {
-                            const imgEl = e.currentTarget;
-                            if (restoreResponsiveImageFallback(imgEl)) {
-                              return;
-                            }
-                            imgEl.srcset = '';
-                            imgEl.sizes = '';
-                            const attempted = imgEl.dataset.attempted || '';
-                            const attempts = attempted.split(',').filter(Boolean);
-
-                            const tryList = [
-                              buildResizedImageUrl({
-                                baseUrl: import.meta.env.BASE_URL || '/',
-                                folder: 'insects',
-                                filename: finalImageFilename,
-                                width: 640,
-                                query: cacheBustRef.current,
-                                format: 'jpg',
-                              }),
-                              buildResizedImageUrl({
-                                baseUrl: import.meta.env.BASE_URL || '/',
-                                folder: 'insects',
-                                filename: finalImageFilename,
-                                width: 320,
-                                query: cacheBustRef.current,
-                                format: 'jpg',
-                              }),
-                              `${import.meta.env.BASE_URL}images/placeholder.jpg${cacheBustRef.current}`,
-                            ].filter((u) => u && !attempts.includes(u));
-
-                            if (tryList.length > 0) {
-                              const next = tryList[0];
-                              attempts.push(next);
-                              imgEl.dataset.attempted = attempts.join(',');
-                              imgEl.src = next;
-                              return;
-                            }
-
-                            if (imgEl.style) {
-                              imgEl.style.display = 'none';
-                            }
-                            const parent = imgEl.parentElement;
-                            const sibling = parent?.nextSibling;
-                            if (sibling && sibling.style) {
-                              sibling.style.display = 'flex';
-                            }
-                          }}
-                        />
-                      </picture>
-                    );
-                  })()
+                  <ImageWithFallback
+                    src={responsiveImage?.src}
+                    srcSet={responsiveImage?.srcSet}
+                    sizes={responsiveImage?.sizes}
+                    sources={responsiveImage?.sources}
+                    candidates={imageFallbackCandidates}
+                    fallbackSrc={placeholderFallbackSrc}
+                    alt={
+                      isEnglish
+                        ? `${primaryName} photograph`
+                        : `${moth.name}（${moth.scientificName}）の写真`
+                    }
+                    width="800"
+                    height="600"
+                    className="w-full h-full"
+                    imgClassName="transition-all duration-500 ease-out group-hover:scale-110 gpu-accelerated"
+                    fit="cover"
+                    style={{
+                      imageRendering: 'auto',
+                      contain: 'layout style paint',
+                    }}
+                    loading={isPriority ? "eager" : "lazy"}
+                    decoding="async"
+                    fetchpriority={isPriority ? "high" : "auto"}
+                  />
                 ) : (
                   <div className="w-full h-full bg-slate-200 dark:bg-slate-700 animate-pulse flex items-center justify-center">
                     <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -18,10 +18,10 @@ import { createSafeScientificPlantFilename, PLANT_IMAGE_SUFFIXES } from './utils
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
 import { createSafeInsectFilename } from './utils/image';
+import ImageWithFallback from './components/ImageWithFallback';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,
-  restoreResponsiveImageFallback,
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
@@ -552,37 +552,23 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
-            <picture>
-              {(responsive.sources || []).map((source) => (
-                <source
-                  key={source.type}
-                  data-next-gen="1"
-                  type={source.type}
-                  srcSet={source.srcSet}
-                  sizes={source.sizes}
-                />
-              ))}
-              <img
-                src={imgSrc}
-                srcSet={responsive.srcSet}
-                sizes={responsive.sizes}
-                data-fallback-src={imgSrc}
-                data-fallback-srcset={responsive.srcSet || ''}
-                data-fallback-sizes={responsive.sizes || ''}
-                alt={isEnglish ? `${primaryName} photograph` : name}
-                width="1200"
-                height="900"
-                className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
-                onError={(event) => {
-                  if (restoreResponsiveImageFallback(event.currentTarget)) {
-                    return;
-                  }
-                  setImgError(true);
-                }}
-                loading="lazy"
-                decoding="async"
-              />
-            </picture>
+            <ImageWithFallback
+              src={imgSrc}
+              srcSet={responsive.srcSet}
+              sizes={responsive.sizes}
+              sources={responsive.sources}
+              alt={isEnglish ? `${primaryName} photograph` : name}
+              width="1200"
+              height="900"
+              className="w-full h-full"
+              imgClassName="transition-all duration-700 hover:scale-105"
+              fit="cover"
+              onError={() => {
+                setImgError(true);
+              }}
+              loading="lazy"
+              decoding="async"
+            />
             {/* Hover gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent hidden"></div>
           </div>

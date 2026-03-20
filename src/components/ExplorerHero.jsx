@@ -4,6 +4,7 @@ import SearchInput from "./SearchInput";
 import logger from "../utils/logger";
 import { ENGLISH_NAMING_NOTICE } from "../utils/englishNaming";
 import { buildResponsivePicture } from "../utils/imageSrcset";
+import ImageWithFallback from "./ImageWithFallback";
 
 const ExplorerHero = ({
   activeSearchTerm,
@@ -49,67 +50,41 @@ const ExplorerHero = ({
           widths: [320, 640, 1024],
           sizes: "100vw",
         });
+        const placeholderSrc = `${normalizedBase}images/placeholder.jpg`;
 
         return (
-          <picture>
-            {sources.map((source) => (
-              <source
-                key={source.type}
-                data-next-gen="1"
-                type={source.type}
-                srcSet={source.srcSet}
-                sizes={source.sizes}
-              />
-            ))}
-            <img
-              src={src}
-              srcSet={srcSet}
-              sizes={sizes}
-              data-fallback-src={src}
-              data-fallback-srcset={srcSet}
-              data-fallback-sizes={sizes}
-              alt={
-                isEnglish
-                  ? "Hero image for Insects and Host Plants of Japan - Cucullia argentea"
-                  : "昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
-              }
-              width="1600"
-              height="900"
-              className={`w-full h-full object-cover object-center transform group-hover:scale-105 transition-all duration-700 ease-out ${
-                heroImageLoaded ? "opacity-100" : "opacity-0"
-              }`}
-              style={{
-                imageRendering: "auto",
-                willChange: heroImageLoaded ? "auto" : "opacity, transform",
-                contain: "layout style paint",
-              }}
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-              onLoad={() => setHeroImageLoaded(true)}
-              onError={(event) => {
-                try {
-                  const imgEl = event.target;
-                  if (imgEl?.dataset?.nextGenFallbackRestored !== "1") {
-                    const picture = imgEl.closest("picture");
-                    picture?.querySelectorAll('source[data-next-gen="1"]').forEach((source) => source.remove());
-                    imgEl.dataset.nextGenFallbackRestored = "1";
-                    imgEl.src = src;
-                    imgEl.srcset = srcSet;
-                    imgEl.sizes = sizes;
-                    return;
-                  }
-                  logger.warn("Hero image failed to load:", imgEl?.src);
-                  imgEl.onerror = null;
-                  imgEl.srcset = "";
-                  imgEl.sizes = "";
-                  imgEl.src = `${normalizedBase}images/placeholder.jpg`;
-                  imgEl.alt = isEnglish ? "Image unavailable" : "画像が見つかりません";
-                } catch {}
-                setHeroImageLoaded(true);
-              }}
-            />
-          </picture>
+          <ImageWithFallback
+            src={src}
+            srcSet={srcSet}
+            sizes={sizes}
+            sources={sources}
+            fallbackSrc={placeholderSrc}
+            alt={
+              isEnglish
+                ? "Hero image for Insects and Host Plants of Japan - Cucullia argentea"
+                : "昆虫植物図鑑のメインビジュアル - Cucullia argentea（ギンスジキンウワバ）"
+            }
+            width="1600"
+            height="900"
+            className="w-full h-full"
+            imgClassName={`object-center transform group-hover:scale-105 ease-out ${
+              heroImageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            fit="cover"
+            style={{
+              imageRendering: "auto",
+              willChange: heroImageLoaded ? "auto" : "opacity, transform",
+              contain: "layout style paint",
+            }}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            onLoad={() => setHeroImageLoaded(true)}
+            onError={(event) => {
+              logger.warn("Hero image failed to load:", event?.currentTarget?.src || src);
+              setHeroImageLoaded(true);
+            }}
+          />
         );
       })()}
 

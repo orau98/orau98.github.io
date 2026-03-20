@@ -24,8 +24,8 @@ import {
 } from "../utils/scientificNameFormatter.jsx";
 import {
   buildResponsivePicture,
-  restoreResponsiveImageFallback,
 } from "../utils/imageSrcset";
+import ImageWithFallback from "./ImageWithFallback";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -53,10 +53,7 @@ const HostPlantListItem = React.memo(
   }) => {
     const location = useLocation();
     const isEnglish = isEnglishLocale(locale);
-    const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
-    const imgRef = useRef(null);
-    const prevImageFilenameRef = useRef(imageFilename);
 
     const safePlantName = createSafePlantFilename(plant);
     const baseUrl = import.meta.env.BASE_URL || "/";
@@ -81,18 +78,7 @@ const HostPlantListItem = React.memo(
       : [];
 
     React.useEffect(() => {
-      if (prevImageFilenameRef.current === imageFilename) return;
-      prevImageFilenameRef.current = imageFilename;
-      setImageLoaded(false);
       setImageError(false);
-    }, [imageFilename]);
-
-    // Handle cached images where onLoad may not fire again after rerender.
-    React.useEffect(() => {
-      const imgEl = imgRef.current;
-      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
-        setImageLoaded(true);
-      }
     }, [imageFilename, responsiveImage?.src, responsiveImage?.srcSet]);
 
     const totalCount =
@@ -137,51 +123,24 @@ const HostPlantListItem = React.memo(
               {imageFilename && !imageError ? (
                 // Actual plant image
                 <div className="relative w-full aspect-[4/3]">
-                  <picture>
-                    {responsiveImage?.sources?.map((source) => (
-                      <source
-                        key={source.type}
-                        data-next-gen="1"
-                        type={source.type}
-                        srcSet={source.srcSet}
-                        sizes={source.sizes}
-                      />
-                    ))}
-                    <img
-                      ref={imgRef}
-                      src={responsiveImage?.src}
-                      srcSet={responsiveImage?.srcSet}
-                      sizes={responsiveImage?.sizes}
-                      data-fallback-src={responsiveImage?.src || ""}
-                      data-fallback-srcset={responsiveImage?.srcSet || ""}
-                      data-fallback-sizes={responsiveImage?.sizes || ""}
-                      alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
-                      width="800"
-                      height="600"
-                      data-fallback-idx="0"
-                      className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 ${
-                        imageLoaded ? "opacity-100" : "opacity-0"
-                      }`}
-                      loading="lazy"
-                      decoding="async"
-                      onLoad={() => setImageLoaded(true)}
-                      onError={(e) => {
-                        const imgEl = e.currentTarget;
-                        if (restoreResponsiveImageFallback(imgEl)) {
-                          return;
-                        }
-                        const idx = Number.parseInt(imgEl.dataset.fallbackIdx || "0", 10);
-                        if (idx < originalFallbackUrls.length) {
-                          imgEl.dataset.fallbackIdx = String(idx + 1);
-                          imgEl.srcset = "";
-                          imgEl.sizes = "";
-                          imgEl.src = originalFallbackUrls[idx];
-                          return;
-                        }
-                        setImageError(true);
-                      }}
-                    />
-                  </picture>
+                  <ImageWithFallback
+                    src={responsiveImage?.src}
+                    srcSet={responsiveImage?.srcSet}
+                    sizes={responsiveImage?.sizes}
+                    sources={responsiveImage?.sources}
+                    candidates={originalFallbackUrls}
+                    alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
+                    width="800"
+                    height="600"
+                    className="w-full h-full"
+                    imgClassName="transition-all duration-500 ease-out group-hover:scale-110"
+                    fit="cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={() => {
+                      setImageError(true);
+                    }}
+                  />
                 </div>
               ) : (
                 // Fallback to beautiful plant icon with better layout
@@ -224,17 +183,6 @@ const HostPlantListItem = React.memo(
                   </div>
                 </div>
               )}
-
-              {/* Loading state for images */}
-              {!imageLoaded && imageFilename && !imageError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-emerald-50/80 dark:bg-emerald-900/40">
-                  <div className="relative">
-                    <div className="w-8 h-8 border-[3px] border-emerald-200 dark:border-emerald-700 rounded-full"></div>
-                    <div className="absolute top-0 left-0 w-8 h-8 border-[3px] border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                </div>
-              )}
-
               {/* Decorative pattern overlay for non-image cards */}
               {(!imageFilename || imageError) && (
                 <div className="absolute inset-0 opacity-10">

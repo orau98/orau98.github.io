@@ -104,32 +104,3 @@ export function buildResponsivePicture({
     })),
   };
 }
-
-export function restoreResponsiveImageFallback(imgEl) {
-  if (!imgEl || imgEl.dataset.nextGenFallbackRestored === '1') return false;
-  const fallbackSrc = imgEl.dataset.fallbackSrc || '';
-  const fallbackSrcSet = imgEl.dataset.fallbackSrcset || '';
-  const fallbackSizes = imgEl.dataset.fallbackSizes || '';
-  if (!fallbackSrc && !fallbackSrcSet) return false;
-
-  const picture = typeof imgEl.closest === 'function' ? imgEl.closest('picture') : null;
-  if (picture) {
-    picture.querySelectorAll('source[data-next-gen="1"]').forEach((source) => source.remove());
-  }
-
-  imgEl.dataset.nextGenFallbackRestored = '1';
-  if (fallbackSrcSet) {
-    imgEl.srcset = fallbackSrcSet;
-  } else {
-    imgEl.removeAttribute('srcset');
-  }
-  if (fallbackSizes) {
-    imgEl.sizes = fallbackSizes;
-  } else {
-    imgEl.removeAttribute('sizes');
-  }
-  if (fallbackSrc) {
-    imgEl.src = fallbackSrc;
-  }
-  return true;
-}
