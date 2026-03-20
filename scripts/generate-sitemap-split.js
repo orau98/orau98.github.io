@@ -10,6 +10,106 @@ function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
+/**
+ * 基準日（today）から N ヶ月前の月初日を "YYYY-MM-DD" 形式で返す。
+ * N=0 → 今月1日, N=1 → 先月1日, N=3 → 3ヶ月前の月初日
+ */
+function monthsAgoFirstDay(n, today = new Date()) {
+  const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - n, 1));
+  return formatDate(d);
+}
+
+/**
+ * normalized_data/hostplants.csv を読み込み、
+ * insect_id → 食草レコード数 のマップを返す。
+ * CSV は UTF-8 (BOM 有無どちらも対応)。
+ */
+function buildHostplantCountMap(csvPath) {
+  const map = new Map();
+  if (!fs.existsSync(csvPath)) {
+    console.warn(`[sitemap] hostplants.csv not found: ${csvPath}`);
+    return map;
+  }
+  let content = fs.readFileSync(csvPath, 'utf-8');
+  // BOM 除去
+  if (content.charCodeAt(0) === 0xfeff) content = content.slice(1);
+  const lines = content.split(/\r?\n/);
+  // 1行目はヘッダー: record_id,insect_id,...
+  // insect_id は列インデックス 1
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    // カンマ分割（簡易。引用符内カンマは insect_id 列には存在しないため問題なし）
+    const comma = line.indexOf(',');
+    if (comma < 0) continue;
+    const rest = line.slice(comma + 1);
+    const comma2 = rest.indexOf(',');
+    const insectId = comma2 >= 0 ? rest.slice(0, comma2) : rest;
+    if (!insectId) continue;
+    map.set(insectId, (map.get(insectId) || 0) + 1);
+  }
+  return map;
+}
+
+/**
+ * normalized_data/general_notes.csv を読み込み、
+ * 「生態情報」ノートを持つ insect_id の Set を返す。
+ */
+function buildEcoNoteSet(csvPath) {
+  const set = new Set();
+  if (!fs.existsSync(csvPath)) {
+    console.warn(`[sitemap] general_notes.csv not found: ${csvPath}`);
+    return set;
+  }
+  let content = fs.readFileSync(csvPath, 'utf-8');
+  if (content.charCodeAt(0) === 0xfeff) content = content.slice(1);
+  const lines = content.split(/\r?\n/);
+  // ヘッダー: record_id,insect_id,note_type,...
+  // insect_id=1, note_type=2
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const parts = line.split(',');
+    if (parts.length < 3) continue;
+    const insectId = parts[1];
+    const noteType = parts[2];
+    if (noteType && (noteType.includes('生態') || noteType.includes('生物'))) {
+      set.add(insectId);
+    }
+  }
+  return set;
+}
+
+/**
+ * normalized_data/hostplants.csv から plant_name → 昆虫種数 のマップを返す。
+ * plant_name は列インデックス 2。
+ */
+function buildPlantInsectCountMap(csvPath) {
+  const map = new Map();
+  if (!fs.existsSync(csvPath)) return map;
+  let content = fs.readFileSync(csvPath, 'utf-8');
+  if (content.charCodeAt(0) === 0xfeff) content = content.slice(1);
+  const lines = content.split(/\r?\n/);
+  // ヘッダー: record_id,insect_id,plant_name,...
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const parts = line.split(',');
+    if (parts.length < 3) continue;
+    const plantName = parts[2].trim();
+    if (!plantName) continue;
+    if (!map.has(plantName)) map.set(plantName, new Set());
+    const insectId = parts[1].trim();
+    if (insectId) map.get(plantName).add(insectId);
+  }
+  // Set → count に変換
+  const countMap = new Map();
+  for (const [name, ids] of map) {
+    countMap.set(name, ids.size);
+  }
+  return countMap;
+}
+
 function encodeFilename(filename) {
   return encodeURIComponent(filename).replace(/[!'()*]/g, (char) =>
     `%${char.charCodeAt(0).toString(16).toUpperCase()}`
@@ -106,6 +206,64 @@ function generateSplitSitemaps() {
 
   const baseUrl = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 
+  // --- lastmod 差別化のためのデータ読み込み ---
+  const today = new Date();
+  const DATE_RICH    = monthsAgoFirstDay(0, today); // 今月1日: データが豊富
+  const DATE_MEDIUM  = monthsAgoFirstDay(1, today); // 先月1日: データが中程度
+  const DATE_SPARSE  = monthsAgoFirstDay(3, today); // 3ヶ月前1日: データが少ない
+
+  const normalizedDataDir = path.join(__dirname, '../normalized_data');
+  const hostplantCountMap = buildHostplantCountMap(
+    path.join(normalizedDataDir, 'hostplants.csv'),
+  );
+  const ecoNoteSet = buildEcoNoteSet(
+    path.join(normalizedDataDir, 'general_notes.csv'),
+  );
+  const plantInsectCountMap = buildPlantInsectCountMap(
+    path.join(normalizedDataDir, 'hostplants.csv'),
+  );
+
+  console.log(
+    `[sitemap] hostplant entries loaded: ${hostplantCountMap.size} insect IDs, ` +
+    `ecoNote IDs: ${ecoNoteSet.size}, plant entries: ${plantInsectCountMap.size}`,
+  );
+
+  /**
+   * 昆虫メタページの insect_id からlastmodを決定する。
+   * - 食草5件以上 または 生態情報あり → DATE_RICH
+   * - 食草1-4件                      → DATE_MEDIUM
+   * - 食草なし                        → DATE_SPARSE
+   */
+  function resolveInsectLastmod(insectId) {
+    const hostCount = hostplantCountMap.get(insectId) || 0;
+    const hasEco = ecoNoteSet.has(insectId);
+    if (hostCount >= 5 || hasEco) return DATE_RICH;
+    if (hostCount >= 1) return DATE_MEDIUM;
+    return DATE_SPARSE;
+  }
+
+  /**
+   * 植物メタページのファイル名（"植物名.html" or "植物名(科名).html"）から
+   * 植物名を取り出し、hostplants.csv の昆虫種数でlastmodを決定する。
+   * - 5種以上 → DATE_RICH
+   * - 1-4種  → DATE_MEDIUM
+   * - 0種    → DATE_SPARSE
+   */
+  function resolvePlantLastmod(filename) {
+    // ファイル名から ".html" を除いたものが植物名（科名付き or なし）
+    const rawName = filename.replace(/\.html$/i, '');
+    // hostplants.csv の plant_name は科名なしが多いので、
+    // "植物名(科名)" → "植物名" も試みる
+    const baseName = rawName.replace(/\([^)]*科\)$/, '').trim();
+    const count =
+      plantInsectCountMap.get(rawName) ||
+      plantInsectCountMap.get(baseName) ||
+      0;
+    if (count >= 5) return DATE_RICH;
+    if (count >= 1) return DATE_MEDIUM;
+    return DATE_SPARSE;
+  }
+
   // 各カテゴリごとのサイトマップを格納
   const sitemaps = {
     main: [],
@@ -200,14 +358,31 @@ function generateSplitSitemaps() {
       });
     }
 
+    // key から植物ページか昆虫ページかを判定（英語版は "en-plant", "en-moth" 等）
+    const isPlantSection = key === 'plant' || key === 'en-plant';
+
     let count = 0;
     files.forEach((file) => {
       if (file === 'index.html') return;
-      const filePath = path.join(absDir, file);
+
+      // lastmod: ファイルの mtime ではなくデータ充実度で決定する
+      let lastmod;
+      if (isPlantSection) {
+        // 植物ページ: ファイル名（植物名）から昆虫種数で決定
+        lastmod = resolvePlantLastmod(file);
+      } else {
+        // 昆虫ページ: ファイル名が "insect_id.html" なので insect_id を抽出
+        const insectId = file.replace(/\.html$/i, '');
+        lastmod = resolveInsectLastmod(insectId);
+      }
+
+      // changefreq: データが豊富なページは weekly、それ以外は monthly
+      const changefreq = lastmod === DATE_RICH ? 'weekly' : 'monthly';
+
       sitemaps[key].push({
         loc: `${baseUrl}${routePrefix}${encodeFilename(file)}`,
-        lastmod: getFileLastmod(filePath),
-        changefreq: 'monthly',
+        lastmod,
+        changefreq,
         priority,
       });
       count++;
@@ -353,7 +528,26 @@ function generateSplitSitemaps() {
       : `English ${section.dir}`;
     console.log(`- ${label}（en meta）: ${englishSectionCounts[section.key] || 0} URL`);
   });
-  console.log(`- 合計: ${Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0)} URLs`);
+  const totalUrls = Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0);
+  console.log(`- 合計: ${totalUrls} URLs`);
+
+  // lastmod 分布の集計ログ（メタページのみ）
+  const allMetaUrls = [
+    ...Object.keys(sectionCounts).flatMap((k) => sitemaps[k] || []),
+    ...Object.keys(englishSectionCounts).flatMap((k) => sitemaps[k] || []),
+  ];
+  const lastmodDist = { [DATE_RICH]: 0, [DATE_MEDIUM]: 0, [DATE_SPARSE]: 0, other: 0 };
+  for (const u of allMetaUrls) {
+    if (u.lastmod === DATE_RICH) lastmodDist[DATE_RICH]++;
+    else if (u.lastmod === DATE_MEDIUM) lastmodDist[DATE_MEDIUM]++;
+    else if (u.lastmod === DATE_SPARSE) lastmodDist[DATE_SPARSE]++;
+    else lastmodDist.other++;
+  }
+  console.log('\nlastmod 分布（メタページ）:');
+  console.log(`  ${DATE_RICH}（豊富・weekly）: ${lastmodDist[DATE_RICH]} URL`);
+  console.log(`  ${DATE_MEDIUM}（中程度・monthly）: ${lastmodDist[DATE_MEDIUM]} URL`);
+  console.log(`  ${DATE_SPARSE}（少ない・monthly）: ${lastmodDist[DATE_SPARSE]} URL`);
+  if (lastmodDist.other > 0) console.log(`  その他: ${lastmodDist.other} URL`);
 }
 
 // メイン処理

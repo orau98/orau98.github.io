@@ -658,8 +658,63 @@ function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles })
   return buildRobotsContent(true);
 }
 
+// 英語メタページ（public/en/meta/）から id→slug および 植物名→slug のマップを構築する
+function buildEnglishSlugMaps() {
+  const insectIdToEnSlug = new Map();
+  const plantNameToEnSlug = new Map();
+
+  const enMetaDir = path.join(__dirname, '../public/en/meta');
+  if (!fs.existsSync(enMetaDir)) {
+    return { insectIdToEnSlug, plantNameToEnSlug };
+  }
+
+  // 昆虫: /en/meta/{type}/*.html の Japanese page リンクからIDとスラグを対応付ける
+  const insectTypes = ['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'aphid'];
+  for (const type of insectTypes) {
+    const typeDir = path.join(enMetaDir, type);
+    if (!fs.existsSync(typeDir)) continue;
+    for (const file of fs.readdirSync(typeDir)) {
+      if (!file.endsWith('.html') || file === 'index.html') continue;
+      const slug = file.replace(/\.html$/, '');
+      try {
+        const content = fs.readFileSync(path.join(typeDir, file), 'utf-8');
+        // Japanese page link: href="/meta/{type}/{id}.html"
+        const jaPageMatch = content.match(/href="\/meta\/[^/]+\/([^"]+)\.html"/);
+        if (jaPageMatch) {
+          const insectId = decodeURIComponent(jaPageMatch[1]);
+          insectIdToEnSlug.set(insectId, { slug, type });
+        }
+      } catch (_e) {
+        // 読み込み失敗はスキップ
+      }
+    }
+  }
+
+  // 植物: /en/meta/plant/*.html の Japanese page リンクから植物名を取得
+  const plantDir = path.join(enMetaDir, 'plant');
+  if (fs.existsSync(plantDir)) {
+    for (const file of fs.readdirSync(plantDir)) {
+      if (!file.endsWith('.html') || file === 'index.html') continue;
+      const slug = file.replace(/\.html$/, '');
+      try {
+        const content = fs.readFileSync(path.join(plantDir, file), 'utf-8');
+        // Japanese page link: href="/meta/plant/{plantName}.html"
+        const jaPageMatch = content.match(/href="\/meta\/plant\/([^"]+)\.html"/);
+        if (jaPageMatch) {
+          const plantName = decodeURIComponent(jaPageMatch[1]);
+          plantNameToEnSlug.set(plantName, slug);
+        }
+      } catch (_e) {
+        // 読み込み失敗はスキップ
+      }
+    }
+  }
+
+  return { insectIdToEnSlug, plantNameToEnSlug };
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
-function generateInsectHTML(insect, type) {
+function generateInsectHTML(insect, type, enSlug = null) {
   const typeNames = INSECT_TYPE_NAMES;
   
   const hostPlants = insect.hostPlants || '不明';
@@ -714,7 +769,94 @@ function generateInsectHTML(insect, type) {
   // 分類情報の生成
   const familyName = insect.family || INSECT_DEFAULT_FAMILIES[type];
   const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
-  
+
+  // --- description テンプレート生成 ---
+  // 出現時期は insect.emergenceTime から取得
+  // データが「成虫は〜に出現[。]」など文章形式の場合は先頭の「成虫は」を除去し、
+  // 句点・読点・25文字のうち最初に来るもので打ち切って時期テキストを取り出す
+  const emergenceTimeRaw = (insect.emergenceTime || '').trim();
+  const hasEmergence = emergenceTimeRaw !== '' && emergenceTimeRaw !== '不明';
+  const emergenceTimeVal = (() => {
+    if (!hasEmergence) return '';
+    // 先頭の「成虫は」「成虫の」を除去
+    let t = emergenceTimeRaw.replace(/^成虫[はの]/, '').trim();
+    // 句点・読点で打ち切り（30文字以内の位置のみ）
+    const cutIdx = t.search(/[。．、,，]/);
+    if (cutIdx !== -1 && cutIdx <= 30) {
+      t = t.substring(0, cutIdx);
+    } else {
+      t = t.substring(0, 25);
+    }
+    // 打ち切り後に末尾の「に出現」「に発生」「で出現」「出現し」「に出る」を除去
+    t = t.replace(/(?:に出現|に発生|で出現|出現し|に出る)$/, '').trim();
+    // 末尾が時期らしい語（月・旬・頃・季節）で終わっている場合のみ有効
+    // それ以外（動詞・助詞・名詞など）で終わる場合は不自然なので空文字を返す
+    if (!/[月旬頃秋春夏冬]$/.test(t)) {
+      return '';
+    }
+    return t;
+  })();
+
+  // 備考テキスト（先頭を生態情報として利用）
+  const remarksRaw = (insect.remarks || '').trim();
+  // HTML タグやダブルクォートを除去して plain text 化
+  const remarksPlain = remarksRaw.replace(/<[^>]*>/g, '').replace(/"/g, '');
+
+  // 昆虫ページ description（120〜160文字目標、末尾句の余裕を確保して打ち切り）
+  const DESC_MAX = 160;
+  const SUFFIX_FOOD = '寄主植物・生態の詳細情報。';
+  const SUFFIX_NOFOOD = '食草・寄主植物・生態についての情報。';
+  let insectDescription;
+  if (hostPlantsArray.length > 0) {
+    // 食草あり
+    const plantListStr = hostPlantsArray.slice(0, 3).join('、');
+    const plantSuffix = hostPlantsArray.length > 3 ? `など${hostPlantsArray.length}種` : `${hostPlantsArray.length}種`;
+    let desc = `${insect.japaneseName}（${familyName}）の幼虫の食草・食樹は${plantListStr}${plantSuffix}。`;
+    if (hasEmergence && emergenceTimeVal) {
+      desc += `成虫は${emergenceTimeVal}に出現。`;
+    }
+    // 備考の先頭スニペットを追加（残り文字数に応じて）
+    if (remarksPlain.length > 0 && desc.length < DESC_MAX - SUFFIX_FOOD.length) {
+      const available = DESC_MAX - SUFFIX_FOOD.length - desc.length;
+      const sentenceEnd = remarksPlain.search(/[。．]/);
+      const snippet = (sentenceEnd !== -1 && sentenceEnd < available)
+        ? remarksPlain.substring(0, sentenceEnd + 1)
+        : remarksPlain.substring(0, available);
+      if (snippet.length > 0) {
+        desc += snippet;
+      }
+    }
+    desc += SUFFIX_FOOD;
+    insectDescription = desc.replace(/"/g, '');
+  } else {
+    // 食草なし
+    const sciPart = scientificName ? `${scientificName.replace(/"/g, '')}。` : '';
+    let desc = `${insect.japaneseName}（${familyName}）は${sciPart}`;
+    if (remarksPlain.length > 0 && desc.length < DESC_MAX - SUFFIX_NOFOOD.length) {
+      const available = DESC_MAX - SUFFIX_NOFOOD.length - desc.length;
+      const sentenceEnd = remarksPlain.search(/[。．]/);
+      const snippet = (sentenceEnd !== -1 && sentenceEnd < available)
+        ? remarksPlain.substring(0, sentenceEnd + 1)
+        : remarksPlain.substring(0, available);
+      if (snippet.length > 0) {
+        desc += snippet;
+      }
+    }
+    desc += SUFFIX_NOFOOD;
+    insectDescription = desc.replace(/"/g, '');
+  }
+
+  // og:description / twitter:description（先頭5種 + など に制限）
+  let insectOgDescription;
+  if (hostPlantsArray.length > 0) {
+    const ogPlants = hostPlantsArray.slice(0, 5).join('、');
+    const ogSuffix = hostPlantsArray.length > 5 ? 'など' : '';
+    insectOgDescription = `${insect.japaneseName}（${familyName}）の食草は${ogPlants}${ogSuffix}。${(hasEmergence && emergenceTimeVal) ? `成虫は${emergenceTimeVal}に出現。` : ''}寄主植物・生態の詳細情報。`.replace(/"/g, '');
+  } else {
+    insectOgDescription = insectDescription;
+  }
+  // --- description テンプレート生成終わり ---
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -725,14 +867,17 @@ function generateInsectHTML(insect, type) {
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
   <title>${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑</title>
-  <meta name="description" content="${insect.japaneseName}の詳細情報、分類、食草について。${hostPlantsArray.length > 0 ? `食草: ${hostPlantsArray.slice(0, 3).join('、')}など` : ''}">
+  <meta name="description" content="${insectDescription}">
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
   <link rel="canonical" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  ${enSlug ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/${type}/${encodeURIComponent(enSlug)}.html">
+  <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">` : ''}
   <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
 
   <!-- Open Graph -->
   <meta property="og:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta property="og:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
+  <meta property="og:description" content="${insectOgDescription}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
@@ -743,7 +888,7 @@ function generateInsectHTML(insect, type) {
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta name="twitter:description" content="${insect.japaneseName}の詳細情報。食草: ${hostPlantsArray.length > 0 ? hostPlantsArray.join('、') : '不明'}">
+  <meta name="twitter:description" content="${insectOgDescription}">
   <meta name="twitter:image" content="${socialImageUrl}">
   <meta name="twitter:image:alt" content="${socialImageAlt}">
   
@@ -929,7 +1074,7 @@ function generateInsectHTML(insect, type) {
 
 // Enhanced 植物のHTMLテンプレートを生成する関数 - フルコンテンツバージョン
 // originalPlantName: エイリアス生成時に元の植物名（科名付き）を渡すため
-function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlantName = null) {
+function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlantName = null, enSlug = null) {
   // originalPlantNameが指定されている場合は、それが実際のデータの植物名
   // plantNameは表示用の名前（エイリアスの場合は科名なし）
   const dataPlantName = originalPlantName || plantName;
@@ -982,7 +1127,24 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     leafbeetle: 'ハムシ',
     aphid: 'アブラムシ'
   };
-  
+
+  // --- 植物ページ description テンプレート生成 ---
+  // 種類別内訳を「蛾X種、蝶Y種...」形式で生成（0種は省略）
+  const plantTypeBreakdown = Object.entries(insectsByType)
+    .filter(([, insects]) => insects.length > 0)
+    .map(([t, insects]) => `${typeNames[t]}${insects.length}種`)
+    .join('、');
+  // description: 昆虫数・内訳 + 代表的な昆虫名 + 末尾句
+  const plantRepresentatives = relatedInsects.slice(0, 3).map(i => i.japaneseName).join('、');
+  const plantDescriptionBase = `${displayPlantName}を食草・寄主植物とする昆虫は${relatedInsects.length}種（${plantTypeBreakdown}）。`;
+  const plantDescriptionSuffix = `${plantRepresentatives}など${displayPlantName}につく幼虫・成虫の種類と生態情報。`;
+  const plantDescription = (plantDescriptionBase + plantDescriptionSuffix).replace(/"/g, '');
+  // og:description: 先頭5種の昆虫名 + など
+  const ogInsects = relatedInsects.slice(0, 5).map(i => i.japaneseName).join('、');
+  const ogInsectsSuffix = relatedInsects.length > 5 ? 'など' : '';
+  const plantOgDescription = `${displayPlantName}を食草とする昆虫: ${ogInsects}${ogInsectsSuffix}。利用昆虫${relatedInsects.length}種の生態・食草関係。`.replace(/"/g, '');
+  // --- 植物ページ description テンプレート生成終わり ---
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -993,14 +1155,17 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
   <title>${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
-  <meta name="description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫の詳細情報。蛾、蝶、タマムシ、カミキリムシ、ハムシ、アブラムシの生態と食草関係について。">
+  <meta name="description" content="${plantDescription}">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
+  ${enSlug ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
+  <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/plant/${encodeURIComponent(enSlug)}.html">
+  <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">` : ''}
   <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
 
   <!-- Open Graph -->
   <meta property="og:title" content="${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用">
-  <meta property="og:description" content="${displayPlantName}を食草とする昆虫: ${insectsList.substring(0, 100)}${insectsList.length > 100 ? '...' : ''}">
+  <meta property="og:description" content="${plantOgDescription}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
@@ -1011,7 +1176,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
-  <meta name="twitter:description" content="${displayPlantName}を食草とする${relatedInsects.length}種の昆虫情報">
+  <meta name="twitter:description" content="${plantOgDescription}">
   <meta name="twitter:image" content="${socialImageUrl}">
   <meta name="twitter:image:alt" content="${socialImageAlt}">
   
@@ -1270,6 +1435,10 @@ async function generateMetaPages() {
     fs.mkdirSync(typeDir, { recursive: true });
   });
   
+  // 英語メタページが既に生成済みの場合、id→enSlug マップを構築
+  const { insectIdToEnSlug, plantNameToEnSlug } = buildEnglishSlugMaps();
+  console.log(`[meta] 英語スラグマップ: 昆虫${insectIdToEnSlug.size}件、植物${plantNameToEnSlug.size}件`);
+
   try {
     // 植物の画像一覧を取得
     const plantImagesDir = path.join(__dirname, '../public/images/plants');
@@ -1496,7 +1665,9 @@ async function generateMetaPages() {
         type: type
       };
       
-      const html = generateInsectHTML(insect, type);
+      const enSlugEntry = insectIdToEnSlug.get(insectId);
+      const enSlug = enSlugEntry ? enSlugEntry.slug : null;
+      const html = generateInsectHTML(insect, type, enSlug);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       if (type === 'moth') mothCount++;
@@ -1556,11 +1727,13 @@ async function generateMetaPages() {
       };
       
       
-      const html = generateInsectHTML(insect, type);
+      const enSlugEntryB = insectIdToEnSlug.get(insectId);
+      const enSlugB = enSlugEntryB ? enSlugEntryB.slug : null;
+      const html = generateInsectHTML(insect, type, enSlugB);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       butterflyCount++;
-      
+
       if (hostPlants && hostPlants !== '不明') {
         // 「(以上...科)」パターンを処理
         let processedHostPlants = hostPlants;
@@ -1628,7 +1801,9 @@ async function generateMetaPages() {
         source: 'ハムシハンドブック'
       };
       
-      const html = generateInsectHTML(insect, type);
+      const enSlugEntryH = insectIdToEnSlug.get(insectId);
+      const enSlugH = enSlugEntryH ? enSlugEntryH.slug : null;
+      const html = generateInsectHTML(insect, type, enSlugH);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       leafbeetleCount++;
@@ -1675,11 +1850,12 @@ async function generateMetaPages() {
         return;
       }
       plantCount++;
-      const html = generatePlantHTML(plantName, insects, allPlantImages);
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+      const plantEnSlug = plantNameToEnSlug.get(safePlantName) || null;
+      const html = generatePlantHTML(plantName, insects, allPlantImages, null, plantEnSlug);
       const filename = path.join(__dirname, `../public/meta/plant/${safePlantName}.html`);
       fs.writeFileSync(filename, html);
-      
+
       // 科名を含む植物名の場合、科名なしバージョンも生成（エイリアス）
       const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
       if (familyMatch) {
@@ -1690,6 +1866,7 @@ async function generateMetaPages() {
           console.log(`DEBUG: 最初の3種: ${insects.slice(0, 3).map(i => i.japaneseName).join(', ')}`);
         }
         // エイリアス用のHTMLを生成（科名なしの植物名で表示、元の植物名のデータを使用）
+        // エイリアスページには英語hreflangを付与しない（英語ページは正規名に対応）
         const aliasHtml = generatePlantHTML(plantNameWithoutFamily, insects, allPlantImages, plantName);
         const safeAliasName = plantNameWithoutFamily.replace(/[/\\?%*:|"<>]/g, '-');
         const aliasFilename = path.join(__dirname, `../public/meta/plant/${safeAliasName}.html`);
@@ -1714,12 +1891,95 @@ async function generateMetaPages() {
   generateImageFileLists();
 
   // メタページのインデックスを生成（内部リンク強化・クロール補助）
+  // 生成済みのデータを渡して全種リスト入りインデックスを作る
   try {
-    generateMetaIndexes();
+    // 昆虫カテゴリ別の科別グループを構築
+    const insectIndexData = {};
+    insectsData.forEach((row) => {
+      const insectId = (row.insect_id || '').trim();
+      if (!insectId || /^species-$/.test(insectId)) return;
+      let japaneseName = (row.japanese_name || '').trim();
+      if (looksLikeYearOnly(japaneseName)) japaneseName = '';
+      const displayName =
+        japaneseName ||
+        (row.scientific_name ? `${row.scientific_name}（和名未記載）` : '');
+      if (!displayName || displayName.length < 2) return;
+      const famJP = (row.family_jp || '').trim();
+      const famLatin = (row.family || '').trim();
+      const isBfly =
+        /チョウ科$/.test(famJP) ||
+        /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/.test(famLatin);
+      const isLB =
+        famJP.includes('ハムシ') ||
+        famLatin === 'Chrysomelidae' ||
+        famLatin === 'Megalopodidae';
+      const isLHB = famJP === 'カミキリムシ科' || famLatin === 'Cerambycidae';
+      const isBtl = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
+      const isAph =
+        famJP.includes('アブラムシ') || famLatin === 'Aphididae';
+      const insType = isBfly
+        ? 'butterfly'
+        : isLB
+        ? 'leafbeetle'
+        : isLHB
+        ? 'longhornbeetle'
+        : isBtl
+        ? 'beetle'
+        : isAph
+        ? 'aphid'
+        : 'moth';
+      const familyLabel = famJP || famLatin || '不明';
+      if (!insectIndexData[insType]) insectIndexData[insType] = {};
+      if (!insectIndexData[insType][familyLabel])
+        insectIndexData[insType][familyLabel] = [];
+      insectIndexData[insType][familyLabel].push({ id: insectId, name: displayName });
+    });
+    // butterfly_host.csv 由来のデータも追加
+    butterflyData.forEach((row, index) => {
+      const japaneseName = (row['和名'] || '').trim();
+      const genus = (row['属'] || '').trim();
+      const species = (row['種小名'] || '').trim();
+      if (!japaneseName || !genus || !species) return;
+      const insectId = `butterfly-csv-${index}`;
+      const familyLabel = (row['科'] || '').trim() || 'タテハチョウ科';
+      if (!insectIndexData['butterfly']) insectIndexData['butterfly'] = {};
+      if (!insectIndexData['butterfly'][familyLabel])
+        insectIndexData['butterfly'][familyLabel] = [];
+      insectIndexData['butterfly'][familyLabel].push({ id: insectId, name: japaneseName });
+    });
+    // hamushi 由来のデータも追加
+    hamushiData.forEach((row, index) => {
+      const japaneseName = (row['和名'] || '').trim();
+      const sciName = (row['学名'] || '').trim();
+      if (!japaneseName && !sciName) return;
+      const displayName = japaneseName || `${sciName}（和名未記載）`;
+      const id =
+        row['大図鑑カタログNo'] || row['ID'] || row['id'] || '';
+      const insectId = id ? id.replace(/^H/, 'leafbeetle-') : `leafbeetle-${index}`;
+      const familyLabel = (row['科和名'] || row['科'] || 'ハムシ科').trim();
+      if (!insectIndexData['leafbeetle']) insectIndexData['leafbeetle'] = {};
+      if (!insectIndexData['leafbeetle'][familyLabel])
+        insectIndexData['leafbeetle'][familyLabel] = [];
+      insectIndexData['leafbeetle'][familyLabel].push({ id: insectId, name: displayName });
+    });
+
+    // 植物インデックス用データ（科名別グループ）を構築
+    const plantIndexByFamily = {};
+    hostPlantsMap.forEach((_plantInsects, plantName) => {
+      if (!isValidPlantName(plantName)) return;
+      const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
+      if (!familyMatch) return; // 科名なしはスキップ（科名付きで登録されているはず）
+      const family = familyMatch[2];
+      if (!plantIndexByFamily[family]) plantIndexByFamily[family] = [];
+      const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+      plantIndexByFamily[family].push({ name: plantName, file: safePlantName });
+    });
+
+    generateMetaIndexes({ insectIndexData, plantIndexByFamily });
   } catch (e) {
     console.warn('メタインデックス生成で警告:', e.message || e);
   }
-  
+
   // 退避していたカスタムページを復元
   try {
     let restored = 0;
@@ -1836,40 +2096,152 @@ function generateImageFileLists() {
   }
 }
 
-// メタページ用の簡易インデックスを生成
-function generateMetaIndexes() {
+// メタページ用インデックスを生成（全種リンク・科別グルーピング対応）
+// indexData: { insectIndexData, plantIndexByFamily } を受け取る
+function generateMetaIndexes(indexData) {
   const base = path.join(__dirname, '../public/meta');
   const sections = META_PAGE_SECTIONS;
+  const insectIndexData = (indexData && indexData.insectIndexData) || null;
+  const plantIndexByFamily = (indexData && indexData.plantIndexByFamily) || null;
+
+  // 50音順比較
+  const jaSort = (a, b) => a.localeCompare(b, 'ja');
+
+  // ヘッダーHTML（共通）
+  const headerHtml = `  <header class="meta-site-header" role="banner">
+    <div class="meta-site-header-inner">
+      <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
+        <span class="meta-site-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </span>
+        <span class="meta-site-logo-text">昆虫植物図鑑</span>
+      </a>
+    </div>
+  </header>`;
+
+  // 共通スタイル
+  const indexStyles = `  <style>
+    .family-group { margin-bottom: 1.5rem; }
+    .family-group h2 { font-size: 1rem; font-weight: bold; padding: 0.4rem 0.75rem; background: var(--color-bg-secondary, #f5f5f5); border-left: 4px solid var(--color-accent, #4caf50); margin-bottom: 0.5rem; }
+    .species-list { list-style: none; columns: 3; gap: 1rem; line-height: 1.85; padding: 0; }
+    @media (max-width: 600px) { .species-list { columns: 2; } }
+    .species-list li a { text-decoration: none; color: var(--color-link, #1976d2); }
+    .species-list li a:hover { text-decoration: underline; }
+    .index-summary { margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: var(--color-bg-card, #fff); border: 1px solid var(--color-border, #ddd); border-radius: 8px; }
+  </style>`;
 
   for (const sec of sections) {
     const dirPath = path.join(base, sec.dir);
     if (!fs.existsSync(dirPath)) continue;
-    let files = fs.readdirSync(dirPath)
-      .filter(f => f.endsWith('.html'))
-      .filter(f => f !== 'index.html')
-      .sort((a,b)=> a.localeCompare(b, 'ja'));
+    const listUrl = `${BASE_ORIGIN}/meta/${sec.dir}/index.html`;
 
-    // 植物は「科名付きが正」としてエイリアス（科名なし）を一覧から除外
+    // ---- 植物インデックス ----
     if (sec.dir === 'plant') {
-      const aliasBases = new Set();
-      files.forEach((file) => {
-        const base = file.replace(/\.html$/i, '');
-        const m = base.match(/^(.+?)\(([^)]+科)\)$/);
-        if (m) aliasBases.add(m[1]);
-      });
-      files = files.filter((file) => {
-        const base = file.replace(/\.html$/i, '');
-        const isFamilyVariant = /\([^)]*科\)$/.test(base);
-        if (!isFamilyVariant && aliasBases.has(base)) return false;
-        return true;
-      });
+      const familyData = plantIndexByFamily || {};
+      const sortedFamilies = Object.keys(familyData).sort(jaSort);
+      const totalPlants = sortedFamilies.reduce((s, f) => s + familyData[f].length, 0);
+      const flatPlants = sortedFamilies.flatMap(f => familyData[f]).slice(0, 100);
+      const pageDescription = `昆虫植物図鑑の食草植物一覧。${totalPlants}種の植物を科別に掲載。`;
+
+      const listStructuredData = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: sec.title,
+        description: pageDescription,
+        url: listUrl,
+        inLanguage: 'ja',
+        mainEntity: {
+          '@type': 'ItemList',
+          numberOfItems: totalPlants,
+          itemListElement: flatPlants.map((p, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 1,
+            item: {
+              '@type': 'WebPage',
+              name: p.name,
+              url: `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(p.file)}.html`,
+            },
+          })),
+        },
+      }, null, 2);
+
+      const sectionBlocks = sortedFamilies.map(family => {
+        const plants = familyData[family].slice().sort((a, b) => jaSort(a.name, b.name));
+        const items = plants
+          .map(p => {
+            const displayName = p.name.replace(/\([^)]+科\)$/, '').trim() || p.name;
+            return `<li><a href="/meta/plant/${encodeURIComponent(p.file)}.html">${displayName}</a></li>`;
+          })
+          .join('\n          ');
+        return `<section class="family-group">
+        <h2>${family}（${plants.length}種）</h2>
+        <ul class="species-list">
+          ${items}
+        </ul>
+      </section>`;
+      }).join('\n      ');
+
+      const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <title>${sec.title}</title>
+  <meta name="description" content="${pageDescription}">
+  <link rel="canonical" href="${listUrl}">
+  <meta property="og:title" content="${sec.title}">
+  <meta property="og:description" content="${pageDescription}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="${listUrl}">
+  <meta property="og:site_name" content="昆虫植物図鑑">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${sec.title}">
+  <meta name="twitter:description" content="${pageDescription}">
+  <script type="application/ld+json">${listStructuredData}</script>
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+${indexStyles}
+</head>
+<body>
+${headerHtml}
+  <div class="meta-page">
+    <header class="meta-header">
+      <h1>${sec.title}</h1>
+    </header>
+    <main>
+      <p class="index-summary">全${totalPlants}種の食草植物を${sortedFamilies.length}科に分けて掲載しています。</p>
+      ${sectionBlocks}
+    </main>
+    <section class="navigation">
+      <a href="/" class="back-link">図鑑トップへ</a>
+    </section>
+  </div>
+</body>
+</html>`;
+      fs.writeFileSync(path.join(dirPath, 'index.html'), html);
+      console.log(`[index] plant: ${totalPlants}種 / ${sortedFamilies.length}科`);
+      continue;
     }
 
-    const relLinks = files.slice(0, 2000) // 安全のため上限（十分な内部リンク確保）
-      .map(f => `<li><a href="/${['meta', sec.dir, f].join('/')}">${f.replace(/\.html$/,'')}</a></li>`) // ファイル名表示
-      .join('\n');
-    const listUrl = `${BASE_ORIGIN}/meta/${sec.dir}/index.html`;
-    const pageDescription = `${sec.title}への内部リンクページ。検索エンジン用に静的URLを明示します。`;
+    // ---- 昆虫インデックス ----
+    const typeData = (insectIndexData && insectIndexData[sec.dir]) || {};
+    const sortedFamilies = Object.keys(typeData).sort(jaSort);
+    const totalSpecies = sortedFamilies.reduce((s, f) => s + typeData[f].length, 0);
+
+    // フォールバック: データなしの場合はファイルスキャン
+    let flatItems;
+    if (totalSpecies === 0) {
+      flatItems = fs.readdirSync(dirPath)
+        .filter(f => f.endsWith('.html') && f !== 'index.html')
+        .sort(jaSort)
+        .map(f => ({ id: f.replace(/\.html$/i, ''), name: f.replace(/\.html$/i, '') }));
+    } else {
+      flatItems = sortedFamilies.flatMap(f => typeData[f]);
+    }
+
+    // JSON-LD: 先頭100件
+    const pageDescription = `昆虫植物図鑑の${sec.title}一覧。${flatItems.length}種を科別に掲載。`;
     const listStructuredData = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
@@ -1879,18 +2251,55 @@ function generateMetaIndexes() {
       inLanguage: 'ja',
       mainEntity: {
         '@type': 'ItemList',
-        numberOfItems: Math.min(files.length, 20),
-        itemListElement: files.slice(0, 20).map((file, index) => ({
+        numberOfItems: flatItems.length,
+        itemListElement: flatItems.slice(0, 100).map((item, idx) => ({
           '@type': 'ListItem',
-          position: index + 1,
+          position: idx + 1,
           item: {
             '@type': 'WebPage',
-            name: file.replace(/\.html$/i, ''),
-            url: `${BASE_ORIGIN}/meta/${sec.dir}/${encodeURIComponent(file)}`,
+            name: item.name,
+            url: `${BASE_ORIGIN}/meta/${sec.dir}/${encodeURIComponent(item.id)}.html`,
           },
         })),
       },
     }, null, 2);
+
+    // 科別セクション（データあり）またはフラットリスト（フォールバック）
+    let mainContent;
+    if (totalSpecies > 0) {
+      mainContent = sortedFamilies
+        .map(family => {
+          const speciesList = typeData[family].slice().sort((a, b) => jaSort(a.name, b.name));
+          const items = speciesList
+            .map(
+              s =>
+                `<li><a href="/meta/${sec.dir}/${encodeURIComponent(s.id)}.html">${s.name}</a></li>`,
+            )
+            .join('\n          ');
+          return `<section class="family-group">
+        <h2>${family}（${speciesList.length}種）</h2>
+        <ul class="species-list">
+          ${items}
+        </ul>
+      </section>`;
+        })
+        .join('\n      ');
+    } else {
+      const items = flatItems
+        .map(
+          s =>
+            `<li><a href="/meta/${sec.dir}/${encodeURIComponent(s.id)}.html">${s.name}</a></li>`,
+        )
+        .join('\n          ');
+      mainContent = `<ul class="species-list" style="columns:3;gap:1rem;list-style:none;padding:0;">
+          ${items}
+        </ul>`;
+    }
+
+    const summaryLabel =
+      totalSpecies > 0
+        ? `全${flatItems.length}種を${sortedFamilies.length}科に分けて掲載しています。`
+        : `全${flatItems.length}種を掲載しています。`;
 
     const html = `<!DOCTYPE html>
 <html lang="ja">
@@ -1912,28 +2321,17 @@ function generateMetaIndexes() {
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
   <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+${indexStyles}
 </head>
 <body>
-  <header class="meta-site-header" role="banner">
-    <div class="meta-site-header-inner">
-      <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
-        <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-        </span>
-        <span class="meta-site-logo-text">昆虫植物図鑑</span>
-      </a>
-    </div>
-  </header>
+${headerHtml}
   <div class="meta-page">
     <header class="meta-header">
       <h1>${sec.title}</h1>
     </header>
     <main>
-      <section style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:1rem 1.25rem 1.25rem;">
-        <ul style="list-style:none;columns:2;gap:1.5rem;line-height:1.9;">
-          ${relLinks}
-        </ul>
-      </section>
+      <p class="index-summary">${summaryLabel}</p>
+      ${mainContent}
     </main>
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
@@ -1942,6 +2340,7 @@ function generateMetaIndexes() {
 </body>
 </html>`;
     fs.writeFileSync(path.join(dirPath, 'index.html'), html);
+    console.log(`[index] ${sec.dir}: ${flatItems.length}種 / ${sortedFamilies.length}科`);
   }
 }
 
