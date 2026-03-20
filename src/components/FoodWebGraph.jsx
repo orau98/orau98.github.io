@@ -583,6 +583,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [nodeListOpen, setNodeListOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchMessage, setSearchMessage] = useState('');
+  const [guideDismissed, setGuideDismissed] = useState(false);
   const [pinVersion, setPinVersion] = useState(0);
   const [isPinDragging, setIsPinDragging] = useState(false);
   const showRelatedInsects = true;
@@ -603,6 +604,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   useEffect(() => {
     hasUserInteractedRef.current = false;
+  }, [currentInsect?.name, currentPlantName]);
+
+  useEffect(() => {
+    setGuideDismissed(false);
   }, [currentInsect?.name, currentPlantName]);
 
   useEffect(() => {
@@ -1246,6 +1251,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const node = graphData.nodes.find(n => n.id === nodeId);
     if (!node) return;
     hasUserInteractedRef.current = true;
+    setGuideDismissed(true);
     setSelectedNodeId(nodeId);
     setHoverNodeId(null);
     try {
@@ -1327,6 +1333,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const markUserInteracted = useCallback(() => {
     hasUserInteractedRef.current = true;
+    setGuideDismissed(true);
   }, []);
 
   // click toggles selection (navigation moved to the detail panel)
@@ -1701,12 +1708,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, [pinnedNodeCount, viewStats]);
 
   const interactionHint = isCompactPanel
-    ? '操作: タップで選択、2回で詳細、長押しで固定、背景で解除'
-    : '操作: クリックで選択、2回で詳細、背景クリックで解除。拡大縮小は上部ボタンを使用';
+    ? '操作: タップで選択、ピンチまたは上部ボタンで拡大、2回で詳細、長押しで固定'
+    : '操作: ドラッグで移動、クリックで選択、2回で詳細、上部ボタンで全体表示や中心移動';
 
-  const enableDirectGraphManipulation = isCompactPanel && !isPinDragging;
+  const enablePanInteraction = !isPinDragging;
+  const enableZoomInteraction = isCompactPanel && !isPinDragging;
+  const enableNodeDrag = isCompactPanel && !isPinDragging;
   const desktopControlButtonClass = 'shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800';
   const desktopControlSurfaceClass = 'rounded-xl border border-slate-200/90 bg-white/94 px-3 py-3 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-200';
+  const graphCursor = isPinDragging ? 'grabbing' : hoverNodeId ? 'pointer' : enablePanInteraction ? 'grab' : 'default';
 
   const handleGraphWheelCapture = useCallback((event) => {
     if (isCompactPanel) return;
@@ -2175,6 +2185,14 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       })()
     : '';
 
+  const focusCurrentNode = useCallback(() => {
+    if (!currentCenterNodeId) return;
+    focusNodeById(currentCenterNodeId);
+  }, [currentCenterNodeId, focusNodeById]);
+
+  const showGuideCard = !selectedNode && !guideDismissed && graphData.nodes.length > 0;
+  const guideButtonClass = 'inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-800';
+
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-slate-900 dark:via-slate-850 dark:to-slate-950 shadow-md flex flex-col">
       {!isCompactPanel && (
@@ -2203,17 +2221,43 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   >
                     移動
                   </button>
+                  {currentCenterNodeId && (
+                    <button
+                      type="button"
+                      onClick={focusCurrentNode}
+                      className={desktopControlButtonClass}
+                      title="中心ノードへ戻る"
+                    >
+                      中心へ
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={resetView}
                     className={desktopControlButtonClass}
-                    title="リセット（ズーム/中心）"
+                    title="全体表示（ズーム/中心）"
                   >
-                    リセット
+                    全体表示
                   </button>
                 </form>
 
                 <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={zoomOut}
+                    className={desktopControlButtonClass}
+                    title="縮小"
+                  >
+                    －
+                  </button>
+                  <button
+                    type="button"
+                    onClick={zoomIn}
+                    className={desktopControlButtonClass}
+                    title="拡大"
+                  >
+                    ＋
+                  </button>
                   {statsChips.map((label) => (
                     <span
                       key={label}
@@ -2354,7 +2398,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         <div
           ref={containerRef}
           className={`relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[500px] lg:min-h-[640px] flex-1'}`}
-          style={isCompactPanel ? { height: graphViewportHeight } : undefined}
+          style={isCompactPanel ? { height: graphViewportHeight, cursor: graphCursor } : { cursor: graphCursor }}
           role="region"
           aria-label={graphAriaLabel}
           onWheelCapture={handleGraphWheelCapture}
@@ -2380,9 +2424,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             onNodeHover={handleNodeHover}
             onNodeClick={handleNodeClick}
             onBackgroundClick={handleBackgroundClick}
-            enablePanInteraction={enableDirectGraphManipulation}
-            enableZoomInteraction={enableDirectGraphManipulation}
-            enableNodeDrag={enableDirectGraphManipulation}
+            enablePanInteraction={enablePanInteraction}
+            enableZoomInteraction={enableZoomInteraction}
+            enableNodeDrag={enableNodeDrag}
             linkDistance={linkDistance}
             linkColor={link => {
               const relationStyle = getLinkStyle(link?.relation);
@@ -2414,6 +2458,67 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             }}
           />
 
+          {showGuideCard && (
+            <div
+              data-fg-ui
+              className={`absolute z-20 pointer-events-none ${
+                isCompactPanel ? 'bottom-4 left-3 right-3' : 'bottom-5 left-5 max-w-sm'
+              }`}
+            >
+              <div className="pointer-events-auto rounded-2xl border border-slate-200/90 bg-white/95 p-4 text-slate-800 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/92 dark:text-slate-100">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-300">
+                      Network Guide
+                    </div>
+                    <div className="mt-1 text-sm font-semibold">
+                      {isCompactPanel ? 'ノードをタップして関係を追う' : 'ノードをクリックして関係を追う'}
+                    </div>
+                    <p className="mt-1 text-[12px] leading-5 text-slate-600 dark:text-slate-300">
+                      {interactionHint}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setGuideDismissed(true)}
+                    className="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+                    aria-label="ガイドを閉じる"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {currentCenterNodeId && (
+                    <button
+                      type="button"
+                      onClick={focusCurrentNode}
+                      className={guideButtonClass}
+                    >
+                      中心へ戻る
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={resetView}
+                    className={guideButtonClass}
+                  >
+                    全体表示
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGuideDismissed(true);
+                      setNodeListOpen(true);
+                    }}
+                    className={guideButtonClass}
+                  >
+                    ノード一覧
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {isCompactPanel && (
             <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
               <div className="mx-auto flex max-w-[900px] flex-col gap-2">
@@ -2423,10 +2528,20 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                       type="button"
                       onClick={resetView}
                       className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      title="リセット（ズーム/中心）"
+                      title="全体表示（ズーム/中心）"
                     >
-                      リセット
+                      全体表示
                     </button>
+                    {currentCenterNodeId && (
+                      <button
+                        type="button"
+                        onClick={focusCurrentNode}
+                        className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
+                        title="中心ノードへ戻る"
+                      >
+                        中心へ
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={zoomOut}
