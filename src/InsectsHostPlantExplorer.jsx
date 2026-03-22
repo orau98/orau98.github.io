@@ -466,10 +466,10 @@ const InsectsHostPlantExplorer = memo(
         searchPlaceholder:
           activeTab === "plants"
             ? isEnglish
-              ? "Search plants (Japanese name, scientific name, taxonomy)"
+              ? "Search plants by scientific name, family, genus, or Japanese name"
               : "植物を検索 (和名・学名・分類)"
             : isEnglish
-              ? "Search insects (Japanese name, scientific name, taxonomy)"
+              ? "Search insects by scientific name, family, host plant, or Japanese name"
               : "昆虫を検索 (和名・学名・分類)",
         searchTargetLabel:
           activeTab === "plants"
@@ -485,7 +485,7 @@ const InsectsHostPlantExplorer = memo(
           ? 'Press "/" or Ctrl/Cmd + K to focus the search box.'
           : "「/」または Ctrl/Cmd + K で検索欄にフォーカスします。",
         searchShortcut2: isEnglish
-          ? "Press Esc once to close suggestions, then again to clear the input."
+          ? "Try a scientific name, family, genus, or host plant first."
           : "Esc を 1 回押すと候補を閉じ、続けて押すと入力をクリアします。",
         searchShortcut3: isEnglish
           ? "Use the tabs above to switch between insects and plants."
