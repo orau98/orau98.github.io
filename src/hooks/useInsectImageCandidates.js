@@ -63,9 +63,6 @@ const useInsectImageCandidates = (options = {}) => {
       imageNames: imageBases,
       normalizedEntries,
     });
-    if (resolvedBases.length === 0 && candidateBases.length > 0) {
-      resolvedBases.push(candidateBases[0]);
-    }
     const urls = [];
     const seen = new Set();
     resolvedBases.forEach((base) => {

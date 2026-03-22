@@ -459,15 +459,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         pushResizedSet(name);
         return;
       }
-      // インデックス未準備でも生成済み縮小画像を試す
-      if (!ready) {
-        pushResizedSet(name);
-        return;
-      }
       if (existsInIndex) {
         pushResizedSet(name);
         return;
       }
+      if (!ready) return;
       pushResizedSet(name);
     };
 
@@ -489,7 +485,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           const candidates = imageBases.filter(base => base.includes(genus) && base.includes(species));
           candidates.sort((a, b) => a.length - b.length);
           for (const base of candidates) {
-            if (exts[base] || !ready || imageBaseSet.has(base)) {
+            if (exts[base] || imageBaseSet.has(base)) {
               pushResizedSet(base);
             }
           }

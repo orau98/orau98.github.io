@@ -226,28 +226,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       imageExtensions,
       normalizedEntries,
     });
-    return resolvedBases[0] || candidateBases.find(Boolean) || 'placeholder';
+    return resolvedBases[0] || null;
   }, [imageFilename, moth, imageExtensions]);
   
   const imageFolder = 'insects';
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const imageUrl = buildResizedImageUrl({
-    baseUrl: normalizedBase,
-    folder: imageFolder,
-    filename: finalImageFilename,
-    width: 1024,
-    query: cacheBustRef.current,
-  });
-  const responsivePreloadUrl = buildResizedImageUrl({
-    baseUrl: normalizedBase,
-    folder: imageFolder,
-    filename: finalImageFilename,
-    width: 640,
-    query: cacheBustRef.current,
-  });
   
-  // Check if we have an actual match (passed filename implies existence)
   const hasImageFilename = !!finalImageFilename;
   const responsiveImage = hasImageFilename
     ? buildResponsivePicture({
@@ -279,31 +264,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       ].filter((url, index, list) => url && url !== responsiveImage?.src && list.indexOf(url) === index)
     : [];
   const placeholderFallbackSrc = `${normalizedBase}images/placeholder.jpg${cacheBustRef.current}`;
-  
-  
-  // Preload priority images with better performance
-  useEffect(() => {
-    if (isPriority && hasImageFilename) {
-      const preloadHref = responsivePreloadUrl || imageUrl;
-      // Create link preload for priority images
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = preloadHref;
-      link.fetchPriority = 'high';
-      document.head.appendChild(link);
-      
-      // Also preload via Image object for immediate caching
-      const img = new Image();
-      img.decoding = 'async';
-      img.fetchPriority = 'high';
-      img.src = preloadHref;
-      
-      return () => {
-        document.head.removeChild(link);
-      };
-    }
-  }, [isPriority, hasImageFilename, responsivePreloadUrl, imageUrl]);
   
   const plantDisplay = useMemo(() => buildPlantDisplayData(moth), [moth]);
   const localizedPlantDisplay = useMemo(() => {
