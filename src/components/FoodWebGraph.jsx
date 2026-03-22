@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useCallback, useState, useId } from 'react';
+import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
@@ -188,7 +188,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const navigate = useNavigate();
   const location = useLocation();
   const isDark = theme === 'dark';
-  const searchListId = useId();
   const [isCompactPanel, setIsCompactPanel] = useState(false);
   const [desktopControlsOpen, setDesktopControlsOpen] = useState(false);
 
@@ -581,8 +580,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [nodeListOpen, setNodeListOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchMessage, setSearchMessage] = useState('');
   const [guideDismissed, setGuideDismissed] = useState(false);
   const [pinVersion, setPinVersion] = useState(0);
   const [isPinDragging, setIsPinDragging] = useState(false);
@@ -612,16 +609,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   useEffect(() => {
     setRelationFilter('all');
-    setSearchQuery('');
-    setSearchMessage('');
     setNodeListOpen(false);
     setIsPinDragging(false);
   }, [currentInsect?.name, currentPlantName]);
-
-  useEffect(() => {
-    if (!searchMessage) return;
-    setSearchMessage('');
-  }, [searchMessage, searchQuery]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
@@ -1147,50 +1137,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     [selectedNode, isNodePinned, pinVersion]
   );
 
-  const findMatchingNode = useCallback((rawQuery) => {
-    const query = String(rawQuery || '').trim().toLocaleLowerCase('ja');
-    if (!query) return null;
-    const candidates = [];
-    graphData.nodes.forEach((node) => {
-      const texts = [
-        node.name,
-        node.raw?.scientificName,
-        node.raw?.scientific_name
-      ]
-        .filter(Boolean)
-        .map((value) => String(value).toLocaleLowerCase('ja'));
-      let rank = Number.POSITIVE_INFINITY;
-      if (texts.some((value) => value === query)) rank = 0;
-      else if (texts.some((value) => value.startsWith(query))) rank = 1;
-      else if (texts.some((value) => value.includes(query))) rank = 2;
-      if (!Number.isFinite(rank)) return;
-      candidates.push({
-        node,
-        rank,
-        currentRank: node.type.includes('current') ? 0 : node.type.startsWith('plant') ? 1 : 2
-      });
-    });
-    candidates.sort((a, b) => (
-      a.rank - b.rank
-      || a.currentRank - b.currentRank
-      || a.node.name.localeCompare(b.node.name, 'ja')
-    ));
-    return candidates[0]?.node || null;
-  }, [graphData.nodes]);
-
-  const filteredNodeGroups = useMemo(() => {
-    const query = searchQuery.trim().toLocaleLowerCase('ja');
-    const matchesQuery = (node) => {
-      if (!query) return true;
-      return [
-        node.name,
-        node.raw?.scientificName,
-        node.raw?.scientific_name
-      ]
-        .filter(Boolean)
-        .some((value) => String(value).toLocaleLowerCase('ja').includes(query));
-    };
-
+  const nodeGroups = useMemo(() => {
     const sortNodes = (a, b) => (
       (a.type.includes('current') ? 0 : a.type.startsWith('plant') ? 1 : 2)
       - (b.type.includes('current') ? 0 : b.type.startsWith('plant') ? 1 : 2)
@@ -1202,7 +1149,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const insects = [];
 
     graphData.nodes
-      .filter(matchesQuery)
       .sort(sortNodes)
       .forEach((node) => {
         if (node.type.includes('current')) {
@@ -1215,7 +1161,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
 
     return { current, plants, insects };
-  }, [graphData.nodes, searchQuery]);
+  }, [graphData.nodes]);
 
   const legendTypeSet = useMemo(() => new Set(graphData.nodes.map((n) => n.type)), [graphData.nodes]);
   const showHostPlantLegend = legendTypeSet.has('plant-host');
@@ -1268,18 +1214,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const id = typeHint === 'plant' ? `plant:${name}` : `insect:${name}`;
     focusNodeById(id);
   }, [focusNodeById]);
-
-  const handleSearchSubmit = useCallback((event) => {
-    event?.preventDefault?.();
-    const match = findMatchingNode(searchQuery);
-    if (!match) {
-      setSearchMessage('現在表示中のノードに一致する項目がありません。');
-      return;
-    }
-    setSearchMessage('');
-    focusNodeById(match.id);
-    setNodeListOpen(false);
-  }, [findMatchingNode, focusNodeById, searchQuery]);
 
   const fitGraphToViewport = useCallback((duration = 400) => {
     if (!fgRef.current || graphData.nodes.length === 0) return;
@@ -1709,7 +1643,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const interactionHint = isCompactPanel
     ? '操作: タップで選択、ピンチまたは上部ボタンで拡大、2回で詳細、長押しで固定'
-    : '操作: ドラッグで移動、クリックで選択、2回で詳細、上部ボタンで全体表示や中心移動';
+    : '操作: ドラッグで移動、クリックで選択、2回で詳細、上部ボタンで全体表示やズーム';
 
   const enablePanInteraction = !isPinDragging;
   const enableZoomInteraction = isCompactPanel && !isPinDragging;
@@ -1902,20 +1836,19 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         </button>
       </div>
       <div className="max-h-[280px] overflow-y-auto px-3 py-3 space-y-3">
-        {filteredNodeGroups.current.length === 0 && filteredNodeGroups.plants.length === 0 && filteredNodeGroups.insects.length === 0 ? (
+        {nodeGroups.current.length === 0 && nodeGroups.plants.length === 0 && nodeGroups.insects.length === 0 ? (
           <div className="text-[12px] text-slate-500 dark:text-slate-400">一致するノードがありません。</div>
         ) : (
           <>
-            {filteredNodeGroups.current.length > 0 && (
+            {nodeGroups.current.length > 0 && (
               <div>
                 <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">中心ノード</div>
                 <div className="flex flex-wrap gap-1.5">
-                  {filteredNodeGroups.current.map((node) => (
+                  {nodeGroups.current.map((node) => (
                     <button
                       key={node.id}
                       type="button"
                       onClick={() => {
-                        setSearchMessage('');
                         focusNodeById(node.id);
                         setNodeListOpen(false);
                       }}
@@ -1927,16 +1860,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 </div>
               </div>
             )}
-            {filteredNodeGroups.plants.length > 0 && (
+            {nodeGroups.plants.length > 0 && (
               <div>
                 <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">植物</div>
                 <div className="flex flex-wrap gap-1.5">
-                  {filteredNodeGroups.plants.map((node) => (
+                  {nodeGroups.plants.map((node) => (
                     <button
                       key={node.id}
                       type="button"
                       onClick={() => {
-                        setSearchMessage('');
                         focusNodeById(node.id);
                         setNodeListOpen(false);
                       }}
@@ -1948,16 +1880,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 </div>
               </div>
             )}
-            {filteredNodeGroups.insects.length > 0 && (
+            {nodeGroups.insects.length > 0 && (
               <div>
                 <div className="mb-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">昆虫</div>
                 <div className="flex flex-wrap gap-1.5">
-                  {filteredNodeGroups.insects.map((node) => (
+                  {nodeGroups.insects.map((node) => (
                     <button
                       key={node.id}
                       type="button"
                       onClick={() => {
-                        setSearchMessage('');
                         focusNodeById(node.id);
                         setNodeListOpen(false);
                       }}
@@ -2185,11 +2116,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       })()
     : '';
 
-  const focusCurrentNode = useCallback(() => {
-    if (!currentCenterNodeId) return;
-    focusNodeById(currentCenterNodeId);
-  }, [currentCenterNodeId, focusNodeById]);
-
   const showGuideCard = !selectedNode && !guideDismissed && graphData.nodes.length > 0;
   const guideButtonClass = 'inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-800';
 
@@ -2200,37 +2126,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           <div className="space-y-3">
             <div className={`${desktopControlSurfaceClass} flex flex-col gap-3`}>
               <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
-                <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
-                  <input
-                    type="search"
-                    list={searchListId}
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    placeholder="現在表示中のノードを検索"
-                    className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
-                    aria-label="現在表示中のノードを検索"
-                  />
-                  <datalist id={searchListId}>
-                    {graphData.nodes.map((node) => (
-                      <option key={node.id} value={node.name} />
-                    ))}
-                  </datalist>
-                  <button
-                    type="submit"
-                    className={desktopControlButtonClass}
-                  >
-                    移動
-                  </button>
-                  {currentCenterNodeId && (
-                    <button
-                      type="button"
-                      onClick={focusCurrentNode}
-                      className={desktopControlButtonClass}
-                      title="中心ノードへ戻る"
-                    >
-                      中心へ
-                    </button>
-                  )}
+                <div className="flex min-w-0 flex-1 items-center gap-2">
                   <button
                     type="button"
                     onClick={resetView}
@@ -2239,7 +2135,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   >
                     全体表示
                   </button>
-                </form>
+                </div>
 
                 <div className="flex flex-wrap items-center gap-1.5">
                   <button
@@ -2298,12 +2194,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 </div>
               )}
             </div>
-
-            {searchMessage && (
-              <div className="max-w-[640px] rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow-sm dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
-                {searchMessage}
-              </div>
-            )}
 
             {desktopControlsOpen && (
               <div className={`${desktopControlSurfaceClass} space-y-3`}>
@@ -2488,15 +2378,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   </button>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {currentCenterNodeId && (
-                    <button
-                      type="button"
-                      onClick={focusCurrentNode}
-                      className={guideButtonClass}
-                    >
-                      中心へ戻る
-                    </button>
-                  )}
                   <button
                     type="button"
                     onClick={resetView}
@@ -2529,19 +2410,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                       onClick={resetView}
                       className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
                       title="全体表示（ズーム/中心）"
-                    >
-                      全体表示
-                    </button>
-                    {currentCenterNodeId && (
-                      <button
-                        type="button"
-                        onClick={focusCurrentNode}
-                        className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                        title="中心ノードへ戻る"
-                      >
-                        中心へ
-                      </button>
-                    )}
+                  >
+                    全体表示
+                  </button>
                     <button
                       type="button"
                       onClick={zoomOut}
@@ -2611,29 +2482,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   </div>
 
                   <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
-                    <form onSubmit={handleSearchSubmit} className="flex min-w-0 flex-1 items-center gap-2">
-                      <input
-                        type="search"
-                        list={searchListId}
-                        value={searchQuery}
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        placeholder="現在表示中のノードを検索"
-                        className="min-w-0 flex-1 rounded-lg border border-slate-200 dark:border-slate-600 bg-white/85 dark:bg-slate-900/50 px-3 py-2 text-[12px] outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200 dark:focus:border-sky-400 dark:focus:ring-sky-900/40"
-                        aria-label="現在表示中のノードを検索"
-                      />
-                      <datalist id={searchListId}>
-                        {graphData.nodes.map((node) => (
-                          <option key={node.id} value={node.name} />
-                        ))}
-                      </datalist>
-                      <button
-                        type="submit"
-                        className="shrink-0 px-3 py-2 rounded-lg text-[12px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      >
-                        移動
-                      </button>
-                    </form>
-
                     <div className="flex flex-wrap items-center gap-1.5">
                       {statsChips.map((label) => (
                         <span
@@ -2658,12 +2506,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     )}
                   </div>
                 </div>
-
-                {searchMessage && (
-                  <div className="pointer-events-auto max-w-[560px] self-start rounded-lg border border-amber-200 bg-amber-50/95 px-3 py-2 text-[11px] text-amber-800 shadow dark:border-amber-900/60 dark:bg-amber-950/60 dark:text-amber-200">
-                    {searchMessage}
-                  </div>
-                )}
 
                 {nodeListOpen && (
                   <div className="pointer-events-auto max-h-[min(52vh,360px)] max-w-[560px] overflow-hidden">
