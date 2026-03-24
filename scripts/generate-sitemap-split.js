@@ -146,12 +146,15 @@ function isNoindexPage(filePath) {
 }
 
 function buildRobotsTxt(baseUrl, sitemapFiles) {
+  const textSitemap = sitemapFiles.find((sitemap) => sitemap.loc.endsWith('/sitemap.txt'));
   const coreSitemap = sitemapFiles.find((sitemap) => sitemap.loc.endsWith('/sitemap-core.xml'));
-  const childSitemaps = sitemapFiles.filter((sitemap) => sitemap !== coreSitemap);
+  const childSitemaps = sitemapFiles.filter((sitemap) => sitemap !== coreSitemap && sitemap !== textSitemap);
   const lines = [
     'User-agent: *',
     'Allow: /',
     '',
+    '# Plain-text sitemap fallback for Search Console',
+    ...(textSitemap ? [`Sitemap: ${textSitemap.loc}`, ''] : []),
     '# Compact sitemap for Search Console and fast discovery',
     ...(coreSitemap ? [`Sitemap: ${coreSitemap.loc}`, ''] : []),
     '# Full sitemap index',
@@ -458,9 +461,32 @@ function generateSplitSitemaps() {
       lastmod: newestLastmod,
     };
   };
+
+  const generateTextSitemapFile = (filename, urls) => {
+    if (!Array.isArray(urls) || urls.length === 0) return null;
+    const text = `${urls.map((url) => url.loc).join('\n')}\n`;
+    const publicPath = path.join(__dirname, '../public', filename);
+    fs.writeFileSync(publicPath, text, 'utf-8');
+
+    const distPath = path.join(__dirname, '../dist');
+    if (fs.existsSync(distPath)) {
+      const distSitemapPath = path.join(distPath, filename);
+      fs.writeFileSync(distSitemapPath, text, 'utf-8');
+    }
+
+    const newestLastmod = urls.reduce((latest, item) =>
+      item.lastmod > latest ? item.lastmod : latest,
+    '1970-01-01');
+
+    return {
+      loc: `${baseUrl}/${filename}`,
+      lastmod: newestLastmod,
+    };
+  };
   
   // 各サイトマップファイルを生成
   const sitemapFiles = [];
+  const supplementalSitemapFiles = [];
   
   Object.entries(sitemaps).forEach(([name, urls]) => {
     const filename = name === 'main' ? 'sitemap-main.xml' : `sitemap-${name}.xml`;
@@ -491,7 +517,13 @@ function generateSplitSitemaps() {
     if (!entry?.loc) return;
     if (!coreUrlMap.has(entry.loc)) coreUrlMap.set(entry.loc, entry);
   });
-  const coreSitemapFile = generateSitemapFile('sitemap-core.xml', Array.from(coreUrlMap.values()));
+  const coreUrls = Array.from(coreUrlMap.values());
+  const textSitemapFile = generateTextSitemapFile('sitemap.txt', coreUrls);
+  if (textSitemapFile) {
+    supplementalSitemapFiles.push(textSitemapFile);
+    console.log(`sitemap.txt 生成完了: ${coreUrlMap.size} URLs`);
+  }
+  const coreSitemapFile = generateSitemapFile('sitemap-core.xml', coreUrls);
   if (coreSitemapFile) {
     sitemapFiles.unshift(coreSitemapFile);
     console.log(`sitemap-core.xml 生成完了: ${coreUrlMap.size} URLs`);
@@ -521,7 +553,7 @@ function generateSplitSitemaps() {
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
   }
 
-  const robotsTxt = buildRobotsTxt(baseUrl, sitemapFiles);
+  const robotsTxt = buildRobotsTxt(baseUrl, [...supplementalSitemapFiles, ...sitemapFiles]);
   const robotsPath = path.join(__dirname, '../public/robots.txt');
   fs.writeFileSync(robotsPath, robotsTxt, 'utf-8');
   if (fs.existsSync(distPath)) {
@@ -531,7 +563,7 @@ function generateSplitSitemaps() {
 
   console.log('\nサイトマップインデックス生成完了');
   console.log('分割サイトマップ:');
-  sitemapFiles.forEach(file => {
+  [...supplementalSitemapFiles, ...sitemapFiles].forEach(file => {
     console.log(`  - ${file.loc}`);
   });
   

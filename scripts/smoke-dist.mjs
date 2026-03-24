@@ -10,6 +10,7 @@ const REQUIRED_FILES = [
   'en/meta/plant/index.html',
   'robots.txt',
   'ads.txt',
+  'sitemap.txt',
   'sitemap.xml',
   'sitemap-core.xml',
   'opensearch.xml',

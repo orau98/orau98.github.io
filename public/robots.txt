@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 
+# Plain-text sitemap fallback for Search Console
+Sitemap: https://orau98.github.io/sitemap.txt
+
 # Compact sitemap for Search Console and fast discovery
 Sitemap: https://orau98.github.io/sitemap-core.xml
 
