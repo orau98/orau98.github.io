@@ -23,18 +23,37 @@ export const sourceLinks = {
   "さやばね": "https://coleoptera.sakura.ne.jp/publication/sayabane/sayabane-bibliography.html"
 };
 
+const referenceAliases = {
+  "日本のキリガ": "日本の冬夜蛾",
+};
+
+const findKnownReferenceKey = (source = "") => {
+  if (!source) return "";
+  for (const key of Object.keys(sourceLinks)) {
+    if (source.includes(key)) return key;
+  }
+  return "";
+};
+
+const canonicalizeReferenceKey = (key = "") => referenceAliases[key] || key;
+
+const getLinkByReferenceKey = (key = "") => {
+  if (!key) return null;
+  const canonicalKey = canonicalizeReferenceKey(key);
+  return sourceLinks[canonicalKey] || sourceLinks[key] || null;
+};
+
 // 出典から参考リンクを取得する関数
 export const getSourceLink = (source) => {
   if (!source) return null;
-  
-  // 部分一致で検索
-  for (const [key, link] of Object.entries(sourceLinks)) {
-    if (source.includes(key)) {
-      return link;
-    }
+
+  const matchedKey = findKnownReferenceKey(String(source));
+  if (matchedKey) {
+    return getLinkByReferenceKey(matchedKey);
   }
-  
-  return null;
+
+  const normalized = normalizeReference(source);
+  return getLinkByReferenceKey(normalized);
 };
 
 // 出典表記を正規化（余計な書誌情報を除去して短縮名に）
@@ -43,9 +62,8 @@ export const normalizeReference = (source) => {
   let s = source.trim();
 
   // 既知タイトルが含まれていれば、その短縮名に統一
-  for (const key of Object.keys(sourceLinks)) {
-    if (s.includes(key)) return key;
-  }
+  const matchedKey = findKnownReferenceKey(s);
+  if (matchedKey) return canonicalizeReferenceKey(matchedKey);
 
   // よくある書誌情報の除去（著者・出版社・発行年・ページなど）
   s = s.replace(/著者\s*[:：][^,，。]+/g, '').replace(/出版社\s*[:：][^,，。]+/g, '')
@@ -64,5 +82,60 @@ export const normalizeReference = (source) => {
   s = s.replace(/__PRESERVED_REF_(\d+)__/g, (_, i) => preserved[Number(i)] || '');
   // 記号の余剰除去
   s = s.replace(/[，,。\s]+$/g, '').replace(/\s{2,}/g, ' ').trim();
-  return s;
+
+  const cleanedMatchedKey = findKnownReferenceKey(s);
+  if (cleanedMatchedKey) return canonicalizeReferenceKey(cleanedMatchedKey);
+  return canonicalizeReferenceKey(s);
+};
+
+export const getReferenceMeta = (source) => {
+  const raw = typeof source === 'string' ? source.trim() : '';
+  const matchedKey = findKnownReferenceKey(raw);
+  const displayLabel = normalizeReference(raw);
+  const originalLabel = matchedKey && canonicalizeReferenceKey(matchedKey) !== matchedKey
+    ? matchedKey
+    : '';
+
+  return {
+    displayLabel,
+    originalLabel,
+    link: getSourceLink(displayLabel || raw),
+  };
+};
+
+export const getReferenceMetaList = (sources) => {
+  const values = Array.isArray(sources) ? sources : [sources];
+  const entries = [];
+  const seen = new Map();
+
+  values
+    .flatMap((value) => String(value || '').split(/[;；]/))
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .forEach((raw) => {
+      const meta = getReferenceMeta(raw);
+      const key = meta.displayLabel || raw;
+      if (!key) return;
+
+      if (!seen.has(key)) {
+        const entry = {
+          displayLabel: key,
+          originalLabels: meta.originalLabel ? [meta.originalLabel] : [],
+          link: meta.link,
+        };
+        seen.set(key, entry);
+        entries.push(entry);
+        return;
+      }
+
+      const entry = seen.get(key);
+      if (meta.originalLabel && !entry.originalLabels.includes(meta.originalLabel)) {
+        entry.originalLabels.push(meta.originalLabel);
+      }
+      if (!entry.link && meta.link) {
+        entry.link = meta.link;
+      }
+    });
+
+  return entries;
 };

@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
-import { getSourceLink, normalizeReference } from './utils/sourceLinks';
+import { getReferenceMeta, getReferenceMetaList } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
@@ -1647,22 +1647,39 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                       </svg>
                       <div className="text-sm text-slate-500 dark:text-slate-400">
-                        <span className="font-medium text-slate-500 dark:text-slate-400">{detailUi.sourceLabel}</span>{' '}
-                        {getSourceLink(moth.source) ? (
-                          <a 
-                            href={getSourceLink(moth.source)} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
-                          >
-                            {moth.source}
-                            <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        ) : (
-                          <span className="font-medium">{moth.source}</span>
-                        )}
+                        {(() => {
+                          const sources = getReferenceMetaList(moth.source);
+                          return (
+                            <>
+                              <span className="font-medium text-slate-500 dark:text-slate-400">{detailUi.sourceLabel}</span>{' '}
+                              {sources.map(({ displayLabel, originalLabels, link }, index) => (
+                                <React.Fragment key={`${displayLabel}-${index}`}>
+                                  {index > 0 ? ', ' : ''}
+                                  {link ? (
+                                    <a
+                                      href={link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
+                                    >
+                                      {displayLabel}
+                                      <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                      </svg>
+                                    </a>
+                                  ) : (
+                                    <span className="font-medium">{displayLabel || moth.source}</span>
+                                  )}
+                                  {originalLabels.length > 0 && (
+                                    <span className="ml-2 text-xs text-slate-400 dark:text-slate-500">
+                                      （原文表記: {originalLabels.join('、')}）
+                                    </span>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -1798,10 +1815,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       primarySource = moth.source || '';
                     }
 
+                    const emergenceOriginalTextCandidates = Array.from(new Set([
+                      best?.notes || '',
+                      moth.emergenceTimeDescription || '',
+                      ...(Array.isArray(moth.emergenceTimeDetailed) ? moth.emergenceTimeDetailed.map((item) => item?.notes || '') : []),
+                      ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : []),
+                    ].map((text) => String(text || '').trim()).filter(Boolean)));
+                    const originalEmergenceText = emergenceOriginalTextCandidates.find((text) => {
+                      if (!text || text === primaryEmergenceTime || text === '不明') return false;
+                      if (text === detailUi.extractedFromNotes || text === detailUi.extractedFromGeneralNotes) return false;
+                      if (/^p\.\s*\d+/i.test(text)) return false;
+                      return /\d+\s*月|春|夏|秋|冬|羽化|出現|発生|得られ|見られ|採れ|採集|越冬|越年|から|まで|頃/.test(text);
+                    }) || '';
+
                     const supplementalEmergenceTexts = Array.from(new Set([
                       moth.notes || '',
                       ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.map((note) => note?.content || '') : []),
-                      ...allEmergenceTimeData.map((item) => item?.period || '')
+                      ...allEmergenceTimeData.map((item) => item?.period || ''),
+                      ...allEmergenceTimeData.map((item) => item?.notes || ''),
                     ].map((text) => String(text || '').trim()).filter(Boolean)));
                     
                     return (
@@ -1810,6 +1841,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                         source={primarySource}
                         compact={false}
                         supplementalTexts={supplementalEmergenceTexts}
+                        originalText={originalEmergenceText}
                         locale={locale}
                       />
                     );
@@ -1847,24 +1879,29 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                             <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">{detailUi.ecologyLabel}</div>
                             <ul className="mt-2 space-y-1">
                               {uniqueEcology.map((n, i) => {
-                                const refLabel = normalizeReference(n.reference);
-                                const href = getSourceLink(refLabel || n.reference);
+                                const sources = getReferenceMetaList(n.reference);
                                 return (
                                   <li key={i} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                                     • {n.content}
                                     {n.reference && (
                                       <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
                                         {detailUi.sourceLabel}{' '}
-                                        {href ? (
-                                          <a href={href} target="_blank" rel="noopener noreferrer" className="underline decoration-slate-300 hover:decoration-slate-400">
-                                            {refLabel}
-                                            <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                            </svg>
-                                          </a>
-                                        ) : (
-                                          <span>{refLabel}</span>
-                                        )}
+                                        {sources.map(({ displayLabel, originalLabels, link }, index) => (
+                                          <React.Fragment key={`${displayLabel}-${index}`}>
+                                            {index > 0 ? ', ' : ''}
+                                            {link ? (
+                                              <a href={link} target="_blank" rel="noopener noreferrer" className="underline decoration-slate-300 hover:decoration-slate-400">
+                                                {displayLabel}
+                                                <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                              </a>
+                                            ) : (
+                                              <span>{displayLabel}</span>
+                                            )}
+                                            {originalLabels.length > 0 ? `（原文表記: ${originalLabels.join('、')}）` : ''}
+                                          </React.Fragment>
+                                        ))}
                                       </span>
                                     )}
                                   </li>

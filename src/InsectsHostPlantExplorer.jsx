@@ -8,7 +8,7 @@ import StickyHeader from "./components/StickyHeader";
 import { ExplorerStructuredData, MainStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
-import { getSourceLink } from "./utils/sourceLinks";
+import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
 import useSeoMeta from "./hooks/useSeoMeta";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./services/imageIndex";
 import lazyWithRetry from "./utils/lazyWithRetry";
@@ -2089,18 +2089,26 @@ const InsectsHostPlantExplorer = memo(
                                   names && names.length > 0 ? names[0] : "",
                                 );
                               };
-                              const bibliography = rawBibliography
-                                .slice()
-                                .sort((a, b) =>
-                                  authorKey(a).localeCompare(
-                                    authorKey(b),
-                                    "en",
-                                    { sensitivity: "base" },
-                                  ),
-                                );
+                              const bibliography = Array.from(
+                                rawBibliography.reduce((map, entry) => {
+                                  const title = (entry?.title || "").trim();
+                                  const canonicalTitle = normalizeReference(title) || title;
+                                  if (!canonicalTitle) return map;
+                                  if (!map.has(canonicalTitle)) {
+                                    map.set(canonicalTitle, entry);
+                                  }
+                                  return map;
+                                }, new Map()).values(),
+                              ).sort((a, b) =>
+                                authorKey(a).localeCompare(
+                                  authorKey(b),
+                                  "en",
+                                  { sensitivity: "base" },
+                                ),
+                              );
                               return bibliography.map((b) => {
                                 const href =
-                                  b.url || getSourceLink(b.title) || undefined;
+                                  b.url || getSourceLink(normalizeReference(b.title)) || undefined;
                                 const authorStr =
                                   joinBibliographyNames(b.authors) ||
                                   (b.editors

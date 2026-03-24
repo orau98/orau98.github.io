@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import logger from '../utils/logger';
-import { getSourceLink, normalizeReference } from '../utils/sourceLinks';
+import { getReferenceMetaList } from '../utils/sourceLinks';
 import { isEnglishLocale } from '../utils/locale';
 
 // 月名と色のマッピング - 薄い色で統一
@@ -698,7 +698,7 @@ const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
   };
 };
 
-const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, supplementalTexts = [], locale = 'ja' }) => {
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, supplementalTexts = [], originalText = '', locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const getPeriodLabel = (periodNum) => {
     if (!isEnglish) return periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
@@ -728,6 +728,11 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
       .find((text) => shouldAnalyzeEmergenceHint(text));
     return emergenceHintText || (supplementalTexts || []).map((text) => String(text || '').trim()).find(Boolean) || '';
   }, [emergenceTime, supplementalTexts]);
+  const originalDisplayText = useMemo(() => {
+    const original = String(originalText || '').trim();
+    if (!original || original === '不明' || original === displayText) return '';
+    return original;
+  }, [displayText, originalText]);
   
   if ((!displayText || displayText === '不明') && activeMonths.length === 0 && fuzzyMonths.length === 0) {
     return (
@@ -802,24 +807,31 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
               <div className="text-sm text-slate-500 dark:text-slate-400">
                 <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
                 {(() => {
-                  const displaySource = normalizeReference(source);
-                  const sourceLink = getSourceLink(displaySource);
-                  if (sourceLink) {
-                    return (
-                      <a 
-                        href={sourceLink} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
-                      >
-                        {displaySource}
-                        <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    );
-                  }
-                  return <span className="font-medium">{displaySource}</span>;
+                  return getReferenceMetaList(source).map(({ displayLabel, originalLabels, link }, index) => (
+                    <React.Fragment key={`${displayLabel}-${index}`}>
+                      {index > 0 ? ', ' : ''}
+                      {link ? (
+                        <a 
+                          href={link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
+                        >
+                          {displayLabel}
+                          <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="font-medium">{displayLabel}</span>
+                      )}
+                      {originalLabels.length > 0 && (
+                        <span className="ml-2 text-xs text-slate-400 dark:text-slate-500">
+                          （原文表記: {originalLabels.join('、')}）
+                        </span>
+                      )}
+                    </React.Fragment>
+                  ));
                 })()}
               </div>
             </div>
@@ -932,6 +944,11 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
               {displayText}
             </span>
           </div>
+          {originalDisplayText && (
+            <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              <span className="font-medium">{isEnglish ? 'Original:' : '原文:'}</span> {originalDisplayText}
+            </div>
+          )}
         </div>
         {source && (
           <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
@@ -942,24 +959,31 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
               <div className="text-sm text-slate-500 dark:text-slate-400">
                 <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
                 {(() => {
-                  const displaySource = normalizeReference(source);
-                  const sourceLink = getSourceLink(displaySource);
-                  if (sourceLink) {
-                    return (
-                      <a 
-                        href={sourceLink} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
-                      >
-                        {displaySource}
-                        <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    );
-                  }
-                  return <span className="font-medium">{displaySource}</span>;
+                  return getReferenceMetaList(source).map(({ displayLabel, originalLabels, link }, index) => (
+                    <React.Fragment key={`${displayLabel}-${index}`}>
+                      {index > 0 ? ', ' : ''}
+                      {link ? (
+                        <a 
+                          href={link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
+                        >
+                          {displayLabel}
+                          <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="font-medium">{displayLabel}</span>
+                      )}
+                      {originalLabels.length > 0 && (
+                        <span className="ml-2 text-xs text-slate-400 dark:text-slate-500">
+                          （原文表記: {originalLabels.join('、')}）
+                        </span>
+                      )}
+                    </React.Fragment>
+                  ));
                 })()}
               </div>
             </div>

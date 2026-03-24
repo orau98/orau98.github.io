@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logger from '../utils/logger';
 import { Link, useLocation } from 'react-router-dom';
-import { getSourceLink, normalizeReference } from '../utils/sourceLinks';
+import { getReferenceMetaList } from '../utils/sourceLinks';
 import { makeDetailLinkState } from '../utils/navState';
 import { buildPlantPath } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
@@ -408,32 +408,34 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
                 </svg>
                 <div className="text-sm text-slate-600 dark:text-slate-300">
                   <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
-                  {Array.from(allReferences).map((ref, index) => {
-                    const displayRef = normalizeReference(ref);
-                    const sourceLink = getSourceLink(displayRef);
+                  {getReferenceMetaList(Array.from(allReferences)).map(({ displayLabel, originalLabels, link }, index) => {
                     const separator = index > 0 ? ', ' : '';
-                    if (sourceLink) {
+                    if (link) {
                       return (
                         <React.Fragment key={index}>
                           {separator}
                           <a 
-                            href={sourceLink} 
+                            href={link} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
                           >
-                            {displayRef}
+                            {displayLabel}
                             <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
                           </a>
+                          {originalLabels.length > 0 ? `（原文表記: ${originalLabels.join('、')}）` : ''}
                         </React.Fragment>
                       );
                     }
                     return (
                       <React.Fragment key={index}>
                         {separator}
-                        <span className="font-medium">{displayRef}</span>
+                        <span className="font-medium">
+                          {displayLabel}
+                          {originalLabels.length > 0 ? `（原文表記: ${originalLabels.join('、')}）` : ''}
+                        </span>
                       </React.Fragment>
                     );
                   })}
