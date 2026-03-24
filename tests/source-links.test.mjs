@@ -19,16 +19,15 @@ test('getSourceLink resolves aliases to the canonical bibliography URL', () => {
   assert.equal(getSourceLink('日本の冬夜蛾'), canonicalUrl);
 });
 
-test('getReferenceMeta preserves the original label when an alias was used', () => {
+test('getReferenceMeta returns the canonical display label for aliases', () => {
   const meta = getReferenceMeta('日本のキリガ');
   assert.equal(meta.displayLabel, '日本の冬夜蛾');
-  assert.equal(meta.originalLabel, '日本のキリガ');
   assert.match(meta.link || '', /000000000506/);
 });
 
-test('getReferenceMetaList merges 日本のキリガ into 日本の冬夜蛾 once', () => {
+test('getReferenceMetaList merges 日本のキリガ into a single 日本の冬夜蛾 entry', () => {
   const metas = getReferenceMetaList(['日本の冬夜蛾', '日本のキリガ']);
   assert.equal(metas.length, 1);
   assert.equal(metas[0].displayLabel, '日本の冬夜蛾');
-  assert.deepEqual(metas[0].originalLabels, ['日本のキリガ']);
+  assert.match(metas[0].link || '', /000000000506/);
 });

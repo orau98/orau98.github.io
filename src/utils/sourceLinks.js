@@ -90,15 +90,10 @@ export const normalizeReference = (source) => {
 
 export const getReferenceMeta = (source) => {
   const raw = typeof source === 'string' ? source.trim() : '';
-  const matchedKey = findKnownReferenceKey(raw);
   const displayLabel = normalizeReference(raw);
-  const originalLabel = matchedKey && canonicalizeReferenceKey(matchedKey) !== matchedKey
-    ? matchedKey
-    : '';
 
   return {
     displayLabel,
-    originalLabel,
     link: getSourceLink(displayLabel || raw),
   };
 };
@@ -120,7 +115,6 @@ export const getReferenceMetaList = (sources) => {
       if (!seen.has(key)) {
         const entry = {
           displayLabel: key,
-          originalLabels: meta.originalLabel ? [meta.originalLabel] : [],
           link: meta.link,
         };
         seen.set(key, entry);
@@ -129,9 +123,6 @@ export const getReferenceMetaList = (sources) => {
       }
 
       const entry = seen.get(key);
-      if (meta.originalLabel && !entry.originalLabels.includes(meta.originalLabel)) {
-        entry.originalLabels.push(meta.originalLabel);
-      }
       if (!entry.link && meta.link) {
         entry.link = meta.link;
       }

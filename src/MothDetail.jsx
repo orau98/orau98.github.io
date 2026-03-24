@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
-import { getReferenceMeta, getReferenceMetaList } from './utils/sourceLinks';
+import { getReferenceMetaList } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
@@ -1652,7 +1652,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                           return (
                             <>
                               <span className="font-medium text-slate-500 dark:text-slate-400">{detailUi.sourceLabel}</span>{' '}
-                              {sources.map(({ displayLabel, originalLabels, link }, index) => (
+                              {sources.map(({ displayLabel, link }, index) => (
                                 <React.Fragment key={`${displayLabel}-${index}`}>
                                   {index > 0 ? ', ' : ''}
                                   {link ? (
@@ -1669,11 +1669,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                                     </a>
                                   ) : (
                                     <span className="font-medium">{displayLabel || moth.source}</span>
-                                  )}
-                                  {originalLabels.length > 0 && (
-                                    <span className="ml-2 text-xs text-slate-400 dark:text-slate-500">
-                                      （原文表記: {originalLabels.join('、')}）
-                                    </span>
                                   )}
                                 </React.Fragment>
                               ))}
@@ -1886,7 +1881,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                                     {n.reference && (
                                       <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
                                         {detailUi.sourceLabel}{' '}
-                                        {sources.map(({ displayLabel, originalLabels, link }, index) => (
+                                        {sources.map(({ displayLabel, link }, index) => (
                                           <React.Fragment key={`${displayLabel}-${index}`}>
                                             {index > 0 ? ', ' : ''}
                                             {link ? (
@@ -1899,7 +1894,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                                             ) : (
                                               <span>{displayLabel}</span>
                                             )}
-                                            {originalLabels.length > 0 ? `（原文表記: ${originalLabels.join('、')}）` : ''}
                                           </React.Fragment>
                                         ))}
                                       </span>

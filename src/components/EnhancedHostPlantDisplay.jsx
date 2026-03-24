@@ -408,7 +408,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
                 </svg>
                 <div className="text-sm text-slate-600 dark:text-slate-300">
                   <span className="font-medium text-slate-500 dark:text-slate-400">{isEnglish ? 'Source:' : '出典:'}</span>{' '}
-                  {getReferenceMetaList(Array.from(allReferences)).map(({ displayLabel, originalLabels, link }, index) => {
+                  {getReferenceMetaList(Array.from(allReferences)).map(({ displayLabel, link }, index) => {
                     const separator = index > 0 ? ', ' : '';
                     if (link) {
                       return (
@@ -425,17 +425,13 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
                           </a>
-                          {originalLabels.length > 0 ? `（原文表記: ${originalLabels.join('、')}）` : ''}
                         </React.Fragment>
                       );
                     }
                     return (
                       <React.Fragment key={index}>
                         {separator}
-                        <span className="font-medium">
-                          {displayLabel}
-                          {originalLabels.length > 0 ? `（原文表記: ${originalLabels.join('、')}）` : ''}
-                        </span>
+                        <span className="font-medium">{displayLabel}</span>
                       </React.Fragment>
                     );
                   })}
