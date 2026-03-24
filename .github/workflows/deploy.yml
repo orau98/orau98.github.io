@@ -44,8 +44,6 @@ jobs:
         run: npm run build:image-index
 
       - name: Build responsive images
-        env:
-          FORCE_RESPONSIVE_IMAGES: "1"
         run: npm run build:images:responsive
 
       - name: Build data-lite
