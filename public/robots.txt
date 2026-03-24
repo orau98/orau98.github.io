@@ -1,10 +1,13 @@
 User-agent: *
 Allow: /
 
-# Primary sitemap index
+# Compact sitemap for Search Console and fast discovery
+Sitemap: https://orau98.github.io/sitemap-core.xml
+
+# Full sitemap index
 Sitemap: https://orau98.github.io/sitemap.xml
 
-# Child sitemaps (fallback for crawlers that fail sitemap index fetch)
+# Child sitemaps
 Sitemap: https://orau98.github.io/sitemap-main.xml
 Sitemap: https://orau98.github.io/sitemap-en-main.xml
 Sitemap: https://orau98.github.io/sitemap-moth.xml
