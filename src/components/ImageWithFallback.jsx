@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 const IMAGE_LOAD_TIMEOUT_MS = 12000;
 
@@ -32,6 +32,13 @@ const normalizeSources = (list) => {
   return out;
 };
 
+const buildSourceSignature = (list) =>
+  Array.isArray(list) && list.length > 0
+    ? list
+        .map((item) => `${item.type || ''}::${item.srcSet || ''}::${item.sizes || ''}`)
+        .join('\u0001')
+    : '';
+
 const ImageWithFallback = ({ 
   src, 
   srcSet,
@@ -59,7 +66,16 @@ const ImageWithFallback = ({
     () => normalizeSources(sources),
     [sources],
   );
+  const candidatesSignature = useMemo(
+    () => normalizedCandidates.join('\u0001'),
+    [normalizedCandidates],
+  );
+  const sourcesSignature = useMemo(
+    () => buildSourceSignature(normalizedSources),
+    [normalizedSources],
+  );
   const initialSrc = src || normalizedCandidates[0] || fallbackSrc || '';
+  const lastResetSignatureRef = useRef('');
 
   const [currentSrc, setCurrentSrc] = useState(initialSrc || src);
   const [currentCandidates, setCurrentCandidates] = useState(
@@ -73,12 +89,24 @@ const ImageWithFallback = ({
   const [status, setStatus] = useState(initialSrc ? 'loading' : 'error'); // loading, loaded, error
 
   // Reset loading state only when the primary src actually changes.
-  // Changing just the candidates array (which is often recreated on every parent render)
-  // should NOT force the image back to the loading skeleton, otherwise a loaded image
-  // disappears after any parent state update.
+  // Changing only array identities from parent rerenders should NOT force the image
+  // back to the loading skeleton, otherwise already-loaded images can disappear.
   useEffect(() => {
     const nextCandidates = normalizedCandidates;
     const nextSrc = src || nextCandidates[0] || fallbackSrc || '';
+    const nextResetSignature = [
+      nextSrc,
+      srcSet || '',
+      sizes || '',
+      fallbackSrc || '',
+      candidatesSignature,
+      sourcesSignature,
+    ].join('\u0002');
+
+    if (lastResetSignatureRef.current === nextResetSignature) {
+      return;
+    }
+    lastResetSignatureRef.current = nextResetSignature;
 
     setCurrentSrc(nextSrc);
     setCurrentCandidates(nextCandidates.filter((candidate) => candidate !== nextSrc));
@@ -88,7 +116,16 @@ const ImageWithFallback = ({
     setPictureSourcesDisabled(false);
     setSrcSetDisabled(false);
     setStatus(nextSrc ? 'loading' : 'error');
-  }, [src, normalizedCandidates, fallbackSrc, srcSet, sizes, normalizedSources]);
+  }, [
+    src,
+    normalizedCandidates,
+    fallbackSrc,
+    srcSet,
+    sizes,
+    normalizedSources,
+    candidatesSignature,
+    sourcesSignature,
+  ]);
 
   // Keep srcset/sizes in sync without resetting the load status.
   useEffect(() => {
