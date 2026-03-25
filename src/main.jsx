@@ -107,6 +107,39 @@ const isExtensionRejection = (event) => {
   return isExtensionLike(stack) || isExtensionLike(message);
 };
 
+const isPrimaryNavigationClick = (event) =>
+  !!event &&
+  !event.defaultPrevented &&
+  event.button === 0 &&
+  !event.metaKey &&
+  !event.ctrlKey &&
+  !event.shiftKey &&
+  !event.altKey;
+
+const shouldUseDocumentNavigation = (anchor) => {
+  if (typeof window === 'undefined' || !anchor?.href) return false;
+  if (anchor.target && anchor.target !== '_self') return false;
+  if (anchor.hasAttribute('download')) return false;
+
+  let targetUrl;
+  try {
+    targetUrl = new URL(anchor.href, window.location.href);
+  } catch {
+    return false;
+  }
+
+  if (targetUrl.origin !== window.location.origin) return false;
+
+  const currentPath = `${window.location.pathname}${window.location.search}`;
+  const targetPath = `${targetUrl.pathname}${targetUrl.search}`;
+
+  if (targetPath === currentPath && targetUrl.hash) {
+    return false;
+  }
+
+  return targetUrl.href !== window.location.href;
+};
+
 window.addEventListener('error', (event) => {
   const errorMessage = event.error?.message || '';
   const isExtension = isExtensionErrorEvent(event);
@@ -176,6 +209,20 @@ window.addEventListener('unhandledrejection', (event) => {
     }
   } catch {}
 });
+
+if (typeof document !== 'undefined') {
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (!isPrimaryNavigationClick(event)) return;
+      const anchor = event.target?.closest?.('a[href]');
+      if (!anchor || !shouldUseDocumentNavigation(anchor)) return;
+      event.preventDefault();
+      window.location.assign(anchor.href);
+    },
+    true,
+  );
+}
 
 // Note: SPA deep-link redirect is handled by 404.html -> index.html
 // and restoration logic in index.html. No additional handler here.

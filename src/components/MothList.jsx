@@ -848,27 +848,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const listTopRef = useRef(null);
   const resizeInitializedRef = useRef(false);
 
-  const getStickyHeaderOffset = useCallback(() => {
-    if (typeof window === 'undefined') return 0;
-    const style = getComputedStyle(document.documentElement);
-    const stickyRaw = style.getPropertyValue('--app-sticky-header-height');
-    const mainRaw = style.getPropertyValue('--app-main-header-height');
-    const sticky = parseInt(stickyRaw, 10);
-    const main = parseInt(mainRaw, 10);
-    const total = (Number.isFinite(main) ? main : 0) + (Number.isFinite(sticky) ? sticky : 0);
-    if (total > 0) return total + 12;
-    return 80;
-  }, []);
-
-  const scrollToListTop = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    const el = listTopRef.current;
-    if (!el) return;
-    const offset = getStickyHeaderOffset();
-    const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-  }, [getStickyHeaderOffset]);
-
   // Scroll restoration is handled centrally by InsectsHostPlantExplorer
 
   // Sync search term with classification filter and clear when filter removed
@@ -1314,8 +1293,18 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [sortedMoths, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
-    setIPage(page);
-    scrollToListTop();
+    if (typeof window === 'undefined') {
+      setIPage(page);
+      return;
+    }
+    const nextUrl = new URL(window.location.href);
+    const nextPage = parseInt(page, 10);
+    if (Number.isFinite(nextPage) && nextPage > 1) {
+      nextUrl.searchParams.set('ipage', String(nextPage));
+    } else {
+      nextUrl.searchParams.delete('ipage');
+    }
+    window.location.assign(nextUrl.toString());
   };
 
   // Add rel=prev/next for crawlers (hint)

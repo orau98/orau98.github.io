@@ -507,27 +507,6 @@ const HostPlantList = ({
     setSearchParams(next, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const getStickyHeaderOffset = useCallback(() => {
-    if (typeof window === "undefined") return 0;
-    const style = getComputedStyle(document.documentElement);
-    const stickyRaw = style.getPropertyValue("--app-sticky-header-height");
-    const mainRaw = style.getPropertyValue("--app-main-header-height");
-    const sticky = parseInt(stickyRaw, 10);
-    const main = parseInt(mainRaw, 10);
-    const total = (Number.isFinite(main) ? main : 0) + (Number.isFinite(sticky) ? sticky : 0);
-    if (total > 0) return total + 12;
-    return 80;
-  }, []);
-
-  const scrollToListTop = useCallback(() => {
-    if (typeof window === "undefined") return;
-    const el = listTopRef.current;
-    if (!el) return;
-    const offset = getStickyHeaderOffset();
-    const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
-    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-  }, [getStickyHeaderOffset]);
-
   const currentPage = useMemo(() => {
     const raw = searchParams.get('ppage');
     const n = parseInt(raw || '', 10);
@@ -1042,8 +1021,18 @@ const HostPlantList = ({
   }, [filteredHostPlants, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
-    setPPage(page);
-    scrollToListTop();
+    if (typeof window === "undefined") {
+      setPPage(page);
+      return;
+    }
+    const nextUrl = new URL(window.location.href);
+    const nextPage = parseInt(page, 10);
+    if (Number.isFinite(nextPage) && nextPage > 1) {
+      nextUrl.searchParams.set("ppage", String(nextPage));
+    } else {
+      nextUrl.searchParams.delete("ppage");
+    }
+    window.location.assign(nextUrl.toString());
   };
 
   React.useEffect(() => {
