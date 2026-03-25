@@ -1,5 +1,29 @@
 import { isEnglishLocale } from '../utils/locale';
 
+const shouldPreserveNativeNavigation = (event) =>
+  event.defaultPrevented ||
+  event.button !== 0 ||
+  event.metaKey ||
+  event.ctrlKey ||
+  event.shiftKey ||
+  event.altKey;
+
+const StaticPageLink = ({ href, className, children }) => {
+  const handleClick = (event) => {
+    if (shouldPreserveNativeNavigation(event)) return;
+    event.preventDefault();
+    if (typeof window !== 'undefined') {
+      window.location.assign(href);
+    }
+  };
+
+  return (
+    <a href={href} onClick={handleClick} className={className}>
+      {children}
+    </a>
+  );
+};
+
 const Footer = ({ locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const metaBase = isEnglish ? 'en/meta' : 'meta';
@@ -44,24 +68,24 @@ const Footer = ({ locale = 'ja' }) => {
         </p>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
           {utilityLinks.map((link) => (
-            <a
+            <StaticPageLink
               key={link.href}
               href={link.href}
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               {link.label}
-            </a>
+            </StaticPageLink>
           ))}
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
           {topicLinks.map((link) => (
-            <a
+            <StaticPageLink
               key={link.href}
               href={link.href}
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               {link.label}
-            </a>
+            </StaticPageLink>
           ))}
         </div>
       </div>

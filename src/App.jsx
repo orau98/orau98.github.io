@@ -46,6 +46,16 @@ const getPapa = async () => {
   return cachedPapa;
 };
 
+const STATIC_DOCUMENT_PATHS = new Set(['/sitemap.html']);
+const STATIC_DOCUMENT_PREFIXES = ['/meta/', '/en/meta/', '/topics/'];
+
+const isStaticDocumentPath = (pathname = '') => {
+  const value = String(pathname || '').trim();
+  if (!value) return false;
+  if (STATIC_DOCUMENT_PATHS.has(value)) return true;
+  return STATIC_DOCUMENT_PREFIXES.some((prefix) => value.startsWith(prefix));
+};
+
 function App() {
   const location = useLocation();
   const locale = getLocaleFromPath(location.pathname);
@@ -86,6 +96,7 @@ function App() {
   const cachedVersionRef = useRef(null);
   
   const isExplorerPage = isExplorerRoutePath(location.pathname);
+  const shouldForceDocumentNavigation = isStaticDocumentPath(location.pathname);
 
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
@@ -110,6 +121,20 @@ function App() {
       setRobotsMetaContent(hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS);
     } catch {}
   }, [location.search]);
+
+  useEffect(() => {
+    if (!shouldForceDocumentNavigation || typeof window === 'undefined') return undefined;
+    const target = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const timerId = window.setTimeout(() => {
+      window.location.replace(target);
+    }, 0);
+    return () => window.clearTimeout(timerId);
+  }, [
+    shouldForceDocumentNavigation,
+    location.hash,
+    location.pathname,
+    location.search,
+  ]);
 
   useEffect(() => {
     try {
@@ -6280,6 +6305,32 @@ function App() {
       element: <NotFoundPage locale={locale} />,
     },
   ];
+
+  if (shouldForceDocumentNavigation) {
+    return (
+      <div className={theme === 'dark' ? 'dark' : ''}>
+        <LoadingBar isLoading={true} />
+        <main
+          id="main-content"
+          role="main"
+          className="min-h-[40vh] px-4 py-16 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto max-w-2xl rounded-3xl border border-slate-200/80 bg-white/85 px-6 py-8 text-center shadow-lg backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/80">
+            <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+              {isEnglish
+                ? 'Opening the requested page...'
+                : 'ページを開いています...'}
+            </p>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              {isEnglish
+                ? 'Switching from the app view to the standalone page.'
+                : 'アプリ画面から個別ページへ切り替えています。'}
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
   
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
