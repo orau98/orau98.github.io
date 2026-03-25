@@ -17,11 +17,12 @@ const SUSPICIOUS_PLANT_NAME_SET = new Set([
 ]);
 
 const SUSPICIOUS_PLANT_NAME_PATTERNS = [
-  /^[,、]/,
+  /^[,、，]/,
   /^の/,
   /^(および|およぴ|と)/,
   /^(であり|であるが|には少ない|に多く|これらの植物と混生していれば|の一種)$/,
   /菌類に侵された|枯れ(?:葉|木|枝|菜)|朽ち木|樹皮下|樹皮|材部|被害果|落ち葉/,
+  /[(（][^)）]*$/,   // 閉じ括弧のない括弧を含む（例：「Spiraea nipponica(本州」）
 ];
 
 export function normalizePlantNameLite(plantName) {

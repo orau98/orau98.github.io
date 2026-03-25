@@ -276,7 +276,8 @@ function isValidPlantName(plantName) {
     /^記録[）)]?$/,    // 「記録」「記録）」
     /^が記録[）)]?$/,  // 「が記録」「が記録）」
     /^\)[^(]*$/,       // 「）」で始まる（括弧の後半のみ）
-    /^[（(][^）)]*$/   // 「（」で始まり「）」で終わらない（括弧の前半のみ）
+    /^[,、，]/,        // カンマ・読点で始まる（例：「,コウマゴヤシ」）
+    /[(（][^)）]*$/,   // 閉じ括弧のない括弧を含む（例：「Spiraea nipponica(本州」）
   ];
   
   for (const pattern of invalidPatterns) {
@@ -394,7 +395,10 @@ function normalizePlantName(plantName) {
   
   // 全角スペースを半角スペースに統一
   let normalized = plantName.replace(/　/g, ' ');
-  
+
+  // 先頭のカンマ・読点を除去（例：「,コウマゴヤシ」→「コウマゴヤシ」）
+  normalized = normalized.replace(/^[,、，]+\s*/, '');
+
   // 全角括弧を半角括弧に統一
   normalized = normalized.replace(/（/g, '(').replace(/）/g, ')');
   
@@ -651,11 +655,16 @@ function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles })
   const insectCount = Array.isArray(relatedInsects) ? relatedInsects.length : 0;
   const hasImage = Array.isArray(plantImageFiles) && plantImageFiles.length > 0;
 
-  // 1種のみ + 画像なし は薄いページとして noindex
-  if (insectCount <= 1 && !hasImage) {
-    return buildRobotsContent(false);
+  // 関連昆虫が2種以上あればインデックス対象（ロングテールキーワードの機会確保）
+  if (insectCount >= 2) {
+    return buildRobotsContent(true);
   }
-  return buildRobotsContent(true);
+  // 画像がある場合もインデックス対象
+  if (hasImage) {
+    return buildRobotsContent(true);
+  }
+  // 関連昆虫0-1種 + 画像なし は薄いページとして noindex
+  return buildRobotsContent(false);
 }
 
 // 英語メタページ（public/en/meta/）から id→slug および 植物名→slug のマップを構築する

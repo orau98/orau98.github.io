@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
 import {
   buildFlowerVisitPlantDataset,
@@ -233,7 +233,7 @@ async function build() {
   const ylistRows = ylistCsv ? parseCsv(ylistCsv) : [];
 
   // Import converter from app util (ESM)
-  const { convertNormalizedDataToStandardFormat } = await import(path.join(ROOT, 'src', 'utils', 'normalizedDataParser.js'));
+  const { convertNormalizedDataToStandardFormat } = await import(pathToFileURL(path.join(ROOT, 'src', 'utils', 'normalizedDataParser.js')).href);
   const normalized = convertNormalizedDataToStandardFormat(insects, hostplants, notes);
 
   // Slim each record for list/search use

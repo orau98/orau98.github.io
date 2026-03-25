@@ -280,7 +280,8 @@ function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
 function computePlantRobotsContent({ relatedInsects, plantImageFiles }) {
   const insectCount = Array.isArray(relatedInsects) ? relatedInsects.length : 0;
   const hasImage = Array.isArray(plantImageFiles) && plantImageFiles.length > 0;
-  return buildRobotsContent(insectCount > 1 || hasImage);
+  // 関連昆虫2種以上 or 画像あり でインデックス対象
+  return buildRobotsContent(insectCount >= 2 || hasImage);
 }
 
 function buildPlantListItems(hostPlantsArray, plantRecords, plantDetails, aliasToCanonical) {
