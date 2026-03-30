@@ -407,6 +407,9 @@ function normalizePlantName(plantName) {
   
   // 「以上」を削除（例：「(以上クルミ科)」→「(クルミ科)」）
   normalized = normalized.replace(/\(以上([^)]+)\)/g, '($1)');
+
+  // 括弧直後に混入した読点・カンマを除去（例: "ヨモギ(，キク科)"）
+  normalized = normalized.replace(/\(\s*[，,、]+\s*/g, '(');
   
   // 科名の前後のスペースを統一（スペースなしに）
   normalized = normalized.replace(/\s*\(\s*([^)]+科)\s*\)/g, '($1)');
@@ -425,6 +428,17 @@ function normalizePlantName(plantName) {
   normalized = normalized.trim();
   
   return normalized;
+}
+
+function normalizePlantFamilyLabel(value) {
+  if (!value || typeof value !== 'string') return '';
+  return value
+    .replace(/　/g, ' ')
+    .replace(/（/g, '(')
+    .replace(/）/g, ')')
+    .replace(/^[\s,，、]+/g, '')
+    .replace(/[\s,，、]+$/g, '')
+    .trim();
 }
 
 // 備考欄から食草情報を抽出する関数
@@ -665,6 +679,16 @@ function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles })
   }
   // 関連昆虫0-1種 + 画像なし は薄いページとして noindex
   return buildRobotsContent(false);
+}
+
+function isGeneratedMetaPageIndexable(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return false;
+    const html = fs.readFileSync(filePath, 'utf-8');
+    return !/<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+  } catch {
+    return false;
+  }
 }
 
 // 英語メタページ（public/en/meta/）から id→slug および 植物名→slug のマップを構築する
@@ -1477,7 +1501,7 @@ async function generateMetaPages() {
     hostplantsData.forEach(row => {
       const insectId = row.insect_id;
       const plantName = row.plant_name;
-      const plantFamily = row.plant_family || '';
+      const plantFamily = normalizePlantFamilyLabel(row.plant_family || '');
       const observationType = row.observation_type || '野外（国内）';
       const plantPart = row.plant_part || '葉';
       const lifeStage = row.life_stage || '幼虫';
@@ -1977,8 +2001,7 @@ async function generateMetaPages() {
     hostPlantsMap.forEach((_plantInsects, plantName) => {
       if (!isValidPlantName(plantName)) return;
       const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
-      if (!familyMatch) return; // 科名なしはスキップ（科名付きで登録されているはず）
-      const family = familyMatch[2];
+      const family = familyMatch ? familyMatch[2] : '科名未設定';
       if (!plantIndexByFamily[family]) plantIndexByFamily[family] = [];
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
       plantIndexByFamily[family].push({ name: plantName, file: safePlantName });
@@ -2146,7 +2169,16 @@ function generateMetaIndexes(indexData) {
 
     // ---- 植物インデックス ----
     if (sec.dir === 'plant') {
-      const familyData = plantIndexByFamily || {};
+      const familyData = Object.fromEntries(
+        Object.entries(plantIndexByFamily || {})
+          .map(([family, plants]) => [
+            family,
+            plants.filter((plant) =>
+              isGeneratedMetaPageIndexable(path.join(dirPath, `${plant.file}.html`)),
+            ),
+          ])
+          .filter(([, plants]) => plants.length > 0),
+      );
       const sortedFamilies = Object.keys(familyData).sort(jaSort);
       const totalPlants = sortedFamilies.reduce((s, f) => s + familyData[f].length, 0);
       const flatPlants = sortedFamilies.flatMap(f => familyData[f]).slice(0, 100);
@@ -2234,7 +2266,16 @@ ${headerHtml}
     }
 
     // ---- 昆虫インデックス ----
-    const typeData = (insectIndexData && insectIndexData[sec.dir]) || {};
+    const typeData = Object.fromEntries(
+      Object.entries((insectIndexData && insectIndexData[sec.dir]) || {})
+        .map(([family, speciesList]) => [
+          family,
+          speciesList.filter((species) =>
+            isGeneratedMetaPageIndexable(path.join(dirPath, `${species.id}.html`)),
+          ),
+        ])
+        .filter(([, speciesList]) => speciesList.length > 0),
+    );
     const sortedFamilies = Object.keys(typeData).sort(jaSort);
     const totalSpecies = sortedFamilies.reduce((s, f) => s + typeData[f].length, 0);
 
@@ -2243,6 +2284,7 @@ ${headerHtml}
     if (totalSpecies === 0) {
       flatItems = fs.readdirSync(dirPath)
         .filter(f => f.endsWith('.html') && f !== 'index.html')
+        .filter(f => isGeneratedMetaPageIndexable(path.join(dirPath, f)))
         .sort(jaSort)
         .map(f => ({ id: f.replace(/\.html$/i, ''), name: f.replace(/\.html$/i, '') }));
     } else {

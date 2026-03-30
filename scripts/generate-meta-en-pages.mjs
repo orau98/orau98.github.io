@@ -127,6 +127,15 @@ function buildRobotsContent(shouldIndex) {
   return `${shouldIndex ? 'index' : 'noindex'}, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1`;
 }
 
+function isGeneratedMetaPageIndexableByHref(href) {
+  if (!href) return false;
+  const relativePath = decodeURIComponent(String(href).replace(/^\//, ''));
+  const filePath = path.join(__dirname, '../public', relativePath);
+  if (!fs.existsSync(filePath)) return false;
+  const html = fs.readFileSync(filePath, 'utf-8');
+  return !/<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+}
+
 function resolveInsectImageUrl(insect) {
   if (!insect) return '';
   const japaneseName = cleanString(insect.name || insect.japaneseName);
@@ -973,10 +982,18 @@ async function generateEnglishMetaPages() {
       });
     });
 
+  const indexableInsectEntriesByType = new Map();
   SECTION_CONFIGS.forEach((section) => {
-    const indexHtml = buildEnglishSectionIndex(section, insectEntriesByType.get(section.type) || []);
+    const indexableEntries = (insectEntriesByType.get(section.type) || []).filter((entry) =>
+      isGeneratedMetaPageIndexableByHref(entry.href),
+    );
+    indexableInsectEntriesByType.set(section.type, indexableEntries);
+    const indexHtml = buildEnglishSectionIndex(section, indexableEntries);
     fs.writeFileSync(path.join(EN_META_DIR, section.routeSegment, 'index.html'), indexHtml);
   });
+  const indexablePlantEntries = plantEntries.filter((entry) =>
+    isGeneratedMetaPageIndexableByHref(entry.href),
+  );
   const plantSection = {
     routeSegment: 'plant',
     singularLabel: EN_TYPE_LABELS.plant,
@@ -984,17 +1001,17 @@ async function generateEnglishMetaPages() {
   };
   fs.writeFileSync(
     path.join(EN_META_DIR, 'plant', 'index.html'),
-    buildEnglishSectionIndex(plantSection, plantEntries),
+    buildEnglishSectionIndex(plantSection, indexablePlantEntries),
   );
 
   const counts = {
-    moths: insectsByType.moth.length,
-    butterflies: insectsByType.butterfly.length,
-    beetles: insectsByType.beetle.length,
-    longhornbeetles: insectsByType.longhornbeetle.length,
-    leafbeetles: insectsByType.leafbeetle.length,
-    aphids: insectsByType.aphid.length,
-    hostPlants: plantEntries.length,
+    moths: (indexableInsectEntriesByType.get('moth') || []).length,
+    butterflies: (indexableInsectEntriesByType.get('butterfly') || []).length,
+    beetles: (indexableInsectEntriesByType.get('beetle') || []).length,
+    longhornbeetles: (indexableInsectEntriesByType.get('longhornbeetle') || []).length,
+    leafbeetles: (indexableInsectEntriesByType.get('leafbeetle') || []).length,
+    aphids: (indexableInsectEntriesByType.get('aphid') || []).length,
+    hostPlants: indexablePlantEntries.length,
   };
   fs.writeFileSync(path.join(PUBLIC_EN_DIR, 'index.html'), buildEnglishHomePage(counts));
 
