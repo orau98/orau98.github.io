@@ -1,29 +1,5 @@
 User-agent: *
 Allow: /
 
-# Plain-text sitemap fallback for Search Console
-Sitemap: https://orau98.github.io/sitemap.txt
-
-# Compact sitemap for Search Console and fast discovery
-Sitemap: https://orau98.github.io/sitemap-core.xml
-
-# Full sitemap index
+# Primary sitemap index
 Sitemap: https://orau98.github.io/sitemap.xml
-
-# Child sitemaps
-Sitemap: https://orau98.github.io/sitemap-main.xml
-Sitemap: https://orau98.github.io/sitemap-en-main.xml
-Sitemap: https://orau98.github.io/sitemap-moth.xml
-Sitemap: https://orau98.github.io/sitemap-butterfly.xml
-Sitemap: https://orau98.github.io/sitemap-beetle.xml
-Sitemap: https://orau98.github.io/sitemap-longhornbeetle.xml
-Sitemap: https://orau98.github.io/sitemap-leafbeetle.xml
-Sitemap: https://orau98.github.io/sitemap-aphid.xml
-Sitemap: https://orau98.github.io/sitemap-plant.xml
-Sitemap: https://orau98.github.io/sitemap-en-moth.xml
-Sitemap: https://orau98.github.io/sitemap-en-butterfly.xml
-Sitemap: https://orau98.github.io/sitemap-en-beetle.xml
-Sitemap: https://orau98.github.io/sitemap-en-longhornbeetle.xml
-Sitemap: https://orau98.github.io/sitemap-en-leafbeetle.xml
-Sitemap: https://orau98.github.io/sitemap-en-aphid.xml
-Sitemap: https://orau98.github.io/sitemap-en-plant.xml

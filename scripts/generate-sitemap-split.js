@@ -146,22 +146,12 @@ function isNoindexPage(filePath) {
 }
 
 function buildRobotsTxt(baseUrl, sitemapFiles) {
-  const textSitemap = sitemapFiles.find((sitemap) => sitemap.loc.endsWith('/sitemap.txt'));
-  const coreSitemap = sitemapFiles.find((sitemap) => sitemap.loc.endsWith('/sitemap-core.xml'));
-  const childSitemaps = sitemapFiles.filter((sitemap) => sitemap !== coreSitemap && sitemap !== textSitemap);
   const lines = [
     'User-agent: *',
     'Allow: /',
     '',
-    '# Plain-text sitemap fallback for Search Console',
-    ...(textSitemap ? [`Sitemap: ${textSitemap.loc}`, ''] : []),
-    '# Compact sitemap for Search Console and fast discovery',
-    ...(coreSitemap ? [`Sitemap: ${coreSitemap.loc}`, ''] : []),
-    '# Full sitemap index',
+    '# Primary sitemap index',
     `Sitemap: ${baseUrl}/sitemap.xml`,
-    '',
-    '# Child sitemaps',
-    ...childSitemaps.map((sitemap) => `Sitemap: ${sitemap.loc}`),
     '',
   ];
   return lines.join('\n');
