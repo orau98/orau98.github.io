@@ -198,9 +198,12 @@ export const buildPlantMetaPagePath = (
   locale = DEFAULT_LOCALE,
 ) => {
   if (!plantName) return '/';
+  const safePlantName = String(plantName)
+    .replace(/[/\\?%*:|"<>]/g, '-')
+    .trim();
   return localizePath(
     `/meta/${PLANT_SECTION_CONFIG.routeSegment}/${encodeURIComponent(
-      plantName,
+      safePlantName,
     )}.html`,
     locale,
   );

@@ -67,16 +67,35 @@ const getLinkHref = (html, relValue) => {
   return '';
 };
 
+const getMetaHttpEquivContent = (html, httpEquivValue) => {
+  const targetEquiv = String(httpEquivValue || '').toLowerCase();
+  for (const tag of getTags(html, 'meta')) {
+    const attrs = parseAttributes(tag);
+    if (String(attrs['http-equiv'] || '').toLowerCase() === targetEquiv) {
+      return String(attrs.content || '').trim();
+    }
+  }
+  return '';
+};
+
 const getJsonLdCount = (html) =>
   (html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>/gi) || []).length;
 
-const resolveCanonicalToDistPath = (href) => {
-  if (!href) return null;
-  let url;
-  try {
-    url = new URL(href);
-  } catch {
-    return null;
+const resolveSitePathToDistPath = (hrefOrPath) => {
+  if (!hrefOrPath) return null;
+  let url = null;
+  if (/^https?:\/\//i.test(hrefOrPath)) {
+    try {
+      url = new URL(hrefOrPath);
+    } catch {
+      return null;
+    }
+  } else {
+    try {
+      url = new URL(String(hrefOrPath).startsWith('/') ? hrefOrPath : `/${hrefOrPath}`, SITE_ORIGIN);
+    } catch {
+      return null;
+    }
   }
   if (url.origin !== SITE_ORIGIN) return null;
   const pathname = url.pathname || '/';
@@ -89,6 +108,8 @@ const resolveCanonicalToDistPath = (href) => {
     .map((segment) => decodeURIComponent(segment));
   return path.join(DIST_DIR, ...decodedSegments);
 };
+
+const resolveCanonicalToDistPath = (href) => resolveSitePathToDistPath(href);
 
 const validateHtml = (filePath, html, options = {}) => {
   const relativePath = path.relative(ROOT, filePath);
@@ -122,6 +143,64 @@ const validateHtml = (filePath, html, options = {}) => {
   const canonicalTarget = resolveCanonicalToDistPath(canonical);
   if (canonicalTarget) {
     ensure(fs.existsSync(canonicalTarget), `${relativePath}: canonical target not found -> ${canonical}`);
+  }
+};
+
+const validateLegacyRedirectHtml = (filePath, html) => {
+  const relativePath = path.relative(ROOT, filePath);
+  const robots = getMetaContent(html, 'name', 'robots');
+  const canonical = getLinkHref(html, 'canonical');
+  const refreshContent = getMetaHttpEquivContent(html, 'refresh');
+
+  ensure(robots.includes('noindex'), `${relativePath}: legacy redirect must be noindex`);
+  ensure(canonical.length > 0, `${relativePath}: missing canonical link`);
+  ensure(
+    canonical.startsWith(SITE_ORIGIN),
+    `${relativePath}: canonical must use ${SITE_ORIGIN}`,
+  );
+  ensure(refreshContent.length > 0, `${relativePath}: missing meta refresh`);
+
+  const refreshMatch = refreshContent.match(/url\s*=\s*(.+)$/i);
+  ensure(Boolean(refreshMatch), `${relativePath}: invalid meta refresh content`);
+  if (refreshMatch) {
+    const refreshTarget = refreshMatch[1].trim().replace(/^['"]|['"]$/g, '');
+    ensure(
+      refreshTarget === canonical,
+      `${relativePath}: meta refresh target mismatch -> ${refreshTarget}`,
+    );
+  }
+
+  const canonicalTarget = resolveCanonicalToDistPath(canonical);
+  if (canonicalTarget) {
+    ensure(fs.existsSync(canonicalTarget), `${relativePath}: canonical target not found -> ${canonical}`);
+  }
+};
+
+const validateSeoRouteMap = (filePath) => {
+  const relativePath = path.relative(ROOT, filePath);
+  ensure(fs.existsSync(filePath), `${relativePath}: route map not found`);
+  if (!fs.existsSync(filePath)) return;
+
+  let payload = null;
+  try {
+    payload = JSON.parse(readFile(filePath));
+  } catch (error) {
+    ensure(false, `${relativePath}: invalid JSON (${error.message})`);
+    return;
+  }
+
+  ensure(payload && typeof payload === 'object' && !Array.isArray(payload), `${relativePath}: route map must be an object`);
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return;
+
+  const entries = Object.entries(payload);
+  ensure(entries.length > 0, `${relativePath}: route map is empty`);
+  for (const [key, href] of entries) {
+    ensure(typeof href === 'string' && href.startsWith('/en/meta/'), `${relativePath}: invalid href for ${key}`);
+    const distPath = resolveSitePathToDistPath(href);
+    ensure(Boolean(distPath), `${relativePath}: unresolved href for ${key}`);
+    if (distPath) {
+      ensure(fs.existsSync(distPath), `${relativePath}: target not found for ${key} -> ${href}`);
+    }
   }
 };
 
@@ -160,6 +239,41 @@ if (fs.existsSync(englishMetaDir)) {
   }
 }
 
+const legacyRouteDirs = [
+  'moth',
+  'butterfly',
+  'beetle',
+  'longhornbeetle',
+  'leafbeetle',
+  'aphid',
+  'plant',
+  'en/moth',
+  'en/butterfly',
+  'en/beetle',
+  'en/longhornbeetle',
+  'en/leafbeetle',
+  'en/aphid',
+  'en/plant',
+];
+
+let legacyRedirectFilesCount = 0;
+for (const relativeDir of legacyRouteDirs) {
+  const dirPath = path.join(DIST_DIR, relativeDir);
+  ensure(fs.existsSync(dirPath), `dist/${relativeDir} redirect directory not found`);
+  if (!fs.existsSync(dirPath)) continue;
+  const redirectFiles = collectHtmlFiles(dirPath).filter(
+    (filePath) => path.basename(filePath) === 'index.html',
+  );
+  ensure(redirectFiles.length > 0, `dist/${relativeDir} redirect pages not found`);
+  legacyRedirectFilesCount += redirectFiles.length;
+  for (const filePath of redirectFiles) {
+    validateLegacyRedirectHtml(filePath, readFile(filePath));
+  }
+}
+
+validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.insects.json'));
+validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.plants.json'));
+
 if (failures.length > 0) {
   console.error(`[audit-seo] failed with ${failures.length} issue(s)`);
   failures.slice(0, 100).forEach((message) => console.error(`- ${message}`));
@@ -173,5 +287,6 @@ const checkedCount =
   1 +
   (fs.existsSync(englishRootIndexPath) ? 1 : 0) +
   metaFiles.length +
-  englishMetaFiles.length;
+  englishMetaFiles.length +
+  legacyRedirectFilesCount;
 console.log(`[audit-seo] ok: checked ${checkedCount} HTML files`);

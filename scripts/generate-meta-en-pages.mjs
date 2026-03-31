@@ -32,6 +32,9 @@ const EN_META_DIR = path.join(PUBLIC_EN_DIR, 'meta');
 const EN_META_STYLE_PATH = '/assets/meta-styles.css?v=3';
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const PLANT_IMAGES_DIR = path.join(__dirname, '../public/images/plants');
+const PUBLIC_DIR = path.join(__dirname, '../public');
+const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.json');
+const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
 
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
   ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.jpg$/i))
@@ -72,6 +75,29 @@ function escapeAttr(value = '') {
   return escapeHtml(value);
 }
 
+function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '' }) {
+  const safeTitle = escapeAttr(title || EN_SITE_NAME);
+  const safeTargetUrl = escapeAttr(targetUrl);
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>${safeTitle}</title>
+  <link rel="canonical" href="${safeTargetUrl}">
+  <meta http-equiv="refresh" content="0;url=${safeTargetUrl}">
+  <script>window.location.replace(${JSON.stringify(targetUrl)});</script>
+</head>
+<body>
+  <main>
+    <p>Opening the canonical page...</p>
+    <p>If you are not redirected automatically, open the canonical page. <a href="${safeTargetUrl}">${safeTargetUrl}</a></p>
+  </main>
+</body>
+</html>`;
+}
+
 function renderJsonLd(data) {
   return JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
 }
@@ -109,6 +135,10 @@ function ensureDir(dirPath) {
 
 function createSafeFileName(value = '') {
   return String(value || '').replace(/[/\\?%*:|"<>]/g, '-').trim();
+}
+
+function writeJson(filePath, payload) {
+  fs.writeFileSync(filePath, `${JSON.stringify(payload, null, 2)}\n`);
 }
 
 function buildAlternateLanguageLinks(jaPath, enPath) {
@@ -905,6 +935,24 @@ async function generateEnglishMetaPages() {
   const insectEntriesById = new Map();
   const insectObjectsByJapaneseName = new Map();
   const usedInsectSlugsByType = new Map(Object.keys(insectsByType).map((type) => [type, new Set()]));
+  const englishInsectRouteMap = {};
+  const englishPlantRouteMap = {};
+  const legacyRedirects = new Map();
+  let legacyRedirectConflicts = 0;
+  let legacyRedirectWriteSkips = 0;
+  const queueLegacyRedirect = (routePath, targetPath, title) => {
+    if (!routePath || !targetPath) return;
+    const normalizedRoutePath = String(routePath).replace(/\/{2,}/g, '/');
+    const targetUrl = targetPath.startsWith('http') ? targetPath : `${BASE_ORIGIN}${targetPath}`;
+    const existing = legacyRedirects.get(normalizedRoutePath);
+    if (existing && existing.targetUrl !== targetUrl) {
+      legacyRedirectConflicts++;
+      return;
+    }
+    if (!existing) {
+      legacyRedirects.set(normalizedRoutePath, { targetUrl, title });
+    }
+  };
 
   Object.entries(insectsByType).forEach(([type, insects]) => {
     const section = SECTION_CONFIGS.find((entry) => entry.type === type);
@@ -939,12 +987,18 @@ async function generateEnglishMetaPages() {
       };
       insectEntriesByType.get(type).push(entry);
       insectEntriesById.set(insect.id, entry);
+      englishInsectRouteMap[insect.id] = entry.href;
       const japaneseName = cleanString(insect.name || insect.japaneseName);
       if (japaneseName) {
         if (!insectObjectsByJapaneseName.has(japaneseName)) {
           insectObjectsByJapaneseName.set(japaneseName, []);
         }
         insectObjectsByJapaneseName.get(japaneseName).push({ ...insect, type });
+        queueLegacyRedirect(
+          `/en/${type}/${encodeURIComponent(japaneseName)}/index.html`,
+          `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
+          `${entry.primaryName} | ${section.singularLabel} profile from Japan`,
+        );
       }
     });
   });
@@ -980,6 +1034,12 @@ async function generateEnglishMetaPages() {
         scientificName: display.scientificName,
         japaneseReference: display.japaneseReference,
       });
+      englishPlantRouteMap[plantRecord.canonicalName] = plantRecord.href;
+      queueLegacyRedirect(
+        `/en/plant/${encodeURIComponent(plantRecord.canonicalName)}/index.html`,
+        plantRecord.href,
+        `${display.primaryName} | Plant profile from Japan`,
+      );
     });
 
   const indexableInsectEntriesByType = new Map();
@@ -1003,6 +1063,24 @@ async function generateEnglishMetaPages() {
     path.join(EN_META_DIR, 'plant', 'index.html'),
     buildEnglishSectionIndex(plantSection, indexablePlantEntries),
   );
+  legacyRedirects.forEach(({ targetUrl, title }, routePath) => {
+    const outputPath = path.join(PUBLIC_DIR, ...routePath.replace(/^\//, '').split('/'));
+    try {
+      ensureDir(path.dirname(outputPath));
+      fs.writeFileSync(outputPath, buildLegacyRedirectHtml({ title, targetUrl }));
+    } catch (error) {
+      legacyRedirectWriteSkips++;
+      console.warn(`[meta-en] legacy redirect skipped: ${routePath} (${error.code || error.message})`);
+    }
+  });
+  writeJson(
+    SEO_ROUTE_MAP_INSECTS_PATH,
+    Object.fromEntries(Object.entries(englishInsectRouteMap).sort(([a], [b]) => a.localeCompare(b))),
+  );
+  writeJson(
+    SEO_ROUTE_MAP_PLANTS_PATH,
+    Object.fromEntries(Object.entries(englishPlantRouteMap).sort(([a], [b]) => a.localeCompare(b, 'ja'))),
+  );
 
   const counts = {
     moths: (indexableInsectEntriesByType.get('moth') || []).length,
@@ -1023,6 +1101,13 @@ async function generateEnglishMetaPages() {
   console.log(`[meta-en] leaf beetles: ${counts.leafbeetles}`);
   console.log(`[meta-en] aphids: ${counts.aphids}`);
   console.log(`[meta-en] plants: ${counts.hostPlants}`);
+  console.log(`[meta-en] legacy redirects: ${legacyRedirects.size}`);
+  if (legacyRedirectConflicts > 0) {
+    console.warn(`[meta-en] skipped conflicting legacy redirects: ${legacyRedirectConflicts}`);
+  }
+  if (legacyRedirectWriteSkips > 0) {
+    console.warn(`[meta-en] skipped writing legacy redirects: ${legacyRedirectWriteSkips}`);
+  }
 }
 
 generateEnglishMetaPages().catch((error) => {

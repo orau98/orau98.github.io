@@ -8,6 +8,7 @@ import { getReferenceMetaList } from './utils/sourceLinks';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
+import useSeoRouteMap from './hooks/useSeoRouteMap';
 import {
   EN_SITE_NAME,
   buildLocalizedTaxonomyChip,
@@ -71,6 +72,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
   const isEnglish = isEnglishLocale(locale);
+  const englishInsectRouteMap = useSeoRouteMap('insects');
 
   const isDevelopment = typeof import.meta !== 'undefined' && import.meta.env && !!import.meta.env.DEV;
   const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
@@ -635,10 +637,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     scientificName: moth?.classification?.tribe,
   });
   const canonicalHref = moth
-    ? (isEnglish
-      ? absUrl(localizePath(location.pathname || buildInsectPath(moth, locale), locale))
-      : absUrl(buildInsectMetaPagePath(moth.type, moth.id, routeType || 'moth')))
+    ? absUrl(
+      isEnglish
+        ? (
+          englishInsectRouteMap[moth.id] ||
+          localizePath(location.pathname || buildInsectPath(moth, locale), locale)
+        )
+        : buildInsectMetaPagePath(moth.type, moth.id, routeType || 'moth')
+    )
     : undefined;
+  const alternateJaHref = moth
+    ? absUrl(buildInsectMetaPagePath(moth.type, moth.id, routeType || 'moth', 'ja'))
+    : absUrl(localizePath(location.pathname, 'ja'));
+  const alternateEnHref = moth
+    ? absUrl(
+      englishInsectRouteMap[moth.id] ||
+      localizePath(location.pathname, 'en')
+    )
+    : absUrl(localizePath(location.pathname, 'en'));
   const pageTitle = moth
     ? (isEnglish
       ? `${primaryName} | ${insectTypeLabel} profile from Japan`
@@ -654,8 +670,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       ? 'Detailed profile for an insect recorded in Japan.'
       : '昆虫の詳細情報。';
   const shareUrl =
-    (typeof window !== 'undefined' && window.location?.href) ||
     canonicalHref ||
+    (typeof window !== 'undefined' && window.location?.href) ||
     '';
   const shareTitle = moth
     ? (isEnglish ? primaryName : `${displayName || moth.name}（${moth.scientificName}）`)
@@ -756,9 +772,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     htmlLang: locale,
     siteName: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑',
     alternates: [
-      { hreflang: 'ja', href: absUrl(localizePath(location.pathname, 'ja')) },
-      { hreflang: 'en', href: absUrl(localizePath(location.pathname, 'en')) },
-      { hreflang: 'x-default', href: absUrl(localizePath(location.pathname, 'en')) },
+      { hreflang: 'ja', href: alternateJaHref },
+      { hreflang: 'en', href: alternateEnHref },
+      { hreflang: 'x-default', href: alternateEnHref },
     ],
     breadcrumbItems: moth ? [
       { name: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑', url: absUrl(localizePath('/', locale)) },

@@ -5,6 +5,7 @@ import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
+import useSeoRouteMap from './hooks/useSeoRouteMap';
 import {
   EN_SITE_NAME,
   buildLocalizedTaxonomyChip,
@@ -34,7 +35,7 @@ import {
   NOINDEX_FOLLOW_ROBOTS,
   setRobotsMetaContent,
 } from './utils/robotsMeta';
-import { buildPlantPath } from './utils/siteTaxonomy';
+import { buildPlantMetaPagePath, buildPlantPath } from './utils/siteTaxonomy';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -629,6 +630,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
 
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
+  const englishPlantRouteMap = useSeoRouteMap('plants');
   const { plantName } = useParams();
   const rawDecodedPlantName = decodeURIComponent(plantName);
   const sanitizePlantParam = (s) => {
@@ -815,12 +817,27 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       ? `${primaryPlantName}. ${japaneseReference || 'Japanese names are shown only as local references.'} Review the related insects, photos, and network links for this plant.`
       : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
   const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
-  const canonicalHref = isEnglish
-    ? absUrl(localizePath(location.pathname || buildPlantPath(canonicalPlantName, locale), locale))
-    : absUrl(`/meta/plant/${encodeURIComponent(canonicalPlantName)}.html`);
+  const plantMetaPath = buildPlantMetaPagePath(canonicalPlantName, 'ja');
+  const englishPlantMetaPath =
+    !isFamily && !isOrder && !isGenus && canonicalPlantName
+      ? englishPlantRouteMap[canonicalPlantName]
+      : null;
+  const canonicalHref = absUrl(
+    isEnglish
+      ? (
+        englishPlantMetaPath ||
+        localizePath(location.pathname || buildPlantPath(canonicalPlantName, locale), locale)
+      )
+      : plantMetaPath
+  );
+  const alternateJaHref = absUrl(plantMetaPath);
+  const alternateEnHref = absUrl(
+    englishPlantMetaPath ||
+    localizePath(location.pathname, 'en')
+  );
   const shareUrl =
-    (typeof window !== 'undefined' && window.location?.href) ||
     canonicalHref ||
+    (typeof window !== 'undefined' && window.location?.href) ||
     '';
   const shareText = isEnglish
     ? `${primaryPlantName} | ${EN_SITE_NAME}`
@@ -889,9 +906,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     htmlLang: locale,
     siteName: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑',
     alternates: [
-      { hreflang: 'ja', href: absUrl(localizePath(location.pathname, 'ja')) },
-      { hreflang: 'en', href: absUrl(localizePath(location.pathname, 'en')) },
-      { hreflang: 'x-default', href: absUrl(localizePath(location.pathname, 'en')) },
+      { hreflang: 'ja', href: alternateJaHref },
+      { hreflang: 'en', href: alternateEnHref },
+      { hreflang: 'x-default', href: alternateEnHref },
     ],
     breadcrumbItems: [
       { name: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑', url: absUrl(localizePath('/', locale)) },
