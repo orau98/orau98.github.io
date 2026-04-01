@@ -150,7 +150,7 @@ function buildRobotsTxt(baseUrl, sitemapFiles) {
     'User-agent: *',
     'Allow: /',
     '',
-    '# Primary sitemap index',
+    '# Primary sitemap',
     `Sitemap: ${baseUrl}/sitemap.xml`,
     '',
   ];
@@ -473,6 +473,15 @@ function generateSplitSitemaps() {
       lastmod: newestLastmod,
     };
   };
+
+  const dedupeUrls = (urls) => {
+    const unique = new Map();
+    urls.forEach((entry) => {
+      if (!entry?.loc) return;
+      if (!unique.has(entry.loc)) unique.set(entry.loc, entry);
+    });
+    return Array.from(unique.values());
+  };
   
   // 各サイトマップファイルを生成
   const sitemapFiles = [];
@@ -502,44 +511,49 @@ function generateSplitSitemaps() {
     }
   });
 
-  const coreUrlMap = new Map();
-  [...sitemaps.main, ...sitemaps['en-main']].forEach((entry) => {
-    if (!entry?.loc) return;
-    if (!coreUrlMap.has(entry.loc)) coreUrlMap.set(entry.loc, entry);
-  });
-  const coreUrls = Array.from(coreUrlMap.values());
-  const textSitemapFile = generateTextSitemapFile('sitemap.txt', coreUrls);
+  const coreUrls = dedupeUrls([...sitemaps.main, ...sitemaps['en-main']]);
+  const allUrls = dedupeUrls(Object.values(sitemaps).flat());
+
+  const textSitemapFile = generateTextSitemapFile('sitemap.txt', allUrls);
   if (textSitemapFile) {
     supplementalSitemapFiles.push(textSitemapFile);
-    console.log(`sitemap.txt 生成完了: ${coreUrlMap.size} URLs`);
+    console.log(`sitemap.txt 生成完了: ${allUrls.length} URLs`);
   }
   const coreSitemapFile = generateSitemapFile('sitemap-core.xml', coreUrls);
   if (coreSitemapFile) {
     sitemapFiles.unshift(coreSitemapFile);
-    console.log(`sitemap-core.xml 生成完了: ${coreUrlMap.size} URLs`);
+    console.log(`sitemap-core.xml 生成完了: ${coreUrls.length} URLs`);
   }
-  
-  // サイトマップインデックスを生成
+
+  const rootSitemapXml = generateXML(allUrls);
+  const rootSitemapPath = path.join(__dirname, '../public/sitemap.xml');
+  fs.writeFileSync(rootSitemapPath, rootSitemapXml, 'utf-8');
+
+  const distPath = path.join(__dirname, '../dist');
+  if (fs.existsSync(distPath)) {
+    const distRootSitemapPath = path.join(distPath, 'sitemap.xml');
+    fs.writeFileSync(distRootSitemapPath, rootSitemapXml, 'utf-8');
+  }
+
+  // 分割サイトマップインデックスを生成
   let indexXml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   indexXml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-  
+
   sitemapFiles.forEach(sitemap => {
     indexXml += '  <sitemap>\n';
     indexXml += `    <loc>${escapeXml(sitemap.loc)}</loc>\n`;
     indexXml += `    <lastmod>${escapeXml(sitemap.lastmod)}</lastmod>\n`;
     indexXml += '  </sitemap>\n';
   });
-  
+
   indexXml += '</sitemapindex>';
-  
-  // サイトマップインデックスを保存（sitemap.xmlとして）
-  const indexPath = path.join(__dirname, '../public/sitemap.xml');
+
+  // 分割サイトマップインデックスを保存
+  const indexPath = path.join(__dirname, '../public/sitemap-index.xml');
   fs.writeFileSync(indexPath, indexXml, 'utf-8');
 
-  // distディレクトリにもコピー
-  const distPath = path.join(__dirname, '../dist');
   if (fs.existsSync(distPath)) {
-    const distIndexPath = path.join(distPath, 'sitemap.xml');
+    const distIndexPath = path.join(distPath, 'sitemap-index.xml');
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
   }
 
@@ -551,8 +565,10 @@ function generateSplitSitemaps() {
     fs.writeFileSync(distRobotsPath, robotsTxt, 'utf-8');
   }
 
-  console.log('\nサイトマップインデックス生成完了');
+  console.log('\nルートサイトマップ生成完了');
+  console.log(`  - ${baseUrl}/sitemap.xml (${allUrls.length} URLs)`);
   console.log('分割サイトマップ:');
+  console.log(`  - ${baseUrl}/sitemap-index.xml`);
   [...supplementalSitemapFiles, ...sitemapFiles].forEach(file => {
     console.log(`  - ${file.loc}`);
   });
