@@ -205,6 +205,7 @@ function generateSplitSitemaps() {
 
   // --- lastmod 差別化のためのデータ読み込み ---
   const today = new Date();
+  const generatedAt = formatDate(today);
   const DATE_RICH    = monthsAgoFirstDay(0, today); // 今月1日: データが豊富
   const DATE_MEDIUM  = monthsAgoFirstDay(1, today); // 先月1日: データが中程度
   const DATE_SPARSE  = monthsAgoFirstDay(3, today); // 3ヶ月前1日: データが少ない
@@ -415,6 +416,7 @@ function generateSplitSitemaps() {
   // XMLを生成する関数
   const generateXML = (urls) => {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += `<!-- generated: ${generatedAt} -->\n`;
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
     urls.forEach(url => {
@@ -537,6 +539,7 @@ function generateSplitSitemaps() {
 
   // 分割サイトマップインデックスを生成
   let indexXml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  indexXml += `<!-- generated: ${generatedAt} -->\n`;
   indexXml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
   sitemapFiles.forEach(sitemap => {
