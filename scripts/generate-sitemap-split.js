@@ -152,6 +152,7 @@ function buildRobotsTxt(baseUrl, sitemapFiles) {
     '',
     '# Primary sitemap',
     `Sitemap: ${baseUrl}/sitemap.xml`,
+    `Sitemap: ${baseUrl}/sitemap-index.xml`,
     '',
   ];
   return lines.join('\n');
@@ -527,7 +528,7 @@ function generateSplitSitemaps() {
     console.log(`sitemap-core.xml 生成完了: ${coreUrls.length} URLs`);
   }
 
-  const rootSitemapXml = generateXML(allUrls);
+  const rootSitemapXml = generateXML(coreUrls);
   const rootSitemapPath = path.join(__dirname, '../public/sitemap.xml');
   fs.writeFileSync(rootSitemapPath, rootSitemapXml, 'utf-8');
 
@@ -569,7 +570,7 @@ function generateSplitSitemaps() {
   }
 
   console.log('\nルートサイトマップ生成完了');
-  console.log(`  - ${baseUrl}/sitemap.xml (${allUrls.length} URLs)`);
+  console.log(`  - ${baseUrl}/sitemap.xml (${coreUrls.length} URLs)`);
   console.log('分割サイトマップ:');
   console.log(`  - ${baseUrl}/sitemap-index.xml`);
   [...supplementalSitemapFiles, ...sitemapFiles].forEach(file => {
