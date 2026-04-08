@@ -150,9 +150,13 @@ function buildRobotsTxt(baseUrl) {
     'User-agent: *',
     'Allow: /',
     '',
-    '# Primary sitemap',
+    '# Search Console canaries',
     `Sitemap: ${baseUrl}/sitemap.xml`,
     `Sitemap: ${baseUrl}/sitemap.txt`,
+    '',
+    '# Full sitemap set for crawlers',
+    `Sitemap: ${baseUrl}/sitemap-index.xml`,
+    `Sitemap: ${baseUrl}/sitemap-all.txt`,
     '',
   ];
   return lines.join('\n');
