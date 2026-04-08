@@ -152,6 +152,7 @@ function buildRobotsTxt(baseUrl) {
     '',
     '# Primary sitemap',
     `Sitemap: ${baseUrl}/sitemap.xml`,
+    `Sitemap: ${baseUrl}/sitemap.txt`,
     '',
   ];
   return lines.join('\n');
@@ -524,10 +525,10 @@ function generateSplitSitemaps() {
   const coreUrls = dedupeUrls([...sitemaps.main, ...sitemaps['en-main']]);
   const allUrls = dedupeUrls(Object.values(sitemaps).flat());
 
-  const textSitemapFile = generateTextSitemapFile('sitemap.txt', allUrls);
-  if (textSitemapFile) {
-    supplementalSitemapFiles.push(textSitemapFile);
-    console.log(`sitemap.txt 生成完了: ${allUrls.length} URLs`);
+  const fullTextSitemapFile = generateTextSitemapFile('sitemap-all.txt', allUrls);
+  if (fullTextSitemapFile) {
+    supplementalSitemapFiles.push(fullTextSitemapFile);
+    console.log(`sitemap-all.txt 生成完了: ${allUrls.length} URLs`);
   }
   const coreSitemapFile = generateSitemapFile('sitemap-core.xml', coreUrls);
   if (coreSitemapFile) {
@@ -548,6 +549,11 @@ function generateSplitSitemaps() {
   if (fs.existsSync(distPath)) {
     const distRootSitemapPath = path.join(distPath, 'sitemap.xml');
     fs.writeFileSync(distRootSitemapPath, rootSitemapXml, 'utf-8');
+  }
+
+  const rootTextSitemapFile = generateTextSitemapFile('sitemap.txt', rootSitemapUrls);
+  if (rootTextSitemapFile) {
+    console.log(`sitemap.txt 生成完了: ${rootSitemapUrls.length} URLs`);
   }
 
   // 分割サイトマップインデックスを生成
