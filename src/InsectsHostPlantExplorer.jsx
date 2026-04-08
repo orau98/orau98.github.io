@@ -1107,6 +1107,111 @@ const InsectsHostPlantExplorer = memo(
       };
     }, [countLabel, counts, isEnglish, locale, strippedPathname]);
 
+    const homeEntrySections = useMemo(() => {
+      const sections = [
+        {
+          key: "indexes",
+          eyebrow: isEnglish ? "Static hubs" : "静的一覧ハブ",
+          title: isEnglish ? "Browse from category indexes" : "カテゴリ一覧から探す",
+          description: isEnglish
+            ? "Open stable category pages first, then drill into species and plants."
+            : "安定した一覧ページから入り、種ページや植物ページへ辿れるようにしています。",
+          links: [
+            {
+              href: localizePath("/meta/moth/index.html", locale),
+              label: isEnglish ? "Moths" : "蛾一覧",
+              description: isEnglish
+                ? `${countLabel(counts.moths)} moth pages`
+                : `${countLabel(counts.moths)}件の蛾ページ`,
+            },
+            {
+              href: localizePath("/meta/butterfly/index.html", locale),
+              label: isEnglish ? "Butterflies" : "蝶一覧",
+              description: isEnglish
+                ? `${countLabel(counts.butterflies)} butterfly pages`
+                : `${countLabel(counts.butterflies)}件の蝶ページ`,
+            },
+            {
+              href: localizePath("/meta/beetle/index.html", locale),
+              label: isEnglish ? "Jewel beetles" : "タマムシ一覧",
+              description: isEnglish
+                ? `${countLabel(counts.beetles)} jewel beetle pages`
+                : `${countLabel(counts.beetles)}件のタマムシページ`,
+            },
+            {
+              href: localizePath("/meta/longhornbeetle/index.html", locale),
+              label: isEnglish ? "Longhorn beetles" : "カミキリムシ一覧",
+              description: isEnglish
+                ? `${countLabel(counts.longhornbeetles)} longhorn beetle pages`
+                : `${countLabel(counts.longhornbeetles)}件のカミキリムシページ`,
+            },
+            {
+              href: localizePath("/meta/leafbeetle/index.html", locale),
+              label: isEnglish ? "Leaf beetles" : "ハムシ一覧",
+              description: isEnglish
+                ? `${countLabel(counts.leafbeetles)} leaf beetle pages`
+                : `${countLabel(counts.leafbeetles)}件のハムシページ`,
+            },
+            {
+              href: localizePath("/meta/aphid/index.html", locale),
+              label: isEnglish ? "Aphids" : "アブラムシ一覧",
+              description: isEnglish
+                ? `${countLabel(counts.aphids)} aphid pages`
+                : `${countLabel(counts.aphids)}件のアブラムシページ`,
+            },
+            {
+              href: localizePath("/meta/plant/index.html", locale),
+              label: isEnglish ? "Plants" : "植物一覧",
+              description: isEnglish
+                ? `${countLabel(counts.hostPlants)} plant pages`
+                : `${countLabel(counts.hostPlants)}件の植物ページ`,
+            },
+            {
+              href: "/sitemap.html",
+              label: isEnglish ? "HTML sitemap" : "HTMLサイトマップ",
+              description: isEnglish
+                ? "Browse the site via static hub pages"
+                : "静的ページの全体入口を開く",
+            },
+          ],
+        },
+      ];
+
+      if (!isEnglish) {
+        sections.push({
+          key: "topics",
+          eyebrow: "特集入口",
+          title: "特集から探す",
+          description:
+            "検索意図が強いテーマページを上位に置き、主要な観察導線へ直接つなぎます。",
+          links: [
+            {
+              href: "/topics/index.html",
+              label: "特集ページ一覧",
+              description: "目的別の入口をまとめて開く",
+            },
+            {
+              href: "/topics/sakura-insects.html",
+              label: "サクラにつく虫",
+              description: "サクラ周辺の虫・幼虫を調べる",
+            },
+            {
+              href: "/topics/kunugi-insects.html",
+              label: "クヌギにつく虫",
+              description: "クヌギと昆虫の関係を見る",
+            },
+            {
+              href: "/topics/garden-tree-caterpillars.html",
+              label: "庭木につく幼虫・蛾",
+              description: "庭木観察から辿る入口",
+            },
+          ],
+        });
+      }
+
+      return sections;
+    }, [countLabel, counts, isEnglish, locale]);
+
     const { setOgTwitterImage } = useSeoMeta({
       title: listSeo.title,
       description: listSeo.description,
@@ -1751,7 +1856,54 @@ const InsectsHostPlantExplorer = memo(
             ui={ui}
           />
 
-          {/* 主要カテゴリ導線セクションは不要のため削除 */}
+          <section
+            aria-label={isEnglish ? "Static entry points" : "静的な入口ページ"}
+            className={`grid gap-4 ${homeEntrySections.length > 1 ? "xl:grid-cols-2" : ""}`}
+          >
+            {homeEntrySections.map((section) => (
+              <div
+                key={section.key}
+                className="rounded-3xl border border-emerald-200/60 bg-white/85 p-5 shadow-lg shadow-emerald-900/5 backdrop-blur-sm dark:border-emerald-800/50 dark:bg-slate-900/75"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">
+                  {section.eyebrow}
+                </p>
+                <h2 className="mt-2 text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+                  {section.title}
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                  {section.description}
+                </p>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {section.links.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      className="group rounded-2xl border border-slate-200 bg-slate-50/90 px-4 py-3 transition hover:-translate-y-0.5 hover:border-emerald-400 hover:bg-white hover:shadow-md dark:border-slate-700 dark:bg-slate-950/60 dark:hover:border-emerald-500 dark:hover:bg-slate-950"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                            {link.label}
+                          </div>
+                          <div className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-400">
+                            {link.description}
+                          </div>
+                        </div>
+                        <span
+                          aria-hidden="true"
+                          className="text-emerald-600 transition group-hover:translate-x-0.5 dark:text-emerald-300"
+                        >
+                          →
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </section>
 
           {/* タブナビゲーション */}
           <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
