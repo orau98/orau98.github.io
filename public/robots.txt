@@ -3,4 +3,3 @@ Allow: /
 
 # Primary sitemap
 Sitemap: https://orau98.github.io/sitemap.xml
-Sitemap: https://orau98.github.io/sitemap-index.xml

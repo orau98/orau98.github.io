@@ -145,14 +145,13 @@ function isNoindexPage(filePath) {
   }
 }
 
-function buildRobotsTxt(baseUrl, sitemapFiles) {
+function buildRobotsTxt(baseUrl) {
   const lines = [
     'User-agent: *',
     'Allow: /',
     '',
     '# Primary sitemap',
     `Sitemap: ${baseUrl}/sitemap.xml`,
-    `Sitemap: ${baseUrl}/sitemap-index.xml`,
     '',
   ];
   return lines.join('\n');
@@ -415,17 +414,25 @@ function generateSplitSitemaps() {
   );
   
   // XMLを生成する関数
-  const generateXML = (urls) => {
+  const generateXML = (urls, options = {}) => {
+    const {
+      includeGeneratedComment = true,
+      includeMetadata = true,
+    } = options;
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += `<!-- generated: ${generatedAt} -->\n`;
+    if (includeGeneratedComment) {
+      xml += `<!-- generated: ${generatedAt} -->\n`;
+    }
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
     urls.forEach(url => {
       xml += '  <url>\n';
       xml += `    <loc>${escapeXml(url.loc)}</loc>\n`;
-      xml += `    <lastmod>${escapeXml(url.lastmod)}</lastmod>\n`;
-      xml += `    <changefreq>${escapeXml(url.changefreq)}</changefreq>\n`;
-      xml += `    <priority>${escapeXml(url.priority)}</priority>\n`;
+      if (includeMetadata) {
+        xml += `    <lastmod>${escapeXml(url.lastmod)}</lastmod>\n`;
+        xml += `    <changefreq>${escapeXml(url.changefreq)}</changefreq>\n`;
+        xml += `    <priority>${escapeXml(url.priority)}</priority>\n`;
+      }
       xml += '  </url>\n';
     });
 
@@ -528,7 +535,10 @@ function generateSplitSitemaps() {
     console.log(`sitemap-core.xml 生成完了: ${coreUrls.length} URLs`);
   }
 
-  const rootSitemapXml = generateXML(coreUrls);
+  const rootSitemapXml = generateXML(coreUrls, {
+    includeGeneratedComment: false,
+    includeMetadata: false,
+  });
   const rootSitemapPath = path.join(__dirname, '../public/sitemap.xml');
   fs.writeFileSync(rootSitemapPath, rootSitemapXml, 'utf-8');
 
@@ -561,7 +571,7 @@ function generateSplitSitemaps() {
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
   }
 
-  const robotsTxt = buildRobotsTxt(baseUrl, [...supplementalSitemapFiles, ...sitemapFiles]);
+  const robotsTxt = buildRobotsTxt(baseUrl);
   const robotsPath = path.join(__dirname, '../public/robots.txt');
   fs.writeFileSync(robotsPath, robotsTxt, 'utf-8');
   if (fs.existsSync(distPath)) {
