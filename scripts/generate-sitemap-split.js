@@ -150,13 +150,7 @@ function buildRobotsTxt(baseUrl) {
     'User-agent: *',
     'Allow: /',
     '',
-    '# Search Console canaries',
     `Sitemap: ${baseUrl}/sitemap.xml`,
-    `Sitemap: ${baseUrl}/sitemap.txt`,
-    '',
-    '# Full sitemap set for crawlers',
-    `Sitemap: ${baseUrl}/sitemap-index.xml`,
-    `Sitemap: ${baseUrl}/sitemap-all.txt`,
     '',
   ];
   return lines.join('\n');
@@ -540,11 +534,11 @@ function generateSplitSitemaps() {
     console.log(`sitemap-core.xml 生成完了: ${coreUrls.length} URLs`);
   }
 
-  const rootSitemapUrls = coreUrls.slice(0, 1);
+  const rootSitemapUrls = allUrls;
 
   const rootSitemapXml = generateXML(rootSitemapUrls, {
     includeGeneratedComment: false,
-    includeMetadata: false,
+    includeMetadata: true,
   });
   const rootSitemapPath = path.join(__dirname, '../public/sitemap.xml');
   fs.writeFileSync(rootSitemapPath, rootSitemapXml, 'utf-8');
