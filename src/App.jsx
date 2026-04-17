@@ -101,6 +101,9 @@ function App() {
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
     try {
+      const isSpa404Fallback =
+        typeof window !== 'undefined' &&
+        (window.__SEO_FORCE_NOINDEX__ === true || location.pathname === '/404.html');
       const params = new URLSearchParams(location.search);
       const hasSearch =
         params.has('q') ||
@@ -118,9 +121,11 @@ function App() {
         params.has('porder') ||
         params.has('pvisit') ||
         params.has('redirect');
-      setRobotsMetaContent(hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS);
+      setRobotsMetaContent(
+        isSpa404Fallback || hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS,
+      );
     } catch {}
-  }, [location.search]);
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     if (!shouldForceDocumentNavigation || typeof window === 'undefined') return undefined;

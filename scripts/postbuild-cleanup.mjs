@@ -40,7 +40,15 @@ const ensureSpa404 = () => {
     const indexPath = path.join('dist', 'index.html');
     const targetPath = path.join('dist', '404.html');
     if (!fs.existsSync(indexPath)) return;
-    fs.copyFileSync(indexPath, targetPath);
+    const indexHtml = fs.readFileSync(indexPath, 'utf8');
+    const noindexMeta = '    <meta name="robots" content="noindex, follow, max-image-preview:none">\n';
+    const fallbackFlag = '    <script>window.__SEO_FORCE_NOINDEX__ = true; window.__IS_SPA_404__ = true;</script>\n';
+    const htmlWithNoindex = indexHtml.replace(
+      /<meta\s+name="robots"\s+content="[^"]*"\s*>/i,
+      noindexMeta.trimEnd(),
+    );
+    const targetHtml = htmlWithNoindex.replace('</head>', `${fallbackFlag}  </head>`);
+    fs.writeFileSync(targetPath, targetHtml, 'utf8');
     console.log('[postbuild] Synced SPA 404.html from index.html (no redirect hop).');
   } catch (error) {
     console.warn('[postbuild] Failed to sync SPA 404:', error?.message || error);

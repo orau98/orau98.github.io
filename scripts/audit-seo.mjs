@@ -204,6 +204,32 @@ const validateSeoRouteMap = (filePath) => {
   }
 };
 
+const validateRobotsTxt = (filePath) => {
+  const relativePath = path.relative(ROOT, filePath);
+  ensure(fs.existsSync(filePath), `${relativePath}: robots.txt not found`);
+  if (!fs.existsSync(filePath)) return;
+
+  const body = readFile(filePath);
+  ensure(
+    body.includes(`Sitemap: ${SITE_ORIGIN}/sitemap.xml`),
+    `${relativePath}: missing sitemap.xml directive`,
+  );
+  ensure(
+    body.includes(`Sitemap: ${SITE_ORIGIN}/sitemap-index.xml`),
+    `${relativePath}: missing sitemap-index.xml directive`,
+  );
+};
+
+const validateSpa404 = (filePath) => {
+  const relativePath = path.relative(ROOT, filePath);
+  ensure(fs.existsSync(filePath), `${relativePath}: 404.html not found`);
+  if (!fs.existsSync(filePath)) return;
+
+  const html = readFile(filePath);
+  const robots = getMetaContent(html, 'name', 'robots');
+  ensure(robots.includes('noindex'), `${relativePath}: 404 fallback must be noindex`);
+};
+
 ensure(fs.existsSync(DIST_DIR), 'dist directory not found. Run npm run build:app first.');
 
 const rootIndexPath = path.join(DIST_DIR, 'index.html');
@@ -216,6 +242,23 @@ if (fs.existsSync(rootIndexPath)) {
 const englishRootIndexPath = path.join(DIST_DIR, 'en', 'index.html');
 if (fs.existsSync(englishRootIndexPath)) {
   validateHtml(englishRootIndexPath, readFile(englishRootIndexPath));
+}
+
+const supportHtmlFiles = [path.join(DIST_DIR, 'sitemap.html')];
+for (const filePath of supportHtmlFiles) {
+  if (fs.existsSync(filePath)) {
+    validateHtml(filePath, readFile(filePath));
+  } else {
+    ensure(false, `${path.relative(ROOT, filePath)} not found`);
+  }
+}
+
+const topicsDir = path.join(DIST_DIR, 'topics');
+const topicFiles = collectHtmlFiles(topicsDir);
+ensure(fs.existsSync(topicsDir), 'dist/topics directory not found');
+ensure(topicFiles.length > 0, 'dist/topics HTML files not found');
+for (const filePath of topicFiles) {
+  validateHtml(filePath, readFile(filePath));
 }
 
 const metaDir = path.join(DIST_DIR, 'meta');
@@ -273,6 +316,9 @@ for (const relativeDir of legacyRouteDirs) {
 
 validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.insects.json'));
 validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.plants.json'));
+validateRobotsTxt(path.join(DIST_DIR, 'robots.txt'));
+ensure(fs.existsSync(path.join(DIST_DIR, 'sitemap-index.xml')), 'dist/sitemap-index.xml not found');
+validateSpa404(path.join(DIST_DIR, '404.html'));
 
 if (failures.length > 0) {
   console.error(`[audit-seo] failed with ${failures.length} issue(s)`);
@@ -286,6 +332,8 @@ if (failures.length > 0) {
 const checkedCount =
   1 +
   (fs.existsSync(englishRootIndexPath) ? 1 : 0) +
+  supportHtmlFiles.filter((filePath) => fs.existsSync(filePath)).length +
+  topicFiles.length +
   metaFiles.length +
   englishMetaFiles.length +
   legacyRedirectFilesCount;

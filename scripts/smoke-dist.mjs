@@ -12,6 +12,7 @@ const REQUIRED_FILES = [
   'ads.txt',
   'sitemap.txt',
   'sitemap.xml',
+  'sitemap-index.xml',
   'sitemap-core.xml',
   'opensearch.xml',
   'sitemap.html',
