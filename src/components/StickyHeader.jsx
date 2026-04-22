@@ -165,11 +165,11 @@ const StickyHeader = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:justify-end">
-            {/* Tabs - Compact (Icon only on mobile, Text on desktop) */}
+            {/* Tabs - Compact */}
             <div className="flex flex-shrink-0 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
               <button
                 onClick={() => handleTabChange('insects')}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-all sm:px-3 ${
+                className={`flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium transition-all sm:gap-1.5 sm:px-3 sm:text-sm ${
                   activeTab === 'insects'
                     ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -182,11 +182,11 @@ const StickyHeader = ({
                   <path d="M445.898,83.886c-74.469,0-160.703,89.859-174.516,111.078c-3.594-4.578-9.109-7.578-15.375-7.578c-6.281,0-11.797,3-15.391,7.578C226.805,173.73,140.57,83.886,66.102,83.886c-76.828,0-70.547,68.984-59.578,112.891c10.969,43.922,56.453,92.516,106.609,94.094c-56.438,25.078-61.141,89.375-43.891,119.156c16.359,28.25,103.266,92.016,167.156-50.296v29.141c0,10.813,8.781,19.593,19.609,19.593c10.813,0,19.594-8.781,19.594-19.593v-29.156c63.891,142.328,150.813,78.562,167.156,50.312c17.25-29.781,12.547-94.078-43.891-119.156c50.172-1.578,95.641-50.172,106.609-94.094C516.445,152.871,522.727,83.886,445.898,83.886z"/>
                   <path d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531C262.492,186.777,267.602,184.246,268.305,179.339z"/>
                 </svg>
-                <span className="hidden sm:inline">{isEnglish ? 'Insects' : '昆虫'}</span>
+                <span>{isEnglish ? 'Insects' : '昆虫'}</span>
               </button>
               <button
                 onClick={() => handleTabChange('plants')}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-all sm:px-3 ${
+                className={`flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium transition-all sm:gap-1.5 sm:px-3 sm:text-sm ${
                   activeTab === 'plants'
                     ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
@@ -197,7 +197,7 @@ const StickyHeader = ({
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 512 512">
                   <path d="M377.478,0.174c-34.179-3.423-37.602,44.438-119.644,78.618c-83.543,34.808-166.39,80.55-167.693,254.14c-0.155,18.807-1.314,51.296-1.513,65.056c-0.276,19.691,0.287,40.872-8.69,51.738c-7.311,8.857-20.176,18.818-32.866,27.531L81.87,512c31.032-24.306,39.834-26.493,46.35-26.35c15.549,0.342,31.33,0.496,47.155-0.762c100.318-7.995,202.137-56.718,253.379-149.714C521.042,167.679,411.657,3.598,377.478,0.174z M368.81,109.802c-6.184,20.817-26.957,51.826-91.925,128.445c-33.517,39.535-72.158,107.672-99.743,168.344c-8.361,18.388-36.432,4.925-26.405-13.473c13.042-19.403,43.08-104.117,86.558-160.968c43.489-56.862,101.411-105.685,110.378-133.801C351.857,79.112,377.048,82.116,368.81,109.802z"/>
                 </svg>
-                <span className="hidden sm:inline">{isEnglish ? 'Plants' : '植物'}</span>
+                <span>{isEnglish ? 'Plants' : '植物'}</span>
               </button>
             </div>
 

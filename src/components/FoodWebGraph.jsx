@@ -2404,7 +2404,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
               <div className="mx-auto flex max-w-[900px] flex-col gap-2">
                 <div className="pointer-events-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2.5 py-2 text-slate-700 dark:text-slate-200">
-                  <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap pb-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     <button
                       type="button"
                       onClick={resetView}
@@ -2437,19 +2437,19 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     >
                       ラベル:{compactLabelModeText}
                     </button>
-                    <label className="shrink-0 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                      関連数
+                    <label className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-200 bg-white/80 px-2 py-1 text-[11px] font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-300">
+                      <span>関連数</span>
+                      <select
+                        value={relatedLimit}
+                        onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                        className="min-w-[3.25rem] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1 text-[11px]"
+                        aria-label="関連数"
+                      >
+                        {RELATED_LIMIT_OPTIONS.map((n) => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </select>
                     </label>
-                    <select
-                      value={relatedLimit}
-                      onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
-                      className="shrink-0 text-[11px] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1"
-                      aria-label="関連数"
-                    >
-                      {RELATED_LIMIT_OPTIONS.map((n) => (
-                        <option key={n} value={n}>{n}</option>
-                      ))}
-                    </select>
                     <button
                       type="button"
                       onClick={() => {
@@ -2469,16 +2469,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                         全固定解除
                       </button>
                     )}
-                    <InfoPopover
-                      title="ネットワーク図の見方"
-                      align="right"
-                      buttonAriaLabel="ネットワーク図の使い方を表示"
-                      buttonClassName="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 text-sm font-semibold hover:bg-white dark:hover:bg-slate-800"
-                      panelClassName="w-[min(22rem,calc(100vw-2rem))]"
-                      buttonContent={<span aria-hidden="true">?</span>}
-                    >
-                      {graphHelpPopoverContent}
-                    </InfoPopover>
+                    <div className="ml-auto flex shrink-0 items-center">
+                      <InfoPopover
+                        title="ネットワーク図の見方"
+                        align="right"
+                        buttonAriaLabel="ネットワーク図の使い方を表示"
+                        buttonClassName="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 text-sm font-semibold hover:bg-white dark:hover:bg-slate-800"
+                        panelClassName="w-[min(22rem,calc(100vw-2rem))]"
+                        buttonContent={<span aria-hidden="true">?</span>}
+                      >
+                        {graphHelpPopoverContent}
+                      </InfoPopover>
+                    </div>
                   </div>
 
                   <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">

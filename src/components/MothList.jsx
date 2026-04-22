@@ -302,7 +302,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           {/* Enhanced Image section - full card width */}
           <div className="w-full relative overflow-hidden rounded-t-[10px] -mx-[2px] -mt-[2px]">
             {hasImageFilename ? (
-              <div className="relative w-full aspect-[4/3]">
+              <div className="relative w-full aspect-[16/10] sm:aspect-[4/3]">
                 {isVisible ? (
                   <ImageWithFallback
                     src={responsiveImage?.src}
@@ -341,7 +341,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             
             {!hasImageFilename && (
 
-              <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex flex-col items-center justify-center p-6">
+              <div className="relative w-full aspect-[16/10] sm:aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex flex-col items-center justify-center p-5 sm:p-6">
                 {/* No image icon at top */}
                 <div className="flex-shrink-0 mb-4">
                   <svg className="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -364,13 +364,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           </div>
           
           {/* Enhanced Content section */}
-          <div className="p-4 flex flex-col flex-grow">
-            <div className="mb-3">
-              <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1 leading-tight">
+          <div className="flex flex-col flex-grow p-3.5 sm:p-4">
+            <div className="mb-2.5 sm:mb-3">
+              <h3 className="mb-1 text-base font-bold leading-tight text-slate-800 dark:text-slate-100 sm:text-lg">
                 {isEnglish ? formatScientificNameReact(primaryName) : moth.name}
               </h3>
               {secondaryName && (
-                <p className={`text-slate-600 dark:text-slate-400 text-sm ${isEnglish ? '' : 'italic'}`}>
+                <p className={`text-[13px] text-slate-600 dark:text-slate-400 sm:text-sm ${isEnglish ? 'line-clamp-1 sm:line-clamp-none' : 'italic line-clamp-1 sm:line-clamp-none'}`}>
                   {isEnglish
                     ? secondaryName
                     : formatScientificNameReact(
@@ -380,9 +380,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               )}
             </div>
 
-            <div className="mt-auto space-y-2">
+            <div className="mt-auto space-y-1.5 sm:space-y-2">
               <div>
-                <div className="space-y-1.5 text-sm">
+                <div className="space-y-1.5 text-[13px] sm:text-sm">
                   {plantDisplay.hostNames.length > 0 && (
                     <div className="flex items-start space-x-2">
                       <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
@@ -390,7 +390,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
                         </svg>
                       </span>
-                      <span className="text-slate-600 dark:text-slate-300 leading-snug">
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
                         {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
                       </span>
                     </div>
@@ -405,7 +405,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       >
                         🌸
                       </span>
-                      <span className="text-slate-600 dark:text-slate-300 leading-snug">
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
                         {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
                       </span>
                     </div>
@@ -441,7 +441,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 
                 if (normalizedTime || hasSupplementalEmergenceHint) {
                   return (
-                    <div className="pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                    <div className="border-t border-slate-100 pt-1.5 dark:border-slate-700/50 sm:pt-2">
                       <EmergenceTimeDisplay 
                         emergenceTime={normalizedTime || ''}
                         source={moth.source}

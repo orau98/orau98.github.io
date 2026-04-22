@@ -122,7 +122,7 @@ const HostPlantListItem = React.memo(
             <div className="w-full relative overflow-hidden rounded-t-[10px] -mx-[2px] -mt-[2px]">
               {imageFilename && !imageError ? (
                 // Actual plant image
-                <div className="relative w-full aspect-[4/3]">
+                <div className="relative w-full aspect-[16/10] sm:aspect-[4/3]">
                   <ImageWithFallback
                     src={responsiveImage?.src}
                     srcSet={responsiveImage?.srcSet}
@@ -144,7 +144,7 @@ const HostPlantListItem = React.memo(
                 </div>
               ) : (
                 // Fallback to beautiful plant icon with better layout
-                <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-700 dark:to-emerald-800 flex flex-col items-center justify-center p-6">
+                <div className="relative w-full aspect-[16/10] sm:aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-700 dark:to-emerald-800 flex flex-col items-center justify-center p-5 sm:p-6">
                   {/* No image icon at top */}
                   <div className="flex-shrink-0 mb-4">
                     <svg
@@ -245,15 +245,15 @@ const HostPlantListItem = React.memo(
             </div>
 
             {/* Enhanced Content section */}
-            <div className="p-4 flex flex-col flex-grow">
-              <div className="mb-3">
-                <h3 className="text-emerald-800 dark:text-emerald-200 font-bold text-lg mb-1 leading-tight tracking-tight">
+            <div className="flex flex-col flex-grow p-3.5 sm:p-4">
+              <div className="mb-2.5 sm:mb-3">
+                <h3 className="mb-1 text-base font-bold leading-tight tracking-tight text-emerald-800 dark:text-emerald-200 sm:text-lg">
                   {isEnglish && detail.scientificName
                     ? formatScientificNameReact(primaryName)
                     : primaryName}
                 </h3>
                 {secondaryName && (
-                  <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-relaxed">
+                  <p className="line-clamp-1 text-[13px] leading-relaxed text-emerald-600 dark:text-emerald-400 sm:line-clamp-none sm:text-sm">
                     {secondaryName}
                   </p>
                 )}
@@ -279,8 +279,8 @@ const HostPlantListItem = React.memo(
                 )}
               </div>
 
-              <div className="mt-auto space-y-2">
-                <div className="flex items-start space-x-2 text-sm">
+              <div className="mt-auto space-y-1.5 sm:space-y-2">
+                <div className="flex items-start space-x-2 text-[13px] sm:text-sm">
                   <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex-shrink-0 mt-0.5">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 512 512">
                       <path d="M243.695,179.339c0.703,4.906,5.813,7.438,7.719,1.406c1.891-6.031-4.828-17.219-22.219-36.531c-14.828-16.484-35.625-39.391-23.844-51.578c14.609-10.078,8.469-27.75-4.172-29.469c-11.313-1.516-21.609,13.578-15.031,38.703C192.711,126.964,241.695,165.292,243.695,179.339z"/>
@@ -288,7 +288,7 @@ const HostPlantListItem = React.memo(
                       <path d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531C262.492,186.777,267.602,184.246,268.305,179.339z"/>
                     </svg>
                   </span>
-                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
+                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 sm:line-clamp-3 leading-snug">
                     {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
                     {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
                   </span>
