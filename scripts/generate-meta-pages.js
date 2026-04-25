@@ -17,6 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
@@ -62,6 +63,102 @@ function escapeRedirectHtml(value = '') {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+const DEFERRED_ADS_SCRIPT = `<script>
+    (function() {
+      var loaded = false;
+      function loadAds() {
+        if (loaded || document.querySelector('script[src*="adsbygoogle.js"]')) return;
+        loaded = true;
+        var script = document.createElement('script');
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
+        document.head.appendChild(script);
+      }
+      function scheduleSoon() {
+        window.setTimeout(loadAds, 1200);
+      }
+      ['scroll', 'pointerdown', 'keydown'].forEach(function(type) {
+        window.addEventListener(type, scheduleSoon, { once: true, passive: true });
+      });
+      window.setTimeout(loadAds, 8000);
+    })();
+  </script>`;
+
+function buildExplorerSearchPath(tab, query) {
+  const params = new URLSearchParams();
+  params.set('tab', tab);
+  if (query) params.set('q', query);
+  return `/?${params.toString()}`;
+}
+
+function buildExplorerRedirectHtml({ lang = 'ja', title, tab, label }) {
+  const targetPath = `/?tab=${encodeURIComponent(tab)}`;
+  const targetUrl = `${BASE_ORIGIN}${targetPath}`;
+  const safeTitle = escapeRedirectHtml(title);
+  const safeLabel = escapeRedirectHtml(label);
+  const openingCopy = lang === 'en'
+    ? `Opening ${safeLabel}...`
+    : `${safeLabel}を開いています...`;
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>${safeTitle}</title>
+  <link rel="canonical" href="${targetUrl}">
+  <meta http-equiv="refresh" content="0;url=${targetUrl}">
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search || '');
+      if (!params.has('tab')) params.set('tab', ${JSON.stringify(tab)});
+      window.location.replace('/?' + params.toString() + (window.location.hash || ''));
+    })();
+  </script>
+</head>
+<body>
+  <main>
+    <p>${openingCopy}</p>
+    <p><a href="${targetPath}">${safeLabel}</a></p>
+  </main>
+</body>
+</html>`;
+}
+
+function writeExplorerRedirect(segment, options) {
+  const routeDir = path.join(__dirname, '../public', segment);
+  ensureDir(routeDir);
+  fs.writeFileSync(path.join(routeDir, 'index.html'), buildExplorerRedirectHtml(options));
+}
+
+function buildPlantPictureHtml(img, altText) {
+  const fileUrl = `/images/plants/${encodeURIComponent(img)}`;
+  const baseName = img.replace(/\.[^/.]+$/, '');
+  const resizedBase = `/images/resized/plants/${encodeURIComponent(baseName)}`;
+  const escapedAlt = escapeRedirectHtml(altText);
+  const escapedFallback = escapeRedirectHtml(fileUrl);
+  const srcSet = (format) => [320, 640, 1024]
+    .map((width) => `${resizedBase}.${width}.${format} ${width}w`)
+    .join(', ');
+
+  return `<picture>
+                  <source type="image/avif" srcset="${srcSet('avif')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
+                  <source type="image/webp" srcset="${srcSet('webp')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
+                  <img
+                    src="${resizedBase}.640.jpg"
+                    srcset="${srcSet('jpg')}"
+                    sizes="(max-width: 640px) calc(100vw - 56px), 280px"
+                    alt="${escapedAlt}"
+                    loading="lazy"
+                    decoding="async"
+                    width="640"
+                    height="480"
+                    onerror="this.onerror=null;this.removeAttribute('srcset');this.src='${escapedFallback}';"
+                  >
+                </picture>`;
 }
 
 function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '' }) {
@@ -957,6 +1054,8 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   }
   // --- description テンプレート生成終わり ---
 
+  const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -965,7 +1064,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   <meta name="robots" content="${robotsContent}">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
+  ${DEFERRED_ADS_SCRIPT}
   <title>${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑</title>
   <meta name="description" content="${insectDescription}">
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
@@ -973,7 +1072,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   ${enAlternatePath ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
   <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
   <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">` : ''}
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+  <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
   <meta property="og:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
@@ -1053,7 +1152,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="/meta/${type}/${insect.id}.html" class="meta-site-header-link">図鑑で見る →</a>
+      <a href="${explorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
     </div>
   </header>
 
@@ -1140,7 +1239,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
     
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
-      <a href="/meta/${type}/${insect.id}.html" class="detail-link">詳細ページへ</a>
+      <a href="${explorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
   </div>
   
@@ -1182,7 +1281,6 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   
   const isAlias = Boolean(originalPlantName && originalPlantName !== displayPlantName);
   const canonicalPlantName = originalPlantName || displayPlantName;
-  const safePlantName = displayPlantName.replace(/[/\\?%*:|"<>]/g, '-');
   const safeCanonicalName = canonicalPlantName.replace(/[/\\?%*:|"<>]/g, '-');
 
   // 植物の別名を取得（データ用の名前で取得）
@@ -1244,6 +1342,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const plantOgDescription = `${displayPlantName}を食草とする昆虫: ${ogInsects}${ogInsectsSuffix}。利用昆虫${relatedInsects.length}種の生態・食草関係。`.replace(/"/g, '');
   // --- 植物ページ description テンプレート生成終わり ---
 
+  const explorerSearchPath = buildExplorerSearchPath('plants', displayPlantName);
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -1252,7 +1352,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="robots" content="${robotsContent}">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
+  ${DEFERRED_ADS_SCRIPT}
   <title>${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
   <meta name="description" content="${plantDescription}">
   <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
@@ -1260,7 +1360,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   ${enSlug ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
   <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/plant/${encodeURIComponent(enSlug)}.html">
   <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">` : ''}
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+  <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
   <meta property="og:title" content="${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用">
@@ -1325,7 +1425,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="/meta/plant/${encodeURIComponent(safeCanonicalName)}.html" class="meta-site-header-link">図鑑で見る →</a>
+      <a href="${explorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
     </div>
   </header>
 
@@ -1381,7 +1481,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
           ${plantImageFiles.map(img => `
             <div class="gallery-item">
               <a href="/images/plants/${encodeURIComponent(img)}" target="_blank" title="画像を拡大表示">
-                <img src="/images/plants/${encodeURIComponent(img)}" alt="${displayPlantName}の写真 - ${img.replace(/\.[^/.]+$/, '')}" loading="lazy">
+                ${buildPlantPictureHtml(img, `${displayPlantName}の写真 - ${img.replace(/\.[^/.]+$/, '')}`)}
               </a>
               <div class="image-caption">${img.replace(/\.[^/.]+$/, '').replace(/_/g, ' ')}</div>
             </div>
@@ -1421,6 +1521,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
+      <a href="${explorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
   </div>
   
@@ -1531,6 +1632,18 @@ async function generateMetaPages() {
     if (fs.existsSync(routeDir)) {
       fs.rmSync(routeDir, { recursive: true, force: true });
     }
+  });
+  writeExplorerRedirect('plant', {
+    lang: 'ja',
+    title: '植物検索へ移動中 | 昆虫植物図鑑',
+    tab: 'plants',
+    label: '植物検索',
+  });
+  writeExplorerRedirect('moth', {
+    lang: 'ja',
+    title: '昆虫検索へ移動中 | 昆虫植物図鑑',
+    tab: 'insects',
+    label: '昆虫検索',
   });
   const legacyRedirects = new Map();
   let legacyRedirectConflicts = 0;
@@ -2376,7 +2489,7 @@ function generateMetaIndexes(indexData) {
   <meta name="twitter:title" content="${sec.title}">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+  <link rel="stylesheet" href="${META_STYLE_PATH}">
 ${indexStyles}
 </head>
 <body>
@@ -2506,7 +2619,7 @@ ${headerHtml}
   <meta name="twitter:title" content="${sec.title}">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+  <link rel="stylesheet" href="${META_STYLE_PATH}">
 ${indexStyles}
 </head>
 <body>

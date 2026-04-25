@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>植物検索へ移動中 | 昆虫植物図鑑</title>
+  <link rel="canonical" href="https://orau98.github.io/?tab=plants">
+  <meta http-equiv="refresh" content="0;url=https://orau98.github.io/?tab=plants">
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search || '');
+      if (!params.has('tab')) params.set('tab', "plants");
+      window.location.replace('/?' + params.toString() + (window.location.hash || ''));
+    })();
+  </script>
+</head>
+<body>
+  <main>
+    <p>植物検索を開いています...</p>
+    <p><a href="/?tab=plants">植物検索</a></p>
+  </main>
+</body>
+</html>

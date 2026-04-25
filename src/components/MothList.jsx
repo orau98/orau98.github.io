@@ -29,11 +29,6 @@ import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings'
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
 import { isEnglishLocale, localizePath } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
-import {
-  buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
-  resolveImageBaseCandidates,
-} from '../utils/insectImageResolver';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
@@ -93,7 +88,7 @@ const buildPlantDisplayData = (moth) => {
   };
 };
 
-const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, imageExtensions = {}, plantDetails = {}, locale = 'ja' }) => {
+const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, plantDetails = {}, locale = 'ja' }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   // Heuristic: insert a space between genus and species if missing
@@ -217,17 +212,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     : moth.scientificName;
   
   // 画像ファイル名を動的に解決（学名表記ゆれ・著者名付きファイル名にも対応）
-  const finalImageFilename = React.useMemo(() => {
-    const mapped = globalJapaneseToScientificMapping.get(moth?.name || moth?.japaneseName || '');
-    const baseCandidates = buildInsectImageBaseCandidates(moth, mapped);
-    const candidateBases = imageFilename ? [imageFilename, ...baseCandidates] : baseCandidates;
-    const normalizedEntries = buildNormalizedEntries(null, imageExtensions);
-    const resolvedBases = resolveImageBaseCandidates(candidateBases, {
-      imageExtensions,
-      normalizedEntries,
-    });
-    return resolvedBases[0] || null;
-  }, [imageFilename, moth, imageExtensions]);
+  const finalImageFilename = React.useMemo(() => imageFilename || null, [imageFilename]);
   
   const imageFolder = 'insects';
   const baseUrl = import.meta.env.BASE_URL || '/';
@@ -1529,7 +1514,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         baseRoute={baseRoute} 
                         isPriority={index < 12} 
                         imageFilename={mothImageMap.get(moth.id)}
-                        imageExtensions={imageExtensions}
                         plantDetails={plantDetails}
                         locale={locale}
                       />

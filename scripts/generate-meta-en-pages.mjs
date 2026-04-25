@@ -29,7 +29,7 @@ const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DATA_LITE_DIR = path.join(__dirname, '../public/assets/data-lite');
 const PUBLIC_EN_DIR = path.join(__dirname, '../public/en');
 const EN_META_DIR = path.join(PUBLIC_EN_DIR, 'meta');
-const EN_META_STYLE_PATH = '/assets/meta-styles.css?v=3';
+const EN_META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const PLANT_IMAGES_DIR = path.join(__dirname, '../public/images/plants');
 const PUBLIC_DIR = path.join(__dirname, '../public');
@@ -74,6 +74,67 @@ function escapeHtml(value = '') {
 
 function escapeAttr(value = '') {
   return escapeHtml(value);
+}
+
+function buildPlantPictureHtml(file, altText) {
+  const fileUrl = `/images/plants/${encodeURIComponent(file)}`;
+  const baseName = file.replace(/\.[^/.]+$/, '');
+  const resizedBase = `/images/resized/plants/${encodeURIComponent(baseName)}`;
+  const fallback = escapeAttr(fileUrl);
+  const srcSet = (format) => [320, 640, 1024]
+    .map((width) => `${resizedBase}.${width}.${format} ${width}w`)
+    .join(', ');
+
+  return `<picture>
+                  <source type="image/avif" srcset="${srcSet('avif')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
+                  <source type="image/webp" srcset="${srcSet('webp')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
+                  <img
+                    src="${resizedBase}.640.jpg"
+                    srcset="${srcSet('jpg')}"
+                    sizes="(max-width: 640px) calc(100vw - 56px), 280px"
+                    alt="${escapeAttr(altText)}"
+                    loading="lazy"
+                    decoding="async"
+                    width="640"
+                    height="480"
+                    onerror="this.onerror=null;this.removeAttribute('srcset');this.src='${fallback}';"
+                  >
+                </picture>`;
+}
+
+function buildExplorerRedirectHtml({ title, tab, label }) {
+  const targetPath = `/en/?tab=${encodeURIComponent(tab)}`;
+  const targetUrl = `${BASE_ORIGIN}${targetPath}`;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>${escapeHtml(title)}</title>
+  <link rel="canonical" href="${targetUrl}">
+  <meta http-equiv="refresh" content="0;url=${targetUrl}">
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search || '');
+      if (!params.has('tab')) params.set('tab', ${JSON.stringify(tab)});
+      window.location.replace('/en/?' + params.toString() + (window.location.hash || ''));
+    })();
+  </script>
+</head>
+<body>
+  <main>
+    <p>Opening ${escapeHtml(label)}...</p>
+    <p><a href="${targetPath}">${escapeHtml(label)}</a></p>
+  </main>
+</body>
+</html>`;
+}
+
+function writeExplorerRedirect(segment, options) {
+  const routeDir = path.join(PUBLIC_EN_DIR, segment);
+  ensureDir(routeDir);
+  fs.writeFileSync(path.join(routeDir, 'index.html'), buildExplorerRedirectHtml(options));
 }
 
 function decodePathSegment(segment) {
@@ -775,7 +836,7 @@ function buildEnglishPlantPage({
           ${plantImageFiles.slice(0, 6).map((file) => `
             <div class="gallery-item">
               <a href="/images/plants/${encodeURIComponent(file)}" target="_blank" rel="noopener noreferrer">
-                <img src="/images/plants/${encodeURIComponent(file)}" alt="${escapeAttr(`${display.primaryName} photograph`)}" loading="lazy">
+                ${buildPlantPictureHtml(file, `${display.primaryName} photograph`)}
               </a>
             </div>`).join('')}
         </div>
@@ -1002,6 +1063,16 @@ async function generateEnglishMetaPages() {
   ensureDir(EN_META_DIR);
   Object.keys(insectsByType).forEach((type) => ensureDir(path.join(EN_META_DIR, type)));
   ensureDir(path.join(EN_META_DIR, 'plant'));
+  writeExplorerRedirect('plant', {
+    title: 'Opening plant search | Insects and Host Plants of Japan',
+    tab: 'plants',
+    label: 'plant search',
+  });
+  writeExplorerRedirect('moth', {
+    title: 'Opening insect search | Insects and Host Plants of Japan',
+    tab: 'insects',
+    label: 'insect search',
+  });
 
   const { plantRecords, aliasToCanonical } = buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite);
 
