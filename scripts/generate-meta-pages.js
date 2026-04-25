@@ -16,6 +16,8 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
+const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -738,6 +740,23 @@ function buildEnglishSlugMaps() {
   const insectIdToEnSlug = new Map();
   const plantNameToEnSlug = new Map();
 
+  if (fs.existsSync(SEO_ROUTE_MAP_INSECTS_PATH)) {
+    try {
+      const routeMap = JSON.parse(fs.readFileSync(SEO_ROUTE_MAP_INSECTS_PATH, 'utf-8'));
+      Object.entries(routeMap).forEach(([insectId, href]) => {
+        const match = String(href).match(/^\/en\/meta\/([^/]+)\/([^/]+)\.html$/);
+        if (!match) return;
+        insectIdToEnSlug.set(insectId, {
+          type: match[1],
+          slug: decodeURIComponent(match[2]),
+          href,
+        });
+      });
+    } catch (_e) {
+      // Existing English pages are still scanned below as a fallback.
+    }
+  }
+
   const enMetaDir = path.join(__dirname, '../public/en/meta');
   if (!fs.existsSync(enMetaDir)) {
     return { insectIdToEnSlug, plantNameToEnSlug };
@@ -757,7 +776,11 @@ function buildEnglishSlugMaps() {
         const jaPageMatch = content.match(/href="\/meta\/[^/]+\/([^"]+)\.html"/);
         if (jaPageMatch) {
           const insectId = decodeURIComponent(jaPageMatch[1]);
-          insectIdToEnSlug.set(insectId, { slug, type });
+          insectIdToEnSlug.set(insectId, {
+            slug,
+            type,
+            href: `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
+          });
         }
       } catch (_e) {
         // 読み込み失敗はスキップ
@@ -789,21 +812,14 @@ function buildEnglishSlugMaps() {
 }
 
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
-function generateInsectHTML(insect, type, enSlug = null) {
+function generateInsectHTML(insect, type, enSlugEntry = null) {
   const typeNames = INSECT_TYPE_NAMES;
   
   const hostPlants = insect.hostPlants || '不明';
   const scientificName = insect.scientificName || '';
   const source = insect.source || '不明';
   const imageUrl = resolveInsectImageUrl(insect);
-  const socialImageUrl = `${BASE_ORIGIN}${
-    imageUrl ||
-    (type === 'moth'
-      ? '/images/og-default-moth.svg'
-      : type === 'butterfly'
-        ? '/images/og-default-butterfly.svg'
-        : '/favicon.svg')
-  }`;
+  const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = imageUrl
     ? `${insect.japaneseName}（${scientificName}）の写真`
     : `${insect.japaneseName}のイメージ画像`;
@@ -844,6 +860,15 @@ function generateInsectHTML(insect, type, enSlug = null) {
   // 分類情報の生成
   const familyName = insect.family || INSECT_DEFAULT_FAMILIES[type];
   const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
+  const enAlternatePath = (() => {
+    if (!enSlugEntry) return '';
+    if (typeof enSlugEntry === 'string') {
+      return `/en/meta/${type}/${encodeURIComponent(enSlugEntry)}.html`;
+    }
+    if (enSlugEntry.href) return enSlugEntry.href;
+    if (!enSlugEntry.slug) return '';
+    return `/en/meta/${enSlugEntry.type || type}/${encodeURIComponent(enSlugEntry.slug)}.html`;
+  })();
 
   // --- description テンプレート生成 ---
   // 出現時期は insect.emergenceTime から取得
@@ -945,8 +970,8 @@ function generateInsectHTML(insect, type, enSlug = null) {
   <meta name="description" content="${insectDescription}">
   <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
   <link rel="canonical" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
-  ${enSlug ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
-  <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/${type}/${encodeURIComponent(enSlug)}.html">
+  ${enAlternatePath ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
   <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">` : ''}
   <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
 
@@ -1028,7 +1053,7 @@ function generateInsectHTML(insect, type, enSlug = null) {
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="/${type}/${insect.id}" class="meta-site-header-link">図鑑で見る →</a>
+      <a href="/meta/${type}/${insect.id}.html" class="meta-site-header-link">図鑑で見る →</a>
     </div>
   </header>
 
@@ -1115,7 +1140,7 @@ function generateInsectHTML(insect, type, enSlug = null) {
     
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
-      <a href="/${type}/${insect.id}" class="detail-link">詳細ページへ</a>
+      <a href="/meta/${type}/${insect.id}.html" class="detail-link">詳細ページへ</a>
     </section>
   </div>
   
@@ -1169,7 +1194,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const mainImageUrl = plantImageFiles.length > 0 
     ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
     : '';
-  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}`;
+  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
     ? `${displayPlantName}の写真`
     : `${displayPlantName}のイメージ画像`;
@@ -1300,7 +1325,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="/plant/${encodeURIComponent(safePlantName)}" class="meta-site-header-link">図鑑で見る →</a>
+      <a href="/meta/plant/${encodeURIComponent(safeCanonicalName)}.html" class="meta-site-header-link">図鑑で見る →</a>
     </div>
   </header>
 
@@ -1764,8 +1789,7 @@ async function generateMetaPages() {
       };
       
       const enSlugEntry = insectIdToEnSlug.get(insectId);
-      const enSlug = enSlugEntry ? enSlugEntry.slug : null;
-      const html = generateInsectHTML(insect, type, enSlug);
+      const html = generateInsectHTML(insect, type, enSlugEntry);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       const legacySlug = encodeURIComponent(String(displayName || insectId).trim());
@@ -1832,8 +1856,7 @@ async function generateMetaPages() {
       
       
       const enSlugEntryB = insectIdToEnSlug.get(insectId);
-      const enSlugB = enSlugEntryB ? enSlugEntryB.slug : null;
-      const html = generateInsectHTML(insect, type, enSlugB);
+      const html = generateInsectHTML(insect, type, enSlugEntryB);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       const legacySlug = encodeURIComponent(String(japaneseName || insectId).trim());
@@ -1912,8 +1935,7 @@ async function generateMetaPages() {
       };
       
       const enSlugEntryH = insectIdToEnSlug.get(insectId);
-      const enSlugH = enSlugEntryH ? enSlugEntryH.slug : null;
-      const html = generateInsectHTML(insect, type, enSlugH);
+      const html = generateInsectHTML(insect, type, enSlugEntryH);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       fs.writeFileSync(filename, html);
       const legacySlug = encodeURIComponent(String(japaneseName || insectId).trim());

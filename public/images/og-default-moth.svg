@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Moth and host plant default image">
+  <rect width="1200" height="630" fill="#f7faf7"/>
+  <rect x="64" y="64" width="1072" height="502" rx="28" fill="#ffffff" stroke="#d7e6d8" stroke-width="4"/>
+  <path d="M160 420c170-230 425-300 740-160-170 54-275 155-336 305-126-56-260-92-404-145z" fill="#7fbe83"/>
+  <path d="M230 450c155-145 360-220 610-220" fill="none" stroke="#2b6b3f" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="584" cy="245" r="58" fill="#d7a75f"/>
+  <path d="M584 190c-132-145-296-116-390-20 82 112 204 163 390 96z" fill="#b68b5c"/>
+  <path d="M584 190c132-145 296-116 390-20-82 112-204 163-390 96z" fill="#d9b27a"/>
+  <path d="M584 300c-132 145-296 116-390 20 82-112 204-163 390-96z" fill="#c29a67"/>
+  <path d="M584 300c132 145 296 116 390 20-82-112-204-163-390-96z" fill="#e3c18c"/>
+  <path d="M584 188v116" stroke="#5f432c" stroke-width="18" stroke-linecap="round"/>
+  <text x="88" y="120" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#1d3b24">Insects and Host Plants</text>
+  <text x="88" y="172" font-family="Arial, sans-serif" font-size="28" fill="#476451">Moth profile</text>
+</svg>

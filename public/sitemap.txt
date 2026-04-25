@@ -11,7 +11,7 @@ https://orau98.github.io/meta/longhornbeetle/index.html
 https://orau98.github.io/meta/leafbeetle/index.html
 https://orau98.github.io/meta/aphid/index.html
 https://orau98.github.io/meta/plant/index.html
-https://orau98.github.io/en/index.html
+https://orau98.github.io/en/
 https://orau98.github.io/en/meta/moth/index.html
 https://orau98.github.io/en/meta/butterfly/index.html
 https://orau98.github.io/en/meta/beetle/index.html

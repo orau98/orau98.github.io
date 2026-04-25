@@ -35,6 +35,7 @@ const PLANT_IMAGES_DIR = path.join(__dirname, '../public/images/plants');
 const PUBLIC_DIR = path.join(__dirname, '../public');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
+const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
   ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.jpg$/i))
@@ -73,6 +74,38 @@ function escapeHtml(value = '') {
 
 function escapeAttr(value = '') {
   return escapeHtml(value);
+}
+
+function decodePathSegment(segment) {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
+function sitePathToPublicFilePath(sitePath) {
+  if (!sitePath) return null;
+  let pathname = '';
+  try {
+    pathname = new URL(sitePath, BASE_ORIGIN).pathname;
+  } catch {
+    return null;
+  }
+  const segments = pathname
+    .replace(/^\//, '')
+    .split('/')
+    .filter(Boolean)
+    .map(decodePathSegment);
+  if (segments.length === 0) return path.join(PUBLIC_DIR, 'index.html');
+  const filePath = path.join(PUBLIC_DIR, ...segments);
+  if (pathname.endsWith('/')) return path.join(filePath, 'index.html');
+  return filePath;
+}
+
+function sitePathExists(sitePath) {
+  const filePath = sitePathToPublicFilePath(sitePath);
+  return Boolean(filePath && fs.existsSync(filePath));
 }
 
 function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '' }) {
@@ -142,11 +175,50 @@ function writeJson(filePath, payload) {
 }
 
 function buildAlternateLanguageLinks(jaPath, enPath) {
+  const validJaPath = jaPath && sitePathExists(jaPath) ? jaPath : '';
+  const defaultPath = validJaPath || enPath;
   return [
-    `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}${escapeAttr(jaPath)}">`,
+    validJaPath
+      ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}${escapeAttr(validJaPath)}">`
+      : '',
     `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${escapeAttr(enPath)}">`,
-    `<link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}${escapeAttr(enPath)}">`,
-  ].join('\n  ');
+    `<link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}${escapeAttr(defaultPath)}">`,
+  ].filter(Boolean).join('\n  ');
+}
+
+function resolveJapanesePlantMetaPath(canonicalName, detail) {
+  const display = buildPlantDisplay(detail, canonicalName);
+  const candidates = [
+    canonicalName,
+    display.japaneseName,
+    display.familyJapanese && display.japaneseName
+      ? `${display.japaneseName}(${display.familyJapanese})`
+      : '',
+    ...(Array.isArray(display.aliases) ? display.aliases : []),
+  ]
+    .map((name) => cleanString(name))
+    .filter(Boolean)
+    .map((name) => `/meta/plant/${encodeURIComponent(createSafeFileName(name))}.html`);
+
+  for (const candidate of Array.from(new Set(candidates))) {
+    if (sitePathExists(candidate)) return candidate;
+  }
+  return '';
+}
+
+function resolveJapaneseInsectMetaPath(insect, preferredRouteSegment) {
+  const insectId = cleanString(insect.id);
+  if (!insectId) return '';
+  const routeSegments = [
+    preferredRouteSegment,
+    ...SECTION_CONFIGS.map((section) => section.routeSegment),
+  ].filter(Boolean);
+  const candidates = Array.from(new Set(routeSegments))
+    .map((routeSegment) => `/meta/${routeSegment}/${encodeURIComponent(insectId)}.html`);
+  for (const candidate of candidates) {
+    if (sitePathExists(candidate)) return candidate;
+  }
+  return '';
 }
 
 function normalizedTextLength(value) {
@@ -359,7 +431,7 @@ function buildEnglishInsectPage({
   const japaneseReference = buildJapaneseReferenceLabel(japaneseName);
   const familyLabels = normalizeInsectFamilyLabels(insect);
   const imageUrl = resolveInsectImageUrl(insect);
-  const socialImageUrl = `${BASE_ORIGIN}${imageUrl || '/favicon.svg'}`;
+  const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = imageUrl
     ? `${primaryName} photograph`
     : `${primaryName} reference image`;
@@ -371,7 +443,8 @@ function buildEnglishInsectPage({
     aliasToCanonical,
   );
   const pagePath = `/en/meta/${section.routeSegment}/${encodeURIComponent(englishSlug)}.html`;
-  const japanesePagePath = `/meta/${section.routeSegment}/${encodeURIComponent(insect.id)}.html`;
+  const japanesePagePath = resolveJapaneseInsectMetaPath(insect, section.routeSegment);
+  const japaneseNavigationPath = japanesePagePath || `/meta/${section.routeSegment}/index.html`;
   const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
   const seasonText = cleanString(insect.emergenceTime);
   const description = [
@@ -494,7 +567,7 @@ function buildEnglishInsectPage({
         </span>
         <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
       </a>
-      <a href="${escapeAttr(japanesePagePath)}" class="meta-site-header-link">Japanese page</a>
+      <a href="${escapeAttr(japaneseNavigationPath)}" class="meta-site-header-link">Japanese page</a>
     </div>
   </header>
 
@@ -568,7 +641,7 @@ function buildEnglishInsectPage({
 
     <section class="navigation">
       <a href="/en/meta/${escapeAttr(section.routeSegment)}/index.html" class="back-link">Browse ${escapeHtml(section.pluralLabel)}</a>
-      <a href="${escapeAttr(japanesePagePath)}" class="detail-link">Open Japanese page</a>
+      <a href="${escapeAttr(japaneseNavigationPath)}" class="detail-link">Open Japanese page</a>
     </section>
   </div>
 </body>
@@ -585,13 +658,14 @@ function buildEnglishPlantPage({
 }) {
   const display = buildPlantDisplay(detail, canonicalName);
   const pagePath = plantRecord.href;
-  const japanesePagePath = `/meta/plant/${encodeURIComponent(createSafeFileName(canonicalName))}.html`;
+  const japanesePagePath = resolveJapanesePlantMetaPath(canonicalName, detail);
+  const japaneseNavigationPath = japanesePagePath || '/meta/plant/index.html';
   const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
   const robotsContent = computePlantRobotsContent({ relatedInsects, plantImageFiles });
   const mainImageUrl = plantImageFiles.length > 0
     ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}`
     : '';
-  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || '/favicon.svg'}`;
+  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
     ? `${display.primaryName} photograph`
     : `${display.primaryName} reference image`;
@@ -660,7 +734,7 @@ function buildEnglishPlantPage({
         </span>
         <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
       </a>
-      <a href="${escapeAttr(japanesePagePath)}" class="meta-site-header-link">Japanese page</a>
+      <a href="${escapeAttr(japaneseNavigationPath)}" class="meta-site-header-link">Japanese page</a>
     </div>
   </header>
 
@@ -741,7 +815,7 @@ function buildEnglishPlantPage({
 
     <section class="navigation">
       <a href="/en/meta/plant/index.html" class="back-link">Browse Plants</a>
-      <a href="${escapeAttr(japanesePagePath)}" class="detail-link">Open Japanese page</a>
+      <a href="${escapeAttr(japaneseNavigationPath)}" class="detail-link">Open Japanese page</a>
     </section>
   </div>
 </body>

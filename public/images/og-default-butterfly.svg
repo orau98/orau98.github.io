@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Butterfly and host plant default image">
+  <rect width="1200" height="630" fill="#f7faf7"/>
+  <rect x="64" y="64" width="1072" height="502" rx="28" fill="#ffffff" stroke="#d7e6d8" stroke-width="4"/>
+  <path d="M150 430c170-230 420-290 740-155-168 58-270 160-330 300-128-58-266-93-410-145z" fill="#83c995"/>
+  <path d="M230 455c160-145 360-220 615-220" fill="none" stroke="#2b6b3f" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="594" cy="250" r="45" fill="#2f4f36"/>
+  <path d="M590 205c-120-132-268-108-352-16 78 100 190 145 352 82z" fill="#4fb3c4"/>
+  <path d="M598 205c120-132 268-108 352-16-78 100-190 145-352 82z" fill="#f2c14e"/>
+  <path d="M590 295c-120 132-268 108-352 16 78-100 190-145 352-82z" fill="#5fc4d1"/>
+  <path d="M598 295c120 132 268 108 352 16-78-100-190-145-352-82z" fill="#f6d365"/>
+  <path d="M594 205v90" stroke="#18301f" stroke-width="16" stroke-linecap="round"/>
+  <path d="M574 205c-34-56-82-70-142-48" fill="none" stroke="#18301f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M614 205c34-56 82-70 142-48" fill="none" stroke="#18301f" stroke-width="8" stroke-linecap="round"/>
+  <text x="88" y="120" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#1d3b24">Insects and Host Plants</text>
+  <text x="88" y="172" font-family="Arial, sans-serif" font-size="28" fill="#476451">Butterfly profile</text>
+</svg>

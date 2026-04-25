@@ -281,7 +281,7 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
-    '/en/index.html',
+    '/en/',
     path.join(__dirname, '../public/en/index.html'),
     { changefreq: 'weekly', priority: '0.9', targetKey: 'en-main' },
   );
