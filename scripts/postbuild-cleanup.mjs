@@ -7,6 +7,9 @@ const MAX_PAGES_DIST_BYTES = 900 * 1024 * 1024;
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
+  // Development CSV snapshots should remain in the repository, not in Pages output.
+  path.join('dist', 'backup'),
+  path.join('dist', 'insects.csv.bak.butterfly_subfamily_fix_20260114125318'),
 ];
 
 const syncPlantImages = () => {

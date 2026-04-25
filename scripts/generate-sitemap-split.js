@@ -531,7 +531,7 @@ function generateSplitSitemaps() {
   }
   const coreSitemapFile = generateSitemapFile('sitemap-core.xml', coreUrls);
   if (coreSitemapFile) {
-    sitemapFiles.unshift(coreSitemapFile);
+    supplementalSitemapFiles.push(coreSitemapFile);
     console.log(`sitemap-core.xml 生成完了: ${coreUrls.length} URLs`);
   }
 
