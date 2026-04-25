@@ -572,6 +572,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const pinDragPointerIdRef = useRef(null);
   const pinDragNodeIdRef = useRef(null);
   const hasUserInteractedRef = useRef(false);
+  const guideDismissFrameRef = useRef(null);
   const lastClickRef = useRef({ id: null, ts: 0 });
   const [hoverNodeId, setHoverNodeId] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
@@ -604,8 +605,19 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, [currentInsect?.name, currentPlantName]);
 
   useEffect(() => {
+    if (guideDismissFrameRef.current !== null && typeof window !== 'undefined' && window.cancelAnimationFrame) {
+      window.cancelAnimationFrame(guideDismissFrameRef.current);
+      guideDismissFrameRef.current = null;
+    }
     setGuideDismissed(false);
   }, [currentInsect?.name, currentPlantName]);
+
+  useEffect(() => () => {
+    if (guideDismissFrameRef.current !== null && typeof window !== 'undefined' && window.cancelAnimationFrame) {
+      window.cancelAnimationFrame(guideDismissFrameRef.current);
+      guideDismissFrameRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     setRelationFilter('all');
@@ -1265,10 +1277,23 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setHoverNodeId(node ? node.id : null);
   }, [selectedNodeId]);
 
+  const dismissGuideAfterRender = useCallback(() => {
+    if (guideDismissFrameRef.current !== null) return;
+    const runDismiss = () => {
+      guideDismissFrameRef.current = null;
+      setGuideDismissed(true);
+    };
+    if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+      guideDismissFrameRef.current = window.requestAnimationFrame(runDismiss);
+    } else {
+      setTimeout(runDismiss, 0);
+    }
+  }, []);
+
   const markUserInteracted = useCallback(() => {
     hasUserInteractedRef.current = true;
-    setGuideDismissed(true);
-  }, []);
+    dismissGuideAfterRender();
+  }, [dismissGuideAfterRender]);
 
   // click toggles selection (navigation moved to the detail panel)
   const handleNodeClick = useCallback((node) => {
@@ -2344,7 +2369,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             onEngineStop={() => {
               if (!fgRef.current) return;
               if (hasUserInteractedRef.current) return;
-              fitGraphToViewport(420);
+              const runFit = () => {
+                if (!fgRef.current) return;
+                if (hasUserInteractedRef.current) return;
+                fitGraphToViewport(420);
+              };
+              if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+                window.requestAnimationFrame(runFit);
+              } else {
+                setTimeout(runFit, 0);
+              }
             }}
           />
 

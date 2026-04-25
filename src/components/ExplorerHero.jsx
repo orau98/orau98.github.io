@@ -78,7 +78,7 @@ const ExplorerHero = ({
             }}
             loading="eager"
             decoding="async"
-            fetchpriority="high"
+            fetchPriority="high"
             onLoad={() => setHeroImageLoaded(true)}
             onError={(event) => {
               logger.warn("Hero image failed to load:", event?.currentTarget?.src || src);

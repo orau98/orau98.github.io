@@ -142,8 +142,18 @@
 </script>
 
 <!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293"
-     crossorigin="anonymous"></script>
+<script>
+  (function () {
+    var hostname = window.location.hostname;
+    var isLocalPreview = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+    if (isLocalPreview) return;
+    var ads = document.createElement('script');
+    ads.async = true;
+    ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
+    ads.crossOrigin = 'anonymous';
+    document.head.appendChild(ads);
+  })();
+</script>
   <!-- SPA深いURL復元スクリプト（404.htmlからのリダイレクト対応） -->
   <script>
   (function () {

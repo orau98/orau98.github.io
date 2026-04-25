@@ -229,8 +229,10 @@ export const getSearchTypeLabel = (type, locale = DEFAULT_LOCALE) => {
   return normalizedLocale === 'en' ? section.searchLabelEn : section.searchLabel;
 };
 
-export const isExplorerRoutePath = (pathname = '') =>
-  EXPLORER_ROUTE_CONFIGS.some((route) => route.path === pathname);
+export const isExplorerRoutePath = (pathname = '') => {
+  const normalized = String(pathname || '/').replace(/\/+$/, '') || '/';
+  return EXPLORER_ROUTE_CONFIGS.some((route) => route.path === normalized);
+};
 
 export const isKnownDetailPath = (pathname = '') => {
   const strippedPath = stripLocalePrefix(pathname);

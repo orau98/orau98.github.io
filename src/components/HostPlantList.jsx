@@ -1021,18 +1021,17 @@ const HostPlantList = ({
   }, [filteredHostPlants, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
-    if (typeof window === "undefined") {
-      setPPage(page);
-      return;
-    }
-    const nextUrl = new URL(window.location.href);
     const nextPage = parseInt(page, 10);
-    if (Number.isFinite(nextPage) && nextPage > 1) {
-      nextUrl.searchParams.set("ppage", String(nextPage));
-    } else {
-      nextUrl.searchParams.delete("ppage");
+    if (!Number.isFinite(nextPage)) return;
+    const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
+    if (clampedPage === currentPage) return;
+    setPPage(clampedPage);
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        const target = listTopRef.current || document.getElementById('explorer-results');
+        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
-    window.location.assign(nextUrl.toString());
   };
 
   React.useEffect(() => {

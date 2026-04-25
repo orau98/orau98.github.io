@@ -126,17 +126,17 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
               </div>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-3xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight">
+              <div className="text-3xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight">
                 {isEnglish
                   ? 'Insects and Host Plants of Japan'
                   : '"繋がり"が見える昆虫植物図鑑'}
-              </h1>
+              </div>
               <p className="text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
                 {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
               </p>
             </div>
             <div className="min-w-0 sm:hidden">
-              <h1 className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1rem,4.9vw,1.35rem)] font-black leading-[1.05] text-transparent">
+              <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1rem,4.9vw,1.35rem)] font-black leading-[1.05] text-transparent">
                 {isEnglish ? (
                   <>
                     <span className="block">Insects &amp;</span>
@@ -148,7 +148,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                     <span className="block">昆虫植物図鑑</span>
                   </>
                 )}
-              </h1>
+              </div>
             </div>
           </Link>
           

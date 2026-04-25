@@ -327,7 +327,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     }}
                     loading={isPriority ? "eager" : "lazy"}
                     decoding="async"
-                    fetchpriority={isPriority ? "high" : "auto"}
+                    fetchPriority={isPriority ? "high" : "auto"}
                   />
                 ) : (
                   <div className="w-full h-full bg-slate-200 dark:bg-slate-700 animate-pulse flex items-center justify-center">
@@ -1293,18 +1293,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [sortedMoths, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
-    if (typeof window === 'undefined') {
-      setIPage(page);
-      return;
-    }
-    const nextUrl = new URL(window.location.href);
     const nextPage = parseInt(page, 10);
-    if (Number.isFinite(nextPage) && nextPage > 1) {
-      nextUrl.searchParams.set('ipage', String(nextPage));
-    } else {
-      nextUrl.searchParams.delete('ipage');
+    if (!Number.isFinite(nextPage)) return;
+    const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
+    if (clampedPage === currentPage) return;
+    setIPage(clampedPage);
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        const target = listTopRef.current || document.getElementById('explorer-results');
+        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
-    window.location.assign(nextUrl.toString());
   };
 
   // Add rel=prev/next for crawlers (hint)

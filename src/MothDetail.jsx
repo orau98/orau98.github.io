@@ -1115,7 +1115,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       candidates={fallbackImageCandidates}
                       fallbackSrc={null}
                       loading="eager"
-                      fetchpriority="high"
+                      fetchPriority="high"
                     />
                     
                     {/* Elegant gradient overlay on hover */}

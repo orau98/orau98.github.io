@@ -78,7 +78,7 @@ export default function ListFilterPanel({
       <div
         id={panelId}
         aria-hidden={!isOpen}
-        inert={!isOpen ? '' : undefined}
+        inert={!isOpen ? true : undefined}
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}

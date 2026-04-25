@@ -1155,7 +1155,6 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const dataPlantName = originalPlantName || plantName;
   const displayPlantName = plantName;
   
-  const insectsList = relatedInsects.map(insect => insect.japaneseName).join(', ');
   const isAlias = Boolean(originalPlantName && originalPlantName !== displayPlantName);
   const canonicalPlantName = originalPlantName || displayPlantName;
   const safePlantName = displayPlantName.replace(/[/\\?%*:|"<>]/g, '-');
