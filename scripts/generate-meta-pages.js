@@ -65,6 +65,10 @@ function escapeRedirectHtml(value = '') {
     .replace(/'/g, '&#39;');
 }
 
+function renderJsonLd(data) {
+  return JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+}
+
 const DEFERRED_ADS_SCRIPT = `<script>
     (function() {
       var loaded = false;
@@ -1055,6 +1059,63 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   // --- description テンプレート生成終わり ---
 
   const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
+  const insectPageUrl = `${BASE_ORIGIN}/meta/${type}/${insect.id}.html`;
+  const insectTitle = `${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑`;
+  const insectKeywords = `${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}`;
+  const insectStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': ['Animal', 'Species'],
+    name: insect.japaneseName,
+    alternateName: [scientificName, insect.japaneseName].filter(Boolean),
+    scientificName,
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'species_id',
+      value: insect.id,
+    },
+    classification: {
+      '@type': 'Taxon',
+      taxonRank: 'species',
+      parentTaxon: {
+        '@type': 'Taxon',
+        name: familyName,
+        taxonRank: 'family',
+      },
+    },
+    description: `${insect.japaneseName}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    url: insectPageUrl,
+    inLanguage: 'ja',
+    author: {
+      '@type': 'Organization',
+      name: '昆虫植物図鑑',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '昆虫植物図鑑',
+    },
+  };
+  if (imageUrl) {
+    insectStructuredData.image = {
+      '@type': 'ImageObject',
+      url: `${BASE_ORIGIN}${imageUrl}`,
+      caption: `${insect.japaneseName}（${scientificName}）の写真`,
+    };
+  }
+  const insectBreadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '昆虫植物図鑑', item: `${BASE_ORIGIN}/` },
+      { '@type': 'ListItem', position: 2, name: typeNames[type], item: `${BASE_ORIGIN}/meta/${type}/index.html` },
+      { '@type': 'ListItem', position: 3, name: insect.japaneseName, item: insectPageUrl },
+    ],
+  };
+  const safeInsectTitle = escapeRedirectHtml(insectTitle);
+  const safeInsectDescription = escapeRedirectHtml(insectDescription);
+  const safeInsectKeywords = escapeRedirectHtml(insectKeywords);
+  const safeInsectOgDescription = escapeRedirectHtml(insectOgDescription);
+  const safeSocialImageAlt = escapeRedirectHtml(socialImageAlt);
+  const safeExplorerSearchPath = escapeRedirectHtml(explorerSearchPath);
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -1065,83 +1126,35 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   ${DEFERRED_ADS_SCRIPT}
-  <title>${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑</title>
-  <meta name="description" content="${insectDescription}">
-  <meta name="keywords" content="${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}">
-  <link rel="canonical" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
-  ${enAlternatePath ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  <title>${safeInsectTitle}</title>
+  <meta name="description" content="${safeInsectDescription}">
+  <meta name="keywords" content="${safeInsectKeywords}">
+  <link rel="canonical" href="${insectPageUrl}">
+  ${enAlternatePath ? `<link rel="alternate" hreflang="ja" href="${insectPageUrl}">
   <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
-  <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">` : ''}
+  <link rel="alternate" hreflang="x-default" href="${insectPageUrl}">` : ''}
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta property="og:description" content="${insectOgDescription}">
+  <meta property="og:title" content="${safeInsectTitle}">
+  <meta property="og:description" content="${safeInsectOgDescription}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="${BASE_ORIGIN}/meta/${type}/${insect.id}.html">
+  <meta property="og:url" content="${insectPageUrl}">
   <meta property="og:image" content="${socialImageUrl}">
-  <meta property="og:image:alt" content="${socialImageAlt}">
+  <meta property="og:image:alt" content="${safeSocialImageAlt}">
   <meta property="og:site_name" content="昆虫植物図鑑">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑">
-  <meta name="twitter:description" content="${insectOgDescription}">
+  <meta name="twitter:title" content="${safeInsectTitle}">
+  <meta name="twitter:description" content="${safeInsectOgDescription}">
   <meta name="twitter:image" content="${socialImageUrl}">
-  <meta name="twitter:image:alt" content="${socialImageAlt}">
+  <meta name="twitter:image:alt" content="${safeSocialImageAlt}">
   
   <!-- Enhanced Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": ["Animal", "Species"],
-    "name": "${insect.japaneseName}",
-    "alternateName": ["${scientificName}", "${insect.japaneseName}"],
-    "scientificName": "${scientificName}",
-    "identifier": {
-      "@type": "PropertyValue",
-      "propertyID": "species_id",
-      "value": "${insect.id}"
-    },
-    "classification": {
-      "@type": "Taxon",
-      "taxonRank": "species",
-      "parentTaxon": {
-        "@type": "Taxon",
-        "name": "${familyName}",
-        "taxonRank": "family"
-      }
-    },
-    "description": "${insect.japaneseName}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}",
-    "url": "${BASE_ORIGIN}/meta/${type}/${insect.id}.html",
-    ${imageUrl ? `"image": {
-      "@type": "ImageObject",
-      "url": "${BASE_ORIGIN}${imageUrl}",
-      "caption": "${insect.japaneseName}（${scientificName}）の写真"
-    },` : ''}
-    "inLanguage": "ja",
-    "author": {
-      "@type": "Organization",
-      "name": "昆虫植物図鑑"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "昆虫植物図鑑"
-    }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "昆虫植物図鑑", "item": "${BASE_ORIGIN}/"},
-      {"@type": "ListItem", "position": 2, "name": "${typeNames[type]}", "item": "${BASE_ORIGIN}/meta/${type}/index.html"},
-      {"@type": "ListItem", "position": 3, "name": "${insect.japaneseName}", "item": "${BASE_ORIGIN}/meta/${type}/${insect.id}.html"}
-    ]
-  }
-  </script>
+  <script type="application/ld+json">${renderJsonLd(insectStructuredData)}</script>
+  <script type="application/ld+json">${renderJsonLd(insectBreadcrumbData)}</script>
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -1152,7 +1165,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="${explorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
+      <a href="${safeExplorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
     </div>
   </header>
 
@@ -1239,7 +1252,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
     
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
-      <a href="${explorerSearchPath}" class="detail-link">図鑑で検索</a>
+      <a href="${safeExplorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
   </div>
   
@@ -1343,6 +1356,50 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   // --- 植物ページ description テンプレート生成終わり ---
 
   const explorerSearchPath = buildExplorerSearchPath('plants', displayPlantName);
+  const plantPageUrl = `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html`;
+  const plantTitle = `${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用`;
+  const plantKeywords = `${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}`;
+  const plantStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': ['Plant', 'Species'],
+    name: displayPlantName,
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'plant_name',
+      value: displayPlantName,
+    },
+    description: `${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.`,
+    url: plantPageUrl,
+    inLanguage: 'ja',
+    hasEcologicalInteraction: relatedInsects.map(insect => ({
+      '@type': 'EcologicalInteraction',
+      interactionType: 'herbivory',
+      participantOrganism: {
+        '@type': ['Animal', 'Species'],
+        name: insect.japaneseName,
+        scientificName: insect.scientificName,
+      },
+    })),
+    author: {
+      '@type': 'Organization',
+      name: '昆虫植物図鑑',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '昆虫植物図鑑',
+    },
+  };
+  if (mainImageUrl) {
+    plantStructuredData.image = `${BASE_ORIGIN}${mainImageUrl}`;
+  }
+  const safePlantTitle = escapeRedirectHtml(plantTitle);
+  const safePlantDescription = escapeRedirectHtml(plantDescription);
+  const safePlantKeywords = escapeRedirectHtml(plantKeywords);
+  const safePlantOgDescription = escapeRedirectHtml(plantOgDescription);
+  const safePlantTwitterTitle = escapeRedirectHtml(`${displayPlantName} - 昆虫植物図鑑`);
+  const safePlantImageAlt = escapeRedirectHtml(socialImageAlt);
+  const safePlantPageUrl = escapeRedirectHtml(plantPageUrl);
+  const safePlantExplorerSearchPath = escapeRedirectHtml(explorerSearchPath);
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -1353,68 +1410,34 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   ${DEFERRED_ADS_SCRIPT}
-  <title>${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用</title>
-  <meta name="description" content="${plantDescription}">
-  <meta name="keywords" content="${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}">
-  <link rel="canonical" href="https://orau98.github.io/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
-  ${enSlug ? `<link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
+  <title>${safePlantTitle}</title>
+  <meta name="description" content="${safePlantDescription}">
+  <meta name="keywords" content="${safePlantKeywords}">
+  <link rel="canonical" href="${safePlantPageUrl}">
+  ${enSlug ? `<link rel="alternate" hreflang="ja" href="${safePlantPageUrl}">
   <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/plant/${encodeURIComponent(enSlug)}.html">
-  <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">` : ''}
+  <link rel="alternate" hreflang="x-default" href="${safePlantPageUrl}">` : ''}
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用">
-  <meta property="og:description" content="${plantOgDescription}">
+  <meta property="og:title" content="${safePlantTitle}">
+  <meta property="og:description" content="${safePlantOgDescription}">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html">
+  <meta property="og:url" content="${safePlantPageUrl}">
   <meta property="og:image" content="${socialImageUrl}">
-  <meta property="og:image:alt" content="${socialImageAlt}">
+  <meta property="og:image:alt" content="${safePlantImageAlt}">
   <meta property="og:site_name" content="昆虫植物図鑑">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${displayPlantName} - 昆虫植物図鑑">
-  <meta name="twitter:description" content="${plantOgDescription}">
+  <meta name="twitter:title" content="${safePlantTwitterTitle}">
+  <meta name="twitter:description" content="${safePlantOgDescription}">
   <meta name="twitter:image" content="${socialImageUrl}">
-  <meta name="twitter:image:alt" content="${socialImageAlt}">
+  <meta name="twitter:image:alt" content="${safePlantImageAlt}">
   
   <!-- Enhanced Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": ["Plant", "Species"],
-    "name": "${displayPlantName}",
-    "identifier": {
-      "@type": "PropertyValue",
-      "propertyID": "plant_name",
-      "value": "${displayPlantName}"
-    },
-    "description": "${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.",
-    "url": "${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html",
-    ${mainImageUrl ? `"image": "${BASE_ORIGIN}${mainImageUrl}",` : ''}
-    "inLanguage": "ja",
-    "hasEcologicalInteraction": [
-      ${relatedInsects.map(insect => `{
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "${insect.japaneseName}",
-          "scientificName": "${insect.scientificName}"
-        }
-      }`).join(',\n      ')}
-    ],
-    "author": {
-      "@type": "Organization",
-      "name": "昆虫植物図鑑"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "昆虫植物図鑑"
-    }
-  }
-  </script>
+  <script type="application/ld+json">${renderJsonLd(plantStructuredData)}</script>
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -1425,7 +1448,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="${explorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
+      <a href="${safePlantExplorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
     </div>
   </header>
 
@@ -1521,7 +1544,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
-      <a href="${explorerSearchPath}" class="detail-link">図鑑で検索</a>
+      <a href="${safePlantExplorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
   </div>
   

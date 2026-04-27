@@ -10,6 +10,9 @@ import {
 const toJsonLd = (data) =>
   JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
 
+const DATASET_DESCRIPTION =
+  '日本産の蛾・蝶・甲虫・アブラムシなど7000種以上について、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。';
+
 const isFlowerVisitRecord = (record) => {
   if (!record) return false;
   if (record.isFlowerVisit === true) return true;
@@ -1023,8 +1026,12 @@ export const MainStructuredData = () => {
     },
     "mainEntity": {
       "@type": "Dataset",
+      "@id": `${siteUrl}#dataset`,
       "name": "昆虫植物・食草データベース",
-      "description": "日本の昆虫と食草の関係を網羅的に収録したデータベース",
+      "description": DATASET_DESCRIPTION,
+      "url": siteUrl,
+      "inLanguage": "ja",
+      "isAccessibleForFree": true,
       "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "カミキリムシ", "ハムシ", "植物", "生態学"],
       "creator": {
         "@type": "Organization",

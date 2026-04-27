@@ -81,6 +81,51 @@ const getMetaHttpEquivContent = (html, httpEquivValue) => {
 const getJsonLdCount = (html) =>
   (html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>/gi) || []).length;
 
+const getJsonLdBlocks = (html) =>
+  Array.from(html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi))
+    .map((match) => match[1].trim())
+    .filter(Boolean);
+
+const hasType = (node, typeName) => {
+  const value = node?.['@type'];
+  if (Array.isArray(value)) return value.includes(typeName);
+  return value === typeName;
+};
+
+const collectNodesByType = (node, typeName, collected = []) => {
+  if (!node || typeof node !== 'object') return collected;
+  if (hasType(node, typeName)) collected.push(node);
+  if (Array.isArray(node)) {
+    node.forEach((item) => collectNodesByType(item, typeName, collected));
+    return collected;
+  }
+  Object.values(node).forEach((value) => collectNodesByType(value, typeName, collected));
+  return collected;
+};
+
+const validateJsonLd = (filePath, html) => {
+  const relativePath = path.relative(ROOT, filePath);
+  for (const block of getJsonLdBlocks(html)) {
+    let payload = null;
+    try {
+      payload = JSON.parse(block);
+    } catch (error) {
+      ensure(false, `${relativePath}: invalid JSON-LD (${error.message})`);
+      continue;
+    }
+
+    const datasets = collectNodesByType(payload, 'Dataset');
+    datasets.forEach((dataset) => {
+      const name = String(dataset.name || dataset['@id'] || 'Dataset');
+      const description = String(dataset.description || '').trim();
+      ensure(
+        description.length >= 50 && description.length <= 5000,
+        `${relativePath}: Dataset description for ${name} must be 50-5000 characters`,
+      );
+    });
+  }
+};
+
 const resolveSitePathToDistPath = (hrefOrPath) => {
   if (!hrefOrPath) return null;
   let url = null;
@@ -132,6 +177,7 @@ const validateHtml = (filePath, html, options = {}) => {
     `${relativePath}: canonical must use ${SITE_ORIGIN}`,
   );
   ensure(jsonLdCount >= 1, `${relativePath}: missing JSON-LD`);
+  validateJsonLd(filePath, html);
 
   if (options.requireSocial !== false) {
     ensure(ogTitle.length > 0, `${relativePath}: missing og:title`);
