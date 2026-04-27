@@ -535,24 +535,9 @@ function generateSplitSitemaps() {
     console.log(`sitemap-core.xml 生成完了: ${coreUrls.length} URLs`);
   }
 
-  const rootSitemapUrls = allUrls;
-
-  const rootSitemapXml = generateXML(rootSitemapUrls, {
-    includeGeneratedComment: false,
-    includeMetadata: true,
-  });
-  const rootSitemapPath = path.join(__dirname, '../public/sitemap.xml');
-  fs.writeFileSync(rootSitemapPath, rootSitemapXml, 'utf-8');
-
-  const distPath = path.join(__dirname, '../dist');
-  if (fs.existsSync(distPath)) {
-    const distRootSitemapPath = path.join(distPath, 'sitemap.xml');
-    fs.writeFileSync(distRootSitemapPath, rootSitemapXml, 'utf-8');
-  }
-
-  const rootTextSitemapFile = generateTextSitemapFile('sitemap.txt', rootSitemapUrls);
+  const rootTextSitemapFile = generateTextSitemapFile('sitemap.txt', allUrls);
   if (rootTextSitemapFile) {
-    console.log(`sitemap.txt 生成完了: ${rootSitemapUrls.length} URLs`);
+    console.log(`sitemap.txt 生成完了: ${allUrls.length} URLs`);
   }
 
   // 分割サイトマップインデックスを生成
@@ -570,10 +555,17 @@ function generateSplitSitemaps() {
   indexXml += '</sitemapindex>';
 
   // 分割サイトマップインデックスを保存
+  const distPath = path.join(__dirname, '../dist');
+  const rootSitemapPath = path.join(__dirname, '../public/sitemap.xml');
+  fs.writeFileSync(rootSitemapPath, indexXml, 'utf-8');
+
   const indexPath = path.join(__dirname, '../public/sitemap-index.xml');
   fs.writeFileSync(indexPath, indexXml, 'utf-8');
 
   if (fs.existsSync(distPath)) {
+    const distRootSitemapPath = path.join(distPath, 'sitemap.xml');
+    fs.writeFileSync(distRootSitemapPath, indexXml, 'utf-8');
+
     const distIndexPath = path.join(distPath, 'sitemap-index.xml');
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
   }
@@ -587,7 +579,7 @@ function generateSplitSitemaps() {
   }
 
   console.log('\nルートサイトマップ生成完了');
-  console.log(`  - ${baseUrl}/sitemap.xml (${rootSitemapUrls.length} URLs)`);
+  console.log(`  - ${baseUrl}/sitemap.xml (sitemap index, ${sitemapFiles.length} files)`);
   console.log('分割サイトマップ:');
   console.log(`  - ${baseUrl}/sitemap-index.xml`);
   [...supplementalSitemapFiles, ...sitemapFiles].forEach(file => {

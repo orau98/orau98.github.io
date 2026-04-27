@@ -220,6 +220,26 @@ const validateRobotsTxt = (filePath) => {
   );
 };
 
+const validateSitemapIndex = (filePath) => {
+  const relativePath = path.relative(ROOT, filePath);
+  ensure(fs.existsSync(filePath), `${relativePath}: sitemap index not found`);
+  if (!fs.existsSync(filePath)) return;
+
+  const body = readFile(filePath);
+  ensure(
+    /<sitemapindex\b/i.test(body),
+    `${relativePath}: root sitemap must be a sitemap index`,
+  );
+  ensure(
+    !/<urlset\b/i.test(body),
+    `${relativePath}: root sitemap should not be a full URL set`,
+  );
+  ensure(
+    body.includes(`${SITE_ORIGIN}/sitemap-main.xml`),
+    `${relativePath}: missing sitemap-main.xml entry`,
+  );
+};
+
 const validateSpa404 = (filePath) => {
   const relativePath = path.relative(ROOT, filePath);
   ensure(fs.existsSync(filePath), `${relativePath}: 404.html not found`);
@@ -317,7 +337,8 @@ for (const relativeDir of legacyRouteDirs) {
 validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.insects.json'));
 validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.plants.json'));
 validateRobotsTxt(path.join(DIST_DIR, 'robots.txt'));
-ensure(fs.existsSync(path.join(DIST_DIR, 'sitemap-index.xml')), 'dist/sitemap-index.xml not found');
+validateSitemapIndex(path.join(DIST_DIR, 'sitemap.xml'));
+validateSitemapIndex(path.join(DIST_DIR, 'sitemap-index.xml'));
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
 if (failures.length > 0) {
