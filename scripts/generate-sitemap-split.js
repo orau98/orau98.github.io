@@ -153,6 +153,7 @@ function buildRobotsTxt(baseUrl) {
     `Sitemap: ${baseUrl}/sitemap.xml`,
     `Sitemap: ${baseUrl}/sitemap-index.xml`,
     `Sitemap: ${baseUrl}/gsc-sitemap.xml`,
+    `Sitemap: ${baseUrl}/gsc-index-sitemap.xml`,
     `Sitemap: ${baseUrl}/gsc-sitemap.txt`,
     `Sitemap: ${baseUrl}/google-sitemap.xml`,
     `Sitemap: ${baseUrl}/google-sitemap.txt`,
@@ -179,9 +180,11 @@ function writePublicAndDistFile(filename, content, distPath) {
 
 function buildGoogleFallbackFiles(baseUrl, generatedAt) {
   const homepage = `${baseUrl}/`;
+  const indexPage = `${baseUrl}/index.html`;
   const hubUrl = 'https://pubsubhubbub.appspot.com/';
   const rfc822Date = formatRfc822Date(generatedAt);
   const escapedHomepage = escapeXml(homepage);
+  const escapedIndexPage = escapeXml(indexPage);
   const escapedHubUrl = escapeXml(hubUrl);
   const escapedGeneratedAt = escapeXml(generatedAt);
 
@@ -191,6 +194,15 @@ function buildGoogleFallbackFiles(baseUrl, generatedAt) {
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
       '  <url>',
       `    <loc>${escapedHomepage}</loc>`,
+      '  </url>',
+      '</urlset>',
+      '',
+    ].join('\n'),
+    'gsc-index-sitemap.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      '  <url>',
+      `    <loc>${escapedIndexPage}</loc>`,
       '  </url>',
       '</urlset>',
       '',
