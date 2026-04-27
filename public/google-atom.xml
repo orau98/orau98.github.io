@@ -2,6 +2,8 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>orau98.github.io</title>
   <link href="https://orau98.github.io/"/>
+  <link rel="self" href="https://orau98.github.io/google-atom.xml"/>
+  <link rel="hub" href="https://pubsubhubbub.appspot.com/"/>
   <updated>2026-04-27T00:00:00Z</updated>
   <id>https://orau98.github.io/</id>
   <entry>
@@ -9,5 +11,6 @@
     <link href="https://orau98.github.io/"/>
     <id>https://orau98.github.io/</id>
     <updated>2026-04-27T00:00:00Z</updated>
+    <summary>昆虫植物図鑑のトップページ</summary>
   </entry>
 </feed>

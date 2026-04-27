@@ -161,6 +161,85 @@ function buildRobotsTxt(baseUrl) {
   return lines.join('\n');
 }
 
+function formatRfc822Date(dateString) {
+  return new Date(`${dateString}T00:00:00Z`).toUTCString();
+}
+
+function writePublicAndDistFile(filename, content, distPath) {
+  const publicPath = path.join(__dirname, '../public', filename);
+  fs.writeFileSync(publicPath, content, 'utf-8');
+
+  if (fs.existsSync(distPath)) {
+    const distFilePath = path.join(distPath, filename);
+    fs.writeFileSync(distFilePath, content, 'utf-8');
+  }
+}
+
+function buildGoogleFallbackFiles(baseUrl, generatedAt) {
+  const homepage = `${baseUrl}/`;
+  const hubUrl = 'https://pubsubhubbub.appspot.com/';
+  const rfc822Date = formatRfc822Date(generatedAt);
+  const escapedHomepage = escapeXml(homepage);
+  const escapedHubUrl = escapeXml(hubUrl);
+  const escapedGeneratedAt = escapeXml(generatedAt);
+
+  return {
+    'google-sitemap.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      '  <url>',
+      `    <loc>${escapedHomepage}</loc>`,
+      `    <lastmod>${escapedGeneratedAt}</lastmod>`,
+      '  </url>',
+      '</urlset>',
+      '',
+    ].join('\n'),
+    'google-sitemap.txt': `${homepage}\n`,
+    'google-feed.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+      '  <channel>',
+      '    <title>orau98.github.io</title>',
+      `    <link>${escapedHomepage}</link>`,
+      '    <description>orau98.github.io sitemap feed</description>',
+      `    <atom:link href="${escapeXml(`${baseUrl}/google-feed.xml`)}" rel="self" type="application/rss+xml"/>`,
+      `    <atom:link href="${escapedHubUrl}" rel="hub"/>`,
+      `    <lastBuildDate>${escapeXml(rfc822Date)}</lastBuildDate>`,
+      '    <language>ja</language>',
+      '    <ttl>60</ttl>',
+      '    <item>',
+      '      <title>orau98.github.io</title>',
+      `      <link>${escapedHomepage}</link>`,
+      '      <description>昆虫植物図鑑のトップページ</description>',
+      `      <guid isPermaLink="true">${escapedHomepage}</guid>`,
+      `      <pubDate>${escapeXml(rfc822Date)}</pubDate>`,
+      '    </item>',
+      '  </channel>',
+      '</rss>',
+      '',
+    ].join('\n'),
+    'google-atom.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<feed xmlns="http://www.w3.org/2005/Atom">',
+      '  <title>orau98.github.io</title>',
+      `  <link href="${escapedHomepage}"/>`,
+      `  <link rel="self" href="${escapeXml(`${baseUrl}/google-atom.xml`)}"/>`,
+      `  <link rel="hub" href="${escapedHubUrl}"/>`,
+      `  <updated>${escapedGeneratedAt}T00:00:00Z</updated>`,
+      `  <id>${escapedHomepage}</id>`,
+      '  <entry>',
+      '    <title>orau98.github.io</title>',
+      `    <link href="${escapedHomepage}"/>`,
+      `    <id>${escapedHomepage}</id>`,
+      `    <updated>${escapedGeneratedAt}T00:00:00Z</updated>`,
+      '    <summary>昆虫植物図鑑のトップページ</summary>',
+      '  </entry>',
+      '</feed>',
+      '',
+    ].join('\n'),
+  };
+}
+
 function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {}) {
   if (!fs.existsSync(filePath) || isNoindexPage(filePath)) {
     return false;
@@ -573,6 +652,11 @@ function generateSplitSitemaps() {
     const distIndexPath = path.join(distPath, 'sitemap-index.xml');
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
   }
+
+  const googleFallbackFiles = buildGoogleFallbackFiles(baseUrl, generatedAt);
+  Object.entries(googleFallbackFiles).forEach(([filename, content]) => {
+    writePublicAndDistFile(filename, content, distPath);
+  });
 
   const robotsTxt = buildRobotsTxt(baseUrl);
   const robotsPath = path.join(__dirname, '../public/robots.txt');

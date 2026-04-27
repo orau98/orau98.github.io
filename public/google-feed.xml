@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>orau98.github.io</title>
     <link>https://orau98.github.io/</link>
     <description>orau98.github.io sitemap feed</description>
+    <atom:link href="https://orau98.github.io/google-feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>
+    <lastBuildDate>Mon, 27 Apr 2026 00:00:00 GMT</lastBuildDate>
+    <language>ja</language>
+    <ttl>60</ttl>
     <item>
       <title>orau98.github.io</title>
       <link>https://orau98.github.io/</link>
+      <description>昆虫植物図鑑のトップページ</description>
+      <guid isPermaLink="true">https://orau98.github.io/</guid>
       <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
     </item>
   </channel>
