@@ -256,18 +256,26 @@ const validateRobotsTxt = (filePath) => {
   if (!fs.existsSync(filePath)) return;
 
   const body = readFile(filePath);
-  ensure(
-    body.includes(`Sitemap: ${SITE_ORIGIN}/sitemap.xml`),
-    `${relativePath}: missing sitemap.xml directive`,
-  );
-  ensure(
-    body.includes(`Sitemap: ${SITE_ORIGIN}/sitemap-index.xml`),
-    `${relativePath}: missing sitemap-index.xml directive`,
-  );
-  ensure(
-    body.includes(`Sitemap: ${SITE_ORIGIN}/search-console-sitemap.xml`),
-    `${relativePath}: missing search-console-sitemap.xml directive`,
-  );
+  const requiredSitemaps = [
+    'sitemap.xml',
+    'sitemap-index.xml',
+    'sitemap-core.xml',
+    'sitemap-all.txt',
+    'sitemap.txt',
+    'search-console-sitemap.xml',
+    'search-console-sitemap.txt',
+    'google-sitemap.xml',
+    'google-sitemap.txt',
+    'gsc-sitemap.xml',
+    'gsc-sitemap.txt',
+  ];
+
+  for (const sitemap of requiredSitemaps) {
+    ensure(
+      body.includes(`Sitemap: ${SITE_ORIGIN}/${sitemap}`),
+      `${relativePath}: missing ${sitemap} directive`,
+    );
+  }
 };
 
 const validateSitemapIndex = (filePath) => {

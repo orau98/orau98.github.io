@@ -146,13 +146,25 @@ function isNoindexPage(filePath) {
 }
 
 function buildRobotsTxt(baseUrl) {
+  const sitemapPaths = [
+    '/sitemap.xml',
+    '/sitemap-index.xml',
+    '/sitemap-core.xml',
+    '/sitemap-all.txt',
+    '/sitemap.txt',
+    '/search-console-sitemap.xml',
+    '/search-console-sitemap.txt',
+    '/google-sitemap.xml',
+    '/google-sitemap.txt',
+    '/gsc-sitemap.xml',
+    '/gsc-sitemap.txt',
+  ];
+
   const lines = [
     'User-agent: *',
     'Allow: /',
     '',
-    `Sitemap: ${baseUrl}/sitemap.xml`,
-    `Sitemap: ${baseUrl}/sitemap-index.xml`,
-    `Sitemap: ${baseUrl}/search-console-sitemap.xml`,
+    ...sitemapPaths.map((sitemapPath) => `Sitemap: ${baseUrl}${sitemapPath}`),
     '',
   ];
   return lines.join('\n');
@@ -211,6 +223,7 @@ function buildGoogleFallbackFiles(baseUrl, generatedAt) {
       '</urlset>',
       '',
     ].join('\n'),
+    'search-console-sitemap.txt': `${homepage}\n`,
     'gsc-sitemap.txt': `${homepage}\n`,
     'google-sitemap.xml': [
       '<?xml version="1.0" encoding="UTF-8"?>',

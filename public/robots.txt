@@ -3,4 +3,12 @@ Allow: /
 
 Sitemap: https://orau98.github.io/sitemap.xml
 Sitemap: https://orau98.github.io/sitemap-index.xml
+Sitemap: https://orau98.github.io/sitemap-core.xml
+Sitemap: https://orau98.github.io/sitemap-all.txt
+Sitemap: https://orau98.github.io/sitemap.txt
 Sitemap: https://orau98.github.io/search-console-sitemap.xml
+Sitemap: https://orau98.github.io/search-console-sitemap.txt
+Sitemap: https://orau98.github.io/google-sitemap.xml
+Sitemap: https://orau98.github.io/google-sitemap.txt
+Sitemap: https://orau98.github.io/gsc-sitemap.xml
+Sitemap: https://orau98.github.io/gsc-sitemap.txt

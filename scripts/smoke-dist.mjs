@@ -14,7 +14,13 @@ const REQUIRED_FILES = [
   'sitemap.xml',
   'sitemap-index.xml',
   'search-console-sitemap.xml',
+  'search-console-sitemap.txt',
   'sitemap-core.xml',
+  'sitemap-all.txt',
+  'google-sitemap.xml',
+  'google-sitemap.txt',
+  'gsc-sitemap.xml',
+  'gsc-sitemap.txt',
   'opensearch.xml',
   'sitemap.html',
 ];
