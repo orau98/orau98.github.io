@@ -152,6 +152,8 @@ function buildRobotsTxt(baseUrl) {
     '',
     `Sitemap: ${baseUrl}/sitemap.xml`,
     `Sitemap: ${baseUrl}/sitemap-index.xml`,
+    `Sitemap: ${baseUrl}/gsc-sitemap.xml`,
+    `Sitemap: ${baseUrl}/gsc-sitemap.txt`,
     `Sitemap: ${baseUrl}/google-sitemap.xml`,
     `Sitemap: ${baseUrl}/google-sitemap.txt`,
     `Sitemap: ${baseUrl}/google-feed.xml`,
@@ -184,6 +186,16 @@ function buildGoogleFallbackFiles(baseUrl, generatedAt) {
   const escapedGeneratedAt = escapeXml(generatedAt);
 
   return {
+    'gsc-sitemap.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      '  <url>',
+      `    <loc>${escapedHomepage}</loc>`,
+      '  </url>',
+      '</urlset>',
+      '',
+    ].join('\n'),
+    'gsc-sitemap.txt': `${homepage}\n`,
     'google-sitemap.xml': [
       '<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
