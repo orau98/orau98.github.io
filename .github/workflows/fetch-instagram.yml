@@ -28,13 +28,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
+
+      - name: Sync latest main before updating
+        run: |
+          git fetch origin main
+          git pull --ff-only origin main
 
       - name: Update instagram_posts.txt (uses provided script or archive fallback)
         run: |
@@ -49,12 +52,10 @@ jobs:
       - name: Commit changes
         id: commit_changes
         run: |
-          git fetch origin main
-          git pull --rebase origin main
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add public/instagram_posts.txt public/instagram_latest.txt public/instagram_posts.json public/instagram
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/instagram_posts.txt public/instagram_latest.txt public/instagram_posts.json public/instagram
+          if ! git diff --cached --quiet; then
             git commit -m "chore(instagram): update instagram posts"
             git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
