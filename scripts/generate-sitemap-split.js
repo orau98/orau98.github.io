@@ -152,6 +152,8 @@ function buildRobotsTxt(baseUrl) {
     '',
     `Sitemap: ${baseUrl}/sitemap.xml`,
     `Sitemap: ${baseUrl}/sitemap-index.xml`,
+    `Sitemap: ${baseUrl}/google-sitemap.xml`,
+    `Sitemap: ${baseUrl}/google-sitemap.txt`,
     '',
   ];
   return lines.join('\n');
