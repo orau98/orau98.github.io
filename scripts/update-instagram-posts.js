@@ -17,6 +17,10 @@ const USER_ID = process.env.IG_USER_ID;
 const IG_USERNAME = process.env.IG_USERNAME;
 const POST_LIMIT = Math.max(1, parseInt(process.env.POST_LIMIT || '10', 10) || 10);
 const REQUEST_RETRY_LIMIT = Math.max(0, parseInt(process.env.IG_REQUEST_RETRY_LIMIT || '2', 10) || 2);
+const CACHE_MAX_AGE_HOURS = (() => {
+  const parsed = Number.parseFloat(process.env.IG_CACHE_MAX_AGE_HOURS || '');
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 72;
+})();
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const USERNAME_PATTERN = /^[A-Za-z0-9._]+$/;
 const MAX_RETRY_WAIT_MS = 15000;
@@ -184,6 +188,12 @@ const loadExistingCacheInfo = () => {
     }
   }
   return { urlCount: urls.length, postCount, generatedAt };
+};
+
+const getCacheAgeHours = (generatedAt = '') => {
+  const generatedMs = Date.parse(generatedAt);
+  if (!Number.isFinite(generatedMs)) return Infinity;
+  return Math.max(0, (Date.now() - generatedMs) / 3600000);
 };
 
 const extractUsernameFromPostHtml = (html = '') => {
@@ -512,13 +522,22 @@ const main = async () => {
 main().catch((err) => {
   const message = err?.message || String(err);
   const cache = loadExistingCacheInfo();
-  if (message.includes('[instagram]') && (cache.urlCount > 0 || cache.postCount > 0)) {
+  const hasCache = cache.urlCount > 0 || cache.postCount > 0;
+  const cacheAgeHours = getCacheAgeHours(cache.generatedAt);
+  if (message.includes('[instagram]') && hasCache && cacheAgeHours <= CACHE_MAX_AGE_HOURS) {
     const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
     console.warn(message);
     console.warn(
       `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
     );
     process.exit(0);
+  }
+  if (message.includes('[instagram]') && hasCache) {
+    console.error(message);
+    console.error(
+      `[instagram] Existing cached data is stale (${cacheAgeHours === Infinity ? 'unknown' : cacheAgeHours.toFixed(1)}h old, max ${CACHE_MAX_AGE_HOURS}h). Failing the workflow so the feed does not silently stay old.`,
+    );
+    process.exit(1);
   }
   console.error(message);
   process.exit(1);
