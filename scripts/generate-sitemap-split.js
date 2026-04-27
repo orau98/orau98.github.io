@@ -152,13 +152,7 @@ function buildRobotsTxt(baseUrl) {
     '',
     `Sitemap: ${baseUrl}/sitemap.xml`,
     `Sitemap: ${baseUrl}/sitemap-index.xml`,
-    `Sitemap: ${baseUrl}/gsc-sitemap.xml`,
-    `Sitemap: ${baseUrl}/gsc-index-sitemap.xml`,
-    `Sitemap: ${baseUrl}/gsc-sitemap.txt`,
-    `Sitemap: ${baseUrl}/google-sitemap.xml`,
-    `Sitemap: ${baseUrl}/google-sitemap.txt`,
-    `Sitemap: ${baseUrl}/google-feed.xml`,
-    `Sitemap: ${baseUrl}/google-atom.xml`,
+    `Sitemap: ${baseUrl}/search-console-sitemap.xml`,
     '',
   ];
   return lines.join('\n');
@@ -189,6 +183,16 @@ function buildGoogleFallbackFiles(baseUrl, generatedAt) {
   const escapedGeneratedAt = escapeXml(generatedAt);
 
   return {
+    'search-console-sitemap.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      '  <url>',
+      `    <loc>${escapedHomepage}</loc>`,
+      `    <lastmod>${escapedGeneratedAt}</lastmod>`,
+      '  </url>',
+      '</urlset>',
+      '',
+    ].join('\n'),
     'gsc-sitemap.xml': [
       '<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',

@@ -218,6 +218,10 @@ const validateRobotsTxt = (filePath) => {
     body.includes(`Sitemap: ${SITE_ORIGIN}/sitemap-index.xml`),
     `${relativePath}: missing sitemap-index.xml directive`,
   );
+  ensure(
+    body.includes(`Sitemap: ${SITE_ORIGIN}/search-console-sitemap.xml`),
+    `${relativePath}: missing search-console-sitemap.xml directive`,
+  );
 };
 
 const validateSitemapIndex = (filePath) => {
