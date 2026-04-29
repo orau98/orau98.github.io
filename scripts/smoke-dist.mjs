@@ -5,6 +5,7 @@ const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
 const REQUIRED_FILES = [
   'index.html',
+  '.nojekyll',
   'en/index.html',
   'en/meta/moth/index.html',
   'en/meta/plant/index.html',
@@ -13,6 +14,8 @@ const REQUIRED_FILES = [
   'sitemap.txt',
   'sitemap.xml',
   'sitemap-index.xml',
+  'search-console-submit.xml',
+  'search-console-submit.txt',
   'search-console-sitemap.xml',
   'search-console-sitemap.txt',
   'sitemap-core.xml',

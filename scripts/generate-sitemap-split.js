@@ -152,6 +152,8 @@ function buildRobotsTxt(baseUrl) {
     '/sitemap-core.xml',
     '/sitemap-all.txt',
     '/sitemap.txt',
+    '/search-console-submit.xml',
+    '/search-console-submit.txt',
     '/search-console-sitemap.xml',
     '/search-console-sitemap.txt',
     '/google-sitemap.xml',
@@ -394,7 +396,7 @@ function generateSplitSitemaps() {
     ...Object.fromEntries(EN_META_PAGE_SECTIONS.map(({ key }) => [key, []])),
   };
   
-  const topLevelFile = path.join(__dirname, '../public/index.html');
+  const topLevelFile = path.join(__dirname, '../index.html');
   sitemaps.main.push({
     loc: `${baseUrl}/`,
     lastmod: getFileLastmod(topLevelFile),
@@ -695,6 +697,15 @@ function generateSplitSitemaps() {
   }
 
   const googleFallbackFiles = buildGoogleFallbackFiles(baseUrl, generatedAt);
+  const searchConsoleSubmitUrls = coreUrls.length > 0
+    ? coreUrls
+    : [{ loc: `${baseUrl}/`, lastmod: generatedAt, changefreq: 'weekly', priority: '1.0' }];
+  googleFallbackFiles['search-console-submit.xml'] = generateXML(
+    searchConsoleSubmitUrls,
+    { includeGeneratedComment: false, includeMetadata: false },
+  ) + '\n';
+  googleFallbackFiles['search-console-submit.txt'] =
+    `${searchConsoleSubmitUrls.map((url) => url.loc).join('\n')}\n`;
   Object.entries(googleFallbackFiles).forEach(([filename, content]) => {
     writePublicAndDistFile(filename, content, distPath);
   });
