@@ -79,8 +79,8 @@ export default function ListFilterPanel({
         id={panelId}
         aria-hidden={!isOpen}
         inert={!isOpen ? true : undefined}
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        className={`transition-all duration-300 ease-in-out ${
+          isOpen ? 'max-h-[36rem] overflow-visible opacity-100' : 'max-h-0 overflow-hidden opacity-0'
         }`}
       >
         <fieldset disabled={!isOpen} className={controlsClassName}>

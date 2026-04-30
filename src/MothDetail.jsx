@@ -28,6 +28,7 @@ import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import DetailNavigation from './components/DetailNavigation';
+import DetailSectionNav from './components/DetailSectionNav';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import Breadcrumb from './components/Breadcrumb';
@@ -927,8 +928,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   logger.debug('Instagram URL:', moth?.instagramUrl);
   logger.debug('Has Instagram Post:', hasInstagramPost);
 
-  const renderFoodWebCard = (containerRef, className) => (
-    <div className={className} ref={containerRef}>
+  const renderFoodWebCard = (containerRef, className, id) => (
+    <div data-section-id={id} className={`${className} scroll-mt-28`} ref={containerRef}>
       <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
           <div className="flex items-center gap-3">
@@ -945,6 +946,20 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 {isEnglish ? 'Plants used by this species' : '食草ネットワーク'}
               </h2>
             </div>
+          </div>
+        </div>
+
+        <div className="border-b border-slate-200/80 bg-emerald-50/80 px-4 py-3 text-sm text-slate-700 dark:border-slate-700/70 dark:bg-emerald-950/20 dark:text-slate-200">
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-emerald-700 shadow-sm dark:bg-slate-900 dark:text-emerald-300">
+              {isEnglish ? 'Green: plants' : '緑: 植物'}
+            </span>
+            <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-blue-700 shadow-sm dark:bg-slate-900 dark:text-blue-300">
+              {isEnglish ? 'Blue: insects' : '青: 昆虫'}
+            </span>
+            <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
+              {isEnglish ? 'Lines: host or flower visit links' : '線: 食草/訪花の関係'}
+            </span>
           </div>
         </div>
 
@@ -1089,6 +1104,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           </div>
         </div>
 
+        <DetailSectionNav
+          label={isEnglish ? 'Insect detail sections' : '昆虫詳細のセクション'}
+          items={[
+            { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
+            { id: 'basic-info', label: isEnglish ? 'Name' : '種名' },
+            { id: 'host-plants', label: isEnglish ? 'Host plants' : '食草・訪花' },
+            { id: 'adult-season', label: isEnglish ? 'Season' : '発生時期' },
+            { id: 'food-web', label: isEnglish ? 'Network' : 'ネットワーク' },
+            { id: 'share', label: isEnglish ? 'Share' : '共有' },
+          ]}
+        />
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 画像セクション */}
           <div id="plant-photos" className="lg:col-span-1">
@@ -1175,7 +1202,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             </div>
 
             {/* PC: 食草ネットワークを左カラムに配置 */}
-            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6")}
+            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6", "food-web")}
           </div>
 
           {/* 情報セクション */}
@@ -1728,7 +1755,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               
               return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote || hasSupplementalEmergenceHint;
             })() && (
-              <div id="emergence-time" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+              <div id="adult-season" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden scroll-mt-28">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-orange-500 rounded-lg">
@@ -1937,7 +1964,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               locale={locale}
             />
             {/* Mobile: 食草ネットワークを同じ食草の昆虫セクションの後に配置 */}
-            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10")}
+            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10", "food-web")}
 
           </div>
         </div>

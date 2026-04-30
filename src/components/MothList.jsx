@@ -14,6 +14,8 @@ import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import { createSafeInsectFilename } from '../utils/image';
 import ImageWithFallback from './ImageWithFallback';
+import SearchableSelect from './SearchableSelect';
+import { ListDisplayControls, PresetFilterChips } from './ListToolbar';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,
@@ -88,7 +90,7 @@ const buildPlantDisplayData = (moth) => {
   };
 };
 
-const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, plantDetails = {}, locale = 'ja' }) => {
+const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false, imageFilename, plantDetails = {}, locale = 'ja', viewMode = 'cards' }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   // Heuristic: insert a space between genus and species if missing
@@ -267,6 +269,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
       flowerNames: plantDisplay.flowerNames.map(toDisplayName).filter(Boolean),
     };
   }, [plantDetails, plantDisplay.flowerNames, plantDisplay.hostNames, isEnglish]);
+  const emergenceTime = moth.emergenceTime || extractEmergenceTime(moth.notes || '').emergenceTime;
+  const normalizedTime = normalizeEmergenceTime(emergenceTime);
+  const linkedPlantCount = plantDisplay.hostNames.length + plantDisplay.flowerNames.length;
 
   // Error boundary for individual moth items
   if (!moth) {
@@ -274,6 +279,87 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   }
   
   try {
+    if (viewMode === 'compact') {
+      return (
+        <article ref={imgRef} className="group list-none rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:border-blue-400/60 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-800">
+          <Link
+            to={route}
+            state={makeDetailLinkState(location, { setFromList: true })}
+            className="flex gap-3 p-3"
+          >
+            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-700 sm:h-24 sm:w-24">
+              {hasImageFilename && isVisible ? (
+                <ImageWithFallback
+                  src={responsiveImage?.src}
+                  srcSet={responsiveImage?.srcSet}
+                  sizes="96px"
+                  sources={responsiveImage?.sources}
+                  candidates={imageFallbackCandidates}
+                  fallbackSrc={placeholderFallbackSrc}
+                  alt={isEnglish ? `${primaryName} photograph` : `${moth.name}（${moth.scientificName}）の写真`}
+                  width="120"
+                  height="120"
+                  className="h-full w-full"
+                  imgClassName="transition duration-300 group-hover:scale-105"
+                  fit="cover"
+                  loading={isPriority ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchPriority={isPriority ? 'high' : 'auto'}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-slate-400">
+                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <h3 className="line-clamp-1 text-base font-bold text-slate-800 dark:text-slate-100">
+                    {isEnglish ? formatScientificNameReact(primaryName) : moth.name}
+                  </h3>
+                  {secondaryName && (
+                    <p className={`line-clamp-1 text-sm text-slate-600 dark:text-slate-400 ${isEnglish ? '' : 'italic'}`}>
+                      {isEnglish ? secondaryName : formatScientificNameReact(dropSubspecies(repairScientificBinomial(moth.scientificName)))}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-wrap justify-end gap-1">
+                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${hasImageFilename ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300'}`}>
+                    {hasImageFilename ? (isEnglish ? 'Photo' : '写真') : (isEnglish ? 'No photo' : '画像なし')}
+                  </span>
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                    {isEnglish ? `${linkedPlantCount} plants` : `植物 ${linkedPlantCount}`}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
+                {localizedPlantDisplay.hostNames.length > 0 && (
+                  <p className="line-clamp-1">
+                    <span className="font-semibold text-emerald-700 dark:text-emerald-300">{isEnglish ? 'Host:' : '食草:'}</span>{' '}
+                    {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
+                  </p>
+                )}
+                {localizedPlantDisplay.flowerNames.length > 0 && (
+                  <p className="line-clamp-1">
+                    <span className="font-semibold text-rose-700 dark:text-rose-300">{isEnglish ? 'Flower:' : '訪花:'}</span>{' '}
+                    {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
+                  </p>
+                )}
+                {normalizedTime && (
+                  <p className="line-clamp-1 text-xs text-slate-500 dark:text-slate-400">
+                    {isEnglish ? 'Season:' : '出現期:'} {normalizedTime}
+                  </p>
+                )}
+              </div>
+            </div>
+          </Link>
+        </article>
+      );
+    }
+
     return (
       <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
@@ -474,6 +560,23 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       family: isEnglish ? 'Family' : '科',
       genus: isEnglish ? 'Genus' : '属',
       emergence: isEnglish ? 'Adult season' : '出現期',
+      season: isEnglish ? 'Season' : '季節',
+      photo: isEnglish ? 'Photo' : '写真',
+      withPhoto: isEnglish ? 'With photos' : '写真あり',
+      presetLabel: isEnglish ? 'Quick filters:' : 'クイック絞り込み:',
+      spring: isEnglish ? 'Spring' : '春',
+      summer: isEnglish ? 'Summer' : '夏',
+      autumn: isEnglish ? 'Autumn' : '秋',
+      winter: isEnglish ? 'Winter' : '冬',
+      view: isEnglish ? 'View' : '表示',
+      cards: isEnglish ? 'Cards' : 'カード',
+      compact: isEnglish ? 'Compact' : 'コンパクト',
+      sort: isEnglish ? 'Sort' : '並び替え',
+      sortImage: isEnglish ? 'Photos first' : '写真あり優先',
+      sortName: isEnglish ? 'Name' : '名前順',
+      sortFamily: isEnglish ? 'Family' : '科順',
+      sortPlantCount: isEnglish ? 'Plant links' : '植物数順',
+      sortSeason: isEnglish ? 'Adult season' : '出現期順',
       resultCount: (value) =>
         isEnglish ? `${value} results` : `${value} 件が見つかりました`,
       listTitle: isEnglish ? `${title} list` : `${title}のリスト`,
@@ -591,6 +694,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const familyFilter = useMemo(() => searchParams.get('ifamily') || '', [searchParams]);
   const genusFilter = useMemo(() => searchParams.get('igenus') || '', [searchParams]);
   const emergenceFilter = useMemo(() => searchParams.get('imonth') || '', [searchParams]);
+  const seasonFilter = useMemo(() => {
+    const v = (searchParams.get('iseason') || '').toLowerCase();
+    return ['spring', 'summer', 'autumn', 'winter'].includes(v) ? v : '';
+  }, [searchParams]);
+  const photoFilter = useMemo(() => (searchParams.get('iphoto') === 'has' ? 'has' : 'all'), [searchParams]);
+  const viewMode = useMemo(() => (searchParams.get('iview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
+  const sortMode = useMemo(() => {
+    const v = searchParams.get('isort') || 'image';
+    return ['image', 'name', 'family', 'plantCount', 'season'].includes(v) ? v : 'image';
+  }, [searchParams]);
 
   const setIPage = useCallback((page) => {
     updateSearchParams((p) => {
@@ -632,6 +745,40 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       const v = (value || '').trim();
       if (v) p.set('imonth', v);
       else p.delete('imonth');
+      p.delete('iseason');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setISeasonFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').trim();
+      if (['spring', 'summer', 'autumn', 'winter'].includes(v)) p.set('iseason', v);
+      else p.delete('iseason');
+      p.delete('imonth');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setIPhotoFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value === 'has') p.set('iphoto', 'has');
+      else p.delete('iphoto');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const setIViewMode = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value === 'compact') p.set('iview', 'compact');
+      else p.delete('iview');
+    });
+  }, [updateSearchParams]);
+
+  const setISortMode = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value && value !== 'image') p.set('isort', value);
+      else p.delete('isort');
       p.delete('ipage');
     });
   }, [updateSearchParams]);
@@ -649,6 +796,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       p.delete('ifamily');
       p.delete('igenus');
       p.delete('imonth');
+      p.delete('iseason');
+      p.delete('iphoto');
       p.delete('classification');
       p.delete('ipage');
     });
@@ -667,6 +816,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       p.delete('ifamily');
       p.delete('igenus');
       p.delete('imonth');
+      p.delete('iseason');
+      p.delete('iphoto');
       p.delete('classification');
       p.delete('q');
       p.delete('ipage');
@@ -752,6 +903,26 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
     return months.includes(targetMonth);
   }, []);
+
+  const getEmergenceMonthList = useCallback((insect) => {
+    const emergenceTime = insect?.emergenceTime || extractEmergenceTime(insect?.notes || '').emergenceTime;
+    const normalized = normalizeEmergenceTime(emergenceTime);
+    if (!normalized) return [];
+    return getEmergenceMonths(normalized) || [];
+  }, []);
+
+  const checkSeasonMatch = useCallback((insect, season) => {
+    if (!season) return true;
+    const months = getEmergenceMonthList(insect);
+    if (!months.length) return false;
+    const seasonMonths = {
+      spring: [3, 4, 5],
+      summer: [6, 7, 8],
+      autumn: [9, 10, 11],
+      winter: [12, 1, 2],
+    }[season] || [];
+    return months.some((month) => seasonMonths.includes(month));
+  }, [getEmergenceMonthList]);
   
   const computeItemsPerPage = useCallback(() => {
     if (typeof window === 'undefined') return 48;
@@ -770,8 +941,14 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const classificationFilter = searchParams.get('classification');
   const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
   const hasSearchQuery = searchQuery.length > 0;
-  const hasFilterCriteria = hostFilter !== 'all' || !!familyFilter || !!genusFilter || !!emergenceFilter || !!classificationFilter;
+  const hasFilterCriteria = hostFilter !== 'all' || !!familyFilter || !!genusFilter || !!emergenceFilter || !!seasonFilter || photoFilter === 'has' || !!classificationFilter;
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
+  const seasonLabels = useMemo(() => ({
+    spring: ui.spring,
+    summer: ui.summer,
+    autumn: ui.autumn,
+    winter: ui.winter,
+  }), [ui.autumn, ui.spring, ui.summer, ui.winter]);
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
@@ -779,6 +956,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     if (familyFilter) filters.push({ type: isEnglish ? 'Family' : '科', value: familyFilter, clear: () => setIFamilyFilter('') });
     if (genusFilter) filters.push({ type: isEnglish ? 'Genus' : '属', value: genusFilter, clear: () => setIGenusFilter('') });
     if (emergenceFilter) filters.push({ type: isEnglish ? 'Season' : '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
+    if (seasonFilter) filters.push({ type: ui.season, value: seasonLabels[seasonFilter] || seasonFilter, clear: () => setISeasonFilter('') });
+    if (photoFilter === 'has') filters.push({ type: ui.photo, value: ui.withPhoto, clear: () => setIPhotoFilter('all') });
     if (classificationFilter) filters.push({ type: isEnglish ? 'Taxonomy' : '分類', value: classificationFilter, clear: clearClassification });
     return filters;
   }, [
@@ -788,6 +967,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     familyFilter,
     genusFilter,
     emergenceFilter,
+    seasonFilter,
+    photoFilter,
     classificationFilter,
     clearSearch,
     clearClassification,
@@ -795,7 +976,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     setIFamilyFilter,
     setIGenusFilter,
     setIEmergenceFilter,
+    setISeasonFilter,
+    setIPhotoFilter,
     isEnglish,
+    ui.photo,
+    ui.season,
+    ui.withPhoto,
+    seasonLabels,
   ]);
   const emptyStateHint = useMemo(() => {
     if (!hasSearchQuery && !hasFilterCriteria) {
@@ -829,6 +1016,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     familyFilter,
     genusFilter,
     emergenceFilter,
+    seasonFilter,
+    photoFilter,
   });
   const listTopRef = useRef(null);
   const resizeInitializedRef = useRef(false);
@@ -979,6 +1168,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           if (emergenceFilter) {
             if (!checkEmergenceMatch(moth, emergenceFilter)) return false;
           }
+
+          if (seasonFilter) {
+            if (!checkSeasonMatch(moth, seasonFilter)) return false;
+          }
           
           const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
           // ひらがなをカタカナに変換した検索語も用意
@@ -1030,7 +1223,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, hasRealHost, checkEmergenceMatch, normalizeText]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, hasRealHost, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
@@ -1203,22 +1396,50 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       if (!filteredMoths || filteredMoths.length === 0) {
         return [];
       }
-      // If image index isn't ready, return unsorted. UI will show placeholders meanwhile.
-      if (!isImageIndexReady) {
-        return filteredMoths;
-      }
-
       const getHasImage = (insect) => {
         if (!insect) return false;
         return mothImageMap.has(insect.id);
       };
 
+      const getPlantLinkCount = (insect) => {
+        const data = buildPlantDisplayData(insect);
+        return data.hostNames.length + data.flowerNames.length;
+      };
+      const getFirstMonth = (insect) => {
+        const months = getEmergenceMonthList(insect);
+        return months.length ? Math.min(...months) : 99;
+      };
+      const getFamilySortKey = (insect) => getFamilyLabel(insect) || '';
       const isSearching = (debouncedSearchTerm && debouncedSearchTerm.trim() !== '') || classificationFilter;
-      const sorted = [...filteredMoths].sort((a, b) => {
+      const pool =
+        photoFilter === 'has' && isImageIndexReady
+          ? filteredMoths.filter((insect) => getHasImage(insect))
+          : filteredMoths;
+      const sorted = [...pool].sort((a, b) => {
         const hasImageA = getHasImage(a);
         const hasImageB = getHasImage(b);
-        if (hasImageA && !hasImageB) return -1;
-        if (!hasImageA && hasImageB) return 1;
+        if (sortMode === 'image') {
+          if (hasImageA && !hasImageB) return -1;
+          if (!hasImageA && hasImageB) return 1;
+        }
+        if (sortMode === 'family') {
+          const familyCompare = compareLocalizedValues(getFamilySortKey(a), getFamilySortKey(b));
+          if (familyCompare !== 0) return familyCompare;
+          return compareLocalizedValues(getVisibleName(a), getVisibleName(b));
+        }
+        if (sortMode === 'plantCount') {
+          const countDiff = getPlantLinkCount(b) - getPlantLinkCount(a);
+          if (countDiff !== 0) return countDiff;
+          return compareLocalizedValues(getVisibleName(a), getVisibleName(b));
+        }
+        if (sortMode === 'season') {
+          const monthDiff = getFirstMonth(a) - getFirstMonth(b);
+          if (monthDiff !== 0) return monthDiff;
+          return compareLocalizedValues(getVisibleName(a), getVisibleName(b));
+        }
+        if (sortMode === 'name') {
+          return compareLocalizedValues(getVisibleName(a), getVisibleName(b));
+        }
 
         if (isSearching) {
           const getClassificationPriority = (insect) => {
@@ -1252,12 +1473,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     filteredMoths,
     debouncedSearchTerm,
     classificationFilter,
+    photoFilter,
+    sortMode,
     isImageIndexReady,
     mothImageMap,
     compareLocalizedValues,
     getFamilyLabel,
     getSubfamilyLabel,
     getTribeLabel,
+    getEmergenceMonthList,
     getVisibleName,
   ]);
 
@@ -1326,7 +1550,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       prev.hostFilter !== hostFilter ||
       prev.familyFilter !== familyFilter ||
       prev.genusFilter !== genusFilter ||
-      prev.emergenceFilter !== emergenceFilter;
+      prev.emergenceFilter !== emergenceFilter ||
+      prev.seasonFilter !== seasonFilter ||
+      prev.photoFilter !== photoFilter;
 
     if (!changed) return;
 
@@ -1336,6 +1562,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       familyFilter,
       genusFilter,
       emergenceFilter,
+      seasonFilter,
+      photoFilter,
     };
 
     if (currentPage === 1) return;
@@ -1346,28 +1574,46 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     familyFilter,
     genusFilter,
     emergenceFilter,
+    seasonFilter,
+    photoFilter,
     currentPage,
     setIPage,
   ]);
 
   const renderFilters = () => {
+    const presetChips = [
+      { key: 'host', label: ui.hasHostPlant, active: hostFilter === 'has', onClick: () => setIHostFilter(hostFilter === 'has' ? 'all' : 'has') },
+      { key: 'photo', label: ui.withPhoto, active: photoFilter === 'has', onClick: () => setIPhotoFilter(photoFilter === 'has' ? 'all' : 'has') },
+      { key: 'spring', label: ui.spring, active: seasonFilter === 'spring', onClick: () => setISeasonFilter(seasonFilter === 'spring' ? '' : 'spring') },
+      { key: 'summer', label: ui.summer, active: seasonFilter === 'summer', onClick: () => setISeasonFilter(seasonFilter === 'summer' ? '' : 'summer') },
+      { key: 'winter', label: ui.winter, active: seasonFilter === 'winter', onClick: () => setISeasonFilter(seasonFilter === 'winter' ? '' : 'winter') },
+      { key: 'unknown', label: ui.unregisteredOnly, active: hostFilter === 'none', onClick: () => setIHostFilter(hostFilter === 'none' ? 'all' : 'none') },
+    ];
+    const sortOptions = [
+      { value: 'image', label: ui.sortImage },
+      { value: 'name', label: ui.sortName },
+      { value: 'family', label: ui.sortFamily },
+      { value: 'plantCount', label: ui.sortPlantCount },
+      { value: 'season', label: ui.sortSeason },
+    ];
     return (
-      <ListFilterPanel
-        title={ui.filterTitle}
-        isOpen={isFiltersOpen}
-        onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
-        panelId={filtersPanelId}
-        hasAnyCriteria={hasAnyCriteria}
-        filteredByLabel={ui.filteredBy}
-        activeFilters={activeFilters}
-        onResetAll={resetAll}
-        resetAllLabel={ui.resetAll}
-        getClearFilterLabel={(type) =>
-          isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
-        }
-        controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
-        resultsLabel={ui.resultCount(filteredMoths?.length ?? 0)}
-      >
+      <>
+        <ListFilterPanel
+          title={ui.filterTitle}
+          isOpen={isFiltersOpen}
+          onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
+          panelId={filtersPanelId}
+          hasAnyCriteria={hasAnyCriteria}
+          filteredByLabel={ui.filteredBy}
+          activeFilters={activeFilters}
+          onResetAll={resetAll}
+          resetAllLabel={ui.resetAll}
+          getClearFilterLabel={(type) =>
+            isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
+          }
+          controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+          resultsLabel={ui.resultCount(sortedMoths?.length ?? filteredMoths?.length ?? 0)}
+        >
             <div className="space-y-1">
               <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>{ui.hostPlantFilter}</label>
               <div className="relative">
@@ -1389,49 +1635,25 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               </div>
             </div>
 
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>{ui.family}</label>
-          <div className="relative">
-            <select
-              id={familyFilterId}
-              value={familyFilter}
-              onChange={(e) => setIFamilyFilter(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            >
-              <option value="">{ui.any}</option>
-              {familyOptions.map((f) => (
-                <option key={f} value={f}>{f}</option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-        </div>
+          <SearchableSelect
+            id={familyFilterId}
+            label={ui.family}
+            value={familyFilter}
+            options={familyOptions}
+            onChange={setIFamilyFilter}
+            placeholder={ui.any}
+            locale={locale}
+          />
 
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={genusFilterId}>{ui.genus}</label>
-          <div className="relative">
-            <select
-              id={genusFilterId}
-              value={genusFilter}
-              onChange={(e) => setIGenusFilter(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            >
-              <option value="">{ui.any}</option>
-              {genusOptions.map((g) => (
-                <option key={g} value={g}>{g}</option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-        </div>
+          <SearchableSelect
+            id={genusFilterId}
+            label={ui.genus}
+            value={genusFilter}
+            options={genusOptions}
+            onChange={setIGenusFilter}
+            placeholder={ui.any}
+            locale={locale}
+          />
 
         <div className="space-y-1">
           <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>{ui.emergence}</label>
@@ -1454,7 +1676,22 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </div>
           </div>
         </div>
-      </ListFilterPanel>
+        </ListFilterPanel>
+        <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
+        <ListDisplayControls
+          viewMode={viewMode}
+          onViewModeChange={setIViewMode}
+          sortMode={sortMode}
+          onSortModeChange={setISortMode}
+          sortOptions={sortOptions}
+          labels={{
+            view: ui.view,
+            cards: ui.cards,
+            compact: ui.compact,
+            sort: ui.sort,
+          }}
+        />
+      </>
     );
   };
 
@@ -1504,11 +1741,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               ))}
             </div>
           ) : currentMoths.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'}>
               {currentMoths.map((moth, index) => {
                 try {
                   return (
-                    <div key={moth?.id || `moth-${index}`} className="animate-fadeIn" style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div key={moth?.id || `moth-${index}`} className="animate-fadeIn" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
                       <MothListItem 
                         moth={moth} 
                         baseRoute={baseRoute} 
@@ -1516,6 +1753,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         imageFilename={mothImageMap.get(moth.id)}
                         plantDetails={plantDetails}
                         locale={locale}
+                        viewMode={viewMode}
                       />
                     </div>
                   );

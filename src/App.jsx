@@ -481,6 +481,15 @@ function App() {
               const prefetchFullDataset = () => {
                 if (typeof window === 'undefined') return;
                 if (shouldDeferHeavyWork()) return;
+                let shouldPrefetchFullDataset = false;
+                try {
+                  shouldPrefetchFullDataset =
+                    window.DEBUG_LOGS === true ||
+                    window.localStorage?.getItem('ihpe-prefetch-full-dataset') === '1';
+                } catch {
+                  shouldPrefetchFullDataset = false;
+                }
+                if (!shouldPrefetchFullDataset) return;
                 const fire = async () => {
                   try {
                     const fullRes = await fetchWithRetry(

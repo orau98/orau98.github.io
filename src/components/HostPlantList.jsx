@@ -26,6 +26,8 @@ import {
   buildResponsivePicture,
 } from "../utils/imageSrcset";
 import ImageWithFallback from "./ImageWithFallback";
+import SearchableSelect from "./SearchableSelect";
+import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -50,6 +52,7 @@ const HostPlantListItem = React.memo(
     hasLarvalHost = false,
     hasFlowerVisit = false,
     locale = "ja",
+    viewMode = "cards",
   }) => {
     const location = useLocation();
     const isEnglish = isEnglishLocale(locale);
@@ -107,6 +110,81 @@ const HostPlantListItem = React.memo(
         ? normalizeLatinBinomialPlain(plant)
         : plant;
     const secondaryName = isEnglish ? buildJapaneseReferenceLabel(plant) : detail.familyName;
+
+    if (viewMode === "compact") {
+      return (
+        <article className="group list-none rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:border-emerald-400/60 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-800">
+          <Link
+            to={buildPlantPath(plant, locale)}
+            state={makeDetailLinkState(location, { setFromList: true })}
+            className="flex gap-3 p-3"
+          >
+            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-800 sm:h-24 sm:w-24">
+              {imageFilename && !imageError ? (
+                <ImageWithFallback
+                  src={responsiveImage?.src}
+                  srcSet={responsiveImage?.srcSet}
+                  sizes="96px"
+                  sources={responsiveImage?.sources}
+                  candidates={originalFallbackUrls}
+                  alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
+                  width="120"
+                  height="120"
+                  className="h-full w-full"
+                  imgClassName="transition duration-300 group-hover:scale-105"
+                  fit="cover"
+                  loading="lazy"
+                  decoding="async"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-emerald-500 dark:text-emerald-300">
+                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22c-4.97 0-9-4.03-9-9 0-4.97 4.03-9 9-9 1.73 0 3.35.49 4.72 1.34C15.25 4.47 13.68 4 12 4c-3.87 0-7 3.13-7 7 0 3.87 3.13 7 7 7 1.98 0 3.77-.83 5.04-2.16A8.96 8.96 0 0 1 12 22z" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <h3 className="line-clamp-1 text-base font-bold text-emerald-800 dark:text-emerald-100">
+                    {isEnglish && detail.scientificName ? formatScientificNameReact(primaryName) : primaryName}
+                  </h3>
+                  {secondaryName && (
+                    <p className="line-clamp-1 text-sm text-emerald-600 dark:text-emerald-400">
+                      {secondaryName}
+                    </p>
+                  )}
+                </div>
+                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                  {isEnglish ? `${totalCount} linked` : `関連 ${totalCount}種`}
+                </span>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {hasLarvalHost && (
+                  <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-300">
+                    {isEnglish ? "Host plant" : "食草"}
+                  </span>
+                )}
+                {hasFlowerVisit && (
+                  <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">
+                    {isEnglish ? "Flower visit" : "訪花"}
+                  </span>
+                )}
+                <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${imageFilename ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300"}`}>
+                  {imageFilename ? (isEnglish ? "Photo" : "写真") : (isEnglish ? "No photo" : "画像なし")}
+                </span>
+              </div>
+              <p className="mt-2 line-clamp-1 text-sm text-slate-600 dark:text-slate-300">
+                {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
+                {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
+              </p>
+            </div>
+          </Link>
+        </article>
+      );
+    }
 
     return (
       <article className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
@@ -324,6 +402,18 @@ const HostPlantList = ({
       family: isEnglish ? 'Family' : '科',
       flowerVisit: isEnglish ? 'Flower visit' : '訪花',
       flowerOnly: isEnglish ? 'Flower visits only' : '訪花のみ',
+      photo: isEnglish ? 'Photo' : '写真',
+      withPhoto: isEnglish ? 'With photos' : '写真あり',
+      hostPlantsOnly: isEnglish ? 'Host plants' : '食草あり',
+      presetLabel: isEnglish ? 'Quick filters:' : 'クイック絞り込み:',
+      view: isEnglish ? 'View' : '表示',
+      cards: isEnglish ? 'Cards' : 'カード',
+      compact: isEnglish ? 'Compact' : 'コンパクト',
+      sort: isEnglish ? 'Sort' : '並び替え',
+      sortImage: isEnglish ? 'Photos first' : '写真あり優先',
+      sortName: isEnglish ? 'Name' : '名前順',
+      sortFamily: isEnglish ? 'Family' : '科順',
+      sortRelated: isEnglish ? 'Linked insects' : '関連昆虫数順',
       resultCount: (value) => (isEnglish ? `${value} results` : `${value} 件が見つかりました`),
       listTitle: isEnglish ? 'Plant list' : '植物リスト',
       emptyTitle: isEnglish ? 'No matching plants found' : '結果が見つかりませんでした',
@@ -516,6 +606,13 @@ const HostPlantList = ({
   const familyFilter = useMemo(() => searchParams.get('pfamily') || '', [searchParams]);
   const orderFilter = useMemo(() => searchParams.get('porder') || '', [searchParams]);
   const visitFilter = useMemo(() => searchParams.get('pvisit') || 'all', [searchParams]);
+  const hostOnlyFilter = useMemo(() => searchParams.get('phost') === 'has', [searchParams]);
+  const photoFilter = useMemo(() => (searchParams.get('pphoto') === 'has' ? 'has' : 'all'), [searchParams]);
+  const viewMode = useMemo(() => (searchParams.get('pview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
+  const sortMode = useMemo(() => {
+    const v = searchParams.get('psort') || 'image';
+    return ['image', 'name', 'family', 'related'].includes(v) ? v : 'image';
+  }, [searchParams]);
 
   const setPPage = useCallback((page) => {
     updateSearchParams((p) => {
@@ -552,11 +649,44 @@ const HostPlantList = ({
     });
   }, [updateSearchParams]);
 
+  const setPHostOnlyFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value === 'has') p.set('phost', 'has');
+      else p.delete('phost');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const setPPhotoFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value === 'has') p.set('pphoto', 'has');
+      else p.delete('pphoto');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const setPViewMode = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value === 'compact') p.set('pview', 'compact');
+      else p.delete('pview');
+    });
+  }, [updateSearchParams]);
+
+  const setPSortMode = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value && value !== 'image') p.set('psort', value);
+      else p.delete('psort');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
   const clearFilters = useCallback(() => {
     updateSearchParams((p) => {
       p.delete('pfamily');
       p.delete('porder');
       p.delete('pvisit');
+      p.delete('phost');
+      p.delete('pphoto');
       p.delete('ppage');
     });
   }, [updateSearchParams]);
@@ -573,6 +703,8 @@ const HostPlantList = ({
       p.delete('pfamily');
       p.delete('porder');
       p.delete('pvisit');
+      p.delete('phost');
+      p.delete('pphoto');
       p.delete('q');
       p.delete('ppage');
     });
@@ -580,7 +712,7 @@ const HostPlantList = ({
 
   const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
   const hasSearchQuery = searchQuery.length > 0;
-  const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all';
+  const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all' || hostOnlyFilter || photoFilter === 'has';
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
   const activeFilters = useMemo(() => {
     const filters = [];
@@ -588,6 +720,8 @@ const HostPlantList = ({
     if (familyFilter) filters.push({ type: ui.family, value: familyFilter, clear: () => setPFamilyFilter('') });
     if (orderFilter) filters.push({ type: ui.order, value: orderFilter, clear: () => setPOrderFilter('') });
     if (visitFilter !== 'all') filters.push({ type: ui.flowerVisit, value: isEnglish ? 'Only' : 'のみ', clear: () => setPVisitFilter('all') });
+    if (hostOnlyFilter) filters.push({ type: isEnglish ? 'Host plant' : '食草', value: isEnglish ? 'Yes' : 'あり', clear: () => setPHostOnlyFilter('all') });
+    if (photoFilter === 'has') filters.push({ type: ui.photo, value: ui.withPhoto, clear: () => setPPhotoFilter('all') });
     return filters;
   }, [
     hasSearchQuery,
@@ -595,14 +729,20 @@ const HostPlantList = ({
     familyFilter,
     orderFilter,
     visitFilter,
+    hostOnlyFilter,
+    photoFilter,
     clearSearch,
     setPFamilyFilter,
     setPOrderFilter,
     setPVisitFilter,
+    setPHostOnlyFilter,
+    setPPhotoFilter,
     isEnglish,
     ui.family,
     ui.flowerVisit,
     ui.order,
+    ui.photo,
+    ui.withPhoto,
   ]);
   const emptyStateHint = useMemo(() => {
     if (!hasSearchQuery && !hasFilterCriteria) {
@@ -672,6 +812,8 @@ const HostPlantList = ({
     familyFilter,
     orderFilter,
     visitFilter,
+    hostOnlyFilter,
+    photoFilter,
   });
 
   // （メタは useSeoMeta に移行）
@@ -895,6 +1037,19 @@ const HostPlantList = ({
         if (!isFlowerOnly) return false;
       }
 
+      if (hostOnlyFilter) {
+        const normalizedPlant = normalizePlantKey(plantName);
+        const hasLarvalHost = !!(
+          safeHostPlants?.[plantName] ||
+          (normalizedPlant && safeHostPlants?.[normalizedPlant])
+        );
+        if (!hasLarvalHost) return false;
+      }
+
+      if (photoFilter === 'has' && !plantImageMap.has(plantName)) {
+        return false;
+      }
+
       // Apply Search Term
       if (!lowerCaseSearchTerm) {
         return true; // No search term, pass
@@ -939,16 +1094,35 @@ const HostPlantList = ({
       );
     });
 
-    // Sort with plants with images first, then "不明" at the end
+    const getRelatedCount = (plantName, insects = []) => {
+      const normalizedPlant = normalizePlantKey(plantName);
+      const statsCount =
+        plantInsectStats?.countsByPlant?.[plantName] ??
+        (normalizedPlant && plantInsectStats?.countsByPlant?.[normalizedPlant]);
+      return Number.isFinite(statsCount) && statsCount >= 0 ? statsCount : insects.length;
+    };
+
     const sorted = filtered.sort(([a], [b]) => {
       const aHasImage = plantImageMap.has(a);
       const bHasImage = plantImageMap.has(b);
 
-      // Sort priority: images first, then regular plants, then "不明" last
       if (a === "不明") return 1;
       if (b === "不明") return -1;
-      if (aHasImage && !bHasImage) return -1;
-      if (!aHasImage && bHasImage) return 1;
+      if (sortMode === "image") {
+        if (aHasImage && !bHasImage) return -1;
+        if (!aHasImage && bHasImage) return 1;
+      }
+      if (sortMode === "family") {
+        const familyCompare = compareLocalizedValues(
+          getFamilyDisplayValue(safePlantDetails[a] || {}),
+          getFamilyDisplayValue(safePlantDetails[b] || {}),
+        );
+        if (familyCompare !== 0) return familyCompare;
+      }
+      if (sortMode === "related") {
+        const countDiff = getRelatedCount(b, mergedHostPlants[b]) - getRelatedCount(a, mergedHostPlants[a]);
+        if (countDiff !== 0) return countDiff;
+      }
       return compareLocalizedValues(getPlantPrimaryName(a), getPlantPrimaryName(b));
     });
 
@@ -963,6 +1137,10 @@ const HostPlantList = ({
     familyFilter,
     orderFilter,
     visitFilter,
+    hostOnlyFilter,
+    photoFilter,
+    sortMode,
+    plantInsectStats,
     compareLocalizedValues,
     getFamilyDisplayValue,
     getOrderDisplayValue,
@@ -1040,7 +1218,9 @@ const HostPlantList = ({
       prev.debouncedPlantSearch !== debouncedPlantSearch ||
       prev.familyFilter !== familyFilter ||
       prev.orderFilter !== orderFilter ||
-      prev.visitFilter !== visitFilter;
+      prev.visitFilter !== visitFilter ||
+      prev.hostOnlyFilter !== hostOnlyFilter ||
+      prev.photoFilter !== photoFilter;
 
     if (!changed) return;
 
@@ -1049,73 +1229,63 @@ const HostPlantList = ({
       familyFilter,
       orderFilter,
       visitFilter,
+      hostOnlyFilter,
+      photoFilter,
     };
 
     if (currentPage === 1) return;
     setPPage(1);
-  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, currentPage, setPPage]);
+  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, currentPage, setPPage]);
 
   const renderFilters = () => {
+    const presetChips = [
+      { key: "host", label: ui.hostPlantsOnly, active: hostOnlyFilter, onClick: () => setPHostOnlyFilter(hostOnlyFilter ? "all" : "has") },
+      { key: "flower", label: ui.flowerOnly, active: visitFilter === "flower", onClick: () => setPVisitFilter(visitFilter === "flower" ? "all" : "flower") },
+      { key: "photo", label: ui.withPhoto, active: photoFilter === "has", onClick: () => setPPhotoFilter(photoFilter === "has" ? "all" : "has") },
+    ];
+    const sortOptions = [
+      { value: "image", label: ui.sortImage },
+      { value: "name", label: ui.sortName },
+      { value: "family", label: ui.sortFamily },
+      { value: "related", label: ui.sortRelated },
+    ];
     return (
-      <ListFilterPanel
-        title={ui.filterTitle}
-        isOpen={isFiltersOpen}
-        onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
-        panelId={filtersPanelId}
-        hasAnyCriteria={hasAnyCriteria}
-        filteredByLabel={ui.filteredBy}
-        activeFilters={activeFilters}
-        onResetAll={resetAll}
-        resetAllLabel={ui.resetAll}
-        getClearFilterLabel={(type) =>
-          isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
-        }
-        controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
-        resultsLabel={ui.resultCount(filteredHostPlants?.length ?? 0)}
-      >
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={orderFilterId}>{ui.order}</label>
-              <div className="relative">
-                <select
-                  id={orderFilterId}
-                  value={orderFilter}
-                  onChange={(e) => setPOrderFilter(e.target.value)}
-                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
-                >
-                  <option value="">{ui.any}</option>
-                  {orderOptions.map((o) => (
-                    <option key={o} value={o}>{o}</option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+      <>
+        <ListFilterPanel
+          title={ui.filterTitle}
+          isOpen={isFiltersOpen}
+          onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
+          panelId={filtersPanelId}
+          hasAnyCriteria={hasAnyCriteria}
+          filteredByLabel={ui.filteredBy}
+          activeFilters={activeFilters}
+          onResetAll={resetAll}
+          resetAllLabel={ui.resetAll}
+          getClearFilterLabel={(type) =>
+            isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
+          }
+          controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+          resultsLabel={ui.resultCount(filteredHostPlants?.length ?? 0)}
+        >
+          <SearchableSelect
+            id={orderFilterId}
+            label={ui.order}
+            value={orderFilter}
+            options={orderOptions}
+            onChange={setPOrderFilter}
+            placeholder={ui.any}
+            locale={locale}
+          />
 
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={familyFilterId}>{ui.family}</label>
-          <div className="relative">
-            <select
-              id={familyFilterId}
-              value={familyFilter}
-              onChange={(e) => setPFamilyFilter(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
-            >
-              <option value="">{ui.any}</option>
-              {familyOptions.map((f) => (
-                <option key={f} value={f}>{f}</option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-        </div>
+          <SearchableSelect
+            id={familyFilterId}
+            label={ui.family}
+            value={familyFilter}
+            options={familyOptions}
+            onChange={setPFamilyFilter}
+            placeholder={ui.any}
+            locale={locale}
+          />
 
         <div className="space-y-1">
           <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>{ui.flowerVisit}</label>
@@ -1136,7 +1306,22 @@ const HostPlantList = ({
             </div>
           </div>
         </div>
-      </ListFilterPanel>
+        </ListFilterPanel>
+        <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
+        <ListDisplayControls
+          viewMode={viewMode}
+          onViewModeChange={setPViewMode}
+          sortMode={sortMode}
+          onSortModeChange={setPSortMode}
+          sortOptions={sortOptions}
+          labels={{
+            view: ui.view,
+            cards: ui.cards,
+            compact: ui.compact,
+            sort: ui.sort,
+          }}
+        />
+      </>
     );
   };
 
@@ -1169,7 +1354,7 @@ const HostPlantList = ({
         <div ref={listTopRef} />
         <div>
           {currentHostPlants.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className={viewMode === "compact" ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"}>
               {currentHostPlants.map(([plant, mothList], index) => {
                 const normalizedPlant = normalizePlantKey(plant);
                 const statsNames =
@@ -1210,6 +1395,7 @@ const HostPlantList = ({
                     hasLarvalHost={hasLarvalHost}
                     hasFlowerVisit={hasFlowerVisit}
                     locale={locale}
+                    viewMode={viewMode}
                   />
                 </div>
                 );

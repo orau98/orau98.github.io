@@ -25,6 +25,7 @@ import {
   buildResizedImageUrl,
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
+import DetailSectionNav from './components/DetailSectionNav';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
@@ -1734,6 +1735,15 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           )}
         </div>
       </div>
+      <DetailSectionNav
+        label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
+        items={[
+          { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
+          { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
+          { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
+          { id: 'share', label: isEnglish ? 'Share' : '共有' },
+        ]}
+      />
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{
@@ -1901,6 +1911,19 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                   </InfoPopover>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="border-b border-slate-200/80 bg-emerald-50/80 px-4 py-3 text-sm text-slate-700 dark:border-slate-700/70 dark:bg-emerald-950/20 dark:text-slate-200">
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-emerald-700 shadow-sm dark:bg-slate-900 dark:text-emerald-300">
+                {isEnglish ? 'Green: plants' : '緑: 植物'}
+              </span>
+              <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-blue-700 shadow-sm dark:bg-slate-900 dark:text-blue-300">
+                {isEnglish ? 'Blue: insects' : '青: 昆虫'}
+              </span>
+              <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
+                {isEnglish ? 'Lines: host or flower visit links' : '線: 食草/訪花の関係'}
+              </span>
             </div>
           </div>
           <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25" ref={graphRef}>
