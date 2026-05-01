@@ -6,6 +6,7 @@ import ChunkErrorBoundary from './components/ChunkErrorBoundary';
 const InsectsHostPlantExplorer = lazyWithRetry(() => import('./InsectsHostPlantExplorer'));
 const MothDetail = lazyWithRetry(() => import('./MothDetail'));
 const HostPlantDetail = lazyWithRetry(() => import('./HostPlantDetail'));
+const QuizPage = lazyWithRetry(() => import('./QuizPage'));
 import SkeletonLoader from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -6302,6 +6303,14 @@ function App() {
         />
       ),
     })),
+    {
+      path: '/quiz',
+      element: <QuizPage {...detailBaseProps} />,
+    },
+    {
+      path: '/en/quiz',
+      element: <QuizPage {...detailBaseProps} />,
+    },
     ...INSECT_DETAIL_ROUTE_PATTERNS.map((path) => ({
       path,
       element: <MothDetail {...detailBaseProps} />,

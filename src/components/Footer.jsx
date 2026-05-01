@@ -1,4 +1,5 @@
-import { isEnglishLocale } from '../utils/locale';
+import { Link } from 'react-router-dom';
+import { isEnglishLocale, localizePath } from '../utils/locale';
 
 const shouldPreserveNativeNavigation = (event) =>
   event.defaultPrevented ||
@@ -27,6 +28,13 @@ const StaticPageLink = ({ href, className, children }) => {
 const Footer = ({ locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const metaBase = isEnglish ? 'en/meta' : 'meta';
+  const appLinks = isEnglish
+    ? [
+        { to: localizePath('/quiz', locale), label: 'Four-choice quiz' },
+      ]
+    : [
+        { to: localizePath('/quiz', locale), label: '4択図鑑' },
+      ];
   const utilityLinks = isEnglish
     ? [
         { href: `${import.meta.env.BASE_URL}sitemap.html`, label: 'Sitemap' },
@@ -66,6 +74,17 @@ const Footer = ({ locale = 'ja' }) => {
         <p className="text-xs mt-2">
           {isEnglish ? 'Built with React and Tailwind CSS.' : 'Built with React and Tailwind CSS.'}
         </p>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+          {appLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="text-emerald-700 hover:underline dark:text-emerald-300"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
           {utilityLinks.map((link) => (
             <StaticPageLink

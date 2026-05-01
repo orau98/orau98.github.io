@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
 import InfoPopover from "./InfoPopover";
 import LocaleSwitcher from "./LocaleSwitcher";
 import SearchInput from "./SearchInput";
 import logger from "../utils/logger";
 import { ENGLISH_NAMING_NOTICE } from "../utils/englishNaming";
 import { buildResponsivePicture } from "../utils/imageSrcset";
+import { localizePath } from "../utils/locale";
 import ImageWithFallback from "./ImageWithFallback";
 
 const ExplorerHero = ({
@@ -213,6 +215,15 @@ const ExplorerHero = ({
                 <p>{ui.searchShortcut3}</p>
                 {isEnglish && <p className="sm:hidden">{ENGLISH_NAMING_NOTICE}</p>}
               </InfoPopover>
+              <Link
+                to={localizePath("/quiz", locale)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/40 bg-amber-300/20 px-3 py-1 font-semibold text-white shadow-sm backdrop-blur-sm transition hover:bg-amber-300/30"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9h6m-6 4h3m-7 8h14a2 2 0 002-2V5a2 2 0 00-2-2H7L3 7v12a2 2 0 002 2z" />
+                </svg>
+                {isEnglish ? "Quiz" : "4択図鑑"}
+              </Link>
             </div>
           </div>
         </div>
