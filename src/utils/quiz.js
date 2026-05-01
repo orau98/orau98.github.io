@@ -251,9 +251,32 @@ const buildPlantOption = (record) => ({
   plantName: record.name,
 });
 
-const buildInsectToPlantCandidates = (relationships, random) => {
+const buildInsectToPlantQuestionBases = (relationships) => {
   const {
     insects,
+  } = relationships;
+
+  return insects.flatMap((insect) => {
+    const insectId = insect.id || insect.name;
+    const family = getFamily(insect);
+    const subfamily = getSubfamily(insect);
+
+    return insect.quizHostPlantRecords.map((correctRecord) => ({
+      id: `${QUIZ_MODES.INSECT_TO_PLANT}:${insectId}:${correctRecord.name}`,
+      reviewKey: `${QUIZ_MODES.INSECT_TO_PLANT}:${insectId}:${correctRecord.name}`,
+      mode: QUIZ_MODES.INSECT_TO_PLANT,
+      subjectKey: insectId,
+      insectId,
+      insect,
+      family,
+      subfamily,
+      correctRecord,
+    }));
+  });
+};
+
+const buildInsectToPlantQuestion = (base, relationships, random) => {
+  const {
     plantDetails,
     insectToPlants,
     familyToPlants,
@@ -261,71 +284,58 @@ const buildInsectToPlantCandidates = (relationships, random) => {
     plantUseCounts,
   } = relationships;
   const allPlantRecords = Array.from(plantDetails.values());
+  const ownedPlants = insectToPlants.get(base.insectId) || new Set();
+  const correctUsage = plantUseCounts.get(base.correctRecord.name) || 0;
+  const distractors = sortByScore(
+    allPlantRecords.filter((record) => !ownedPlants.has(record.name)),
+    (record) => {
+      let score = 0;
+      if (base.subfamily && subfamilyToPlants.get(base.subfamily)?.has(record.name)) score += 45;
+      if (base.family && familyToPlants.get(base.family)?.has(record.name)) score += 35;
+      if (record.family && record.family === base.correctRecord.family) score += 20;
+      const usage = plantUseCounts.get(record.name) || 0;
+      score += Math.max(0, 16 - Math.abs(usage - correctUsage));
+      return score;
+    },
+    random,
+  ).slice(0, 3);
 
-  return insects.flatMap((insect) => {
-    const insectId = insect.id || insect.name;
-    const family = getFamily(insect);
-    const subfamily = getSubfamily(insect);
-    const ownedPlants = insectToPlants.get(insectId) || new Set();
-
-    return insect.quizHostPlantRecords.map((correctRecord) => {
-      const correctUsage = plantUseCounts.get(correctRecord.name) || 0;
-      const distractors = sortByScore(
-        allPlantRecords.filter((record) => !ownedPlants.has(record.name)),
-        (record) => {
-          let score = 0;
-          if (subfamily && subfamilyToPlants.get(subfamily)?.has(record.name)) score += 45;
-          if (family && familyToPlants.get(family)?.has(record.name)) score += 35;
-          if (record.family && record.family === correctRecord.family) score += 20;
-          const usage = plantUseCounts.get(record.name) || 0;
-          score += Math.max(0, 16 - Math.abs(usage - correctUsage));
-          return score;
-        },
-        random,
-      ).slice(0, 3);
-
-      if (distractors.length < 3) return null;
-      const correctOption = buildPlantOption(correctRecord);
-      return {
-        id: `${QUIZ_MODES.INSECT_TO_PLANT}:${insectId}:${correctRecord.name}`,
-        reviewKey: `${QUIZ_MODES.INSECT_TO_PLANT}:${insectId}:${correctRecord.name}`,
-        mode: QUIZ_MODES.INSECT_TO_PLANT,
-        subjectKey: insectId,
-        prompt: {
-          type: 'insect',
-          title: insect.name,
-          subtitle: insect.scientificName || '',
-          family,
-          insectId,
-          insect,
-        },
-        options: shuffleWithRandom([correctOption, ...distractors.map(buildPlantOption)], random),
-        correctOptionId: correctOption.id,
-        explanation: {
-          correctLabel: correctRecord.name,
-          sourceLabel: buildSourceLabel(correctRecord),
-          sourceRecords: [correctRecord],
-          insect,
-          plant: correctRecord,
-        },
-        detailLinks: {
-          insect,
-          plantName: correctRecord.name,
-        },
-      };
-    }).filter(Boolean);
-  });
+  if (distractors.length < 3) return null;
+  const correctOption = buildPlantOption(base.correctRecord);
+  return {
+    id: base.id,
+    reviewKey: base.reviewKey,
+    mode: base.mode,
+    subjectKey: base.subjectKey,
+    prompt: {
+      type: 'insect',
+      title: base.insect.name,
+      subtitle: base.insect.scientificName || '',
+      family: base.family,
+      insectId: base.insectId,
+      insect: base.insect,
+    },
+    options: shuffleWithRandom([correctOption, ...distractors.map(buildPlantOption)], random),
+    correctOptionId: correctOption.id,
+    explanation: {
+      correctLabel: base.correctRecord.name,
+      sourceLabel: buildSourceLabel(base.correctRecord),
+      sourceRecords: [base.correctRecord],
+      insect: base.insect,
+      plant: base.correctRecord,
+    },
+    detailLinks: {
+      insect: base.insect,
+      plantName: base.correctRecord.name,
+    },
+  };
 };
 
-const buildPlantToInsectCandidates = (relationships, random) => {
+const buildPlantToInsectQuestionBases = (relationships) => {
   const {
-    insects,
     insectById,
-    insectToPlants,
     plantToInsects,
     plantDetails,
-    familyToInsects,
-    subfamilyToInsects,
   } = relationships;
 
   return Array.from(plantToInsects.entries()).flatMap(([plantName, relatedIds]) => {
@@ -335,83 +345,109 @@ const buildPlantToInsectCandidates = (relationships, random) => {
       if (!correctInsect) return null;
       const family = getFamily(correctInsect);
       const subfamily = getSubfamily(correctInsect);
-      const correctHostCount = insectToPlants.get(correctInsectId)?.size || 0;
-      const distractors = sortByScore(
-        insects.filter((insect) => {
-          const id = insect.id || insect.name;
-          return id !== correctInsectId && !plantToInsects.get(plantName)?.has(id);
-        }),
-        (insect) => {
-          const id = insect.id || insect.name;
-          let score = 0;
-          if (subfamily && subfamilyToInsects.get(subfamily)?.has(id)) score += 45;
-          if (family && familyToInsects.get(family)?.has(id)) score += 35;
-          const hostCount = insectToPlants.get(id)?.size || 0;
-          score += Math.max(0, 16 - Math.abs(hostCount - correctHostCount));
-          return score;
-        },
-        random,
-      ).slice(0, 3);
-      if (distractors.length < 3) return null;
-      const correctOption = buildInsectOption(correctInsect);
-      return {
+      return ({
         id: `${QUIZ_MODES.PLANT_TO_INSECT}:${plantName}:${correctInsectId}`,
         reviewKey: `${QUIZ_MODES.PLANT_TO_INSECT}:${plantName}:${correctInsectId}`,
         mode: QUIZ_MODES.PLANT_TO_INSECT,
         subjectKey: plantName,
-        prompt: {
-          type: 'plant',
-          title: plantName,
-          subtitle: plantRecord.family || '',
-          plantName,
-          plant: plantRecord,
-        },
-        options: shuffleWithRandom([correctOption, ...distractors.map(buildInsectOption)], random),
-        correctOptionId: correctOption.id,
-        explanation: {
-          correctLabel: correctInsect.name,
-          sourceLabel: buildSourceLabel(
-            correctInsect.quizHostPlantRecords.find((record) => record.name === plantName) || plantRecord,
-          ),
-          sourceRecords: correctInsect.quizHostPlantRecords.filter((record) => record.name === plantName),
-          insect: correctInsect,
-          plant: plantRecord,
-        },
-        detailLinks: {
-          insect: correctInsect,
-          plantName,
-        },
-      };
+        plantName,
+        plantRecord,
+        correctInsectId,
+        correctInsect,
+        family,
+        subfamily,
+      });
     }).filter(Boolean);
   });
 };
 
+const buildPlantToInsectQuestion = (base, relationships, random) => {
+  const {
+    insects,
+    insectToPlants,
+    plantToInsects,
+    familyToInsects,
+    subfamilyToInsects,
+  } = relationships;
+  const correctHostCount = insectToPlants.get(base.correctInsectId)?.size || 0;
+  const relatedToPromptPlant = plantToInsects.get(base.plantName) || new Set();
+  const distractors = sortByScore(
+    insects.filter((insect) => {
+      const id = insect.id || insect.name;
+      return id !== base.correctInsectId && !relatedToPromptPlant.has(id);
+    }),
+    (insect) => {
+      const id = insect.id || insect.name;
+      let score = 0;
+      if (base.subfamily && subfamilyToInsects.get(base.subfamily)?.has(id)) score += 45;
+      if (base.family && familyToInsects.get(base.family)?.has(id)) score += 35;
+      const hostCount = insectToPlants.get(id)?.size || 0;
+      score += Math.max(0, 16 - Math.abs(hostCount - correctHostCount));
+      return score;
+    },
+    random,
+  ).slice(0, 3);
+  if (distractors.length < 3) return null;
+  const correctOption = buildInsectOption(base.correctInsect);
+  return {
+    id: base.id,
+    reviewKey: base.reviewKey,
+    mode: base.mode,
+    subjectKey: base.subjectKey,
+    prompt: {
+      type: 'plant',
+      title: base.plantName,
+      subtitle: base.plantRecord.family || '',
+      plantName: base.plantName,
+      plant: base.plantRecord,
+    },
+    options: shuffleWithRandom([correctOption, ...distractors.map(buildInsectOption)], random),
+    correctOptionId: correctOption.id,
+    explanation: {
+      correctLabel: base.correctInsect.name,
+      sourceLabel: buildSourceLabel(
+        base.correctInsect.quizHostPlantRecords.find((record) => record.name === base.plantName) || base.plantRecord,
+      ),
+      sourceRecords: base.correctInsect.quizHostPlantRecords.filter((record) => record.name === base.plantName),
+      insect: base.correctInsect,
+      plant: base.plantRecord,
+    },
+    detailLinks: {
+      insect: base.correctInsect,
+      plantName: base.plantName,
+    },
+  };
+};
+
 const selectSessionQuestions = ({
-  candidates,
+  questionBases,
   questionCount,
   reviewKeys,
   random,
+  buildQuestion,
 }) => {
   const selected = [];
   const usedSubjects = new Set();
   const usedQuestionIds = new Set();
   const reviewSet = new Set(reviewKeys || []);
   const reviewLimit = Math.min(2, Math.max(1, Math.floor(questionCount * 0.25)));
-  const shuffled = shuffleWithRandom(candidates, random);
+  const shuffled = shuffleWithRandom(questionBases, random);
   const reviewCandidates = shuffled.filter((question) => reviewSet.has(question.reviewKey));
   const regularCandidates = shuffled.filter((question) => !reviewSet.has(question.reviewKey));
 
-  const takeFrom = (pool, limit = Infinity) => {
+  const takeFrom = (pool, limit = Infinity, { relaxSubjects = false } = {}) => {
     let added = 0;
-    for (const question of pool) {
+    for (const questionBase of pool) {
       if (selected.length >= questionCount || added >= limit) break;
-      if (usedQuestionIds.has(question.id)) continue;
-      if (usedSubjects.has(question.subjectKey) && selected.length < Math.floor(questionCount * 0.8)) {
+      if (usedQuestionIds.has(questionBase.id)) continue;
+      if (!relaxSubjects && usedSubjects.has(questionBase.subjectKey) && selected.length < Math.floor(questionCount * 0.8)) {
         continue;
       }
+      const question = buildQuestion(questionBase);
+      if (!question) continue;
       selected.push(question);
-      usedQuestionIds.add(question.id);
-      usedSubjects.add(question.subjectKey);
+      usedQuestionIds.add(questionBase.id);
+      usedSubjects.add(questionBase.subjectKey);
       added += 1;
     }
   };
@@ -419,7 +455,7 @@ const selectSessionQuestions = ({
   takeFrom(reviewCandidates, reviewLimit);
   takeFrom(regularCandidates);
   if (selected.length < questionCount) {
-    takeFrom(shuffled);
+    takeFrom(shuffled, Infinity, { relaxSubjects: true });
   }
 
   return shuffleWithRandom(selected.slice(0, questionCount), random).map((question, index) => ({
@@ -441,16 +477,21 @@ export const buildQuizQuestions = ({
   const normalizedMode = normalizeQuizMode(mode);
   const random = createRandom(seed);
   const relationships = buildRelationships({ moths, butterflies, plantDetails });
-  const candidates =
+  const questionBases =
     normalizedMode === QUIZ_MODES.PLANT_TO_INSECT
-      ? buildPlantToInsectCandidates(relationships, random)
-      : buildInsectToPlantCandidates(relationships, random);
+      ? buildPlantToInsectQuestionBases(relationships)
+      : buildInsectToPlantQuestionBases(relationships);
+  const buildQuestion =
+    normalizedMode === QUIZ_MODES.PLANT_TO_INSECT
+      ? (questionBase) => buildPlantToInsectQuestion(questionBase, relationships, random)
+      : (questionBase) => buildInsectToPlantQuestion(questionBase, relationships, random);
 
   return selectSessionQuestions({
-    candidates,
+    questionBases,
     questionCount,
     reviewKeys,
     random,
+    buildQuestion,
   });
 };
 

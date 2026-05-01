@@ -94,6 +94,7 @@ const labelsFor = (isEnglish) => ({
     ? 'A ten-question game for learning moth and butterfly host-plant links.'
     : '蛾・蝶と幼虫食草のつながりを10問で覚える学習ゲーム。',
   start: isEnglish ? 'Start 10 questions' : '10問を始める',
+  starting: isEnglish ? 'Preparing the first question...' : '最初の問題を準備中…',
   restart: isEnglish ? 'Try again' : 'もう一度挑戦',
   next: isEnglish ? 'Next question' : '次の問題',
   result: isEnglish ? 'Session result' : '結果',
@@ -272,6 +273,7 @@ const QuizPage = ({
   const [selectedOptionId, setSelectedOptionId] = useState('');
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [lastSeed, setLastSeed] = useState('');
+  const [isStarting, setIsStarting] = useState(false);
   const [best, setBest] = useState(() => safeReadJson(getBestStorageKey(locale, mode), {
     score: 0,
     bestStreak: 0,
@@ -348,25 +350,43 @@ const QuizPage = ({
   }, [searchParams, setSearchParams]);
 
   const startSession = useCallback(() => {
-    const reviewEntries = safeReadJson(getReviewStorageKey(locale, mode), []);
-    const reviewKeys = Array.isArray(reviewEntries) ? reviewEntries.map((entry) => entry.key).filter(Boolean) : [];
-    const seed = `${mode}:${Date.now()}:${Math.random().toString(16).slice(2)}`;
-    const nextQuestions = buildQuizQuestions({
-      moths,
-      butterflies,
-      plantDetails,
-      mode,
-      questionCount: DEFAULT_QUIZ_LENGTH,
-      seed,
-      reviewKeys,
-    });
-    setLastSeed(seed);
-    setQuestions(nextQuestions);
+    if (!hasData || isStarting) return;
+    setIsStarting(true);
+    setQuestions([]);
     setCurrentIndex(0);
     setAnswers([]);
     setSelectedOptionId('');
     setDetailsOpen(false);
-  }, [butterflies, locale, mode, moths, plantDetails]);
+
+    const prepareSession = () => {
+      try {
+        const reviewEntries = safeReadJson(getReviewStorageKey(locale, mode), []);
+        const reviewKeys = Array.isArray(reviewEntries) ? reviewEntries.map((entry) => entry.key).filter(Boolean) : [];
+        const seed = `${mode}:${Date.now()}:${Math.random().toString(16).slice(2)}`;
+        const nextQuestions = buildQuizQuestions({
+          moths,
+          butterflies,
+          plantDetails,
+          mode,
+          questionCount: DEFAULT_QUIZ_LENGTH,
+          seed,
+          reviewKeys,
+        });
+        setLastSeed(seed);
+        setQuestions(nextQuestions);
+      } finally {
+        setIsStarting(false);
+      }
+    };
+
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(() => {
+        window.setTimeout(prepareSession, 0);
+      });
+      return;
+    }
+    prepareSession();
+  }, [butterflies, hasData, isStarting, locale, mode, moths, plantDetails]);
 
   const persistSession = useCallback((nextAnswers) => {
     const score = nextAnswers.filter((answer) => answer.isCorrect).length;
@@ -538,10 +558,10 @@ const QuizPage = ({
           <button
             type="button"
             onClick={startSession}
-            disabled={!hasData}
+            disabled={!hasData || isStarting}
             className="mt-5 w-full rounded-xl bg-emerald-600 px-5 py-3 text-base font-black text-white shadow-lg shadow-emerald-900/20 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-400"
           >
-            {hasData ? labels.start : labels.loading}
+            {!hasData ? labels.loading : isStarting ? labels.starting : labels.start}
           </button>
           {!hasData && (
             <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
@@ -727,9 +747,10 @@ const QuizPage = ({
             <button
               type="button"
               onClick={startSession}
+              disabled={isStarting}
               className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-white transition hover:bg-emerald-600"
             >
-              {labels.restart}
+              {isStarting ? labels.starting : labels.restart}
             </button>
             <Link
               to={localizePath('/', locale)}
