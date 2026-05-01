@@ -1,4 +1,5 @@
 https://orau98.github.io/
+https://orau98.github.io/quiz/
 https://orau98.github.io/sitemap.html
 https://orau98.github.io/topics/garden-tree-caterpillars.html
 https://orau98.github.io/topics/index.html
@@ -12,6 +13,7 @@ https://orau98.github.io/meta/leafbeetle/index.html
 https://orau98.github.io/meta/aphid/index.html
 https://orau98.github.io/meta/plant/index.html
 https://orau98.github.io/en/
+https://orau98.github.io/en/quiz/
 https://orau98.github.io/en/meta/moth/index.html
 https://orau98.github.io/en/meta/butterfly/index.html
 https://orau98.github.io/en/meta/beetle/index.html

@@ -407,9 +407,25 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/quiz/',
+    topLevelFile,
+    { changefreq: 'weekly', priority: '0.8' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/en/',
     path.join(__dirname, '../public/en/index.html'),
     { changefreq: 'weekly', priority: '0.9', targetKey: 'en-main' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/quiz/',
+    topLevelFile,
+    { changefreq: 'weekly', priority: '0.8', targetKey: 'en-main' },
   );
 
   addStaticPageToMain(

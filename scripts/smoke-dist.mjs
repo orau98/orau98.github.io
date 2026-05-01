@@ -6,7 +6,9 @@ const DIST_DIR = path.join(ROOT, 'dist');
 const REQUIRED_FILES = [
   'index.html',
   '.nojekyll',
+  'quiz/index.html',
   'en/index.html',
+  'en/quiz/index.html',
   'en/meta/moth/index.html',
   'en/meta/plant/index.html',
   'robots.txt',

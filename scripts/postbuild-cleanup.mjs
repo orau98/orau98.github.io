@@ -4,6 +4,37 @@ import fs from 'fs';
 import path from 'path';
 
 const MAX_PAGES_DIST_BYTES = 900 * 1024 * 1024;
+const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
+const SPA_ROUTE_SHELLS = [
+  {
+    segments: ['quiz'],
+    lang: 'ja',
+    title: '4択図鑑 | 昆虫植物図鑑',
+    description: '蛾・蝶の幼虫食草を4択で学べる昆虫植物図鑑のクイズ。昆虫から食草、食草から昆虫の双方向で検索練習できます。',
+    canonicalPath: '/quiz',
+    alternates: [
+      { hreflang: 'ja', path: '/quiz' },
+      { hreflang: 'en', path: '/en/quiz' },
+      { hreflang: 'x-default', path: '/quiz' },
+    ],
+    ogTitle: '4択図鑑 | 昆虫植物図鑑',
+    ogDescription: '蛾・蝶の幼虫食草を4択で学べるクイズです。',
+  },
+  {
+    segments: ['en', 'quiz'],
+    lang: 'en',
+    title: 'Four-choice Quiz | Insects and Host Plants of Japan',
+    description: 'A four-choice quiz for learning larval host plants of Japanese moths and butterflies in both insect-to-plant and plant-to-insect modes.',
+    canonicalPath: '/en/quiz',
+    alternates: [
+      { hreflang: 'ja', path: '/quiz' },
+      { hreflang: 'en', path: '/en/quiz' },
+      { hreflang: 'x-default', path: '/quiz' },
+    ],
+    ogTitle: 'Four-choice Quiz | Insects and Host Plants of Japan',
+    ogDescription: 'Practice moth and butterfly larval host plants with immediate feedback.',
+  },
+];
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
@@ -58,6 +89,70 @@ const ensureSpa404 = () => {
   }
 };
 
+const escapeHtmlAttr = (value) => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/"/g, '&quot;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;');
+
+const replaceMetaContent = (html, attr, key, content) => {
+  const pattern = new RegExp(
+    `<meta\\s+${attr}="${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s+content="[^"]*"\\s*>`,
+    'i',
+  );
+  const replacement = `<meta ${attr}="${key}" content="${escapeHtmlAttr(content)}">`;
+  return html.replace(pattern, replacement);
+};
+
+const buildSpaRouteShell = (indexHtml, route) => {
+  const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
+  const alternateLinks = route.alternates
+    .map(({ hreflang, path: routePath }) =>
+      `    <link rel="alternate" hreflang="${escapeHtmlAttr(hreflang)}" href="${escapeHtmlAttr(`${BASE_ORIGIN}${routePath}`)}">`)
+    .join('\n');
+
+  let html = indexHtml
+    .replace(/<html\s+lang="[^"]*"/i, `<html lang="${escapeHtmlAttr(route.lang)}"`)
+    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtmlAttr(route.title)}</title>`)
+    .replace(/<link\s+rel="canonical"\s+href="[^"]*"\s*>/i, `<link rel="canonical" href="${escapeHtmlAttr(canonicalUrl)}">`)
+    .replace(
+      /(?:\s*<link\s+rel="alternate"\s+hreflang="[^"]+"\s+href="[^"]+"\s*>\n?)+/i,
+      `\n${alternateLinks}\n`,
+    );
+
+  html = replaceMetaContent(html, 'name', 'description', route.description);
+  html = replaceMetaContent(html, 'property', 'og:title', route.ogTitle);
+  html = replaceMetaContent(html, 'property', 'og:description', route.ogDescription);
+  html = replaceMetaContent(html, 'property', 'og:url', canonicalUrl);
+  html = replaceMetaContent(html, 'name', 'twitter:title', route.ogTitle);
+  html = replaceMetaContent(html, 'name', 'twitter:description', route.ogDescription);
+  return html;
+};
+
+const ensureSpaRouteShells = () => {
+  try {
+    const indexPath = path.join('dist', 'index.html');
+    if (!fs.existsSync(indexPath)) return;
+    const indexHtml = fs.readFileSync(indexPath, 'utf8');
+    let count = 0;
+
+    for (const route of SPA_ROUTE_SHELLS) {
+      const routeDir = path.join('dist', ...route.segments);
+      fs.mkdirSync(routeDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(routeDir, 'index.html'),
+        buildSpaRouteShell(indexHtml, route),
+        'utf8',
+      );
+      count++;
+    }
+
+    console.log(`[postbuild] Synced ${count} SPA route shell(s).`);
+  } catch (error) {
+    console.warn('[postbuild] Failed to sync SPA route shells:', error?.message || error);
+  }
+};
+
 const getDirectorySizeBytes = (dirPath) => {
   if (!fs.existsSync(dirPath)) return 0;
   let total = 0;
@@ -109,4 +204,5 @@ for (const p of targets) {
 
 syncPlantImages();
 ensureSpa404();
+ensureSpaRouteShells();
 assertPagesSizeBudget();
