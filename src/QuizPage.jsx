@@ -1,4 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  AcademicCapIcon,
+  ArrowPathIcon,
+  ArrowRightIcon,
+  BoltIcon,
+  CameraIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  FireIcon,
+  TrophyIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/solid';
 import { Link, useSearchParams } from 'react-router-dom';
 import ImageWithFallback from './components/ImageWithFallback';
 import useInsectImageCandidates from './hooks/useInsectImageCandidates';
@@ -100,6 +113,17 @@ const labelsFor = (isEnglish) => ({
   subtitle: isEnglish
     ? 'A ten-question game for learning moth and butterfly host-plant links.'
     : '蛾・蝶と幼虫食草のつながりを10問で覚える学習ゲーム。',
+  today: isEnglish ? "Today's 10" : '今日の10問',
+  photoFirst: isEnglish ? 'Photo-first' : '写真あり優先',
+  biteSize: isEnglish ? 'Few minutes' : '数分で完了',
+  reviewDue: isEnglish ? 'Review due' : '復習候補',
+  answered: isEnglish ? 'Answered' : '回答済み',
+  flow: isEnglish ? 'Flow' : '流れ',
+  see: isEnglish ? 'Look' : '見る',
+  choose: isEnglish ? 'Choose' : '選ぶ',
+  reviewStep: isEnglish ? 'Review' : '復習',
+  stageChoose: isEnglish ? 'Choose one answer' : '1つ選択',
+  stageCheck: isEnglish ? 'Check the link' : '答え合わせ',
   start: isEnglish ? 'Start 10 questions' : '10問を始める',
   starting: isEnglish ? 'Preparing the first question...' : '最初の問題を準備中…',
   restart: isEnglish ? 'Try again' : 'もう一度挑戦',
@@ -123,6 +147,7 @@ const labelsFor = (isEnglish) => ({
   finish: isEnglish ? 'Last question complete.' : '10問完了です。',
   keyboard: isEnglish ? 'Keys 1-4 answer, Enter advances.' : '1〜4で回答、Enterで次へ進めます。',
   mode: isEnglish ? 'Mode' : 'モード',
+  session: isEnglish ? 'Session' : 'セッション',
   insectPrompt: isEnglish ? 'Choose the larval host plant.' : 'この昆虫の幼虫食草を選んでください。',
   plantPrompt: isEnglish ? 'Choose the insect linked to this host plant.' : 'この植物を食草にする昆虫を選んでください。',
   openInsect: isEnglish ? 'Open insect page' : '昆虫ページへ',
@@ -180,7 +205,7 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish })
     : null;
 
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-emerald-100 dark:bg-emerald-950/60">
+    <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-950/60">
       {filename ? (
         <ImageWithFallback
           src={picture.src}
@@ -209,7 +234,7 @@ const InsectMedia = ({ insect, isEnglish }) => {
   const { getImageCandidates, placeholderSrc } = useInsectImageCandidates({ useAssetVersionInProd: true });
   const candidates = useMemo(() => getImageCandidates(insect), [getImageCandidates, insect]);
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800">
+    <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800">
       {candidates.length > 0 ? (
         <ImageWithFallback
           src={candidates[0]}
@@ -248,12 +273,56 @@ const PromptMedia = ({ question, plantDetails, plantImageFilenames, isEnglish })
   return <InsectMedia insect={question.prompt.insect} isEnglish={isEnglish} />;
 };
 
+const ProgressDots = ({ total, answered, currentIndex }) => (
+  <div className="grid grid-cols-10 gap-1" aria-label={`${answered}/${total}`}>
+    {Array.from({ length: total }, (_, index) => {
+      const done = index < answered;
+      const current = index === currentIndex;
+      return (
+        <span
+          key={index}
+          className={`h-2 rounded-full transition ${
+            done
+              ? 'bg-emerald-500'
+              : current
+                ? 'bg-amber-400'
+                : 'bg-slate-300 dark:bg-slate-700'
+          }`}
+        />
+      );
+    })}
+  </div>
+);
+
+const Metric = ({ icon: Icon, label, value, tone = 'slate' }) => {
+  const toneClasses = {
+    slate: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
+    emerald: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-200',
+    amber: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-200',
+    blue: 'bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-200',
+    rose: 'bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-200',
+  };
+  return (
+    <div className="min-w-0 rounded-lg bg-slate-100/80 p-3 dark:bg-slate-800/70">
+      <div className="flex items-center gap-2">
+        <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg ${toneClasses[tone]}`}>
+          <Icon className="h-4 w-4" />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-xs font-bold text-slate-500 dark:text-slate-400">{label}</span>
+          <span className="block text-base font-black leading-tight text-slate-950 dark:text-white">{value}</span>
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const ModeButton = ({ active, children, onClick }) => (
   <button
     type="button"
     onClick={onClick}
     aria-pressed={active}
-    className={`rounded-xl border px-4 py-3 text-sm font-bold transition ${
+    className={`rounded-lg border px-3 py-2.5 text-sm font-bold transition ${
       active
         ? 'border-slate-900 bg-slate-900 text-white shadow-md dark:border-white dark:bg-white dark:text-slate-950'
         : 'border-slate-300 bg-white text-slate-700 hover:border-emerald-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200'
@@ -280,7 +349,6 @@ const QuizPage = ({
   const [answers, setAnswers] = useState([]);
   const [selectedOptionId, setSelectedOptionId] = useState('');
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [lastSeed, setLastSeed] = useState('');
   const [isStarting, setIsStarting] = useState(false);
   const [best, setBest] = useState(() => safeReadJson(getBestStorageKey(locale, mode), {
     score: 0,
@@ -344,6 +412,7 @@ const QuizPage = ({
   const isResult = questions.length > 0 && currentIndex >= questions.length;
   const currentQuestion = questions[currentIndex] || null;
   const currentAnswer = answers[currentIndex] || null;
+  const answeredCount = answers.filter(Boolean).length;
   const currentScore = answers.filter((answer) => answer.isCorrect).length;
   const currentStreak = answers.reduce((streak, answer) => (answer.isCorrect ? streak + 1 : 0), 0);
   const bestStreakInSession = answers.reduce(
@@ -354,6 +423,10 @@ const QuizPage = ({
     { running: 0, best: 0 },
   ).best;
   const missedAnswers = answers.filter((answer) => !answer.isCorrect);
+  const reviewCount = useMemo(() => {
+    const entries = safeReadJson(getReviewStorageKey(locale, mode), []);
+    return Array.isArray(entries) ? entries.length : 0;
+  }, [locale, mode]);
 
   const setMode = useCallback((nextMode) => {
     const normalized = normalizeQuizMode(nextMode);
@@ -402,7 +475,6 @@ const QuizPage = ({
           seed,
           reviewKeys,
         });
-        setLastSeed(seed);
         setQuestions(nextQuestions);
       } catch (error) {
         console.error('Failed to prepare quiz session', error);
@@ -538,100 +610,137 @@ const QuizPage = ({
   );
 
   const renderStart = () => (
-    <section className="mx-auto grid max-w-6xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,1fr)_22rem] md:px-8 md:py-12">
-      <div className="flex min-h-[34rem] flex-col justify-between rounded-3xl bg-slate-950 p-6 text-white shadow-2xl sm:p-8">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">
-            {isEnglish ? 'Learn by choosing' : '選ぶほど覚える'}
-          </p>
-          <h1 className="mt-4 max-w-3xl text-[clamp(2.4rem,6vw,5.8rem)] font-black leading-[0.95] tracking-tight">
-            {labels.title}
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg">
-            {labels.subtitle}
-          </p>
+    <section className="mx-auto grid max-w-6xl gap-4 px-4 py-5 md:px-8 md:py-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <aside className="order-1 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:order-2 lg:sticky lg:top-4 lg:self-start">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+              {labels.session}
+            </p>
+            <h2 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">{labels.today}</h2>
+          </div>
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200">
+            <BoltIcon className="h-5 w-5" />
+          </span>
         </div>
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {[
-            isEnglish ? '10 quick questions' : '10問で区切る',
-            isEnglish ? 'Immediate feedback' : 'すぐ答え合わせ',
-            isEnglish ? 'Review misses later' : '間違いは次回復習',
-          ].map((text) => (
-            <div key={text} className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-semibold text-slate-100">
-              {text}
-            </div>
-          ))}
-        </div>
-      </div>
 
-      <aside className="flex flex-col gap-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            {labels.mode}
-          </p>
-          <div className="mt-3 grid gap-2">
-            <ModeButton active={mode === QUIZ_MODES.INSECT_TO_PLANT} onClick={() => setMode(QUIZ_MODES.INSECT_TO_PLANT)}>
-              {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.INSECT_TO_PLANT]}
-            </ModeButton>
-            <ModeButton active={mode === QUIZ_MODES.PLANT_TO_INSECT} onClick={() => setMode(QUIZ_MODES.PLANT_TO_INSECT)}>
-              {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.PLANT_TO_INSECT]}
-            </ModeButton>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <ModeButton active={mode === QUIZ_MODES.INSECT_TO_PLANT} onClick={() => setMode(QUIZ_MODES.INSECT_TO_PLANT)}>
+            {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.INSECT_TO_PLANT]}
+          </ModeButton>
+          <ModeButton active={mode === QUIZ_MODES.PLANT_TO_INSECT} onClick={() => setMode(QUIZ_MODES.PLANT_TO_INSECT)}>
+            {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.PLANT_TO_INSECT]}
+          </ModeButton>
+        </div>
+
+        <div className="mt-4 grid gap-2">
+          <Metric icon={TrophyIcon} label={labels.best} value={summarizeBest(best, isEnglish)} tone="amber" />
+          <Metric icon={ArrowPathIcon} label={labels.reviewDue} value={reviewCount} tone={reviewCount ? 'rose' : 'slate'} />
+        </div>
+
+        <button
+          type="button"
+          onClick={startSession}
+          disabled={!hasData || isStarting}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-base font-black text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+        >
+          {!hasData ? labels.loading : isStarting ? labels.starting : labels.start}
+          {hasData && !isStarting && <ChevronRightIcon className="h-5 w-5" />}
+        </button>
+        {!hasData && (
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
+        )}
+        <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
+      </aside>
+
+      <div className="order-2 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:order-1">
+        <div className="grid gap-0 md:grid-cols-[minmax(0,1fr)_18rem]">
+          <div className="p-5 sm:p-7">
+            <div className="flex flex-wrap gap-2 text-xs font-black">
+              <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-2.5 py-1.5 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-200">
+                <CameraIcon className="h-4 w-4" />
+                {labels.photoFirst}
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-lg bg-blue-100 px-2.5 py-1.5 text-blue-800 dark:bg-blue-950/70 dark:text-blue-200">
+                <ClockIcon className="h-4 w-4" />
+                {labels.biteSize}
+              </span>
+            </div>
+            <h1 className="mt-5 max-w-3xl text-4xl font-black leading-[1.02] tracking-normal text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
+              {labels.title}
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
+              {labels.subtitle}
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <Metric icon={CameraIcon} label={labels.photoFirst} value={isEnglish ? 'On' : '有効'} tone="emerald" />
+              <Metric icon={AcademicCapIcon} label={labels.reviewStep} value={reviewCount} tone="blue" />
+              <Metric icon={FireIcon} label={labels.streak} value={Number(best?.bestStreak || 0)} tone="amber" />
+            </div>
+          </div>
+
+          <div className="border-t border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950/50 md:border-l md:border-t-0">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+              {labels.flow}
+            </p>
+            <div className="mt-4 space-y-3">
+              {[
+                [CameraIcon, labels.see, isEnglish ? 'Photo / plant' : '写真・植物'],
+                [BoltIcon, labels.choose, modeLabel],
+                [ArrowPathIcon, labels.reviewStep, `${reviewCount}`],
+              ].map(([Icon, title, value]) => (
+                <div key={title} className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-black text-slate-950 dark:text-white">{title}</span>
+                    <span className="block truncate text-xs font-semibold text-slate-500 dark:text-slate-400">{value}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <dl className="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <dt className="text-slate-500 dark:text-slate-400">{labels.best}</dt>
-              <dd className="mt-1 font-bold text-slate-900 dark:text-slate-50">{summarizeBest(best, isEnglish)}</dd>
-            </div>
-            <div>
-              <dt className="text-slate-500 dark:text-slate-400">{isEnglish ? 'Scope' : '対象'}</dt>
-              <dd className="mt-1 font-bold text-slate-900 dark:text-slate-50">{isEnglish ? 'Moths, butterflies' : '蛾・蝶'}</dd>
-            </div>
-          </dl>
-          <button
-            type="button"
-            onClick={startSession}
-            disabled={!hasData || isStarting}
-            className="mt-5 w-full rounded-xl bg-emerald-600 px-5 py-3 text-base font-black text-white shadow-lg shadow-emerald-900/20 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-400"
-          >
-            {!hasData ? labels.loading : isStarting ? labels.starting : labels.start}
-          </button>
-          {!hasData && (
-            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
-          )}
-          <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
-        </div>
-      </aside>
+      </div>
     </section>
   );
 
   const renderQuestion = () => {
     const promptInstruction =
       mode === QUIZ_MODES.PLANT_TO_INSECT ? labels.plantPrompt : labels.insectPrompt;
+    const feedbackIcon = currentAnswer?.isCorrect ? CheckCircleIcon : XCircleIcon;
+    const FeedbackIcon = feedbackIcon;
     return (
-      <section className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
-              {labels.mode}: {modeLabel}
-            </p>
-            <h1 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">
-              {currentIndex + 1}/{questions.length}
-            </h1>
-          </div>
-          <div className="flex flex-wrap gap-2 text-sm font-bold">
-            <span className="rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
-              {labels.score} {currentScore}/{answers.length}
-            </span>
-            <span className="rounded-full bg-amber-100 px-3 py-1.5 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-              {labels.streak} {currentStreak}
-            </span>
+      <section className="mx-auto max-w-6xl px-3 py-4 md:px-8 md:py-7">
+        <div className="sticky top-0 z-20 -mx-3 mb-4 border-b border-slate-200 bg-slate-100/95 px-3 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 md:-mx-8 md:px-8">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                  {modeLabel}
+                </p>
+                <h1 className="mt-1 text-xl font-black text-slate-950 dark:text-white">
+                  {currentIndex + 1}/{questions.length}
+                </h1>
+              </div>
+              <div className="flex flex-wrap gap-2 text-sm font-bold">
+                <span className="rounded-lg bg-white px-3 py-1.5 text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
+                  {labels.score} {currentScore}/{answeredCount}
+                </span>
+                <span className="rounded-lg bg-amber-100 px-3 py-1.5 text-amber-800 dark:bg-amber-950/60 dark:text-amber-200">
+                  {labels.streak} {currentStreak}
+                </span>
+                <span className="rounded-lg bg-blue-100 px-3 py-1.5 text-blue-800 dark:bg-blue-950/60 dark:text-blue-200">
+                  {selectedOptionId ? labels.stageCheck : labels.stageChoose}
+                </span>
+              </div>
+            </div>
+            <ProgressDots total={questions.length} answered={answeredCount} currentIndex={currentIndex} />
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <PromptMedia
             question={currentQuestion}
             plantDetails={plantDetails}
@@ -639,11 +748,11 @@ const QuizPage = ({
             isEnglish={isEnglish}
           />
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
+          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
               {promptInstruction}
             </p>
-            <h2 className="mt-3 text-3xl font-black leading-tight text-slate-950 dark:text-white">
+            <h2 className="mt-3 text-2xl font-black leading-tight tracking-normal text-slate-950 dark:text-white sm:text-3xl">
               {currentQuestion.prompt.title}
             </h2>
             {currentQuestion.prompt.subtitle && (
@@ -657,23 +766,25 @@ const QuizPage = ({
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{currentQuestion.prompt.family}</p>
             )}
 
-            <div className="mt-6 grid gap-3">
+            <div className="mt-5 grid gap-2.5">
               {currentQuestion.options.map((option, index) => {
                 const isSelected = selectedOptionId === option.id;
-                const isCorrect = selectedOptionId && option.id === currentQuestion.correctOptionId;
-                const isWrong = selectedOptionId && isSelected && !isCorrect;
+                const isCorrect = Boolean(selectedOptionId && option.id === currentQuestion.correctOptionId);
+                const isWrong = Boolean(selectedOptionId && isSelected && !isCorrect);
                 return (
                   <button
                     key={option.id}
                     type="button"
                     onClick={() => answerQuestion(option.id)}
                     disabled={Boolean(selectedOptionId)}
-                    className={`group flex min-h-[4.6rem] w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
+                    className={`group flex min-h-[4.35rem] w-full items-center gap-3 rounded-lg border px-3 py-3 text-left transition sm:px-4 ${
                       isCorrect
                         ? 'border-emerald-500 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/50 dark:text-emerald-100'
                         : isWrong
                           ? 'border-rose-500 bg-rose-50 text-rose-950 dark:bg-rose-950/50 dark:text-rose-100'
-                          : 'border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-400 hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-500'
+                          : selectedOptionId
+                            ? 'border-slate-200 bg-slate-50 text-slate-500 dark:border-slate-800 dark:bg-slate-800/70 dark:text-slate-400'
+                            : 'border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-400 hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-500'
                     }`}
                   >
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-black text-slate-700 shadow-sm dark:bg-slate-950 dark:text-slate-100">
@@ -689,43 +800,59 @@ const QuizPage = ({
                         </span>
                       )}
                     </span>
+                    {isCorrect && <CheckCircleIcon className="ml-auto h-6 w-6 flex-shrink-0 text-emerald-600 dark:text-emerald-300" />}
+                    {isWrong && <XCircleIcon className="ml-auto h-6 w-6 flex-shrink-0 text-rose-600 dark:text-rose-300" />}
                   </button>
                 );
               })}
             </div>
 
             {selectedOptionId && (
-              <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-950/60">
+              <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className={`text-sm font-black ${currentAnswer?.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
-                      {currentAnswer?.isCorrect ? labels.correct : labels.incorrect}
-                    </p>
-                    <p className="mt-1 text-lg font-black text-slate-950 dark:text-white">
-                      {currentQuestion.explanation.correctLabel}
-                    </p>
-                    {currentQuestion.explanation.sourceLabel && (
-                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                        {labels.source}: {currentQuestion.explanation.sourceLabel}
+                  <div className="flex min-w-0 flex-1 gap-3">
+                    <span className={`mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg ${
+                      currentAnswer?.isCorrect
+                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200'
+                        : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-200'
+                    }`}
+                    >
+                      <FeedbackIcon className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <p className={`text-sm font-black ${currentAnswer?.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
+                        {currentAnswer?.isCorrect ? labels.correct : labels.incorrect}
                       </p>
-                    )}
-                    {midpointMessage && (
-                      <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
-                    )}
+                      <p className="mt-1 text-lg font-black text-slate-950 dark:text-white">
+                        {currentQuestion.explanation.correctLabel}
+                      </p>
+                    </div>
                   </div>
                   <button
                     type="button"
                     onClick={nextQuestion}
-                    className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-black text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-950"
+                    className="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
                   >
                     {labels.next}
+                    <ArrowRightIcon className="h-4 w-4" />
                   </button>
+                </div>
+
+                <div className="mt-3 pl-12">
+                  {currentQuestion.explanation.sourceLabel && (
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                      {labels.source}: {currentQuestion.explanation.sourceLabel}
+                    </p>
+                  )}
+                  {midpointMessage && (
+                    <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
+                  )}
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setDetailsOpen((value) => !value)}
-                  className="mt-4 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
+                  className="mt-4 pl-12 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
                 >
                   {detailsOpen ? labels.hideDetails : labels.details}
                 </button>
@@ -760,50 +887,56 @@ const QuizPage = ({
       ? `${currentScore}/${questions.length} correct`
       : `${questions.length}問中${currentScore}問正解`;
     return (
-      <section className="mx-auto max-w-5xl px-4 py-8 md:px-8 md:py-12">
-        <div className="rounded-3xl bg-slate-950 p-6 text-white shadow-2xl sm:p-8">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">{labels.result}</p>
-          <h1 className="mt-3 text-[clamp(2.8rem,7vw,6rem)] font-black leading-none tracking-tight">{gradeText}</h1>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-              <p className="text-sm text-slate-300">{labels.streak}</p>
-              <p className="mt-1 text-3xl font-black">{bestStreakInSession}</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-              <p className="text-sm text-slate-300">{labels.best}</p>
-              <p className="mt-1 text-xl font-black">{summarizeBest(best, isEnglish)}</p>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-4">
-              <p className="text-sm text-slate-300">{isEnglish ? 'Seed' : '出題セット'}</p>
-              <p className="mt-1 truncate text-sm font-semibold text-slate-200">{lastSeed || '-'}</p>
+      <section className="mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-10">
+        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="bg-slate-950 p-5 text-white sm:p-7">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">{labels.result}</p>
+            <h1 className="mt-3 text-4xl font-black leading-tight tracking-normal sm:text-6xl">{gradeText}</h1>
+            <div className="mt-5">
+              <ProgressDots total={questions.length} answered={questions.length} currentIndex={questions.length - 1} />
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={startSession}
-              disabled={isStarting}
-              className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-white transition hover:bg-emerald-600"
-            >
-              {isStarting ? labels.starting : labels.restart}
-            </button>
-            <Link
-              to={localizePath('/', locale)}
-              className="rounded-xl border border-white/20 px-5 py-3 text-sm font-black text-white transition hover:bg-white/10"
-            >
-              {labels.home}
-            </Link>
+
+          <div className="grid gap-3 p-5 sm:grid-cols-3 sm:p-6">
+            <Metric icon={FireIcon} label={labels.streak} value={bestStreakInSession} tone="amber" />
+            <Metric icon={TrophyIcon} label={labels.best} value={summarizeBest(best, isEnglish)} tone="emerald" />
+            <Metric icon={ArrowPathIcon} label={labels.reviewDue} value={missedAnswers.length} tone={missedAnswers.length ? 'rose' : 'slate'} />
+          </div>
+
+          <div className="border-t border-slate-200 px-5 py-4 dark:border-slate-800 sm:px-6">
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={startSession}
+                disabled={isStarting}
+                className="flex items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+              >
+                {isStarting ? labels.starting : labels.restart}
+                <ArrowRightIcon className="h-4 w-4" />
+              </button>
+              <Link
+                to={localizePath('/', locale)}
+                className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-black text-slate-700 transition hover:border-slate-500 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500"
+              >
+                {labels.home}
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.review}</h2>
+        <div className="mt-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.review}</h2>
+            <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-black text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              {missedAnswers.length}/{questions.length}
+            </span>
+          </div>
           {missedAnswers.length === 0 ? (
             <p className="mt-3 text-slate-600 dark:text-slate-300">{labels.noReview}</p>
           ) : (
             <div className="mt-4 grid gap-3">
               {missedAnswers.map((answer) => (
-                <div key={answer.questionId} className="rounded-xl border border-slate-200 p-4 dark:border-slate-700">
+                <div key={answer.questionId} className="rounded-lg border border-slate-200 p-4 dark:border-slate-700">
                   <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
                     {answer.question.prompt.title}
                   </p>
