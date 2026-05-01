@@ -70,7 +70,7 @@ export const bibliography = [
     publisher: '学研教育出版',
     isbn10: '4054038468',
     isbn13: '978-4-05-403846-2',
-    url: 'https://www.amazon.co.jp/%E6%27%A5%E6%9C%AC%E7%94%A3%E8%9B%BE%E9%A1%9E%E6%A8%99%E6%BA%96%E5%9B%B3%E9%91%91%EF%BC%92-%E5%B2%B8%E7%94%B0%E6%B3%B0%E5%89%87/dp/4054038468',
+    url: 'https://www.amazon.co.jp/dp/4054038468',
     note: '第2巻'
   },
   {
@@ -81,7 +81,7 @@ export const bibliography = [
     publisher: '学研教育出版',
     isbn10: '405405109X',
     isbn13: '978-4-05-405109-6',
-    url: 'https://www.amazon.co.jp/%E6%27%A5%E6%9C%AC%E7%94%A3%E8%9B%BE%E9%A1%9E%E6%A8%99%E6%BA%96%E5%9B%B3%E9%91%913-%E9%82%A3%E9%A0%88%E7%BE%A9%E6%AC%A1/dp/405405109X',
+    url: 'https://www.amazon.co.jp/dp/405405109X',
     note: '第3巻'
   },
   {
