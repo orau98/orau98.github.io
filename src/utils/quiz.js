@@ -1,3 +1,10 @@
+import { globalJapaneseToScientificMapping } from './insectImageMappings.js';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from './insectImageResolver.js';
+
 export const QUIZ_MODES = Object.freeze({
   INSECT_TO_PLANT: 'insect-to-plant',
   PLANT_TO_INSECT: 'plant-to-insect',
@@ -151,12 +158,56 @@ const enrichPlantRecord = (record, plantDetailLookup) => {
   };
 };
 
-const buildRelationships = ({ moths = [], butterflies = [], plantDetails = {} } = {}) => {
+const toImageNameSet = (imageNames) => {
+  if (imageNames instanceof Set) return imageNames;
+  if (Array.isArray(imageNames)) return new Set(imageNames.map((name) => normalizeString(name)).filter(Boolean));
+  return new Set();
+};
+
+const buildInsectImageLookup = ({ insectImageNames, insectImageExtensions } = {}) => {
+  const imageNames = toImageNameSet(insectImageNames);
+  const imageExtensions =
+    insectImageExtensions && typeof insectImageExtensions === 'object'
+      ? insectImageExtensions
+      : {};
+  const hasIndex = imageNames.size > 0 || Object.keys(imageExtensions).length > 0;
+  return {
+    hasIndex,
+    imageNames,
+    imageExtensions,
+    normalizedEntries: hasIndex ? buildNormalizedEntries(imageNames, imageExtensions) : [],
+  };
+};
+
+const hasRegisteredInsectImage = (insect, imageLookup) => {
+  if (!imageLookup?.hasIndex || !insect) return false;
+  const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
+  const candidateBases = buildInsectImageBaseCandidates(insect, mappedFilename);
+  const resolvedBases = resolveImageBaseCandidates(candidateBases, {
+    imageExtensions: imageLookup.imageExtensions,
+    imageNames: imageLookup.imageNames,
+    normalizedEntries: imageLookup.normalizedEntries,
+  });
+  return resolvedBases.some((base) =>
+    Boolean(imageLookup.imageExtensions?.[base]) ||
+    Boolean(imageLookup.imageNames?.has?.(base)),
+  );
+};
+
+const buildRelationships = ({
+  moths = [],
+  butterflies = [],
+  plantDetails = {},
+  insectImageNames,
+  insectImageExtensions,
+} = {}) => {
   const plantDetailLookup = buildPlantDetailLookup(plantDetails);
+  const imageLookup = buildInsectImageLookup({ insectImageNames, insectImageExtensions });
   const insects = [...(moths || []), ...(butterflies || [])]
     .filter((insect) => insect && (insect.type === 'moth' || insect.type === 'butterfly'))
     .map((insect) => ({
       ...insect,
+      quizHasImage: hasRegisteredInsectImage(insect, imageLookup),
       quizHostPlantRecords: getQuizHostPlantRecords(insect).map((record) =>
         enrichPlantRecord(record, plantDetailLookup),
       ),
@@ -239,6 +290,7 @@ const buildInsectOption = (insect) => ({
   subtitle: insect.scientificName || '',
   family: getFamily(insect),
   insectId: insect.id,
+  hasImage: Boolean(insect.quizHasImage),
 });
 
 const buildPlantOption = (record) => ({
@@ -266,6 +318,7 @@ const buildInsectToPlantQuestionBases = (relationships) => {
       reviewKey: `${QUIZ_MODES.INSECT_TO_PLANT}:${insectId}:${correctRecord.name}`,
       mode: QUIZ_MODES.INSECT_TO_PLANT,
       subjectKey: insectId,
+      hasImage: Boolean(insect.quizHasImage),
       insectId,
       insect,
       family,
@@ -350,6 +403,7 @@ const buildPlantToInsectQuestionBases = (relationships) => {
         reviewKey: `${QUIZ_MODES.PLANT_TO_INSECT}:${plantName}:${correctInsectId}`,
         mode: QUIZ_MODES.PLANT_TO_INSECT,
         subjectKey: plantName,
+        hasImage: Boolean(correctInsect.quizHasImage),
         plantName,
         plantRecord,
         correctInsectId,
@@ -381,6 +435,7 @@ const buildPlantToInsectQuestion = (base, relationships, random) => {
       let score = 0;
       if (base.subfamily && subfamilyToInsects.get(base.subfamily)?.has(id)) score += 45;
       if (base.family && familyToInsects.get(base.family)?.has(id)) score += 35;
+      if (insect.quizHasImage) score += 8;
       const hostCount = insectToPlants.get(id)?.size || 0;
       score += Math.max(0, 16 - Math.abs(hostCount - correctHostCount));
       return score;
@@ -432,8 +487,15 @@ const selectSessionQuestions = ({
   const reviewSet = new Set(reviewKeys || []);
   const reviewLimit = Math.min(2, Math.max(1, Math.floor(questionCount * 0.25)));
   const shuffled = shuffleWithRandom(questionBases, random);
-  const reviewCandidates = shuffled.filter((question) => reviewSet.has(question.reviewKey));
-  const regularCandidates = shuffled.filter((question) => !reviewSet.has(question.reviewKey));
+  const prioritizeImages = (pool) =>
+    pool.some((question) => question.hasImage)
+      ? [
+          ...pool.filter((question) => question.hasImage),
+          ...pool.filter((question) => !question.hasImage),
+        ]
+      : pool;
+  const reviewCandidates = prioritizeImages(shuffled.filter((question) => reviewSet.has(question.reviewKey)));
+  const regularCandidates = prioritizeImages(shuffled.filter((question) => !reviewSet.has(question.reviewKey)));
 
   const takeFrom = (pool, limit = Infinity, { relaxSubjects = false } = {}) => {
     let added = 0;
@@ -469,6 +531,8 @@ export const buildQuizQuestions = ({
   moths = [],
   butterflies = [],
   plantDetails = {},
+  insectImageNames,
+  insectImageExtensions,
   mode = DEFAULT_QUIZ_MODE,
   questionCount = DEFAULT_QUIZ_LENGTH,
   seed = Date.now(),
@@ -476,7 +540,13 @@ export const buildQuizQuestions = ({
 } = {}) => {
   const normalizedMode = normalizeQuizMode(mode);
   const random = createRandom(seed);
-  const relationships = buildRelationships({ moths, butterflies, plantDetails });
+  const relationships = buildRelationships({
+    moths,
+    butterflies,
+    plantDetails,
+    insectImageNames,
+    insectImageExtensions,
+  });
   const questionBases =
     normalizedMode === QUIZ_MODES.PLANT_TO_INSECT
       ? buildPlantToInsectQuestionBases(relationships)

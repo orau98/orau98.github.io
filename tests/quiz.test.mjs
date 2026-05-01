@@ -19,11 +19,20 @@ const hostRecord = (name, family = 'ブナ科', extra = {}) => ({
   ...extra,
 });
 
-const insect = ({ id, name, type = 'moth', family = 'ヤガ科', subfamily = 'ヨトウガ亜科', plants = [] }) => ({
+const insect = ({
+  id,
+  name,
+  type = 'moth',
+  family = 'ヤガ科',
+  subfamily = 'ヨトウガ亜科',
+  plants = [],
+  scientificFilename = '',
+}) => ({
   id,
   name,
   type,
   scientificName: `Testus ${id}`,
+  scientificFilename,
   classification: {
     familyJapanese: family,
     subfamilyJapanese: subfamily,
@@ -160,4 +169,43 @@ test('review candidates are prioritized without dominating a ten-question sessio
   assert.equal(questions.length, 10);
   assert.ok(reviewQuestionCount >= 1);
   assert.ok(reviewQuestionCount <= 2);
+});
+
+test('quiz question selection prioritizes insects with registered photos', () => {
+  const photoInsects = Array.from({ length: 6 }, (_, index) =>
+    insect({
+      id: `photo-${index}`,
+      name: `写真ありテストガ${index}`,
+      scientificFilename: `Photo_priority_${index}`,
+      plants: [hostRecord(`写真植物${index}`, index % 2 === 0 ? 'ブナ科' : 'バラ科')],
+    }),
+  );
+  const noPhotoInsects = Array.from({ length: 8 }, (_, index) =>
+    insect({
+      id: `plain-${index}`,
+      name: `写真なしテストガ${index}`,
+      plants: [hostRecord(`通常植物${index}`, index % 2 === 0 ? 'ヤナギ科' : 'スミレ科')],
+    }),
+  );
+  const insectImageNames = new Set(photoInsects.map((item) => item.scientificFilename));
+
+  const insectToPlant = buildQuizQuestions({
+    moths: [...photoInsects, ...noPhotoInsects],
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 6,
+    seed: 'photo-priority-insect-to-plant',
+    insectImageNames,
+  });
+  assert.equal(insectToPlant.length, 6);
+  assert.ok(insectToPlant.every((question) => question.prompt.insectId.startsWith('photo-')));
+
+  const plantToInsect = buildQuizQuestions({
+    moths: [...photoInsects, ...noPhotoInsects],
+    mode: QUIZ_MODES.PLANT_TO_INSECT,
+    questionCount: 6,
+    seed: 'photo-priority-plant-to-insect',
+    insectImageNames,
+  });
+  assert.equal(plantToInsect.length, 6);
+  assert.ok(plantToInsect.every((question) => question.explanation.insect.id.startsWith('photo-')));
 });

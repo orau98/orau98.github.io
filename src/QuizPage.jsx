@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import ImageWithFallback from './components/ImageWithFallback';
 import useInsectImageCandidates from './hooks/useInsectImageCandidates';
 import useSeoMeta from './hooks/useSeoMeta';
-import { loadPlantImageFilenames } from './services/imageIndex';
+import { loadInsectImageIndexes, loadPlantImageFilenames } from './services/imageIndex';
 import {
   DEFAULT_QUIZ_LENGTH,
   QUIZ_MODES,
@@ -25,6 +25,13 @@ import { buildPlantPath } from './utils/siteTaxonomy';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 
 const REVIEW_LIMIT = 24;
+const EMPTY_INSECT_IMAGE_INDEX = Object.freeze({ names: new Set(), exts: {}, ready: false });
+
+const normalizeInsectImageIndex = ({ names, exts } = {}, ready = true) => ({
+  names: new Set(names || []),
+  exts: exts || {},
+  ready,
+});
 
 const getBestStorageKey = (locale, mode) => `ihpe-quiz-best:v1:${locale}:${mode}`;
 const getReviewStorageKey = (locale, mode) => `ihpe-quiz-review:v1:${locale}:${mode}`;
@@ -267,6 +274,7 @@ const QuizPage = ({
   const labels = labelsFor(isEnglish);
   const mode = normalizeQuizMode(searchParams.get('mode'));
   const [plantImageFilenames, setPlantImageFilenames] = useState([]);
+  const [insectImageIndex, setInsectImageIndex] = useState(EMPTY_INSECT_IMAGE_INDEX);
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -310,6 +318,15 @@ const QuizPage = ({
 
   useEffect(() => {
     let cancelled = false;
+    loadInsectImageIndexes()
+      .then((index) => {
+        if (!cancelled) {
+          setInsectImageIndex(normalizeInsectImageIndex(index));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setInsectImageIndex(normalizeInsectImageIndex({}, true));
+      });
     loadPlantImageFilenames()
       .then((filenames) => {
         if (!cancelled) setPlantImageFilenames(filenames);
@@ -358,8 +375,19 @@ const QuizPage = ({
     setSelectedOptionId('');
     setDetailsOpen(false);
 
-    const prepareSession = () => {
+    const prepareSession = async () => {
       try {
+        let imageIndexForSession = insectImageIndex;
+        if (!imageIndexForSession.ready) {
+          try {
+            const loadedIndex = normalizeInsectImageIndex(await loadInsectImageIndexes());
+            imageIndexForSession = loadedIndex;
+            setInsectImageIndex(loadedIndex);
+          } catch {
+            imageIndexForSession = normalizeInsectImageIndex({}, true);
+            setInsectImageIndex(imageIndexForSession);
+          }
+        }
         const reviewEntries = safeReadJson(getReviewStorageKey(locale, mode), []);
         const reviewKeys = Array.isArray(reviewEntries) ? reviewEntries.map((entry) => entry.key).filter(Boolean) : [];
         const seed = `${mode}:${Date.now()}:${Math.random().toString(16).slice(2)}`;
@@ -367,6 +395,8 @@ const QuizPage = ({
           moths,
           butterflies,
           plantDetails,
+          insectImageNames: imageIndexForSession.names,
+          insectImageExtensions: imageIndexForSession.exts,
           mode,
           questionCount: DEFAULT_QUIZ_LENGTH,
           seed,
@@ -374,6 +404,9 @@ const QuizPage = ({
         });
         setLastSeed(seed);
         setQuestions(nextQuestions);
+      } catch (error) {
+        console.error('Failed to prepare quiz session', error);
+        setQuestions([]);
       } finally {
         setIsStarting(false);
       }
@@ -381,12 +414,14 @@ const QuizPage = ({
 
     if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
       window.requestAnimationFrame(() => {
-        window.setTimeout(prepareSession, 0);
+        window.setTimeout(() => {
+          void prepareSession();
+        }, 0);
       });
       return;
     }
-    prepareSession();
-  }, [butterflies, hasData, isStarting, locale, mode, moths, plantDetails]);
+    void prepareSession();
+  }, [butterflies, hasData, insectImageIndex, isStarting, locale, mode, moths, plantDetails]);
 
   const persistSession = useCallback((nextAnswers) => {
     const score = nextAnswers.filter((answer) => answer.isCorrect).length;
