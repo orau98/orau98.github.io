@@ -119,6 +119,10 @@ const labelsFor = (isEnglish) => ({
   reviewDue: isEnglish ? 'Review due' : '復習候補',
   answered: isEnglish ? 'Answered' : '回答済み',
   flow: isEnglish ? 'Flow' : '流れ',
+  preview: isEnglish ? 'Question preview' : '出題プレビュー',
+  samplePrompt: isEnglish ? 'Choose the larval host plant.' : '幼虫食草を選ぶ',
+  sourceBased: isEnglish ? 'Source-backed' : '出典つき',
+  larvalHost: isEnglish ? 'Larval host' : '幼虫食草',
   see: isEnglish ? 'Look' : '見る',
   choose: isEnglish ? 'Choose' : '選ぶ',
   reviewStep: isEnglish ? 'Review' : '復習',
@@ -312,6 +316,110 @@ const Metric = ({ icon: Icon, label, value, tone = 'slate' }) => {
           <span className="block text-xs font-bold text-slate-500 dark:text-slate-400">{label}</span>
           <span className="block text-base font-black leading-tight text-slate-950 dark:text-white">{value}</span>
         </span>
+      </div>
+    </div>
+  );
+};
+
+const QuizStartPreview = ({ labels, isEnglish }) => {
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const picture = buildResponsivePicture({
+    baseUrl: normalizedBase,
+    folder: 'insects',
+    filename: 'Cucullia_argentea',
+    widths: [320, 640, 1024],
+    sizes: '(max-width: 1024px) 100vw, 58vw',
+  });
+  const sampleName = isEnglish ? 'Cucullia argentea' : 'アオモンギンセダカモクメ';
+  const choices = isEnglish
+    ? [
+        ['A', 'Artemisia capillaris', 'Asteraceae', true],
+        ['B', 'Quercus serrata', 'Fagaceae', false],
+        ['C', 'Quercus myrsinifolia', 'Fagaceae', false],
+        ['D', 'Viola spp.', 'Violaceae', false],
+      ]
+    : [
+        ['A', 'カワラヨモギ', 'キク科', true],
+        ['B', 'コナラ', 'ブナ科', false],
+        ['C', 'シラカシ', 'ブナ科', false],
+        ['D', 'スミレ', 'スミレ科', false],
+      ];
+
+  return (
+    <div className="relative flex min-h-[32rem] overflow-hidden rounded-lg bg-slate-950 text-white shadow-sm">
+      <ImageWithFallback
+        src={picture.src}
+        srcSet={picture.srcSet}
+        sizes={picture.sizes}
+        sources={picture.sources}
+        alt={isEnglish ? 'Cucullia argentea photograph' : 'アオモンギンセダカモクメの写真'}
+        width="1024"
+        height="768"
+        className="absolute inset-0 h-full w-full"
+        imgClassName="object-center"
+        fit="cover"
+      />
+      <div className="absolute inset-0 bg-slate-950/45" />
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+
+      <div className="relative z-10 flex w-full flex-col justify-between p-5 sm:p-7 lg:p-8">
+        <div className="flex flex-wrap gap-2 text-xs font-black">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-white/90 px-2.5 py-1.5 text-slate-950">
+            <CameraIcon className="h-4 w-4" />
+            {labels.photoFirst}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-300 px-2.5 py-1.5 text-emerald-950">
+            <CheckCircleIcon className="h-4 w-4" />
+            {labels.sourceBased}
+          </span>
+        </div>
+
+        <div className="mt-12 max-w-4xl">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-200">
+            {labels.preview}
+          </p>
+          <h1 className="mt-3 max-w-4xl text-5xl font-black leading-[0.98] tracking-normal sm:text-6xl xl:text-7xl">
+            {labels.title}
+          </h1>
+          <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-200 sm:text-lg">
+            {labels.subtitle}
+          </p>
+
+          <div className="mt-7 grid gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(24rem,0.8fr)]">
+            <div>
+              <p className="text-sm font-black text-emerald-200">{labels.samplePrompt}</p>
+              <h2 className="mt-2 text-2xl font-black leading-tight text-white">
+                {sampleName}
+              </h2>
+              <p className="mt-1 text-sm text-slate-300">
+                {formatScientificNameReact('Cucullia argentea (Hufnagel, 1766)')}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {choices.map(([letter, plant, family, correct]) => (
+                <div
+                  key={letter}
+                  className={`flex min-h-[3.3rem] items-center gap-2 rounded-lg border px-3 py-2 ${
+                    correct
+                      ? 'border-emerald-300 bg-emerald-300/95 text-emerald-950'
+                      : 'border-white/20 bg-white/[0.12] text-white backdrop-blur'
+                  }`}
+                >
+                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-black text-slate-950">
+                    {letter}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-black">{plant}</span>
+                    <span className={`block text-xs font-semibold ${correct ? 'text-emerald-900' : 'text-slate-300'}`}>
+                      {family}
+                    </span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -610,21 +718,21 @@ const QuizPage = ({
   );
 
   const renderStart = () => (
-    <section className="mx-auto grid max-w-6xl gap-4 px-4 py-5 md:px-8 md:py-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
-      <aside className="order-1 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:order-2 lg:sticky lg:top-4 lg:self-start">
+    <section className="mx-auto grid max-w-[104rem] gap-5 px-4 py-5 md:px-8 md:py-7 xl:grid-cols-[minmax(0,1fr)_26rem]">
+      <aside className="order-1 flex min-h-[30rem] flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 xl:order-2 xl:min-h-[32rem]">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {labels.session}
             </p>
-            <h2 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">{labels.today}</h2>
+            <h2 className="mt-1 text-3xl font-black text-slate-950 dark:text-white">{labels.today}</h2>
           </div>
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200">
-            <BoltIcon className="h-5 w-5" />
+          <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200">
+            <BoltIcon className="h-6 w-6" />
           </span>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="mt-5 grid grid-cols-2 gap-2">
           <ModeButton active={mode === QUIZ_MODES.INSECT_TO_PLANT} onClick={() => setMode(QUIZ_MODES.INSECT_TO_PLANT)}>
             {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.INSECT_TO_PLANT]}
           </ModeButton>
@@ -633,73 +741,61 @@ const QuizPage = ({
           </ModeButton>
         </div>
 
-        <div className="mt-4 grid gap-2">
+        <div className="mt-5 grid gap-3">
           <Metric icon={TrophyIcon} label={labels.best} value={summarizeBest(best, isEnglish)} tone="amber" />
           <Metric icon={ArrowPathIcon} label={labels.reviewDue} value={reviewCount} tone={reviewCount ? 'rose' : 'slate'} />
         </div>
 
-        <button
-          type="button"
-          onClick={startSession}
-          disabled={!hasData || isStarting}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-base font-black text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
-        >
-          {!hasData ? labels.loading : isStarting ? labels.starting : labels.start}
-          {hasData && !isStarting && <ChevronRightIcon className="h-5 w-5" />}
-        </button>
-        {!hasData && (
-          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
-        )}
-        <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <Metric icon={CameraIcon} label={labels.photoFirst} value={isEnglish ? 'On' : '有効'} tone="emerald" />
+          <Metric icon={ClockIcon} label={labels.biteSize} value="10" tone="blue" />
+        </div>
+
+        <div className="mt-auto pt-5">
+          <button
+            type="button"
+            onClick={startSession}
+            disabled={!hasData || isStarting}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-4 text-base font-black text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+          >
+            {!hasData ? labels.loading : isStarting ? labels.starting : labels.start}
+            {hasData && !isStarting && <ChevronRightIcon className="h-5 w-5" />}
+          </button>
+          {!hasData && (
+            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
+          )}
+          <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
+        </div>
       </aside>
 
-      <div className="order-2 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:order-1">
-        <div className="grid gap-0 md:grid-cols-[minmax(0,1fr)_18rem]">
-          <div className="p-5 sm:p-7">
-            <div className="flex flex-wrap gap-2 text-xs font-black">
-              <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-2.5 py-1.5 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-200">
-                <CameraIcon className="h-4 w-4" />
-                {labels.photoFirst}
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-lg bg-blue-100 px-2.5 py-1.5 text-blue-800 dark:bg-blue-950/70 dark:text-blue-200">
-                <ClockIcon className="h-4 w-4" />
-                {labels.biteSize}
-              </span>
-            </div>
-            <h1 className="mt-5 max-w-3xl text-4xl font-black leading-[1.02] tracking-normal text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
-              {labels.title}
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
-              {labels.subtitle}
-            </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <Metric icon={CameraIcon} label={labels.photoFirst} value={isEnglish ? 'On' : '有効'} tone="emerald" />
-              <Metric icon={AcademicCapIcon} label={labels.reviewStep} value={reviewCount} tone="blue" />
-              <Metric icon={FireIcon} label={labels.streak} value={Number(best?.bestStreak || 0)} tone="amber" />
-            </div>
+      <div className="order-2 grid gap-5 xl:order-1 xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <QuizStartPreview labels={labels} isEnglish={isEnglish} />
+
+        <div className="flex min-h-[30rem] flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 xl:min-h-[32rem]">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+            {labels.flow}
+          </p>
+          <div className="mt-5 space-y-4">
+            {[
+              [CameraIcon, labels.see, isEnglish ? 'Photo / plant' : '写真・植物'],
+              [BoltIcon, labels.choose, modeLabel],
+              [ArrowPathIcon, labels.reviewStep, `${reviewCount}`],
+            ].map(([Icon, title, value]) => (
+              <div key={title} className="flex items-center gap-3">
+                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-base font-black text-slate-950 dark:text-white">{title}</span>
+                  <span className="block truncate text-sm font-semibold text-slate-500 dark:text-slate-400">{value}</span>
+                </span>
+              </div>
+            ))}
           </div>
 
-          <div className="border-t border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950/50 md:border-l md:border-t-0">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-              {labels.flow}
-            </p>
-            <div className="mt-4 space-y-3">
-              {[
-                [CameraIcon, labels.see, isEnglish ? 'Photo / plant' : '写真・植物'],
-                [BoltIcon, labels.choose, modeLabel],
-                [ArrowPathIcon, labels.reviewStep, `${reviewCount}`],
-              ].map(([Icon, title, value]) => (
-                <div key={title} className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
-                    <Icon className="h-4 w-4" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-sm font-black text-slate-950 dark:text-white">{title}</span>
-                    <span className="block truncate text-xs font-semibold text-slate-500 dark:text-slate-400">{value}</span>
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="mt-auto grid gap-3 pt-6">
+            <Metric icon={AcademicCapIcon} label={labels.larvalHost} value={isEnglish ? 'Moths / butterflies' : '蛾・蝶'} tone="blue" />
+            <Metric icon={FireIcon} label={labels.streak} value={Number(best?.bestStreak || 0)} tone="amber" />
           </div>
         </div>
       </div>
