@@ -18,6 +18,14 @@ const UNKNOWN_PLANT_RE =
 
 const normalizeString = (value = '') => String(value || '').normalize('NFC').trim();
 
+export const PLANT_TAXON_RANKS = Object.freeze({
+  SPECIES: 'species',
+  GENUS: 'genus',
+  FAMILY: 'family',
+  GROUP: 'group',
+  UNKNOWN: 'unknown',
+});
+
 export const normalizeQuizMode = (mode) =>
   mode === QUIZ_MODES.PLANT_TO_INSECT || mode === QUIZ_MODES.INSECT_TO_PLANT
     ? mode
@@ -140,6 +148,28 @@ const buildPlantDetailLookup = (plantDetails = {}) => {
   return lookup;
 };
 
+const looksLikeScientificSpeciesName = (scientificName = '') =>
+  /^[A-Z][A-Za-z.-]+\s+(?:x\s+|×\s*)?[a-z][a-z.-]+/.test(normalizeString(scientificName));
+
+export const getPlantTaxonRankForQuiz = (record = {}, detail = {}) => {
+  const name = normalizePlantNameForQuiz(record.name || record.displayName || detail.name);
+  if (!name) return PLANT_TAXON_RANKS.UNKNOWN;
+
+  const family = normalizeString(record.family || detail.familyName || detail.family);
+  const scientificName = normalizeString(record.scientificName || detail.scientificName);
+
+  if (name.endsWith('科') && (!scientificName || !family || family === name)) {
+    return PLANT_TAXON_RANKS.FAMILY;
+  }
+  if (name.endsWith('属')) return PLANT_TAXON_RANKS.GENUS;
+  if (/(?:類|の一種|の多種|植物の多種|科植物)$/.test(name)) {
+    return PLANT_TAXON_RANKS.GROUP;
+  }
+  if (looksLikeScientificSpeciesName(scientificName)) return PLANT_TAXON_RANKS.SPECIES;
+
+  return PLANT_TAXON_RANKS.SPECIES;
+};
+
 const enrichPlantRecord = (record, plantDetailLookup) => {
   const detail = plantDetailLookup.get(record.name) || {};
   const family = record.family || detail.familyName || detail.family || '';
@@ -155,6 +185,7 @@ const enrichPlantRecord = (record, plantDetailLookup) => {
     displayName,
     scientificName: record.scientificName || detail.scientificName || '',
     order: record.order || detail.order || '',
+    taxonRank: getPlantTaxonRankForQuiz({ ...record, family }, detail),
   };
 };
 
@@ -298,9 +329,10 @@ const buildPlantOption = (record) => ({
   type: 'plant',
   value: record.name,
   label: record.name,
-  subtitle: record.family || '',
+  subtitle: record.taxonRank === PLANT_TAXON_RANKS.FAMILY ? '' : record.family || '',
   family: record.family || '',
   plantName: record.name,
+  taxonRank: record.taxonRank || PLANT_TAXON_RANKS.UNKNOWN,
 });
 
 const buildInsectToPlantQuestionBases = (relationships) => {
@@ -339,8 +371,12 @@ const buildInsectToPlantQuestion = (base, relationships, random) => {
   const allPlantRecords = Array.from(plantDetails.values());
   const ownedPlants = insectToPlants.get(base.insectId) || new Set();
   const correctUsage = plantUseCounts.get(base.correctRecord.name) || 0;
+  const correctRank = base.correctRecord.taxonRank || PLANT_TAXON_RANKS.UNKNOWN;
   const distractors = sortByScore(
-    allPlantRecords.filter((record) => !ownedPlants.has(record.name)),
+    allPlantRecords.filter((record) =>
+      !ownedPlants.has(record.name) &&
+      (record.taxonRank || PLANT_TAXON_RANKS.UNKNOWN) === correctRank,
+    ),
     (record) => {
       let score = 0;
       if (base.subfamily && subfamilyToPlants.get(base.subfamily)?.has(record.name)) score += 45;

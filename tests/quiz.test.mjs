@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  PLANT_TAXON_RANKS,
   QUIZ_MODES,
   buildQuizQuestions,
   getQuizHostPlantRecords,
@@ -123,6 +124,82 @@ test('plant family is filled from plantDetails when source record family is blan
   assert.equal(correct.label, 'キンギンボク');
   assert.equal(correct.subtitle, 'スイカズラ科');
   assert.equal(question.explanation.sourceRecords[0].family, 'スイカズラ科');
+});
+
+test('insect-to-plant choices keep plant taxon rank consistent for species questions', () => {
+  const questions = buildQuizQuestions({
+    moths: [
+      insect({ id: 'species-target', name: '種階層テストガ', plants: [hostRecord('コナラ', 'ブナ科')] }),
+      insect({ id: 'species-b', name: '種階層テストガB', plants: [hostRecord('クヌギ', 'ブナ科')] }),
+      insect({ id: 'species-c', name: '種階層テストガC', plants: [hostRecord('サクラ', 'バラ科')] }),
+      insect({ id: 'species-d', name: '種階層テストガD', plants: [hostRecord('ヤナギ', 'ヤナギ科')] }),
+      insect({ id: 'family-noise', name: '科階層ノイズガ', plants: [hostRecord('マチン科', '')] }),
+      insect({ id: 'genus-noise', name: '属階層ノイズガ', plants: [hostRecord('コナラ属', 'ブナ科')] }),
+    ],
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 1,
+    seed: 'species-rank-consistency',
+    reviewKeys: [`${QUIZ_MODES.INSECT_TO_PLANT}:species-target:コナラ`],
+  });
+
+  const [question] = questions;
+  assert.equal(question.options.length, 4);
+  assert.deepEqual(
+    [...new Set(question.options.map((option) => option.taxonRank))],
+    [PLANT_TAXON_RANKS.SPECIES],
+  );
+  assert.ok(!question.options.some((option) => option.label.endsWith('科') || option.label.endsWith('属')));
+});
+
+test('insect-to-plant choices keep plant taxon rank consistent for family questions', () => {
+  const questions = buildQuizQuestions({
+    moths: [
+      insect({ id: 'family-target', name: '科階層テストガ', plants: [hostRecord('マチン科', '')] }),
+      insect({ id: 'family-b', name: '科階層テストガB', plants: [hostRecord('ブナ科', '')] }),
+      insect({ id: 'family-c', name: '科階層テストガC', plants: [hostRecord('バラ科', '')] }),
+      insect({ id: 'family-d', name: '科階層テストガD', plants: [hostRecord('スミレ科', '')] }),
+      insect({ id: 'species-noise', name: '種階層ノイズガ', plants: [hostRecord('コナラ', 'ブナ科')] }),
+      insect({ id: 'genus-noise', name: '属階層ノイズガ', plants: [hostRecord('コナラ属', 'ブナ科')] }),
+    ],
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 1,
+    seed: 'family-rank-consistency',
+    reviewKeys: [`${QUIZ_MODES.INSECT_TO_PLANT}:family-target:マチン科`],
+  });
+
+  const [question] = questions;
+  assert.equal(question.options.length, 4);
+  assert.deepEqual(
+    [...new Set(question.options.map((option) => option.taxonRank))],
+    [PLANT_TAXON_RANKS.FAMILY],
+  );
+  assert.ok(question.options.every((option) => option.label.endsWith('科')));
+  assert.ok(question.options.every((option) => option.subtitle === ''));
+});
+
+test('insect-to-plant choices keep plant taxon rank consistent for genus questions', () => {
+  const questions = buildQuizQuestions({
+    moths: [
+      insect({ id: 'genus-target', name: '属階層テストガ', plants: [hostRecord('コナラ属', 'ブナ科')] }),
+      insect({ id: 'genus-b', name: '属階層テストガB', plants: [hostRecord('サクラ属', 'バラ科')] }),
+      insect({ id: 'genus-c', name: '属階層テストガC', plants: [hostRecord('スミレ属', 'スミレ科')] }),
+      insect({ id: 'genus-d', name: '属階層テストガD', plants: [hostRecord('ヤナギ属', 'ヤナギ科')] }),
+      insect({ id: 'species-noise', name: '種階層ノイズガ', plants: [hostRecord('コナラ', 'ブナ科')] }),
+      insect({ id: 'family-noise', name: '科階層ノイズガ', plants: [hostRecord('ブナ科', '')] }),
+    ],
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 1,
+    seed: 'genus-rank-consistency',
+    reviewKeys: [`${QUIZ_MODES.INSECT_TO_PLANT}:genus-target:コナラ属`],
+  });
+
+  const [question] = questions;
+  assert.equal(question.options.length, 4);
+  assert.deepEqual(
+    [...new Set(question.options.map((option) => option.taxonRank))],
+    [PLANT_TAXON_RANKS.GENUS],
+  );
+  assert.ok(question.options.every((option) => option.label.endsWith('属')));
 });
 
 test('plant-to-insect questions exclude insects already linked to the prompt plant as distractors', () => {
