@@ -678,6 +678,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     ? (isEnglish ? primaryName : `${displayName || moth.name}（${moth.scientificName}）`)
     : isEnglish ? EN_SITE_NAME : '昆虫植物図鑑';
   const shareText = isEnglish ? `${shareTitle} | ${EN_SITE_NAME}` : `${shareTitle}｜昆虫植物図鑑`;
+  const quizFocusHref = moth && (moth.type === 'moth' || moth.type === 'butterfly')
+    ? `${localizePath('/quiz', locale)}?mode=insect-to-plant&style=photo&focusInsect=${encodeURIComponent(moth.id || moth.name)}`
+    : '';
   const detailUi = {
     noteLabel: isEnglish ? 'Notes:' : '備考:',
     sourceLabel: isEnglish ? 'Source:' : '出典:',
@@ -1047,16 +1050,26 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           ]}
         />
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
-          <Link
-            to={getBackTarget(location, localizePath('/?tab=insects', locale))}
-            state={makeDetailLinkState(location)}
-            className="ui-btn ui-btn-secondary text-sm shadow-sm hover:shadow-md active:scale-95 transition-transform"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-{isEnglish ? 'Back to list' : '一覧に戻る'}
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              to={getBackTarget(location, localizePath('/?tab=insects', locale))}
+              state={makeDetailLinkState(location)}
+              className="ui-btn ui-btn-secondary text-sm shadow-sm hover:shadow-md active:scale-95 transition-transform"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              {isEnglish ? 'Back to list' : '一覧に戻る'}
+            </Link>
+            {quizFocusHref && (
+              <Link
+                to={quizFocusHref}
+                className="inline-flex items-center rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950"
+              >
+                {isEnglish ? 'Review in quiz' : 'この昆虫をクイズで復習'}
+              </Link>
+            )}
+          </div>
           
           {/* 分類情報をヘッダーに表示 */}
           <div className="flex flex-wrap items-center gap-2">

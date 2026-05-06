@@ -34,8 +34,13 @@ import { absUrl } from './utils/origin';
 import { buildPlantPath } from './utils/siteTaxonomy';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 
-const REVIEW_LIMIT = 24;
+const REVIEW_LIMIT = 48;
+const DAY_MS = 24 * 60 * 60 * 1000;
 const EMPTY_INSECT_IMAGE_INDEX = Object.freeze({ names: new Set(), exts: {}, ready: false });
+const QUIZ_STYLES = Object.freeze({
+  GUIDED: 'guided',
+  PHOTO: 'photo',
+});
 
 const normalizeInsectImageIndex = ({ names, exts } = {}, ready = true) => ({
   names: new Set(names || []),
@@ -45,6 +50,11 @@ const normalizeInsectImageIndex = ({ names, exts } = {}, ready = true) => ({
 
 const getBestStorageKey = (locale, mode) => `ihpe-quiz-best:v1:${locale}:${mode}`;
 const getReviewStorageKey = (locale, mode) => `ihpe-quiz-review:v1:${locale}:${mode}`;
+
+const normalizeQuizStyle = (style) =>
+  style === QUIZ_STYLES.PHOTO || style === QUIZ_STYLES.GUIDED
+    ? style
+    : QUIZ_STYLES.GUIDED;
 
 const safeReadJson = (key, fallback) => {
   try {
@@ -63,32 +73,79 @@ const safeWriteJson = (key, value) => {
   } catch {}
 };
 
+const normalizeReviewEntries = (entries = []) => (
+  Array.isArray(entries)
+    ? entries
+        .filter((entry) => entry?.key)
+        .map((entry) => {
+          const misses = Number(entry.misses || 0);
+          const lastSeen = Number(entry.lastSeen || 0);
+          const intervalDays = Math.max(0, Number(entry.intervalDays || 0));
+          const legacyDueAt = misses > 0 ? lastSeen : lastSeen + DAY_MS;
+          return {
+            key: entry.key,
+            misses,
+            correct: Number(entry.correct || 0),
+            intervalDays,
+            dueAt: Number(entry.dueAt || legacyDueAt || 0),
+            lastSeen,
+            lastResult: entry.lastResult || (misses > 0 ? 'missed' : 'correct'),
+          };
+        })
+    : []
+);
+
+const getDueReviewEntries = (locale, mode, now = Date.now()) =>
+  normalizeReviewEntries(safeReadJson(getReviewStorageKey(locale, mode), []))
+    .filter((entry) => entry.dueAt <= now)
+    .sort((a, b) => a.dueAt - b.dueAt || b.misses - a.misses || a.lastSeen - b.lastSeen);
+
 const updateReviewEntries = ({ previous = [], answers = [] }) => {
   const map = new Map(
-    Array.isArray(previous)
-      ? previous
-          .filter((entry) => entry?.key)
-          .map((entry) => [entry.key, { key: entry.key, misses: Number(entry.misses || 0), lastSeen: Number(entry.lastSeen || 0) }])
-      : [],
+    normalizeReviewEntries(previous)
+      .map((entry) => [entry.key, entry]),
   );
   const now = Date.now();
 
   answers.forEach((answer) => {
     if (!answer?.reviewKey) return;
+    const current = map.get(answer.reviewKey) || {
+      key: answer.reviewKey,
+      misses: 0,
+      correct: 0,
+      intervalDays: 0,
+      dueAt: now,
+      lastSeen: 0,
+      lastResult: '',
+    };
     if (answer.isCorrect) {
-      map.delete(answer.reviewKey);
+      const nextIntervalDays = current.lastResult === 'missed'
+        ? 1
+        : Math.min(30, Math.max(1, Math.round((current.intervalDays || 0.5) * 2)));
+      map.set(answer.reviewKey, {
+        ...current,
+        correct: current.correct + 1,
+        intervalDays: nextIntervalDays,
+        dueAt: now + nextIntervalDays * DAY_MS,
+        lastSeen: now,
+        lastResult: 'correct',
+      });
       return;
     }
-    const current = map.get(answer.reviewKey) || { key: answer.reviewKey, misses: 0, lastSeen: 0 };
     map.set(answer.reviewKey, {
+      ...current,
       key: answer.reviewKey,
       misses: current.misses + 1,
+      correct: 0,
+      intervalDays: 0,
+      dueAt: now,
       lastSeen: now,
+      lastResult: 'missed',
     });
   });
 
   return Array.from(map.values())
-    .sort((a, b) => b.misses - a.misses || a.lastSeen - b.lastSeen)
+    .sort((a, b) => a.dueAt - b.dueAt || b.misses - a.misses || b.lastSeen - a.lastSeen)
     .slice(0, REVIEW_LIMIT);
 };
 
@@ -111,13 +168,20 @@ const labelsFor = (isEnglish) => ({
     ? 'A ten-question game for learning moth and butterfly host-plant links.'
     : '蛾・蝶と幼虫食草のつながりを10問で覚える学習ゲーム。',
   today: isEnglish ? "Today's 10" : '今日の10問',
-  reviewDue: isEnglish ? 'Review due' : '復習候補',
+  todayLead: isEnglish ? 'Start with the next useful set. Review appears only when it is due.' : '次に覚えるべき10問だけを出します。復習は必要な時だけ混ざります。',
+  settings: isEnglish ? 'Question settings' : '出題設定',
+  reviewDue: isEnglish ? 'Due now' : '今日の復習',
   answered: isEnglish ? 'Answered' : '回答済み',
   stageChoose: isEnglish ? 'Choose one answer' : '1つ選択',
   stageCheck: isEnglish ? 'Check the link' : '答え合わせ',
   start: isEnglish ? 'Start 10 questions' : '10問を始める',
   starting: isEnglish ? 'Preparing the first question...' : '最初の問題を準備中…',
+  startStages: {
+    images: isEnglish ? 'Checking photo indexes...' : '写真索引を確認中…',
+    questions: isEnglish ? 'Selecting today’s questions...' : '今日の10問を選定中…',
+  },
   restart: isEnglish ? 'Try again' : 'もう一度挑戦',
+  nextSession: isEnglish ? 'Next useful 10' : '次の10問へ',
   next: isEnglish ? 'Next question' : '次の問題',
   result: isEnglish ? 'Session result' : '結果',
   score: isEnglish ? 'Score' : '正答',
@@ -125,11 +189,18 @@ const labelsFor = (isEnglish) => ({
   best: isEnglish ? 'Best' : '自己ベスト',
   review: isEnglish ? 'Review list' : '復習候補',
   noReview: isEnglish ? 'No missed questions this round.' : '今回の復習候補はありません。',
+  weakPoints: isEnglish ? 'Next focus' : '次に覚えるポイント',
+  noWeakPoints: isEnglish ? 'No weak point stood out in this round.' : 'この回で目立った弱点はありません。',
+  reviewTop: isEnglish ? 'Review these first' : 'まず復習する3問',
   source: isEnglish ? 'Source' : '出典',
   details: isEnglish ? 'Show details' : '詳しい記録を見る',
   hideDetails: isEnglish ? 'Hide details' : '詳細を閉じる',
   correct: isEnglish ? 'Correct' : '正解',
   incorrect: isEnglish ? 'Review this one' : '復習しよう',
+  correctPair: isEnglish ? 'Correct link' : '正しいつながり',
+  yourChoice: isEnglish ? 'Your choice' : '選んだ答え',
+  learningPoint: isEnglish ? 'Learning point' : '覚えるポイント',
+  comparePhotos: isEnglish ? 'Photo comparison' : '写真で確認',
   loading: isEnglish ? 'Preparing quiz data...' : 'クイズデータを準備しています…',
   notReady: isEnglish
     ? 'Quiz data is still loading. Please try again in a moment.'
@@ -138,12 +209,18 @@ const labelsFor = (isEnglish) => ({
   finish: isEnglish ? 'Last question complete.' : '10問完了です。',
   keyboard: isEnglish ? 'Keys 1-4 answer, Enter advances.' : '1〜4で回答、Enterで次へ進めます。',
   mode: isEnglish ? 'Mode' : 'モード',
+  style: isEnglish ? 'Style' : '表示',
+  guidedStyle: isEnglish ? 'Guided' : '標準',
+  photoStyle: isEnglish ? 'Photo ID' : '写真識別',
+  guidedStyleDesc: isEnglish ? 'Balanced photo and text practice.' : '写真と文字をバランスよく確認します。',
+  photoStyleDesc: isEnglish ? 'Larger photos and shorter choices for visual identification.' : '写真を大きく見せ、候補を短く並べます。',
   session: isEnglish ? 'Session' : 'セッション',
   insectPrompt: isEnglish ? 'Choose the larval host plant.' : 'この昆虫の幼虫食草を選んでください。',
   plantPrompt: isEnglish ? 'Choose the insect linked to this host plant.' : 'この植物を食草にする昆虫を選んでください。',
   openInsect: isEnglish ? 'Open insect page' : '昆虫ページへ',
   openPlant: isEnglish ? 'Open plant page' : '植物ページへ',
   home: isEnglish ? 'Back to explorer' : '図鑑へ戻る',
+  focused: isEnglish ? 'Focused from detail page' : '詳細ページから優先出題',
 });
 
 const summarizeBest = (best, isEnglish) => {
@@ -152,6 +229,100 @@ const summarizeBest = (best, isEnglish) => {
   return isEnglish
     ? `${score}/${DEFAULT_QUIZ_LENGTH}, streak ${streak}`
     : `${DEFAULT_QUIZ_LENGTH}問中${score}問・連続${streak}問`;
+};
+
+const getPlantRankLabel = (rank, isEnglish) => {
+  const labels = {
+    species: isEnglish ? 'species-level plant' : '種レベルの植物',
+    genus: isEnglish ? 'genus-level plant' : '属レベルの植物',
+    family: isEnglish ? 'plant family' : '科レベルの植物',
+    group: isEnglish ? 'plant group' : '植物グループ',
+  };
+  return labels[rank] || (isEnglish ? 'host plant' : '食草');
+};
+
+const getInsectFamily = (insect = {}) =>
+  insect.classification?.familyJapanese || insect.classification?.family || insect.family || '';
+
+const buildCorrectLinkLabel = (question, isEnglish) => {
+  const insectName = question.explanation?.insect?.name || question.prompt?.title || '';
+  const plantName = question.explanation?.plant?.name || question.explanation?.correctLabel || '';
+  return isEnglish ? `${insectName} - ${plantName}` : `${insectName} → ${plantName}`;
+};
+
+const buildLearningPoint = ({ question, selectedOption, correctOption, isEnglish }) => {
+  if (!question || !correctOption) return '';
+  if (question.mode === QUIZ_MODES.INSECT_TO_PLANT) {
+    const rankLabel = getPlantRankLabel(correctOption.taxonRank, isEnglish);
+    const family = correctOption.family || question.explanation?.plant?.family || '';
+    const correctGroup = family || correctOption.label;
+    if (selectedOption && selectedOption.id !== correctOption.id) {
+      if (family && selectedOption.family === family) {
+        return isEnglish
+          ? `Both choices are in ${family}. Use the exact host-plant name after checking the family.`
+          : `選んだ候補も${family}です。まず科をそろえた上で、正確な食草名を見分ける問題です。`;
+      }
+      return isEnglish
+        ? `This is a ${rankLabel} question. The correct answer is ${correctGroup}.`
+        : `これは${rankLabel}を選ぶ問題です。正解は${correctGroup}です。`;
+    }
+    return isEnglish
+      ? `You matched the insect to the recorded ${rankLabel}${family ? ` in ${family}` : ''}.`
+      : `${rankLabel}${family ? `（${family}）` : ''}として記録された食草を選べています。`;
+  }
+
+  const insectFamily = getInsectFamily(question.explanation?.insect);
+  if (selectedOption && selectedOption.id !== correctOption.id) {
+    if (insectFamily && selectedOption.family === insectFamily) {
+      return isEnglish
+        ? `Both insects are in ${insectFamily}. The useful cue is the exact host-plant link.`
+        : `選んだ昆虫も${insectFamily}です。科だけでなく、この植物との食草関係で見分けます。`;
+    }
+    return isEnglish
+      ? `The recorded insect is in ${insectFamily || 'the linked moth/butterfly group'}.`
+      : `この植物に記録されている昆虫は${insectFamily || '関連する蛾・蝶のグループ'}です。`;
+  }
+  return isEnglish
+    ? `You matched the plant to the linked insect${insectFamily ? ` in ${insectFamily}` : ''}.`
+    : `この植物と結びつく昆虫${insectFamily ? `（${insectFamily}）` : ''}を選べています。`;
+};
+
+const countBy = (items, getKey) => {
+  const map = new Map();
+  items.forEach((item) => {
+    const key = getKey(item);
+    if (!key) return;
+    map.set(key, (map.get(key) || 0) + 1);
+  });
+  return Array.from(map.entries())
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ja'))
+    .map(([label, count]) => ({ label, count }));
+};
+
+const buildWeaknessItems = (missedAnswers, isEnglish) => {
+  const plantFamilies = countBy(
+    missedAnswers,
+    (answer) => answer.question?.explanation?.plant?.family || answer.question?.options?.find((option) => option.id === answer.correctOptionId)?.family,
+  );
+  const insectFamilies = countBy(
+    missedAnswers,
+    (answer) => getInsectFamily(answer.question?.explanation?.insect),
+  );
+  const ranks = countBy(
+    missedAnswers,
+    (answer) => getPlantRankLabel(answer.question?.explanation?.plant?.taxonRank, isEnglish),
+  );
+  return [
+    ...plantFamilies.slice(0, 1).map((item) => ({
+      ...item,
+      label: isEnglish ? `Host plants in ${item.label}` : `${item.label}の食草`,
+    })),
+    ...insectFamilies.slice(0, 1).map((item) => ({
+      ...item,
+      label: isEnglish ? `Insects in ${item.label}` : `${item.label}の昆虫`,
+    })),
+    ...ranks.slice(0, 1),
+  ].slice(0, 3);
 };
 
 const resolvePlantImageFilename = ({ plantName, plantDetails = {}, plantImageFilenames = [] }) => {
@@ -181,7 +352,7 @@ const resolvePlantImageFilename = ({ plantName, plantDetails = {}, plantImageFil
   return '';
 };
 
-const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish }) => {
+const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, variant = 'default' }) => {
   const filename = resolvePlantImageFilename({ plantName, plantDetails, plantImageFilenames });
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
@@ -196,7 +367,10 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish })
     : null;
 
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-950/60">
+    <div className={`relative overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-950/60 ${
+      variant === 'photo' ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[4/3]'
+    }`}
+    >
       {filename ? (
         <ImageWithFallback
           src={picture.src}
@@ -221,11 +395,14 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish })
   );
 };
 
-const InsectMedia = ({ insect, isEnglish }) => {
+const InsectMedia = ({ insect, isEnglish, variant = 'default' }) => {
   const { getImageCandidates, placeholderSrc } = useInsectImageCandidates({ useAssetVersionInProd: true });
   const candidates = useMemo(() => getImageCandidates(insect), [getImageCandidates, insect]);
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800">
+    <div className={`relative overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800 ${
+      variant === 'photo' ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[4/3]'
+    }`}
+    >
       {candidates.length > 0 ? (
         <ImageWithFallback
           src={candidates[0]}
@@ -249,7 +426,7 @@ const InsectMedia = ({ insect, isEnglish }) => {
   );
 };
 
-const PromptMedia = ({ question, plantDetails, plantImageFilenames, isEnglish }) => {
+const PromptMedia = ({ question, plantDetails, plantImageFilenames, isEnglish, variant = 'default' }) => {
   if (!question) return null;
   if (question.prompt.type === 'plant') {
     return (
@@ -258,10 +435,43 @@ const PromptMedia = ({ question, plantDetails, plantImageFilenames, isEnglish })
         plantDetails={plantDetails}
         plantImageFilenames={plantImageFilenames}
         isEnglish={isEnglish}
+        variant={variant}
       />
     );
   }
-  return <InsectMedia insect={question.prompt.insect} isEnglish={isEnglish} />;
+  return <InsectMedia insect={question.prompt.insect} isEnglish={isEnglish} variant={variant} />;
+};
+
+const FeedbackPhotoPair = ({ question, plantDetails, plantImageFilenames, isEnglish, labels }) => {
+  const insect = question?.explanation?.insect;
+  const plantName = question?.explanation?.plant?.name || question?.detailLinks?.plantName;
+  if (!insect && !plantName) return null;
+  return (
+    <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+        {labels.comparePhotos}
+      </p>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        {insect && (
+          <div>
+            <InsectMedia insect={insect} isEnglish={isEnglish} />
+            <p className="mt-2 text-sm font-bold text-slate-700 dark:text-slate-200">{insect.name}</p>
+          </div>
+        )}
+        {plantName && (
+          <div>
+            <PlantMedia
+              plantName={plantName}
+              plantDetails={plantDetails}
+              plantImageFilenames={plantImageFilenames}
+              isEnglish={isEnglish}
+            />
+            <p className="mt-2 text-sm font-bold text-slate-700 dark:text-slate-200">{plantName}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 const ProgressDots = ({ total, answered, currentIndex }) => (
@@ -371,6 +581,10 @@ const QuizPage = ({
   const isEnglish = isEnglishLocale(locale);
   const labels = labelsFor(isEnglish);
   const mode = normalizeQuizMode(searchParams.get('mode'));
+  const quizStyle = normalizeQuizStyle(searchParams.get('style'));
+  const isPhotoStyle = quizStyle === QUIZ_STYLES.PHOTO;
+  const focusedInsectKey = searchParams.get('focusInsect') || '';
+  const focusedPlantKey = searchParams.get('focusPlant') || '';
   const [plantImageFilenames, setPlantImageFilenames] = useState([]);
   const [insectImageIndex, setInsectImageIndex] = useState(EMPTY_INSECT_IMAGE_INDEX);
   const [questions, setQuestions] = useState([]);
@@ -379,6 +593,8 @@ const QuizPage = ({
   const [selectedOptionId, setSelectedOptionId] = useState('');
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  const [startStage, setStartStage] = useState('');
+  const [reviewRevision, setReviewRevision] = useState(0);
   const [best, setBest] = useState(() => safeReadJson(getBestStorageKey(locale, mode), {
     score: 0,
     bestStreak: 0,
@@ -403,7 +619,12 @@ const QuizPage = ({
       next.set('mode', mode);
       setSearchParams(next, { replace: true });
     }
-  }, [mode, searchParams, setSearchParams]);
+    if (searchParams.get('style') && searchParams.get('style') !== quizStyle) {
+      const next = new URLSearchParams(searchParams);
+      next.set('style', quizStyle);
+      setSearchParams(next, { replace: true });
+    }
+  }, [mode, quizStyle, searchParams, setSearchParams]);
 
   useEffect(() => {
     setBest(safeReadJson(getBestStorageKey(locale, mode), {
@@ -452,15 +673,38 @@ const QuizPage = ({
     { running: 0, best: 0 },
   ).best;
   const missedAnswers = answers.filter((answer) => !answer.isCorrect);
+  const dueReviewEntries = useMemo(
+    () => getDueReviewEntries(locale, mode, Date.now() + reviewRevision * 0),
+    [locale, mode, reviewRevision],
+  );
   const reviewCount = useMemo(() => {
-    const entries = safeReadJson(getReviewStorageKey(locale, mode), []);
-    return Array.isArray(entries) ? entries.length : 0;
-  }, [locale, mode]);
+    return dueReviewEntries.length;
+  }, [dueReviewEntries.length]);
+  const prioritySubjectKeys = useMemo(() => {
+    if (mode === QUIZ_MODES.PLANT_TO_INSECT && focusedPlantKey) return [focusedPlantKey];
+    if (mode === QUIZ_MODES.INSECT_TO_PLANT && focusedInsectKey) return [focusedInsectKey];
+    return [];
+  }, [focusedInsectKey, focusedPlantKey, mode]);
 
   const setMode = useCallback((nextMode) => {
     const normalized = normalizeQuizMode(nextMode);
     const next = new URLSearchParams(searchParams);
     next.set('mode', normalized);
+    setSearchParams(next, { replace: true });
+    setQuestions([]);
+    setCurrentIndex(0);
+    setAnswers([]);
+    setSelectedOptionId('');
+  }, [searchParams, setSearchParams]);
+
+  const setQuizStyle = useCallback((nextStyle) => {
+    const normalized = normalizeQuizStyle(nextStyle);
+    const next = new URLSearchParams(searchParams);
+    if (normalized === QUIZ_STYLES.GUIDED) {
+      next.delete('style');
+    } else {
+      next.set('style', normalized);
+    }
     setSearchParams(next, { replace: true });
     setQuestions([]);
     setCurrentIndex(0);
@@ -476,11 +720,13 @@ const QuizPage = ({
     setAnswers([]);
     setSelectedOptionId('');
     setDetailsOpen(false);
+    setStartStage('questions');
 
     const prepareSession = async () => {
       try {
         let imageIndexForSession = insectImageIndex;
         if (!imageIndexForSession.ready) {
+          setStartStage('images');
           try {
             const loadedIndex = normalizeInsectImageIndex(await loadInsectImageIndexes());
             imageIndexForSession = loadedIndex;
@@ -490,8 +736,8 @@ const QuizPage = ({
             setInsectImageIndex(imageIndexForSession);
           }
         }
-        const reviewEntries = safeReadJson(getReviewStorageKey(locale, mode), []);
-        const reviewKeys = Array.isArray(reviewEntries) ? reviewEntries.map((entry) => entry.key).filter(Boolean) : [];
+        setStartStage('questions');
+        const reviewKeys = getDueReviewEntries(locale, mode).map((entry) => entry.key);
         const seed = `${mode}:${Date.now()}:${Math.random().toString(16).slice(2)}`;
         const nextQuestions = buildQuizQuestions({
           moths,
@@ -503,6 +749,7 @@ const QuizPage = ({
           questionCount: DEFAULT_QUIZ_LENGTH,
           seed,
           reviewKeys,
+          prioritySubjectKeys,
         });
         setQuestions(nextQuestions);
       } catch (error) {
@@ -510,19 +757,18 @@ const QuizPage = ({
         setQuestions([]);
       } finally {
         setIsStarting(false);
+        setStartStage('');
       }
     };
 
-    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-      window.requestAnimationFrame(() => {
-        window.setTimeout(() => {
-          void prepareSession();
-        }, 0);
-      });
+    if (typeof window !== 'undefined' && typeof window.setTimeout === 'function') {
+      window.setTimeout(() => {
+        void prepareSession();
+      }, 0);
       return;
     }
     void prepareSession();
-  }, [butterflies, hasData, insectImageIndex, isStarting, locale, mode, moths, plantDetails]);
+  }, [butterflies, hasData, insectImageIndex, isStarting, locale, mode, moths, plantDetails, prioritySubjectKeys]);
 
   const persistSession = useCallback((nextAnswers) => {
     const score = nextAnswers.filter((answer) => answer.isCorrect).length;
@@ -547,6 +793,7 @@ const QuizPage = ({
     const reviewKey = getReviewStorageKey(locale, mode);
     const previousReview = safeReadJson(reviewKey, []);
     safeWriteJson(reviewKey, updateReviewEntries({ previous: previousReview, answers: nextAnswers }));
+    setReviewRevision((value) => value + 1);
   }, [locale, mode]);
 
   const answerQuestion = useCallback((optionId) => {
@@ -554,13 +801,22 @@ const QuizPage = ({
     const option = currentQuestion.options.find((item) => item.id === optionId);
     if (!option) return;
     const isCorrect = isCorrectAnswer(currentQuestion, optionId);
+    const correctOption = currentQuestion.options.find((item) => item.id === currentQuestion.correctOptionId);
     const answer = {
       questionId: currentQuestion.id,
       reviewKey: currentQuestion.reviewKey,
       selectedOptionId: optionId,
       selectedLabel: option.label,
+      selectedOption: option,
       correctOptionId: currentQuestion.correctOptionId,
-      correctLabel: currentQuestion.options.find((item) => item.id === currentQuestion.correctOptionId)?.label || '',
+      correctLabel: correctOption?.label || '',
+      correctOption,
+      learningPoint: buildLearningPoint({
+        question: currentQuestion,
+        selectedOption: option,
+        correctOption,
+        isEnglish,
+      }),
       isCorrect,
       question: currentQuestion,
     };
@@ -571,7 +827,7 @@ const QuizPage = ({
       next[currentIndex] = answer;
       return next;
     });
-  }, [currentIndex, currentQuestion, selectedOptionId]);
+  }, [currentIndex, currentQuestion, isEnglish, selectedOptionId]);
 
   const nextQuestion = useCallback(() => {
     if (!currentQuestion || !selectedOptionId) return;
@@ -638,66 +894,115 @@ const QuizPage = ({
     </div>
   );
 
-  const renderStart = () => (
-    <section className="mx-auto max-w-4xl space-y-5 px-4 py-5 md:px-8 md:py-7">
-      <QuizStartPreview
-        labels={labels}
-        isEnglish={isEnglish}
-      />
+  const renderStart = () => {
+    const startingLabel = startStage ? labels.startStages[startStage] : labels.starting;
+    return (
+      <section className="mx-auto max-w-4xl space-y-5 px-4 py-5 md:px-8 md:py-7">
+        <QuizStartPreview
+          labels={labels}
+          isEnglish={isEnglish}
+        />
 
-      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {labels.session}
             </p>
             <h2 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">{labels.today}</h2>
+            <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">
+              {labels.todayLead}
+            </p>
           </div>
           <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200">
             <BoltIcon className="h-5 w-5" />
           </span>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-2">
-          <ModeButton active={mode === QUIZ_MODES.INSECT_TO_PLANT} onClick={() => setMode(QUIZ_MODES.INSECT_TO_PLANT)}>
-            {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.INSECT_TO_PLANT]}
-          </ModeButton>
-          <ModeButton active={mode === QUIZ_MODES.PLANT_TO_INSECT} onClick={() => setMode(QUIZ_MODES.PLANT_TO_INSECT)}>
-            {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.PLANT_TO_INSECT]}
-          </ModeButton>
-        </div>
-
-        <div className="mt-5 grid gap-3">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <Metric icon={TrophyIcon} label={labels.best} value={summarizeBest(best, isEnglish)} tone="amber" />
           <Metric icon={ArrowPathIcon} label={labels.reviewDue} value={reviewCount} tone={reviewCount ? 'rose' : 'slate'} />
         </div>
 
-        <div className="mt-5 border-t border-slate-200 pt-5 dark:border-slate-800">
+        {prioritySubjectKeys.length > 0 && (
+          <p className="mt-4 inline-flex rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-black text-blue-800 dark:bg-blue-950/60 dark:text-blue-200">
+            {labels.focused}
+          </p>
+        )}
+
+        <div className="mt-5">
           <button
             type="button"
             onClick={startSession}
             disabled={!hasData || isStarting}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-4 text-base font-black text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
           >
-            {!hasData ? labels.loading : isStarting ? labels.starting : labels.start}
+            {!hasData ? labels.loading : isStarting ? startingLabel : labels.start}
             {hasData && !isStarting && <ChevronRightIcon className="h-5 w-5" />}
           </button>
+          {isStarting && (
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800" aria-label={startingLabel}>
+              <div className={`h-full rounded-full bg-emerald-500 transition-all duration-300 ${
+                startStage === 'images' ? 'w-1/3' : 'w-2/3'
+              }`}
+              />
+            </div>
+          )}
           {!hasData && (
             <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
           )}
           <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
         </div>
+
+        <div className="mt-5 border-t border-slate-200 pt-5 dark:border-slate-800">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+            {labels.settings}
+          </p>
+          <div className="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <p className="mb-2 text-sm font-black text-slate-700 dark:text-slate-200">{labels.mode}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <ModeButton active={mode === QUIZ_MODES.INSECT_TO_PLANT} onClick={() => setMode(QUIZ_MODES.INSECT_TO_PLANT)}>
+                  {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.INSECT_TO_PLANT]}
+                </ModeButton>
+                <ModeButton active={mode === QUIZ_MODES.PLANT_TO_INSECT} onClick={() => setMode(QUIZ_MODES.PLANT_TO_INSECT)}>
+                  {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.PLANT_TO_INSECT]}
+                </ModeButton>
+              </div>
+            </div>
+            <div>
+              <p className="mb-2 text-sm font-black text-slate-700 dark:text-slate-200">{labels.style}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <ModeButton active={quizStyle === QUIZ_STYLES.GUIDED} onClick={() => setQuizStyle(QUIZ_STYLES.GUIDED)}>
+                  {labels.guidedStyle}
+                </ModeButton>
+                <ModeButton active={quizStyle === QUIZ_STYLES.PHOTO} onClick={() => setQuizStyle(QUIZ_STYLES.PHOTO)}>
+                  {labels.photoStyle}
+                </ModeButton>
+              </div>
+              <p className="mt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                {isPhotoStyle ? labels.photoStyleDesc : labels.guidedStyleDesc}
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </section>
-  );
+    );
+  };
 
   const renderQuestion = () => {
     const promptInstruction =
       mode === QUIZ_MODES.PLANT_TO_INSECT ? labels.plantPrompt : labels.insectPrompt;
     const feedbackIcon = currentAnswer?.isCorrect ? CheckCircleIcon : XCircleIcon;
     const FeedbackIcon = feedbackIcon;
+    const correctOption = currentQuestion.options.find((item) => item.id === currentQuestion.correctOptionId);
+    const selectedOption = currentAnswer?.selectedOption;
+    const questionGridClass = isPhotoStyle
+      ? 'grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(22rem,0.75fr)]'
+      : 'grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]';
     return (
-      <section className="mx-auto max-w-6xl px-3 py-4 md:px-8 md:py-7">
+      <section className={`${isPhotoStyle ? 'mx-auto max-w-7xl' : 'mx-auto max-w-6xl'} px-3 py-4 md:px-8 md:py-7`}>
         <div className="sticky top-0 z-20 -mx-3 mb-4 border-b border-slate-200 bg-slate-100/95 px-3 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 md:-mx-8 md:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
@@ -725,12 +1030,13 @@ const QuizPage = ({
           </div>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <div className={questionGridClass}>
           <PromptMedia
             question={currentQuestion}
             plantDetails={plantDetails}
             plantImageFilenames={plantImageFilenames}
             isEnglish={isEnglish}
+            variant={isPhotoStyle ? 'photo' : 'default'}
           />
 
           <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
@@ -811,6 +1117,9 @@ const QuizPage = ({
                       <p className="mt-1 text-lg font-black text-slate-950 dark:text-white">
                         {currentQuestion.explanation.correctLabel}
                       </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-600 dark:text-slate-300">
+                        {labels.correctPair}: {buildCorrectLinkLabel(currentQuestion, isEnglish)}
+                      </p>
                     </div>
                   </div>
                   <button
@@ -824,6 +1133,26 @@ const QuizPage = ({
                 </div>
 
                 <div className="mt-3 pl-12">
+                  {currentAnswer?.selectedLabel && !currentAnswer?.isCorrect && (
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                      {labels.yourChoice}: {currentAnswer.selectedLabel}
+                    </p>
+                  )}
+                  {(currentAnswer?.learningPoint || buildLearningPoint({
+                    question: currentQuestion,
+                    selectedOption,
+                    correctOption,
+                    isEnglish,
+                  })) && (
+                    <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                      {labels.learningPoint}: {currentAnswer?.learningPoint || buildLearningPoint({
+                        question: currentQuestion,
+                        selectedOption,
+                        correctOption,
+                        isEnglish,
+                      })}
+                    </p>
+                  )}
                   {currentQuestion.explanation.sourceLabel && (
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                       {labels.source}: {currentQuestion.explanation.sourceLabel}
@@ -859,6 +1188,15 @@ const QuizPage = ({
                     {renderDetailLinks(currentQuestion)}
                   </div>
                 )}
+                {isPhotoStyle && (
+                  <FeedbackPhotoPair
+                    question={currentQuestion}
+                    plantDetails={plantDetails}
+                    plantImageFilenames={plantImageFilenames}
+                    isEnglish={isEnglish}
+                    labels={labels}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -871,6 +1209,8 @@ const QuizPage = ({
     const gradeText = isEnglish
       ? `${currentScore}/${questions.length} correct`
       : `${questions.length}問中${currentScore}問正解`;
+    const weakItems = buildWeaknessItems(missedAnswers, isEnglish);
+    const topReviewAnswers = missedAnswers.slice(0, 3);
     return (
       <section className="mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-10">
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -896,7 +1236,7 @@ const QuizPage = ({
                 disabled={isStarting}
                 className="flex items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
               >
-                {isStarting ? labels.starting : labels.restart}
+                {isStarting ? (startStage ? labels.startStages[startStage] : labels.starting) : labels.nextSession}
                 <ArrowRightIcon className="h-4 w-4" />
               </button>
               <Link
@@ -906,6 +1246,49 @@ const QuizPage = ({
                 {labels.home}
               </Link>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.weakPoints}</h2>
+            {weakItems.length === 0 ? (
+              <p className="mt-3 text-slate-600 dark:text-slate-300">{labels.noWeakPoints}</p>
+            ) : (
+              <div className="mt-4 grid gap-2">
+                {weakItems.map((item) => (
+                  <div key={item.label} className="flex items-center justify-between rounded-lg bg-slate-100 px-3 py-2 dark:bg-slate-800">
+                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{item.label}</span>
+                    <span className="rounded-md bg-white px-2 py-1 text-xs font-black text-slate-700 dark:bg-slate-950 dark:text-slate-200">
+                      {item.count}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.reviewTop}</h2>
+            {topReviewAnswers.length === 0 ? (
+              <p className="mt-3 text-slate-600 dark:text-slate-300">{labels.noReview}</p>
+            ) : (
+              <div className="mt-4 grid gap-3">
+                {topReviewAnswers.map((answer) => (
+                  <div key={`top-${answer.questionId}`} className="border-l-4 border-rose-400 pl-3">
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
+                      {answer.question.prompt.title}
+                    </p>
+                    <p className="mt-1 text-base font-black text-slate-950 dark:text-white">
+                      {answer.correctLabel}
+                    </p>
+                    {answer.learningPoint && (
+                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{answer.learningPoint}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -931,6 +1314,11 @@ const QuizPage = ({
                   <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                     {isEnglish ? 'Your answer:' : 'あなたの回答:'} {answer.selectedLabel}
                   </p>
+                  {answer.learningPoint && (
+                    <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                      {labels.learningPoint}: {answer.learningPoint}
+                    </p>
+                  )}
                   {renderDetailLinks(answer.question)}
                 </div>
               ))}

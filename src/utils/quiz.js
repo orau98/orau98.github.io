@@ -514,6 +514,7 @@ const selectSessionQuestions = ({
   questionBases,
   questionCount,
   reviewKeys,
+  prioritySubjectKeys,
   random,
   buildQuestion,
 }) => {
@@ -521,7 +522,9 @@ const selectSessionQuestions = ({
   const usedSubjects = new Set();
   const usedQuestionIds = new Set();
   const reviewSet = new Set(reviewKeys || []);
+  const prioritySubjectSet = new Set(prioritySubjectKeys || []);
   const reviewLimit = Math.min(2, Math.max(1, Math.floor(questionCount * 0.25)));
+  const priorityLimit = prioritySubjectSet.size > 0 ? Math.min(2, questionCount) : 0;
   const shuffled = shuffleWithRandom(questionBases, random);
   const prioritizeImages = (pool) =>
     pool.some((question) => question.hasImage)
@@ -530,8 +533,16 @@ const selectSessionQuestions = ({
           ...pool.filter((question) => !question.hasImage),
         ]
       : pool;
+  const priorityCandidates = prioritizeImages(
+    shuffled.filter((question) => prioritySubjectSet.has(question.subjectKey)),
+  );
   const reviewCandidates = prioritizeImages(shuffled.filter((question) => reviewSet.has(question.reviewKey)));
-  const regularCandidates = prioritizeImages(shuffled.filter((question) => !reviewSet.has(question.reviewKey)));
+  const regularCandidates = prioritizeImages(
+    shuffled.filter((question) =>
+      !reviewSet.has(question.reviewKey) &&
+      !prioritySubjectSet.has(question.subjectKey),
+    ),
+  );
 
   const takeFrom = (pool, limit = Infinity, { relaxSubjects = false } = {}) => {
     let added = 0;
@@ -550,13 +561,23 @@ const selectSessionQuestions = ({
     }
   };
 
+  takeFrom(priorityCandidates, priorityLimit, { relaxSubjects: true });
   takeFrom(reviewCandidates, reviewLimit);
   takeFrom(regularCandidates);
   if (selected.length < questionCount) {
     takeFrom(shuffled, Infinity, { relaxSubjects: true });
   }
 
-  return shuffleWithRandom(selected.slice(0, questionCount), random).map((question, index) => ({
+  const sessionQuestions = selected.slice(0, questionCount);
+  const orderedQuestions = prioritySubjectSet.size > 0
+    ? [
+        ...sessionQuestions.filter((question) => prioritySubjectSet.has(question.subjectKey)).slice(0, 1),
+        ...shuffleWithRandom(sessionQuestions.filter((question) => !prioritySubjectSet.has(question.subjectKey)), random),
+        ...sessionQuestions.filter((question) => prioritySubjectSet.has(question.subjectKey)).slice(1),
+      ].slice(0, questionCount)
+    : shuffleWithRandom(sessionQuestions, random);
+
+  return orderedQuestions.map((question, index) => ({
     ...question,
     id: `${question.id}:${index + 1}`,
     questionNumber: index + 1,
@@ -573,6 +594,7 @@ export const buildQuizQuestions = ({
   questionCount = DEFAULT_QUIZ_LENGTH,
   seed = Date.now(),
   reviewKeys = [],
+  prioritySubjectKeys = [],
 } = {}) => {
   const normalizedMode = normalizeQuizMode(mode);
   const random = createRandom(seed);
@@ -596,6 +618,7 @@ export const buildQuizQuestions = ({
     questionBases,
     questionCount,
     reviewKeys,
+    prioritySubjectKeys,
     random,
     buildQuestion,
   });

@@ -286,3 +286,27 @@ test('quiz question selection prioritizes insects with registered photos', () =>
   assert.equal(plantToInsect.length, 6);
   assert.ok(plantToInsect.every((question) => question.explanation.insect.id.startsWith('photo-')));
 });
+
+test('priority subject keys place a focused quiz detail item first', () => {
+  const questions = buildQuizQuestions({
+    moths: baseInsects(),
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 4,
+    seed: 'focused-insect-priority',
+    prioritySubjectKeys: ['c'],
+  });
+
+  assert.equal(questions.length, 4);
+  assert.equal(questions[0].prompt.insectId, 'c');
+
+  const plantQuestions = buildQuizQuestions({
+    moths: baseInsects(),
+    mode: QUIZ_MODES.PLANT_TO_INSECT,
+    questionCount: 4,
+    seed: 'focused-plant-priority',
+    prioritySubjectKeys: ['スミレ'],
+  });
+
+  assert.equal(plantQuestions.length, 4);
+  assert.equal(plantQuestions[0].prompt.plantName, 'スミレ');
+});

@@ -818,6 +818,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       ? `${primaryPlantName}. ${japaneseReference || 'Japanese names are shown only as local references.'} Review the related insects, photos, and network links for this plant.`
       : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
   const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
+  const quizFocusHref = canonicalPlantName
+    ? `${localizePath('/quiz', locale)}?mode=plant-to-insect&style=photo&focusPlant=${encodeURIComponent(canonicalPlantName)}`
+    : '';
   const plantMetaPath = buildPlantMetaPagePath(canonicalPlantName, 'ja');
   const englishPlantMetaPath =
     !isFamily && !isOrder && !isGenus && canonicalPlantName
@@ -1792,6 +1795,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {!isEnglish && taxonomy.scientificName && (
             <div className="mt-1 text-left text-slate-600 dark:text-slate-300 text-lg">
               {formatScientificNameReact(taxonomy.scientificName)}
+            </div>
+          )}
+          {quizFocusHref && (
+            <div className="mt-4">
+              <Link
+                to={quizFocusHref}
+                className="inline-flex items-center rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950"
+              >
+                {isEnglish ? 'Review linked insects in quiz' : 'この植物をクイズで復習'}
+              </Link>
             </div>
           )}
         </div>
