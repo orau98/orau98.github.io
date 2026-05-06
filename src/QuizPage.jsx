@@ -3,10 +3,8 @@ import {
   ArrowPathIcon,
   ArrowRightIcon,
   BoltIcon,
-  CameraIcon,
   CheckCircleIcon,
   ChevronRightIcon,
-  ClockIcon,
   FireIcon,
   TrophyIcon,
   XCircleIcon,
@@ -113,18 +111,8 @@ const labelsFor = (isEnglish) => ({
     ? 'A ten-question game for learning moth and butterfly host-plant links.'
     : '蛾・蝶と幼虫食草のつながりを10問で覚える学習ゲーム。',
   today: isEnglish ? "Today's 10" : '今日の10問',
-  photoFirst: isEnglish ? 'Photo-first' : '写真あり優先',
-  biteSize: isEnglish ? 'Few minutes' : '数分で完了',
   reviewDue: isEnglish ? 'Review due' : '復習候補',
   answered: isEnglish ? 'Answered' : '回答済み',
-  flow: isEnglish ? 'Flow' : '流れ',
-  preview: isEnglish ? 'Question preview' : '出題プレビュー',
-  samplePrompt: isEnglish ? 'Choose the larval host plant.' : '幼虫食草を選ぶ',
-  sourceBased: isEnglish ? 'Source-backed' : '出典つき',
-  larvalHost: isEnglish ? 'Larval host' : '幼虫食草',
-  see: isEnglish ? 'Look' : '見る',
-  choose: isEnglish ? 'Choose' : '選ぶ',
-  reviewStep: isEnglish ? 'Review' : '復習',
   stageChoose: isEnglish ? 'Choose one answer' : '1つ選択',
   stageCheck: isEnglish ? 'Check the link' : '答え合わせ',
   start: isEnglish ? 'Start 10 questions' : '10問を始める',
@@ -320,7 +308,7 @@ const Metric = ({ icon: Icon, label, value, tone = 'slate' }) => {
   );
 };
 
-const QuizStartPreview = ({ labels, isEnglish, modeLabel, reviewCount }) => {
+const QuizStartPreview = ({ labels, isEnglish }) => {
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const picture = buildResponsivePicture({
@@ -330,27 +318,6 @@ const QuizStartPreview = ({ labels, isEnglish, modeLabel, reviewCount }) => {
     widths: [320, 640, 1024],
     sizes: '(max-width: 1024px) 100vw, 22rem',
   });
-  const sampleName = isEnglish ? 'Cucullia argentea' : 'アオモンギンセダカモクメ';
-  const choices = isEnglish
-    ? [
-        ['A', 'Artemisia capillaris', 'Asteraceae', true],
-        ['B', 'Quercus serrata', 'Fagaceae', false],
-        ['C', 'Quercus myrsinifolia', 'Fagaceae', false],
-        ['D', 'Viola spp.', 'Violaceae', false],
-      ]
-    : [
-        ['A', 'カワラヨモギ', 'キク科', true],
-        ['B', 'コナラ', 'ブナ科', false],
-        ['C', 'シラカシ', 'ブナ科', false],
-        ['D', 'スミレ', 'スミレ科', false],
-      ];
-
-  const flowItems = [
-    [CameraIcon, labels.see, isEnglish ? 'Photo / plant' : '写真・植物'],
-    [BoltIcon, labels.choose, modeLabel],
-    [ArrowPathIcon, labels.reviewStep, `${reviewCount}`],
-  ];
-
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
       <div className="grid gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
@@ -366,83 +333,13 @@ const QuizStartPreview = ({ labels, isEnglish, modeLabel, reviewCount }) => {
           loading="eager"
         />
 
-        <div className="min-w-0">
-          <div className="flex flex-wrap gap-2 text-xs font-black">
-            <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-2.5 py-1.5 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-200">
-              <CameraIcon className="h-4 w-4" />
-              {labels.photoFirst}
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-lg bg-blue-100 px-2.5 py-1.5 text-blue-800 dark:bg-blue-950/70 dark:text-blue-200">
-              <CheckCircleIcon className="h-4 w-4" />
-              {labels.sourceBased}
-            </span>
-          </div>
-          <h1 className="mt-4 max-w-3xl text-3xl font-black leading-tight tracking-normal text-slate-950 dark:text-white sm:text-4xl">
+        <div className="flex min-w-0 flex-col justify-center">
+          <h1 className="max-w-3xl text-3xl font-black leading-tight tracking-normal text-slate-950 dark:text-white sm:text-4xl">
             {labels.title}
           </h1>
           <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-600 dark:text-slate-300">
             {labels.subtitle}
           </p>
-
-          <div className="mt-5 grid gap-2 sm:grid-cols-3">
-            {flowItems.map(([Icon, title, value]) => (
-              <div
-                key={title}
-                className="flex min-w-0 items-center gap-2 rounded-lg bg-slate-100/80 px-3 py-2 dark:bg-slate-800/70"
-              >
-                <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
-                  <Icon className="h-4 w-4" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-xs font-black text-slate-950 dark:text-white">{title}</span>
-                  <span className="block truncate text-xs font-semibold text-slate-500 dark:text-slate-400">{value}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/45">
-        <div className="grid gap-4 xl:grid-cols-[minmax(13rem,0.8fr)_minmax(0,1.25fr)]">
-          <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-              {labels.preview}
-            </p>
-            <p className="mt-3 text-sm font-black text-emerald-700 dark:text-emerald-300">{labels.samplePrompt}</p>
-            <h2 className="mt-1 text-2xl font-black leading-tight text-slate-950 dark:text-white">
-              {sampleName}
-            </h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              {formatScientificNameReact('Cucullia argentea (Hufnagel, 1766)')}
-            </p>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {choices.map(([letter, plant, family, correct]) => (
-              <div
-                key={letter}
-                className={`flex min-h-[3.25rem] items-center gap-2 rounded-lg border px-3 py-2 ${
-                  correct
-                    ? 'border-emerald-200 bg-emerald-100 text-emerald-950 dark:border-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-100'
-                    : 'border-slate-200 bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100'
-                }`}
-              >
-                <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-sm font-black ${
-                  correct
-                    ? 'bg-emerald-600 text-white dark:bg-emerald-400 dark:text-emerald-950'
-                    : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'
-                }`}>
-                  {letter}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-black">{plant}</span>
-                  <span className={`block text-xs font-semibold ${correct ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-500 dark:text-slate-400'}`}>
-                    {family}
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
@@ -770,11 +667,6 @@ const QuizPage = ({
           <Metric icon={ArrowPathIcon} label={labels.reviewDue} value={reviewCount} tone={reviewCount ? 'rose' : 'slate'} />
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <Metric icon={CameraIcon} label={labels.photoFirst} value={isEnglish ? 'On' : '有効'} tone="emerald" />
-          <Metric icon={ClockIcon} label={labels.biteSize} value="10" tone="blue" />
-        </div>
-
         <div className="mt-5 border-t border-slate-200 pt-5 dark:border-slate-800">
           <button
             type="button"
@@ -796,8 +688,6 @@ const QuizPage = ({
         <QuizStartPreview
           labels={labels}
           isEnglish={isEnglish}
-          modeLabel={modeLabel}
-          reviewCount={reviewCount}
         />
       </div>
     </section>
