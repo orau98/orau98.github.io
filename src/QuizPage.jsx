@@ -518,44 +518,6 @@ const Metric = ({ icon: Icon, label, value, tone = 'slate' }) => {
   );
 };
 
-const QuizStartPreview = ({ labels, isEnglish }) => {
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const picture = buildResponsivePicture({
-    baseUrl: normalizedBase,
-    folder: 'insects',
-    filename: 'Cucullia_argentea',
-    widths: [320, 640, 1024],
-    sizes: '(max-width: 1024px) 100vw, 22rem',
-  });
-  return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-      <div className="space-y-5">
-        <ImageWithFallback
-          src={picture.src}
-          srcSet={picture.srcSet}
-          sizes={picture.sizes}
-          sources={picture.sources}
-          alt={isEnglish ? 'Cucullia argentea photograph' : 'アオモンギンセダカモクメの写真'}
-          className="aspect-[16/9] w-full rounded-lg"
-          imgClassName="object-center"
-          fit="cover"
-          loading="eager"
-        />
-
-        <div className="flex min-w-0 flex-col justify-center">
-          <h1 className="max-w-3xl text-3xl font-black leading-tight tracking-normal text-slate-950 dark:text-white sm:text-4xl">
-            {labels.title}
-          </h1>
-          <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-slate-600 dark:text-slate-300">
-            {labels.subtitle}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const ModeButton = ({ active, children, onClick }) => (
   <button
     type="button"
@@ -897,19 +859,14 @@ const QuizPage = ({
   const renderStart = () => {
     const startingLabel = startStage ? labels.startStages[startStage] : labels.starting;
     return (
-      <section className="mx-auto max-w-4xl space-y-5 px-4 py-5 md:px-8 md:py-7">
-        <QuizStartPreview
-          labels={labels}
-          isEnglish={isEnglish}
-        />
-
+      <section className="mx-auto max-w-3xl px-4 py-5 md:px-8 md:py-8">
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {labels.session}
             </p>
-            <h2 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">{labels.today}</h2>
+            <h1 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">{labels.today}</h1>
             <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">
               {labels.todayLead}
             </p>
