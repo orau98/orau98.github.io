@@ -320,14 +320,14 @@ const QuizStartPreview = ({ labels, isEnglish }) => {
   });
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
-      <div className="grid gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[20rem_minmax(0,1fr)]">
+      <div className="space-y-5">
         <ImageWithFallback
           src={picture.src}
           srcSet={picture.srcSet}
           sizes={picture.sizes}
           sources={picture.sources}
           alt={isEnglish ? 'Cucullia argentea photograph' : 'アオモンギンセダカモクメの写真'}
-          className="aspect-[4/3] w-full rounded-lg"
+          className="aspect-[16/9] w-full rounded-lg"
           imgClassName="object-center"
           fit="cover"
           loading="eager"
@@ -639,8 +639,13 @@ const QuizPage = ({
   );
 
   const renderStart = () => (
-    <section className="mx-auto grid max-w-7xl gap-5 px-4 py-5 md:px-8 md:py-7 lg:grid-cols-[minmax(0,1fr)_24rem]">
-      <aside className="order-1 rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:order-2 lg:sticky lg:top-4 lg:self-start">
+    <section className="mx-auto max-w-4xl space-y-5 px-4 py-5 md:px-8 md:py-7">
+      <QuizStartPreview
+        labels={labels}
+        isEnglish={isEnglish}
+      />
+
+      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
@@ -682,14 +687,7 @@ const QuizPage = ({
           )}
           <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
         </div>
-      </aside>
-
-      <div className="order-2 lg:order-1">
-        <QuizStartPreview
-          labels={labels}
-          isEnglish={isEnglish}
-        />
-      </div>
+      </section>
     </section>
   );
 
