@@ -30,6 +30,7 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
+import { buildPlantProfileSummary, normalizePlantProfileText } from './utils/plantProfileText';
 import InfoPopover from './components/InfoPopover';
 import {
   INDEX_FOLLOW_ROBOTS,
@@ -845,7 +846,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       ['distribution', plantProfile.distribution],
       ['habitat', plantProfile.habitat],
     ]
-      .map(([key, value]) => ({ key, label: labels[key], value: String(value || '').trim() }))
+      .map(([key, value]) => ({ key, label: labels[key], value: normalizePlantProfileText(value) }))
       .filter((row) => row.value);
     const sourceParts = [
       plantProfile.source,
@@ -882,6 +883,21 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         fallback: decodedPlantName,
       })
     : decodedPlantName;
+  const plantProfileSummary = useMemo(() => buildPlantProfileSummary({
+    name: primaryPlantName,
+    profile: plantProfile,
+    family: details?.family || details?.familyName,
+    genus: details?.genus || taxonomy.genus,
+    scientificName: details?.scientificName || taxonomy.scientificName,
+    isEnglish,
+  }), [
+    primaryPlantName,
+    plantProfile,
+    details,
+    taxonomy.genus,
+    taxonomy.scientificName,
+    isEnglish,
+  ]);
   const japaneseReference = isEnglish ? buildJapaneseReferenceLabel(decodedPlantName) : '';
   const pageTitle = isFamily
     ? (isEnglish ? `${primaryPlantName} plant index | ${EN_SITE_NAME}` : `${decodedPlantName}の植物一覧 | 昆虫植物図鑑`)
@@ -1886,7 +1902,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       <DetailSectionNav
         label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
         items={[
-          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '植物情報' }] : []),
+          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '解説' }] : []),
           { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
           { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
           { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
@@ -1962,8 +1978,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         <section id="plant-profile" className="mb-10 scroll-mt-24">
           <div className="rounded-2xl border border-emerald-200/70 bg-white/90 p-5 shadow-sm dark:border-emerald-900/60 dark:bg-slate-900/70">
             <h2 className="mb-4 text-xl font-bold text-slate-800 dark:text-white">
-              {isEnglish ? 'Plant Profile' : '植物情報'}
+              {isEnglish ? 'Plant Profile' : '解説・植物情報'}
             </h2>
+            {plantProfileSummary && (
+              <div className="mb-5 border-b border-slate-200/70 pb-5 dark:border-slate-800">
+                <h3 className="mb-2 text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+                  {isEnglish ? 'Summary' : '解説'}
+                </h3>
+                <p className="text-sm leading-7 text-slate-800 dark:text-slate-100">
+                  {plantProfileSummary}
+                </p>
+              </div>
+            )}
             <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
               {plantProfileFacts.map((item) => (
                 <div key={item.key} className="border-b border-slate-200/70 pb-3 dark:border-slate-800">
