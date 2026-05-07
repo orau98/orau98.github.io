@@ -405,7 +405,6 @@ const checkedCount =
   1 +
   (fs.existsSync(englishRootIndexPath) ? 1 : 0) +
   supportHtmlFiles.filter((filePath) => fs.existsSync(filePath)).length +
-  topicFiles.length +
   metaFiles.length +
   englishMetaFiles.length +
   legacyRedirectFilesCount;
