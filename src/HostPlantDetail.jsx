@@ -406,13 +406,13 @@ const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
               onClick={() => handleImageClick(mainImage)}
               aria-label={isEnglish ? `Open enlarged photo of ${plantName || mainImage.label || mainImage.alt}` : `${plantName || mainImage.alt}の写真を拡大表示`}
             >
-              <div className="relative bg-emerald-50 dark:bg-emerald-900/20 overflow-hidden aspect-[16/10] min-h-[200px] md:min-h-[300px] lg:min-h-[400px]">
+              <div className="relative bg-slate-100 dark:bg-slate-900 overflow-hidden aspect-[16/10] min-h-[200px] md:min-h-[300px] lg:min-h-[400px]">
                 <img 
                   src={mainImage.finalSrc}
                   alt={isEnglish ? `${plantName || mainImage.label || mainImage.alt} photograph` : `${mainImage.alt}の写真`}
                   width="1600"
                   height="1000"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   onError={(event) => handleImageError(mainImage.id, event)}
                   loading="lazy"
                 />
@@ -452,13 +452,13 @@ const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
                   }}
                   aria-label={isEnglish ? `Show ${image.label} as the main image` : `${image.label}をメイン画像に表示`}
                 >
-                  <div className="relative aspect-square bg-emerald-50 dark:bg-emerald-900/20">
+                  <div className="relative aspect-square bg-slate-100 dark:bg-slate-900">
                     <img 
                       src={image.finalSrc}
                       alt={isEnglish ? `${image.label || plantName || image.alt} photograph` : `${image.alt}の写真`}
                       width="400"
                       height="400"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       onError={(event) => handleImageError(image.id, event)}
                       loading="lazy"
                     />
