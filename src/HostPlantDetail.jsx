@@ -1468,6 +1468,34 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         const target = decodedPlantName;
         const normalizedTarget = normalizePlantName(target);
         if (!isTaxonListPage) {
+          const detailName = plantDetails[target]
+            ? target
+            : (normalizedTarget && plantDetails[normalizedTarget] ? normalizedTarget : '');
+          const exactDetail = detailName ? plantDetails[detailName] : null;
+          if (exactDetail) {
+            setTaxonomy({
+              familyJp: exactDetail.familyName || exactDetail.family || '',
+              familyEn: exactDetail.familyLatin || '',
+              orderJp: exactDetail.order || '',
+              orderEn: exactDetail.orderLatin || '',
+              genus: exactDetail.genusScientificName || exactDetail.genus || '',
+              scientificName: exactDetail.scientificName || ''
+            });
+            setCanonicalName(detailName);
+            const aliasesRaw = exactDetail.aliases || exactDetail.aliasNames;
+            const aliases = Array.isArray(aliasesRaw)
+              ? aliasesRaw.filter(a => a && a !== detailName)
+              : [];
+            setAliasNames(aliases);
+            if (
+              (rawDecodedPlantName && rawDecodedPlantName !== target) ||
+              (detailName && detailName !== target)
+            ) {
+              navigate(buildPlantPath(detailName || target, locale), { replace: true, state: location.state });
+            }
+            return true;
+          }
+
           const lookupCandidates = Array.from(new Set([target, normalizedTarget].filter(Boolean)));
           let canonical = '';
           for (const candidate of lookupCandidates) {
