@@ -16,7 +16,14 @@
 日本の野生植物PDFはスキャン画像なので、macOS Vision OCRでページごとにテキスト化し、植物名・学名・科・生活型・花期・分布・生育環境だけを `normalized_data/plant_profiles.csv` に保存する。本文の長文転載はしない。
 
 ```bash
-npm run extract:wildplants -- /path/to/jp_wild_plants_1.pdf --pages 34-133 --replace
+npm run extract:wildplants -- /path/to/jp_wild_plants_1.pdf --pages 34-83
+npm run extract:wildplants -- /path/to/jp_wild_plants_1.pdf --pages 84-133
+```
+
+まとまった範囲を処理し終えたら、キャッシュ済みOCRを使って全範囲を作り直し、レポートも全体版に揃える。
+
+```bash
+npm run extract:wildplants -- /path/to/jp_wild_plants_1.pdf --pages 34-650 --replace
 ```
 
 抽出後はサイト用軽量JSONに反映する。

@@ -54,6 +54,34 @@ export const isFlowerVisitRecord = (record) => {
   return isAdultOrUnknown && partCompact && partCompact.includes('花');
 };
 
+const PLANT_PROFILE_FACT_FIELDS = ['habit', 'height', 'flowerPeriod', 'distribution', 'habitat'];
+
+const plantProfileFactScore = (profile) =>
+  PLANT_PROFILE_FACT_FIELDS.reduce((score, field) => score + (cleanString(profile?.[field]) ? 1 : 0), 0);
+
+const plantProfileScore = (profile) => {
+  const factScore = plantProfileFactScore(profile) * 4;
+  const familyScore = cleanString(profile?.family) && cleanString(profile?.familyLatin) ? 2 : 0;
+  const taxonScore = ['genus', 'genusJp', 'scientificName'].reduce(
+    (score, field) => score + (cleanString(profile?.[field]) ? 1 : 0),
+    0,
+  );
+  return factScore + familyScore + taxonScore;
+};
+
+const isBetterPlantProfile = (candidate, current) => {
+  if (!current) return true;
+  const candidateScore = plantProfileScore(candidate);
+  const currentScore = plantProfileScore(current);
+  if (candidateScore !== currentScore) return candidateScore > currentScore;
+  const candidatePage = Number.parseInt(candidate?.page, 10);
+  const currentPage = Number.parseInt(current?.page, 10);
+  if (Number.isFinite(candidatePage) && Number.isFinite(currentPage)) {
+    return candidatePage < currentPage;
+  }
+  return false;
+};
+
 export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
   const flowerVisitPlants = {};
   const aliasToCanonical = { ...(ylistLite.aliasToCanonical || {}) };
@@ -91,11 +119,12 @@ export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
 }
 
 export function normalizePlantProfileRows(rows = []) {
-  return (rows || [])
-    .map((row) => {
+  const bestByName = new Map();
+  (rows || [])
+    .forEach((row) => {
       const name = cleanString(row?.plant_name);
-      if (!name || name === '不明' || isSuspiciousPlantName(name)) return null;
-      return {
+      if (!name || name === '不明' || isSuspiciousPlantName(name)) return;
+      const profile = {
         name,
         scientificName: cleanString(row?.scientific_name),
         family: cleanString(row?.family),
@@ -111,8 +140,11 @@ export function normalizePlantProfileRows(rows = []) {
         page: cleanString(row?.page),
         extractionMethod: cleanString(row?.extraction_method),
       };
-    })
-    .filter(Boolean);
+      if (isBetterPlantProfile(profile, bestByName.get(name))) {
+        bestByName.set(name, profile);
+      }
+    });
+  return Array.from(bestByName.values());
 }
 
 export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProfilesInput = []) {
@@ -133,6 +165,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
         scientificName: '',
         genus: '',
         profile: null,
+        profileHasFacts: false,
         aliases: new Set(),
       };
     }
@@ -213,13 +246,14 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
       genusJp: profile.genusJp,
       extractionMethod: profile.extractionMethod,
     };
+    detail.profileHasFacts = plantProfileFactScore(profile) > 0;
   });
 
   Object.entries(plantDetailsRaw).forEach(([name, detail]) => {
     const canonical = aliasToCanonical[name] || name;
     const yDetail = ylistPlants[canonical] || ylistPlants[name];
     if (yDetail) {
-      const hasProfileFamily = Boolean(detail.profile && detail.family && detail.familyLatin);
+      const hasProfileFamily = Boolean(detail.profileHasFacts && detail.family && detail.familyLatin);
       detail.family = hasProfileFamily ? detail.family : (yDetail.familyJp || detail.family || '');
       detail.familyName = hasProfileFamily ? (detail.familyName || detail.family) : (yDetail.familyJp || detail.familyName || detail.family);
       detail.familyLatin = hasProfileFamily ? detail.familyLatin : (yDetail.familyEn || detail.familyLatin || '');

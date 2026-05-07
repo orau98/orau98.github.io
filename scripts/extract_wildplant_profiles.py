@@ -329,6 +329,37 @@ def assign_profile_ids(rows: list[dict]) -> list[dict]:
     return rows
 
 
+PROFILE_FACT_FIELDS = ["habit", "height", "flower_period", "distribution", "habitat"]
+TAXON_FIELDS = ["family", "family_latin", "genus_jp", "genus_scientific"]
+
+
+def profile_score(row: dict) -> int:
+    score = 0
+    score += sum(4 for field in PROFILE_FACT_FIELDS if clean_text(row.get(field, "")))
+    score += 2 if clean_text(row.get("family", "")) and clean_text(row.get("family_latin", "")) else 0
+    score += sum(1 for field in TAXON_FIELDS if clean_text(row.get(field, "")))
+    return score
+
+
+def merge_duplicate_profile(old: dict, new: dict) -> tuple[dict, bool]:
+    old_score = profile_score(old)
+    new_score = profile_score(new)
+    if new_score > old_score:
+        winner = {field: new.get(field, "") or old.get(field, "") for field in FIELDNAMES}
+        winner["profile_id"] = old.get("profile_id", "")
+        return winner, winner != old
+
+    changed = False
+    merged = dict(old)
+    for field in FIELDNAMES:
+        if field == "profile_id":
+            continue
+        if not merged.get(field) and new.get(field):
+            merged[field] = new[field]
+            changed = True
+    return merged, changed
+
+
 def merge_rows(existing: list[dict], extracted: list[dict]) -> tuple[list[dict], int, int]:
     merged: dict[tuple[str, str, str], dict] = {}
     for row in existing:
@@ -346,15 +377,9 @@ def merge_rows(existing: list[dict], extracted: list[dict]) -> tuple[list[dict],
         key = (row["plant_name"], row["scientific_name"], row["source"])
         payload = {field: row.get(field, "") for field in FIELDNAMES}
         if key in merged:
-            old = merged[key]
-            changed = False
-            for field in FIELDNAMES:
-                if field == "profile_id":
-                    continue
-                if payload.get(field) and payload.get(field) != old.get(field):
-                    old[field] = payload[field]
-                    changed = True
+            merged_row, changed = merge_duplicate_profile(merged[key], payload)
             if changed:
+                merged[key] = merged_row
                 updated += 1
             continue
         merged[key] = payload

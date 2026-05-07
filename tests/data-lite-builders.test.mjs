@@ -97,6 +97,35 @@ test('buildHostPlantDataset adds plant profiles even without linked insects', ()
   assert.equal(plantDetails.クスノキ.profile.page, '70');
 });
 
+test('buildHostPlantDataset keeps the richest profile for duplicate plant names', () => {
+  const { plantDetails } = buildHostPlantDataset([], {}, [
+    {
+      plant_name: 'クスノキ',
+      scientific_name: 'Cinnamomum camphora',
+      family: 'クスノキ科',
+      family_latin: 'LAURACEAE',
+      genus_scientific: 'Cinnamomum',
+      habit: '常緑高木',
+      source: '日本の野生植物 第1巻',
+      page: '36',
+    },
+    {
+      plant_name: 'クスノキ',
+      scientific_name: 'Cinnamomum campbora',
+      family: 'ハスノハギリ科',
+      family_latin: 'HERNANDIACEAE',
+      genus_scientific: 'Cinnamomum',
+      source: '日本の野生植物 第1巻',
+      page: '335',
+    },
+  ]);
+
+  assert.equal(plantDetails.クスノキ.family, 'クスノキ科');
+  assert.equal(plantDetails.クスノキ.scientificName, 'Cinnamomum camphora');
+  assert.equal(plantDetails.クスノキ.profile.habit, '常緑高木');
+  assert.equal(plantDetails.クスノキ.profile.page, '36');
+});
+
 test('isSuspiciousPlantName filters fragmentary substrate notes but keeps coarse host groups', () => {
   assert.equal(isSuspiciousPlantName('の樹皮下'), true);
   assert.equal(isSuspiciousPlantName('ヤマザクラなどの枯れ木'), true);
