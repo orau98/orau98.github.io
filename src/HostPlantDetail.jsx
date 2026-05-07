@@ -810,6 +810,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     if (!plantProfile) return [];
     const labels = isEnglish
       ? {
+          family: 'Family',
+          genus: 'Genus',
           habit: 'Habit',
           height: 'Size',
           flowerPeriod: 'Flowering',
@@ -818,6 +820,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           source: 'Source',
         }
       : {
+          family: '科',
+          genus: '属',
           habit: '生活型',
           height: '大きさ',
           flowerPeriod: '花期',
@@ -825,7 +829,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           habitat: '生育環境',
           source: '出典',
         };
+    const genusValue = [
+      plantProfile.genusJp,
+      details?.genus,
+    ]
+      .map((value) => String(value || '').trim())
+      .filter((value, index, values) => value && values.indexOf(value) === index)
+      .join(' / ');
     const rows = [
+      ['family', details?.family || details?.familyName],
+      ['genus', genusValue],
       ['habit', plantProfile.habit],
       ['height', plantProfile.height],
       ['flowerPeriod', plantProfile.flowerPeriod],
@@ -842,7 +855,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       rows.push({ key: 'source', label: labels.source, value: sourceParts.join(' ') });
     }
     return rows;
-  }, [plantProfile, isEnglish]);
+  }, [plantProfile, details, isEnglish]);
 
   const classificationGroups = useMemo(() => {
     if (!isOrder || !Array.isArray(classificationMembers) || classificationMembers.length === 0) return [];
