@@ -29,14 +29,16 @@ const FORMATS = [
   },
 ];
 const FORCE_REBUILD = process.env.FORCE_RESPONSIVE_IMAGES === '1';
+const IS_PAGES_DEPLOY = process.env.GITHUB_WORKFLOW === 'Deploy with GitHub Actions Pages';
 
 function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 
 if (
   process.env.SKIP_RESPONSIVE_IMAGES === '1' ||
+  IS_PAGES_DEPLOY ||
   (process.env.CI === 'true' && process.env.FORCE_RESPONSIVE_IMAGES !== '1')
 ) {
-  console.log('[responsive] skipped (CI or SKIP_RESPONSIVE_IMAGES=1)');
+  console.log('[responsive] skipped (CI, Pages deploy, or SKIP_RESPONSIVE_IMAGES=1)');
   process.exit(0);
 }
 
