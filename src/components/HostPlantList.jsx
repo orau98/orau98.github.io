@@ -127,7 +127,7 @@ const HostPlantListItem = React.memo(
             state={makeDetailLinkState(location, { setFromList: true })}
             className="flex gap-3 p-3"
           >
-            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-800 sm:h-24 sm:w-24">
+            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-900 sm:h-24 sm:w-24">
               {imageFilename && !imageError ? (
                 <ImageWithFallback
                   src={primaryImageSrc}
@@ -136,8 +136,7 @@ const HostPlantListItem = React.memo(
                   width="120"
                   height="120"
                   className="h-full w-full"
-                  imgClassName="transition duration-300 group-hover:scale-105"
-                  fit="cover"
+                  fit="contain"
                   loading="lazy"
                   decoding="async"
                   onError={() => setImageError(true)}
@@ -205,7 +204,7 @@ const HostPlantListItem = React.memo(
             <div className="w-full relative overflow-hidden rounded-t-[10px] -mx-[2px] -mt-[2px]">
               {imageFilename && !imageError ? (
                 // Actual plant image
-                <div className="relative w-full aspect-[16/10] sm:aspect-[4/3]">
+                <div className="relative w-full aspect-[16/10] sm:aspect-[4/3] bg-slate-100 dark:bg-slate-900">
                   <ImageWithFallback
                     src={primaryImageSrc}
                     candidates={fallbackImageCandidates}
@@ -213,8 +212,7 @@ const HostPlantListItem = React.memo(
                     width="800"
                     height="600"
                     className="w-full h-full"
-                    imgClassName="transition-all duration-500 ease-out group-hover:scale-110"
-                    fit="cover"
+                    fit="contain"
                     loading="lazy"
                     decoding="async"
                     onError={() => {
