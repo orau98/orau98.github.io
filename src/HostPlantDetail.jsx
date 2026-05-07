@@ -1755,7 +1755,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Top row: back link + classification chips (unified with insect detail) */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
+      <div className="mb-6 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-center lg:justify-between">
         <Link 
           to={getBackTarget(location, localizePath('/?tab=plants', locale))}
           state={makeDetailLinkState(location)}
@@ -1770,7 +1770,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {orderChip.label && orderChip.queryValue && (
             <Link
               to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:bg-emerald-200/70 dark:hover:bg-emerald-900/50"
+              className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50`}
               aria-label={isEnglish ? `Search plants in ${orderChip.label}` : `${orderChip.label} の植物を検索`}
             >
               <span className="font-medium">{orderChip.label}</span>
@@ -1782,7 +1782,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {familyChip.label && familyChip.queryValue && (
             <Link
               to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50 hover:bg-blue-200/70 dark:hover:bg-blue-900/50"
+              className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/50 bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50`}
               aria-label={isEnglish ? `Search plants in ${familyChip.label}` : `${familyChip.label} の植物を検索`}
             >
               <span className="font-medium">{familyChip.label}</span>
@@ -1794,7 +1794,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {taxonomy.genus && (
             <Link
               to={localizePath(`/?tab=plants&q=${encodeURIComponent(taxonomy.genus)}`, locale)}
-              className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50 hover:bg-slate-200/70 dark:hover:bg-slate-900/50"
+              className="hidden items-center rounded-lg border border-slate-200/50 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 md:inline-flex"
               aria-label={isEnglish ? `Search plants in genus ${taxonomy.genus}` : `${taxonomy.genus} の植物を検索`}
             >
               <span className="font-medium italic">{taxonomy.genus}</span>
@@ -1826,19 +1826,21 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       <div id="basic-info" className="mt-4 md:mt-6 scroll-mt-24">
       <div className="mb-6">
         {/* パンくずリスト */}
-        <Breadcrumb
-          locale={locale}
-          items={[
-            { label: isEnglish ? 'Home' : 'ホーム', path: localizePath('/', locale) },
-            { label: isEnglish ? 'Plants' : '植物', path: localizePath('/?tab=plants', locale) },
-            ...(familyLabel && !isFamily && !isOrder ? [{ label: familyLabel, path: buildPlantPath(familyLabel, locale) }] : []),
-            {
-              label: isEnglish && !isFamily && !isOrder && /[A-Za-z]/.test(primaryPlantName)
-                ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryPlantName)}</span>
-                : primaryPlantName,
-            },
-          ]}
-        />
+        <div className="hidden md:block">
+          <Breadcrumb
+            locale={locale}
+            items={[
+              { label: isEnglish ? 'Home' : 'ホーム', path: localizePath('/', locale) },
+              { label: isEnglish ? 'Plants' : '植物', path: localizePath('/?tab=plants', locale) },
+              ...(familyLabel && !isFamily && !isOrder ? [{ label: familyLabel, path: buildPlantPath(familyLabel, locale) }] : []),
+              {
+                label: isEnglish && !isFamily && !isOrder && /[A-Za-z]/.test(primaryPlantName)
+                  ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryPlantName)}</span>
+                  : primaryPlantName,
+              },
+            ]}
+          />
+        </div>
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white text-left">
             {isEnglish
               ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryPlantName)}</span>

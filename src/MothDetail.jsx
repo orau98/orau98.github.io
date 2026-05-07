@@ -35,6 +35,14 @@ import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
 const PLANT_PART_KEYWORDS = ['花', '実', '果実', '葉', '茎', '根', '枝', '樹皮', '蕾', '若葉'];
+const INSECT_ORDER_LABELS = Object.freeze({
+  moth: { ja: 'チョウ目', en: 'Lepidoptera' },
+  butterfly: { ja: 'チョウ目', en: 'Lepidoptera' },
+  beetle: { ja: 'コウチュウ目', en: 'Coleoptera' },
+  longhornbeetle: { ja: 'コウチュウ目', en: 'Coleoptera' },
+  leafbeetle: { ja: 'コウチュウ目', en: 'Coleoptera' },
+  aphid: { ja: 'カメムシ目', en: 'Hemiptera' },
+});
 
 const extractPlantPartsFromNotes = (notes) => {
   if (!Array.isArray(notes) || notes.length === 0) return {};
@@ -627,6 +635,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     scientificName: moth?.classification?.family,
     fallback: moth?.family,
   });
+  const orderChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: INSECT_ORDER_LABELS[moth?.type || routeType]?.ja,
+    scientificName: INSECT_ORDER_LABELS[moth?.type || routeType]?.en,
+  });
+  const genusChipLabel = String(
+    moth?.classification?.genus ||
+      moth?.scientificName?.trim().split(/\s+/)[0] ||
+      '',
+  ).trim();
   const subfamilyChip = buildLocalizedTaxonomyChip({
     locale,
     japaneseName: moth?.classification?.subfamilyJapanese,
@@ -1031,90 +1049,96 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       {aphidId && moth && <AphidStructuredData aphid={moth} />}
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* パンくずリスト */}
-        <Breadcrumb
-          locale={locale}
-          items={[
-            { label: isEnglish ? 'Home' : 'ホーム', path: localizePath('/', locale) },
-            { label: insectTypeLabel, path: localizePath(`/?tab=insects`, locale) },
-            ...(familyChip.label && familyChip.queryValue
-              ? [{
-                  label: familyChip.label,
-                  path: localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale),
-                }]
-              : []),
-            {
-              label: isEnglish && moth.scientificName
-                ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryName)}</span>
-                : (primaryName || moth.name),
-            }
-          ]}
-        />
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="hidden md:block">
+          <Breadcrumb
+            locale={locale}
+            items={[
+              { label: isEnglish ? 'Home' : 'ホーム', path: localizePath('/', locale) },
+              { label: insectTypeLabel, path: localizePath(`/?tab=insects`, locale) },
+              ...(familyChip.label && familyChip.queryValue
+                ? [{
+                    label: familyChip.label,
+                    path: localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale),
+                  }]
+                : []),
+              {
+                label: isEnglish && moth.scientificName
+                  ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryName)}</span>
+                  : (primaryName || moth.name),
+              }
+            ]}
+          />
+        </div>
+        <div className="mb-6 flex flex-wrap items-center gap-2 lg:mb-8">
+          <Link
+            to={getBackTarget(location, localizePath('/?tab=insects', locale))}
+            state={makeDetailLinkState(location)}
+            className="ui-btn ui-btn-secondary whitespace-nowrap px-3 py-2 text-xs shadow-sm transition-transform hover:shadow-md active:scale-95 sm:text-sm"
+          >
+            <svg className="mr-1.5 h-4 w-4 sm:mr-2 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="sm:hidden">{isEnglish ? 'Back' : '一覧へ'}</span>
+            <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
+          </Link>
+          {quizFocusHref && (
             <Link
-              to={getBackTarget(location, localizePath('/?tab=insects', locale))}
-              state={makeDetailLinkState(location)}
-              className="ui-btn ui-btn-secondary text-sm shadow-sm hover:shadow-md active:scale-95 transition-transform"
+              to={quizFocusHref}
+              className="inline-flex items-center whitespace-nowrap rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950 sm:text-sm"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              {isEnglish ? 'Back to list' : '一覧に戻る'}
+              <span className="sm:hidden">{isEnglish ? 'Review' : 'クイズ'}</span>
+              <span className="hidden sm:inline">{isEnglish ? 'Review in quiz' : 'この昆虫をクイズで復習'}</span>
             </Link>
-            {quizFocusHref && (
-              <Link
-                to={quizFocusHref}
-                className="inline-flex items-center rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950"
-              >
-                {isEnglish ? 'Review in quiz' : 'この昆虫をクイズで復習'}
-              </Link>
-            )}
-          </div>
-          
-          {/* 分類情報をヘッダーに表示 */}
-          <div className="flex flex-wrap items-center gap-2">
-            {familyChip.label && familyChip.queryValue && (
-              <Link
-                to={localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
-              >
-                <span className="font-medium">{familyChip.label}</span>
-                {familyChip.referenceLabel && (
-                  <span className="ml-1 text-xs opacity-80">{familyChip.referenceLabel}</span>
-                )}
-              </Link>
-            )}
-            {subfamilyChip.label && subfamilyChip.queryValue && (
-              <Link
-                to={localizePath(`/?classification=${encodeURIComponent(subfamilyChip.queryValue)}`, locale)}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50"
-              >
-                <span className="font-medium">{subfamilyChip.label}</span>
-                {subfamilyChip.referenceLabel && (
-                  <span className="ml-1 text-xs opacity-80">{subfamilyChip.referenceLabel}</span>
-                )}
-              </Link>
-            )}
-            {tribeChip.label && tribeChip.queryValue && (
-              <Link
-                to={localizePath(`/?classification=${encodeURIComponent(tribeChip.queryValue)}`, locale)}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 border border-blue-200/50 dark:border-blue-700/50"
-              >
-                <span className="font-medium">{tribeChip.label}</span>
-                {tribeChip.referenceLabel && (
-                  <span className="ml-1 text-xs opacity-80">{tribeChip.referenceLabel}</span>
-                )}
-              </Link>
-            )}
-            {moth.classification.genus && (
-              <Link
-                to={localizePath(`/?classification=${encodeURIComponent(moth.classification.genus)}`, locale)}
-                className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-900/50 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50"
-              >
-                <span className="font-medium italic">{moth.classification.genus}</span>
-              </Link>
-            )}
-          </div>
+          )}
+          {orderChip.label && (
+            <span className="inline-flex items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 sm:px-3 sm:text-sm">
+              <span className="font-medium">{orderChip.label}</span>
+              {orderChip.referenceLabel && (
+                <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{orderChip.referenceLabel}</span>
+              )}
+            </span>
+          )}
+          {familyChip.label && familyChip.queryValue && (
+            <Link
+              to={localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale)}
+              className="inline-flex items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm"
+            >
+              <span className="font-medium">{familyChip.label}</span>
+              {familyChip.referenceLabel && (
+                <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{familyChip.referenceLabel}</span>
+              )}
+            </Link>
+          )}
+          {genusChipLabel && (
+            <Link
+              to={localizePath(`/?tab=insects&q=${encodeURIComponent(genusChipLabel)}`, locale)}
+              className="inline-flex items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm"
+            >
+              <span className="font-medium italic">{genusChipLabel}</span>
+            </Link>
+          )}
+          {subfamilyChip.label && subfamilyChip.queryValue && (
+            <Link
+              to={localizePath(`/?classification=${encodeURIComponent(subfamilyChip.queryValue)}`, locale)}
+              className="hidden items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 lg:inline-flex"
+            >
+              <span className="font-medium">{subfamilyChip.label}</span>
+              {subfamilyChip.referenceLabel && (
+                <span className="ml-1 text-xs opacity-80">{subfamilyChip.referenceLabel}</span>
+              )}
+            </Link>
+          )}
+          {tribeChip.label && tribeChip.queryValue && (
+            <Link
+              to={localizePath(`/?classification=${encodeURIComponent(tribeChip.queryValue)}`, locale)}
+              className="hidden items-center rounded-lg border border-blue-200/50 bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 xl:inline-flex"
+            >
+              <span className="font-medium">{tribeChip.label}</span>
+              {tribeChip.referenceLabel && (
+                <span className="ml-1 text-xs opacity-80">{tribeChip.referenceLabel}</span>
+              )}
+            </Link>
+          )}
         </div>
 
         <DetailSectionNav

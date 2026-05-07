@@ -117,7 +117,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   return (
     <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl relative z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-3 py-3 sm:h-20 sm:py-0">
+        <div className="flex items-center justify-between gap-2.5 py-3 sm:h-20 sm:py-0">
           <Link to={homePath} className="group flex min-w-0 flex-1 items-center gap-2.5 transition-transform duration-200 sm:gap-3 sm:hover:scale-105">
             <div className="relative">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-emerald-500/50 sm:h-12 sm:w-12">
@@ -137,19 +137,21 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
               </p>
             </div>
             <div className="min-w-0 sm:hidden">
-              <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1rem,4.9vw,1.35rem)] font-black leading-[1.05] text-transparent">
-                {isEnglish ? (
-                  <>
-                    <span className="block">Insects &amp;</span>
-                    <span className="block">Host Plants</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="block">"繋がり"が見える</span>
-                    <span className="block">昆虫植物図鑑</span>
-                  </>
-                )}
-              </div>
+              {isEnglish ? (
+                <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-black leading-none text-transparent">
+                  <span className="block whitespace-nowrap">Insects &amp;</span>
+                  <span className="block whitespace-nowrap">Host Plants</span>
+                </div>
+              ) : (
+                <div className="flex min-w-0 flex-col gap-1">
+                  <span className="max-w-full truncate text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-100/75">
+                    &quot;繋がり&quot;が見える
+                  </span>
+                  <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-black leading-none text-transparent whitespace-nowrap">
+                    昆虫植物図鑑
+                  </span>
+                </div>
+              )}
             </div>
           </Link>
           

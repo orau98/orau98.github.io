@@ -190,6 +190,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const isDark = theme === 'dark';
   const [isCompactPanel, setIsCompactPanel] = useState(false);
   const [desktopControlsOpen, setDesktopControlsOpen] = useState(false);
+  const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
 
   // モバイルレスポンシブ: コンテナ幅を監視してグラフサイズを動的に決定
   const [graphSize, setGraphSize] = useState(() => ({ width, height }));
@@ -623,6 +624,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setRelationFilter('all');
     setNodeListOpen(false);
     setIsPinDragging(false);
+    setDesktopControlsOpen(false);
+    setMobileControlsOpen(false);
   }, [currentInsect?.name, currentPlantName]);
 
   useEffect(() => {
@@ -637,6 +640,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     mq.addListener(update);
     return () => mq.removeListener(update);
   }, []);
+
+  useEffect(() => {
+    if (!isCompactPanel) {
+      setMobileControlsOpen(false);
+    }
+  }, [isCompactPanel]);
 
   useEffect(() => {
     if (!selectedNodeId) return;
@@ -1674,7 +1683,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const enableNodeDrag = isCompactPanel && !isPinDragging;
   const desktopControlButtonClass = 'shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800';
   const desktopControlSurfaceClass = 'rounded-xl border border-slate-200/90 bg-white/94 px-3 py-3 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-200';
+  const mobileControlLaunchButtonClass = 'inline-flex shrink-0 items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-800';
+  const mobileControlActionButtonClass = 'inline-flex shrink-0 items-center rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-[12px] font-semibold text-slate-800 shadow-sm transition hover:bg-white dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-800';
   const graphCursor = isPinDragging ? 'grabbing' : hoverNodeId ? 'pointer' : enablePanInteraction ? 'grab' : 'default';
+  const closeMobileControls = useCallback(() => {
+    setMobileControlsOpen(false);
+    setNodeListOpen(false);
+  }, []);
 
   const handleGraphWheelCapture = useCallback((event) => {
     if (isCompactPanel) return;
@@ -2411,23 +2426,31 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   </button>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={resetView}
-                    className={guideButtonClass}
-                  >
-                    全体表示
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setGuideDismissed(true);
-                      setNodeListOpen(true);
-                    }}
-                    className={guideButtonClass}
-                  >
-                    ノード一覧
-                  </button>
+                  {isCompactPanel ? (
+                    <p className="text-[11px] leading-5 text-slate-500 dark:text-slate-300">
+                      上部の「表示」からズームや絞り込みを開けます。
+                    </p>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={resetView}
+                        className={guideButtonClass}
+                      >
+                        全体表示
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGuideDismissed(true);
+                          setNodeListOpen(true);
+                        }}
+                        className={guideButtonClass}
+                      >
+                        ノード一覧
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -2437,83 +2460,25 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             <div data-fg-ui className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
               <div className="mx-auto flex max-w-[900px] flex-col gap-2">
                 <div className="pointer-events-auto bg-white/92 dark:bg-slate-800/90 backdrop-blur rounded-xl shadow border border-slate-200 dark:border-slate-700 px-2.5 py-2 text-slate-700 dark:text-slate-200">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={resetView}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      title="全体表示（ズーム/中心）"
-                  >
-                    全体表示
-                  </button>
-                    <button
-                      type="button"
-                      onClick={zoomOut}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      title="縮小"
-                    >
-                      －
-                    </button>
-                    <button
-                      type="button"
-                      onClick={zoomIn}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      title="拡大"
-                    >
-                      ＋
-                    </button>
-                    <button
-                      type="button"
-                      onClick={toggleCompactLabelMode}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      title="ラベル表示"
-                    >
-                      ラベル:{compactLabelModeText}
-                    </button>
-                    <label className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-200 bg-white/80 px-2 py-1 text-[11px] font-semibold text-slate-600 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-300">
-                      <span>関連数</span>
-                      <select
-                        value={relatedLimit}
-                        onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
-                        className="min-w-[3.25rem] rounded-md border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 px-2 py-1 text-[11px]"
-                        aria-label="関連数"
-                      >
-                        {RELATED_LIMIT_OPTIONS.map((n) => (
-                          <option key={n} value={n}>{n}</option>
-                        ))}
-                      </select>
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setNodeListOpen((prev) => !prev);
-                      }}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      aria-expanded={nodeListOpen}
-                    >
-                      {nodeListOpen ? '一覧を閉じる' : '一覧'}
-                    </button>
-                    {pinnedNodeCount > 0 && (
-                      <button
-                        type="button"
-                        onClick={clearPinnedNodes}
-                        className="shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800"
-                      >
-                        全固定解除
-                      </button>
-                    )}
-                    <div className="ml-auto flex shrink-0 items-center">
-                      <InfoPopover
-                        title="ネットワーク図の見方"
-                        align="right"
-                        buttonAriaLabel="ネットワーク図の使い方を表示"
-                        buttonClassName="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-600 bg-white/80 dark:bg-slate-900/40 text-sm font-semibold hover:bg-white dark:hover:bg-slate-800"
-                        panelClassName="w-[min(22rem,calc(100vw-2rem))]"
-                        buttonContent={<span aria-hidden="true">?</span>}
-                      >
-                        {graphHelpPopoverContent}
-                      </InfoPopover>
+                  <div className="flex items-start gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[11px] font-semibold text-slate-800 dark:text-slate-100">
+                        ネットワーク操作
+                      </div>
+                      <p className="mt-0.5 text-[11px] leading-4 text-slate-500 dark:text-slate-300">
+                        {relationFilter !== 'all'
+                          ? relationFilterConfig.helper
+                          : '表示、ズーム、絞り込みは「表示」から開けます。'}
+                      </p>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => setMobileControlsOpen(true)}
+                      className={mobileControlLaunchButtonClass}
+                      aria-expanded={mobileControlsOpen}
+                    >
+                      表示
+                    </button>
                   </div>
 
                   <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
@@ -2529,21 +2494,136 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     </div>
                   </div>
 
-                  <div className="mt-2 flex flex-col gap-1.5 xl:flex-row xl:items-center xl:justify-between">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">絞り込み</span>
-                      {relationFilterButtons}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isCompactPanel && mobileControlsOpen && (
+            <div
+              data-fg-ui
+              className="absolute inset-0 z-30 pointer-events-auto"
+              onClick={closeMobileControls}
+            >
+              <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px]" />
+              <div
+                className="absolute inset-x-0 bottom-0 rounded-t-3xl border border-slate-200/90 bg-white/96 px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-4 text-slate-800 shadow-2xl dark:border-slate-700/90 dark:bg-slate-900/96 dark:text-slate-100"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="mx-auto h-1.5 w-12 rounded-full bg-slate-300 dark:bg-slate-700" />
+                <div className="mt-3 flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-300">
+                      Controls
                     </div>
-                    {relationFilter !== 'all' && (
-                      <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                        {relationFilterConfig.helper}
-                      </div>
-                    )}
+                    <div className="mt-1 text-sm font-bold">ネットワーク表示</div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={closeMobileControls}
+                    className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+                    aria-label="表示パネルを閉じる"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={resetView}
+                    className={mobileControlActionButtonClass}
+                    title="全体表示（ズーム/中心）"
+                  >
+                    全体表示
+                  </button>
+                  <button
+                    type="button"
+                    onClick={zoomOut}
+                    className={mobileControlActionButtonClass}
+                    title="縮小"
+                  >
+                    －
+                  </button>
+                  <button
+                    type="button"
+                    onClick={zoomIn}
+                    className={mobileControlActionButtonClass}
+                    title="拡大"
+                  >
+                    ＋
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleCompactLabelMode}
+                    className={mobileControlActionButtonClass}
+                    title="ラベル表示"
+                  >
+                    ラベル:{compactLabelModeText}
+                  </button>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <label className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 shadow-sm dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-200">
+                    <span>関連数</span>
+                    <select
+                      value={relatedLimit}
+                      onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                      className="min-w-[3.5rem] rounded-md border border-slate-200 bg-white px-2 py-1 text-[12px] dark:border-slate-600 dark:bg-slate-900/70"
+                      aria-label="関連数"
+                    >
+                      {RELATED_LIMIT_OPTIONS.map((n) => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNodeListOpen((prev) => !prev);
+                    }}
+                    className={mobileControlActionButtonClass}
+                    aria-expanded={nodeListOpen}
+                  >
+                    {nodeListOpen ? '一覧を閉じる' : 'ノード一覧'}
+                  </button>
+                  {pinnedNodeCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={clearPinnedNodes}
+                      className={mobileControlActionButtonClass}
+                    >
+                      全固定解除
+                    </button>
+                  )}
+                  <InfoPopover
+                    title="ネットワーク図の見方"
+                    align="right"
+                    buttonAriaLabel="ネットワーク図の使い方を表示"
+                    buttonClassName={mobileControlActionButtonClass}
+                    panelClassName="w-[min(22rem,calc(100vw-2rem))]"
+                    buttonContent={<span>使い方</span>}
+                  >
+                    {graphHelpPopoverContent}
+                  </InfoPopover>
+                </div>
+
+                <div className="mt-4">
+                  <div className="mb-2 text-[12px] font-semibold text-slate-600 dark:text-slate-300">
+                    絞り込み
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {relationFilterButtons}
+                  </div>
+                  {relationFilter !== 'all' && (
+                    <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-300">
+                      {relationFilterConfig.helper}
+                    </div>
+                  )}
                 </div>
 
                 {nodeListOpen && (
-                  <div className="pointer-events-auto max-h-[min(52vh,360px)] max-w-[560px] overflow-hidden">
+                  <div className="mt-4 max-h-[min(40vh,320px)] overflow-hidden">
                     {nodeListPanel}
                   </div>
                 )}

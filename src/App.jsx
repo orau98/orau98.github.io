@@ -32,6 +32,10 @@ import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { loadInsectImageIndexes } from './services/imageIndex';
 import { getLocaleFromPath, isEnglishLocale } from './utils/locale';
 import {
+  buildCurrentHashHref,
+  scrollElementWithOffset,
+} from './utils/sectionNavigation';
+import {
   EXPLORER_ROUTE_CONFIGS,
   INSECT_DETAIL_ROUTE_PATTERNS,
   isExplorerRoutePath,
@@ -98,6 +102,22 @@ function App() {
   
   const isExplorerPage = isExplorerRoutePath(location.pathname);
   const shouldForceDocumentNavigation = isStaticDocumentPath(location.pathname);
+  const skipToMainHref = buildCurrentHashHref(location, 'main-content');
+
+  const handleSkipToMainContent = (event) => {
+    if (typeof document === 'undefined') return;
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+    event.preventDefault();
+    try {
+      mainContent.focus({ preventScroll: true });
+    } catch {}
+    scrollElementWithOffset(mainContent, {
+      behavior: 'auto',
+      extraOffset: 0,
+      updateHashId: 'main-content',
+    });
+  };
 
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
@@ -6360,7 +6380,8 @@ function App() {
       {/* グローバルローディングバー */}
       <LoadingBar isLoading={loading} />
       <a
-        href="#main-content"
+        href={skipToMainHref}
+        onClick={handleSkipToMainContent}
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-white focus:text-slate-900 focus:shadow-lg"
       >
         {isEnglish ? 'Skip to main content' : '本文へスキップ'}

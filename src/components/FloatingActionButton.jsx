@@ -5,6 +5,10 @@ import {
   isEnglishLocale,
   stripLocalePrefix,
 } from '../utils/locale';
+import {
+  collectAvailableSectionItems,
+  scrollToSection as scrollToSectionHelper,
+} from '../utils/sectionNavigation';
 
 const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,13 +28,19 @@ const FloatingActionButton = () => {
     }
 
     const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
+      const isMobileViewport = typeof window !== 'undefined' && window.matchMedia
+        ? window.matchMedia('(max-width: 767px)').matches
+        : false;
+      if (isMobileViewport) {
+        setIsVisible(true);
+      } else if (window.pageYOffset > 300) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
 
+    toggleVisibility();
     window.addEventListener('scroll', toggleVisibility);
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, [isDetailPage]);
@@ -63,11 +73,7 @@ const FloatingActionButton = () => {
     // Check which sections actually exist in the DOM
     // Delay slightly to ensure DOM is ready
     const checkSections = () => {
-      const found = possibleSections.filter(section => (
-        document.getElementById(section.id) ||
-        document.querySelector(`[data-section-id="${section.id}"]`)
-      ));
-      setTocItems(found);
+      setTocItems(collectAvailableSectionItems(possibleSections));
     };
 
     const timer = setTimeout(checkSections, 500);
@@ -88,34 +94,8 @@ const FloatingActionButton = () => {
     setIsOpen(false);
   };
 
-  const getHeaderOffset = () => {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return 0;
-    const styles = window.getComputedStyle(document.documentElement);
-    const main = parseFloat(styles.getPropertyValue('--app-main-header-height')) || 0;
-    const sticky = parseFloat(styles.getPropertyValue('--app-sticky-header-height')) || 0;
-    return main + sticky + 16;
-  };
-
   const scrollToSection = (id) => {
-    const candidates = [
-      document.getElementById(id),
-      ...document.querySelectorAll(`[data-section-id="${id}"]`),
-    ].filter(Boolean);
-    const el = candidates.find((element) => {
-      const rect = element.getBoundingClientRect();
-      const style = window.getComputedStyle(element);
-      return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden';
-    }) || candidates[0];
-    if (el) {
-      // Offset for header + sticky header
-      const headerOffset = getHeaderOffset();
-      const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    if (scrollToSectionHelper(id, { behavior: 'smooth', extraOffset: 16, updateHash: true })) {
       setIsOpen(false);
     }
   };
@@ -177,16 +157,24 @@ const FloatingActionButton = () => {
       {/* Main FAB Toggle */}
       <button
         onClick={toggleMenu}
-        className={`relative z-[70] flex items-center justify-center w-14 h-14 rounded-full shadow-xl transition-all duration-300 ${
+        className={`relative z-[70] flex h-12 items-center justify-center gap-1.5 rounded-full px-4 shadow-xl transition-all duration-300 md:h-14 md:w-14 md:px-0 ${
           isOpen
-            ? 'bg-slate-700 text-white rotate-45'
+            ? 'bg-slate-700 text-white'
             : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
         }`}
-        aria-label={isOpen ? (isEnglish ? 'Close menu' : 'メニューを閉じる') : (isEnglish ? 'Open menu' : 'メニューを開く')}
+        aria-label={isOpen ? (isEnglish ? 'Close contents' : '目次を閉じる') : (isEnglish ? 'Open contents' : '目次を開く')}
       >
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className={`h-7 w-7 transition-transform duration-300 md:h-8 md:w-8 ${isOpen ? 'rotate-45' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
+        <span className="text-sm font-semibold md:hidden">
+          {isOpen ? (isEnglish ? 'Close' : '閉じる') : (isEnglish ? 'Contents' : '目次')}
+        </span>
       </button>
       
       {/* Overlay to close when clicking outside */}
