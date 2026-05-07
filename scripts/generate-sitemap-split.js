@@ -704,12 +704,20 @@ function generateSplitSitemaps() {
   const indexPath = path.join(__dirname, '../public/sitemap-index.xml');
   fs.writeFileSync(indexPath, indexXml, 'utf-8');
 
+  // Compatibility for previously submitted Search Console URLs that used
+  // the common underscore variant instead of this repo's hyphenated filename.
+  const legacyIndexPath = path.join(__dirname, '../public/sitemap_index.xml');
+  fs.writeFileSync(legacyIndexPath, indexXml, 'utf-8');
+
   if (fs.existsSync(distPath)) {
     const distRootSitemapPath = path.join(distPath, 'sitemap.xml');
     fs.writeFileSync(distRootSitemapPath, indexXml, 'utf-8');
 
     const distIndexPath = path.join(distPath, 'sitemap-index.xml');
     fs.writeFileSync(distIndexPath, indexXml, 'utf-8');
+
+    const distLegacyIndexPath = path.join(distPath, 'sitemap_index.xml');
+    fs.writeFileSync(distLegacyIndexPath, indexXml, 'utf-8');
   }
 
   const googleFallbackFiles = buildGoogleFallbackFiles(baseUrl, generatedAt);

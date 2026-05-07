@@ -397,6 +397,7 @@ validateSeoRouteMap(path.join(DIST_DIR, 'seo-route-map.plants.json'));
 validateRobotsTxt(path.join(DIST_DIR, 'robots.txt'));
 validateSitemapIndex(path.join(DIST_DIR, 'sitemap.xml'));
 validateSitemapIndex(path.join(DIST_DIR, 'sitemap-index.xml'));
+validateSitemapIndex(path.join(DIST_DIR, 'sitemap_index.xml'));
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
 if (failures.length > 0) {

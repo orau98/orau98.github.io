@@ -16,6 +16,7 @@ const REQUIRED_FILES = [
   'sitemap.txt',
   'sitemap.xml',
   'sitemap-index.xml',
+  'sitemap_index.xml',
   'search-console-submit.xml',
   'search-console-submit.txt',
   'search-console-sitemap.xml',
