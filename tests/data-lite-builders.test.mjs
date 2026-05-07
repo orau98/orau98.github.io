@@ -126,6 +126,53 @@ test('buildHostPlantDataset keeps the richest profile for duplicate plant names'
   assert.equal(plantDetails.クスノキ.profile.page, '36');
 });
 
+test('buildHostPlantDataset ignores taxonomy-only plant profile fragments', () => {
+  const { plantDetails } = buildHostPlantDataset([], {}, [
+    {
+      plant_name: 'クスノキ',
+      scientific_name: 'Cinnamomum campbora',
+      family: 'ハスノハギリ科',
+      family_latin: 'HERNANDIACEAE',
+      genus_scientific: 'Cinnamomum',
+      source: '日本の野生植物 第1巻',
+      page: '335',
+    },
+  ]);
+
+  assert.equal(plantDetails.クスノキ, undefined);
+});
+
+test('buildHostPlantDataset prefers YList taxonomy over OCR profile taxonomy', () => {
+  const { plantDetails } = buildHostPlantDataset([], {
+    plants: {
+      クスノキ: {
+        familyJp: 'クスノキ科',
+        familyEn: 'Lauraceae',
+        orderJp: 'クスノキ目',
+        orderEn: 'LAURALES',
+        scientificName: 'Cinnamomum camphora',
+        aliases: [],
+      },
+    },
+  }, [
+    {
+      plant_name: 'クスノキ',
+      scientific_name: 'Cinnamomum campbora',
+      family: 'ハスノハギリ科',
+      family_latin: 'HERNANDIACEAE',
+      genus_scientific: 'Cinnamomum',
+      habit: '常緑高木',
+      source: '日本の野生植物 第1巻',
+      page: '335',
+    },
+  ]);
+
+  assert.equal(plantDetails.クスノキ.family, 'クスノキ科');
+  assert.equal(plantDetails.クスノキ.familyLatin, 'Lauraceae');
+  assert.equal(plantDetails.クスノキ.scientificName, 'Cinnamomum camphora');
+  assert.equal(plantDetails.クスノキ.profile.habit, '常緑高木');
+});
+
 test('isSuspiciousPlantName filters fragmentary substrate notes but keeps coarse host groups', () => {
   assert.equal(isSuspiciousPlantName('の樹皮下'), true);
   assert.equal(isSuspiciousPlantName('ヤマザクラなどの枯れ木'), true);
