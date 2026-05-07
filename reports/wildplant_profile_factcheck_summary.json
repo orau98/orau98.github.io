@@ -1,33 +1,94 @@
 {
-  "audited_rows": 3963,
-  "profile_candidate_rows": 2071,
-  "findings": 7160,
-  "high_priority_findings": 3004,
-  "profile_candidate_findings": 2437,
-  "high_priority_profile_candidate_findings": 251,
+  "audited_rows": 5928,
+  "profile_candidate_rows": 4036,
+  "findings": 8188,
+  "high_priority_findings": 3187,
+  "profile_candidate_findings": 3465,
+  "high_priority_profile_candidate_findings": 434,
   "category_counts": {
     "duplicate_name_scientific_conflict": 2015,
     "low_information_profile": 1707,
+    "genus_scientific_conflicts_with_scientific_name": 1584,
     "duplicate_low_information_row_shadowed": 1008,
-    "genus_scientific_conflicts_with_scientific_name": 809,
+    "possible_ocr_latin_typo_against_ylist": 633,
     "duplicate_name_family_conflict": 559,
-    "possible_ocr_latin_typo_against_ylist": 463,
-    "ylist_family_latin_conflict": 246,
-    "ylist_family_conflict": 245,
-    "ylist_scientific_name_conflict": 100,
+    "ylist_family_latin_conflict": 279,
+    "ylist_family_conflict": 258,
+    "ylist_scientific_name_conflict": 137,
     "family_latin_outlier_for_japanese_family": 8
   },
   "profile_candidate_category_counts": {
+    "genus_scientific_conflicts_with_scientific_name": 1562,
     "duplicate_name_scientific_conflict": 993,
-    "genus_scientific_conflicts_with_scientific_name": 787,
+    "possible_ocr_latin_typo_against_ylist": 332,
     "duplicate_name_family_conflict": 277,
-    "possible_ocr_latin_typo_against_ylist": 162,
-    "ylist_family_conflict": 89,
-    "ylist_family_latin_conflict": 89,
-    "ylist_scientific_name_conflict": 40
+    "ylist_family_latin_conflict": 122,
+    "ylist_family_conflict": 102,
+    "ylist_scientific_name_conflict": 77
   },
-  "ocr_cache": "/Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_1",
+  "source_counts": [
+    {
+      "source": "日本の野生植物 第1巻",
+      "rows": 3963,
+      "profile_candidate_rows": 2071,
+      "high_priority_profile_candidate_findings": 251
+    },
+    {
+      "source": "日本の野生植物 第2巻",
+      "rows": 1965,
+      "profile_candidate_rows": 1965,
+      "high_priority_profile_candidate_findings": 183
+    }
+  ],
+  "high_priority_profile_candidate_category_counts_by_source": [
+    {
+      "source": "日本の野生植物 第1巻",
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "count": 162
+    },
+    {
+      "source": "日本の野生植物 第1巻",
+      "category": "ylist_family_conflict",
+      "count": 89
+    },
+    {
+      "source": "日本の野生植物 第2巻",
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "count": 170
+    },
+    {
+      "source": "日本の野生植物 第2巻",
+      "category": "ylist_family_conflict",
+      "count": 13
+    }
+  ],
+  "ocr_caches": [
+    {
+      "source": "日本の野生植物 第1巻",
+      "cache_dir": "/Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_1"
+    },
+    {
+      "source": "日本の野生植物 第2巻",
+      "cache_dir": "/Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_2"
+    }
+  ],
   "top_profile_candidate_findings": [
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-005306",
+      "plant_name": "アオハダ",
+      "scientific_name": "Ilex maeropoda",
+      "family": "モチノキ科",
+      "family_latin": "AQUIFOLIACEAE",
+      "page": "229",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Ilex maeropoda",
+      "expected_or_check": "Ilex macropoda",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アオハダ; similarity=0.93"
+    },
     {
       "score": 88,
       "category": "possible_ocr_latin_typo_against_ylist",
@@ -112,6 +173,38 @@
       "score": 88,
       "category": "possible_ocr_latin_typo_against_ylist",
       "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-005195",
+      "plant_name": "アキノタムラソウ",
+      "scientific_name": "Salvia japoniea",
+      "family": "シソ科",
+      "family_latin": "LAMIACEAE",
+      "page": "212",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Salvia japoniea",
+      "expected_or_check": "Salvia japonica",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アキノタムラソウ; similarity=0.93"
+    },
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-005557",
+      "plant_name": "アキノノゲシ",
+      "scientific_name": "Lactuea indica",
+      "family": "キク科",
+      "family_latin": "ASTERACEAE",
+      "page": "263",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Lactuea indica",
+      "expected_or_check": "Lactuca indica var. laciniata",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アキノノゲシ; similarity=0.93"
+    },
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
       "profile_id": "plant-profile-001170",
       "plant_name": "アキメヒシバ",
       "scientific_name": "Digitaria violaseens",
@@ -139,6 +232,22 @@
       "expected_or_check": "Anemone raddeana",
       "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
       "evidence": "ylist_canonical=アズマイチゲ; similarity=0.94"
+    },
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-004648",
+      "plant_name": "アズマシャクナゲ",
+      "scientific_name": "Rhododendron degroniamum",
+      "family": "ツツジ科",
+      "family_latin": "ERICACEAE",
+      "page": "136",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Rhododendron degroniamum",
+      "expected_or_check": "Rhododendron degronianum",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アズマシャクナゲ; similarity=0.96"
     },
     {
       "score": 88,
@@ -192,6 +301,22 @@
       "score": 88,
       "category": "possible_ocr_latin_typo_against_ylist",
       "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-004595",
+      "plant_name": "アマシバ",
+      "scientific_name": "Symploeos formosana",
+      "family": "ハイノキ科",
+      "family_latin": "SYMPLOCACEAE",
+      "page": "126",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Symploeos formosana",
+      "expected_or_check": "Symplocos formosana",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アマシバ; similarity=0.95"
+    },
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
       "profile_id": "plant-profile-002000",
       "plant_name": "アマチャヅル",
       "scientific_name": "Gynostemma pentaplyllum",
@@ -203,6 +328,22 @@
       "expected_or_check": "Gynostemma pentaphyllum",
       "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
       "evidence": "ylist_canonical=アマチャヅル; similarity=0.96"
+    },
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-005742",
+      "plant_name": "アメリカセンダングサ",
+      "scientific_name": "Bideus frondosa",
+      "family": "キク科",
+      "family_latin": "ASTERACEAE",
+      "page": "290",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Bideus frondosa",
+      "expected_or_check": "Bidens frondosa",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アメリカセンダングサ; similarity=0.93"
     },
     {
       "score": 88,
@@ -224,6 +365,22 @@
       "score": 88,
       "category": "possible_ocr_latin_typo_against_ylist",
       "display_scope": "profile_candidate",
+      "profile_id": "plant-profile-004001",
+      "plant_name": "アリアケスミレ",
+      "scientific_name": "Viola betonieifolia",
+      "family": "スミレ科",
+      "family_latin": "VIOLACEAE",
+      "page": "29",
+      "source": "日本の野生植物 第2巻",
+      "current_value": "Viola betonieifolia",
+      "expected_or_check": "Viola betonicifolia var. albescens",
+      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
+      "evidence": "ylist_canonical=アリアケスミレ; similarity=0.95"
+    },
+    {
+      "score": 88,
+      "category": "possible_ocr_latin_typo_against_ylist",
+      "display_scope": "profile_candidate",
       "profile_id": "plant-profile-001930",
       "plant_name": "アンズ",
       "scientific_name": "Prunus armeninca",
@@ -235,118 +392,6 @@
       "expected_or_check": "Prunus armeniaca",
       "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
       "evidence": "ylist_canonical=アンズ; similarity=0.94"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001248",
-      "plant_name": "イソヤマアオキ",
-      "scientific_name": "Coceulus laurifolius",
-      "family": "ツヅラフジ科",
-      "family_latin": "MENISPERMACEAE",
-      "page": "179",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Coceulus laurifolius",
-      "expected_or_check": "Cocculus laurifolius",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イソヤマアオキ; similarity=0.95"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001611",
-      "plant_name": "イタチササゲ",
-      "scientific_name": "Lathyrus davidi",
-      "family": "ハマビシ科",
-      "family_latin": "ZYGOPHYLLACEAE",
-      "page": "233",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Lathyrus davidi",
-      "expected_or_check": "Lathyrus davidii",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イタチササゲ; similarity=0.97"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001742",
-      "plant_name": "イタビカズラ",
-      "scientific_name": "Fieus sarmentosa",
-      "family": "アサ科",
-      "family_latin": "CANNABACEAE",
-      "page": "254",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Fieus sarmentosa",
-      "expected_or_check": "Ficus sarmentosa subsp. nipponica",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イタビカズラ; similarity=0.94"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001972",
-      "plant_name": "イチイガシ",
-      "scientific_name": "Quereus gilva",
-      "family": "ブナ科",
-      "family_latin": "FAGACEAE",
-      "page": "282",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Quereus gilva",
-      "expected_or_check": "Quercus gilva",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イチイガシ; similarity=0.92"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001959",
-      "plant_name": "イヌブナ",
-      "scientific_name": "Fagus japoniea",
-      "family": "ブナ科",
-      "family_latin": "FAGACEAE",
-      "page": "280",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Fagus japoniea",
-      "expected_or_check": "Fagus japonica",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イヌブナ; similarity=0.93"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001777",
-      "plant_name": "イワガネ",
-      "scientific_name": "Oreoenide frutescens",
-      "family": "イラクサ科",
-      "family_latin": "URTICACEAE",
-      "page": "258",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Oreoenide frutescens",
-      "expected_or_check": "Oreocnide frutescens",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イワガネ; similarity=0.95"
-    },
-    {
-      "score": 88,
-      "category": "possible_ocr_latin_typo_against_ylist",
-      "display_scope": "profile_candidate",
-      "profile_id": "plant-profile-001951",
-      "plant_name": "イワシモツケ",
-      "scientific_name": "Spiraea nipponiea",
-      "family": "バラ科",
-      "family_latin": "ROSACEAE",
-      "page": "279",
-      "source": "日本の野生植物 第1巻",
-      "current_value": "Spiraea nipponiea",
-      "expected_or_check": "Spiraea niopponica var. nipponica",
-      "reason": "The scientific name is very close to YList but not identical, which is typical of OCR letter errors.",
-      "evidence": "ylist_canonical=イワシモツケ; similarity=0.91"
     }
   ],
   "top_findings": [

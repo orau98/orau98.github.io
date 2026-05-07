@@ -226,6 +226,12 @@ def extract_habitat(text: str) -> str:
                 elif hit and "分布" in sentence[hit.end() :]:
                     sentence = sentence[: hit.end()].strip()
             sentence = re.sub(r"^[0-9０-９]+[.．]\s*", "", sentence).strip()
+            sentence = re.sub(
+                r"^[一-龯ぁ-んァ-ヶー]+(?:[［〔\[][^\]〕］]+[\]〕］])?\s+"
+                r"[A-Z][^\u3040-\u30ff\u3400-\u9fff]*",
+                "",
+                sentence,
+            ).strip()
             return shorten_fact(sentence, 180)
     return ""
 
@@ -411,6 +417,12 @@ def main() -> int:
     parser.add_argument("--dpi", type=int, default=220, help="OCR render DPI")
     parser.add_argument("--force-ocr", action="store_true", help="Re-run OCR even when cached text exists")
     parser.add_argument("--replace", action="store_true", help="Replace output instead of merging")
+    parser.add_argument("--replace-source", action="store_true", help="Replace existing rows for the same source label")
+    parser.add_argument(
+        "--require-profile-facts",
+        action="store_true",
+        help="Keep only rows with habit, height, flower period, distribution, or habitat facts",
+    )
     args = parser.parse_args()
 
     pdf_path = Path(args.pdf).expanduser()
@@ -437,20 +449,34 @@ def main() -> int:
     print(f"[wildplants] cache={cache_dir}")
     page_texts = load_or_ocr_pages(pdf_path, pages, cache_dir, args.dpi, args.force_ocr)
     extracted = parse_profiles(page_texts, args.source_label)
+    raw_extracted = len(extracted)
+    if args.require_profile_facts:
+        extracted = [
+            row
+            for row in extracted
+            if any(clean_text(row.get(field, "")) for field in PROFILE_FACT_FIELDS)
+        ]
 
     output_path = Path(args.output)
     if not output_path.is_absolute():
         output_path = ROOT / output_path
     existing = [] if args.replace else read_existing_rows(output_path)
+    if args.replace_source and not args.replace:
+        source_label = clean_text(args.source_label)
+        existing = [row for row in existing if clean_text(row.get("source", "")) != source_label]
     rows, added, updated = merge_rows(existing, extracted)
     write_csv(output_path, rows)
 
     report = {
         "pdf": str(pdf_path),
+        "source_label": args.source_label,
         "pages": pages,
         "output": str(output_path),
         "cache_dir": str(cache_dir),
         "extracted": len(extracted),
+        "raw_extracted": raw_extracted,
+        "require_profile_facts": args.require_profile_facts,
+        "replace_source": args.replace_source,
         "added": added,
         "updated": updated,
         "total_rows": len(rows),

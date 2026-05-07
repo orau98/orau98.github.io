@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = ROOT / "normalized_data" / "plant_profiles.csv"
 DEFAULT_YLIST = ROOT / "public" / "assets" / "data-lite" / "ylist-lite.json"
 DEFAULT_EXTRACTION_REPORT = ROOT / "reports" / "wildplant_profile_extraction_report.json"
+DEFAULT_EXTRACTION_REPORT_PATTERN = "wildplant_profile_extraction_report*.json"
 DEFAULT_CSV_REPORT = ROOT / "reports" / "wildplant_profile_factcheck.csv"
 DEFAULT_MD_REPORT = ROOT / "reports" / "wildplant_profile_factcheck.md"
 DEFAULT_JSON_REPORT = ROOT / "reports" / "wildplant_profile_factcheck_summary.json"
@@ -207,26 +208,109 @@ def ylist_detail(name: str, plants: dict, alias_to_canonical: dict) -> tuple[str
     return canonical, detail
 
 
-def load_cache_dir(report_path: Path, override: str | None) -> Path | None:
+def discover_extraction_reports() -> list[Path]:
+    reports = sorted((ROOT / "reports").glob(DEFAULT_EXTRACTION_REPORT_PATTERN))
+    if reports:
+        return reports
+    return [DEFAULT_EXTRACTION_REPORT]
+
+
+def infer_source_label(report_path: Path, report: dict) -> str:
+    source_label = clean(report.get("source_label", ""))
+    if source_label:
+        return source_label
+    probe = " ".join([report_path.name, clean(report.get("pdf", "")), clean(report.get("cache_dir", ""))])
+    if re.search(r"(?:book2|plants_2|wild_plants_2|第2巻| 2-)", probe):
+        return "日本の野生植物 第2巻"
+    return "日本の野生植物 第1巻"
+
+
+def load_cache_sources(report_paths: list[Path], override: str | None) -> list[tuple[str, Path]]:
     if override:
-        return Path(override).expanduser()
-    if not report_path.exists():
-        return None
-    report = json.loads(report_path.read_text(encoding="utf-8"))
-    cache_dir = report.get("cache_dir")
-    return Path(cache_dir).expanduser() if cache_dir else None
+        return [("", Path(override).expanduser())]
 
-
-def load_ocr_pages(cache_dir: Path | None) -> dict[int, str]:
-    if not cache_dir or not cache_dir.exists():
-        return {}
-    pages: dict[int, str] = {}
-    for path in sorted(cache_dir.glob("page-*.txt")):
-        match = re.search(r"page-(\d+)\.txt$", path.name)
-        if not match:
+    cache_sources: list[tuple[str, Path]] = []
+    for report_path in report_paths:
+        if not report_path.exists():
             continue
-        pages[int(match.group(1))] = path.read_text(encoding="utf-8", errors="replace")
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        cache_dir = report.get("cache_dir")
+        if not cache_dir:
+            continue
+        cache_sources.append((infer_source_label(report_path, report), Path(cache_dir).expanduser()))
+    return cache_sources
+
+
+def load_ocr_pages(cache_sources: list[tuple[str, Path]]) -> dict[tuple[str, int], str]:
+    pages: dict[tuple[str, int], str] = {}
+    for source_label, cache_dir in cache_sources:
+        if not cache_dir.exists():
+            continue
+        for path in sorted(cache_dir.glob("page-*.txt")):
+            match = re.search(r"page-(\d+)\.txt$", path.name)
+            if not match:
+                continue
+            pages[(source_label, int(match.group(1)))] = path.read_text(encoding="utf-8", errors="replace")
     return pages
+
+
+def ocr_cache_summary(cache_sources: list[tuple[str, Path]]) -> str:
+    if not cache_sources:
+        return "not available"
+    return "; ".join(
+        f"{source_label or 'unspecified'}: {cache_dir}"
+        for source_label, cache_dir in cache_sources
+    )
+
+
+def ocr_cache_json(cache_sources: list[tuple[str, Path]]) -> list[dict[str, str]]:
+    return [
+        {"source": source_label, "cache_dir": str(cache_dir)}
+        for source_label, cache_dir in cache_sources
+    ]
+
+
+def source_summary(
+    rows: list[dict[str, str]],
+    findings: list[Finding],
+    chosen_profile_ids: set[str],
+) -> list[dict[str, int | str]]:
+    row_counts = Counter(clean(row.get("source", "")) or "unspecified" for row in rows)
+    candidate_counts = Counter(
+        clean(row.get("source", "")) or "unspecified"
+        for row in rows
+        if clean(row.get("profile_id", "")) in chosen_profile_ids
+    )
+    high_candidate_counts = Counter(
+        clean(finding.row.get("source", "")) or "unspecified"
+        for finding in findings
+        if finding.score >= 80 and finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"
+    )
+    sources = sorted(set(row_counts) | set(candidate_counts) | set(high_candidate_counts))
+    return [
+        {
+            "source": source,
+            "rows": row_counts[source],
+            "profile_candidate_rows": candidate_counts[source],
+            "high_priority_profile_candidate_findings": high_candidate_counts[source],
+        }
+        for source in sources
+    ]
+
+
+def high_candidate_category_summary(
+    findings: list[Finding],
+    chosen_profile_ids: set[str],
+) -> list[dict[str, int | str]]:
+    counts = Counter(
+        (clean(finding.row.get("source", "")) or "unspecified", finding.category)
+        for finding in findings
+        if finding.score >= 80 and finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"
+    )
+    return [
+        {"source": source, "category": category, "count": count}
+        for (source, category), count in sorted(counts.items(), key=lambda item: (item[0][0], -item[1], item[0][1]))
+    ]
 
 
 def plant_name_variants(name: str) -> list[str]:
@@ -254,11 +338,13 @@ def add_finding(findings: list[Finding], finding: Finding) -> None:
     findings.append(finding)
 
 
-def audit_ocr_support(rows: list[dict[str, str]], ocr_pages: dict[int, str], findings: list[Finding]) -> None:
+def audit_ocr_support(rows: list[dict[str, str]], ocr_pages: dict[tuple[str, int], str], findings: list[Finding]) -> None:
     if not ocr_pages:
         return
     for row in rows:
-        page_text = ocr_pages.get(int(clean(row.get("page", "")) or 0))
+        page = int(clean(row.get("page", "")) or 0)
+        source = clean(row.get("source", ""))
+        page_text = ocr_pages.get((source, page)) or ocr_pages.get(("", page))
         if page_text is None:
             add_finding(
                 findings,
@@ -620,7 +706,7 @@ def write_markdown_report(
     path: Path,
     rows: list[dict[str, str]],
     findings: list[Finding],
-    cache_dir: Path | None,
+    cache_sources: list[tuple[str, Path]],
     limit: int,
     chosen_profile_ids: set[str],
 ) -> None:
@@ -628,6 +714,8 @@ def write_markdown_report(
     candidate_findings = [finding for finding in findings if finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"]
     high_priority = sum(1 for finding in findings if finding.score >= 80)
     high_priority_candidates = sum(1 for finding in candidate_findings if finding.score >= 80)
+    source_counts = source_summary(rows, findings, chosen_profile_ids)
+    high_by_source_category = high_candidate_category_summary(findings, chosen_profile_ids)
     generated_at = datetime.now().isoformat(timespec="seconds")
     lines = [
         "# Wild Plant Profile Fact Check",
@@ -645,13 +733,58 @@ def write_markdown_report(
         f"- Findings: {len(findings)}",
         f"- High-priority findings (score >= 80): {high_priority}",
         f"- High-priority profile-candidate findings: {high_priority_candidates}",
-        f"- OCR cache: {cache_dir or 'not available'}",
+        f"- OCR caches: {ocr_cache_summary(cache_sources)}",
         "",
-        "## Category Counts",
+        "## Source Counts",
         "",
-        "| Category | Count |",
-        "| --- | ---: |",
+        "| Source | Rows | Profile candidate rows | High-priority profile-candidate findings |",
+        "| --- | ---: | ---: | ---: |",
     ]
+    for item in source_counts:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    markdown_escape(item["source"]),
+                    str(item["rows"]),
+                    str(item["profile_candidate_rows"]),
+                    str(item["high_priority_profile_candidate_findings"]),
+                ]
+            )
+            + " |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## High-Priority Profile-Candidate Findings By Source",
+            "",
+            "| Source | Category | Count |",
+            "| --- | --- | ---: |",
+        ]
+    )
+    for item in high_by_source_category:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    markdown_escape(item["source"]),
+                    markdown_escape(item["category"]),
+                    str(item["count"]),
+                ]
+            )
+            + " |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Category Counts",
+            "",
+            "| Category | Count |",
+            "| --- | ---: |",
+        ]
+    )
     for category, count in category_counts.most_common():
         lines.append(f"| {markdown_escape(category)} | {count} |")
 
@@ -734,7 +867,7 @@ def write_json_summary(
     path: Path,
     rows: list[dict[str, str]],
     findings: list[Finding],
-    cache_dir: Path | None,
+    cache_sources: list[tuple[str, Path]],
     chosen_profile_ids: set[str],
 ) -> None:
     candidate_findings = [finding for finding in findings if finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"]
@@ -747,7 +880,9 @@ def write_json_summary(
         "high_priority_profile_candidate_findings": sum(1 for finding in candidate_findings if finding.score >= 80),
         "category_counts": dict(Counter(finding.category for finding in findings).most_common()),
         "profile_candidate_category_counts": dict(Counter(finding.category for finding in candidate_findings).most_common()),
-        "ocr_cache": str(cache_dir) if cache_dir else "",
+        "source_counts": source_summary(rows, findings, chosen_profile_ids),
+        "high_priority_profile_candidate_category_counts_by_source": high_candidate_category_summary(findings, chosen_profile_ids),
+        "ocr_caches": ocr_cache_json(cache_sources),
         "top_profile_candidate_findings": [finding.as_dict(chosen_profile_ids) for finding in candidate_findings[:20]],
         "top_findings": [finding.as_dict(chosen_profile_ids) for finding in findings[:20]],
     }
@@ -764,7 +899,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Audit OCR-derived wild plant profile facts")
     parser.add_argument("--input", default=str(DEFAULT_INPUT), help="Input plant profile CSV")
     parser.add_argument("--ylist", default=str(DEFAULT_YLIST), help="YList lite JSON")
-    parser.add_argument("--extraction-report", default=str(DEFAULT_EXTRACTION_REPORT), help="Extraction report JSON")
+    parser.add_argument(
+        "--extraction-report",
+        action="append",
+        help="Extraction report JSON. Repeat to load multiple OCR caches. Defaults to all wildplant extraction reports.",
+    )
     parser.add_argument("--cache-dir", help="Override OCR cache directory")
     parser.add_argument("--csv-report", default=str(DEFAULT_CSV_REPORT), help="Output suspect CSV")
     parser.add_argument("--md-report", default=str(DEFAULT_MD_REPORT), help="Output Markdown summary")
@@ -774,15 +913,19 @@ def main() -> int:
 
     input_path = resolve_path(args.input, DEFAULT_INPUT)
     ylist_path = resolve_path(args.ylist, DEFAULT_YLIST)
-    extraction_report_path = resolve_path(args.extraction_report, DEFAULT_EXTRACTION_REPORT)
+    extraction_report_paths = (
+        [resolve_path(value, DEFAULT_EXTRACTION_REPORT) for value in args.extraction_report]
+        if args.extraction_report
+        else discover_extraction_reports()
+    )
     csv_report_path = resolve_path(args.csv_report, DEFAULT_CSV_REPORT)
     md_report_path = resolve_path(args.md_report, DEFAULT_MD_REPORT)
     json_report_path = resolve_path(args.json_report, DEFAULT_JSON_REPORT)
-    cache_dir = load_cache_dir(extraction_report_path, args.cache_dir)
+    cache_sources = load_cache_sources(extraction_report_paths, args.cache_dir)
 
     rows = read_csv(input_path)
     plants, alias_to_canonical = load_ylist(ylist_path)
-    ocr_pages = load_ocr_pages(cache_dir)
+    ocr_pages = load_ocr_pages(cache_sources)
 
     findings: list[Finding] = []
     audit_ocr_support(rows, ocr_pages, findings)
@@ -795,8 +938,8 @@ def main() -> int:
     chosen_profile_ids = display_profile_ids(rows)
 
     write_csv_report(csv_report_path, findings, chosen_profile_ids)
-    write_markdown_report(md_report_path, rows, findings, cache_dir, args.top, chosen_profile_ids)
-    write_json_summary(json_report_path, rows, findings, cache_dir, chosen_profile_ids)
+    write_markdown_report(md_report_path, rows, findings, cache_sources, args.top, chosen_profile_ids)
+    write_json_summary(json_report_path, rows, findings, cache_sources, chosen_profile_ids)
 
     candidate_findings = [finding for finding in findings if finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"]
     print(
