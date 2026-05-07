@@ -35,6 +35,7 @@ const SPA_ROUTE_SHELLS = [
     ogDescription: 'Practice moth and butterfly larval host plants with immediate feedback.',
   },
 ];
+const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
@@ -156,6 +157,54 @@ const ensureSpaRouteShells = () => {
   }
 };
 
+const buildPlantProfileRouteShell = (indexHtml, plantName) => {
+  const routeFlag = `    <script>${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>\n`;
+  return indexHtml.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
+    ? indexHtml
+    : indexHtml.replace('</head>', `${routeFlag}  </head>`);
+};
+
+const isSafePlantRouteSegment = (name) => {
+  const value = String(name || '').trim();
+  return Boolean(value && !/[\/\\\0]/.test(value));
+};
+
+const ensurePlantProfileRouteShells = () => {
+  try {
+    const indexPath = path.join('dist', 'index.html');
+    const plantDetailsPath = path.join('dist', 'assets', 'data-lite', 'plant-details.json');
+    if (!fs.existsSync(indexPath) || !fs.existsSync(plantDetailsPath)) return;
+
+    const indexHtml = fs.readFileSync(indexPath, 'utf8');
+    const plantDetails = JSON.parse(fs.readFileSync(plantDetailsPath, 'utf8'));
+    let count = 0;
+    let skipped = 0;
+
+    for (const [plantName, detail] of Object.entries(plantDetails)) {
+      if (!detail?.profile) continue;
+      if (!isSafePlantRouteSegment(plantName)) {
+        skipped++;
+        continue;
+      }
+      const routeDir = path.join('dist', 'plant', plantName);
+      fs.mkdirSync(routeDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(routeDir, 'index.html'),
+        buildPlantProfileRouteShell(indexHtml, plantName),
+        'utf8',
+      );
+      count++;
+    }
+
+    console.log(`[postbuild] Synced ${count} plant profile SPA route shell(s).`);
+    if (skipped) {
+      console.warn(`[postbuild] Skipped ${skipped} plant profile route shell(s) with unsafe path characters.`);
+    }
+  } catch (error) {
+    console.warn('[postbuild] Failed to sync plant profile SPA route shells:', error?.message || error);
+  }
+};
+
 const getDirectorySizeBytes = (dirPath) => {
   if (!fs.existsSync(dirPath)) return 0;
   let total = 0;
@@ -208,4 +257,5 @@ for (const p of targets) {
 syncPlantImages();
 ensureSpa404();
 ensureSpaRouteShells();
+ensurePlantProfileRouteShells();
 assertPagesSizeBudget();

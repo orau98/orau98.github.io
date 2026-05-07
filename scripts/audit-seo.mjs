@@ -222,6 +222,14 @@ const validateLegacyRedirectHtml = (filePath, html) => {
   }
 };
 
+const validatePlantRouteHtml = (filePath, html) => {
+  if (html.includes('window.__PLANT_ROUTE_SHELL__')) {
+    validateHtml(filePath, html);
+    return;
+  }
+  validateLegacyRedirectHtml(filePath, html);
+};
+
 const validateSeoRouteMap = (filePath) => {
   const relativePath = path.relative(ROOT, filePath);
   ensure(fs.existsSync(filePath), `${relativePath}: route map not found`);
@@ -380,7 +388,12 @@ for (const relativeDir of legacyRouteDirs) {
   ensure(redirectFiles.length > 0, `dist/${relativeDir} redirect pages not found`);
   legacyRedirectFilesCount += redirectFiles.length;
   for (const filePath of redirectFiles) {
-    validateLegacyRedirectHtml(filePath, readFile(filePath));
+    const html = readFile(filePath);
+    if (relativeDir === 'plant') {
+      validatePlantRouteHtml(filePath, html);
+    } else {
+      validateLegacyRedirectHtml(filePath, html);
+    }
   }
 }
 
