@@ -72,12 +72,20 @@ const HostPlantListItem = React.memo(
           widths: [320, 640, 1024],
           sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",
           query: assetVer,
+          sourceFormats: ["webp"],
         })
       : null;
     const originalFallbackUrls = imageFilename
       ? ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG"].map(
           (ext) => `${originalBaseUrl}${encoded}.${ext}${assetVer}`,
         )
+      : [];
+    const primaryImageSrc = originalFallbackUrls[0] || responsiveImage?.src || "";
+    const fallbackImageCandidates = imageFilename
+      ? Array.from(new Set([
+          ...originalFallbackUrls.slice(1),
+          responsiveImage?.src,
+        ].filter(Boolean)))
       : [];
 
     React.useEffect(() => {
@@ -122,11 +130,8 @@ const HostPlantListItem = React.memo(
             <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-800 sm:h-24 sm:w-24">
               {imageFilename && !imageError ? (
                 <ImageWithFallback
-                  src={responsiveImage?.src}
-                  srcSet={responsiveImage?.srcSet}
-                  sizes="96px"
-                  sources={responsiveImage?.sources}
-                  candidates={originalFallbackUrls}
+                  src={primaryImageSrc}
+                  candidates={fallbackImageCandidates}
                   alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                   width="120"
                   height="120"
@@ -202,11 +207,8 @@ const HostPlantListItem = React.memo(
                 // Actual plant image
                 <div className="relative w-full aspect-[16/10] sm:aspect-[4/3]">
                   <ImageWithFallback
-                    src={responsiveImage?.src}
-                    srcSet={responsiveImage?.srcSet}
-                    sizes={responsiveImage?.sizes}
-                    sources={responsiveImage?.sources}
-                    candidates={originalFallbackUrls}
+                    src={primaryImageSrc}
+                    candidates={fallbackImageCandidates}
                     alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                     width="800"
                     height="600"

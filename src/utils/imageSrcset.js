@@ -76,6 +76,7 @@ export function buildResponsivePicture({
   widths = [320, 640, 1024],
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
   query,
+  sourceFormats = ['avif', 'webp'],
 }) {
   if (!filename) return { src: '', srcSet: '', sizes, sources: [] };
   const fallback = buildResponsiveSrcset({
@@ -87,9 +88,13 @@ export function buildResponsivePicture({
     query,
     format: 'jpg',
   });
+  const formats = Array.isArray(sourceFormats)
+    ? Array.from(new Set(sourceFormats.map(normalizeResizedImageFormat)))
+        .filter((format) => format && format !== 'jpg')
+    : ['avif', 'webp'];
   return {
     ...fallback,
-    sources: ['avif', 'webp'].map((type) => ({
+    sources: formats.map((type) => ({
       type: `image/${type}`,
       srcSet: buildResponsiveSrcset({
         baseUrl,

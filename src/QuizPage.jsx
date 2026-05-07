@@ -356,6 +356,12 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
   const filename = resolvePlantImageFilename({ plantName, plantDetails, plantImageFilenames });
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const encodedFilename = filename ? encodeURIComponent(filename) : '';
+  const originalCandidates = filename
+    ? ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'].map(
+        (ext) => `${normalizedBase}images/plants/${encodedFilename}.${ext}`,
+      )
+    : [];
   const picture = filename
     ? buildResponsivePicture({
         baseUrl: normalizedBase,
@@ -363,8 +369,15 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
         filename,
         widths: [320, 640, 1024],
         sizes: '(max-width: 768px) 100vw, 42vw',
+        sourceFormats: ['webp'],
       })
     : null;
+  const fallbackCandidates = filename
+    ? Array.from(new Set([
+        ...originalCandidates.slice(1),
+        picture?.src,
+      ].filter(Boolean)))
+    : [];
 
   return (
     <div className={`relative overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-950/60 ${
@@ -373,10 +386,8 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
     >
       {filename ? (
         <ImageWithFallback
-          src={picture.src}
-          srcSet={picture.srcSet}
-          sizes={picture.sizes}
-          sources={picture.sources}
+          src={originalCandidates[0] || picture.src}
+          candidates={fallbackCandidates}
           alt={isEnglish ? `${plantName} photograph` : `${plantName}の写真`}
           width="800"
           height="600"

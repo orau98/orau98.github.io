@@ -12,6 +12,11 @@ import {
   INSECT_SECTION_CONFIGS,
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
+import {
+  createSafePlantFilename,
+  createSafeScientificPlantFilename,
+  PLANT_IMAGE_SUFFIXES,
+} from '../src/utils/filename.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +24,7 @@ const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
+const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -51,6 +57,18 @@ const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '穂',
   '地中の根',
 ]);
+
+function readJsonOrEmpty(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return {};
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch (error) {
+    console.warn(`[meta] JSON読み込み失敗: ${path.relative(path.join(__dirname, '..'), filePath)} (${error.message})`);
+    return {};
+  }
+}
+
+const plantDetailIndex = readJsonOrEmpty(PLANT_DETAILS_PATH);
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -140,29 +158,15 @@ function writeExplorerRedirect(segment, options) {
 
 function buildPlantPictureHtml(img, altText) {
   const fileUrl = `/images/plants/${encodeURIComponent(img)}`;
-  const baseName = img.replace(/\.[^/.]+$/, '');
-  const resizedBase = `/images/resized/plants/${encodeURIComponent(baseName)}`;
   const escapedAlt = escapeRedirectHtml(altText);
   const escapedFallback = escapeRedirectHtml(fileUrl);
-  const srcSet = (format) => [320, 640, 1024]
-    .map((width) => `${resizedBase}.${width}.${format} ${width}w`)
-    .join(', ');
 
-  return `<picture>
-                  <source type="image/avif" srcset="${srcSet('avif')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
-                  <source type="image/webp" srcset="${srcSet('webp')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
-                  <img
-                    src="${resizedBase}.640.jpg"
-                    srcset="${srcSet('jpg')}"
-                    sizes="(max-width: 640px) calc(100vw - 56px), 280px"
+  return `<img
+                    src="${escapedFallback}"
                     alt="${escapedAlt}"
                     loading="lazy"
                     decoding="async"
-                    width="640"
-                    height="480"
-                    onerror="this.onerror=null;this.removeAttribute('srcset');this.src='${escapedFallback}';"
-                  >
-                </picture>`;
+                  >`;
 }
 
 function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '' }) {
@@ -750,6 +754,79 @@ function getPlantAliases(plantName) {
   return mainToAliasesMap[basePlantName] || [];
 }
 
+function normalizePlantImageCandidateBase(value = '') {
+  return String(value || '')
+    .split(/\s+/)[0]
+    .trim();
+}
+
+function getPlantDetailForMeta(plantName) {
+  const basePlantName = String(plantName || '').split(/[（(]/)[0].trim();
+  return plantDetailIndex[plantName] || plantDetailIndex[basePlantName] || {};
+}
+
+function buildPlantImageLookupBases(displayPlantName, dataPlantName = null) {
+  const names = new Set();
+  const addName = (name) => {
+    const raw = String(name || '').trim();
+    if (!raw) return;
+    const base = normalizePlantImageCandidateBase(raw);
+    [raw, base, createSafePlantFilename(raw), createSafePlantFilename(base)]
+      .filter(Boolean)
+      .forEach((candidate) => names.add(candidate));
+  };
+
+  addName(displayPlantName);
+  addName(dataPlantName);
+
+  const detail = getPlantDetailForMeta(dataPlantName || displayPlantName);
+  (Array.isArray(detail.aliases) ? detail.aliases : []).forEach(addName);
+  getPlantAliases(dataPlantName || displayPlantName).forEach(addName);
+
+  const scientificBase = createSafeScientificPlantFilename(detail.scientificName || '');
+  if (scientificBase) names.add(scientificBase);
+
+  return Array.from(names).filter(Boolean);
+}
+
+function plantImageNameMatchesBase(rawBase, lookupBase) {
+  if (!rawBase || !lookupBase) return false;
+  if (rawBase === lookupBase) return true;
+  if (rawBase.startsWith(`${lookupBase}_`) || rawBase.startsWith(`${lookupBase}＿`)) return true;
+  if (!rawBase.startsWith(lookupBase)) return false;
+
+  const tail = rawBase.slice(lookupBase.length);
+  if (!tail) return true;
+  return PLANT_IMAGE_SUFFIXES.some(({ suffix, label }) => {
+    const suffixCore = String(suffix || '').replace(/^[_＿]+/, '');
+    return tail === label || tail === suffixCore;
+  });
+}
+
+function getPlantImageFilesForMeta(displayPlantName, allPlantImages, dataPlantName = null) {
+  if (!Array.isArray(allPlantImages) || allPlantImages.length === 0) return [];
+  const lookupBases = buildPlantImageLookupBases(displayPlantName, dataPlantName);
+  const matches = allPlantImages.filter((img) => {
+    const rawBase = img.replace(/\.[^.]+$/i, '');
+    return lookupBases.some((base) => plantImageNameMatchesBase(rawBase, base));
+  });
+
+  const priority = (file) => {
+    const base = file.replace(/\.[^.]+$/i, '');
+    if (base.includes('葉表')) return 1;
+    if (base.includes('葉')) return 2;
+    if (base.includes('花')) return 3;
+    if (base.includes('実') || base.includes('果実')) return 4;
+    if (base.includes('樹皮')) return 5;
+    return 6;
+  };
+
+  return Array.from(new Set(matches)).sort((a, b) => {
+    const diff = priority(a) - priority(b);
+    return diff || a.localeCompare(b, 'ja');
+  });
+}
+
 function resolveInsectImageUrl(insect) {
   if (!insect) return '';
   const jpName = (insect.japaneseName || insect.name || '').trim();
@@ -1299,9 +1376,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   // 植物の別名を取得（データ用の名前で取得）
   const plantAliases = getPlantAliases(dataPlantName);
 
-  // この植物に関連する画像を探す（表示名から基本名を取得）
-  const basePlantName = displayPlantName.split(/[\s(（]/)[0]; // "タケニグサ (ケシ科)" -> "タケニグサ"
-  const plantImageFiles = plantImages.filter(img => img.startsWith(basePlantName));
+  // この植物に関連する画像を探す（和名・別名・学名ベースのファイル名を許容）
+  const plantImageFiles = getPlantImageFilesForMeta(displayPlantName, plantImages, dataPlantName);
   const mainImageUrl = plantImageFiles.length > 0 
     ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
     : '';

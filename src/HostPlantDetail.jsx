@@ -15,7 +15,7 @@ import {
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
-import { createSafeScientificPlantFilename, PLANT_IMAGE_SUFFIXES } from './utils/filename';
+import { createSafePlantFilename, createSafeScientificPlantFilename, PLANT_IMAGE_SUFFIXES } from './utils/filename';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
 import { createSafeInsectFilename } from './utils/image';
@@ -88,6 +88,17 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
   const labelId = useId();
   const hasLabel = Boolean(image?.label);
   const dialogLabel = image?.label || image?.alt || (isEnglish ? 'Image preview' : '画像表示');
+  const modalCandidates = useMemo(() => {
+    const originals = Array.isArray(image?.originalCandidates) ? image.originalCandidates : [];
+    return Array.from(new Set([
+      ...originals,
+      image?.modalSrc,
+      image?.finalSrc,
+      image?.src,
+    ].filter(Boolean)));
+  }, [image]);
+  const [modalSrc, setModalSrc] = useState(modalCandidates[0] || '');
+  const [modalCandidateIndex, setModalCandidateIndex] = useState(0);
 
   const handlePrev = useCallback((e) => {
     e.stopPropagation();
@@ -174,6 +185,23 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
     };
   }, [isActive]);
 
+  useEffect(() => {
+    setModalCandidateIndex(0);
+    setModalSrc(modalCandidates[0] || '');
+  }, [modalCandidates]);
+
+  const handleModalImageError = (event) => {
+    const nextIndex = modalCandidateIndex + 1;
+    const nextSrc = modalCandidates[nextIndex];
+    if (nextSrc) {
+      setModalCandidateIndex(nextIndex);
+      setModalSrc(nextSrc);
+      if (event?.currentTarget) event.currentTarget.src = nextSrc;
+      return;
+    }
+    onImageError?.(image?.id, event);
+  };
+
   const hasMultiple = images.length > 1;
 
   if (!isActive) return null;
@@ -192,10 +220,10 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
       >
         {/* メイン画像 */}
         <img
-          src={image.finalSrc || image.src}
+          src={modalSrc}
           alt={image.alt}
           className="w-full h-full object-contain rounded-lg shadow-2xl"
-          onError={(event) => onImageError?.(image.id, event)}
+          onError={handleModalImageError}
         />
 
         {/* 閉じるボタン */}
@@ -293,6 +321,9 @@ const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
         id: image.id || `${image.alt || 'plant'}-${idx}`,
         slotKey,
         candidates: uniqueCandidates,
+        modalSrc: Array.isArray(image.originalCandidates) && image.originalCandidates.length
+          ? image.originalCandidates[0]
+          : uniqueCandidates[0],
         candidateIndex: 0,
         finalSrc: uniqueCandidates[0],
       }];
@@ -1212,14 +1243,28 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     if (!hasUsableIndex) return [];
 
     const scientificBase = createSafeScientificPlantFilename(scientificName);
-    const baseEntries = Array.from(new Map([
-      ...[plantName, ...altNames]
-        .filter(Boolean)
-        .map((name) => [name, { lookupBase: name, displayBase: plantName || name }]),
-      ...(scientificBase
-        ? [[scientificBase, { lookupBase: scientificBase, displayBase: plantName || scientificName || scientificBase }]]
-        : []),
-    ]).values());
+    const addBaseEntry = (map, lookupBase, displayBase) => {
+      const normalizedBase = String(lookupBase || '').trim();
+      if (!normalizedBase) return;
+      if (!map.has(normalizedBase)) {
+        map.set(normalizedBase, { lookupBase: normalizedBase, displayBase });
+      }
+    };
+    const baseEntryMap = new Map();
+    [plantName, ...altNames].filter(Boolean).forEach((name) => {
+      const displayBase = plantName || name;
+      const firstToken = String(name).split(/\s+/)[0];
+      [
+        name,
+        firstToken,
+        createSafePlantFilename(name),
+        createSafePlantFilename(firstToken),
+      ].forEach((candidate) => addBaseEntry(baseEntryMap, candidate, displayBase));
+    });
+    if (scientificBase) {
+      addBaseEntry(baseEntryMap, scientificBase, plantName || scientificName || scientificBase);
+    }
+    const baseEntries = Array.from(baseEntryMap.values());
     const images = [];
     const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
     const addedNames = new Set();
@@ -1247,15 +1292,21 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const buildCandidates = (name) => {
       const encodedName = encodeURIComponent(name);
       const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
-      const variations = [];
-      // Prefer resized image first to reduce transfer size and burst load.
-      variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.avif`);
-      variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.webp`);
-      variations.push(`${baseUrl}images/resized/plants/${encodedName}.640.jpg`);
-      extensions.forEach((ext) => {
-        variations.push(`${baseUrl}images/plants/${encodedName}${ext}`);
-      });
+      const originalCandidates = extensions.map((ext) => `${baseUrl}images/plants/${encodedName}${ext}`);
+      const variations = [
+        ...originalCandidates,
+        `${baseUrl}images/resized/plants/${encodedName}.1024.jpg`,
+        `${baseUrl}images/resized/plants/${encodedName}.1024.webp`,
+        `${baseUrl}images/resized/plants/${encodedName}.640.jpg`,
+        `${baseUrl}images/resized/plants/${encodedName}.640.webp`,
+      ];
       return Array.from(new Set(variations.filter(Boolean)));
+    };
+
+    const buildOriginalCandidates = (name) => {
+      const encodedName = encodeURIComponent(name);
+      const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
+      return extensions.map((ext) => `${baseUrl}images/plants/${encodedName}${ext}`);
     };
 
     const buildLabelFromSuffix = (suffix, fallback = '画像') => {
@@ -1263,6 +1314,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const trimmed = String(suffix).replace(/^[_＿]+/, '');
       if (!trimmed) return '全体';
       return trimmed.replace(/[_＿]+/g, '・') || fallback;
+    };
+
+    const nameMatchesBase = (name, base) => {
+      if (!name || !base) return false;
+      if (name === base) return true;
+      if (name.startsWith(`${base}_`) || name.startsWith(`${base}＿`)) return true;
+      if (!name.startsWith(base)) return false;
+      const tail = name.slice(base.length);
+      return PLANT_IMAGE_SUFFIXES.some(({ suffix, label }) => {
+        const suffixCore = String(suffix || '').replace(/^[_＿]+/, '');
+        return tail === label || tail === suffixCore;
+      });
     };
 
     const buildSlotKey = (base, label, appliedSuffix = '') => {
@@ -1287,7 +1350,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         label: resolvedLabel,
         alt: `${base}${appliedSuffix ? ` (${label || buildLabelFromSuffix(appliedSuffix || '')})` : ''}`,
         slotKey,
-        candidates: candidateList.slice(0, 8),
+        candidates: candidateList.slice(0, 12),
+        originalCandidates: buildOriginalCandidates(finalName).slice(0, 8),
       });
     };
 
@@ -1301,7 +1365,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       });
       // Include additional suffix variants present in the index (e.g., _紅葉)
       nameIndex
-        .filter((name) => name && name.startsWith(lookupBase))
+        .filter((name) => nameMatchesBase(name, lookupBase))
         .forEach((name) => {
           if (addedNames.has(name)) return;
           const suffixPart = name.startsWith(lookupBase) ? name.slice(lookupBase.length) : '';

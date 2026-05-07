@@ -17,17 +17,18 @@ const WIDTHS = [320, 640, 1024];
 const FORMATS = [
   {
     ext: 'jpg',
-    transform: (pipeline) => pipeline.jpeg({ quality: 82, progressive: true }),
+    transform: (pipeline) => pipeline.jpeg({ quality: 88, progressive: true, mozjpeg: true }),
   },
   {
     ext: 'webp',
-    transform: (pipeline) => pipeline.webp({ quality: 78, effort: 4 }),
+    transform: (pipeline) => pipeline.webp({ quality: 86, effort: 5 }),
   },
   {
     ext: 'avif',
-    transform: (pipeline) => pipeline.avif({ quality: 56, effort: 4 }),
+    transform: (pipeline) => pipeline.avif({ quality: 72, effort: 5 }),
   },
 ];
+const FORCE_REBUILD = process.env.FORCE_RESPONSIVE_IMAGES === '1';
 
 function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 
@@ -51,7 +52,7 @@ async function processImage(srcPath, outBase, widths = WIDTHS) {
       for (const format of FORMATS) {
         const outPath = `${outBase}.${w}.${format.ext}`;
         const outStat = statOrNull(outPath);
-        if (outStat && outStat.mtimeMs >= srcStat.mtimeMs) continue; // up-to-date
+        if (!FORCE_REBUILD && outStat && outStat.mtimeMs >= srcStat.mtimeMs) continue; // up-to-date
         await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
         await format.transform(
           sharp(srcPath, { failOnError: false }).rotate().resize({

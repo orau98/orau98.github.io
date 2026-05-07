@@ -78,28 +78,14 @@ function escapeAttr(value = '') {
 
 function buildPlantPictureHtml(file, altText) {
   const fileUrl = `/images/plants/${encodeURIComponent(file)}`;
-  const baseName = file.replace(/\.[^/.]+$/, '');
-  const resizedBase = `/images/resized/plants/${encodeURIComponent(baseName)}`;
   const fallback = escapeAttr(fileUrl);
-  const srcSet = (format) => [320, 640, 1024]
-    .map((width) => `${resizedBase}.${width}.${format} ${width}w`)
-    .join(', ');
 
-  return `<picture>
-                  <source type="image/avif" srcset="${srcSet('avif')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
-                  <source type="image/webp" srcset="${srcSet('webp')}" sizes="(max-width: 640px) calc(100vw - 56px), 280px">
-                  <img
-                    src="${resizedBase}.640.jpg"
-                    srcset="${srcSet('jpg')}"
-                    sizes="(max-width: 640px) calc(100vw - 56px), 280px"
+  return `<img
+                    src="${fallback}"
                     alt="${escapeAttr(altText)}"
                     loading="lazy"
                     decoding="async"
-                    width="640"
-                    height="480"
-                    onerror="this.onerror=null;this.removeAttribute('srcset');this.src='${fallback}';"
-                  >
-                </picture>`;
+                  >`;
 }
 
 function buildExplorerRedirectHtml({ title, tab, label }) {
