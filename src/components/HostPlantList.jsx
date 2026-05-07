@@ -1252,7 +1252,10 @@ const HostPlantList = ({
       { value: "family", label: ui.sortFamily },
       { value: "related", label: ui.sortRelated },
     ];
-    return (
+    const resultsLabel = ui.resultCount(filteredHostPlants?.length ?? 0);
+    const mobileControlsLabel = isEnglish ? "Controls" : "条件";
+    const activeControlsLabel = isEnglish ? "Active" : "条件あり";
+    const renderFullControls = ({ showResultsLabel = true } = {}) => (
       <>
         <ListFilterPanel
           title={ui.filterTitle}
@@ -1268,7 +1271,7 @@ const HostPlantList = ({
             isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
           }
           controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
-          resultsLabel={ui.resultCount(filteredHostPlants?.length ?? 0)}
+          resultsLabel={showResultsLabel ? resultsLabel : ""}
         >
           <SearchableSelect
             id={orderFilterId}
@@ -1324,6 +1327,34 @@ const HostPlantList = ({
             sort: ui.sort,
           }}
         />
+      </>
+    );
+    return (
+      <>
+        <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 [&::-webkit-details-marker]:hidden">
+            <span className="min-w-0 truncate text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
+              {resultsLabel}
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300/70 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-600/70 dark:bg-slate-800 dark:text-slate-200">
+              {hasAnyCriteria && (
+                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
+                  {activeControlsLabel}
+                </span>
+              )}
+              {mobileControlsLabel}
+              <svg className="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div className="border-t border-slate-200/70 px-3 pb-3 pt-1 dark:border-slate-700/70">
+            {renderFullControls({ showResultsLabel: false })}
+          </div>
+        </details>
+        <div className="hidden sm:block">
+          {renderFullControls()}
+        </div>
       </>
     );
   };
