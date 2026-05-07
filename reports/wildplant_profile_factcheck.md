@@ -1,6 +1,6 @@
 # Wild Plant Profile Fact Check
 
-Generated: 2026-05-08T00:56:44
+Generated: 2026-05-08T01:31:40
 
 This report audits the OCR-derived `normalized_data/plant_profiles.csv` data for likely hallucinations or OCR/parser artifacts. It is a review list, not an automatic deletion list.
 
@@ -10,26 +10,26 @@ Display safety rules: taxonomy-only OCR fragments are excluded from site profile
 
 - Audited rows: 5928
 - Profile candidate rows with factual fields: 4036
-- Findings: 8188
-- High-priority findings (score >= 80): 3187
-- High-priority profile-candidate findings: 434
+- Findings: 8165
+- High-priority findings (score >= 80): 3180
+- High-priority profile-candidate findings: 430
 - OCR caches: 日本の野生植物 第1巻: /Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_1; 日本の野生植物 第2巻: /Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_2
 
 ## Source Counts
 
 | Source | Rows | Profile candidate rows | High-priority profile-candidate findings |
 | --- | ---: | ---: | ---: |
-| 日本の野生植物 第1巻 | 3963 | 2071 | 251 |
-| 日本の野生植物 第2巻 | 1965 | 1965 | 183 |
+| 日本の野生植物 第1巻 | 3963 | 2071 | 248 |
+| 日本の野生植物 第2巻 | 1965 | 1965 | 182 |
 
 ## High-Priority Profile-Candidate Findings By Source
 
 | Source | Category | Count |
 | --- | --- | ---: |
 | 日本の野生植物 第1巻 | possible_ocr_latin_typo_against_ylist | 162 |
-| 日本の野生植物 第1巻 | ylist_family_conflict | 89 |
+| 日本の野生植物 第1巻 | ylist_family_conflict | 86 |
 | 日本の野生植物 第2巻 | possible_ocr_latin_typo_against_ylist | 170 |
-| 日本の野生植物 第2巻 | ylist_family_conflict | 13 |
+| 日本の野生植物 第2巻 | ylist_family_conflict | 12 |
 
 ## Category Counts
 
@@ -39,11 +39,11 @@ Display safety rules: taxonomy-only OCR fragments are excluded from site profile
 | low_information_profile | 1707 |
 | genus_scientific_conflicts_with_scientific_name | 1584 |
 | duplicate_low_information_row_shadowed | 1008 |
-| possible_ocr_latin_typo_against_ylist | 633 |
+| possible_ocr_latin_typo_against_ylist | 632 |
 | duplicate_name_family_conflict | 559 |
-| ylist_family_latin_conflict | 279 |
-| ylist_family_conflict | 258 |
-| ylist_scientific_name_conflict | 137 |
+| ylist_family_latin_conflict | 271 |
+| ylist_family_conflict | 252 |
+| ylist_scientific_name_conflict | 129 |
 | family_latin_outlier_for_japanese_family | 8 |
 
 ## Profile-Candidate Category Counts
@@ -54,11 +54,11 @@ Display safety rules: taxonomy-only OCR fragments are excluded from site profile
 | duplicate_name_scientific_conflict | 993 |
 | possible_ocr_latin_typo_against_ylist | 332 |
 | duplicate_name_family_conflict | 277 |
-| ylist_family_latin_conflict | 122 |
-| ylist_family_conflict | 102 |
-| ylist_scientific_name_conflict | 77 |
+| ylist_family_latin_conflict | 117 |
+| ylist_family_conflict | 98 |
+| ylist_scientific_name_conflict | 71 |
 
-## Top 80 Profile-Candidate Findings
+## Top 120 Profile-Candidate Findings
 
 | Score | Category | Plant | Scientific name | Family | Page | Reason | Expected/check |
 | ---: | --- | --- | --- | --- | ---: | --- | --- |
@@ -142,8 +142,48 @@ Display safety rules: taxonomy-only OCR fragments are excluded from site profile
 | 88 | possible_ocr_latin_typo_against_ylist | カエデドコロ | Dioscorea quinguelobata | ヤマノイモ科 | 59 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Dioscorea quinquelobata |
 | 88 | possible_ocr_latin_typo_against_ylist | カギカズラ | Unearia rlynchophylla | アカネ科 | 153 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Uncaria rhynchophylla |
 | 88 | possible_ocr_latin_typo_against_ylist | カゴノキ | Lisea coreana | クスノキ科 | 37 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Litsea coreana |
+| 88 | possible_ocr_latin_typo_against_ylist | カシワ | Quereus dentata | ブナ科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus dentata |
+| 88 | possible_ocr_latin_typo_against_ylist | カジイチゴ | Rubus trifdus | バラ科 | 268 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rubus trifidus |
+| 88 | possible_ocr_latin_typo_against_ylist | カタバミ | Oxalis cornieulata | カタバミ科 | 294 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Oxalis corniculata |
+| 88 | possible_ocr_latin_typo_against_ylist | カテンソウ | Nanoenide japoniea | イラクサ科 | 257 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Nanocnide japonica |
+| 88 | possible_ocr_latin_typo_against_ylist | カナクギノキ | Lindera erythroearpa | クスノキ科 | 37 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lindera erythrocarpa |
+| 88 | possible_ocr_latin_typo_against_ylist | カナムグラ | Humulus seandens | アサ科 | 252 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Humulus scandens |
+| 88 | possible_ocr_latin_typo_against_ylist | カノコユリ | Lilium speeiosum | ユリ科 | 67 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lilium speciosum |
+| 88 | possible_ocr_latin_typo_against_ylist | カラコギカエデ | Acer tatarieum | ムクロジ科 | 52 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Acer tataricum subsp. aidzuense |
+| 88 | possible_ocr_latin_typo_against_ylist | カラスノゴマ | Corchoropsis erenata | アオイ科 | 60 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Corchoropsis crenata |
+| 88 | possible_ocr_latin_typo_against_ylist | カラマツソウ | Thalictrum aguilegifolium | キンポウゲ科 | 195 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Thalictrum aquilegiifolium var. intermedium |
+| 88 | possible_ocr_latin_typo_against_ylist | カワラケツメイ | Chamaeerista nomame | ハマビシ科 | 224 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Chamaecrista nomame |
+| 88 | possible_ocr_latin_typo_against_ylist | カンスゲ | Carex morrowil | カヤツリグサ科 | 122 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carex morrowi |
+| 88 | possible_ocr_latin_typo_against_ylist | ガジュマル | Fieus mieroearpa | アサ科 | 254 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ficus microcarpa |
+| 88 | possible_ocr_latin_typo_against_ylist | キカラスウリ | Trichosanthes kirilowi | ウリ科 | 290 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Trichosanthes kirilowii var. japonica |
+| 88 | possible_ocr_latin_typo_against_ylist | キジムシロ | Potentila fragarioides | バラ科 | 265 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Potentilla fragarioides var. major |
+| 88 | possible_ocr_latin_typo_against_ylist | キダチニンドウ | Lonicera hypoglauea | スイカズラ科 | 313 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lonicera hypoglauca |
+| 88 | possible_ocr_latin_typo_against_ylist | キチジョウソウ | Reineekea carnea | クサスギカズラ科 | 100 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Reineckea carnea |
+| 88 | possible_ocr_latin_typo_against_ylist | キツネノマゴ | Justicia proeumbens | キツネノマゴ科 | 224 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Justicia procumbens var. leucantha f. japonica |
+| 88 | possible_ocr_latin_typo_against_ylist | キツネヤナギ | Salis vulpina | ヤナギ科 | 23 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Salix vulpina |
+| 88 | possible_ocr_latin_typo_against_ylist | キンシバイ | Hyperieum patulum | オトギリソウ科 | 36 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Hypericum patulum |
+| 88 | possible_ocr_latin_typo_against_ylist | ギシギシ | Rumex japonieus | タデ科 | 89 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rumex japonicus |
+| 88 | possible_ocr_latin_typo_against_ylist | ギョウギシバ | Cynodon daetylon | イネ科 | 160 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cynodon dactylon var. dactylon |
+| 88 | possible_ocr_latin_typo_against_ylist | ギョクシンカ | Taremna kotoensis | アカネ科 | 153 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Tarenna kotoensis var. gyokushinkwa |
+| 88 | possible_ocr_latin_typo_against_ylist | ギョボク | Crateya formosensis | フウチョウボク科 | 67 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Crateva formosensis |
+| 88 | possible_ocr_latin_typo_against_ylist | ギーマ | Vaecinium wrightii | ツツジ科 | 141 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Vaccinium wrightii |
+| 88 | possible_ocr_latin_typo_against_ylist | クコ | Lyeium chinense | ナス科 | 170 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lycium chinense |
+| 88 | possible_ocr_latin_typo_against_ylist | クサスギカズラ | Asparagus cochinehinensis | クサスギカズラ科 | 96 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Asparagus cochinchinensis |
+| 88 | possible_ocr_latin_typo_against_ylist | クサトベラ | Seaevola taeeada | クサトベラ科 | 234 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Scaevola taccada |
+| 88 | possible_ocr_latin_typo_against_ylist | クサヨシ | Phalaris arundinaeen | イネ科 | 156 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Phalaris arundinacea |
+| 88 | possible_ocr_latin_typo_against_ylist | クスノハカエデ | Aeer itoanum | ムクロジ科 | 54 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Acer itoanum |
+| 88 | possible_ocr_latin_typo_against_ylist | クヌギ | Quereus aeutissima | ブナ科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus acutissima |
+| 88 | possible_ocr_latin_typo_against_ylist | クマザサ | Sasa veitehii | イネ科 | 146 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Sasa veitchii var. veitchii |
+| 88 | possible_ocr_latin_typo_against_ylist | クマシデ | Carpinus japoniea | カバノキ科 | 287 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carpinus japonica |
+| 88 | possible_ocr_latin_typo_against_ylist | クマタケラン | Alpinia xformosana | ショウガ科 | 105 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Alpinia formosana |
+| 88 | possible_ocr_latin_typo_against_ylist | クロウメモドキ | Rhamnus japoniea | クロウメモドキ科 | 249 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rhamnus japonica var. decipiens |
+| 88 | possible_ocr_latin_typo_against_ylist | クロツバラ | Rhamnus davuriea | クロウメモドキ科 | 249 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rhamnus davurica var. nipponica |
+| 88 | possible_ocr_latin_typo_against_ylist | クロトウヒレン | Saussurea sessilillora | キク科 | 257 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Saussurea sessiliflora |
+| 88 | possible_ocr_latin_typo_against_ylist | クロバナヒキオコシ | Isodon trichoearpus | シソ科 | 213 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Isodon trichocarpus |
+| 88 | possible_ocr_latin_typo_against_ylist | クワズイモ | Alocasia odora | サトイモ科 | 39 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Alocasia odorum |
+| 88 | possible_ocr_latin_typo_against_ylist | グミモドキ | Croton cascariloides | トウダイグサ科 | 297 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Croton cascarilloides |
 
-## Top 80 Raw CSV Findings
+## Top 120 Raw CSV Findings
 
 | Score | Scope | Category | Plant | Scientific name | Family | Page | Reason | Expected/check |
 | ---: | --- | --- | --- | --- | --- | ---: | --- | --- |
@@ -227,3 +267,43 @@ Display safety rules: taxonomy-only OCR fragments are excluded from site profile
 | 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キバナノアツモリソウ | Cypripedinum yataleantmn | ユリ科 | 367 | The same Japanese plant name appears with multiple families. | ユリ科 / ラン科 |
 | 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キヨミトリカブト | Aconittam kiyomiense | キンボウゲ科 | 478 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
 | 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キリギシソウ | Calliaathemmum kinigisbiense | キンボウゲ科 | 489 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キリシマシャクジョウ | Bumsmnia nepalensis | キンコウカ科 | 354 | The same Japanese plant name appears with multiple families. | キンコウカ科 / ヒナノシャクジョウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キンスゲ | Carex pyrenaica var. altior | イグサ科 | 408 | The same Japanese plant name appears with multiple families. | イグサ科 / カヤツリグサ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ギョウジャニンニク | Allium victorialis subsp. platyplyllumn | ススキノキ科 | 390 | The same Japanese plant name appears with multiple families. | ススキノキ科 / ヒガンバナ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クサスギカズラ | Asparagus cochinchinensis | ヒガンバナ科 | 393 | The same Japanese plant name appears with multiple families. | クサスギカズラ科 / ヒガンバナ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クサフジ | Vicia cracca | ブドウ科 | 530 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クスノキ | Cinnamomum campbora | ハスノハギリ科 | 335 | The same Japanese plant name appears with multiple families. | クスノキ科 / ハスノハギリ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クズ | Puetana lobata subsp. lobata | ブドウ科 | 541 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クマガイソウ | Cypripedinm japonicum var | ユリ科 | 367 | The same Japanese plant name appears with multiple families. | ユリ科 / ラン科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クロバナハンショウヅル | Clematis fusca | キンボウゲ科 | 486 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クロボウモドキ | Monoon linkinense | モクレン科 | 334 | The same Japanese plant name appears with multiple families. | バンレイシ科 / モクレン科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クロムヨウラン | Lecanorclus mgncans | ユリ科 | 368 | The same Japanese plant name appears with multiple families. | ユリ科 / ラン科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クワクサ | Fatoua wllosa | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ケカラスウリ | Trichosanthes ovigera var. ovigera | ドクウツギ科 | 620 | The same Japanese plant name appears with multiple families. | ウリ科 / ドクウツギ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ケグワ | Monus cathayana | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コアマモ | Zottera japoaica | トチカガミ科 | 352 | The same Japanese plant name appears with multiple families. | アマモ科 / トチカガミ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コウモリカズラ | Menispermt dauricum | ケシ科 | 472 | The same Japanese plant name appears with multiple families. | ケシ科 / ツヅラフジ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コウヤシロカネソウ | Dichocapum mumsjirianum | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コウヤハンショウヅル | Clematis obvallata var. obvallata | キンボウゲ科 | 485 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コキツネノボタン | Ranuncultus chinensis | キンボウゲ科 | 492 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コゴメカラマツ | Thalictrua microgpermum | キンボウゲ科 | 494 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コセリバオウレン | Coptis japonica var. japonica | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コバイケイソウ | Veratrum stamaneu var | タコノキ科 | 358 | The same Japanese plant name appears with multiple families. | シュロソウ科 / タコノキ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コマガタケスグリ | Ribes japonicun | ズイナ科 | 505 | The same Japanese plant name appears with multiple families. | スグリ科 / ズイナ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サイコクサバノオ | Dichoxarpam wnivalve | キンボウゲ科 | 481 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サバノオ | Dichocarpumn dicarpon | キンボウゲ科 | 481 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サンインシロカネソウ | Dichocarpuam sarmentosum | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サンヨウブシ | Aconitua sanyoense | キンボウゲ科 | 478 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サンリンソウ | Anemope stolonnin | キンボウゲ科 | 488 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ザリコミ | Ribes maxinsowiczianum | ズイナ科 | 505 | The same Japanese plant name appears with multiple families. | スグリ科 / ズイナ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シオデ | Smilax npana | シュロソウ科 | 360 | The same Japanese plant name appears with multiple families. | サルトリイバラ科 / シュロソウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シキンカラマツ | Thalictrum rocbebeueauen | キンボウゲ科 | 494 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シギンカラマツ | Thalictrumn actaesfoluma | キンボウゲ科 | 495 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シナガワハギ | Mehlotus ofhcmalss subsp. busveolens | ブドウ科 | 528 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シバネム | Sunithia ciliata | ブドウ科 | 543 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シベリアメドハギ | Lesgedeza jucea | ブドウ科 | 545 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シマイボクサ | Murdannia loriformns | ツュクサ科 | 401 | The same Japanese plant name appears with multiple families. | ツュクサ科 / ツユクサ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シマホルトノキ | Elaeocarpus pbotinifolius | カタバミ科 | 628 | The same Japanese plant name appears with multiple families. | カタバミ科 / ホルトノキ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シャジクソウ | Trifolitmn luupinaster | ブドウ科 | 529 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シュウメイギク | Anemnone hnugehensts var. japoaica | キンボウゲ科 | 487 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
+| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ショウブ | Aconus calamts | クスノキ科 | 341 | The same Japanese plant name appears with multiple families. | クスノキ科 / ショウブ科 |

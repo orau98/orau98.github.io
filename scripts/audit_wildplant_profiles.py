@@ -208,6 +208,24 @@ def ylist_detail(name: str, plants: dict, alias_to_canonical: dict) -> tuple[str
     return canonical, detail
 
 
+def ylist_detail_for_row(row: dict[str, str], plants: dict, alias_to_canonical: dict) -> tuple[str, dict | None]:
+    name = clean(row.get("plant_name", ""))
+    if not name:
+        return "", None
+    exact = plants.get(name)
+    if exact:
+        return name, exact
+    canonical = alias_to_canonical.get(name, name)
+    detail = plants.get(canonical)
+    if not detail:
+        return canonical, None
+    row_genus = first_token(row.get("scientific_name", ""))
+    ylist_genus = first_token(detail.get("scientificName", ""))
+    if row_genus and ylist_genus and row_genus != ylist_genus:
+        return canonical, None
+    return canonical, detail
+
+
 def discover_extraction_reports() -> list[Path]:
     reports = sorted((ROOT / "reports").glob(DEFAULT_EXTRACTION_REPORT_PATTERN))
     if reports:
@@ -399,7 +417,7 @@ def audit_ylist(rows: list[dict[str, str]], plants: dict, alias_to_canonical: di
         name = clean(row.get("plant_name", ""))
         if not name:
             continue
-        canonical, detail = ylist_detail(name, plants, alias_to_canonical)
+        canonical, detail = ylist_detail_for_row(row, plants, alias_to_canonical)
         if not detail:
             continue
 

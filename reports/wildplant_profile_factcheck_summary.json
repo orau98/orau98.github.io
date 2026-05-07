@@ -1,20 +1,20 @@
 {
   "audited_rows": 5928,
   "profile_candidate_rows": 4036,
-  "findings": 8188,
-  "high_priority_findings": 3187,
-  "profile_candidate_findings": 3465,
-  "high_priority_profile_candidate_findings": 434,
+  "findings": 8165,
+  "high_priority_findings": 3180,
+  "profile_candidate_findings": 3450,
+  "high_priority_profile_candidate_findings": 430,
   "category_counts": {
     "duplicate_name_scientific_conflict": 2015,
     "low_information_profile": 1707,
     "genus_scientific_conflicts_with_scientific_name": 1584,
     "duplicate_low_information_row_shadowed": 1008,
-    "possible_ocr_latin_typo_against_ylist": 633,
+    "possible_ocr_latin_typo_against_ylist": 632,
     "duplicate_name_family_conflict": 559,
-    "ylist_family_latin_conflict": 279,
-    "ylist_family_conflict": 258,
-    "ylist_scientific_name_conflict": 137,
+    "ylist_family_latin_conflict": 271,
+    "ylist_family_conflict": 252,
+    "ylist_scientific_name_conflict": 129,
     "family_latin_outlier_for_japanese_family": 8
   },
   "profile_candidate_category_counts": {
@@ -22,22 +22,22 @@
     "duplicate_name_scientific_conflict": 993,
     "possible_ocr_latin_typo_against_ylist": 332,
     "duplicate_name_family_conflict": 277,
-    "ylist_family_latin_conflict": 122,
-    "ylist_family_conflict": 102,
-    "ylist_scientific_name_conflict": 77
+    "ylist_family_latin_conflict": 117,
+    "ylist_family_conflict": 98,
+    "ylist_scientific_name_conflict": 71
   },
   "source_counts": [
     {
       "source": "日本の野生植物 第1巻",
       "rows": 3963,
       "profile_candidate_rows": 2071,
-      "high_priority_profile_candidate_findings": 251
+      "high_priority_profile_candidate_findings": 248
     },
     {
       "source": "日本の野生植物 第2巻",
       "rows": 1965,
       "profile_candidate_rows": 1965,
-      "high_priority_profile_candidate_findings": 183
+      "high_priority_profile_candidate_findings": 182
     }
   ],
   "high_priority_profile_candidate_category_counts_by_source": [
@@ -49,7 +49,7 @@
     {
       "source": "日本の野生植物 第1巻",
       "category": "ylist_family_conflict",
-      "count": 89
+      "count": 86
     },
     {
       "source": "日本の野生植物 第2巻",
@@ -59,7 +59,7 @@
     {
       "source": "日本の野生植物 第2巻",
       "category": "ylist_family_conflict",
-      "count": 13
+      "count": 12
     }
   ],
   "ocr_caches": [

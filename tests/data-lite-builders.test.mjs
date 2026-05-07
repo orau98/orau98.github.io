@@ -173,6 +173,90 @@ test('buildHostPlantDataset prefers YList taxonomy over OCR profile taxonomy', (
   assert.equal(plantDetails.クスノキ.profile.habit, '常緑高木');
 });
 
+test('buildHostPlantDataset keeps homonymous plant profiles separate from YList aliases', () => {
+  const { plantDetails } = buildHostPlantDataset([], {
+    aliasToCanonical: {
+      タチガシワ: 'カシワ',
+    },
+    plants: {
+      カシワ: {
+        familyJp: 'ブナ科',
+        familyEn: 'Fagaceae',
+        orderJp: 'ブナ目',
+        orderEn: 'FAGALES',
+        scientificName: 'Quercus dentata',
+        aliases: ['タチガシワ'],
+      },
+    },
+  }, [
+    {
+      plant_name: 'タチガシワ',
+      scientific_name: 'Vincetoxicum magnificum',
+      family: 'キョウチクトウ科',
+      family_latin: 'APOCYNACEAE',
+      genus_jp: 'カモメヅル属',
+      genus_scientific: 'Vincetoxicum',
+      habit: '多年草',
+      source: '日本の野生植物 第2巻',
+      page: '162',
+    },
+  ]);
+
+  assert.equal(plantDetails.タチガシワ.family, 'キョウチクトウ科');
+  assert.equal(plantDetails.タチガシワ.scientificName, 'Vincetoxicum magnificum');
+  assert.equal(plantDetails.タチガシワ.profile.genusJp, 'カモメヅル属');
+  assert.equal(plantDetails.カシワ, undefined);
+});
+
+test('buildHostPlantDataset drops leaked Japanese genus names when Latin genus conflicts', () => {
+  const { plantDetails } = buildHostPlantDataset([], {
+    plants: {
+      リンドウ: {
+        familyJp: 'リンドウ科',
+        familyEn: 'Gentianaceae',
+        orderJp: 'リンドウ目',
+        orderEn: 'GENTIANALES',
+        scientificName: 'Gentiana scabra var. buergeri',
+        aliases: [],
+      },
+    },
+  }, [
+    {
+      plant_name: 'リンドウ',
+      scientific_name: 'Gentiana scabra',
+      family: 'アカネ科',
+      family_latin: 'RUBIACEAE',
+      genus_jp: 'センプリ属',
+      genus_scientific: 'Swertia',
+      habit: '多年草',
+      source: '日本の野生植物 第2巻',
+      page: '155',
+    },
+  ]);
+
+  assert.equal(plantDetails.リンドウ.family, 'リンドウ科');
+  assert.equal(plantDetails.リンドウ.genus, 'Gentiana');
+  assert.equal(plantDetails.リンドウ.profile.genusJp, '');
+});
+
+test('buildHostPlantDataset corrects known OCR slips in Japanese genus names', () => {
+  const { plantDetails } = buildHostPlantDataset([], {}, [
+    {
+      plant_name: 'ハコネウツギ',
+      scientific_name: 'Weigela coraeensis',
+      family: 'スイカズラ科',
+      family_latin: 'CAPRIFOLIACEAE',
+      genus_jp: 'タニウッギ属',
+      genus_scientific: 'Weigela',
+      habit: '落葉小高木',
+      source: '日本の野生植物 第2巻',
+      page: '316',
+    },
+  ]);
+
+  assert.equal(plantDetails.ハコネウツギ.profile.genusJp, 'タニウツギ属');
+});
+
 test('isSuspiciousPlantName filters fragmentary substrate notes but keeps coarse host groups', () => {
   assert.equal(isSuspiciousPlantName('の樹皮下'), true);
   assert.equal(isSuspiciousPlantName('ヤマザクラなどの枯れ木'), true);
