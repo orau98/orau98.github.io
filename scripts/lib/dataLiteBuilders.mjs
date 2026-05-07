@@ -90,11 +90,37 @@ export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
   return flowerVisitPlants;
 }
 
-export function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
+export function normalizePlantProfileRows(rows = []) {
+  return (rows || [])
+    .map((row) => {
+      const name = cleanString(row?.plant_name);
+      if (!name || name === '不明' || isSuspiciousPlantName(name)) return null;
+      return {
+        name,
+        scientificName: cleanString(row?.scientific_name),
+        family: cleanString(row?.family),
+        familyLatin: cleanString(row?.family_latin),
+        genus: cleanString(row?.genus_scientific),
+        genusJp: cleanString(row?.genus_jp),
+        habit: cleanString(row?.habit),
+        height: cleanString(row?.height),
+        flowerPeriod: cleanString(row?.flower_period),
+        distribution: cleanString(row?.distribution),
+        habitat: cleanString(row?.habitat),
+        source: cleanString(row?.source),
+        page: cleanString(row?.page),
+        extractionMethod: cleanString(row?.extraction_method),
+      };
+    })
+    .filter(Boolean);
+}
+
+export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProfilesInput = []) {
   const hostPlantsMap = {};
   const plantDetailsRaw = {};
   const aliasToCanonical = { ...(ylistLite.aliasToCanonical || {}) };
   const ylistPlants = ylistLite.plants || {};
+  const plantProfiles = normalizePlantProfileRows(plantProfilesInput);
 
   const ensureDetail = (name) => {
     if (!plantDetailsRaw[name]) {
@@ -106,6 +132,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
         orderLatin: '',
         scientificName: '',
         genus: '',
+        profile: null,
         aliases: new Set(),
       };
     }
@@ -154,21 +181,53 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
     });
   });
 
+  plantProfiles.forEach((profile) => {
+    const canonical =
+      aliasToCanonical[profile.name] ||
+      aliasToCanonical[normalizePlantNameLite(profile.name)] ||
+      profile.name;
+    const detail = ensureDetail(canonical);
+    detail.family = profile.family || (detail.family && detail.family !== '不明' ? detail.family : '');
+    detail.familyName = profile.family || detail.familyName || detail.family;
+    detail.familyLatin = profile.familyLatin || detail.familyLatin || '';
+    detail.scientificName = detail.scientificName || profile.scientificName;
+    const profileLatinGenus = profile.scientificName
+      ? profile.scientificName.split(/\s+/)[0] || ''
+      : '';
+    detail.genus =
+      detail.genus ||
+      profileLatinGenus ||
+      profile.genus;
+    detail.aliases.add(profile.name);
+    if (canonical !== profile.name && !aliasToCanonical[profile.name]) {
+      aliasToCanonical[profile.name] = canonical;
+    }
+    detail.profile = {
+      source: profile.source,
+      page: profile.page,
+      habit: profile.habit,
+      height: profile.height,
+      flowerPeriod: profile.flowerPeriod,
+      distribution: profile.distribution,
+      habitat: profile.habitat,
+      genusJp: profile.genusJp,
+      extractionMethod: profile.extractionMethod,
+    };
+  });
+
   Object.entries(plantDetailsRaw).forEach(([name, detail]) => {
     const canonical = aliasToCanonical[name] || name;
     const yDetail = ylistPlants[canonical] || ylistPlants[name];
     if (yDetail) {
-      detail.family =
-        detail.family && detail.family !== '不明'
-          ? detail.family
-          : yDetail.familyJp || detail.family;
-      detail.familyName = detail.familyName || yDetail.familyJp || detail.family;
-      detail.familyLatin = detail.familyLatin || yDetail.familyEn || '';
-      detail.order = detail.order || yDetail.orderJp || '';
-      detail.orderLatin = detail.orderLatin || yDetail.orderEn || '';
+      const hasProfileFamily = Boolean(detail.profile && detail.family && detail.familyLatin);
+      detail.family = hasProfileFamily ? detail.family : (yDetail.familyJp || detail.family || '');
+      detail.familyName = hasProfileFamily ? (detail.familyName || detail.family) : (yDetail.familyJp || detail.familyName || detail.family);
+      detail.familyLatin = hasProfileFamily ? detail.familyLatin : (yDetail.familyEn || detail.familyLatin || '');
+      detail.order = yDetail.orderJp || detail.order || '';
+      detail.orderLatin = yDetail.orderEn || detail.orderLatin || '';
       const scientificName = yDetail.scientificName || detail.scientificName || '';
       detail.scientificName = scientificName || detail.scientificName || '';
-      if (scientificName && !detail.genus) {
+      if (scientificName) {
         detail.genus = scientificName.split(/\s+/)[0] || '';
       }
       (yDetail.aliases || []).forEach((alias) => {
@@ -196,6 +255,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}) {
       orderLatin: detail.orderLatin || '',
       scientificName: detail.scientificName || '',
       genus: detail.genus || '',
+      profile: detail.profile || null,
       aliases,
     };
   });

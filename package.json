@@ -33,6 +33,7 @@
     "format": "prettier -w .",
     "download:ga-tsushin": ".venv/bin/python scripts/download_ga_tsushin.py",
     "extract:pdf": ".venv/bin/python scripts/extract_from_pdf.py",
+    "extract:wildplants": ".venv/bin/python scripts/extract_wildplant_profiles.py",
     "check:api": ".venv/bin/python scripts/check_updates_api.py",
     "merge:candidates": ".venv/bin/python scripts/merge_candidates.py",
     "split:update-batches": ".venv/bin/python scripts/split_update_candidates.py",

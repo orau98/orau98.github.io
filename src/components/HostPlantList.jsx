@@ -535,12 +535,15 @@ const HostPlantList = ({
     Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {
       addEntry(plant, insects);
     });
+    Object.entries(safePlantDetails || {}).forEach(([plant, detail]) => {
+      if (detail?.profile) addEntry(plant, []);
+    });
     const obj = {};
     merged.forEach((set, key) => {
       obj[key] = Array.from(set);
     });
     return obj;
-  }, [safeHostPlants, flowerVisitPlants, normalizedToCanonical, aliasToCanonical]);
+  }, [safeHostPlants, flowerVisitPlants, safePlantDetails, normalizedToCanonical, aliasToCanonical]);
 
   const plantCount = Object.keys(mergedHostPlants).length;
   const plantCanonicalUrl = absUrl(locale === "en" ? "/en/plant" : "/plant");

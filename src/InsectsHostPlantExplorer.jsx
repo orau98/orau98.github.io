@@ -1535,6 +1535,9 @@ const InsectsHostPlantExplorer = memo(
         Object.keys(flowerVisitPlants || {}).forEach((name) => {
           if (name) plantNameSet.add(name);
         });
+        Object.entries(plantDetails || {}).forEach(([name, detail]) => {
+          if (name && detail?.profile) plantNameSet.add(name);
+        });
         const plantNames = Array.from(plantNameSet);
 
         // 植物画像URLを生成するヘルパー

@@ -74,6 +74,29 @@ test('buildFlowerVisitPlantDataset canonicalizes aliases and sorts insect names'
   });
 });
 
+test('buildHostPlantDataset adds plant profiles even without linked insects', () => {
+  const { hostPlantsMap, plantDetails } = buildHostPlantDataset([], {}, [
+    {
+      plant_name: 'クスノキ',
+      scientific_name: 'Cinnamomum camphora',
+      family: 'クスノキ科',
+      family_latin: 'LAURACEAE',
+      genus_scientific: 'Cinnamomum',
+      habit: '常緑高木',
+      flower_period: '5-6月',
+      distribution: '本州・四国・九州・琉球に見られる',
+      source: '日本の野生植物 第1巻',
+      page: '70',
+    },
+  ]);
+
+  assert.deepEqual(hostPlantsMap, {});
+  assert.equal(plantDetails.クスノキ.family, 'クスノキ科');
+  assert.equal(plantDetails.クスノキ.scientificName, 'Cinnamomum camphora');
+  assert.equal(plantDetails.クスノキ.profile.habit, '常緑高木');
+  assert.equal(plantDetails.クスノキ.profile.page, '70');
+});
+
 test('isSuspiciousPlantName filters fragmentary substrate notes but keeps coarse host groups', () => {
   assert.equal(isSuspiciousPlantName('の樹皮下'), true);
   assert.equal(isSuspiciousPlantName('ヤマザクラなどの枯れ木'), true);

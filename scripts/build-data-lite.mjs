@@ -231,6 +231,11 @@ async function build() {
   const notes = parseCsv(notesCsv);
   const ylistCsv = readText(path.join(PUBLIC_DIR, '20210514YList_download.csv'));
   const ylistRows = ylistCsv ? parseCsv(ylistCsv) : [];
+  const plantProfilesCsv = readFirstExistingText([
+    path.join(ROOT, 'normalized_data', 'plant_profiles.csv'),
+    path.join(PUBLIC_DIR, 'plant_profiles.csv'),
+  ]);
+  const plantProfiles = plantProfilesCsv ? parseCsv(plantProfilesCsv) : [];
 
   // Import converter from app util (ESM)
   const { convertNormalizedDataToStandardFormat } = await import(pathToFileURL(path.join(ROOT, 'src', 'utils', 'normalizedDataParser.js')).href);
@@ -306,6 +311,7 @@ const slim = (arr) => (arr || []).map(i => ({
   const { hostPlantsMap: fullHostPlants, plantDetails, aliasToCanonical } = buildHostPlantDataset(
     allProcessedInsects,
     ylistLite,
+    plantProfiles,
   );
   const flowerVisitPlants = buildFlowerVisitPlantDataset(allProcessedInsects, ylistLite);
   write('hostplants.json', fullHostPlants);

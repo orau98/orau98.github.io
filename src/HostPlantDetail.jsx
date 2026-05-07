@@ -803,6 +803,46 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const isFamily = /科$/.test(decodedPlantName);
   const isOrder = /目$/.test(decodedPlantName);
   const isGenus = !isFamily && !isOrder && /属$/.test(decodedPlantName);
+  const plantProfile = (!isFamily && !isOrder && !isGenus && details?.profile)
+    ? details.profile
+    : null;
+  const plantProfileFacts = useMemo(() => {
+    if (!plantProfile) return [];
+    const labels = isEnglish
+      ? {
+          habit: 'Habit',
+          height: 'Size',
+          flowerPeriod: 'Flowering',
+          distribution: 'Distribution',
+          habitat: 'Habitat',
+          source: 'Source',
+        }
+      : {
+          habit: '生活型',
+          height: '大きさ',
+          flowerPeriod: '花期',
+          distribution: '分布',
+          habitat: '生育環境',
+          source: '出典',
+        };
+    const rows = [
+      ['habit', plantProfile.habit],
+      ['height', plantProfile.height],
+      ['flowerPeriod', plantProfile.flowerPeriod],
+      ['distribution', plantProfile.distribution],
+      ['habitat', plantProfile.habitat],
+    ]
+      .map(([key, value]) => ({ key, label: labels[key], value: String(value || '').trim() }))
+      .filter((row) => row.value);
+    const sourceParts = [
+      plantProfile.source,
+      plantProfile.page ? `p.${plantProfile.page}` : '',
+    ].filter(Boolean);
+    if (sourceParts.length) {
+      rows.push({ key: 'source', label: labels.source, value: sourceParts.join(' ') });
+    }
+    return rows;
+  }, [plantProfile, isEnglish]);
 
   const classificationGroups = useMemo(() => {
     if (!isOrder || !Array.isArray(classificationMembers) || classificationMembers.length === 0) return [];
@@ -1805,6 +1845,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       <DetailSectionNav
         label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
         items={[
+          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '植物情報' }] : []),
           { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
           { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
           { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
@@ -1875,6 +1916,28 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           )}
         </div>
       </div>
+
+      {plantProfileFacts.length > 0 && (
+        <section id="plant-profile" className="mb-10 scroll-mt-24">
+          <div className="rounded-2xl border border-emerald-200/70 bg-white/90 p-5 shadow-sm dark:border-emerald-900/60 dark:bg-slate-900/70">
+            <h2 className="mb-4 text-xl font-bold text-slate-800 dark:text-white">
+              {isEnglish ? 'Plant Profile' : '植物情報'}
+            </h2>
+            <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+              {plantProfileFacts.map((item) => (
+                <div key={item.key} className="border-b border-slate-200/70 pb-3 dark:border-slate-800">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                    {item.label}
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-slate-800 dark:text-slate-100">
+                    {item.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      )}
 
       {/* 植物画像ギャラリー */}
       <section id="plant-photos" aria-labelledby="plant-photos" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">

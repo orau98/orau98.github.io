@@ -1,0 +1,928 @@
+profile_id,plant_name,scientific_name,family,family_latin,genus_jp,genus_scientific,habit,height,flower_period,distribution,habitat,source,page,extraction_method
+plant-profile-000001,オガタマノキ,Magnolia compressa,,,,Magnolia,常緑高木,,,,,日本の野生植物 第1巻,34,macOS Vision OCR + rule parser
+plant-profile-000002,クロボウモドキ,Monoon liukiuense,バンレイシ科,ANNONACEAE,クロボウモドキ属,Monoon,常緑高木,15m,,琉球（西表島・波照間島）の石灰岩上に生え、台湾（開喫）に分布,琉球（西表島・波照間島）の石灰岩上に生え,日本の野生植物 第1巻,34,macOS Vision OCR + rule parser
+plant-profile-000003,タイサンボク,Magnolia grandilora,,,,Magnolia,常緑高木,20m,6月,,,日本の野生植物 第1巻,34,macOS Vision OCR + rule parser
+plant-profile-000004,テングノハナ,Illigera luzonensis,ハスノハギリ科,HERNANDIACEAE,テングノハナ属,Iligera,藤本,,,,,日本の野生植物 第1巻,34,macOS Vision OCR + rule parser
+plant-profile-000005,ハスノハギリ,Hernandia nymphaeifolia,ハスノハギリ科,HERNANDIACEAE,ハスノハギリ属,Hernandla,常緑高木,7ー20m,,小笠原・琉球（沖 永良部島以南）の海近くに生え、台湾・南中国（海南島）・東南アジア・スリランカ・アフリカ 東部・ポリネシア・ミクロネシアの熱帯に広く分布,小笠原・琉球（沖 永良部島以南）の海近くに生え,日本の野生植物 第1巻,34,macOS Vision OCR + rule parser
+plant-profile-000006,アカハダクスノキ,Beilschmiedia erythrophloia,クスノキ科,LAURACEAE,アカハダクスノキ属,Beilschmiedia,常緑高木,,,吐鳴喇列島悪石島およ び喜界島・奄美大島以南西表島までの琉球、台湾に分布する,,日本の野生植物 第1巻,35,macOS Vision OCR + rule parser
+plant-profile-000007,スナヅル,Cassytha fliformnis,クスノキ科,LAURACEAE,スナヅル属,Cassytha,つる草,,,世界中の熱帯に広 く分布し、日本では琉球から屋久島・九州の佐多岬まで北上し、また小笠原にも見られる,海岸の砂地に生える寄生性のつる草,日本の野生植物 第1巻,35,macOS Vision OCR + rule parser
+plant-profile-000008,クスノキ,Cinnamomum camphora,クスノキ科,LAURACEAE,クスノキ属,Cinnamomum,常緑高木,,5一6月,日本では本州・四国・九州・琉球の暖地に見られるが、九州以北のものは野生かどうかはわか らない,,日本の野生植物 第1巻,36,macOS Vision OCR + rule parser
+plant-profile-000009,シナクスモドキ,Cryptoearya chinensis,クスノキ科,LAURACEAE,クスノキ属,Cinnamomum,常緑高木,,5 月,九州（宮崎県・鹿児島県種子島）、台湾・中国南部に分布する,,日本の野生植物 第1巻,36,macOS Vision OCR + rule parser
+plant-profile-000010,ニッケイ,Cinnamomum sieboldii,クスノキ科,LAURACEAE,クスノキ属,Cinnamomum,常緑高木,,5ー6月,沖縄 島北部のほか、久米島・徳之島などに分布する,,日本の野生植物 第1巻,36,macOS Vision OCR + rule parser
+plant-profile-000011,マルバニッケイ,Cinnamomum daphnoides,クスノキ科,LAURACEAE,クスノキ属,Cinnamomum,常緑小高木,,,福岡県（大島）・長崎県（男女群島）・鹿児島県（大隅半島・ 際半島・屋久島・種子島・吐略射列島）・沖縄県（硫黄鳥島）に分布し、海岸の波蝕能上の街 中に生育する,海岸の波蝕能上の街 中に生育する,日本の野生植物 第1巻,36,macOS Vision OCR + rule parser
+plant-profile-000012,ヤブニッケイ,Cinnamomum yabunikkei,クスノキ科,LAURACEAE,クスノキ属,Cinnamomum,常緑高木,,6月,本 州（関東・北陸以西）・四国・九州・琉球に分布し、韓国（南部島膜）・台湾（開側）にも産する,,日本の野生植物 第1巻,36,macOS Vision OCR + rule parser
+plant-profile-000013,アオモジ,Litsea cubeba,クスノキ科,LAURACEAE,ハマビワ属,Litsea,落葉小高木,,,九州 （西部・南部）・琉球、台湾・中国・ヒマラヤに産し、本州（愛知県以西）にも都市部周辺を中心 に近年分布を拡大してきている,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000014,アブラチャン,Lindera praecox,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉低木,,,本州・四国・九州にふつうに見られ、中国東部にも分布する,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000015,オキナワコウバシ,Lindera communis,クスノキ科,LAURACEAE,クロモジ属,Lindera,常緑小高木,,,,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000016,カゴノキ,Lisea coreana,クスノキ科,LAURACEAE,ハマビワ属,Litsea,常緑高木,,,本州（関東・福井県以西）・四国・ 九州・琉球、朝鮮半島南部・台湾に分布する,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000017,カナクギノキ,Lindera erythroearpa,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉高木,,,本州（神奈川県以西）・四国・九州、朝鮮半島・中国・台湾に分布する,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000018,クロモジ,Lindera umbellata,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉低木,,,本州（東北地方南部の太平洋側以西）に分布する,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000019,ケクロモジ,Lindera sericea,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉低木,,,本州（中国地方の一部）・四国・九州、朝鮮半島南部 に分布し、山地、渓間に多い,本州（関東以西）・四国・九州の山地に生育,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000020,シロモジ,Lindera triloba,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉低木,,,,本州（中部地方以西）・四国・九州の山地、朝鮮半島南部に生育する,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000021,ダンコウバイ,Lindera obtusiloba,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉低木,,,本州（関東地方・新潟県以西）・四国・九州、朝鮮半島・中国（中部・東北）に分布する,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000022,テンダイウヤク,Lindera aggregata,クスノキ科,LAURACEAE,クロモジ属,Lindera,常緑低木,,4月,,中国の原産で、日本には享保年間（18世紀前半）に渡来し、薬用のた め栽培され、暖地には野生化したものもある,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000023,ハマビワ,Litsea japonica,クスノキ科,LAURACEAE,ハマビワ属,Litsea,常緑高木,,,本州（山口県・島根県）・四国・九州・琉球、朝鮮半島南部に分布する,沿海地に生育する,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000024,ヤマコウバシ,Lindera glauca,クスノキ科,LAURACEAE,クロモジ属,Lindera,落葉低木,,4月,本州（宮城県以南）・四国・九州、朝鮮半島・中国に分布する,,日本の野生植物 第1巻,37,macOS Vision OCR + rule parser
+plant-profile-000025,イヌガシ,Neolitsea aciculata,クスノキ科,LAURACEAE,タブノキ属,Machilus,常緑高木,,,本州（関東南部以西）・四国・九州・琉球、朝鮮半島南部・台湾に分布する,,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000026,オガサワラシロダモ,Neolitsea boninensis,クスノキ科,LAURACEAE,タブノキ属,Machilus,高木,,,,,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000027,コブガシ,Maehilus kobu,クスノキ科,LAURACEAE,タブノキ属,Machilus,常緑高木,,2-3月,,,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000028,ショウブ,Acorus calamus,ショウブ科,ACORACEAE,,Acorus,,,5一7月,,水辺に群生する,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000029,シロダモ,Neolitsea sericea,クスノキ科,LAURACEAE,タブノキ属,Machilus,高木,,,本州・四国・九州・琉球、朝鮮半島南部・中国東部に分布する,,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000030,セキショウ,Acorus gramineus,ショウブ科,ACORACEAE,,Acorus,,10-30cm,3ー5月,本州～九州、 韓国（済州島）・台湾・中国・東シベリア・インドシナ・ミャンマー・北東インド・フィリピン に分布する,平地から山地にかけての溝や小川の緑などに 群生,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000031,タブノキ,Machilus thunbergii,クスノキ科,LAURACEAE,タブノキ属,Machilus,高木,,3ー5月,本州・四国・九州・琉球、朝鮮半島南部・台湾・中国に分布する,本州～琉球に生える…・•• D. 葉裏の毛は銀灰色,日本の野生植物 第1巻,38,macOS Vision OCR + rule parser
+plant-profile-000032,クワズイモ,Alocasia odora,サトイモ科,ARACEAE,ヒメカイウ属,Calla,多年草,1m,5ー8月,,低地の常緑横林下に生え、全体の高さが1m以 上になる多年草,日本の野生植物 第1巻,39,macOS Vision OCR + rule parser
+plant-profile-000033,シマクワズイモ,Alocasia cucullata,サトイモ科,ARACEAE,ヒメカイウ属,Calla,多年草,30ー50cm,,奄美から琉球・小笠原、東南アジア・インドに分布する,耕作地の緑や人家の近くに生える常緑 の多年草,日本の野生植物 第1巻,39,macOS Vision OCR + rule parser
+plant-profile-000034,ヤマコンニャク,Amorphophallus kiusianus,サトイモ科,ARACEAE,コンニャク属,Amorphophallus,,1m,5ー6月,四 国（高知県）・九州南部・奄美、台湾に分布する,低地のやや湿った常緑林下に まれに生える,日本の野生植物 第1巻,40,macOS Vision OCR + rule parser
+plant-profile-000035,アマミテンナンショウ,Arisaema heterocephalum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,20-50cm,1ー3月,奄美大島・徳之島に分布する,山地の常緑 樹林下に生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000036,イシヅチテンナンショウ,Arisaema ishizuchiense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5月,,,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000037,イナヒロハテンナンショウ,Arisaema inaense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,25-50cm,5ー6月,本州（長野県）に分布する,山地 プナ帯の林緑などに生え、高さ25-50cm,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000038,ウラシマソウ,Arisaema thunbergii,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4ー5月,北海道（日高・渡島）・本州・四国・九州（佐賀県）に分布する,平 地から低山地の野原、林線、林中にややふつうに生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000039,オガタテンナンショウ,Arisaema ogatae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4ー6月,,山地の林下、特に谷筋の斜面に生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000040,オドリコテンナンショウ,Arisaema aprile,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4-5月,本州（静岡県・山梨県・神奈川県）に分布する,ブナ帯林下に生え、高さ15-30（一 40）cm,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000041,カラフトヒロハテンナンショウ,Arisaema sachalinense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,17-50cm,5ー6月ごろ,北海道東北部（利尻島・礼文島）、 海馬島（サハリン）に分布する,林緑の 笹やぶなどに生え、高さ17-50cm,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000042,シコクヒロハテンナンショウ,Arisaema longipeduneulatum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,6月,本州（静岡県・山梨県）・四国・九州（宮崎県・星久島）に分布する,山地のプナ林中に 生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000043,タカハシテンナンショウ,Arisaema nambae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,15ー50cm,5月ごろ,本州 （岡山県・広島県）に分布する,低山地の林下、林緑に生え、高さ 15ー50cmに達する,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000044,ナガバマムシグサ,Arisaema undalatifolium,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,10ー35cm,3ー5月,本州（伊豆半島）に分布,ウワジマテンナンショウsubsp. uwajimense Tom. Kobay. et J. Murataは照楽勘林の林緑に生え、高さ 15-45cmに達する,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000045,ナギヒロハテンナンショウ,Arisaema nagiense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,10-40cm,5-6月,本州（兵庫県・岡山県）に分布する,山地林 緑の笹原などに生え、高さ10-40cm,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000046,ハチジョウテンナンショウ,Arisaema hatizyoense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,100cm,3ー4月,,ハチジョウテンナンショウ Arisaema hatizyoense Nakai 林緑や周辺の草地に生え、高さ100cm に達する,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000047,ハリママムシグサ,Arisaema minus,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,多年草,15ー30cm,3-4月,本州（兵庫県）に分布する,低山地の林下、林緑に生える多年草,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000048,ヒトヨシテンナンショウ,Arisaema mayebarae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4ー5月,九州（おもに熊本県）に分布する,火山堆積物をおおう明るい林の林 床などに生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000049,ヒメウラシマソウ,Arisaema kiushianum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,,本州（山口県）・九州に分布する,低山地の暗い林下に生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000050,ヒロハテンナンショウ,Arisaema ovale,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5一6月,北海道・本州（福井県以北の日本海側の地域に多い）・九州北部に分布する,山地の林下、おもにブナ帯に生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000051,マイヅルテンナンショウ,Arisaema heterophyllum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5一6月,本州（岩手県より岡山県まで点在）～九州、朝鮮半島南部・ 中国・台湾に分布する,低地の草原や湿地に生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000052,マムシグサ,Arisaema japonicum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,120cm,,四国・九州（吐畷喇列島まで），韓国（機験島）に分布する,,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000053,ミツバテンナンショウ,Arisaema ternatipartitum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,,本州（静岡県）・四国・九州に分布する,ミツバテンナンショウ Arisaema ternatipartitum Makino （PL76） おもに山地ブナ帯の林下で岩の 多い斜面などに生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000054,ミミガタテンナンショウ,Arisaema linbatum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,多年草,70cm,暖地では3月から,本州（東北 地方から中部地方東部の太平洋側・兵庫県）・四国（高知県沖の島）・九州（大分県）に分布する,落業林下、林緑に生え る多年草,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000055,ムサシアブミ,Arisaema ringens,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,3ー5月,本州（関東以西）～琉球、朝鮮半島南部・中国・台湾に分布する,やや湿った林下に生え、特に海岸近くの 林で見られることが多い,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000056,ユモトマムシグサ,Arisaema nikoense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,15ー25cm,5ー7月,本州（岐 阜県・長野県・福井県）に分布し、飛騨山脈および白山の亜高山帯の林下に見られる,山地のプナ帝から亜高山帯 にかけての林下に生える,日本の野生植物 第1巻,42,macOS Vision OCR + rule parser
+plant-profile-000057,アオテンナンショウ,Arisaema tosaense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5一6月,本州（岡山県）・瀬戸内海（淡路島・厳島・周防大島）・四国・ 九州（大分県）に分布する,山地の林下に生え、全体が緑色,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000058,アマギテンナンショウ,Arisaema kuratae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,,,山地の林下の斜面に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000059,ウメガシマテンナンショウ,Arisaema maekawae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,80cm,4一5月,本州（山梨 県・静岡県・長野県・岐阜県・兵庫県および中国地方）に分布する,山地の林下に 生え、高さ80cmに避する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000060,ウンゼンマムシグサ,Arisaema unzenense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,70cm,4ー5月,,山地の林緑などに生え、高さ70cmに達 する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000061,エヒメテンナンショウ,Arisaema ehiinense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,110cm,5月ごろ,四国（愛媛県の瀬戸内海側）に分布する,林下や林緑に生え、高さ 110cmに避する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000062,オオマムシグサ,Arisaema takedae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,70cm,,北海道南部・本州に分布する,湿った草原や明るい疎林下に生え、高さ 70cmに達する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000063,オモゴウテンナンショウ,Arisaema iyoanum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5月,,山地の林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000064,カントウマムシグサ,Arisaema serratum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4ー6月,北海道～九州、韓国（済州島）に分布する,平地から山地の野原、林緑、林 下などにふつうに生育する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000065,コウライテンナンショウ,Arisaema peninsulae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,100cm,,北海道・本州・九州、朝鮮半島・中国・ ロシアに分布する,おもに山地や多雪地の林緑，湿っ た草地などに生え、高さ100cmに違する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000066,セッピコテンナンショウ,Arisaema seppikoense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5月,,山中の林下や湿った岩場などに 生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000067,ツルギテンナンショウ,Arisaema abei,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,90cm,5ー6月,四国の山地に分布する,ツルギテンナンショウ Arisaema abei Seriz. ブナ帯の林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000068,トクノシマテンナンショウ,Arisaema kawashimae,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,50cm,2月ごろ,,湿って岩の多い林下に生える多 年草,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000069,ヒトツバテンナンショウ,Arisaema monoplyllum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5一6月,本州中北部*に分布する,低山地のやや暗い林中、林緑な どの斜面に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000070,ヒュウガヒロハテンナンショウ,Arisaema minamitanii,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,20-50cm,,九州（宮崎県・鹿児島県）に分布する,山地の林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000071,ホソバテンナンショウ,Arisaema angustatum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,100cm,,,低山地から山地の林下、林 緑に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000072,ホロテンナンショウ,Arisaema cucullatum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,5ー6月,,山地の林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000073,ミクニテンナンショウ,Arisaema planilaminum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,70cm,,本州（関東山地および茨城県・愛知県）に分布する,ミクニテンナンショウ Arisaema planilaminum J. Murata 落葉荷林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000074,ムロウテンナンショウ,Arisaemna yamatense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4ー6月,,山地の林中に 生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000075,ヤマグチテンナンショウ,Arisaema suwoense,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,40cm,5月,,湿った草原や疎 林の林下、林緑に生育する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000076,ヤマザトマムシグサ,Arisaema galeiforme,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,70cm,5月,,内陸地の山地の林下に生え、高さ70cm に達する,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000077,ヤマジノテンナンショウ,Arisaema solenoehlamys,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,70cm,,,山地の林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000078,ユキモチソウ,Arisaema sikokianum,サトイモ科,ARACEAE,テンナンショウ属,Arisaema,,,4ー5月,本州（静岡県*・三重県・奈良県）・四国に分布する,山地の林下に生える,日本の野生植物 第1巻,43,macOS Vision OCR + rule parser
+plant-profile-000079,アオウキクサ,Lemna aoukikusa,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,水草,,夏,北海道～九州に分布する,,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000080,オオハンゲ,Pinellia triparfita,サトイモ科,ARACEAE,ハンゲ属,Pinellia,,20ー50cm,6ー8月,本州（中部地方）～琉球に分布する,山地の常緑荷林下に生える,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000081,キタグニコウキクサ,Lemna turionifera,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,,,,北海道、北米・ユーラシア大陸部・サハリンに分布する,,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000082,コウキクサ,Lemna minor,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,,,夏,北海道～四国、北半球の温帯に広く分布 する,池や満に生育する,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000083,ナンゴクアオウキクサ,Lemna aequinoetialis,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,,,,近畿地方以西、世界の熱帯・亜熱帯に広く分布する,,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000084,ハブカズラ,Epipremnum pinnatum,サトイモ科,ARACEAE,ハブカズラ属,Epipremnum,,,,琉球（沖縄諸島・八重山列島）で、森林中に生育し、台湾・中国大陸 南部・東南アジアに分布する,琉球（沖縄諸島・八重山列島）で、森林中に生育,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000085,ヒメウキクサ,Landoltia punctata,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,,,5ー8月,,平地の池や 溝に生育,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000086,ヒメカイウ,Calla palustris,サトイモ科,ARACEAE,ヒメカイウ属,Calla,,15-30cm,6-7月,北海道・本州中北部に分布する,低地から山地の水湿地に生える,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000087,ヒンジモ,Lemna trisulea,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,多年草,,,薬状 体は長さ7ー10mm，北海道・本州・四国に見られ、南アメリカを除く世界に広く分布する,日本には1種が自生する,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000088,ミズバショウ,Lysichiton camtschatcensis,サトイモ科,ARACEAE,ヒメウキクサ属,Landottia,,10ー30cm,5ー7月,本州（兵庫 県および中部以北の日本海側）・北海道、千島・カムチャツカ・サハリン・ウスリーに分布する,,日本の野生植物 第1巻,44,macOS Vision OCR + rule parser
+plant-profile-000089,ウキクサ,Spirodela polyrhiza,サトイモ科,ARACEAE,ウキクサ属,Spirodela,,,,日本全士にあり、南アメリカを除いた世界中のほとんどに分布する,,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000090,サキシマハブカズラ,Rhaphidophora korthalsii,サトイモ科,ARACEAE,ヒメハブカズラ属,Rhaphidophora,,,,石垣島・西表島にま れに生育し、フィリピンから東南アジアの熱帯域に広く分布する,石垣島・西表島にま れに生育,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000091,ザゼンソウ,Symplocarpus renifolius,サトイモ科,ARACEAE,ザゼンソウ属,Syunplocarpus,,,3ー5月,朝鮮半島・アムール・ウスリー・サハリンに分布する,水湿地に生える悪臭のある大型の多 年草,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000092,ナベクラザゼンソウ,Symploearpus nabekuraensis,サトイモ科,ARACEAE,ザゼンソウ属,Syunplocarpus,,,,本州（福井県から岩手県にかけての多営地）に分布する,,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000093,ヒメザゼンソウ,Symploearpus nipponicus,サトイモ科,ARACEAE,ザゼンソウ属,Syunplocarpus,,,6月,朝鮮半島に分布する,林緑や道ばたの湿地に生え、ザゼンソ ウよりやや小型,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000094,ヒメハブカズラ,Rhaphidophora liukiuensis,サトイモ科,ARACEAE,ヒメハブカズラ属,Rhaphidophora,,,,石垣島・西表島のマン グロープにまれに生育し、台湾（開嶼）・フィリピンにも分布する,石垣島・西表島のマン グロープにまれに生育,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000095,ミジンコウキクサ,Wolffa globosa,サトイモ科,ARACEAE,ミジンコウキクサ属,Wolffia,,0.2-0.6m,,,平地の池 や満に生育する,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000096,ユズノハカズラ,Pothos chinensis,サトイモ科,ARACEAE,ユズノハカズラ属,Pothos,,,,大東島、台湾から中国南部・インドシナ半島・インド北部にかけて広く分布する,,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000097,リュウキュウハング,Typhonium blumei,サトイモ科,ARACEAE,リュウキュウハンゲ属,Typhouium,,,5一9月,九 州（鹿児島県）～琉球・小笠原、中国（南西部）・台湾・東南アジア・インドに分布する,,日本の野生植物 第1巻,45,macOS Vision OCR + rule parser
+plant-profile-000098,イワショウブ,Triantha japonica,チシマゼキショウ科,TOFIELDIACEAE,イワショウブ属,Triantha,,,,,亜高山帯の湿原に生える,日本の野生植物 第1巻,46,macOS Vision OCR + rule parser
+plant-profile-000099,チシマゼキショウ,Tofeldia coccinea,チシマゼキショウ科,TOFIELDIACEAE,チシマゼキショウ属,Tofieldia,,5ー12cm,,南千島・北海道（北部～中部），朝鮮半島（北部）・中国（北部）・ モンゴル・シベリア・サハリン・千島・カムチャツカ・アリューシャン・アラスカ・カナダ・ グリーンランドに広く分布,高山帯や寒地に生える,日本の野生植物 第1巻,46,macOS Vision OCR + rule parser
+plant-profile-000100,ヒメイワショウブ,Tofieldia okuboi,チシマゼキショウ科,TOFIELDIACEAE,チシマゼキショウ属,Tofieldia,,6ー17cm,6ー8月,日本特産で、本州（近 畿地方北部）・九州（佐賀県・長崎県）に分布する,亜高山帯に生える,日本の野生植物 第1巻,46,macOS Vision OCR + rule parser
+plant-profile-000101,ヤクシマチャボゼキショウ,Tofieldia yoshiiana,チシマゼキショウ科,TOFIELDIACEAE,チシマゼキショウ属,Tofieldia,,5.3ー18cm,,,ヤクシマチャボゼキショウ Tofieldia yoshiiana Makino var. yoshiiana 山中の岩に生える,日本の野生植物 第1巻,46,macOS Vision OCR + rule parser
+plant-profile-000102,ヤシュウハナゼキショウ,Tofeldia furusei,チシマゼキショウ科,TOFIELDIACEAE,チシマゼキショウ属,Tofieldia,,13.5-34.5cm,,日本特産で、 本州（栃木県・愛知県東部・和歌山県南部）に分布する,渓流沿いや山中 の岩に生える,日本の野生植物 第1巻,46,macOS Vision OCR + rule parser
+plant-profile-000103,ウリカワ,Sagittaria pygmaea,オモダカ科,ALISMATACEAE,オモダカ属,Sagitaria,多年草,,7ー9月,本州～琉球、東アジア の温帯～亜熱帯に分布する,水田や湿地に生える抽水性～沈水性の多年草,日本の野生植物 第1巻,47,macOS Vision OCR + rule parser
+plant-profile-000104,カラフトグワイ,Sagittaria natans,オモダカ科,ALISMATACEAE,オモダカ属,Sagitaria,多年草,,,,カラフトグワイ Sagittaria natans Pall. 湖沼や河川に生育する浮葉性の多年草,日本の野生植物 第1巻,47,macOS Vision OCR + rule parser
+plant-profile-000105,サジオモダカ,Alisma plantago-aguatica,オモダカ科,ALISMATACEAE,サジオモダカ属,Alisma,多年草,,7ー9月,北海道～本州中部、東アジアに分布する,水 田，水路に生える抽水性の多年草,日本の野生植物 第1巻,47,macOS Vision OCR + rule parser
+plant-profile-000106,トウゴクヘラオモダカ,Alisma rariflorum,オモダカ科,ALISMATACEAE,サジオモダカ属,Alisma,多年草,,,本州～九州の一部に分布する,水田，湿地、湖沼の浅水域に生える抽水 性の多年草,日本の野生植物 第1巻,47,macOS Vision OCR + rule parser
+plant-profile-000107,ヘラオモダカ,Alismna canaliculatum,オモダカ科,ALISMATACEAE,サジオモダカ属,Alisma,多年草,,,北海道～琉球、朝鮮半島・中国に分布する,水田，湿地、 湖沼やため池の浅水域に生える抽水性の多年草,日本の野生植物 第1巻,47,macOS Vision OCR + rule parser
+plant-profile-000108,マルバオモダカ,Caldesia parnassiifolia,オモダカ科,ALISMATACEAE,マルバオモダカ属,Caldesia,,,7ー9月,北海道南部～九州、ユーラシア・アフリ カ・オーストラリアの温帯～熱帯に分布する,,日本の野生植物 第1巻,47,macOS Vision OCR + rule parser
+plant-profile-000109,アギナシ,Sagittaria aginashi,オモダカ科,ALISMATACEAE,オモダカ属,Sagitaria,多年草,,,北海 道～九州、朝鮮半島に分布する,水田，ため池，湿地に生える抽水性の多年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000110,オオカナダモ,Egeria densa,トチカガミ科,HYDROCHARITACEAE,オオカナダモ属,Egeria,多年草,,,,湖沼や河川、ため池、水路に生える沈水性の多年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000111,オモダカ,Sagittaria trifolia,オモダカ科,ALISMATACEAE,オモダカ属,Sagitaria,多年草,20-80cm,,北海道～琉球、アジア～東ヨーロッパの温帯～熱帯に分布する,水田や水路、ため池、湿地に生える抽水性の多年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000112,クワイ,Sagittaria trifolia,オモダカ科,ALISMATACEAE,オモダカ属,Sagitaria,多年草,,,,,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000113,スブタ,Blyxa echinosperma,トチカガミ科,HYDROCHARITACEAE,スブタ属,Blyxa,一年草,,,本州～琉球、アジア・オーストラリアに分布する,ため池や水田、水路に生える一年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000114,セトヤナギスブタ,Blyxa alternifolia,トチカガミ科,HYDROCHARITACEAE,スブタ属,Blyxa,一年草,,,,ため池や水田、水路に生える一年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000115,マルミスブタ,Blysa aubertii,トチカガミ科,HYDROCHARITACEAE,スブタ属,Blyxa,一年草,,,本州～琉球、ア ジア・マダガスカルに分布し、北アメリカとアフリカに移入と推測される分布がある,ため池や水田、水路に生える一年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000116,ミカワスブタ,Blysa leiosperma,トチカガミ科,HYDROCHARITACEAE,スブタ属,Blyxa,一年草,,,本州にまれに見られ、 国外では中国に分布する,水田などに生える一年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000117,ヤナギスブタ,Blysa japoniea,トチカガミ科,HYDROCHARITACEAE,スブタ属,Blyxa,一年草,30cm,7ー10月,本州～琉球、アジアに分布し、ヨーロッパに移入分布する,水路に生え る沈水性の一年草,日本の野生植物 第1巻,48,macOS Vision OCR + rule parser
+plant-profile-000118,ウミショウブ,Enhalus acoroides,トチカガミ科,HYDROCHARITACEAE,ウミショウブ属,Enhalus,多年草,,6ー10月,八重山諸島、インド洋から酉太平洋の熱帯から亜熱帯域に分布する,珊瑚礁のラグーンなどの波浪の弱い 浅い海底の砂～砂泥に生える沈水性の多年草,日本の野生植物 第1巻,49,macOS Vision OCR + rule parser
+plant-profile-000119,ウミヒルモ,Halophila ovalis,トチカガミ科,HYDROCHARITACEAE,ウミヒルモ属,Halophila,多年草,,不明,本州北部～琉球、インド洋～西太平洋の治岸に分布する,海底の砂～砂泥に生える多年草,日本の野生植物 第1巻,49,macOS Vision OCR + rule parser
+plant-profile-000120,クロモ,Hydrilla verticillata,トチカガミ科,HYDROCHARITACEAE,クロモ属,Hydrilla,多年草,,8ー10月,北海道～琉球、アジア、オーストラリアの温帯～熱帯に分布,湖沼やため池、水路などに生える沈水性の多年草,日本の野生植物 第1巻,49,macOS Vision OCR + rule parser
+plant-profile-000121,コカナダモ,Elodea nuttallii,トチカガミ科,HYDROCHARITACEAE,コカナダモ属,Elodea,多年草,,,現在、北海道 ～九州、ヨーロッパ・アジアに移入分布,湖沼や河川、ため池、水路に生える沈水性 の多年草,日本の野生植物 第1巻,49,macOS Vision OCR + rule parser
+plant-profile-000122,トチカガミ,Hydrocharis dubia,トチカガミ科,HYDROCHARITACEAE,トチカガミ属,Hydrocharis,,,8ー10月,本州～九州、アジア・オーストラリアの温帯～熱帯に分布する,水田、水路 などに生育する,日本の野生植物 第1巻,49,macOS Vision OCR + rule parser
+plant-profile-000123,イトイバラモ,Najas yezoensis,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,,北海道～本州北部に分布する,湖沼やため池に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000124,イトトリゲモ,Najas graeillima,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,6一9月,本州～九州、東アジア・北 アメリカに分布し、ヨーロッパに移入分布する,水田やため池に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000125,イバラモ,Najas marina,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,7ー9月,北海道～琉球、世界の温帯～熱帯に分布する,淡水または汽水の湖沼やため池に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000126,オオトリゲモ,Najas oguraensis,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,7一9月,本州～琉球、中国に分布する,オオトリゲモ Najas oguraensis Miki （P.92） 湖沼やため池に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000127,コウガイモ,Vallisneria denseserrulata,トチカガミ科,HYDROCHARITACEAE,リュウキュウスガモ属,Thalassia,,,,本州～九州、中国に分布する,,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000128,セキショウモ,Vallisneria natans,トチカガミ科,HYDROCHARITACEAE,リュウキュウスガモ属,Thalassia,多年草,,,,,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000129,トリゲモ,Najas minor,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,7一9月,本州～琉球、アジア・北アフリカ・ヨーロッ パの温帯～熟帯に分布し、北アメリカに移入分布する,トリゲモ Najas minor All. 湖沼やため池に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000130,ネジレモ,Vallisneria natans,トチカガミ科,HYDROCHARITACEAE,リュウキュウスガモ属,Thalassia,,,,,,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000131,ヒメイバラモ,Najas tenuicaulis,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,,本州に分布するが、実体は不明,ヒメイバラモ Najas tenuicaulis Miki 湖沼やため池に生育する一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000132,ヒラモ,Vallisneria natans,トチカガミ科,HYDROCHARITACEAE,リュウキュウスガモ属,Thalassia,,,,,,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000133,ホッスモ,Najas graminea,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,7ー9月,北海道～琉球、アジア・オーストラリア・ヨーロッパ・ アフリカの温帯～熱帯に分布、北アメリカに移入分布する,水田に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000134,ホロムイソウ,Scheuchzeria palustris,ホロムイソウ科,SCHEUCHZERIACEAE,ホロムイソウ属,Scheuchzeria,,,,,湿原、特にミズゴケの発達する高層湿原に生え トチカガミ科／ホロムイソウ科 99,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000135,ミズオオバコ,Ottelia alismoides,トチカガミ科,HYDROCHARITACEAE,ミズオオバコ属,Ottelia,一年草,,8ー10月,北 海道～琉球，アジア・オーストラリア・アフリカの温帯～熟帯に分布する,水田やため池、水路に生える洸水性の一年草ま たは多年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000136,ムサシモ,Najas ancistroearpa,トチカガミ科,HYDROCHARITACEAE,イバラモ属,Najas,一年草,,7ー9月,,水田に生える一年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000137,リュウキュウスガモ,Thalassia hemprichii,トチカガミ科,HYDROCHARITACEAE,リュウキュウスガモ属,Thalassia,多年草,,8ー12月,奄美・琉球，インド洋～西太平洋の熱帯～亜熱 帯に分布する,浅い海底の砂利～砂に生える多 年草,日本の野生植物 第1巻,50,macOS Vision OCR + rule parser
+plant-profile-000138,エビアマモ,Phyllospadix japonieus,アマモ科,ZOSTERACEAE,スガモ属,Phyllospadix,,,3-4月,本州 中部（太平洋岸は茨城県以南、日本海岸は新潟県佐渡島）～九州北部、朝鮮半島・中国に分布,,日本の野生植物 第1巻,51,macOS Vision OCR + rule parser
+plant-profile-000139,シバナ,Triglochin asiatiea,シバナ科,JUNCAGINACEAE,,Triglochin,多年草,15ー50cm,5ー10 月,北海道～九州、および北半球の温帯域に広く分布する,河口や千潟の緑の塩分を含む湿地に生え る多年草,日本の野生植物 第1巻,51,macOS Vision OCR + rule parser
+plant-profile-000140,スガモ,Phyllospadix iwatensis,アマモ科,ZOSTERACEAE,スガモ属,Phyllospadix,,,3ー5月,千島列島・朝鮮半島・中国・サハリンに分布する,岩礁上に生育する,日本の野生植物 第1巻,51,macOS Vision OCR + rule parser
+plant-profile-000141,ホソバノシバナ,Triglochin palustris,シバナ科,JUNCAGINACEAE,,Triglochin,多年草,15-35cm,7ー8月,北海道と本州の北部 と中部の高地に産し、広く北半球の温帯～亜寒帯に分布する,淡水の湿原や沼の縁に生える多年草,日本の野生植物 第1巻,51,macOS Vision OCR + rule parser
+plant-profile-000142,アマモ,Zostera marina,アマモ科,ZOSTERACEAE,アマモ属,Zostera,多年草,,3ー7月,北海道～九州、北半球の寒器～温帯に広く分布する,内湾の水深0ー10m（最大30m）の海底の砂泥に生える多年草， まれに高水温域では一年草,日本の野生植物 第1巻,52,macOS Vision OCR + rule parser
+plant-profile-000143,オオアマモ,Zostera asiatica,アマモ科,ZOSTERACEAE,アマモ属,Zostera,多年草,,5一7月,北海道・本州北部（岩手県）、千 島列島・朝鮮半島・中国・ロシアに分布する,水深0一5mの内湾の海底の砂泥に生える多年草,日本の野生植物 第1巻,52,macOS Vision OCR + rule parser
+plant-profile-000144,コアマモ,Zostera japonica,アマモ科,ZOSTERACEAE,アマモ属,Zostera,多年草,,,,水深0以下ー1mの内湾や河口、珊瑚礁のラ グーンなどの汽水～海水の砂～砂泥に生える多年草,日本の野生植物 第1巻,52,macOS Vision OCR + rule parser
+plant-profile-000145,スゲアマモ,Zostera caespitosa,アマモ科,ZOSTERACEAE,アマモ属,Zostera,多年草,,2一5月,北海道～本州（太平洋岸は宮 城県以北、日本海岸は島根県以北）、朝鮮半島・中国北部に分布する,水深1ー20mの内湾の海底の砂泥に生える多年草,日本の野生植物 第1巻,52,macOS Vision OCR + rule parser
+plant-profile-000146,タチアマモ,Zostera caulescens,アマモ科,ZOSTERACEAE,アマモ属,Zostera,多年草,,4一6月,北海道～本州（太平洋岸 は神奈川県以北、日本海岸は島根県以北），朝鮮半島に分布する,水深3ー17mの内湾の海底の砂泥に生える多年草,日本の野生植物 第1巻,52,macOS Vision OCR + rule parser
+plant-profile-000147,イトモ,Potamogeton berehtoldii,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,6ー8月,北海道～琉球、世界の 温帯～熱帯に広く分布する,イトモ Potamogeton berehtoldii Ficber 淡水の湖沼やため池、水路に生える沈水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000148,イヌイトモ,Potamogeton obtusifolius,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,8-9月,北海道にまれに分 布し、北半球の冷温者に広く分布する,イヌイトモ Potamogeton obtusifolius Mert. et W.D. J. Koch 淡水の湖沼、水路に生える洗水性の 多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000149,エゾノヒルムシロ,Potamogeton gramineus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,,,7一9月,北海道・本州（中部以北）、北半球の温帯～亜寒帯に広く分布する,エゾノヒルムシロ Potamogeton gramineus L.淡水の湖沼やため池に生える沈水性～浮葉性の多 年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000150,エゾヤナギモ,Potamogeton compressts,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,8ー9月,,エゾヤナギモ Potamogeton compressts L.淡水の湖沼に生える沈水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000151,エビモ,Potamogeton crispus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,6一9月,北 海道～琉球、世界に広く分布する,河川、水路にふつうに生える沈水 性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000152,オヒルムシロ,Potamogeton natans,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,5ー8月,北海道～九州、北半球の冷温帯に広く分布する,淡水の湖沼、ため池に生える浮葉性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000153,ガシャモク,Potamogeton lucens,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,6ー10月,関東と九州の一 部にまれに分布し、世界ではユーラシア大陸の冷温帯に広く分布する,淡水の湖沼やため池に生える沈水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000154,コバノヒルムシロ,Potamogeton cristatus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,5一8月,北海道～琉球、朝鮮半島・ウスリー・台湾・中国に分布する,コバノヒルムシロ Potamogeton cristatus Regel et Maack 淡水の湖沼やため池に生える沈水性～ 浮葉性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000155,ササバモ,Potamogeton wrightii,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,,,7一9月,本州（関 東以西）～琉球，朝鮮半島・中国・東南アジアに分布する,ササバモ Potamogeton wrightii Morong 淡水の湖沼、河川、水路に生える沈水性～浮葉性の多年 草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000156,センニンモ,Potamogeton maackianus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,7ー8月,北海道～九州、 朝鮮半島・中国・東南アジアに分布する,河川、水路に生える沈水性 の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000157,ツツイトモ,Potamogeton pusillus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,,北海道～九州、世界に広く分布する,淡水の湖沼、水路に生える沈水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000158,ナガバエビモ,Potamogeton praelongus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,,北海道にまれに分布し、北半球に広く分布する,ナガバエビモ Potamogeton praelongus Wulfen 淡水の湖沼に生える洗水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000159,ヒルムシロ,Potamogeton distinetus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,,北海道～琉球、朝鮮半島・中国に分布する,,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000160,ヒロハノエビモ,Potamogeton perfoliatus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,,世界の温帯～亜熱帯に広く分布する,淡水～汽水の湖沼に生える洗水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000161,フトヒルムシロ,Potamogeton fryeri,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,4ー8月,北海道～九州、朝鮮半島・千島に分布する,湿原内の池に生え る浮葉性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000162,ホソバヒルムシロ,Potamogeton alpinus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,,,,北海道・本州（東北）、北半球の高緯度地域に広く分布する,淡水の湖沼に生える沈水性～浮葉性の多年 草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000163,ホソバミズヒキモ,Potamogeton octandrus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,,北海道～琉球、朝鮮半島・中国・東南アジア・豪州北部に分布する,淡水の河川、水路、ため池に生える沈水 性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000164,ヤナギモ,Potamogeton oxyphyllus,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,6-9月,北海道～九州、朝鮮 半島・中国に分布する,淡水の湖沼や河川、水路に生える洗水性の多年草,日本の野生植物 第1巻,53,macOS Vision OCR + rule parser
+plant-profile-000165,イトクズモ,Zannichellia palustris,ヒルムシロ科,POTAMOGETONACEAE,イトクズモ属,Zannichellia,一年草,,6一9月,北海道～琉球、世界に広く分布する,水路などに生える沈水 性の一年草または多年草,日本の野生植物 第1巻,54,macOS Vision OCR + rule parser
+plant-profile-000166,カワツルモ,Ruppia maritima,カワツルモ科,RUPPIACEAE,カワツルモ属,Ruppia,多年草,,,北海道～琉球・小笠原にあり、世界に広く分布する,河口や海岸近くの汽水城に生える沈水性の多年草,日本の野生植物 第1巻,54,macOS Vision OCR + rule parser
+plant-profile-000167,ナガバカワツルモ,Ruppia oeeidentalis,カワツルモ科,RUPPIACEAE,カワツルモ属,Ruppia,多年草,,,国内では北海道にのみ分布し、国外では北米内陸部から アラスカ、極東ロシアに分布する,ナガバカワツルモ Ruppia oeeidentalis S. Watson 海岸近くの汽水域に生える沈水性の多年草,日本の野生植物 第1巻,54,macOS Vision OCR + rule parser
+plant-profile-000168,ナンゴクカワツルモ,Ruppia rostellata,カワツルモ科,RUPPIACEAE,カワツルモ属,Ruppia,,,,国内では島根 と沖縄（石垣島）にのみ分布し、国外では中国や東南アジア・太平洋諸島・北米・欧州に広く,,日本の野生植物 第1巻,54,macOS Vision OCR + rule parser
+plant-profile-000169,ネジリカワツルモ,Ruppia megaearpa,カワツルモ科,RUPPIACEAE,カワツルモ属,Ruppia,,,,,海岸近くの汽水域に生える沈水性の多年 草,日本の野生植物 第1巻,54,macOS Vision OCR + rule parser
+plant-profile-000170,リュウノヒゲモ,Stuckenia peetinata,ヒルムシロ科,POTAMOGETONACEAE,リュウノヒゲモ属,Stuckenia,多年草,,6-9月,北海道～琉球、世界に広く分布する,淡水～汽水の湖沼や水路に生える沈水性 の多年草,日本の野生植物 第1巻,54,macOS Vision OCR + rule parser
+plant-profile-000171,ウミジグサ,Halodule uninervis,ベニアマモ科,CYMODOCEACEAE,ウミジグサ属,Halodule,多年草,,,奄美諸島～琉球、太平洋西部～インド洋の熱帯～亜熱帯に分布する,珊瑚礁のラグーンなど潮間帯～浅い潮下帯 の砂～泥地に生える多年草,日本の野生植物 第1巻,55,macOS Vision OCR + rule parser
+plant-profile-000172,オゼソウ,Japonolirion osense,サクライソウ科,PETROSAVIACEAE,オゼソウ属,Japonolirion,多年草,15ー35cm,7ー8月,,オゼソウ Japonolirion osense Nakai （PL 97） 北海道（天塩山地），本州（至仏山・谷川岳）の蛇紋 岩地帯にまれに生える多年草,日本の野生植物 第1巻,55,macOS Vision OCR + rule parser
+plant-profile-000173,ベニアマモ,Cymodoeea rotundata,ベニアマモ科,CYMODOCEACEAE,ベニアマモ属,Cymodocea,多年草,,,奄美諸島～琉球、太平洋西部、インド洋の亜熱帯～熱群に分布,珊場礁のラグーン など潮間帯～浅い潮下帯の砂地に生える多年草,日本の野生植物 第1巻,55,macOS Vision OCR + rule parser
+plant-profile-000174,ボウアマモ,Syringodium isoetifolium,ベニアマモ科,CYMODOCEACEAE,ボウアマモ属,Syringodium,多年草,,,奄美諸島～琉球、太平洋西部～インド洋に分布する,ボウアマモ〔ボウバアマモ、シオニラ〕 Syringodium isoetifolium （Asch.） Dandy （PL 97） 地瑚礁のラグー ンなど潮間帯～浅い潮下帯の砂～砂泥地に生える多年草,日本の野生植物 第1巻,55,macOS Vision OCR + rule parser
+plant-profile-000175,マツバウミジグサ,Halodule pinifolia,ベニアマモ科,CYMODOCEACEAE,ウミジグサ属,Halodule,多年草,,,奄美諸島～琉球、太平洋西部の熱帯～亜熱帯に分布する,珊瑚礁のラグーンなど潮間帯～浅い潮 下帯の砂～砂泥地に生える多年草,日本の野生植物 第1巻,55,macOS Vision OCR + rule parser
+plant-profile-000176,リュウキュウアマモ,Cymodocea serralata,ベニアマモ科,CYMODOCEACEAE,ベニアマモ属,Cymodocea,多年草,,,奄美諸島～琉球、インド洋～太平洋西部の亜熱帯～熱帯に分布する,珊瑚礁のラグーンなど 湖間帯～浅い湖下帯の砂地に生える多年草,日本の野生植物 第1巻,55,macOS Vision OCR + rule parser
+plant-profile-000177,キンコウカ,Narthecium asiaticum,キンコウカ科,NARTHECIACEAE,キンコウカ属,Narthecium,多年草,20-50cm,,,山地の湿原に生え、ときに群生する多年草,日本の野生植物 第1巻,56,macOS Vision OCR + rule parser
+plant-profile-000178,サクライソウ,Petrosavia sakuraii,サクライソウ科,PETROSAVIACEAE,サクライソウ属,Petrosavia,多年草,7ー20cm,7月ごろ,台湾・中国（海南島）・ベトナム・ミャンマー・スマトラ北部に分布する,常緑広葉椡林，落葉常緑混 交林，針楽街休などの林下に生える菌従屈栄養の多年草,日本の野生植物 第1巻,56,macOS Vision OCR + rule parser
+plant-profile-000179,ソクシンラン,Aletris spieata,キンコウカ科,NARTHECIACEAE,ノギラン属,Metanarthecium,多年草,30-50cm,4ー6月,本州（関東地方以西）～琉球（吐鴨喇列島と宮古列島 を除く）、韓国・中国・台湾・フィリピン（ルソン島）・マレーシア北部（？）に分布する,日当りのよい草原や山離に生える多年草,日本の野生植物 第1巻,56,macOS Vision OCR + rule parser
+plant-profile-000180,ネバリノギラン,Aletris foliata,キンコウカ科,NARTHECIACEAE,ノギラン属,Metanarthecium,多年草,20-40cm,4ー8月中旬,北海道（南西 部）・本州・四国・九州に分布する日本の特産種である,山地～亜高山帯の草原に生える 多年草,日本の野生植物 第1巻,56,macOS Vision OCR + rule parser
+plant-profile-000181,ヒメソクシンラン,Aletris scopulorum,キンコウカ科,NARTHECIACEAE,ノギラン属,Metanarthecium,多年草,,5月,,ヒメソクシンラン Aletris scopulorum Dunn 山麓の流れの緑に生える多年草,日本の野生植物 第1巻,56,macOS Vision OCR + rule parser
+plant-profile-000182,キリシマタヌキノショクダイ,Thismia fubereulata,タヌキノショクダイ科,THISMIACEAE,タヌキノショクダイ属,Thismia,多年草,,,,キリシマタヌキノショクダイ Thismia fubereulata Hatus.照葉樹林下の落葉に埋もれて生える淡 褐色の菌従属栄養多年草,日本の野生植物 第1巻,57,macOS Vision OCR + rule parser
+plant-profile-000183,タヌキノショクダイ,Thismia abei,タヌキノショクダイ科,THISMIACEAE,タヌキノショクダイ属,Thismia,多年草,,,,照葉街林下の落葉の下に生える帯白 色の菌従属栄養多年草,日本の野生植物 第1巻,57,macOS Vision OCR + rule parser
+plant-profile-000184,ヒナノボンボリ,Saionia hyodol,タヌキノショクダイ科,THISMIACEAE,タヌキノショクダイ属,Thismia,,2-3cm,,,ヒナノボンボリ Saionia hyodol （C. Abe et Akasawa） H. Ohashi 常緑広葉林下に生えるごくまれ な菌従属栄養植物,日本の野生植物 第1巻,57,macOS Vision OCR + rule parser
+plant-profile-000185,ホシザキシャクジョウ,Saionia shinzatoi,タヌキノショクダイ科,THISMIACEAE,タヌキノショクダイ属,Thismia,,,,,,日本の野生植物 第1巻,57,macOS Vision OCR + rule parser
+plant-profile-000186,ヤクノヒナホシ,Saionia yamashitae,タヌキノショクダイ科,THISMIACEAE,タヌキノショクダイ属,Thismia,,1cm,,,,日本の野生植物 第1巻,57,macOS Vision OCR + rule parser
+plant-profile-000187,キリシマシャクジョウ,Burmannia nepalensis,ヒナノシャクジョウ科,BURMANNIACEAE,ヒナノシャクジョウ属,Burmannia,多年草,5ー14cm,,伊豆七島・四国（愛媛県、高知県）・九州・奄美大島・ 沖縄島に生え、台湾・中国・フィリピン・インドネシア・インド・ネパールに分布する,常緑歯林下に生える菌従属 栄養多年草,日本の野生植物 第1巻,58,macOS Vision OCR + rule parser
+plant-profile-000188,シロシャクジョウ,Burmannia cryptopetala,ヒナノシャクジョウ科,BURMANNIACEAE,ヒナノシャクジョウ属,Burmannia,多年草,5ー15cm,,本州（近畿）・四国・九州・屋久島・種子島・琉球（沖 縄島・久米島・石垣島・西表島）に生え、台湾・中国（海南島）に分布する,常緑林下の落葉の間に生える白色 の菌従属栄養多年草,日本の野生植物 第1巻,58,macOS Vision OCR + rule parser
+plant-profile-000189,ヒナノシャクジョウ,Burmannia championii,ヒナノシャクジョウ科,BURMANNIACEAE,ヒナノシャクジョウ属,Burmannia,多年草,3ー15cm,,本州（関東以西）・四国・九州・屋久島と沖縄島に 見られ、台湾・中国（南部）・マレーシア・タイ・インドネシア・ニューギニア・インド・スリ ランカに分布する,,日本の野生植物 第1巻,58,macOS Vision OCR + rule parser
+plant-profile-000190,ミドリシャクジョウ,Burmannia coelestis,ヒナノシャクジョウ科,BURMANNIACEAE,ヒナノシャクジョウ属,Burmannia,一年草,10-25cm,,中国（南部）・インドシナ・タイ・マレーシア・インドネシア・ニューギニア・ミャン マー・バングラデシュ・インド・ネパールに分布する,ミドリシャクジョウ Burmannia coelestis D. Don湿った草地または砂地に生える一年草,日本の野生植物 第1巻,58,macOS Vision OCR + rule parser
+plant-profile-000191,ルリシャクジョウ,Burmannia itoana,ヒナノシャクジョウ科,BURMANNIACEAE,ヒナノシャクジョウ属,Burmannia,多年草,6ー12cm,,屋久島・奄美大島・琉球（沖縄島・石垣島・西表島） に生え、台湾・中国南部と南西部（海南・広州・広西・要南省）に分布する,屋久島・奄美大島・琉球（沖縄島・石垣島・西表島） に生え,日本の野生植物 第1巻,58,macOS Vision OCR + rule parser
+plant-profile-000192,イシガキソウ,Sciaphila multilora,ホンゴウソウ科,TRIURIDACEAE,ホンゴウソウ属,Sciaphila,,3ー13cm,,,落ち葉の間に生える多年生の菌従属栄養植物,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000193,イズドコロ,Dioseorea izuensis,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,,林下に生えるつる性の多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000194,ウエマツソウ,Seiaphila secundilora,ホンゴウソウ科,TRIURIDACEAE,ホンゴウソウ属,Sciaphila,,6ー10cm,7ー9月,本州（新潟・和歌山県以西）・四国・九州・琉球 （沖縄島、西表島）・伊豆諸島～小笠原、台湾・香港・タイ・ニューギニア・スリランカに分布,林床の落葉の間に生える菌従属栄 養植物,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000195,ウチワドコロ,Dioscorea nipponica,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,朝鮮半島・中国に分布する,山地に生えるつる性の多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000196,オニドコロ,Dioscorea tokoro,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,北海道～九州に分布する,,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000197,カエデドコロ,Dioscorea quinguelobata,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,本州（中部以西）～琉球、朝鮮半島・中国に分布する,山野に生えるつる性の多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000198,スズフリホンゴウソウ,Sciaphila ramosa,ホンゴウソウ科,TRIURIDACEAE,ホンゴウソウ属,Sciaphila,,3ー8cm,,小笠原（父島，兄島）と台湾に分布する,,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000199,タカクマソウ,Seiaphila tenella,ホンゴウソウ科,TRIURIDACEAE,ホンゴウソウ属,Sciaphila,,5ー10cm,,鹿 児島県大隅半島の高隈山から琉球にかけてまれに生育する日本特産種とみなされていたが、台 湾・中国（海南島）からインドネシア・スリランカに広く分布することがわかった,鹿 児島県大隅半島の高隈山から琉球にかけてまれに生育,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000200,タチドコロ,Dioseorea gracillima,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,本州～九州、中国に分布する,山地に生える多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000201,ツクシタチドコロ,Dioscorea aselepiadea,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,,,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000202,ナガイモ,Dioscorea polystachya,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,つる性多年草,,,,畑で栽培される中国原産のつる性多年草で、山野 に野生化したものもある,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000203,ニガカシュウ,Dioscorea bulbifera,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,本州（関東以西）～琉球，朝鮮半島・中国・台湾・マレーシア・ インド・オーストラリア・アフリカ・熱帯アメリカに分布,山野に生えるつる性の多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000204,ヒメドコロ,Dioscorea tenuipes,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,本州（関東以西）～琉球に分布する,山野に生えるつる性の多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000205,ホンゴウソウ,Sciaphila nana,ホンゴウソウ科,TRIURIDACEAE,ホンゴウソウ属,Sciaphila,,3ー13cm,,本州（宮城県・栃木県・新潟県以西）～琉 球にややまれに分布,暗い林の下の落ち葉の間に生える多年生の菌従属 栄養植物,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000206,ヤクシマソウ,Sciaphila yakushimensis,ホンゴウソウ科,TRIURIDACEAE,ホンゴウソウ属,Sciaphila,,3ー9cm,,,,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000207,ヤマノイモ,Dioseorea japonica,ヤマノイモ科,DIOSCOREACEAE,ヤマノイモ属,Dioscorea,多年草,,,本州～琉球，朝鮮 半島・中国・台湾に分布する,山野に生えるつる性の多年草,日本の野生植物 第1巻,59,macOS Vision OCR + rule parser
+plant-profile-000208,コバナナベワリ,Croomia saitoana,ビャクブ科,STEMONACEAE,ナベワリ属,Croomia,,,,,,日本の野生植物 第1巻,60,macOS Vision OCR + rule parser
+plant-profile-000209,シコクナベワリ,Croomia kinoshitae,ビャクブ科,STEMONACEAE,ナベワリ属,Croomia,,,,四国（小豆島を含む）に分布,,日本の野生植物 第1巻,60,macOS Vision OCR + rule parser
+plant-profile-000210,ナベワリ,Croomia heterosepala,ビャクブ科,STEMONACEAE,ナベワリ属,Croomia,,30-60cm,,本 州（関東以西）・四国・九州に分布する,,日本の野生植物 第1巻,60,macOS Vision OCR + rule parser
+plant-profile-000211,ヒメナベワリ,Croomia japonica,ビャクブ科,STEMONACEAE,ナベワリ属,Croomia,,40-60cm,,本州（広島県・山口県）・四国・九州・奄美諸島に分布する,,日本の野生植物 第1巻,60,macOS Vision OCR + rule parser
+plant-profile-000212,ヒュウガナベワリ,Croomia lyugaensis,ビャクブ科,STEMONACEAE,ナベワリ属,Croomia,,,,,,日本の野生植物 第1巻,60,macOS Vision OCR + rule parser
+plant-profile-000213,ビャクブ,Stemona japonica,ビャクブ科,STEMONACEAE,ビャクブ属,Stemoma,,,,,,日本の野生植物 第1巻,60,macOS Vision OCR + rule parser
+plant-profile-000214,アダン,Pandanus odoratissimus,タコノキ科,PANDANACEAE,ツルアダン属,Freycinetia,小高木,2-6m,,吐感喇列島口之 島以南の南西諸島および大東諸島の沿海地に生え、台湾・中国南部・ベトナム・マレーシアか らインド南部・スリランカ・モルジブに分布する,吐感喇列島口之 島以南の南西諸島および大東諸島の沿海地に生え,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000215,シライトソウ,Chionographis japonica,シュロソウ科,MELANTHIACEAE,シライトソウ属,Chionographis,多年草,15ー50cm,5ー6月,本州（秋田県以南）～九州、韓国（済州島）に分布する,山地の林中に生える多年草,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000216,タコノキ,Pandanus boninensis,タコノキ科,PANDANACEAE,ツルアダン属,Freycinetia,常緑小高木,3ー6m,,,小笠原（父島列島・母島列島・硫黄列島）の治海地から山地の岩地や常緑林内 に生える,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000217,チャボシライトソウ,Chionographis koidzumiana,シュロソウ科,MELANTHIACEAE,シライトソウ属,Chionographis,,12ー30cm,,本州（愛知県・紀伊半島）・四国・九州に分布する,,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000218,ツルアダン,Freyeinetia formosana,タコノキ科,PANDANACEAE,ツルアダン属,Freycinetia,藤本,,,琉球 （石垣島・西表島）・小笠原（父島・母島）の常緑樹林内に生え、台湾（北部・蘭）・フィリピ ン（バタン諸島）に分布する,琉球 （石垣島・西表島）・小笠原（父島・母島）の常緑樹林内に生え,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000219,ヒメツルアダン,Freyeinetia williamsi,タコノキ科,PANDANACEAE,ツルアダン属,Freycinetia,藤本,,,琉球（西表島）の林内に生え、台湾（開鹸）・フィリピン（バタン諸島）に分布,琉球（西表島）の林内に生え,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000220,リシリソウ,Anticlea sibiriea,シュロソウ科,MELANTHIACEAE,リシリソウ属,Anticlea,,10ー25cm,7ー8月,国外では、朝鮮半島北部・中国 （北部）・シベリアに分布する,北海道の利尻島・礼文島の高山草地に生える多 年草,日本の野生植物 第1巻,61,macOS Vision OCR + rule parser
+plant-profile-000221,エンレイソウ,Twillium apetalon,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,20-40cm,,南千島・北海道～九州、サハリンに分布する,山地の林内のやや湿ったところに生える多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000222,オオバナノエンレイソウ,Trillium eamsehatcense,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,,,本州北部・北海道、千島・サハリン・カムチャツカ半島に分布,原野の林下に生える多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000223,キヌガサソウ,Kinugasa japoniea,シュロソウ科,MELANTHIACEAE,キヌガサソウ属,Kinugasa,多年草,30-80cm,,,亜高山に生える多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000224,クルマバツクバネソウ,Paris verficilata,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,,,北海道～九州、朝鮮半島・中国・千島・サハリン・シベリアに 122 シュロソウ科 分布する,山地の林下に生える多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000225,コバイケイソウ,Veratrum stamineum,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,,,,,山地，亜高山の湿原に生え シュロソウ科 123,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000226,ショウジョウバカマ,Heloniopsis orientalis,シュロソウ科,MELANTHIACEAE,ショウジョウバカマ属,Heloniopsis,多年草,10-30cm,4ー5月,北海道～九州，サハリンに分布する,山野のやや 湿ったところに生える多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000227,ツクバネソウ,Paris tetraphylla,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,,,北海道～九州に分布する,山地の林下に生える多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000228,ミヤマエンレイソウ,Trwillium tschonoskii,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,,,北海道～九州、朝鮮半島・中国・サハリンに分布する,ミヤマエンレイソウ〔シロバナエンレイソウ〕 Trwillium tschonoskii Maxim. （PL 109） 山地の林下に生え る多年草,日本の野生植物 第1巻,62,macOS Vision OCR + rule parser
+plant-profile-000229,アオヤギソウ,Veratrum maackii,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,50-100cm,6一8月,本州中部以北・北海道、 朝鮮半島に分布する,山地の林 下や湿った草原に生える多年草,日本の野生植物 第1巻,63,macOS Vision OCR + rule parser
+plant-profile-000230,オオチゴユリ,Disporum viridescens,イヌサフラン科,COLCHICACEAE,,Disporum,,,,北海道・本州（北部～中部）、朝鮮半島・中国（北 東部）・ウスリーに分布する,山地の林下に生える多 年草,日本の野生植物 第1巻,63,macOS Vision OCR + rule parser
+plant-profile-000231,キバナチゴユリ,Disporum luteseens,イヌサフラン科,COLCHICACEAE,,Disporum,多年草,,,,山地の林下に生える多年草,日本の野生植物 第1巻,63,macOS Vision OCR + rule parser
+plant-profile-000232,チゴユリ,Disporum smilacinum,イヌサフラン科,COLCHICACEAE,,Disporum,多年草,,,南千島・北海道・本州・四国・九州，ウルップ島・サハリン南部・朝鮮半島・中国（山東 省北東部）に分布する,山野の林下にふつうに生える多年草,日本の野生植物 第1巻,63,macOS Vision OCR + rule parser
+plant-profile-000233,バイケイソウ,Veratrum album,シュロソウ科,MELANTHIACEAE,ツクバネソウ属,Paris,多年草,60-150cm,7ー8月,北 海道～九州，サハリン・千島列島・朝鮮半島・中国（東北）・ウスリー・ダフリア・カムチャツ カ半島に分布する,山地の林下または湿っ た草原に生える大型の多年草,日本の野生植物 第1巻,63,macOS Vision OCR + rule parser
+plant-profile-000234,ホウチャクソウ,Disporum sessile,イヌサフラン科,COLCHICACEAE,,Disporum,多年草,15-60cm,早い,南千島・北海道・本州・四国・九州、サハリン南部・韓国（酸陵品・ 済州島）に分布する,丘陵、原野の林 下に生える多年草,日本の野生植物 第1巻,63,macOS Vision OCR + rule parser
+plant-profile-000235,カラスキバサンキライ,Heterosmilax japoniea,サルトリイバラ科,SMILACACEAE,カラスキバサンキライ属,Heterosmilax,低木,,,,カラスキバサンキライ Heterosmilax japoniea Kunth （PL111） 道ばたに生えるつる性の半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000236,ササバサンキライ,Smilax nervomarginata,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,,,奄美大島・琉球中国に分布する,ササバサンキライ Smilax nervomarginata Hayata 常緑の林緑ややぶに生えるやや小型のつる性 半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000237,サツマサンキライ,Smilax bracteata,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,,,九州（長崎県以南の西側海岸）～琉球、台湾・インドシナ・フィリピン・ミクロネシアに分布,サツマサンキライ Smilax bracteata C. Pres］ （PL 113） 山地に生えるつる性半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000238,サルトリイパラ,Smilax china,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,,,北 海道～琉球・伊豆～小笠原諸島、朝鮮半島・中国・台湾・インドシナ・フィリピンに分布する,サルトリイパラ Smilax china L. （PL112） 山野、丘陵地に生えるつる性半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000239,サルマメ,Smias trinervula,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,30-50cm,,本州（関東以西）、中国に分布する,山地に生える小型の半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000240,シオデ,Smilax riparia,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,多年草,,,北海道～九 州、朝鮮半島・中国・ウスリーに分布する,シオデ Smilax riparia A. DC. （PL 111） 山野に生える多年草,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000241,タチシオデ,Smilax nipponica,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,多年草,,,朝鮮半島・中国 に分布する,タチシオデ Smilax nipponica Mig. （PL 112） 山野に生える多年草,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000242,ハマサルトリイバラ,Smilax sebeana,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,,,九州（鹿児島県、長崎県男女群島）～琉球、台湾に分布する,海岸近くに生えるつる性半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000243,ヒメカカラ,Smilas bilora,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,20-30cm,,,ヒメカカラ Smilas bilora Siebold ex Mig. （PL 113） 山地に生える小型の半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000244,マルバサンキライ,Smilax stans,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,,,本州～九州、中国・台湾に分布する,山地に生えるつる性半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000245,ヤマカシュウ,Smilax sieboldii,サルトリイバラ科,SMILACACEAE,サルトリイバラ属,Smilax,低木,,,本州 ～九州、朝鮮半島・中国に分布する,山地に生えるつる性の半低木,日本の野生植物 第1巻,64,macOS Vision OCR + rule parser
+plant-profile-000246,ウバユリ,Cardiocrinum cordatum,ユリ科,LILIACEAE,ウバユリ属,Cardiocrinum,,60-100cm,,本州（宮城 県・石川県以西）・四国・九州に分布,山野の林下に生える多 年草,日本の野生植物 第1巻,65,macOS Vision OCR + rule parser
+plant-profile-000247,カタクリ,Erythronium japonicum,ユリ科,LILIACEAE,カタクリ属,Erythronium,多年草,10ー20cm,,南千島・北海道・本州・四 国・九州、朝鮮半島・中国（北東部）・サハリンに分布するが、四国や九州ではまれである,山野に群生する多年草,日本の野生植物 第1巻,65,macOS Vision OCR + rule parser
+plant-profile-000248,クロユリ,Fritillaria camschateensis,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,10-50cm,,サハリン・ウスリー・千島・カムチャツカ・北アメリカ北部に分布する,高山または北地の 草原に生える多年草,日本の野生植物 第1巻,65,macOS Vision OCR + rule parser
+plant-profile-000249,ツバメオモト,Clintonia udensis,ユリ科,LILIACEAE,ツバメオモト属,Clintonia,多年草,20-30cm,,南 千島・北海道・本州（奈良県以北），ウルップ島・サハリン・朝鮮半島・中国・シベリア東部・ ヒマラヤ東部に分布する,亜高山帯の針楽林下などに生える 多年草,日本の野生植物 第1巻,65,macOS Vision OCR + rule parser
+plant-profile-000250,アワコバイモ,Fritillaria muraiana,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,10-30cm,,四国にまれに見られる,山地の林下に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000251,イズモコバイモ,Fritillaria ayakoana,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,,,本州（島根県） にまれに見られる,イズモコバイモ Fritillaria ayakoana Maruy. et Nanuh. 山地の林下に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000252,エゾヒメアマナ,Gagea vaginata,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,,,,,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000253,カイコバイモ,Fridillaria kaiensis,ユリ科,LILIACEAE,バイモ属,Fritillaria,,,,本州（東京都・山梨県・ 静岡県）にまれに見られる,,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000254,キバナノアマナ,Gagea nakaiana,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,15ー25cm,,南千島・北海道・本州北部～中部に産し、本州西部・四国・九州にはまれで、 朝鮮半島・中国北東部・ロシアに広く分布する,山野に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000255,クルマユリ,Lilium medeoloides,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,30-100cm,,南千島・北海道・本州（近畿地方以北）・四国（剣山）、 朝鮮半島・中国・サハリン・千島・カムチャツカに分布,亜高山帯の草原に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000256,コシノコバイモ,Fritillaria koidzumiana,ユリ科,LILIACEAE,バイモ属,Fritillaria,,,,本州（山形県・福 島県～石川県・静岡県・厳阜県）にまれに見られる,,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000257,スカシユリ,Lilium maeulatum,ユリ科,LILIACEAE,ユリ属,Lilium,,,6ー8月上旬,,海岸の砂浜や岩場、崖に生える多 年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000258,タケシマユリ,Lillium hansonii,ユリ科,LILIACEAE,ユリ属,Lilium,,1ー1.5m,,,タケシマユリ Lillium hansonii Leichtlin ex D. T. Moore 観賞用として古くから栽培され、自生地は 韓国の鬱陵島（古名竹島）であるという,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000259,トサコバイモ,Fritillaria shikokiana,ユリ科,LILIACEAE,バイモ属,Fritillaria,,,,四国・九州中部に まれに見られる,,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000260,ヒメアマナ,Gagea japoniea,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,,,,湿った原野に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000261,ヒメユリ,Lilium coneolor,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,30-80cm,,本州～九州、朝鮮半島・中国・アムールに分布し、日本ではややまれである,山地に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000262,ホソバナコバイモ,Fritillaria amabilis,ユリ科,LILIACEAE,バイモ属,Fritillaria,多年草,,,本州（兵庫県 以西）・九州（北部～中部）にまれに見られる,山地の林下に生える多年草,日本の野生植物 第1巻,66,macOS Vision OCR + rule parser
+plant-profile-000263,ウケユリ,Lilium alexandrae,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,1ー1.2m,,奄美大島、徳之島とその間の島々に分布し、請島に多い,,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000264,エゾスカシユリ,Lilium pensylvanicum,ユリ科,LILIACEAE,ユリ属,Lilium,,,,北海道や南千島 の海岸砂地に生え、ウルップ島・サハリン・カムチャツカ・ダフリア・朝鮮半島・中国北東部 にまで分布する,北海道や南千島 の海岸砂地に生え,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000265,オオバタケシマラン,Streptopus amplexifolius,ユリ科,LILIACEAE,タケシマラン属,Streptopus,多年草,50-100cm,,南千島・北海道・本州（北部～中 部）、朝鮮半島・サハリン・アムール・千島・カムチャツカ・シベリア東部に分布する,深山の林下に 生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000266,オニユリ,Lilium lancifolium,ユリ科,LILIACEAE,ユリ属,Lilium,,1ー2m,,北海道～九州、朝鮮半島・中国に分布し、日本各地に見 られるが、真の自生か不明,オニユリ Lilium lancifolium Thunb. var. laneifolium （PL 120） 田のあぜなど人里近くに生える多年 草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000267,カノコユリ,Lilium speeiosum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,,,四国（徳島県）・九州に分布する,山地の崖などに生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000268,コオニスリ,Lilium leichtlinii,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,,7ー9月,北海道～琉球（奄美大島以北），朝鮮半島・中国（北東 部）・ウスリーに分布,山地地の 草原に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000269,ササユリ,Lilium japonieum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,,,本州（中部地方以西）～九州に分布する,山地の草原に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000270,タケシマラン,Streptopus streptopoides,ユリ科,LILIACEAE,タケシマラン属,Streptopus,多年草,20-50cm,,南千島・北海道・本州（北部～中部），千島（シムシル 島以率）・サハリン・シベリア東部に分布する,山地に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000271,タモトユリ,Lilium nobilissiinum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,1.5m,,,タモトユリ Lilium nobilissiinum（Makino） Makino 海岸の岩壁に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000272,チシマアマナ,Lloydia serotina,ユリ科,LILIACEAE,チシマアマナ属,Lloydia,多年草,,,,高山の岩地に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000273,テッポウユリ,Lilium longilorum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,50-100cm,,台湾に分布する,海岸近くの崖などに生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000274,ノヒメユリ,Lilium eallosum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,60-100cm,,九州、朝鮮半島・中国・台湾・アムールに分布する,山地の草原に生える 多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000275,ヒメサユリ,Lilium rubellum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,,,,深山の草地に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000276,ホソバノアマナ,Lloydia trillora,ユリ科,LILIACEAE,チシマアマナ属,Lloydia,多年草,,,北海道～九州、朝鮮半島・中国（北東部）・ウスリー・サハリン・千島（パラムシル 島以北）・カムチャツカに分布する,山地の草原に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000277,ヤマユリ,Liium auratum,ユリ科,LILIACEAE,ユリ属,Lilium,多年草,100-150cm,,本州（近畿地方以北）に分布する日本特産種,山地、丘陵に生える多年草,日本の野生植物 第1巻,67,macOS Vision OCR + rule parser
+plant-profile-000278,アマナ,Tulipa edulis,ユリ科,LILIACEAE,チューリップ属,Tulipa,多年草,,,本州（宮城県以 南）・四国・九州、朝鮮半島・中国（東部）に分布する,原野に生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000279,キイジョウロウホトトギス,Tricyrtis macranthopsis,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,,,,,,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000280,キバナノツキタキホトトギス,Tricyrtis perfoliata,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,,,,山の崖などに下垂して生える 多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000281,キバナノホトトギス,Tricyrtis flava,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,,,,,,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000282,サガミジョウロウホトトギス,Tricyrtis ishiiana,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,,,,,,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000283,ジョウロウホトトギス,Tricyrtis maerantha,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,,,,山中に生え、湿り気のある崖から 下垂する多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000284,セトウチホトトギス,Trieyrtis setouchiensis,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,40-80cm,,本州～九州に分布する,山地の水気のあるところなど に生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000285,タイワンホトトギス,Tricyrtis formosana,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,50-80cm,9ー11月,西表島に産し、台湾に分布する,山中のやや湿った場所に生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000286,チャボホトトギス,Trieyrtis nana,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,,,,本州（東海地方～近畿地方）・四国・九州に分布し、南限は屋久島である,,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000287,ヒロハノアマナ,Tulipa latifolia,ユリ科,LILIACEAE,チューリップ属,Tulipa,多年草,,,分布は本州（福島県以西）・四国（香川県）に限られる,草地や疎林の下などに生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000288,ホトトギス,Tricyrtis hirta,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,,,北海道南西部・本州（関東地方以西・新潟県以南）・四国・ 九州に分布,山地の半日陰地に生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000289,ヤマジノホトトギス,Tricyrtis affnis,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,30-60cm,,北海道南西部～九州に分布する,山野に生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000290,ヤマホトトギス,Tricyrtis maeropoda,ユリ科,LILIACEAE,ホトトギス属,Twricyatis,多年草,,,北海道南西部・本州（岩手県以南）・四国・九州、朝鮮半島に分布する,山地の林下に生える多年草,日本の野生植物 第1巻,68,macOS Vision OCR + rule parser
+plant-profile-000291,イワチドリ,Amitostigma keiskei,ラン科,ORCHIDACEAE,ヒナラン属,Amitostigmna,,5ー15cm,,本州（中部地方・近畿地方）・四国・伊豆諸島に分布する,暖温帯の谷間の岩上に 生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000292,オキナワチドリ,Amitostigma lepidum,ラン科,ORCHIDACEAE,ヒナラン属,Amitostigmna,,8ー15cm,,九州南部・琉球に分布する,亜熱帯の海岸から山地まで、岩上 の割れ目などに生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000293,コアニチドリ,Amitostigma kinoshitae,ラン科,ORCHIDACEAE,ヒナラン属,Amitostigmna,,10-20cm,,南千島・北海道・本州中部以北に分布,亜寒帯～冷温帯の多雪地の湿原や 湿った岩場に生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000294,タイワンショウキラン,Aeanthephippium sylhetense,ラン科,ORCHIDACEAE,ニュウメンラン属,Staurochilus,,15cm,,屋久島・奄美大島・徳之島・琉球、台湾・中国～ヒマラ ヤに分布する,亜熱帯～熱帯の常緑広葉樹林 下に生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000295,タネガシマムヨウラン,Aphyllorehis montana,ラン科,ORCHIDACEAE,キバナシュスラン属,Anoectochilus,,,,九州南部・屋久島・種子島・琉球、台湾・亜熱帯～熱帯アジアに分布,亜熱帯～熱帯の林下に生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000296,ヒナラン,Amitostigma gracile,ラン科,ORCHIDACEAE,ヒナラン属,Amitostigmna,,,,本州（茨城県・栃木県・静岡県以西）・四国・九州、朝鮮半島・中国・台 湾に分布する,暖温帯の橋林下の岩上に生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000297,ミスズラン,Androcorys pusillus,ラン科,ORCHIDACEAE,ミスズラン属,Androcorys,,8ー15cm,,本州（東北～中部地方），朝鮮半島・台湾に分布する,,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000298,ヤクシマラン,Apostasia nipponiea,ラン科,ORCHIDACEAE,ヤクシマラン属,Apostasia,,,,九州南部・屋久島・種子島に分布する,暖温帯の常緑広葉樹の林床に生える,日本の野生植物 第1巻,71,macOS Vision OCR + rule parser
+plant-profile-000299,シコウラン,Bulboplyllum maeraei,ラン科,ORCHIDACEAE,マメヅタラン属,Bulbophyllum,,,,琉球、台湾・中国～ヒマラヤ・スリランカに分布,,日本の野生植物 第1巻,72,macOS Vision OCR + rule parser
+plant-profile-000300,シラン,Bletilla striata,ラン科,ORCHIDACEAE,ナリヤラン属,Arundina,,30-70cm,,本州（福島県以南）～九州、朝鮮半島南部・中国に分布 する,暖温帯の日当りがよく湿り気のある斜面に生える,日本の野生植物 第1巻,72,macOS Vision OCR + rule parser
+plant-profile-000301,マメヅタラン,Bulboplyllum drymoglossum,ラン科,ORCHIDACEAE,マメヅタラン属,Bulbophyllum,,,,台湾に分布する,,日本の野生植物 第1巻,72,macOS Vision OCR + rule parser
+plant-profile-000302,ミヤマムギラン,Bulbophyllum japonicum,ラン科,ORCHIDACEAE,マメヅタラン属,Bulbophyllum,,,,本州（静岡県以西）・四国・九州、台湾・中国商部に分布,,日本の野生植物 第1巻,72,macOS Vision OCR + rule parser
+plant-profile-000303,ムギラン,Bulbophyllum inconspicuum,ラン科,ORCHIDACEAE,マメヅタラン属,Bulbophyllum,,,,本州（宮城県以南）・四国・九州、朝鮮半島南部に分布する,,日本の野生植物 第1巻,72,macOS Vision OCR + rule parser
+plant-profile-000304,レンギョウエビネ,Calanthe lyroglossa,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,35-45cm,,中国・台湾・東南アジア～ヒマラヤに分布する,亜熱帯の常緑広薬掛林下に生える,日本の野生植物 第1巻,72,macOS Vision OCR + rule parser
+plant-profile-000305,エビネ,Calanthe diseolor,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,20-40cm,,北海道西南部～琉球，朝鮮半島・中国（東～南部）に 分布する,主として暖温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000306,オナガエビネ,Calanthe masuea,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,30-50cm,,鹿児島県の甑島・黒島から琉球を経て中国・台湾・亜 熱帯～熱帯アジアに分布する,亜熱帯～熱帯の常緑広葉林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000307,キエビネ,Calanthe citrina,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,済州島・台湾・ 中国（湖南省）に分布,暖温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000308,キソエビネ,Calanthe alpina,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,本州（東北～中部地方）・四国，台湾・中国～ヒマラヤに分布する,冷温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000309,キリシマエビネ,Calanthe aristulifera,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,20-40cm,,本州（近畿地方南部）～九州、朝鮮半島・台湾・中国南東部 に分布する,暖温帯の常緑広薬林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000310,キンセイラン,Calanthe nipponiea,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,北海道～九州，チベットに分布する,冷温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000311,キンラン,Cephalanthera faleata,ラン科,ORCHIDACEAE,キンラン属,Cephalanthera,,30-70cm,,本州～九州、朝鮮半島・中国に分布する,暖温帯の疎林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000312,ギンラン,Cephalanthera ereeta,ラン科,ORCHIDACEAE,キンラン属,Cephalanthera,,10-30cm,,北海道～九州、朝鮮半島・台湾・中国～ヒマラヤ東部に分布する,冷温帯～暖温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000313,サクラジマエビネ,Calanthe mamni,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,九州、中国南部～ヒマラヤに分布する,暖温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000314,ササバギンラン,Cephalanthera longibracteata,ラン科,ORCHIDACEAE,キンラン属,Cephalanthera,,30-50cm,,北海道～九州、朝鮮半島・極東ロシア・中国（東北部）に 分布,亜寒帯～暖温帯の林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000315,サルメンエビネ,Calanthe tricarinata,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,北海道～九州、朝鮮半島・台湾・中国～ヒマラヤに分布する,冷温帯の落葉勘林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000316,タガネラン,Calanthe bungoana,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,,タガネラン Calanthe bungoana Ohwi 暖温帯の海岸に近い林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000317,ダルマエビネ,Calanthe alismifolia,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,,,九州南部・琉球、台湾・中国南部～ヒマラヤに分布する,暖温帯～亜熱帯の常緑広薬林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000318,ツルラン,Calanthe triplieata,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,40-80cm,,九州南部・屋久島・種子島・琉球・小笠原（南硫黄島）、台湾・中国・亜熱帯～熱帯ア ジア・オセアニアに広く分布する,亜熱帯～熱帯の常緑広薬林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000319,ナツエビネ,Calanthe puberula,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,20-40cm,,本州・四国・九州、朝鮮半島南部・台湾・ 中国東部～ヒマラヤに分布する,冷温帯～暖温帯のやや湿った落葉楜 林下に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000320,ホテイラン,Calypso bulbosa,ラン科,ORCHIDACEAE,エビネ属,Calanthe,,6ー15cm,,本州中部の亜高山に分布する,亜寒帯の針葉樹林下 に生える,日本の野生植物 第1巻,73,macOS Vision OCR + rule parser
+plant-profile-000321,サイハイラン,Cremastra variabilis,ラン科,ORCHIDACEAE,サイハイラン属,Cremnastra,,30-50cm,,南千島・北海道～九州、サハリン南部・朝鮮半島南部・台湾・ 中国～ヒマラヤに分布する,サイハイラン Cremastra variabilis （Blume） Nakai （PL 159） 亜寒帯～暖温帯の林床に生える,日本の野生植物 第1巻,74,macOS Vision OCR + rule parser
+plant-profile-000322,トクサラン,Cephalantheropsis obcordata,ラン科,ORCHIDACEAE,トクサラン属,Cephalantheropsis,,50-100cm,,飯島・ 種子島・屋久島・琉球，台湾・中国南部～ヒマラヤ・東開アジアに分布する,亜熱帯～熱帯の常緑広葉材林 下に生える,日本の野生植物 第1巻,74,macOS Vision OCR + rule parser
+plant-profile-000323,トケンラン,Cremastra uguieulata,ラン科,ORCHIDACEAE,サイハイラン属,Cremnastra,多年草,30-40cm,,北海道・本州・四国・九州、韓国（済州島）・中国に分布,亜寒帯～冷温帯の落葉林下に生える,日本の野生植物 第1巻,74,macOS Vision OCR + rule parser
+plant-profile-000324,リュウキュウカイロラン,Cheirostylis liukiuensis,ラン科,ORCHIDACEAE,カイロラン属,Cheirostylis,多年草,10-15cm,,九州南部・種子島・屋久島・琉球、 台湾に分布する,亜熱帯の常緑酵林下に生える,日本の野生植物 第1巻,74,macOS Vision OCR + rule parser
+plant-profile-000325,アキザキナギラン,Cymbidium aspidistrifolium,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,,,本州 （紀伊半島）・四国・九州・琉球、韓国（済州島）・台湾に分布する,アキザキナギラン Cymbidium aspidistrifolium Fukuy. 暖温帯の常緑広葉林下に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000326,アツモリソウ,Cypripedium macranthos,ラン科,ORCHIDACEAE,アツモリソウ属,Cypripedlum,,20-40cm,,本州近畿地方以北・北海道・南千島、朝鮮半島・台湾・アジア北東部～ヨーロッパ東部 に分布する,,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000327,カンラン,Cymbidium kanran,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,25-60cm,,本州（東海地方以酒）～琉球，韓国（済州島）・台湾・中国 部に分布する,暖温帯～亜熱帯の常緑広薬材林下に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000328,キバナノアツモリソウ,Cypripedium yatabeanum,ラン科,ORCHIDACEAE,アツモリソウ属,Cypripedlum,,10-30cm,,北海道・本州（東北地方南部～中部 地方），カムチャツカ半島・アリューシャン列島～アラスカに分布する,亜寒帯～冷温帯の落棄樹林下. または草原に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000329,クマガイソウ,Cypripedium japonieum,ラン科,ORCHIDACEAE,アツモリソウ属,Cypripedlum,,20-40cm,,朝鮮半島・中国東部に分布する,冷温帯～暖温帯の楜林下， 特に杉林，竹林下に群生する,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000330,コアツモリソウ,Cypripedium debile,ラン科,ORCHIDACEAE,アツモリソウ属,Cypripedlum,,10-20cm,,台湾・中国岡部に分布する,冷温帯の山地林下に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000331,シュンラン,Cymbidium goeringii,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,10-25cm,,北海道（奥尻島）～九州，朝鮮半島・中国～ヒマラヤ西部に分布する,暖温帯のやや乾いた林床に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000332,ナギラン,Cymbidium nagifolium,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,10ー15cm,,本州（関東南部以西）～琉球，韓国（済州島）に分布する,暖温帯の常緑広棄林の林床に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000333,ヘツカラン,Cymbidium dayanum,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,,,,,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000334,ホウサイ,Cymbidium sinense,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,,,屋久島・琉球、中国・台湾～ヒマラヤに分布する,亜熱帯の常緑広葉勘林の林床に生える,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000335,マヤラン,Cymbidium macrorhizon,ラン科,ORCHIDACEAE,オオスズムシラン属,Cryptostylis,,10ー30cm,,本州（関東以西）～琉球、朝鮮半島・台湾・中国～ヒマラヤに分布する,マヤラン Cymbidium macrorhizon Lindl. （PL 161） 暖温帯～亜熱帯の林下に生える菌徒属栄養植物,日本の野生植物 第1巻,75,macOS Vision OCR + rule parser
+plant-profile-000336,アオチドリ,Dactylorhiza viridis,ラン科,ORCHIDACEAE,ツチアケビ属,Cyrtosia,,20-50cm,,四 国・本州中部以北・北海道、千島・アラスカ・サハリン・朝鮮半島・中国・ロシア・ヒマラヤ・ ヨーロッパに広く分布する,亜寒帯 ～冷温帯の林下や林緑のやや湿ったところに生える,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000337,イチヨウラン,Dactylostalix ringens,ラン科,ORCHIDACEAE,イチヨウラン属,Dactylostalix,多年草,,,南千島・北海道～九州、サハリンに分布,亜寒帯～冷温帯の林床に生える,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000338,キバナノセッコク,Dendrobium catenatum,ラン科,ORCHIDACEAE,イチヨウラン属,Dactylostalix,,,,伊豆諸島・四国・九州・ 琉球、台湾・中国南部に分布する,,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000339,コカゲラン,Didymoplexiella siamensis,ラン科,ORCHIDACEAE,コカゲラン属,Didymoplexiella,多年草,13-30cm,,台湾・中国南部～タイに 分布する,コカゲラン Didymoplexiella siamensis （Rolfe ex Downic） Seidenf.亜熱帯の常緑樹林下に生える,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000340,セッコク,Dendrobium moniliforme,ラン科,ORCHIDACEAE,イチヨウラン属,Dactylostalix,,5ー25cm,,本州～琉球（吐蠣喇列島以北）、朝鮮半島南部・台湾・中国～ヒマラ ヤに分布する,が自生する,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000341,ツチアケビ,Cyrtosia septentrionalis,ラン科,ORCHIDACEAE,ツチアケビ属,Cyrtosia,多年草,50-100cm,,朝鮮半島・中国南西部に分布する,冷温帯～暖温帯の林下に生える,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000342,ハクサンチドリ,Daetylorhiza aristata,ラン科,ORCHIDACEAE,ツチアケビ属,Cyrtosia,,10-40cm,,本州中部以北・北海道、千島・サハリン・朝鮮半島・ 中国東部・カムチャツカ半島・アリューシャン・アラスカに分布する,亜寒帯～冷温帯の草地に生え る,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000343,ヒメヤツシロラン,Didymoplexis mieradenia,ラン科,ORCHIDACEAE,コカゲラン属,Didymoplexiella,多年草,10-15cm,,種子島・吐噶喇列島・琉球に産するこ とが知られ、台湾・東南アジア・オセアニアにまで分布する,亜熱帯の常緑林下に生え る,日本の野生植物 第1巻,76,macOS Vision OCR + rule parser
+plant-profile-000344,アオキラン,Epipogium japonieum,ラン科,ORCHIDACEAE,トラキチラン属,Epipogiumn,,,,本州（東北～中部地方）にまれに産し、台湾・中国南西部にも分布する,冷温帯の落薬横林下に生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000345,アオスズラン,Epipactis helleborine,ラン科,ORCHIDACEAE,カキラン属,Epipactis,,,,南千島・ 北海道～九州、ユーラシア大陸の冷温帯～亜寒帯域、アフリカ北部に分布する,亜寒帯～冷温帯の林下または暖温帯の海 岸林に生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000346,オサラン,Eria japonica,ラン科,ORCHIDACEAE,オサラン属,Eria,,2ー6cm,,,,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000347,カキラン,Epipaetis thunbergi,ラン科,ORCHIDACEAE,カキラン属,Epipactis,,30-70cm,,北海道～九州、朝鮮半 島・中国（東北）・ウスリーに分布する,亜寒帯～暖温帯の日当りのよい湿地に生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000348,コイチヨウラン,Ephippianthus schmidti,ラン科,ORCHIDACEAE,コイチヨウラン属,Ephippianthus,,10-20cm,,北海道・本州（東北～山陰）・四国，千島・サ ハリン・極東ロシアに分布,コイチヨウラン Ephippianthus schmidti Rehb. f. （PL 151） 亜寒帯～冷温帯のおもに針薬林下に 生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000349,サワラン,Eleorehis japonica,ラン科,ORCHIDACEAE,コカゲラン属,Didymoplexiella,,20-30cm,,本州近畿地方以北・北海道・南千島に分布する,亜寒帯～冷温帯の湿地でミズ ゴケとともに生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000350,タシロラン,Epipogium roseum,ラン科,ORCHIDACEAE,トラキチラン属,Epipogiumn,,20-50cm,,本州（関東以西）・四国・九州・琉球，熱帯アフリカ・熱帯～ 亜熱帯アジア・オセアニアに分布する,暖温帯～熱帯の常緑林下に生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000351,トラキチラン,Epipogium aplyllum,ラン科,ORCHIDACEAE,トラキチラン属,Epipogiumn,,,,,亜高山針薬林下に生える,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000352,ハコネラン,Ephippianthus sawadanus,ラン科,ORCHIDACEAE,コイチヨウラン属,Ephippianthus,,,6一7月とやや早く,,コイチヨウラ ンに似るが、花の色がより強い緑色で、花期は6一7月とやや早く、生育地は冷温帯であること が異なる,日本の野生植物 第1巻,77,macOS Vision OCR + rule parser
+plant-profile-000353,イモネヤガラ,Eulophia zollingeri,ラン科,ORCHIDACEAE,イモネヤガラ属,Eulophia,,50cm,,九州南部・琉球、熱帯アジア～オーストラリア北東部に分布する,亜熱帯～熱帯の常緑広葉樹林の林床 に生える,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000354,オオオサラン,Eria seabrilinguis,ラン科,ORCHIDACEAE,オサラン属,Eria,,,,屋久島・種子島・琉球，台湾・中国・インドシナ・イン ド（アッサム地方）に分布する,,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000355,オノエラン,Galearis fauriei,ラン科,ORCHIDACEAE,カモメラン属,Galearis,,10ー15cm,,本州中北部・紀伊半島に分布し、日本固有種,冷温帯の日当りのよい岩石まじりの草地に 生える,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000356,カシノキラン,Gastrochilus japonieus,ラン科,ORCHIDACEAE,カシノキラン属,Gastrochilus,,,,本州（千葉県以西）・四国・九州・琉球，済州島に分布する,,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000357,カモメラン,Galearis cyelochila,ラン科,ORCHIDACEAE,カモメラン属,Galearis,,10-20cm,,北海道・本州（中国地方以北）・四国，サ ハリン・朝鮮半島・ウスリーに分布する,亜寒帯～冷温帯の湿った林緑に生え る,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000358,タカツルラン,Erythrorehis altissima,ラン科,ORCHIDACEAE,タカツルラン属,Erythrorchis,,,,屋久島・ 種子島・琉球，台湾・東南アジア・ヒマラヤに分布する,,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000359,マツゲカヤラン,Gastrochilus ciliaris,ラン科,ORCHIDACEAE,カシノキラン属,Gastrochilus,,,,屋久島と台湾の山地に分布する,,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000360,マツラン,Gastrochilus matsuran,ラン科,ORCHIDACEAE,カシノキラン属,Gastrochilus,,,,本州（岩手県以南 の太平洋側）・四国・九州、朝鮮半島南部に分布する,,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000361,モミラン,Gastrochilus toramanus,ラン科,ORCHIDACEAE,カシノキラン属,Gastrochilus,,,,本州（宮城県以南）・四国・九州に分布する,,日本の野生植物 第1巻,78,macOS Vision OCR + rule parser
+plant-profile-000362,アキザキヤツシロラン,Gastrodia confusa,ラン科,ORCHIDACEAE,オニノヤガラ属,Gastrodia,,8ー10cm,12一1月で花 の長さ12mm,本州（関東地方以西）・四国・九州、台湾に分布する,おもに暖温帯の竹林下に生え る,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000363,オニノヤガラ,Gastrodia elata,ラン科,ORCHIDACEAE,オニノヤガラ属,Gastrodia,,40-100cm,,台湾・朝鮮半島・極東ロシア・中国～ヒマラヤに分布,オニノヤガラ Gastrodia elata Blume var. elata （PL 139） 亜寒帯～暖温帯の林下に生え、ナラタケ と共生する,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000364,キンギンソウ,Goodyera procera,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,70cm,,屋久島・種子島・琉球・ 小笠原、中国・台湾・熱帯アジアに分布する,亜熱帯～熱帯の林緑の渓流沿いなど に生える,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000365,クロヤツシロラン,Gastrodia pubilabiata,ラン科,ORCHIDACEAE,オニノヤガラ属,Gastrodia,多年草,3cm,,本州（関東地 方以西）・四国・九州、済州島・台湾に分布,おもに暖温帯の常緑広葉林，竹林， スギ植林などに生える,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000366,ツリシュスラン,Goodyera pendula,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,,,北海道～九州、台湾に分布する,,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000367,ナヨテンマ,Gastrodin graeilis,ラン科,ORCHIDACEAE,オニノヤガラ属,Gastrodia,,,6一7月,本州（千葉県以西）・四国・ 九州、台湾に分布し、まれである,おもに暖温帯の林下に生える,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000368,ハチジョウシュスラン,Goodyera hachiijoensis,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,,,本州（岩手県、関東地方南部）・四国・九州・琉球・伊豆諸島、台湾に分布,ハチジョウシュスラン Goodyera hachiijoensis Yatabe var. hachijoensis 暖温帯～亜熱帯の常緑棋林 下に生える,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000369,ハルザキヤツシロラン,Gastrodia nipponiea,ラン科,ORCHIDACEAE,オニノヤガラ属,Gastrodia,,3-4cm,,,暖温帯～亜熱帯の常緑広葉 材林下に生える,日本の野生植物 第1巻,79,macOS Vision OCR + rule parser
+plant-profile-000370,アケボノシュスラン,Goodyera foliosa,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,5ー10cm,,朝鮮半島に分布する,亜寒帯 ～暖温帯の林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000371,イヨトンボ,Habenaria iyoensis,ラン科,ORCHIDACEAE,ミズトンボ属,Habenaria,,10ー25cm,,本州（千薬県以 西）～九州、台湾に分布する,暖温帯の湿った原野の草の間にまれに生え る,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000372,オオミズトンボ,Habenaria linearifolia,ラン科,ORCHIDACEAE,ミズトンボ属,Habenaria,,40-60cm,,北海道・本州（中部地方以北），ウスリー・アムール・中国（東 北～東南部）・朝鮮半島に分布する,オオミズトンボ Habenaria linearifolia Maxim. var. linearifolia （PL 137） おもに冷温帯の日当りの よい湿原に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000373,シマシュスラン,Goodyera viridillora,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,8ー10cm,,九州南部～琉球、台湾・中国～ ヒマラヤ・熱帯アジア・オセアニアに分布する,亜熱帯～熟帯の常緑広葉 掛林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000374,シュスラン,Goodyera velutina,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,10-15cm,,本州（関東以西）～九州、琉球、朝鮮半品・台湾・中国に分布,暖温帯～亜熱帯の常緑林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000375,ダイサギソウ,Habenaria dentata,ラン科,ORCHIDACEAE,ミズトンボ属,Habenaria,,30-60cm,,本州（千葉県以西）～琉球、朝鮮半島・ 中国・台湾・インドシナ・ヒマラヤ・マレー半島・フィリピンに分布する,暖温帯～熱帯の日当りのよいやや湿った草 原に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000376,テガタチドリ,Gymnadenia conopsea,ラン科,ORCHIDACEAE,テガタチドリ属,Gymnadenia,,30-60cm,,本州中北部・北海道、千島・サハリン・朝鮮半島・中国から シペリアを経てヨーロッパまで広く分布する,亜高山～高山帯の草原に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000377,ヒメクリソラン,Hancockia unilora,ラン科,ORCHIDACEAE,ヒメクリソラン属,Hancockia,,,,台湾・中国（要南省）・ベトナムに分布する,ヒメクリソラン Hancockia unilora Rolfe 暖温帯～亜熱帯の林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000378,ヒメミヤマウズラ,Goodyera repens,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,10ー20cm,,南千島・北海道・本州（中北部および大台ヶ原山）、台湾・ 中国・朝鮮半島・サハリン・ヒマラヤ・シベリア・ヨーロッパ・北アメリカに分布する,亜寒帯～冷温帯の林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000379,ベニシュスラン,Goodyera biflora,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,4ー10cm,,北海道（南部）・本州・ 四国・九州、朝鮮半島・台湾・中国～ヒマラヤに分布する,冷温帯～暖温帯の常緑林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000380,ミズトンボ,Habenaria sagittifera,ラン科,ORCHIDACEAE,ミズトンボ属,Habenaria,,40-70cm,,北海道西南部～九州，中国（東北～東南部）に分布する,おもに暖温帯の日当りのよい湿地に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000381,ミヤマウズラ,Goodyera schlechtendaliana,ラン科,ORCHIDACEAE,シュスラン属,Goodyera,,12-25cm,,北海道～九州・琉球（奄美大島以北）、朝鮮半島・台湾・ 中国～ヒマラヤ・スマトラ島に分布する,冷温帯～亜熱帯の林下に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000382,ヤチラン,Hammarbya palndosa,ラン科,ORCHIDACEAE,ヤチラン属,Hammarbya,,5ー10cm,,サハリン・シ ベリア・ヨーロッパ・北アメリカの亜寒帯～冷温帯に分布する,高層湿原のミズゴケの中に生える,日本の野生植物 第1巻,80,macOS Vision OCR + rule parser
+plant-profile-000383,オオハクウンラン,Kuhihasseltia fissa,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,25cm,,,常緑広薬勘林下に生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000384,クシロチドリ,Herminium monorchis,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,多年草,10-35cm,,本州（下北半島）・北海道（釧路・十勝・ 渡島大島）、朝鮮半島・中国・ヒマラヤ・シベリア・ヨーロッパに広城分布するが、日本ではまれ,亜寒帯～冷温帯機林下の湿ったところや 草地に生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000385,クロムヨウラン,Lecanorchis nigricans,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,15-30cm,6ー8月,,暖温帯～亜熱帯の常緑広薬林下に生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000386,ニオイラン,Haraella retrocalla,ラン科,ORCHIDACEAE,ニオイラン属,Haraella,,,,西表島と台湾に分布する,,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000387,ハクウンラン,Kuhlhasseltia nakaiana,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,5ー13cm,,本州・四国・九州、朝鮮半島・台湾に分布する,ハクウンラン Kuhlhasseltia nakaiana （F. Maek.） Ormerod （PL 147） おもに冷温帯の林下に生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000388,ヒメノヤガラ,Hetaeria shikokiana,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,多年草,10ー20cm,,朝鮮半島南部、中国南西部～ヒマラヤに分布する,暖温帯の林下に生える菌 従属栄養植物,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000389,ムカゴソウ,Herninium lanceum,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,20-45cm,,北海道西南部～琉球，亜寒帯～熱帯アジア・ ニューギニアに分布する,亜寒帯～熱帯のやや湿った草地に 生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000390,ヤクシマアカシュスラン,Hetaeria yakusimensis,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,10ー25cm,,本州（静岡県以西）・四国・九州・屋久島・種 子島・琉球，台湾・中国南部・ベトナムに分布する,暖温帯～亜熱帯の常緑 勘林下に生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000391,ヤクシマヒメアリドオシラン,Kuhilhasseltia yakushimensis,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,4-10cm,,本州（中部地方・近畿地方）・ 四国・九州（阪島・大隅半島）・屋久島・琉球、台湾・中国・フィリビンに分布する,おもに暖温 帯の林下に生える,日本の野生植物 第1巻,81,macOS Vision OCR + rule parser
+plant-profile-000392,アワムヨウラン,Leeanorehis trachyeaula,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,30-50cm,,本州（和歌山県）・四国（徳島県）・九州・琉球、台 湾に分布する,暖温帯～亜熱帯の常緑広葉樹林下に生え る,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000393,ウスキムヨウラン,Lecanorchis kiusiana,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,,,本州（関東地方以西）・四国・九州・琉球、台湾・済州島に分布する,エ ンシュウムヨウランL. suginoana （Tuyama） Seriz.は本種によく似るが、唇弁の中裂片に生える毛が 黄色で赤紫色をおびない,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000394,ギボウシラン,Liparis auriculata,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,15-30cm,,北海道～九州・屋久島、済州島に分布,冷温帯～暖温帯の林床や湿原に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000395,クモキリソウ,Liparis kumokiri,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,,,南千島・北海道～九州、朝鮮半島・中国東北部・極東ロシアに分布,亜寒帯～暖温帯の疎林下に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000396,コクラン,Liparis nervosa,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,15-30cm,,本州（福島県以南）・四国・九州・ 琉球，済州島・台湾に分布する,暖温帯の常緑林下に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000397,ササバラン,Liparis odorata,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,20-30cm,,本州（栃木県以南） ～九州・琉球、中国・台湾～ヒマラヤ・インド・スリランカ・ミクロネシアに分布する,暖温帯～熱帯の日当りのよい草原に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000398,ジガバチソウ,Liparis krameri,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,,,北海道～九州、朝鮮半島 に分布する,亜寒帯～暖温帯の林下に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000399,スズムシソウ,Liparis makinoana,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,,,北海道～九州、朝鮮半島に分布する,冷温帯の掛林下に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000400,セイタカスズムシソウ,Liparis japonica,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,10-30cm,,朝鮮半島・中国（東北）・アムールに分布する,亜寒番～冷温帯の林下に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000401,チケイラン,Liparis bootanensis,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,,,九州南部・琉球、中国、台湾～ヒマ ラヤ、東南アジアに分布する,,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000402,フガクスズムシソウ,Liparis fujisanensis,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,,,北海道～九州に分布する,亜寒待～冷湿帯の 林床で生育する,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000403,ムヨウラン,Lecanorehis japoniea,ラン科,ORCHIDACEAE,ムカゴソウ属,Herminium,,,5一6月で,本州（岩手県以）・四国・九州・琉球、朝鮮半島南部の島嶼・中国南東部・台湾に 分布する,暖温帯～亜熱帯の常緑広葉林， 落薬広楽菌、アカマツ林などの林床に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000404,ユウコクラン,Liparis formosana,ラン科,ORCHIDACEAE,クモキリソウ属,Liparis,,,,本州（紀伊半島南部）・九州・琉 球・伊豆諸島、中国南部・台湾に分布する,おもに亜熱帯の常緑樹林下に生える,日本の野生植物 第1巻,82,macOS Vision OCR + rule parser
+plant-profile-000405,アリドオシラン,Myrmechis japoniea,ラン科,ORCHIDACEAE,ボウラン属,Luisia,,5ー10cm,7ー8月,南千 島・北海道・本州（近畿地方以北）・四国、朝鮮半島・中国南部～チベットに分布する,亜寒帯～冷温帯の林下に生える,日本の野生植物 第1巻,83,macOS Vision OCR + rule parser
+plant-profile-000406,ツクシアリドオシラン,Myrmechis tsukusiana,ラン科,ORCHIDACEAE,ボウラン属,Luisia,,,,分布域は四国（剣山・石鎚山など）・九州（霧島山・高隈山など）・屋 久島で、アリドオシランより南に偏る,,日本の野生植物 第1巻,83,macOS Vision OCR + rule parser
+plant-profile-000407,ニラバラン,Microtis unifolia,ラン科,ORCHIDACEAE,ボウラン属,Luisia,多年草,10-40cm,,本州（千葉県以西）～琉球、中国南部・台湾・東南 アジア・オセアニアに分布する,暖温帯～熱帯の海岸に近い日当りのよい 草地に生える,日本の野生植物 第1巻,83,macOS Vision OCR + rule parser
+plant-profile-000408,ノビネチドリ,Neolindleya camtschatica,ラン科,ORCHIDACEAE,ノビネチドリ属,Neolindleya,,30-60cm,,千島・北海道・本州・四国・ 九州，サハリン・カムチャツカ半島・朝鮮半島に分布する,亜寒帯～冷温帯の林下や林緑 の湿ったところに生える,日本の野生植物 第1巻,83,macOS Vision OCR + rule parser
+plant-profile-000409,ホザキイチヨウラン,Malaxis monoplyllos,ラン科,ORCHIDACEAE,ボウラン属,Luisia,多年草,15-30cm,,北海道・本州（東北～近畿）・四国、朝鮮半島・サハリン・シベリア・ 中国・台湾・フィリピン・ヒマラヤ・ヨーロッパ・北アメリカに分布する,亜寒帯～冷温帯の林下に生える,日本の野生植物 第1巻,83,macOS Vision OCR + rule parser
+plant-profile-000410,ボウラン,Luisia teres,ラン科,ORCHIDACEAE,ボウラン属,Luisia,多年草,,,本州（近畿地方南部）～琉球、台湾・中国南部に分布する,花茎は総状で腺毛が 生え、多くの花をつける,日本の野生植物 第1巻,83,macOS Vision OCR + rule parser
+plant-profile-000411,アオフタパラン,Neottia makinoana,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,10-20cm,,本州・四国・九州に分布する,冷温帯の樹林下に生える,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000412,コフタバラン,Neottia cordata,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,,,北海道・本州・四国・九州、海外では周北極に広く分布,亜寒帯～冷温帯の針薬樹林下に生える,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000413,サカネラン,Neottia papiligera,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,,,南千島・北海道・ 本州中北部，サハリン・朝鮮半島・中国（東北）・シベリア東部に分布する,亜寒帯～冷温帯の落業街林下に生える,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000414,タカネフタバラン,Neottia puberula,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,15ー20cm,,サハリン・朝鮮半島・ウスリー・シベリア東部・中国東北～北部に分布する,,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000415,ヒメフタバラン,Neottia japoniea,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,5ー30cm,,本州・四国・九州・琉球に分布,おもに暖温帯の桝林下に生える,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000416,ヒメムヨウラン,Neottia aeuminata,ラン科,ORCHIDACEAE,サカネラン属,Neottia,多年草,10ー20cm,,サハリン・ウスリー・カムチャツカ半島・朝鮮半島・台湾・中国～ヒマラヤに分布する,亜寒帯～冷温帯の針薬林下に生える,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000417,フジチドリ,Neottianthe fujisanensis,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,4-7cm,,北海道・本州中部以北に分布する,,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000418,ミヤマフタバラン,Neottia nipponica,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,10-25cm,,朝鮮半島・千島・サハリン・ウスリーに分布する,,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000419,ミヤマモジズリ,Neottianthe cueullata,ラン科,ORCHIDACEAE,サカネラン属,Neottia,,10ー20cm,,千島・サハリン・朝鮮半島・中国～ヒマラヤ・シベリア・東ヨーロッパに広く分布する,,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000420,ムカゴサイシン,Nervila nipponiea,ラン科,ORCHIDACEAE,ムカゴサイシン属,Nervilia,,,,本州（関東地方 以西）・四国・九州・琉球，済州島に分布する,ムカゴサイシン Nervila nipponiea Makino （PL 138）暖温帯の林下に生える,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000421,ヨウラクラン,Oberonia japonica,ラン科,ORCHIDACEAE,ヨウラクラン属,Oberonia,,,,本州（宮城県以南）・四国・ 九州・琉球、済州島、台湾、中国（福建省）に分布する,,日本の野生植物 第1巻,84,macOS Vision OCR + rule parser
+plant-profile-000422,コケイラン,Oreorehis patens,ラン科,ORCHIDACEAE,コケイラン属,Oreorehis,多年草,30-40cm,,南千島・ 北海道～九州，カムチャツカ半島・サハリン・朝鮮半島・ウスリー・台湾・中国～ヒマラヤに 分布,亜寒帯～冷温帯の林内のやや湿ったところに 生える,日本の野生植物 第1巻,85,macOS Vision OCR + rule parser
+plant-profile-000423,コハクラン,Oreorchis indica,ラン科,ORCHIDACEAE,コケイラン属,Oreorehis,,30-40cm,,本州中部、台湾・中国西部・ヒマラヤに分布する,亜高山針薬林下に生える,日本の野生植物 第1巻,85,macOS Vision OCR + rule parser
+plant-profile-000424,サギソウ,Pecteilis radiata,ラン科,ORCHIDACEAE,コケイラン属,Oreorehis,多年草,,,北海道～九州，朝鮮半島・ 極東ロシア、中国東部に分布する,サギソウ Pecteilis radiata （Thunb.） Raf. （PL 137） 亜寒帯～暖温帯の湿地に生育する,日本の野生植物 第1巻,85,macOS Vision OCR + rule parser
+plant-profile-000425,タカサゴサギソウ,Peristylus formosanus,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,30-50cm,,琉球、台湾に分布する,九州南部，台湾・中国南部・フィリピンにはヒュウガトンポP.intrudens （Ames） Ormerodがまれに 自生する,日本の野生植物 第1巻,85,macOS Vision OCR + rule parser
+plant-profile-000426,ハツシマラン,Odontochilus hatusimanus,ラン科,ORCHIDACEAE,ヨウラクラン属,Oberonia,,10-15cm,,,暖温帯の林下に生える,日本の野生植物 第1巻,85,macOS Vision OCR + rule parser
+plant-profile-000427,ムカデラン,Pelatantheria seolopendrifolia,ラン科,ORCHIDACEAE,コケイラン属,Oreorehis,,,,本州（関東以西の太平洋側）・四国・九州、朝鮮半島南 部・済州島・中国東～南部に分布する,,日本の野生植物 第1巻,85,macOS Vision OCR + rule parser
+plant-profile-000428,イイヌマムカゴ,Platanthera iinumae,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,30cm,,北海道南部・本州・四国・九州に分布,冷温帯～暖温帯の山地の林緑や 湿った草地に生える,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000429,カクチョウラン,Phaius tankervilleae,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,多年草,60-70cm,,種子島・屋久島・琉球，台湾・中国南部・熱帯アジア・ オセアニアに分布する,亜熱帯～熱帯の常緑材林下に生える,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000430,ガンゼキラン,Phaius favus,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,40-60cm,5ー6月,本州（伊豆諸島・静岡 県・紀伊半島）・四国・九州・琉球，台湾・中国～ヒマラヤ・東南アジア・メラネシアに分布する,暖温帯～亜熱帯の常緑相林下に生える,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000431,タカネトンボ,Platanthera chorisiana,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,8ー20cm,,北海道・本州中北部、千島・サハリン・カムチャツカ半島・ アリューシャン列島・アラスカ～アメリカ合衆国ワシントン州に分布する,高山の湿った草原や林緑に生える,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000432,ツレサギソウ,Platanthera japoniea,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,50cm,,北海道・本州・四国・九州，朝鮮 半島・中国に分布する,冷温帯～暖温帯の日当りのよい草原 や湿った林下に生える,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000433,トンボソウ,Platanthera ussuriensis,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,15-35cm,,南千島・北海道～九州、朝鮮半島・中国・極東ロシアに分布する,沖 縄島・西表島、台湾の渓流沿いに自生する,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000434,ヒロハトンボソウ,Platanthera fuscescens,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,25-50cm,,北海道・本州（東北南部～中部）、千島・サハリン・ 朝鮮半島・シベリア東部・中国に分布,,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000435,ミズチドリ,Platanthera hologlottis,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,50-90cm,,,亜寒帯～暖温帯の湿地に生える,日本の野生植物 第1巻,86,macOS Vision OCR + rule parser
+plant-profile-000436,エゾチドリ,Platanthera metabifolia,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,,,北海道、千島・サハリン・シベリアに分布する,亜寒帯の海岸近くの草原に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000437,オオバノトンボソウ,Platanthera minor,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,,,本州・四国・九州，朝鮮半島・台湾・中国東～南部に分布,暖温帯の疎林下に生え る,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000438,オオヤマサギソウ,Platanthera sachalinensis,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,25-60cm,,南千島・北海道～九州、サハリン・ 台湾に分布する,亜寒帯～冷温帯の疎林の下、林 緑、湿地などに生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000439,ガッサンチドリ,Platanthera takedae,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,,,北海道・本州中部以北に分布する,,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000440,シロウマチドリ,Platanthera convallarifolia,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,25-50cm,,,高山帯のやや湿った 草原や亜高山帯の林縁の渓流沿いなどに生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000441,タカネサギソウ,Platanthera mandarinorum,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,10ー20cm,,本州中北部・北海道に分布する,亜高山帯の草原に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000442,トキソウ,Pogonia japonica,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,10ー30cm,,北海道・本州・四国・九州，千島・朝鮮半島・中国・極東ロシ アに分布する,亜寒帯～暖温帯の日当りのよい湿地に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000443,ニイタカチドリ,Platanthera brevicalearata,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,10ー15cm,,済州品・台湾に分布する,暖温帯上部の山地の常緑広葉林や 針薬荷林の林床に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000444,ハチジョウツレサギ,Platanthera okuboi,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,20-45cm,,北海道～九州に分布する,暖温帯の海岸沿いから山地の明るい草 地や林下に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000445,ヒトツバキソチドリ,Platanthera ophrydioides,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,15ー30cm,,本州（中～西部）・四国・九州の太平洋側に分布する,ヒトツバキソチドリ Platanthera ophrydioides F. Schmidt var. monophylla Honda E 亜高山の針業荷 林下に生育する,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000446,ホソバノキソチドリ,Platanthera tipuloides,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,多年草,20-40cm,,北海道・本州北～中部，千島に分布する,亜高山帯の日当りのよい草地に 生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000447,ミヤマチドリ,Platanthera takedae,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,20cm,,本州中部に分布する,亜高山帯の針葉樹林下に生え る,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000448,ヤクシマチドリ,Platanthera amabilis,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,,,,冷温帯の掛林下に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000449,ヤマサギソウ,Platanthera mandarinorum,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,20-40cm,,北海道・本州・四国・九州に分布する,冷温帯～暖温帯の日当りのよい草地に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000450,ヤマトキソウ,Pogonia minor,ラン科,ORCHIDACEAE,ムカゴトンボ属,Peristylus,,10-20cm,,北海道・本州・四国・九州，朝鮮半島・台湾・中国南部に分布,冷温帯の日当りのよい草地に生える,日本の野生植物 第1巻,87,macOS Vision OCR + rule parser
+plant-profile-000451,ウチョウラン,Ponerorehis graminifolia,ラン科,ORCHIDACEAE,ウチョウラン属,Ponerorchis,,7ー20cm,,本州・四国・九州、朝鮮半島に分布する,,日本の野生植物 第1巻,88,macOS Vision OCR + rule parser
+plant-profile-000452,コオロギラン,Stigmatodactylus sikokianus,ラン科,ORCHIDACEAE,コオロギラン属,Stigmatodactylus,,3ー10cm,,本州（和歌山県・伊豆諸島）・四国・九州、台湾・中国東商部に分布する,暖温帯の常緑広葉林下ま たは杉林下に生える,日本の野生植物 第1巻,88,macOS Vision OCR + rule parser
+plant-profile-000453,ナゴラン,Sedirea japonica,ラン科,ORCHIDACEAE,ナゴラン属,Sedirea,多年草,,,本州（静岡県・伊豆諸島・紀伊半島・福井県・京都府・隠岐）・四国・九州・琉球、済州島・中 国南部に分布する,日当りのよい草原に生育する,日本の野生植物 第1巻,88,macOS Vision OCR + rule parser
+plant-profile-000454,ニョホウチドリ,Ponerorchis joo-iokiana,ラン科,ORCHIDACEAE,ウチョウラン属,Ponerorchis,,10-30cm,,本州（東北地方南部～中部地方）・朝鮮半島に分布する,亜寒帯ー冷温帯の草地に生える,日本の野生植物 第1巻,88,macOS Vision OCR + rule parser
+plant-profile-000455,ネジバナ,Spiranthes sinensis,ラン科,ORCHIDACEAE,ナゴラン属,Sedirea,,10-40cm,5ー8月,北海道・本州・四国・九州・琉球、 サハリン・千島・ロシアより東のユーラシア大陸の亜寒帯～暖温帯域に広く分布する,日当りのよい草 地に生える,日本の野生植物 第1巻,88,macOS Vision OCR + rule parser
+plant-profile-000456,ヒナチドリ,Ponerorehis chidori,ラン科,ORCHIDACEAE,ウチョウラン属,Ponerorchis,,,,北海道・本州・四国に分布し、日本固有の種である,,日本の野生植物 第1巻,88,macOS Vision OCR + rule parser
+plant-profile-000457,カヤラン,Thrixspermum japonicum,ラン科,ORCHIDACEAE,クモラン属,Taenioplyllum,,,,済州島・ 中国南部に分布する,,日本の野生植物 第1巻,89,macOS Vision OCR + rule parser
+plant-profile-000458,クモラン,Taeniophyllum glandulosum,ラン科,ORCHIDACEAE,クモラン属,Taenioplyllum,多年草,,,本州（福島県以南）・四国・九州・琉球、朝鮮半島・中国・台湾・熱帯アジア～オセア ニアに分布する,,日本の野生植物 第1巻,89,macOS Vision OCR + rule parser
+plant-profile-000459,ヒトツボクロ,Tipularia japonica,ラン科,ORCHIDACEAE,ヒトツボクロ属,Tipularia,多年草,20-30cm,,本州～ 九州，朝鮮半島南部に分布する,ヒトツボクロ Tipularia japonica Matsum. var. japonica （PL 159） 冷温帯～暖温帯の林床に生える,日本の野生植物 第1巻,89,macOS Vision OCR + rule parser
+plant-profile-000460,ヒメトケンラン,Tainia laxiflora,ラン科,ORCHIDACEAE,クモラン属,Taenioplyllum,多年草,20-30cm,,伊豆諸島・四国南部・九州・屋久島・種子島・琉球に分布する,おもに暖温帯の常緑広業林下に生える,日本の野生植物 第1巻,89,macOS Vision OCR + rule parser
+plant-profile-000461,フウラン,Vanda falcata,ラン科,ORCHIDACEAE,ヒトツボクロ属,Tipularia,,,,本州（関東部以西）～琉球、朝鮮半島南部・済州島・中国東南部に分布する,,日本の野生植物 第1巻,89,macOS Vision OCR + rule parser
+plant-profile-000462,ヤクシマネッタイラン,Tropidia nipponiea,ラン科,ORCHIDACEAE,ヒトツボクロ属,Tipularia,多年草,15-30cm,,四国・九州・琉球、台湾に分布する,暖温帯～亜熱帯の常緑 広楽林に生える,日本の野生植物 第1巻,89,macOS Vision OCR + rule parser
+plant-profile-000463,イシガキキヌラン,Zeuxine sakagutii,ラン科,ORCHIDACEAE,ミソボシラン属,Vrydagzynea,,,,,,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000464,カゲロウラン,Zeuxine agyokuana,ラン科,ORCHIDACEAE,ミソボシラン属,Vrydagzynea,,10ー20cm,,本州（関東以西）・四国・九州・琉球、台湾・中国南 部～ヒマラヤに分布する,カゲロウラン Zeuxine agyokuana Fukuy. （AL 149） 暖温帯～亜熱帯の常緑広薬林下に生える,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000465,キヌラン,Zeusine strateumatica,ラン科,ORCHIDACEAE,ミソボシラン属,Vrydagzynea,,,,九州南部・琉球、熱帯アジアに広く分布し、世界各地の熱帯で野生化している,亜熱帯～熱帯の日当りのよい草原に生える,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000466,キバナノショウキラン,Yoania amagiensis,ラン科,ORCHIDACEAE,ミソボシラン属,Vrydagzynea,多年草,10cm,,本州（関東～紀伊半島）・四国・九州に分布,冷温帯と暖温帯の移行帯の落 薬広楽材林の林床に生える,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000467,キンバイザサ,Curculigo orchioides,ラン科,ORCHIDACEAE,キンバイザサ属,Curculigo,多年草,,,本州（紀伊半島・中国地方）～四国・九州・琉球，台湾・中国（南部）・インド・パキスタン・ 東南アジア・パプアニューギニアに分布する,山地に生える塊茎をもつ多年草,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000468,ショウキラン,Yoania japonica,ラン科,ORCHIDACEAE,ミソボシラン属,Vrydagzynea,,10-25cm,7ー8月,北海道西南部・本州・四国・九州・ 屋久島、台湾・中国南部・アッサムに分布する,冷温帯落葉広葉材林の林床に生える,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000469,ヤンバルキヌラン,Zeuxine tenuifolia,ラン科,ORCHIDACEAE,ミソボシラン属,Vrydagzynea,多年草,20ー30cm,,琉琉球、台湾に分布する,亜熱帯の常緑広薬林下に生える,日本の野生植物 第1巻,90,macOS Vision OCR + rule parser
+plant-profile-000470,イチハツ,Iris tectorum,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,30-50cm,,,,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000471,エヒメアヤメ,Iris rossii,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,,,本州（中国地方）・四国・九州、朝鮮半島・中国（東北部）に分布する,山地に生える多年草で根茎に褐色の繊維が密生する,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000472,コキンバイザサ,Hypoxis aurea,ラン科,ORCHIDACEAE,コキンバイザサ属,Hypoxis,多年草,,,本 州（宮城県以南）～琉球，中国（南部）・台湾から東南アジア大陸部・ネパール・インド・マレー シア・インドネシア・フィリピン・パプアニューギニアまで広く分布する,山地の林縁や草原に生える多年草,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000473,シャガ,Iris japonica,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,30-70cm,,本州～九州に見られ、中国・ミャンマーに分布,林下に群生する多年草,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000474,ノハナショウブ,Iris ensata,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,40-80cm,,,山野 の草原や湿原に生える多年草,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000475,ヒオウギ,Iris domestica,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,60-100cm,,本州～琉球，朝鮮半島・ 中国・東南アジア・インドに分布する,山地の草原に生えるが、観賞用に栽培も される多年草,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000476,ヒメシャガ,Iris gracilipes,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,30cm,,北海道西南部～九州北部に分布,山地のやや乾いた林下に生える多年草,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000477,ヒメヒオウギズイセン,Crocosmia xerocosmiflora,アヤメ科,IRIDACEAE,ヒオウギズイセン属,Crocosmnia,多年草,,,,日当りのよい各地 の道路沿い、人家周辺などに野生化する南アフリカが原産の多年草,日本の野生植物 第1巻,91,macOS Vision OCR + rule parser
+plant-profile-000478,アヤメ,Iris sanguinea,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,30-60cm,,韓国・中国（東北）・シベリア東部に分布する,山地のやや乾いた草原に生える多年草,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000479,カキツバタ,Iris laevigata,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,40-70cm,,北海道～九州、韓国・中国・シ ベリア東部に分布する,水湿地に生える多年草,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000480,キキョウラン,Dianella ensifolia,ススキノキ科,XANTHORRHOEACEAE,ワスレグサ属,Hemerocallis,多年草,50-100cm,,本州（紀伊半島）・四国・九州・琉球・小 笠原，中国（中南部）・台湾・マレーシア・インドに分布する,海岸に生える多年草,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000481,キショウブ,Iris pseudacorus,アヤメ科,IRIDACEAE,アヤメ属,Iris,多年草,,,,,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000482,ニワゼキショウ,Sisyrinchium rosulatum,アヤメ科,IRIDACEAE,ニワゼキショウ属,Sisyrinchium,一年草,10-30cm,,1.ニワゼキショウ Sisyrinchium rosulatum E. P. Bickncll （P.168） 日当りのよい道ばたや芝生などに ふつうに見られる北アメリカ原産の一年草， またはときに短命な多年草,,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000483,ヒオウギアヤメ,Iris setosa,アヤメ科,IRIDACEAE,アヤメ属,Iris,,30-90cm,,本州中部以北・北海道、 中国・韓国・ロシア・アラスカ・カナダ東部に分布する,寒地の湿性の草原に生える多年 草,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000484,ヒトフサニワゼキショウ,Sisyrinchium mueronatum,アヤメ科,IRIDACEAE,ニワゼキショウ属,Sisyrinchium,多年草,20-40cm,,,,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000485,ルリニワゼキショウ,Sisyrinchium angustifolium,アヤメ科,IRIDACEAE,ニワゼキショウ属,Sisyrinchium,多年草,,,2.ルリニワゼキショウ Sisyrinchium angustifolium Mill. 日当りのよい道ぼたや公園などにふつう に見られる北アメリカ原産の多年草,,日本の野生植物 第1巻,92,macOS Vision OCR + rule parser
+plant-profile-000486,エゾキスゲ,Hemeroeallis lilioasphodelus,ススキノキ科,XANTHORRHOEACEAE,ワスレグサ属,Hemerocalls,,,,,北海道・南千島の 海岸草地や砂浜に生える,日本の野生植物 第1巻,93,macOS Vision OCR + rule parser
+plant-profile-000487,ゼンテイカ,Hemerocallis dumortieri,ススキノキ科,XANTHORRHOEACEAE,ワスレグサ属,Hemerocalls,多年草,60-80cm,,本州中部以北・北海道・南千島、サハリンに分布する,山地または亜高山の草原、ときに海岸の斜面に群生す る多年草,日本の野生植物 第1巻,93,macOS Vision OCR + rule parser
+plant-profile-000488,ノカンゾウ,Hemeroeallis fulva,ススキノキ科,XANTHORRHOEACEAE,ワスレグサ属,Hemerocalls,多年草,50-70cm,,本 州～琉球，中国・台湾に分布する,溝の緑や野原に生える多年草,日本の野生植物 第1巻,93,macOS Vision OCR + rule parser
+plant-profile-000489,アサツキ,Allium schoenoprasum,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,30-50cm,,北海道～四国，シベリアに分布する,海岸や山地に生える多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000490,イトラッキョウ,Allum virgunculae,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,8ー20cm,,,暖地の岩場に生え る多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000491,カンカケイニラ,Allium togashi,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,,7ー9月,,"カンカケイニラ Allium togashi H, Hara 香川県小豆島の寒電渓周辺の集塊岩地帯に生える多年草",日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000492,キイイトラッキョウ,Allium kiiense,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,,,,本州（岐 阜県・愛知県・三重県・和歌山県・山口県）に分布する,,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000493,ギョウジャニンニク,Allium victorialis,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,40-70cm,,本州（近畿以北）・北海道、千島・サハリン・韓国 （鬱険島）・中国・カムチャツカ・アムール・シベリア東部に分布する,深山の林下に群生す る多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000494,ステゴビル,Allium inutile,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,15-30cm,,,原野に生える多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000495,タマムラサキ,Allium psendojaponicum,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,,,本州・四国・ 九州・対馬・奄美大島、朝鮮半島に分布する,海岸草地や海岸付近の岩礫地に生える 多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000496,ナンゴクヤマラッキョウ,Allium austrokyushuense,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,25-40cm,,九州南部（霧島山地・摩半島）に分布,山地の草原に生える多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000497,ニラ,Allium tuberosum,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,,,日本（本 州～九州）に分布するといわれるが、日本では真の自生かどうか疑わしい,日本では真の自生かどうか疑わしい,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000498,ノビル,Allium maerostemon,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,,,,,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000499,ハマオモト,Crinum asiaticum,ヒガンバナ科,AMARYLLIDACEAE,ハマオモト属,Crinum,多年草,50-80cm,,本州（関東南部以南） ～琉球、朝鮮半島に分布する,海岸に生える多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000500,ヒメニラ,Allium monanthum,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,5ー10cm,,北海 道～九州、朝鮮半島・中国（東北）・ウスリーに分布する,山野に生える繊細な多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000501,ミヤマラッキョウ,Allium splendens,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,20-40cm,,北海道～本州（長野 186ヒガンバナ科 県以北）、千島・サハリン・朝鮮半島・中国（東北）・シベリア東部・カムチャツカに分布する,高山の草地や礫地に生え る多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000502,ヤマラッキョウ,Allium thunbergii,ヒガンバナ科,AMARYLLIDACEAE,ネギ属,Allium,多年草,30-60cm,,本州（秋 田県以南）～九州、朝鮮半島・中国・台湾に分布する,山地の草原に生える多年草,日本の野生植物 第1巻,94,macOS Vision OCR + rule parser
+plant-profile-000503,キツネノカミソリ,Lyeoris sanguinea,ヒガンバナ科,AMARYLLIDACEAE,ヒガンバナ属,Lycoris,,30-60cm,8月,本州～九州に分布する,山野の湿った場所に生える多 年章,日本の野生植物 第1巻,95,macOS Vision OCR + rule parser
+plant-profile-000504,ショウキズイセン,Lycoris traubii,ヒガンバナ科,AMARYLLIDACEAE,ヒガンバナ属,Lycoris,多年草,50cm,,,ショウキズイセン Lycoris traubii W. Hayw. （PL 173） 暖地山野の湿った場所に生える多年草,日本の野生植物 第1巻,95,macOS Vision OCR + rule parser
+plant-profile-000505,シロバナマンジュシャゲ,Lyeoris xalbiflora,ヒガンバナ科,AMARYLLIDACEAE,ヒガンバナ属,Lycoris,多年草,,9ー10月で結実しない,九州を中心に分布する,,日本の野生植物 第1巻,95,macOS Vision OCR + rule parser
+plant-profile-000506,スイセン,Nareissus tazetta,ヒガンバナ科,AMARYLLIDACEAE,スイセン属,Nareissus,,20-40cm,,,本州（関東以西）・九州の海岸に生 188 ヒガンバナ科 えるが真の自生ではない,日本の野生植物 第1巻,95,macOS Vision OCR + rule parser
+plant-profile-000507,ナツズイセン,Lycoris xsquamigera,ヒガンバナ科,AMARYLLIDACEAE,ヒガンバナ属,Lycoris,,50-70cm,,,中国原産の多年生植物で、日本国内では観 質用に栽培されたものがときに逸出して野生化している,日本の野生植物 第1巻,95,macOS Vision OCR + rule parser
+plant-profile-000508,ヒガンバナ,Lycoris radiata,ヒガンバナ科,AMARYLLIDACEAE,ヒガンバナ属,Lycoris,,30-60cm,,北海道～琉球に広く分布するが、もとより の自生ではなく、昔、中国から渡来したものが拡がったものと考えられる,人家に近い田畑の緑、堤防、墓地などに群生 する,日本の野生植物 第1巻,95,macOS Vision OCR + rule parser
+plant-profile-000509,アオノリュウゼツラン,Agave amerieana,クサスギカズラ科,ASPARAGACEAE,リュウゼツラン属,Agave,,,,,国内には繊維作物や観質植 物として導入されたが、繁殖力が旺盛で、小笠原では広く野生化して問題となっている,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000510,オランダキジカクシ,Asparagus offcinalis,クサスギカズラ科,ASPARAGACEAE,クサスギカズラ属,Asparagus,,,,,,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000511,キジカクシ,Asparagus schoberioides,クサスギカズラ科,ASPARAGACEAE,クサスギカズラ属,Asparagus,多年草,,,朝鮮半島・中国北部・モンゴル・ロシア（シベリア以東）に分布する,キジカクシ Asparagus schoberioides Kunth （PL 175） 山地の草原に生える多年草,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000512,クサスギカズラ,Asparagus cochinehinensis,クサスギカズラ科,ASPARAGACEAE,クサスギカズラ属,Asparagus,多年草,1ー2m,,本州・四国・九州・琉球、朝鮮半島・中国・ 台湾・ベトナム・ラオスに分布する,おもに海岸近く生える多年草,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000513,サイザル,Agave sisalana,クサスギカズラ科,ASPARAGACEAE,リュウゼツラン属,Agave,,,,,繊維 作物として世界中で栽培され、小笠原では広く野生化して問題となっている,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000514,タマボウキ,Asparagus oligoclonos,クサスギカズラ科,ASPARAGACEAE,クサスギカズラ属,Asparagus,,50-100cm,,朝鮮半島・中国北東部・ モンゴル・ロシア（シベリア以東）に分布する,山麓の草原に生える,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000515,ツルボ,Barnardia japonica,クサスギカズラ科,ASPARAGACEAE,ハラン属,Aspidistra,多年草,,,北海道南 西部～琉球、朝鮮半島・中国・台湾・ウスリーに分布する,山野の日当りのよいところに生え る多年草,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000516,ハマタマボウキ,Asparagus kiusianus,クサスギカズラ科,ASPARAGACEAE,クサスギカズラ属,Asparagus,多年草,50-80cm,,本州（中国地方）・九州（北部～西部）に分布する,海岸に生える多年草,日本の野生植物 第1巻,96,macOS Vision OCR + rule parser
+plant-profile-000517,イワギボウシ,Hosta longipes,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,25-30cm,,,山中の湿った楜上また は岩上に生える多年草,日本の野生植物 第1巻,97,macOS Vision OCR + rule parser
+plant-profile-000518,ケイビラン,Comospermum yedoense,クサスギカズラ科,ASPARAGACEAE,ケイビラン属,Comospermum,多年草,,,本州 （紀伊半島）・四国・九州に分布する,,日本の野生植物 第1巻,97,macOS Vision OCR + rule parser
+plant-profile-000519,スズラン,Couvallaria majalis,クサスギカズラ科,ASPARAGACEAE,スズラン属,Convallaria,多年草,16ー35cm,,南千島・北海道・本州・九州、朝鮮半島・中国・ロシ ア（シベリア東部以東）・モンゴル・ミャンマーに分布する,山地、高原の草地に生える多年草,日本の野生植物 第1巻,97,macOS Vision OCR + rule parser
+plant-profile-000520,タマノカンザシ,Hosta plantaginea,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,50-70cm,,,,日本の野生植物 第1巻,97,macOS Vision OCR + rule parser
+plant-profile-000521,ウバタケギボウシ,Hosta pulchella,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,,山地の岩場に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000522,ウラジロギボウシ,Hosta hypoleuca,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,,谷沿いの岩壁に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000523,オオバギボウシ,Hosta sieboldiana,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,50-100cm,,北海道南西部～九州に分布する,山地の草原 や林緑に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000524,オニヤブラン,Liriope tawadae,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,,,,,,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000525,キヨスミギボウシ,Hosta kiyosumiensis,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,30-60cm,,,山地の湿った岩場に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000526,コバギボウシ,Hosta sieboldii,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,30-45cm,,南千島・北海道・本 州・四国・九州、ウルップ島・サハリン・ウスリーに分布する,日当りのよい湿地に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000527,コヤブラン,Liriope spieata,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,本州中部～琉球、朝鮮半島・台湾・中国・ベトナムに分布する,林下に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000528,シコクギボウシ,Hosta shikokiana,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,40-60cm,,本州（中国 地方）・四国・九州、朝鮮半品に分布する,シコクギボウシ Hosta shikokiana N. Fujita 岩場に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000529,スジギボウシ,Hosta undulata,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,80ー150cm,,,,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000530,セトウチギボウシ,Hosta pyenophylla,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,,セトウチギボウシ Hosta pyenophylla F. Maek. 日当たりがよく、乾いた集塊岩地に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000531,ツシマギボウシ,Hosta tsushiimensis,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,15ー75cm,,,ツシマギボウシ Hosta tsushiimensis N. Fujita var. tsushimensis やや乾いたところに生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000532,ヒメヤブラン,Liriope minor,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,北海道南西部～琉球、台湾・中国に分布する,原野の草地や林下に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000533,ヒュウガギボウシ,Hosta kikutii,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,九州南東部に分布する,山地の湿った岩場に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000534,ミズギボウシ,Hosta longissima,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,40-65cm,,本州（愛知県以西）・四国・九州、朝鮮半島に分布する,ミズギボウシ Hosta longissima Honda ex E. Mack. 湿地に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000535,ヤブラン,Liriope museari,クサスギカズラ科,ASPARAGACEAE,ギボウシ属,Hosta,多年草,,,本州～琉球、朝鮮半島南部・台湾・中国に分布する,林下に生える多年草,日本の野生植物 第1巻,98,macOS Vision OCR + rule parser
+plant-profile-000536,オオバジャノヒゲ,Ophiopogonl planiseapus,クサスギカズラ科,ASPARAGACEAE,ジャノヒゲ属,Ophiopogon,多年草,,,本州～九州に分布する,オオバジャノヒゲ Ophiopogonl planiseapus Nakai （PL178） 林下に生える多年草,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000537,ノシラン,Ophiopogon jaburan,クサスギカズラ科,ASPARAGACEAE,ジャノヒゲ属,Ophiopogon,多年草,,,本州（関東地方以西）～琉球、韓国（済州島）に分布する,海に近い林の下に生える多年草,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000538,ハルナユキザサ,Maianthemum robustum,クサスギカズラ科,ASPARAGACEAE,マイヅルソウ属,Maianthemu,,1.5m,6一7月,,,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000539,ヒメマイヅルソウ,Malanthemum bifolium,クサスギカズラ科,ASPARAGACEAE,マイヅルソウ属,Maianthemu,,,,北海 道・本州（北部～中部）、朝鮮半島・中国・サハリン・カムチャツカ・シベリアに分布する,,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000540,ヒロハユキザサ,Maianthemum yesoense,クサスギカズラ科,ASPARAGACEAE,マイヅルソウ属,Maianthemu,,,6月下旬～8月,,針葉横林下に生える多 年草,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000541,マイヅルソウ,Maianthemum dilatatum,クサスギカズラ科,ASPARAGACEAE,マイヅルソウ属,Maianthemu,多年草,8ー25cm,,南千島・北海道・本州・四国・九州、朝鮮半島・中国北東部・シベリア東部・サハリン・千島・ カムチャツカ・北アメリカに分布する,山地や亜高 山帯の針葉樹林下に生える多年草,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000542,ユキザサ,Maianthemum japonicum,クサスギカズラ科,ASPARAGACEAE,マイヅルソウ属,Maianthemu,多年草,20-70cm,,朝鮮半 島・中国・ウスリー・アムールに分布する,山地の林下に生える多年草,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000543,ヨナグニノシラン,Ophiopogon reversus,クサスギカズラ科,ASPARAGACEAE,ジャノヒゲ属,Ophiopogon,多年草,,,,,日本の野生植物 第1巻,99,macOS Vision OCR + rule parser
+plant-profile-000544,アマドコロ,Polygonatum odoratum,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,多年草,,,北海道～ 九州、朝鮮半島に分布する,山地の林下に 生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000545,ウスギワニグチソウ,Polygonatum cryptanthum,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,,,,九州（福岡県・対馬）、韓国に分布する,ウスギワニグチソウ Polygonatum cryptanthum H. Ley. et Vaniot （PL 182）林下や草原に生える多 年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000546,オモト,Rohdea japoniea,クサスギカズラ科,ASPARAGACEAE,キチジョウソウ属,Reineckea,多年草,8ー20cm,,本州（関東地方以 西）・四国・九州、中国に分布する,暖かい地方の林下に生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000547,キチジョウソウ,Reineekea carnea,クサスギカズラ科,ASPARAGACEAE,キチジョウソウ属,Reineckea,多年草,,,本州（関東地方以西）・四国・九州、中国に分布する,林下に生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000548,チトセラン,Sansevieria nilotica,クサスギカズラ科,ASPARAGACEAE,チトセラン属,Sansevieria,,,,,小笠原では各所に野生化している,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000549,ナルコユリ,Polygonatum faleatum,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,多年草,,,本州（関 東地方以西）・四国・九州、韓国に分布する,山地の林下に生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000550,ヒメイズイ,Polygonatum humile,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,多年草,,,南千島・北海道・本州（滋賀県以北）・ 九州（？），ウルップ島・サハリン～シベリア・朝鮮半島・中国北東部・モンゴルに分布する,草原や海岸に生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000551,ヒメナルコユリ,Polygonatum amabile,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,多年草,,,本州中部・九州（佐賀県）にまれに分布する,ヒメナルコユリ Polygonatum amabile Yatabe 林下に生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000552,ミドリヨウラク,Polygonatum inflatum,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,多年草,,,本州（広島県）・四国・九州、朝鮮半島・ 中国北東部に分布する,山地の林下や草原に生える多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000553,ミヤマナルコユリ,Polygonatum lasianthum,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,多年草,,,北海道～九州に分布する,山地の林下に生える 多年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000554,ワニグチソウ,Polygonatu involueratum,クサスギカズラ科,ASPARAGACEAE,アマドコロ属,Polygonatum,,,,北海道南西部・本州・九州，朝鮮半島・中国北東部・ ウスリーに分布する,ワニグチソウ Polygonatu involueratum （Franch. et Sav.） Maxim.（PL 183） 山地の林下に生える多 年草,日本の野生植物 第1巻,100,macOS Vision OCR + rule parser
+plant-profile-000555,クロツグ,Arenga engleri,ヤシ科,ARECACEAE,クロッグ属,Arenga,小高木,2ー5m,,サトウヤシA.pinnata （Wurmb） Mer. 200 ヤシ科 はマレーシアからインドにかけて分布し、日本では温室で観質用に栽培される,吐噶喇列島以南 の琉球に自生し、熱帯および亜熱帯の低地の林内に生える,日本の野生植物 第1巻,101,macOS Vision OCR + rule parser
+plant-profile-000556,ニッパヤシ,Nypa fruticans,ヤシ科,ARECACEAE,ニッパヤシ属,Nypa,,4ー10m,,フィリピンから広くマレーシア地域・インドおよびミクロネ シアに分布する代表的なマングローブ植物の1つである,日本では琉球の西表島と内離島にそれ ぞれ1つの自生が確認されている,日本の野生植物 第1巻,101,macOS Vision OCR + rule parser
+plant-profile-000557,ノヤシ,Clinostigma savoryanum,ヤシ科,ARECACEAE,クロッグ属,Arenga,常緑高木,7ー10m,6ー7月,,日本には次の1種が自生する,日本の野生植物 第1巻,101,macOS Vision OCR + rule parser
+plant-profile-000558,ビロウ,Livistona chinensis,ヤシ科,ARECACEAE,クロッグ属,Arenga,高木,15m,,四国（南部）・九州・琉球に分布し,亜熱帯の海岸近くに 生える,日本の野生植物 第1巻,101,macOS Vision OCR + rule parser
+plant-profile-000559,ヤエヤマヤシ,Satakentia liukinensis,ヤシ科,ARECACEAE,ヤエヤマヤシ属,Satakentia,常緑高木,,,,,日本の野生植物 第1巻,101,macOS Vision OCR + rule parser
+plant-profile-000560,ヤンバルミョウガ,Amischotolype hispida,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,多年草,25-90cm,,奄美大島・沖永良部島・沖縄島・八重山列島、台湾・中国南部・東南アジアに分布する,林下 に生える多年草,日本の野生植物 第1巻,102,macOS Vision OCR + rule parser
+plant-profile-000561,アオイカズラ,Streptolirion lineare,ツユクサ科,COMMELINACEAE,アオイカズラ属,Streptolinion,つる草,,,本州 （中国地方）、朝鮮半島・中国（北東部～北部）に分布する,山地に生える一年生のつる草,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000562,イボクサ,Murdannia keisak,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,,20-30cm,,北海道～琉球、朝鮮半島・中国に分布する,湿地や水辺に生える一年 草,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000563,コヤブミョウガ,Pollia miranda,ツユクサ科,COMMELINACEAE,ヤブミョウガ属,Pollia,草本,,,九 州用部～沖縄島、台湾・中国用部に分布する,,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000564,ザルゾコミョウガ,Pollia secundillora,ツユクサ科,COMMELINACEAE,ヤブミョウガ属,Pollia,多年草,,,石垣島、台湾・中国南部～インドシナ半島・マレーシア・インドに分布,,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000565,シマイボクサ,Murdamnia loriformis,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,多年草,,,四国南部・九州南部～琉球，台湾・ 中国・フィリピン・マレーシア・インドに分布する,,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000566,タヌキアヤメ,Philydrum lanuginosum,タヌキアヤメ科,PHILYDRACEAE,タヌキアヤメ属,Philydrum,,50-100cm,,九州～琉球、中国・マレーシア・インド・タイ・ベト ナム・ミャンマー・パプアニューギニア・オーストラリアに分布する,水湿地に生える直立する多 年草,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000567,ナガバイボクサ,Mwdamnia angustifolia,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,一年草,,,琉球・小笠原、台湾・東南アジアに分布する,,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000568,ナンバンツユクサ,Commelina paludosa,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,多年草,60-90cm,,台湾・中国南部・東南アジア・ヒマラヤ・インドに分布する,山地のやや暗いところに 生える多年草,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000569,ホウライツユクサ,Commelina aurieulata,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,多年草,,,九州南部～琉球，台湾・中国南部・東南アジア・オーストラリ アに分布する,,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000570,マルバツユクサ,Commelina benghalensis,ツユクサ科,COMMELINACEAE,ヤンバルミョウガ属,Amischotolype,多年草,,,本州（関東地方以西） ～琉球・小笠原、アジア～アフリカの熱帯・亜熱帯に分布する,海岸に近い砂質地や耕地に生える多年草,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000571,ヤブミョウガ,Pollia japonica,ツユクサ科,COMMELINACEAE,ヤブミョウガ属,Pollia,多年草,,,本州（宮城県以南）～九州韓国・台湾・中国南部に分布する,暖地の林下に生える多年草,日本の野生植物 第1巻,103,macOS Vision OCR + rule parser
+plant-profile-000572,コナギ,Monochoria vaginalis,ミズアオイ科,PONTEDERIACEAE,ミズアオイ属,Monochoria,一年草,,8ー10月,北海道～琉球、アジ ア・オーストラリアに分布し、北アメリカとヨーロッパに移入分布する,水田やため池に生える抽水性の 一年草,日本の野生植物 第1巻,104,macOS Vision OCR + rule parser
+plant-profile-000573,バショウ,Musa basjoo,バショウ科,MUSACEAE,バショウ属,Musa,,,,,,日本の野生植物 第1巻,104,macOS Vision OCR + rule parser
+plant-profile-000574,ホテイアオイ,Eichhornia erassipes,ミズアオイ科,PONTEDERIACEAE,ホテイアオイ属,Eichhornia,多年草,,日本 では6ー10月,南アメリカの熱帯原産で、本州～琉球、世界中の熱帯～温帯に移入分布している,水路などに生え る浮遊性の多年草または一年草,日本の野生植物 第1巻,104,macOS Vision OCR + rule parser
+plant-profile-000575,ミズアオイ,Monochoria korsakowii,ミズアオイ科,PONTEDERIACEAE,ミズアオイ属,Monochoria,一年草,,8ー10月,北海道～九州， 206ミズアオイ科 東アジアに分布する,湖沼や水田，水路などに生える抽水 性の一年草,日本の野生植物 第1巻,104,macOS Vision OCR + rule parser
+plant-profile-000576,リュウキュウバショウ,Musa balbisiana,バショウ科,MUSACEAE,バショウ属,Musa,,,,,,日本の野生植物 第1巻,104,macOS Vision OCR + rule parser
+plant-profile-000577,アオノクマタケラン,Alpinia intermedia,ショウガ科,ZINGIBERACEAE,ハナミョウガ属,Alpinia,多年草,,,,暖地の林下に生える常緑の多年草,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000578,イリオモテクマタケラン,Alpinia flabellata,ショウガ科,ZINGIBERACEAE,ハナミョウガ属,Alpinia,,,,琉球（石垣島・西表島）、台湾・中国・フィリピ ンに分布する,,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000579,クマタケラン,Alpinia xformosana,ショウガ科,ZINGIBERACEAE,ハナミョウガ属,Alpinia,,,,,九州商部～琉球、台湾に自生する,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000580,ゲットウ,Alpinia zerumbet,ショウガ科,ZINGIBERACEAE,ハナミョウガ属,Alpinia,,,,九州南部～琉球・小笠原、台湾・東 南アジア・インド・スリランカに分布する,,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000581,ダンドク,Camna indiea,カンナ科,CANNACEAE,カンナ属,Canna,,1.5ー2m,6ー 10月,,林縁、道路脇や開放地などに生える根茎をもつ多 年草,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000582,チクリンカ,Alpinia nigra,ショウガ科,ZINGIBERACEAE,ハナミョウガ属,Alpinia,,,,中国南部からプータン・インド・スリランカ・ミャンマー・ タイなどに広く分布する,,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000583,ハナミョウガ,Alpinia japonica,ショウガ科,ZINGIBERACEAE,ハナミョウガ属,Alpinia,多年草,40-60cm,5ー6月,本州（関東以西）～九 州・奄美、中国・台湾に分布する,暖地の山中の林下に生える多年草,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000584,ミョウガ,Zingiber mioga,ショウガ科,ZINGIBERACEAE,ショウガ属,Zingiber,多年草,5ー10cm,,,,日本の野生植物 第1巻,105,macOS Vision OCR + rule parser
+plant-profile-000585,ウキミクリ,Sparganium gramineum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,,高山湿原の池に生える多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000586,エゾミクリ,Sparganium emersum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,20-60cm,,,水位の浅い池や湿地に生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000587,ガマ,Typha latifolia,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,北海道～九州、北半球の温帯～熱帯からオーストラリアにかけて分布する,水位の浅い池や川べりなどに生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000588,コガマ,Typha orientalis,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,本州・四国・九州，東アジアの温帯～熱帯に分布する,水位の浅い池や川べりに生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000589,タマミクリ,Sparganium glomeratum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,30-60cm,,本州（中北部の 山地）・北海道、アジア・ヨーロッパ・北アメリカの温帯～寒帯に広く分布する,水位の浅い池や湿地 に生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000590,チシマミクリ,Sparganium hyperboreum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,北海道の高山、北半球の寒帯に分布する,,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000591,ナガエミクリ,Sparganium japonieum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,本 州～九州、朝鮮半島に分布する,水位の浅い池や湿地に生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000592,ヒメガマ,Typha domingensis,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,,水位の浅い池や川べりなどに生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000593,ヒメミクリ,Sparganium subglobosum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,30-60cm,,北海道～琉球，朝鮮半島・中国（北部）に分布する,ヒメミクリ Sparganium subglobosum Morong 水位の浅い池や湿地に生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000594,ホソバウキミクリ,Sparganium angustifolium,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,北海道の高山にまれで、北半球の寒帯に分布する,高山湿原の池に生える多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000595,ミクリ,Sparganium ereetum,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,北海道～九州、アジア・ヨーロッ パ・北アフリカの温帯に広く分布する,水位の浅い池や湿地に生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000596,ヤマトミクリ,Sparganium fallax,ガマ科,TYPHACEAE,ミクリ属,Sparganium,多年草,,,本州 （関東以西）・九州，ミャンマー・インドの温帯～暖帯に分布する,水位の浅い池や湿地に生育する多年草,日本の野生植物 第1巻,106,macOS Vision OCR + rule parser
+plant-profile-000597,モウコガマ,Typha laxmannii,ガマ科,TYPHACEAE,ミクリ属,Sparganium,,,,北海道に分布し、本州各地で帰化が報告されている,,日本の野生植物 第1巻,107,macOS Vision OCR + rule parser
+plant-profile-000598,アズマホシクサ,Erioeanlon takae,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,8ー14cm,,北海道・青森県・山形県に分布、日本固有,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000599,イヌノヒゲ,Eriocaulon miguelianum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,5ー30cm,,北海道・本州・四国・九州，韓国・中国に分布する,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000600,エゾイヌノヒゲ,Erioeanlon perplexum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,5ー14cm,,北海道に分布,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000601,オオシラタマホシクサ,Erioeaulon sesangulare,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,多年草,10-40cm,,琉球（沖縄本島・石垣島・西表島）、中国・台湾・フィ リピン・インドシナ・インドに分布する,湿地に生育する多年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000602,オオホシクサ,Eriocaulon buergerianum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,15-30cm,,本州～琉球，朝鮮半島・中国・台湾に分布する,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000603,カラフトホシクサ,Eriocaulon sachalinense,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,,5ー13cm,,北海道、ロシアに分布する,"カラフトホシクサ Eriocaulon sachalinense Miyabe ct Nakai var, sachalinense 湿原に生育する一年 草",日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000604,クロイヌノヒゲ,Eriocaulon atrum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,5ー12cm,,北海道～九州、朝鮮半島・中国・ヒマラヤに分布する,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000605,クロホシクサ,Erioeaulon paryum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,5ー20cm,,本州～九州・沖縄、朝鮮半島に分布する,湿地に生える一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000606,コシガヤホシクサ,Erioeanlon heleocharioides,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,6ー7m,,,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000607,ゴマシオホシクサ,Eriocaulon nepalense,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,,,九州（長崎県・熊本県・宮崎県）、中国・ヒマラヤに分布する,湧水などがある湿った荒れ地 や湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000608,シラタマホシクサ,Eriocanlon nudicuspe,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,20-40cm,,本州（静岡県・愛知県・岐阜県・三重県）のみに分布する,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000609,シロエゾホシクサ,Eriocanlon pallescens,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,5ー6cm,,,シロエゾホシクサ Eriocanlon pallescens （Nakai ex Miyabe ct Kudo） Satake 湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000610,タカノホシクサ,Erioeaulon setaceum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,,,韓国・インド・オーストラリアに分布,,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000611,ツクシクロイヌノヒゲ,Erioeaulon kiusianum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,,,本州・四国・九州・屋久島、韓国に分布する,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000612,ニッポンイヌノヒゲ,Eriocaulon taguetii,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,15ー22cm,,北 海道ー九州，朝鮮半島に分布する,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000613,ヒュウガホシクサ,Erioeaulon echinulatum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,,,,台湾・中国・フィリピン・インド ネシア・マレーシア・タイ・ミャンマー・カンボジア・インドに分布する,国 内では宮崎県のみで記録され、自生地の植生遷移が進行したため絶滅が確認されていたが、生 育地である湿原の環境復元により生育個体が再確認された,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000614,ヒロハノイヌノヒゲ,Erioeaulon alpestre,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,5ー20cm,,北海 道～九州、朝鮮半島・中国（東北）に分布する,湿地や水田などに 生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000615,ホシクサ,Erioeaulon cinereum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,2-15cm,,北海道を除く、本州～琉 球，朝鮮半島・中国・台湾・フィリピン・インドシナ・インド・アフリカ・オーストラリアに 分布する,湿地また水田などに生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000616,ミカワイヌノヒゲ,Erioeaulon mikawanum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,,,,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000617,ヤマトホシクサ,Eriocaulon japonicum,ホシクサ科,ERIOCAULACEAE,ホシクサ属,Eriocaulon,一年草,,,,湿地に生育する一年草,日本の野生植物 第1巻,108,macOS Vision OCR + rule parser
+plant-profile-000618,ヒメコウガイゼキショウ,Juneus bufonius,イグサ科,JUNCACEAE,イグサ属,Juncus,一年草,,,,明るい裸地に生育する一年草,日本の野生植物 第1巻,109,macOS Vision OCR + rule parser
+plant-profile-000619,イトイ,Juncus maximowiczii,イグサ科,JUNCACEAE,イグサ属,Juncus,,5ー15cm,,朝鮮半島・台湾・中国に分布する,亜高山針葉楜林帯の湿った岩上に生育する多年 草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000620,エゾイトイ,Juneus potaninii,イグサ科,JUNCACEAE,イグサ属,Juncus,,,,本州中部（八ヶ岳・塩見岳）・北海道、朝鮮半島・中国に分布する,エゾイトイ Juneus potaninii Buchenau 高山の岩上に生える,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000621,クロコウガイゼキショウ,Juncus eastaneus,イグサ科,JUNCACEAE,イグサ属,Juncus,,20-40cm,,北海道（大雪山）、千島 列島・朝鮮半島・シベリア東部・北アメリカ・ヨーロッパに分布する,クロコウガイゼキショウ Juncus eastaneus Sm. subsp. triceps （Rostk.） Novikov 高山の草地に生育 する多年章,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000622,コウガイゼキショウ,Juneus prismatoearpus,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,30-40cm,,北海道～琉球（沖縄本島・西表島）、朝鮮半島・中国・インド・ヒマラヤ・シベリア東部・カムチャ ツカに分布する,低地の湿地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000623,セキショウイ,Juneus prominens,イグサ科,JUNCACEAE,イグサ属,Juncus,,20-40cm,,北海道・本州（東北地方），千島列島・カムチャッツカ・北アメリカに分布する,北地の低湿地に生育する多 年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000624,タカネイ,Juneus triglumis,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,6ー15cm,,千島列島・サハリン・ 中国・朝鮮半島・カムチャツカ・シベリア・ヒマラヤ・ヨーロッパに分布する,高山の草地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000625,タチコウガイゼキショウ,Juncus krameri,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,30-60cm,,北海道～琉球、朝鮮半島・ 中国（東北）・千島列島に分布する,湿地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000626,ハナビゼキショウ,Juneus alatus,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,,,本州～九州、朝鮮半島・中国に分布する,山地の湿地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000627,ハリコウガイゼキショウ,Juncus wallichianus,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,5-50cm,,北海道～琉球，朝鮮半島・ 中国・台湾・ウスリー・サハリン・シベリア東部・ヒマラヤに分布する,低地の湿地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000628,ヒロハノコウガイゼキショウ,Juneus diastrophanthus,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,,,北海道ー九州，朝鮮半島・中国に分布する,,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000629,ホソイ,Juncus setchuensis,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,30-50cm,,本州～九州、朝鮮半島・中国に分布,北地の価地湿地、亜高山帯以上 の湿地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000630,ホソコウガイゼキショウ,Juncus fauriensis,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,20-40cm,,北海道（大雪山）・本州（焼 石缶）、アリューシャン列島・アラスカ・カムチャツカ・北アメリカに分布する,高山の湿原 に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000631,ミクリゼキショウ,Juneus ensifolius,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,30-50cm,,北海道・本州中部以北、千島列島・北アメリカに分布する,山の湿地、水辺に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000632,ミヤマホソコウガイゼキショウ,Juncus kamschatcensis,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,10-20cm,,北海道、本州中部以北、千島列島・カムチャツカに分布する,ミヤマホソコウガイゼキショウ〔チシマホソコウガイゼキショウ〕 Juncus kamschatcensis （Buchenau） Kuds 高山の湿地に生育する多年草,日本の野生植物 第1巻,110,macOS Vision OCR + rule parser
+plant-profile-000633,オカスズメノヒエ,Luzula pallescens,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,15ー20cm,,北海道～九州，朝鮮半島・中 国・千島列島・サハリン・カムチャツカ・シベリア・北ヨーロッパ・北アメリカに分布する,オカスズメノヒエ Luzula pallescens Sw.山地に草地に生育する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000634,クモマスズメノヒエ,Luzula areuata,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,15ー25cm,,北 海道（大雪山）・本州中部および北部，千島列島・サハリン・朝鮮半島北部・中国・シベリア・ アリューシャン列島・カムチャツカ・アラスカ・北アメリカ・北ヨーロッパに分布する,高山の砂礫地に生育する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000635,コゴメヌカボシ,Luzula piperi,イグサ科,JUNCACEAE,イグサ属,Juncus,,,,国内では北海道（大雪山）にのみに産し、千島列島・アリューシャン列島・カムチャ ツカ・アラスカ・北アメリカに分布する,,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000636,セイタカヌカボシソウ,Luzua jimboi,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,10-20cm,,北海道～琉 球、朝鮮半島・千島列島・サハリン・シベリア東部・カムチャツカに分布する,温帯の森林下に生育 する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000637,タカネスズメノヒエ,Luzula oligantha,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,,7ー8月,北海道・本州中部および北部、朝鮮半島・中国・サ ハリン・千島列島・カムチャツカに分布する,高山帯の草地に生育する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000638,ヌカボシソウ,Luzula plumosa,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,15ー25cm,,北海道～九州、中国・インド・ネパール・プー タンに分布する,山野の草地に生育する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000639,ミヤマスズメノヒエ,Luzula nipponica,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,,4ー7月,本州中部・朝鮮半島に分布,,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000640,ミヤマヌカボシソウ,Luzula jimboi,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,15ー25cm,,,ミヤマヌカボシソウ Luzula jimboi Miyabe et Kudo subsp. atrotepala Z. Kaplan 亜高山帯の草地に 生育する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000641,ヤマスズメノヒエ,Luzula multillora,イグサ科,JUNCACEAE,イグサ属,Juncus,多年草,20-40cm,,北海道～九州、朝鮮半島・中国・千島列島・サハリン・カムチャツカ・シベリア・北アメ リカ・ヨーロッパ・アフリカ・オーストラリアに分布する,山地の草原に生育する多年草,日本の野生植物 第1巻,111,macOS Vision OCR + rule parser
+plant-profile-000642,オオサンカクイ,Actinoscipus grossus,カヤツリグサ科,CYPERACEAE,オオサンカクイ属,Actinoscirpus,多年草,,,小笠原諸島、中国・台湾・南アジア～東南アジア・オーストラリアに分布する,,日本の野生植物 第1巻,112,macOS Vision OCR + rule parser
+plant-profile-000643,イトハナビテンツキ,Bulbostylis densa,カヤツリグサ科,CYPERACEAE,ハタガヤ属,Bulbostylls,一年草,,,北海道～九州、朝鮮半島・中国・台湾・インドに分布する,荒れ地または畑地に生える一年草,日本の野生植物 第1巻,113,macOS Vision OCR + rule parser
+plant-profile-000644,ウキヤガラ,Bollbosehoenus fluviatills,カヤツリグサ科,CYPERACEAE,オオサンカクイ属,Actinoscirpus,多年草,,,北海道～九州、アムール・千島列島・カムチャツカ半島・朝鮮半島・中国・ 台湾・ヨーロッパに分布する,平地の池 群の浅水中や湿地の溝中などにしばしば群生する大型の多年草,日本の野生植物 第1巻,113,macOS Vision OCR + rule parser
+plant-profile-000645,コウキヤガラ,Bolboschoenus koshevnikovii,カヤツリグサ科,CYPERACEAE,オオサンカクイ属,Actinoscirpus,多年草,,,北海道～ 琉球、朝鮮半島・中国・サハリン・アムールに分布する,海岸近くの湿地などに生える多年草,日本の野生植物 第1巻,113,macOS Vision OCR + rule parser
+plant-profile-000646,ハタガヤ,Bulbostylis barbata,カヤツリグサ科,CYPERACEAE,ハタガヤ属,Bulbostylls,一年草,,,本州～ 琉球，朝鮮半島・中国・台湾・インド・インドネシア・オーストラリア・北アメリカに分布する,,日本の野生植物 第1巻,113,macOS Vision OCR + rule parser
+plant-profile-000647,イトキンスゲ,Cares hakkodensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州中部以北・北海道の水気のある高山の斜面に生え、千島列島・カ ムチャツカ半島にも分布する,本州中部以北・北海道の水気のある高山の斜面に生え,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000648,カラフトイワスゲ,Carex rupestris,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10ー15cm,,北海道・本州（仙 丈ヶ岳・雪倉岳）の高山帯に生え、国外ではサハリン・朝鮮半島北部からヨーロッパおよび北 アメリカに広く分布する,北海道・本州（仙 丈ヶ岳・雪倉岳）の高山帯に生え,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000649,カンチスゲ,Carex gyuoerates,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10ー20cm,,,根茎は細くて短く、高層湿原のミズゴケの間に 生え、茎は高さ10ー20cm,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000650,キンスゲ,Carex pyrenaica,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10-40cm,,本州中部以北・北海道に分布する,高山の少し乾いた草原にややまれに 生える多年草,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000651,コウヤハリスゲ,Carex koyaensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（近畿地方以西）に分布,,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000652,コハリスゲ,Carex hakonensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10-20cm,,北海道～ 九州、朝鮮半島に分布する,山地の水湿のある斜面に生える多年草,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000653,サトヤマハリスゲ,Carex ruralis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,丘陵から低山地の温地に生え、本州（中部地方～近畿地方）に分布,丘陵から低山地の温地に生え,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000654,シモツケハリスゲ,Carex noguchll,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（栃木県）に分布,,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000655,シラコスゲ,Carex rhizopoda,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-50cm,,北海道～九州に分布する,丘験地または山間の水湿地に生える多年草,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000656,ニッコウハリスゲ,Carex fulta,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州（中部以北）の山中林内の湿ったところにまれに生える,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000657,ハリガネスゲ,Carex capillacea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,北海道ではまれで、本州・九州、東アジア～インド・オーストラリアに広く分布する,山中の湿地にやや多く生える多年草,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000658,ヒカゲハリスゲ,Carex onoei,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-30cm,,本州・北海道の山地に生え、 朝鮮半島・中国（東北）・ウスリーに分布する,本州・北海道の山地に生え,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000659,ヒナスゲ,Carex grallatoria,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,5ー20cm,,本州（関束～近畿）・四国・九州、台湾に分布する,本州～九州の山中の林内岩地にややま れに生える小さい多年草,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000660,マツバスゲ,Carex biwensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,北海道～九州，朝鮮半島・ 中国・ウスリーに分布,湿地にややふつうに生える多年草,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000661,ヤリスゲ,Carex kabanovii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道大山の高山湿原にまれで、サハリンに分布,,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000662,ユキグニハリスゲ,Carex semilyalofrueta,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（中部以北）に分布,ユキグニハリスゲ Carex semilyalofrueta Tak. Shimizu （PL 208） 温原に生え、ニッコウハリスゲ に似る,日本の野生植物 第1巻,115,macOS Vision OCR + rule parser
+plant-profile-000663,アサマスゲ,Carex lithophila,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,本州（岩手県・長野県・関東地方）の川岸の草地にややまれに生え、国外では 朝鮮半島～シベリア東部に分布する,本州（岩手県・長野県・関東地方）の川岸の草地にややまれに生え,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000664,エゾノコウボウムギ,Carex maerocephala,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,東アジア北部・北アメリカ西海 岸に分布する,海岸の砂地に生える,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000665,オオカワズスゲ,Cares stipata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-60cm,,本州中部以北・北海道、東アジア北 部～北アメリカに分布する,山中の湿地に生え、株をつくる緑色の多 年草で、少しざらつく,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000666,カヤツリスゲ,Carex bohemica,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15ー30cm,,北海道・本州（山梨県富士五湖）にまれに生え、国外では朝鮮半島・中国東北部・シベリア・ヨー ロッパに分布する,北海道・本州（山梨県富士五湖）にまれに生え,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000667,キタノカワズスゲ,Cares echinata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,東アジア北部からヨーロッパ・北アメリカにも分布,北海 道・本州北部の高山の湿原にまれに生える,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000668,キビノミノボロスゲ,Carex paxii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-60cm,,中国地方にまれに生え、また朝鮮 半島・中国にも分布する,中国地方にまれに生え,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000669,クリイロスゲ,Carex diandra,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,50-80cm,,,本州（中部以北）と北海道の山中、池畔などの 湿地に生える,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000670,クロカワズスゲ,Carex arenicola,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道～九州の 平地に多く、朝鮮半島・サハリン・千島列島に分布する,ときに海岸にも生える,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000671,コウボウムギ,Carex kobomugi,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道～琉球，朝鮮半島・台湾・中国（東北・北部）・ウスリーに分布,,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000672,ツルスゲ,Carex pseudocuraiea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,22.ツルスゲ Carex pseudocuraiea F. Schmidt （PL.210） 北海道・本州（近畿地方以北）の湿原に生え、 国外では朝鮮半島からシベリア東部に分布する,北海道・本州（近畿地方以北）の湿原に生え,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000673,ナガバアメリカミコシガヤ,Carex vulpinoidea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000674,ヒメミコシガヤ,Carex laevissima,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（近畿・中国地方）にまれに生え、朝鮮半島・ウスリーに分布する,本州（近畿・中国地方）にまれに生え,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000675,ミコシガヤ,Carex neurocarpa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-60cm,,本州、東アジア北部に分布する,平地や河川の縁などの草地に生える多年草,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000676,ミノボロスゲ,Carex albata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-60cm,,北海道・ 本州・四国（稀）に分布する,,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000677,ヤチカワズスゲ,Cares omiana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30ー50cm,,南千島・北海道～九州に分布する,ヤチカワズスゲ Cares omiana Franch. et Sav. var. omiana 湿原や湿地に生える多年草,日本の野生植物 第1巻,116,macOS Vision OCR + rule parser
+plant-profile-000678,アカンスゲ,Carex loliacea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道・本州（中部以北）の山地の高層温原にまれに生え、国外では旧世界の北地に広く分布,北海道・本州（中部以北）の山地の高層温原にまれに生え,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000679,アブラシバ,Cares satsumensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10-30cm,,,山中の裸地に生える多年草,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000680,アメリカヤガミスゲ,Carex scoparia,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000681,イトヒキスゲ,Carex remotiuseula,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-50cm,,北海道・本州（長野県霧ヶ絲）の深山林中にまれに自生し、朝鮮 半品・中国（東北）・ウスリー・サハリンにも分布する,北海道・本州（長野県霧ヶ絲）の深山林中にまれに自生,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000682,タカネマスクサ,Carex planata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,愛知県以西の本州に分布し、河川の高水敷などに生える,高山には生えない,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000683,タカネヤガミスゲ,Carex lachenalli,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-30cm,,,北海道（大雪山）・本州（山形県・長野県・ 山梨県）の高山帯の乾いた草原にまれに生える,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000684,ノルゲスゲ,Carex mackenziei,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,北海道（釧路・根室付近）の海岸の湿地に 生え、サハリンからヨーロッパ・シベリア・北アメリカ西部に分布する,ハクサンスゲにやや似るが、創枝を伸ばして 群生し、有花基は高さ20-40cm,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000685,ハクサンスゲ,Carex caneseens,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-60cm,,本州中部以北・北海道、北半球の北地や高山 南アメリカとニューギニアに分布する,高山の湿った草地に生える,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000686,ヒメカワズスゲ,Carex brunnescens,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-40cm,,本州中部以北・北海道の高山の湿った草地に生え、東ア ジア北部・シベリア・北アメリカ・ヨーロッパに分布する,本州中部以北・北海道の高山の湿った草地に生え,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000687,ヒロハイッポンスゲ,Carex pseudololiacea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,"44.ヒロハイッポンスゲ Carex pseudololiacea E, Schmidt （PL 214） 本州（山形県・福島県）・北海道 のミズゴケ湿原に生え、サハリン・千島列島にも分布する","ヒロハイッポンスゲ Carex pseudololiacea E, Schmidt （PL 214） 本州（山形県・福島県）・北海道 のミズゴケ湿原に生え",日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000688,ヒロハオゼヌマスゲ,Carex traiziseana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-60cm,,北海道・本州（尾瀬ヶ原）などに 生え、サハリンに分布する,北海道・本州（尾瀬ヶ原）などに 生え,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000689,ホスゲ,Carex senanensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州（おもに日本海側）の湿った高山帯の草原に生え、 小穂は7ー9個,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000690,ホソスゲ,Cares disperma,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,北海道の林中の湿原にまれに生え、国外では北半球の亜寒帯に 分布する,北海道の林中の湿原にまれに生え,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000691,ホソバオゼヌマスゲ,Carex nemurensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-70cm,,,本州中部以北・北海道の高層湿原に生え、サハリン・千島列島に生える,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000692,マスクサ,Carex gibba,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-70cm,,本州～九州、朝鮮半島・中国に分布する,平地の草原ややぶなどに生え、株をつくる,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000693,ヤガミスゲ,Carex maackii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,朝鮮半島・中国（東北）・アムールに分布する,北海道・本州・九州の川岸や平地の湿気のある草原 に生える,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000694,ヤブスゲ,Carex rochebrunii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,本州・四国に生え、国外では東アジア～インドに分布する,林内に生える多年草,日本の野生植物 第1巻,117,macOS Vision OCR + rule parser
+plant-profile-000695,アマミナキリスゲ,Cares tabatae,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,渓流の岩上に生える,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000696,オオナキリスゲ,Carex autumnalis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州（近畿以西）・四国・対馬にまれに生える,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000697,オキナワヒメナキリ,Carex tamakii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,南西諸島（沖縄島・ 234 カヤツリグサ科 西表島）に分布し、渓流岩上に生える,渓流岩上に生える,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000698,キシュウナキリスゲ,Carex nachiana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,1m,,本州～九州の暖地の林内にまれに生え、中国に分布する,本州～九州の暖地の林内にまれに生え,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000699,コゴメスゲ,Carex brunnea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-80cm,,,コゴメスゲ Carex brunnea Thunb. （PL217） ナキリスゲによく似るが、治海地に生える,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000700,センダイスゲ,Carex sendaiea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州～九州 の疎林地に生え、朝鮮半島・中国に分布する,本州～九州 の疎林地に生え,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000701,チチジマナキリスゲ,Carex chichijimensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,低木,,,,風衝低木林に生える,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000702,ナキリスゲ,Carex lenta,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,本州～九州，朝鮮 半島・中国・インドに分布する,平地の陳林に多く生える多年草,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000703,フサナキリスゲ,Carex teinogyna,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-60cm,,本州（近畿以西）～九州に生え、朝鮮半島南部・中国・東南アジ ア・インドに分布する,本州（近畿以西）～九州に生え,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000704,ムニンナキリスゲ,Carex hattoriana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,小笠原諸島（父島・兄島・弟島・母島）に分布,林内に生える,日本の野生植物 第1巻,118,macOS Vision OCR + rule parser
+plant-profile-000705,アゼスゲ,Carex thunbergil,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-80cm,,北海道～九州，千島列島・サハリンに分布する,平地の川岸や田のあぜなど湿地に生え る多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000706,アゼナルコ,Carex dimorpholepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-80cm,,本 州～琉球、朝鮮半島・中国・台湾・インドネシアに分布する,川岸や田のあぜなどの湿った草地に生える多 年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000707,ウシオスゲ,Carex ramenskii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,北海道（北部と東部）の塩 性湿地にまれに生える,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000708,オハグロスゲ,Carex bigelowii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10ー30cm,,北海道（大雪山） の高山帯の湿った草原に生え、朝鮮半島北部・カムチャツカ半島・シベリア・ヨーロッパ北部・ 北アメリカにも分布する,北海道（大雪山） の高山帯の湿った草原に生え,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000709,カブスゲ,Carex cespitosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-70cm,,,北海道の高層湿原に生え、ユーラシアの亜寒帯に広く分 布する種類で、大株をつくり、毎枝はない,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000710,カワラスゲ,Cares incisa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-50cm,,北海道・本州に分布する,草原や路傍などにふつうに生える多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000711,ゴウソ,Carex maximowiezii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,40-70cm,,南千島列島・北海道～琉球、朝 鮮半島・中国に分布する,平地の湿ったところに生える多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000712,サドスゲ,Carex sadoensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-70cm,,北海道・本州中北部および 伯者大山、千島列島・サハリンに分布する,山地の谷川のほとりに群生する多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000713,シュミットスゲ,Cares schmidtii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道の湿原にまれに生え、サハリン・千島列島・カムチャツカ半島・朝鮮半島北部か らシベリア東部に分布する,北海道の湿原にまれに生え,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000714,タテヤマスゲ,Carex aplyllopus,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-100cm,,,本州中北部の日本海側の高山草原 に群生して、飼技が出る,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000715,タニガワスグ,Carex forfeula,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,北海道西南部～九州、朝鮮半島・中国（東北・北部）に分布する,山地の渓流の緑などに生える多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000716,ツクシナルコ,Carex subeeruua,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,40-60cm,,北海道～琉球、朝鮮半島・中国・インド・インドネシアに分布する,本州（三重県）・四国（徳島県）・九州、中国の平地の湿地にまれに生える,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000717,テキリスゲ,Carex kiotensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-70cm,,北海道～九州に分布する,山地の川岸などの湿った斜面に生える多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000718,トダスゲ,Carex aequialta,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40ー80cm,,本州（関東地方・近畿地方）・九州北部の平地、川岸の草地に生え、朝鮮半島・中国（中部）に 分布する,本州（関東地方・近畿地方）・九州北部の平地、川岸の草地に生え,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000719,トマリスゲ,Carex middendorfhi,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-70cm,,,本州中北部・北海道の高層（ミズゴケ）湿原に生える,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000720,ナガエスゲ,Carex otayae,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000721,ヌマアゼスゲ,Carex cinerascens,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,60cm,,本州（関東・東北地方）の川岸の湿地に生え、 朝鮮半島・中国に分布する,本州（関東・東北地方）の川岸の湿地に生え,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000722,ヒメアゼスグ,Cares eleusinoides,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10ー30cm,,北海道の高 山帯にまれに生え、北千島・朝鮮半島北部～シベリア東部に分布する,北海道の高 山帯にまれに生え,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000723,ヒメウシオスゲ,Carex subspathacea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,3ー30cm,,73.ヒメウシオスゲ Carex subspathacea Wormsk. （PL.219） 北海道・本州（青森県）の海岸の湿地に 群生し、サハリン・千島列島からヨーロッパ北部・北アメリカ北部に分布する小型の種類,北海道・本州（青森県）の海岸の湿地に 群生,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000724,ヤマアゼスゲ,Carex heterolepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-60cm,,北海道西南部・本州・四国・九州、朝鮮 半島・中国に分布する,谷間の水辺などに生える多年草,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000725,ヤマテキリスゲ,Cares fabellata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,北海道・ 本州（日本海側）・四国（稀）・九州（稀）に生える,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000726,ヤラメスゲ,Carex lyngbyei,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-100cm,,サハリン・千島列島～シベリア、および北アメリカに分布する,主として海岸の湿地に生える,日本の野生植物 第1巻,119,macOS Vision OCR + rule parser
+plant-profile-000727,アオバスゲ,Carex papillatieulmis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-40cm,,本州（関東以西）～九州に分布する,山地の林中に生える多年草,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000728,オオムギスゲ,Carex laticeps,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,99.オオムギスゲ Carex laticeps C. B. Clarke ex Franch. （PL.223） 本州（愛知県・瀬戸内海沿岸）・四 国（小豆島）に生え、朝鮮半島・中国に分布する,本州（愛知県・瀬戸内海沿岸）・四 国（小豆島）に生え,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000729,カゴシマスゲ,Carex kagoshimensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（山口県）・九州（鹿児島県・宮崎県）に分布,,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000730,コカンスゲ,Cares reinii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-60cm,,,本州 ～九州の丘険地の林中に生える,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000731,コタヌキラン,Carex doenitzii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-60cm,,北海道・本州（中北部・近畿地方南部）と屋久島に分布する,山地の乾いた岩上、草地などに生える多年草,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000732,サコスゲ,Carex sakonis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,海岸岩場に生える,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000733,サンインヒエスゲ,Carex jubozanensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,102.サンインヒエスゲ Carex jubozanensis J. Oda et A. Tanaka （PL.224） アカマツ林などの乾いた掛 林内に生え、本州（福井県から鳥取県の日本海側）に分布,アカマツ林などの乾いた掛 林内に生え,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000734,シマタヌキラン,Carex okuboi,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,伊豆七島の山地に生える,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000735,タヌキラン,Carex podogyua,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-100cm,,北海道西南部・本州中部以北に分布する,山地の湿った斜面の岩地に生える多年草,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000736,ヒロバスゲ,Carex insanine,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州の日本海側・北海道・南 千島列島に分布,,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000737,フサカンスゲ,Carex tokarensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,40-100cm,,,D. 側小穂は1節に1個つけ、果胞は長さ5ー6mm…・・ ・・97.ヒゲスゲ D.側小穂は1節に2-4個つけ、果胞は長さ4ー5mm ・98.サコスゲ C.根茎はやや伸張してまぼらに生え、葉はやわらかく、基部の鞘は白色または緑白色、果胞は明らかに有毛,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000738,ホウザンスゲ,Carex hoozanensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-50cm,,八重山諸島（石 垣島）の椡林内に生え、国外では台湾からインドシナに分布,八重山諸島（石 垣島）の椡林内に生え,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000739,ヤマタヌキラン,Carex angustisquama,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-50cm,,本州（東北地方）に分布する,火山の湿った裸地に生える多年草,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000740,リュウキュウヒエスゲ,Carex collifera,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,樹林内に生える,日本の野生植物 第1巻,120,macOS Vision OCR + rule parser
+plant-profile-000741,アキイトスグ,Carex kamagariensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,草地や疎 林内に生え、瀬戸内海の島（広島県・愛媛県）・佐賀県（加唐島・松島）・対馬、朝鮮半島南部,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000742,ウミノサチスゲ,Carex augustini,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,高木,,,109.オキナワスゲ〔ホウランスゲ］ Carex breviseapa C. B. Clarke （PL.225） 南西諸島（奄美以南）に分布,南硫黄島と父島の湿性 高木林内に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000743,オオシマカンスゲ,Carex oshimensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000744,オクノカンスゲ,Carex foliosissiima,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-40cm,,北海道～九州、サハリンに分布,山地の林内に生える多年 草,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000745,カンスゲ,Carex morrowil,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,,山地の林内に生える多年草,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000746,キンキミヤマカンスゲ,Cares multifolia,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（紀伊半島の南半部）に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000747,ケスゲ,Carex duvaliana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,ホンモンジスゲやシロイトスゲとその変種によ く似るが、茎、葉、花序など、全体に開出する敷毛が生えることで容易に区別できる,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000748,ケヒエスゲ,Carex mayebarana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,133.ケヒエスゲ Carex mayebarana Ohwi （PL.229） 四国（高知県）・九州に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000749,ゲンカイモエギスゲ,Carex genkaiensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本 州（近畿、小豆島）・九州北部、朝鮮半島南部に分布する,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000750,シロホンモンジスゲ,Cares polyschoena,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,対馬、朝鮮半島・中国（東北・北部）に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000751,スルガスゲ,Carex omurae,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15ー20cm,,,本州（静岡県・山梨県・長野県）の山地に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000752,セキモンスゲ,Cares toyoshimae,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,高木,,,,湿性高木林内に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000753,タシロスゲ,Carex sociata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,九州（南部）～琉球の暖地に生え、台湾にも分布する,九州（南部）～琉球の暖地に生え,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000754,ダイセンスゲ,Carex daisenensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,本州（福井県以西）・九州北 部の日本海側の山地に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000755,ツクシスゲ,Carex uber,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,四国（高知県）・九州に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000756,ツシマスゲ,Cares tsushimensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000757,ツルミヤマカンスゲ,Carex sikokiana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,九州（北部）に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000758,トックリスゲ,Carex rhynchaehaenium,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-50cm,,110. トックリスゲ Carex rhynchaehaenium C. B. Clarke （PL.225） 沖縄島に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000759,ナガボスゲ,Cares dolichostachya,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,台湾に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000760,ナゴスゲ,Carex cucullata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,南西諸島（沖縄島・石垣島）に分布,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000761,ニシノホンモンジスゲ,Carex stenostachys,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-50cm,,本州（中部以西）に分布,林地に生え る多年草,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000762,ハシナガカンスゲ,Carex phaeodon,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,中部地方の富士川沿岸にまれに生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000763,ハチジョウカンスゲ,Cares hachitjoensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,,伊豆八丈島・御蔵島の山地林中に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000764,ヒメカンスゲ,Carex coniea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-50cm,,北海道～九州，朝鮮半島南部に分布する,丘陵地の斜面の林内などに多く生える多年草,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000765,ホソバカンスゲ,Carex temnolepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,新潟県～ 兵庫県の日本海側）の山地に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000766,ホンモンジスゲ,Carex pisiformis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,丘陵地の林内などにややふつうに生える多年 カヤツリグサ科243,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000767,ミヤマカンスゲ,Cares multifolia,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,北海道～九州に分布し、変化が多い,山地の林内にややふつうに生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000768,ムニンヒョウタンスゲ,Carex yasuii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000769,ヤマオオイトスゲ,Cares clivorum,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,,関東地方西部から東海地方の山地林に生える,日本の野生植物 第1巻,122,macOS Vision OCR + rule parser
+plant-profile-000770,アイズスゲ,Carex hondoensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,50-70cm,,,本州中北部の山中の疎林地や草原に生え、中国（北 部）・サハリンに類似種がある,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000771,アオスゲ,Cares leueochlora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,5-40cm,,北海道～琉球、極東ロシア・朝鮮半島・中国・台湾・インドに分布 244 カヤツリグサ科 する,山地から亜高山帯に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000772,アリマイトスゲ,Carex alternillora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（近畿地方・中国地方）・四国（愛媛県）に分布する,本州（東北 地方から東海地方）の林中に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000773,イセアオスゲ,Carex karashidaniensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,151.イセアオスゲ Carex karashidaniensis Aliyama （PL.233）本州（関東南部・東海地方・紀伊半島） に分布する,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000774,イソアオスグ,Carex meridiana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（日本海側は山形県以南・太平洋側は千葉県以南）・四国・九州・屋久島・ 吐職喇列島に分布,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000775,イトスゲ,Carex fernaldiana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-30cm,,北海道～九州 の山地林内に生え、朝鮮半島南部・台湾にも分布する,北海道～九州 の山地林内に生え,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000776,オオアオスゲ,Cares lonchophora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（関東 以西）・四国・九州に分布,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000777,カミカワスゲ,Carex sabyuensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-50cm,,北海道・本州北部・九州（大分県）の陽地や疎林地に生えて、 シベリア東部・サハリン・千島列島・朝鮮半島に分布する,北海道・本州北部・九州（大分県）の陽地や疎林地に生え,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000778,クサスゲ,Carex rugata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-30cm,,,中国の林内に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000779,シバスゲ,Carex nervata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10ー30cm,,北海道・本州～九州 に分布,丘陵地の芝生など丈の低い草原の日当りのよ いところに生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000780,シロイトスゲ,Carex alternillora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（東海地方以西）・四国・九州の丘陵から低山地に分布,本州の丘陵から 低山地林中に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000781,チャシバスゲ,Carex mierotricha,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10-40cm,,北海道・本州中北部の海岸および山地の草 原に生え、千島列島・サハリン・朝鮮半島に分布する,北海道・本州中北部の海岸および山地の草 原に生え,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000782,ツルナシオオイトスゲ,Carex tenuinervis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,四国・九州に分布,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000783,ヌカスゲ,Cares mitrata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,雄小穂が短く、雌麟片に長い芒があるものをノゲヌカスゲvar. aristata Ohwiといい，本州（宮城 県以南）～九州、朝鮮半島・中国・台湾に分布する,朝鮮半島・中国に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000784,ノスゲ,Carex tashiroana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（岡山県・広島県・山口県）に分布,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000785,ハガクレスゲ,Carex jacens,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,7ー15cm,,,北海道・ 本州中北部の深山針薬掛林帯の疎林地に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000786,ハコネイトスゲ,Carex hakonemontana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（神奈川県・静岡県・山梨県・宮城果）に分布,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000787,ハマアオスゲ,Carex fbrillosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州～琉球にふつうで、朝鮮半島・中国・台湾にも分布する,海岸の砂地や草原に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000788,ヒメアオスグ,Carex discoidea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（近畿以西）・四国・ 九州・南西諸島に分布,屋久島や南西諸島の渓流に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000789,マメスゲ,Carex pudiea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州の丘陵地に生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000790,ミヤケスゲ,Carex subumbellata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-30cm,,北海道・本州（早池峰山）の 高山草地に生え、サハリンに分布する,北海道・本州（早池峰山）の 高山草地に生え,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000791,ミヤマジュズスゲ,Carex dissitillora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000792,モエギスグ,Carex tristaclya,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,朝鮮半島・中国に分布する,山地の乾いた草地に多く生える,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000793,ワタリスゲ,Cares conicoides,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,四国・九州に分布,,日本の野生植物 第1巻,123,macOS Vision OCR + rule parser
+plant-profile-000794,アカスゲ,Carex quadrillora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20ー30cm,,,北海道（東部）の山地林中にまれに生え、朝鮮半島・中国（東北）・ウスリーに分 布する小型の一種,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000795,アカネスゲ,Carex poeulisquamna,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-50cm,,,アカネスゲ Carex poeulisquamna Kuk. （PL 237） 中国の揚子江沿岸地方に生え、本州（関東・中 国地方）・九州北部の石灰岩地帯にまれに自生する,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000796,アズマスゲ,Carex lasiolepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,全体に明らかに開出する軟毛が生え、有花茎は高 さ5ー15cm,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000797,イワスゲ,Cares stenantha,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-40cm,,,高山の岩礫地の草原に生える多 年草,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000798,イワヤスゲ,Carex tumidula,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-20cm,,,愛媛県の山中にまれに生え、匍包する根茎のある 小型の種類で、有花茎は高さ15-20cm,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000799,カタスゲ,Carex maerandrolepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-40cm,,伊豆諸島・本州（東海地方以西）～九州に生え、 朝鮮半島南部・台湾に分布する,伊豆諸島・本州（東海地方以西）～九州に生え,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000800,ケタガネソウ,Carex ciliatomarginata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,タガネソウによく似るが、全体に少し小 さく、茎や薬に密に長毛が生える,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000801,ササノハスゲ,Carex paclygyna,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州（近畿以西）・四国の山中林内に生える,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000802,サツマスゲ,Carex ligulata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,40-70cm,,本州（関東南部以南）・四国・九州にあり、朝鮮半島・中国・インドに分布する,旬枝の出ない、高さ40-70cmのややまれな多年草で、 林地に生える,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000803,サヤマスゲ,Carex hashimotoi,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,滋賀県～長野県南部の山林中にまれに自生する,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000804,タイホクスグ,Carex taihokuensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,南西 諸島（沖縄島・石垣島）に分布,,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000805,タガネソウ,Carex siderosticta,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10-40cm,,北海道～ 九州、朝鮮半島・中囲・ウスリーに分布する,山地の林内に生える多年草,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000806,ヒカゲスゲ,Carex lanceolata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,北海道～九州、朝鮮半島・中国・ウスリーに分布する,疎林地の斜面などに多く生える多年草,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000807,ビッチュウヒカゲスゲ,Carex bitchuensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州（岡山県・三重県） の石灰岩上に生える,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000808,ホソバヒカゲスゲ,Carex humilis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,3ー6cm,,,南千島・北海道～ 九州の山地の岩上または疎林地の斜面に生え、国外では朝鮮半島・中国（東北）・シベリア東部 に生える,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000809,リュウキュウスゲ,Carex alliiformis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,九州 南部・琉球の密な林中に生え、国外では台湾に分布,九州 南部・琉球の密な林中に生え,日本の野生植物 第1巻,124,macOS Vision OCR + rule parser
+plant-profile-000810,アキザキバケイスゲ,Carex mochomuensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000811,アリサンタマツリスゲ,Carex arisanensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,南西 諸島（沖縄本島と石垣島）、台湾に分布する,,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000812,イワカンスゲ,Carex makinoensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-50cm,,,四国・九州の山地に生える,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000813,エゾツリスゲ,Cares papulosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-50cm,,朝鮮半島・ウスリーにも分布,北海道・本州中部以北・九州の湿地にまれに生える,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000814,オオタマツリスゲ,Carex rouyana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州に生え、中国にも分布する,本州に生え,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000815,オクタマツリスゲ,Carex flipes,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（東北地方と栃木県）に分布する,,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000816,オノエスゲ,Carex tenuiformis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-40cm,,国外では朝 鮮半島・中国（東北）・シベリア東部・サハリン・千島列島に分布,本州中北部・北海道の高山帯の草地に ややまれに生える小型の植物で、有花茎は細く、高さ15-40cm,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000817,クジュウツリスゲ,Carex kujuzana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,50-60cm,,本州中北部・ 九州の山地の草原にまれに自生し、朝鮮半島南部にも分布,本州中北部・ 九州の山地の草原にまれに自生,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000818,コイワカンスゲ,Carex chrysolepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,15-30cm,,,本州（近畿地方）～九州、台湾の山地に生える,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000819,コバケイスグ,Carex tenuior,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,奄美諸島・沖縄諸島に分布,山地の岩場や岩混じりの斜面な どに生える,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000820,サッポロスゲ,Carex pilosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-60cm,,北 海道・本州北部の林内に生え、サハリン・千島列島からシベリア・ヨーロッパに分布する,北 海道・本州北部の林内に生え,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000821,ショウジョウスゲ,Carex blepharicarpa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10ー50cm,,北海道～九州に分布する,山地や高山に生える 多年草,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000822,タイワンカンスゲ,Carex longistipes,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,琉球（西表島）の渓流岩上に生え、 台湾に分布する,琉球（西表島）の渓流岩上に生え,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000823,タカネシバスゲ,Carex fuscidnla,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10-20cm,,,本州（白馬店・早池峰山）・北海道（夕張缶） の高山帯の草地にまれに生え、国外では千島列島・サハリン・朝鮮半島北部・中国東北部に分 布する,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000824,タチスゲ,Carex maeulata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-60cm,,朝鮮半島南部・中国・インドに分布する,本州～九州の水湿地に生える粉緑色の多年草,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000825,タマツリスゲ,Carex flipes,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-50cm,,本州・四国・九州に分布する,"タマツリスゲ Carex flipes Franch. et Say, subsp. flipes （PL 242）林内の草地に生えるやわらかい 緑色の多年草",日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000826,ヒロハノオオタマツリスゲ,Cares arakiana,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本 州（北陸～中国地方の日本海側）に分布,,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000827,リュウキュウタチスゲ,Carex tetsuoi,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,沖縄島の都林内の湿地に生える,日本の野生植物 第1巻,125,macOS Vision OCR + rule parser
+plant-profile-000828,カツラガワスゲ,Carex subtumida,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,四国（愛媛県南部） の川岸に生え、中国に分布,四国（愛媛県南部） の川岸に生え,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000829,キンチャクスゲ,Carex mertensii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,北海道・本州中北部の高山に生え、千島列島にも生育,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000830,クロボスゲ,Carex atrata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,本州中部の高山草原にまれに生え、朝鮮半島にも分布し、種としては北半球の高山に,本州中部の高山草原にまれに生え,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000831,グレーンスゲ,Carex parcifora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州（中部地方北部・東北地方）・北海道・南千島、サハリ ンなどに生える,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000832,コジュズスゲ,Carex maeroglossa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,15ー30cm,,北 海道～九州、朝鮮半島に分布する,,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000833,ジュズスグ,Carex isehnostaclya,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-60cm,,北 海道～九州、朝鮮半島・中国に分布する,,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000834,センジョウスゲ,Carex lehmannii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-30cm,,南アルプ ス仙丈ヶ岳の高所、林内にまれに生え、朝鮮半島北部からインドまで分布する,南アルプ ス仙丈ヶ岳の高所、林内にまれに生え,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000835,タカネナルコ,Carex siroumensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-30cm,,本州中部の高山の岩 混じりの草地に生え、朝鮮半島北部・中国（東北）に分布する,本州中部の高山の岩 混じりの草地に生え,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000836,タルマイスゲ,Carex buxbaumii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-40cm,,千島列島・シベリアから ヨーロッパ・北アメリカ・アフリカ・オーストラリアに分布する,北海道と本州中部以北の湿った平原などに 生える種類,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000837,ナガボノコジュズスゲ,Carex vanioti,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,6ー7月に成熟するコジュズスゲに似る が、本州の日本海側の高山の水湿のある草原に生える,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000838,ネムロスゲ,Carex gmelinii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-70cm,,北海道・本州（青森県・岩手県）に分布、国外では東アジア北部・アラスカ・北ア メリカ北西部に分布する,海岸砂地に生える,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000839,マンシュウクロカワスゲ,Carex peiktusani,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-50cm,,本州中部以北・北海道の深山の谷川 のほとりに生え、東アジア北部に分布する,本州中部以北・北海道の深山の谷川 のほとりに生え,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000840,ミヤマアシボソスゲ,Carex seita,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-70cm,,,高山の中性草原などに生える多年草,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000841,ヤマジスグ,Carex bostrychostigma,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10ー30cm,,本州（近畿以西）～九州の山地草原にややまれに生え、朝鮮半島・ 中国（東北）・ウスリーに分布する,本州（近畿以西）～九州の山地草原にややまれに生え,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000842,ラウススゲ,Cares stylosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,高層湿原に生える,日本の野生植物 第1巻,126,macOS Vision OCR + rule parser
+plant-profile-000843,アポイタヌキラン,Carex apoiensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道（日高地方） に分布する,渓谷岩上に生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000844,イトナルコスゲ,Carex laxa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,朝鮮半島・中国（東北）・ 千島列島・シベリア・ヨーロッパ北部にも分布する,本州中北部・北海道の温原にまれに生える細い 種類で、有化茎は高さ20-40cm、細い飼枝がある,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000845,エナシヒゴクサ,Carex aphanolepis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000846,クロヒナスゲ,Carex gifuensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-30cm,,本州（栃木県・茨城県・岐阜県・ 三重県）・四国（愛媛県）・九州（鹿児島県）に分布,山中林内に生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000847,サワヒメスゲ,Carex mira,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,本州 （静岡県以西）・四国・九州（宮崎県）の川岸に生え、朝鮮半島に分布する,本州 （静岡県以西）・四国・九州（宮崎県）の川岸に生え,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000848,シラスゲ,Carex alopecuroides,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,50-70cm,,北海道～琉球、朝鮮半島・中国・インドネシア・インドに分布する,平地，丘陵地の林内にややふつうに生える多年草,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000849,タカネヒメスゲ,Cares melanocarpa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,5-15cm,,北海道（夕張匠）の高山帯の砂礫地の草原に 生え、サハリン・シベリア東部に分布する,北海道（夕張匠）の高山帯の砂礫地の草原に 生え,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000850,ダケスゲ,Carex paupereula,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,,本州中北部の山地、高層湿原にまれに生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000851,トナカイスゲ,Carex globularis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道（東部） のアカエゾマツ林内の湿地に生え、北東アジア～ヨーロッパ北部に分布,北海道（東部） のアカエゾマツ林内の湿地に生え,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000852,ナルコスゲ,Carex curvicollis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-40cm,,北海道西南部～九州に分布する,山地の渓流のほとりに生える鮮緑色でや わらかい多年草,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000853,ヌイオスゲ,Carex vanheurckii,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,10-40cm,,北海道・本州 中部以北，シベリア東部からサハリン・千島列島に分布,高山帯中性草地に生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000854,ヒカゲシラスゲ,Carex planienlmis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州中部以北・北海道の深山の針薬林中に生え、朝鮮半島・中国（東北）・ウ スリー・サハリンに分布する,個枝を伸ばしまばらに生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000855,ヒゴクサ,Carex japoniea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,20-40cm,,北海道～九州，朝鮮半島・中国に分布する,,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000856,ヒメシラスゲ,Carex mollicula,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,15-30cm,,南千島・北海道～九州、朝鮮半島・中国に分布する,深山の林内に生える多年草,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000857,ヒメスゲ,Carex oxyandra,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,北海道～九州，サハリン・千島列島・台湾 252 カヤツリグサ科 に分布する,山地または高山の林地や草地に生える 多年草,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000858,ミヤマクロスゲ,Carex flavocuspis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,10-50cm,,本州中部以北・北海道、 サハリン・千島列島・カムチャツカ半島に分布する,,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000859,ムセンスゲ,Carex livida,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-30cm,,北半球の北部に生え、 朝鮮半島北部・北千島にも分布する,猿払，羅臼湖）の湿原に まれに生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000860,ヤチスゲ,Carex limnosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-40cm,,,高層湿原などに生える,日本の野生植物 第1巻,127,macOS Vision OCR + rule parser
+plant-profile-000861,アキカサスゲ,Carex nemostachys,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（近畿以西）～琉球に生え、台湾・中国・インドに分布する,山地の小川のほとりに生える,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000862,アワボスゲ,Carex nipposiniea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道～九州、東アジアに分布する,,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000863,ウマスゲ,Cares idzuroei,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-60cm,,本州 （関東以西）～九州の水湿地に生え、中国にも分布する,本州 （関東以西）～九州の水湿地に生え,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000864,エゾサワスゲ,Carex viridula,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,,,246.エゾサワスゲ Carex viridula Michx. （PL.251） 北海道・本州中北部などの湿地にややまれに生え、 東アジア北部・北アメリカに分布する,北海道・本州中北部などの湿地にややまれに生え,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000865,オオカサスゲ,Carex rlynchoplysa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,草本,1m,,本州中部以北・北海道に見られ、東アジア・シベリアに分布する,山野の湿地に生え、太い地下個枝をつ ける肥厚した大型の草本,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000866,オニナルコスゲ,Carex vesiearia,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-100cm,,北海 道・本州・九州、北半球の温帯般に分布し、北地に多い,オニナルコスゲ Carex vesiearia L. （PL 252） 湿地に生え、地下個枝のあるややかたい多年草,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000867,カサスゲ,Carex dispalata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,50-100cm,,朝鮮半島・中国・ ウスリー・サハリンに分布する,平地の湿地または浅水中に生える多年草,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000868,カラフトカサスゲ,Cares rostrata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-60cm,,254.カラフトカサスゲ Cares rostrata Stokes var. rostrata （PL. 252） 北海道の湿原に生え、朝鮮半島 北部からヨーロッパ北部に分布する,北海道の湿原に生え,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000869,キンキカサスゲ,Carex persistens,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,30-70cm,,,カサスゲによく似るが、山地の渓流のほとり に生え、茎は高さ30-70cm,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000870,クグスゲ,Carex pseudoeyperus,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北 海道・本州（青森県・群馬県・長野県）の水湿地に生え、シベリア・ヨーロッパ・北アメリカ に分布する,北 海道・本州（青森県・群馬県・長野県）の水湿地に生え,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000871,コヌマスゲ,Carex rotundata,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,北海道（大雪山）の高層湿原に生え、周北極地方に広く分布,個技を伸ばし、まぼらに生える,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000872,ジョウロウスゲ,Carex capricornis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,40-70cm,,北海道・本州（関東以北）、東アジアに分布する,水湿地に生える多年草,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000873,ベンケイヤワラスゲ,Carex benkei,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州・四国・九 州・対馬に分布,,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000874,ホロムイクグ,Cares tsuishikarensis,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,20-50cm,,249.ホロムイクグ Cares tsuishikarensis Koidz. （PL.252） 本州中部以北・北海道の温原にまれに生え、 千島列島に分布する,本州中部以北・北海道の温原にまれに生え,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000875,ミヤマシラスゲ,Carex confertillora,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-80cm,,,山地の水湿地に生える多年草,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000876,ヤワラスゲ,Carex transversa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-50cm,,,ヤワラスゲ Carex transversa Boott （PL250） 平地または丘陵地の半日陰に生える多年草,日本の野生植物 第1巻,128,macOS Vision OCR + rule parser
+plant-profile-000877,アカンカサスゲ,Carex sordida,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,60-80cm,,北海道東部の草地に生え、サハリン・朝鮮半島・ウスリーに分布,北海道東部の草地に生え,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000878,オオクグ,Cares rugulosa,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,40-70cm,,海水の出入りする河口に生え、北海道・本州・四国・九州にまれ に見られ、朝鮮半島・中国（東北）・ウスリーに分布する,海水の出入りする河口に生え,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000879,コウボウシバ,Carex pumila,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道～琉球の海岸砂地に多く見られ、東アジア・オーストラリア・南アメリカ（チリ）に分布,,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000880,シオクグ,Carex seabrifolia,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,30-50cm,,,海岸の塩水の出入りする泥地に生える多年草,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000881,スナジスゲ,Carex glabrescens,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本 州（関東・中部以北）・北海道（商部），朝鮮半島・中国（東北部）に分布,河川の高水敷に生え、全体にビロードスゲ に似るが、果胞はやや大きく、あらい毛が生えるが、ビロードスゲのように密生はしない,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000882,ハタベスグ,Carex latisquamea,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,多年草,40-75cm,,北海道・本州中北部・九州の山地の草原に生え、朝鮮半島・中国（東北）・ウスリーに分布する,北海道・本州中北部・九州の山地の草原に生え,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000883,ビロードスゲ,Carex miyabei,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,北海道・本州・ 九州、朝鮮半島に見られる,川岸の水湿のある砂地に生える,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000884,ワンドスゲ,Carex argyi,カヤツリグサ科,CYPERACEAE,スゲ属,Carex,,,,本州（大阪府淀川と 熊本県），国外では中国に分布,河川下流や河口の水辺に生える,日本の野生植物 第1巻,129,macOS Vision OCR + rule parser
+plant-profile-000885,イガガヤツリ,Cyperus polystachyos,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,10-50cm,,本州～琉球，朝鮮半島・中 国・台湾・インド・インドネシア・オーストラリア・アフリカに分布する,主として海岸に生える多年草,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000886,オニクグ,Cyperus javanicus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,40-80cm,,琉球（沖縄 諸島以南）・小笠原，台湾・中国・東南アジア・インド・太平洋諸島・アフリカに分布,,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000887,カワラスガナ,Cyperus sanguinolentus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,10-40cm,,北海道～琉球、東アジア・インド・インドネ シア・オーストラリア・アフリカに分布する,湿地にふつうに生え、根茎はない,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000888,コウシュンスゲ,Cyperus pedunculatus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,石垣島の海岸にまれに生じ、世界の熱帯に広く分布する,海岸砂浜に生える多年草,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000889,タイトウクグ,Cyperus sesquilorus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,,,2.タイトウクグ Cyperus sesquilorus （Torr：） Mattf. et Kuk. subsp. cylindrieus （Nees） T. Koyama 琉球 （西表島）、台湾・中国・東南アジア・インド・アフリカに分布,,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000890,タチガヤツリ,Cyperus diaphanus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,,,まれに青森県・栃木県の湿地 に知られ、朝鮮半島・中国（東北）・アムール、さらにインドネシアから中央アジアまで分布する,,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000891,タチヒメクグ,Cyperus kamtschatieus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,,,北海道・本州（関東地方 以北）、カムチャツカ半島に分布,湖沼や河川などの減水 裸地に生える一年章,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000892,ヒメクグ,Cyperus brevifolius,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,北海 道～琉球、朝鮮半島・中国に分布する,本州～琉球の暖地に生え,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000893,ムギガラガヤツリ,Cyperus unioloides,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,30-50cm,,本州（千葉 県・和歌山県）・四国（愛媛県・高知県）・九州，台湾・オーストラリアに分布,ムギガラガヤツリ Cyperus unioloides R. Br.湿地に生える多年草で高さ30-50cm,日本の野生植物 第1巻,130,macOS Vision OCR + rule parser
+plant-profile-000894,アオガヤツリ,Cyperus nipponieus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,5ー25cm,,本州～九州、朝鮮半島・中国に分布す る,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000895,ウシクグ,Cyperus orthostachyus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,20-70cm,,北海道～九州，朝鮮半 島・中国・シベリア東部に分布する,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000896,オオホウキガヤツリ,Cyperus digitatus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,,,34.オオホウキガヤツリ Cyperus digitatus Roxb.琉球（沖縄島・宮古島・石垣島・西表島・与那国 島）、台湾・中国・インド・世界の熱帯に広く分布,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000897,オニガヤツリ,Cyperus pilosus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,本州（中部地方以西）～琉球、中国・台湾・インドに分布する,湿地に生える多年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000898,カンエンガヤツリ,Cyperus exaltatus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,80-120cm,,本州，朝鮮半島・中国に分布する,湿地にまれ に生えて群落をつくる,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000899,クグガヤツリ,Cyperus compressus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,10-40cm,,本州～琉球、中国（中南部・台湾）から世界の熱帯に分布する,路傍や荒れ地などに生える一年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000900,コアゼガヤツリ,Cyperus haspan,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,,,本州～琉球、 および全世界の暖地に分布する,湿地や水田などに生える,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000901,コゴメガヤツリ,Cyperus iria,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,,,本州～琉球、朝 鮮半島・中国・台湾・インド・マレーシア・オーストラリア・アフリカに分布する,畑地や中性の荒れ地にふつうに生える一年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000902,シチトウイ,Cyperus malaecensis,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,1ー1.5m,,本州（関東以西）～琉球で栽培され、また暖地に野生し、中 国（南部）、台湾に分布する,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000903,シュロガヤツリ,Cyperus alternifolius,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,1.5ー2m,,,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000904,ショクヨウガヤツリ,Cyperus eseulentus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,ヨーロッパ、アジア、アメリカに広く分布し、本州に帰化,ショクヨウガヤツリ〔キハマスグ） Cyperus eseulentus L.路傍や畑地に生える多年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000905,シロガヤツリ,Cyperus paeifeus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,,,北海道・本州、朝鮮半島に分布する,平地の湿地に生える、アオガヤツリによ く似たやわらかい一年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000906,スナハマスゲ,Cyperus stoloniferus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,10ー30cm,,琉球（奄美以南）、世界の熱帯・亜熱帯に広く分布,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000907,タマガヤツリ,Cyperus difformis,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,15-40cm,,北海道～琉球、 ほとんど全世界の暖地に分布する,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000908,チャガヤツリ,Cyperus amurieus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,,,国外では朝鮮半島・中国・台湾・アムー ル・ウスリーに分布する,本州～琉球の畑地や中性の荒れ地などに生える,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000909,ツクシオオガヤツリ,Cyperus olwii,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,,1ー1.5m,,インド・インドネシアにも分布する,福岡県の池畔の湿地に生える,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000910,ヌマガヤツリ,Cyperus glomeratus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,,,本州、朝鮮半島・中国・アムール・インド・ ヨーロッパに分布する,湿地に生える丈の高い一年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000911,ハマスゲ,Cyperus rotundus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,20-40cm,,本州～琉球、および世界 の熱帯～亜熱帯に広く分布する,日当りのよい砂質地に生える多年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000912,ヒナガヤツリ,Cyperus faecidus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,5ー25cm,,本州～九州，朝鮮半島・中国・オースト ラリアに分布する,平地の川岸の草地などに生える、やわらかくて 緑色の一年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000913,ヒメアオガヤツリ,Cyperus extremiorientalis,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,一年草,,,本州～九州に分布する,ため池などの減水裸地に生える小型 の一年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000914,ヒメホウキガヤツリ,Cyperus nutans,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,琉球（宮古島・石垣島・西表島）、台湾・中国・東南アジア・ インド・オーストラリア・アフリカに分布する,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000915,ホウキガヤツリ,Cyperus distans,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,四国（高知県）・九州（種子島）・琉球、台湾・世界の熱帯に広く分布,,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000916,ミズガヤツリ,Cyperus serotinus,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,50-100cm,,北海道～琉球、朝鮮半島・中 国・台湾・インド・ヨーロッパに分布する,湿地に生える多年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000917,メリケンガヤツリ,Cyperus eragrostis,カヤツリグサ科,CYPERACEAE,ヒトモトススキ属,Cladium,多年草,,,,メリケンガヤツリ Cyperus eragrostis Lam. 川岸や池畔などの湿地に生えるやや大型の多年草,日本の野生植物 第1巻,131,macOS Vision OCR + rule parser
+plant-profile-000918,オオヌマハリイ,Eleocharis mamillata,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,多年草,,,北海道・本州・九州、朝鮮半島・ウスリー・中国（東 北）に分布する,山地の浅い池沼に生える多年草,日本の野生植物 第1巻,132,macOS Vision OCR + rule parser
+plant-profile-000919,クログワイ,Eleocharis kuroguwai,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,多年草,,,本州（関東・北陸以西）～九州、朝鮮半島に分布する,池中に生える多年草,日本の野生植物 第1巻,132,macOS Vision OCR + rule parser
+plant-profile-000920,タマハリイ,Eleocharis geniculata,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,一年草,,,,,日本の野生植物 第1巻,132,macOS Vision OCR + rule parser
+plant-profile-000921,トクサイ,Eleoeharis ochrostaclys,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,多年草,,,南西諸島、中国・台湾・インド・スリランカ・マ ダガスカル・インドシナ・マレーシア・太平洋諸島・オーストラリアに分布する,,日本の野生植物 第1巻,132,macOS Vision OCR + rule parser
+plant-profile-000922,ヒメハリイ,Eleocharis kamtschatica,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,多年草,,,北海道 ～九州，朝鮮半島・中国・ウスリー・サハリン・千島列島・カムチャツカ半島・北アメリカ北 部に分布する,海岸近くの湿地に生える多年草,日本の野生植物 第1巻,132,macOS Vision OCR + rule parser
+plant-profile-000923,マツバイ,Eleocharis acicularis,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,一年草,,,北海道～琉球，シ ベリア東部・朝鮮半島・中国・台湾・インドシナに分布する,川岸などの水湿地に生える一年草で、糸状の細い個枝がある,日本の野生植物 第1巻,132,macOS Vision OCR + rule parser
+plant-profile-000924,カヤツリマツバイ,Eleocharis retrofexa,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,一年草,,,琉球諸島（石垣島）にあり、 中国・インド・スリランカ・東南アジア・アフリカ・オーストラリアに分布する,,日本の野生植物 第1巻,133,macOS Vision OCR + rule parser
+plant-profile-000925,サギスゲ,Eriophorum gracile,カヤツリグサ科,CYPERACEAE,ワタスゲ属,Eriophorum,多年草,,,北海道・本州，ユーラシア・ 朝鮮半島・北アメリカに広く分布する,湿地に生える多年草,日本の野生植物 第1巻,133,macOS Vision OCR + rule parser
+plant-profile-000926,シカクイ,Eleocharis wichurae,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,多年草,,,北海道～琉球、南千島・ウスリー・朝鮮半島・中国に分布する,叢生する多年草で、山地から平地にいたる湿地 にややふつうに生える,日本の野生植物 第1巻,133,macOS Vision OCR + rule parser
+plant-profile-000927,ハリイ,Eleocharis congesta,カヤツリグサ科,CYPERACEAE,ハリイ属,Eleocharis,一年草,,,北海道～流球、朝鮮半島・中国・台湾・インド・ インドネシア・マレーシアに分布する,湿地や水田跡地などに ふつうに生える一年草で、制技はない,日本の野生植物 第1巻,133,macOS Vision OCR + rule parser

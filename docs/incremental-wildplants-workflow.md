@@ -7,8 +7,23 @@
 - PDFやページ画像などの大きい一次資料はリポジトリ外に置く。
 - リポジトリ内に残すのは、確認済みの小さいCSV、反映結果、検証レポートだけにする。
 - 1回で扱う候補は原則25件以下にする。
+- スキャンPDFのOCR結果は `~/Codex_offload/wildplant_ocr_cache/` に置き、リポジトリに入れない。
 - 各バッチは、反映前に `--dry-run`、反映後に `validate-normalized` まで確認する。
 - `npm run build` は毎バッチでは実行せず、数バッチごとの区切りで実行する。
+
+## PDFから植物プロフィールを抽出する
+
+日本の野生植物PDFはスキャン画像なので、macOS Vision OCRでページごとにテキスト化し、植物名・学名・科・生活型・花期・分布・生育環境だけを `normalized_data/plant_profiles.csv` に保存する。本文の長文転載はしない。
+
+```bash
+npm run extract:wildplants -- /path/to/jp_wild_plants_1.pdf --pages 34-133 --replace
+```
+
+抽出後はサイト用軽量JSONに反映する。
+
+```bash
+npm run build:data-lite
+```
 
 ## 既存候補CSVの分割
 
