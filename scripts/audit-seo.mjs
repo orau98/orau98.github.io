@@ -331,14 +331,6 @@ for (const filePath of supportHtmlFiles) {
   }
 }
 
-const topicsDir = path.join(DIST_DIR, 'topics');
-const topicFiles = collectHtmlFiles(topicsDir);
-ensure(fs.existsSync(topicsDir), 'dist/topics directory not found');
-ensure(topicFiles.length > 0, 'dist/topics HTML files not found');
-for (const filePath of topicFiles) {
-  validateHtml(filePath, readFile(filePath));
-}
-
 const metaDir = path.join(DIST_DIR, 'meta');
 const metaFiles = collectHtmlFiles(metaDir).filter(
   (filePath) => !filePath.endsWith('support-test.html'),

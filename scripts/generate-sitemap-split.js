@@ -436,14 +436,6 @@ function generateSplitSitemaps() {
     { changefreq: 'monthly', priority: '0.5' },
   );
 
-  addStaticDirectoryToMain(
-    sitemaps,
-    baseUrl,
-    path.join(__dirname, '../public/topics'),
-    '/topics/',
-    { changefreq: 'monthly', priority: '0.7' },
-  );
-
   // NOTE:
   // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
   // 検索エンジン向けのサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
