@@ -38,6 +38,9 @@ const SPA_ROUTE_SHELLS = [
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
+  // Plant views use original plant photos directly; responsive derivatives are
+  // only a local/development fallback and push Pages artifacts over the limit.
+  path.join('dist', 'images', 'resized', 'plants'),
   // Development CSV snapshots should remain in the repository, not in Pages output.
   path.join('dist', 'backup'),
   path.join('dist', 'insects.csv.bak.butterfly_subfamily_fix_20260114125318'),
