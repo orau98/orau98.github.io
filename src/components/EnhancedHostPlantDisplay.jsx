@@ -346,10 +346,15 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
               </div>
             )}
           </div>
-          {plantGroup.family && (
-            <span className={`text-sm shrink-0 ${isDomesticWild ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
+          {plantGroup.family && plantGroup.family !== plantGroup.name && (
+            <Link
+              to={buildPlantPath(plantGroup.family, locale)}
+              state={makeDetailLinkState(location)}
+              className={`text-sm shrink-0 underline-offset-2 hover:underline ${isDomesticWild ? 'text-slate-500 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-300' : 'text-slate-400 hover:text-emerald-600 dark:text-slate-500 dark:hover:text-emerald-300'}`}
+              title={`${plantGroup.family} の詳細へ`}
+            >
               {plantGroup.family}
-            </span>
+            </Link>
           )}
           {/* 利用バッジ（極小・横並び・折り返さない） */}
           {shownBadges.length > 0 && (

@@ -35,6 +35,7 @@
     "extract:pdf": ".venv/bin/python scripts/extract_from_pdf.py",
     "check:api": ".venv/bin/python scripts/check_updates_api.py",
     "merge:candidates": ".venv/bin/python scripts/merge_candidates.py",
+    "split:update-batches": ".venv/bin/python scripts/split_update_candidates.py",
     "apply:updates": ".venv/bin/python scripts/apply_updates.py",
     "extract:parallel": "bash scripts/run_extract_parallel.sh",
     "check:api:parallel": "bash scripts/run_api_parallel.sh",

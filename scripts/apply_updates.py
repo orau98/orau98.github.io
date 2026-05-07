@@ -55,6 +55,26 @@ HOSTPLANT_PROPOSED_OVERRIDES = {
     ],
 }
 
+SCIENTIFIC_PLANT_TOKEN_OVERRIDES = {
+    "Carex sp.": {"plant_name": "スゲ属", "plant_family": "カヤツリグサ科"},
+}
+
+INVALID_PLANT_NAMES = {
+    "枯葉",
+    "植物",
+    "複数の植物",
+    "キク科野草",
+    "食葉性",
+    "判明",
+    "羽化",
+    "葉",
+    "み",
+}
+
+INVALID_PLANT_NAME_PATTERN = re.compile(
+    r"(食草|幼虫|採集|確認|記録|飼育|摂食|寄主|本種|小笠原|終齢|として|では|から|での|発見|発生|加害|食害|つくこ|するこ|巻いて住む|越冬|蛹化|従来|生活環|繭構成物|営繭|あるこ|生育|県|市|郡|町|村)"
+)
+
 
 def find_csv(filename: str) -> Path | None:
     for d in CSV_CANDIDATES_DIRS:
@@ -109,12 +129,19 @@ def load_candidates(input_path: Path) -> list[dict]:
     if not input_path.exists():
         print(f"エラー: {input_path} が見つかりません。")
         sys.exit(1)
-    with open(input_path, encoding="utf-8") as f:
+    with open(input_path, encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
 
 
 def build_hostplant_family_lookup(rows: list[dict]) -> dict[str, str]:
     lookup = {}
+    if YLIST_LITE_PATH.exists():
+        with open(YLIST_LITE_PATH, encoding="utf-8") as f:
+            payload = json.load(f)
+        for japanese_name, detail in (payload.get("plants") or {}).items():
+            family = ((detail or {}).get("familyJp") or "").strip()
+            if japanese_name and family:
+                lookup[japanese_name] = family
     for row in rows:
         plant_name = row.get("plant_name", "").strip()
         plant_family = row.get("plant_family", "").strip()
@@ -123,6 +150,35 @@ def build_hostplant_family_lookup(rows: list[dict]) -> dict[str, str]:
     lookup.setdefault("オトギリソウ", "オトギリソウ科")
     lookup.setdefault("イワオトギリ", "オトギリソウ科")
     lookup.setdefault("シナノオトギリ", "オトギリソウ科")
+    lookup.setdefault("ノバラ", "バラ科")
+    lookup.setdefault("カラフトイバラ", "バラ科")
+    lookup.setdefault("セイヨウタンポポ", "キク科")
+    lookup.setdefault("ヌマガヤ", "イネ科")
+    lookup.setdefault("イヌビエ", "イネ科")
+    lookup.setdefault("アカリ", "")
+    lookup.setdefault("アカザ", "ヒユ科")
+    lookup.setdefault("イワオオギ", "マメ科")
+    lookup.setdefault("ウニヤバネゴケ", "ウロコゴケ綱")
+    lookup.setdefault("モエギコミミゴケ", "ウロコゴケ綱")
+    lookup.setdefault("オオキゴケ", "キゴケ科")
+    lookup.setdefault("キールンカンコノキ", "コミカンソウ科")
+    lookup.setdefault("シャク", "セリ科")
+    lookup.setdefault("キオン", "キク科")
+    lookup.setdefault("タムラソウ", "キク科")
+    lookup.setdefault("フキ", "キク科")
+    lookup.setdefault("ウバメガシ", "ブナ科")
+    lookup.setdefault("イヌビワ", "クワ科")
+    lookup.setdefault("ネザサ", "イネ科")
+    lookup.setdefault("ヨモギ属", "キク科")
+    lookup.setdefault("ハンノキ", "カバノキ科")
+    lookup.setdefault("ヒラドツツジ", "ツツジ科")
+    lookup.setdefault("ドロノキ", "ヤナギ科")
+    lookup.setdefault("ノコンギク", "キク科")
+    lookup.setdefault("ユウガギク", "キク科")
+    lookup.setdefault("オクラ", "アオイ科")
+    lookup.setdefault("ビロードスゲ", "カヤツリグサ科")
+    lookup.setdefault("シリブカカシ", "ブナ科")
+    lookup.setdefault("フモトシダ", "コバノイシカグマ科")
     return lookup
 
 
@@ -177,7 +233,39 @@ def extract_japanese_plant_name(text: str) -> str:
     if leading_match and re.search(r"[A-Za-z]", text):
         return leading_match.group(1)
     jp_tokens = re.findall(r"[一-龯ぁ-んァ-ヶー]+", text)
-    return jp_tokens[-1] if jp_tokens else text
+    if jp_tokens:
+        return jp_tokens[-1]
+    if re.search(r"[A-Za-z]", text):
+        return ""
+    return text
+
+
+def normalize_parenthetical_family(text: str) -> str:
+    def repl(match: re.Match) -> str:
+        content = match.group(1).strip()
+        common_family = re.fullmatch(r"いずれも([一-龯ぁ-んァ-ヶー]+科)", content)
+        if common_family:
+            return f"（{common_family.group(1)}）"
+        family_match = re.search(r"([一-龯ぁ-んァ-ヶー]+科)", content)
+        jp_candidates = [
+            candidate
+            for candidate in re.findall(r"[一-龯ぁ-んァ-ヶー]+", content)
+            if candidate != "いずれも" and not candidate.endswith("科")
+        ]
+        if family_match and jp_candidates:
+            return f"（{jp_candidates[0]} {family_match.group(1)}）"
+        exact_family = re.fullmatch(r"[一-龯ぁ-んァ-ヶー]+科", content)
+        if exact_family:
+            return f"（{content}）"
+        prefix_family = re.match(r"^([一-龯ぁ-んァ-ヶー]+科)", content)
+        if prefix_family:
+            return f"（{prefix_family.group(1)}）"
+        trailing_family_match = re.search(r"(?:^|[、，\s])([一-龯ぁ-んァ-ヶー]+科)$", content)
+        if trailing_family_match:
+            return f"（{trailing_family_match.group(1)}）"
+        return ""
+
+    return re.sub(r"[（(]([^）)]*)[）)]", repl, text)
 
 
 def parse_hostplant_token(
@@ -191,29 +279,137 @@ def parse_hostplant_token(
         return None
 
     family = default_family
-    name_text = token
+    explicit_family_taxon = bool(re.search(r"[一-龯ぁ-んァ-ヶー]+科(?:植物|の仲間|$)", token))
+    raw_parenthetical = re.search(r"[（(]([^）)]*)[）)]", token)
+    parenthetical_name = ""
+    if raw_parenthetical:
+        content = raw_parenthetical.group(1)
+        family_match = re.search(r"([一-龯ぁ-んァ-ヶー]+科)", content)
+        if family_match:
+            family = family_match.group(1)
+        jp_candidates = [
+            candidate
+            for candidate in re.findall(r"[一-龯ぁ-んァ-ヶー]+", content)
+            if candidate != "いずれも" and not candidate.endswith("科")
+        ]
+        if jp_candidates:
+            parenthetical_name = jp_candidates[0]
 
-    paren_match = re.match(r"^(.+?)[（(]([^）)]+科)[）)]$", token)
+    name_text = normalize_parenthetical_family(token)
+    name_text = re.sub(r"^(?:小笠原で|終齢幼虫では|幼虫では)", "", name_text).strip()
+    name_text = re.sub(r"^.*?産は", "", name_text).strip()
+    name_text = re.sub(r"などの[一-龯ぁ-んァ-ヶー]+$", "", name_text).strip()
+    name_text = re.sub(r"からも確認$", "", name_text).strip()
+
+    paren_match = re.match(r"^(.+?)[（(]([一-龯ぁ-んァ-ヶー]+科)[）)]$", name_text)
     if paren_match:
         name_text = paren_match.group(1).strip()
         family = paren_match.group(2).strip()
+    else:
+        name_text = re.sub(r"[（(][^）)]*[）)]", "", name_text).strip(" 、。")
+
+    if parenthetical_name and not re.search(r"[一-龯ぁ-んァ-ヶー]", name_text):
+        name_text = parenthetical_name
+
+    family_prefix_match = re.match(r"^([一-龯ぁ-んァ-ヶー]+科)の(.+)$", name_text)
+    if family_prefix_match:
+        family = family_prefix_match.group(1)
+        name_text = family_prefix_match.group(2).strip()
+    else:
+        family_prefix_match = re.match(r"^([一-龯ぁ-んァ-ヶー]+科)([一-龯ぁ-んァ-ヶー]+)$", name_text)
+        if family_prefix_match:
+            family = family_prefix_match.group(1)
+            name_text = family_prefix_match.group(2).strip()
+        else:
+            family_prefix_match = re.match(r"^([一-龯ぁ-んァ-ヶー]+科)([一-龯ぁ-んァ-ヶー]+)(?:\s|$)", name_text)
+            if family_prefix_match:
+                family = family_prefix_match.group(1)
+                name_text = family_prefix_match.group(2).strip()
+    genus_prefix_match = re.match(r"^[一-龯ぁ-んァ-ヶー]+属の(.+)$", name_text)
+    if genus_prefix_match:
+        name_text = genus_prefix_match.group(1).strip()
+    if name_text == "スゲの一種":
+        name_text = "スゲ属"
+        family = family or "カヤツリグサ科"
+    if name_text.startswith("スゲの一種"):
+        name_text = "スゲ属"
+        family = family or "カヤツリグサ科"
+    name_text = re.sub(r"^.*?で(?=[一-龯ぁ-んァ-ヶー]+$)", "", name_text).strip()
+    name_text = re.sub(r"^(?:して|湿らせた)", "", name_text).strip()
+    name_text = re.sub(r"の(?:花|葉|実)$", "", name_text).strip()
+    name_text = re.sub(r"(?:の若葉|の果実|の種子|の根茎基部|の栄養葉|の生葉|の葉上|の枯葉|の花蕾|の花蕾・葉|の害虫)$", "", name_text).strip()
+    name_text = re.sub(r"(?:のみ|等)$", "", name_text).strip()
+    name_text = re.sub(r"(?:属|科)$", lambda m: m.group(0), name_text).strip()
 
     plant_name = extract_japanese_plant_name(name_text)
+    if plant_name.startswith("スゲの一種"):
+        plant_name = "スゲ属"
+        family = family or "カヤツリグサ科"
+    if plant_name == "植物" and family:
+        plant_name = family
+        family = ""
+        explicit_family_taxon = True
+    if plant_name in INVALID_PLANT_NAMES:
+        return None
     if not plant_name:
+        override = SCIENTIFIC_PLANT_TOKEN_OVERRIDES.get(normalize_scientific_plant_name(name_text))
+        if override:
+            plant_name = override["plant_name"]
+            if not family:
+                family = override.get("plant_family", "")
+        else:
+            resolved = (scientific_lookup or {}).get(normalize_scientific_plant_name(name_text))
+            if not resolved:
+                return None
+            plant_name = resolved["plant_name"]
+            if not family:
+                family = resolved.get("plant_family", "")
+    if not plant_name:
+        return None
+    if not family:
         resolved = (scientific_lookup or {}).get(normalize_scientific_plant_name(name_text))
-        if not resolved:
-            return None
-        plant_name = resolved["plant_name"]
-        if not family:
+        if resolved:
             family = resolved.get("plant_family", "")
     if not family:
         family = family_lookup.get(plant_name, "")
+    if family and INVALID_PLANT_NAME_PATTERN.search(family):
+        family = family_lookup.get(plant_name, "")
+    if plant_name in INVALID_PLANT_NAMES:
+        return None
+    if plant_name.endswith("科") and not explicit_family_taxon:
+        return None
+    if INVALID_PLANT_NAME_PATTERN.search(plant_name):
+        return None
 
     return {
         "plant_name": plant_name,
         "plant_family": family,
         "notes": "",
     }
+
+
+def parse_hostplant_tokens(
+    payload: str,
+    family_lookup: dict[str, str],
+    scientific_lookup: dict[str, dict] | None = None,
+) -> list[dict]:
+    entries = []
+    common_family_match = re.search(r"いずれも([一-龯ぁ-んァ-ヶー]+科)", payload)
+    common_family = common_family_match.group(1) if common_family_match else ""
+    normalized_payload = normalize_parenthetical_family(payload)
+    normalized_payload = re.sub(r"^.*?産は", "", normalized_payload)
+    normalized_payload = re.sub(r"など複数の植物", "", normalized_payload)
+    normalized_payload = re.sub(r"\s*および\s*", "、", normalized_payload)
+    normalized_payload = re.sub(r"\s*と\s*", "、", normalized_payload)
+    normalized_payload = re.sub(r"[，、及び・/]", "、", normalized_payload)
+    for token in normalized_payload.split("、"):
+        entry = parse_hostplant_token(token, family_lookup, "", scientific_lookup)
+        if not entry:
+            continue
+        if common_family and not entry.get("plant_family"):
+            entry["plant_family"] = common_family
+        entries.append(entry)
+    return entries
 
 
 def normalize_hostplant_additions(
@@ -225,24 +421,103 @@ def normalize_hostplant_additions(
     if not proposed:
         return []
 
+    if any(marker in proposed for marker in ("日本では食草は未知", "わが国での食草は未知")):
+        return []
+    if proposed.startswith("食草は外国では") or proposed.startswith("ヨーロッパでは"):
+        return []
+
     if proposed in HOSTPLANT_PROPOSED_OVERRIDES:
         return [dict(entry) for entry in HOSTPLANT_PROPOSED_OVERRIDES[proposed]]
 
     if proposed.startswith("食草："):
         payload = proposed.split("：", 1)[1].strip()
-        if "、" in payload:
-            entries = []
-            default_family = ""
-            for token in payload.split("、"):
-                entry = parse_hostplant_token(token, family_lookup, default_family, scientific_lookup)
-                if not entry:
-                    continue
-                entries.append(entry)
-                if entry["plant_family"]:
-                    default_family = entry["plant_family"]
-            return entries
+        if any(separator in payload for separator in ("、", "，", "及び", "・", "/")):
+            return parse_hostplant_tokens(payload, family_lookup, scientific_lookup)
         entry = parse_hostplant_token(payload, family_lookup, scientific_lookup=scientific_lookup)
         return [entry] if entry else []
+
+    phrase_patterns = [
+        r"^幼虫の飼育により、(.+?)を食草として確認",
+        r"^幼虫の食草は(.+?)(?:のみ|[。、]|$)",
+        r"^幼虫の食草が(.+?)であることを.*確認",
+        r"^幼虫は(.+?)の(?:葉|枯葉).*?(?:摂食|巻いて)",
+        r"^幼虫は(.+?)を食",
+        r"^幼虫は(.+?)を摂食",
+        r"^幼虫が(.+?)を食餌として確認",
+        r"^幼虫が(.+?)で飼育され",
+        r"^幼虫が(.+?)で生育することを確認",
+        r"^幼虫が(.+?)につくことが確認",
+        r".*食草は(.+?)(?:[)。、]|$)",
+        r"^食草として(.+?)を(?:初記録|確認|記録)",
+        r"^食草は(.+?)(?:と判明|$)",
+        r"^主要食草は(.+?)と判明",
+        r"^(.+?)を(?:高山植物)?食草として(?:確認|記録)",
+        r"^(.+?)を食草として(?:初)?(?:確認|記録)",
+        r"^(.+?)を食草として.*?(?:確認|記録)",
+        r"^(.+?)を食草として追加",
+        r"^(.+?)を食草確認",
+        r"^(.+?)を食草[。、]?",
+        r"^(.+?)を新寄主植物として記録",
+        r"^(.+?)を新たな寄主植物として確認",
+        r"^(.+?)を寄主植物として確認",
+        r"^(.+?)を新食草として(?:確認|追加記録)",
+        r"^(.+?)を新食樹として確認",
+        r"^(.+?)を新しい食餌植物として記録",
+        r"^(.+?)を食餌植物として確認",
+        r"^([^。]+?)を確認",
+        r"^(.+?)を追加食草として確認",
+        r"^(.+?)を主食草として確認",
+        r"^(.+?)を食餌とすることが特定",
+        r"^(.+?)を摂食することを確認",
+        r"^野生寄主として(.+?)を確認",
+        r"^(.+?)での飼育に成功",
+        r"^(.+?)で飼育に成功",
+        r"^(.+?)で採卵飼育に成功",
+        r"^(.+?)で大発生",
+        r"^(.+?)での営繭を確認",
+        r"^(.+?)での越冬態",
+        r"^(.+?)につくことを確認",
+        r"^(.+?)につくことを初めて確認",
+        r"^(.+?)からの発生を新記録",
+        r"^(.+?)[、，](?:終齢幼虫では|幼虫では).+?も摂食",
+        r"、([^、。]+?)も摂食",
+        r"^(.+?)で幼虫の飼育に成功",
+        r"^(.+?)の花から幼虫を採集",
+        r"^(.+?)の(?:若葉|果実|実|種子|葉|栄養葉|根茎基部|花蕾・葉|生葉|花).*?(?:食害|摂食|食草|採集|確認|発見|記録)",
+        r"^(.+?)から(?:若齢|終齢|老熟|成熟)?幼虫.*?(?:採集|確認|発見|初めて発見|採取)",
+        r"^(.+?)から(?:卵を採取|採卵|飼育羽化|幼虫)",
+        r"^(.+?)を食する幼虫",
+        r"^(.+?)の花を食す幼虫",
+        r"^(.+?)に産卵を確認",
+        r"^(.+?)で(?:幼虫を)?発見",
+        r"^繭構成物が(.+?)であることを確認",
+        r"^(?:.*で)?(.+?)に加害すること",
+        r"^.*幼虫を(.+?)から採",
+        r"^(.+?)をつづった巣から.*食草として確認",
+        r"^(.+?)での寄生を確認",
+        r"^本邦では[一-龯ぁ-んァ-ヶー]+科の(.+?)より幼虫",
+        r"^(.+?)より幼虫を",
+        r"^飼育では(.+?)をよく食べた",
+        r"。(.+?)もよく食した",
+        r"。(.+?)も飼育下で食する",
+        r"。(.+?)からも幼虫発見",
+        r"。(.+?)も食べる",
+    ]
+    collected_entries = []
+    seen_entries = set()
+    for pattern in phrase_patterns:
+        matches = re.finditer(pattern, proposed)
+        for match in matches:
+            entries = parse_hostplant_tokens(match.group(1), family_lookup, scientific_lookup)
+            for entry in entries:
+                key = (entry.get("plant_name", ""), entry.get("plant_family", ""))
+                if key in seen_entries:
+                    continue
+                entry["notes"] = proposed
+                collected_entries.append(entry)
+                seen_entries.add(key)
+    if collected_entries:
+        return collected_entries
 
     match = re.match(r"^食草が(.+?)[（(]([^）)]+科)[）)](?:と判明|であることが判明)", proposed)
     if match:
@@ -297,7 +572,7 @@ def apply_hostplant_addition(row: dict, hostplants_path: Path):
         return False
 
     # 既存レコードを読み込み
-    with open(hostplants_path, encoding="utf-8") as f:
+    with open(hostplants_path, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
         fieldnames = reader.fieldnames
@@ -354,7 +629,7 @@ def apply_hostplant_addition(row: dict, hostplants_path: Path):
 
     # 書き出し
     with open(hostplants_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -372,7 +647,7 @@ def apply_scientific_name_change(row: dict, insects_path: Path):
         print(f"    スキップ（データ不足）: insect_id={insect_id}")
         return False
 
-    with open(insects_path, encoding="utf-8") as f:
+    with open(insects_path, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
         fieldnames = reader.fieldnames
@@ -392,7 +667,7 @@ def apply_scientific_name_change(row: dict, insects_path: Path):
 
     if updated:
         with open(insects_path, "w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
             writer.writeheader()
             writer.writerows(rows)
     return updated
@@ -407,7 +682,7 @@ def apply_japanese_name_change(row: dict, insects_path: Path):
         print(f"    スキップ（データ不足）: insect_id={insect_id}")
         return False
 
-    with open(insects_path, encoding="utf-8") as f:
+    with open(insects_path, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
         fieldnames = reader.fieldnames
@@ -427,7 +702,7 @@ def apply_japanese_name_change(row: dict, insects_path: Path):
 
     if updated:
         with open(insects_path, "w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
             writer.writeheader()
             writer.writerows(rows)
     return updated
@@ -443,7 +718,7 @@ def apply_new_species(row: dict, insects_path: Path):
         print("    スキップ（和名・学名なし）")
         return False
 
-    with open(insects_path, encoding="utf-8") as f:
+    with open(insects_path, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
         fieldnames = reader.fieldnames
@@ -470,7 +745,7 @@ def apply_new_species(row: dict, insects_path: Path):
     rows.append(new_row)
 
     with open(insects_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -511,6 +786,11 @@ def main():
         "--dry-run",
         action="store_true",
         help="実際のCSV更新を行わず、何が適用されるか表示のみ",
+    )
+    parser.add_argument(
+        "--skip-build",
+        action="store_true",
+        help="バリデーション後の npm run build 確認を省略する",
     )
     args = parser.parse_args()
 
@@ -567,41 +847,46 @@ def main():
     applied = 0
     skipped = 0
 
-    for r in approved:
-        change_type = r.get("change_type", "").strip()
-        print(f"\n  処理: [{change_type}] {r.get('insect_id', '?')}")
+    try:
+        for r in approved:
+            change_type = r.get("change_type", "").strip()
+            print(f"\n  処理: [{change_type}] {r.get('insect_id', '?')}")
 
-        if change_type == "食草追加":
-            if hostplants_path:
-                if apply_hostplant_addition(r, hostplants_path):
+            if change_type == "食草追加":
+                if hostplants_path:
+                    if apply_hostplant_addition(r, hostplants_path):
+                        applied += 1
+                    else:
+                        skipped += 1
+                else:
+                    print("    hostplants.csv が見つかりません — スキップ")
+                    skipped += 1
+
+            elif change_type == "学名変更":
+                if apply_scientific_name_change(r, insects_path):
                     applied += 1
                 else:
                     skipped += 1
-            else:
-                print("    hostplants.csv が見つかりません — スキップ")
-                skipped += 1
 
-        elif change_type == "学名変更":
-            if apply_scientific_name_change(r, insects_path):
-                applied += 1
-            else:
-                skipped += 1
+            elif change_type == "和名変更":
+                if apply_japanese_name_change(r, insects_path):
+                    applied += 1
+                else:
+                    skipped += 1
 
-        elif change_type == "和名変更":
-            if apply_japanese_name_change(r, insects_path):
-                applied += 1
-            else:
-                skipped += 1
+            elif change_type == "新規種追加":
+                if apply_new_species(r, insects_path):
+                    applied += 1
+                else:
+                    skipped += 1
 
-        elif change_type == "新規種追加":
-            if apply_new_species(r, insects_path):
-                applied += 1
             else:
+                print(f"    未対応の変更種別: {change_type} — スキップ")
                 skipped += 1
-
-        else:
-            print(f"    未対応の変更種別: {change_type} — スキップ")
-            skipped += 1
+    except Exception as exc:
+        print(f"\nエラー: 変更適用中に失敗しました: {exc}")
+        rollback(backup_path)
+        raise
 
     print(f"\n--- 結果 ---")
     print(f"適用: {applied}件, スキップ: {skipped}件")
@@ -617,6 +902,13 @@ def main():
         sys.exit(1)
 
     print("\nバリデーション成功。")
+
+    if args.skip_build:
+        print("\n--skip-build: npm run build をスキップしました。")
+        print("手動で実行する場合: npm run build")
+        print(f"\nバックアップ: {backup_path}")
+        print("git push は手動で行ってください。")
+        return
 
     # ビルド確認
     print("\n" + "=" * 50)

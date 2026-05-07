@@ -59,6 +59,7 @@ tmp/
 tmp_*/
 tmp_listmj_xlsx/
 tmp_xlsx_cli/
+.codex_artifacts/
 
 # Local caches / deploy artifacts
 cache/
@@ -69,6 +70,8 @@ _deploy/
 
 # Downloaded PDFs (too large for Git)
 pdfs/
+data/sources/
+data/ocr/
 
 # Backup directory created by apply_updates.py
 public/backup/
@@ -80,6 +83,7 @@ scripts/__pycache__/
 reports/api_log_*.txt
 reports/api_check_progress.json
 reports/api_update_candidates.csv
+reports/update_batches/
 reports/extracted_*.json
 reports/processed_*.json
 reports/agent_extract_*.json

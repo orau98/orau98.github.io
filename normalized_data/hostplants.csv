@@ -1,4 +1,4 @@
-﻿record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
+record_id,insect_id,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes
 host-B1B7-20251121002628-0001,species-3996,フタバガキ科サラノキ属,,文献,,,日本産蛾類標準図鑑1,
 host-B1B7-20251121002628-0002,species-3996,マメ科ドクフジ属,,文献,,,日本産蛾類標準図鑑1,
 host-B1B7-20251121002628-0003,species-3997,シマニッケイ,クスノキ科,文献,,,日本産蛾類標準図鑑1,
@@ -17057,3 +17057,221 @@ hostplant-913195,species-1174,ガマ,ガマ科,文献,雌穂,幼虫,日本産蛾
 hostplant-913196,species-1174,ハマボウ,アオイ科,文献,朔果内,幼虫,日本産蛾類標準図鑑3,残物を摂食
 hostplant-913197,species-1308,ナデシコ属数種,ナデシコ科,国外,,幼虫,日本産蛾類標準図鑑3,ヨーロッパ
 hostplant-913198,species-1308,センノウ属,ナデシコ科,国外,,幼虫,日本産蛾類標準図鑑3,ヨーロッパ
+hostplant-913210,species-4198,クロウメモドキ,クロウメモドキ科,,,,矢崎克己 (1979),クロウメモドキ（Rhamnus japonica）を食草として確認
+hostplant-913211,species-4976,ヤマモモ,ヤマモモ科,,,,宮田保 (1979),ヤマモモ（Myrica rubra）を食草として確認
+hostplant-913212,species-6053,クヌギ,ブナ科,,,,山本光人 (1979),幼虫の飼育により、クヌギ、ノバラ、コナラ、ソメイヨシノ、ボケを食草として確認
+hostplant-913213,species-6053,コナラ,ブナ科,,,,山本光人 (1979),幼虫の飼育により、クヌギ、ノバラ、コナラ、ソメイヨシノ、ボケを食草として確認
+hostplant-913214,species-3944,カラフトイバラ,バラ科,,,,飯島一雄 (1980),幼虫はエゾノバッコヤナギ，カラフトイバラを食べていた
+hostplant-913215,species-3914,ミズナラ,ブナ科,,,,飯島一雄 (1980),幼虫はミズナラを食べていた
+hostplant-913216,species-3926,ミヤマザクラ,バラ科,,,,飯島一雄 (1980),9月に終令幼虫をミヤマザクラから採った
+hostplant-913217,species-4202,ノリウツギ,アジサイ科,,,,飯島一雄 (1980),幼虫はノリウツギを食べていた
+hostplant-913218,species-4253,ミズナラ,ブナ科,,,,飯島一雄 (1980),幼虫はミズナラを食べ，卵で越冬した
+hostplant-913219,species-5404,イワガサ,バラ科,,,,増井武彦 (1982),イワガサ（Spiraea blumei G. Don、バラ科シモツケ属）を食草として確認
+hostplant-913220,species-5815,ヨモギ,キク科,,,,小木広行 (1982),ヨモギ（Artemisia princeps、キク科）を食草として確認
+hostplant-913221,species-5881,イタドリ,タデ科,,,,小木広行 (1982),イタドリ（Polygonum cuspidatum、タデ科）を食草として確認
+hostplant-913222,species-5423,スゲ属,カヤツリグサ科,,,,小木広行 (1982),Carex sp.（カヤツリグサ科）、Dactylis glomerata L. カモガヤ（イネ科）を食草として確認
+hostplant-913223,species-5423,カモガヤ,イネ科,,,,小木広行 (1982),Carex sp.（カヤツリグサ科）、Dactylis glomerata L. カモガヤ（イネ科）を食草として確認
+hostplant-913224,species-5429,ヤブマメ,マメ科,,,,小木広行 (1982),Amphicarpaea edgeworthii Benth. var. japonica Oliver ヤブマメ（マメ科）を食草として確認
+hostplant-913225,species-5427,クサフジ,マメ科,,,,小木広行 (1982),Vicia cracca L. クサフジ（マメ科）を食草として確認
+hostplant-913226,species-5428,クサフジ,マメ科,,,,小木広行 (1982),Vicia cracca L. クサフジ（マメ科）を食草として確認、既に宮田（1979）による同じ食草記録あり
+hostplant-913227,species-4412,クロマメノキ,ツツジ科,,,,神保一義・柳田慶浩 (1982),Tripetaleia bracteata Maxim. ミヤマホツツジ（ツツジ科）、クロマメノキを食草として確認
+hostplant-913228,species-5873,ヤマモモ,ヤマモモ科,,,,中村正直 (1984),幼虫がヤマモモ（樹木）を食餌として確認。従来は草本のみが知られていた
+hostplant-913229,species-5903,クロミノウグイスカグラ,スイカズラ科,,,,小木広行 (1984),食草としてクロミノウグイスカグラ（スイカズラ科）を初記録
+hostplant-913230,species-5504,シラカシ,ブナ科,,,,松井英子 (1984),シラカシから老熟幼虫を採集、野外での幼虫採集は初記録
+hostplant-913231,species-5685,イチイカシ,ブナ科,,,,行徳直巳 (1984),イチイカシ（ブナ科）を食草として確認。福岡県甘木市と吉井町で幼虫を採集、飼育により羽化。
+hostplant-913232,species-4849,クワ,クワ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913233,species-4849,イチジク,クワ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913234,species-4849,ギシギシ,タデ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913235,species-4849,イタドリ,タデ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913236,species-4849,クズ,マメ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913237,species-4849,シロツメクサ,マメ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913238,species-4849,オオバコ,オオバコ科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913239,species-4849,ヨモギ,キク科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913240,species-4849,セイヨウタンポポ,キク科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913241,species-4849,ノゲシ,キク科,,,,寺本憲之 (1984),クワ、イチジク、ギシギシ、イタドリ、クズ、シロツメクサ、オオバコ、ヨモギ、セイヨウタンポポ、ノゲシで幼虫の飼育に成功。本種はきわめて強い多食性を示す
+hostplant-913242,species-5795,カラマツ,マツ科,,,,中村正直 (1984),幼虫はカラマツ（Larix leptolepis Gord.）を食す。群馬県湯の丸高原で成熟幼虫を発見
+hostplant-913243,species-20705,アマドコロ,ユリ科,,,,小木広行 (1987),食草としてアキタブキ（キク科Petasites japonicus var. giganteus）とアマドコロ（ユリ科Polygonatum odoratum）を確認
+hostplant-913244,species-2224,キバナシャクナゲ,ツツジ科,,,,楠祐一 (1987),キバナシャクナゲ（ツツジ科Rhododendron aureum）をつづった巣から蛹を得て、食草として確認
+hostplant-913245,species-3534,ガガイモ,ガガイモ科,,,,吉安裕 (1991),ガガイモ科ガガイモ（Metaplexis japonica）を食草として確認
+hostplant-913246,species-1544,ヌマガヤ,イネ科,,,,中村正直 (1993),ヌマガヤ Molinia japonia Hakelを食草として確認。イヌビエ Panicum crus-galla L.もよく食した
+hostplant-913247,species-1544,イヌビエ,イネ科,,,,中村正直 (1993),ヌマガヤ Molinia japonia Hakelを食草として確認。イヌビエ Panicum crus-galla L.もよく食した
+hostplant-913248,species-5383,シナノキ,シナノキ科,,,,森展二 (1996),シナノキ（Tilia japonica、シナノキ科）を食草として確認。オオバボダイジュ、ヘラノキも飼育下で食する。アオイ科は食さない。
+hostplant-913249,species-5383,オオバボダイジュ,アオイ科,,,,森展二 (1996),シナノキ（Tilia japonica、シナノキ科）を食草として確認。オオバボダイジュ、ヘラノキも飼育下で食する。アオイ科は食さない。
+hostplant-913250,species-5383,ヘラノキ,アオイ科,,,,森展二 (1996),シナノキ（Tilia japonica、シナノキ科）を食草として確認。オオバボダイジュ、ヘラノキも飼育下で食する。アオイ科は食さない。
+hostplant-913251,species-20692,ヌマガヤ,イネ科,,,,"中村正直, 工藤広悦, 内孝之助 (1996)",ヌマガヤ（Molinia japonica、イネ科）を食草として確認
+hostplant-913252,species-5777,ヌマガヤ,イネ科,,,,"中村正直, 工藤広悦, 内孝之助 (1996)",ヌマガヤ（Molinia japonica、イネ科）を食草として確認。幼虫は葉を綴って巣を作る外部食者
+hostplant-913253,species-4874,モモタマナ,シクンシ科,,,,井上 (1996),モモタマナTerminalia catappa（シクンシ科）を食草として確認
+hostplant-913254,species-5551,カテンソウ,イラクサ科,,,,村瀬 (1997),カテンソウ Nanocnide japonica（イラクサ科）を食草として確認
+hostplant-913255,species-5552,カラムシ,イラクサ科,,,,村瀬 (1997),カラムシ Boehmeria nipononivea（イラクサ科）を食草として確認
+hostplant-913256,species-5557,クワクサ,クワ科,,,,村瀬 (1997),クワクサ Fatoua villosa（クワ科）を食草として確認、幼虫の緑色型を初記録
+hostplant-913257,species-6115,ウラジロモミ,マツ科,,,,神保 (1997),ウラジロモミ Abies homolepis、終齢幼虫ではコメツガも摂食
+hostplant-913258,species-6115,コメツガ,マツ科,,,,神保 (1997),ウラジロモミ Abies homolepis、終齢幼虫ではコメツガも摂食
+hostplant-913259,species-5819,オオバナノセンダングサ,キク科,,,,"大林, 竹内 (1997)",小笠原でオオバナノセンダングサ、ヒマワリ、ウスベニニガナ、チチコグサモドキ、カッコアザミ（いずれもキク科）を食草として確認
+hostplant-913260,species-5819,ヒマワリ,キク科,,,,"大林, 竹内 (1997)",小笠原でオオバナノセンダングサ、ヒマワリ、ウスベニニガナ、チチコグサモドキ、カッコアザミ（いずれもキク科）を食草として確認
+hostplant-913261,species-5819,ウスベニニガナ,キク科,,,,"大林, 竹内 (1997)",小笠原でオオバナノセンダングサ、ヒマワリ、ウスベニニガナ、チチコグサモドキ、カッコアザミ（いずれもキク科）を食草として確認
+hostplant-913262,species-5819,チチコグサモドキ,キク科,,,,"大林, 竹内 (1997)",小笠原でオオバナノセンダングサ、ヒマワリ、ウスベニニガナ、チチコグサモドキ、カッコアザミ（いずれもキク科）を食草として確認
+hostplant-913263,species-5819,カッコアザミ,キク科,,,,"大林, 竹内 (1997)",小笠原でオオバナノセンダングサ、ヒマワリ、ウスベニニガナ、チチコグサモドキ、カッコアザミ（いずれもキク科）を食草として確認
+hostplant-913264,species-5821,オオバナノセンダングサ,キク科,,,,"大林, 竹内 (1997)",小笠原でオオバナノセンダングサ、ハルノノゲシ（キク科）を食草として確認
+hostplant-913265,species-5749,サルナシ,マタタビ科,,,,松浦 (1997),サルナシ Actinidia argutaを食草として確認
+hostplant-913266,species-4956,アキニレ,ニレ科,,,,"松浦, 上田 (1997)",アキニレ Ulmus parvifolia を食草として確認
+hostplant-913267,species-3391,クサトベラ,クサトベラ科,,,,"富永智, 杉繁郎 (1998)",クサトベラ科のクサトベラ Scaevola taccata (Gaertn.) Roxb.を食草として確認
+hostplant-913268,species-4419,モクタチバナ,ヤブコウジ科,,,,富永智 (1998),モクタチバナ Ardisia sieboldii（ヤブコウジ科）とシマイズセンリョウ Maesa montana A. DC.（ヤブコウジ科）を食草として確認
+hostplant-913269,species-4419,シマイズセンリョウ,ヤブコウジ科,,,,富永智 (1998),モクタチバナ Ardisia sieboldii（ヤブコウジ科）とシマイズセンリョウ Maesa montana A. DC.（ヤブコウジ科）を食草として確認
+hostplant-913270,species-4426,イズセンリョウ,ヤブコウジ科,,,,"越野誠一郎, 村瀬ますみ (1998)",イズセンリョウ Maesa japonica (Thunb.) Moritzi（ヤブコウジ科）を食草として確認、終齢幼虫の生態写真
+hostplant-913271,species-3300,グンバイヒルガオ,ヒルガオ科,,,,富永智 (1998),ヒルガオ科のグンバイヒルガオ Ipomoea pescaprae (L.) Sweet ssp. brasiliensis (L.) Ooststr.を食草として確認
+hostplant-913272,species-4935,ビスコフィア,トウダイグサ科,,,,富永智 (1998),トウダイグサ科のビスコフィア Bischofia javanicaを食草として確認、沖縄本島と石垣島で飼育
+hostplant-913273,species-3896,ウラジロエノキ,ニレ科,,,,棚原恵 (1998),
+hostplant-913274,species-3364,ヤブカラシ,ブドウ科,,,,"井上寛,山中浩 (1999)",幼虫の食草がヤブカラシ（ブドウ科 Cayratia japonica）であることを初めて確認
+hostplant-913275,species-2795,モチツツジ,ツツジ科,,,,村瀬ますみ (1999),モチツツジ（ツツジ科 Rhododendron macrosepalum）での寄生を確認
+hostplant-913276,species-5679,ヒルガオ,ヒルガオ科,,,,小木広行 (1980),ヒルガオを食草として確認。北海道においてもヒルガオを食草として土着発生
+hostplant-913277,species-4177,キバナシャクナゲ,ツツジ科,,,,神保一義・柳田慶浩 (1981),キバナシャクナゲ（ツツジ科）を食草として確認
+hostplant-913278,species-20640,ナツハゼ,ツツジ科,,,,神保一義・柳田慶浩 (1981),クロマメノキ、ガンコウラン、ナツハゼを食草として確認
+hostplant-913279,species-4973,トキワガキ,カキノキ科,,,,藤原麒一郎 (1981),トキワガキ（岐阜県岐阜市長良）を食草として確認
+hostplant-913280,species-5397,イワシモツケ,バラ科,,,,杉繁郎 (1982),Spiraea nipponica Maxim（イワシモツケ、バラ科）を食草として確認。長野県白馬村で終齢幼虫5頭を採取
+hostplant-913281,species-3346,キョウチクトウ,キョウチクトウ科,,,,中村正直 (1982),キョウチクトウ（Nerium indicum、キョウチクトウ科）の花を食害する新害虫として記録
+hostplant-913282,species-5725,ハンノキ,カバノキ科,,,,富樫一次 (1983),ハンノキを食草として確認、最初の記録
+hostplant-913283,species-6112,ヒノキ,ヒノキ科,,,,杉繁郎 (1983),ヒノキ（ヒノキ科）を食草として確認。長野県開田村と神奈川県丹沢山塊で幼虫を採集し飼育で確認
+hostplant-913284,species-6065,カシワ,ブナ科,,,,小木広行 (1983),カシワ（ブナ科）を食草として追加。これまでにクヌギが知られていた
+hostplant-913285,species-5920,オトギリソウ,オトギリソウ科,,,,小木広行 (1983),オトギリソウ（オトギリソウ科）を食草として確認。推定されていたが実際の観察例は初めて
+hostplant-913286,species-3296,アカリ,,,,,富樫一次 (1983),アカリ、トリアシショウマを食草として記録
+hostplant-913287,species-6002,ツゲ,ツゲ科,,,,"大和田守,山本光人 (1983)",ツゲ（Buxus microphylla var. japonica、ツゲ科）を食草として確認
+hostplant-913288,species-5769,イワシモツケ,バラ科,,,,"大和田守,山本光人 (1983)",イワシモツケ（Spiraea nipponica、バラ科）を食草として確認。堀江清史氏により長野県戸台で採集
+hostplant-913289,species-5404,イワシモツケ,バラ科,,,,"大和田守,山本光人 (1983)",イワシモツケ（Spiraea nipponica、バラ科）を食草として確認（本州での食草記録）
+hostplant-913290,species-6112,スギ,スギ科,,,,中村正直 (1984),スギ Cryptomeria japonica (スギ科) を新食草として追加記録
+hostplant-913291,species-6146,エゾノギシギシ,タデ科,,,,小木広行 (1984),フキ、エゾノギシギシ、オオイタドリ、ウラジロタデ、ヤマブキショウマ、アズマイチゲなど複数の植物を食草として記録
+hostplant-913292,species-6146,オオイタドリ,タデ科,,,,小木広行 (1984),フキ、エゾノギシギシ、オオイタドリ、ウラジロタデ、ヤマブキショウマ、アズマイチゲなど複数の植物を食草として記録
+hostplant-913293,species-6146,ウラジロタデ,タデ科,,,,小木広行 (1984),フキ、エゾノギシギシ、オオイタドリ、ウラジロタデ、ヤマブキショウマ、アズマイチゲなど複数の植物を食草として記録
+hostplant-913294,species-6146,ヤマブキショウマ,バラ科,,,,小木広行 (1984),フキ、エゾノギシギシ、オオイタドリ、ウラジロタデ、ヤマブキショウマ、アズマイチゲなど複数の植物を食草として記録
+hostplant-913295,species-6146,アズマイチゲ,キンポウゲ科,,,,小木広行 (1984),フキ、エゾノギシギシ、オオイタドリ、ウラジロタデ、ヤマブキショウマ、アズマイチゲなど複数の植物を食草として記録
+hostplant-913296,species-6148,オオイタドリ,タデ科,,,,小木広行 (1984),オオイタドリ、ムラサキツメクサ、ホザキシモツケ、ナガボノシロワレモコウ、キンミズヒキなど複数の植物を食草として記録
+hostplant-913297,species-6148,ムラサキツメクサ,マメ科,,,,小木広行 (1984),オオイタドリ、ムラサキツメクサ、ホザキシモツケ、ナガボノシロワレモコウ、キンミズヒキなど複数の植物を食草として記録
+hostplant-913298,species-6148,ホザキシモツケ,バラ科,,,,小木広行 (1984),オオイタドリ、ムラサキツメクサ、ホザキシモツケ、ナガボノシロワレモコウ、キンミズヒキなど複数の植物を食草として記録
+hostplant-913299,species-6148,ナガボノシロワレモコウ,バラ科,,,,小木広行 (1984),オオイタドリ、ムラサキツメクサ、ホザキシモツケ、ナガボノシロワレモコウ、キンミズヒキなど複数の植物を食草として記録
+hostplant-913300,species-6148,キンミズヒキ,バラ科,,,,小木広行 (1984),オオイタドリ、ムラサキツメクサ、ホザキシモツケ、ナガボノシロワレモコウ、キンミズヒキなど複数の植物を食草として記録
+hostplant-913301,species-5015,クズ,マメ科,,,,中村正直 (1984),クズ Pueraria lobata (マメ科) を食草として初記録
+hostplant-913302,species-5211,ヌスビトハギ,マメ科,,,,中村正直 (1984),ヌスビトハギ Desmodium oryphyllum (マメ科) を食草として初記録
+hostplant-913303,species-6037,シナノキ,アオイ科,,,,杉繁郎 (1984),シナノキ（Tilia japonica）を食草として確認
+hostplant-913304,species-5783,ブナ,ブナ科,,,,富樫一次 (1984),ブナ（Fagus crenata）を食草として確認。本種の食草に関する報告は最初
+hostplant-913305,species-1566,クロミノニシゴリ,ハイノキ科,,,,渡辺一雄 (1984),クロミノニシゴリ（Symplocos paniculata、ハイノキ科）を食草として確認
+hostplant-913306,species-5905,オオイタドリ,タデ科,,,,小木広行 (1985),オオイタドリ（Polygonum weyrichii Fr. Schmidt）を食草として確認
+hostplant-913307,species-4274,イタヤカエデ,ムクロジ科,,,,矢崎克己 (1985),イタヤカエデ（Acer Mono Maxim.）を食草として確認（従来チビヒメナミシャクの食草とされていた記録を訂正）
+hostplant-913308,species-6021,ホザキシモツケ,バラ科,,,,小木広行 (1985),ホザキシモツケ（バラ科Sanguisorba tenuifolia）を食草として確認
+hostplant-913309,species-5299,ビロードスゲ,カヤツリグサ科,,,,小木広行 (1985),ビロードスゲ、アゼスゲ（カヤツリグサ科）、オニウシノケグサ（イネ科）を食草として確認
+hostplant-913310,species-5608,ガンコウラン,ツツジ科,,,,"保田信紀,渡辺康之 (1985)",幼虫はガンコウラン、クロマメノキ、コケモモを摂食するが、特にガンコウランを好む
+hostplant-913311,species-5608,コケモモ,ツツジ科,,,,"保田信紀,渡辺康之 (1985)",幼虫はガンコウラン、クロマメノキ、コケモモを摂食するが、特にガンコウランを好む
+hostplant-913312,species-6088,シナノキ,シナノキ科,,,,佐々木明夫 (1985),シナノキ Tilia japonica（シナノキ科）を食草として確認
+hostplant-913313,species-5217,ミヤマハハソ,アワブキ科,,,,山本義丸 (1985),ミヤマハハソ Meliosma tenuis（アワブキ科）を食草として確認
+hostplant-913314,species-20763,コスカグサ,イネ科,,,,小木広行 (1986),食草としてAgrostis alba（コスカグサ、イネ科）を記録。
+hostplant-913315,species-20723,チシマアザミ,キク科,,,,小木広行 (1986),食草としてCirsium kamtschaticum（チシマアザミ、キク科）、Petasites japonicus var. giganteus（アキタブキ、キク科）、Polygonum sachalinense（オオイタドリ、タデ科）、Primula japonica（クリンソウ、サクラソウ科）、Lamium barbatum（オドリコソウ、シソ科）を記録。
+hostplant-913316,species-20723,クリンソウ,サクラソウ科,,,,小木広行 (1986),食草としてCirsium kamtschaticum（チシマアザミ、キク科）、Petasites japonicus var. giganteus（アキタブキ、キク科）、Polygonum sachalinense（オオイタドリ、タデ科）、Primula japonica（クリンソウ、サクラソウ科）、Lamium barbatum（オドリコソウ、シソ科）を記録。
+hostplant-913317,species-20723,オドリコソウ,シソ科,,,,小木広行 (1986),食草としてCirsium kamtschaticum（チシマアザミ、キク科）、Petasites japonicus var. giganteus（アキタブキ、キク科）、Polygonum sachalinense（オオイタドリ、タデ科）、Primula japonica（クリンソウ、サクラソウ科）、Lamium barbatum（オドリコソウ、シソ科）を記録。
+hostplant-913318,species-20731,チシマアザミ,キク科,,,,小木広行 (1986),食草としてCirsium kamtschaticum（チシマアザミ、キク科）、Petasites japonicus var. giganteus（アキタブキ、キク科）、Trifolium repens（シロツメクサ、マメ科）、Oenothera biennis（アレチマツヨイグサ、アカバナ科）、Polygonum weyrichii（ウラジロタデ、タデ科）を記録。
+hostplant-913319,species-20731,シロツメクサ,マメ科,,,,小木広行 (1986),食草としてCirsium kamtschaticum（チシマアザミ、キク科）、Petasites japonicus var. giganteus（アキタブキ、キク科）、Trifolium repens（シロツメクサ、マメ科）、Oenothera biennis（アレチマツヨイグサ、アカバナ科）、Polygonum weyrichii（ウラジロタデ、タデ科）を記録。
+hostplant-913320,species-20731,アレチマツヨイグサ,アカバナ科,,,,小木広行 (1986),食草としてCirsium kamtschaticum（チシマアザミ、キク科）、Petasites japonicus var. giganteus（アキタブキ、キク科）、Trifolium repens（シロツメクサ、マメ科）、Oenothera biennis（アレチマツヨイグサ、アカバナ科）、Polygonum weyrichii（ウラジロタデ、タデ科）を記録。
+hostplant-913321,species-5920,オトギリソウ,オトギリソウ科,,,,小木広行 (1986),食草としてHypericum erectus（オトギリソウ、オトギリソウ科）を記録。
+hostplant-913322,species-5591,シソ科,,,,,小木広行 (1986),
+hostplant-913323,species-5595,ホザキシモツケ,バラ科,,,,小木広行 (1986),
+hostplant-913324,species-5595,ナガボノシロワレモコウ,バラ科,,,,小木広行 (1986),
+hostplant-913325,species-4199,ヨモギ属,キク科,,,,佐藤力夫 (1986),幼虫の食草はヨモギ属（Artemisia）のみ、ヨモギ属に固有であることが判明
+hostplant-913326,species-4861,ガジュマル,クワ科,,,,"中村正直, 中本英一 (1986)",
+hostplant-913327,species-5980,アキタブキ,キク科,,,,小木広行 (1986),アキタブキ（Petasites japonicus var. giganteus、キク科）、ハンゴンソウ（Senecio cannabifolius、キク科）を食草として確認
+hostplant-913328,species-5980,ハンゴンソウ,キク科,,,,小木広行 (1986),アキタブキ（Petasites japonicus var. giganteus、キク科）、ハンゴンソウ（Senecio cannabifolius、キク科）を食草として確認
+hostplant-913329,species-0707,ウラジロガシ,ブナ科,,,,富樫一次 (1986),
+hostplant-913330,species-3926,カツラ,カツラ科,,,,富樫一次 (1986),
+hostplant-913331,species-5806,キリ,キリ科,,,,富樫一次 (1986),
+hostplant-913332,species-6155,シナノキ,アオイ科,,,,佐々木明夫 (1986),
+hostplant-913333,species-4694,スゲ属,カヤツリグサ科,,,,工藤広悦 (1986),スゲの一種 Carex sp.、ヒメガマ Typha angustifolia、マツカサススキ Scirpus mitsukurianum を食草として確認
+hostplant-913334,species-4694,ヒメガマ,ガマ科,,,,工藤広悦 (1986),スゲの一種 Carex sp.、ヒメガマ Typha angustifolia、マツカサススキ Scirpus mitsukurianum を食草として確認
+hostplant-913335,species-4694,マツカサススキ,カヤツリグサ科,,,,工藤広悦 (1986),スゲの一種 Carex sp.、ヒメガマ Typha angustifolia、マツカサススキ Scirpus mitsukurianum を食草として確認
+hostplant-913336,species-4928,コゴメヤナギ,ヤナギ科,,,,西尾規孝 (1986),コゴメヤナギ Salix serissaefolia での営繭を確認
+hostplant-913337,species-4485,アベリア,,,,,"野崎敦士, 宮田彬 (1986)",アベリア（ハナツクバネウツギ）Abelia grandiflora を食草として確認
+hostplant-913338,species-5171,イワガネ,イラクサ科,,,,野崎敦士 (1987),幼虫の食草がイワガネ Villebrunea frutescens（イラクサ科）であることを確認。大分県内各地で幼虫を採集し飼育。
+hostplant-913339,species-6147,シリブカカシ,ブナ科,,,,西尾規孝 (1987),シリブカカシ Pasania glabraを新しい食餌植物として記録。
+hostplant-913340,species-5477,シリブカカシ,ブナ科,,,,行徳直己 (1987),シリブカカシ Pasania glabraから幼虫を採集。福岡県久留米市高良山で1986年8月28日採集。
+hostplant-913341,species-20642,ムラサキモメンズル,マメ科,,,,"中村正直, 山本光人 (1987)",ムラサキモメンズル Astragalus adsuergens（マメ科）を食草として確認
+hostplant-913342,species-5424,マルバハギ,マメ科,,,,西尾規孝 (1987),マルバハギ Lespedeza cyrtobotrya、キハギ L. buergeri、ヤマハギ L. bicolor、フジ Wisteria floribunda から幼虫を確認。これまでのカシワに加えてマメ科植物が主たる食草であることが判明。
+hostplant-913343,species-5424,キハギ,マメ科,,,,西尾規孝 (1987),マルバハギ Lespedeza cyrtobotrya、キハギ L. buergeri、ヤマハギ L. bicolor、フジ Wisteria floribunda から幼虫を確認。これまでのカシワに加えてマメ科植物が主たる食草であることが判明。
+hostplant-913344,species-5424,ヤマハギ,マメ科,,,,西尾規孝 (1987),マルバハギ Lespedeza cyrtobotrya、キハギ L. buergeri、ヤマハギ L. bicolor、フジ Wisteria floribunda から幼虫を確認。これまでのカシワに加えてマメ科植物が主たる食草であることが判明。
+hostplant-913345,species-5424,フジ,マメ科,,,,西尾規孝 (1987),マルバハギ Lespedeza cyrtobotrya、キハギ L. buergeri、ヤマハギ L. bicolor、フジ Wisteria floribunda から幼虫を確認。これまでのカシワに加えてマメ科植物が主たる食草であることが判明。
+hostplant-913346,species-5442,ネムノキ,マメ科,,,,中村正直 (1987),ネムノキ Albizzia julibrissin から終齢幼虫を野外で確認。自然状態の食草として初記録。
+hostplant-913347,species-2619,ウニヤバネゴケ,ウロコゴケ綱,,,,坂部元宏 (1987),ウニヤバネゴケ Cephaloziella spinicaulis とモエギコミミゴケ Lejeunea pallide-virens（苔類）を食草として確認。
+hostplant-913348,species-2619,モエギコミミゴケ,ウロコゴケ綱,,,,坂部元宏 (1987),ウニヤバネゴケ Cephaloziella spinicaulis とモエギコミミゴケ Lejeunea pallide-virens（苔類）を食草として確認。
+hostplant-913349,species-5026,オオキゴケ,キゴケ科,,,,坂部元宏 (1988),繭構成物がオオキゴケ(Stereocaulon sorediferum)であることを確認。従来「ツノゴケ」とされていたが、地衣類のオオキゴケ（キゴケ科）が正しい。
+hostplant-913350,species-5426,イワオオギ,マメ科,,,,"中村正直, 山本光人 (1988)",富士山御殿場口新二合目でイワオオギ（Hedysarum esculentum Ledeb.）を食草として確認。全発育過程を記載・図示
+hostplant-913351,species-6117,ホザキシモツケ,バラ科,,,,小木 (1988),ホザキシモツケ Spiraea pinnatifida Maxim.（バラ科）を食草として確認
+hostplant-913352,species-6006,枯ススキ,,,,,工藤 (1988),枯ススキ Miscanthus sinensis Anderss.の根茎中で発見、茎内の髄を食餌
+hostplant-913353,species-3389,フモトシダ,コバノイシカグマ科,,,,"吉安, 金野 (1988)",フモトシダ Microlepia marginata (Panzer) C. Chr.を新食草として確認
+hostplant-913354,species-5628,エノコログサ,イネ科,,,,船越 (1989),エノコログサ、メヒシバを摂食することを確認
+hostplant-913355,species-0841,シャク,セリ科,,,,藤沢勝利 (1989),シャクAnthriscus sylestris subsp. aemulaより幼虫を採集し、飼育羽化させた
+hostplant-913356,species-0819,マルバハギ,マメ科,,,,藤沢勝利 (1989),食草はマメ科のハギ属（Lespedeza）のヤマハギL. bicolor，マルバハギL. cyrtobotrya，メドハギL. cuneata，キハギL. buergeri
+hostplant-913357,species-0819,メドハギ,マメ科,,,,藤沢勝利 (1989),食草はマメ科のハギ属（Lespedeza）のヤマハギL. bicolor，マルバハギL. cyrtobotrya，メドハギL. cuneata，キハギL. buergeri
+hostplant-913358,species-0819,キハギ,マメ科,,,,藤沢勝利 (1989),食草はマメ科のハギ属（Lespedeza）のヤマハギL. bicolor，マルバハギL. cyrtobotrya，メドハギL. cuneata，キハギL. buergeri
+hostplant-913359,species-6021,ホロムイイチゴ,バラ科,,,,小木広行 (1989),ホロムイイチゴ（Rubus chamaemorus、バラ科）を食草として確認
+hostplant-913360,species-6024,ヤチヤナギ,ヤマモモ科,,,,小木広行 (1989),ヤチヤナギ（Myrica gale、ヤマモモ科）を食草として確認、高層湿原に分布
+hostplant-913361,species-5791,ケヤキ,ニレ科,,,,岩崎史郎 (1989),ケヤキ(Zelkova serrata)を食草として確認
+hostplant-913362,species-4651,ブナ,ブナ科,,,,佐々木明夫 (1989),ブナを食草として確認。幼虫期の初記載
+hostplant-913363,species-4995,ネザサ,イネ科,,,,中村正直 (1990),幼虫の食草はネザサ(Pleioblastus variegatus Makino)。幼生期を初めて記載
+hostplant-913364,species-5762,ヨモギ属,キク科,,,,"杉繁郎, 山本光人 (1990)",多摩川河川敷で幼虫発見。食草はヨモギ属(Artemisia)
+hostplant-913365,species-5437,シロツメクサ,マメ科,,,,小木広行 (1990),シロツメクサ（マメ科Trifolium repens Linn.）、クサフジ（マメ科Vicia amoena Fisch.）を食草として確認
+hostplant-913366,species-5437,クサフジ,マメ科,,,,小木広行 (1990),シロツメクサ（マメ科Trifolium repens Linn.）、クサフジ（マメ科Vicia amoena Fisch.）を食草として確認
+hostplant-913367,species-5587,ヒメカンアオイ,ウマノスズクサ科,,,,渡辺一雄 (1990),ヒメカンアオイ（ウマノスズクサ科Asarum takanoi）を食草として確認
+hostplant-913368,species-5581,オオバコ,オオバコ科,,,,小木広行 (1990),オオバコ（オオバコ科）を食草として確認
+hostplant-913369,species-5582,セリ,セリ科,,,,小木広行 (1990),セリ（セリ科）を食草として確認
+hostplant-913370,species-4670,ミズナラ,ブナ科,,,,佐々木明夫 (1990),ミズナラ（Quercus mongolica）を主食草として確認。コナラも摂食可能
+hostplant-913371,species-5756,オオヨモギ,キク科,,,,小木広行 (1991),食草としてオオヨモギ Artemisia montana Pampan（キク科）を確認
+hostplant-913372,species-5753,ツリフネソウ,ツリフネソウ科,,,,杉繁郎 (1991),食草としてツリフネソウ、キツリフネ、ハガクレツリフネ（ツリフネソウ科）を確認
+hostplant-913373,species-5753,キツリフネ,ツリフネソウ科,,,,杉繁郎 (1991),食草としてツリフネソウ、キツリフネ、ハガクレツリフネ（ツリフネソウ科）を確認
+hostplant-913374,species-5753,ハガクレツリフネ,ツリフネソウ科,,,,杉繁郎 (1991),食草としてツリフネソウ、キツリフネ、ハガクレツリフネ（ツリフネソウ科）を確認
+hostplant-913375,species-4485,ツツジ,ツツジ科,,,,杉繁郎 (1991),東京都内でツツジ（Rhododendron omurasaki）を食草として確認、従来イヌツゲのみ
+hostplant-913376,species-20644,ヨモギ,キク科,,,,杉繁郎 (1991),食草はヨモギ Artemisia
+hostplant-913377,species-4684,クヌギ,ブナ科,,,,中村正直・松浦寛子 (1992),食草としてクヌギ Quercus acutissima を確認
+hostplant-913378,species-5197,ミミズバイ,ハイノキ科,,,,西原かよ子 (1992),サカキ・ヒサカキ・ミミズバイを追加食草として確認
+hostplant-913379,species-4794,ミミズバイ,ハイノキ科,,,,西原かよ子 (1992),ミミズバイ・ヒサカキ・サカキの生葉を食草として確認。コケガ亜科の食葉性を確認
+hostplant-913380,species-4794,ヒサカキ,モッコク科,,,,西原かよ子 (1992),ミミズバイ・ヒサカキ・サカキの生葉を食草として確認。コケガ亜科の食葉性を確認
+hostplant-913381,species-4794,サカキ,モッコク科,,,,西原かよ子 (1992),ミミズバイ・ヒサカキ・サカキの生葉を食草として確認。コケガ亜科の食葉性を確認
+hostplant-913382,species-5689,ネザサ,イネ科,,,,杉繁郎 (1992),ネザサ Pleioblastus sp. で飼育に成功
+hostplant-913383,species-3476,ノイバラ,バラ科,,,,中村正直 (1992),幼虫がノイバラで飼育され羽化確認
+hostplant-913384,species-3888,ヤマモガシ,ヤマモガシ科,,,,松下弘・後藤伸・谷幸子 (1993),ヤマモガシ Helicia cochinchinensis を食餌とすることが特定された
+hostplant-913385,species-3518,サンゴジュ,ガマズミ科,,,,杉繁郎 (1994),サンゴジュ Viburnum odoratissimum の葉上から幼虫が採集され飼育羽化
+hostplant-913386,species-5531,クヌギ,ブナ科,,,,寺本憲之 (1994),幼虫がクヌギにつくことが確認
+hostplant-913387,species-5982,ギョウジャニンニク,ヒガンバナ科,,,,鳥倉英徳 (1994),野生寄主としてギョウジャニンニクを確認
+hostplant-913388,species-4525,コンロンカ,アカネ科,,,,木村正明 (1994),コンロンカ Mussaenda parviflora（アカネ科）から卵を採取し飼育に成功
+hostplant-913389,species-4496,アカシデ,カバノキ科,,,,矢野高広 (1994),イヌシデ、アカシデを食草として確認
+hostplant-913390,species-5690,ヒラドツツジ,ツツジ科,,,,那須義次・田中寛 (1995),ヒラドツツジ Rhododendron sp. からの発生を新記録
+hostplant-913391,species-6127,ウラジロガシ,ブナ科,,,,富樫一次 (1995),ウラジロガシ Quercus salicina を食草として初記録
+hostplant-913392,species-5467,コミカンソウ,トウダイグサ科,,,,大林隆司・竹内浩二 (1996),コミカンソウ Phyllanthus urinaria（トウダイグサ科）を食草として初記録
+hostplant-913393,species-5609,イソツツジ,ツツジ科,,,,神保一義・中谷正彦・小木広行 (1996),ガンコウラン、イソツツジ、ヒメシャクナゲ、ツルコケモモを食餌植物として確認
+hostplant-913394,species-5609,ヒメシャクナゲ,ツツジ科,,,,神保一義・中谷正彦・小木広行 (1996),ガンコウラン、イソツツジ、ヒメシャクナゲ、ツルコケモモを食餌植物として確認
+hostplant-913395,species-5609,ツルコケモモ,ツツジ科,,,,神保一義・中谷正彦・小木広行 (1996),ガンコウラン、イソツツジ、ヒメシャクナゲ、ツルコケモモを食餌植物として確認
+hostplant-913396,species-5807,ノアズキ,マメ科,,,,村瀬ますみ (1996),ノアズキ Dunbaria villosa（マメ科）の花から幼虫を採集
+hostplant-913397,species-4495,ヌルデ,ウルシ科,,,,中村正直 (1996),ヌルデ Rhus javanica から終齢幼虫を採集しホソバスズメの羽化を確認
+hostplant-913398,species-5726,タカネザクラ,バラ科,,,,富樫一次 (1996),タカネザクラ Prunus nipponica の葉を摂食中の幼虫を採集
+hostplant-913399,species-5758,ノコンギク,キク科,,,,中村正直・工藤広悦 (1997),ノコンギクとユウガギクから幼虫を確認。キク科野草が食草と判明
+hostplant-913400,species-5758,ユウガギク,キク科,,,,中村正直・工藤広悦 (1997),ノコンギクとユウガギクから幼虫を確認。キク科野草が食草と判明
+hostplant-913401,species-3962,ハマゴウ,シソ科,,,,村瀬ますみ (1997),ハマゴウ Vitex rotundifolia から若齢幼虫30頭以上を採集
+hostplant-913402,species-5547,カジカエデ,ムクロジ科,,,,中臣謙太郎 (1997),カジカエデ Acer diabolicum から幼虫を発見し飼育に成功
+hostplant-913403,species-4624,エノキ,アサ科,,,,中臣謙太郎・大橋拓也 (1998),食草はエノキ Celtis sinensis と判明
+hostplant-913404,species-4513,ギョクシンカ,アカネ科,,,,棚原功 (1998),主要食草はギョクシンカ Tarenna gracilipes（アカネ科）と判明
+hostplant-913405,species-3528,クチナシ,アカネ科,,,,村瀬ますみ (1998),クチナシ Gardenia jasminoides（アカネ科）から幼虫を採集
+hostplant-913406,species-5706,ミカエリソウ,シソ科,,,,岡本清 (1998),シソ科ミカエリソウ Comanthosphace stellipila から幼虫が採集された
+hostplant-913407,species-5810,ミゾソバ,タデ科,,,,山本光人 (1998),ミゾソバ Polygonum thunbergii（タデ科）から幼虫を採集
+hostplant-913408,species-4539,クワズイモ,サトイモ科,,,,棚原功 (1998),クワズイモ Alocasia odora（サトイモ科）から幼虫。サトイモ等も食べる
+hostplant-913409,species-5775,アキグミ,グミ科,,,,杉繁郎 (1998),アキグミ Elaeagnus umbellata から終齢幼虫を採集、羽化を確認
+hostplant-913410,species-5740,イボタノキ,モクセイ科,,,,佐々木明夫 (1999),食草がイボタ（モクセイ科）と判明
+hostplant-913411,species-4528,シラタマカズラ,アカネ科,,,,棚原功・棚原恵 (1999),シラタマカズラ Psychotria serpens（アカネ科）から幼虫を初めて発見。世界初記録
+hostplant-913412,species-5467,ナンキンハゼ,トウダイグサ科,,,,越野誠一郎 (1999),ナンキンハゼ・シラキ（トウダイグサ科）で採卵飼育に成功
+hostplant-913413,species-1541,ハイキビ,イネ科,,,,富永智 (1999),ハイキビとタチスズメノヒエ（イネ科）から幼虫を確認
+hostplant-913414,species-4910,サルスベリ,ミソハギ科,,,,富永智 (1999),サルスベリの花蕾・葉を食する幼虫約100頭を発見
+hostplant-913415,species-5698,クロツバラ,クロウメモドキ科,,,,高橋滋 (1999),クロツバラ Rhamnus davurica（クロウメモドキ科）であることが判明
+hostplant-913416,species-6110,エゾリンドウ,リンドウ科,,,,小木広行 (1999),エゾリンドウ Gentiana triflora（リンドウ科）から終齢幼虫を採集
+hostplant-913417,species-4005,コンロンカ,アカネ科,,,,棚原功 (1999),コンロンカ Mussaenda parviflora（アカネ科）から幼虫を採集・飼育
+hostplant-913418,species-3905,テイカカズラ,キョウチクトウ科,,,,竹内浩二・大林隆司 (1999),テイカカズラ Trachelospermum asiaticum（キョウチクトウ科）から幼虫を採集
+hostplant-913419,species-6079,ケヤキ,ニレ科,,,,佐々木明夫 (1999),食草がケヤキ Zelkova serrata（ニレ科）と判明。ハルニレとエノキでも摂食
+hostplant-913420,species-6155,シナノキ,アオイ科,,,,杉繁郎 (1999),シナノキ Tilia japonica の葉をつづる幼虫を採集・飼育し成虫を羽化。食草の初記録
+hostplant-913421,species-2315,オクラ,アオイ科,,,,那須義次・安田耕司 (1993),石垣島でオクラに加害することが観察された
+hostplant-913422,species-5359,コウシュウヤク,ツヅラフジ科,,,,"Kishida, Y. (2010)",コウシュウヤク Cocculus laurifolius（ツヅラフジ科）から飼育羽化
+hostplant-913423,species-5164,シマツユクサ,ツユクサ科,,,,"Kishida, Y. (2010)",シマツユクサ Commelina diffusa（ツユクサ科）を食草
+hostplant-913424,species-5169,キダチハマグルマ,キク科,,,,"Kishida, Y. (2010)",キダチハマグルマ Wadalia biflora（キク科）から飼育羽化
+hostplant-913425,species-5170,ケタデ,タデ科,,,,"Kishida, Y. (2010)",ケタデ Polygonum barbatum（タデ科）から飼育羽化
+hostplant-913426,species-0051,シナノキ,シナノキ科,,,,Hirano (2014),シナノキ Tilia japonica（シナノキ科）を食草。日本初記録
+hostplant-913427,species-2244,ホウロクイチゴ,バラ科,,,,Nasu (2012),ホウロクイチゴ Rubus sieboldii（バラ科）を食草
