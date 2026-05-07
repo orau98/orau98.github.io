@@ -1716,12 +1716,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       )}
       
       {embedded && (
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           {renderFilters()}
         </div>
       )}
       
-      <div className="p-6">
+      <div className="p-3 pt-1 sm:p-6">
         <div ref={listTopRef} />
         <div>
           {!isImageIndexReady ? (

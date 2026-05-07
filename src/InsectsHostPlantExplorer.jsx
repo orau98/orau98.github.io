@@ -1734,7 +1734,7 @@ const InsectsHostPlantExplorer = memo(
           featuredInsects={featuredInsects}
           featuredPlants={featuredPlants}
         />
-        <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-8">
+        <div className="max-w-6xl mx-auto space-y-2 p-2 sm:space-y-6 sm:p-4 md:p-8">
           <ExplorerHero
             activeSearchTerm={activeSearchTerm}
             activeTab={activeTab}
@@ -1755,7 +1755,7 @@ const InsectsHostPlantExplorer = memo(
           />
 
           {/* タブナビゲーション */}
-          <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden">
+          <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden sm:rounded-3xl">
             {/* タブヘッダー */}
             <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label={isEnglish ? "Switch between insects and plants" : "昆虫/植物の切り替え"}>
               <button
@@ -1767,7 +1767,7 @@ const InsectsHostPlantExplorer = memo(
                 onClick={() => {
                   setActiveTabWithUrl("insects");
                 }}
-                className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium tracking-tight transition-colors relative ${
+                className={`flex-1 px-4 py-2.5 text-sm font-medium tracking-tight transition-colors relative sm:px-6 sm:py-4 sm:text-base ${
                   activeTab === "insects"
                     ? "text-emerald-600 dark:text-emerald-300 bg-white/70 dark:bg-slate-900/40"
                     : "text-slate-600 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
@@ -1776,7 +1776,7 @@ const InsectsHostPlantExplorer = memo(
                 <div className="flex items-center justify-center space-x-3">
                   {/* Beautiful butterfly icon */}
                   <svg
-                    className="w-5 h-5 sm:w-6 sm:h-6"
+                    className="h-[18px] w-[18px] sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 512 512"
                   >
@@ -1825,7 +1825,7 @@ const InsectsHostPlantExplorer = memo(
                 aria-controls="panel-plants"
                 type="button"
                 onClick={() => setActiveTabWithUrl("plants")}
-                className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium tracking-tight transition-colors relative ${
+                className={`flex-1 px-4 py-2.5 text-sm font-medium tracking-tight transition-colors relative sm:px-6 sm:py-4 sm:text-base ${
                   activeTab === "plants"
                     ? "text-blue-600 dark:text-blue-300 bg-white/70 dark:bg-slate-900/40"
                     : "text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
@@ -1834,7 +1834,7 @@ const InsectsHostPlantExplorer = memo(
                 <div className="flex items-center justify-center space-x-3">
                   {/* Beautiful leaf icon */}
                   <svg
-                    className="w-5 h-5 sm:w-6 sm:h-6"
+                    className="h-[18px] w-[18px] sm:h-6 sm:w-6"
                     fill="currentColor"
                     viewBox="0 0 512 512"
                   >

@@ -4,9 +4,9 @@ const buttonBase =
 export function PresetFilterChips({ label, chips = [] }) {
   if (!chips.length) return null;
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-2">
+    <div className="mt-2 flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:mt-3 sm:flex-wrap sm:overflow-visible sm:pb-0">
       {label && (
-        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <span className="shrink-0 text-xs font-semibold text-slate-500 dark:text-slate-400">
           {label}
         </span>
       )}
@@ -16,7 +16,7 @@ export function PresetFilterChips({ label, chips = [] }) {
           type="button"
           onClick={chip.onClick}
           aria-pressed={chip.active}
-          className={`${buttonBase} ${
+          className={`${buttonBase} shrink-0 ${
             chip.active
               ? 'border-emerald-300 bg-emerald-100 text-emerald-800 focus:ring-emerald-400 dark:border-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200'
               : 'border-slate-200 bg-white/80 text-slate-600 hover:bg-slate-50 focus:ring-slate-300 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-700'
@@ -38,7 +38,7 @@ export function ListDisplayControls({
   labels,
 }) {
   return (
-    <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-200/70 bg-white/70 p-3 dark:border-slate-700/70 dark:bg-slate-900/50 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mt-2 flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white/70 p-2.5 dark:border-slate-700/70 dark:bg-slate-900/50 sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-3">
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
           {labels.view}

@@ -18,10 +18,10 @@ export default function ListFilterPanel({
   children,
 }) {
   return (
-    <div className="mt-4">
+    <div className="mt-2 sm:mt-4">
       <div className="md:sticky md:z-40" style={stickyTopStyle}>
-        <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-3 py-2">
-          <div className="flex flex-wrap items-center gap-3">
+        <div className="rounded-xl bg-white/70 dark:bg-slate-900/55 backdrop-blur border border-slate-200/60 dark:border-slate-700/60 px-2.5 py-2 sm:px-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <button
               onClick={onToggle}
               type="button"
@@ -42,7 +42,7 @@ export default function ListFilterPanel({
               </svg>
             </button>
 
-            <div className="flex flex-wrap gap-2 items-center flex-1">
+            <div className="flex flex-wrap gap-1.5 items-center flex-1 sm:gap-2">
               {hasAnyCriteria && (
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">
                   {filteredByLabel}
@@ -71,6 +71,16 @@ export default function ListFilterPanel({
                 </button>
               )}
             </div>
+
+            {resultsLabel && (
+              <div
+                className="ml-auto text-right text-xs font-semibold text-slate-600 dark:text-slate-300"
+                role="status"
+                aria-live="polite"
+              >
+                {resultsLabel}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -88,9 +98,6 @@ export default function ListFilterPanel({
         </fieldset>
       </div>
 
-      <div className="mt-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
-        {resultsLabel}
-      </div>
     </div>
   );
 }

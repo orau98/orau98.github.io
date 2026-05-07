@@ -30,11 +30,11 @@ const ExplorerHero = ({
     id="hero-section"
     className={`group relative w-full ${
       isEnglish
-        ? "min-h-[34rem] sm:min-h-[34rem] md:min-h-[38rem] lg:min-h-[40rem]"
-        : "min-h-[25rem] sm:min-h-[25rem] md:min-h-[27rem] lg:min-h-[29rem]"
+        ? "min-h-[19rem] sm:min-h-[30rem] md:min-h-[38rem] lg:min-h-[40rem]"
+        : "min-h-[15.5rem] sm:min-h-[22rem] md:min-h-[27rem] lg:min-h-[29rem]"
     }`}
   >
-    <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl z-0">
+    <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl z-0 sm:rounded-3xl">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/30 via-transparent to-blue-900/40 z-10"></div>
 
       {!heroImageLoaded && (
@@ -93,30 +93,30 @@ const ExplorerHero = ({
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
     </div>
 
-    <div className="absolute inset-0 z-30 p-4 md:p-8">
+    <div className="absolute inset-0 z-30 p-3 sm:p-4 md:p-8">
       <div
         className={`flex h-full flex-col ${
           isEnglish
-            ? "justify-between"
-            : "justify-start gap-4 md:gap-7 lg:gap-8"
+            ? "justify-start gap-3 sm:justify-between"
+            : "justify-start gap-2 sm:gap-4 md:gap-7 lg:gap-8"
         }`}
       >
-        <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-4xl pt-1 md:pt-2">
+        <div className="flex flex-col gap-2 sm:gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-4xl pt-0 sm:pt-1 md:pt-2">
             <p
               className={`bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text font-bold tracking-tight text-transparent drop-shadow-2xl ${
                 isEnglish
-                  ? "text-[clamp(1.25rem,2.6vw,2.25rem)] leading-tight"
-                  : "text-[clamp(1.4rem,3vw,2.8rem)] leading-tight"
+                  ? "text-base leading-tight sm:text-[clamp(1.25rem,2.6vw,2.25rem)]"
+                  : "text-lg leading-tight sm:text-[clamp(1.4rem,3vw,2.8rem)]"
               }`}
             >
               {ui.heroLead}
             </p>
             <h1
-              className={`mt-2 max-w-4xl bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl ${
+              className={`mt-1 max-w-4xl bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl sm:mt-2 ${
                 isEnglish
-                  ? "text-[clamp(2.4rem,4.8vw,4.9rem)] leading-[0.94]"
-                  : "pb-2 text-[clamp(3rem,7.5vw,6.2rem)] leading-[0.98]"
+                  ? "text-[1.85rem] leading-[0.98] sm:text-[clamp(2.4rem,4.8vw,4.9rem)] sm:leading-[0.94]"
+                  : "text-[2.15rem] leading-[0.98] sm:pb-2 sm:text-[clamp(3rem,7.5vw,6.2rem)]"
               }`}
             >
               {ui.siteTitle}
@@ -165,8 +165,8 @@ const ExplorerHero = ({
           )}
         </div>
 
-        <div className={`${isEnglish ? "mt-4 sm:mt-5" : "mt-1"} space-y-3.5 md:space-y-5`}>
-          <div className="flex max-w-5xl flex-wrap gap-2 sm:gap-2.5">
+        <div className={`${isEnglish ? "mt-1 sm:mt-5" : "mt-0 sm:mt-1"} space-y-2 sm:space-y-3.5 md:space-y-5`}>
+          <div className="hidden max-w-5xl flex-wrap gap-2 sm:flex sm:gap-2.5">
             {heroStats.map((item) => (
               <div
                 key={item.label}
@@ -193,7 +193,7 @@ const ExplorerHero = ({
               locale={locale}
             />
             <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-white/85 sm:gap-2 sm:text-sm">
-              <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:px-3">
+              <span className="hidden items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:inline-flex sm:px-3">
                 {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
               </span>
               {isEnglish && (
