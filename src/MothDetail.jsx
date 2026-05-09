@@ -718,6 +718,25 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       狭食性: 'Oligophagous',
     })[value] || value;
   };
+  const ecologyNotes = React.useMemo(() => {
+    const notes = Array.isArray(moth?.generalNotes) ? moth.generalNotes : [];
+    const seen = new Set();
+    return notes
+      .filter((note) => {
+        const type = (note?.type || '').trim();
+        const content = (note?.content || '').trim();
+        return (type === '生態情報' || type === '生態') && content && content !== '不明';
+      })
+      .map((note) => ({
+        content: String(note.content || '').trim(),
+        reference: note.reference || '',
+      }))
+      .filter((note) => {
+        if (seen.has(note.content)) return false;
+        seen.add(note.content);
+        return true;
+      });
+  }, [moth?.generalNotes]);
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
   const [copyFeedback, setCopyFeedback] = useState('idle');
@@ -1775,7 +1794,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
               const supplementalEmergenceTexts = Array.from(new Set([
                 moth.notes || '',
-                ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.map((note) => note?.content || '') : [])
+                ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : [])
               ].map((text) => String(text || '').trim()).filter(Boolean)));
               const hasSupplementalEmergenceHint = supplementalEmergenceTexts.some((text) =>
                 /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中|翌春|翌夏|翌秋|翌冬)/.test(text)
@@ -1905,7 +1924,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
                     const supplementalEmergenceTexts = Array.from(new Set([
                       moth.notes || '',
-                      ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.map((note) => note?.content || '') : []),
+                      ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : []),
                       ...allEmergenceTimeData.map((item) => item?.period || ''),
                       ...allEmergenceTimeData.map((item) => item?.notes || ''),
                     ].map((text) => String(text || '').trim()).filter(Boolean)));
@@ -1922,71 +1941,56 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     );
                   })()}
 
-                  {/* 生態情報（general_notes.csv） */}
-                  {(() => {
-                    const notes = Array.isArray(moth.generalNotes) ? moth.generalNotes : [];
-                    const ecology = notes
-                      .filter(n => (n.type === '生態情報' || n.type === '生態') && n.content && n.content.trim() && n.content.trim() !== '不明')
-                      .map(n => ({
-                        content: String(n.content).trim(),
-                        reference: n.reference || ''
-                      }));
-                    // 重複除去（内容で）
-                    const seen = new Set();
-                    const uniqueEcology = ecology.filter(n => {
-                      const key = n.content;
-                      if (seen.has(key)) return false;
-                      seen.add(key);
-                      return true;
-                    });
+                </div>
+              </div>
+            )}
 
-                    if (uniqueEcology.length === 0) return null;
-
-                    return (
-                      <div className="mt-5 pt-4 border-t border-orange-200/30 dark:border-orange-700/30">
-                        <div className="flex items-start space-x-3">
-                          <div className="mt-0.5 p-1 rounded bg-orange-500/10 text-orange-600 dark:text-orange-300">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6c-1.657 0-3 1.343-3 3 0 2.25 3 6 3 6s3-3.75 3-6c0-1.657-1.343-3-3-3z" />
-                            </svg>
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">{detailUi.ecologyLabel}</div>
-                            <ul className="mt-2 space-y-1">
-                              {uniqueEcology.map((n, i) => {
-                                const sources = getReferenceMetaList(n.reference);
-                                return (
-                                  <li key={i} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                                    • {n.content}
-                                    {n.reference && (
-                                      <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
-                                        {detailUi.sourceLabel}{' '}
-                                        {sources.map(({ displayLabel, link }, index) => (
-                                          <React.Fragment key={`${displayLabel}-${index}`}>
-                                            {index > 0 ? ', ' : ''}
-                                            {link ? (
-                                              <a href={link} target="_blank" rel="noopener noreferrer" className="underline decoration-slate-300 hover:decoration-slate-400">
-                                                {displayLabel}
-                                                <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                </svg>
-                                              </a>
-                                            ) : (
-                                              <span>{displayLabel}</span>
-                                            )}
-                                          </React.Fragment>
-                                        ))}
-                                      </span>
-                                    )}
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
+            {/* 生態情報（general_notes.csv） */}
+            {ecologyNotes.length > 0 && (
+              <div id="ecology" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden scroll-mt-28">
+                <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-orange-500 rounded-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6c-1.657 0-3 1.343-3 3 0 2.25 3 6 3 6s3-3.75 3-6c0-1.657-1.343-3-3-3z" />
+                      </svg>
+                    </div>
+                    <h2 className="text-xl font-bold text-orange-600 dark:text-orange-400">
+                      {detailUi.ecologyLabel}
+                    </h2>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <ul className="space-y-2">
+                    {ecologyNotes.map((note, index) => {
+                      const sources = getReferenceMetaList(note.reference);
+                      return (
+                        <li key={index} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                          • {note.content}
+                          {note.reference && (
+                            <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
+                              {detailUi.sourceLabel}{' '}
+                              {sources.map(({ displayLabel, link }, sourceIndex) => (
+                                <React.Fragment key={`${displayLabel}-${sourceIndex}`}>
+                                  {sourceIndex > 0 ? ', ' : ''}
+                                  {link ? (
+                                    <a href={link} target="_blank" rel="noopener noreferrer" className="underline decoration-slate-300 hover:decoration-slate-400">
+                                      {displayLabel}
+                                      <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                      </svg>
+                                    </a>
+                                  ) : (
+                                    <span>{displayLabel}</span>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               </div>
             )}
