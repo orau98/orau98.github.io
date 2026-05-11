@@ -17,6 +17,8 @@ import {
   createSafeScientificPlantFilename,
   PLANT_IMAGE_SUFFIXES,
 } from '../src/utils/filename.js';
+import { bibliography } from '../src/utils/bibliography.js';
+import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,6 +87,220 @@ function escapeRedirectHtml(value = '') {
 
 function renderJsonLd(data) {
   return JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+}
+
+const isInternalSourceLabel = (value = '') => {
+  const source = String(value || '').trim();
+  return !source || /\.csv\b|hostplants|insects|normalized_data|public\//i.test(source);
+};
+
+const normalizeCitationMatchKey = (value = '') => String(value || '')
+  .normalize('NFKC')
+  .replace(/[「」『』]/g, '')
+  .replace(/[‐‑‒–—−]/g, '-')
+  .replace(/\s+/g, '')
+  .toLowerCase();
+
+function splitReferenceTokens(value = '') {
+  return String(value || '')
+    .split(/[;；]|(?:\s+[\/／]\s+)/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
+function formatCitationAuthors(authors = []) {
+  if (!Array.isArray(authors) || authors.length === 0) return '';
+  return authors.join('・');
+}
+
+function findBibliographyEntry(rawReference = '') {
+  const raw = String(rawReference || '').trim();
+  if (!raw) return null;
+  const candidates = [
+    raw,
+    normalizeReference(raw),
+  ].map(normalizeCitationMatchKey).filter(Boolean);
+
+  return bibliography.find((entry) => {
+    const titleKey = normalizeCitationMatchKey(entry.title);
+    if (!titleKey) return false;
+    return candidates.some((candidate) => candidate === titleKey || candidate.includes(titleKey));
+  }) || null;
+}
+
+function buildJournalCitation(entry) {
+  const journal = entry.journal || '';
+  if (!journal) return '';
+  const volumeAndIssue = entry.volume
+    ? `${entry.volume}${entry.issue ? `(${entry.issue})` : ''}`
+    : (entry.issue || '');
+  const journalWithVolume = [journal, volumeAndIssue].filter(Boolean).join(' ');
+  return `${journalWithVolume}${entry.pages ? `: ${entry.pages}` : ''}`;
+}
+
+function formatCitationPlain(entry, rawReference = '') {
+  if (!entry) return normalizeReference(rawReference) || rawReference;
+
+  const authors = formatCitationAuthors(entry.authors);
+  const year = entry.year ? ` (${entry.year})` : '';
+  const heading = authors ? `${authors}${year}` : (entry.year ? entry.year : '');
+  const pieces = [];
+  pieces.push(`${heading ? `${heading} ` : ''}${entry.title}.`);
+
+  if (entry.type === 'article') {
+    const journalCitation = buildJournalCitation(entry);
+    if (journalCitation) pieces.push(`${journalCitation}.`);
+  } else if (entry.publisher) {
+    const publisher = [entry.place, entry.publisher].filter(Boolean).join(': ');
+    pieces.push(`${publisher}.`);
+  }
+
+  if (entry.isbn13) pieces.push(`ISBN ${entry.isbn13}.`);
+  return pieces.join(' ');
+}
+
+function formatCitationHtml(entry, rawReference = '') {
+  if (!entry) {
+    const display = normalizeReference(rawReference) || rawReference;
+    const link = getSourceLink(rawReference);
+    const label = escapeRedirectHtml(display);
+    return link
+      ? `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="noopener noreferrer">${label}</a></cite>`
+      : `<cite>${label}</cite>`;
+  }
+
+  const authors = formatCitationAuthors(entry.authors);
+  const year = entry.year ? ` (${escapeRedirectHtml(entry.year)})` : '';
+  const heading = authors ? `${escapeRedirectHtml(authors)}${year}` : (entry.year ? escapeRedirectHtml(entry.year) : '');
+  const safeTitle = escapeRedirectHtml(entry.title);
+  const titleHtml = entry.url
+    ? `<cite><a href="${escapeRedirectHtml(entry.url)}" target="_blank" rel="noopener noreferrer">${safeTitle}</a></cite>`
+    : `<cite>${safeTitle}</cite>`;
+  const pieces = [];
+  pieces.push(`${heading ? `${heading} ` : ''}${titleHtml}.`);
+
+  if (entry.type === 'article') {
+    const journalCitation = buildJournalCitation(entry);
+    if (journalCitation) pieces.push(`${escapeRedirectHtml(journalCitation)}.`);
+  } else if (entry.publisher) {
+    const publisher = [entry.place, entry.publisher].filter(Boolean).join(': ');
+    pieces.push(`${escapeRedirectHtml(publisher)}.`);
+  }
+
+  if (entry.isbn13) pieces.push(`ISBN ${escapeRedirectHtml(entry.isbn13)}.`);
+  return pieces.join(' ');
+}
+
+function formatCitationShortHtml(entry, rawReference = '') {
+  if (!entry) {
+    const display = normalizeReference(rawReference) || rawReference;
+    const link = getSourceLink(rawReference);
+    const label = escapeRedirectHtml(display);
+    return link
+      ? `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="noopener noreferrer">${label}</a></cite>`
+      : `<cite>${label}</cite>`;
+  }
+
+  const safeTitle = escapeRedirectHtml(entry.title);
+  const titleHtml = entry.url
+    ? `<cite><a href="${escapeRedirectHtml(entry.url)}" target="_blank" rel="noopener noreferrer">${safeTitle}</a></cite>`
+    : `<cite>${safeTitle}</cite>`;
+  return `${titleHtml}${entry.year ? ` (${escapeRedirectHtml(entry.year)})` : ''}`;
+}
+
+function buildCitationEntriesFromReferences(rawReferences = []) {
+  const entries = [];
+  const seen = new Set();
+
+  rawReferences
+    .flatMap(splitReferenceTokens)
+    .filter((reference) => reference && !isInternalSourceLabel(reference))
+    .forEach((rawReference) => {
+      const entry = findBibliographyEntry(rawReference);
+      const key = entry
+        ? `bib:${entry.key || normalizeCitationMatchKey(entry.title)}`
+        : `raw:${normalizeCitationMatchKey(normalizeReference(rawReference) || rawReference)}`;
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      entries.push({
+        key,
+        rawReference,
+        entry,
+        plain: formatCitationPlain(entry, rawReference),
+        html: formatCitationHtml(entry, rawReference),
+        shortHtml: formatCitationShortHtml(entry, rawReference),
+      });
+    });
+
+  return entries;
+}
+
+function buildInsectCitationEntries(insect) {
+  const references = [];
+  if (Array.isArray(insect.hostPlantsDetailed)) {
+    insect.hostPlantsDetailed.forEach((hostPlant) => {
+      if (hostPlant?.reference) references.push(hostPlant.reference);
+    });
+  }
+  if (Array.isArray(insect.generalNotes)) {
+    insect.generalNotes.forEach((note) => {
+      if (note?.reference) references.push(note.reference);
+    });
+  }
+  if (insect.source && !isInternalSourceLabel(insect.source)) {
+    references.push(insect.source);
+  }
+  return buildCitationEntriesFromReferences(references);
+}
+
+function buildPlantCitationEntries(relatedInsects = [], dataPlantName = '', displayPlantName = '') {
+  const targetPlantNames = new Set(
+    [dataPlantName, displayPlantName, normalizePlantName(dataPlantName), normalizePlantName(displayPlantName)]
+      .map((value) => String(value || '').trim())
+      .filter(Boolean),
+  );
+  const references = [];
+
+  relatedInsects.forEach((insect) => {
+    let foundSpecificHostReference = false;
+    if (Array.isArray(insect.hostPlantsDetailed)) {
+      insect.hostPlantsDetailed.forEach((hostPlant) => {
+        const candidateNames = [
+          hostPlant?.name,
+          hostPlant?.displayName,
+          normalizePlantName(hostPlant?.name || ''),
+          normalizePlantName(hostPlant?.displayName || ''),
+        ].map((value) => String(value || '').trim()).filter(Boolean);
+        const matchesPlant = candidateNames.some((name) => targetPlantNames.has(name));
+        if (matchesPlant && hostPlant?.reference) {
+          references.push(hostPlant.reference);
+          foundSpecificHostReference = true;
+        }
+      });
+    }
+    if (!foundSpecificHostReference && insect.source && !isInternalSourceLabel(insect.source)) {
+      references.push(insect.source);
+    }
+  });
+
+  return buildCitationEntriesFromReferences(references);
+}
+
+function renderCitationSummaryHtml(entries = [], maxItems = 2) {
+  if (!entries.length) return '';
+  const shown = entries.slice(0, maxItems).map((entry) => entry.shortHtml);
+  const remaining = entries.length - shown.length;
+  if (remaining > 0) {
+    shown.push(`<span class="citation-more">ほか${remaining}件</span>`);
+  }
+  return shown.join('<br>');
+}
+
+function renderCitationListHtml(entries = []) {
+  if (!entries.length) return '';
+  return `<ol class="citation-list">
+          ${entries.map((entry) => `<li>${entry.html}</li>`).join('\n          ')}
+        </ol>`;
 }
 
 const DEFERRED_ADS_SCRIPT = `<script>
@@ -995,7 +1211,9 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   
   const hostPlants = insect.hostPlants || '不明';
   const scientificName = insect.scientificName || '';
-  const source = insect.source || '不明';
+  const citationEntries = buildInsectCitationEntries(insect);
+  const citationSummaryHtml = renderCitationSummaryHtml(citationEntries);
+  const citationListHtml = renderCitationListHtml(citationEntries);
   const imageUrl = resolveInsectImageUrl(insect);
   const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = imageUrl
@@ -1171,6 +1389,9 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
       name: '昆虫植物図鑑',
     },
   };
+  if (citationEntries.length > 0) {
+    insectStructuredData.citation = citationEntries.map((entry) => entry.plain);
+  }
   if (imageUrl) {
     insectStructuredData.image = {
       '@type': 'ImageObject',
@@ -1281,8 +1502,9 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
           ${insect.emergenceTime && insect.emergenceTime !== '不明' ? `
           <dt>成虫出現時期</dt>
           <dd>${insect.emergenceTime}</dd>` : ''}
-          <dt>出典</dt>
-          <dd>${source}</dd>
+          ${citationSummaryHtml ? `
+          <dt>主な引用文献</dt>
+          <dd>${citationSummaryHtml}</dd>` : ''}
         </dl>
       </section>
       
@@ -1322,7 +1544,9 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         ${insect.remarks && insect.remarks.trim() ? `
         <h4>備考</h4>
         <p>${formatEnglishWordsInItalic(insect.remarks)}</p>` : ''}
-        ${source && source !== '不明' ? `<p>出典: ${source}</p>` : ''}
+        ${citationListHtml ? `
+        <h4>引用文献</h4>
+        ${citationListHtml}` : ''}
         <p>この種の詳細な生態情報や観察記録については、メインの図鑑ページでご確認ください。</p>
       </section>
     </main>
@@ -1413,6 +1637,8 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     leafbeetle: 'ハムシ',
     aphid: 'アブラムシ'
   };
+  const citationEntries = buildPlantCitationEntries(relatedInsects, dataPlantName, displayPlantName);
+  const citationListHtml = renderCitationListHtml(citationEntries);
 
   // --- 植物ページ description テンプレート生成 ---
   // 種類別内訳を「蛾X種、蝶Y種...」形式で生成（0種は省略）
@@ -1465,6 +1691,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       name: '昆虫植物図鑑',
     },
   };
+  if (citationEntries.length > 0) {
+    plantStructuredData.citation = citationEntries.map((entry) => entry.plain);
+  }
   if (mainImageUrl) {
     plantStructuredData.image = `${BASE_ORIGIN}${mainImageUrl}`;
   }
@@ -1598,6 +1827,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
           .map(([type, insects]) => 
             `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => `<a href=\"/meta/${getInsectMetaRouteType(i)}/${i.id}.html\">${i.japaneseName}</a>`).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
           ).join('')}
+        ${citationListHtml ? `
+        <h4>引用文献</h4>
+        ${citationListHtml}` : ''}
       </section>
       
       <section class="related-insects">
@@ -1984,7 +2216,7 @@ async function generateMetaPages() {
         hostPlants: hostPlantsString,
         hostPlantsDetailed: insectHostPlants,
         generalNotes: generalNotes,
-        source: 'insects.csv + hostplants.csv',
+        source: '',
         remarks: notes,
         alternativeNames: alternativeNames,
         emergenceTime: emergenceTime,
