@@ -128,84 +128,32 @@ function findBibliographyEntry(rawReference = '') {
   }) || null;
 }
 
-function buildJournalCitation(entry) {
-  const journal = entry.journal || '';
-  if (!journal) return '';
-  const volumeAndIssue = entry.volume
-    ? `${entry.volume}${entry.issue ? `(${entry.issue})` : ''}`
-    : (entry.issue || '');
-  const journalWithVolume = [journal, volumeAndIssue].filter(Boolean).join(' ');
-  return `${journalWithVolume}${entry.pages ? `: ${entry.pages}` : ''}`;
+function extractAuthorYearLabel(rawReference = '') {
+  const raw = String(rawReference || '').trim();
+  const match = raw.match(/^(.+?)\s*[（(]\s*((?:18|19|20)\d{2})\s*[）)]/);
+  if (match) return `${match[1].trim()} (${match[2]})`;
+  return normalizeReference(raw) || raw;
 }
 
 function formatCitationPlain(entry, rawReference = '') {
-  if (!entry) return normalizeReference(rawReference) || rawReference;
+  if (!entry) return extractAuthorYearLabel(rawReference);
 
   const authors = formatCitationAuthors(entry.authors);
-  const year = entry.year ? ` (${entry.year})` : '';
-  const heading = authors ? `${authors}${year}` : (entry.year ? entry.year : '');
-  const pieces = [];
-  pieces.push(`${heading ? `${heading} ` : ''}${entry.title}.`);
-
-  if (entry.type === 'article') {
-    const journalCitation = buildJournalCitation(entry);
-    if (journalCitation) pieces.push(`${journalCitation}.`);
-  } else if (entry.publisher) {
-    const publisher = [entry.place, entry.publisher].filter(Boolean).join(': ');
-    pieces.push(`${publisher}.`);
-  }
-
-  if (entry.isbn13) pieces.push(`ISBN ${entry.isbn13}.`);
-  return pieces.join(' ');
+  if (authors && entry.year) return `${authors} (${entry.year})`;
+  return authors || entry.year || entry.title || extractAuthorYearLabel(rawReference);
 }
 
 function formatCitationHtml(entry, rawReference = '') {
-  if (!entry) {
-    const display = normalizeReference(rawReference) || rawReference;
-    const link = getSourceLink(rawReference);
-    const label = escapeRedirectHtml(display);
-    return link
-      ? `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="noopener noreferrer">${label}</a></cite>`
-      : `<cite>${label}</cite>`;
-  }
-
-  const authors = formatCitationAuthors(entry.authors);
-  const year = entry.year ? ` (${escapeRedirectHtml(entry.year)})` : '';
-  const heading = authors ? `${escapeRedirectHtml(authors)}${year}` : (entry.year ? escapeRedirectHtml(entry.year) : '');
-  const safeTitle = escapeRedirectHtml(entry.title);
-  const titleHtml = entry.url
-    ? `<cite><a href="${escapeRedirectHtml(entry.url)}" target="_blank" rel="noopener noreferrer">${safeTitle}</a></cite>`
-    : `<cite>${safeTitle}</cite>`;
-  const pieces = [];
-  pieces.push(`${heading ? `${heading} ` : ''}${titleHtml}.`);
-
-  if (entry.type === 'article') {
-    const journalCitation = buildJournalCitation(entry);
-    if (journalCitation) pieces.push(`${escapeRedirectHtml(journalCitation)}.`);
-  } else if (entry.publisher) {
-    const publisher = [entry.place, entry.publisher].filter(Boolean).join(': ');
-    pieces.push(`${escapeRedirectHtml(publisher)}.`);
-  }
-
-  if (entry.isbn13) pieces.push(`ISBN ${escapeRedirectHtml(entry.isbn13)}.`);
-  return pieces.join(' ');
+  const display = formatCitationPlain(entry, rawReference);
+  const link = entry?.url || getSourceLink(rawReference);
+  const label = escapeRedirectHtml(display);
+  return link
+    ? `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="noopener noreferrer">${label}</a></cite>`
+    : `<cite>${label}</cite>`;
 }
 
 function formatCitationShortHtml(entry, rawReference = '') {
-  if (!entry) {
-    const display = normalizeReference(rawReference) || rawReference;
-    const link = getSourceLink(rawReference);
-    const label = escapeRedirectHtml(display);
-    return link
-      ? `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="noopener noreferrer">${label}</a></cite>`
-      : `<cite>${label}</cite>`;
-  }
-
-  const safeTitle = escapeRedirectHtml(entry.title);
-  const titleHtml = entry.url
-    ? `<cite><a href="${escapeRedirectHtml(entry.url)}" target="_blank" rel="noopener noreferrer">${safeTitle}</a></cite>`
-    : `<cite>${safeTitle}</cite>`;
-  return `${titleHtml}${entry.year ? ` (${escapeRedirectHtml(entry.year)})` : ''}`;
+  return formatCitationHtml(entry, rawReference);
 }
 
 function buildCitationEntriesFromReferences(rawReferences = []) {
@@ -217,16 +165,15 @@ function buildCitationEntriesFromReferences(rawReferences = []) {
     .filter((reference) => reference && !isInternalSourceLabel(reference))
     .forEach((rawReference) => {
       const entry = findBibliographyEntry(rawReference);
-      const key = entry
-        ? `bib:${entry.key || normalizeCitationMatchKey(entry.title)}`
-        : `raw:${normalizeCitationMatchKey(normalizeReference(rawReference) || rawReference)}`;
+      const plain = formatCitationPlain(entry, rawReference);
+      const key = `citation:${normalizeCitationMatchKey(plain)}`;
       if (!key || seen.has(key)) return;
       seen.add(key);
       entries.push({
         key,
         rawReference,
         entry,
-        plain: formatCitationPlain(entry, rawReference),
+        plain,
         html: formatCitationHtml(entry, rawReference),
         shortHtml: formatCitationShortHtml(entry, rawReference),
       });
@@ -1503,7 +1450,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
           <dt>成虫出現時期</dt>
           <dd>${insect.emergenceTime}</dd>` : ''}
           ${citationSummaryHtml ? `
-          <dt>主な引用文献</dt>
+          <dt>出典</dt>
           <dd>${citationSummaryHtml}</dd>` : ''}
         </dl>
       </section>
@@ -1545,7 +1492,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         <h4>備考</h4>
         <p>${formatEnglishWordsInItalic(insect.remarks)}</p>` : ''}
         ${citationListHtml ? `
-        <h4>引用文献</h4>
+        <h4>出典</h4>
         ${citationListHtml}` : ''}
         <p>この種の詳細な生態情報や観察記録については、メインの図鑑ページでご確認ください。</p>
       </section>
@@ -1828,7 +1775,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
             `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => `<a href=\"/meta/${getInsectMetaRouteType(i)}/${i.id}.html\">${i.japaneseName}</a>`).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
           ).join('')}
         ${citationListHtml ? `
-        <h4>引用文献</h4>
+        <h4>出典</h4>
         ${citationListHtml}` : ''}
       </section>
       
