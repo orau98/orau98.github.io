@@ -7,9 +7,11 @@ export const bibliography = [
     authors: ['岸田泰則'],
     year: '2011',
     publisher: '学研教育出版',
+    pages: '352p',
+    size: '31cm',
     isbn10: '405403845X',
     isbn13: '978-4-05-403845-5',
-    url: 'https://www.amazon.co.jp/日本産蛾類標準図鑑１-岸田泰則/dp/405403845X',
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000011161861',
     note: '第1巻'
   },
   {
@@ -68,9 +70,11 @@ export const bibliography = [
     authors: ['岸田泰則'],
     year: '2011',
     publisher: '学研教育出版',
+    pages: '416p',
+    size: '31cm',
     isbn10: '4054038468',
     isbn13: '978-4-05-403846-2',
-    url: 'https://www.amazon.co.jp/dp/4054038468',
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000011161867',
     note: '第2巻'
   },
   {
@@ -79,9 +83,11 @@ export const bibliography = [
     authors: ['広渡 俊哉', '那須 義次', '坂巻 祥孝'],
     year: '2013',
     publisher: '学研教育出版',
+    pages: '359p',
+    size: '31cm',
     isbn10: '405405109X',
     isbn13: '978-4-05-405109-6',
-    url: 'https://www.amazon.co.jp/dp/405405109X',
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I024199485',
     note: '第3巻'
   },
   {
@@ -93,9 +99,9 @@ export const bibliography = [
     publisher: '昆虫文献六本脚',
     pages: '215p',
     size: '31cm',
-    isbn10: '4902649086',
+    isbn10: '490264908X',
     isbn13: '978-4-902649-08-6',
-    url: 'https://amzn.to/4b2pvfe'
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000009933125'
   },
   {
     key: 'nihon-no-fuyushaku',
@@ -108,10 +114,12 @@ export const bibliography = [
   },
   {
     key: 'nihon-no-fuyuyaga',
-    title: '日本の冬夜蛾',
-    authors: ['小林 秀紀'],
+    title: '日本の冬夜蛾 (キリガ)',
+    authors: ['小林 秀紀', '四方 圭一郎', '枝 恵太郎'],
     year: '2016',
     publisher: 'むし社',
+    pages: '112p',
+    size: '31cm',
     isbn13: '978-4-943955-48-1',
     url: 'https://www.mushi-sha.co.jp/shopdetail/000000000506/ct6/page1/recommend/'
   },
@@ -134,11 +142,13 @@ export const bibliography = [
   {
     key: 'nihonsan-tamamushi-daizukan',
     title: '日本産タマムシ大図鑑',
-    authors: ['大桃 定洋', '福富宏和', '藤田 宏'],
+    authors: ['大桃 定洋', '福富 宏和'],
     year: '2013',
     publisher: 'むし社',
-    isbn13: '978-4-943955-06-1',
-    url: 'https://amzn.to/4m2vPWp'
+    pages: '206p',
+    size: '31cm',
+    isbn13: '978-4-943955-07-8',
+    url: 'https://www.mushi-sha.co.jp/shopdetail/000000000496/'
   },
   {
     key: 'hamushi-handbook',
@@ -146,8 +156,11 @@ export const bibliography = [
     authors: ['尾園 暁'],
     year: '2014',
     publisher: '文一総合出版',
+    pages: '104p',
+    size: '19cm',
+    isbn10: '4829981229',
     isbn13: '978-4-8299-8122-1',
-    url: 'https://amzn.to/456YVhu'
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I025611359'
   },
   {
     key: 'nihonsan-hamushi-seitai-obogaki',
@@ -422,35 +435,47 @@ export const bibliography = [
   {
     key: 'nihonsan-kamikiri',
     title: '日本産カミキリムシ',
-    authors: ['日本鞘翅学会 カミキリムシ部会'],
-    year: '2018',
-    publisher: '昆虫文献六本脚',
-    isbn13: '978-4-902649-14-7'
+    authors: ['大林 延夫', '新里 達也'],
+    year: '2007',
+    publisher: '東海大学出版会',
+    pages: '818p',
+    size: '27cm',
+    isbn13: '978-4-486-01741-7',
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283'
   },
   {
     key: 'nihonsan-chorui-hyojun',
     title: '日本産蝶類標準図鑑',
     authors: ['白水 隆'],
     year: '2006',
-    publisher: '学研教育出版',
-    isbn13: '978-4-05-202296-9',
-    url: 'https://www.amazon.co.jp/日本産蝶類標準図鑑-白水-隆/dp/4052022963'
+    publisher: '学習研究社',
+    pages: '336p',
+    size: '31cm',
+    isbn10: '4052022963',
+    isbn13: '978-4-05-202296-8',
+    url: 'https://hon.gakken.jp/book/1320229601'
   },
   {
     key: 'nihon-genshoku-aburamushi',
     title: '日本原色アブラムシ図鑑',
     authors: ['森津 孫四郎'],
-    year: '2009',
+    year: '1983',
     publisher: '全国農村教育協会',
-    isbn13: '978-4-88137-153-1'
+    pages: '545p',
+    isbn10: '4881370170',
+    isbn13: '978-4-88137-017-9',
+    url: 'https://ci.nii.ac.jp/ncid/BN0139061X'
   },
   {
     key: 'nihon-no-kiriga',
-    title: '日本のキリガ',
-    authors: ['四方 圭一郎', '枝恵太郎'],
-    year: '2015',
+    title: '日本の冬夜蛾 (キリガ)',
+    authors: ['小林 秀紀', '四方 圭一郎', '枝 恵太郎'],
+    year: '2016',
     publisher: 'むし社',
-    isbn13: '978-4-943955-35-1'
+    pages: '112p',
+    size: '31cm',
+    isbn13: '978-4-943955-48-1',
+    url: 'https://www.mushi-sha.co.jp/shopdetail/000000000506/'
   },
   {
     key: 'tinea-21-2-kishida-2010',
