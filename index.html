@@ -4,11 +4,16 @@
     <meta charset="UTF-8" />
     <!-- Ensure relative URLs resolve correctly under subpath deployments -->
     <base href="%BASE_URL%">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate icon" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="shortcut icon" type="image/png" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2c5530" />
+    <meta name="application-name" content="昆虫植物図鑑" />
+    <meta name="apple-mobile-web-app-title" content="昆虫植物図鑑" />
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,8 +45,8 @@
     <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
     <link rel="dns-prefetch" href="//tpc.googlesyndication.com">
     <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
-    <title>昆虫 食草 - 7000種以上の昆虫植物図鑑（昆虫食草図鑑） | 蛾・蝶・タマムシ・カミキリムシ・ハムシの植物関係データベース</title>
-    <meta name="description" content="昆虫 食草の関係を検索できる日本最大級データベース。7000種以上の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと植物の関係を網羅。オニグルミ、ヤナギ、イラクサなど豊富な食草情報で昆虫と植物の意外な繋がりを発見。研究者から愛好家まで必見の昆虫植物図鑑（昆虫食草図鑑）。"> 
+    <title>昆虫植物図鑑｜7000種超の昆虫と食草を検索</title>
+    <meta name="description" content="蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を和名・学名・植物名から検索できるデータベース。観察、同定、研究の入口に。"> 
     <meta name="keywords" content="昆虫 食草, 食草, 昆虫植物図鑑, 昆虫食草図鑑, 昆虫図鑑, 蛾, 蝶, タマムシ, カミキリムシ, ハムシ, アブラムシ, ホストプラント, 寄主植物, オニグルミ, ヤナギ, イラクサ, アキニレ, 植物昆虫関係, 生態, 観察, 研究, データベース, 7000種, 日本産, 標準図鑑, 生物多様性, 幼虫食餌">
     <meta name="author" content="昆虫植物図鑑">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -58,22 +63,37 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": "https://orau98.github.io/#website",
       "name": "昆虫植物図鑑",
-      "alternateName": "昆虫食草図鑑",
-      "description": "7000種以上の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の関係を網羅した日本最大級の昆虫植物図鑑",
+      "alternateName": ["昆虫食草図鑑", "昆虫食草DB", "InsectPlantDB"],
+      "description": "蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を検索できるデータベース。",
       "url": "https://orau98.github.io/",
+      "image": "https://orau98.github.io/images/resized/insects/Cucullia_argentea.1024.jpg",
+      "isAccessibleForFree": true,
       "author": {
         "@type": "Organization",
         "name": "昆虫植物図鑑"
       },
+      "publisher": {
+        "@type": "Organization",
+        "name": "昆虫植物図鑑",
+        "url": "https://orau98.github.io/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://orau98.github.io/favicon-192.png",
+          "width": 192,
+          "height": 192
+        }
+      },
       "mainEntity": {
         "@type": "Dataset",
         "@id": "https://orau98.github.io/#dataset",
-        "name": "昆虫植物・食草データベース",
+        "name": "日本産昆虫と食草・寄主植物データベース",
         "description": "日本産の蛾・蝶・甲虫・アブラムシなど7000種以上について、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。",
         "url": "https://orau98.github.io/",
         "inLanguage": "ja",
         "isAccessibleForFree": true,
+        "image": "https://orau98.github.io/images/resized/insects/Cucullia_argentea.1024.jpg",
         "keywords": "昆虫, 蛾, 蝶, タマムシ, カミキリムシ, ハムシ, アブラムシ, 食草, ホストプラント",
         "creator": {
           "@type": "Organization",
@@ -89,8 +109,8 @@
     </script>
     
     <!-- OGP設定 -->
-    <meta property="og:title" content="昆虫 食草 - 7000種以上の昆虫植物図鑑（昆虫食草図鑑） | 蛾・蝶・タマムシ・カミキリムシ・ハムシの植物関係データベース">
-    <meta property="og:description" content="昆虫 食草の関係を検索できる日本最大級データベース。7000種以上の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと植物の関係を網羅。オニグルミ、ヤナギ、イラクサなど豊富な食草情報で昆虫と植物の意外な繋がりを発見。">
+    <meta property="og:title" content="昆虫植物図鑑｜7000種超の昆虫と食草を検索">
+    <meta property="og:description" content="蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を和名・学名・植物名から検索できるデータベース。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://orau98.github.io/">
     <meta property="og:image" content="https://orau98.github.io/images/resized/insects/Cucullia_argentea.1024.jpg">
@@ -103,8 +123,8 @@
     
     <!-- Twitterカード設定 -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="昆虫 食草 - 7000種以上の昆虫植物図鑑（昆虫食草図鑑） | 蛾・蝶・タマムシ・カミキリムシ・ハムシの植物関係データベース">
-    <meta name="twitter:description" content="昆虫 食草の関係を検索できる日本最大級データベース。7000種以上の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと植物の関係を網羅。研究者から愛好家まで必見の昆虫植物図鑑（昆虫食草図鑑）。">
+    <meta name="twitter:title" content="昆虫植物図鑑｜7000種超の昆虫と食草を検索">
+    <meta name="twitter:description" content="蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を和名・学名・植物名から検索できるデータベース。">
     <meta name="twitter:image" content="https://orau98.github.io/images/resized/insects/Cucullia_argentea.1024.jpg">
     <meta name="twitter:image:alt" content="美しい蛾の写真 - 昆虫植物図鑑">
     
@@ -114,9 +134,9 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "昆虫植物図鑑",
-      "alternateName": "昆虫食草図鑑",
+      "alternateName": ["昆虫食草図鑑", "昆虫食草DB", "InsectPlantDB"],
       "url": "https://orau98.github.io/",
-      "logo": "https://orau98.github.io/favicon.svg",
+      "logo": "https://orau98.github.io/favicon-192.png",
       "sameAs": [
         "https://www.instagram.com/onychodactylus_nipponoborealis/"
       ]

@@ -5,7 +5,7 @@ import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
 import ExplorerHero from "./components/ExplorerHero";
 import StickyHeader from "./components/StickyHeader";
-import { ExplorerStructuredData, MainStructuredData } from "./components/StructuredData";
+import { ExplorerStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
@@ -1084,7 +1084,7 @@ const InsectsHostPlantExplorer = memo(
       return {
         title: isEnglish
           ? "Insects and Host Plants of Japan"
-          : "昆虫植物図鑑 — 蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の繋がりを探索",
+          : "昆虫植物図鑑｜7000種超の昆虫と食草を検索",
         description: isEnglish
           ? `Explore insects and host plants recorded in Japan. Includes ${countLabel(
               counts.moths + counts.butterflies,
@@ -1099,7 +1099,7 @@ const InsectsHostPlantExplorer = memo(
             )} of aphids, and ${countLabel(
               counts.hostPlants,
             )} of plants.`
-          : `掲載: 蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種。和名/学名/分類から高速検索。昆虫植物図鑑（昆虫食草図鑑）。`,
+          : `蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種を掲載。和名・学名・植物名から検索できる昆虫食草データベース。`,
         canonical: absUrl(localizePath("/", locale)),
         breadcrumbItems: [
           { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
@@ -1725,7 +1725,6 @@ const InsectsHostPlantExplorer = memo(
           onVisibilityChange={setIsStickyHeaderVisible}
         />
         {/* 構造化データ */}
-        <MainStructuredData />
         <ExplorerStructuredData
           pathname={location.pathname}
           pageTitle={listSeo.title}

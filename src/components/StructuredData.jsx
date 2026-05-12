@@ -1003,10 +1003,12 @@ export const MainStructuredData = () => {
     "@type": "WebSite",
     "@id": `${siteUrl}#website`,
     "name": "昆虫植物図鑑",
-    "alternateName": "昆虫食草図鑑",
+    "alternateName": ["昆虫食草図鑑", "昆虫食草DB", "InsectPlantDB"],
     "url": siteUrl,
-    "description": "昆虫植物図鑑（昆虫食草図鑑）として、昆虫と食草の美しい関係を探る。蛾、蝶、タマムシ、カミキリムシ、ハムシと植物の関係を詳しく紹介する専門図鑑サイト。",
+    "description": "蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を検索できるデータベース。",
     "inLanguage": "ja",
+    "image": absUrl('/images/resized/insects/Cucullia_argentea.1024.jpg'),
+    "isAccessibleForFree": true,
     "sameAs": [
       "https://www.instagram.com/onychodactylus_nipponoborealis/"
     ],
@@ -1017,7 +1019,13 @@ export const MainStructuredData = () => {
     "publisher": {
       "@type": "Organization",
       "name": "昆虫植物図鑑",
-      "url": siteUrl
+      "url": siteUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": absUrl('/favicon-192.png'),
+        "width": 192,
+        "height": 192
+      }
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -1027,11 +1035,12 @@ export const MainStructuredData = () => {
     "mainEntity": {
       "@type": "Dataset",
       "@id": `${siteUrl}#dataset`,
-      "name": "昆虫植物・食草データベース",
+      "name": "日本産昆虫と食草・寄主植物データベース",
       "description": DATASET_DESCRIPTION,
       "url": siteUrl,
       "inLanguage": "ja",
       "isAccessibleForFree": true,
+      "image": absUrl('/images/resized/insects/Cucullia_argentea.1024.jpg'),
       "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "カミキリムシ", "ハムシ", "植物", "生態学"],
       "creator": {
         "@type": "Organization",
