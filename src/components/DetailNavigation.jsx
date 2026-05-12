@@ -81,7 +81,7 @@ const DetailNavigation = ({ allItems, currentId, type = 'insect', locale = 'ja' 
   // Sort items for consistent navigation order (e.g., alphabetical by Japanese name)
   // Assuming 'allItems' might be unsorted, let's sort by name if not already.
   // For insects, usually passed sorted or we sort here.
-  // Sorting 7000+ items on every render is heavy. 
+  // Sorting 9700+ items on every render is heavy. 
   // Ideally 'allItems' is already memoized/sorted in parent or we memoize here.
   
   // However, for simplicity and correctness with the list view:

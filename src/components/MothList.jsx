@@ -1336,7 +1336,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       // 4. Substring search (slowest, but necessary for some)
       // Only do this if we haven't found it yet
       // Optimize: check if any image filename contains the name
-      // iterating 2000+ filenames x 7000 insects is too slow (14M ops).
+      // iterating 2000+ filenames x 9700 insects is too slow (19M+ ops).
       // We should skip this expensive check for the pre-calc map if possible, 
       // or optimize it.
       // For now, let's trust the specific lookups above cover 99% cases.
