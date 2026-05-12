@@ -1,3 +1,5 @@
+import { isPlantHostRecord } from './hostResource';
+
 export const isFlowerVisitRecord = (record) => {
   if (!record) return false;
   if (record.isFlowerVisit === true) return true;
@@ -25,6 +27,7 @@ export const buildFlowerVisitMap = (insects = []) => {
     const records = insect.hostPlantsDetailed;
     if (!Array.isArray(records) || records.length === 0) return;
     records.forEach((record) => {
+      if (!isPlantHostRecord(record)) return;
       if (!isFlowerVisitRecord(record)) return;
       const rawPlant = record?.name || record?.displayName || record?.plant || '';
       const plantName = normalizeFlowerVisitPlant(String(rawPlant || '').trim());

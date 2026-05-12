@@ -7,6 +7,7 @@ import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
   cleanString,
+  isNonPlantResourceName,
   isSuspiciousPlantName,
 } from './lib/dataLiteBuilders.mjs';
 
@@ -224,10 +225,19 @@ async function build() {
   );
   const hostplantsRaw = parseCsv(hostplantsCsv);
   const suspiciousHostplants = hostplantsRaw.filter((row) => isSuspiciousPlantName(row?.plant_name));
+  const resourceHostplants = hostplantsRaw.filter((row) => isNonPlantResourceName(row?.plant_name));
   if (suspiciousHostplants.length > 0) {
-    console.warn(`[data-lite] filtered suspicious hostplant rows: ${suspiciousHostplants.length}`);
+    console.warn(`[data-lite] filtered suspicious hostplant rows from plant index: ${suspiciousHostplants.length}`);
   }
-  const hostplants = hostplantsRaw.filter((row) => !isSuspiciousPlantName(row?.plant_name));
+  if (resourceHostplants.length > 0) {
+    console.warn(`[data-lite] filtered non-plant resource rows from plant index: ${resourceHostplants.length}`);
+  }
+  const hostplantsForInsects = hostplantsRaw.filter(
+    (row) => !isSuspiciousPlantName(row?.plant_name) || isNonPlantResourceName(row?.plant_name),
+  );
+  const hostplants = hostplantsRaw.filter(
+    (row) => !isSuspiciousPlantName(row?.plant_name) && !isNonPlantResourceName(row?.plant_name),
+  );
   const notes = parseCsv(notesCsv);
   const ylistCsv = readText(path.join(PUBLIC_DIR, '20210514YList_download.csv'));
   const ylistRows = ylistCsv ? parseCsv(ylistCsv) : [];
@@ -239,7 +249,7 @@ async function build() {
 
   // Import converter from app util (ESM)
   const { convertNormalizedDataToStandardFormat } = await import(pathToFileURL(path.join(ROOT, 'src', 'utils', 'normalizedDataParser.js')).href);
-  const normalized = convertNormalizedDataToStandardFormat(insects, hostplants, notes);
+  const normalized = convertNormalizedDataToStandardFormat(insects, hostplantsForInsects, notes);
 
   // Slim each record for list/search use
 const slim = (arr) => (arr || []).map(i => ({
@@ -290,7 +300,7 @@ const slim = (arr) => (arr || []).map(i => ({
   const hostPlantTargets = new Set(
     hostplants
       .map(r => cleanString(r.plant_name))
-      .filter(name => name && name !== '不明' && !isSuspiciousPlantName(name))
+      .filter(name => name && name !== '不明' && !isSuspiciousPlantName(name) && !isNonPlantResourceName(name))
   );
   const builtYListLite = ylistRows.length > 0
     ? buildYListLite(ylistRows, hostPlantTargets)

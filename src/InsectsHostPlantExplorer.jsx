@@ -14,6 +14,7 @@ import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./ser
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
+import { isPlantHostRecord } from "./utils/hostResource";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "./utils/filename";
 import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { absUrl } from "./utils/origin";
@@ -310,6 +311,7 @@ const buildPlantInsectStats = (
     const records = insect.hostPlantsDetailed;
     if (Array.isArray(records) && records.length > 0) {
       records.forEach((record) => {
+        if (!isPlantHostRecord(record)) return;
         const plantName =
           record?.name || record?.displayName || record?.plant || "";
         addPlantByInsectId(plantName, insectId);
@@ -858,6 +860,7 @@ const InsectsHostPlantExplorer = memo(
         const records = insect?.hostPlantsDetailed;
         if (!Array.isArray(records) || records.length === 0) return;
         records.forEach((record) => {
+          if (!isPlantHostRecord(record)) return;
           const lifeStage = (record?.lifeStage || "").trim();
           const plantPart = (record?.plantPart || "").trim();
           if (lifeStage !== "成虫" || plantPart !== "花") return;

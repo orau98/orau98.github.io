@@ -1,3 +1,7 @@
+import { isNonPlantResourceName, isPlantHostRecord } from '../../src/utils/hostResource.js';
+
+export { isNonPlantResourceName, isPlantHostRecord };
+
 export const cleanString = (value) => (value ?? '').toString().trim();
 
 const SUSPICIOUS_PLANT_NAME_SET = new Set([
@@ -127,6 +131,7 @@ export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
     if (!insectName) return;
     const records = Array.isArray(insect?.hostPlantsDetailed) ? insect.hostPlantsDetailed : [];
     records.forEach((record) => {
+      if (!isPlantHostRecord(record)) return;
       if (!isFlowerVisitRecord(record)) return;
       const rawName = cleanString(record?.displayName || record?.name || record?.plant);
       if (!rawName || isSuspiciousPlantName(rawName)) return;
@@ -226,6 +231,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
 
     detailedPlants.forEach((hostPlant) => {
       const rawName = cleanString(hostPlant?.name);
+      if (!isPlantHostRecord(hostPlant) || isNonPlantResourceName(rawName)) return;
       if (!rawName || isSuspiciousPlantName(rawName)) return;
       const normalized = normalizePlantNameLite(rawName) || rawName;
       const canonical =

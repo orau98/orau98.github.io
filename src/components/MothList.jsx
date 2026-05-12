@@ -31,6 +31,7 @@ import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings'
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
 import { isEnglishLocale, localizePath } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
+import { isPlantHostRecord } from '../utils/hostResource';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
@@ -62,6 +63,7 @@ const buildPlantDisplayData = (moth) => {
 
   if (Array.isArray(moth?.hostPlantsDetailed) && moth.hostPlantsDetailed.length > 0) {
     moth.hostPlantsDetailed.forEach((record) => {
+      if (!isPlantHostRecord(record)) return;
       const raw = record.displayName || record.name || '';
       const cleaned = cleanPlantName(String(raw).trim());
       if (!cleaned) return;

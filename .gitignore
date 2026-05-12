@@ -39,6 +39,7 @@ reports/cleanup-inventory.json
 reports/aphid_wrong_links.csv
 reports/blank_japanese_name_links.csv
 reports/duplicate_insect_ids.csv
+reports/data-structure-audit.md
 reports/missing_family_insects.csv
 reports/missing_ids.csv
 reports/placeholder_note_mismatch.csv

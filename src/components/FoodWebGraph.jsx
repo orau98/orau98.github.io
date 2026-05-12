@@ -7,6 +7,7 @@ import { createSafeScientificPlantFilename } from '../utils/filename';
 import { buildResizedImageUrl } from '../utils/imageSrcset';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
+import { isNonPlantResourceName, isPlantHostRecord } from '../utils/hostResource';
 import InfoPopover from './InfoPopover';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
@@ -125,6 +126,9 @@ const isFlowerVisitRecord = (record) => {
   return isAdultOrUnknown && partCompact && partCompact.includes('花');
 };
 
+const isGraphPlantRecord = (record, rawName = '') =>
+  isPlantHostRecord(record) && !isNonPlantResourceName(rawName);
+
 const getRelationType = (hasHost, hasFlowerVisit) => {
   if (hasHost && hasFlowerVisit) return 'both';
   if (hasFlowerVisit) return 'flower';
@@ -233,6 +237,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       return insect.hostPlantsDetailed.some((record) => {
         if (isFlowerVisitRecord(record)) return false;
         const raw = record?.name || record?.plant || record?.displayName || '';
+        if (!isGraphPlantRecord(record, raw)) return false;
         return matchesPlantName(String(raw).trim(), plantName);
       });
     }
@@ -288,6 +293,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       records.forEach((record) => {
         if (!isFlowerVisitRecord(record)) return;
         const rawPlant = record?.name || record?.plant || record?.displayName || '';
+        if (!isGraphPlantRecord(record, rawPlant)) return;
         const plantName = String(rawPlant).trim();
         addVisit(plantName, insectName);
       });
@@ -310,6 +316,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       return insect.hostPlantsDetailed.some((record) => {
         if (!isFlowerVisitRecord(record)) return false;
         const raw = record?.name || record?.plant || record?.displayName || '';
+        if (!isGraphPlantRecord(record, raw)) return false;
         return matchesPlantName(String(raw).trim(), plantName);
       });
     }
@@ -475,6 +482,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
       for (const p of insect.hostPlantsDetailed) {
         const raw = p?.name || p?.plant || p?.displayName || p?.hostPlant || p?.hostPlantName || '';
+        if (!isGraphPlantRecord(p, raw)) continue;
         const part = String(p?.part || p?.organ || p?.site || p?.parasiticPart || p?.plantPart || '').trim();
         if (isFlowerVisitRecord(p)) {
           addPlant(raw, 'flower', part);

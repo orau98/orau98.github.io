@@ -14,6 +14,7 @@ import {
   INSECT_COLLECTION_KEYS,
   createEmptyInsectCollections,
 } from './siteTaxonomy.js';
+import { getHostResourceType, isPlantHostRecord } from './hostResource.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = createEmptyInsectCollections(() => []);
@@ -152,9 +153,11 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       hostPlantsByInsect[hp.insect_id] = [];
     }
     
+    const resourceType = getHostResourceType(rawName);
+
     // 表示用の食草名を構築
     let displayName = rawName;
-    if (hp.plant_family && hp.plant_family !== '以上バラ科' && hp.plant_family !== '以上ブナ科') {
+    if (resourceType === 'plant' && hp.plant_family && hp.plant_family !== '以上バラ科' && hp.plant_family !== '以上ブナ科') {
       displayName += `（${hp.plant_family}）`;
     }
     
@@ -187,7 +190,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       reference: hp.reference || '',
       notes: hp.notes || '',
       isDetailed: true,
-      isFlowerVisit
+      isFlowerVisit,
+      resourceType
     });
   });
 
@@ -301,6 +305,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
       const hostPlantList = Array.from(new Set(
         hostPlants
+          .filter(isPlantHostRecord)
           .filter(hp => !hp.isFlowerVisit)
           .map(hp => hp.displayName)
           .filter(Boolean)

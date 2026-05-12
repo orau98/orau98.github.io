@@ -15,6 +15,7 @@ import LoadingBar from './components/LoadingBar';
 import NotFoundPage from './components/NotFoundPage';
 import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
 import { buildFlowerVisitMap, isFlowerVisitRecord } from './utils/flowerVisitPlants';
+import { isPlantHostRecord } from './utils/hostResource';
 import {
   INDEX_FOLLOW_ROBOTS,
   NOINDEX_FOLLOW_ROBOTS,
@@ -5986,6 +5987,7 @@ function App() {
           let plants = [];
           if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
             plants = insect.hostPlantsDetailed
+              .filter(isPlantHostRecord)
               .filter(p => !isFlowerVisitRecord(p))
               .map(p => p && p.name ? String(p.name).trim() : '')
               .filter(Boolean);
@@ -6011,6 +6013,7 @@ function App() {
           const larvalPlants = new Set();
           const flowerPlants = new Set();
           records.forEach((record) => {
+            if (!isPlantHostRecord(record)) return;
             const raw = record?.name || record?.displayName || record?.plant || '';
             const normalized = normalizePlantName(String(raw || '').trim());
             if (!normalized || normalized === '不明') return;

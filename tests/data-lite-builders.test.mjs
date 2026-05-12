@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
+  isNonPlantResourceName,
   isSuspiciousPlantName,
 } from '../scripts/lib/dataLiteBuilders.mjs';
 
@@ -72,6 +73,35 @@ test('buildFlowerVisitPlantDataset canonicalizes aliases and sorts insect names'
   assert.deepEqual(flowerVisitPlants, {
     ヤナギ: ['ガA', 'チョウB'],
   });
+});
+
+test('plant indexes exclude non-plant larval resources', () => {
+  const insects = [
+    {
+      name: 'ガA',
+      hostPlantsDetailed: [
+        { name: 'コナラ', family: 'ブナ科', lifeStage: '幼虫', plantPart: '葉', resourceType: 'plant' },
+        { name: '枯れ葉', lifeStage: '幼虫', plantPart: '葉', resourceType: 'substrate' },
+        { name: 'カワラタケ', family: 'サルノコシカケ科', lifeStage: '幼虫', plantPart: '葉' },
+      ],
+    },
+    {
+      name: 'ガB',
+      hostPlantsDetailed: [
+        { name: '枯れ葉', lifeStage: '成虫', plantPart: '花', resourceType: 'substrate' },
+      ],
+    },
+  ];
+
+  const { hostPlantsMap, plantDetails } = buildHostPlantDataset(insects);
+  const flowerVisitPlants = buildFlowerVisitPlantDataset(insects);
+
+  assert.deepEqual(hostPlantsMap, { コナラ: ['ガA'] });
+  assert.equal(plantDetails.枯れ葉, undefined);
+  assert.equal(plantDetails.カワラタケ, undefined);
+  assert.deepEqual(flowerVisitPlants, {});
+  assert.equal(isNonPlantResourceName('枯葉'), true);
+  assert.equal(isNonPlantResourceName('カワラタケ'), true);
 });
 
 test('buildHostPlantDataset adds plant profiles even without linked insects', () => {

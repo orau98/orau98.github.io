@@ -7,6 +7,7 @@ import { buildPlantPath } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
+import { getHostResourceType } from '../utils/hostResource';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -182,10 +183,12 @@ const groupPlantsByName = (plants) => {
   
   plants.forEach(plant => {
     const key = plant.name;
+    const resourceType = plant.resourceType || getHostResourceType(plant.name);
     if (!groups[key]) {
       groups[key] = {
         name: plant.name,
         family: plant.family || '',
+        resourceType,
         records: []
       };
     }
@@ -194,7 +197,8 @@ const groupPlantsByName = (plants) => {
       plantPart: plant.plantPart,
       lifeStage: plant.lifeStage,
       reference: plant.reference,
-      notes: plant.notes
+      notes: plant.notes,
+      resourceType
     });
   });
   
@@ -232,6 +236,7 @@ const getPlantPartLabel = (plantPart, isEnglish = false) => {
 const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetails = {} }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
+  const isResourceGroup = plantGroup.resourceType === 'substrate';
   // 最優先の観察タイプを決定（野外（国内）を最優先）
   const primaryRecord = plantGroup.records.reduce((prev, current) => {
     const prevPriority = getObservationTypePriority(prev.observationType);
@@ -312,7 +317,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
     return t;
   };
   const displayPlantName = repairPlantLatinBinomial(plantGroup.name);
-  const plantDetail = plantDetails?.[plantGroup.name] || {};
+  const plantDetail = isResourceGroup ? {} : (plantDetails?.[plantGroup.name] || {});
   const primaryPlantName = isEnglish
     ? getPrimaryEnglishName({
         scientificName: plantDetail.scientificName,
@@ -330,23 +335,32 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2 min-w-0 flex-1">
           <div className="min-w-0">
-            <Link
-              to={buildPlantPath(plantGroup.name, locale)}
-              state={makeDetailLinkState(location)}
-              className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
-              title={isEnglish ? `${primaryPlantName}${japaneseReference ? ` (${displayPlantName})` : ''}` : `${displayPlantName} の詳細へ`}
-            >
-              {isEnglish && plantDetail.scientificName
-                ? formatScientificNameReact(primaryPlantName)
-                : primaryPlantName}
-            </Link>
+            {isResourceGroup ? (
+              <span
+                className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 dark:text-emerald-300' : 'text-emerald-600 dark:text-emerald-400'}`}
+                title={displayPlantName}
+              >
+                {primaryPlantName}
+              </span>
+            ) : (
+              <Link
+                to={buildPlantPath(plantGroup.name, locale)}
+                state={makeDetailLinkState(location)}
+                className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
+                title={isEnglish ? `${primaryPlantName}${japaneseReference ? ` (${displayPlantName})` : ''}` : `${displayPlantName} の詳細へ`}
+              >
+                {isEnglish && plantDetail.scientificName
+                  ? formatScientificNameReact(primaryPlantName)
+                  : primaryPlantName}
+              </Link>
+            )}
             {japaneseReference && (
               <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
                 {japaneseReference}
               </div>
             )}
           </div>
-          {plantGroup.family && plantGroup.family !== plantGroup.name && (
+          {!isResourceGroup && plantGroup.family && plantGroup.family !== plantGroup.name && (
             <Link
               to={buildPlantPath(plantGroup.family, locale)}
               state={makeDetailLinkState(location)}
@@ -544,16 +558,21 @@ const EnhancedHostPlantDisplay = ({
   const splitGroupsByUsage = (groups) => {
     const hostGroups = [];
     const flowerGroups = [];
+    const resourceGroups = [];
     groups.forEach((group) => {
+      if (group.resourceType === 'substrate') {
+        resourceGroups.push(group);
+        return;
+      }
       const flowerRecords = group.records.filter(isFlowerVisitRecord);
       const hostRecords = group.records.filter((record) => !isFlowerVisitRecord(record));
       if (hostRecords.length > 0) hostGroups.push({ ...group, records: hostRecords, usageCategory: 'host' });
       if (flowerRecords.length > 0) flowerGroups.push({ ...group, records: flowerRecords, usageCategory: 'flower' });
     });
-    return { hostGroups, flowerGroups };
+    return { hostGroups, flowerGroups, resourceGroups };
   };
 
-  const { hostGroups, flowerGroups } = splitGroupsByUsage(sortedGroups);
+  const { hostGroups, flowerGroups, resourceGroups } = splitGroupsByUsage(sortedGroups);
   const hostDisplayCount = showAllHost ? hostGroups.length : Math.min(maxDisplayCount, hostGroups.length);
   const flowerDisplayCount = showAllFlower ? flowerGroups.length : Math.min(maxDisplayCount, flowerGroups.length);
   const hasMoreHost = hostGroups.length > maxDisplayCount;
@@ -640,6 +659,26 @@ const EnhancedHostPlantDisplay = ({
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {resourceGroups.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            {isEnglish ? 'Other larval resources' : '植物以外の利用資源'}
+          </div>
+          <div className="space-y-2">
+            {resourceGroups.map((plantGroup, index) => (
+              <HostPlantDetailCard
+                key={`${plantGroup.name}-resource-${index}`}
+                plantGroup={plantGroup}
+                isExpanded={expandedItems.has(`resource-${index}`) || showDetailsByDefault}
+                onToggle={() => toggleExpanded(`resource-${index}`)}
+                locale={locale}
+                plantDetails={plantDetails}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

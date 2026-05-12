@@ -7,6 +7,7 @@
 - `normalized_data/*.csv` を編集の出発点（ソース・オブ・トゥルース）と位置づけます。
 - `public/*.csv` はビルド処理や検証スクリプトの成果物として扱い、必要に応じて `npm run build:data-lite` などで再生成します。
 - 手動編集時は、`normalized_data` を更新 → 検証スクリプトを実行 → `public`／`dist` へ反映、という手順に統一します。
+- 現在のデータ構造と安全な改善順序は `docs/data-structure.md` に整理します。
 
 ## 生成物と一次データの扱い
 

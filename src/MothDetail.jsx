@@ -31,6 +31,7 @@ import DetailNavigation from './components/DetailNavigation';
 import DetailSectionNav from './components/DetailSectionNav';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
+import { isPlantHostRecord } from './utils/hostResource';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -583,6 +584,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     if (!insect) return [];
     if (Array.isArray(insect.hostPlantsDetailed) && insect.hostPlantsDetailed.length > 0) {
       const detailedPlants = insect.hostPlantsDetailed
+        .filter(isPlantHostRecord)
         .filter(record => !isFlowerVisitRecord(record))
         .map(record => cleanPlantName(record?.name ? String(record.name).trim() : ''))
         .filter(name => name && name !== '不明');
