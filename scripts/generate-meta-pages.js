@@ -1036,16 +1036,12 @@ function buildRobotsContent(shouldIndex) {
 }
 
 function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
-  const hasHostPlants = Array.isArray(hostPlantsArray) && hostPlantsArray.length > 0;
-  const hasImage = Boolean(imageUrl);
-  const emergence = String(insect?.emergenceTime || '').trim();
-  const hasEmergence = emergence !== '' && emergence !== '不明';
-  const hasRichRemarks = normalizedTextLength(insect?.remarks) >= 80;
-
-  // 検索流入に寄与しづらい薄いページは noindex へ
-  if (!hasHostPlants && !hasImage && !hasEmergence && !hasRichRemarks) {
+  const name = String(insect?.japaneseName || insect?.name || '').trim();
+  if (!name || name === '不明') {
     return buildRobotsContent(false);
   }
+  // 種名検索での発見性を優先し、昆虫の個別種ページは原則 index へ。
+  // 食草が未整理でも、和名・学名・分類だけでロングテール検索の入口になる。
   return buildRobotsContent(true);
 }
 
@@ -1074,6 +1070,30 @@ function isGeneratedMetaPageIndexable(filePath) {
   } catch {
     return false;
   }
+}
+
+function splitAlternativeNames(value = '') {
+  return String(value || '')
+    .split(/[、，,;；／/]/)
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
+function uniqueNonEmpty(values = []) {
+  const seen = new Set();
+  const result = [];
+  values.forEach((value) => {
+    const text = String(value || '').trim();
+    if (!text || seen.has(text)) return;
+    seen.add(text);
+    result.push(text);
+  });
+  return result;
+}
+
+function extractScientificGenus(scientificName = '') {
+  const match = String(scientificName || '').trim().match(/^([A-Z][a-zA-Z-]+)/);
+  return match ? match[1] : '';
 }
 
 // 英語メタページ（public/en/meta/）から id→slug および 植物名→slug のマップを構築する
@@ -1203,6 +1223,29 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   // 分類情報の生成
   const familyName = insect.family || INSECT_DEFAULT_FAMILIES[type];
   const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
+  const alternativeNameList = splitAlternativeNames(insect.alternativeNames);
+  const scientificGenus = extractScientificGenus(scientificName);
+  const hostPlantKeywordList = uniqueNonEmpty(
+    hostPlantsArray
+      .slice(0, 12)
+      .map((plant) => normalizePlantName(plant))
+      .filter(isValidPlantName),
+  );
+  const insectKeywordList = uniqueNonEmpty([
+    insect.japaneseName,
+    ...alternativeNameList,
+    scientificName,
+    scientificGenus,
+    familyName,
+    typeNames[type],
+    '昆虫',
+    '昆虫 食草',
+    '食草',
+    '寄主植物',
+    '幼虫 食草',
+    '昆虫図鑑',
+    ...hostPlantKeywordList,
+  ]);
   const enAlternatePath = (() => {
     if (!enSlugEntry) return '';
     if (typeof enSlugEntry === 'string') {
@@ -1302,14 +1345,18 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
 
   const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
   const insectPageUrl = `${BASE_ORIGIN}/meta/${type}/${insect.id}.html`;
-  const insectTitle = `${insect.japaneseName} (${scientificName}) - ${typeNames[type]}図鑑`;
-  const insectKeywords = `${insect.japaneseName},${scientificName},${typeNames[type]},食草,昆虫図鑑,${familyName}`;
+  const insectTitle = `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`;
+  const insectKeywords = insectKeywordList.join(',');
   const insectStructuredData = {
     '@context': 'https://schema.org',
     '@type': ['Animal', 'Species'],
     name: insect.japaneseName,
-    alternateName: [scientificName, insect.japaneseName].filter(Boolean),
+    alternateName: uniqueNonEmpty([scientificName, insect.japaneseName, ...alternativeNameList]),
     scientificName,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': insectPageUrl,
+    },
     identifier: {
       '@type': 'PropertyValue',
       propertyID: 'species_id',
@@ -1325,6 +1372,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
       },
     },
     description: `${insect.japaneseName}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    keywords: insectKeywordList.slice(0, 14),
     url: insectPageUrl,
     inLanguage: 'ja',
     author: {
