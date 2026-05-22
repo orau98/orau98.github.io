@@ -266,16 +266,7 @@ const validateRobotsTxt = (filePath) => {
   const body = readFile(filePath);
   const requiredSitemaps = [
     'sitemap.xml',
-    'sitemap-index.xml',
-    'sitemap-core.xml',
-    'sitemap-all.txt',
-    'sitemap.txt',
-    'search-console-sitemap.xml',
-    'search-console-sitemap.txt',
-    'google-sitemap.xml',
-    'google-sitemap.txt',
-    'gsc-sitemap.xml',
-    'gsc-sitemap.txt',
+    'search-console-submit.xml',
   ];
 
   for (const sitemap of requiredSitemaps) {
