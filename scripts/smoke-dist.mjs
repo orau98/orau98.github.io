@@ -29,6 +29,10 @@ const REQUIRED_FILES = [
   'gsc-sitemap.txt',
   'opensearch.xml',
   'sitemap.html',
+  'guides/index.html',
+  'guides/host-plant-search.html',
+  'en/guides/index.html',
+  'en/guides/host-plant-search.html',
 ];
 
 function assert(condition, message) {

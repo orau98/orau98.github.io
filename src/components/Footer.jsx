@@ -37,11 +37,13 @@ const Footer = ({ locale = 'ja' }) => {
       ];
   const utilityLinks = isEnglish
     ? [
+        { href: `${import.meta.env.BASE_URL}en/guides/`, label: 'Search guides' },
         { href: `${import.meta.env.BASE_URL}sitemap.html`, label: 'Sitemap' },
         { href: `${import.meta.env.BASE_URL}${metaBase}/moth/index.html`, label: 'All insect pages' },
         { href: `${import.meta.env.BASE_URL}${metaBase}/plant/index.html`, label: 'All plant pages' },
       ]
     : [
+        { href: `${import.meta.env.BASE_URL}guides/`, label: '調べ方ガイド' },
         { href: `${import.meta.env.BASE_URL}sitemap.html`, label: 'サイトマップ' },
         { href: `${import.meta.env.BASE_URL}${metaBase}/moth/index.html`, label: '蛾メタ一覧' },
         { href: `${import.meta.env.BASE_URL}${metaBase}/plant/index.html`, label: '植物メタ一覧' },

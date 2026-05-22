@@ -436,6 +436,38 @@ function generateSplitSitemaps() {
     { changefreq: 'monthly', priority: '0.5' },
   );
 
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/',
+    path.join(__dirname, '../public/guides/index.html'),
+    { changefreq: 'monthly', priority: '0.7' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/host-plant-search.html',
+    path.join(__dirname, '../public/guides/host-plant-search.html'),
+    { changefreq: 'monthly', priority: '0.7' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/guides/',
+    path.join(__dirname, '../public/en/guides/index.html'),
+    { changefreq: 'monthly', priority: '0.7', targetKey: 'en-main' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/guides/host-plant-search.html',
+    path.join(__dirname, '../public/en/guides/host-plant-search.html'),
+    { changefreq: 'monthly', priority: '0.7', targetKey: 'en-main' },
+  );
+
   // NOTE:
   // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
   // 検索エンジン向けのサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。

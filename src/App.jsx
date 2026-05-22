@@ -53,7 +53,7 @@ const getPapa = async () => {
 };
 
 const STATIC_DOCUMENT_PATHS = new Set(['/sitemap.html']);
-const STATIC_DOCUMENT_PREFIXES = ['/meta/', '/en/meta/'];
+const STATIC_DOCUMENT_PREFIXES = ['/guides/', '/en/guides/', '/meta/', '/en/meta/'];
 
 const isStaticDocumentPath = (pathname = '') => {
   const value = String(pathname || '').trim();

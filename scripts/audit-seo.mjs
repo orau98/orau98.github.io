@@ -330,7 +330,13 @@ if (fs.existsSync(englishRootIndexPath)) {
   validateHtml(englishRootIndexPath, readFile(englishRootIndexPath));
 }
 
-const supportHtmlFiles = [path.join(DIST_DIR, 'sitemap.html')];
+const supportHtmlFiles = [
+  path.join(DIST_DIR, 'sitemap.html'),
+  path.join(DIST_DIR, 'guides', 'index.html'),
+  path.join(DIST_DIR, 'guides', 'host-plant-search.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'index.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'host-plant-search.html'),
+];
 for (const filePath of supportHtmlFiles) {
   if (fs.existsSync(filePath)) {
     validateHtml(filePath, readFile(filePath));
