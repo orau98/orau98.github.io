@@ -374,8 +374,8 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
     : null;
   const fallbackCandidates = filename
     ? Array.from(new Set([
-        ...originalCandidates.slice(1),
         picture?.src,
+        ...originalCandidates,
       ].filter(Boolean)))
     : [];
 
@@ -386,7 +386,7 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
     >
       {filename ? (
         <ImageWithFallback
-          src={originalCandidates[0] || picture.src}
+          src={picture.src || originalCandidates[0]}
           candidates={fallbackCandidates}
           alt={isEnglish ? `${plantName} photograph` : `${plantName}の写真`}
           width="800"

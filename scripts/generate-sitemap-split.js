@@ -148,7 +148,18 @@ function isNoindexPage(filePath) {
 function buildRobotsTxt(baseUrl) {
   const sitemapPaths = [
     '/sitemap.xml',
+    '/sitemap-index.xml',
+    '/sitemap-core.xml',
+    '/sitemap-all.txt',
+    '/sitemap.txt',
     '/search-console-submit.xml',
+    '/search-console-submit.txt',
+    '/search-console-sitemap.xml',
+    '/search-console-sitemap.txt',
+    '/google-sitemap.xml',
+    '/google-sitemap.txt',
+    '/gsc-sitemap.xml',
+    '/gsc-sitemap.txt',
   ];
 
   const lines = [

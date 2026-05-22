@@ -39,39 +39,13 @@ const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
-  // Plant views use original plant photos directly; responsive derivatives are
-  // only a local/development fallback and push Pages artifacts over the limit.
-  path.join('dist', 'images', 'resized', 'plants'),
+  // Serve plant photos from responsive derivatives; full-size originals push
+  // Pages artifacts over the limit without changing the visible page content.
+  path.join('dist', 'images', 'plants'),
   // Development CSV snapshots should remain in the repository, not in Pages output.
   path.join('dist', 'backup'),
   path.join('dist', 'insects.csv.bak.butterfly_subfamily_fix_20260114125318'),
 ];
-
-const syncPlantImages = () => {
-  const srcDir = path.join('public', 'images', 'plants');
-  const destDir = path.join('dist', 'images', 'plants');
-  try {
-    if (!fs.existsSync(srcDir) || !fs.existsSync(destDir)) return;
-    const srcFiles = fs.readdirSync(srcDir);
-    const destFiles = new Set(fs.readdirSync(destDir));
-    let copied = 0;
-    for (const file of srcFiles) {
-      const srcPath = path.join(srcDir, file);
-      const destPath = path.join(destDir, file);
-      const stat = fs.statSync(srcPath);
-      if (!stat.isFile()) continue;
-      if (!destFiles.has(file)) {
-        fs.copyFileSync(srcPath, destPath);
-        copied++;
-      }
-    }
-    if (copied) {
-      console.log(`[postbuild] Synced ${copied} plant image(s) missing from dist.`);
-    }
-  } catch (error) {
-    console.warn('[postbuild] Failed to sync plant images:', error?.message || error);
-  }
-};
 
 const ensureSpa404 = () => {
   try {
@@ -254,7 +228,6 @@ for (const p of targets) {
   }
 }
 
-syncPlantImages();
 ensureSpa404();
 ensureSpaRouteShells();
 ensurePlantProfileRouteShells();

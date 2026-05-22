@@ -761,9 +761,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (hits.length === 0) return [];
     const urls = [];
     hits.slice(0, 2).forEach(base => {
-      urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}.jpg${cacheBust}`);
       urls.push(`${assetBase}images/resized/plants/${encodeURIComponent(base)}.1024.jpg${cacheBust}`);
       urls.push(`${assetBase}images/resized/plants/${encodeURIComponent(base)}.640.jpg${cacheBust}`);
+      urls.push(`${assetBase}images/plants/${encodeURIComponent(base)}.jpg${cacheBust}`);
     });
     return urls;
   }, [assetBase, cacheBust, plantImageNames, plantScientificBaseMap]);

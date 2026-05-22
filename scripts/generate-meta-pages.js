@@ -319,8 +319,18 @@ function writeExplorerRedirect(segment, options) {
   fs.writeFileSync(path.join(routeDir, 'index.html'), buildExplorerRedirectHtml(options));
 }
 
+function stripImageExtension(fileName) {
+  return String(fileName || '').replace(/\.[^.]+$/i, '');
+}
+
+function buildPlantResizedImageUrl(fileName, width = 1024, format = 'jpg') {
+  const baseName = stripImageExtension(fileName);
+  if (!baseName) return '';
+  return `/images/resized/plants/${encodeURIComponent(baseName)}.${width}.${format}`;
+}
+
 function buildPlantPictureHtml(img, altText) {
-  const fileUrl = `/images/plants/${encodeURIComponent(img)}`;
+  const fileUrl = buildPlantResizedImageUrl(img);
   const escapedAlt = escapeRedirectHtml(altText);
   const escapedFallback = escapeRedirectHtml(fileUrl);
 
@@ -1598,7 +1608,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   // この植物に関連する画像を探す（和名・別名・学名ベースのファイル名を許容）
   const plantImageFiles = getPlantImageFilesForMeta(displayPlantName, plantImages, dataPlantName);
   const mainImageUrl = plantImageFiles.length > 0 
-    ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}` 
+    ? buildPlantResizedImageUrl(plantImageFiles[0]) 
     : '';
   const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
@@ -1803,7 +1813,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         <div class="gallery-container">
           ${plantImageFiles.map(img => `
             <div class="gallery-item">
-              <a href="/images/plants/${encodeURIComponent(img)}" target="_blank" title="画像を拡大表示">
+              <a href="${buildPlantResizedImageUrl(img)}" target="_blank" title="画像を拡大表示">
                 ${buildPlantPictureHtml(img, `${displayPlantName}の写真 - ${img.replace(/\.[^/.]+$/, '')}`)}
               </a>
               <div class="image-caption">${img.replace(/\.[^/.]+$/, '').replace(/_/g, ' ')}</div>

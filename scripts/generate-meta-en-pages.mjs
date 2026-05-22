@@ -36,6 +36,10 @@ const PUBLIC_DIR = path.join(__dirname, '../public');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+const PRESERVED_EN_STATIC_FILES = Object.freeze([
+  'guides/index.html',
+  'guides/host-plant-search.html',
+]);
 
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
   ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.jpg$/i))
@@ -76,8 +80,18 @@ function escapeAttr(value = '') {
   return escapeHtml(value);
 }
 
+function stripImageExtension(fileName) {
+  return String(fileName || '').replace(/\.[^.]+$/i, '');
+}
+
+function buildPlantResizedImageUrl(fileName, width = 1024, format = 'jpg') {
+  const baseName = stripImageExtension(fileName);
+  if (!baseName) return '';
+  return `/images/resized/plants/${encodeURIComponent(baseName)}.${width}.${format}`;
+}
+
 function buildPlantPictureHtml(file, altText) {
-  const fileUrl = `/images/plants/${encodeURIComponent(file)}`;
+  const fileUrl = buildPlantResizedImageUrl(file);
   const fallback = escapeAttr(fileUrl);
 
   return `<img
@@ -219,6 +233,27 @@ function createSafeFileName(value = '') {
 
 function writeJson(filePath, payload) {
   fs.writeFileSync(filePath, `${JSON.stringify(payload, null, 2)}\n`);
+}
+
+function readPreservedEnglishStaticFiles() {
+  return PRESERVED_EN_STATIC_FILES
+    .map((relativePath) => {
+      const filePath = path.join(PUBLIC_EN_DIR, relativePath);
+      if (!fs.existsSync(filePath)) return null;
+      return {
+        relativePath,
+        content: fs.readFileSync(filePath, 'utf-8'),
+      };
+    })
+    .filter(Boolean);
+}
+
+function restorePreservedEnglishStaticFiles(files = []) {
+  files.forEach(({ relativePath, content }) => {
+    const filePath = path.join(PUBLIC_EN_DIR, relativePath);
+    ensureDir(path.dirname(filePath));
+    fs.writeFileSync(filePath, content, 'utf-8');
+  });
 }
 
 function buildAlternateLanguageLinks(jaPath, enPath) {
@@ -710,7 +745,7 @@ function buildEnglishPlantPage({
   const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
   const robotsContent = computePlantRobotsContent({ relatedInsects, plantImageFiles });
   const mainImageUrl = plantImageFiles.length > 0
-    ? `/images/plants/${encodeURIComponent(plantImageFiles[0])}`
+    ? buildPlantResizedImageUrl(plantImageFiles[0])
     : '';
   const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
@@ -821,7 +856,7 @@ function buildEnglishPlantPage({
         <div class="gallery-container">
           ${plantImageFiles.slice(0, 6).map((file) => `
             <div class="gallery-item">
-              <a href="/images/plants/${encodeURIComponent(file)}" target="_blank" rel="noopener noreferrer">
+              <a href="${buildPlantResizedImageUrl(file)}" target="_blank" rel="noopener noreferrer">
                 ${buildPlantPictureHtml(file, `${display.primaryName} photograph`)}
               </a>
             </div>`).join('')}
@@ -1044,9 +1079,11 @@ async function generateEnglishMetaPages() {
   const hostPlantsMap = loadJson('hostplants.json', {});
   const plantDetails = loadJson('plant-details.json', {});
   const ylistLite = loadJson('ylist-lite.json', { plants: {}, aliasToCanonical: {} });
+  const preservedEnglishStaticFiles = readPreservedEnglishStaticFiles();
 
   fs.rmSync(PUBLIC_EN_DIR, { recursive: true, force: true });
   ensureDir(EN_META_DIR);
+  restorePreservedEnglishStaticFiles(preservedEnglishStaticFiles);
   Object.keys(insectsByType).forEach((type) => ensureDir(path.join(EN_META_DIR, type)));
   ensureDir(path.join(EN_META_DIR, 'plant'));
   writeExplorerRedirect('plant', {

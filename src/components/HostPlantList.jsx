@@ -80,11 +80,11 @@ const HostPlantListItem = React.memo(
           (ext) => `${originalBaseUrl}${encoded}.${ext}${assetVer}`,
         )
       : [];
-    const primaryImageSrc = originalFallbackUrls[0] || responsiveImage?.src || "";
+    const primaryImageSrc = responsiveImage?.src || originalFallbackUrls[0] || "";
     const fallbackImageCandidates = imageFilename
       ? Array.from(new Set([
-          ...originalFallbackUrls.slice(1),
           responsiveImage?.src,
+          ...originalFallbackUrls,
         ].filter(Boolean)))
       : [];
 

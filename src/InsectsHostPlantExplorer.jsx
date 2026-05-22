@@ -1592,7 +1592,7 @@ const InsectsHostPlantExplorer = memo(
             return getPriority(a) - getPriority(b);
           });
           const filename = matches[0];
-          return `${normalizedBase}images/plants/${encodeURIComponent(filename)}.jpg`;
+          return `${normalizedBase}images/resized/plants/${encodeURIComponent(filename)}.1024.jpg`;
         };
 
         for (const plant of plantNames) {

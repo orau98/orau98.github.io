@@ -1363,11 +1363,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
       const originalCandidates = extensions.map((ext) => `${baseUrl}images/plants/${encodedName}${ext}`);
       const variations = [
-        ...originalCandidates,
         `${baseUrl}images/resized/plants/${encodedName}.1024.jpg`,
         `${baseUrl}images/resized/plants/${encodedName}.1024.webp`,
+        `${baseUrl}images/resized/plants/${encodedName}.1024.avif`,
         `${baseUrl}images/resized/plants/${encodedName}.640.jpg`,
         `${baseUrl}images/resized/plants/${encodedName}.640.webp`,
+        ...originalCandidates,
       ];
       return Array.from(new Set(variations.filter(Boolean)));
     };
@@ -1375,7 +1376,12 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const buildOriginalCandidates = (name) => {
       const encodedName = encodeURIComponent(name);
       const extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.webp', '.WEBP'];
-      return extensions.map((ext) => `${baseUrl}images/plants/${encodedName}${ext}`);
+      return [
+        `${baseUrl}images/resized/plants/${encodedName}.1024.jpg`,
+        `${baseUrl}images/resized/plants/${encodedName}.1024.webp`,
+        `${baseUrl}images/resized/plants/${encodedName}.1024.avif`,
+        ...extensions.map((ext) => `${baseUrl}images/plants/${encodedName}${ext}`),
+      ];
     };
 
     const buildLabelFromSuffix = (suffix, fallback = '画像') => {
