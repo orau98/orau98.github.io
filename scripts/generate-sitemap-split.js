@@ -487,6 +487,24 @@ function generateSplitSitemaps() {
     console.log(`[sitemap] host plant guide pages added: ${plantGuideCount}`);
   }
 
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/categories/',
+    path.join(__dirname, '../public/guides/categories/index.html'),
+    { changefreq: 'monthly', priority: '0.8' },
+  );
+  const categoryGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/guides/categories'),
+    '/guides/categories/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false },
+  );
+  if (categoryGuideCount > 0) {
+    console.log(`[sitemap] category guide pages added: ${categoryGuideCount}`);
+  }
+
   // NOTE:
   // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
   // 検索エンジン向けのサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
