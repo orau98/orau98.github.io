@@ -303,6 +303,7 @@ function addStaticDirectoryToMain(sitemaps, baseUrl, absDir, routePrefix, option
   const files = fs
     .readdirSync(absDir)
     .filter((name) => name.endsWith('.html'))
+    .filter((name) => options.includeIndex !== false || name !== 'index.html')
     .sort((a, b) => a.localeCompare(b, 'en'));
 
   let count = 0;
@@ -467,6 +468,24 @@ function generateSplitSitemaps() {
     path.join(__dirname, '../public/en/guides/host-plant-search.html'),
     { changefreq: 'monthly', priority: '0.7', targetKey: 'en-main' },
   );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/plants/',
+    path.join(__dirname, '../public/guides/plants/index.html'),
+    { changefreq: 'monthly', priority: '0.8' },
+  );
+  const plantGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/guides/plants'),
+    '/guides/plants/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false },
+  );
+  if (plantGuideCount > 0) {
+    console.log(`[sitemap] host plant guide pages added: ${plantGuideCount}`);
+  }
 
   // NOTE:
   // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
