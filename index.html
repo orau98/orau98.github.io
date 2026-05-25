@@ -35,16 +35,8 @@
     <link rel="sitemap" type="application/xml" title="Search Console sitemap" href="/search-console-sitemap.xml">
     <link rel="alternate" type="application/rss+xml" title="昆虫植物図鑑 RSS" href="/google-feed.xml">
     <link rel="alternate" type="application/atom+xml" title="昆虫植物図鑑 Atom" href="/google-atom.xml">
-    <!-- Preconnect for embeds/CDNs (Instagram widgets / Analytics / Ads) -->
+    <!-- Preconnect only for embed origins used during initial rendering -->
     <link rel="preconnect" href="https://www.instagram.com" crossorigin>
-    <link rel="preconnect" href="https://snapwidget.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.lightwidget.com" crossorigin>
-    <link rel="dns-prefetch" href="//www.googletagmanager.com">
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
-    <link rel="dns-prefetch" href="//tpc.googlesyndication.com">
-    <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
     <title>昆虫植物図鑑｜9700種超の昆虫と食草を検索</title>
     <meta name="description" content="蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を和名・学名・植物名から検索できるデータベース。観察、同定、研究の入口に。"> 
     <meta name="keywords" content="昆虫 食草, 食草, 昆虫植物図鑑, 昆虫食草図鑑, 昆虫図鑑, 蛾, 蝶, タマムシ, カミキリムシ, ハムシ, アブラムシ, ホストプラント, 寄主植物, オニグルミ, ヤナギ, イラクサ, アキニレ, 植物昆虫関係, 生態, 観察, 研究, データベース, 9700種, 日本産, 標準図鑑, 生物多様性, 幼虫食餌">
@@ -164,27 +156,78 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
-      <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-MFEQF99G0H', { send_page_view: false });
-</script>
-
-<!-- Google AdSense -->
 <script>
   (function () {
     var hostname = window.location.hostname;
     var isLocalPreview = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
     if (isLocalPreview) return;
-    var ads = document.createElement('script');
-    ads.async = true;
-    ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
-    ads.crossOrigin = 'anonymous';
-    document.head.appendChild(ads);
+
+    var analyticsLoaded = false;
+    var adsLoaded = false;
+    var scheduled = false;
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
+    var loadAnalytics = function () {
+      if (analyticsLoaded) return;
+      analyticsLoaded = true;
+      var analytics = document.createElement('script');
+      analytics.async = true;
+      analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H';
+      analytics.onload = function () {
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-MFEQF99G0H', { send_page_view: false });
+        window.gtag('event', 'page_view', {
+          send_to: 'G-MFEQF99G0H',
+          page_title: document.title || '昆虫植物図鑑',
+          page_path: window.location.pathname + window.location.search + window.location.hash,
+          page_location: window.location.href,
+        });
+      };
+      document.head.appendChild(analytics);
+    };
+
+    var loadAds = function () {
+      if (adsLoaded) return;
+      adsLoaded = true;
+      var ads = document.createElement('script');
+      ads.async = true;
+      ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
+      ads.crossOrigin = 'anonymous';
+      document.head.appendChild(ads);
+    };
+
+    var loadThirdPartyScripts = function () {
+      loadAnalytics();
+      loadAds();
+    };
+
+    var scheduleThirdPartyScripts = function () {
+      if (scheduled) return;
+      scheduled = true;
+      window.removeEventListener('pointerdown', scheduleThirdPartyScripts, { passive: true });
+      window.removeEventListener('keydown', scheduleThirdPartyScripts, { passive: true });
+      window.removeEventListener('scroll', scheduleThirdPartyScripts, { passive: true });
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(loadThirdPartyScripts, { timeout: 2500 });
+        return;
+      }
+      window.setTimeout(loadThirdPartyScripts, 1500);
+    };
+
+    window.addEventListener('pointerdown', scheduleThirdPartyScripts, { once: true, passive: true });
+    window.addEventListener('keydown', scheduleThirdPartyScripts, { once: true, passive: true });
+    window.addEventListener('scroll', scheduleThirdPartyScripts, { once: true, passive: true });
+    if (document.visibilityState === 'visible') {
+      scheduleThirdPartyScripts();
+      return;
+    }
+    document.addEventListener('visibilitychange', function handleVisibilityChange() {
+      if (document.visibilityState !== 'visible') return;
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      scheduleThirdPartyScripts();
+    });
   })();
 </script>
   <!-- SPA深いURL復元スクリプト（404.htmlからのリダイレクト対応） -->
