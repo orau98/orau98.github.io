@@ -28,15 +28,21 @@ const FORMATS = [
     transform: (pipeline) => pipeline.avif({ quality: 72, effort: 5 }),
   },
 ];
-const FORCE_REBUILD = process.env.FORCE_RESPONSIVE_IMAGES === '1';
+const FORCE_REBUILD = ['force', 'rebuild'].includes(
+  String(process.env.FORCE_RESPONSIVE_IMAGES || '').toLowerCase(),
+);
+const ALLOW_CI_RESPONSIVE_IMAGES =
+  FORCE_REBUILD || process.env.FORCE_RESPONSIVE_IMAGES === '1';
 const IS_PAGES_DEPLOY = process.env.GITHUB_WORKFLOW === 'Deploy with GitHub Actions Pages';
+const GENERATE_MISSING_ONLY =
+  !FORCE_REBUILD && ALLOW_CI_RESPONSIVE_IMAGES && process.env.CI === 'true';
 
 function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 
 if (
   process.env.SKIP_RESPONSIVE_IMAGES === '1' ||
-  (!FORCE_REBUILD && IS_PAGES_DEPLOY) ||
-  (process.env.CI === 'true' && process.env.FORCE_RESPONSIVE_IMAGES !== '1')
+  (!ALLOW_CI_RESPONSIVE_IMAGES && IS_PAGES_DEPLOY) ||
+  (process.env.CI === 'true' && !ALLOW_CI_RESPONSIVE_IMAGES)
 ) {
   console.log('[responsive] skipped (CI, Pages deploy, or SKIP_RESPONSIVE_IMAGES=1)');
   process.exit(0);
@@ -54,7 +60,9 @@ async function processImage(srcPath, outBase, widths = WIDTHS) {
       for (const format of FORMATS) {
         const outPath = `${outBase}.${w}.${format.ext}`;
         const outStat = statOrNull(outPath);
-        if (!FORCE_REBUILD && outStat && outStat.mtimeMs >= srcStat.mtimeMs) continue; // up-to-date
+        if (!FORCE_REBUILD && outStat) {
+          if (GENERATE_MISSING_ONLY || outStat.mtimeMs >= srcStat.mtimeMs) continue; // up-to-date
+        }
         await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
         await format.transform(
           sharp(srcPath, { failOnError: false }).rotate().resize({
