@@ -5,7 +5,110 @@ import path from 'path';
 
 const MAX_PAGES_DIST_BYTES = 900 * 1024 * 1024;
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
+const EN_SITE_NAME = 'Insects and Host Plants of Japan';
+const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. Search moths, butterflies, beetles, aphids, and host plants by scientific name, Japanese name, plant name, or taxonomy.';
+const EN_HOME_KEYWORDS = 'Japanese insects, host plants, larval host plants, moths, butterflies, beetles, aphids, plant-insect relationships, Japan biodiversity, scientific names';
+const DEFAULT_SOCIAL_IMAGE_URL = `${BASE_ORIGIN}/images/resized/insects/Cucullia_argentea.1024.jpg`;
+const DEFAULT_SOCIAL_IMAGE_ALT_EN = 'Cucullia argentea on Insects and Host Plants of Japan';
+const EN_HOME_NOSCRIPT = `    <noscript>
+      <section style="max-width: 960px; margin: 24px auto; padding: 16px; border: 1px solid #dbe4ea; border-radius: 8px; background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.7;">
+        <h1 style="font-size: 1.4rem; margin: 0 0 8px; color: #047857;">Insects and Host Plants of Japan</h1>
+        <p style="margin: 0 0 10px; color: #0f172a;">Explore insects and host plants recorded in Japan. The full interactive search needs JavaScript, but static English entry pages are available below.</p>
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+          <div>
+            <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Browse insects</h2>
+            <ul style="margin: 0 0 0 18px; padding: 0;">
+              <li><a href="/en/meta/moth/index.html">Moths</a></li>
+              <li><a href="/en/meta/butterfly/index.html">Butterflies</a></li>
+              <li><a href="/en/meta/beetle/index.html">Jewel beetles</a></li>
+              <li><a href="/en/meta/longhornbeetle/index.html">Longhorn beetles</a></li>
+              <li><a href="/en/meta/leafbeetle/index.html">Leaf beetles</a></li>
+              <li><a href="/en/meta/aphid/index.html">Aphids</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Browse plants</h2>
+            <ul style="margin: 0 0 0 18px; padding: 0;">
+              <li><a href="/en/meta/plant/index.html">Plant pages</a></li>
+              <li><a href="/en/guides/">Search guides</a></li>
+              <li><a href="/en/guides/host-plant-search.html">Find insects by host plant</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Interactive tools</h2>
+            <ul style="margin: 0 0 0 18px; padding: 0;">
+              <li><a href="/en/moth">Insect search</a></li>
+              <li><a href="/en/plant">Plant search</a></li>
+              <li><a href="/en/quiz">Four-choice quiz</a></li>
+            </ul>
+          </div>
+        </section>
+      </section>
+    </noscript>`;
+const EN_HOME_STRUCTURED_DATA = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${BASE_ORIGIN}/en/#website`,
+    name: EN_SITE_NAME,
+    alternateName: ['InsectPlantDB', 'Japanese insects and host plants'],
+    description: EN_HOME_DESCRIPTION,
+    url: `${BASE_ORIGIN}/en/`,
+    image: DEFAULT_SOCIAL_IMAGE_URL,
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${BASE_ORIGIN}/en/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: EN_SITE_NAME,
+    alternateName: ['InsectPlantDB'],
+    url: `${BASE_ORIGIN}/en/`,
+    logo: `${BASE_ORIGIN}/favicon-192.png`,
+    sameAs: [
+      'https://www.instagram.com/onychodactylus_nipponoborealis/',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'SiteNavigationElement', name: 'Search guides', url: `${BASE_ORIGIN}/en/guides/` },
+      { '@type': 'SiteNavigationElement', name: 'Find insects by host plant', url: `${BASE_ORIGIN}/en/guides/host-plant-search.html` },
+      { '@type': 'SiteNavigationElement', name: 'Insects', url: `${BASE_ORIGIN}/en/meta/moth/index.html` },
+      { '@type': 'SiteNavigationElement', name: 'Plants', url: `${BASE_ORIGIN}/en/meta/plant/index.html` },
+      { '@type': 'SiteNavigationElement', name: 'Four-choice quiz', url: `${BASE_ORIGIN}/en/quiz` },
+    ],
+  },
+];
 const SPA_ROUTE_SHELLS = [
+  {
+    segments: ['en'],
+    lang: 'en',
+    title: EN_SITE_NAME,
+    description: EN_HOME_DESCRIPTION,
+    canonicalPath: '/en/',
+    alternates: [
+      { hreflang: 'ja', path: '/' },
+      { hreflang: 'en', path: '/en/' },
+      { hreflang: 'x-default', path: '/en/' },
+    ],
+    appName: EN_SITE_NAME,
+    appleTitle: EN_SITE_NAME,
+    ogTitle: EN_SITE_NAME,
+    ogDescription: EN_HOME_DESCRIPTION,
+    siteName: EN_SITE_NAME,
+    author: EN_SITE_NAME,
+    keywords: EN_HOME_KEYWORDS,
+    ogLocale: 'en_US',
+    imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
+    noscriptHtml: EN_HOME_NOSCRIPT,
+    structuredData: EN_HOME_STRUCTURED_DATA,
+  },
   {
     segments: ['quiz'],
     lang: 'ja',
@@ -75,11 +178,27 @@ const escapeHtmlAttr = (value) => String(value)
 
 const replaceMetaContent = (html, attr, key, content) => {
   const pattern = new RegExp(
-    `<meta\\s+${attr}="${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s+content="[^"]*"\\s*>`,
+    `<meta\\s+${attr}="${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s+content="[^"]*"\\s*\\/?>`,
     'i',
   );
   const replacement = `<meta ${attr}="${key}" content="${escapeHtmlAttr(content)}">`;
   return html.replace(pattern, replacement);
+};
+
+const renderJsonLdScript = (payload) =>
+  `    <script type="application/ld+json">\n${JSON.stringify(payload, null, 2).replace(/</g, '\\u003c')}\n    </script>`;
+
+const replaceJsonLdBlocks = (html, structuredData) => {
+  if (!Array.isArray(structuredData) || structuredData.length === 0) return html;
+  const scripts = structuredData.map(renderJsonLdScript).join('\n');
+  const withoutExistingJsonLd = html.replace(
+    /\s*<script\s+type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi,
+    '\n',
+  );
+  if (/<!-- OGP設定 -->/.test(withoutExistingJsonLd)) {
+    return withoutExistingJsonLd.replace(/(\s*<!-- OGP設定 -->)/, `\n${scripts}\n$1`);
+  }
+  return withoutExistingJsonLd.replace('</head>', `${scripts}\n  </head>`);
 };
 
 const buildSpaRouteShell = (indexHtml, route) => {
@@ -104,6 +223,32 @@ const buildSpaRouteShell = (indexHtml, route) => {
   html = replaceMetaContent(html, 'property', 'og:url', canonicalUrl);
   html = replaceMetaContent(html, 'name', 'twitter:title', route.ogTitle);
   html = replaceMetaContent(html, 'name', 'twitter:description', route.ogDescription);
+  if (route.keywords) {
+    html = replaceMetaContent(html, 'name', 'keywords', route.keywords);
+  }
+  if (route.author) {
+    html = replaceMetaContent(html, 'name', 'author', route.author);
+  }
+  if (route.appName) {
+    html = replaceMetaContent(html, 'name', 'application-name', route.appName);
+  }
+  if (route.appleTitle) {
+    html = replaceMetaContent(html, 'name', 'apple-mobile-web-app-title', route.appleTitle);
+  }
+  if (route.ogLocale) {
+    html = replaceMetaContent(html, 'property', 'og:locale', route.ogLocale);
+  }
+  if (route.siteName) {
+    html = replaceMetaContent(html, 'property', 'og:site_name', route.siteName);
+  }
+  if (route.imageAlt) {
+    html = replaceMetaContent(html, 'property', 'og:image:alt', route.imageAlt);
+    html = replaceMetaContent(html, 'name', 'twitter:image:alt', route.imageAlt);
+  }
+  if (route.noscriptHtml) {
+    html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, route.noscriptHtml);
+  }
+  html = replaceJsonLdBlocks(html, route.structuredData);
   return html;
 };
 
