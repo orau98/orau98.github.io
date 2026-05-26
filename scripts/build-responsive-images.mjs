@@ -35,7 +35,7 @@ function statOrNull(p) { try { return fs.statSync(p); } catch { return null; } }
 
 if (
   process.env.SKIP_RESPONSIVE_IMAGES === '1' ||
-  IS_PAGES_DEPLOY ||
+  (!FORCE_REBUILD && IS_PAGES_DEPLOY) ||
   (process.env.CI === 'true' && process.env.FORCE_RESPONSIVE_IMAGES !== '1')
 ) {
   console.log('[responsive] skipped (CI, Pages deploy, or SKIP_RESPONSIVE_IMAGES=1)');
