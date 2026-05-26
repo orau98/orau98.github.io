@@ -138,20 +138,22 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SiteNavigationElement",
-      "name": ["調べ方ガイド", "食草・寄主植物から探す", "植物別につく虫を調べる", "カテゴリ別につく虫を調べる", "昆虫（静的メタ）", "蝶（静的メタ）", "タマムシ（静的メタ）", "カミキリムシ（静的メタ）", "ハムシ（静的メタ）", "植物（静的メタ）", "サイトマップ"],
-      "url": [
-        "https://orau98.github.io/guides/",
-        "https://orau98.github.io/guides/host-plant-search.html",
-        "https://orau98.github.io/guides/plants/",
-        "https://orau98.github.io/guides/categories/",
-        "https://orau98.github.io/meta/moth/index.html",
-        "https://orau98.github.io/meta/butterfly/index.html",
-        "https://orau98.github.io/meta/beetle/index.html",
-        "https://orau98.github.io/meta/longhornbeetle/index.html",
-        "https://orau98.github.io/meta/leafbeetle/index.html",
-        "https://orau98.github.io/meta/plant/index.html",
-        "https://orau98.github.io/sitemap.html"
+      "@graph": [
+        { "@type": "SiteNavigationElement", "name": "調べ方ガイド", "url": "https://orau98.github.io/guides/" },
+        { "@type": "SiteNavigationElement", "name": "食草・寄主植物から探す", "url": "https://orau98.github.io/guides/host-plant-search.html" },
+        { "@type": "SiteNavigationElement", "name": "植物別につく虫を調べる", "url": "https://orau98.github.io/guides/plants/" },
+        { "@type": "SiteNavigationElement", "name": "カテゴリ別につく虫を調べる", "url": "https://orau98.github.io/guides/categories/" },
+        { "@type": "SiteNavigationElement", "name": "庭木につく虫", "url": "https://orau98.github.io/guides/categories/garden-trees.html" },
+        { "@type": "SiteNavigationElement", "name": "果樹につく虫", "url": "https://orau98.github.io/guides/categories/fruit-trees.html" },
+        { "@type": "SiteNavigationElement", "name": "野菜につく虫", "url": "https://orau98.github.io/guides/categories/vegetables.html" },
+        { "@type": "SiteNavigationElement", "name": "広葉樹につく虫", "url": "https://orau98.github.io/guides/categories/broadleaf-trees.html" },
+        { "@type": "SiteNavigationElement", "name": "昆虫（静的メタ）", "url": "https://orau98.github.io/meta/moth/index.html" },
+        { "@type": "SiteNavigationElement", "name": "蝶（静的メタ）", "url": "https://orau98.github.io/meta/butterfly/index.html" },
+        { "@type": "SiteNavigationElement", "name": "タマムシ（静的メタ）", "url": "https://orau98.github.io/meta/beetle/index.html" },
+        { "@type": "SiteNavigationElement", "name": "カミキリムシ（静的メタ）", "url": "https://orau98.github.io/meta/longhornbeetle/index.html" },
+        { "@type": "SiteNavigationElement", "name": "ハムシ（静的メタ）", "url": "https://orau98.github.io/meta/leafbeetle/index.html" },
+        { "@type": "SiteNavigationElement", "name": "植物（静的メタ）", "url": "https://orau98.github.io/meta/plant/index.html" },
+        { "@type": "SiteNavigationElement", "name": "サイトマップ", "url": "https://orau98.github.io/sitemap.html" }
       ]
     }
     </script>
@@ -279,7 +281,7 @@
       <section style="max-width: 960px; margin: 24px auto; padding: 16px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fafafa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; line-height: 1.7;">
         <h1 style="font-size: 1.4rem; margin: 0 0 8px; color: #2c5530;">昆虫植物図鑑</h1>
         <p style="margin: 0 0 10px; color: #333;">日本産の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと、食草・寄主植物・訪花植物の関係を調べられるデータベースです。種名、植物名、科、出現時期から探せます。</p>
-        <p style="margin: 0 0 12px; color: #475569;">JavaScript が無効な環境では、下の静的ページや特集ページから閲覧できます。</p>
+        <p style="margin: 0 0 12px; color: #475569;">JavaScript が無効な環境では、下の静的ページや調べ方ガイドから閲覧できます。</p>
         <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
           <div>
             <h2 style="font-size: 1rem; margin: 0 0 6px; color: #1d3b24;">代表的な昆虫</h2>
@@ -321,6 +323,14 @@
               <li><a href="/guides/host-plant-search.html">食草・寄主植物から昆虫を探す</a></li>
               <li><a href="/guides/plants/">植物別につく虫を調べる</a></li>
               <li><a href="/guides/categories/">カテゴリ別につく虫を調べる</a></li>
+              <li><a href="/guides/categories/garden-trees.html">庭木につく虫</a></li>
+              <li><a href="/guides/categories/fruit-trees.html">果樹につく虫</a></li>
+              <li><a href="/guides/categories/vegetables.html">野菜につく虫</a></li>
+              <li><a href="/guides/categories/broadleaf-trees.html">広葉樹につく虫</a></li>
+              <li><a href="/guides/plants/sakura.html">サクラにつく虫</a></li>
+              <li><a href="/guides/plants/kunugi.html">クヌギにつく虫</a></li>
+              <li><a href="/guides/plants/keyaki.html">ケヤキにつく虫</a></li>
+              <li><a href="/guides/plants/jagaimo.html">ジャガイモにつく虫</a></li>
               <li><a href="/meta/moth/index.html">蛾メタページ一覧</a></li>
               <li><a href="/meta/butterfly/index.html">蝶メタページ一覧</a></li>
               <li><a href="/meta/beetle/index.html">タマムシメタページ一覧</a></li>
