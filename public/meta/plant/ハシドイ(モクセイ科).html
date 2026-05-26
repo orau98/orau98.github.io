@@ -6,13 +6,33 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <!-- Google AdSense (auto ads for meta pages) -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293" crossorigin="anonymous"></script>
+  <script>
+    (function() {
+      var loaded = false;
+      function loadAds() {
+        if (loaded || document.querySelector('script[src*="adsbygoogle.js"]')) return;
+        loaded = true;
+        var script = document.createElement('script');
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
+        document.head.appendChild(script);
+      }
+      function scheduleSoon() {
+        window.setTimeout(loadAds, 1200);
+      }
+      ['scroll', 'pointerdown', 'keydown'].forEach(function(type) {
+        window.addEventListener(type, scheduleSoon, { once: true, passive: true });
+      });
+      window.setTimeout(loadAds, 8000);
+    })();
+  </script>
   <title>ハシドイ(モクセイ科) - 昆虫植物図鑑 | 18種の昆虫が利用</title>
   <meta name="description" content="ハシドイ(モクセイ科)を食草・寄主植物とする昆虫は18種（蛾10種、蝶1種、カミキリムシ5種、ハムシ2種）。ハシドイコスガ、ウラゴマダラシジミ、ハシドイヒメハマキなどハシドイ(モクセイ科)につく幼虫・成虫の種類と生態情報。">
   <meta name="keywords" content="ハシドイ(モクセイ科),食草,植物,昆虫図鑑,生態系,ハシドイコスガ,ウラゴマダラシジミ,ハシドイヒメハマキ,シロオビチビカミキリ 基亜種,シロオビチビカミキリ 伊豆諸島亜種">
   <link rel="canonical" href="https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%89%E3%82%A4(%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91).html">
   
-  <link rel="stylesheet" href="/assets/meta-styles.css?v=3">
+  <link rel="stylesheet" href="/assets/meta-styles.css?v=4">
 
   <!-- Open Graph -->
   <meta property="og:title" content="ハシドイ(モクセイ科) - 昆虫植物図鑑 | 18種の昆虫が利用">
@@ -32,194 +52,257 @@
   <meta name="twitter:image:alt" content="ハシドイ(モクセイ科)のイメージ画像">
   
   <!-- Enhanced Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": ["Plant", "Species"],
-    "name": "ハシドイ(モクセイ科)",
-    "identifier": {
-      "@type": "PropertyValue",
-      "propertyID": "plant_name",
-      "value": "ハシドイ(モクセイ科)"
-    },
-    "description": "ハシドイ(モクセイ科)の食草植物情報。18種の昆虫がこの植物を食草として利用します.",
-    "url": "https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%89%E3%82%A4(%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91).html",
-    
-    "inLanguage": "ja",
-    "hasEcologicalInteraction": [
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "ハシドイコスガ",
-          "scientificName": "Zelleria silvicolella Moriuti, 1977"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "ウラゴマダラシジミ",
-          "scientificName": "Artopoetes pryeri Murray, 1873"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "ハシドイヒメハマキ",
-          "scientificName": "Zeiraphera corpulentana (Kennel, 1901)"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "シロオビチビカミキリ 基亜種",
-          "scientificName": "Sybra (Sybrodiboma) subfasciata subfasciata (Bates, 1884)"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "シロオビチビカミキリ 伊豆諸島亜種",
-          "scientificName": "Sybra (Sybrodiboma) subfasciata mikurensis (Hayashi, 1971)"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "カタシロゴマフカミキリ 基亜種",
-          "scientificName": "Mesosa (Perimesosa) hirsuta hirsuta Bates, 1884"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "カタシロゴマフカミキリ 屋久島亜種",
-          "scientificName": "Mesosa (Perimesosa) hirsuta albihirsuta Kusama & Takakuwa, 1984"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "カタシロゴマフカミキリ 男女諸島亜種",
-          "scientificName": "Mesosa (Perimesosa) hirsuta brevihirsuta Makihara, 1980"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "アオダモヒメハマキ",
-          "scientificName": "Rhopobota sp. 2 of Nasu, 2013"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "クロフタオ",
-          "scientificName": ""Epiplema styx" (Butler, 1881)"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "エゾウスクモエダシャク",
-          "scientificName": "Phthonandria emaria (Bremer, 1864)"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "ハガタムラサキエダシャク",
-          "scientificName": "Selenia sordidaria Leech, 1897"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "クロテンケンモンスズメ",
-          "scientificName": "Kentrochrysalis consimilis Rothschild & Jordan, 1903"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "サザナミスズメ",
-          "scientificName": "Dolbina tancrei Staudinger, 1887"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "ヒメサザナミスズメ",
-          "scientificName": "Dolbina exacta Staudinger, 1892"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "マンレイツマキリアツバ",
-          "scientificName": "Polysciera manleyi (Leech, 1900)"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "テントウノミハムシ",
-          "scientificName": "Argopistes biplagiatus Motschulsky, 1860"
-        }
-      },
-      {
-        "@type": "EcologicalInteraction",
-        "interactionType": "herbivory",
-        "participantOrganism": {
-          "@type": ["Animal", "Species"],
-          "name": "ナガハムシ",
-          "scientificName": "Orsodacne arakii Chûjô"
-        }
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": [
+    "Plant",
+    "Species"
+  ],
+  "name": "ハシドイ(モクセイ科)",
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "plant_name",
+    "value": "ハシドイ(モクセイ科)"
+  },
+  "description": "ハシドイ(モクセイ科)の食草植物情報。18種の昆虫がこの植物を食草として利用します.",
+  "url": "https://orau98.github.io/meta/plant/%E3%83%8F%E3%82%B7%E3%83%89%E3%82%A4(%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91).html",
+  "inLanguage": "ja",
+  "hasEcologicalInteraction": [
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "ハシドイコスガ",
+        "scientificName": "Zelleria silvicolella Moriuti, 1977"
       }
-    ],
-    "author": {
-      "@type": "Organization",
-      "name": "昆虫植物図鑑"
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "昆虫植物図鑑"
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "ウラゴマダラシジミ",
+        "scientificName": "Artopoetes pryeri Murray, 1873"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "ハシドイヒメハマキ",
+        "scientificName": "Zeiraphera corpulentana (Kennel, 1901)"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "シロオビチビカミキリ 基亜種",
+        "scientificName": "Sybra (Sybrodiboma) subfasciata subfasciata (Bates, 1884)"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "シロオビチビカミキリ 伊豆諸島亜種",
+        "scientificName": "Sybra (Sybrodiboma) subfasciata mikurensis (Hayashi, 1971)"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "カタシロゴマフカミキリ 基亜種",
+        "scientificName": "Mesosa (Perimesosa) hirsuta hirsuta Bates, 1884"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "カタシロゴマフカミキリ 屋久島亜種",
+        "scientificName": "Mesosa (Perimesosa) hirsuta albihirsuta Kusama & Takakuwa, 1984"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "カタシロゴマフカミキリ 男女諸島亜種",
+        "scientificName": "Mesosa (Perimesosa) hirsuta brevihirsuta Makihara, 1980"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "アオダモヒメハマキ",
+        "scientificName": "Rhopobota sp. 2 of Nasu, 2013"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "クロフタオ",
+        "scientificName": "\"Epiplema styx\" (Butler, 1881)"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "エゾウスクモエダシャク",
+        "scientificName": "Phthonandria emaria (Bremer, 1864)"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "ハガタムラサキエダシャク",
+        "scientificName": "Selenia sordidaria Leech, 1897"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "クロテンケンモンスズメ",
+        "scientificName": "Kentrochrysalis consimilis Rothschild & Jordan, 1903"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "サザナミスズメ",
+        "scientificName": "Dolbina tancrei Staudinger, 1887"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "ヒメサザナミスズメ",
+        "scientificName": "Dolbina exacta Staudinger, 1892"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "マンレイツマキリアツバ",
+        "scientificName": "Polysciera manleyi (Leech, 1900)"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "テントウノミハムシ",
+        "scientificName": "Argopistes biplagiatus Motschulsky, 1860"
+      }
+    },
+    {
+      "@type": "EcologicalInteraction",
+      "interactionType": "herbivory",
+      "participantOrganism": {
+        "@type": [
+          "Animal",
+          "Species"
+        ],
+        "name": "ナガハムシ",
+        "scientificName": "Orsodacne arakii Chûjô"
+      }
     }
-  }
-  </script>
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "昆虫植物図鑑"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "昆虫植物図鑑"
+  },
+  "citation": [
+    "広渡 俊哉・那須 義次・坂巻 祥孝 (2013)",
+    "白水 隆 (2006)",
+    "大林 延夫・新里 達也 (2007)",
+    "那須 義次 (2021)",
+    "岸田泰則 (2011)",
+    "滝沢 春雄 (2012)",
+    "尾園 暁 (2014)"
+  ]
+}</script>
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -230,7 +313,7 @@
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="/meta/plant/%E3%83%8F%E3%82%B7%E3%83%89%E3%82%A4(%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91).html" class="meta-site-header-link">図鑑で見る →</a>
+      <a href="/?tab=plants&amp;q=%E3%83%8F%E3%82%B7%E3%83%89%E3%82%A4%28%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91%29" class="meta-site-header-link">図鑑で検索 →</a>
     </div>
   </header>
 
@@ -284,6 +367,17 @@
         <p>ハシドイ(モクセイ科)は、昆虫の食草として重要な役割を果たしている植物です。</p>
         <p>この植物を食草として利用する昆虫は18種確認されており、生態系において多様な昆虫の生活を支える重要な植物資源となっています。</p>
         <p><strong>蛾</strong>では10種が確認されており、<a href="/meta/moth/species-0640.html">ハシドイコスガ</a>、<a href="/meta/moth/species-2197.html">ハシドイヒメハマキ</a>、<a href="/meta/moth/species-2305.html">アオダモヒメハマキ</a>などがこの植物を利用しています。</p><p><strong>蝶</strong>では1種が確認されており、<a href="/meta/butterfly/species-20227.html">ウラゴマダラシジミ</a>がこの植物を利用しています。</p><p><strong>カミキリムシ</strong>では5種が確認されており、<a href="/meta/longhornbeetle/species-22642.html">シロオビチビカミキリ 基亜種</a>、<a href="/meta/longhornbeetle/species-22643.html">シロオビチビカミキリ 伊豆諸島亜種</a>、<a href="/meta/longhornbeetle/species-22890.html">カタシロゴマフカミキリ 基亜種</a>などがこの植物を利用しています。</p><p><strong>ハムシ</strong>では2種が確認されており、<a href="/meta/leafbeetle/species-H031.html">テントウノミハムシ</a>、<a href="/meta/leafbeetle/species-H627.html">ナガハムシ</a>がこの植物を利用しています。</p>
+        
+        <h4>出典</h4>
+        <ol class="citation-list">
+          <li><cite><a href="https://ndlsearch.ndl.go.jp/books/R100000002-I024199485" target="_blank" rel="noopener noreferrer">広渡 俊哉・那須 義次・坂巻 祥孝 (2013)</a></cite></li>
+          <li><cite><a href="https://hon.gakken.jp/book/1320229601" target="_blank" rel="noopener noreferrer">白水 隆 (2006)</a></cite></li>
+          <li><cite><a href="https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283" target="_blank" rel="noopener noreferrer">大林 延夫・新里 達也 (2007)</a></cite></li>
+          <li><cite><a href="https://www.moth.jp/" target="_blank" rel="noopener noreferrer">那須 義次 (2021)</a></cite></li>
+          <li><cite><a href="https://ndlsearch.ndl.go.jp/books/R100000002-I000011161861" target="_blank" rel="noopener noreferrer">岸田泰則 (2011)</a></cite></li>
+          <li><cite>滝沢 春雄 (2012)</cite></li>
+          <li><cite><a href="https://ndlsearch.ndl.go.jp/books/R100000002-I025611359" target="_blank" rel="noopener noreferrer">尾園 暁 (2014)</a></cite></li>
+        </ol>
       </section>
       
       <section class="related-insects">
@@ -418,6 +512,7 @@
     
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
+      <a href="/?tab=plants&amp;q=%E3%83%8F%E3%82%B7%E3%83%89%E3%82%A4%28%E3%83%A2%E3%82%AF%E3%82%BB%E3%82%A4%E7%A7%91%29" class="detail-link">図鑑で検索</a>
     </section>
   </div>
   
