@@ -138,6 +138,30 @@ const buildPlantProfileRouteShell = (indexHtml, plantName) => {
     : indexHtml.replace('</head>', `${routeFlag}  </head>`);
 };
 
+const readTextIfExists = (filePath) => {
+  if (!fs.existsSync(filePath)) return '';
+  return fs.readFileSync(filePath, 'utf8');
+};
+
+const isPlantProfileRouteShell = (html) => html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER);
+
+const getPlantRouteIndexPaths = (plantName) => {
+  const encodedPlantName = encodeURIComponent(plantName);
+  const decodedPath = path.join('dist', 'plant', plantName, 'index.html');
+  const encodedPath = path.join('dist', 'plant', encodedPlantName, 'index.html');
+  return encodedPath === decodedPath ? [decodedPath] : [decodedPath, encodedPath];
+};
+
+const findExistingStaticPlantRoute = (plantName) => {
+  for (const filePath of getPlantRouteIndexPaths(plantName)) {
+    const html = readTextIfExists(filePath);
+    if (html && !isPlantProfileRouteShell(html)) {
+      return { filePath, html };
+    }
+  }
+  return null;
+};
+
 const isSafePlantRouteSegment = (name) => {
   const value = String(name || '').trim();
   return Boolean(value && !/[\/\\\0]/.test(value));
@@ -152,6 +176,7 @@ const ensurePlantProfileRouteShells = () => {
     const indexHtml = fs.readFileSync(indexPath, 'utf8');
     const plantDetails = JSON.parse(fs.readFileSync(plantDetailsPath, 'utf8'));
     let count = 0;
+    let preserved = 0;
     let skipped = 0;
 
     for (const [plantName, detail] of Object.entries(plantDetails)) {
@@ -161,9 +186,20 @@ const ensurePlantProfileRouteShells = () => {
         continue;
       }
       const routeDir = path.join('dist', 'plant', plantName);
+      const routeIndexPath = path.join(routeDir, 'index.html');
+      const staticRoute = findExistingStaticPlantRoute(plantName);
+      if (staticRoute) {
+        fs.mkdirSync(routeDir, { recursive: true });
+        if (readTextIfExists(routeIndexPath) !== staticRoute.html) {
+          fs.writeFileSync(routeIndexPath, staticRoute.html, 'utf8');
+        }
+        preserved++;
+        continue;
+      }
+
       fs.mkdirSync(routeDir, { recursive: true });
       fs.writeFileSync(
-        path.join(routeDir, 'index.html'),
+        routeIndexPath,
         buildPlantProfileRouteShell(indexHtml, plantName),
         'utf8',
       );
@@ -171,6 +207,9 @@ const ensurePlantProfileRouteShells = () => {
     }
 
     console.log(`[postbuild] Synced ${count} plant profile SPA route shell(s).`);
+    if (preserved) {
+      console.log(`[postbuild] Preserved ${preserved} static plant redirect route(s).`);
+    }
     if (skipped) {
       console.warn(`[postbuild] Skipped ${skipped} plant profile route shell(s) with unsafe path characters.`);
     }

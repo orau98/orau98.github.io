@@ -26,10 +26,8 @@ const withTimeout = (promise, timeoutMs, errorMessage = 'タイムアウトし�
 // タイムアウト設定付き（デフォルト15秒）
 export default function lazyWithRetry(
   importer,
-  { retries = 2, delay = 700, timeout = 15000 } = {}
+  { retries = 2, delay = 700, timeout = 30000 } = {}
 ) {
-  let attempt = 0;
-
   const shouldRetry = (err) => {
     const message = (err && err.message) || '';
     // 429/503 from CDNs come through as TypeError: Failed to fetch...
@@ -49,18 +47,22 @@ export default function lazyWithRetry(
     'コンポーネントの読み込みがタイムアウトしました'
   );
 
-  return React.lazy(() =>
-    importWithTimeout().catch((error) => {
-      if (attempt < retries && shouldRetry(error)) {
+  return React.lazy(async () => {
+    let lastError;
+
+    for (let attempt = 0; attempt <= retries; attempt += 1) {
+      try {
+        return await importWithTimeout();
+      } catch (error) {
+        lastError = error;
+        if (attempt >= retries || !shouldRetry(error)) {
+          break;
+        }
         const wait = delay * 2 ** attempt;
-        attempt += 1;
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            importWithTimeout().then(resolve).catch(reject);
-          }, wait);
-        });
+        await new Promise((resolve) => setTimeout(resolve, wait));
       }
-      throw error;
-    }),
-  );
+    }
+
+    throw lastError;
+  });
 }

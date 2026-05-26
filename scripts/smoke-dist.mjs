@@ -41,6 +41,9 @@ function assert(condition, message) {
   }
 }
 
+const readDistText = (relativePath) =>
+  fs.readFileSync(path.join(DIST_DIR, relativePath), 'utf8');
+
 assert(fs.existsSync(DIST_DIR), 'dist directory not found');
 
 for (const relativePath of REQUIRED_FILES) {
@@ -54,5 +57,35 @@ assert(fs.existsSync(assetsDir), 'missing dist/assets directory');
 const assetFiles = fs.readdirSync(assetsDir);
 assert(assetFiles.some((name) => /^index-.*\.js$/.test(name)), 'missing built JS asset in dist/assets');
 assert(assetFiles.some((name) => /^index-.*\.css$/.test(name)), 'missing built CSS asset in dist/assets');
+
+const okinagusaRoutePath = path.join('plant', 'オキナグサ', 'index.html');
+assert(
+  fs.existsSync(path.join(DIST_DIR, okinagusaRoutePath)),
+  'missing decoded オキナグサ plant route',
+);
+const okinagusaRouteHtml = readDistText(okinagusaRoutePath);
+assert(
+  !okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__'),
+  'オキナグサ direct route must not be overwritten by the SPA plant shell',
+);
+assert(
+  /http-equiv=["']refresh["']/i.test(okinagusaRouteHtml) &&
+    okinagusaRouteHtml.includes('/meta/plant/'),
+  'オキナグサ direct route must redirect to its static meta page',
+);
+
+const okinagusaImagePath = '/images/resized/plants/%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5.1024.jpg';
+const okinagusaMetaCandidates = [
+  path.join('meta', 'plant', 'オキナグサ.html'),
+  path.join('meta', 'plant', 'オキナグサ(キク科).html'),
+  path.join('meta', 'plant', 'オキナグサ(キンポウゲ科).html'),
+];
+assert(
+  okinagusaMetaCandidates.some((relativePath) => {
+    const fullPath = path.join(DIST_DIR, relativePath);
+    return fs.existsSync(fullPath) && readDistText(relativePath).includes(okinagusaImagePath);
+  }),
+  'オキナグサ static meta page must include the responsive plant image',
+);
 
 console.log('[smoke-dist] ok');
