@@ -48,6 +48,12 @@ const parseRetryAfterMs = (raw) => {
   return clampRetryWaitMs(at - Date.now());
 };
 
+const summarizeResponseText = (text = '', maxLength = 500) => {
+  const compact = String(text || '').replace(/\s+/g, ' ').trim();
+  if (compact.length <= maxLength) return compact;
+  return `${compact.slice(0, maxLength)}...`;
+};
+
 const fetchWithRetry = async (url, options = {}, { label = 'request', retries = REQUEST_RETRY_LIMIT } = {}) => {
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     try {
@@ -196,6 +202,11 @@ const getCacheAgeHours = (generatedAt = '') => {
   return Math.max(0, (Date.now() - generatedMs) / 3600000);
 };
 
+const isInstagramAuthFailureMessage = (message = '') =>
+  /(?:Error validating access token|Session has expired|Invalid OAuth access token|Cannot parse access token|OAuthException)/i.test(
+    message,
+  );
+
 const extractUsernameFromPostHtml = (html = '') => {
   if (!html) return '';
   const patterns = [
@@ -302,7 +313,7 @@ const fetchPostsFromPublicProfile = async (username, limit) => {
   }, { label: `public profile @${normalizedUsername}` });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`[instagram] Public profile fallback failed: ${res.status} ${res.statusText} ${text}`.trim());
+    throw new Error(`[instagram] Public profile fallback failed: ${res.status} ${res.statusText} ${summarizeResponseText(text)}`.trim());
   }
   const json = await res.json();
   const edges = json?.data?.user?.edge_owner_to_timeline_media?.edges;
@@ -436,7 +447,14 @@ const main = async () => {
       throw new Error(`[instagram] Fetch failed. ${errors.join(' | ')} | Could not resolve Instagram username for public fallback.`.trim());
     }
     console.warn(`[instagram] Falling back to public profile scraping for @${username}`);
-    items = await fetchPostsFromPublicProfile(username, minFetchCount);
+    try {
+      items = await fetchPostsFromPublicProfile(username, minFetchCount);
+    } catch (error) {
+      if (errors.some(isInstagramAuthFailureMessage)) {
+        throw new Error(`${error?.message || error} | ${errors.join(' | ')}`.trim());
+      }
+      throw error;
+    }
     fetchSource = 'public-profile-fallback';
   }
 
@@ -527,6 +545,17 @@ main().catch((err) => {
   if (message.includes('[instagram]') && hasCache && cacheAgeHours <= CACHE_MAX_AGE_HOURS) {
     const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
     console.warn(message);
+    console.warn(
+      `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
+    );
+    process.exit(0);
+  }
+  if (message.includes('[instagram]') && hasCache && isInstagramAuthFailureMessage(message)) {
+    const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
+    console.warn(message);
+    console.warn(
+      '::warning title=Instagram token refresh needed::Instagram access token is expired or invalid; keeping existing cached Instagram data until the repository secret is refreshed.',
+    );
     console.warn(
       `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
     );
