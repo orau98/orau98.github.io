@@ -3,6 +3,7 @@ import path from 'path';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
+const RESPONSIVE_IMAGES_SKIPPED = process.env.SKIP_RESPONSIVE_IMAGES === '1';
 const REQUIRED_FILES = [
   'index.html',
   '.nojekyll',
@@ -76,10 +77,12 @@ assert(
 
 const okinagusaImagePath = '/images/resized/plants/%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5.1024.jpg';
 const okinagusaImageFile = path.join(DIST_DIR, 'images', 'resized', 'plants', 'オキナグサ.1024.jpg');
-assert(
-  fs.existsSync(okinagusaImageFile) && fs.statSync(okinagusaImageFile).size > 0,
-  'missing deployed オキナグサ responsive image file',
-);
+if (!RESPONSIVE_IMAGES_SKIPPED) {
+  assert(
+    fs.existsSync(okinagusaImageFile) && fs.statSync(okinagusaImageFile).size > 0,
+    'missing deployed オキナグサ responsive image file',
+  );
+}
 const okinagusaMetaCandidates = [
   path.join('meta', 'plant', 'オキナグサ.html'),
   path.join('meta', 'plant', 'オキナグサ(キク科).html'),
