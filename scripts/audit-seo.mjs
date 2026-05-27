@@ -147,11 +147,18 @@ const resolveSitePathToDistPath = (hrefOrPath) => {
   if (pathname === '/' || pathname === '') {
     return path.join(DIST_DIR, 'index.html');
   }
+  const rawSegments = pathname
+    .split('/')
+    .filter(Boolean);
   const decodedSegments = pathname
     .split('/')
     .filter(Boolean)
     .map((segment) => decodeURIComponent(segment));
-  return path.join(DIST_DIR, ...decodedSegments);
+  const decodedPath = path.join(DIST_DIR, ...decodedSegments);
+  const rawPath = path.join(DIST_DIR, ...rawSegments);
+  if (fs.existsSync(decodedPath)) return decodedPath;
+  if (fs.existsSync(rawPath)) return rawPath;
+  return decodedPath;
 };
 
 const resolveCanonicalToDistPath = (href) => resolveSitePathToDistPath(href);
@@ -386,7 +393,7 @@ for (const relativeDir of legacyRouteDirs) {
   legacyRedirectFilesCount += redirectFiles.length;
   for (const filePath of redirectFiles) {
     const html = readFile(filePath);
-    if (relativeDir === 'plant') {
+    if (relativeDir === 'plant' || relativeDir === 'en/plant') {
       validatePlantRouteHtml(filePath, html);
     } else {
       validateLegacyRedirectHtml(filePath, html);

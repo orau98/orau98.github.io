@@ -59,20 +59,39 @@ const assetFiles = fs.readdirSync(assetsDir);
 assert(assetFiles.some((name) => /^index-.*\.js$/.test(name)), 'missing built JS asset in dist/assets');
 assert(assetFiles.some((name) => /^index-.*\.css$/.test(name)), 'missing built CSS asset in dist/assets');
 
-const okinagusaRoutePath = path.join('plant', 'オキナグサ', 'index.html');
+const okinagusaRoutePath = path.join('plant', '%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5', 'index.html');
 assert(
   fs.existsSync(path.join(DIST_DIR, okinagusaRoutePath)),
-  'missing decoded オキナグサ plant route',
+  'missing オキナグサ plant app route',
 );
 const okinagusaRouteHtml = readDistText(okinagusaRoutePath);
 assert(
-  !okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__'),
-  'オキナグサ direct route must not be overwritten by the SPA plant shell',
+  okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
+    okinagusaRouteHtml.includes('/assets/index-') &&
+    okinagusaRouteHtml.includes('<div id="root"></div>'),
+  'オキナグサ direct route must serve the Japanese SPA plant shell',
 );
 assert(
-  /http-equiv=["']refresh["']/i.test(okinagusaRouteHtml) &&
-    okinagusaRouteHtml.includes('/meta/plant/'),
-  'オキナグサ direct route must redirect to its static meta page',
+  !/http-equiv=["']refresh["']/i.test(okinagusaRouteHtml),
+  'オキナグサ direct route must not redirect away from the app plant detail',
+);
+
+const okinagusaEnglishRoutePath = path.join('en', 'plant', '%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5', 'index.html');
+assert(
+  fs.existsSync(path.join(DIST_DIR, okinagusaEnglishRoutePath)),
+  'missing English オキナグサ plant app route',
+);
+const okinagusaEnglishRouteHtml = readDistText(okinagusaEnglishRoutePath);
+assert(
+  okinagusaEnglishRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
+    okinagusaEnglishRouteHtml.includes('<html lang="en"') &&
+    okinagusaEnglishRouteHtml.includes('/assets/index-') &&
+    okinagusaEnglishRouteHtml.includes('<div id="root"></div>'),
+  'English オキナグサ direct route must serve the English SPA plant shell',
+);
+assert(
+  !/http-equiv=["']refresh["']/i.test(okinagusaEnglishRouteHtml),
+  'English オキナグサ direct route must not redirect away from the app plant detail',
 );
 
 const okinagusaImagePath = '/images/resized/plants/%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5.1024.jpg';

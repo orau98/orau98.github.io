@@ -276,11 +276,51 @@ const ensureSpaRouteShells = () => {
   }
 };
 
-const buildPlantProfileRouteShell = (indexHtml, plantName) => {
+const buildPlantRouteMetadata = (plantName, locale) => {
+  const encodedPlantName = encodeURIComponent(plantName);
+  if (locale === 'en') {
+    return {
+      lang: 'en',
+      title: `${plantName} | Plant Profile | ${EN_SITE_NAME}`,
+      description: `Interactive plant profile for ${plantName}, showing recorded plant-insect relationships from Japan.`,
+      canonicalPath: `/en/plant/${encodedPlantName}`,
+      alternates: [
+        { hreflang: 'ja', path: `/plant/${encodedPlantName}` },
+        { hreflang: 'en', path: `/en/plant/${encodedPlantName}` },
+        { hreflang: 'x-default', path: `/en/plant/${encodedPlantName}` },
+      ],
+      appName: EN_SITE_NAME,
+      appleTitle: EN_SITE_NAME,
+      ogTitle: `${plantName} | Plant Profile | ${EN_SITE_NAME}`,
+      ogDescription: `Explore insects recorded from ${plantName} and related host-plant records from Japan.`,
+      siteName: EN_SITE_NAME,
+      author: EN_SITE_NAME,
+      keywords: `${plantName}, Japanese host plants, plant-insect relationships, Japan biodiversity`,
+      ogLocale: 'en_US',
+      imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
+    };
+  }
+  return {
+    lang: 'ja',
+    title: `${plantName} | 昆虫植物図鑑`,
+    description: `${plantName}を利用する昆虫と食草・訪花関係を検索できる昆虫植物図鑑の植物詳細ページ。`,
+    canonicalPath: `/plant/${encodedPlantName}`,
+    alternates: [
+      { hreflang: 'ja', path: `/plant/${encodedPlantName}` },
+      { hreflang: 'en', path: `/en/plant/${encodedPlantName}` },
+      { hreflang: 'x-default', path: `/en/plant/${encodedPlantName}` },
+    ],
+    ogTitle: `${plantName} | 昆虫植物図鑑`,
+    ogDescription: `${plantName}を利用する昆虫と食草・訪花関係を検索できます。`,
+  };
+};
+
+const buildPlantProfileRouteShell = (indexHtml, plantName, locale = 'ja') => {
   const routeFlag = `    <script>${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>\n`;
-  return indexHtml.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
-    ? indexHtml
-    : indexHtml.replace('</head>', `${routeFlag}  </head>`);
+  const html = buildSpaRouteShell(indexHtml, buildPlantRouteMetadata(plantName, locale));
+  return html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
+    ? html
+    : html.replace('</head>', `${routeFlag}  </head>`);
 };
 
 const readTextIfExists = (filePath) => {
@@ -288,76 +328,49 @@ const readTextIfExists = (filePath) => {
   return fs.readFileSync(filePath, 'utf8');
 };
 
-const isPlantProfileRouteShell = (html) => html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER);
-
-const getPlantRouteIndexPaths = (plantName) => {
-  const encodedPlantName = encodeURIComponent(plantName);
-  const decodedPath = path.join('dist', 'plant', plantName, 'index.html');
-  const encodedPath = path.join('dist', 'plant', encodedPlantName, 'index.html');
-  return encodedPath === decodedPath ? [decodedPath] : [decodedPath, encodedPath];
-};
-
-const findExistingStaticPlantRoute = (plantName) => {
-  for (const filePath of getPlantRouteIndexPaths(plantName)) {
-    const html = readTextIfExists(filePath);
-    if (html && !isPlantProfileRouteShell(html)) {
-      return { filePath, html };
-    }
+const decodeRouteSegment = (segment) => {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
   }
-  return null;
 };
 
-const isSafePlantRouteSegment = (name) => {
-  const value = String(name || '').trim();
-  return Boolean(value && !/[\/\\\0]/.test(value));
+const collectExistingPlantRouteIndexes = (baseDir) => {
+  if (!fs.existsSync(baseDir)) return [];
+  return fs.readdirSync(baseDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => ({
+      plantName: decodeRouteSegment(entry.name),
+      indexPath: path.join(baseDir, entry.name, 'index.html'),
+    }))
+    .filter(({ indexPath }) => fs.existsSync(indexPath));
 };
 
 const ensurePlantProfileRouteShells = () => {
   try {
     const indexPath = path.join('dist', 'index.html');
-    const plantDetailsPath = path.join('dist', 'assets', 'data-lite', 'plant-details.json');
-    if (!fs.existsSync(indexPath) || !fs.existsSync(plantDetailsPath)) return;
+    if (!fs.existsSync(indexPath)) return;
 
     const indexHtml = fs.readFileSync(indexPath, 'utf8');
-    const plantDetails = JSON.parse(fs.readFileSync(plantDetailsPath, 'utf8'));
+    const routeGroups = [
+      { baseDir: path.join('dist', 'plant'), locale: 'ja' },
+      { baseDir: path.join('dist', 'en', 'plant'), locale: 'en' },
+    ];
     let count = 0;
-    let preserved = 0;
-    let skipped = 0;
 
-    for (const [plantName, detail] of Object.entries(plantDetails)) {
-      if (!detail?.profile) continue;
-      if (!isSafePlantRouteSegment(plantName)) {
-        skipped++;
-        continue;
-      }
-      const routeDir = path.join('dist', 'plant', plantName);
-      const routeIndexPath = path.join(routeDir, 'index.html');
-      const staticRoute = findExistingStaticPlantRoute(plantName);
-      if (staticRoute) {
-        fs.mkdirSync(routeDir, { recursive: true });
-        if (readTextIfExists(routeIndexPath) !== staticRoute.html) {
-          fs.writeFileSync(routeIndexPath, staticRoute.html, 'utf8');
+    for (const { baseDir, locale } of routeGroups) {
+      const routes = collectExistingPlantRouteIndexes(baseDir);
+      for (const { plantName, indexPath: routeIndexPath } of routes) {
+        const shellHtml = buildPlantProfileRouteShell(indexHtml, plantName, locale);
+        if (readTextIfExists(routeIndexPath) !== shellHtml) {
+          fs.writeFileSync(routeIndexPath, shellHtml, 'utf8');
         }
-        preserved++;
-        continue;
+        count++;
       }
-
-      fs.mkdirSync(routeDir, { recursive: true });
-      fs.writeFileSync(
-        routeIndexPath,
-        buildPlantProfileRouteShell(indexHtml, plantName),
-        'utf8',
-      );
-      count++;
     }
 
     console.log(`[postbuild] Synced ${count} plant profile SPA route shell(s).`);
-    if (preserved) {
-      console.log(`[postbuild] Preserved ${preserved} static plant redirect route(s).`);
-    }
-    if (skipped) {
-      console.warn(`[postbuild] Skipped ${skipped} plant profile route shell(s) with unsafe path characters.`);
-    }
   } catch (error) {
     console.warn('[postbuild] Failed to sync plant profile SPA route shells:', error?.message || error);
   }
