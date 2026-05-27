@@ -336,15 +336,25 @@ const decodeRouteSegment = (segment) => {
   }
 };
 
+const isSafeRouteSegment = (segment) => {
+  const value = String(segment || '').trim();
+  return Boolean(value && !/[\/\\\0]/.test(value));
+};
+
 const collectExistingPlantRouteIndexes = (baseDir) => {
   if (!fs.existsSync(baseDir)) return [];
   return fs.readdirSync(baseDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .map((entry) => ({
-      plantName: decodeRouteSegment(entry.name),
-      indexPath: path.join(baseDir, entry.name, 'index.html'),
-    }))
-    .filter(({ indexPath }) => fs.existsSync(indexPath));
+    .map((entry) => {
+      const plantName = decodeRouteSegment(entry.name);
+      return {
+        plantName,
+        sourceDir: path.join(baseDir, entry.name),
+        targetDir: path.join(baseDir, plantName),
+        indexPath: path.join(baseDir, entry.name, 'index.html'),
+      };
+    })
+    .filter(({ plantName, indexPath }) => isSafeRouteSegment(plantName) && fs.existsSync(indexPath));
 };
 
 const ensurePlantProfileRouteShells = () => {
@@ -361,10 +371,15 @@ const ensurePlantProfileRouteShells = () => {
 
     for (const { baseDir, locale } of routeGroups) {
       const routes = collectExistingPlantRouteIndexes(baseDir);
-      for (const { plantName, indexPath: routeIndexPath } of routes) {
+      for (const { plantName, sourceDir, targetDir } of routes) {
+        const routeIndexPath = path.join(targetDir, 'index.html');
         const shellHtml = buildPlantProfileRouteShell(indexHtml, plantName, locale);
+        fs.mkdirSync(targetDir, { recursive: true });
         if (readTextIfExists(routeIndexPath) !== shellHtml) {
           fs.writeFileSync(routeIndexPath, shellHtml, 'utf8');
+        }
+        if (sourceDir !== targetDir && fs.existsSync(sourceDir)) {
+          fs.rmSync(sourceDir, { recursive: true, force: true });
         }
         count++;
       }

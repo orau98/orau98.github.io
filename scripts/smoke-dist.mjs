@@ -59,7 +59,7 @@ const assetFiles = fs.readdirSync(assetsDir);
 assert(assetFiles.some((name) => /^index-.*\.js$/.test(name)), 'missing built JS asset in dist/assets');
 assert(assetFiles.some((name) => /^index-.*\.css$/.test(name)), 'missing built CSS asset in dist/assets');
 
-const okinagusaRoutePath = path.join('plant', '%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5', 'index.html');
+const okinagusaRoutePath = path.join('plant', 'オキナグサ', 'index.html');
 assert(
   fs.existsSync(path.join(DIST_DIR, okinagusaRoutePath)),
   'missing オキナグサ plant app route',
@@ -76,7 +76,7 @@ assert(
   'オキナグサ direct route must not redirect away from the app plant detail',
 );
 
-const okinagusaEnglishRoutePath = path.join('en', 'plant', '%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5', 'index.html');
+const okinagusaEnglishRoutePath = path.join('en', 'plant', 'オキナグサ', 'index.html');
 assert(
   fs.existsSync(path.join(DIST_DIR, okinagusaEnglishRoutePath)),
   'missing English オキナグサ plant app route',
