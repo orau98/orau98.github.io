@@ -542,20 +542,28 @@ main().catch((err) => {
   const cache = loadExistingCacheInfo();
   const hasCache = cache.urlCount > 0 || cache.postCount > 0;
   const cacheAgeHours = getCacheAgeHours(cache.generatedAt);
-  if (message.includes('[instagram]') && hasCache && cacheAgeHours <= CACHE_MAX_AGE_HOURS) {
-    const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
-    console.warn(message);
-    console.warn(
-      `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
-    );
-    process.exit(0);
-  }
+  const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
+  const cacheAgeLabel = cacheAgeHours === Infinity ? 'unknown' : `${cacheAgeHours.toFixed(1)}h`;
+
   if (message.includes('[instagram]') && hasCache && isInstagramAuthFailureMessage(message)) {
-    const cacheAge = cache.generatedAt ? `, last successful refresh ${cache.generatedAt}` : '';
     console.warn(message);
     console.warn(
-      '::warning title=Instagram token refresh needed::Instagram access token is expired or invalid; keeping existing cached Instagram data until the repository secret is refreshed.',
+      '::warning title=Instagram token refresh needed::Instagram access token is expired or invalid. Refresh IG_ACCESS_TOKEN / IG_USER_ID to keep the feed updating reliably.',
     );
+    if (cacheAgeHours <= CACHE_MAX_AGE_HOURS) {
+      console.warn(
+        `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
+      );
+      process.exit(0);
+    }
+    console.error(
+      `[instagram] Existing cached data is stale (${cacheAgeLabel} old, max ${CACHE_MAX_AGE_HOURS}h). Failing the workflow so the feed does not silently stay old.`,
+    );
+    process.exit(1);
+  }
+
+  if (message.includes('[instagram]') && hasCache && cacheAgeHours <= CACHE_MAX_AGE_HOURS) {
+    console.warn(message);
     console.warn(
       `[instagram] Keeping existing cached data (${cache.urlCount} URL(s), ${cache.postCount} post(s)${cacheAge}).`,
     );
@@ -564,7 +572,7 @@ main().catch((err) => {
   if (message.includes('[instagram]') && hasCache) {
     console.error(message);
     console.error(
-      `[instagram] Existing cached data is stale (${cacheAgeHours === Infinity ? 'unknown' : cacheAgeHours.toFixed(1)}h old, max ${CACHE_MAX_AGE_HOURS}h). Failing the workflow so the feed does not silently stay old.`,
+      `[instagram] Existing cached data is stale (${cacheAgeLabel} old, max ${CACHE_MAX_AGE_HOURS}h). Failing the workflow so the feed does not silently stay old.`,
     );
     process.exit(1);
   }

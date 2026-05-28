@@ -54,6 +54,21 @@ const getPapa = async () => {
 
 const STATIC_DOCUMENT_PATHS = new Set(['/sitemap.html']);
 const STATIC_DOCUMENT_PREFIXES = ['/guides/', '/en/guides/', '/meta/', '/en/meta/'];
+const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = [
+  'q',
+  'search',
+  'term',
+  'classification',
+  'page',
+  'ipage',
+  'ihost',
+  'ifamily',
+  'igenus',
+  'imonth',
+  'pfamily',
+  'porder',
+  'pvisit',
+];
 
 const isStaticDocumentPath = (pathname = '') => {
   const value = String(pathname || '').trim();
@@ -61,6 +76,9 @@ const isStaticDocumentPath = (pathname = '') => {
   if (STATIC_DOCUMENT_PATHS.has(value)) return true;
   return STATIC_DOCUMENT_PREFIXES.some((prefix) => value.startsWith(prefix));
 };
+
+const hasImmediateInsectDataParams = (params) =>
+  INSECT_DATA_IMMEDIATE_QUERY_PARAMS.some((name) => params.has(name));
 
 function App() {
   const location = useLocation();
@@ -84,6 +102,9 @@ function App() {
   const fetchDataRef = useRef(null);
   const fetchSeqRef = useRef(0);
   const fetchAbortRef = useRef(null);
+  const insectDataLoadTimerRef = useRef(null);
+  const insectDataLoadScheduledRef = useRef(false);
+  const insectDataInteractionCleanupRef = useRef(null);
   const [theme, setTheme] = useState(() => {
     try {
       // 1. 保存された設定があればそれを使用
@@ -245,8 +266,26 @@ function App() {
   };
 
   useEffect(() => {
-    // 画像インデックスをアプリ起動直後にプリフェッチし、初回表示での画像欠落を防ぐ
-    loadInsectImageIndexes().catch(() => {});
+    const loadIndexes = () => loadInsectImageIndexes().catch(() => {});
+    let timerId = null;
+    let idleId = null;
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(loadIndexes, { timeout: 2500 });
+    } else if (typeof window !== 'undefined') {
+      timerId = window.setTimeout(loadIndexes, 1800);
+    } else {
+      loadIndexes();
+    }
+
+    return () => {
+      if (idleId !== null && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timerId !== null && typeof window !== 'undefined') {
+        window.clearTimeout(timerId);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -373,6 +412,10 @@ function App() {
           manifest = await manifestRes.json();
           if (!shouldContinue()) return;
           manifestVersion = manifest?.version || null;
+          if (manifest?.counts && !cacheLoadedRef.current) {
+            setSummaryCounts((prev) => prev || manifest.counts);
+            setLoading(false);
+          }
           versionSuffix = import.meta.env.DEV
             ? `?v=${Date.now()}`
             : manifestVersion
@@ -572,22 +615,12 @@ function App() {
                 const params = new URLSearchParams(
                   typeof window !== 'undefined' ? window.location.search || '' : '',
                 );
-                const initialTab = params.get('tab') || 'insects';
-                if (initialTab !== 'plants') {
+                const pathname = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
+                if (!isExplorerRoutePath(pathname) || hasImmediateInsectDataParams(params)) {
                   startFetchTypes();
-                } else {
-                  const delay = 5000;
-                  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-                    setTimeout(
-                      () => window.requestIdleCallback(() => startFetchTypes(), { timeout: 2000 }),
-                      delay,
-                    );
-                  } else {
-                    setTimeout(() => startFetchTypes(), delay);
-                  }
                 }
               } catch (error) {
-                logger.debug('Failed to interpret initial tab, fetching insects immediately:', error);
+                logger.debug('Failed to interpret route data need, fetching insects immediately:', error);
                 startFetchTypes();
               }
 
@@ -6166,6 +6199,12 @@ function App() {
           fetchAbortRef.current.abort();
         } catch {}
       }
+      if (insectDataLoadTimerRef.current) {
+        window.clearTimeout(insectDataLoadTimerRef.current);
+        insectDataLoadTimerRef.current = null;
+      }
+      insectDataInteractionCleanupRef.current && insectDataInteractionCleanupRef.current();
+      insectDataInteractionCleanupRef.current = null;
     };
   }, []); // Close useEffect and add dependency array
 
@@ -6266,10 +6305,61 @@ function App() {
 
   logger.debug("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
 
-  const triggerInsectsDataLoad = () => {
+  const hasLoadedInsectPartitions =
+    moths.length +
+      butterflies.length +
+      beetles.length +
+      longhornbeetles.length +
+      leafbeetles.length +
+      aphids.length >
+    0;
+
+  const clearScheduledInsectDataLoad = () => {
+    if (insectDataLoadTimerRef.current && typeof window !== 'undefined') {
+      window.clearTimeout(insectDataLoadTimerRef.current);
+      insectDataLoadTimerRef.current = null;
+    }
+    insectDataInteractionCleanupRef.current && insectDataInteractionCleanupRef.current();
+    insectDataInteractionCleanupRef.current = null;
+    insectDataLoadScheduledRef.current = false;
+  };
+
+  const runInsectDataLoad = () => {
+    clearScheduledInsectDataLoad();
     try {
       ensureTypesLoaderRef.current && ensureTypesLoaderRef.current();
     } catch {}
+  };
+
+  const currentRouteNeedsInsectsImmediately = () => {
+    try {
+      const params = new URLSearchParams(location.search || '');
+      return !isExplorerPage || hasImmediateInsectDataParams(params);
+    } catch {
+      return true;
+    }
+  };
+
+  const triggerInsectsDataLoad = ({ immediate = false } = {}) => {
+    if (hasLoadedInsectPartitions) return;
+    if (immediate || currentRouteNeedsInsectsImmediately()) {
+      runInsectDataLoad();
+      return;
+    }
+    if (insectDataLoadScheduledRef.current || typeof window === 'undefined') return;
+    insectDataLoadScheduledRef.current = true;
+
+    const handleInteraction = () => runInsectDataLoad();
+    const events = ['pointerdown', 'keydown', 'scroll'];
+    events.forEach((eventName) => {
+      window.addEventListener(eventName, handleInteraction, { once: true, passive: true });
+    });
+    insectDataInteractionCleanupRef.current = () => {
+      events.forEach((eventName) => {
+        window.removeEventListener(eventName, handleInteraction);
+      });
+    };
+    insectDataLoadTimerRef.current = window.setTimeout(runInsectDataLoad, 1800);
   };
 
   const triggerPlantsDataLoad = () => {

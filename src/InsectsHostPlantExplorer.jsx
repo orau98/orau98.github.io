@@ -1158,19 +1158,6 @@ const InsectsHostPlantExplorer = memo(
       return () => window.removeEventListener("keydown", handleShortcut);
     }, [isStickyHeaderVisible]);
 
-    // Preload hero image on component mount (base-aware for subpath deployments)
-    useEffect(() => {
-      const baseUrl = import.meta.env.BASE_URL || "/";
-      const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-      const heroImageUrl = `${normalizedBase}images/resized/insects/Cucullia_argentea.640.jpg`;
-      const img = new Image();
-      img.decoding = "async";
-      img.fetchPriority = "high";
-      img.onload = () => setHeroImageLoaded(true);
-      img.onerror = () => setHeroImageLoaded(true);
-      img.src = heroImageUrl;
-    }, []);
-
     // Use hero image as OG/Twitter image when loaded
     useEffect(() => {
       if (heroImageLoaded) {
