@@ -170,7 +170,6 @@
     if (isLocalPreview) return;
 
     var analyticsLoaded = false;
-    var adsLoaded = false;
     var scheduled = false;
 
     window.dataLayer = window.dataLayer || [];
@@ -195,19 +194,8 @@
       document.head.appendChild(analytics);
     };
 
-    var loadAds = function () {
-      if (adsLoaded) return;
-      adsLoaded = true;
-      var ads = document.createElement('script');
-      ads.async = true;
-      ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
-      ads.crossOrigin = 'anonymous';
-      document.head.appendChild(ads);
-    };
-
     var loadThirdPartyScripts = function () {
       loadAnalytics();
-      loadAds();
     };
 
     var scheduleThirdPartyScripts = function () {
@@ -253,10 +241,6 @@
       // 通常アクセス時は何もしない（本番はログ出力もしない）
       return;
     }
-    
-    // デバッグログ（本番環境では削除可能）
-    console.log('[SPA Restore] URL復元処理開始');
-    console.log('[SPA Restore] 復元対象URL:', redirectUrl);
     
     try {
       // デコードして元のURL（パス + クエリ + ハッシュ）に戻す

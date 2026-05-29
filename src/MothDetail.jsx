@@ -29,6 +29,7 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import DetailNavigation from './components/DetailNavigation';
 import DetailSectionNav from './components/DetailSectionNav';
+import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
@@ -2008,6 +2009,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             />
             {/* Mobile: 食草ネットワークを同じ食草の昆虫セクションの後に配置 */}
             {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10", "food-web")}
+
+            <ManualAdSlot
+              placement="detail"
+              locale={locale}
+              className="mt-10"
+              minHeight="min-h-[120px]"
+            />
 
           </div>
         </div>

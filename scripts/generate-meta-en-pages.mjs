@@ -25,6 +25,29 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+function loadProductionEnv() {
+  const envPath = path.join(__dirname, '../.env.production');
+  if (!fs.existsSync(envPath)) return;
+
+  fs.readFileSync(envPath, 'utf-8')
+    .split(/\r?\n/)
+    .forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const separatorIndex = trimmed.indexOf('=');
+      if (separatorIndex === -1) return;
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      const value = trimmed.slice(separatorIndex + 1).trim().replace(/^(['"])(.*)\1$/, '$2');
+      if (key && process.env[key] === undefined) {
+        process.env[key] = value;
+      }
+    });
+}
+
+loadProductionEnv();
+
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DATA_LITE_DIR = path.join(__dirname, '../public/assets/data-lite');
 const PUBLIC_EN_DIR = path.join(__dirname, '../public/en');
@@ -36,6 +59,42 @@ const PUBLIC_DIR = path.join(__dirname, '../public');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
+const MANUAL_AD_SLOTS = Object.freeze({
+  detail: process.env.VITE_ADSENSE_SLOT_DETAIL || '',
+});
+const DEFERRED_ADS_SCRIPT = MANUAL_AD_SLOTS.detail ? `<script>
+    (function() {
+      var loaded = false;
+      function requestAds() {
+        if (!document.querySelector('.adsbygoogle')) return;
+        var queue = window.adsbygoogle = window.adsbygoogle || [];
+        document.querySelectorAll('.adsbygoogle').forEach(function() {
+          queue.push({});
+        });
+      }
+      function loadAds() {
+        if (loaded) {
+          requestAds();
+          return;
+        }
+        loaded = true;
+        var script = document.createElement('script');
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}';
+        script.onload = requestAds;
+        document.head.appendChild(script);
+      }
+      window.addEventListener('load', function() {
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(loadAds, { timeout: 1800 });
+        } else {
+          window.setTimeout(loadAds, 900);
+        }
+      }, { once: true });
+    })();
+  </script>` : '';
 const PRESERVED_EN_STATIC_FILES = Object.freeze([
   'guides/index.html',
   'guides/host-plant-search.html',
@@ -78,6 +137,19 @@ function escapeHtml(value = '') {
 
 function escapeAttr(value = '') {
   return escapeHtml(value);
+}
+
+function renderManualAdSlot(slotId, label = 'Advertisement') {
+  if (!slotId) return '';
+  return `<aside class="manual-ad-slot" aria-label="${label}" style="margin:32px 0;padding:12px;border:1px solid #dbe4ee;border-radius:12px;background:#ffffff;text-align:center">
+        <div class="manual-ad-label" style="margin-bottom:8px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#8a98aa">${label}</div>
+        <ins class="adsbygoogle"
+             style="display:block;min-height:120px"
+             data-ad-client="${ADSENSE_CLIENT}"
+             data-ad-slot="${escapeAttr(slotId)}"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </aside>`;
 }
 
 function stripImageExtension(fileName) {
@@ -618,6 +690,7 @@ function buildEnglishInsectPage({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${escapeAttr(robotsContent)}">
+  <meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeAttr(description)}">
   <meta name="keywords" content="${escapeAttr([primaryName, scientificName, japaneseName, section.singularLabel, familyLabels.familyLatin || familyLabels.familyJapanese].filter(Boolean).join(', '))}">
@@ -639,6 +712,7 @@ function buildEnglishInsectPage({
   <meta name="twitter:image:alt" content="${escapeAttr(socialImageAlt)}">
   <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
   <script type="application/ld+json">${renderJsonLd(breadcrumbData)}</script>
+  ${DEFERRED_ADS_SCRIPT}
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -719,6 +793,7 @@ function buildEnglishInsectPage({
         <h3>Original source note</h3>
         <p>${escapeHtml(cleanString(insect.notes || insect.remarks))}</p>
       </section>` : ''}
+      ${renderManualAdSlot(MANUAL_AD_SLOTS.detail)}
     </main>
 
     <section class="navigation">
@@ -786,6 +861,7 @@ function buildEnglishPlantPage({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${escapeAttr(robotsContent)}">
+  <meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeAttr(description)}">
   <meta name="keywords" content="${escapeAttr([display.primaryName, display.scientificName, display.japaneseName, display.familyLatin, display.familyJapanese, 'host plant'].filter(Boolean).join(', '))}">
@@ -806,6 +882,7 @@ function buildEnglishPlantPage({
   <meta name="twitter:image" content="${escapeAttr(socialImageUrl)}">
   <meta name="twitter:image:alt" content="${escapeAttr(socialImageAlt)}">
   <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
+  ${DEFERRED_ADS_SCRIPT}
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -893,6 +970,7 @@ function buildEnglishPlantPage({
           </ul>`;
         }).join('\n        ')}
       </section>
+      ${renderManualAdSlot(MANUAL_AD_SLOTS.detail)}
     </main>
 
     <section class="navigation">

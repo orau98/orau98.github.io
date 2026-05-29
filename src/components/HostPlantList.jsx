@@ -28,6 +28,7 @@ import {
 import ImageWithFallback from "./ImageWithFallback";
 import SearchableSelect from "./SearchableSelect";
 import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
+import ManualAdSlot from "./ManualAdSlot";
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -177,7 +178,7 @@ const HostPlantListItem = React.memo(
                   </span>
                 )}
                 <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${imageFilename ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300"}`}>
-                  {imageFilename ? (isEnglish ? "Photo" : "写真") : (isEnglish ? "No photo" : "画像なし")}
+                  {imageFilename ? (isEnglish ? "Photo" : "写真") : (isEnglish ? "No image listed" : "画像未掲載")}
                 </span>
               </div>
               <p className="mt-2 line-clamp-1 text-sm text-slate-600 dark:text-slate-300">
@@ -256,7 +257,7 @@ const HostPlantListItem = React.memo(
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      {isEnglish ? "Image pending" : "画像準備中"}
+                      {isEnglish ? "No image listed" : "画像未掲載"}
                     </span>
                   </div>
                 </div>
@@ -1414,24 +1415,33 @@ const HostPlantList = ({
                   (normalizedPlant && flowerVisitPlants?.[normalizedPlant])
                 );
                 return (
-                <div
-                  key={plant}
-                  className="animate-fadeIn"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <HostPlantListItem
-                    plant={plant}
-                    mothNames={displayNames}
-                    relatedCount={relatedCount}
-                    plantDetails={safePlantDetails}
-                    insectDisplayNameMap={insectDisplayNameMap}
-                    imageFilename={plantImageMap.get(plant)}
-                    hasLarvalHost={hasLarvalHost}
-                    hasFlowerVisit={hasFlowerVisit}
-                    locale={locale}
-                    viewMode={viewMode}
-                  />
-                </div>
+                <React.Fragment key={plant}>
+                  {!hasAnyCriteria && currentPage === 1 && index === 8 && viewMode !== "compact" && (
+                    <ManualAdSlot
+                      placement="inFeed"
+                      locale={locale}
+                      className="animate-fadeIn self-start"
+                      minHeight="min-h-[220px]"
+                    />
+                  )}
+                  <div
+                    className="animate-fadeIn"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <HostPlantListItem
+                      plant={plant}
+                      mothNames={displayNames}
+                      relatedCount={relatedCount}
+                      plantDetails={safePlantDetails}
+                      insectDisplayNameMap={insectDisplayNameMap}
+                      imageFilename={plantImageMap.get(plant)}
+                      hasLarvalHost={hasLarvalHost}
+                      hasFlowerVisit={hasFlowerVisit}
+                      locale={locale}
+                      viewMode={viewMode}
+                    />
+                  </div>
+                </React.Fragment>
                 );
               })}
             </div>

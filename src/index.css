@@ -47,7 +47,7 @@
     font-feature-settings: "palt" 1, "kern" 1; /* カーニングとプロポーショナル */
     font-weight: 400;
     font-size: 16px;
-    letter-spacing: -0.011em; /* モダンなタイトな文字間隔 */
+    letter-spacing: 0;
     min-height: 100vh;
     background: transparent;
     color: rgb(15 23 42);
@@ -79,25 +79,25 @@
   :lang(ja) {
     font-family: 'Noto Sans JP', 'Inter', -apple-system, BlinkMacSystemFont,
                  "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-    letter-spacing: 0.02em; /* 日本語は少し広め */
+    letter-spacing: 0;
   }
   
   /* 見出しのモダンなスタイリング */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', 'Noto Sans JP', sans-serif;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     line-height: 1.2;
   }
   
   h1 {
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
   }
   
   h2 {
     font-weight: 700;
-    letter-spacing: -0.025em;
+    letter-spacing: 0;
   }
   
   h3 {

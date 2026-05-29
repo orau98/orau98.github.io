@@ -96,6 +96,12 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   const headerRef = useRef(null);
   const homePath = localizePath('/', locale);
   const quizPath = localizePath('/quiz', locale);
+  const navItems = [
+    { label: isEnglish ? 'Insects' : '昆虫', to: localizePath('/?tab=insects', locale) },
+    { label: isEnglish ? 'Plants' : '植物', to: localizePath('/?tab=plants', locale) },
+    { label: isEnglish ? 'Guides' : 'ガイド', href: localizePath('/guides/', locale) },
+    { label: isEnglish ? 'Site map' : 'サイトマップ', href: '/sitemap.html' },
+  ];
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return undefined;
@@ -156,6 +162,21 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
           </Link>
           
           <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4">
+            <nav className="hidden items-center gap-1 rounded-2xl border border-white/10 bg-white/5 p-1 lg:flex" aria-label={isEnglish ? 'Primary navigation' : '主要ナビゲーション'}>
+              {navItems.map((item) => {
+                const className = "rounded-xl px-3 py-2 text-sm font-semibold text-emerald-50/85 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-300/50";
+                return item.to ? (
+                  <Link key={item.label} to={item.to} className={className}>
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a key={item.label} href={item.href} className={className}>
+                    {item.label}
+                  </a>
+                );
+              })}
+            </nav>
+
             {/* Dynamic species classification info */}
             {speciesInfo && (
               <div className="hidden lg:flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl px-5 py-2.5 border border-emerald-400/20 shadow-lg">
@@ -231,6 +252,20 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             </button>
           </div>
         </div>
+        <nav className="flex gap-2 overflow-x-auto border-t border-white/10 py-2 lg:hidden" aria-label={isEnglish ? 'Primary navigation' : '主要ナビゲーション'}>
+          {navItems.map((item) => {
+            const className = "shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-emerald-50/85 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-300/50";
+            return item.to ? (
+              <Link key={item.label} to={item.to} className={className}>
+                {item.label}
+              </Link>
+            ) : (
+              <a key={item.label} href={item.href} className={className}>
+                {item.label}
+              </a>
+            );
+          })}
+        </nav>
       </div>
     </header>
   );

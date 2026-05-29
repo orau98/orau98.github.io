@@ -32,6 +32,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
     };
   }, []);
   const visiblePages = isMobile ? maxVisiblePagesMobile : maxVisiblePages;
+  const [jumpPage, setJumpPage] = useState('');
   
   let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
   let endPage = Math.min(totalPages, startPage + visiblePages - 1);
@@ -44,8 +45,16 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
     pageNumbers.push(i);
   }
 
+  const handleJumpSubmit = (event) => {
+    event.preventDefault();
+    const nextPage = parseInt(jumpPage, 10);
+    if (!Number.isFinite(nextPage)) return;
+    onPageChange(Math.min(Math.max(nextPage, 1), totalPages));
+    setJumpPage('');
+  };
+
   return (
-    <nav className="flex items-center justify-center w-full px-2 sm:px-0" aria-label={isEnglish ? 'Pagination' : 'ページネーション'}>
+    <nav className="flex w-full flex-col items-center justify-center gap-3 px-2 sm:px-0" aria-label={isEnglish ? 'Pagination' : 'ページネーション'}>
       <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center">
         <button
           type="button"
@@ -57,7 +66,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
           <svg className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="hidden sm:inline">{isEnglish ? 'Prev' : '前へ'}</span>
+          <span className="ml-1 sm:ml-0">{isEnglish ? 'Prev' : '前へ'}</span>
         </button>
 
         {startPage > 1 && (
@@ -124,12 +133,35 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
           className="group relative inline-flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-md disabled:hover:shadow-none"
           aria-label={isEnglish ? 'Next page' : '次のページ'}
         >
-          <span className="hidden sm:inline">{isEnglish ? 'Next' : '次へ'}</span>
+          <span>{isEnglish ? 'Next' : '次へ'}</span>
           <svg className="w-3 h-3 sm:w-4 sm:h-4 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
+      {totalPages > 8 && (
+        <form onSubmit={handleJumpSubmit} className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <label htmlFor="page-jump-input">{isEnglish ? 'Go to page' : 'ページ指定'}</label>
+          <input
+            id="page-jump-input"
+            type="number"
+            inputMode="numeric"
+            min="1"
+            max={totalPages}
+            value={jumpPage}
+            onChange={(event) => setJumpPage(event.target.value)}
+            placeholder={String(currentPage)}
+            className="w-20 rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+          />
+          <span>/ {totalPages}</span>
+          <button
+            type="submit"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            {isEnglish ? 'Go' : '移動'}
+          </button>
+        </form>
+      )}
     </nav>
   );
 };

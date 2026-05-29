@@ -13,6 +13,7 @@ import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
 import LoadingBar from './components/LoadingBar';
 import NotFoundPage from './components/NotFoundPage';
+import ManualAdSlot from './components/ManualAdSlot';
 import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
 import { buildFlowerVisitMap, isFlowerVisitRecord } from './utils/flowerVisitPlants';
 import { isPlantHostRecord } from './utils/hostResource';
@@ -4259,21 +4260,6 @@ function App() {
               }
               allowDebugLogs && console.log("Before push - mothName:", mothName, "scientificName:", scientificName, "scientificFilename:", scientificFilename);
               
-              // Debug logging for センモンヤガ final data
-              if (mothName === 'センモンヤガ' || row['大図鑑カタログNo'] === '3489') {
-                allowDebugLogs && console.log(`DEBUG: Final センモンヤガ data:`, {
-                  mothName,
-                  hostPlantEntries,
-                  hostPlantList,
-                  hostPlantNotes,
-                  hasKirigaData,
-                  isBeetle,
-                  catalogNo: row['大図鑑カタログNo'],
-                  rawHostPlantFromCSV: row['食草']
-                });
-                allowDebugLogs && console.log(`DEBUG: センモンヤガ will be added to:`, isBeetle ? 'beetles' : 'insects');
-              }
-              
               if (isBeetle) {
                 // Process as beetle
                 const catalogNo = row['大図鑑カタログNo'] || '';
@@ -6479,21 +6465,19 @@ function App() {
       >
         {isEnglish ? 'Skip to main content' : '本文へスキップ'}
       </a>
-      {!isExplorerPage && (
-        <Header
-          locale={locale}
-          theme={theme}
-          setTheme={setTheme}
-          moths={moths}
-          butterflies={butterflies}
-          beetles={beetles}
-          longhornbeetles={longhornbeetles}
-          leafbeetles={leafbeetles}
-          aphids={aphids}
-          hostPlants={hostPlants}
-          plantDetails={plantDetails}
-        />
-      )}
+      <Header
+        locale={locale}
+        theme={theme}
+        setTheme={setTheme}
+        moths={moths}
+        butterflies={butterflies}
+        beetles={beetles}
+        longhornbeetles={longhornbeetles}
+        leafbeetles={leafbeetles}
+        aphids={aphids}
+        hostPlants={hostPlants}
+        plantDetails={plantDetails}
+      />
 
       {loadError && (
         <div className="px-4 sm:px-6 lg:px-8 mt-4">
@@ -6537,6 +6521,12 @@ function App() {
       )}
       </main>
         <FloatingActionButton />
+      <ManualAdSlot
+        placement="footer"
+        locale={locale}
+        className="mx-auto mt-10 w-[min(100%-1rem,64rem)] sm:mt-12"
+        minHeight="min-h-[96px]"
+      />
       <Footer locale={locale} />
     </div>
   );

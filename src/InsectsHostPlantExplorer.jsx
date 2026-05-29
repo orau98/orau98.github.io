@@ -1738,6 +1738,7 @@ const InsectsHostPlantExplorer = memo(
             locale={locale}
             setHeroImageLoaded={setHeroImageLoaded}
             setTheme={setTheme}
+            showHeaderControls={false}
             suggestions={suggestions}
             theme={theme}
             ui={ui}
@@ -1790,7 +1791,7 @@ const InsectsHostPlantExplorer = memo(
                   </svg>
                   <span className="flex items-center gap-1">
                     <span>{ui.insectsTab}</span>
-                    <span className="hidden sm:inline">
+                    <span className="text-[11px] sm:text-sm">
                       (
                       {moths.length +
                         butterflies.length +
@@ -1839,7 +1840,7 @@ const InsectsHostPlantExplorer = memo(
                   </svg>
                   <span className="flex items-center gap-1">
                     <span>{ui.plantsTab}</span>
-                    <span className="hidden sm:inline">({mergedHostPlantCount})</span>
+                    <span className="text-[11px] sm:text-sm">({mergedHostPlantCount})</span>
                   </span>
                 </div>
                 {activeTab === "plants" && (

@@ -22,6 +22,7 @@ const ExplorerHero = ({
   locale,
   setHeroImageLoaded,
   setTheme,
+  showHeaderControls = true,
   suggestions,
   theme,
   ui,
@@ -123,7 +124,7 @@ const ExplorerHero = ({
             </h1>
           </div>
 
-          {!isStickyHeaderVisible && (
+          {showHeaderControls && !isStickyHeaderVisible && (
             <div className="flex w-full items-center justify-between gap-2 self-start sm:w-auto sm:justify-start lg:pt-1">
               <LocaleSwitcher locale={locale} compact />
               <button
@@ -166,7 +167,7 @@ const ExplorerHero = ({
         </div>
 
         <div className={`${isEnglish ? "mt-1 sm:mt-5" : "mt-0 sm:mt-1"} space-y-2 sm:space-y-3.5 md:space-y-5`}>
-          <div className="hidden max-w-5xl flex-wrap gap-2 sm:flex sm:gap-2.5">
+          <div className="flex max-w-full flex-nowrap gap-2 overflow-x-auto pb-1 sm:max-w-5xl sm:flex-wrap sm:gap-2.5 sm:overflow-visible sm:pb-0">
             {heroStats.map((item) => (
               <div
                 key={item.label}
@@ -193,7 +194,7 @@ const ExplorerHero = ({
               locale={locale}
             />
             <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-white/85 sm:gap-2 sm:text-sm">
-              <span className="hidden items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:inline-flex sm:px-3">
+              <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:px-3">
                 {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
               </span>
               {isEnglish && (
@@ -205,7 +206,13 @@ const ExplorerHero = ({
                 title={ui.searchHelpTitle}
                 align="left"
                 buttonAriaLabel={ui.searchHelpAria}
-                buttonClassName="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-semibold text-white shadow-sm transition hover:bg-white/20 sm:h-7 sm:w-7"
+                buttonClassName="inline-flex h-8 min-w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 px-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-white/20 sm:h-7 sm:w-7 sm:px-0 sm:text-sm"
+                buttonContent={
+                  <>
+                    <span aria-hidden="true">?</span>
+                    <span className="ml-1 sm:hidden">{isEnglish ? "Tips" : "使い方"}</span>
+                  </>
+                }
                 panelClassName="border-slate-700 bg-slate-950 text-white shadow-[0_28px_90px_-30px_rgba(2,6,23,0.9)] ring-1 ring-white/10 backdrop-blur-none"
                 contentClassName="space-y-2 text-slate-100"
                 titleClassName="text-white"

@@ -16,6 +16,7 @@ import { createSafeInsectFilename } from '../utils/image';
 import ImageWithFallback from './ImageWithFallback';
 import SearchableSelect from './SearchableSelect';
 import { ListDisplayControls, PresetFilterChips } from './ListToolbar';
+import ManualAdSlot from './ManualAdSlot';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,
@@ -35,6 +36,7 @@ import { isPlantHostRecord } from '../utils/hostResource';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
+const PER_PAGE_OPTIONS = [20, 50, 100];
 
 const isFlowerVisitRecord = (record) => {
   if (!record) return false;
@@ -330,7 +332,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 </div>
                 <div className="flex flex-wrap justify-end gap-1">
                   <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${hasImageFilename ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300'}`}>
-                    {hasImageFilename ? (isEnglish ? 'Photo' : '写真') : (isEnglish ? 'No photo' : '画像なし')}
+                    {hasImageFilename ? (isEnglish ? 'Photo' : '写真') : (isEnglish ? 'No image listed' : '画像未掲載')}
                   </span>
                   <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
                     {isEnglish ? `${linkedPlantCount} plants` : `植物 ${linkedPlantCount}`}
@@ -428,7 +430,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
                     </svg>
-                    {isEnglish ? 'Image pending' : '画像準備中'}
+                    {isEnglish ? 'No image listed' : '画像未掲載'}
                   </span>
                 </div>
               </div>
@@ -557,7 +559,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       hostPlantFilter: isEnglish ? 'Host plant record' : '食草の有無',
       all: isEnglish ? 'All' : 'すべて',
       hasHostPlant: isEnglish ? 'Has host plant' : '食草あり',
-      unregisteredOnly: isEnglish ? 'Unregistered only' : '未登録のみ',
+      unregisteredOnly: isEnglish ? 'No host plant data' : '食草情報なし',
       any: isEnglish ? 'Any' : '指定なし',
       family: isEnglish ? 'Family' : '科',
       genus: isEnglish ? 'Genus' : '属',
@@ -573,6 +575,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       view: isEnglish ? 'View' : '表示',
       cards: isEnglish ? 'Cards' : 'カード',
       compact: isEnglish ? 'Compact' : 'コンパクト',
+      perPage: isEnglish ? 'Per page' : '表示件数',
+      autoPerPage: (value) => (isEnglish ? `Auto (${value})` : `自動 (${value})`),
       sort: isEnglish ? 'Sort' : '並び替え',
       sortImage: isEnglish ? 'Photos first' : '写真あり優先',
       sortName: isEnglish ? 'Name' : '名前順',
@@ -593,6 +597,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       examples: isEnglish
         ? 'Examples: scientific name, family, host plant, or Japanese name'
         : '例：「オオミズアオ」「ヤナギ」「ヤガ科」など',
+      exampleSearches: isEnglish
+        ? ['Quercus', 'Prunus', 'Noctuidae', 'Papilionidae']
+        : ['オオミズアオ', 'ヤナギ', 'ヤガ科', 'アゲハチョウ科'],
       listPageTitle: isEnglish ? `${title} index | ${EN_SITE_NAME}` : `${title}の一覧 | 昆虫植物図鑑`,
       listPageDesc: isEnglish
         ? `${moths?.length || 0} entries. Search by scientific name, family, subfamily, genus, host plant, or Japanese name.`
@@ -626,7 +633,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + localizePath('/', locale)
   });
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
   const updateSearchParams = useCallback((mutate) => {
     let next;
     try {
@@ -705,6 +712,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const sortMode = useMemo(() => {
     const v = searchParams.get('isort') || 'image';
     return ['image', 'name', 'family', 'plantCount', 'season'].includes(v) ? v : 'image';
+  }, [searchParams]);
+  const requestedItemsPerPage = useMemo(() => {
+    const n = parseInt(searchParams.get('iper') || '', 10);
+    return PER_PAGE_OPTIONS.includes(n) ? n : null;
   }, [searchParams]);
 
   const setIPage = useCallback((page) => {
@@ -785,6 +796,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     });
   }, [updateSearchParams]);
 
+  const setIItemsPerPage = useCallback((value) => {
+    updateSearchParams((p) => {
+      const n = parseInt(value, 10);
+      if (PER_PAGE_OPTIONS.includes(n)) p.set('iper', String(n));
+      else p.delete('iper');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
   const clearClassification = useCallback(() => {
     updateSearchParams((p) => {
       p.delete('classification');
@@ -822,6 +842,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       p.delete('iphoto');
       p.delete('classification');
       p.delete('q');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
+  const applyExampleSearch = useCallback((value) => {
+    const nextValue = String(value || '').trim();
+    if (!nextValue) return;
+    setSearchTerm(nextValue);
+    updateSearchParams((p) => {
+      p.set('q', nextValue);
       p.delete('ipage');
     });
   }, [updateSearchParams]);
@@ -929,10 +959,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const computeItemsPerPage = useCallback(() => {
     if (typeof window === 'undefined') return 48;
     const w = window.innerWidth;
-    const cols = w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 768 ? 2 : 1;
+    const cols = w >= 1536 ? 4 : w >= 1024 ? 3 : w >= 768 ? 2 : 1;
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
+  const effectiveItemsPerPage = requestedItemsPerPage || itemsPerPage;
   const filterIdBase = useId();
   const hostFilterId = `${filterIdBase}-host`;
   const familyFilterId = `${filterIdBase}-family`;
@@ -954,7 +985,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
-    if (hostFilter !== 'all') filters.push({ type: isEnglish ? 'Host plant' : '食草', value: hostFilter === 'has' ? (isEnglish ? 'Yes' : 'あり') : (isEnglish ? 'No' : 'なし'), clear: () => setIHostFilter('all') });
+    if (hostFilter !== 'all') filters.push({ type: isEnglish ? 'Host plant' : '食草', value: hostFilter === 'has' ? ui.hasHostPlant : ui.unregisteredOnly, clear: () => setIHostFilter('all') });
     if (familyFilter) filters.push({ type: isEnglish ? 'Family' : '科', value: familyFilter, clear: () => setIFamilyFilter('') });
     if (genusFilter) filters.push({ type: isEnglish ? 'Genus' : '属', value: genusFilter, clear: () => setIGenusFilter('') });
     if (emergenceFilter) filters.push({ type: isEnglish ? 'Season' : '出現期', value: emergenceFilter, clear: () => setIEmergenceFilter('') });
@@ -981,8 +1012,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     setISeasonFilter,
     setIPhotoFilter,
     isEnglish,
+    ui.hasHostPlant,
     ui.photo,
     ui.season,
+    ui.unregisteredOnly,
     ui.withPhoto,
     seasonLabels,
   ]);
@@ -1487,21 +1520,21 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     getVisibleName,
   ]);
 
-  const totalPages = Math.ceil((sortedMoths?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((sortedMoths?.length || 0) / effectiveItemsPerPage);
   const currentMoths = useMemo(() => {
     try {
       if (!sortedMoths || sortedMoths.length === 0) {
         return [];
       }
       
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
+      const startIndex = (currentPage - 1) * effectiveItemsPerPage;
+      const endIndex = startIndex + effectiveItemsPerPage;
       return sortedMoths.slice(startIndex, endIndex);
     } catch (error) {
       logger.error('Error calculating currentMoths:', error);
       return [];
     }
-  }, [sortedMoths, currentPage, itemsPerPage]);
+  }, [sortedMoths, currentPage, effectiveItemsPerPage]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
@@ -1588,6 +1621,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       { key: 'photo', label: ui.withPhoto, active: photoFilter === 'has', onClick: () => setIPhotoFilter(photoFilter === 'has' ? 'all' : 'has') },
       { key: 'spring', label: ui.spring, active: seasonFilter === 'spring', onClick: () => setISeasonFilter(seasonFilter === 'spring' ? '' : 'spring') },
       { key: 'summer', label: ui.summer, active: seasonFilter === 'summer', onClick: () => setISeasonFilter(seasonFilter === 'summer' ? '' : 'summer') },
+      { key: 'autumn', label: ui.autumn, active: seasonFilter === 'autumn', onClick: () => setISeasonFilter(seasonFilter === 'autumn' ? '' : 'autumn') },
       { key: 'winter', label: ui.winter, active: seasonFilter === 'winter', onClick: () => setISeasonFilter(seasonFilter === 'winter' ? '' : 'winter') },
       { key: 'unknown', label: ui.unregisteredOnly, active: hostFilter === 'none', onClick: () => setIHostFilter(hostFilter === 'none' ? 'all' : 'none') },
     ];
@@ -1600,7 +1634,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     ];
     const resultsLabel = ui.resultCount(sortedMoths?.length ?? filteredMoths?.length ?? 0);
     const mobileControlsLabel = isEnglish ? 'Controls' : '条件';
-    const activeControlsLabel = isEnglish ? 'Active' : '条件あり';
+    const activeControlsLabel = isEnglish ? `${activeFilters.length} active` : `条件${activeFilters.length}`;
     const renderFullControls = ({ showResultsLabel = true } = {}) => (
       <>
         <ListFilterPanel
@@ -1689,10 +1723,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           sortMode={sortMode}
           onSortModeChange={setISortMode}
           sortOptions={sortOptions}
+          itemsPerPageValue={requestedItemsPerPage || 'auto'}
+          autoItemsPerPage={itemsPerPage}
+          onItemsPerPageChange={setIItemsPerPage}
           labels={{
             view: ui.view,
             cards: ui.cards,
             compact: ui.compact,
+            perPage: ui.perPage,
+            autoPerPage: ui.autoPerPage,
             sort: ui.sort,
           }}
         />
@@ -1758,7 +1797,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         <div ref={listTopRef} />
         <div>
           {!isImageIndexReady ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
                   key={`skeleton-${i}`}
@@ -1774,21 +1813,31 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               ))}
             </div>
           ) : currentMoths.length > 0 ? (
-            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'}>
+            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'}>
               {currentMoths.map((moth, index) => {
                 try {
                   return (
-                    <div key={moth?.id || `moth-${index}`} className="animate-fadeIn" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
-                      <MothListItem 
-                        moth={moth} 
-                        baseRoute={baseRoute} 
-                        isPriority={index < 12} 
-                        imageFilename={mothImageMap.get(moth.id)}
-                        plantDetails={plantDetails}
-                        locale={locale}
-                        viewMode={viewMode}
-                      />
-                    </div>
+                    <React.Fragment key={moth?.id || `moth-${index}`}>
+                      {!hasAnyCriteria && currentPage === 1 && index === 8 && viewMode !== 'compact' && (
+                        <ManualAdSlot
+                          placement="inFeed"
+                          locale={locale}
+                          className="animate-fadeIn self-start"
+                          minHeight="min-h-[220px]"
+                        />
+                      )}
+                      <div className="animate-fadeIn" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
+                        <MothListItem 
+                          moth={moth} 
+                          baseRoute={baseRoute} 
+                          isPriority={index < 12} 
+                          imageFilename={mothImageMap.get(moth.id)}
+                          plantDetails={plantDetails}
+                          locale={locale}
+                          viewMode={viewMode}
+                        />
+                      </div>
+                    </React.Fragment>
                   );
                 } catch (error) {
                   logger.error('Error rendering moth item:', error, moth);
@@ -1823,9 +1872,21 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               {!hasAnyCriteria && (
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{ui.tryAnother}</p>
               )}
-              <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
-                {ui.examples}
-              </p>
+              <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
+                <span className="w-full text-xs text-slate-400 dark:text-slate-500 sm:w-auto">
+                  {ui.examples}
+                </span>
+                {ui.exampleSearches.map((example) => (
+                  <button
+                    key={example}
+                    type="button"
+                    onClick={() => applyExampleSearch(example)}
+                    className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-200 dark:hover:bg-blue-900/50"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
               {hasAnyCriteria && (
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                   <button

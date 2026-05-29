@@ -26,6 +26,7 @@ import {
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import DetailSectionNav from './components/DetailSectionNav';
+import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
@@ -2214,6 +2215,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </div>
         )}
       </div>
+
+      <ManualAdSlot
+        placement="detail"
+        locale={locale}
+        className="mt-10"
+        minHeight="min-h-[120px]"
+      />
 
       {/* 前後の植物へのナビゲーション */}
       <DetailNavigation 

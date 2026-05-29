@@ -35,10 +35,13 @@ export function ListDisplayControls({
   sortMode,
   onSortModeChange,
   sortOptions = [],
+  itemsPerPageValue = 'auto',
+  autoItemsPerPage,
+  onItemsPerPageChange,
   labels,
 }) {
   return (
-    <div className="mt-2 flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white/70 p-2.5 dark:border-slate-700/70 dark:bg-slate-900/50 sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-3">
+    <div className="mt-2 flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white/70 p-2.5 dark:border-slate-700/70 dark:bg-slate-900/50 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:p-3">
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
           {labels.view}
@@ -65,20 +68,40 @@ export function ListDisplayControls({
         </div>
       </div>
 
-      <label className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-        {labels.sort}
-        <select
-          value={sortMode}
-          onChange={(event) => onSortModeChange(event.target.value)}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
-        >
-          {sortOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+        {onItemsPerPageChange && (
+          <label className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            {labels.perPage}
+            <select
+              value={itemsPerPageValue}
+              onChange={(event) => onItemsPerPageChange(event.target.value)}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+            >
+              <option value="auto">{labels.autoPerPage ? labels.autoPerPage(autoItemsPerPage) : 'Auto'}</option>
+              {[20, 50, 100].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+
+        <label className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          {labels.sort}
+          <select
+            value={sortMode}
+            onChange={(event) => onSortModeChange(event.target.value)}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
     </div>
   );
 }

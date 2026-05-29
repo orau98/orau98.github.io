@@ -22,6 +22,29 @@ import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+function loadProductionEnv() {
+  const envPath = path.join(__dirname, '../.env.production');
+  if (!fs.existsSync(envPath)) return;
+
+  fs.readFileSync(envPath, 'utf-8')
+    .split(/\r?\n/)
+    .forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const separatorIndex = trimmed.indexOf('=');
+      if (separatorIndex === -1) return;
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      const value = trimmed.slice(separatorIndex + 1).trim().replace(/^(['"])(.*)\1$/, '$2');
+      if (key && process.env[key] === undefined) {
+        process.env[key] = value;
+      }
+    });
+}
+
+loadProductionEnv();
+
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
@@ -250,27 +273,63 @@ function renderCitationListHtml(entries = []) {
         </ol>`;
 }
 
-const DEFERRED_ADS_SCRIPT = `<script>
+const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
+const MANUAL_AD_SLOTS = Object.freeze({
+  footer: process.env.VITE_ADSENSE_SLOT_FOOTER || '',
+  detail: process.env.VITE_ADSENSE_SLOT_DETAIL || '',
+});
+const HAS_MANUAL_AD_SLOTS = Object.values(MANUAL_AD_SLOTS).some(Boolean);
+const DEFERRED_ADS_SCRIPT = HAS_MANUAL_AD_SLOTS ? `<script>
     (function() {
       var loaded = false;
+      function requestAds() {
+        if (!document.querySelector('.adsbygoogle')) return;
+        var queue = window.adsbygoogle = window.adsbygoogle || [];
+        document.querySelectorAll('.adsbygoogle').forEach(function() {
+          queue.push({});
+        });
+      }
       function loadAds() {
-        if (loaded || document.querySelector('script[src*="adsbygoogle.js"]')) return;
+        if (loaded) {
+          requestAds();
+          return;
+        }
+        if (document.querySelector('script[src*="adsbygoogle.js"]')) {
+          loaded = true;
+          requestAds();
+          return;
+        }
         loaded = true;
         var script = document.createElement('script');
         script.async = true;
         script.crossOrigin = 'anonymous';
-        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}';
+        script.onload = requestAds;
         document.head.appendChild(script);
       }
-      function scheduleSoon() {
-        window.setTimeout(loadAds, 1200);
+      function schedule() {
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(loadAds, { timeout: 1800 });
+        } else {
+          window.setTimeout(loadAds, 900);
+        }
       }
-      ['scroll', 'pointerdown', 'keydown'].forEach(function(type) {
-        window.addEventListener(type, scheduleSoon, { once: true, passive: true });
-      });
-      window.setTimeout(loadAds, 8000);
+      window.addEventListener('load', schedule, { once: true });
     })();
-  </script>`;
+  </script>` : '';
+
+function renderManualAdSlot(slotId, label = '広告') {
+  if (!slotId) return '';
+  return `<aside class="manual-ad-slot" aria-label="${label}" style="margin:32px 0;padding:12px;border:1px solid #dbe4ee;border-radius:12px;background:#ffffff;text-align:center">
+        <div class="manual-ad-label" style="margin-bottom:8px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#8a98aa">${label}</div>
+        <ins class="adsbygoogle"
+             style="display:block;min-height:120px"
+             data-ad-client="${ADSENSE_CLIENT}"
+             data-ad-slot="${escapeRedirectHtml(slotId)}"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </aside>`;
+}
 
 function buildExplorerSearchPath(tab, query) {
   const params = new URLSearchParams();
@@ -1426,7 +1485,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${robotsContent}">
-  <!-- Google AdSense (auto ads for meta pages) -->
+  <!-- Google AdSense account verification -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   ${DEFERRED_ADS_SCRIPT}
   <title>${safeInsectTitle}</title>
@@ -1553,10 +1612,11 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         <h4>出典</h4>
         ${citationListHtml}` : ''}
         <p>この種の詳細な生態情報や観察記録については、メインの図鑑ページでご確認ください。</p>
-      </section>
-    </main>
-    
-    <section class="navigation">
+	      </section>
+	      ${renderManualAdSlot(MANUAL_AD_SLOTS.detail)}
+	    </main>
+	    
+	    <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
       <a href="${safeExplorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
@@ -1717,7 +1777,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${robotsContent}">
-  <!-- Google AdSense (auto ads for meta pages) -->
+  <!-- Google AdSense account verification -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   ${DEFERRED_ADS_SCRIPT}
   <title>${safePlantTitle}</title>
@@ -1852,10 +1912,11 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
             <div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>
           </li>`).join('')}
         </ul>`).join('')}
-      </section>
-    </main>
-    
-    <section class="navigation">
+	      </section>
+	      ${renderManualAdSlot(MANUAL_AD_SLOTS.detail)}
+	    </main>
+	    
+	    <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
       <a href="${safePlantExplorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
