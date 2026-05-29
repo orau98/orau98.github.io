@@ -309,14 +309,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   }, [moth, resolvedInsectId]);
   
   const [graphDimensions, setGraphDimensions] = useState({ width: 0, height: 500 });
-  const graphContainerRefDesktop = useRef(null);
-  const graphContainerRefMobile = useRef(null);
+  const graphContainerRef = useRef(null);
 
   useLayoutEffect(() => {
     const updateSize = () => {
-      const desktopWidth = graphContainerRefDesktop.current?.offsetWidth || 0;
-      const mobileWidth = graphContainerRefMobile.current?.offsetWidth || 0;
-      const width = Math.max(desktopWidth, mobileWidth, 0);
+      const width = graphContainerRef.current?.offsetWidth || 0;
       if (width > 0) {
         setGraphDimensions({
           width,
@@ -1177,7 +1174,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 画像セクション */}
-          <div id="plant-photos" className="lg:col-span-1">
+          <div id="plant-photos" className="lg:col-span-1 lg:sticky lg:top-24 lg:self-start">
             <div>
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
                 {hasInstagramPost ? (
@@ -1260,8 +1257,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               </div>
             </div>
 
-            {/* PC: 食草ネットワークを左カラムに配置 */}
-            {renderFoodWebCard(graphContainerRefDesktop, "hidden lg:block mt-6", "food-web")}
           </div>
 
           {/* 情報セクション */}
@@ -2007,8 +2002,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               allInsects={allInsects} 
               locale={locale}
             />
-            {/* Mobile: 食草ネットワークを同じ食草の昆虫セクションの後に配置 */}
-            {renderFoodWebCard(graphContainerRefMobile, "block lg:hidden mt-10", "food-web")}
 
             <ManualAdSlot
               placement="detail"
@@ -2019,6 +2012,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
           </div>
         </div>
+
+        {/* 食草ネットワーク（全幅） */}
+        {renderFoodWebCard(graphContainerRef, "mt-6", "food-web")}
 
         {/* 前後の種へのナビゲーション */}
         <DetailNavigation allItems={sortedInsects} currentId={moth.id} type="insect" locale={locale} />

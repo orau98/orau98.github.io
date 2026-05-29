@@ -123,7 +123,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   return (
     <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl relative z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-2.5 py-3 sm:h-20 sm:py-0">
+        <div className="flex items-center justify-between gap-2.5 py-3 sm:min-h-20 sm:py-2">
           <Link to={homePath} className="group flex min-w-0 flex-1 items-center gap-2.5 transition-transform duration-200 sm:gap-3 sm:hover:scale-105">
             <div className="relative">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-emerald-500/50 sm:h-12 sm:w-12">
@@ -132,13 +132,13 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                 </svg>
               </div>
             </div>
-            <div className="hidden sm:block">
-              <div className="text-3xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight">
+            <div className="hidden min-w-0 sm:block">
+              <div className="truncate text-2xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
                 {isEnglish
                   ? 'Insects and Host Plants of Japan'
                   : '"繋がり"が見える昆虫植物図鑑'}
               </div>
-              <p className="text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
+              <p className="truncate text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
                 {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
               </p>
             </div>
@@ -179,7 +179,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
 
             {/* Dynamic species classification info */}
             {speciesInfo && (
-              <div className="hidden lg:flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl px-5 py-2.5 border border-emerald-400/20 shadow-lg">
+              <div className="hidden min-w-0 max-w-[16rem] lg:flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl px-5 py-2.5 border border-emerald-400/20 shadow-lg xl:max-w-xs">
                 {speciesInfo.type === 'plant' ? (
                   <div className="flex items-center space-x-2">
                     <div className="text-sm">
@@ -207,8 +207,8 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center space-x-2">
-                    <div className="text-sm">
+                  <div className="flex min-w-0 items-center space-x-2">
+                    <div className="truncate text-sm">
                       <span className="text-white font-medium">
                         {isEnglish && speciesInfo.scientificName
                           ? formatScientificNameReact(speciesInfo.name)
