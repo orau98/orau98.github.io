@@ -31,8 +31,8 @@ const ExplorerHero = ({
     id="hero-section"
     className={`group relative w-full ${
       isEnglish
-        ? "min-h-[19rem] sm:min-h-[30rem] md:min-h-[38rem] lg:min-h-[40rem]"
-        : "min-h-[15.5rem] sm:min-h-[22rem] md:min-h-[27rem] lg:min-h-[29rem]"
+        ? "min-h-[13rem] sm:min-h-[18rem] md:min-h-[21rem] lg:min-h-[23rem]"
+        : "min-h-[12rem] sm:min-h-[17rem] md:min-h-[20rem] lg:min-h-[22rem]"
     }`}
   >
     <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl z-0 sm:rounded-3xl">
@@ -99,28 +99,19 @@ const ExplorerHero = ({
         className={`flex flex-col sm:h-full ${
           isEnglish
             ? "justify-start gap-3 sm:justify-between"
-            : "justify-start gap-2 sm:gap-4 md:gap-7 lg:gap-8"
+            : "justify-start gap-2 sm:gap-3 md:gap-5 lg:gap-6"
         }`}
       >
         <div className="flex flex-col gap-2 sm:gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-4xl pt-0 sm:pt-1 md:pt-2">
-            <p
-              className={`bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text font-bold tracking-tight text-transparent drop-shadow-2xl ${
-                isEnglish
-                  ? "text-base leading-tight sm:text-[clamp(1.25rem,2.6vw,2.25rem)]"
-                  : "text-lg leading-tight sm:text-[clamp(1.4rem,3vw,2.8rem)]"
-              }`}
-            >
-              {ui.heroLead}
-            </p>
             <h1
-              className={`mt-1 max-w-4xl bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl sm:mt-2 ${
+              className={`bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl ${
                 isEnglish
-                  ? "text-[1.85rem] leading-[0.98] sm:text-[clamp(2.4rem,4.8vw,4.9rem)] sm:leading-[0.94]"
-                  : "text-[2.15rem] leading-[0.98] sm:pb-2 sm:text-[clamp(3rem,7.5vw,6.2rem)]"
+                  ? "text-xl leading-snug sm:text-[clamp(1.5rem,3vw,2.4rem)]"
+                  : "text-xl leading-snug sm:text-[clamp(1.6rem,3.4vw,2.6rem)]"
               }`}
             >
-              {ui.siteTitle}
+              {isEnglish ? "Explore the links between insects and host plants" : "昆虫と食草のつながりを探す"}
             </h1>
           </div>
 
