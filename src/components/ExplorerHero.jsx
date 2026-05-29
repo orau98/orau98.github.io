@@ -194,7 +194,7 @@ const ExplorerHero = ({
               locale={locale}
             />
             <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-white/85 sm:gap-2 sm:text-sm">
-              <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:px-3">
+              <span className="hidden items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:inline-flex sm:px-3">
                 {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
               </span>
               {isEnglish && (

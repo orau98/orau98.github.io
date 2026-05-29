@@ -95,6 +95,9 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   const speciesInfo = getCurrentSpeciesInfo();
   const headerRef = useRef(null);
   const homePath = localizePath('/', locale);
+  // トップページではヒーローが同じタイトルを大きく表示するため、ヘッダーのタイトル文字は重複になる
+  const normalizedHeaderPath = stripLocalePrefix(location.pathname || '/');
+  const isHome = normalizedHeaderPath === '/' || normalizedHeaderPath === '';
   const quizPath = localizePath('/quiz', locale);
   const navItems = [
     { label: isEnglish ? 'Insects' : '昆虫', to: localizePath('/?tab=insects', locale) },
@@ -132,33 +135,38 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                 </svg>
               </div>
             </div>
-            <div className="hidden min-w-0 sm:block">
-              <div className="truncate text-2xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
-                {isEnglish
-                  ? 'Insects and Host Plants of Japan'
-                  : '"繋がり"が見える昆虫植物図鑑'}
-              </div>
-              <p className="truncate text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
-                {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
-              </p>
-            </div>
-            <div className="min-w-0 sm:hidden">
-              {isEnglish ? (
-                <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-black leading-none text-transparent">
-                  <span className="block whitespace-nowrap">Insects &amp;</span>
-                  <span className="block whitespace-nowrap">Host Plants</span>
+            {/* トップページではヒーローが同じタイトルを大きく表示するため、ヘッダーのタイトル文字は出さない（ロゴアイコンがホームリンク） */}
+            {!isHome && (
+              <>
+                <div className="hidden min-w-0 sm:block">
+                  <div className="truncate text-2xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
+                    {isEnglish
+                      ? 'Insects and Host Plants of Japan'
+                      : '"繋がり"が見える昆虫植物図鑑'}
+                  </div>
+                  <p className="truncate text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
+                    {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
+                  </p>
                 </div>
-              ) : (
-                <div className="flex min-w-0 flex-col gap-1">
-                  <span className="max-w-full truncate text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-100/75">
-                    &quot;繋がり&quot;が見える
-                  </span>
-                  <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-black leading-none text-transparent whitespace-nowrap">
-                    昆虫植物図鑑
-                  </span>
+                <div className="min-w-0 sm:hidden">
+                  {isEnglish ? (
+                    <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-black leading-none text-transparent">
+                      <span className="block whitespace-nowrap">Insects &amp;</span>
+                      <span className="block whitespace-nowrap">Host Plants</span>
+                    </div>
+                  ) : (
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <span className="max-w-full truncate text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-100/75">
+                        &quot;繋がり&quot;が見える
+                      </span>
+                      <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-black leading-none text-transparent whitespace-nowrap">
+                        昆虫植物図鑑
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </Link>
           
           <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4">
@@ -227,7 +235,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
 
             <Link
               to={quizPath}
-              className="group inline-flex items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-3 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
+              className="group hidden sm:inline-flex items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-3 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
               aria-label={isEnglish ? 'Open four-choice quiz' : '4択図鑑を開く'}
             >
               <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,20 +260,6 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             </button>
           </div>
         </div>
-        <nav className="flex gap-2 overflow-x-auto border-t border-white/10 py-2 lg:hidden" aria-label={isEnglish ? 'Primary navigation' : '主要ナビゲーション'}>
-          {navItems.map((item) => {
-            const className = "shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-emerald-50/85 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-300/50";
-            return item.to ? (
-              <Link key={item.label} to={item.to} className={className}>
-                {item.label}
-              </Link>
-            ) : (
-              <a key={item.label} href={item.href} className={className}>
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
       </div>
     </header>
   );
