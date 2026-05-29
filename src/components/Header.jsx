@@ -95,9 +95,6 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   const speciesInfo = getCurrentSpeciesInfo();
   const headerRef = useRef(null);
   const homePath = localizePath('/', locale);
-  // トップページではヒーローが同じタイトルを大きく表示するため、ヘッダーのタイトル文字は重複になる
-  const normalizedHeaderPath = stripLocalePrefix(location.pathname || '/');
-  const isHome = normalizedHeaderPath === '/' || normalizedHeaderPath === '';
   const quizPath = localizePath('/quiz', locale);
   const navItems = [
     { label: isEnglish ? 'Insects' : '昆虫', to: localizePath('/?tab=insects', locale) },
@@ -135,38 +132,33 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                 </svg>
               </div>
             </div>
-            {/* トップページではヒーローが同じタイトルを大きく表示するため、ヘッダーのタイトル文字は出さない（ロゴアイコンがホームリンク） */}
-            {!isHome && (
-              <>
-                <div className="hidden min-w-0 sm:block">
-                  <div className="truncate text-2xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
-                    {isEnglish
-                      ? 'Insects and Host Plants of Japan'
-                      : '"繋がり"が見える昆虫植物図鑑'}
-                  </div>
-                  <p className="truncate text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
-                    {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
-                  </p>
+            <div className="hidden min-w-0 sm:block">
+              <div className="truncate text-2xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
+                {isEnglish
+                  ? 'Insects and Host Plants of Japan'
+                  : '"繋がり"が見える昆虫植物図鑑'}
+              </div>
+              <p className="truncate text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
+                {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
+              </p>
+            </div>
+            <div className="min-w-0 sm:hidden">
+              {isEnglish ? (
+                <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-black leading-none text-transparent">
+                  <span className="block whitespace-nowrap">Insects &amp;</span>
+                  <span className="block whitespace-nowrap">Host Plants</span>
                 </div>
-                <div className="min-w-0 sm:hidden">
-                  {isEnglish ? (
-                    <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-black leading-none text-transparent">
-                      <span className="block whitespace-nowrap">Insects &amp;</span>
-                      <span className="block whitespace-nowrap">Host Plants</span>
-                    </div>
-                  ) : (
-                    <div className="flex min-w-0 flex-col gap-1">
-                      <span className="max-w-full truncate text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-100/75">
-                        &quot;繋がり&quot;が見える
-                      </span>
-                      <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-black leading-none text-transparent whitespace-nowrap">
-                        昆虫植物図鑑
-                      </span>
-                    </div>
-                  )}
+              ) : (
+                <div className="flex min-w-0 flex-col gap-1">
+                  <span className="max-w-full truncate text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-100/75">
+                    &quot;繋がり&quot;が見える
+                  </span>
+                  <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-black leading-none text-transparent whitespace-nowrap">
+                    昆虫植物図鑑
+                  </span>
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </Link>
           
           <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4">
