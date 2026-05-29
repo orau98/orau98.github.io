@@ -1,5 +1,5 @@
 import { Suspense, memo, useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import InstagramIcon from "./components/InstagramIcon";
 import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
@@ -18,7 +18,8 @@ import { isPlantHostRecord } from "./utils/hostResource";
 import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "./utils/filename";
 import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { absUrl } from "./utils/origin";
-import { isKnownDetailPath } from "./utils/siteTaxonomy";
+import { buildPlantPath, isKnownDetailPath } from "./utils/siteTaxonomy";
+import { buildInsectPath } from "./utils/insectSlug";
 import {
   EN_SITE_NAME,
   buildJapaneseReferenceLabel,
@@ -403,6 +404,7 @@ const InsectsHostPlantExplorer = memo(
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
+    const navigate = useNavigate();
     const isEnglish = isEnglishLocale(locale);
     const strippedPathname = stripLocalePrefix(location.pathname || "/");
     const countLabel = useCallback(
@@ -1469,6 +1471,7 @@ const InsectsHostPlantExplorer = memo(
             nameIsScientific: isEnglish && Boolean(insect.scientificName),
             subTextIsScientific: !isEnglish && Boolean(insect.scientificName),
             image: getInsectImageUrl(insect),
+            detailPath: buildInsectPath(insect, locale),
           };
           const alternativeNames = String(insect.alternativeNames || '')
             .split(/[、,，]/)
@@ -1610,6 +1613,7 @@ const InsectsHostPlantExplorer = memo(
             nameIsScientific: isEnglish && Boolean(detail.scientificName),
             subTextIsScientific: !isEnglish && Boolean(detail.scientificName),
             image: getPlantImageUrl(plant),
+            detailPath: buildPlantPath(plant, locale),
           };
           const plantScore = Math.max(
             getMatchScore(plant),
@@ -1676,9 +1680,20 @@ const InsectsHostPlantExplorer = memo(
       plantDetails,
       plantImageFilenames,
       isEnglish,
+      locale,
     ]);
 
-    const handleSelectSuggestion = (value) => {
+    const handleSelectSuggestion = (selection) => {
+      // 特定の種・植物の候補（detailPath あり）は詳細ページへ直接遷移。
+      // 「科で検索」などの集合候補は従来どおり検索を確定して一覧を絞り込む。
+      if (selection && typeof selection === "object" && selection.detailPath) {
+        navigate(selection.detailPath);
+        return;
+      }
+      const value =
+        selection && typeof selection === "object"
+          ? selection.value || selection.name || ""
+          : selection;
       commitSearchValue(value);
     };
 
