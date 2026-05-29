@@ -94,9 +94,9 @@ const ExplorerHero = ({
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
     </div>
 
-    <div className="absolute inset-0 z-30 p-3 sm:p-4 md:p-8">
+    <div className="relative z-30 p-3 sm:absolute sm:inset-0 sm:p-4 md:p-8">
       <div
-        className={`flex h-full flex-col ${
+        className={`flex flex-col sm:h-full ${
           isEnglish
             ? "justify-start gap-3 sm:justify-between"
             : "justify-start gap-2 sm:gap-4 md:gap-7 lg:gap-8"
@@ -171,9 +171,9 @@ const ExplorerHero = ({
             {heroStats.map((item) => (
               <div
                 key={item.label}
-                className="rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:px-3.5 sm:py-1.5"
+                className="shrink-0 rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:shrink sm:px-3.5 sm:py-1.5"
               >
-                <span className="text-[11px] font-medium text-white/90 sm:text-sm">
+                <span className="whitespace-nowrap text-[11px] font-medium text-white/90 sm:text-sm">
                   {item.label} {item.value}
                 </span>
               </div>

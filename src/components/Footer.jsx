@@ -52,18 +52,18 @@ const Footer = ({ locale = 'ja' }) => {
     <footer className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">
       <div className="container mx-auto px-4 py-6 text-center text-neutral-500 dark:text-neutral-400">
         <p className="text-sm">
-          {isEnglish ? 'Curated private collection data. Source code on ' : 'Private collection data. Open source on '}
-          <a 
-            href="https://github.com/orau98/orau98.github.io" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          {isEnglish
+            ? 'A database built from personal field observation and collection records. Source code on '
+            : '個人の観察・採集記録にもとづく図鑑データベースです。ソースコードは '}
+          <a
+            href="https://github.com/orau98/orau98.github.io"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-blue-600 dark:text-blue-400 hover:underline"
           >
             GitHub
-          </a>.
-        </p>
-        <p className="text-xs mt-2">
-          {isEnglish ? 'Built with React and Tailwind CSS.' : 'Built with React and Tailwind CSS.'}
+          </a>
+          {isEnglish ? '.' : ' で公開しています。'}
         </p>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
           {appLinks.map((link) => (
