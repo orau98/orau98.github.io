@@ -168,7 +168,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   
   // Sort for navigation
   const sortedInsects = React.useMemo(() => {
-    return [...allInsects].sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    return [...allInsects].sort((a, b) => String(a?.name || '').localeCompare(String(b?.name || ''), 'ja'));
   }, [allInsects]);
 
   // Utility: find by slugified Japanese name (URL-safe)

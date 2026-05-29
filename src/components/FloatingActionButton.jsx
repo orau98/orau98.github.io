@@ -110,6 +110,8 @@ const FloatingActionButton = () => {
     <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 md:right-6 z-[70] flex flex-col items-end gap-3">
       {/* Menu Items */}
       <div
+        id="fab-contents-menu"
+        inert={!isOpen}
         className={`relative z-[70] flex flex-col gap-3 transition-all duration-300 origin-bottom ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
@@ -157,6 +159,8 @@ const FloatingActionButton = () => {
       {/* Main FAB Toggle */}
       <button
         onClick={toggleMenu}
+        aria-expanded={isOpen}
+        aria-controls="fab-contents-menu"
         className={`relative z-[70] flex h-12 items-center justify-center gap-1.5 rounded-full px-4 shadow-xl transition-all duration-300 md:h-14 md:w-14 md:px-0 ${
           isOpen
             ? 'bg-slate-700 text-white'

@@ -769,7 +769,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const { detail: resolvedPlantDetail, canonical: resolvedCanonicalName } = primaryResolvedPlant.detail
     ? primaryResolvedPlant
     : fallbackResolvedPlant;
-  const details = resolvedPlantDetail || { family: '不明' };
+  const details = useMemo(() => resolvedPlantDetail || { family: '不明' }, [resolvedPlantDetail]);
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
   const [showAllMembers, setShowAllMembers] = useState(false);

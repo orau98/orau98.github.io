@@ -198,6 +198,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
   // 総合備考をinsect_idでグループ化
   const generalNotesByInsect = {};
   generalNotesData.forEach(note => {
+    if (!note || !note.insect_id) return;
     if (!generalNotesByInsect[note.insect_id]) {
       generalNotesByInsect[note.insect_id] = [];
     }

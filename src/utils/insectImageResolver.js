@@ -72,7 +72,7 @@ export const resolveImageBaseCandidates = (
       if (!resolved) {
         const compact = normalizeCompactImageBase(candidate);
         for (const entry of normalizedEntries) {
-          if (entry.compact === compact || entry.compact.startsWith(compact)) {
+          if (compact && (entry.compact === compact || entry.compact.startsWith(compact))) {
             resolved = entry.name;
             break;
           }
