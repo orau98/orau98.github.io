@@ -303,8 +303,14 @@ const SearchInput = React.forwardRef(({
   };
 
   const handleSelect = (suggestion) => {
-    addToHistory(suggestion);
+    const historyValue =
+      typeof suggestion === "object" && suggestion !== null
+        ? suggestion.value || suggestion.name || ""
+        : suggestion;
+    addToHistory(historyValue);
     if (typeof onSelectSuggestion === "function") {
+      // Pass the full suggestion object so the parent can route specific
+      // species/plants straight to their detail page (vs. taxon filters).
       onSelectSuggestion(suggestion);
     }
     setShowSuggestions(false);
@@ -363,7 +369,7 @@ const SearchInput = React.forwardRef(({
           typeof selected === "object" && selected !== null
             ? selected.value || selected.name || ""
             : selected;
-        if (selectValue) handleSelect(selectValue);
+        if (selectValue) handleSelect(selected);
         return;
       }
       const trimmed = localValue.trim();
@@ -533,7 +539,7 @@ const SearchInput = React.forwardRef(({
                   const subText = isObject ? suggestion.subText : null;
                   const nameIsScientific = isObject ? Boolean(suggestion.nameIsScientific) : false;
                   const subTextIsScientific = isObject ? Boolean(suggestion.subTextIsScientific) : false;
-                  const selectValue = isObject ? (suggestion.value || suggestion.name) : suggestion;
+                  const isNavigable = isObject && Boolean(suggestion.detailPath);
 
                   return (
                     <li key={`${name}-${index}`} role="none">
@@ -543,7 +549,7 @@ const SearchInput = React.forwardRef(({
                         id={`${listboxId}-option-${index}`}
                         aria-selected={index === activeIndex}
                         tabIndex={-1}
-                        onMouseDown={() => handleSelect(selectValue)}
+                        onMouseDown={() => handleSelect(suggestion)}
                         onMouseEnter={() => setActiveIndex(index)}
                         className={`flex min-h-[52px] w-full items-center gap-2.5 px-3 py-2 text-left text-slate-700 transition-all duration-150 dark:text-slate-200 sm:min-h-[56px] sm:gap-3 sm:px-4 sm:py-2.5 ${
                           index === activeIndex
@@ -579,6 +585,12 @@ const SearchInput = React.forwardRef(({
                           <span className={`hidden flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium sm:inline-flex ${getSuggestionBadgeClass(type)}`}>
                             {getSearchTypeLabel(type, locale)}
                           </span>
+                        )}
+                        {/* 詳細ページへ直接遷移できる候補（種・植物）に矢印を表示 */}
+                        {isNavigable && (
+                          <svg className="ml-0.5 h-4 w-4 flex-shrink-0 text-slate-300 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
                         )}
                       </button>
                     </li>
