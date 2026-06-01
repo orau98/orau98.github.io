@@ -148,18 +148,8 @@ function isNoindexPage(filePath) {
 function buildRobotsTxt(baseUrl) {
   const sitemapPaths = [
     '/sitemap.xml',
-    '/sitemap-index.xml',
     '/sitemap-core.xml',
-    '/sitemap-all.txt',
-    '/sitemap.txt',
     '/search-console-submit.xml',
-    '/search-console-submit.txt',
-    '/search-console-sitemap.xml',
-    '/search-console-sitemap.txt',
-    '/google-sitemap.xml',
-    '/google-sitemap.txt',
-    '/gsc-sitemap.xml',
-    '/gsc-sitemap.txt',
   ];
 
   const lines = [
@@ -782,8 +772,11 @@ function generateSplitSitemaps() {
   }
 
   const googleFallbackFiles = buildGoogleFallbackFiles(baseUrl, generatedAt);
-  const searchConsoleSubmitUrls = allUrls.length > 0
-    ? allUrls
+  // Search Console reports for this site have failed to discover the huge
+  // sitemap aliases. Keep this file as a compact, high-value discovery seed;
+  // the complete URL inventory remains available through sitemap.xml.
+  const searchConsoleSubmitUrls = coreUrls.length > 0
+    ? coreUrls
     : [{ loc: `${baseUrl}/`, lastmod: generatedAt, changefreq: 'weekly', priority: '1.0' }];
   const searchConsoleSubmitXml = generateXML(
     searchConsoleSubmitUrls,
