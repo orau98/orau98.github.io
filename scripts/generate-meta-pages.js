@@ -1278,8 +1278,42 @@ function renderHostPlantGuideLinks(hostPlantsArray = []) {
   return `<p class="host-plant-guides">この食草で探す：${links}</p>`;
 }
 
+// --- 同じ食草を利用する他の昆虫（共起昆虫）---
+// hostPlantsMap（食草→昆虫の逆引き、全ループ完成後に渡す）から、この種と食草を共有する
+// 他の昆虫を抽出して相互リンクする。各種ページの内容を厚くし(薄い・定型コンテンツの是正)、
+// 種↔種の内部リンク網を密にしてクロール到達性とトピック関連性を高める。
+function renderCoOccurringInsects(insect, fallbackType, hostPlantsArray = [], hostPlantsMap = null) {
+  if (!hostPlantsMap || !hostPlantsArray.length) return '';
+  const selfId = insect && insect.id;
+  const seen = new Map();
+  for (const plant of hostPlantsArray) {
+    const list = hostPlantsMap.get(normalizePlantName(plant));
+    if (!Array.isArray(list)) continue;
+    for (const other of list) {
+      if (!other || !other.id || other.id === selfId) continue;
+      const name = other.japaneseName || other.name;
+      if (!name) continue;
+      if (!seen.has(other.id)) {
+        seen.set(other.id, { id: other.id, name, type: other.type || fallbackType });
+      }
+    }
+  }
+  const others = [...seen.values()];
+  if (!others.length) return '';
+  const shown = others.slice(0, 20);
+  const items = shown
+    .map((o) => `<li><a href="/meta/${o.type}/${encodeURIComponent(o.id)}.html">${o.name}</a></li>`)
+    .join('');
+  return `
+      <section class="co-occurring">
+        <h3>同じ食草を利用する他の昆虫</h3>
+        <p>${insect.japaneseName}と食草を共有する昆虫が${others.length}種知られています${others.length > shown.length ? `（うち${shown.length}種を表示）` : ''}：</p>
+        <ul>${items}</ul>
+      </section>`;
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
-function generateInsectHTML(insect, type, enSlugEntry = null) {
+function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = null) {
   const typeNames = INSECT_TYPE_NAMES;
   
   const hostPlants = insect.hostPlants || '不明';
@@ -1637,7 +1671,8 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         ${renderHostPlantGuideLinks(hostPlantsArray)}` : `
         <p>食草情報は現在調査中です。</p>`}
       </section>
-      
+      ${renderCoOccurringInsects(insect, type, hostPlantsArray, hostPlantsMap)}
+
       <section class="description">
         <h3>詳細説明</h3>
         <p>${insect.japaneseName}（学名：${formatScientificNameHTML(scientificName)}）は${familyName}に分類される${typeNames[type]}の一種です。</p>
@@ -2240,6 +2275,8 @@ async function generateMetaPages() {
     let leafbeetleCountFromInsects = 0;
     let aphidCountFromInsects = 0;
     const hostPlantsMap = new Map();
+    // 種ページは hostPlantsMap が全ループで完成してから2パス目で書き出す（共起昆虫の相互リンクのため）
+    const insectPageQueue = [];
 
     // e.g. "1758)" / "[1799])" / "1978"
     const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(String(value || '').trim());
@@ -2343,9 +2380,8 @@ async function generateMetaPages() {
       };
       
       const enSlugEntry = insectIdToEnSlug.get(insectId);
-      const html = generateInsectHTML(insect, type, enSlugEntry);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
-      fs.writeFileSync(filename, html);
+      insectPageQueue.push({ insect, type, enSlugEntry, filename });
       const legacySlug = encodeURIComponent(String(displayName || insectId).trim());
       queueLegacyRedirect(
         `/${type}/${legacySlug}/index.html`,
@@ -2410,9 +2446,8 @@ async function generateMetaPages() {
       
       
       const enSlugEntryB = insectIdToEnSlug.get(insectId);
-      const html = generateInsectHTML(insect, type, enSlugEntryB);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
-      fs.writeFileSync(filename, html);
+      insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryB, filename });
       const legacySlug = encodeURIComponent(String(japaneseName || insectId).trim());
       queueLegacyRedirect(
         `/${type}/${legacySlug}/index.html`,
@@ -2489,9 +2524,8 @@ async function generateMetaPages() {
       };
       
       const enSlugEntryH = insectIdToEnSlug.get(insectId);
-      const html = generateInsectHTML(insect, type, enSlugEntryH);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
-      fs.writeFileSync(filename, html);
+      insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryH, filename });
       const legacySlug = encodeURIComponent(String(japaneseName || insectId).trim());
       queueLegacyRedirect(
         `/${type}/${legacySlug}/index.html`,
@@ -2532,6 +2566,14 @@ async function generateMetaPages() {
       }
     });
     
+    // 2パス目: hostPlantsMap が全ループで完成した後に種ページを書き出す。
+    // 「同じ食草を利用する他の昆虫」を相互リンクし、各ページの内容を厚くする。
+    console.log(`[meta] 種ページを書き出します（共起昆虫リンク付き）: ${insectPageQueue.length}件`);
+    insectPageQueue.forEach(({ insect, type, enSlugEntry, filename }) => {
+      const html = generateInsectHTML(insect, type, enSlugEntry, hostPlantsMap);
+      fs.writeFileSync(filename, html);
+    });
+
     // 植物ページを生成
     let plantCount = 0;
     let skippedPlants = 0;
