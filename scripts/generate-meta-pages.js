@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { HOST_PLANT_GUIDES } from './generate-host-plant-guides.mjs';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
 import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
@@ -1241,6 +1242,42 @@ function buildEnglishSlugMaps() {
   return { insectIdToEnSlug, plantNameToEnSlug };
 }
 
+// --- 食草ガイドへの内部リンク ---
+// 種ページから該当する食草ガイド(/guides/plants/<slug>.html)へ逆リンクを張る。
+// 多数の種ページ(約1.5万)から少数のガイドページ(「サクラにつく虫」等、検索需要の大きい
+// クエリの受け皿)へ内部リンクを集中させ、ガイドの内部評価とクロール到達性を高める。
+// 元データ HOST_PLANT_GUIDES は generate-host-plant-guides.mjs と単一ソースを共有する。
+const PLANT_GUIDE_BY_VARIANT = new Map();
+for (const guide of HOST_PLANT_GUIDES) {
+  const names = new Set([guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]);
+  for (const name of names) {
+    const key = String(name || '').trim();
+    if (key) PLANT_GUIDE_BY_VARIANT.set(key, { slug: guide.slug, name: guide.name });
+  }
+}
+
+function findHostPlantGuides(hostPlantsArray = []) {
+  const found = new Map();
+  for (const plant of hostPlantsArray) {
+    const raw = String(plant || '').trim();
+    if (!raw) continue;
+    // 「サクラ(バラ科)」のような科名注記を除いた基準名でも照合する
+    const base = raw.replace(/[（(][^）)]*[）)]\s*$/, '').trim();
+    const hit = PLANT_GUIDE_BY_VARIANT.get(raw) || PLANT_GUIDE_BY_VARIANT.get(base);
+    if (hit) found.set(hit.slug, hit);
+  }
+  return [...found.values()];
+}
+
+function renderHostPlantGuideLinks(hostPlantsArray = []) {
+  const guides = findHostPlantGuides(hostPlantsArray);
+  if (!guides.length) return '';
+  const links = guides
+    .map((g) => `<a href="/guides/plants/${g.slug}.html">${g.name}につく虫の一覧</a>`)
+    .join('、');
+  return `<p class="host-plant-guides">この食草で探す：${links}</p>`;
+}
+
 // Enhanced HTMLテンプレートを生成する関数 - フルコンテンツバージョン
 function generateInsectHTML(insect, type, enSlugEntry = null) {
   const typeNames = INSECT_TYPE_NAMES;
@@ -1596,7 +1633,8 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
             const safePlantName = normalizedPlant.replace(/[/\\?%*:|"<>]/g, '-');
             return `<li><a href="/meta/plant/${encodeURIComponent(safePlantName)}.html">${normalizedPlant}</a></li>`;
           }).join('')}
-        </ul>` : `
+        </ul>
+        ${renderHostPlantGuideLinks(hostPlantsArray)}` : `
         <p>食草情報は現在調査中です。</p>`}
       </section>
       
@@ -1604,7 +1642,13 @@ function generateInsectHTML(insect, type, enSlugEntry = null) {
         <h3>詳細説明</h3>
         <p>${insect.japaneseName}（学名：${formatScientificNameHTML(scientificName)}）は${familyName}に分類される${typeNames[type]}の一種です。</p>
         ${hostPlantsArray.length > 0 ? `
-        <p>幼虫は${hostPlantsArray.slice(0, 3).join('、')}${hostPlantsArray.length > 3 ? 'など' : ''}を食草として成長します。${hostPlantsArray.length}種の植物との関係が確認されており、多様な植物資源を利用する種です。</p>` : ''}
+        <p>幼虫は${hostPlantsArray.slice(0, 3).join('、')}${hostPlantsArray.length > 3 ? 'など' : ''}を食草として成長します。${
+          hostPlantsArray.length === 1
+            ? `知られている食草は${hostPlantsArray[0]}の1種で、特定の植物に依存する食性をもつと考えられます。`
+            : hostPlantsArray.length <= 5
+              ? `これまでに${hostPlantsArray.length}種の植物が食草として記録されています。`
+              : `${hostPlantsArray.length}種におよぶ幅広い植物を利用する多食性の種です。`
+        }</p>` : ''}
         ${insect.remarks && insect.remarks.trim() ? `
         <h4>備考</h4>
         <p>${formatEnglishWordsInItalic(insect.remarks)}</p>` : ''}

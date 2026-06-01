@@ -25,7 +25,7 @@ const TYPE_LABELS = Object.fromEntries(TYPE_CONFIGS.map(([key, label]) => [key, 
 const TYPE_ROUTE_PREFIXES = Object.fromEntries(TYPE_CONFIGS.map(([key, , prefix]) => [key, prefix]));
 const TYPE_ORDER = Object.fromEntries(TYPE_CONFIGS.map(([key], index) => [key, index]));
 
-const HOST_PLANT_GUIDES = [
+export const HOST_PLANT_GUIDES = [
   {
     slug: 'sakura',
     name: 'サクラ',
@@ -1032,4 +1032,8 @@ function main() {
   console.log(`[guides] generated category guide pages: ${categories.length + 1}`);
 }
 
-main();
+// 直接実行時のみ生成を走らせる。他スクリプト(generate-meta-pages.js)が
+// HOST_PLANT_GUIDES を import しても副作用でページ生成が走らないようにするためのガード。
+if (process.argv[1] === __filename) {
+  main();
+}
