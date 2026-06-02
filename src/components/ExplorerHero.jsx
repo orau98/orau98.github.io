@@ -31,8 +31,8 @@ const ExplorerHero = ({
     id="hero-section"
     className={`group relative w-full ${
       isEnglish
-        ? "min-h-[13rem] sm:min-h-[18rem] md:min-h-[21rem] lg:min-h-[23rem]"
-        : "min-h-[12rem] sm:min-h-[17rem] md:min-h-[20rem] lg:min-h-[22rem]"
+        ? "min-h-[12rem] sm:min-h-[15rem] md:min-h-[17rem] lg:min-h-[18rem]"
+        : "min-h-[11.5rem] sm:min-h-[14rem] md:min-h-[16rem] lg:min-h-[17rem]"
     }`}
   >
     <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl z-0 sm:rounded-3xl">
@@ -96,56 +96,54 @@ const ExplorerHero = ({
 
     <div className="relative z-30 p-3 sm:absolute sm:inset-0 sm:p-4 md:p-8">
       <div
-        className={`flex flex-col sm:h-full ${
+        className={`flex flex-col justify-center sm:h-full ${
           isEnglish
-            ? "justify-start gap-3 sm:justify-between"
-            : "justify-start gap-2 sm:gap-3 md:gap-5 lg:gap-6"
+            ? "gap-3 md:gap-4"
+            : "gap-2 sm:gap-3 md:gap-4"
         }`}
       >
-        <div className="flex flex-col gap-2 sm:gap-4 lg:flex-row lg:items-start lg:justify-between">
-          {showHeaderControls && !isStickyHeaderVisible && (
-            <div className="flex w-full items-center justify-between gap-2 self-start sm:w-auto sm:justify-start lg:pt-1">
-              <LocaleSwitcher locale={locale} compact />
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="rounded-2xl border border-white/30 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 p-3 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:from-emerald-500/30 hover:to-blue-500/30 sm:p-3.5"
-                aria-label={ui.themeAria}
-              >
-                {theme === "dark" ? (
-                  <svg
-                    className="h-5 w-5 text-white/80 sm:h-6 sm:w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="h-5 w-5 text-white/80 sm:h-6 sm:w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+        {showHeaderControls && !isStickyHeaderVisible && (
+          <div className="flex w-full items-center justify-between gap-2 self-start sm:w-auto sm:justify-start lg:pt-1">
+            <LocaleSwitcher locale={locale} compact />
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-2xl border border-white/30 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 p-3 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:from-emerald-500/30 hover:to-blue-500/30 sm:p-3.5"
+              aria-label={ui.themeAria}
+            >
+              {theme === "dark" ? (
+                <svg
+                  className="h-5 w-5 text-white/80 sm:h-6 sm:w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="h-5 w-5 text-white/80 sm:h-6 sm:w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+        )}
 
-        <div className={`${isEnglish ? "mt-1 sm:mt-5" : "mt-0 sm:mt-1"} space-y-2 sm:space-y-3.5 md:space-y-5`}>
+        <div className="w-full space-y-2 sm:space-y-3.5 md:space-y-4">
           <div className="flex max-w-full flex-nowrap gap-2 overflow-x-auto pb-1 sm:max-w-5xl sm:flex-wrap sm:gap-2.5 sm:overflow-visible sm:pb-0">
             {heroStats.map((item) => (
               <div
