@@ -48,8 +48,8 @@ export function ListDisplayControls({
         </span>
         <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-800">
           {[
-            { value: 'compact', label: labels.compact },
             { value: 'cards', label: labels.cards },
+            { value: 'compact', label: labels.compact },
           ].map((item) => (
             <button
               key={item.value}

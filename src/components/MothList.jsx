@@ -475,9 +475,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
                         </svg>
                       </span>
-                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300">
-                        {renderLocalizedScientificNameListReact(visibleHostNames, locale)}
-                        {extraHostCount > 0 && moreLabel(extraHostCount)}
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
+                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
                       </span>
                     </div>
                   )}
@@ -491,9 +490,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       >
                         🌸
                       </span>
-                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300">
-                        {renderLocalizedScientificNameListReact(visibleFlowerNames, locale)}
-                        {extraFlowerCount > 0 && moreLabel(extraFlowerCount)}
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
+                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
                       </span>
                     </div>
                   )}
@@ -720,7 +718,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return ['spring', 'summer', 'autumn', 'winter'].includes(v) ? v : '';
   }, [searchParams]);
   const photoFilter = useMemo(() => (searchParams.get('iphoto') === 'has' ? 'has' : 'all'), [searchParams]);
-  const viewMode = useMemo(() => (searchParams.get('iview') === 'cards' ? 'cards' : 'compact'), [searchParams]);
+  const viewMode = useMemo(() => (searchParams.get('iview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
   const sortMode = useMemo(() => {
     const v = searchParams.get('isort') || 'image';
     return ['image', 'name', 'family', 'plantCount', 'season'].includes(v) ? v : 'image';
@@ -795,7 +793,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const setIViewMode = useCallback((value) => {
     updateSearchParams((p) => {
-      if (value === 'cards') p.set('iview', 'cards');
+      if (value === 'compact') p.set('iview', 'compact');
       else p.delete('iview');
     });
   }, [updateSearchParams]);

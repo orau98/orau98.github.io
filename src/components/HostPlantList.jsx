@@ -97,7 +97,7 @@ const HostPlantListItem = React.memo(
       Number.isFinite(relatedCount) && relatedCount >= 0
         ? relatedCount
         : mothNames.length;
-    const visibleNames = mothNames.slice(0, 3);
+    const visibleNames = mothNames.slice(0, 4);
     const visibleDisplayNames = useMemo(
       () =>
         visibleNames
@@ -367,7 +367,7 @@ const HostPlantListItem = React.memo(
                       <path d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531C262.492,186.777,267.602,184.246,268.305,179.339z"/>
                     </svg>
                   </span>
-                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
+                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug sm:line-clamp-3">
                     {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
                     {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
                   </span>
@@ -612,7 +612,7 @@ const HostPlantList = ({
   const visitFilter = useMemo(() => searchParams.get('pvisit') || 'all', [searchParams]);
   const hostOnlyFilter = useMemo(() => searchParams.get('phost') === 'has', [searchParams]);
   const photoFilter = useMemo(() => (searchParams.get('pphoto') === 'has' ? 'has' : 'all'), [searchParams]);
-  const viewMode = useMemo(() => (searchParams.get('pview') === 'cards' ? 'cards' : 'compact'), [searchParams]);
+  const viewMode = useMemo(() => (searchParams.get('pview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
   const sortMode = useMemo(() => {
     const v = searchParams.get('psort') || 'image';
     return ['image', 'name', 'family', 'related'].includes(v) ? v : 'image';
@@ -671,7 +671,7 @@ const HostPlantList = ({
 
   const setPViewMode = useCallback((value) => {
     updateSearchParams((p) => {
-      if (value === 'cards') p.set('pview', 'cards');
+      if (value === 'compact') p.set('pview', 'compact');
       else p.delete('pview');
     });
   }, [updateSearchParams]);
