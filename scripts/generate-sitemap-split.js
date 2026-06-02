@@ -326,6 +326,10 @@ function generateSplitSitemaps() {
   const DATE_RICH    = monthsAgoFirstDay(0, today); // 今月1日: データが豊富
   const DATE_MEDIUM  = monthsAgoFirstDay(1, today); // 先月1日: データが中程度
   const DATE_SPARSE  = monthsAgoFirstDay(3, today); // 3ヶ月前1日: データが少ない
+  // 種・植物ページのテンプレートを更新した日（施策B/C: 食草数準拠の説明文＋「同じ食草につく他の昆虫」相互リンク）。
+  // この日に全ページの本文が実際に変わったため、lastmod の下限として用い、Google 等に再クロールを促す正当なシグナルとする。
+  // 今後テンプレートを実質変更したら、この日付を更新すること。
+  const TEMPLATE_CHANGE_DATE = '2026-06-02';
 
   const normalizedDataDir = path.join(__dirname, '../normalized_data');
   const hostplantCountMap = buildHostplantCountMap(
@@ -567,8 +571,11 @@ function generateSplitSitemaps() {
         lastmod = resolveInsectLastmod(insectId);
       }
 
-      // changefreq: データが豊富なページは weekly、それ以外は monthly
+      // changefreq: データが豊富なページは weekly、それ以外は monthly（充実度バケットで判定）
       const changefreq = lastmod === DATE_RICH ? 'weekly' : 'monthly';
+
+      // テンプレート更新で全ページの本文が変わったため、lastmod は変更日を下回らないようにする
+      if (lastmod < TEMPLATE_CHANGE_DATE) lastmod = TEMPLATE_CHANGE_DATE;
 
       sitemaps[key].push({
         loc: `${baseUrl}${routePrefix}${encodeFilename(file)}`,
