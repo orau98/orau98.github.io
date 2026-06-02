@@ -31,8 +31,8 @@ const ExplorerHero = ({
     id="hero-section"
     className={`group relative w-full ${
       isEnglish
-        ? "min-h-[12rem] sm:min-h-[15rem] md:min-h-[17rem] lg:min-h-[18rem]"
-        : "min-h-[11.5rem] sm:min-h-[14rem] md:min-h-[16rem] lg:min-h-[17rem]"
+        ? "min-h-[11rem] sm:min-h-[13.5rem] md:min-h-[15rem] lg:min-h-[16.5rem]"
+        : "min-h-[10.5rem] sm:min-h-[12.5rem] md:min-h-[14rem] lg:min-h-[15.5rem]"
     }`}
   >
     <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl z-0 sm:rounded-3xl">
@@ -94,7 +94,7 @@ const ExplorerHero = ({
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-transparent z-20"></div>
     </div>
 
-    <div className="relative z-30 p-3 sm:absolute sm:inset-0 sm:p-4 md:p-8">
+    <div className="relative z-30 p-3 sm:absolute sm:inset-0 sm:p-4 md:p-6">
       <div
         className={`flex flex-col justify-center sm:h-full ${
           isEnglish
@@ -143,9 +143,11 @@ const ExplorerHero = ({
           </div>
         )}
 
-        <div className="w-full space-y-2 sm:space-y-3.5 md:space-y-4">
-          <div className="flex max-w-full flex-nowrap gap-2 overflow-x-auto pb-1 sm:max-w-5xl sm:flex-wrap sm:gap-2.5 sm:overflow-visible sm:pb-0">
-            {heroStats.map((item) => (
+        <div className="w-full space-y-2 sm:space-y-3 md:space-y-3.5">
+          <div className="flex max-w-full flex-wrap gap-2 sm:max-w-4xl sm:gap-2.5">
+            {heroStats
+              .filter((_, index, list) => index === 0 || index === 2 || index === list.length - 1)
+              .map((item) => (
               <div
                 key={item.label}
                 className="shrink-0 rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:shrink sm:px-3.5 sm:py-1.5"
@@ -171,9 +173,6 @@ const ExplorerHero = ({
               locale={locale}
             />
             <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-white/85 sm:gap-2 sm:text-sm">
-              <span className="hidden items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-1 backdrop-blur-sm sm:inline-flex sm:px-3">
-                {isEnglish ? "Search target:" : "検索対象:"} {ui.searchTargetLabel}
-              </span>
               {isEnglish && (
                 <span className="hidden max-w-2xl items-center rounded-[1.4rem] border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-sm sm:inline-flex">
                   <span className="text-pretty">{ENGLISH_NAMING_NOTICE}</span>

@@ -276,6 +276,14 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const emergenceTime = moth.emergenceTime || extractEmergenceTime(moth.notes || '').emergenceTime;
   const normalizedTime = normalizeEmergenceTime(emergenceTime);
   const linkedPlantCount = plantDisplay.hostNames.length + plantDisplay.flowerNames.length;
+  const visibleHostNames = localizedPlantDisplay.hostNames.slice(0, 3);
+  const visibleFlowerNames = localizedPlantDisplay.flowerNames.slice(0, 2);
+  const extraHostCount = Math.max(0, localizedPlantDisplay.hostNames.length - visibleHostNames.length);
+  const extraFlowerCount = Math.max(0, localizedPlantDisplay.flowerNames.length - visibleFlowerNames.length);
+  const moreLabel = useCallback(
+    (value) => (isEnglish ? ` and ${value} more` : `...他${value}`),
+    [isEnglish],
+  );
 
   // Error boundary for individual moth items
   if (!moth) {
@@ -343,13 +351,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 {localizedPlantDisplay.hostNames.length > 0 && (
                   <p className="line-clamp-1">
                     <span className="font-semibold text-emerald-700 dark:text-emerald-300">{isEnglish ? 'Host:' : '食草:'}</span>{' '}
-                    {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
+                    {renderLocalizedScientificNameListReact(visibleHostNames, locale)}
+                    {extraHostCount > 0 && moreLabel(extraHostCount)}
                   </p>
                 )}
                 {localizedPlantDisplay.flowerNames.length > 0 && (
                   <p className="line-clamp-1">
                     <span className="font-semibold text-rose-700 dark:text-rose-300">{isEnglish ? 'Flower:' : '訪花:'}</span>{' '}
-                    {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
+                    {renderLocalizedScientificNameListReact(visibleFlowerNames, locale)}
+                    {extraFlowerCount > 0 && moreLabel(extraFlowerCount)}
                   </p>
                 )}
                 {normalizedTime && (
@@ -465,8 +475,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
                         </svg>
                       </span>
-                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
-                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300">
+                        {renderLocalizedScientificNameListReact(visibleHostNames, locale)}
+                        {extraHostCount > 0 && moreLabel(extraHostCount)}
                       </span>
                     </div>
                   )}
@@ -480,8 +491,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       >
                         🌸
                       </span>
-                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
-                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300">
+                        {renderLocalizedScientificNameListReact(visibleFlowerNames, locale)}
+                        {extraFlowerCount > 0 && moreLabel(extraFlowerCount)}
                       </span>
                     </div>
                   )}
@@ -633,7 +645,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     resetCanonicalTo: (typeof window !== 'undefined' ? window.location.origin : 'https://orau98.github.io') + localizePath('/', locale)
   });
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const updateSearchParams = useCallback((mutate) => {
     let next;
     try {
@@ -708,7 +720,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return ['spring', 'summer', 'autumn', 'winter'].includes(v) ? v : '';
   }, [searchParams]);
   const photoFilter = useMemo(() => (searchParams.get('iphoto') === 'has' ? 'has' : 'all'), [searchParams]);
-  const viewMode = useMemo(() => (searchParams.get('iview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
+  const viewMode = useMemo(() => (searchParams.get('iview') === 'cards' ? 'cards' : 'compact'), [searchParams]);
   const sortMode = useMemo(() => {
     const v = searchParams.get('isort') || 'image';
     return ['image', 'name', 'family', 'plantCount', 'season'].includes(v) ? v : 'image';
@@ -783,7 +795,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   const setIViewMode = useCallback((value) => {
     updateSearchParams((p) => {
-      if (value === 'compact') p.set('iview', 'compact');
+      if (value === 'cards') p.set('iview', 'cards');
       else p.delete('iview');
     });
   }, [updateSearchParams]);
@@ -1635,13 +1647,22 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     const resultsLabel = ui.resultCount(sortedMoths?.length ?? filteredMoths?.length ?? 0);
     const mobileControlsLabel = isEnglish ? 'Controls' : '条件';
     const activeControlsLabel = isEnglish ? `${activeFilters.length} active` : `条件${activeFilters.length}`;
-    const renderFullControls = ({ showResultsLabel = true } = {}) => (
+    const renderFullControls = ({ showResultsLabel = true, mobileInline = false } = {}) => {
+      const idSuffix = mobileInline ? '-mobile' : '';
+      const panelId = `${filtersPanelId}${idSuffix}`;
+      const hostId = `${hostFilterId}${idSuffix}`;
+      const familyId = `${familyFilterId}${idSuffix}`;
+      const genusId = `${genusFilterId}${idSuffix}`;
+      const emergenceId = `${emergenceFilterId}${idSuffix}`;
+
+      return (
       <>
         <ListFilterPanel
           title={ui.filterTitle}
-          isOpen={isFiltersOpen}
+          isOpen={mobileInline || isFiltersOpen}
           onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
-          panelId={filtersPanelId}
+          panelId={panelId}
+          hideHeader={mobileInline}
           hasAnyCriteria={hasAnyCriteria}
           filteredByLabel={ui.filteredBy}
           activeFilters={activeFilters}
@@ -1650,14 +1671,14 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           getClearFilterLabel={(type) =>
             isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
           }
-          controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"
+          controlsClassName={`${mobileInline ? 'mt-2' : 'mt-4'} grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}
           resultsLabel={showResultsLabel ? resultsLabel : ''}
         >
             <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostFilterId}>{ui.hostPlantFilter}</label>
+              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostId}>{ui.hostPlantFilter}</label>
               <div className="relative">
                 <select
-                  id={hostFilterId}
+                  id={hostId}
                   value={hostFilter}
                   onChange={(e) => setIHostFilter(e.target.value)}
                   className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -1675,7 +1696,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </div>
 
           <SearchableSelect
-            id={familyFilterId}
+            id={familyId}
             label={ui.family}
             value={familyFilter}
             options={familyOptions}
@@ -1685,7 +1706,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           />
 
           <SearchableSelect
-            id={genusFilterId}
+            id={genusId}
             label={ui.genus}
             value={genusFilter}
             options={genusOptions}
@@ -1695,10 +1716,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           />
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceFilterId}>{ui.emergence}</label>
+          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceId}>{ui.emergence}</label>
           <div className="relative">
             <select
-              id={emergenceFilterId}
+              id={emergenceId}
               value={emergenceFilter}
               onChange={(e) => setIEmergenceFilter(e.target.value)}
               className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -1736,7 +1757,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           }}
         />
       </>
-    );
+      );
+    };
     return (
       <>
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
@@ -1757,7 +1779,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </span>
           </summary>
           <div className="border-t border-slate-200/70 px-3 pb-3 pt-1 dark:border-slate-700/70">
-            {renderFullControls({ showResultsLabel: false })}
+            {renderFullControls({ showResultsLabel: false, mobileInline: true })}
           </div>
         </details>
         <div className="hidden sm:block">

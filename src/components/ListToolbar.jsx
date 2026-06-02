@@ -4,9 +4,9 @@ const buttonBase =
 export function PresetFilterChips({ label, chips = [] }) {
   if (!chips.length) return null;
   return (
-    <div className="mt-2 flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:mt-3 sm:flex-wrap sm:overflow-visible sm:pb-0">
+    <div className="mt-2 flex flex-wrap items-center gap-2 sm:mt-3">
       {label && (
-        <span className="shrink-0 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <span className="w-full text-xs font-semibold text-slate-500 dark:text-slate-400 sm:w-auto">
           {label}
         </span>
       )}
@@ -16,7 +16,7 @@ export function PresetFilterChips({ label, chips = [] }) {
           type="button"
           onClick={chip.onClick}
           aria-pressed={chip.active}
-          className={`${buttonBase} shrink-0 ${
+          className={`${buttonBase} ${
             chip.active
               ? 'border-emerald-300 bg-emerald-100 text-emerald-800 focus:ring-emerald-400 dark:border-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200'
               : 'border-slate-200 bg-white/80 text-slate-600 hover:bg-slate-50 focus:ring-slate-300 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-700'
@@ -42,14 +42,14 @@ export function ListDisplayControls({
 }) {
   return (
     <div className="mt-2 flex flex-col gap-2 rounded-xl border border-slate-200/70 bg-white/70 p-2.5 dark:border-slate-700/70 dark:bg-slate-900/50 sm:mt-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:p-3">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
           {labels.view}
         </span>
         <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-800">
           {[
-            { value: 'cards', label: labels.cards },
             { value: 'compact', label: labels.compact },
+            { value: 'cards', label: labels.cards },
           ].map((item) => (
             <button
               key={item.value}
@@ -70,12 +70,12 @@ export function ListDisplayControls({
 
       <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
         {onItemsPerPageChange && (
-          <label className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <label className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
             {labels.perPage}
             <select
               value={itemsPerPageValue}
               onChange={(event) => onItemsPerPageChange(event.target.value)}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              className="max-w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
             >
               <option value="auto">{labels.autoPerPage ? labels.autoPerPage(autoItemsPerPage) : 'Auto'}</option>
               {[20, 50, 100].map((value) => (
@@ -87,12 +87,12 @@ export function ListDisplayControls({
           </label>
         )}
 
-        <label className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <label className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
           {labels.sort}
           <select
             value={sortMode}
             onChange={(event) => onSortModeChange(event.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+            className="max-w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
           >
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>

@@ -97,7 +97,7 @@ const HostPlantListItem = React.memo(
       Number.isFinite(relatedCount) && relatedCount >= 0
         ? relatedCount
         : mothNames.length;
-    const visibleNames = mothNames.slice(0, 4);
+    const visibleNames = mothNames.slice(0, 3);
     const visibleDisplayNames = useMemo(
       () =>
         visibleNames
@@ -367,7 +367,7 @@ const HostPlantListItem = React.memo(
                       <path d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531C262.492,186.777,267.602,184.246,268.305,179.339z"/>
                     </svg>
                   </span>
-                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 sm:line-clamp-3 leading-snug">
+                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug">
                     {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
                     {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
                   </span>
@@ -612,7 +612,7 @@ const HostPlantList = ({
   const visitFilter = useMemo(() => searchParams.get('pvisit') || 'all', [searchParams]);
   const hostOnlyFilter = useMemo(() => searchParams.get('phost') === 'has', [searchParams]);
   const photoFilter = useMemo(() => (searchParams.get('pphoto') === 'has' ? 'has' : 'all'), [searchParams]);
-  const viewMode = useMemo(() => (searchParams.get('pview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
+  const viewMode = useMemo(() => (searchParams.get('pview') === 'cards' ? 'cards' : 'compact'), [searchParams]);
   const sortMode = useMemo(() => {
     const v = searchParams.get('psort') || 'image';
     return ['image', 'name', 'family', 'related'].includes(v) ? v : 'image';
@@ -671,7 +671,7 @@ const HostPlantList = ({
 
   const setPViewMode = useCallback((value) => {
     updateSearchParams((p) => {
-      if (value === 'compact') p.set('pview', 'compact');
+      if (value === 'cards') p.set('pview', 'cards');
       else p.delete('pview');
     });
   }, [updateSearchParams]);
@@ -1256,13 +1256,21 @@ const HostPlantList = ({
     const resultsLabel = ui.resultCount(filteredHostPlants?.length ?? 0);
     const mobileControlsLabel = isEnglish ? "Controls" : "条件";
     const activeControlsLabel = isEnglish ? "Active" : "条件あり";
-    const renderFullControls = ({ showResultsLabel = true } = {}) => (
+    const renderFullControls = ({ showResultsLabel = true, mobileInline = false } = {}) => {
+      const idSuffix = mobileInline ? "-mobile" : "";
+      const panelId = `${filtersPanelId}${idSuffix}`;
+      const orderId = `${orderFilterId}${idSuffix}`;
+      const familyId = `${familyFilterId}${idSuffix}`;
+      const visitId = `${visitFilterId}${idSuffix}`;
+
+      return (
       <>
         <ListFilterPanel
           title={ui.filterTitle}
-          isOpen={isFiltersOpen}
+          isOpen={mobileInline || isFiltersOpen}
           onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
-          panelId={filtersPanelId}
+          panelId={panelId}
+          hideHeader={mobileInline}
           hasAnyCriteria={hasAnyCriteria}
           filteredByLabel={ui.filteredBy}
           activeFilters={activeFilters}
@@ -1271,11 +1279,11 @@ const HostPlantList = ({
           getClearFilterLabel={(type) =>
             isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
           }
-          controlsClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+          controlsClassName={`${mobileInline ? "mt-2" : "mt-4"} grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3`}
           resultsLabel={showResultsLabel ? resultsLabel : ""}
         >
           <SearchableSelect
-            id={orderFilterId}
+            id={orderId}
             label={ui.order}
             value={orderFilter}
             options={orderOptions}
@@ -1285,7 +1293,7 @@ const HostPlantList = ({
           />
 
           <SearchableSelect
-            id={familyFilterId}
+            id={familyId}
             label={ui.family}
             value={familyFilter}
             options={familyOptions}
@@ -1295,10 +1303,10 @@ const HostPlantList = ({
           />
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitFilterId}>{ui.flowerVisit}</label>
+          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitId}>{ui.flowerVisit}</label>
           <div className="relative">
             <select
-              id={visitFilterId}
+              id={visitId}
               value={visitFilter}
               onChange={(e) => setPVisitFilter(e.target.value)}
               className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
@@ -1329,7 +1337,8 @@ const HostPlantList = ({
           }}
         />
       </>
-    );
+      );
+    };
     return (
       <>
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
@@ -1350,7 +1359,7 @@ const HostPlantList = ({
             </span>
           </summary>
           <div className="border-t border-slate-200/70 px-3 pb-3 pt-1 dark:border-slate-700/70">
-            {renderFullControls({ showResultsLabel: false })}
+            {renderFullControls({ showResultsLabel: false, mobileInline: true })}
           </div>
         </details>
         <div className="hidden sm:block">
