@@ -466,7 +466,6 @@ const InsectsHostPlantExplorer = memo(
         siteTitle: isEnglish
           ? "Insects and Host Plants of Japan"
           : "昆虫植物図鑑",
-        heroLead: isEnglish ? "Explore ecological links" : '"繋がり"が見える',
         searchPlaceholder:
           activeTab === "plants"
             ? isEnglish

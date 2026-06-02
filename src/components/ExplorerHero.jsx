@@ -103,18 +103,6 @@ const ExplorerHero = ({
         }`}
       >
         <div className="flex flex-col gap-2 sm:gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-4xl pt-0 sm:pt-1 md:pt-2">
-            <h1
-              className={`bg-gradient-to-r from-blue-100 via-teal-100 to-emerald-100 bg-clip-text font-extrabold tracking-tight text-transparent drop-shadow-2xl ${
-                isEnglish
-                  ? "text-xl leading-snug sm:text-[clamp(1.5rem,3vw,2.4rem)]"
-                  : "text-xl leading-snug sm:text-[clamp(1.6rem,3.4vw,2.6rem)]"
-              }`}
-            >
-              {isEnglish ? "Explore the links between insects and host plants" : "昆虫と食草のつながりを探す"}
-            </h1>
-          </div>
-
           {showHeaderControls && !isStickyHeaderVisible && (
             <div className="flex w-full items-center justify-between gap-2 self-start sm:w-auto sm:justify-start lg:pt-1">
               <LocaleSwitcher locale={locale} compact />
