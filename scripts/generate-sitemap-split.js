@@ -812,6 +812,39 @@ function generateSplitSitemaps() {
     });
     return Array.from(unique.values());
   };
+
+  const compareDiscoverySeedUrls = (a, b) => {
+    const freqRank = (entry) => (entry.changefreq === 'weekly' ? 0 : 1);
+    const freqDiff = freqRank(a) - freqRank(b);
+    if (freqDiff !== 0) return freqDiff;
+    const priorityDiff = Number(b.priority || 0) - Number(a.priority || 0);
+    if (priorityDiff !== 0) return priorityDiff;
+    return a.loc.localeCompare(b.loc, 'ja');
+  };
+
+  const takeDiscoverySeedUrls = (key, limit) =>
+    (sitemaps[key] || [])
+      .filter((entry) => !entry.loc.endsWith('/index.html'))
+      .slice()
+      .sort(compareDiscoverySeedUrls)
+      .slice(0, limit);
+
+  const buildSearchConsoleDiscoverySeed = () => dedupeUrls([
+    ...sitemaps.main,
+    ...sitemaps['en-main'],
+    // Search Console has previously been unreliable at discovering the large
+    // split sitemap inventory. Add a bounded high-value seed of indexable meta
+    // pages so species and plant profile URLs are submitted directly too.
+    ...takeDiscoverySeedUrls('moth', 160),
+    ...takeDiscoverySeedUrls('plant', 120),
+    ...takeDiscoverySeedUrls('longhornbeetle', 60),
+    ...takeDiscoverySeedUrls('butterfly', 40),
+    ...takeDiscoverySeedUrls('leafbeetle', 40),
+    ...takeDiscoverySeedUrls('aphid', 40),
+    ...takeDiscoverySeedUrls('beetle', 30),
+    ...takeDiscoverySeedUrls('en-moth', 80),
+    ...takeDiscoverySeedUrls('en-plant', 60),
+  ]);
   
   // 各サイトマップファイルを生成
   const sitemapFiles = [];
@@ -903,7 +936,7 @@ function generateSplitSitemaps() {
   // sitemap aliases. Keep this file as a compact, high-value discovery seed;
   // the complete URL inventory remains available through sitemap.xml.
   const searchConsoleSubmitUrls = coreUrls.length > 0
-    ? coreUrls
+    ? buildSearchConsoleDiscoverySeed()
     : [{ loc: `${baseUrl}/`, lastmod: generatedAt, changefreq: 'weekly', priority: '1.0' }];
   const searchConsoleSubmitXml = generateXML(
     searchConsoleSubmitUrls,
