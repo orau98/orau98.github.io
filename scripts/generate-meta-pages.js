@@ -1884,6 +1884,15 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   if (mainImageUrl) {
     plantStructuredData.image = `${BASE_ORIGIN}${mainImageUrl}`;
   }
+  const plantBreadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '昆虫植物図鑑', item: `${BASE_ORIGIN}/` },
+      { '@type': 'ListItem', position: 2, name: '植物', item: `${BASE_ORIGIN}/meta/plant/index.html` },
+      { '@type': 'ListItem', position: 3, name: displayPlantName, item: plantPageUrl },
+    ],
+  };
   const plantFaqInsectList = relatedInsects.slice(0, 5).map((insect) => insect.japaneseName).join('、');
   const plantFaqInsectSummary = relatedInsects.length > 5
     ? `${plantFaqInsectList}など${relatedInsects.length}種`
@@ -1963,6 +1972,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">${renderJsonLd(plantStructuredData)}</script>
+  <script type="application/ld+json">${renderJsonLd(plantBreadcrumbData)}</script>
   ${plantFaqData ? `<script type="application/ld+json">${renderJsonLd(plantFaqData)}</script>` : ''}
 </head>
 <body>
