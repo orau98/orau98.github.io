@@ -466,6 +466,30 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/guides/caterpillar-host-plant.html',
+    path.join(__dirname, '../public/guides/caterpillar-host-plant.html'),
+    { changefreq: 'monthly', priority: '0.7' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/garden-tree-caterpillars.html',
+    path.join(__dirname, '../public/guides/garden-tree-caterpillars.html'),
+    { changefreq: 'monthly', priority: '0.7' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/weeds-caterpillars.html',
+    path.join(__dirname, '../public/guides/weeds-caterpillars.html'),
+    { changefreq: 'monthly', priority: '0.7' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/en/guides/',
     path.join(__dirname, '../public/en/guides/index.html'),
     { changefreq: 'monthly', priority: '0.7', targetKey: 'en-main' },
