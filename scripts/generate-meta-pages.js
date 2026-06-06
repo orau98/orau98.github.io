@@ -1543,6 +1543,38 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
       { '@type': 'ListItem', position: 3, name: insect.japaneseName, item: insectPageUrl },
     ],
   };
+  const faqPlantList = hostPlantsArray.slice(0, 5).join('、');
+  const faqPlantSummary = hostPlantsArray.length > 5
+    ? `${faqPlantList}など${hostPlantsArray.length}種`
+    : `${faqPlantList}の${hostPlantsArray.length}種`;
+  const insectFaqItems = hostPlantsArray.length > 0 ? [
+    {
+      question: `${insect.japaneseName}の食草・寄主植物は何ですか？`,
+      answer: `${insect.japaneseName}の食草・寄主植物として、このページでは${faqPlantSummary}を掲載しています。`,
+    },
+    {
+      question: `${insect.japaneseName}は何種の植物を利用しますか？`,
+      answer: `整理済みデータでは、${insect.japaneseName}が利用する植物として${hostPlantsArray.length}種が記録されています。表記ゆれや近縁植物を含む場合があります。`,
+    },
+    {
+      question: `${insect.japaneseName}の食草情報の出典はどこで確認できますか？`,
+      answer: citationEntries.length > 0
+        ? `このページの出典欄で、${insect.japaneseName}の食草・寄主植物情報に関係する文献やデータ出典を確認できます。`
+        : `このページの食草リストと各植物ページを確認し、報告や同定に使う場合は元データの出典を確認してください。`,
+    },
+  ] : [];
+  const insectFaqData = insectFaqItems.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: insectFaqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
   const safeInsectTitle = escapeRedirectHtml(insectTitle);
   const safeInsectDescription = escapeRedirectHtml(insectDescription);
   const safeInsectKeywords = escapeRedirectHtml(insectKeywords);
@@ -1588,6 +1620,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">${renderJsonLd(insectStructuredData)}</script>
   <script type="application/ld+json">${renderJsonLd(insectBreadcrumbData)}</script>
+  ${insectFaqData ? `<script type="application/ld+json">${renderJsonLd(insectFaqData)}</script>` : ''}
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -1672,6 +1705,16 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
         <p>食草情報は現在調査中です。</p>`}
       </section>
       ${renderCoOccurringInsects(insect, type, hostPlantsArray, hostPlantsMap)}
+
+      ${insectFaqItems.length > 0 ? `
+      <section class="description">
+        <h3>よくある疑問</h3>
+        <dl>
+          ${insectFaqItems.map((item) => `
+          <dt>${escapeRedirectHtml(item.question)}</dt>
+          <dd>${escapeRedirectHtml(item.answer)}</dd>`).join('')}
+        </dl>
+      </section>` : ''}
 
       <section class="description">
         <h3>詳細説明</h3>
