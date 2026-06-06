@@ -336,11 +336,17 @@ const supportHtmlFiles = [
   path.join(DIST_DIR, 'guides', 'host-plant-search.html'),
   path.join(DIST_DIR, 'guides', 'families', 'index.html'),
   path.join(DIST_DIR, 'guides', 'families', 'malvaceae.html'),
+  path.join(DIST_DIR, 'guides', 'plants', 'shirobai.html'),
+  path.join(DIST_DIR, 'guides', 'plants', 'sansho.html'),
+  path.join(DIST_DIR, 'guides', 'categories', 'forest-trees.html'),
   path.join(DIST_DIR, 'en', 'guides', 'index.html'),
   path.join(DIST_DIR, 'en', 'guides', 'what-is-host-plant.html'),
   path.join(DIST_DIR, 'en', 'guides', 'host-plant-search.html'),
   path.join(DIST_DIR, 'en', 'guides', 'families', 'index.html'),
   path.join(DIST_DIR, 'en', 'guides', 'families', 'malvaceae.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'plants', 'shirobai.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'plants', 'sansho.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'categories', 'forest-trees.html'),
 ];
 for (const filePath of supportHtmlFiles) {
   if (fs.existsSync(filePath)) {
