@@ -466,6 +466,42 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/en/guides/plants/',
+    path.join(__dirname, '../public/en/guides/plants/index.html'),
+    { changefreq: 'monthly', priority: '0.8', targetKey: 'en-main' },
+  );
+  const enPlantGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/en/guides/plants'),
+    '/en/guides/plants/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false, targetKey: 'en-main' },
+  );
+  if (enPlantGuideCount > 0) {
+    console.log(`[sitemap] English host plant guide pages added: ${enPlantGuideCount}`);
+  }
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/guides/categories/',
+    path.join(__dirname, '../public/en/guides/categories/index.html'),
+    { changefreq: 'monthly', priority: '0.8', targetKey: 'en-main' },
+  );
+  const enCategoryGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/en/guides/categories'),
+    '/en/guides/categories/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false, targetKey: 'en-main' },
+  );
+  if (enCategoryGuideCount > 0) {
+    console.log(`[sitemap] English category guide pages added: ${enCategoryGuideCount}`);
+  }
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/guides/plants/',
     path.join(__dirname, '../public/guides/plants/index.html'),
     { changefreq: 'monthly', priority: '0.8' },
