@@ -526,6 +526,24 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/en/guides/families/',
+    path.join(__dirname, '../public/en/guides/families/index.html'),
+    { changefreq: 'monthly', priority: '0.8', targetKey: 'en-main' },
+  );
+  const enFamilyGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/en/guides/families'),
+    '/en/guides/families/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false, targetKey: 'en-main' },
+  );
+  if (enFamilyGuideCount > 0) {
+    console.log(`[sitemap] English family guide pages added: ${enFamilyGuideCount}`);
+  }
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/guides/plants/',
     path.join(__dirname, '../public/guides/plants/index.html'),
     { changefreq: 'monthly', priority: '0.8' },
@@ -557,6 +575,24 @@ function generateSplitSitemaps() {
   );
   if (categoryGuideCount > 0) {
     console.log(`[sitemap] category guide pages added: ${categoryGuideCount}`);
+  }
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/families/',
+    path.join(__dirname, '../public/guides/families/index.html'),
+    { changefreq: 'monthly', priority: '0.8' },
+  );
+  const familyGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/guides/families'),
+    '/guides/families/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false },
+  );
+  if (familyGuideCount > 0) {
+    console.log(`[sitemap] family guide pages added: ${familyGuideCount}`);
   }
 
   // NOTE:

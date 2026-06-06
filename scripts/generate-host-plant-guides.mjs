@@ -17,9 +17,11 @@ const ROOT_DIR = path.join(__dirname, '..');
 const DATASET_PATH = path.join(ROOT_DIR, 'public/assets/data-lite/full-dataset.json');
 const OUT_DIR = path.join(ROOT_DIR, 'public/guides/plants');
 const CATEGORY_OUT_DIR = path.join(ROOT_DIR, 'public/guides/categories');
+const FAMILY_OUT_DIR = path.join(ROOT_DIR, 'public/guides/families');
 const EN_GUIDES_DIR = path.join(ROOT_DIR, 'public/en/guides');
 const EN_OUT_DIR = path.join(EN_GUIDES_DIR, 'plants');
 const EN_CATEGORY_OUT_DIR = path.join(EN_GUIDES_DIR, 'categories');
+const EN_FAMILY_OUT_DIR = path.join(EN_GUIDES_DIR, 'families');
 const PLANT_META_DIR = path.join(ROOT_DIR, 'public/meta/plant');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(ROOT_DIR, 'public/seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(ROOT_DIR, 'public/seo-route-map.plants.json');
@@ -415,6 +417,69 @@ const CATEGORY_GUIDES = [
   },
 ];
 
+const FAMILY_GUIDES = [
+  {
+    slug: 'rosaceae',
+    name: 'バラ科',
+    searchPhrases: ['バラ科につく虫', 'バラ科 食草', 'バラ科を食べる幼虫'],
+  },
+  {
+    slug: 'fagaceae',
+    name: 'ブナ科',
+    searchPhrases: ['ブナ科につく虫', 'ブナ科 幼虫 食草', 'どんぐりの木 食草'],
+  },
+  {
+    slug: 'fabaceae',
+    name: 'マメ科',
+    searchPhrases: ['マメ科につく虫', 'マメ科 食草', 'ダイズ クローバー につく虫'],
+  },
+  {
+    slug: 'poaceae',
+    name: 'イネ科',
+    searchPhrases: ['イネ科につく虫', 'イネ科 食草', 'イネ科を食べる蛾'],
+  },
+  {
+    slug: 'asteraceae',
+    name: 'キク科',
+    searchPhrases: ['キク科につく虫', 'キク科 食草', 'ヨモギ タンポポ につく虫'],
+  },
+  {
+    slug: 'brassicaceae',
+    name: 'アブラナ科',
+    searchPhrases: ['アブラナ科につく虫', 'アブラナ科 食草', 'キャベツ ダイコン につく虫'],
+  },
+  {
+    slug: 'solanaceae',
+    name: 'ナス科',
+    searchPhrases: ['ナス科につく虫', 'ナス科 食草', 'トマト ナス ジャガイモ につく虫'],
+  },
+  {
+    slug: 'malvaceae',
+    name: 'アオイ科',
+    searchPhrases: ['アオイ科につく虫', 'アオイ科 食草', 'アオイ科 野菜 一覧'],
+  },
+  {
+    slug: 'rutaceae',
+    name: 'ミカン科',
+    searchPhrases: ['ミカン科につく虫', 'ミカン科 食草', 'サンショウ ミカン につく虫'],
+  },
+  {
+    slug: 'betulaceae',
+    name: 'カバノキ科',
+    searchPhrases: ['カバノキ科につく虫', 'カバノキ科 食草', 'シラカンバ ハンノキ につく虫'],
+  },
+  {
+    slug: 'salicaceae',
+    name: 'ヤナギ科',
+    searchPhrases: ['ヤナギ科につく虫', 'ヤナギ科 食草', 'ヤナギ ポプラ につく虫'],
+  },
+  {
+    slug: 'ericaceae',
+    name: 'ツツジ科',
+    searchPhrases: ['ツツジ科につく虫', 'ツツジ科 食草', 'ツツジ アセビ につく虫'],
+  },
+];
+
 export const ENGLISH_GUIDE_LABELS = Object.freeze({
   sakura: 'Cherry trees (Cerasus / Prunus)',
   ume: 'Japanese apricot (Prunus mume)',
@@ -481,6 +546,21 @@ const ENGLISH_CATEGORY_LABELS = Object.freeze({
   'oak-family': 'Fagaceae and acorn-bearing trees',
   'weeds-and-grasses': 'Weeds and grasses',
   'butterfly-host-plants': 'Butterfly host plants',
+});
+
+const ENGLISH_FAMILY_LABELS = Object.freeze({
+  rosaceae: 'Rosaceae (rose family)',
+  fagaceae: 'Fagaceae (beech and oak family)',
+  fabaceae: 'Fabaceae (legume family)',
+  poaceae: 'Poaceae (grass family)',
+  asteraceae: 'Asteraceae (aster family)',
+  brassicaceae: 'Brassicaceae (mustard family)',
+  solanaceae: 'Solanaceae (nightshade family)',
+  malvaceae: 'Malvaceae (mallow family)',
+  rutaceae: 'Rutaceae (citrus family)',
+  betulaceae: 'Betulaceae (birch family)',
+  salicaceae: 'Salicaceae (willow family)',
+  ericaceae: 'Ericaceae (heath family)',
 });
 
 const EN_TYPE_ORDER = Object.fromEntries(Object.keys(EN_TYPE_PLURALS).map((key, index) => [key, index]));
@@ -638,6 +718,73 @@ function collectCategoryData(config, guideBySlug) {
   };
 }
 
+function normalizeFamilyName(value = '') {
+  return String(value || '').normalize('NFKC').replace(/\s+/g, '').trim();
+}
+
+function collectFamilyData(config, dataset, insects) {
+  const targetFamily = normalizeFamilyName(config.name);
+  const plantDetails = dataset.plantDetails || {};
+  const plantRows = Object.entries(dataset.hostPlants || {})
+    .map(([plantName, insectIds]) => {
+      const detail = normalizeEnglishPlantDetail(plantName, plantDetails);
+      const familyName = normalizeFamilyName(detail.familyName || detail.family || '');
+      if (familyName !== targetFamily) return null;
+      const ids = Array.from(new Set((Array.isArray(insectIds) ? insectIds : []).filter(Boolean)));
+      if (ids.length === 0) return null;
+      return {
+        name: plantName,
+        href: findPlantMetaHref(plantName, plantDetails),
+        count: ids.length,
+        aliases: Array.isArray(detail.aliases) ? detail.aliases : [],
+        familyLatin: detail.familyLatin || '',
+        scientificName: detail.scientificName || '',
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      return a.name.localeCompare(b.name, 'ja');
+    });
+
+  const relatedById = new Map();
+  const familyPlantNames = new Set(
+    plantRows.flatMap((row) => [row.name, ...row.aliases].filter(Boolean).map(normalizePlantName)),
+  );
+  insects.forEach((insect) => {
+    const hostPlants = Array.isArray(insect.hostPlantsDetailed) ? insect.hostPlantsDetailed : [];
+    const matches = hostPlants.some((hostPlant) => {
+      const names = [
+        hostPlant?.name,
+        hostPlant?.displayName,
+        normalizePlantName(hostPlant?.name),
+        normalizePlantName(hostPlant?.displayName),
+      ].filter(Boolean).map(normalizePlantName);
+      return names.some((name) => familyPlantNames.has(name));
+    });
+    if (matches) relatedById.set(insect.id, insect);
+  });
+
+  const relatedInsects = [...relatedById.values()].sort((a, b) => {
+    const typeDiff = (TYPE_ORDER[a.type] ?? 99) - (TYPE_ORDER[b.type] ?? 99);
+    if (typeDiff !== 0) return typeDiff;
+    return String(a.name || a.japaneseName || '').localeCompare(String(b.name || b.japaneseName || ''), 'ja');
+  });
+
+  const typeCounts = Object.fromEntries(TYPE_CONFIGS.map(([type]) => [type, 0]));
+  relatedInsects.forEach((insect) => {
+    typeCounts[insect.type] = (typeCounts[insect.type] || 0) + 1;
+  });
+
+  return {
+    ...config,
+    familyLatin: plantRows.find((row) => row.familyLatin)?.familyLatin || '',
+    plantRows,
+    relatedInsects,
+    typeCounts,
+  };
+}
+
 function readJsonIfExists(filePath, fallback = {}) {
   try {
     if (!fs.existsSync(filePath)) return fallback;
@@ -696,6 +843,14 @@ function buildEnglishCategoryDisplay(category) {
   };
 }
 
+function buildEnglishFamilyDisplay(family) {
+  return {
+    label: ENGLISH_FAMILY_LABELS[family.slug] || family.familyLatin || family.name,
+    japaneseName: family.name,
+    familyLatin: family.familyLatin || '',
+  };
+}
+
 function buildRouteMaps() {
   return {
     insects: readJsonIfExists(SEO_ROUTE_MAP_INSECTS_PATH, {}),
@@ -716,6 +871,14 @@ function resolveEnglishPlantHref(guide, routeMaps = {}, plantDetails = {}) {
     if (detail?.scientificName && routeMaps.plants?.[detail.scientificName]) {
       return routeMaps.plants[detail.scientificName];
     }
+  }
+  return '/en/meta/plant/index.html';
+}
+
+function resolveEnglishFamilyPlantHref(row, routeMaps = {}) {
+  if (routeMaps.plants?.[row.name]) return routeMaps.plants[row.name];
+  if (row.scientificName && routeMaps.plants?.[row.scientificName]) {
+    return routeMaps.plants[row.scientificName];
   }
   return '/en/meta/plant/index.html';
 }
@@ -822,6 +985,7 @@ function renderHeader() {
         <a href="/guides/what-is-host-plant.html">食草とは</a>
         <a href="/guides/plants/">植物別ガイド</a>
         <a href="/guides/categories/">カテゴリ別ガイド</a>
+        <a href="/guides/families/">科別ガイド</a>
         <a href="/meta/plant/index.html">植物一覧</a>
         <a href="/meta/moth/index.html">昆虫一覧</a>
       </nav>
@@ -1080,6 +1244,200 @@ function renderCategoryPage(category) {
 `;
 }
 
+function renderFamilyPage(family) {
+  const canonicalPath = `/guides/families/${family.slug}.html`;
+  const count = family.relatedInsects.length;
+  const typeSummary = TYPE_CONFIGS
+    .filter(([type]) => family.typeCounts[type] > 0)
+    .map(([type, label]) => `${label}${family.typeCounts[type]}種`)
+    .join('、');
+  const plantNames = family.plantRows.slice(0, 8).map((row) => row.name).join('、');
+  const title = `${family.name}につく虫・食草植物一覧 | 昆虫植物図鑑`;
+  const description = truncate(`${family.name}の植物につく虫を、${plantNames}などの植物別データから整理。${family.plantRows.length}植物、${typeSummary || `計${count}種`}を確認できます。`, 155);
+  const shownPlants = family.plantRows.slice(0, 80);
+  const shownInsects = family.relatedInsects.slice(0, 48);
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${family.name}につく虫・食草植物一覧`,
+    description,
+    url: `${BASE_ORIGIN}${canonicalPath}`,
+    inLanguage: 'ja',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: '昆虫植物図鑑',
+      url: `${BASE_ORIGIN}/`,
+    },
+    about: {
+      '@type': 'Thing',
+      name: `${family.name}の植物と昆虫の食草関係`,
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: family.plantRows.length,
+      itemListElement: shownPlants.slice(0, 30).map((row, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'WebPage',
+          name: `${row.name}につく虫`,
+          url: `${BASE_ORIGIN}${row.href}`,
+        },
+      })),
+    },
+  };
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '昆虫植物図鑑', item: `${BASE_ORIGIN}/` },
+      { '@type': 'ListItem', position: 2, name: '調べ方ガイド', item: `${BASE_ORIGIN}/guides/` },
+      { '@type': 'ListItem', position: 3, name: '科別ガイド', item: `${BASE_ORIGIN}/guides/families/` },
+      { '@type': 'ListItem', position: 4, name: `${family.name}につく虫`, item: `${BASE_ORIGIN}${canonicalPath}` },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  ${renderHead({ title, description, canonicalPath })}
+  <script type="application/ld+json">${escapeJson(structuredData)}</script>
+  <script type="application/ld+json">${escapeJson(breadcrumbData)}</script>
+  ${renderStyle()}
+</head>
+<body>
+  <div class="wrap">
+    ${renderHeader()}
+    <header>
+      <span class="badge">科別ガイド</span>
+      <h1>${escapeHtml(family.name)}につく虫・食草植物一覧</h1>
+      <p class="lead">${escapeHtml(family.name)}に含まれる植物から、食草・寄主植物として記録された昆虫へ進むための静的な入口ページです。</p>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="grid">
+          <div class="card">
+            <div class="count">${family.plantRows.length}</div>
+            <p class="muted">データに含まれる植物数</p>
+          </div>
+          <div class="card">
+            <div class="count">${count}</div>
+            <p class="muted">重複を除いた関連昆虫数</p>
+          </div>
+          <div class="card">
+            <h2>検索語</h2>
+            <ul class="chips">
+              ${family.searchPhrases.map((phrase) => `<li>${escapeHtml(phrase)}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="plants">
+        <h2 id="plants">${escapeHtml(family.name)}の植物と関連昆虫数</h2>
+        <table>
+          <thead><tr><th>植物名</th><th>関連昆虫数</th></tr></thead>
+          <tbody>
+            ${shownPlants.map((row) => `
+            <tr>
+              <td><a href="${escapeHtml(row.href)}">${escapeHtml(row.name)}</a>${row.scientificName ? `<span class="scientific">${escapeHtml(row.scientificName)}</span>` : ''}</td>
+              <td>${row.count}種</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+        ${family.plantRows.length > shownPlants.length ? `<p class="small">表示は関連昆虫数の多い上位${shownPlants.length}植物です。</p>` : ''}
+      </section>
+
+      <section aria-labelledby="type-breakdown">
+        <h2 id="type-breakdown">分類群別の内訳</h2>
+        <table>
+          <thead><tr><th>分類群</th><th>記録数</th></tr></thead>
+          <tbody>
+            ${TYPE_CONFIGS
+              .filter(([type]) => family.typeCounts[type] > 0)
+              .map(([type, label]) => `<tr><td>${label}</td><td>${family.typeCounts[type]}種</td></tr>`)
+              .join('')}
+          </tbody>
+        </table>
+      </section>
+
+      <section aria-labelledby="representatives">
+        <h2 id="representatives">代表的な関連昆虫</h2>
+        <ul class="insect-list">
+          ${shownInsects.map((insect) => `
+          <li>
+            <a href="${escapeHtml(getInsectRoute(insect))}">${escapeHtml(insect.name || insect.japaneseName)}</a>
+            <span class="small">（${escapeHtml(TYPE_LABELS[insect.type] || '昆虫')}）</span>
+            ${insect.scientificName ? `<span class="scientific">${escapeHtml(insect.scientificName)}</span>` : ''}
+          </li>`).join('')}
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+function renderFamilyIndexPage(families) {
+  const canonicalPath = '/guides/families/';
+  const title = '科別につく虫・食草植物を調べる | 昆虫植物図鑑';
+  const description = 'バラ科、ブナ科、マメ科、イネ科、キク科、アオイ科など、植物の科名からその植物につく虫・幼虫・食草関係を調べるためのガイド一覧です。';
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: '科別につく虫・食草植物を調べる',
+    description,
+    url: `${BASE_ORIGIN}${canonicalPath}`,
+    inLanguage: 'ja',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: families.length,
+      itemListElement: families.map((family, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'WebPage',
+          name: `${family.name}につく虫`,
+          url: `${BASE_ORIGIN}/guides/families/${family.slug}.html`,
+        },
+      })),
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  ${renderHead({ title, description, canonicalPath })}
+  <script type="application/ld+json">${escapeJson(structuredData)}</script>
+  ${renderStyle()}
+</head>
+<body>
+  <div class="wrap">
+    ${renderHeader()}
+    <header>
+      <span class="badge">科別ガイド</span>
+      <h1>科名から、その植物につく虫を調べる</h1>
+      <p class="lead">植物名が分からない場合や「アオイ科」「バラ科」のような科名検索から、関連昆虫と植物ページへ進むための入口です。</p>
+    </header>
+
+    <main>
+      <section class="grid" aria-label="科別ガイド一覧">
+        ${families.map((family) => `
+        <article class="card">
+          <h2><a href="/guides/families/${family.slug}.html">${escapeHtml(family.name)}につく虫</a></h2>
+          <p>${family.plantRows.length}植物、${family.relatedInsects.length}種の関連昆虫を掲載。</p>
+          <p class="small">${escapeHtml(family.searchPhrases.slice(0, 2).join(' / '))}</p>
+        </article>`).join('')}
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
 function renderCategoryIndexPage(categories) {
   const canonicalPath = '/guides/categories/';
   const title = 'カテゴリ別につく虫を調べる | 昆虫植物図鑑';
@@ -1138,7 +1496,7 @@ function renderCategoryIndexPage(categories) {
 `;
 }
 
-function renderIndexPage(guides, categories = []) {
+function renderIndexPage(guides, categories = [], families = []) {
   const canonicalPath = '/guides/plants/';
   const title = '植物別につく虫を調べる | 昆虫植物図鑑';
   const description = 'サクラ、クヌギ、コナラ、ヨモギなど、植物名からその植物につく虫・幼虫・食草関係を調べるための植物別ガイド一覧です。';
@@ -1147,6 +1505,15 @@ function renderIndexPage(guides, categories = []) {
         <h2 id="category-guides">カテゴリから探す</h2>
         <p>植物名がまだ分からない場合は、庭木、果樹、野菜、広葉樹などのカテゴリから入れます。</p>
         <p><a href="/guides/categories/">カテゴリ別につく虫を調べる</a></p>
+      </section>
+
+`
+    : '';
+  const familySection = families.length > 0
+    ? `      <section class="panel" aria-labelledby="family-guides">
+        <h2 id="family-guides">科名から探す</h2>
+        <p>植物名が分からない場合は、バラ科、ブナ科、アオイ科などの科名から入れます。</p>
+        <p><a href="/guides/families/">科別につく虫・食草植物を調べる</a></p>
       </section>
 
 `
@@ -1191,6 +1558,7 @@ function renderIndexPage(guides, categories = []) {
 
     <main>
 ${categorySection}
+${familySection}
       <section class="grid" aria-label="植物別ガイド一覧">
         ${guides.map((guide) => `
         <article class="card">
@@ -1214,6 +1582,7 @@ function renderEnglishHeader(japanesePath = '/guides/') {
         <a href="/en/guides/what-is-host-plant.html">Host plant basics</a>
         <a href="/en/guides/plants/">Host plant guides</a>
         <a href="/en/guides/categories/">Category guides</a>
+        <a href="/en/guides/families/">Family guides</a>
         <a href="/en/meta/plant/index.html">Plants</a>
         <a href="/en/meta/moth/index.html">Insects</a>
         <a href="${escapeHtml(japanesePath)}">日本語</a>
@@ -1514,7 +1883,199 @@ function renderEnglishCategoryPage(category, routeMaps, plantDetails = {}) {
 `;
 }
 
-function renderEnglishPlantIndexPage(guides, categories, plantDetails = {}) {
+function renderEnglishFamilyPage(family, routeMaps) {
+  const canonicalPath = `/en/guides/families/${family.slug}.html`;
+  const japanesePath = `/guides/families/${family.slug}.html`;
+  const display = buildEnglishFamilyDisplay(family);
+  const count = family.relatedInsects.length;
+  const typeSummary = formatEnglishTypeSummary(family.typeCounts);
+  const shownPlants = family.plantRows.slice(0, 80);
+  const shownInsects = family.relatedInsects.slice(0, 48);
+  const plantNames = shownPlants.slice(0, 8).map((row) => row.name).join(', ');
+  const title = `${display.label} host plant insects in Japan | ${EN_SITE_NAME}`;
+  const description = truncate(
+    `${display.label} guide for Japanese plant-insect records. It covers ${family.plantRows.length} plants including ${plantNames}, with ${typeSummary || `${count} related insect records`}.`,
+    155,
+  );
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${display.label} host plant insects in Japan`,
+    description,
+    url: `${BASE_ORIGIN}${canonicalPath}`,
+    inLanguage: 'en',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: EN_SITE_NAME,
+      url: `${BASE_ORIGIN}/en/`,
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: family.plantRows.length,
+      itemListElement: shownPlants.slice(0, 30).map((row, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'WebPage',
+          name: row.scientificName || row.name,
+          url: `${BASE_ORIGIN}${resolveEnglishFamilyPlantHref(row, routeMaps)}`,
+        },
+      })),
+    },
+  };
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: EN_SITE_NAME, item: `${BASE_ORIGIN}/en/` },
+      { '@type': 'ListItem', position: 2, name: 'Search guides', item: `${BASE_ORIGIN}/en/guides/` },
+      { '@type': 'ListItem', position: 3, name: 'Family guides', item: `${BASE_ORIGIN}/en/guides/families/` },
+      { '@type': 'ListItem', position: 4, name: display.label, item: `${BASE_ORIGIN}${canonicalPath}` },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  ${renderEnglishHead({ title, description, canonicalPath, japanesePath })}
+  <script type="application/ld+json">${escapeJson(structuredData)}</script>
+  <script type="application/ld+json">${escapeJson(breadcrumbData)}</script>
+  ${renderStyle()}
+</head>
+<body>
+  <div class="wrap">
+    ${renderEnglishHeader(japanesePath)}
+    <header>
+      <span class="badge">Family guide</span>
+      <h1>${escapeHtml(display.label)} host plant insects in Japan</h1>
+      <p class="lead">A data-driven entry page for moving from a plant family to Japanese plant and insect profile pages.</p>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="grid">
+          <div class="card">
+            <div class="count">${family.plantRows.length}</div>
+            <p class="muted">Plants in the dataset</p>
+          </div>
+          <div class="card">
+            <div class="count">${count}</div>
+            <p class="muted">Deduplicated related insect records</p>
+          </div>
+          <div class="card">
+            <h2>Japanese reference</h2>
+            <p>${escapeHtml(buildJapaneseReferenceLabel(display.japaneseName))}</p>
+            ${display.familyLatin ? `<p><em>${escapeHtml(display.familyLatin)}</em></p>` : ''}
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="plants">
+        <h2 id="plants">Plants and related insect counts</h2>
+        <table>
+          <thead><tr><th>Plant</th><th>Related records</th></tr></thead>
+          <tbody>
+            ${shownPlants.map((row) => `
+            <tr>
+              <td><a href="${escapeHtml(resolveEnglishFamilyPlantHref(row, routeMaps))}">${escapeHtml(row.scientificName || row.name)}</a><span class="small">${escapeHtml(buildJapaneseReferenceLabel(row.name))}</span></td>
+              <td>${row.count}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </section>
+
+      <section aria-labelledby="type-breakdown">
+        <h2 id="type-breakdown">Breakdown by insect group</h2>
+        <table>
+          <thead><tr><th>Group</th><th>Records</th></tr></thead>
+          <tbody>${renderEnglishTypeBreakdown(family.typeCounts)}
+          </tbody>
+        </table>
+      </section>
+
+      <section aria-labelledby="representatives">
+        <h2 id="representatives">Representative linked insect pages</h2>
+        <ul class="insect-list">
+          ${shownInsects.map((insect) => buildEnglishInsectListItem(insect, routeMaps)).join('')}
+        </ul>
+      </section>
+
+      <section class="panel" aria-labelledby="search-terms">
+        <h2 id="search-terms">Search intents covered</h2>
+        <ul class="chips">
+          ${buildEnglishSearchPhrases(display.label, family.name, 'host plant insects').map((phrase) => `<li>${escapeHtml(phrase)}</li>`).join('')}
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+function renderEnglishFamilyIndexPage(families) {
+  const canonicalPath = '/en/guides/families/';
+  const japanesePath = '/guides/families/';
+  const title = `Plant family host plant guides | ${EN_SITE_NAME}`;
+  const description = 'Browse Japanese plant-insect records by plant family, including Rosaceae, Fagaceae, Fabaceae, Poaceae, Asteraceae, Brassicaceae, and Malvaceae.';
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Plant family host plant guides',
+    description,
+    url: `${BASE_ORIGIN}${canonicalPath}`,
+    inLanguage: 'en',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: families.length,
+      itemListElement: families.map((family, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'WebPage',
+          name: `${buildEnglishFamilyDisplay(family).label} host plant insects`,
+          url: `${BASE_ORIGIN}/en/guides/families/${family.slug}.html`,
+        },
+      })),
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  ${renderEnglishHead({ title, description, canonicalPath, japanesePath, ogType: 'website' })}
+  <script type="application/ld+json">${escapeJson(structuredData)}</script>
+  ${renderStyle()}
+</head>
+<body>
+  <div class="wrap">
+    ${renderEnglishHeader(japanesePath)}
+    <header>
+      <span class="badge">Family guides</span>
+      <h1>Browse host plants by family</h1>
+      <p class="lead">Family pages group plant records before linking to detailed host plant and insect pages.</p>
+    </header>
+
+    <main>
+      <section class="grid" aria-label="Plant family guide list">
+        ${families.map((family) => {
+          const display = buildEnglishFamilyDisplay(family);
+          return `
+        <article class="card">
+          <h2><a href="/en/guides/families/${family.slug}.html">${escapeHtml(display.label)}</a></h2>
+          <p>${family.plantRows.length} plants and ${family.relatedInsects.length} related insect records.</p>
+          <p class="small">${escapeHtml(buildJapaneseReferenceLabel(family.name))}</p>
+        </article>`;
+        }).join('')}
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+function renderEnglishPlantIndexPage(guides, categories, families, plantDetails = {}) {
   const canonicalPath = '/en/guides/plants/';
   const japanesePath = '/guides/plants/';
   const title = `Host plant guides for Japanese insects | ${EN_SITE_NAME}`;
@@ -1549,6 +2110,15 @@ function renderEnglishPlantIndexPage(guides, categories, plantDetails = {}) {
 
 `
     : '';
+  const familySection = families.length > 0
+    ? `      <section class="panel" aria-labelledby="family-guides">
+        <h2 id="family-guides">Browse by plant family</h2>
+        <p>Use family guides for searches such as Rosaceae host plants, Poaceae insects, or Malvaceae food plants.</p>
+        <p><a href="/en/guides/families/">Open family guides</a></p>
+      </section>
+
+`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1568,6 +2138,7 @@ function renderEnglishPlantIndexPage(guides, categories, plantDetails = {}) {
 
     <main>
 ${categorySection}
+${familySection}
       <section class="grid" aria-label="Host plant guide list">
         ${guides.map((guide) => {
           const display = buildEnglishGuideDisplay(guide, plantDetails);
@@ -1648,7 +2219,7 @@ function renderEnglishCategoryIndexPage(categories, plantDetails = {}) {
 `;
 }
 
-function renderEnglishGuideIndexPage(guides, categories) {
+function renderEnglishGuideIndexPage(guides, categories, families) {
   const canonicalPath = '/en/guides/';
   const japanesePath = '/guides/';
   const title = `Search guides | ${EN_SITE_NAME}`;
@@ -1657,6 +2228,7 @@ function renderEnglishGuideIndexPage(guides, categories) {
     { name: 'What is a host plant?', url: `${BASE_ORIGIN}/en/guides/what-is-host-plant.html` },
     { name: 'Host plant guides', url: `${BASE_ORIGIN}/en/guides/plants/` },
     { name: 'Category guides', url: `${BASE_ORIGIN}/en/guides/categories/` },
+    { name: 'Plant family guides', url: `${BASE_ORIGIN}/en/guides/families/` },
     { name: 'Find insects by host plant', url: `${BASE_ORIGIN}/en/guides/host-plant-search.html` },
   ];
   const structuredData = {
@@ -1720,6 +2292,11 @@ function renderEnglishGuideIndexPage(guides, categories) {
         </article>
 
         <article class="card">
+          <h2><a href="/en/guides/families/">Plant family guides</a></h2>
+          <p>${families.length} family pages cover searches such as Rosaceae, Fagaceae, Poaceae, Brassicaceae, and Malvaceae host plants.</p>
+        </article>
+
+        <article class="card">
           <h2><a href="/en/guides/host-plant-search.html">Find insects by host plant</a></h2>
           <p>Use plant names, scientific names, or Japanese local names to reach the corresponding insect-plant relationship pages.</p>
         </article>
@@ -1748,12 +2325,16 @@ function main() {
   const plantDetails = dataset.plantDetails || {};
   fs.rmSync(OUT_DIR, { recursive: true, force: true });
   fs.rmSync(CATEGORY_OUT_DIR, { recursive: true, force: true });
+  fs.rmSync(FAMILY_OUT_DIR, { recursive: true, force: true });
   fs.rmSync(EN_OUT_DIR, { recursive: true, force: true });
   fs.rmSync(EN_CATEGORY_OUT_DIR, { recursive: true, force: true });
+  fs.rmSync(EN_FAMILY_OUT_DIR, { recursive: true, force: true });
   fs.mkdirSync(OUT_DIR, { recursive: true });
   fs.mkdirSync(CATEGORY_OUT_DIR, { recursive: true });
+  fs.mkdirSync(FAMILY_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_CATEGORY_OUT_DIR, { recursive: true });
+  fs.mkdirSync(EN_FAMILY_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_GUIDES_DIR, { recursive: true });
 
   const guides = HOST_PLANT_GUIDES
@@ -1763,6 +2344,9 @@ function main() {
   const categories = CATEGORY_GUIDES
     .map((config) => collectCategoryData(config, guideBySlug))
     .filter((category) => category.plantGuides.length > 0 && category.relatedInsects.length > 0);
+  const families = FAMILY_GUIDES
+    .map((config) => collectFamilyData(config, dataset, insects))
+    .filter((family) => family.plantRows.length > 0 && family.relatedInsects.length > 0);
 
   guides.forEach((guide) => {
     writeHtml(path.join(OUT_DIR, `${guide.slug}.html`), renderGuidePage(guide));
@@ -1772,16 +2356,24 @@ function main() {
     writeHtml(path.join(CATEGORY_OUT_DIR, `${category.slug}.html`), renderCategoryPage(category));
     writeHtml(path.join(EN_CATEGORY_OUT_DIR, `${category.slug}.html`), renderEnglishCategoryPage(category, routeMaps, plantDetails));
   });
-  writeHtml(path.join(OUT_DIR, 'index.html'), renderIndexPage(guides, categories));
+  families.forEach((family) => {
+    writeHtml(path.join(FAMILY_OUT_DIR, `${family.slug}.html`), renderFamilyPage(family));
+    writeHtml(path.join(EN_FAMILY_OUT_DIR, `${family.slug}.html`), renderEnglishFamilyPage(family, routeMaps));
+  });
+  writeHtml(path.join(OUT_DIR, 'index.html'), renderIndexPage(guides, categories, families));
   writeHtml(path.join(CATEGORY_OUT_DIR, 'index.html'), renderCategoryIndexPage(categories));
-  writeHtml(path.join(EN_OUT_DIR, 'index.html'), renderEnglishPlantIndexPage(guides, categories, plantDetails));
+  writeHtml(path.join(FAMILY_OUT_DIR, 'index.html'), renderFamilyIndexPage(families));
+  writeHtml(path.join(EN_OUT_DIR, 'index.html'), renderEnglishPlantIndexPage(guides, categories, families, plantDetails));
   writeHtml(path.join(EN_CATEGORY_OUT_DIR, 'index.html'), renderEnglishCategoryIndexPage(categories, plantDetails));
-  writeHtml(path.join(EN_GUIDES_DIR, 'index.html'), renderEnglishGuideIndexPage(guides, categories));
+  writeHtml(path.join(EN_FAMILY_OUT_DIR, 'index.html'), renderEnglishFamilyIndexPage(families));
+  writeHtml(path.join(EN_GUIDES_DIR, 'index.html'), renderEnglishGuideIndexPage(guides, categories, families));
 
   console.log(`[guides] generated host plant guide pages: ${guides.length + 1}`);
   console.log(`[guides] generated category guide pages: ${categories.length + 1}`);
+  console.log(`[guides] generated family guide pages: ${families.length + 1}`);
   console.log(`[guides] generated English host plant guide pages: ${guides.length + 1}`);
   console.log(`[guides] generated English category guide pages: ${categories.length + 1}`);
+  console.log(`[guides] generated English family guide pages: ${families.length + 1}`);
 }
 
 // 直接実行時のみ生成を走らせる。他スクリプト(generate-meta-pages.js)が
