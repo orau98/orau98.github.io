@@ -36,11 +36,17 @@ const REQUIRED_FILES = [
   'guides/host-plant-search.html',
   'guides/families/index.html',
   'guides/families/malvaceae.html',
+  'guides/plants/shirobai.html',
+  'guides/plants/sansho.html',
+  'guides/categories/forest-trees.html',
   'en/guides/index.html',
   'en/guides/what-is-host-plant.html',
   'en/guides/host-plant-search.html',
   'en/guides/families/index.html',
   'en/guides/families/malvaceae.html',
+  'en/guides/plants/shirobai.html',
+  'en/guides/plants/sansho.html',
+  'en/guides/categories/forest-trees.html',
 ];
 
 function assert(condition, message) {
