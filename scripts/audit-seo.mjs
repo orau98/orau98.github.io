@@ -331,6 +331,7 @@ if (fs.existsSync(englishRootIndexPath)) {
 const supportHtmlFiles = [
   path.join(DIST_DIR, 'sitemap.html'),
   path.join(DIST_DIR, 'guides', 'index.html'),
+  path.join(DIST_DIR, 'guides', 'insect-plant-database.html'),
   path.join(DIST_DIR, 'guides', 'what-is-host-plant.html'),
   path.join(DIST_DIR, 'guides', 'host-plant-search.html'),
   path.join(DIST_DIR, 'en', 'guides', 'index.html'),

@@ -450,6 +450,14 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/guides/insect-plant-database.html',
+    path.join(__dirname, '../public/guides/insect-plant-database.html'),
+    { changefreq: 'monthly', priority: '0.8' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/guides/host-plant-search.html',
     path.join(__dirname, '../public/guides/host-plant-search.html'),
     { changefreq: 'monthly', priority: '0.7' },

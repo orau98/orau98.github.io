@@ -818,6 +818,7 @@ function renderHeader() {
       <a class="brand" href="/">昆虫植物図鑑</a>
       <nav class="nav" aria-label="主要リンク">
         <a href="/guides/">調べ方ガイド</a>
+        <a href="/guides/insect-plant-database.html">昆虫植物図鑑とは</a>
         <a href="/guides/what-is-host-plant.html">食草とは</a>
         <a href="/guides/plants/">植物別ガイド</a>
         <a href="/guides/categories/">カテゴリ別ガイド</a>
