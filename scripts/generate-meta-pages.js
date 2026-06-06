@@ -1884,6 +1884,39 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   if (mainImageUrl) {
     plantStructuredData.image = `${BASE_ORIGIN}${mainImageUrl}`;
   }
+  const plantFaqInsectList = relatedInsects.slice(0, 5).map((insect) => insect.japaneseName).join('、');
+  const plantFaqInsectSummary = relatedInsects.length > 5
+    ? `${plantFaqInsectList}など${relatedInsects.length}種`
+    : `${plantFaqInsectList}の${relatedInsects.length}種`;
+  const shouldRenderPlantFaq = relatedInsects.length >= 5;
+  const plantFaqItems = shouldRenderPlantFaq ? [
+    {
+      question: `${displayPlantName}につく虫は何種ありますか？`,
+      answer: `昆虫植物図鑑の整理済みデータでは、${displayPlantName}を食草・寄主植物として利用する昆虫を${relatedInsects.length}種掲載しています。内訳は${plantTypeBreakdown || `計${relatedInsects.length}種`}です。`,
+    },
+    {
+      question: `${displayPlantName}を食べる幼虫や昆虫を調べるには？`,
+      answer: `${displayPlantName}を利用する昆虫として、このページでは${plantFaqInsectSummary}を掲載しています。各昆虫名から食草・分類・出典を確認できます。`,
+    },
+    {
+      question: `${displayPlantName}の食草記録の出典はどこで確認できますか？`,
+      answer: citationEntries.length > 0
+        ? `このページの出典欄で、${displayPlantName}を利用する昆虫の食草・寄主植物情報に関係する文献やデータ出典を確認できます。`
+        : `このページの関連昆虫リストと各昆虫ページを確認し、報告や同定に使う場合は元データの出典を確認してください。`,
+    },
+  ] : [];
+  const plantFaqData = plantFaqItems.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: plantFaqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
   const safePlantTitle = escapeRedirectHtml(plantTitle);
   const safePlantDescription = escapeRedirectHtml(plantDescription);
   const safePlantKeywords = escapeRedirectHtml(plantKeywords);
@@ -1930,6 +1963,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   
   <!-- Enhanced Structured Data -->
   <script type="application/ld+json">${renderJsonLd(plantStructuredData)}</script>
+  ${plantFaqData ? `<script type="application/ld+json">${renderJsonLd(plantFaqData)}</script>` : ''}
 </head>
 <body>
   <header class="meta-site-header" role="banner">
@@ -2018,6 +2052,16 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         <h4>出典</h4>
         ${citationListHtml}` : ''}
       </section>
+
+      ${plantFaqItems.length > 0 ? `
+      <section class="description">
+        <h3>よくある疑問</h3>
+        <dl>
+          ${plantFaqItems.map((item) => `
+          <dt>${escapeRedirectHtml(item.question)}</dt>
+          <dd>${escapeRedirectHtml(item.answer)}</dd>`).join('')}
+        </dl>
+      </section>` : ''}
       
       <section class="related-insects">
         <h3>この植物を利用する昆虫（${relatedInsects.length}種）</h3>
