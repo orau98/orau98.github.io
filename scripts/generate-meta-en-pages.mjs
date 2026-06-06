@@ -8,6 +8,7 @@ import {
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { ENGLISH_GUIDE_LABELS, HOST_PLANT_GUIDES } from './generate-host-plant-guides.mjs';
 import {
   cleanString,
   isFlowerVisitRecord,
@@ -549,6 +550,59 @@ function computePlantRobotsContent({ relatedInsects, plantImageFiles }) {
   return buildRobotsContent(insectCount >= 2 || hasImage);
 }
 
+const HOST_PLANT_GUIDE_BY_VARIANT = new Map();
+for (const guide of HOST_PLANT_GUIDES) {
+  const names = new Set([guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]);
+  for (const name of names) {
+    const key = buildHostPlantGuideLookupKey(name);
+    if (key) HOST_PLANT_GUIDE_BY_VARIANT.set(key, guide);
+  }
+}
+
+function buildHostPlantGuideLookupKey(value = '') {
+  return String(value || '')
+    .replace(/[（(][^）)]*[）)]\s*$/, '')
+    .trim();
+}
+
+function findEnglishHostPlantGuides(plantNames = []) {
+  const found = new Map();
+  for (const name of plantNames) {
+    const rawKey = buildHostPlantGuideLookupKey(name);
+    if (!rawKey) continue;
+    const normalizedKey = buildHostPlantGuideLookupKey(normalizePlantNameLite(rawKey));
+    const guide = HOST_PLANT_GUIDE_BY_VARIANT.get(rawKey) || HOST_PLANT_GUIDE_BY_VARIANT.get(normalizedKey);
+    if (guide) found.set(guide.slug, guide);
+  }
+  return [...found.values()];
+}
+
+function getEnglishHostPlantGuideLabel(guide) {
+  return ENGLISH_GUIDE_LABELS[guide.slug] || buildJapaneseReferenceLabel(guide.name);
+}
+
+function renderEnglishHostPlantGuideLinks(plantNames = []) {
+  const guides = findEnglishHostPlantGuides(plantNames);
+  if (!guides.length) return '';
+  return `
+      <section class="host-plant-guides">
+        <h3>Host plant search guides</h3>
+        <p>Use these guide pages to find other Japanese insect records that use the same host plants.</p>
+        <ul>
+          ${guides.map((guide) => `<li><a href="/en/guides/plants/${escapeAttr(guide.slug)}.html">${escapeHtml(getEnglishHostPlantGuideLabel(guide))} host plant insects</a></li>`).join('\n          ')}
+        </ul>
+      </section>`;
+}
+
+function collectPlantGuideCandidateNames(canonicalName, detail = {}) {
+  return Array.from(new Set([
+    canonicalName,
+    detail.name,
+    detail.japaneseName,
+    ...(Array.isArray(detail.aliases) ? detail.aliases : []),
+  ].filter(Boolean)));
+}
+
 function buildPlantListItems(hostPlantsArray, plantRecords, plantDetails, aliasToCanonical) {
   return hostPlantsArray.map((plantName) => {
     const normalized = normalizePlantNameLite(plantName) || plantName;
@@ -788,6 +842,8 @@ function buildEnglishInsectPage({
         <p>Larval host plant information is currently limited in the source dataset for this entry.</p>`}
       </section>
 
+      ${renderEnglishHostPlantGuideLinks(hostPlantsArray)}
+
       ${cleanString(insect.notes || insect.remarks) ? `
       <section class="description">
         <h3>Original source note</h3>
@@ -945,6 +1001,8 @@ function buildEnglishPlantPage({
         <p>${escapeHtml(`${display.primaryName} is listed here as a plant associated with insect records from Japan.`)}</p>
         <p>${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
       </section>
+
+      ${renderEnglishHostPlantGuideLinks(collectPlantGuideCandidateNames(canonicalName, detail))}
 
       <section class="related-insects">
         <h3>Associated insects</h3>

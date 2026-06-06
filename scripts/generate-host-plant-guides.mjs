@@ -415,7 +415,7 @@ const CATEGORY_GUIDES = [
   },
 ];
 
-const ENGLISH_GUIDE_LABELS = Object.freeze({
+export const ENGLISH_GUIDE_LABELS = Object.freeze({
   sakura: 'Cherry trees (Cerasus / Prunus)',
   ume: 'Japanese apricot (Prunus mume)',
   ringo: 'Apple trees (Malus)',
