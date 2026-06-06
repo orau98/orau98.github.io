@@ -1857,6 +1857,9 @@ function renderStyle() {
     tr:last-child td{border-bottom:0}
     .insect-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;padding:0;list-style:none}
     .insect-list li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px}
+    .faq{display:grid;gap:14px;margin:0}
+    .faq dt{font-weight:800}
+    .faq dd{margin:4px 0 0;color:var(--muted)}
     .scientific{display:block;color:var(--muted);font-size:13px;font-style:italic;margin-top:2px}
     .small{font-size:14px;color:var(--muted)}
   </style>`;
@@ -1890,6 +1893,26 @@ function renderGuidePage(guide) {
   const description = truncate(`${guide.name}を食草・寄主植物として利用する昆虫をデータから整理。${typeSummary || `計${count}種`}、代表例は${representativeNames}など。植物名から幼虫や関連昆虫を調べられます。`, 155);
   const variantsText = guide.matchedVariants.map((variant) => variant.name).join('、');
   const shownInsects = guide.relatedInsects.slice(0, 48);
+  const mothCount = guide.typeCounts.moth || 0;
+  const butterflyCount = guide.typeCounts.butterfly || 0;
+  const larvalTypeText = [
+    mothCount > 0 ? `蛾${mothCount}種` : '',
+    butterflyCount > 0 ? `蝶${butterflyCount}種` : '',
+  ].filter(Boolean).join('、');
+  const faqItems = [
+    {
+      question: `${guide.name}につく虫は何種ありますか？`,
+      answer: `昆虫植物図鑑の整理済みデータでは、${guide.name}を食草・寄主植物として利用する昆虫を${count}種掲載しています。内訳は${typeSummary || `計${count}種`}です。`,
+    },
+    {
+      question: `${guide.name}を食べる幼虫や毛虫を調べるには？`,
+      answer: `${guide.name}についていた幼虫や毛虫は、まずこのページの代表的な関連昆虫を確認してください。${larvalTypeText ? `幼虫期に植物を食べる分類群として${larvalTypeText}が含まれます。` : '関連昆虫の候補から各種ページへ進むと、食草や出典を確認できます。'}`,
+    },
+    {
+      question: `${guide.name}の食草記録を詳しく確認するには？`,
+      answer: `全件は${guide.name}の植物ページと各昆虫ページで確認できます。近縁種や表記ゆれを含む場合があるため、報告や同定に使う場合は各ページの出典を確認してください。`,
+    },
+  ];
   const itemList = shownInsects.slice(0, 20).map((insect, index) => ({
     '@type': 'ListItem',
     position: index + 1,
@@ -1931,6 +1954,18 @@ function renderGuidePage(guide) {
       { '@type': 'ListItem', position: 4, name: `${guide.name}につく虫`, item: `${BASE_ORIGIN}${canonicalPath}` },
     ],
   };
+  const faqData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -1938,6 +1973,7 @@ function renderGuidePage(guide) {
   ${renderHead({ title, description, canonicalPath })}
   <script type="application/ld+json">${escapeJson(structuredData)}</script>
   <script type="application/ld+json">${escapeJson(breadcrumbData)}</script>
+  <script type="application/ld+json">${escapeJson(faqData)}</script>
   ${renderStyle()}
 </head>
 <body>
@@ -1992,6 +2028,17 @@ function renderGuidePage(guide) {
           </li>`).join('')}
         </ul>
         ${count > shownInsects.length ? `<p class="small">表示は一部です。全${count}種は <a href="${escapeHtml(guide.primaryPlantHref)}">${escapeHtml(guide.name)}の植物ページ</a> で確認できます。</p>` : ''}
+      </section>
+
+      <section class="panel" aria-labelledby="faq">
+        <h2 id="faq">よくある疑問</h2>
+        <dl class="faq">
+          ${faqItems.map((item) => `
+          <div>
+            <dt>${escapeHtml(item.question)}</dt>
+            <dd>${escapeHtml(item.answer)}</dd>
+          </div>`).join('')}
+        </dl>
       </section>
 
       <section class="panel" aria-labelledby="search-terms">
