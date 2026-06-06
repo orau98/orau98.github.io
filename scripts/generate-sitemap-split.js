@@ -442,6 +442,14 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/guides/what-is-host-plant.html',
+    path.join(__dirname, '../public/guides/what-is-host-plant.html'),
+    { changefreq: 'monthly', priority: '0.8' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/guides/host-plant-search.html',
     path.join(__dirname, '../public/guides/host-plant-search.html'),
     { changefreq: 'monthly', priority: '0.7' },
@@ -453,6 +461,14 @@ function generateSplitSitemaps() {
     '/en/guides/',
     path.join(__dirname, '../public/en/guides/index.html'),
     { changefreq: 'monthly', priority: '0.7', targetKey: 'en-main' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/guides/what-is-host-plant.html',
+    path.join(__dirname, '../public/en/guides/what-is-host-plant.html'),
+    { changefreq: 'monthly', priority: '0.8', targetKey: 'en-main' },
   );
 
   addStaticPageToMain(

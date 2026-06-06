@@ -31,8 +31,10 @@ const REQUIRED_FILES = [
   'opensearch.xml',
   'sitemap.html',
   'guides/index.html',
+  'guides/what-is-host-plant.html',
   'guides/host-plant-search.html',
   'en/guides/index.html',
+  'en/guides/what-is-host-plant.html',
   'en/guides/host-plant-search.html',
 ];
 

@@ -98,6 +98,7 @@ const DEFERRED_ADS_SCRIPT = MANUAL_AD_SLOTS.detail ? `<script>
   </script>` : '';
 const PRESERVED_EN_STATIC_FILES = Object.freeze([
   'guides/index.html',
+  'guides/what-is-host-plant.html',
   'guides/host-plant-search.html',
 ]);
 
