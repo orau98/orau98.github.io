@@ -34,9 +34,13 @@ const REQUIRED_FILES = [
   'guides/insect-plant-database.html',
   'guides/what-is-host-plant.html',
   'guides/host-plant-search.html',
+  'guides/families/index.html',
+  'guides/families/malvaceae.html',
   'en/guides/index.html',
   'en/guides/what-is-host-plant.html',
   'en/guides/host-plant-search.html',
+  'en/guides/families/index.html',
+  'en/guides/families/malvaceae.html',
 ];
 
 function assert(condition, message) {
