@@ -31,6 +31,7 @@ const REQUIRED_FILES = [
   'opensearch.xml',
   'sitemap.html',
   'guides/index.html',
+  'guides/insect-plant-database.html',
   'guides/what-is-host-plant.html',
   'guides/host-plant-search.html',
   'en/guides/index.html',
