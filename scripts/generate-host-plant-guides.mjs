@@ -818,6 +818,7 @@ function renderHeader() {
       <a class="brand" href="/">昆虫植物図鑑</a>
       <nav class="nav" aria-label="主要リンク">
         <a href="/guides/">調べ方ガイド</a>
+        <a href="/guides/what-is-host-plant.html">食草とは</a>
         <a href="/guides/plants/">植物別ガイド</a>
         <a href="/guides/categories/">カテゴリ別ガイド</a>
         <a href="/meta/plant/index.html">植物一覧</a>
@@ -1209,6 +1210,7 @@ function renderEnglishHeader(japanesePath = '/guides/') {
       <a class="brand" href="/en/">${escapeHtml(EN_SITE_NAME)}</a>
       <nav class="nav" aria-label="Primary links">
         <a href="/en/guides/">Search guides</a>
+        <a href="/en/guides/what-is-host-plant.html">Host plant basics</a>
         <a href="/en/guides/plants/">Host plant guides</a>
         <a href="/en/guides/categories/">Category guides</a>
         <a href="/en/meta/plant/index.html">Plants</a>
@@ -1651,6 +1653,7 @@ function renderEnglishGuideIndexPage(guides, categories) {
   const title = `Search guides | ${EN_SITE_NAME}`;
   const description = 'Search guide entry points for Japanese insect and host plant records, including host plant guides, category guides, and the host plant search method.';
   const items = [
+    { name: 'What is a host plant?', url: `${BASE_ORIGIN}/en/guides/what-is-host-plant.html` },
     { name: 'Host plant guides', url: `${BASE_ORIGIN}/en/guides/plants/` },
     { name: 'Category guides', url: `${BASE_ORIGIN}/en/guides/categories/` },
     { name: 'Find insects by host plant', url: `${BASE_ORIGIN}/en/guides/host-plant-search.html` },
@@ -1700,6 +1703,11 @@ function renderEnglishGuideIndexPage(guides, categories) {
 
     <main>
       <div class="grid">
+        <article class="card">
+          <h2><a href="/en/guides/what-is-host-plant.html">What is a host plant?</a></h2>
+          <p>Read a short explanation of host plants, larval food plants, and how Japanese insect-plant records are organized.</p>
+        </article>
+
         <article class="card">
           <h2><a href="/en/guides/plants/">Host plant guides</a></h2>
           <p>${guides.length} plant-based guide pages link plant names to recorded Japanese insects.</p>
