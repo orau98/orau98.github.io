@@ -113,6 +113,39 @@ function renderJsonLd(data) {
   return JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
 }
 
+function buildMetaWebPageData({ url, title, description, inLanguage, entityId, imageObject = null }) {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url,
+    name: title,
+    description,
+    inLanguage,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: '昆虫植物図鑑',
+      url: `${BASE_ORIGIN}/`,
+    },
+    mainEntity: {
+      '@id': entityId,
+    },
+  };
+
+  if (imageObject) {
+    data.primaryImageOfPage = imageObject;
+  }
+
+  return data;
+}
+
+function shouldRenderInsectWebPageData(hostPlantsArray = []) {
+  return Array.isArray(hostPlantsArray) && hostPlantsArray.length >= 5;
+}
+
+function shouldRenderPlantWebPageData(relatedInsects = []) {
+  return Array.isArray(relatedInsects) && relatedInsects.length >= 5;
+}
+
 const isInternalSourceLabel = (value = '') => {
   const source = String(value || '').trim();
   return !source || /\.csv\b|hostplants|insects|normalized_data|public\//i.test(source);
@@ -1487,8 +1520,16 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   const insectPageUrl = `${BASE_ORIGIN}/meta/${type}/${insect.id}.html`;
   const insectTitle = `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`;
   const insectKeywords = insectKeywordList.join(',');
+  const insectEntityId = `${insectPageUrl}#species`;
+  const insectImageObject = imageUrl ? {
+    '@type': 'ImageObject',
+    url: `${BASE_ORIGIN}${imageUrl}`,
+    caption: `${insect.japaneseName}（${scientificName}）の写真`,
+    representativeOfPage: true,
+  } : null;
   const insectStructuredData = {
     '@context': 'https://schema.org',
+    '@id': insectEntityId,
     '@type': ['Animal', 'Species'],
     name: insect.japaneseName,
     alternateName: uniqueNonEmpty([scientificName, insect.japaneseName, ...alternativeNameList]),
@@ -1527,13 +1568,19 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   if (citationEntries.length > 0) {
     insectStructuredData.citation = citationEntries.map((entry) => entry.plain);
   }
-  if (imageUrl) {
-    insectStructuredData.image = {
-      '@type': 'ImageObject',
-      url: `${BASE_ORIGIN}${imageUrl}`,
-      caption: `${insect.japaneseName}（${scientificName}）の写真`,
-    };
+  if (insectImageObject) {
+    insectStructuredData.image = insectImageObject;
   }
+  const insectWebPageData = shouldRenderInsectWebPageData(hostPlantsArray)
+    ? buildMetaWebPageData({
+      url: insectPageUrl,
+      title: insectTitle,
+      description: insectDescription,
+      inLanguage: 'ja',
+      entityId: insectEntityId,
+      imageObject: insectImageObject,
+    })
+    : null;
   const insectBreadcrumbData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -1618,6 +1665,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   <meta name="twitter:image:alt" content="${safeSocialImageAlt}">
   
   <!-- Enhanced Structured Data -->
+  ${insectWebPageData ? `<script type="application/ld+json">${renderJsonLd(insectWebPageData)}</script>` : ''}
   <script type="application/ld+json">${renderJsonLd(insectStructuredData)}</script>
   <script type="application/ld+json">${renderJsonLd(insectBreadcrumbData)}</script>
   ${insectFaqData ? `<script type="application/ld+json">${renderJsonLd(insectFaqData)}</script>` : ''}
@@ -1848,8 +1896,16 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const plantPageUrl = `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html`;
   const plantTitle = `${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用`;
   const plantKeywords = `${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}`;
+  const plantEntityId = `${plantPageUrl}#plant`;
+  const plantImageObject = mainImageUrl ? {
+    '@type': 'ImageObject',
+    url: `${BASE_ORIGIN}${mainImageUrl}`,
+    caption: socialImageAlt,
+    representativeOfPage: true,
+  } : null;
   const plantStructuredData = {
     '@context': 'https://schema.org',
+    '@id': plantEntityId,
     '@type': ['Plant', 'Species'],
     name: displayPlantName,
     identifier: {
@@ -1881,9 +1937,19 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   if (citationEntries.length > 0) {
     plantStructuredData.citation = citationEntries.map((entry) => entry.plain);
   }
-  if (mainImageUrl) {
-    plantStructuredData.image = `${BASE_ORIGIN}${mainImageUrl}`;
+  if (plantImageObject) {
+    plantStructuredData.image = plantImageObject;
   }
+  const plantWebPageData = shouldRenderPlantWebPageData(relatedInsects)
+    ? buildMetaWebPageData({
+      url: plantPageUrl,
+      title: plantTitle,
+      description: plantDescription,
+      inLanguage: 'ja',
+      entityId: plantEntityId,
+      imageObject: plantImageObject,
+    })
+    : null;
   const plantBreadcrumbData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -1971,6 +2037,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="twitter:image:alt" content="${safePlantImageAlt}">
   
   <!-- Enhanced Structured Data -->
+  ${plantWebPageData ? `<script type="application/ld+json">${renderJsonLd(plantWebPageData)}</script>` : ''}
   <script type="application/ld+json">${renderJsonLd(plantStructuredData)}</script>
   <script type="application/ld+json">${renderJsonLd(plantBreadcrumbData)}</script>
   ${plantFaqData ? `<script type="application/ld+json">${renderJsonLd(plantFaqData)}</script>` : ''}
