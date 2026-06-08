@@ -182,6 +182,11 @@ const escapeHtmlAttr = (value) => String(value)
   .replace(/</g, '&lt;')
   .replace(/>/g, '&gt;');
 
+const escapeHtmlText = (value) => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;');
+
 const replaceMetaContent = (html, attr, key, content) => {
   const pattern = new RegExp(
     `<meta\\s+${attr}="${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s+content="[^"]*"\\s*\\/?>`,
@@ -209,6 +214,16 @@ const ensureAdsenseScript = (html) => {
 
 const renderJsonLdScript = (payload) =>
   `    <script type="application/ld+json">\n${JSON.stringify(payload, null, 2).replace(/</g, '\\u003c')}\n    </script>`;
+
+const extractSpaAssetTags = (indexHtml) => {
+  const headMatch = String(indexHtml || '').match(/<head[^>]*>([\s\S]*?)<\/head>/i);
+  const headHtml = headMatch?.[1] || '';
+  return Array.from(headHtml.matchAll(
+    /<link\b[^>]+href="\/assets\/[^"]+"[^>]*>|<script\b[^>]+src="\/assets\/[^"]+"[^>]*>\s*<\/script>/gi,
+  ))
+    .map((match) => `    ${match[0].trim()}`)
+    .join('\n');
+};
 
 const replaceJsonLdBlocks = (html, structuredData) => {
   if (!Array.isArray(structuredData) || structuredData.length === 0) return html;
@@ -346,11 +361,61 @@ const buildPlantRouteMetadata = (plantName, locale) => {
 };
 
 const buildPlantProfileRouteShell = (indexHtml, plantName, locale = 'ja') => {
-  const routeFlag = `    <script>${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>\n`;
-  const html = buildSpaRouteShell(indexHtml, buildPlantRouteMetadata(plantName, locale));
-  return html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
-    ? html
-    : html.replace('</head>', `${routeFlag}  </head>`);
+  const route = buildPlantRouteMetadata(plantName, locale);
+  const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
+  const assetTags = extractSpaAssetTags(indexHtml);
+  if (!assetTags) {
+    const routeFlag = `    <script>${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>\n`;
+    const html = buildSpaRouteShell(indexHtml, route);
+    return html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
+      ? html
+      : html.replace('</head>', `${routeFlag}  </head>`);
+  }
+
+  const alternateLinks = route.alternates
+    .map(({ hreflang, path: routePath }) =>
+      `    <link rel="alternate" hreflang="${escapeHtmlAttr(hreflang)}" href="${escapeHtmlAttr(`${BASE_ORIGIN}${routePath}`)}">`)
+    .join('\n');
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: route.title,
+    description: route.description,
+    url: canonicalUrl,
+    inLanguage: route.lang,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: route.lang === 'en' ? EN_SITE_NAME : '昆虫植物図鑑',
+      url: `${BASE_ORIGIN}${route.lang === 'en' ? '/en/' : '/'}`,
+    },
+  };
+
+  return `<!doctype html>
+<html lang="${escapeHtmlAttr(route.lang)}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtmlText(route.title)}</title>
+    <meta name="description" content="${escapeHtmlAttr(route.description)}">
+    <meta name="robots" content="${escapeHtmlAttr(route.robotsContent || SPA_ROUTE_NOINDEX_ROBOTS)}">
+    <link rel="canonical" href="${escapeHtmlAttr(canonicalUrl)}">
+${alternateLinks}
+    <meta property="og:title" content="${escapeHtmlAttr(route.ogTitle)}">
+    <meta property="og:description" content="${escapeHtmlAttr(route.ogDescription)}">
+    <meta property="og:url" content="${escapeHtmlAttr(canonicalUrl)}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeHtmlAttr(route.ogTitle)}">
+    <meta name="twitter:description" content="${escapeHtmlAttr(route.ogDescription)}">
+${renderJsonLdScript(structuredData)}
+    <script>window.__SEO_FORCE_NOINDEX__ = true; ${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>
+${assetTags}
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`;
 };
 
 const readTextIfExists = (filePath) => {

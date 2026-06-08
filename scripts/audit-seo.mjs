@@ -433,7 +433,7 @@ for (const filePath of supportHtmlFiles) {
   }
 }
 
-const GUIDE_PAGE_INVENTORY_MIN = 145;
+const GUIDE_PAGE_INVENTORY_MIN = 320;
 let guideInventorySampleCount = 0;
 const validateGuidePageInventory = (dirPath, label) => {
   const files = collectHtmlFiles(dirPath)
