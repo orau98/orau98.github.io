@@ -274,6 +274,7 @@ const validateRobotsTxt = (filePath) => {
   const requiredSitemaps = [
     'sitemap.xml',
     'search-console-submit.xml',
+    'search-console-discovery-seed.xml',
   ];
 
   for (const sitemap of requiredSitemaps) {
@@ -284,7 +285,7 @@ const validateRobotsTxt = (filePath) => {
   }
 };
 
-const validateSitemapIndex = (filePath) => {
+const validateSitemapIndex = (filePath, requiredEntries = [`${SITE_ORIGIN}/sitemap-main.xml`]) => {
   const relativePath = path.relative(ROOT, filePath);
   ensure(fs.existsSync(filePath), `${relativePath}: sitemap index not found`);
   if (!fs.existsSync(filePath)) return;
@@ -292,16 +293,29 @@ const validateSitemapIndex = (filePath) => {
   const body = readFile(filePath);
   ensure(
     /<sitemapindex\b/i.test(body),
-    `${relativePath}: root sitemap must be a sitemap index`,
+    `${relativePath}: sitemap must be a sitemap index`,
   );
   ensure(
     !/<urlset\b/i.test(body),
-    `${relativePath}: root sitemap should not be a full URL set`,
+    `${relativePath}: sitemap index should not be a full URL set`,
   );
-  ensure(
-    body.includes(`${SITE_ORIGIN}/sitemap-main.xml`),
-    `${relativePath}: missing sitemap-main.xml entry`,
-  );
+  for (const requiredEntry of requiredEntries) {
+    ensure(
+      body.includes(requiredEntry),
+      `${relativePath}: missing sitemap index entry -> ${requiredEntry}`,
+    );
+  }
+};
+
+const validateSitemapUrlSet = (filePath) => {
+  const relativePath = path.relative(ROOT, filePath);
+  ensure(fs.existsSync(filePath), `${relativePath}: sitemap URL set not found`);
+  if (!fs.existsSync(filePath)) return;
+
+  const body = readFile(filePath);
+  ensure(/<urlset\b/i.test(body), `${relativePath}: sitemap must be a URL set`);
+  ensure(!/<sitemapindex\b/i.test(body), `${relativePath}: URL set should not be a sitemap index`);
+  ensure(/<url>\s*<loc>/i.test(body), `${relativePath}: URL set should contain at least one URL`);
 };
 
 const validateSpa404 = (filePath) => {
@@ -449,6 +463,13 @@ validateRobotsTxt(path.join(DIST_DIR, 'robots.txt'));
 validateSitemapIndex(path.join(DIST_DIR, 'sitemap.xml'));
 validateSitemapIndex(path.join(DIST_DIR, 'sitemap-index.xml'));
 validateSitemapIndex(path.join(DIST_DIR, 'sitemap_index.xml'));
+validateSitemapIndex(path.join(DIST_DIR, 'search-console-submit.xml'), [
+  `${SITE_ORIGIN}/search-console-discovery-seed.xml`,
+  `${SITE_ORIGIN}/sitemap-main.xml`,
+  `${SITE_ORIGIN}/sitemap-plant.xml`,
+  `${SITE_ORIGIN}/sitemap-en-plant.xml`,
+]);
+validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'));
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
 if (failures.length > 0) {
