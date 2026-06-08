@@ -25,6 +25,7 @@ const EN_GUIDES_DIR = path.join(ROOT_DIR, 'public/en/guides');
 const EN_OUT_DIR = path.join(EN_GUIDES_DIR, 'plants');
 const EN_CATEGORY_OUT_DIR = path.join(EN_GUIDES_DIR, 'categories');
 const EN_FAMILY_OUT_DIR = path.join(EN_GUIDES_DIR, 'families');
+const EN_INSECT_TYPE_OUT_DIR = path.join(EN_GUIDES_DIR, 'insects');
 const PLANT_META_DIR = path.join(ROOT_DIR, 'public/meta/plant');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(ROOT_DIR, 'public/seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(ROOT_DIR, 'public/seo-route-map.plants.json');
@@ -1939,6 +1940,7 @@ function collectInsectTypeGuideData(config, dataset, insects, plantGuideLookup) 
         ...row,
         count: row.relatedInsects.size,
         href: guide ? `/guides/plants/${guide.slug}.html` : findPlantMetaHref(row.name, dataset.plantDetails),
+        guideSlug: guide?.slug || '',
         scientificName: row.detail?.scientificName || '',
         familyName: row.detail?.familyName || row.detail?.family || '',
       };
@@ -2053,6 +2055,11 @@ function resolveEnglishFamilyPlantHref(row, routeMaps = {}) {
   return '/en/meta/plant/index.html';
 }
 
+function resolveEnglishTypePlantHref(row, routeMaps = {}) {
+  if (row.guideSlug) return `/en/guides/plants/${row.guideSlug}.html`;
+  return resolveEnglishFamilyPlantHref(row, routeMaps);
+}
+
 function resolveEnglishInsectHref(insect, routeMaps = {}) {
   return routeMaps.insects?.[insect.id] || getInsectRoute(insect);
 }
@@ -2065,6 +2072,28 @@ function buildEnglishSearchPhrases(label, localName, context = 'host plant insec
     `${primary} larval host plants`,
     localName ? `${localName} host plant insects` : '',
   ].filter(Boolean)));
+}
+
+function buildEnglishInsectTypeDisplay(typeGuide) {
+  const singular = EN_TYPE_LABELS[typeGuide.type] || typeGuide.label;
+  const plural = EN_TYPE_PLURALS[typeGuide.type] || `${singular}s`;
+  return {
+    singular,
+    plural,
+    lowerSingular: singular.toLowerCase(),
+    lowerPlural: plural.toLowerCase(),
+    japaneseLabel: typeGuide.label,
+  };
+}
+
+function buildEnglishInsectTypeSearchPhrases(typeGuide) {
+  const display = buildEnglishInsectTypeDisplay(typeGuide);
+  return [
+    `${display.singular} host plants Japan`,
+    `Host plants of Japanese ${display.lowerPlural}`,
+    `Japanese ${display.lowerPlural} larval food plants`,
+    `${typeGuide.label} host plants`,
+  ];
 }
 
 function renderEnglishHead({ title, description, canonicalPath, japanesePath, ogType = 'article' }) {
@@ -3021,6 +3050,7 @@ function renderEnglishHeader(japanesePath = '/guides/') {
         <a href="/en/guides/">Search guides</a>
         <a href="/en/guides/what-is-host-plant.html">Host plant basics</a>
         <a href="/en/guides/plants/">Host plant guides</a>
+        <a href="/en/guides/insects/">Insect group guides</a>
         <a href="/en/guides/categories/">Category guides</a>
         <a href="/en/guides/families/">Family guides</a>
         <a href="/en/meta/plant/index.html">Plants</a>
@@ -3194,6 +3224,236 @@ function renderEnglishGuidePage(guide, routeMaps, plantDetails = {}) {
         <h2 id="variants">Japanese plant-name variants included</h2>
         <p>${escapeHtml(variantsText || guide.name)}</p>
         <p class="small">For research or identification use, verify the source references on the linked profile pages.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+function renderEnglishInsectTypeGuidePage(typeGuide, routeMaps = {}) {
+  const canonicalPath = `/en/guides/insects/${typeGuide.slug}.html`;
+  const japanesePath = `/guides/insects/${typeGuide.slug}.html`;
+  const display = buildEnglishInsectTypeDisplay(typeGuide);
+  const plantRows = typeGuide.plantRows.slice(0, 120);
+  const shownInsects = typeGuide.relatedInsects.slice(0, 48);
+  const searchPhrases = buildEnglishInsectTypeSearchPhrases(typeGuide);
+  const topPlantNames = plantRows
+    .slice(0, 6)
+    .map((row) => row.scientificName || row.name)
+    .join(', ');
+  const title = `${display.singular} host plants in Japan | ${EN_SITE_NAME}`;
+  const description = truncate(
+    `Browse Japanese ${display.lowerSingular} records by host plants. The guide links ${typeGuide.plantRows.length} plant entries including ${topPlantNames} to ${typeGuide.relatedInsects.length} insect records.`,
+    155,
+  );
+  const faqItems = [
+    {
+      question: `Where can I find host plants for Japanese ${display.lowerPlural}?`,
+      answer: `This page ranks plant names recorded from ${display.lowerPlural} in the site dataset. Each plant link leads to an English host plant guide or plant profile when available.`,
+    },
+    {
+      question: `How many plant entries are listed for ${display.lowerPlural}?`,
+      answer: `The current static guide summarizes ${typeGuide.plantRows.length} plant entries and ${typeGuide.relatedInsects.length} linked ${display.lowerSingular} records.`,
+    },
+    {
+      question: 'Can I use this page for identification or reporting?',
+      answer: 'Use it as a discovery route first. Plant names can include closely related taxa or spelling variants, so source references on the linked insect and plant pages should be checked before identification or reporting.',
+    },
+  ];
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${display.singular} host plants in Japan`,
+    description,
+    url: `${BASE_ORIGIN}${canonicalPath}`,
+    inLanguage: 'en',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: EN_SITE_NAME,
+      url: `${BASE_ORIGIN}/en/`,
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: typeGuide.plantRows.length,
+      itemListElement: plantRows.slice(0, 50).map((row, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'WebPage',
+          name: `${row.scientificName || row.name} host plant records`,
+          url: `${BASE_ORIGIN}${resolveEnglishTypePlantHref(row, routeMaps)}`,
+        },
+      })),
+    },
+  };
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: EN_SITE_NAME, item: `${BASE_ORIGIN}/en/` },
+      { '@type': 'ListItem', position: 2, name: 'Search guides', item: `${BASE_ORIGIN}/en/guides/` },
+      { '@type': 'ListItem', position: 3, name: 'Insect group guides', item: `${BASE_ORIGIN}/en/guides/insects/` },
+      { '@type': 'ListItem', position: 4, name: `${display.singular} host plants`, item: `${BASE_ORIGIN}${canonicalPath}` },
+    ],
+  };
+  const faqData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  ${renderEnglishHead({ title, description, canonicalPath, japanesePath })}
+  <script type="application/ld+json">${escapeJson(structuredData)}</script>
+  <script type="application/ld+json">${escapeJson(breadcrumbData)}</script>
+  <script type="application/ld+json">${escapeJson(faqData)}</script>
+  ${renderStyle()}
+</head>
+<body>
+  <div class="wrap">
+    ${renderEnglishHeader(japanesePath)}
+    <header>
+      <span class="badge">Insect group guide</span>
+      <h1>${escapeHtml(display.singular)} host plants in Japan</h1>
+      <p class="lead">A static entry page for moving from an insect group to host plant guides and indexed insect profile pages.</p>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="grid">
+          <div class="card">
+            <div class="count">${typeGuide.relatedInsects.length}</div>
+            <p class="muted">Related insect records</p>
+          </div>
+          <div class="card">
+            <div class="count">${typeGuide.plantRows.length}</div>
+            <p class="muted">Plant entries</p>
+          </div>
+          <div class="card">
+            <h2>Japanese reference</h2>
+            <p>${escapeHtml(buildJapaneseReferenceLabel(display.japaneseLabel))}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="search-terms">
+        <h2 id="search-terms">Search intents covered</h2>
+        <ul class="chips">
+          ${searchPhrases.map((phrase) => `<li>${escapeHtml(phrase)}</li>`).join('')}
+        </ul>
+      </section>
+
+      <section aria-labelledby="plants">
+        <h2 id="plants">Host plants linked from ${escapeHtml(display.lowerPlural)}</h2>
+        <table>
+          <thead><tr><th>Plant</th><th>Related records</th><th>Reference</th></tr></thead>
+          <tbody>
+            ${plantRows.map((row) => `
+            <tr>
+              <td>
+                <a href="${escapeHtml(resolveEnglishTypePlantHref(row, routeMaps))}">${escapeHtml(row.scientificName || row.name)}</a>
+                <span class="small">${escapeHtml(buildJapaneseReferenceLabel(row.name))}</span>
+              </td>
+              <td>${row.count}</td>
+              <td>${escapeHtml(row.familyName || '-')}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+        ${typeGuide.plantRows.length > plantRows.length ? `<p class="small">The table shows the top ${plantRows.length} plant entries. Use the linked plant and host plant guide pages for deeper browsing.</p>` : ''}
+      </section>
+
+      <section aria-labelledby="representatives">
+        <h2 id="representatives">Representative linked ${escapeHtml(display.lowerPlural)} pages</h2>
+        <ul class="insect-list">
+          ${shownInsects.map((insect) => buildEnglishInsectListItem(insect, routeMaps)).join('')}
+        </ul>
+      </section>
+
+      <section class="panel" aria-labelledby="faq">
+        <h2 id="faq">Common questions</h2>
+        <dl class="faq">
+          ${faqItems.map((item) => `
+          <div>
+            <dt>${escapeHtml(item.question)}</dt>
+            <dd>${escapeHtml(item.answer)}</dd>
+          </div>`).join('')}
+        </dl>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+`;
+}
+
+function renderEnglishInsectTypeIndexPage(typeGuides = []) {
+  const canonicalPath = '/en/guides/insects/';
+  const japanesePath = '/guides/insects/';
+  const title = `Insect group host plant guides | ${EN_SITE_NAME}`;
+  const description = 'Browse Japanese insect and host plant records by insect group, including moths, butterflies, longhorn beetles, leaf beetles, jewel beetles, and aphids.';
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Insect group host plant guides',
+    description,
+    url: `${BASE_ORIGIN}${canonicalPath}`,
+    inLanguage: 'en',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: typeGuides.length,
+      itemListElement: typeGuides.map((guide, index) => {
+        const display = buildEnglishInsectTypeDisplay(guide);
+        return {
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'WebPage',
+            name: `${display.singular} host plants in Japan`,
+            url: `${BASE_ORIGIN}/en/guides/insects/${guide.slug}.html`,
+          },
+        };
+      }),
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  ${renderEnglishHead({ title, description, canonicalPath, japanesePath, ogType: 'website' })}
+  <script type="application/ld+json">${escapeJson(structuredData)}</script>
+  ${renderStyle()}
+</head>
+<body>
+  <div class="wrap">
+    ${renderEnglishHeader(japanesePath)}
+    <header>
+      <span class="badge">Insect group guides</span>
+      <h1>Browse host plants by insect group</h1>
+      <p class="lead">Use these pages when the search starts from an insect group, then move to host plant and species profile pages.</p>
+    </header>
+
+    <main>
+      <section class="grid" aria-label="Insect group guide list">
+        ${typeGuides.map((guide) => {
+          const display = buildEnglishInsectTypeDisplay(guide);
+          return `
+        <article class="card">
+          <h2><a href="/en/guides/insects/${guide.slug}.html">${escapeHtml(display.singular)} host plants</a></h2>
+          <p>${guide.relatedInsects.length} linked insect records and ${guide.plantRows.length} plant entries.</p>
+          <p class="small">${escapeHtml(buildEnglishInsectTypeSearchPhrases(guide).slice(0, 2).join(' / '))}</p>
+        </article>`;
+        }).join('')}
       </section>
     </main>
   </div>
@@ -3659,14 +3919,15 @@ function renderEnglishCategoryIndexPage(categories, plantDetails = {}) {
 `;
 }
 
-function renderEnglishGuideIndexPage(guides, categories, families) {
+function renderEnglishGuideIndexPage(guides, categories, families, typeGuides = []) {
   const canonicalPath = '/en/guides/';
   const japanesePath = '/guides/';
   const title = `Search guides | ${EN_SITE_NAME}`;
-  const description = 'Search guide entry points for Japanese insect and host plant records, including host plant guides, category guides, and the host plant search method.';
+  const description = 'Search guide entry points for Japanese insect and host plant records, including host plant guides, insect group guides, category guides, and the host plant search method.';
   const items = [
     { name: 'What is a host plant?', url: `${BASE_ORIGIN}/en/guides/what-is-host-plant.html` },
     { name: 'Host plant guides', url: `${BASE_ORIGIN}/en/guides/plants/` },
+    { name: 'Insect group host plant guides', url: `${BASE_ORIGIN}/en/guides/insects/` },
     { name: 'Category guides', url: `${BASE_ORIGIN}/en/guides/categories/` },
     { name: 'Plant family guides', url: `${BASE_ORIGIN}/en/guides/families/` },
     { name: 'Find insects by host plant', url: `${BASE_ORIGIN}/en/guides/host-plant-search.html` },
@@ -3727,6 +3988,11 @@ function renderEnglishGuideIndexPage(guides, categories, families) {
         </article>
 
         <article class="card">
+          <h2><a href="/en/guides/insects/">Insect group guides</a></h2>
+          <p>${typeGuides.length} pages start from insect groups such as moths, butterflies, beetles, and aphids.</p>
+        </article>
+
+        <article class="card">
           <h2><a href="/en/guides/categories/">Category guides</a></h2>
           <p>${categories.length} category pages cover practical searches such as garden trees, fruit trees, vegetables, grasses, and broadleaf trees.</p>
         </article>
@@ -3770,6 +4036,7 @@ function main() {
   fs.rmSync(EN_OUT_DIR, { recursive: true, force: true });
   fs.rmSync(EN_CATEGORY_OUT_DIR, { recursive: true, force: true });
   fs.rmSync(EN_FAMILY_OUT_DIR, { recursive: true, force: true });
+  fs.rmSync(EN_INSECT_TYPE_OUT_DIR, { recursive: true, force: true });
   fs.mkdirSync(OUT_DIR, { recursive: true });
   fs.mkdirSync(CATEGORY_OUT_DIR, { recursive: true });
   fs.mkdirSync(FAMILY_OUT_DIR, { recursive: true });
@@ -3777,6 +4044,7 @@ function main() {
   fs.mkdirSync(EN_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_CATEGORY_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_FAMILY_OUT_DIR, { recursive: true });
+  fs.mkdirSync(EN_INSECT_TYPE_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_GUIDES_DIR, { recursive: true });
 
   const guideConfigs = buildHostPlantGuideConfigs(dataset);
@@ -3810,6 +4078,7 @@ function main() {
   });
   typeGuides.forEach((typeGuide) => {
     writeHtml(path.join(INSECT_TYPE_OUT_DIR, `${typeGuide.slug}.html`), renderInsectTypeGuidePage(typeGuide));
+    writeHtml(path.join(EN_INSECT_TYPE_OUT_DIR, `${typeGuide.slug}.html`), renderEnglishInsectTypeGuidePage(typeGuide, routeMaps));
   });
   writeHtml(path.join(OUT_DIR, 'index.html'), renderIndexPage(guides, categories, families, typeGuides));
   writeHtml(path.join(CATEGORY_OUT_DIR, 'index.html'), renderCategoryIndexPage(categories));
@@ -3818,7 +4087,8 @@ function main() {
   writeHtml(path.join(EN_OUT_DIR, 'index.html'), renderEnglishPlantIndexPage(guides, categories, families, plantDetails));
   writeHtml(path.join(EN_CATEGORY_OUT_DIR, 'index.html'), renderEnglishCategoryIndexPage(categories, plantDetails));
   writeHtml(path.join(EN_FAMILY_OUT_DIR, 'index.html'), renderEnglishFamilyIndexPage(families));
-  writeHtml(path.join(EN_GUIDES_DIR, 'index.html'), renderEnglishGuideIndexPage(guides, categories, families));
+  writeHtml(path.join(EN_INSECT_TYPE_OUT_DIR, 'index.html'), renderEnglishInsectTypeIndexPage(typeGuides));
+  writeHtml(path.join(EN_GUIDES_DIR, 'index.html'), renderEnglishGuideIndexPage(guides, categories, families, typeGuides));
   const patchedStaticGuideCount = STATIC_GUIDE_HTML_PATHS
     .filter((filePath) => ensureAdsenseHeadTags(filePath))
     .length;
@@ -3831,6 +4101,7 @@ function main() {
   console.log(`[guides] generated English host plant guide pages: ${guides.length + 1}`);
   console.log(`[guides] generated English category guide pages: ${categories.length + 1}`);
   console.log(`[guides] generated English family guide pages: ${families.length + 1}`);
+  console.log(`[guides] generated English insect type guide pages: ${typeGuides.length + 1}`);
   console.log(`[guides] patched static guide AdSense tags: ${patchedStaticGuideCount}`);
 }
 
