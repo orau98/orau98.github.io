@@ -139,11 +139,11 @@ function buildMetaWebPageData({ url, title, description, inLanguage, entityId, i
 }
 
 function shouldRenderInsectWebPageData(hostPlantsArray = []) {
-  return Array.isArray(hostPlantsArray) && hostPlantsArray.length >= 5;
+  return Array.isArray(hostPlantsArray) && hostPlantsArray.length >= 10;
 }
 
 function shouldRenderPlantWebPageData(relatedInsects = []) {
-  return Array.isArray(relatedInsects) && relatedInsects.length >= 5;
+  return Array.isArray(relatedInsects) && relatedInsects.length >= 10;
 }
 
 const isInternalSourceLabel = (value = '') => {
