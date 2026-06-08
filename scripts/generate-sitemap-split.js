@@ -569,6 +569,24 @@ function generateSplitSitemaps() {
   addStaticPageToMain(
     sitemaps,
     baseUrl,
+    '/en/guides/insects/',
+    path.join(__dirname, '../public/en/guides/insects/index.html'),
+    { changefreq: 'monthly', priority: '0.8', targetKey: 'en-main' },
+  );
+  const enInsectTypeGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/en/guides/insects'),
+    '/en/guides/insects/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false, targetKey: 'en-main' },
+  );
+  if (enInsectTypeGuideCount > 0) {
+    console.log(`[sitemap] English insect type guide pages added: ${enInsectTypeGuideCount}`);
+  }
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
     '/guides/plants/',
     path.join(__dirname, '../public/guides/plants/index.html'),
     { changefreq: 'monthly', priority: '0.8' },

@@ -431,6 +431,13 @@ const supportHtmlFiles = [
   path.join(DIST_DIR, 'en', 'guides', 'categories', 'asteraceae-wildflowers.html'),
   path.join(DIST_DIR, 'en', 'guides', 'families', 'onagraceae.html'),
   path.join(DIST_DIR, 'en', 'guides', 'families', 'elaeagnaceae.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'index.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'moth-host-plants.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'butterfly-host-plants.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'longhornbeetle-host-plants.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'leafbeetle-host-plants.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'jewelbeetle-host-plants.html'),
+  path.join(DIST_DIR, 'en', 'guides', 'insects', 'aphid-host-plants.html'),
 ];
 for (const filePath of supportHtmlFiles) {
   if (fs.existsSync(filePath)) {

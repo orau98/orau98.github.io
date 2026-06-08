@@ -78,6 +78,13 @@ const REQUIRED_FILES = [
   'en/guides/categories/asteraceae-wildflowers.html',
   'en/guides/families/onagraceae.html',
   'en/guides/families/elaeagnaceae.html',
+  'en/guides/insects/index.html',
+  'en/guides/insects/moth-host-plants.html',
+  'en/guides/insects/butterfly-host-plants.html',
+  'en/guides/insects/longhornbeetle-host-plants.html',
+  'en/guides/insects/leafbeetle-host-plants.html',
+  'en/guides/insects/jewelbeetle-host-plants.html',
+  'en/guides/insects/aphid-host-plants.html',
 ];
 
 function assert(condition, message) {
