@@ -8,7 +8,7 @@ import {
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
-import { ENGLISH_GUIDE_LABELS, HOST_PLANT_GUIDES } from './generate-host-plant-guides.mjs';
+import { ENGLISH_GUIDE_LABELS, buildHostPlantGuideConfigs } from './generate-host-plant-guides.mjs';
 import {
   cleanString,
   isFlowerVisitRecord,
@@ -553,8 +553,9 @@ function computePlantRobotsContent({ relatedInsects, plantImageFiles }) {
   return buildRobotsContent(insectCount >= 2 || hasImage);
 }
 
+const hostPlantGuideConfigs = buildHostPlantGuideConfigs(loadJson('full-dataset.json', {}));
 const HOST_PLANT_GUIDE_BY_VARIANT = new Map();
-for (const guide of HOST_PLANT_GUIDES) {
+for (const guide of hostPlantGuideConfigs) {
   const names = new Set([guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]);
   for (const name of names) {
     const key = buildHostPlantGuideLookupKey(name);

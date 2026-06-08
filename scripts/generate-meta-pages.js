@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { HOST_PLANT_GUIDES } from './generate-host-plant-guides.mjs';
+import { buildHostPlantGuideConfigs } from './generate-host-plant-guides.mjs';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
 import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
@@ -51,6 +51,7 @@ const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.102
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
 const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
+const FULL_DATASET_PATH = path.join(__dirname, '../public/assets/data-lite/full-dataset.json');
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -95,6 +96,7 @@ function readJsonOrEmpty(filePath) {
 }
 
 const plantDetailIndex = readJsonOrEmpty(PLANT_DETAILS_PATH);
+const hostPlantGuideConfigs = buildHostPlantGuideConfigs(readJsonOrEmpty(FULL_DATASET_PATH));
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -1281,9 +1283,9 @@ function buildEnglishSlugMaps() {
 // 種ページから該当する食草ガイド(/guides/plants/<slug>.html)へ逆リンクを張る。
 // 多数の種ページ(約1.5万)から少数のガイドページ(「サクラにつく虫」等、検索需要の大きい
 // クエリの受け皿)へ内部リンクを集中させ、ガイドの内部評価とクロール到達性を高める。
-// 元データ HOST_PLANT_GUIDES は generate-host-plant-guides.mjs と単一ソースを共有する。
+// 元データは generate-host-plant-guides.mjs と単一ソースを共有する。
 const PLANT_GUIDE_BY_VARIANT = new Map();
-for (const guide of HOST_PLANT_GUIDES) {
+for (const guide of hostPlantGuideConfigs) {
   const names = new Set([guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]);
   for (const name of names) {
     const key = String(name || '').trim();
