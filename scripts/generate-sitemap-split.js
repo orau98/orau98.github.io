@@ -620,6 +620,24 @@ function generateSplitSitemaps() {
     console.log(`[sitemap] family guide pages added: ${familyGuideCount}`);
   }
 
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/guides/insects/',
+    path.join(__dirname, '../public/guides/insects/index.html'),
+    { changefreq: 'monthly', priority: '0.8' },
+  );
+  const insectTypeGuideCount = addStaticDirectoryToMain(
+    sitemaps,
+    baseUrl,
+    path.join(__dirname, '../public/guides/insects'),
+    '/guides/insects/',
+    { changefreq: 'monthly', priority: '0.8', includeIndex: false },
+  );
+  if (insectTypeGuideCount > 0) {
+    console.log(`[sitemap] insect type guide pages added: ${insectTypeGuideCount}`);
+  }
+
   // NOTE:
   // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
   // 検索エンジン向けのサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
