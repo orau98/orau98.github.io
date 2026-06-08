@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const ROOT_DIR = path.join(__dirname, '..');
 const DATASET_PATH = path.join(ROOT_DIR, 'public/assets/data-lite/full-dataset.json');
+const GUIDES_DIR = path.join(ROOT_DIR, 'public/guides');
 const OUT_DIR = path.join(ROOT_DIR, 'public/guides/plants');
 const CATEGORY_OUT_DIR = path.join(ROOT_DIR, 'public/guides/categories');
 const FAMILY_OUT_DIR = path.join(ROOT_DIR, 'public/guides/families');
@@ -25,6 +26,22 @@ const EN_FAMILY_OUT_DIR = path.join(EN_GUIDES_DIR, 'families');
 const PLANT_META_DIR = path.join(ROOT_DIR, 'public/meta/plant');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(ROOT_DIR, 'public/seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(ROOT_DIR, 'public/seo-route-map.plants.json');
+const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
+const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
+const ADSENSE_SCRIPT_URL = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
+const STATIC_GUIDE_HTML_PATHS = Object.freeze([
+  path.join(GUIDES_DIR, 'index.html'),
+  path.join(GUIDES_DIR, 'insect-plant-database.html'),
+  path.join(GUIDES_DIR, 'what-is-host-plant.html'),
+  path.join(GUIDES_DIR, 'host-plant-search.html'),
+  path.join(GUIDES_DIR, 'caterpillar-host-plant.html'),
+  path.join(GUIDES_DIR, 'garden-tree-caterpillars.html'),
+  path.join(GUIDES_DIR, 'weeds-caterpillars.html'),
+  path.join(EN_GUIDES_DIR, 'index.html'),
+  path.join(EN_GUIDES_DIR, 'what-is-host-plant.html'),
+  path.join(EN_GUIDES_DIR, 'host-plant-search.html'),
+]);
 
 const TYPE_CONFIGS = [
   ['moth', '蛾', '/meta/moth/'],
@@ -1468,6 +1485,21 @@ function writeHtml(filePath, content) {
   fs.writeFileSync(filePath, content.replace(/[ \t]+$/gm, ''), 'utf-8');
 }
 
+function ensureAdsenseHeadTags(filePath) {
+  if (!fs.existsSync(filePath)) return false;
+  const html = fs.readFileSync(filePath, 'utf-8');
+  if (html.includes(ADSENSE_SCRIPT_URL)) return false;
+
+  const adsenseBlock = `  ${ADSENSE_HEAD_TAGS}\n`;
+  const nextHtml = html.replace(
+    /(<meta\s+name="description"\s+content="[^"]*"\s*>\n)/i,
+    `$1${adsenseBlock}`,
+  );
+  if (nextHtml === html) return false;
+  writeHtml(filePath, nextHtml);
+  return true;
+}
+
 function encodePathSegment(value) {
   return encodeURIComponent(value).replace(/[!'()*]/g, (char) =>
     `%${char.charCodeAt(0).toString(16).toUpperCase()}`
@@ -1790,6 +1822,7 @@ function renderEnglishHead({ title, description, canonicalPath, japanesePath, og
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
+  ${ADSENSE_HEAD_TAGS}
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
   ${japaneseUrl ? `<link rel="alternate" hreflang="ja" href="${escapeHtml(japaneseUrl)}">` : ''}
@@ -1812,6 +1845,7 @@ function renderHead({ title, description, canonicalPath }) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
+  ${ADSENSE_HEAD_TAGS}
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
   <link rel="alternate" hreflang="ja" href="${escapeHtml(canonicalUrl)}">
@@ -3300,6 +3334,9 @@ function main() {
   writeHtml(path.join(EN_CATEGORY_OUT_DIR, 'index.html'), renderEnglishCategoryIndexPage(categories, plantDetails));
   writeHtml(path.join(EN_FAMILY_OUT_DIR, 'index.html'), renderEnglishFamilyIndexPage(families));
   writeHtml(path.join(EN_GUIDES_DIR, 'index.html'), renderEnglishGuideIndexPage(guides, categories, families));
+  const patchedStaticGuideCount = STATIC_GUIDE_HTML_PATHS
+    .filter((filePath) => ensureAdsenseHeadTags(filePath))
+    .length;
 
   console.log(`[guides] generated host plant guide pages: ${guides.length + 1}`);
   console.log(`[guides] generated category guide pages: ${categories.length + 1}`);
@@ -3307,6 +3344,7 @@ function main() {
   console.log(`[guides] generated English host plant guide pages: ${guides.length + 1}`);
   console.log(`[guides] generated English category guide pages: ${categories.length + 1}`);
   console.log(`[guides] generated English family guide pages: ${families.length + 1}`);
+  console.log(`[guides] patched static guide AdSense tags: ${patchedStaticGuideCount}`);
 }
 
 // 直接実行時のみ生成を走らせる。他スクリプト(generate-meta-pages.js)が
