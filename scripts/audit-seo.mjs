@@ -174,6 +174,8 @@ const validateHtml = (filePath, html, options = {}) => {
   const ogUrl = getMetaContent(html, 'property', 'og:url');
   const twitterCard = getMetaContent(html, 'name', 'twitter:card');
   const jsonLdCount = getJsonLdCount(html);
+  const isGuideHtml = relativePath.startsWith('dist/guides/') ||
+    relativePath.startsWith('dist/en/guides/');
 
   ensure(title.length > 0, `${relativePath}: missing <title>`);
   ensure(description.length > 0, `${relativePath}: missing meta description`);
@@ -185,6 +187,16 @@ const validateHtml = (filePath, html, options = {}) => {
   );
   ensure(jsonLdCount >= 1, `${relativePath}: missing JSON-LD`);
   validateJsonLd(filePath, html);
+  if (isGuideHtml) {
+    ensure(
+      html.includes('<meta name="google-adsense-account" content="ca-pub-6982051533473293">'),
+      `${relativePath}: missing AdSense account meta`,
+    );
+    ensure(
+      html.includes('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6982051533473293'),
+      `${relativePath}: missing AdSense script`,
+    );
+  }
 
   if (options.requireSocial !== false) {
     ensure(ogTitle.length > 0, `${relativePath}: missing og:title`);
