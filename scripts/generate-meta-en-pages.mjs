@@ -61,6 +61,8 @@ const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
+const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
 const MANUAL_AD_SLOTS = Object.freeze({
   detail: process.env.VITE_ADSENSE_SLOT_DETAIL || '',
 });
@@ -1060,6 +1062,7 @@ function buildEnglishSectionIndex(section, entries) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${buildRobotsContent(true)}">
+  ${ADSENSE_HEAD_TAGS}
   <title>${escapeHtml(section.pluralLabel)} | ${escapeHtml(EN_SITE_NAME)}</title>
   <meta name="description" content="${escapeAttr(listDescription)}">
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
@@ -1128,6 +1131,7 @@ function buildEnglishHomePage(counts) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${buildRobotsContent(true)}">
+  ${ADSENSE_HEAD_TAGS}
   <title>${escapeHtml(EN_SITE_NAME)}</title>
   <meta name="description" content="${escapeAttr(description)}">
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
