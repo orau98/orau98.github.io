@@ -20,6 +20,8 @@ const REQUIRED_FILES = [
   'sitemap_index.xml',
   'search-console-submit.xml',
   'search-console-submit.txt',
+  'search-console-discovery-seed.xml',
+  'search-console-discovery-seed.txt',
   'search-console-sitemap.xml',
   'search-console-sitemap.txt',
   'sitemap-core.xml',

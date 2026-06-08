@@ -150,6 +150,7 @@ function buildRobotsTxt(baseUrl) {
     '/sitemap.xml',
     '/sitemap-core.xml',
     '/search-console-submit.xml',
+    '/search-console-discovery-seed.xml',
   ];
 
   const lines = [
@@ -760,6 +761,22 @@ function generateSplitSitemaps() {
     return xml;
   };
 
+  const generateSitemapIndexXML = (entries) => {
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += `<!-- generated: ${generatedAt} -->\n`;
+    xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+    entries.forEach((sitemap) => {
+      xml += '  <sitemap>\n';
+      xml += `    <loc>${escapeXml(sitemap.loc)}</loc>\n`;
+      xml += `    <lastmod>${escapeXml(sitemap.lastmod)}</lastmod>\n`;
+      xml += '  </sitemap>\n';
+    });
+
+    xml += '</sitemapindex>';
+    return xml;
+  };
+
   const generateSitemapFile = (filename, urls) => {
     if (!Array.isArray(urls) || urls.length === 0) return null;
     const xml = generateXML(urls);
@@ -894,18 +911,7 @@ function generateSplitSitemaps() {
   }
 
   // 分割サイトマップインデックスを生成
-  let indexXml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  indexXml += `<!-- generated: ${generatedAt} -->\n`;
-  indexXml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-
-  sitemapFiles.forEach(sitemap => {
-    indexXml += '  <sitemap>\n';
-    indexXml += `    <loc>${escapeXml(sitemap.loc)}</loc>\n`;
-    indexXml += `    <lastmod>${escapeXml(sitemap.lastmod)}</lastmod>\n`;
-    indexXml += '  </sitemap>\n';
-  });
-
-  indexXml += '</sitemapindex>';
+  const indexXml = generateSitemapIndexXML(sitemapFiles);
 
   // 分割サイトマップインデックスを保存
   const distPath = path.join(__dirname, '../dist');
@@ -943,13 +949,28 @@ function generateSplitSitemaps() {
     { includeGeneratedComment: true, includeMetadata: true },
   ) + '\n';
   const searchConsoleSubmitText = `${searchConsoleSubmitUrls.map((url) => url.loc).join('\n')}\n`;
+  const newestSearchConsoleSeedLastmod = searchConsoleSubmitUrls.reduce((latest, item) =>
+    item.lastmod > latest ? item.lastmod : latest,
+  '1970-01-01');
+  const searchConsoleSeedFile = {
+    loc: `${baseUrl}/search-console-discovery-seed.xml`,
+    lastmod: newestSearchConsoleSeedLastmod,
+  };
+  const searchConsoleSubmitIndexXml = generateSitemapIndexXML([
+    searchConsoleSeedFile,
+    ...sitemapFiles,
+  ]) + '\n';
+  googleFallbackFiles['search-console-discovery-seed.xml'] = searchConsoleSubmitXml;
+  googleFallbackFiles['search-console-discovery-seed.txt'] = searchConsoleSubmitText;
+  supplementalSitemapFiles.push(searchConsoleSeedFile);
   [
     'search-console-submit.xml',
     'search-console-sitemap.xml',
     'google-sitemap.xml',
     'gsc-sitemap.xml',
+    'gsc-index-sitemap.xml',
   ].forEach((filename) => {
-    googleFallbackFiles[filename] = searchConsoleSubmitXml;
+    googleFallbackFiles[filename] = searchConsoleSubmitIndexXml;
   });
   [
     'search-console-submit.txt',
