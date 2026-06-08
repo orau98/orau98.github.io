@@ -852,15 +852,15 @@ function generateSplitSitemaps() {
     // Search Console has previously been unreliable at discovering the large
     // split sitemap inventory. Add a bounded high-value seed of indexable meta
     // pages so species and plant profile URLs are submitted directly too.
-    ...takeDiscoverySeedUrls('moth', 160),
-    ...takeDiscoverySeedUrls('plant', 120),
-    ...takeDiscoverySeedUrls('longhornbeetle', 60),
-    ...takeDiscoverySeedUrls('butterfly', 40),
-    ...takeDiscoverySeedUrls('leafbeetle', 40),
-    ...takeDiscoverySeedUrls('aphid', 40),
-    ...takeDiscoverySeedUrls('beetle', 30),
-    ...takeDiscoverySeedUrls('en-moth', 80),
-    ...takeDiscoverySeedUrls('en-plant', 60),
+    ...takeDiscoverySeedUrls('moth', 500),
+    ...takeDiscoverySeedUrls('plant', 220),
+    ...takeDiscoverySeedUrls('longhornbeetle', 120),
+    ...takeDiscoverySeedUrls('butterfly', 80),
+    ...takeDiscoverySeedUrls('leafbeetle', 80),
+    ...takeDiscoverySeedUrls('aphid', 80),
+    ...takeDiscoverySeedUrls('beetle', 60),
+    ...takeDiscoverySeedUrls('en-moth', 240),
+    ...takeDiscoverySeedUrls('en-plant', 180),
   ]);
   
   // 各サイトマップファイルを生成
