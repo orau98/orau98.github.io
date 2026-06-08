@@ -7,6 +7,7 @@ import {
   EN_TYPE_PLURALS,
   buildJapaneseReferenceLabel,
   getPrimaryEnglishName,
+  slugifyScientificLabel,
 } from './lib/englishNaming.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -55,6 +56,16 @@ const TYPE_CONFIGS = [
 const TYPE_LABELS = Object.fromEntries(TYPE_CONFIGS.map(([key, label]) => [key, label]));
 const TYPE_ROUTE_PREFIXES = Object.fromEntries(TYPE_CONFIGS.map(([key, , prefix]) => [key, prefix]));
 const TYPE_ORDER = Object.fromEntries(TYPE_CONFIGS.map(([key], index) => [key, index]));
+const AUTO_HOST_PLANT_GUIDE_TARGET = 340;
+const AUTO_HOST_PLANT_GUIDE_MIN_RELATED = 6;
+const AUTO_HOST_PLANT_GUIDE_MAX_VARIANTS = 8;
+const AUTO_HOST_PLANT_REJECT_PATTERNS = Object.freeze([
+  /[?？<>"'&/\\]/u,
+  /^(不明|不詳|なし|無し|その他|各種|種名|和名|植物)$/u,
+  /(など|の一種)$/u,
+  /(類|属|科)$/u,
+  /(広葉樹|針葉樹|常緑樹|落葉樹|樹木|草本|木本|雑草|牧草|作物|野菜|果樹|植物|葉|花|芽|枝|幹|茎|根|果実|種子|穂|樹皮|枯|朽|材|落葉|落ち葉|倒木|腐|菌|地衣|蘚苔|苔|コケ|ゴケ|キノコ|カワラタケ)/u,
+]);
 
 export const HOST_PLANT_GUIDES = [
   {
@@ -1518,6 +1529,129 @@ function normalizePlantName(value = '') {
     .replace(/[（(][^)）]*科[)）]$/u, '')
     .replace(/\s+/g, '')
     .trim();
+}
+
+function hasJapanesePlantName(value = '') {
+  return /[一-龯ぁ-んァ-ヶ]/u.test(String(value || ''));
+}
+
+function isConcretePlantLabel(value = '') {
+  const name = normalizePlantName(value);
+  if (!name || name.length < 2 || name.length > 24) return false;
+  if (!hasJapanesePlantName(name)) return false;
+  return !AUTO_HOST_PLANT_REJECT_PATTERNS.some((pattern) => pattern.test(name));
+}
+
+function getPlantDetail(dataset, rawName, normalizedName = normalizePlantName(rawName)) {
+  const plantDetails = dataset?.plantDetails || {};
+  return plantDetails[rawName] || plantDetails[normalizedName] || {};
+}
+
+function isConcreteAutoGuidePlantName(name, detail = {}) {
+  return isConcretePlantLabel(name) && Boolean(detail.familyName || detail.family || detail.scientificName);
+}
+
+function hashToBase36(value = '') {
+  let hash = 2166136261;
+  for (const char of String(value || '')) {
+    hash ^= char.codePointAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(36);
+}
+
+function createAutoHostPlantGuideSlug(name, detail = {}, usedSlugs = new Set()) {
+  const scientificSlug = slugifyScientificLabel(detail.scientificName);
+  const fallbackSlug = `plant-${hashToBase36(name)}`;
+  const baseSlug = scientificSlug || fallbackSlug;
+  let slug = baseSlug;
+  let index = 2;
+  while (usedSlugs.has(slug)) {
+    slug = `${baseSlug}-${index}`;
+    index += 1;
+  }
+  usedSlugs.add(slug);
+  return slug;
+}
+
+function collectAutoHostPlantCandidates(dataset = {}) {
+  const hostPlants = dataset?.hostPlants || {};
+  const candidatesByName = new Map();
+
+  Object.entries(hostPlants).forEach(([rawName, relatedIds]) => {
+    const name = normalizePlantName(rawName);
+    const detail = getPlantDetail(dataset, rawName, name);
+    if (!isConcreteAutoGuidePlantName(name, detail)) return;
+
+    const entry = candidatesByName.get(name) || {
+      name,
+      detail,
+      relatedIds: new Set(),
+      aliases: new Set(),
+    };
+    (Array.isArray(relatedIds) ? relatedIds : []).forEach((id) => entry.relatedIds.add(id));
+    entry.aliases.add(name);
+    if (Array.isArray(detail.aliases)) {
+      detail.aliases
+        .map(normalizePlantName)
+        .filter(isConcretePlantLabel)
+        .forEach((alias) => entry.aliases.add(alias));
+    }
+    candidatesByName.set(name, entry);
+  });
+
+  return [...candidatesByName.values()]
+    .map((candidate) => ({
+      ...candidate,
+      relatedCount: candidate.relatedIds.size,
+    }))
+    .filter((candidate) => candidate.relatedCount >= AUTO_HOST_PLANT_GUIDE_MIN_RELATED)
+    .sort((a, b) => {
+      if (b.relatedCount !== a.relatedCount) return b.relatedCount - a.relatedCount;
+      return a.name.localeCompare(b.name, 'ja');
+    });
+}
+
+export function buildHostPlantGuideConfigs(dataset = {}, options = {}) {
+  const target = options.target ?? AUTO_HOST_PLANT_GUIDE_TARGET;
+  const manualConfigs = options.manualConfigs ?? HOST_PLANT_GUIDES;
+  const manualNameSet = new Set();
+  const usedSlugs = new Set();
+
+  manualConfigs.forEach((guide) => {
+    usedSlugs.add(guide.slug);
+    [guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]
+      .map(normalizePlantName)
+      .filter(Boolean)
+      .forEach((name) => manualNameSet.add(name));
+  });
+
+  const autoLimit = Math.max(0, target - manualConfigs.length);
+  const autoConfigs = [];
+  for (const candidate of collectAutoHostPlantCandidates(dataset)) {
+    if (autoConfigs.length >= autoLimit) break;
+    if (manualNameSet.has(candidate.name)) continue;
+
+    const variants = [...candidate.aliases]
+      .filter((variant) => !manualNameSet.has(variant))
+      .slice(0, AUTO_HOST_PLANT_GUIDE_MAX_VARIANTS);
+    if (variants.length === 0) variants.push(candidate.name);
+
+    autoConfigs.push({
+      slug: createAutoHostPlantGuideSlug(candidate.name, candidate.detail, usedSlugs),
+      name: candidate.name,
+      variants,
+      searchPhrases: [
+        `${candidate.name}につく虫`,
+        `${candidate.name} 幼虫 食草`,
+        `${candidate.name}を食べる蛾`,
+      ],
+      autoGenerated: true,
+      relatedCountHint: candidate.relatedCount,
+    });
+  }
+
+  return [...manualConfigs, ...autoConfigs];
 }
 
 function getInsectType(insect) {
@@ -3304,7 +3438,9 @@ function main() {
   fs.mkdirSync(EN_FAMILY_OUT_DIR, { recursive: true });
   fs.mkdirSync(EN_GUIDES_DIR, { recursive: true });
 
-  const guides = HOST_PLANT_GUIDES
+  const guideConfigs = buildHostPlantGuideConfigs(dataset);
+  const autoGuideConfigCount = guideConfigs.filter((guide) => guide.autoGenerated).length;
+  const guides = guideConfigs
     .map((config) => collectGuideData(config, dataset, insects))
     .filter((guide) => guide.relatedInsects.length > 0);
   const guideBySlug = new Map(guides.map((guide) => [guide.slug, guide]));
@@ -3338,6 +3474,7 @@ function main() {
     .filter((filePath) => ensureAdsenseHeadTags(filePath))
     .length;
 
+  console.log(`[guides] auto host plant guide configs: ${autoGuideConfigCount}`);
   console.log(`[guides] generated host plant guide pages: ${guides.length + 1}`);
   console.log(`[guides] generated category guide pages: ${categories.length + 1}`);
   console.log(`[guides] generated family guide pages: ${families.length + 1}`);

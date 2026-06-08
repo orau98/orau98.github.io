@@ -433,6 +433,25 @@ for (const filePath of supportHtmlFiles) {
   }
 }
 
+const GUIDE_PAGE_INVENTORY_MIN = 320;
+let guideInventorySampleCount = 0;
+const validateGuidePageInventory = (dirPath, label) => {
+  const files = collectHtmlFiles(dirPath)
+    .filter((filePath) => path.basename(filePath) !== 'index.html')
+    .sort();
+  ensure(
+    files.length >= GUIDE_PAGE_INVENTORY_MIN,
+    `${path.relative(ROOT, dirPath)}: expected at least ${GUIDE_PAGE_INVENTORY_MIN} ${label}, found ${files.length}`,
+  );
+  for (const filePath of files.slice(0, 5)) {
+    validateHtml(filePath, readFile(filePath));
+    guideInventorySampleCount += 1;
+  }
+};
+
+validateGuidePageInventory(path.join(DIST_DIR, 'guides', 'plants'), 'Japanese plant guide pages');
+validateGuidePageInventory(path.join(DIST_DIR, 'en', 'guides', 'plants'), 'English plant guide pages');
+
 const metaDir = path.join(DIST_DIR, 'meta');
 const metaFiles = collectHtmlFiles(metaDir).filter(
   (filePath) => !filePath.endsWith('support-test.html'),
@@ -527,6 +546,7 @@ const checkedCount =
   1 +
   (fs.existsSync(englishRootIndexPath) ? 1 : 0) +
   supportHtmlFiles.filter((filePath) => fs.existsSync(filePath)).length +
+  guideInventorySampleCount +
   metaFiles.length +
   englishMetaFiles.length +
   legacyRedirectFilesCount;
