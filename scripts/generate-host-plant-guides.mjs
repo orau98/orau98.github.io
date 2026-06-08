@@ -56,7 +56,7 @@ const TYPE_CONFIGS = [
 const TYPE_LABELS = Object.fromEntries(TYPE_CONFIGS.map(([key, label]) => [key, label]));
 const TYPE_ROUTE_PREFIXES = Object.fromEntries(TYPE_CONFIGS.map(([key, , prefix]) => [key, prefix]));
 const TYPE_ORDER = Object.fromEntries(TYPE_CONFIGS.map(([key], index) => [key, index]));
-const AUTO_HOST_PLANT_GUIDE_TARGET = 150;
+const AUTO_HOST_PLANT_GUIDE_TARGET = 340;
 const AUTO_HOST_PLANT_GUIDE_MIN_RELATED = 6;
 const AUTO_HOST_PLANT_GUIDE_MAX_VARIANTS = 8;
 const AUTO_HOST_PLANT_REJECT_PATTERNS = Object.freeze([
