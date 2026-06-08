@@ -320,7 +320,11 @@ const validateSitemapIndex = (filePath, requiredEntries = [`${SITE_ORIGIN}/sitem
   }
 };
 
-const validateSitemapUrlSet = (filePath) => {
+const extractSitemapLocs = (body) => [
+  ...body.matchAll(/<loc>([^<]+)<\/loc>/g),
+].map((match) => match[1]);
+
+const validateSitemapUrlSet = (filePath, options = {}) => {
   const relativePath = path.relative(ROOT, filePath);
   ensure(fs.existsSync(filePath), `${relativePath}: sitemap URL set not found`);
   if (!fs.existsSync(filePath)) return;
@@ -329,6 +333,21 @@ const validateSitemapUrlSet = (filePath) => {
   ensure(/<urlset\b/i.test(body), `${relativePath}: sitemap must be a URL set`);
   ensure(!/<sitemapindex\b/i.test(body), `${relativePath}: URL set should not be a sitemap index`);
   ensure(/<url>\s*<loc>/i.test(body), `${relativePath}: URL set should contain at least one URL`);
+
+  const locs = extractSitemapLocs(body);
+  if (options.minUrls) {
+    ensure(
+      locs.length >= options.minUrls,
+      `${relativePath}: expected at least ${options.minUrls} URLs, found ${locs.length}`,
+    );
+  }
+
+  for (const requiredPrefix of options.requiredPrefixes || []) {
+    ensure(
+      locs.some((loc) => loc.startsWith(requiredPrefix)),
+      `${relativePath}: missing URL prefix -> ${requiredPrefix}`,
+    );
+  }
 };
 
 const validateSpa404 = (filePath) => {
@@ -482,7 +501,15 @@ validateSitemapIndex(path.join(DIST_DIR, 'search-console-submit.xml'), [
   `${SITE_ORIGIN}/sitemap-plant.xml`,
   `${SITE_ORIGIN}/sitemap-en-plant.xml`,
 ]);
-validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'));
+validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'), {
+  minUrls: 1600,
+  requiredPrefixes: [
+    `${SITE_ORIGIN}/meta/moth/`,
+    `${SITE_ORIGIN}/meta/plant/`,
+    `${SITE_ORIGIN}/en/meta/moth/`,
+    `${SITE_ORIGIN}/en/meta/plant/`,
+  ],
+});
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
 if (failures.length > 0) {
