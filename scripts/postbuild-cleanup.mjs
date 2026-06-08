@@ -10,6 +10,8 @@ const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. 
 const EN_HOME_KEYWORDS = 'Japanese insects, host plants, larval host plants, moths, butterflies, beetles, aphids, plant-insect relationships, Japan biodiversity, scientific names';
 const DEFAULT_SOCIAL_IMAGE_URL = `${BASE_ORIGIN}/images/resized/insects/Cucullia_argentea.1024.jpg`;
 const DEFAULT_SOCIAL_IMAGE_ALT_EN = 'Cucullia argentea on Insects and Host Plants of Japan';
+const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
+const ADSENSE_SCRIPT_URL = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
 const EN_HOME_NOSCRIPT = `    <noscript>
       <section style="max-width: 960px; margin: 24px auto; padding: 16px; border: 1px solid #dbe4ea; border-radius: 8px; background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.7;">
         <h1 style="font-size: 1.4rem; margin: 0 0 8px; color: #047857;">Insects and Host Plants of Japan</h1>
@@ -110,6 +112,7 @@ const SPA_ROUTE_SHELLS = [
     imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
     noscriptHtml: EN_HOME_NOSCRIPT,
     structuredData: EN_HOME_STRUCTURED_DATA,
+    requireAdsenseScript: true,
   },
   {
     segments: ['quiz'],
@@ -195,6 +198,15 @@ const replaceOrInsertMetaContent = (html, attr, key, content) => {
   return html.replace('</head>', replacement);
 };
 
+const ensureAdsenseScript = (html) => {
+  let nextHtml = replaceOrInsertMetaContent(html, 'name', 'google-adsense-account', ADSENSE_CLIENT);
+  if (nextHtml.includes(ADSENSE_SCRIPT_URL)) return nextHtml;
+  return nextHtml.replace(
+    '</head>',
+    `    <script async src="${ADSENSE_SCRIPT_URL}" crossorigin="anonymous"></script>\n  </head>`,
+  );
+};
+
 const renderJsonLdScript = (payload) =>
   `    <script type="application/ld+json">\n${JSON.stringify(payload, null, 2).replace(/</g, '\\u003c')}\n    </script>`;
 
@@ -262,6 +274,9 @@ const buildSpaRouteShell = (indexHtml, route) => {
     html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, route.noscriptHtml);
   }
   html = replaceJsonLdBlocks(html, route.structuredData);
+  if (route.requireAdsenseScript) {
+    html = ensureAdsenseScript(html);
+  }
   return html;
 };
 

@@ -308,6 +308,8 @@ function renderCitationListHtml(entries = []) {
 }
 
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
+const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
 const MANUAL_AD_SLOTS = Object.freeze({
   footer: process.env.VITE_ADSENSE_SLOT_FOOTER || '',
   detail: process.env.VITE_ADSENSE_SLOT_DETAIL || '',
@@ -3123,6 +3125,7 @@ function generateMetaIndexes(indexData) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
+  ${ADSENSE_HEAD_TAGS}
   <title>${sec.title}</title>
   <meta name="description" content="${pageDescription}">
   <link rel="canonical" href="${listUrl}">
@@ -3253,6 +3256,7 @@ ${headerHtml}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
+  ${ADSENSE_HEAD_TAGS}
   <title>${sec.title}</title>
   <meta name="description" content="${pageDescription}">
   <link rel="canonical" href="${listUrl}">

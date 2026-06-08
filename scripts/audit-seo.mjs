@@ -174,9 +174,11 @@ const validateHtml = (filePath, html, options = {}) => {
   const ogUrl = getMetaContent(html, 'property', 'og:url');
   const twitterCard = getMetaContent(html, 'name', 'twitter:card');
   const jsonLdCount = getJsonLdCount(html);
-  const shouldRequireAdsenseTags = relativePath === 'dist/sitemap.html' ||
+  const shouldRequireAdsenseTags = relativePath === 'dist/en/index.html' ||
+    relativePath === 'dist/sitemap.html' ||
     relativePath.startsWith('dist/guides/') ||
-    relativePath.startsWith('dist/en/guides/');
+    relativePath.startsWith('dist/en/guides/') ||
+    /^dist\/(?:en\/)?meta\/[^/]+\/index\.html$/.test(relativePath);
 
   ensure(title.length > 0, `${relativePath}: missing <title>`);
   ensure(description.length > 0, `${relativePath}: missing meta description`);
