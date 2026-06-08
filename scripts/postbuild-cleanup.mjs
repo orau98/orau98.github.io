@@ -141,6 +141,7 @@ const SPA_ROUTE_SHELLS = [
   },
 ];
 const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
+const SPA_ROUTE_NOINDEX_ROBOTS = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
@@ -187,6 +188,13 @@ const replaceMetaContent = (html, attr, key, content) => {
   return html.replace(pattern, replacement);
 };
 
+const replaceOrInsertMetaContent = (html, attr, key, content) => {
+  const nextHtml = replaceMetaContent(html, attr, key, content);
+  if (nextHtml !== html) return nextHtml;
+  const replacement = `    <meta ${attr}="${key}" content="${escapeHtmlAttr(content)}">\n  </head>`;
+  return html.replace('</head>', replacement);
+};
+
 const renderJsonLdScript = (payload) =>
   `    <script type="application/ld+json">\n${JSON.stringify(payload, null, 2).replace(/</g, '\\u003c')}\n    </script>`;
 
@@ -220,6 +228,9 @@ const buildSpaRouteShell = (indexHtml, route) => {
     );
 
   html = replaceMetaContent(html, 'name', 'description', route.description);
+  if (route.robotsContent) {
+    html = replaceOrInsertMetaContent(html, 'name', 'robots', route.robotsContent);
+  }
   html = replaceMetaContent(html, 'property', 'og:title', route.ogTitle);
   html = replaceMetaContent(html, 'property', 'og:description', route.ogDescription);
   html = replaceMetaContent(html, 'property', 'og:url', canonicalUrl);
@@ -300,6 +311,7 @@ const buildPlantRouteMetadata = (plantName, locale) => {
       keywords: `${plantName}, Japanese host plants, plant-insect relationships, Japan biodiversity`,
       ogLocale: 'en_US',
       imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
+      robotsContent: SPA_ROUTE_NOINDEX_ROBOTS,
     };
   }
   return {
@@ -314,6 +326,7 @@ const buildPlantRouteMetadata = (plantName, locale) => {
     ],
     ogTitle: `${plantName} | 昆虫植物図鑑`,
     ogDescription: `${plantName}を利用する昆虫と食草・訪花関係を検索できます。`,
+    robotsContent: SPA_ROUTE_NOINDEX_ROBOTS,
   };
 };
 
