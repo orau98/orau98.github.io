@@ -32,9 +32,6 @@ const EN_HOME_NOSCRIPT = `    <noscript>
             <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Browse plants</h2>
             <ul style="margin: 0 0 0 18px; padding: 0;">
               <li><a href="/en/meta/plant/index.html">Plant pages</a></li>
-              <li><a href="/en/guides/">Search guides</a></li>
-              <li><a href="/en/guides/what-is-host-plant.html">What is a host plant?</a></li>
-              <li><a href="/en/guides/host-plant-search.html">Find insects by host plant</a></li>
             </ul>
           </div>
           <div>
@@ -80,9 +77,6 @@ const EN_HOME_STRUCTURED_DATA = [
   {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'SiteNavigationElement', name: 'Search guides', url: `${BASE_ORIGIN}/en/guides/` },
-      { '@type': 'SiteNavigationElement', name: 'What is a host plant?', url: `${BASE_ORIGIN}/en/guides/what-is-host-plant.html` },
-      { '@type': 'SiteNavigationElement', name: 'Find insects by host plant', url: `${BASE_ORIGIN}/en/guides/host-plant-search.html` },
       { '@type': 'SiteNavigationElement', name: 'Insects', url: `${BASE_ORIGIN}/en/meta/moth/index.html` },
       { '@type': 'SiteNavigationElement', name: 'Plants', url: `${BASE_ORIGIN}/en/meta/plant/index.html` },
       { '@type': 'SiteNavigationElement', name: 'Four-choice quiz', url: `${BASE_ORIGIN}/en/quiz` },

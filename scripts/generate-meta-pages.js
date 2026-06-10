@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { buildHostPlantGuideConfigs } from './generate-host-plant-guides.mjs';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
 import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
@@ -96,7 +95,6 @@ function readJsonOrEmpty(filePath) {
 }
 
 const plantDetailIndex = readJsonOrEmpty(PLANT_DETAILS_PATH);
-const hostPlantGuideConfigs = buildHostPlantGuideConfigs(readJsonOrEmpty(FULL_DATASET_PATH));
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -1280,40 +1278,8 @@ function buildEnglishSlugMaps() {
 }
 
 // --- 食草ガイドへの内部リンク ---
-// 種ページから該当する食草ガイド(/guides/plants/<slug>.html)へ逆リンクを張る。
-// 多数の種ページ(約1.5万)から少数のガイドページ(「サクラにつく虫」等、検索需要の大きい
-// クエリの受け皿)へ内部リンクを集中させ、ガイドの内部評価とクロール到達性を高める。
-// 元データは generate-host-plant-guides.mjs と単一ソースを共有する。
-const PLANT_GUIDE_BY_VARIANT = new Map();
-for (const guide of hostPlantGuideConfigs) {
-  const names = new Set([guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]);
-  for (const name of names) {
-    const key = String(name || '').trim();
-    if (key) PLANT_GUIDE_BY_VARIANT.set(key, { slug: guide.slug, name: guide.name });
-  }
-}
-
-function findHostPlantGuides(hostPlantsArray = []) {
-  const found = new Map();
-  for (const plant of hostPlantsArray) {
-    const raw = String(plant || '').trim();
-    if (!raw) continue;
-    // 「サクラ(バラ科)」のような科名注記を除いた基準名でも照合する
-    const base = raw.replace(/[（(][^）)]*[）)]\s*$/, '').trim();
-    const hit = PLANT_GUIDE_BY_VARIANT.get(raw) || PLANT_GUIDE_BY_VARIANT.get(base);
-    if (hit) found.set(hit.slug, hit);
-  }
-  return [...found.values()];
-}
-
-function renderHostPlantGuideLinks(hostPlantsArray = []) {
-  const guides = findHostPlantGuides(hostPlantsArray);
-  if (!guides.length) return '';
-  const links = guides
-    .map((g) => `<a href="/guides/plants/${g.slug}.html">${g.name}につく虫の一覧</a>`)
-    .join('、');
-  return `<p class="host-plant-guides">この食草で探す：${links}</p>`;
-}
+// 食草ガイドは廃止したため、種ページからガイドへの逆リンクは生成しない（no-op）。
+const renderHostPlantGuideLinks = () => '';
 
 // --- 同じ食草を利用する他の昆虫（共起昆虫）---
 // hostPlantsMap（食草→昆虫の逆引き、全ループ完成後に渡す）から、この種と食草を共有する

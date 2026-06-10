@@ -176,8 +176,6 @@ const validateHtml = (filePath, html, options = {}) => {
   const jsonLdCount = getJsonLdCount(html);
   const shouldRequireAdsenseTags = relativePath === 'dist/en/index.html' ||
     relativePath === 'dist/sitemap.html' ||
-    relativePath.startsWith('dist/guides/') ||
-    relativePath.startsWith('dist/en/guides/') ||
     /^dist\/(?:en\/)?meta\/[^/]+\/index\.html$/.test(relativePath);
 
   ensure(title.length > 0, `${relativePath}: missing <title>`);
@@ -378,66 +376,6 @@ if (fs.existsSync(englishRootIndexPath)) {
 
 const supportHtmlFiles = [
   path.join(DIST_DIR, 'sitemap.html'),
-  path.join(DIST_DIR, 'guides', 'index.html'),
-  path.join(DIST_DIR, 'guides', 'insect-plant-database.html'),
-  path.join(DIST_DIR, 'guides', 'what-is-host-plant.html'),
-  path.join(DIST_DIR, 'guides', 'host-plant-search.html'),
-  path.join(DIST_DIR, 'guides', 'caterpillar-host-plant.html'),
-  path.join(DIST_DIR, 'guides', 'garden-tree-caterpillars.html'),
-  path.join(DIST_DIR, 'guides', 'weeds-caterpillars.html'),
-  path.join(DIST_DIR, 'guides', 'families', 'index.html'),
-  path.join(DIST_DIR, 'guides', 'families', 'malvaceae.html'),
-  path.join(DIST_DIR, 'guides', 'families', 'araliaceae.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'shirobai.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'sansho.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'yamahagi.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'asebi.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'taranoki-yatsude.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'seitaka-awadachiso.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'hiyodoribana.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'tsuwabuki.html'),
-  path.join(DIST_DIR, 'guides', 'plants', 'oomatsuyoigusa.html'),
-  path.join(DIST_DIR, 'guides', 'categories', 'forest-trees.html'),
-  path.join(DIST_DIR, 'guides', 'categories', 'shrubs-and-vines.html'),
-  path.join(DIST_DIR, 'guides', 'categories', 'wildflowers.html'),
-  path.join(DIST_DIR, 'guides', 'categories', 'asteraceae-wildflowers.html'),
-  path.join(DIST_DIR, 'guides', 'families', 'onagraceae.html'),
-  path.join(DIST_DIR, 'guides', 'families', 'elaeagnaceae.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'index.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'moth-host-plants.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'butterfly-host-plants.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'longhornbeetle-host-plants.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'leafbeetle-host-plants.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'jewelbeetle-host-plants.html'),
-  path.join(DIST_DIR, 'guides', 'insects', 'aphid-host-plants.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'index.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'what-is-host-plant.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'host-plant-search.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'families', 'index.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'families', 'malvaceae.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'families', 'araliaceae.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'shirobai.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'sansho.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'yamahagi.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'asebi.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'taranoki-yatsude.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'seitaka-awadachiso.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'hiyodoribana.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'tsuwabuki.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'plants', 'oomatsuyoigusa.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'categories', 'forest-trees.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'categories', 'shrubs-and-vines.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'categories', 'wildflowers.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'categories', 'asteraceae-wildflowers.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'families', 'onagraceae.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'families', 'elaeagnaceae.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'index.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'moth-host-plants.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'butterfly-host-plants.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'longhornbeetle-host-plants.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'leafbeetle-host-plants.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'jewelbeetle-host-plants.html'),
-  path.join(DIST_DIR, 'en', 'guides', 'insects', 'aphid-host-plants.html'),
 ];
 for (const filePath of supportHtmlFiles) {
   if (fs.existsSync(filePath)) {
@@ -447,24 +385,7 @@ for (const filePath of supportHtmlFiles) {
   }
 }
 
-const GUIDE_PAGE_INVENTORY_MIN = 320;
-let guideInventorySampleCount = 0;
-const validateGuidePageInventory = (dirPath, label) => {
-  const files = collectHtmlFiles(dirPath)
-    .filter((filePath) => path.basename(filePath) !== 'index.html')
-    .sort();
-  ensure(
-    files.length >= GUIDE_PAGE_INVENTORY_MIN,
-    `${path.relative(ROOT, dirPath)}: expected at least ${GUIDE_PAGE_INVENTORY_MIN} ${label}, found ${files.length}`,
-  );
-  for (const filePath of files.slice(0, 5)) {
-    validateHtml(filePath, readFile(filePath));
-    guideInventorySampleCount += 1;
-  }
-};
-
-validateGuidePageInventory(path.join(DIST_DIR, 'guides', 'plants'), 'Japanese plant guide pages');
-validateGuidePageInventory(path.join(DIST_DIR, 'en', 'guides', 'plants'), 'English plant guide pages');
+// 食草ガイドは廃止したため、ガイドページ在庫の検証は行わない。
 
 const metaDir = path.join(DIST_DIR, 'meta');
 const metaFiles = collectHtmlFiles(metaDir).filter(
@@ -537,7 +458,7 @@ validateSitemapIndex(path.join(DIST_DIR, 'search-console-submit.xml'), [
   `${SITE_ORIGIN}/sitemap-en-plant.xml`,
 ]);
 validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'), {
-  minUrls: 1600,
+  minUrls: 1500,
   requiredPrefixes: [
     `${SITE_ORIGIN}/meta/moth/`,
     `${SITE_ORIGIN}/meta/plant/`,
@@ -560,7 +481,6 @@ const checkedCount =
   1 +
   (fs.existsSync(englishRootIndexPath) ? 1 : 0) +
   supportHtmlFiles.filter((filePath) => fs.existsSync(filePath)).length +
-  guideInventorySampleCount +
   metaFiles.length +
   englishMetaFiles.length +
   legacyRedirectFilesCount;

@@ -96,11 +96,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   const headerRef = useRef(null);
   const homePath = localizePath('/', locale);
   const quizPath = localizePath('/quiz', locale);
-  // 昆虫/植物はタブ＋パンくずで到達できるためヘッダーから外し、サイトマップはフッターに集約。
-  // ヘッダーのナビはガイドのみに絞って上部の煩雑さを解消する。
-  const navItems = [
-    { label: isEnglish ? 'Guides' : 'ガイド', href: localizePath('/guides/', locale) },
-  ];
+  // ヘッダーにナビ項目は置かない（昆虫/植物はタブ＋パンくず、その他はフッターで回遊）。
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return undefined;
@@ -161,21 +157,6 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
           </Link>
           
           <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4">
-            <nav className="hidden items-center gap-1 rounded-2xl border border-white/10 bg-white/5 p-1 lg:flex" aria-label={isEnglish ? 'Primary navigation' : '主要ナビゲーション'}>
-              {navItems.map((item) => {
-                const className = "rounded-xl px-3 py-2 text-sm font-semibold text-emerald-50/85 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-300/50";
-                return item.to ? (
-                  <Link key={item.label} to={item.to} className={className}>
-                    {item.label}
-                  </Link>
-                ) : (
-                  <a key={item.label} href={item.href} className={className}>
-                    {item.label}
-                  </a>
-                );
-              })}
-            </nav>
-
             {/* Dynamic species classification info */}
             {speciesInfo && (
               <div className="hidden min-w-0 max-w-[16rem] lg:flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl px-5 py-2.5 border border-emerald-400/20 shadow-lg xl:max-w-xs">

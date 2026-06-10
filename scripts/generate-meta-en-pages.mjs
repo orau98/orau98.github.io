@@ -8,7 +8,6 @@ import {
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
-import { ENGLISH_GUIDE_LABELS, buildHostPlantGuideConfigs } from './generate-host-plant-guides.mjs';
 import {
   cleanString,
   isFlowerVisitRecord,
@@ -98,11 +97,8 @@ const DEFERRED_ADS_SCRIPT = MANUAL_AD_SLOTS.detail ? `<script>
       }, { once: true });
     })();
   </script>` : '';
-const PRESERVED_EN_STATIC_FILES = Object.freeze([
-  'guides/index.html',
-  'guides/what-is-host-plant.html',
-  'guides/host-plant-search.html',
-]);
+// 食草ガイドは廃止したため、保存対象の英語静的ファイルは無し。
+const PRESERVED_EN_STATIC_FILES = Object.freeze([]);
 
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
   ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.jpg$/i))
@@ -553,50 +549,8 @@ function computePlantRobotsContent({ relatedInsects, plantImageFiles }) {
   return buildRobotsContent(insectCount >= 2 || hasImage);
 }
 
-const hostPlantGuideConfigs = buildHostPlantGuideConfigs(loadJson('full-dataset.json', {}));
-const HOST_PLANT_GUIDE_BY_VARIANT = new Map();
-for (const guide of hostPlantGuideConfigs) {
-  const names = new Set([guide.name, ...(Array.isArray(guide.variants) ? guide.variants : [])]);
-  for (const name of names) {
-    const key = buildHostPlantGuideLookupKey(name);
-    if (key) HOST_PLANT_GUIDE_BY_VARIANT.set(key, guide);
-  }
-}
-
-function buildHostPlantGuideLookupKey(value = '') {
-  return String(value || '')
-    .replace(/[（(][^）)]*[）)]\s*$/, '')
-    .trim();
-}
-
-function findEnglishHostPlantGuides(plantNames = []) {
-  const found = new Map();
-  for (const name of plantNames) {
-    const rawKey = buildHostPlantGuideLookupKey(name);
-    if (!rawKey) continue;
-    const normalizedKey = buildHostPlantGuideLookupKey(normalizePlantNameLite(rawKey));
-    const guide = HOST_PLANT_GUIDE_BY_VARIANT.get(rawKey) || HOST_PLANT_GUIDE_BY_VARIANT.get(normalizedKey);
-    if (guide) found.set(guide.slug, guide);
-  }
-  return [...found.values()];
-}
-
-function getEnglishHostPlantGuideLabel(guide) {
-  return ENGLISH_GUIDE_LABELS[guide.slug] || buildJapaneseReferenceLabel(guide.name);
-}
-
-function renderEnglishHostPlantGuideLinks(plantNames = []) {
-  const guides = findEnglishHostPlantGuides(plantNames);
-  if (!guides.length) return '';
-  return `
-      <section class="host-plant-guides">
-        <h3>Host plant search guides</h3>
-        <p>Use these guide pages to find other Japanese insect records that use the same host plants.</p>
-        <ul>
-          ${guides.map((guide) => `<li><a href="/en/guides/plants/${escapeAttr(guide.slug)}.html">${escapeHtml(getEnglishHostPlantGuideLabel(guide))} host plant insects</a></li>`).join('\n          ')}
-        </ul>
-      </section>`;
-}
+// 食草ガイドは廃止したため、種ページからガイドへの逆リンクは生成しない（no-op）。
+const renderEnglishHostPlantGuideLinks = () => '';
 
 function collectPlantGuideCandidateNames(canonicalName, detail = {}) {
   return Array.from(new Set([
