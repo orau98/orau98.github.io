@@ -33,7 +33,8 @@ test('buildPlantProfileSummary uses only supplied profile facts', () => {
   assert.match(summary, /属はQuercus。/);
   assert.match(summary, /大きさは20m。/);
   assert.match(summary, /本州（宮城県・新潟県以南）/);
-  assert.match(summary, /出典は日本の野生植物 第1巻 p\.282。/);
+  // 出典は要約文には含めず、SourceCitation コンポーネントで別途表示する仕様に変更
+  assert.doesNotMatch(summary, /出典/);
 });
 
 test('buildPlantProfileSummary returns an empty string without a profile', () => {
