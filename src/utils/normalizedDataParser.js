@@ -179,7 +179,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     const partCompact = plantPartRaw.replace(/\s+/g, '');
     const isAdultOrUnknown = lifeStageRaw === '成虫' || lifeStageRaw === '';
     const isFlowerVisit = isAdultOrUnknown && partCompact && partCompact.includes('花');
-    const defaultPlantPart = referenceRaw === '日本のハマキガ3' ? '' : '葉';
+    const preservesBlankPlantPart = /^日本のハマキガ[123]$/.test(referenceRaw);
+    const defaultPlantPart = preservesBlankPlantPart ? '' : '葉';
 
     hostPlantsByInsect[hp.insect_id].push({
       name: rawName,

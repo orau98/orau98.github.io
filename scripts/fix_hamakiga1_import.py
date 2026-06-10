@@ -269,6 +269,15 @@ NEW_INSECTS = [
     ),
 ]
 
+NOTE_CONTENT_UPDATES = {
+    ("species-2095", "生態情報", "の自生地に産する(奥，2003)"): "岩手県ではイチイの自生地に産する（奥，2003）",
+    (
+        "species-2123",
+        "生態情報",
+        "を摂食している可能性が指摘されている(村瀬，2008)",
+    ): "幼虫はムクロジを摂食している可能性が指摘されている（村瀬，2008）",
+}
+
 
 def normalize_inline_text(text: str) -> str:
     text = " ".join(part.strip() for part in text.splitlines() if part.strip())
@@ -583,6 +592,13 @@ def build_note_rows(
             append_note(insect_id, "生態情報", f"寄主植物は{account['host_text'].rstrip('．')}")
         elif extra:
             append_note(insect_id, "生態情報", extra)
+
+    for row in rows:
+        if row.get("reference") != REFERENCE:
+            continue
+        replacement = NOTE_CONTENT_UPDATES.get((row["insect_id"], row["note_type"], row["content"]))
+        if replacement is not None:
+            row["content"] = replacement
 
     return rows
 
