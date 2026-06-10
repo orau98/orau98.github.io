@@ -302,6 +302,7 @@ LEADING_CONTEXT_PATTERNS = [
     r"^ヨーロッパでは",
     r"^ロシアでは",
     r"^国外では",
+    r"^外国では",
     r"^海外では",
     r"^HOSTSでは",
     r"^中国では",
@@ -313,6 +314,12 @@ LEADING_CONTEXT_PATTERNS = [
     r"^日本では",
     r"^国内では",
 ]
+
+FOREIGN_CONTEXT_PATTERN = re.compile(
+    r"(?:ヨーロッパ|ロシア|国外|外国|海外|HOSTS|中国|台湾|インド|東南アジア|北アメリカ)では"
+)
+
+FEEDING_CONTEXT_PATTERN = re.compile(r"与えられた|給餌|飼育")
 
 SKIP_HOST_TOKEN_PATTERNS = [
     r"記録されている",
@@ -330,24 +337,97 @@ SKIP_HOST_TOKEN_PATTERNS = [
     r"成虫",
 ]
 
+HOST_FAMILY_OVERRIDES = {
+    "エゾミソハギ": "ミソハギ科",
+    "Actinidia属": "マタタビ科",
+    "スノキ属": "ツツジ科",
+    "カルーナ属": "ツツジ科",
+    "ミヤコグサ属": "マメ科",
+    "マンネングサ属": "ベンケイソウ科",
+}
+
+YLIST_FAMILY_LOOKUP: dict[str, str] | None = None
+
+
+def load_ylist_family_lookup() -> dict[str, str]:
+    global YLIST_FAMILY_LOOKUP
+    if YLIST_FAMILY_LOOKUP is not None:
+        return YLIST_FAMILY_LOOKUP
+
+    lookup: dict[str, str] = {}
+    ylist_path = ROOT / "public" / "assets" / "data-lite" / "ylist-lite.json"
+    if ylist_path.exists():
+        data = json.loads(ylist_path.read_text(encoding="utf-8"))
+        for name, detail in data.get("plants", {}).items():
+            family = detail.get("familyJp", "")
+            if not family:
+                continue
+            lookup.setdefault(name, family)
+            for alias in detail.get("aliases", []) or []:
+                lookup.setdefault(alias, family)
+    YLIST_FAMILY_LOOKUP = lookup
+    return lookup
+
+
+def base_plant_name_for_lookup(name: str) -> str:
+    name = compact_japanese_spaces(name)
+    name = re.sub(r"[（(].*?[）)]", "", name).strip()
+    return name
+
+
+def ylist_family_for_name(name: str) -> str:
+    lookup = load_ylist_family_lookup()
+    candidates = [
+        name,
+        base_plant_name_for_lookup(name),
+        re.sub(r"属(?:の)?(?:1種|一種|各種|数種)?$", "", base_plant_name_for_lookup(name)),
+    ]
+    for candidate in candidates:
+        if candidate in HOST_FAMILY_OVERRIDES:
+            return HOST_FAMILY_OVERRIDES[candidate]
+        if candidate in lookup:
+            return lookup[candidate]
+    return ""
+
+
+def choose_family(name: str, source_family: str, is_explicit: bool) -> str:
+    if name in HOST_FAMILY_OVERRIDES:
+        return HOST_FAMILY_OVERRIDES[name]
+    if is_explicit:
+        return source_family
+    return ylist_family_for_name(name) or source_family
+
 
 def normalize_host_token(token: str) -> str:
     token = compact_japanese_spaces(token.strip(" ．.、，;；"))
     for pattern in LEADING_CONTEXT_PATTERNS:
         token = re.sub(pattern, "", token)
-    token = re.sub(r"^(?:および|及び|また|さらに)\s*", "", token)
+    token = re.sub(r"^(?:および|及び|また|さらに|他に)\s*", "", token)
     token = re.sub(r"^(?:幼虫は)?与えられた", "", token)
-    token = re.sub(r"^.*?では(?=[\u30A0-\u30FF\u3040-\u309F\u4E00-\u9FFF])", "", token)
+    token = re.sub(r"[（(][^（）()]*\d{4}[^（）()]*[）)]", "", token)
+    token = re.sub(r"([ぁ-んァ-ン一-龥ー]+)([A-Z][A-Za-z×.-]+)属", r"\1属", token)
+    token = re.sub(r"(?:が|も)?(?:海外では)?記録されている.*$", "", token)
+    token = re.sub(r"をよく食し.*$", "", token)
+    if re.fullmatch(r"[A-Z][A-Za-z×.-]+属", token):
+        return token
     token = re.split(r"\s*(?:[A-Z][a-zA-Z×.-]+|[A-Z]\.)", token, maxsplit=1)[0]
     token = token.strip(" ．.、，;；")
     token = re.sub(r"[（(]\s*[）)]", "", token).strip()
-    token = token.strip("）)")
+    token = re.sub(r"など属$", "", token).strip()
     token = re.sub(r"など様々な植物を摂食する$|など様々な植物$|などの植物$|など$|の各種$", "", token).strip()
+    while token.count("）") > token.count("（") and token.endswith("）"):
+        token = token[:-1].strip()
+    while token.count(")") > token.count("(") and token.endswith(")"):
+        token = token[:-1].strip()
+    if token.count("（") > token.count("）"):
+        token += "）" * (token.count("（") - token.count("）"))
+    if token.count("(") > token.count(")"):
+        token += ")" * (token.count("(") - token.count(")"))
     return token.strip(" ．.、，;；")
 
 
 def should_skip_host_name(name: str) -> bool:
-    if not name or name in {"未知", "不明"}:
+    if not name or name in {"未知", "不明", "他に", "また", "さらに"}:
         return True
     if not re.search(r"[\u3040-\u30ff\u3400-\u9fff]", name):
         return True
@@ -356,49 +436,99 @@ def should_skip_host_name(name: str) -> bool:
     return any(re.search(pattern, name) for pattern in SKIP_HOST_TOKEN_PATTERNS)
 
 
+def split_host_tokens(sentence: str) -> list[str]:
+    sentence = re.sub(r"(?<=属)や(?=[\u3040-\u30ff\u3400-\u9fffA-Z])", "，", sentence)
+    return [token.strip() for token in re.split(r"[、，,；;]", sentence) if token.strip()]
+
+
+def extract_token_family(token: str) -> tuple[str, str, bool]:
+    families = re.findall(r"[（(]([^（）()]*科)[）)]", token)
+    family = families[-1] if families else ""
+    token_without_family = re.sub(r"[（(][^（）()]*科[^（）()]*[）)]", "", token).strip()
+    is_explicit = bool(family)
+
+    if not family:
+        family_suffix = re.match(r"^(.+?)などの([^、，,；;]*科)(?:植物)?.*$", token_without_family)
+        if family_suffix:
+            token_without_family = family_suffix.group(1)
+            family = family_suffix.group(2)
+            is_explicit = True
+
+    if not family:
+        family_plant = re.match(r"^(.+?)の([^、，,；;]*科)植物.*$", token_without_family)
+        if family_plant:
+            token_without_family = family_plant.group(1)
+            family = family_plant.group(2)
+            is_explicit = True
+
+    if not family:
+        family_prefix = re.match(r"^([^、，,；;]*科)の(.+)$", token_without_family)
+        if family_prefix:
+            family = family_prefix.group(1)
+            token_without_family = family_prefix.group(2)
+            is_explicit = True
+
+    return token_without_family, family, is_explicit
+
+
 def parse_hostplants(host_text: str) -> list[dict[str, str]]:
     if not host_text or re.fullmatch(r"(未知|不明)[．.]?", host_text):
         return []
     rows: list[dict[str, str]] = []
 
-    def flush(pending: list[str], family: str, note: str = "") -> None:
+    def flush(pending: list[dict[str, str | bool]], family: str, note: str = "", observation_type: str = "") -> None:
         family = compact_japanese_spaces(family.strip())
-        for token in pending:
-            name = normalize_host_token(token)
+        for pending_token in pending:
+            name = normalize_host_token(str(pending_token["token"]))
             if should_skip_host_name(name):
                 continue
-            rows.append({"plant_name": name, "plant_family": family, "notes": note})
+            source_family = str(pending_token["family"]) or family
+            rows.append(
+                {
+                    "plant_name": name,
+                    "plant_family": choose_family(name, compact_japanese_spaces(source_family.strip()), bool(pending_token["explicit"])),
+                    "notes": note,
+                    "observation_type": observation_type,
+                }
+            )
         pending.clear()
 
     for sentence in [s.strip() for s in re.split(r"[．。]", host_text) if s.strip()]:
-        if re.search(r"再検討を要する|疑問", sentence):
+        if re.search(r"再検討を要する|再検討が必要|疑問", sentence):
             continue
-        is_foreign = any(re.search(pattern, sentence) for pattern in LEADING_CONTEXT_PATTERNS)
-        notes = "海外記録" if is_foreign else ""
+        is_foreign = bool(FOREIGN_CONTEXT_PATTERN.search(sentence))
+        is_feeding = bool(FEEDING_CONTEXT_PATTERN.search(sentence))
+        notes = "；".join(note for note in ["海外記録" if is_foreign else "", "給餌記録" if is_feeding else ""] if note)
+        observation_type = "飼育" if is_feeding else ("野外（国外）" if is_foreign else "野外（国内）")
         for pattern in LEADING_CONTEXT_PATTERNS:
             sentence = re.sub(pattern, "", sentence)
         sentence = re.sub(r"^，", "", sentence)
         sentence = re.sub(r"広食性[（(]", "", sentence).strip()
 
-        pending: list[str] = []
-        for token in [t.strip() for t in re.split(r"[、，,；;]", sentence) if t.strip()]:
-            families = re.findall(r"[（(]([^（）()]*科)[）)]", token)
-            family = families[-1] if families else ""
-            token_without_family = re.sub(r"[（(][^（）()]*科[^（）()]*[）)]", "", token).strip()
-            if not family:
-                family_prefix = re.match(r"^([^、，,；;]*科)の(.+)$", token_without_family)
-                if family_prefix:
-                    family = family_prefix.group(1)
-                    token_without_family = family_prefix.group(2)
-            pending.append(token_without_family)
+        compound_family = re.match(r"^([^、，,；;]*科)と([^、，,；;]*科)の(.+)$", sentence)
+        if compound_family:
+            rows.append(
+                {
+                    "plant_name": compound_family.group(1),
+                    "plant_family": "",
+                    "notes": notes,
+                    "observation_type": observation_type,
+                }
+            )
+            sentence = f"{compound_family.group(3)}（{compound_family.group(2)}）"
+
+        pending: list[dict[str, str | bool]] = []
+        for token in split_host_tokens(sentence):
+            token_without_family, family, is_explicit = extract_token_family(token)
+            pending.append({"token": token_without_family, "family": family, "explicit": is_explicit})
             if family:
-                flush(pending, family, notes)
-        flush(pending, "", notes)
+                flush(pending, family, notes, observation_type)
+        flush(pending, "", notes, observation_type)
 
     deduped: list[dict[str, str]] = []
-    seen: set[tuple[str, str]] = set()
+    seen: set[tuple[str, str, str, str]] = set()
     for row in rows:
-        key = (row["plant_name"], row["plant_family"])
+        key = (row["plant_name"], row["plant_family"], row["notes"], row["observation_type"])
         if key in seen:
             continue
         seen.add(key)
@@ -443,6 +573,38 @@ def infer_plant_part(ecology_text: str) -> str:
     return "、".join(parts[:4])
 
 
+def infer_plant_part_for_host(ecology_text: str, plant_name: str, host_names: list[str]) -> str:
+    sentences = split_sentences(ecology_text)
+    base_name = base_plant_name_for_lookup(plant_name)
+    host_bases = [base_plant_name_for_lookup(name) for name in host_names if base_plant_name_for_lookup(name)]
+
+    def mentions_target(sentence: str, target: str) -> bool:
+        if not target or target not in sentence:
+            return False
+        return not any(other != target and target in other and other in sentence for other in host_bases)
+
+    if base_name:
+        specific_sentences = [sentence for sentence in sentences if mentions_target(compact_japanese_spaces(sentence), base_name)]
+        specific_part = infer_plant_part("。".join(specific_sentences))
+        if specific_part:
+            return specific_part
+
+    generic_sentences: list[str] = []
+    for sentence in sentences:
+        compact_sentence = compact_japanese_spaces(sentence)
+        mentions_host = any(mentions_target(compact_sentence, host_base) for host_base in host_bases)
+        if mentions_host:
+            continue
+        if re.search(r"寄主植物|寄主の|幼虫は(?:様々な植物|さまざまな植物)?(?:の)?[^\u3002．]*(?:葉|新芽|新葉|新梢|花|果実|実|種子|枝|根)", compact_sentence):
+            generic_sentences.append(sentence)
+
+    if generic_sentences:
+        return infer_plant_part("。".join(generic_sentences))
+    if len(host_names) == 1:
+        return infer_plant_part(ecology_text)
+    return ""
+
+
 def split_sentences(text: str) -> list[str]:
     return [sentence.strip(" ．.") for sentence in re.split(r"[．。]", text) if sentence.strip()]
 
@@ -459,7 +621,7 @@ def normalize_note_text(text: str) -> str:
     text = re.sub(r"。[0-9]{1,3}$", "", text)
     text = re.sub(r"^[0-9]{1,3}$", "", text)
     text = re.sub(r"\s*-\s*", "-", text)
-    return re.sub(r"\s+", " ", text).strip(" ．.")
+    return re.sub(r"\s+", " ", text).strip(" ．.、，")
 
 
 def extract_emergence_note(ecology_text: str) -> tuple[str, str]:
@@ -571,7 +733,9 @@ def apply_import(raw_text_path: Path) -> dict[str, object]:
             row.get("insect_id", "").strip(),
             row.get("plant_name", "").strip(),
             row.get("plant_family", "").strip(),
+            row.get("observation_type", "").strip(),
             row.get("reference", "").strip(),
+            row.get("notes", "").strip(),
         )
         for row in hostplant_rows
     }
@@ -580,9 +744,17 @@ def apply_import(raw_text_path: Path) -> dict[str, object]:
     host_counter = 1
     for entry in entries:
         insect_id = entry_to_insect_id[int(entry["number"])]
-        plant_part = infer_plant_part(str(entry["ecology_text"]))
-        for host in parse_hostplants(str(entry["host_text"])):
-            key = (insect_id, host["plant_name"], host["plant_family"], REFERENCE)
+        parsed_hosts = parse_hostplants(str(entry["host_text"]))
+        host_names = [host["plant_name"] for host in parsed_hosts]
+        for host in parsed_hosts:
+            key = (
+                insect_id,
+                host["plant_name"],
+                host["plant_family"],
+                host.get("observation_type", ""),
+                REFERENCE,
+                host["notes"],
+            )
             if key in existing_host_keys:
                 continue
             existing_host_keys.add(key)
@@ -592,8 +764,8 @@ def apply_import(raw_text_path: Path) -> dict[str, object]:
                     "insect_id": insect_id,
                     "plant_name": host["plant_name"],
                     "plant_family": host["plant_family"],
-                    "observation_type": "野外（国外）" if host["notes"] == "海外記録" else "野外（国内）",
-                    "plant_part": plant_part,
+                    "observation_type": host.get("observation_type", ""),
+                    "plant_part": infer_plant_part_for_host(str(entry["ecology_text"]), host["plant_name"], host_names),
                     "life_stage": "幼虫",
                     "reference": REFERENCE,
                     "notes": host["notes"],
@@ -652,8 +824,15 @@ def apply_import(raw_text_path: Path) -> dict[str, object]:
         ],
         "added_hostplants": len(added_hostplants),
         "added_notes": len(added_notes),
-        "species_with_unknown_or_unparsed_hostplants": sum(
-            1 for entry in entries if not parse_hostplants(str(entry["host_text"]))
+        "species_with_unknown_hostplants": sum(
+            1 for entry in entries if re.fullmatch(r"(未知|不明)[．.]?", str(entry["host_text"]).strip())
+        ),
+        "species_with_unparsed_hostplants": sum(
+            1
+            for entry in entries
+            if str(entry["host_text"]).strip()
+            and not re.fullmatch(r"(未知|不明)[．.]?", str(entry["host_text"]).strip())
+            and not parse_hostplants(str(entry["host_text"]))
         ),
     }
     reports_dir = ROOT / "reports"

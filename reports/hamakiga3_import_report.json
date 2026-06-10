@@ -99,7 +99,8 @@
       "scientific_name": "Rhopalovalva ayanishiki Nasu, 2022"
     }
   ],
-  "added_hostplants": 340,
+  "added_hostplants": 343,
   "added_notes": 289,
-  "species_with_unknown_or_unparsed_hostplants": 51
+  "species_with_unknown_hostplants": 51,
+  "species_with_unparsed_hostplants": 0
 }

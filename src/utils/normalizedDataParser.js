@@ -175,9 +175,11 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     
     const lifeStageRaw = (hp.life_stage || '').trim();
     const plantPartRaw = (hp.plant_part || '').trim();
+    const referenceRaw = (hp.reference || '').trim();
     const partCompact = plantPartRaw.replace(/\s+/g, '');
     const isAdultOrUnknown = lifeStageRaw === '成虫' || lifeStageRaw === '';
     const isFlowerVisit = isAdultOrUnknown && partCompact && partCompact.includes('花');
+    const defaultPlantPart = referenceRaw === '日本のハマキガ3' ? '' : '葉';
 
     hostPlantsByInsect[hp.insect_id].push({
       name: rawName,
@@ -185,9 +187,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       displayName: displayName,
       observationType: hp.observation_type || '野外（国内）',
       // Keep display defaults but preserve flower-visit detection via isFlowerVisit flag.
-      plantPart: plantPartRaw || '葉',
+      plantPart: plantPartRaw || defaultPlantPart,
       lifeStage: lifeStageRaw || '幼虫',
-      reference: hp.reference || '',
+      reference: referenceRaw,
       notes: hp.notes || '',
       isDetailed: true,
       isFlowerVisit,
