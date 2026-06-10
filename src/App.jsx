@@ -142,6 +142,24 @@ function App() {
     });
   };
 
+  // パフォーマンス: スクロール中は body.is-scrolling を付与し、CSS 側で backdrop-blur を一時無効化する
+  // （重なったブラーのGPU負荷でローエンド端末がジャンクするのを防ぐ。静止時の見た目は不変）
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    let timer = null;
+    const onScroll = () => {
+      document.body.classList.add('is-scrolling');
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => document.body.classList.remove('is-scrolling'), 160);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (timer) clearTimeout(timer);
+      document.body.classList.remove('is-scrolling');
+    };
+  }, []);
+
   // SEO: avoid indexing search result pages (with query params)
   useEffect(() => {
     try {

@@ -1,3 +1,5 @@
+import { Badge } from './ui';
+
 const stickyTopStyle = {
   top: 'calc(var(--app-main-header-height, 0px) + var(--app-sticky-header-height, 0px) + 12px)',
 };
@@ -41,6 +43,9 @@ export default function ListFilterPanel({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                 </svg>
                 {title}
+                {activeFilters.length > 0 && (
+                  <Badge tone="brand" className="px-1.5 py-0 tabular-nums">{activeFilters.length}</Badge>
+                )}
                 <svg className={`w-3 h-3 transition-transform duration-200 ${panelIsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>

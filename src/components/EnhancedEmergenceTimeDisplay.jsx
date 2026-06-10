@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SourceCitation from './ui/SourceCitation';
 
 /**
  * 発生時期の詳細情報カードコンポーネント
@@ -43,14 +44,9 @@ const EmergenceTimeDetailCard = ({ emergenceData, isExpanded, onToggle }) => {
       {/* 詳細情報（展開時） */}
       {isExpanded && (
         <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-600 space-y-2">
-          {/* 出典情報 */}
+          {/* 出典情報（サイト共通の控えめ表記） */}
           {emergenceData.source && (
-            <div className="text-sm">
-              <span className="font-medium text-slate-500 dark:text-slate-400">出典:</span>
-              <span className="ml-1 font-medium text-slate-700 dark:text-slate-300">
-                {emergenceData.source}
-              </span>
-            </div>
+            <SourceCitation sources={emergenceData.source} />
           )}
           
           {/* 備考 */}

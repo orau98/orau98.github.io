@@ -22,7 +22,8 @@ const ensureJapanesePeriod = (value = '') => {
   return /[。！？]$/.test(text) ? text : `${text}。`;
 };
 
-const buildSourceLabel = (profile = {}) => [
+// 出典 + ページを 1 文字列に整形（HostPlantDetail の SourceCitation で使用）
+export const buildSourceLabel = (profile = {}) => [
   normalizeSourceText(profile.source),
   profile.page ? `p.${normalizeSourceText(profile.page)}` : '',
 ].filter(Boolean).join(' ');
@@ -44,7 +45,6 @@ export const buildPlantProfileSummary = ({
   const flowerPeriod = normalizePlantProfileText(profile.flowerPeriod);
   const distribution = normalizePlantProfileText(profile.distribution);
   const habitat = normalizePlantProfileText(profile.habitat);
-  const source = buildSourceLabel(profile);
   const genusValues = uniqueCleanValues([profile.genusJp, genus]);
   const latinName = normalizePlantProfileText(scientificName);
 
@@ -64,7 +64,6 @@ export const buildPlantProfileSummary = ({
     if (flowerPeriod) sentences.push(`Flowering: ${flowerPeriod}.`);
     if (habitat) sentences.push(`Habitat: ${habitat}.`);
     if (distribution) sentences.push(`Distribution: ${distribution}.`);
-    if (source) sentences.push(`Source: ${source}.`);
     return sentences.join(' ');
   }
 
@@ -79,7 +78,6 @@ export const buildPlantProfileSummary = ({
   if (flowerPeriod) sentences.push(`花期は${flowerPeriod}。`);
   if (habitat) sentences.push(`生育環境は${habitat}。`);
   if (distribution) sentences.push(`分布は${distribution}。`);
-  if (source) sentences.push(`出典は${source}。`);
 
   return sentences.map(ensureJapanesePeriod).join('');
 };

@@ -429,7 +429,6 @@ const InsectsHostPlantExplorer = memo(
     const initialTabFromParams = normalizeTab(searchParams.get("tab"), initialTab);
     const initialQuery = searchParams.get("q") || "";
     const [activeTab, setActiveTab] = useState(() => initialTabFromParams);
-    const [heroImageLoaded, setHeroImageLoaded] = useState(false);
     const [instagramUrl, setInstagramUrl] = useState("");
     const [instagramPosts, setInstagramPosts] = useState([]);
     const [instagramPostCards, setInstagramPostCards] = useState([]);
@@ -603,6 +602,24 @@ const InsectsHostPlantExplorer = memo(
       else newParams.delete("q");
       setSearchParams(newParams, { replace: true });
     };
+
+    // 逆引き動線: 現在の検索語を保持したまま反対のタブ（昆虫⇄植物）へ切り替える
+    const crossSearchOtherTab = useCallback(() => {
+      const term = (searchByTab[activeTab] || "").trim();
+      const otherTab = activeTab === "insects" ? "plants" : "insects";
+      setSearchByTab((prev) => ({ ...prev, [otherTab]: term }));
+      setActiveTab(otherTab);
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+      const newParams = getCurrentParams();
+      newParams.set("tab", otherTab);
+      if (term) newParams.set("q", term);
+      else newParams.delete("q");
+      setSearchParams(newParams, { replace: true });
+      const resultsEl = typeof document !== "undefined" && document.getElementById("explorer-results");
+      if (resultsEl) resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, [activeTab, searchByTab, setActiveTab, getCurrentParams, setSearchParams]);
 
     // Cleanup timeout
     useEffect(() => {
@@ -1159,27 +1176,17 @@ const InsectsHostPlantExplorer = memo(
       return () => window.removeEventListener("keydown", handleShortcut);
     }, [isStickyHeaderVisible]);
 
-    // Use hero image as OG/Twitter image when loaded
+    // ヒーローからインライン写真は撤去したが、OG/Twitter の共有画像には署名の蛾写真を維持する
     useEffect(() => {
-      if (heroImageLoaded) {
-        try {
-          const hero =
-            document.querySelector('#hero-section img') ||
-            document.querySelector('img[alt*="メインビジュアル"]');
-          // Prefer resolved absolute URL from currentSrc/src
-          const src =
-            hero?.currentSrc ||
-            hero?.src ||
-            "images/resized/insects/Cucullia_argentea.1024.jpg";
-          setOgTwitterImage(
-            src,
-            isEnglish
-              ? "Hero image for Insects and Host Plants of Japan"
-              : "昆虫植物図鑑 メインビジュアル",
-          );
-        } catch {}
-      }
-    }, [heroImageLoaded, isEnglish, setOgTwitterImage]);
+      try {
+        setOgTwitterImage(
+          "images/resized/insects/Cucullia_argentea.1024.jpg",
+          isEnglish
+            ? "Hero image for Insects and Host Plants of Japan"
+            : "昆虫植物図鑑 メインビジュアル",
+        );
+      } catch {}
+    }, [isEnglish, setOgTwitterImage]);
 
     const instagramSectionRef = useRef(null);
     const [instagramInView, setInstagramInView] = useState(false);
@@ -1744,13 +1751,11 @@ const InsectsHostPlantExplorer = memo(
             commitSearchValue={commitSearchValue}
             handleGlobalSearch={handleGlobalSearch}
             handleSelectSuggestion={handleSelectSuggestion}
-            heroImageLoaded={heroImageLoaded}
             heroSearchInputRef={heroSearchInputRef}
             heroStats={heroStats}
             isEnglish={isEnglish}
             isStickyHeaderVisible={isStickyHeaderVisible}
             locale={locale}
-            setHeroImageLoaded={setHeroImageLoaded}
             setTheme={setTheme}
             showHeaderControls={false}
             suggestions={suggestions}
@@ -1862,6 +1867,27 @@ const InsectsHostPlantExplorer = memo(
                 )}
               </button>
             </div>
+
+            {/* 逆引き動線: 検索語があるとき、同じ語で反対のタブを探すリンクを1つだけ出す */}
+            {activeSearchTerm.trim() && (
+              <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-line bg-surface-raised px-4 py-2 text-xs">
+                <span className="text-ink-muted">
+                  {isEnglish
+                    ? `Showing ${activeTab === "insects" ? "insects" : "plants"} for "${activeSearchTerm.trim()}".`
+                    : `「${activeSearchTerm.trim()}」で${activeTab === "insects" ? "昆虫" : "植物"}を表示中。`}
+                </span>
+                <button
+                  type="button"
+                  onClick={crossSearchOtherTab}
+                  className="inline-flex items-center gap-1 font-semibold text-brand-600 underline decoration-brand-300 underline-offset-2 transition-colors hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200"
+                >
+                  {isEnglish
+                    ? `See ${activeTab === "insects" ? "plants" : "insects"} instead`
+                    : `${activeTab === "insects" ? "植物" : "昆虫"}でも探す`}
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            )}
 
             {/* タブコンテンツ */}
             <div className="relative">

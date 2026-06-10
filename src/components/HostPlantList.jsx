@@ -205,7 +205,7 @@ const HostPlantListItem = React.memo(
             <div className="w-full relative overflow-hidden rounded-t-[10px] -mx-[2px] -mt-[2px]">
               {imageFilename && !imageError ? (
                 // Actual plant image
-                <div className="relative w-full aspect-[16/10] sm:aspect-[4/3] bg-slate-100 dark:bg-slate-900">
+                <div className="relative w-full aspect-[4/3] bg-slate-100 dark:bg-slate-900">
                   <ImageWithFallback
                     src={primaryImageSrc}
                     candidates={fallbackImageCandidates}
@@ -223,7 +223,7 @@ const HostPlantListItem = React.memo(
                 </div>
               ) : (
                 // Fallback to beautiful plant icon with better layout
-                <div className="relative w-full aspect-[16/10] sm:aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-700 dark:to-emerald-800 flex flex-col items-center justify-center p-5 sm:p-6">
+                <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-700 dark:to-emerald-800 flex flex-col items-center justify-center p-5 sm:p-6">
                   {/* No image icon at top */}
                   <div className="flex-shrink-0 mb-4">
                     <svg
@@ -1398,7 +1398,7 @@ const HostPlantList = ({
         <div ref={listTopRef} />
         <div>
           {currentHostPlants.length > 0 ? (
-            <div className={viewMode === "compact" ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"}>
+            <div className={viewMode === "compact" ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"}>
               {currentHostPlants.map(([plant, mothList], index) => {
                 const normalizedPlant = normalizePlantKey(plant);
                 const statsNames =

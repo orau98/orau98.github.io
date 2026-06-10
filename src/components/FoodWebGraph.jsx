@@ -1498,7 +1498,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
     const isCurrent = node.type.includes('current');
-    const radius = (isCurrent ? 18 : 13) / Math.sqrt(globalScale);
+    // 視覚半径(13/8)より広いタップ判定。モバイルで小ノードを取りやすくする。
+    const radius = (isCurrent ? 20 : 15) / Math.sqrt(globalScale);
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
@@ -1838,6 +1839,41 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     </>
   );
 
+  // 常時表示用のコンパクト凡例（従来は ? ポップオーバー内に隠れていた）
+  const legendStrip = (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600 dark:text-slate-300">
+      <span className="font-semibold text-slate-500 dark:text-slate-400">凡例</span>
+      {(showInsectLegend || showInsectHostLegend || showInsectFlowerLegend || showInsectBothLegend) && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-sky-400" aria-hidden="true"></span>昆虫
+        </span>
+      )}
+      {(showHostPlantLegend || showFlowerPlantLegend || showBothPlantLegend) && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" aria-hidden="true"></span>植物
+        </span>
+      )}
+      {showHostRelationLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className={`inline-block w-6 border-t-2 ${RELATION_STYLES.host.legendClass}`} aria-hidden="true"></span>
+          {RELATION_STYLES.host.label}
+        </span>
+      )}
+      {showFlowerRelationLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className={`inline-block w-6 border-t-2 ${RELATION_STYLES.flower.legendClass}`} style={{ borderTopStyle: 'dashed' }} aria-hidden="true"></span>
+          {RELATION_STYLES.flower.label}
+        </span>
+      )}
+      {showBothRelationLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className={`inline-block w-6 border-t-2 ${RELATION_STYLES.both.legendClass}`} style={{ borderTopStyle: 'dotted' }} aria-hidden="true"></span>
+          {RELATION_STYLES.both.label}
+        </span>
+      )}
+    </div>
+  );
+
   const graphHelpPopoverContent = (
     <div className="space-y-3">
       <div className="space-y-1">
@@ -2143,7 +2179,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                 }
               }}
             >
-              詳細へ
+              詳細ページへ →
             </button>
           </div>
         </>
@@ -2240,6 +2276,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   {relationFilterConfig.helper}
                 </div>
               )}
+              {/* 常時表示の凡例 */}
+              <div className="border-t border-slate-200/70 pt-2 dark:border-slate-700/70">
+                {legendStrip}
+              </div>
             </div>
 
             {desktopControlsOpen && (
@@ -2316,7 +2356,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     {relationFilterButtons}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-300">
-                    凡例と操作方法は上段の ? ボタンから確認できます。
+                    詳しい操作方法は上段の ? ボタンから確認できます。
                   </div>
                 </div>
 
@@ -2500,6 +2540,11 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                         </span>
                       ))}
                     </div>
+                  </div>
+
+                  {/* 常時表示の凡例（モバイル） */}
+                  <div className="mt-2 border-t border-slate-200/70 pt-2 dark:border-slate-700/70">
+                    {legendStrip}
                   </div>
 
                 </div>

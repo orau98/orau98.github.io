@@ -17,6 +17,7 @@ import ImageWithFallback from './ImageWithFallback';
 import SearchableSelect from './SearchableSelect';
 import { ListDisplayControls, PresetFilterChips } from './ListToolbar';
 import ManualAdSlot from './ManualAdSlot';
+import { Card, Badge } from './ui';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,
@@ -36,6 +37,8 @@ import { isPlantHostRecord } from '../utils/hostResource';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
+// カード上で食草/訪花名を何件まで出すか（超過分は「他N種」に集約してカード高を揃える）
+const CARD_PLANT_PREVIEW_CAP = 6;
 const PER_PAGE_OPTIONS = [20, 50, 100];
 
 const isFlowerVisitRecord = (record) => {
@@ -293,7 +296,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   try {
     if (viewMode === 'compact') {
       return (
-        <article ref={imgRef} className="group list-none rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:border-blue-400/60 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-800">
+        <Card as="article" ref={imgRef} interactive className="group list-none overflow-hidden hover:border-blue-400/60 dark:hover:border-blue-500/60">
           <Link
             to={route}
             state={makeDetailLinkState(location, { setFromList: true })}
@@ -339,12 +342,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   )}
                 </div>
                 <div className="flex flex-wrap justify-end gap-1">
-                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${hasImageFilename ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300'}`}>
+                  <Badge tone={hasImageFilename ? 'info' : 'neutral'}>
                     {hasImageFilename ? (isEnglish ? 'Photo' : '写真') : (isEnglish ? 'No image listed' : '画像未掲載')}
-                  </span>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                  </Badge>
+                  <Badge tone="brand">
                     {isEnglish ? `${linkedPlantCount} plants` : `植物 ${linkedPlantCount}`}
-                  </span>
+                  </Badge>
                 </div>
               </div>
               <div className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
@@ -370,7 +373,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               </div>
             </div>
           </Link>
-        </article>
+        </Card>
       );
     }
 
@@ -387,7 +390,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           {/* Enhanced Image section - full card width */}
           <div className="w-full relative overflow-hidden rounded-t-[10px] -mx-[2px] -mt-[2px]">
             {hasImageFilename ? (
-              <div className="relative w-full aspect-[16/10] sm:aspect-[4/3]">
+              <div className="relative w-full aspect-[4/3]">
                 {isVisible ? (
                   <ImageWithFallback
                     src={responsiveImage?.src}
@@ -426,7 +429,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             
             {!hasImageFilename && (
 
-              <div className="relative w-full aspect-[16/10] sm:aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex flex-col items-center justify-center p-5 sm:p-6">
+              <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex flex-col items-center justify-center p-5 sm:p-6">
                 {/* No image icon at top */}
                 <div className="flex-shrink-0 mb-4">
                   <svg className="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,8 +478,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                           <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
                         </svg>
                       </span>
-                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
-                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames, locale)}
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
+                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
+                        {localizedPlantDisplay.hostNames.length > CARD_PLANT_PREVIEW_CAP && (
+                          <span className="text-slate-400 dark:text-slate-500">
+                            {isEnglish
+                              ? ` +${localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP} more`
+                              : ` 他${localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP}種`}
+                          </span>
+                        )}
                       </span>
                     </div>
                   )}
@@ -490,8 +500,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       >
                         🌸
                       </span>
-                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-none">
-                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames, locale)}
+                      <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
+                        {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
+                        {localizedPlantDisplay.flowerNames.length > CARD_PLANT_PREVIEW_CAP && (
+                          <span className="text-slate-400 dark:text-slate-500">
+                            {isEnglish
+                              ? ` +${localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP} more`
+                              : ` 他${localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP}種`}
+                          </span>
+                        )}
                       </span>
                     </div>
                   )}

@@ -31,7 +31,8 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
-import { buildPlantProfileSummary, normalizePlantProfileText } from './utils/plantProfileText';
+import { buildPlantProfileSummary, buildSourceLabel, normalizePlantProfileText } from './utils/plantProfileText';
+import SourceCitation from './components/ui/SourceCitation';
 import InfoPopover from './components/InfoPopover';
 import {
   INDEX_FOLLOW_ROBOTS,
@@ -849,13 +850,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     ]
       .map(([key, value]) => ({ key, label: labels[key], value: normalizePlantProfileText(value) }))
       .filter((row) => row.value);
-    const sourceParts = [
-      plantProfile.source,
-      plantProfile.page ? `p.${plantProfile.page}` : '',
-    ].filter(Boolean);
-    if (sourceParts.length) {
-      rows.push({ key: 'source', label: labels.source, value: sourceParts.join(' ') });
-    }
+    // 出典は facts グリッドに混ぜず、プロフィール末尾の SourceCitation に集約（サイト共通の控えめ表記）
     return rows;
   }, [plantProfile, details, isEnglish]);
 
@@ -1909,8 +1904,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       <DetailSectionNav
         label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
         items={[
-          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '解説' }] : []),
           { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
+          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '解説' }] : []),
           { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
           { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
           { id: 'share', label: isEnglish ? 'Share' : '共有' },
@@ -1981,9 +1976,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         </div>
       </div>
 
+      {/* 植物画像ギャラリー（昆虫ページと同様、写真を解説より先に出す） */}
+      <section id="plant-photos" aria-labelledby="plant-photos" className="mb-10 scroll-mt-24">
+        <PlantImageGallery images={plantImages} plantName={decodedPlantName} locale={locale} />
+      </section>
+
       {plantProfileFacts.length > 0 && (
-        <section id="plant-profile" className="mb-10 scroll-mt-24">
-          <div className="rounded-2xl border border-emerald-200/70 bg-white/90 p-5 shadow-sm dark:border-emerald-900/60 dark:bg-slate-900/70">
+        <section id="plant-profile" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
+          <div className="rounded-card border border-line bg-surface p-5 shadow-e1">
             <h2 className="mb-4 text-xl font-bold text-slate-800 dark:text-white">
               {isEnglish ? 'Plant Profile' : '解説・植物情報'}
             </h2>
@@ -2009,14 +2009,15 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 </div>
               ))}
             </dl>
+            <SourceCitation
+              sources={buildSourceLabel(plantProfile)}
+              isEnglish={isEnglish}
+              resolveLinks={false}
+              className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
+            />
           </div>
         </section>
       )}
-
-      {/* 植物画像ギャラリー */}
-      <section id="plant-photos" aria-labelledby="plant-photos" className="mb-12 md:mb-16 lg:mb-20 scroll-mt-24">
-        <PlantImageGallery images={plantImages} plantName={decodedPlantName} locale={locale} />
-      </section>
 
       {/* 科／目ページ用：この分類に属する植物一覧 */}
       {classificationMembers && classificationMembers.length > 0 && (

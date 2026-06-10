@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
-import { getReferenceMetaList } from './utils/sourceLinks';
+import SourceCitation from './components/ui/SourceCitation';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
@@ -1172,9 +1172,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           ]}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 画像セクション */}
-          <div id="plant-photos" className="lg:col-span-1 lg:sticky lg:top-24 lg:self-start">
+        <div className="space-y-6">
+          {/* 画像セクション（1カラム：写真ファースト、植物ページと統一） */}
+          <div id="plant-photos">
             <div>
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
                 {hasInstagramPost ? (
@@ -1256,14 +1256,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 </div>
               </div>
             </div>
-
           </div>
 
           {/* 情報セクション */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="space-y-4">
             
             {/* 種名情報 */}
-            <div id="basic-info" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden p-6">
+            <div id="basic-info" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden p-6">
               <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
                 {isEnglish ? formatScientificNameReact(primaryName) : displayName || moth.name}
               </h1>
@@ -1285,7 +1284,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             </div>
 
             {/* 食草情報 */}
-            <div id="host-plants" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+            <div id="host-plants" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden">
               <div className="p-4 bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-200/30 dark:border-emerald-700/30">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-emerald-500 rounded-lg">
@@ -1736,44 +1735,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                   </div>
                 )}
 
-                {/* 出典情報 */}
+                {/* 出典情報（サイト共通の控えめ表記） */}
                 {moth.source && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
-                    <div className="flex items-start space-x-2">
-                      <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                      <div className="text-sm text-slate-500 dark:text-slate-400">
-                        {(() => {
-                          const sources = getReferenceMetaList(moth.source);
-                          return (
-                            <>
-                              <span className="font-medium text-slate-500 dark:text-slate-400">{detailUi.sourceLabel}</span>{' '}
-                              {sources.map(({ displayLabel, link }, index) => (
-                                <React.Fragment key={`${displayLabel}-${index}`}>
-                                  {index > 0 ? ', ' : ''}
-                                  {link ? (
-                                    <a
-                                      href={link}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 underline decoration-slate-300 hover:decoration-slate-400 transition-colors duration-200"
-                                    >
-                                      {displayLabel}
-                                      <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                      </svg>
-                                    </a>
-                                  ) : (
-                                    <span className="font-medium">{displayLabel || moth.source}</span>
-                                  )}
-                                </React.Fragment>
-                              ))}
-                            </>
-                          );
-                        })()}
-                      </div>
-                    </div>
+                    <SourceCitation sources={moth.source} isEnglish={isEnglish} />
                   </div>
                 )}
               </div>
@@ -1809,7 +1774,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               
               return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote || hasSupplementalEmergenceHint;
             })() && (
-              <div id="adult-season" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden scroll-mt-28">
+              <div id="adult-season" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden scroll-mt-28">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-orange-500 rounded-lg">
@@ -1945,7 +1910,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
             {/* 生態情報（general_notes.csv） */}
             {ecologyNotes.length > 0 && (
-              <div id="ecology" className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden scroll-mt-28">
+              <div id="ecology" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden scroll-mt-28">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-orange-500 rounded-lg">
@@ -1960,34 +1925,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 </div>
                 <div className="p-4">
                   <ul className="space-y-2">
-                    {ecologyNotes.map((note, index) => {
-                      const sources = getReferenceMetaList(note.reference);
-                      return (
-                        <li key={index} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                          • {note.content}
-                          {note.reference && (
-                            <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">
-                              {detailUi.sourceLabel}{' '}
-                              {sources.map(({ displayLabel, link }, sourceIndex) => (
-                                <React.Fragment key={`${displayLabel}-${sourceIndex}`}>
-                                  {sourceIndex > 0 ? ', ' : ''}
-                                  {link ? (
-                                    <a href={link} target="_blank" rel="noopener noreferrer" className="underline decoration-slate-300 hover:decoration-slate-400">
-                                      {displayLabel}
-                                      <svg className="w-3 h-3 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                      </svg>
-                                    </a>
-                                  ) : (
-                                    <span>{displayLabel}</span>
-                                  )}
-                                </React.Fragment>
-                              ))}
-                            </span>
-                          )}
-                        </li>
-                      );
-                    })}
+                    {ecologyNotes.map((note, index) => (
+                      <li key={index} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                        • {note.content}
+                        {note.reference && (
+                          <SourceCitation
+                            sources={note.reference}
+                            isEnglish={isEnglish}
+                            className="mt-1"
+                          />
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -1997,9 +1946,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
             {/* 関連種情報 - 横スクロール式カードデザイン */}
             <div id="related-insects"></div>
-            <RelatedInsectsSection 
-              relatedMothsByPlant={relatedMothsByPlant} 
-              allInsects={allInsects} 
+            <RelatedInsectsSection
+              relatedMothsByPlant={relatedMothsByPlant}
+              allInsects={allInsects}
               locale={locale}
             />
 
@@ -2020,7 +1969,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         <DetailNavigation allItems={sortedInsects} currentId={moth.id} type="insect" locale={locale} />
 
         <div id="share" className="mt-8">
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+          <div className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden">
             <div className="p-4 bg-gradient-to-r from-slate-100/70 to-slate-50/70 dark:from-slate-700/40 dark:to-slate-800/40 border-b border-slate-200/40 dark:border-slate-600/40">
               <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

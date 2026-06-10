@@ -96,11 +96,10 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   const headerRef = useRef(null);
   const homePath = localizePath('/', locale);
   const quizPath = localizePath('/quiz', locale);
+  // 昆虫/植物はタブ＋パンくずで到達できるためヘッダーから外し、サイトマップはフッターに集約。
+  // ヘッダーのナビはガイドのみに絞って上部の煩雑さを解消する。
   const navItems = [
-    { label: isEnglish ? 'Insects' : '昆虫', to: localizePath('/?tab=insects', locale) },
-    { label: isEnglish ? 'Plants' : '植物', to: localizePath('/?tab=plants', locale) },
     { label: isEnglish ? 'Guides' : 'ガイド', href: localizePath('/guides/', locale) },
-    { label: isEnglish ? 'Site map' : 'サイトマップ', href: '/sitemap.html' },
   ];
 
   useEffect(() => {

@@ -2,6 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * デザイントークン（単一の真実源）
+ * - 値は RGB チャンネル（"R G B"）で保持し、Tailwind 側で rgb(var(--token) / <alpha-value>) として参照する。
+ * - セマンティック面（surface / line / ink）は .dark でスワップ → 同じユーティリティが両テーマで解決する。
+ * - ブランド ramp は emerald を種に、両テーマ共通。
+ * Phase 0 では現行の見た目を完全再現する値を設定（コンポーネント側はまだ未参照＝視覚変化なし）。
+ */
+@layer base {
+  :root {
+    /* ブランド ramp（emerald） */
+    --brand-50: 236 253 245;
+    --brand-100: 209 250 229;
+    --brand-200: 167 243 208;
+    --brand-300: 110 231 183;
+    --brand-400: 52 211 153;
+    --brand-500: 16 185 129;
+    --brand-600: 5 150 105;
+    --brand-700: 4 120 87;
+    --brand-800: 6 95 70;
+    --brand-900: 6 78 59;
+    --brand-950: 2 44 34;
+
+    /* セマンティック面・境界・文字（ライト） */
+    --surface: 255 255 255;          /* カード地 = white */
+    --surface-raised: 248 250 252;   /* slate-50 */
+    --surface-overlay: 255 255 255;  /* ポップオーバー等 */
+    --line: 226 232 240;             /* slate-200 */
+    --line-strong: 203 213 225;      /* slate-300 */
+    --ink: 15 23 42;                 /* slate-900 本文 */
+    --ink-muted: 100 116 139;        /* slate-500 補助・出典 */
+    --ink-subtle: 148 163 184;       /* slate-400 さらに控えめ */
+    --ring: 16 185 129;              /* フォーカス = emerald-500 */
+
+    /* 角丸スケール（xl/2xl/3xl 混在を2段に集約） */
+    --radius-control: 0.75rem;       /* 内側要素（旧 rounded-xl） */
+    --radius-card: 1rem;             /* カード外殻（旧 rounded-2xl） */
+
+    /* 影の段階（resting / hover / overlay） */
+    --shadow-1: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+    --shadow-2: 0 6px 16px -4px rgb(15 23 42 / 0.12);
+    --shadow-3: 0 18px 40px -12px rgb(15 23 42 / 0.22);
+  }
+
+  html.dark {
+    --surface: 30 41 59;             /* slate-800 */
+    --surface-raised: 15 23 42;      /* slate-900 */
+    --surface-overlay: 30 41 59;
+    --line: 51 65 85;                /* slate-700 */
+    --line-strong: 71 85 105;        /* slate-600 */
+    --ink: 226 232 240;              /* slate-200 */
+    --ink-muted: 148 163 184;        /* slate-400 */
+    --ink-subtle: 100 116 139;       /* slate-500 */
+    --ring: 52 211 153;              /* emerald-400 */
+
+    --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.35);
+    --shadow-2: 0 6px 16px -4px rgb(0 0 0 / 0.50);
+    --shadow-3: 0 18px 40px -12px rgb(0 0 0 / 0.62);
+  }
+}
+
 @layer components {
   .ui-btn {
     @apply inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold transition-all duration-150 active:scale-95;
@@ -521,6 +581,37 @@ img[loading="lazy"] {
   perspective: 1000px;
 }
 
+/*
+ * パフォーマンス: backdrop-blur はGPU負荷が高く、特にスクロール中に重なると低スペック端末で
+ * ジャンクの原因になる。スクロール中（body.is-scrolling）は全 backdrop-blur を一時的に無効化し、
+ * 静止時のみブラーを効かせる。見た目（静止時）は変えずに体感パフォーマンスだけ改善する。
+ * クラスは Tailwind が生成済みなので、コンポーネント側を触らずグローバルに効く。
+ */
+body.is-scrolling .backdrop-blur-sm,
+body.is-scrolling .backdrop-blur,
+body.is-scrolling .backdrop-blur-md,
+body.is-scrolling .backdrop-blur-lg,
+body.is-scrolling .backdrop-blur-xl,
+body.is-scrolling .backdrop-blur-2xl,
+body.is-scrolling .backdrop-blur-3xl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 低スペック/省電力設定の端末ではブラーを完全に切る */
+@media (prefers-reduced-transparency: reduce) {
+  .backdrop-blur-sm,
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
 /* Re-enable pointer events for interactive images */
 .interactive-image {
   pointer-events: auto;
@@ -553,14 +644,10 @@ img[loading="lazy"] {
   z-index: 10;
 }
 
-/* フォーカス表示の改善 */
+/* フォーカス表示の改善（--ring トークンが .dark で自動スワップ） */
 *:focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid rgb(var(--ring));
   outline-offset: 2px;
-}
-
-.dark *:focus-visible {
-  outline-color: #34d399;
 }
 
 /* インタラクティブ要素のフォーカスリング */
@@ -569,20 +656,12 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid rgb(var(--ring));
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-.dark button:focus-visible,
-.dark a:focus-visible,
-.dark input:focus-visible,
-.dark select:focus-visible,
-.dark textarea:focus-visible {
-  outline-color: #34d399;
-}
-
 /* カードやボタンのフォーカス時のハイライト */
 .focus-ring:focus-visible {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 0 3px rgb(var(--ring) / 0.4);
 }

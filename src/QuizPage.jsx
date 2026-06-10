@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link, useSearchParams } from 'react-router-dom';
 import ImageWithFallback from './components/ImageWithFallback';
+import SourceCitation from './components/ui/SourceCitation';
 import useInsectImageCandidates from './hooks/useInsectImageCandidates';
 import useSeoMeta from './hooks/useSeoMeta';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from './services/imageIndex';
@@ -1122,9 +1123,12 @@ const QuizPage = ({
                     </p>
                   )}
                   {currentQuestion.explanation.sourceLabel && (
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                      {labels.source}: {currentQuestion.explanation.sourceLabel}
-                    </p>
+                    <SourceCitation
+                      sources={currentQuestion.explanation.sourceLabel}
+                      isEnglish={isEnglish}
+                      resolveLinks={false}
+                      className="mt-1"
+                    />
                   )}
                   {midpointMessage && (
                     <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
