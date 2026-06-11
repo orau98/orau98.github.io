@@ -117,8 +117,7 @@ const StickyHeader = ({
         ref={headerBarRef}
         className="border-b border-slate-200 bg-white/95 px-3 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] shadow-lg backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95 sm:px-4"
       >
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
-          <div className="flex min-w-0 items-center gap-3 sm:gap-4 lg:flex-1">
+        <div className="mx-auto flex max-w-6xl items-center gap-2 sm:gap-3 lg:gap-4">
             {/* Logo / Top Button */}
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -151,20 +150,7 @@ const StickyHeader = ({
                 locale={locale}
                 compact
               />
-              {/* 検索アクティブ状態のインジケーター */}
-              {searchTerm && searchTerm.trim() && (
-                <div className="absolute left-0 right-0 -bottom-5 hidden items-center justify-center md:flex">
-                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-                    {isEnglish
-                      ? `Searching: ${searchTerm.trim().length > 10 ? `${searchTerm.trim().slice(0, 10)}...` : searchTerm.trim()}`
-                      : `「${searchTerm.trim().length > 10 ? searchTerm.trim().slice(0, 10) + '...' : searchTerm.trim()}」で検索中`}
-                  </span>
-                </div>
-              )}
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:justify-end">
             {/* Tabs - Compact */}
             <div className="flex flex-shrink-0 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
               <button
@@ -201,7 +187,7 @@ const StickyHeader = ({
               </button>
             </div>
 
-            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            <div className="hidden flex-shrink-0 items-center gap-2 lg:flex">
               <LocaleSwitcher locale={locale} compact />
 
               {/* Theme toggle */}
@@ -224,7 +210,6 @@ const StickyHeader = ({
                 </button>
               )}
             </div>
-          </div>
         </div>
       </div>
     </div>
