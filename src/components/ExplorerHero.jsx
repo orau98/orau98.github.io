@@ -4,8 +4,8 @@ import SearchInput from "./SearchInput";
 
 /**
  * 種数チップの行。モバイルは横スクロール1行、sm以上は折り返し。
- * 端のフェード＋右シェブロンで「横スクロールできる」ことを明示し、
- * 端に達したらフェード/シェブロンを消す（最後の「食草」が常時隠れないように）。
+ * 端のフェードで「横スクロールできる」ことを明示し、
+ * 端に達したらフェードを消す（最後の「食草」が常時隠れないように）。
  */
 const HeroStatChips = ({ heroStats }) => {
   const scrollRef = useRef(null);
@@ -50,17 +50,13 @@ const HeroStatChips = ({ heroStats }) => {
           showLeftFade ? "opacity-100" : "opacity-0"
         }`}
       />
-      {/* 右端フェード＋シェブロン（まだ続きがあるとき＝スクロール可能の合図） */}
+      {/* 右端フェード（まだ続きがあるとき＝スクロール可能の合図） */}
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-y-0 right-0 flex w-9 items-center justify-end bg-gradient-to-l from-slate-900 to-transparent pr-0.5 transition-opacity duration-200 dark:from-slate-950 sm:hidden ${
+        className={`pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-slate-900 to-transparent transition-opacity duration-200 dark:from-slate-950 sm:hidden ${
           showRightFade ? "opacity-100" : "opacity-0"
         }`}
-      >
-        <svg className="h-4 w-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </div>
+      />
     </div>
   );
 };
