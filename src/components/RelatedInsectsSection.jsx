@@ -136,7 +136,10 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                       })
                     : relatedMothName;
                   const secondaryName = isEnglish ? buildJapaneseReferenceLabel(relatedMothName) : '';
-                  
+                  const candidates = getImageCandidates(relatedMoth);
+                  const hasImage = candidates.length > 0;
+                  const primarySrc = candidates[0] || placeholderSrc;
+
                   return (
                     <Link
                       key={relatedMoth.id}
@@ -153,12 +156,10 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                         relatedMoth.type === 'longhornbeetle' ? 'border-teal-200/60 dark:border-teal-700/60 hover:border-teal-400/80 dark:hover:border-teal-500/80 hover:shadow-teal-500/20' :
                         'border-amber-200/60 dark:border-amber-700/60 hover:border-amber-400/80 dark:hover:border-amber-500/80 hover:shadow-amber-500/20'
                       }`}>
-                        {/* 昆虫画像 - 大きくしてカードの大部分を占める */}
+                        {/* 昆虫画像。画像が無い種は名前が必ず読めるカードにする */}
                         <div className="relative w-full aspect-[3/2] overflow-hidden">
-                          {(() => {
-                            const candidates = getImageCandidates(relatedMoth);
-                            const primarySrc = candidates[0] || placeholderSrc;
-                            return (
+                          {hasImage ? (
+                            <>
                               <ImageWithFallback
                                 src={primarySrc}
                                 candidates={candidates.slice(1)}
@@ -172,23 +173,37 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                                 loading="lazy"
                                 decoding="async"
                               />
-                            );
-                          })()}
-
-                          
-                          {/* 画像上に昆虫名をオーバーレイ表示 */}
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
-                            <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
-                              {isEnglish && relatedMoth.scientificName
-                                ? formatScientificNameReact(primaryName)
-                                : primaryName}
-                            </h5>
-                            {secondaryName && (
-                              <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
-                                {secondaryName}
-                              </p>
-                            )}
-                          </div>
+                              {/* 画像上に昆虫名をオーバーレイ表示 */}
+                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
+                                <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
+                                  {isEnglish && relatedMoth.scientificName
+                                    ? formatScientificNameReact(primaryName)
+                                    : primaryName}
+                                </h5>
+                                {secondaryName && (
+                                  <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
+                                    {secondaryName}
+                                  </p>
+                                )}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-surface-raised p-3 text-center">
+                              <svg className="h-6 w-6 flex-shrink-0 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              <h5 className="font-medium text-xs leading-tight line-clamp-3 text-ink">
+                                {isEnglish && relatedMoth.scientificName
+                                  ? formatScientificNameReact(primaryName)
+                                  : primaryName}
+                              </h5>
+                              {secondaryName && (
+                                <p className="text-[10px] leading-tight text-ink-muted line-clamp-2">
+                                  {secondaryName}
+                                </p>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </Link>
