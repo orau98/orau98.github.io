@@ -799,7 +799,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
         
         {/* 出典情報 */}
         {source && (
-          <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
+          <div className="mt-4 pt-4 border-t border-line">
             <SourceCitation sources={source} isEnglish={isEnglish} />
           </div>
         )}
@@ -816,7 +816,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
         {/* 月のヘッダー */}
         <div className="grid grid-cols-12 gap-1 text-center">
           {MONTHS.map((month) => (
-            <div key={month.number} className="text-xs font-medium text-slate-600 dark:text-slate-400">
+            <div key={month.number} className="text-xs font-medium text-ink-muted">
               <div className="flex flex-col items-center">
                 <span className="hidden sm:block">{getMonthLabel(month, 'header')}</span>
                 <span className="sm:hidden">{isEnglish ? month.number : month.number}</span>
@@ -827,16 +827,16 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
         
         
         {/* メインタイムライン（旬単位） */}
-        <div className="relative bg-slate-50 dark:bg-slate-800 rounded-xl p-2 border border-slate-200 dark:border-slate-600">
+        <div className="relative bg-surface-raised rounded-card p-2 border border-line">
           {/* 背景グリッド */}
           <div className="grid grid-cols-12 gap-1 h-10">
             {MONTHS.map((month) => (
-              <div key={month.number} className="grid grid-cols-3 gap-px bg-slate-200 dark:bg-slate-700 rounded-md p-px">
+              <div key={month.number} className="grid grid-cols-3 gap-px bg-line rounded-md p-px">
                 {[1, 2, 3].map((periodNum) => {
                   return (
                     <div
                       key={periodNum}
-                      className="bg-white dark:bg-slate-800 rounded-sm"
+                      className="bg-surface rounded-sm"
                     />
                   );
                 })}
@@ -904,20 +904,20 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
       </div>
       {/* 原文表示 - 食草セクションと同じ構造で色違い */}
       <div>
-        <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 border border-emerald-200/50 dark:border-emerald-700/50">
+        <div className="bg-surface-raised rounded-card p-3 border border-line">
           <div className="flex items-center space-x-3">
-            <span className="font-medium text-slate-700 dark:text-slate-300">
+            <span className="font-medium text-ink">
               {displayText}
             </span>
           </div>
           {originalDisplayText && (
-            <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+            <div className="mt-2 text-sm text-ink-muted">
               <span className="font-medium">{isEnglish ? 'Original:' : '原文:'}</span> {originalDisplayText}
             </div>
           )}
         </div>
         {source && (
-          <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
+          <div className="mt-4 pt-4 border-t border-line">
             <SourceCitation sources={source} isEnglish={isEnglish} />
           </div>
         )}
