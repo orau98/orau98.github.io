@@ -6,14 +6,34 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.join(__dirname, '..');
 
-const normalizedPath = path.join(ROOT, 'normalized_data', 'insects.csv');
-const publicPath = path.join(ROOT, 'public', 'insects.csv');
+// Runtime data contract: these CSVs are fetched by the app at runtime
+// (insects.csv on the dev full pipeline, hostplants.csv by the MothDetail
+// host-plant fallback) and must be served from public/ in lockstep with
+// normalized_data/. Keep this list in sync with scripts/smoke-dist.mjs.
+const SYNC_TARGETS = [
+  { name: 'insects.csv', required: true },
+  { name: 'hostplants.csv', required: true },
+  { name: 'general_notes.csv', required: true },
+];
 
-if (!fs.existsSync(normalizedPath)) {
-  console.warn('[sync-public-insects-csv] normalized_data/insects.csv not found; skipping.');
-  process.exit(0);
+let missingRequired = false;
+
+for (const { name, required } of SYNC_TARGETS) {
+  const normalizedPath = path.join(ROOT, 'normalized_data', name);
+  const publicPath = path.join(ROOT, 'public', name);
+
+  if (!fs.existsSync(normalizedPath)) {
+    const level = required ? 'error' : 'warn';
+    console[level](`[sync-public-insects-csv] normalized_data/${name} not found; skipping.`);
+    if (required) missingRequired = true;
+    continue;
+  }
+
+  fs.mkdirSync(path.dirname(publicPath), { recursive: true });
+  fs.copyFileSync(normalizedPath, publicPath);
+  console.log(`[sync-public-insects-csv] synced ${path.relative(ROOT, publicPath)} from normalized_data/${name}`);
 }
 
-fs.mkdirSync(path.dirname(publicPath), { recursive: true });
-fs.copyFileSync(normalizedPath, publicPath);
-console.log(`[sync-public-insects-csv] synced ${path.relative(ROOT, publicPath)} from normalized_data/insects.csv`);
+if (missingRequired) {
+  process.exit(1);
+}

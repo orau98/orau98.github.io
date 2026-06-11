@@ -34,6 +34,9 @@ jobs:
       - name: Data validation (normalized CSV)
         run: npm run validate-normalized
 
+      - name: Sync runtime CSVs into public/
+        run: npm run sync:public-insects
+
       - name: Build lite datasets
         run: npm run build:data-lite
 

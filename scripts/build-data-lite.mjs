@@ -287,31 +287,59 @@ const slim = (arr) => (arr || []).map(i => ({
   });
 
   // Build and write full dataset for runtime consumption
-  const existingYListLiteText = readText(ylistLitePath);
-  const existingYListLite = (() => {
-    if (!existingYListLiteText) return null;
+  // ylist-lite source resolution, in priority order:
+  //   1. public/20210514YList_download.csv  (original YList CSV, currently not in the repo)
+  //   2. normalized_data/ylist-lite.json    (canonical committed snapshot)
+  //   3. public/assets/data-lite/ylist-lite.json (legacy fallback)
+  // The frontend resolves plant aliases/families from this file, so a missing or
+  // empty result must fail the build instead of silently degrading the site.
+  const readJsonIfValid = (filePath, label) => {
+    const text = readText(filePath);
+    if (!text) return null;
     try {
-      return JSON.parse(existingYListLiteText);
+      return JSON.parse(text);
     } catch (error) {
-      console.warn('[data-lite] failed to parse existing ylist-lite.json:', error?.message || error);
+      console.warn(`[data-lite] failed to parse ${label}:`, error?.message || error);
       return null;
     }
-  })();
+  };
+  const ylistSnapshotPath = path.join(ROOT, 'normalized_data', 'ylist-lite.json');
   const hostPlantTargets = new Set(
     hostplants
       .map(r => cleanString(r.plant_name))
       .filter(name => name && name !== '不明' && !isSuspiciousPlantName(name) && !isNonPlantResourceName(name))
   );
-  const builtYListLite = ylistRows.length > 0
-    ? buildYListLite(ylistRows, hostPlantTargets)
-    : (existingYListLite || { plants: {}, familiesMap: {}, ordersMap: {}, aliasToCanonical: {} });
-  const ylistLite = augmentYListLiteWithScientificAliases(builtYListLite);
-  if (
-    Object.keys(ylistLite.plants || {}).length > 0 ||
-    Object.keys(ylistLite.aliasToCanonical || {}).length > 0
-  ) {
-    write('ylist-lite.json', ylistLite);
+  let builtYListLite = null;
+  if (ylistRows.length > 0) {
+    builtYListLite = buildYListLite(ylistRows, hostPlantTargets);
+    console.log('[data-lite] ylist-lite built from public/20210514YList_download.csv');
+  } else {
+    builtYListLite = readJsonIfValid(ylistSnapshotPath, 'normalized_data/ylist-lite.json');
+    if (builtYListLite) {
+      console.log('[data-lite] ylist-lite loaded from normalized_data/ylist-lite.json snapshot');
+    } else {
+      builtYListLite = readJsonIfValid(ylistLitePath, 'existing ylist-lite.json');
+      if (builtYListLite) {
+        console.warn(
+          '[data-lite] ylist-lite reused from previous public output; ' +
+          'restore normalized_data/ylist-lite.json so the source of truth is tracked.',
+        );
+      }
+    }
   }
+  const ylistLite = augmentYListLiteWithScientificAliases(
+    builtYListLite || { plants: {}, familiesMap: {}, ordersMap: {}, aliasToCanonical: {} },
+  );
+  if (
+    Object.keys(ylistLite.plants || {}).length === 0 &&
+    Object.keys(ylistLite.aliasToCanonical || {}).length === 0
+  ) {
+    throw new Error(
+      '[data-lite] ylist-lite.json would be empty: no YList CSV, no normalized_data/ylist-lite.json ' +
+      'snapshot, and no previous output found. Aborting so plant alias/family resolution does not break.',
+    );
+  }
+  write('ylist-lite.json', ylistLite);
   const processedCollections = Object.fromEntries(
     INSECT_COLLECTION_KEYS.map((key) => [key, processInsects(normalized[key])]),
   );
