@@ -941,6 +941,25 @@ const InsectsHostPlantExplorer = memo(
       });
       return names.size;
     }, [hostPlants, flowerVisitPlants]);
+    // 逆引き動線のラベル: 検索語を保持して反対カテゴリへ誘導する。
+    // 件数は親側では正確に算出できない（各リストが内部に独自フィルタ＋別名正規化マージを持ち、
+    // 植物詳細は遅延ロード）ため、誤った数字を出さないよう数字なしの行動リンクにしている。
+    const crossLinkLabel = useMemo(() => {
+      const term = (activeSearchTerm || "").trim();
+      if (!term) return "";
+      const shortTerm = term.length > 12 ? `${term.slice(0, 12)}…` : term;
+      const other =
+        activeTab === "insects"
+          ? isEnglish
+            ? "plants"
+            : "植物"
+          : isEnglish
+            ? "insects"
+            : "昆虫";
+      return isEnglish
+        ? `Search ${other} for "${shortTerm}"`
+        : `${other}でも「${shortTerm}」を探す`;
+    }, [activeSearchTerm, activeTab, isEnglish]);
     // SEO for list pages (トップ/昆虫/植物)
     const counts = useMemo(
       () => ({
@@ -1868,22 +1887,16 @@ const InsectsHostPlantExplorer = memo(
               </button>
             </div>
 
-            {/* 逆引き動線: 検索語があるとき、同じ語で反対のタブを探すリンクを1つだけ出す */}
+            {/* 逆引き動線: 検索語があるとき、反対カテゴリの概算一致件数つきリンクを1本だけ出す。
+                説明文（「○○を表示中」）は冗長なので撤去し、行動リンクに集約。 */}
             {activeSearchTerm.trim() && (
-              <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-line bg-surface-raised px-4 py-2 text-xs">
-                <span className="text-ink-muted">
-                  {isEnglish
-                    ? `Showing ${activeTab === "insects" ? "insects" : "plants"} for "${activeSearchTerm.trim()}".`
-                    : `「${activeSearchTerm.trim()}」で${activeTab === "insects" ? "昆虫" : "植物"}を表示中。`}
-                </span>
+              <div className="flex justify-center border-b border-line bg-surface-raised px-4 py-1.5 text-xs">
                 <button
                   type="button"
                   onClick={crossSearchOtherTab}
-                  className="inline-flex items-center gap-1 font-semibold text-brand-600 underline decoration-brand-300 underline-offset-2 transition-colors hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200"
+                  className="inline-flex items-center gap-1 font-medium text-brand-600 underline decoration-brand-300 underline-offset-2 transition-colors hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200"
                 >
-                  {isEnglish
-                    ? `See ${activeTab === "insects" ? "plants" : "insects"} instead`
-                    : `${activeTab === "insects" ? "植物" : "昆虫"}でも探す`}
+                  {crossLinkLabel}
                   <span aria-hidden="true">→</span>
                 </button>
               </div>

@@ -25,9 +25,9 @@ const ExplorerHero = ({
 }) => (
   <div
     id="hero-section"
-    className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-900/70 to-slate-900 shadow-xl sm:rounded-3xl dark:from-slate-950 dark:via-emerald-950/70 dark:to-slate-950"
+    className="relative w-full rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-900/70 to-slate-900 shadow-xl sm:rounded-3xl dark:from-slate-950 dark:via-emerald-950/70 dark:to-slate-950"
   >
-    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.22),transparent_55%)]" />
+    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.22),transparent_55%)] sm:rounded-3xl" />
 
     <div className="relative z-10 flex flex-col gap-3 p-4 sm:gap-3.5 sm:p-5 md:p-6">
       {showHeaderControls && !isStickyHeaderVisible && (
@@ -61,15 +61,13 @@ const ExplorerHero = ({
         </div>
       )}
 
-      <div className="flex max-w-full flex-wrap gap-2 sm:max-w-5xl sm:gap-2.5">
-        {heroStats.map((item, index) => (
+      {/* モバイルは横スクロール1行で全カテゴリ表示、sm以上は従来どおり折り返し（ListToolbar と同じ定石）。
+          -mx-4/px-4 でヒーロー左右端までスクロール領域を広げる（外枠は overflow-hidden で安全にクリップ）。 */}
+      <div className="-mx-4 flex max-w-full flex-nowrap items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:max-w-5xl sm:flex-wrap sm:gap-2.5 sm:overflow-visible sm:px-0 sm:pb-0">
+        {heroStats.map((item) => (
           <div
             key={item.label}
-            className={`${
-              index === 0 || index === 2 || index === heroStats.length - 1
-                ? "inline-flex"
-                : "hidden sm:inline-flex"
-            } rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:px-3.5 sm:py-1.5`}
+            className="inline-flex shrink-0 rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:px-3.5 sm:py-1.5"
           >
             <span className="whitespace-nowrap text-[11px] font-medium text-white/90 sm:text-sm">
               {item.label} {item.value}
