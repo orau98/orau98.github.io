@@ -38,6 +38,12 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline --no-audit --no-fund
 
+      - name: Validate normalized data
+        run: npm run validate-normalized
+
+      - name: Sync runtime CSVs into public/
+        run: npm run sync:public-insects
+
       - name: Refresh plant image filename index
         run: node scripts/update_plant_image_filenames.mjs
 
