@@ -288,25 +288,6 @@ function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {
   return true;
 }
 
-function addStaticDirectoryToMain(sitemaps, baseUrl, absDir, routePrefix, options = {}) {
-  if (!fs.existsSync(absDir)) return 0;
-
-  const files = fs
-    .readdirSync(absDir)
-    .filter((name) => name.endsWith('.html'))
-    .filter((name) => options.includeIndex !== false || name !== 'index.html')
-    .sort((a, b) => a.localeCompare(b, 'en'));
-
-  let count = 0;
-  files.forEach((file) => {
-    const filePath = path.join(absDir, file);
-    const routePath = `${routePrefix}${encodeFilename(file)}`;
-    const added = addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options);
-    if (added) count++;
-  });
-  return count;
-}
-
 const EN_META_PAGE_SECTIONS = META_PAGE_SECTIONS.map((section) => ({
   ...section,
   key: `en-${section.key}`,

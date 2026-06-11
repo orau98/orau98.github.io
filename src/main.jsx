@@ -29,57 +29,6 @@ if (import.meta && import.meta.env && import.meta.env.PROD && typeof window !== 
   }
 }
 
-// Bot detection and anti-scraping measures
-(function() {
-  // Detect headless browsers and automation tools
-  const suspiciousFeatures = [
-    window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect,
-    window.phantom,
-    window._phantom,
-    window.__nightmare,
-    window.domAutomation,
-    window.callPhantom,
-    navigator.userAgent.includes('PhantomJS'),
-    navigator.userAgent.includes('HeadlessChrome'),
-    navigator.userAgent.includes('bot'),
-    navigator.userAgent.includes('crawler'),
-    navigator.userAgent.includes('spider'),
-    navigator.webdriver === true
-  ];
-
-  if (suspiciousFeatures.some(feature => feature)) {
-    logger.warn('Bot detection triggered, but allowing access for debugging');
-    // TEMPORARILY DISABLED: document.body.innerHTML = '<div style="text-align:center;padding:50px;">Access Restricted</div>';
-    // TEMPORARILY DISABLED: throw new Error('Automated access detected');
-  }
-
-  // Rate limiting check
-  const accessKey = 'page_access_count';
-  const timeKey = 'page_access_time';
-  const maxRequests = 100;
-  const timeWindow = 3600000; // 1 hour
-  
-  const currentTime = Date.now();
-  try {
-    const lastAccess = localStorage.getItem(timeKey);
-    const accessCount = parseInt(localStorage.getItem(accessKey) || '0');
-    
-    if (lastAccess && (currentTime - parseInt(lastAccess)) < timeWindow) {
-      if (accessCount > maxRequests) {
-        logger.warn('Rate limit would be triggered, but allowing access for debugging');
-        // TEMPORARILY DISABLED: document.body.innerHTML = '<div style="text-align:center;padding:50px;">Rate limit exceeded</div>';
-        // TEMPORARILY DISABLED: throw new Error('Rate limit exceeded');
-      }
-      localStorage.setItem(accessKey, (accessCount + 1).toString());
-    } else {
-      localStorage.setItem(accessKey, '1');
-      localStorage.setItem(timeKey, currentTime.toString());
-    }
-  } catch (error) {
-    logger.debug('LocalStorage unavailable for rate limiter:', error);
-  }
-})();
-
 // Global error handler to suppress harmless browser extension errors
 const isExtensionLike = (text) => {
   const value = String(text || '');

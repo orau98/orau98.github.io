@@ -50,7 +50,6 @@ const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.102
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
 const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
-const FULL_DATASET_PATH = path.join(__dirname, '../public/assets/data-lite/full-dataset.json');
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -1128,11 +1127,6 @@ function resolveInsectImageUrl(insect) {
   return '';
 }
 
-function normalizedTextLength(value) {
-  if (!value) return 0;
-  return String(value).replace(/\s+/g, '').length;
-}
-
 const ROBOTS_PREVIEW_DIRECTIVES =
   'follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
@@ -1140,7 +1134,7 @@ function buildRobotsContent(shouldIndex) {
   return `${shouldIndex ? 'index' : 'noindex'}, ${ROBOTS_PREVIEW_DIRECTIVES}`;
 }
 
-function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
+function computeInsectRobotsContent({ insect }) {
   const name = String(insect?.japaneseName || insect?.name || '').trim();
   if (!name || name === '不明') {
     return buildRobotsContent(false);
