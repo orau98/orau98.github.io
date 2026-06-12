@@ -13,7 +13,9 @@
       "Bash(npm install:*)",
       "Bash(git status:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__Google_Drive__search_files",
+      "mcp__Google_Drive__download_file_content"
     ]
   }
 }
