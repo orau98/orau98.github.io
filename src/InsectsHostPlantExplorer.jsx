@@ -34,6 +34,48 @@ import {
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
 
+const KNOWN_INSECT_TYPES = new Set(['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'aphid']);
+
+const INSECT_TAXON_LABELS = {
+  ja: {
+    familyJapanese: '科で検索',
+    subfamilyJapanese: '亜科で検索',
+    tribeJapanese: '族で検索',
+    genus: '属で検索',
+    family: '科名(学名)で検索',
+    subfamily: '亜科名(学名)で検索',
+    tribe: '族名(学名)で検索',
+  },
+  en: {
+    family: 'Search family',
+    subfamily: 'Search subfamily',
+    tribe: 'Search tribe',
+    genus: 'Search genus',
+    familyJapanese: 'Search family (Japanese)',
+    subfamilyJapanese: 'Search subfamily (Japanese)',
+    tribeJapanese: 'Search tribe (Japanese)',
+  },
+};
+
+const PLANT_TAXON_LABELS = {
+  ja: {
+    family: '科で検索',
+    familyName: '科で検索',
+    familyLatin: '科名(学名)で検索',
+    order: '目で検索',
+    orderLatin: '目名(学名)で検索',
+    genus: '属で検索',
+  },
+  en: {
+    familyLatin: 'Search family',
+    orderLatin: 'Search order',
+    genus: 'Search genus',
+    family: 'Search family (Japanese)',
+    familyName: 'Search family (Japanese)',
+    order: 'Search order (Japanese)',
+  },
+};
+
 const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
   const trimmed = String(html || "").trim();
   if (!trimmed) return "";
@@ -1383,34 +1425,139 @@ const InsectsHostPlantExplorer = memo(
       return Array.from(new Set(base)).slice(0, 4);
     }, [instagramTimelinePosts, instagramPosts, isInstagramPostUrl]);
 
+    // 検索インデックス（データ変更時のみ構築）。キー入力ごとに全件分のオブジェクト生成・
+    // toLowerCase・タイプ判定を繰り返さないようにして、サジェスト計算を軽量化する。
+    const insectSuggestionIndex = useMemo(() => {
+      const groups = [
+        [moths, 'moth'],
+        [butterflies, 'butterfly'],
+        [beetles, 'beetle'],
+        [longhornbeetles, 'longhornbeetle'],
+        [leafbeetles, 'leafbeetle'],
+        [aphids, 'aphid'],
+      ];
+      const species = [];
+      const taxaByKey = new Map();
+      for (const [list, fallbackType] of groups) {
+        if (!Array.isArray(list)) continue;
+        for (const insect of list) {
+          if (!insect) continue;
+          const insectType = KNOWN_INSECT_TYPES.has(insect.type) ? insect.type : fallbackType;
+          const searchTexts = [insect.name, insect.scientificName];
+          if (insect.alternativeNames) {
+            String(insect.alternativeNames)
+              .split(/[、,，]/)
+              .forEach((name) => {
+                const trimmed = name.trim();
+                if (trimmed) searchTexts.push(trimmed);
+              });
+          }
+          species.push({
+            insect,
+            insectType,
+            searchTexts: searchTexts.filter(Boolean).map((value) => String(value).toLowerCase()),
+          });
+          const classification = insect.classification || {};
+          const taxonEntries = [
+            ['familyJapanese', classification.familyJapanese],
+            ['subfamilyJapanese', classification.subfamilyJapanese],
+            ['tribeJapanese', classification.tribeJapanese],
+            ['genus', classification.genus],
+            ['family', classification.family],
+            ['subfamily', classification.subfamily],
+            ['tribe', classification.tribe],
+          ];
+          for (const [field, value] of taxonEntries) {
+            if (!value) continue;
+            const key = `${insectType}:${value}`;
+            if (!taxaByKey.has(key)) {
+              taxaByKey.set(key, {
+                key,
+                value,
+                valueLower: String(value).toLowerCase(),
+                type: insectType,
+                field,
+              });
+            }
+          }
+        }
+      }
+      return { species, taxa: Array.from(taxaByKey.values()) };
+    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
+
+    const plantSuggestionIndex = useMemo(() => {
+      const plantNameSet = new Set(Object.keys(hostPlants));
+      Object.keys(flowerVisitPlants || {}).forEach((name) => {
+        if (name) plantNameSet.add(name);
+      });
+      Object.entries(plantDetails || {}).forEach(([name, detail]) => {
+        if (name && detail?.profile) plantNameSet.add(name);
+      });
+      const species = [];
+      const taxaByKey = new Map();
+      for (const plant of plantNameSet) {
+        const detail = plantDetails?.[plant] || {};
+        const aliasesRaw = detail.aliases || detail.aliasNames;
+        const aliases = Array.isArray(aliasesRaw)
+          ? aliasesRaw
+          : aliasesRaw instanceof Set
+            ? Array.from(aliasesRaw)
+            : [];
+        species.push({
+          plant,
+          detail,
+          searchTexts: [plant, detail.scientificName, ...aliases]
+            .filter(Boolean)
+            .map((value) => String(value).toLowerCase()),
+        });
+        const taxonEntries = [
+          ['family', detail.family],
+          ['familyName', detail.familyName],
+          ['familyLatin', detail.familyLatin],
+          ['order', detail.order],
+          ['orderLatin', detail.orderLatin],
+          ['genus', detail.genus],
+        ];
+        for (const [field, value] of taxonEntries) {
+          if (!value) continue;
+          const key = `plant:${value}`;
+          if (!taxaByKey.has(key)) {
+            taxaByKey.set(key, {
+              key,
+              value,
+              valueLower: String(value).toLowerCase(),
+              field,
+            });
+          }
+        }
+      }
+      return { species, taxa: Array.from(taxaByKey.values()) };
+    }, [hostPlants, flowerVisitPlants, plantDetails]);
+
+    const plantImageFilesByBase = useMemo(() => {
+      const map = new Map();
+      if (Array.isArray(plantImageFilenames)) {
+        plantImageFilenames.forEach((filename) => {
+          const base = splitFilenameBase(filename);
+          if (!map.has(base)) {
+            map.set(base, []);
+          }
+          map.get(base).push(filename);
+        });
+      }
+      return map;
+    }, [plantImageFilenames]);
+
     const suggestions = useMemo(() => {
       if (!activeSearchTerm || activeSearchTerm.trim() === "") return [];
       const term = activeSearchTerm.toLowerCase();
       const katakanaTerm = hiraganaToKatakana(activeSearchTerm).toLowerCase();
-      const suggestionsByKey = new Map();
-      let sequence = 0;
 
       // ベースURL計算
       const baseUrl = import.meta.env.BASE_URL || '/';
       const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
-      const plantImageIndex = Array.isArray(plantImageFilenames)
-        ? plantImageFilenames
-        : [];
-      const baseToPlantFiles = new Map();
-      if (plantImageIndex.length > 0) {
-        plantImageIndex.forEach((filename) => {
-          const base = splitFilenameBase(filename);
-          if (!baseToPlantFiles.has(base)) {
-            baseToPlantFiles.set(base, []);
-          }
-          baseToPlantFiles.get(base).push(filename);
-        });
-      }
-
-      const getMatchScore = (value) => {
-        if (!value) return 0;
-        const lower = String(value).toLowerCase();
+      const getMatchScoreLower = (lower) => {
         if (!lower) return 0;
         if (lower === term || lower === katakanaTerm) return 500;
         if (lower.startsWith(term) || lower.startsWith(katakanaTerm)) return 350;
@@ -1418,38 +1565,16 @@ const InsectsHostPlantExplorer = memo(
         return 0;
       };
 
-      const registerSuggestion = (item, dedupeKey = item?.name, score = 0) => {
-        const key = String(dedupeKey || "").trim();
-        if (!key || score <= 0) return false;
-        const existing = suggestionsByKey.get(key);
-        if (!existing || score > existing.score) {
-          suggestionsByKey.set(key, {
-            item,
-            score,
-            order: sequence++,
-          });
+      const scoreSearchTexts = (searchTexts) => {
+        let best = 0;
+        for (const lower of searchTexts) {
+          const score = getMatchScoreLower(lower);
+          if (score > best) {
+            best = score;
+            if (best >= 500) break;
+          }
         }
-        return true;
-      };
-
-      // 昆虫タイプを判定するヘルパー
-      const getInsectType = (insect) => {
-        if (
-          insect?.type === 'moth' ||
-          insect?.type === 'butterfly' ||
-          insect?.type === 'beetle' ||
-          insect?.type === 'longhornbeetle' ||
-          insect?.type === 'leafbeetle' ||
-          insect?.type === 'aphid'
-        ) {
-          return insect.type;
-        }
-        if (butterflies.includes(insect)) return 'butterfly';
-        if (beetles.includes(insect)) return 'beetle';
-        if (longhornbeetles.includes(insect)) return 'longhornbeetle';
-        if (leafbeetles.includes(insect)) return 'leafbeetle';
-        if (aphids.includes(insect)) return 'aphid';
-        return 'moth';
+        return best;
       };
 
       // 昆虫画像URLを生成するヘルパー
@@ -1464,246 +1589,175 @@ const InsectsHostPlantExplorer = memo(
         });
       };
 
-      if (activeTab === "insects") {
-        const allInsects = [
-          ...moths,
-          ...butterflies,
-          ...beetles,
-          ...longhornbeetles,
-          ...leafbeetles,
-          ...aphids,
-        ];
-        for (const insect of allInsects) {
-          const insectType = getInsectType(insect);
-          const insectPrimaryName = isEnglish
-            ? getPrimaryEnglishName({
-                scientificName: insect.scientificName,
-                japaneseName: insect.name,
-                fallback: insect.name,
-              })
-            : insect.name;
-          const insectSecondaryName = isEnglish
-            ? buildJapaneseReferenceLabel(insect.name)
-            : insect.scientificName;
-          const insectSuggestion = {
-            name: insectPrimaryName,
-            value:
-              isEnglish && insect.scientificName
-                ? insect.scientificName
-                : insect.name,
-            type: insectType,
-            subText: insectSecondaryName,
-            nameIsScientific: isEnglish && Boolean(insect.scientificName),
-            subTextIsScientific: !isEnglish && Boolean(insect.scientificName),
-            image: getInsectImageUrl(insect),
-            detailPath: buildInsectPath(insect, locale),
-          };
-          const alternativeNames = String(insect.alternativeNames || '')
-            .split(/[、,，]/)
-            .map((name) => name.trim())
-            .filter(Boolean);
-          const insectScore = Math.max(
-            getMatchScore(insect.name),
-            getMatchScore(insect.scientificName),
-            ...alternativeNames.map((name) => getMatchScore(name)),
-          );
-
-          if (insectScore > 0) {
-            registerSuggestion(insectSuggestion, `insect:${insect.name}`, insectScore);
+      // 植物画像URLを生成するヘルパー
+      const getPlantImageUrl = (plantName, detail = {}) => {
+        if (!plantName || plantImageFilesByBase.size === 0) return null;
+        const aliasesRaw = detail.aliases || detail.aliasNames;
+        const aliases = Array.isArray(aliasesRaw)
+          ? aliasesRaw
+          : aliasesRaw instanceof Set
+            ? Array.from(aliasesRaw)
+            : [];
+        const baseName = plantName.replace(/[（(].*[）)]/g, '').trim();
+        const scientificBase = createSafeScientificPlantFilename(detail.scientificName || '');
+        const candidates = new Set([
+          plantName,
+          baseName,
+          createSafePlantFilename(plantName),
+          createSafePlantFilename(baseName),
+          scientificBase,
+          ...aliases.flatMap((name) => {
+            const trimmed = (name || '').trim();
+            const base = trimmed.split(" ")[0];
+            const cleaned = createSafePlantFilename(trimmed);
+            const cleanedBase = createSafePlantFilename(base);
+            return [trimmed, base, cleaned, cleanedBase];
+          }),
+        ].filter(Boolean));
+        let matches = [];
+        for (const candidate of candidates) {
+          if (plantImageFilesByBase.has(candidate)) {
+            matches.push(...plantImageFilesByBase.get(candidate));
           }
+        }
+        if (matches.length === 0) return null;
+        matches.sort((a, b) => {
+          const aHasLeafSurface = a.includes("葉表");
+          const bHasLeafSurface = b.includes("葉表");
+          if (aHasLeafSurface && !bHasLeafSurface) return -1;
+          if (!aHasLeafSurface && bHasLeafSurface) return 1;
+          const getPriority = (filename) => {
+            if (filename.includes("葉表")) return 1;
+            if (filename.includes("葉")) return 2;
+            if (filename.includes("花")) return 3;
+            if (filename.includes("実")) return 4;
+            if (filename.includes("樹皮")) return 5;
+            return 6;
+          };
+          return getPriority(a) - getPriority(b);
+        });
+        const filename = matches[0];
+        return `${normalizedBase}images/resized/plants/${encodeURIComponent(filename)}.1024.jpg`;
+      };
 
-          const classificationSuggestions = isEnglish
-            ? [
-                { value: insect.classification?.family, label: 'Search family' },
-                { value: insect.classification?.subfamily, label: 'Search subfamily' },
-                { value: insect.classification?.tribe, label: 'Search tribe' },
-                { value: insect.classification?.genus, label: 'Search genus', nameIsScientific: true },
-                { value: insect.classification?.familyJapanese, label: 'Search family (Japanese)' },
-                { value: insect.classification?.subfamilyJapanese, label: 'Search subfamily (Japanese)' },
-                { value: insect.classification?.tribeJapanese, label: 'Search tribe (Japanese)' },
-              ]
-            : [
-                { value: insect.classification?.familyJapanese, label: '科で検索' },
-                { value: insect.classification?.subfamilyJapanese, label: '亜科で検索' },
-                { value: insect.classification?.tribeJapanese, label: '族で検索' },
-                { value: insect.classification?.genus, label: '属で検索', nameIsScientific: true },
-                { value: insect.classification?.family, label: '科名(学名)で検索' },
-                { value: insect.classification?.subfamily, label: '亜科名(学名)で検索' },
-                { value: insect.classification?.tribe, label: '族名(学名)で検索' },
-              ];
-          for (const candidate of classificationSuggestions) {
-            const candidateScore = getMatchScore(candidate.value);
-            if (candidateScore <= 0) continue;
-            registerSuggestion(
-              {
-                name: candidate.value,
-                value: candidate.value,
-                type: insectType,
-                subText: candidate.label,
-                nameIsScientific: Boolean(candidate.nameIsScientific),
-              },
-              `${insectType}:${candidate.value}`,
-              candidateScore,
-            );
+      const buildInsectSuggestion = ({ insect, insectType }) => {
+        const insectPrimaryName = isEnglish
+          ? getPrimaryEnglishName({
+              scientificName: insect.scientificName,
+              japaneseName: insect.name,
+              fallback: insect.name,
+            })
+          : insect.name;
+        const insectSecondaryName = isEnglish
+          ? buildJapaneseReferenceLabel(insect.name)
+          : insect.scientificName;
+        return {
+          name: insectPrimaryName,
+          value:
+            isEnglish && insect.scientificName
+              ? insect.scientificName
+              : insect.name,
+          type: insectType,
+          subText: insectSecondaryName,
+          nameIsScientific: isEnglish && Boolean(insect.scientificName),
+          subTextIsScientific: !isEnglish && Boolean(insect.scientificName),
+          image: getInsectImageUrl(insect),
+          detailPath: buildInsectPath(insect, locale),
+        };
+      };
+
+      const insectTaxonLabels = isEnglish ? INSECT_TAXON_LABELS.en : INSECT_TAXON_LABELS.ja;
+      const buildInsectTaxonSuggestion = (taxon) => ({
+        name: taxon.value,
+        value: taxon.value,
+        type: taxon.type,
+        subText: insectTaxonLabels[taxon.field] || '',
+        nameIsScientific: taxon.field === 'genus',
+      });
+
+      const buildPlantSuggestion = ({ plant, detail }) => {
+        const plantPrimaryName = isEnglish
+          ? getPrimaryEnglishName({
+              scientificName: detail.scientificName,
+              japaneseName: plant,
+              fallback: plant,
+            })
+          : plant;
+        return {
+          name: plantPrimaryName,
+          value:
+            isEnglish && detail.scientificName
+              ? detail.scientificName
+              : plant,
+          type: 'plant',
+          subText: isEnglish
+            ? buildJapaneseReferenceLabel(plant)
+            : detail.scientificName || detail.family || detail.familyName,
+          nameIsScientific: isEnglish && Boolean(detail.scientificName),
+          subTextIsScientific: !isEnglish && Boolean(detail.scientificName),
+          image: getPlantImageUrl(plant, detail),
+          detailPath: buildPlantPath(plant, locale),
+        };
+      };
+
+      const plantTaxonLabels = isEnglish ? PLANT_TAXON_LABELS.en : PLANT_TAXON_LABELS.ja;
+      const buildPlantTaxonSuggestion = (taxon) => ({
+        name: taxon.value,
+        value: taxon.value,
+        type: 'plant',
+        subText: plantTaxonLabels[taxon.field] || '',
+        nameIsScientific: taxon.field === 'genus',
+      });
+
+      // スコア計算だけを全件に行い、表示オブジェクトの構築は上位10件に限定する
+      const matchesByKey = new Map();
+      let sequence = 0;
+      const register = (key, score, build) => {
+        if (!key || score <= 0) return;
+        const existing = matchesByKey.get(key);
+        if (!existing || score > existing.score) {
+          matchesByKey.set(key, { score, order: sequence++, build });
+        }
+      };
+
+      if (activeTab === "insects") {
+        for (const entry of insectSuggestionIndex.species) {
+          const score = scoreSearchTexts(entry.searchTexts);
+          if (score > 0) {
+            register(`insect:${entry.insect.name}`, score, () => buildInsectSuggestion(entry));
+          }
+        }
+        for (const taxon of insectSuggestionIndex.taxa) {
+          const score = getMatchScoreLower(taxon.valueLower);
+          if (score > 0) {
+            register(taxon.key, score, () => buildInsectTaxonSuggestion(taxon));
           }
         }
       } else {
-        // plants
-        const plantNameSet = new Set(Object.keys(hostPlants));
-        Object.keys(flowerVisitPlants || {}).forEach((name) => {
-          if (name) plantNameSet.add(name);
-        });
-        Object.entries(plantDetails || {}).forEach(([name, detail]) => {
-          if (name && detail?.profile) plantNameSet.add(name);
-        });
-        const plantNames = Array.from(plantNameSet);
-
-        // 植物画像URLを生成するヘルパー
-        const getPlantImageUrl = (plantName) => {
-          if (!plantName || baseToPlantFiles.size === 0) return null;
-          const detail = plantDetails?.[plantName] || {};
-          const aliasesRaw = detail.aliases || detail.aliasNames;
-          const aliases = Array.isArray(aliasesRaw)
-            ? aliasesRaw
-            : aliasesRaw instanceof Set
-              ? Array.from(aliasesRaw)
-              : [];
-          const baseName = plantName.replace(/[（(].*[）)]/g, '').trim();
-          const scientificBase = createSafeScientificPlantFilename(detail.scientificName || '');
-          const candidates = new Set([
-            plantName,
-            baseName,
-            createSafePlantFilename(plantName),
-            createSafePlantFilename(baseName),
-            scientificBase,
-            ...aliases.flatMap((name) => {
-              const trimmed = (name || '').trim();
-              const base = trimmed.split(" ")[0];
-              const cleaned = createSafePlantFilename(trimmed);
-              const cleanedBase = createSafePlantFilename(base);
-              return [trimmed, base, cleaned, cleanedBase];
-            }),
-          ].filter(Boolean));
-          let matches = [];
-          for (const candidate of candidates) {
-            if (baseToPlantFiles.has(candidate)) {
-              matches.push(...baseToPlantFiles.get(candidate));
-            }
+        for (const entry of plantSuggestionIndex.species) {
+          const score = scoreSearchTexts(entry.searchTexts);
+          if (score > 0) {
+            register(`plant:${entry.plant}`, score, () => buildPlantSuggestion(entry));
           }
-          if (matches.length === 0) return null;
-          matches.sort((a, b) => {
-            const aHasLeafSurface = a.includes("葉表");
-            const bHasLeafSurface = b.includes("葉表");
-            if (aHasLeafSurface && !bHasLeafSurface) return -1;
-            if (!aHasLeafSurface && bHasLeafSurface) return 1;
-            const getPriority = (filename) => {
-              if (filename.includes("葉表")) return 1;
-              if (filename.includes("葉")) return 2;
-              if (filename.includes("花")) return 3;
-              if (filename.includes("実")) return 4;
-              if (filename.includes("樹皮")) return 5;
-              return 6;
-            };
-            return getPriority(a) - getPriority(b);
-          });
-          const filename = matches[0];
-          return `${normalizedBase}images/resized/plants/${encodeURIComponent(filename)}.1024.jpg`;
-        };
-
-        for (const plant of plantNames) {
-          const detail = plantDetails?.[plant] || {};
-          const aliasesRaw = detail.aliases || detail.aliasNames;
-          const aliases = Array.isArray(aliasesRaw)
-            ? aliasesRaw
-            : aliasesRaw instanceof Set
-              ? Array.from(aliasesRaw)
-              : [];
-          const plantPrimaryName = isEnglish
-            ? getPrimaryEnglishName({
-                scientificName: detail.scientificName,
-                japaneseName: plant,
-                fallback: plant,
-              })
-            : plant;
-          const canonicalSuggestion = {
-            name: plantPrimaryName,
-            value:
-              isEnglish && detail.scientificName
-                ? detail.scientificName
-                : plant,
-            type: 'plant',
-            subText: isEnglish
-              ? buildJapaneseReferenceLabel(plant)
-              : detail.scientificName || detail.family || detail.familyName,
-            nameIsScientific: isEnglish && Boolean(detail.scientificName),
-            subTextIsScientific: !isEnglish && Boolean(detail.scientificName),
-            image: getPlantImageUrl(plant),
-            detailPath: buildPlantPath(plant, locale),
-          };
-          const plantScore = Math.max(
-            getMatchScore(plant),
-            getMatchScore(detail.scientificName),
-            ...aliases.map((alias) => getMatchScore(alias)),
-          );
-
-          if (plantScore > 0) {
-            registerSuggestion(canonicalSuggestion, `plant:${plant}`, plantScore);
-          }
-
-          const candidates = (
-            isEnglish
-              ? [
-                  { value: detail.familyLatin, label: 'Search family' },
-                  { value: detail.orderLatin, label: 'Search order' },
-                  { value: detail.genus, label: 'Search genus', nameIsScientific: true },
-                  { value: detail.family, label: 'Search family (Japanese)' },
-                  { value: detail.familyName, label: 'Search family (Japanese)' },
-                  { value: detail.order, label: 'Search order (Japanese)' },
-                ]
-              : [
-                  { value: detail.family, label: '科で検索' },
-                  { value: detail.familyName, label: '科で検索' },
-                  { value: detail.familyLatin, label: '科名(学名)で検索' },
-                  { value: detail.order, label: '目で検索' },
-                  { value: detail.orderLatin, label: '目名(学名)で検索' },
-                  { value: detail.genus, label: '属で検索', nameIsScientific: true },
-                ]
-          ).filter(c => c.value);
-          for (const candidate of candidates) {
-            const candidateScore = getMatchScore(candidate.value);
-            if (candidateScore > 0) {
-              registerSuggestion({
-                name: candidate.value,
-                value: candidate.value,
-                type: 'plant',
-                subText: candidate.label,
-                nameIsScientific: Boolean(candidate.nameIsScientific),
-              }, `plant:${candidate.value}`, candidateScore);
-            }
+        }
+        for (const taxon of plantSuggestionIndex.taxa) {
+          const score = getMatchScoreLower(taxon.valueLower);
+          if (score > 0) {
+            register(taxon.key, score, () => buildPlantTaxonSuggestion(taxon));
           }
         }
       }
-      return Array.from(suggestionsByKey.values())
-        .sort((a, b) =>
-          b.score - a.score ||
-          a.order - b.order ||
-          String(a.item?.name || '').localeCompare(String(b.item?.name || ''), isEnglish ? 'en' : 'ja')
-        )
+
+      return Array.from(matchesByKey.values())
+        .sort((a, b) => b.score - a.score || a.order - b.order)
         .slice(0, 10)
-        .map((entry) => entry.item);
+        .map((entry) => entry.build());
     }, [
       activeSearchTerm,
       activeTab,
-      moths,
-      butterflies,
-      beetles,
-      longhornbeetles,
-      leafbeetles,
-      aphids,
-      hostPlants,
-      flowerVisitPlants,
-      plantDetails,
-      plantImageFilenames,
+      insectSuggestionIndex,
+      plantSuggestionIndex,
+      plantImageFilesByBase,
       isEnglish,
       locale,
     ]);

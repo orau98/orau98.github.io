@@ -95,17 +95,20 @@ export default function ListFilterPanel({
         </div>
       )}
 
+      {/* grid-template-rows でコンテンツの実高さまで開閉する（max-h固定だと項目が多いとき下部が隠れる） */}
       <div
         id={panelId}
         aria-hidden={!panelIsOpen}
         inert={!panelIsOpen ? true : undefined}
-        className={`transition-all duration-300 ease-in-out ${
-          panelIsOpen ? 'max-h-[36rem] overflow-visible opacity-100' : 'max-h-0 overflow-hidden opacity-0'
+        className={`grid transition-all duration-300 ease-in-out ${
+          panelIsOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
         }`}
       >
-        <fieldset disabled={!panelIsOpen} className={controlsClassName}>
-          {children}
-        </fieldset>
+        <div className={`min-h-0 ${panelIsOpen ? 'overflow-visible' : 'overflow-hidden'}`}>
+          <fieldset disabled={!panelIsOpen} className={controlsClassName}>
+            {children}
+          </fieldset>
+        </div>
       </div>
 
     </div>

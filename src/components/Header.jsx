@@ -96,7 +96,18 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
   const headerRef = useRef(null);
   const homePath = localizePath('/', locale);
   const quizPath = localizePath('/quiz', locale);
-  // ヘッダーにナビ項目は置かない（昆虫/植物はタブ＋パンくず、その他はフッターで回遊）。
+  const plantsPath = localizePath('/plant', locale);
+
+  // 主要セクション（昆虫/植物/クイズ）への導線。詳細ページ直行のユーザーでも迷わないようにする。
+  const navPath = stripLocalePrefix(location.pathname || '/');
+  const navParams = new URLSearchParams(location.search || '');
+  const isPlantsActive = navPath === '/plant' || navPath.startsWith('/plant/') || navParams.get('tab') === 'plants';
+  const isQuizActive = navPath === '/quiz' || navPath.startsWith('/quiz/');
+  const isInsectsActive = !isPlantsActive && !isQuizActive;
+  const primaryNavItems = [
+    { key: 'insects', label: isEnglish ? 'Insects' : '昆虫', path: homePath, isActive: isInsectsActive },
+    { key: 'plants', label: isEnglish ? 'Plants' : '植物', path: plantsPath, isActive: isPlantsActive },
+  ];
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return undefined;
@@ -203,6 +214,26 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
               </div>
             )}
 
+            <nav
+              aria-label={isEnglish ? 'Primary navigation' : '主要ナビゲーション'}
+              className="hidden items-center gap-1.5 sm:flex"
+            >
+              {primaryNavItems.map((item) => (
+                <Link
+                  key={item.key}
+                  to={item.path}
+                  aria-current={item.isActive ? 'page' : undefined}
+                  className={`rounded-2xl border px-3 py-2 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-emerald-300/50 ${
+                    item.isActive
+                      ? 'border-emerald-300/40 bg-emerald-400/20 text-emerald-50'
+                      : 'border-white/10 bg-white/5 text-slate-200 hover:bg-white/15 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
             <LocaleSwitcher locale={locale} compact />
 
             <Link
@@ -232,6 +263,38 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             </button>
           </div>
         </div>
+
+        {/* モバイル用ナビ（デスクトップのナビ＋クイズリンクはsm以上で表示されるため、ここで補完する） */}
+        <nav
+          aria-label={isEnglish ? 'Primary navigation' : '主要ナビゲーション'}
+          className="flex items-center gap-1.5 pb-3 sm:hidden"
+        >
+          {primaryNavItems.map((item) => (
+            <Link
+              key={item.key}
+              to={item.path}
+              aria-current={item.isActive ? 'page' : undefined}
+              className={`inline-flex min-h-[2.5rem] flex-1 items-center justify-center rounded-xl border px-3 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-emerald-300/50 ${
+                item.isActive
+                  ? 'border-emerald-300/50 bg-emerald-400/25 text-emerald-50'
+                  : 'border-white/10 bg-white/10 text-slate-200'
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            to={quizPath}
+            aria-current={isQuizActive ? 'page' : undefined}
+            className={`inline-flex min-h-[2.5rem] flex-1 items-center justify-center rounded-xl border px-3 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-amber-300/50 ${
+              isQuizActive
+                ? 'border-amber-300/50 bg-amber-400/30 text-amber-50'
+                : 'border-amber-300/30 bg-amber-400/15 text-amber-100'
+            }`}
+          >
+            {isEnglish ? 'Quiz' : '4択図鑑'}
+          </Link>
+        </nav>
       </div>
     </header>
   );

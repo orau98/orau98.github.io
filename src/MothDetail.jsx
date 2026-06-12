@@ -1067,8 +1067,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       {leafbeetleId && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
       {aphidId && moth && <AphidStructuredData aphid={moth} />}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* パンくずリスト */}
-        <div className="hidden md:block">
+        {/* パンくずリスト（モバイルでも階層を辿れるよう常時表示） */}
+        <div>
           <Breadcrumb
             locale={locale}
             items={[

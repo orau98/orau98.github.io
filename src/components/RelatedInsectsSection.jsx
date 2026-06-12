@@ -92,7 +92,8 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                 {showExpandButton && (
                   <button
                     onClick={() => togglePlantExpansion(plant)}
-                    className="flex items-center space-x-1 px-3 py-1 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
+                    aria-expanded={isExpanded}
+                    className="flex min-h-[2.75rem] items-center space-x-1 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
                     <span>{isExpanded ? (isEnglish ? 'Show less' : '少なく表示') : (isEnglish ? 'Show more' : 'もっと見る')}</span>
                     <svg 
@@ -107,18 +108,17 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                 )}
               </div>
             
-            {/* 動的レイアウトコンテナ */}
+            {/* 動的レイアウトコンテナ（横スクロール時は右端フェードで続きがあることを示す） */}
+            <div className="relative">
             <div className={`${
-              layout === 'horizontal' ? 'overflow-x-auto pb-2' :
-              layout === 'horizontal-limited' ? 'overflow-x-auto pb-2' :
-              'overflow-hidden'
+              layout === 'horizontal' || layout === 'horizontal-limited'
+                ? 'overflow-x-auto pb-2'
+                : 'overflow-hidden'
             }`}>
               <div className={`transition-all duration-300 ${
-                layout === 'horizontal' ? 'flex space-x-4 min-w-max' :
-                layout === 'horizontal-limited' ? 'flex space-x-4 min-w-max' :
-                layout === 'grid-2rows' ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6' :
-                layout === 'grid-3rows' ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-6' :
-                'flex space-x-4 min-w-max'
+                layout.startsWith('grid')
+                  ? 'grid grid-cols-2 md:grid-cols-3 gap-6'
+                  : 'flex space-x-4 min-w-max'
               }`}>
                 {relatedMothNames.slice(0, displayCount).map(relatedMothName => {
                   let relatedMoth = allInsects.find(m => m.name === relatedMothName);
@@ -210,6 +210,13 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                   );
                 })}
               </div>
+            </div>
+            {(layout === 'horizontal' || layout === 'horizontal-limited') && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white/90 to-transparent dark:from-slate-800/90"
+              />
+            )}
             </div>
           </div>
           );

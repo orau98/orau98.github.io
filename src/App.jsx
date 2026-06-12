@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import logger from './utils/logger';
 import lazyWithRetry from './utils/lazyWithRetry';
@@ -6318,7 +6318,7 @@ function App() {
       aphids.length >
     0;
 
-  const clearScheduledInsectDataLoad = () => {
+  const clearScheduledInsectDataLoad = useCallback(() => {
     if (insectDataLoadTimerRef.current && typeof window !== 'undefined') {
       window.clearTimeout(insectDataLoadTimerRef.current);
       insectDataLoadTimerRef.current = null;
@@ -6326,25 +6326,25 @@ function App() {
     insectDataInteractionCleanupRef.current && insectDataInteractionCleanupRef.current();
     insectDataInteractionCleanupRef.current = null;
     insectDataLoadScheduledRef.current = false;
-  };
+  }, []);
 
-  const runInsectDataLoad = () => {
+  const runInsectDataLoad = useCallback(() => {
     clearScheduledInsectDataLoad();
     try {
       ensureTypesLoaderRef.current && ensureTypesLoaderRef.current();
     } catch {}
-  };
+  }, [clearScheduledInsectDataLoad]);
 
-  const currentRouteNeedsInsectsImmediately = () => {
+  const currentRouteNeedsInsectsImmediately = useCallback(() => {
     try {
       const params = new URLSearchParams(location.search || '');
       return !isExplorerPage || hasImmediateInsectDataParams(params);
     } catch {
       return true;
     }
-  };
+  }, [isExplorerPage, location.search]);
 
-  const triggerInsectsDataLoad = ({ immediate = false } = {}) => {
+  const triggerInsectsDataLoad = useCallback(({ immediate = false } = {}) => {
     if (hasLoadedInsectPartitions) return;
     if (immediate || currentRouteNeedsInsectsImmediately()) {
       runInsectDataLoad();
@@ -6364,11 +6364,11 @@ function App() {
       });
     };
     insectDataLoadTimerRef.current = window.setTimeout(runInsectDataLoad, 1800);
-  };
+  }, [hasLoadedInsectPartitions, currentRouteNeedsInsectsImmediately, runInsectDataLoad]);
 
-  const triggerPlantsDataLoad = () => {
+  const triggerPlantsDataLoad = useCallback(() => {
     triggerInsectsDataLoad();
-  };
+  }, [triggerInsectsDataLoad]);
 
   const renderWithChunkBoundary = (element) => (
     <ChunkErrorBoundary>
@@ -6378,7 +6378,8 @@ function App() {
     </ChunkErrorBoundary>
   );
 
-  const explorerBaseProps = {
+  // props/route定義はメモ化して、無関係なstate更新によるルートツリー全体の再レンダリングを防ぐ
+  const explorerBaseProps = useMemo(() => ({
     moths,
     butterflies,
     beetles,
@@ -6394,9 +6395,25 @@ function App() {
     locale,
     onNeedInsectsData: triggerInsectsDataLoad,
     onNeedPlantsData: triggerPlantsDataLoad,
-  };
+  }), [
+    moths,
+    butterflies,
+    beetles,
+    longhornbeetles,
+    leafbeetles,
+    aphids,
+    hostPlants,
+    flowerVisitPlants,
+    plantDetails,
+    theme,
+    setTheme,
+    summaryCounts,
+    locale,
+    triggerInsectsDataLoad,
+    triggerPlantsDataLoad,
+  ]);
 
-  const detailBaseProps = {
+  const detailBaseProps = useMemo(() => ({
     moths,
     butterflies,
     beetles,
@@ -6408,9 +6425,21 @@ function App() {
     plantDetails,
     theme,
     locale,
-  };
+  }), [
+    moths,
+    butterflies,
+    beetles,
+    longhornbeetles,
+    leafbeetles,
+    aphids,
+    hostPlants,
+    flowerVisitPlants,
+    plantDetails,
+    theme,
+    locale,
+  ]);
 
-  const routeConfigs = [
+  const routeConfigs = useMemo(() => [
     ...EXPLORER_ROUTE_CONFIGS.map(({ path, initialTab }) => ({
       path,
       element: (
@@ -6444,7 +6473,7 @@ function App() {
       path: '*',
       element: <NotFoundPage locale={locale} />,
     },
-  ];
+  ], [explorerBaseProps, detailBaseProps, locale]);
 
   if (shouldForceDocumentNavigation) {
     return (

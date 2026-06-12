@@ -40,7 +40,7 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
     <Link
       to={route}
       state={makeDetailLinkState(location)}
-      className={`flex-1 flex items-center ${isPrev ? 'justify-start' : 'justify-end'} group p-4 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md`}
+      className={`flex-1 flex items-center ${isPrev ? 'justify-start' : 'justify-end'} group p-4 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900`}
     >
       {isPrev && (
         <div className="mr-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">

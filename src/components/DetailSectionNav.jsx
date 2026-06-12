@@ -34,7 +34,7 @@ export default function DetailSectionNav({ items = [], label = 'Sections' }) {
   return (
     <nav
       aria-label={label}
-      className="hidden md:block sticky top-[calc(var(--app-main-header-height,0px)+8px)] z-30 mb-6 overflow-x-auto rounded-xl border border-slate-200/70 bg-white/85 px-2 py-2 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/80"
+      className="md:sticky md:top-[calc(var(--app-main-header-height,0px)+8px)] z-30 mb-6 overflow-x-auto rounded-xl border border-slate-200/70 bg-white/85 px-2 py-2 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/80"
     >
       <div className="flex min-w-max items-center gap-1">
         {visibleItems.map((item) => (

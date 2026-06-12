@@ -1455,7 +1455,7 @@ const HostPlantList = ({
               })}
             </div>
           ) : (
-            <div className="text-center py-12">
+            <div className="text-center py-12" role="status" aria-live="polite">
               <p className="text-slate-500 dark:text-slate-400 font-medium">
                 {ui.emptyTitle}
               </p>

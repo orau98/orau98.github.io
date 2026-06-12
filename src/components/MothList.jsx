@@ -1418,19 +1418,45 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       setMothImageMap(new Map());
       return;
     }
-    
-    // Use a timeout to avoid blocking main thread if list is huge
-    const timeoutId = setTimeout(() => {
-      const nextMap = new Map();
-      moths.forEach((insect) => {
-        if (!insect || !insect.id) return;
+
+    // 9000件超のループを一括実行するとメインスレッドを長時間塞ぐため、
+    // アイドル時間にチャンク分割して処理する
+    const hasIdleCallback =
+      typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function';
+    const schedule = hasIdleCallback
+      ? (cb) => window.requestIdleCallback(cb, { timeout: 500 })
+      : (cb) => setTimeout(cb, 0);
+    const cancelSchedule = hasIdleCallback
+      ? (id) => window.cancelIdleCallback(id)
+      : (id) => clearTimeout(id);
+
+    const CHUNK_SIZE = 500;
+    let cancelled = false;
+    let scheduledId = null;
+    let index = 0;
+    const nextMap = new Map();
+
+    const processChunk = () => {
+      if (cancelled) return;
+      const end = Math.min(index + CHUNK_SIZE, moths.length);
+      for (; index < end; index++) {
+        const insect = moths[index];
+        if (!insect || !insect.id) continue;
         const best = getBestImageForMoth(insect);
         if (best) nextMap.set(insect.id, best);
-      });
-      setMothImageMap(nextMap);
-    }, 0);
-    
-    return () => clearTimeout(timeoutId);
+      }
+      if (index < moths.length) {
+        scheduledId = schedule(processChunk);
+      } else {
+        setMothImageMap(nextMap);
+      }
+    };
+
+    scheduledId = schedule(processChunk);
+    return () => {
+      cancelled = true;
+      if (scheduledId !== null) cancelSchedule(scheduledId);
+    };
   }, [getBestImageForMoth, isImageIndexReady, moths]);
 
   // 重要種はインデックス未準備でもあらかじめ画像ベース名を埋めておく
@@ -1889,7 +1915,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               })}
             </div>
           ) : (
-            <div className="text-center py-16">
+            <div className="text-center py-16" role="status" aria-live="polite">
               {/* Empty state イラスト */}
               <div className="w-24 h-24 mx-auto mb-6 relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-emerald-100 dark:from-blue-900/30 dark:to-emerald-900/30 rounded-full animate-pulse" />
