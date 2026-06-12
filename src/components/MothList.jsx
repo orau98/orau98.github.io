@@ -32,6 +32,7 @@ import {
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
 import { isEnglishLocale, localizePath } from '../utils/locale';
+import { getScrollBehavior } from '../utils/motion';
 import { makeDetailLinkState } from '../utils/navState';
 import { isPlantHostRecord } from '../utils/hostResource';
 
@@ -1598,7 +1599,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     if (typeof window !== 'undefined') {
       window.requestAnimationFrame(() => {
         const target = listTopRef.current || document.getElementById('explorer-results');
-        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target?.scrollIntoView({ behavior: getScrollBehavior('smooth'), block: 'start' });
       });
     }
   };

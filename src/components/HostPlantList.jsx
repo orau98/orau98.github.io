@@ -15,6 +15,7 @@ import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../se
 import Pagination from "./Pagination";
 import ListFilterPanel from "./ListFilterPanel";
 import { isEnglishLocale } from "../utils/locale";
+import { getScrollBehavior } from "../utils/motion";
 import { makeDetailLinkState } from "../utils/navState";
 import { normalizePlantKey } from "../utils/plantNameUtils";
 import { buildPlantPath } from "../utils/siteTaxonomy";
@@ -1211,7 +1212,7 @@ const HostPlantList = ({
     if (typeof window !== "undefined") {
       window.requestAnimationFrame(() => {
         const target = listTopRef.current || document.getElementById('explorer-results');
-        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target?.scrollIntoView({ behavior: getScrollBehavior('smooth'), block: 'start' });
       });
     }
   };

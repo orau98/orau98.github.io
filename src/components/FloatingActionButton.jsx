@@ -9,6 +9,7 @@ import {
   collectAvailableSectionItems,
   scrollToSection as scrollToSectionHelper,
 } from '../utils/sectionNavigation';
+import { getScrollBehavior } from '../utils/motion';
 
 const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,7 +90,7 @@ const FloatingActionButton = () => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: getScrollBehavior('smooth'),
     });
     setIsOpen(false);
   };

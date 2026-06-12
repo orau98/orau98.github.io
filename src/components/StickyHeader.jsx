@@ -4,6 +4,7 @@ import {
   isEnglishLocale,
 } from '../utils/locale';
 import LocaleSwitcher from './LocaleSwitcher';
+import { getScrollBehavior } from '../utils/motion';
 
 const StickyHeader = ({ 
   activeTab, 
@@ -92,7 +93,7 @@ const StickyHeader = ({
     try {
       const el = scrollTargetId ? document.getElementById(scrollTargetId) : null;
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.scrollIntoView({ behavior: getScrollBehavior('smooth'), block: 'start' });
       }
     } catch { /* ignore */ }
   };
@@ -120,7 +121,7 @@ const StickyHeader = ({
         <div className="mx-auto flex max-w-6xl items-center gap-2 sm:gap-3 lg:gap-4">
             {/* Logo / Top Button */}
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => window.scrollTo({ top: 0, behavior: getScrollBehavior('smooth') })}
               className="flex-shrink-0 rounded-full p-2 text-emerald-600 transition-colors hover:bg-slate-100 dark:text-emerald-400 dark:hover:bg-slate-800"
               aria-label={isEnglish ? 'Back to top' : 'トップへ戻る'}
             >

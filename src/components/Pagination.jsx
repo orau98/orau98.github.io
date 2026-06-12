@@ -5,7 +5,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
   const isEnglish = isEnglishLocale(locale);
   const pageNumbers = [];
   const maxVisiblePages = 5;
-  const maxVisiblePagesMobile = 5; // Increased from 3 to 5 for better mobile navigation
+  // 320px幅では前へ/次へ＋数字ボタンが折り返して窮屈になるため、モバイルは3に抑える
+  // （最初/最後ページ・ページ指定ジャンプは別途用意しているので到達性は維持される）
+  const maxVisiblePagesMobile = 3;
   
   // スマホでは表示ページ数を減らす（リサイズ追従）
   const [isMobile, setIsMobile] = useState(() => {

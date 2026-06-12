@@ -1,3 +1,5 @@
+import { getScrollBehavior } from './motion.js';
+
 const getSectionCandidates = (id) => {
   if (!id || typeof document === 'undefined') return [];
   return [
@@ -49,7 +51,7 @@ export const scrollElementWithOffset = (
   const headerOffset = getSectionHeaderOffset({ extraOffset });
   const elementPosition = element.getBoundingClientRect().top;
   const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-  window.scrollTo({ top: offsetPosition, behavior });
+  window.scrollTo({ top: offsetPosition, behavior: getScrollBehavior(behavior) });
   if (updateHashId) {
     try {
       window.history.replaceState(

@@ -30,6 +30,7 @@ import {
   localizePath,
   stripLocalePrefix,
 } from "./utils/locale";
+import { getScrollBehavior } from "./utils/motion";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -660,7 +661,7 @@ const InsectsHostPlantExplorer = memo(
       else newParams.delete("q");
       setSearchParams(newParams, { replace: true });
       const resultsEl = typeof document !== "undefined" && document.getElementById("explorer-results");
-      if (resultsEl) resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (resultsEl) resultsEl.scrollIntoView({ behavior: getScrollBehavior("smooth"), block: "start" });
     }, [activeTab, searchByTab, setActiveTab, getCurrentParams, setSearchParams]);
 
     // Cleanup timeout
