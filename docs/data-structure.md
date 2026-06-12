@@ -14,6 +14,8 @@
 
 ## 生成物
 
+生成物はgit管理外（`.gitignore`）で、CI/デプロイが毎回 `normalized_data/` と `public/images/` から再生成する。対象: `public/assets/data-lite/`、`public/meta/`、`public/en/`、ルートシェル各ディレクトリ（`public/{moth,plant,butterfly,beetle,longhornbeetle,leafbeetle,aphid}/`）、`public/seo-route-map.*.json`。ローカル開発では `npm run dev` 起動時に `predev`（`scripts/ensure-dev-data.mjs`）が不足分を自動生成する。※`public/images/resized/` のみ、デプロイ時間維持のため当面コミットを継続。
+
 `npm run build:data-lite` が、正規化CSVから以下を生成する。
 
 - `public/assets/data-lite/{moths,butterflies,beetles,longhornbeetles,leafbeetles,aphids}.json`: 分類群別の昆虫一覧。

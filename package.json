@@ -5,6 +5,7 @@
   "type": "module",
   "homepage": "https://orau98.github.io/",
   "scripts": {
+    "predev": "node scripts/ensure-dev-data.mjs",
     "dev": "vite",
     "build": "vite build",
     "build:app": "vite build",
