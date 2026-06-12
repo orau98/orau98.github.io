@@ -93,3 +93,20 @@ reports/download_errors.txt
 reports/reference_cache/
 reports/butterfly_book_ocr/
 reports/butterfly_book_samples/
+
+# Generated site artifacts — rebuilt from normalized_data/ and public/images/
+# on every CI/deploy run (generate-meta:all, build:data-lite). Do not commit.
+# NOTE: public/images/resized/ stays committed until incremental responsive
+# image builds are in place (deploy only generates missing derivatives).
+public/meta/
+public/en/
+public/aphid/
+public/beetle/
+public/butterfly/
+public/leafbeetle/
+public/longhornbeetle/
+public/moth/
+public/plant/
+public/assets/data-lite/
+public/seo-route-map.insects.json
+public/seo-route-map.plants.json
