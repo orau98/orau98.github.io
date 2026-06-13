@@ -1686,7 +1686,6 @@ main > .page-hero {
 .page-hero-inner .eyebrow { color: var(--lamp); margin: 0 0 10px; }
 .page-hero-inner h1 { margin: 0; color: var(--moon); text-shadow: 0 2px 22px rgba(4,9,26,0.85); max-width: 20ch; }
 /* 写真ヘッダーのあるページでは装飾の角の月を隠す */
-body:has(.page-hero)::before { display: none; }
 
 @media (max-width: 860px) {
   main > .page-hero { min-height: 260px; }
