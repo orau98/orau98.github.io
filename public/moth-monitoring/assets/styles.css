@@ -1554,6 +1554,13 @@ a:focus-visible { outline:2px solid var(--lamp); outline-offset:2px; box-shadow:
     linear-gradient(90deg, transparent, rgba(205,214,236,0.30), transparent) center / 100% 1px no-repeat;
   filter:drop-shadow(0 0 5px rgba(127,199,214,0.7));
 }
+.section.note.compact-note {
+  margin-top: 24px;
+}
+.section.note.compact-note::before {
+  content: none;
+  display: none;
+}
 /* 「光に寄る」カードホバー */
 .link-grid a { transition:transform .2s, box-shadow .2s, border-color .2s; }
 .link-grid a:hover {
