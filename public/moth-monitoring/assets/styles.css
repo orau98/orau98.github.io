@@ -1742,9 +1742,9 @@ main > .page-hero {
 /* スマホ／タブレット：縦向き（↓矢印） */
 @media (max-width: 860px) {
   .flowsteps { flex-direction: column; gap: 26px 0; }
-  .flowsteps > li { text-align: left; flex-direction: row; align-items: baseline; gap: 10px; padding: 13px 15px; }
-  .flowsteps .fs-t { flex: 0 0 auto; }
-  .flowsteps .fs-d { flex: 1 1 auto; }
+  .flowsteps > li { text-align: left; flex-direction: column; align-items: stretch; gap: 4px; padding: 14px 16px; }
+  .flowsteps .fs-t, .flowsteps .fs-d { flex: 0 0 auto; }
+  .flowsteps.numbered > li { padding-top: 17px; }
   .flowsteps.numbered > li::after { left: 14px; top: -9px; transform: none; }
   .flowsteps > li + li::before {
     left: 50%; top: -20px; transform: translateX(-50%) rotate(135deg);
@@ -1813,6 +1813,36 @@ main > .page-hero {
 }
 .flowsteps > li.is-later { opacity: .85; }
 @media (max-width: 860px) {
-  .flowsteps > li.current { flex-wrap: wrap; }
-  .flowsteps .here { align-self: flex-start; margin: 0 0 4px; flex: 0 0 100%; }
+  .flowsteps .here { align-self: flex-start; margin: 0 0 5px; }
+  /* モバイル：指標カードの余白をなくす（min-height解除） */
+  .metric-cards article { min-height: auto; }
+}
+
+/* ===================== イベント告知カード（ランプ色アクセント） ===================== */
+.event-card {
+  position: relative; margin-top: 4px;
+  border: 1px solid var(--lamp-deep); border-radius: 14px;
+  background: linear-gradient(180deg, rgba(224,164,77,0.12), rgba(23,38,76,0.55));
+  box-shadow: 0 14px 34px rgba(3,8,24,0.5), inset 0 0 0 1px rgba(232,169,78,0.15);
+  padding: 22px 24px;
+}
+.event-tag { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.event-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(180deg, var(--lamp-bright), var(--lamp)); color: #2a1c05;
+  font-weight: 800; font-size: 12px; letter-spacing: .04em; padding: 3px 11px; border-radius: 999px;
+  box-shadow: 0 4px 12px var(--lamp-glow);
+}
+.event-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #2a1c05; }
+.event-when { color: var(--lamp); font-weight: 800; font-size: 15px; letter-spacing: .02em; }
+.event-card .event-title { color: var(--moon); margin: 0 0 8px; font-size: 24px; }
+.event-lead { color: var(--moonlight); margin: 0 0 14px; line-height: 1.85; font-weight: 600; }
+.event-meta { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 26px; }
+.event-meta li { color: var(--moonlight); font-size: 14px; }
+.event-meta li span { color: var(--lamp); font-weight: 800; margin-right: 8px; }
+.event-note { color: var(--moon-dim); font-size: 13.5px; margin: 0; line-height: 1.7; }
+@media (max-width: 600px) {
+  .event-card { padding: 18px 16px; }
+  .event-card .event-title { font-size: 20px; }
+  .event-meta { flex-direction: column; gap: 5px; }
 }
