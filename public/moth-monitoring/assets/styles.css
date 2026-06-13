@@ -1698,3 +1698,76 @@ body:has(.page-hero)::before { display: none; }
   .page-hero-inner { padding: 0 14px 16px; }
   .page-hero-inner h1 { max-width: none; }
 }
+
+/* ===================== フロー図：PC横・スマホ縦のレスポンシブ・ステップ ===================== */
+.flowfig { margin: 18px 0 0; }
+.flowsteps {
+  list-style: none; margin: 0; padding: 4px 0 0; display: flex; gap: 14px 30px;
+}
+.flowsteps > li {
+  flex: 1 1 0; min-width: 0; position: relative;
+  background: var(--plate); color: var(--ink);
+  border: 1px solid var(--plate-border); border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(3,8,24,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+  padding: 14px 12px; text-align: center;
+  display: flex; flex-direction: column; justify-content: center; gap: 5px;
+}
+.flowsteps .fs-t { font-weight: 800; color: var(--ink); font-size: 16px; line-height: 1.35; }
+.flowsteps .fs-d { color: var(--ink-muted); font-size: 12.5px; line-height: 1.5; }
+/* ステップ番号バッジ（小さな夜の灯） */
+.flowsteps.numbered { counter-reset: fstep; }
+.flowsteps.numbered > li::after {
+  counter-increment: fstep; content: counter(fstep);
+  position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--night-2); color: var(--moon); font-size: 11px; font-weight: 800;
+  box-shadow: 0 0 0 1px var(--night-edge), 0 0 10px -1px var(--sky-cyan-glow);
+}
+/* 矢印（PC＝右向き） */
+.flowsteps > li + li::before {
+  content: ""; position: absolute; left: -22px; top: 50%;
+  width: 12px; height: 12px; transform: translateY(-50%) rotate(45deg);
+  border-top: 2px solid var(--lamp); border-right: 2px solid var(--lamp);
+}
+/* 補助：式・注記 */
+.flow-eq {
+  margin: 16px auto 0; max-width: 760px; text-align: center;
+  background: var(--plate-2); color: #143a2e; border: 1px solid var(--plate-border);
+  border-radius: 8px; padding: 10px 14px; font-weight: 800; font-size: 15px;
+}
+.flowfig figcaption { margin-top: 14px; color: var(--moon-dim); font-size: 14px; line-height: 1.65; }
+.flow-note {
+  margin-top: 12px; border-left: 4px solid var(--lamp); background: #f3ead4; color: #3a2c11;
+  padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13.5px; line-height: 1.6;
+}
+/* スマホ／タブレット：縦向き（↓矢印） */
+@media (max-width: 860px) {
+  .flowsteps { flex-direction: column; gap: 26px 0; }
+  .flowsteps > li { text-align: left; flex-direction: row; align-items: baseline; gap: 10px; padding: 13px 15px; }
+  .flowsteps .fs-t { flex: 0 0 auto; }
+  .flowsteps .fs-d { flex: 1 1 auto; }
+  .flowsteps.numbered > li::after { left: 14px; top: -9px; transform: none; }
+  .flowsteps > li + li::before {
+    left: 50%; top: -20px; transform: translateX(-50%) rotate(135deg);
+  }
+}
+
+/* 全体像マップ（分岐型）：入力群→検証→活用 を縦に */
+.flowmap { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding-top: 4px; }
+.fm-inputs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+.fm-card {
+  background: var(--plate); color: var(--ink); border: 1px solid var(--plate-border); border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(3,8,24,0.4), inset 0 1px 0 rgba(255,255,255,0.5); padding: 14px 16px;
+}
+.fm-card .fm-t { display: block; font-weight: 800; font-size: 16px; color: var(--ink); }
+.fm-card .fm-d { display: block; margin-top: 5px; color: var(--ink-muted); font-size: 13px; line-height: 1.55; }
+.fm-card.fm-hub { border-color: rgba(127,199,214,0.5); }
+.fm-card.fm-use { background: var(--night-2); color: var(--moon); border-color: var(--night-edge); }
+.fm-card.fm-use .fm-t { color: var(--moon); }
+.fm-card.fm-use .fm-d { color: var(--moon-dim); }
+.fm-arrow { align-self: center; color: var(--lamp); font-size: 22px; line-height: 1; padding: 8px 0; }
+@media (max-width: 860px) { .fm-inputs { grid-template-columns: 1fr; gap: 12px; } }
+.flow-axis { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 16px; font-size: 12.5px; color: var(--moon-dim); }
+.flow-axis > b { color: var(--lamp); white-space: nowrap; font-size: 13px; }
+.flow-axis > span { flex: 1; text-align: center; }
+@media (max-width: 860px) { .flow-axis > span { display: none; } }

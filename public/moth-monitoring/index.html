@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1530">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング | プロジェクト概要</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui4">
+  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui5">
 </head>
 <body>
   <header class="site-header">
@@ -59,47 +59,20 @@
           <h2>一枚で見る全体像</h2>
           <p>このプロジェクトは、標準トラップの検証を出発点に、地域の実施者・検証者・拠点を育て、全国で続けられるモニタリング体制を作る取り組みです。</p>
         </div>
-        <figure class="diagram-panel">
-          <div class="diagram-scroll"><svg viewBox="0 0 1040 430" role="img" aria-label="標準トラップ検証から定点調査、市民記録、検証済みデータベース、公開活用へつながる全体図">
-            <defs>
-              <marker id="arrow-main" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-                <path d="M0,0 L7,3 L0,6 Z" fill="#2c704c"></path>
-              </marker>
-            </defs>
-            <rect x="24" y="30" width="260" height="150" rx="12" fill="#e9f1e8" stroke="#2c704c" stroke-width="2"></rect>
-            <text x="154" y="70" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">標準トラップ検証</text>
-            <text x="154" y="106" text-anchor="middle" fill="#25332e" font-size="16">光源・入口構造・記録方法</text>
-            <text x="154" y="136" text-anchor="middle" fill="#566760" font-size="14">LepiLED / 10W級LED</text>
-            <text x="154" y="160" text-anchor="middle" fill="#566760" font-size="14">谷型入口 / 衝突板付き漏斗型</text>
-
-            <rect x="384" y="30" width="260" height="150" rx="12" fill="#e7f0f2" stroke="#2f6576" stroke-width="2"></rect>
-            <text x="514" y="70" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">定点定量調査</text>
-            <text x="514" y="106" text-anchor="middle" fill="#25332e" font-size="16">同一地点・同一機材・同一頻度</text>
-            <text x="514" y="136" text-anchor="middle" fill="#566760" font-size="14">個体数・種組成・年変動</text>
-
-            <rect x="24" y="250" width="260" height="120" rx="12" fill="#f6eadc" stroke="#b5692d" stroke-width="2"></rect>
-            <text x="154" y="294" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">市民記録</text>
-            <text x="154" y="328" text-anchor="middle" fill="#25332e" font-size="16">庭・地域・同好会・博物館</text>
-            <text x="154" y="352" text-anchor="middle" fill="#566760" font-size="14">分布変化・新産地・季節記録</text>
-
-            <rect x="744" y="108" width="260" height="150" rx="12" fill="#ffffff" stroke="#d7dfd8" stroke-width="2"></rect>
-            <text x="874" y="150" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">検証済みデータ</text>
-            <text x="874" y="186" text-anchor="middle" fill="#25332e" font-size="16">同定確認・公開可否・位置情報処理</text>
-            <text x="874" y="216" text-anchor="middle" fill="#566760" font-size="14">地図・集計・CSV・年次レポート</text>
-
-            <g stroke="#2c704c" stroke-width="3" fill="none" marker-end="url(#arrow-main)">
-              <line x1="284" y1="105" x2="376" y2="105"></line>
-              <path d="M644,105 C690,105 694,183 736,183"></path>
-              <path d="M284,310 C455,310 554,234 736,207"></path>
-            </g>
-
-            <rect x="744" y="308" width="260" height="64" rx="10" fill="#153f31"></rect>
-            <text x="874" y="334" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="700">保全・研究・環境教育へ活用</text>
-            <text x="874" y="358" text-anchor="middle" fill="#d8e5df" font-size="13">希少種の詳細位置は一般公開しない</text>
-            <path d="M874,258 L874,300" stroke="#2c704c" stroke-width="3" fill="none" marker-end="url(#arrow-main)"></path>
-          </svg></div>
-          <figcaption>定量データと広域記録を混同せず、それぞれの強みを同じ検証済みデータ基盤に流し込みます。</figcaption>
-        </figure>
+        <figure class="flowfig">
+        <div class="flowmap">
+          <div class="fm-inputs">
+            <div class="fm-card"><span class="fm-t">標準トラップ検証</span><span class="fm-d">光源・入口構造・記録方法（LepiLED／10W級LED、谷型入口／衝突板付き漏斗型）</span></div>
+            <div class="fm-card"><span class="fm-t">定点定量調査</span><span class="fm-d">同一地点・同一機材・同一頻度。個体数・種組成・年変動</span></div>
+            <div class="fm-card"><span class="fm-t">市民記録</span><span class="fm-d">庭・地域・同好会・博物館。分布変化・新産地・季節記録</span></div>
+          </div>
+          <div class="fm-arrow" aria-hidden="true">↓</div>
+          <div class="fm-card fm-hub"><span class="fm-t">検証済みデータ</span><span class="fm-d">同定確認・公開可否・位置情報処理。地図・集計・CSV・年次レポート</span></div>
+          <div class="fm-arrow" aria-hidden="true">↓</div>
+          <div class="fm-card fm-use"><span class="fm-t">保全・研究・環境教育へ活用</span><span class="fm-d">希少種の詳細位置は一般公開しない</span></div>
+        </div>
+        <figcaption>定量データと広域記録を混同せず、それぞれの強みを同じ検証済みデータ基盤に流し込みます。</figcaption>
+      </figure>
       </section>
 
       <section class="section">
@@ -158,44 +131,17 @@
           <h2>捕獲数を分解して見る</h2>
           <p>最終捕獲数だけを見ると、光源が弱いのか、入口に入らないのか、入った後に逃げるのかが分かりません。</p>
         </div>
-        <figure class="diagram-panel compact">
-          <div class="diagram-scroll"><svg viewBox="0 0 1040 260" role="img" aria-label="到来、接触、入トラップ、保持、同定集計へ進む捕獲過程の図">
-            <defs>
-              <marker id="arrow-process" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-                <path d="M0,0 L7,3 L0,6 Z" fill="#2f6576"></path>
-              </marker>
-            </defs>
-            <g font-size="16">
-              <rect x="28" y="72" width="160" height="92" rx="12" fill="#e9f1e8" stroke="#2c704c" stroke-width="2"></rect>
-              <text x="108" y="112" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">到来</text>
-              <text x="108" y="140" text-anchor="middle" fill="#566760">光に来る</text>
-
-              <rect x="244" y="72" width="160" height="92" rx="12" fill="#e7f0f2" stroke="#2f6576" stroke-width="2"></rect>
-              <text x="324" y="112" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">接触</text>
-              <text x="324" y="140" text-anchor="middle" fill="#566760">入口・板に触れる</text>
-
-              <rect x="460" y="72" width="160" height="92" rx="12" fill="#f6eadc" stroke="#b5692d" stroke-width="2"></rect>
-              <text x="540" y="112" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">入る</text>
-              <text x="540" y="140" text-anchor="middle" fill="#566760">捕獲部へ入る</text>
-
-              <rect x="676" y="72" width="160" height="92" rx="12" fill="#f6e8ec" stroke="#8b4051" stroke-width="2"></rect>
-              <text x="756" y="112" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">保持</text>
-              <text x="756" y="140" text-anchor="middle" fill="#566760">逃げずに残る</text>
-
-              <rect x="892" y="72" width="120" height="92" rx="12" fill="#ffffff" stroke="#d7dfd8" stroke-width="2"></rect>
-              <text x="952" y="112" text-anchor="middle" fill="#153f31" font-size="22" font-weight="700">同定</text>
-              <text x="952" y="140" text-anchor="middle" fill="#566760">集計する</text>
-            </g>
-            <g stroke="#2f6576" stroke-width="3" fill="none" marker-end="url(#arrow-process)">
-              <line x1="190" y1="118" x2="236" y2="118"></line>
-              <line x1="406" y1="118" x2="452" y2="118"></line>
-              <line x1="622" y1="118" x2="668" y2="118"></line>
-              <line x1="838" y1="118" x2="884" y2="118"></line>
-            </g>
-            <text x="520" y="220" text-anchor="middle" fill="#25332e" font-size="20" font-weight="700">最終捕獲数 = 到来 × 接触率 × 入トラップ率 × 保持率</text>
-          </svg></div>
-          <figcaption>トラップの良し悪しを、誘引力と捕獲効率に分けて判断します。</figcaption>
-        </figure>
+        <figure class="flowfig">
+        <ol class="flowsteps numbered">
+          <li><span class="fs-t">到来</span><span class="fs-d">光に来る</span></li>
+          <li><span class="fs-t">接触</span><span class="fs-d">入口・板に触れる</span></li>
+          <li><span class="fs-t">入る</span><span class="fs-d">捕獲部へ入る</span></li>
+          <li><span class="fs-t">保持</span><span class="fs-d">逃げずに残る</span></li>
+          <li><span class="fs-t">同定</span><span class="fs-d">集計する</span></li>
+        </ol>
+        <p class="flow-eq">最終捕獲数 = 到来 × 接触率 × 入トラップ率 × 保持率</p>
+        <figcaption>トラップの良し悪しを、誘引力と捕獲効率に分けて判断します。</figcaption>
+      </figure>
       </section>
 
     <section class="band">

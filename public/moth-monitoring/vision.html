@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1530">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング | 背景・体制</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui4">
+  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui5">
 </head>
 <body>
   <header class="site-header">
@@ -74,39 +74,15 @@
 
     <section class="section">
       <h2>定性記録と定量調査の位置づけ</h2>
-      <figure class="diagram-panel compact">
-        <div class="diagram-scroll"><svg viewBox="0 0 1040 260" role="img" aria-label="定性記録から定量調査までのモニタリング手法のスペクトル">
-          <defs>
-            <marker id="arrow-spectrum" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-              <path d="M0,0 L7,3 L0,6 Z" fill="#566760"></path>
-            </marker>
-          </defs>
-          <line x1="90" y1="130" x2="950" y2="130" stroke="#566760" stroke-width="4" marker-end="url(#arrow-spectrum)"></line>
-          <text x="94" y="184" fill="#566760" font-size="17" font-weight="700">定性: 広域・低コスト・参加しやすい</text>
-          <text x="946" y="184" text-anchor="end" fill="#566760" font-size="17" font-weight="700">定量: 努力量をそろえ、トレンドを見る</text>
-
-          <g text-anchor="middle">
-            <circle cx="170" cy="130" r="11" fill="#b5692d"></circle>
-            <text x="170" y="94" fill="#153f31" font-size="17" font-weight="700">市民投稿</text>
-            <text x="170" y="218" fill="#566760" font-size="13">写真・分布記録</text>
-
-            <circle cx="340" cy="130" r="11" fill="#b5692d"></circle>
-            <text x="340" y="94" fill="#153f31" font-size="17" font-weight="700">イベント調査</text>
-            <text x="340" y="218" fill="#566760" font-size="13">Moth Night型</text>
-
-            <circle cx="520" cy="130" r="11" fill="#2c704c"></circle>
-            <text x="520" y="94" fill="#153f31" font-size="17" font-weight="700">半標準化</text>
-            <text x="520" y="218" fill="#566760" font-size="13">庭・普通種リスト・ゼロ記録</text>
-
-            <circle cx="700" cy="130" r="11" fill="#2f6576"></circle>
-            <text x="700" y="94" fill="#153f31" font-size="17" font-weight="700">標準トラップ網</text>
-            <text x="700" y="218" fill="#566760" font-size="13">同一機材・同一頻度</text>
-
-            <circle cx="870" cy="130" r="11" fill="#153f31"></circle>
-            <text x="870" y="94" fill="#153f31" font-size="17" font-weight="700">長期定点</text>
-            <text x="870" y="218" fill="#566760" font-size="13">年変動・減少率</text>
-          </g>
-        </svg></div>
+      <figure class="flowfig">
+        <p class="flow-axis"><b>定性的</b><span>広域・低コスト・参加しやすい　→　努力量をそろえ、トレンドを見る</span><b>定量的</b></p>
+        <ol class="flowsteps">
+          <li><span class="fs-t">市民投稿</span><span class="fs-d">写真・分布記録</span></li>
+          <li><span class="fs-t">イベント調査</span><span class="fs-d">Moth Night型</span></li>
+          <li><span class="fs-t">半標準化</span><span class="fs-d">庭・普通種リスト・ゼロ記録</span></li>
+          <li><span class="fs-t">標準トラップ網</span><span class="fs-d">同一機材・同一頻度</span></li>
+          <li><span class="fs-t">長期定点</span><span class="fs-d">年変動・減少率</span></li>
+        </ol>
         <figcaption>広域の市民記録と、努力量をそろえた定点調査は役割が違います。日本版では両方を分けて設計し、後で接続します。</figcaption>
       </figure>
     </section>
@@ -127,49 +103,16 @@
 
     <section class="section">
       <h2>データの流れ</h2>
-      <figure class="diagram-panel compact">
-        <div class="diagram-scroll"><svg viewBox="0 0 1040 300" role="img" aria-label="観察採集、画像標本、同定、検証済みデータベース、公開、活用へ進むデータの流れ">
-          <defs>
-            <marker id="arrow-data" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-              <path d="M0,0 L7,3 L0,6 Z" fill="#2c704c"></path>
-            </marker>
-          </defs>
-          <g text-anchor="middle">
-            <rect x="24" y="92" width="136" height="92" rx="12" fill="#153f31"></rect>
-            <text x="92" y="128" fill="#fff" font-size="18" font-weight="700">観察・採集</text>
-            <text x="92" y="156" fill="#d8e5df" font-size="13">トラップ / 撮影</text>
-
-            <rect x="204" y="92" width="136" height="92" rx="12" fill="#2f6576"></rect>
-            <text x="272" y="128" fill="#fff" font-size="18" font-weight="700">画像・標本</text>
-            <text x="272" y="156" fill="#d8e5df" font-size="13">日時・地点付き</text>
-
-            <rect x="384" y="72" width="150" height="132" rx="12" fill="#2c704c"></rect>
-            <text x="459" y="112" fill="#fff" font-size="18" font-weight="700">同定</text>
-            <text x="459" y="142" fill="#d8e5df" font-size="13">AI一次候補</text>
-            <text x="459" y="166" fill="#d8e5df" font-size="13">専門家・地域検証</text>
-
-            <rect x="578" y="92" width="136" height="92" rx="12" fill="#ffffff" stroke="#d7dfd8" stroke-width="2"></rect>
-            <text x="646" y="128" fill="#153f31" font-size="18" font-weight="700">検証済DB</text>
-            <text x="646" y="156" fill="#566760" font-size="13">公開可否を管理</text>
-
-            <rect x="758" y="92" width="116" height="92" rx="12" fill="#b5692d"></rect>
-            <text x="816" y="128" fill="#fff" font-size="18" font-weight="700">公開</text>
-            <text x="816" y="156" fill="#fff" font-size="13">地図・CSV</text>
-
-            <rect x="916" y="92" width="100" height="92" rx="12" fill="#8b4051"></rect>
-            <text x="966" y="128" fill="#fff" font-size="18" font-weight="700">活用</text>
-            <text x="966" y="156" fill="#f6e8ec" font-size="13">保全・教育</text>
-          </g>
-          <g stroke="#2c704c" stroke-width="3" fill="none" marker-end="url(#arrow-data)">
-            <line x1="162" y1="138" x2="196" y2="138"></line>
-            <line x1="342" y1="138" x2="376" y2="138"></line>
-            <line x1="536" y1="138" x2="570" y2="138"></line>
-            <line x1="716" y1="138" x2="750" y2="138"></line>
-            <line x1="876" y1="138" x2="908" y2="138"></line>
-          </g>
-          <path d="M816,184 C816,250 320,250 92,188" fill="none" stroke="#b5692d" stroke-width="2" stroke-dasharray="6 5"></path>
-          <text x="455" y="272" text-anchor="middle" fill="#8a5a12" font-size="14" font-weight="700">希少種・私有地情報は公開前に一般化・非公開化する</text>
-        </svg></div>
+      <figure class="flowfig">
+        <ol class="flowsteps numbered">
+          <li><span class="fs-t">観察・採集</span><span class="fs-d">トラップ / 撮影</span></li>
+          <li><span class="fs-t">画像・標本</span><span class="fs-d">日時・地点付き</span></li>
+          <li><span class="fs-t">同定</span><span class="fs-d">AI一次候補・専門家／地域検証</span></li>
+          <li><span class="fs-t">検証済DB</span><span class="fs-d">公開可否を管理</span></li>
+          <li><span class="fs-t">公開</span><span class="fs-d">地図・CSV</span></li>
+          <li><span class="fs-t">活用</span><span class="fs-d">保全・教育</span></li>
+        </ol>
+        <p class="flow-note">希少種・私有地情報は、公開前に一般化・非公開化します。</p>
         <figcaption>記録を集めるだけではなく、同定検証と公開ルールを通してから活用します。</figcaption>
       </figure>
       <div class="table-wrap">
