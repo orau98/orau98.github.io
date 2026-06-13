@@ -1,7 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="蛾類モニタリング">
   <rect width="32" height="32" rx="6" fill="#0c1733"/>
-  <circle cx="14" cy="16" r="8.5" fill="#f4f1e6"/>
-  <circle cx="18.4" cy="13.6" r="7.6" fill="#0c1733"/>
-  <path d="M21 19 C18.4 16.6 16 17.2 16.8 20 C17.6 22.3 20.4 21.8 22 20.4 C23.6 21.8 26.4 22.3 27.2 20 C28 17.2 25.6 16.6 23 19 Z" fill="#e0a44d"/>
-  <circle cx="6.5" cy="7" r="1" fill="#7fc7d6"/>
+  <!-- moon, upper-left (the light) -->
+  <circle cx="9.2" cy="9.0" r="6.3" fill="#f4f1e6"/>
+  <circle cx="12.4" cy="7.0" r="5.4" fill="#0c1733"/>
+  <circle cx="26.5" cy="6.2" r="0.9" fill="#7fc7d6"/>
+  <!-- moth: drawn upright, rotated so head/antennae point to the upper-left moon -->
+  <g transform="translate(18.8,19.4) rotate(-45)">
+    <g stroke="#e8a94e" stroke-width="0.9" stroke-linecap="round" fill="none">
+      <path d="M-0.4,-4.7 C-1.8,-6.7 -2.9,-7.7 -4.0,-8.4"/>
+      <path d="M0.4,-4.7 C1.8,-6.7 2.9,-7.7 4.0,-8.4"/>
+    </g>
+    <g fill="#e8a94e">
+      <ellipse cx="-3.9" cy="-1.7" rx="4.0" ry="2.7" transform="rotate(-30 -3.9 -1.7)"/>
+      <ellipse cx="3.9" cy="-1.7" rx="4.0" ry="2.7" transform="rotate(30 3.9 -1.7)"/>
+      <ellipse cx="-2.5" cy="3.0" rx="2.5" ry="2.1" transform="rotate(40 -2.5 3.0)"/>
+      <ellipse cx="2.5" cy="3.0" rx="2.5" ry="2.1" transform="rotate(-40 2.5 3.0)"/>
+    </g>
+    <ellipse cx="0" cy="0.2" rx="1.05" ry="4.7" fill="#d28b2c"/>
+    <circle cx="0" cy="-4.6" r="1.4" fill="#d28b2c"/>
+  </g>
 </svg>
