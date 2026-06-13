@@ -8,7 +8,6 @@
 - `vision.html`: 背景・体制
 - `protocol.html`: 調査プロトコル
 - `forms.html`: 記録フォームへのリンク
-- `sites.html`: 調査地点一覧
 - `results.html`: 集計結果ページ
 - `resources.html`: 資料・PDF置き場
 
@@ -19,6 +18,5 @@ Cloudflare Pages や GitHub Pages に `site/` ディレクトリをそのまま�
 ## 差し替える項目
 
 - `forms.html` の KoboToolbox / Google Forms / Google Sheets のURL
-- `sites.html` の地点一覧
 - `results.html` の集計値と図表
 - `resources.html` の資料カテゴリやリンク
