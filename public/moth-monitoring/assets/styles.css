@@ -1624,78 +1624,6 @@ a:focus-visible { outline:2px solid var(--lamp); outline-offset:2px; box-shadow:
   }
 }
 
-/* ===================== PHOTO-BAND — 灯火に照らし出された一頭（標本バナー） ===================== */
-figure.photo-band {
-  position: relative;
-  width: min(100%, 760px);
-  max-width: 100%;
-  min-width: 0;
-  margin: 30px 0 0;
-  border: 1px solid var(--plate-border);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #0c1733;
-  box-shadow: 0 14px 34px rgba(4, 9, 26, 0.55), inset 0 0 0 1px rgba(232, 169, 78, 0.10);
-}
-figure.photo-band::before {
-  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--lamp) 18%, var(--lamp-bright) 50%, var(--lamp) 82%, transparent);
-  opacity: 0.85; z-index: 3; pointer-events: none;
-}
-figure.photo-band::after {
-  content: ""; position: absolute; top: -26%; right: -12%; width: 54%; aspect-ratio: 1;
-  background: radial-gradient(circle at 70% 30%, var(--lamp-glow) 0%, rgba(224,164,77,0.10) 38%, transparent 68%);
-  z-index: 2; pointer-events: none; mix-blend-mode: screen; opacity: 0.9; transition: opacity 0.6s ease;
-}
-figure.photo-band img {
-  display: block; width: 100%; height: 100%;
-  aspect-ratio: 3 / 2; object-fit: cover; object-position: center 42%;
-  filter: saturate(0.97) contrast(0.99) brightness(0.94);
-  transition: transform 0.6s ease, filter 0.6s ease; min-height: 180px;
-}
-figure.photo-band figcaption {
-  position: absolute; inset: auto 0 0 0; z-index: 4;
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
-  padding: 46px 18px 15px; font-family: var(--font-sans); color: var(--moon);
-  background: linear-gradient(180deg, transparent 0%, rgba(6,11,28,0.52) 28%, rgba(6,11,28,0.86) 64%, rgba(6,11,28,0.97) 100%);
-}
-figure.photo-band .pb-line {
-  flex: 1 1 100%; margin: 0; font-size: 15px; font-weight: 600; line-height: 1.5; letter-spacing: 0.01em;
-  color: var(--moon); text-shadow: 0 1px 8px rgba(4,9,26,0.9); text-wrap: balance;
-}
-figure.photo-band .pb-call {
-  flex: 1 1 auto; display: inline-flex; align-items: center; gap: 7px; margin: 0;
-  font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--lamp-bright);
-  text-shadow: 0 1px 6px rgba(4,9,26,0.9);
-}
-figure.photo-band .pb-call::before {
-  content: ""; flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%;
-  background: radial-gradient(circle, var(--lamp-bright) 0%, var(--lamp) 60%, transparent 100%);
-  box-shadow: 0 0 8px 1px var(--lamp-glow);
-}
-figure.photo-band .pb-tag {
-  flex: 0 0 auto; margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-  color: var(--moonlight); padding: 3px 9px; border: 1px solid var(--plate-border); border-radius: 999px;
-  background: rgba(12,23,51,0.55); white-space: nowrap;
-}
-figure.photo-band .pb-tag:empty { display: none; }
-@media (hover: hover) {
-  figure.photo-band:hover img { transform: scale(1.03); filter: saturate(1.0) contrast(1.0) brightness(1.0); }
-  figure.photo-band:hover::after { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  figure.photo-band img, figure.photo-band::after { transition: none; }
-  figure.photo-band:hover img { transform: none; }
-}
-@media (max-width: 860px) { figure.photo-band img { aspect-ratio: 16 / 10; } }
-@media (max-width: 520px) {
-  figure.photo-band { margin-top: 18px; }
-  figure.photo-band img { aspect-ratio: 4 / 3; object-position: center 40%; }
-  figure.photo-band figcaption { padding: 38px 14px 13px; gap: 4px 8px; }
-  figure.photo-band .pb-line { font-size: 14.5px; line-height: 1.45; }
-  figure.photo-band .pb-call { font-size: 12px; }
-  figure.photo-band .pb-tag { display: none; }
-}
 
 /* ===================== 図：内側ラッパでスクロール＋導線 ===================== */
 .diagram-panel { overflow: visible; }
@@ -1715,4 +1643,47 @@ figure.photo-band .pb-tag:empty { display: none; }
 /* ===================== モバイルの月：上端に置きスクロールで流す（常駐させない） ===================== */
 @media (max-width: 520px) {
   body::before { position: absolute; top: 8px; right: 6vw; width: 84px; }
+}
+
+/* ===================== ページヘッダー：蛾写真＋見出し（各内部ページ） ===================== */
+main > .page-hero {
+  position: relative; isolation: isolate;
+  min-height: clamp(210px, 30vw, 330px);
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+  background: var(--night-0);
+  border-bottom: 1px solid var(--night-edge);
+}
+.page-hero > img {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 42%;
+}
+.page-hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(8,14,34,0.34) 0%, rgba(8,14,34,0.12) 30%, rgba(7,12,30,0.58) 68%, rgba(7,12,30,0.90) 100%);
+}
+.page-hero::before {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 2px; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--lamp) 20%, var(--lamp-bright) 50%, var(--lamp) 80%, transparent);
+  opacity: 0.8;
+}
+.page-hero-inner {
+  position: relative; z-index: 3;
+  width: 100%; max-width: 1180px; margin: 0 auto;
+  padding: 0 24px 28px;
+}
+.page-hero-inner .eyebrow { color: var(--lamp); margin: 0 0 10px; }
+.page-hero-inner h1 { margin: 0; color: var(--moon); text-shadow: 0 2px 20px rgba(4,9,26,0.78); max-width: 20ch; }
+body:has(.page-hero)::before { display: none; }
+
+@media (max-width: 860px) {
+  main > .page-hero { min-height: 220px; }
+  .page-hero-inner { padding: 0 16px 22px; }
+}
+@media (max-width: 520px) {
+  main > .page-hero { min-height: 176px; }
+  .page-hero > img { object-position: center 40%; }
+  .page-hero-inner { padding: 0 14px 18px; }
+  .page-hero-inner h1 { max-width: none; }
 }
