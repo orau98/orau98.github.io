@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市民科学による夜の生物多様性モニタリング：海外事例と日本での実装案</title>
+<style>
+  :root{
+    --ink:#1c2421; --sub:#4b5a52; --line:#d9e0db; --bg:#fbfcfb;
+    --teal:#15605a; --teal-d:#0d3f3b; --amber:#c98a2b; --amber-l:#f3e6cd;
+    --night:#10202b; --night2:#1d3a4a; --soft:#eef3f0; --warn:#8a5a12;
+    --maxw:980px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo","Noto Sans JP",sans-serif;
+    --font-heading:"Hiragino Sans","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,"Yu Gothic",YuGothic,"Meiryo","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--font-sans);
+    line-height:1.9; font-size:17px; font-weight:500; letter-spacing:0;
+    text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px 96px}
+  header.hero{
+    background:linear-gradient(160deg,var(--night) 0%,var(--night2) 70%,var(--teal-d) 100%);
+    color:#f3f7f5; padding:54px 22px 46px; position:relative; overflow:hidden;
+  }
+  header.hero .stars{position:absolute;inset:0;opacity:.5}
+  header.hero .inner{max-width:var(--maxw); margin:0 auto; position:relative}
+  header.hero h1{font-family:var(--font-heading); font-size:30px; line-height:1.45; margin:0 0 12px; font-weight:700}
+  header.hero .lead{font-size:16px; color:#cfe3dc; max-width:760px; margin:0}
+  header.hero .meta{margin-top:22px; font-size:13px; color:#9fc1b8; display:flex; flex-wrap:wrap; gap:8px 20px}
+  header.hero .badge{display:inline-block; background:rgba(201,138,43,.18); border:1px solid rgba(201,138,43,.5);
+    color:#f0d9b1; padding:3px 11px; border-radius:999px; font-size:12px; margin-right:6px}
+
+  nav.toc{background:var(--soft); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:34px 0}
+  nav.toc h2{font-family:var(--font-heading); font-size:15px; margin:0 0 12px; color:var(--teal-d); letter-spacing:0}
+  nav.toc ol{margin:0; padding-left:22px; columns:2; column-gap:34px}
+  nav.toc li{margin:5px 0; break-inside:avoid}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--line)}
+  nav.toc a:hover{color:var(--teal)}
+
+  h2.sec{font-family:var(--font-heading); font-size:22px; margin:54px 0 6px; color:var(--teal-d); border-bottom:3px solid var(--teal);
+    padding-bottom:8px; font-weight:700}
+  h2.sec .num{color:var(--amber); font-weight:800; margin-right:10px}
+  h3{font-family:var(--font-heading); font-size:17px; color:var(--teal-d); margin:28px 0 6px; font-weight:700}
+  h4{font-family:var(--font-heading); font-size:15px; color:var(--warn); margin:20px 0 4px; font-weight:700}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0; padding-left:24px}
+  li{margin:5px 0}
+  strong{color:var(--teal-d)}
+  a{color:var(--teal)}
+  small{color:var(--sub)}
+
+  .fig{margin:26px 0; background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 16px 10px;
+    box-shadow:0 1px 3px rgba(20,40,30,.05)}
+  .fig svg{display:block; width:100%; height:auto}
+  .fig figcaption{font-size:13px; color:var(--sub); margin-top:8px; padding-top:8px; border-top:1px dashed var(--line)}
+  .fig figcaption b{color:var(--teal-d)}
+
+  table{width:100%; border-collapse:collapse; margin:18px 0; font-size:14.5px}
+  th,td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top}
+  th{background:var(--teal); color:#fff; font-family:var(--font-heading); font-weight:700}
+  tbody tr:nth-child(even){background:var(--soft)}
+  caption{caption-side:top; text-align:left; font-size:13px; color:var(--sub); margin-bottom:6px}
+
+  .callout{border-left:5px solid var(--amber); background:var(--amber-l); padding:14px 18px; border-radius:0 10px 10px 0;
+    margin:20px 0; font-size:14.5px}
+  .callout.note{border-color:var(--teal); background:#e6f1ee}
+  .callout b{color:var(--warn)}
+  .callout.note b{color:var(--teal-d)}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:18px 0}
+  .card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px}
+  .card h4{margin:0 0 6px; color:var(--teal-d)}
+  .card p{margin:4px 0; font-size:14px; color:var(--sub)}
+
+  .pill{display:inline-block; background:var(--soft); border:1px solid var(--line); border-radius:999px;
+    padding:1px 9px; font-size:12px; color:var(--sub); margin:1px 2px}
+
+  .refs{font-size:13.5px}
+  .refs h3{margin-top:22px}
+  .refs ol{padding-left:22px}
+  .refs li{margin:7px 0; line-height:1.6}
+  .refs .src{color:var(--sub); word-break:break-all}
+
+  footer{margin-top:60px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--sub)}
+  .unverified{color:var(--warn); font-size:12px}
+  @media(max-width:680px){
+    body{font-size:15px; line-height:1.8}
+    .wrap{padding:0 15px 72px}
+    header.hero{padding:38px 16px 32px}
+    header.hero h1{font-size:22px}
+    nav.toc{padding:16px 16px}
+    nav.toc ol{columns:1}
+    h2.sec{font-size:19px}
+    /* 表は横スクロールで全列を保持 */
+    table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:normal; font-size:13.5px}
+    th,td{padding:7px 8px}
+    .cards{grid-template-columns:1fr}
+    .refs .src{font-size:12px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="stars" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+    <g fill="#ffffff">
+      <circle cx="80" cy="40" r="1.4"/><circle cx="180" cy="80" r="1"/><circle cx="300" cy="30" r="1.6"/>
+      <circle cx="420" cy="60" r="1"/><circle cx="540" cy="35" r="1.3"/><circle cx="660" cy="70" r="1"/>
+      <circle cx="780" cy="45" r="1.5"/><circle cx="900" cy="65" r="1"/><circle cx="240" cy="120" r="1.1"/>
+      <circle cx="500" cy="110" r="1.2"/><circle cx="720" cy="120" r="1"/><circle cx="950" cy="110" r="1.3"/>
+    </g>
+    <g fill="#c98a2b" opacity="0.85">
+      <circle cx="850" cy="38" r="13"/>
+    </g>
+  </svg>
+  <div class="inner">
+    <div>
+      <span class="badge">市民科学</span><span class="badge">夜行性昆虫モニタリング</span><span class="badge">保全政策</span>
+    </div>
+    <h1>市民科学による夜の生物多様性モニタリング<br>― 海外事例と日本での実装案 ―</h1>
+    <p class="lead">蛾類を中心に、夜行性昆虫の記録と標準化モニタリングが環境変化・生物多様性・保全政策・農地／都市緑地評価・気候変動影響の把握にどう活用されてきたかを海外事例から整理し、日本で構築すべき体制・課題・ロードマップを提案します。</p>
+    <div class="meta">
+      <span>対象読者：研究者／行政担当者／NPO・市民団体／博物館関係者／市民科学参加者</span>
+      <span>作成日：2026-06-11</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="callout note">
+    <b>本レポートの方針</b>：内容は自然史・保全・市民科学・政策実装に限定しています。記載した海外プログラムの設立年・規模・手法は、可能な限り公式サイトまたは査読論文を一次ソースとして確認しました。確認できなかった数値には「<span class="unverified">要確認</span>」を付しています。誘引光を用いる手法は、後述するとおりそれ自体が夜の生物への撹乱（人工光）になりうるため、本レポートは<strong>非致死的な撮影ベースの記録</strong>と<strong>必要最小限の標準化</strong>を基本姿勢とします。
+  </div>
+
+  <nav class="toc" aria-label="目次">
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#s1">なぜ蛾類が生物多様性指標として有用なのか</a></li>
+      <li><a href="#s2">英国 Rothamsted Insect Survey の概要</a></li>
+      <li><a href="#s3">英国 National Moth Recording Scheme の概要</a></li>
+      <li><a href="#s4">Garden Moth Scheme など市民参加型調査の例</a></li>
+      <li><a href="#s5">MothsIreland と農地での蛾類モニタリング</a></li>
+      <li><a href="#s6">オランダ・欧州の標準化LEDトラップによるモニタリング</a></li>
+      <li><a href="#s7">定量モニタリングと定性モニタリングの違い</a></li>
+      <li><a href="#s8">海外での社会実装例</a></li>
+      <li><a href="#s9">日本で構築すべき体制</a></li>
+      <li><a href="#s10">日本での課題</a></li>
+      <li><a href="#s11">5年間の実装ロードマップ</a></li>
+      <li><a href="#s12">最初に始めるべきパイロットプロジェクト案</a></li>
+    </ol>
+  </nav>
+
+  <!-- ===================== 1 ===================== -->
+  <h2 class="sec" id="s1"><span class="num">1</span>なぜ蛾類が生物多様性指標として有用なのか</h2>
+
+  <p>蛾類（鱗翅目のうち蝶を除く大半の系統）は、夜の生物多様性をモニタリングするうえで、世界的に最も実績のある分類群の一つです。指標生物としての強みは次の点に集約されます。</p>
+
+  <h3>① 圧倒的な種数と群集の解像度</h3>
+  <p>英国だけでも大型蛾（macro-moth）が約900種、小型蛾を含めればその数倍が知られます。日本の既知種は<strong>6,000種を超え</strong>（国立科学博物館・神保宇嗣の解説）、群集組成の微細な変化を捉えられる「高解像度の指標」になります。</p>
+
+  <h3>② 食性を通じた土地利用・植生の反映</h3>
+  <p>多くの種が幼虫期に特定の植物を食べる植食者であり、寄主植物の分布や植生の質を反映します。農地の草地マージンやヘッジロウ（生垣）の管理が蛾の個体数に直結することが、英国・アイルランドの圃場実験で定量的に示されています（<a href="#r-merckx2010">Merckx et al. 2010</a>）。</p>
+
+  <h3>③ 食物網の基盤としての代理指標</h3>
+  <p>蛾とその幼虫は、鳥類・コウモリ・寄生蜂など多くの捕食者の主要な餌資源です。蛾相の変化は、それに依存する高次の生物群の動態を予測する代理指標になります。</p>
+
+  <h3>④ 標準化サンプリングのしやすさと大量データ</h3>
+  <p>多くの種が人工光に誘引されるため、ライトトラップやライトシートで効率よく、かつ手順をそろえて記録できます。これは一晩で数百〜数千個体規模のデータを生み、統計的に頑健な時系列解析を可能にします。</p>
+
+  <h3>⑤ 環境変化への感受性（気候・土地利用・光害）</h3>
+  <p>世代時間が短く環境変化への応答が速いため、<strong>気候変動による分布の北上やフェノロジー（発生時期）の前倒し</strong>、土地利用変化、人工光（ALAN）の影響を鋭敏に映します。英国では50年間の長期データから大型蛾の総個体数が<strong>33%減少</strong>したことが検出されています（<a href="#r-soubm2021">State of Britain's Larger Moths 2021</a>）。ドイツの保護区では飛翔性昆虫の<strong>総バイオマスが27年で76.7%減少</strong>したという、世界的に引用される警鐘も、長期トラップデータから得られました（<a href="#r-hallmann2017">Hallmann et al. 2017</a>）。</p>
+
+  <div class="callout">
+    <b>方法論上の留意点（科による誘引性の差）</b>：光への誘引のされやすさは蛾の科によって異なることが実証されています（<a href="#r-merckx2014">Merckx &amp; Slade 2014</a>）。ライトトラップのデータは「群集の鏡」ではなく「光に来た部分の像」であり、このバイアスを理解したうえで指標化することが前提になります。
+  </div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 920 360" role="img" aria-label="蛾類が生物多様性指標として優れる理由の概念図">
+      <defs>
+        <radialGradient id="moonG" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#15605a"/><stop offset="100%" stop-color="#0d3f3b"/>
+        </radialGradient>
+      </defs>
+      <circle cx="460" cy="180" r="86" fill="url(#moonG)"/>
+      <text x="460" y="172" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">蛾類</text>
+      <text x="460" y="198" text-anchor="middle" fill="#cfe3dc" font-size="13">生物多様性指標</text>
+      <!-- spokes -->
+      <g font-size="13" fill="#1c2421">
+        <!-- top-left -->
+        <line x1="392" y1="128" x2="210" y2="58" stroke="#c98a2b" stroke-width="2"/>
+        <rect x="40" y="34" width="200" height="48" rx="9" fill="#f3e6cd" stroke="#c98a2b"/>
+        <text x="140" y="54" text-anchor="middle" font-weight="700">膨大な種数</text>
+        <text x="140" y="72" text-anchor="middle" font-size="11" fill="#4b5a52">日本6,000種超／群集の高解像度</text>
+        <!-- top-right -->
+        <line x1="528" y1="128" x2="710" y2="58" stroke="#c98a2b" stroke-width="2"/>
+        <rect x="680" y="34" width="200" height="48" rx="9" fill="#f3e6cd" stroke="#c98a2b"/>
+        <text x="780" y="54" text-anchor="middle" font-weight="700">食性で植生を反映</text>
+        <text x="780" y="72" text-anchor="middle" font-size="11" fill="#4b5a52">寄主植物・土地利用の変化</text>
+        <!-- left -->
+        <line x1="374" y1="180" x2="250" y2="180" stroke="#15605a" stroke-width="2"/>
+        <rect x="40" y="156" width="200" height="48" rx="9" fill="#e6f1ee" stroke="#15605a"/>
+        <text x="140" y="176" text-anchor="middle" font-weight="700">食物網の基盤</text>
+        <text x="140" y="194" text-anchor="middle" font-size="11" fill="#4b5a52">鳥・コウモリ・寄生蜂の餌</text>
+        <!-- right -->
+        <line x1="546" y1="180" x2="670" y2="180" stroke="#15605a" stroke-width="2"/>
+        <rect x="680" y="156" width="200" height="48" rx="9" fill="#e6f1ee" stroke="#15605a"/>
+        <text x="780" y="176" text-anchor="middle" font-weight="700">光で標準化採集</text>
+        <text x="780" y="194" text-anchor="middle" font-size="11" fill="#4b5a52">大量・比較可能なデータ</text>
+        <!-- bottom-left -->
+        <line x1="392" y1="232" x2="210" y2="302" stroke="#c98a2b" stroke-width="2"/>
+        <rect x="40" y="278" width="200" height="48" rx="9" fill="#f3e6cd" stroke="#c98a2b"/>
+        <text x="140" y="298" text-anchor="middle" font-weight="700">環境変化に敏感</text>
+        <text x="140" y="316" text-anchor="middle" font-size="11" fill="#4b5a52">気候・土地利用・光害</text>
+        <!-- bottom-right -->
+        <line x1="528" y1="232" x2="710" y2="302" stroke="#c98a2b" stroke-width="2"/>
+        <rect x="680" y="278" width="200" height="48" rx="9" fill="#f3e6cd" stroke="#c98a2b"/>
+        <text x="780" y="298" text-anchor="middle" font-weight="700">長期データの実績</text>
+        <text x="780" y="316" text-anchor="middle" font-size="11" fill="#4b5a52">50年で33%減を検出</text>
+      </g>
+    </svg>
+    <figcaption><b>図1.</b> 蛾類が夜の生物多様性指標として優れる6つの理由。緑＝生態学的特性、橙＝モニタリング上の利点。</figcaption>
+  </figure>
+
+  <!-- ===================== 2 ===================== -->
+  <h2 class="sec" id="s2"><span class="num">2</span>英国 Rothamsted Insect Survey（RIS）の概要</h2>
+
+  <p><strong>Rothamsted Insect Survey</strong> は、世界で最も長く継続している昆虫トラップネットワークの一つで、英国 Rothamsted Research が運営する国家的研究基盤（National Capability）です。<strong>1964年</strong>に、吸引トラップ（アブラムシ用）とライトトラップ（蛾用）の2系統の運用を開始しました。</p>
+
+  <div class="cards">
+    <div class="card"><h4>ライトトラップ網</h4><p>現在<strong>約80台</strong>を英国・アイルランド全域に展開。<strong>大半がボランティアによって運用</strong>され、主に大型蛾を対象とします。</p></div>
+    <div class="card"><h4>吸引トラップ網</h4><p>高さ12.2 mの吸引塔<strong>16台</strong>（イングランド12・スコットランド4）でアブラムシを記録。英国産約600種のうち400種超を捕獲。</p></div>
+    <div class="card"><h4>蓄積規模</h4><p>ライトトラップ網は累計で<strong>1,500種超</strong>の蛾を捕獲。半世紀超の標準化された時系列が蓄積。</p></div>
+    <div class="card"><h4>データ公開</h4><p>BBSRC等の公的資金で運営され、オンラインデータベースで公開。State of Moths 報告書の基礎データを供給。</p></div>
+  </div>
+
+  <p>RISの本質は、<strong>同一地点で同一手法を半世紀以上続ける「定点・定法」</strong>にあります。これにより、個体数の経年トレンドを統計的に評価でき、後述する「英国大型蛾33%減」のような国レベルの結論を支える定量基盤となっています。</p>
+  <p class="unverified">※ 一部の二次情報にある「保有トラップ600台超」「累計5,000万個体」「1933年稼働の最古トラップ」は公式ページで確認できず、ここでは採用していません（要確認）。</p>
+
+  <!-- ===================== 3 ===================== -->
+  <h2 class="sec" id="s3"><span class="num">3</span>英国 National Moth Recording Scheme（NMRS）の概要</h2>
+
+  <p><strong>National Moth Recording Scheme</strong> は、保全NGO <strong>Butterfly Conservation</strong> が運営する全国規模の蛾記録スキームです。2007年にデイヴィッド・アッテンボロー卿が発足させた「Moths Count」プロジェクトを母体とします。</p>
+
+  <ul>
+    <li><strong>対象：</strong>主に大型蛾 約900種（英国・マン島・チャンネル諸島）。</li>
+    <li><strong>記録規模：</strong>累計で<strong>3,000万件超</strong>（NBN Atlas で公開された大型蛾記録は約3,100万件、17世紀〜近年の検証済みデータ）。</li>
+    <li><strong>収集と検証：</strong>地域ごとに任命された<strong>County Moth Recorder（地域記録担当者）</strong>が、市民・愛好家の記録を集約・検証。投稿は <strong>iRecord</strong> 等のプラットフォーム経由。</li>
+    <li><strong>成果物：</strong>検証済みデータは『<em>Atlas of Britain and Ireland's Larger Moths</em>』(2019) として出版され、分布図と保全評価の標準リファレンスに。</li>
+  </ul>
+
+  <div class="callout note">
+    <b>RISとNMRSの分業がモデルの核心</b>：RISが「<strong>少数の定点で厳密な定量データ</strong>」を、NMRSが「<strong>多数の市民から広域の分布データ</strong>」を担い、両者を組み合わせて「個体数トレンド（RIS）×分布変化（NMRS）」を国レベルで描く――この二層構造が英国モデルの最大の発明です。日本の実装案（第9章）もこの分業を踏襲します。
+  </div>
+
+  <!-- ===================== 4 ===================== -->
+  <h2 class="sec" id="s4"><span class="num">4</span>Garden Moth Scheme など市民参加型調査の例</h2>
+
+  <h3>Garden Moth Scheme（GMS, 英国・アイルランド）</h3>
+  <p>市民が自宅の庭でライトトラップ調査を行う<strong>半標準化された</strong>市民科学プロジェクトです。設計が秀逸で、日本版のプロトコル設計に直接参考になります。</p>
+  <ul>
+    <li><strong>頻度：</strong>毎週<strong>金曜の夜</strong>、3月〜11月（約36週の時系列）。</li>
+    <li><strong>対象種：</strong>同定が容易な指定種リストに集中（初心者でも参加可能に）。</li>
+    <li><strong>記録ルール：</strong>天候を問わず実施し、<strong>「捕れなかった夜（ゼロ）」も記録</strong>する。これにより在・不在を含む解析可能なデータになる。</li>
+    <li><strong>付随情報：</strong>庭の環境（緑地・農地・街灯・水域・林などとの距離）も報告。</li>
+    <li><strong>規模：</strong>データベースに<strong>100万件超</strong>。査読論文にも利用実績。</li>
+  </ul>
+  <p class="unverified">※ GMSの正確な設立年・参加者数は公式ページに明示がなく未確認（要確認）。</p>
+
+  <h3>National Moth Night（英国）</h3>
+  <p>雑誌『Atropos』の Mark Tunmore が創設したイベントで、第1回は<strong>1999年</strong>。Atropos・Butterfly Conservation・UKCEH の共催で、年1回・連続3夜にわたり、毎回テーマ種やテーマ生息地を設定して全国の市民が一斉に記録します。記録はNMRSへ統合されます。</p>
+
+  <h3>National Moth Week（米国発・世界規模）</h3>
+  <p><strong>2012年</strong>に米ニュージャージー州の非営利団体が発足させ、いまや<strong>80か国以上</strong>に広がる世界的な「蛾の週間」です（毎年7月下旬）。独自データベースを持たず、<strong>iNaturalist</strong> や Project Noah といった既存プラットフォームへの投稿を促す<strong>集約型</strong>の設計で、写真ベースの低コスト参加を世界中に開きました。</p>
+
+  <div class="callout note"><b>3つの型の使い分け</b>：GMS＝<strong>半標準化・定点反復</strong>（解析向き）、Moth Night＝<strong>イベント型・普及啓発</strong>（参加の入口）、Moth Week＝<strong>プラットフォーム集約型</strong>（広域・低コスト）。日本でも、市民の入口（イベント）と解析用の骨格（半標準化）を分けて設計するのが現実的です。</div>
+
+  <!-- ===================== 5 ===================== -->
+  <h2 class="sec" id="s5"><span class="num">5</span>MothsIreland と農地での蛾類モニタリング</h2>
+
+  <h3>MothsIreland（アイルランド島）</h3>
+  <p>アイルランド島の蛾記録を集約する市民科学プロジェクトで、専門家がボランティアでデータの編纂・管理を担っています。</p>
+  <ul>
+    <li><strong>規模：</strong>記録<strong>1,255,377件</strong>・<strong>1,497種</strong>、1840年〜現在。アイルランドの Biodiversity Maps 上で最大級のデータセット。</li>
+    <li><strong>連携：</strong>アイルランド国立生物多様性データセンター（NBDC）が、市民科学ポータルに投稿された蛾の記録を MothsIreland に流し込む仕組みを整備。<strong>「市民の入口（ポータル）」と「専門家の検証・編纂（スキーム）」を制度的に接続</strong>している点が参考になります。</li>
+    <li>蝶については別に Irish Butterfly Monitoring Scheme（トランセクト法）が走っており、蝶＝定量トランセクト／蛾＝記録集約という英国型の分業を踏襲。</li>
+  </ul>
+
+  <h3>農地での蛾類モニタリング（保全・政策評価の現場）</h3>
+  <p>蛾は農地の生物多様性評価と農業環境政策の効果検証に使われてきました。英国・アイルランドの圃場研究では、<strong>農業環境スキーム（agri-environment scheme）</strong>のもとで設けた幅広の草地マージンやヘッジロウの樹木が、蛾の個体数を有意に増やすことがライトトラップ調査で示されています。たとえば6 m幅の草地マージンを持つ圃場では、普通種9種合計で標準マージンの圃場より<strong>約40%多い</strong>蛾が記録されました（<a href="#r-merckx2010">Merckx et al. 2010</a>, <a href="#r-merckx2009">Merckx et al. 2009</a>）。移動性の低い種（小型蛾）ほどマージンへの応答が強いという、保全設計に直結する知見も得られています。</p>
+  <p>このように蛾類モニタリングは、「農地の管理オプションが生物多様性にどれだけ効くか」を<strong>定量的に評価する物差し</strong>として機能します。</p>
+
+  <!-- ===================== 6 ===================== -->
+  <h2 class="sec" id="s6"><span class="num">6</span>オランダ・欧州の標準化LEDトラップによるモニタリング</h2>
+
+  <p>近年の欧州では、市民・非専門家でも比較可能なデータを取れるように、<strong>標準化されたLEDライトトラップ＋アプリ撮影＋AI画像同定</strong>を組み合わせた次世代の枠組みが整備されつつあります。</p>
+
+  <h3>EU 送粉者モニタリング・蛾モジュール（SPRINGプロジェクト）</h3>
+  <p>EUの送粉者モニタリング（EU PoMS）の実装準備を担った SPRING プロジェクトは、<strong>蛾モジュール</strong>を開発しました。手順は明快です。</p>
+  <ol>
+    <li>規格化した<strong>LEDライトトラップ</strong>を一晩稼働。</li>
+    <li>翌朝、専用アプリで止まった個体をすべて撮影。</li>
+    <li><strong>AI画像分類器</strong>が候補を提示し、非専門家でも迅速に記録できる。</li>
+  </ol>
+  <p>このプロトコルは<strong>5か国（ドイツ・ハンガリー・オランダ・スペイン・スウェーデン）の253地点</strong>でパイロット実施され、加盟国横断で比較可能な蛾モニタリングの実現可能性が示されました。</p>
+
+  <h3>DIOPSIS（オランダ）― 自律カメラによる自動モニタリング</h3>
+  <p>DIOPSIS は、UV層を持つスクリーンに止まった昆虫を自動撮影し、機械学習で計数・同定する自律カメラです。<strong>約150台</strong>がオランダ全土（自然・都市・農地）に展開され、大型研究イニシアチブ ARISE の一部として運用されています。商用機（Faunabit）として購入・リースも可能です。</p>
+
+  <h3>AMI System（UKCEH 主導の国際コンソーシアム）</h3>
+  <p>AMI（Automated Monitoring of Insects）は、UV光で誘引した昆虫を照明スクリーン上で撮影し、機械学習で検出・同定する<strong>非致死的</strong>システムです。Raspberry Pi系の制御PC・UVランプ・高解像度カメラ・ソーラー電源で構成され、<strong>30か国以上</strong>に展開。ソフトウェアと設計はオープンソースで公開されています。AMIの標準化フレームワークは <a href="#r-roy2024">Roy et al. 2024（Phil. Trans. R. Soc. B）</a>にまとめられ、その前身となる自動ライトトラップ（<a href="#r-bjerge2021">Bjerge et al. 2021</a>）は8種の蛾をF1=0.93で分類しました。AIの種同定モデルは、欧米向けで実トラップ画像に対し<strong>80%台前半の種レベル精度</strong>が報告されています（<a href="#r-jain2024">Jain et al. 2024</a>）。</p>
+
+  <div class="callout">
+    <b>誘引光それ自体が人工光（ALAN）である</b>：モニタリングに使う光は、対象である蛾の交尾・産卵・捕食回避に亜致死的な影響を与え、測ろうとしているトレンドそのものを歪めうる――この緊張関係を <a href="#r-roy2024">Roy et al. 2024</a> が明示しています。緩和策として、一晩のうちに非点灯時間を挟む点灯スケジュールや、撮影後に放す非致死運用が提案されています。日本版でもこの倫理・方法論を最初から組み込むべきです（関連：<a href="#r-owens2020">Owens et al. 2020</a>, <a href="#r-boyes2021">Boyes et al. 2021</a>）。
+  </div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 920 250" role="img" aria-label="市民科学データのパイプライン図">
+      <defs>
+        <marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#15605a"/>
+        </marker>
+      </defs>
+      <g font-size="12.5" text-anchor="middle">
+        <!-- stage boxes -->
+        <g>
+          <rect x="20" y="90" width="120" height="64" rx="10" fill="#10202b"/>
+          <text x="80" y="116" fill="#fff" font-weight="700">観察・採集</text>
+          <text x="80" y="134" fill="#9fc1b8" font-size="11">トラップ／撮影</text>
+        </g>
+        <g>
+          <rect x="180" y="90" width="120" height="64" rx="10" fill="#1d3a4a"/>
+          <text x="240" y="116" fill="#fff" font-weight="700">画像・標本</text>
+          <text x="240" y="134" fill="#cfe3dc" font-size="11">日時・位置情報付</text>
+        </g>
+        <g>
+          <rect x="340" y="74" width="130" height="96" rx="10" fill="#15605a"/>
+          <text x="405" y="104" fill="#fff" font-weight="700">同定</text>
+          <text x="405" y="124" fill="#cfe3dc" font-size="11">AI一次候補</text>
+          <text x="405" y="142" fill="#cfe3dc" font-size="11">＋専門家／</text>
+          <text x="405" y="158" fill="#cfe3dc" font-size="11">地域記録担当者検証</text>
+        </g>
+        <g>
+          <rect x="510" y="90" width="120" height="64" rx="10" fill="#15605a"/>
+          <text x="570" y="116" fill="#fff" font-weight="700">検証済DB</text>
+          <text x="570" y="134" fill="#cfe3dc" font-size="11">Darwin Core</text>
+        </g>
+        <g>
+          <rect x="670" y="90" width="110" height="64" rx="10" fill="#c98a2b"/>
+          <text x="725" y="116" fill="#fff" font-weight="700">公開</text>
+          <text x="725" y="134" fill="#fff" font-size="11">GBIF／地図</text>
+        </g>
+        <g>
+          <rect x="815" y="74" width="90" height="96" rx="10" fill="#0d3f3b"/>
+          <text x="860" y="108" fill="#fff" font-weight="700">活用</text>
+          <text x="860" y="128" fill="#cfe3dc" font-size="11">保全</text>
+          <text x="860" y="144" fill="#cfe3dc" font-size="11">政策・教育</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="#15605a" stroke-width="2" marker-end="url(#arr)">
+          <line x1="140" y1="122" x2="178" y2="122"/>
+          <line x1="300" y1="122" x2="338" y2="122"/>
+          <line x1="470" y1="122" x2="508" y2="122"/>
+          <line x1="630" y1="122" x2="668" y2="122"/>
+          <line x1="780" y1="122" x2="813" y2="122"/>
+        </g>
+        <!-- feedback loop -->
+        <path d="M860,170 q0,40 -430,40 q-430,0 -350,-50" fill="none" stroke="#c98a2b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+        <text x="430" y="232" fill="#8a5a12" font-size="11">フィードバック：希少種は位置情報を一般化（ぼかし）して公開</text>
+      </g>
+    </svg>
+    <figcaption><b>図2.</b> 市民科学による夜行性昆虫モニタリングの標準データパイプライン。AIによる一次同定と専門家／地域記録担当者による検証を組み合わせ、Darwin Core準拠で公開する。希少種は位置情報を一般化してから公開する（破線のルール）。</figcaption>
+  </figure>
+
+  <!-- ===================== 7 ===================== -->
+  <h2 class="sec" id="s7"><span class="num">7</span>定量モニタリングと定性モニタリングの違い</h2>
+
+  <p>蛾類モニタリングは、目的に応じて「定量」と「定性」を意図的に使い分け、両輪で運用するのが要点です。</p>
+
+  <table>
+    <caption>表1. 定量モニタリングと定性モニタリングの比較</caption>
+    <thead>
+      <tr><th>観点</th><th>定量モニタリング</th><th>定性モニタリング</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>調べる対象</td><td>個体数・バイオマス・群集組成の<strong>変化量</strong></td><td>種の<strong>在・不在（分布）</strong>・記録</td></tr>
+      <tr><td>サンプリング努力</td><td>標準化・一定（同一地点・同一機材・同一頻度）</td><td>機会的・不均一（参加者の都合で変動）</td></tr>
+      <tr><td>代表例</td><td>Rothamsted Insect Survey、Garden Moth Scheme、Krefeld（マレーゼトラップ）</td><td>iNaturalist、Biome、National Moth Week、NMRS／MothsIreland の記録収集</td></tr>
+      <tr><td>強み</td><td>トレンド検出・統計的因果推論に強い</td><td>広域・大量・低コスト・市民参加の裾野が広い</td></tr>
+      <tr><td>弱み</td><td>地点数が限られ、運用コストと継続性が課題</td><td>努力量が不明でトレンド解釈が難しい（観察増＝個体増ではない）</td></tr>
+      <tr><td>主な用途</td><td>減少率の推定、政策効果の検証</td><td>分布図、新産地・分布拡大の検出、普及啓発</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="fig">
+    <svg viewBox="0 0 920 180" role="img" aria-label="定性から定量までのモニタリング・スペクトル">
+      <line x1="60" y1="100" x2="860" y2="100" stroke="#4b5a52" stroke-width="3"/>
+      <polygon points="860,100 846,93 846,107" fill="#4b5a52"/>
+      <polygon points="60,100 74,93 74,107" fill="#4b5a52"/>
+      <text x="70" y="138" fill="#4b5a52" font-size="13" font-weight="700">定性（機会的・在不在）</text>
+      <text x="850" y="138" text-anchor="end" fill="#4b5a52" font-size="13" font-weight="700">定量（標準化・個体数）</text>
+      <g font-size="12" text-anchor="middle">
+        <g><circle cx="150" cy="100" r="7" fill="#c98a2b"/><text x="150" y="78" fill="#1c2421">iNaturalist／Biome</text></g>
+        <g><circle cx="330" cy="100" r="7" fill="#c98a2b"/><text x="330" y="78" fill="#1c2421">Moth Week・記録収集</text></g>
+        <g><circle cx="510" cy="100" r="7" fill="#15605a"/><text x="510" y="78" fill="#1c2421">Garden Moth Scheme</text></g>
+        <g><circle cx="690" cy="100" r="7" fill="#15605a"/><text x="690" y="78" fill="#1c2421">標準化LEDトラップ網</text></g>
+        <g><circle cx="820" cy="100" r="7" fill="#0d3f3b"/><text x="820" y="78" fill="#1c2421">RIS／Krefeld</text></g>
+      </g>
+      <text x="460" y="165" text-anchor="middle" fill="#4b5a52" font-size="12">努力量の標準化が進むほど、トレンド解析の信頼性が上がる（ただし運用コストも上がる）</text>
+    </svg>
+    <figcaption><b>図3.</b> モニタリング手法のスペクトル。左ほど参加の裾野が広く低コスト、右ほどトレンド検出力が高い。日本版は両端を接続して運用する。</figcaption>
+  </figure>
+
+  <!-- ===================== 8 ===================== -->
+  <h2 class="sec" id="s8"><span class="num">8</span>海外での社会実装例</h2>
+
+  <h3>① 保全優先種の抽出</h3>
+  <p>NMRS・RISの長期データは、減少率に基づく<strong>レッドリスト評価や保全優先種の特定</strong>に使われています。個体数トレンド（RIS）と分布の縮小（NMRS）を組み合わせ、どの種に保全資源を投じるかの根拠を提供します。</p>
+
+  <h3>② 分布変化の検出</h3>
+  <p>市民から集まる大量の分布記録（NMRS・MothsIreland）は、分布拡大・縮小や<strong>新たな定着種の検出</strong>を可能にします。記録集約型スキームの最も得意とする社会実装です。</p>
+
+  <h3>③ 気候変動影響の把握</h3>
+  <p>英国の『State of Britain's Larger Moths 2021』は、1968〜2017年の50年間で大型蛾の総個体数が<strong>33%減少</strong>し、減少は南部（39%減）で北部（22%減）より大きいこと、そして温暖化に伴い<strong>南方系の種が北へ分布を広げる一方、冷涼な気候に適応した種が減少</strong>していることを示しました。これは長期トラップ網（RIS）と記録スキーム（NMRS）の統合があって初めて描けた、気候変動影響の代表的な実証例です。</p>
+
+  <h3>④ 農地・都市緑地・保護区の評価</h3>
+  <p>農地では、農業環境スキームの草地マージンやヘッジロウが蛾を増やす効果が定量評価され（<a href="#r-merckx2010">Merckx et al. 2010</a>）、政策の費用対効果の議論に使われています。都市域では、街灯（特に白色LED）が蛾の幼虫個体数を周辺で<strong>約半減</strong>させることが対照実験で示され（<a href="#r-boyes2021">Boyes et al. 2021</a>）、都市緑地・照明計画の評価指標になっています。保護区では、Krefeldのデータが「保護区内ですら飛翔性昆虫が激減している」という政策的に重大な発見をもたらしました。</p>
+
+  <h3>⑤ 市民科学・環境教育</h3>
+  <p>National Moth Night／Moth Week や Garden Moth Scheme は、市民が自宅の庭で夜の生物多様性に触れる入口となり、<strong>科学リテラシーと地域の自然への関心を育てる教育装置</strong>として機能しています。集まったデータが研究・政策に使われる実感が、参加の継続を支えています。</p>
+
+  <!-- ===================== 9 ===================== -->
+  <h2 class="sec" id="s9"><span class="num">9</span>日本で構築すべき体制</h2>
+
+  <div class="callout note">
+    <b>日本の現状（出発点の確認）</b>：市民科学プラットフォームは充実しています ―
+    <span class="pill">いきものログ（環境省・2013〜・546万件超）</span>
+    <span class="pill">Biome（2019〜・1,000万件超・10万種）</span>
+    <span class="pill">みんなで作る日本産蛾類図鑑Z（2003〜・科博関与）</span>。
+    一方、蝶は<strong>モニタリングサイト1000</strong>で全国トランセクト調査が走るのに対し、<strong>確認した範囲では「生物多様性を目的とした全国標準化の蛾類／ライトトラップ・モニタリング網」は見当たりません</strong>（全国の灯火ネットワークとしては農林水産分野の予察灯がありますが、目的・対象種が異なります）。GBIFの日本産鱗翅目データは標本主導（観察データは約11%）で、観察データ主導の欧米とは構造が対照的です。<strong>ここが日本で構築すべき体制の空白であり、出発点です。</strong>
+  </div>
+
+  <p>英国・アイルランド・欧州のモデルを踏まえ、日本では次の5要素を組み合わせた二層構造（広域の記録収集＋少数の定点定量）を提案します。</p>
+
+  <h3>(1) 全国的な記録データベース</h3>
+  <p>新規構築よりも<strong>既存資産の接続</strong>を優先します。Biome・いきものログの市民投稿と、jpmoth・博物館標本・GBIFを結び、蛾類のオキュレンスを<strong>Darwin Core準拠</strong>で一元的に検索・公開できる層をつくります。MothsIrelandのNBDCのように、「市民投稿ポータル → 専門家検証 → 公開DB」を制度的に接続するのが要点です。</p>
+
+  <h3>(2) 地点固定型の標準化ライトトラップ網</h3>
+  <p>RIS／GMSに相当する定量の骨格です。<strong>同一地点・同一機材（規格化LED光源）・同一頻度</strong>で運用し、トレンド検出に耐えるデータを得ます。非致死的な撮影ベースを基本とし、点灯スケジュールで光害影響を抑えます（第6章の倫理）。</p>
+
+  <h3>(3) 博物館・大学・NPO・行政・市民の連携</h3>
+  <p>役割を明確に分担します。<strong>博物館＝同定の最終検証と標本の保管</strong>、<strong>大学＝解析・手法開発・人材育成</strong>、<strong>NPO・同好会＝市民の組織化と地域記録担当者の供給</strong>、<strong>行政＝資金・許認可・政策接続</strong>、<strong>市民＝データ収集の主力</strong>。</p>
+
+  <h3>(4) 画像記録と専門家同定の仕組み</h3>
+  <p>日本産蛾類に特化した<strong>AI一次同定</strong>（Biomeの同定基盤や、海外のオープンソースAMIモデルの再学習を活用）と、英国の<strong>County Moth Recorder</strong>に倣った<strong>地域記録担当者による検証</strong>を二段構えにします。同定容易な普通種リストから始め、徐々に対象を広げます。</p>
+
+  <h3>(5) 希少種の位置情報とデータ公開ルール</h3>
+  <p>採集圧の助長を避けるため、<strong>希少種は位置情報を一般化（メッシュ化・ぼかし）してから公開</strong>するルールを最初から設けます（GBIF等の一般化の慣行に準拠）。生のデータは研究・行政利用に限り申請制とし、一般公開とは分離します。</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 920 380" role="img" aria-label="日本版の連携体制図">
+      <circle cx="460" cy="190" r="62" fill="#15605a"/>
+      <text x="460" y="184" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">蛾類モニタリング</text>
+      <text x="460" y="204" text-anchor="middle" fill="#cfe3dc" font-size="12">運営コンソーシアム</text>
+      <g font-size="13" text-anchor="middle">
+        <g>
+          <line x1="416" y1="146" x2="250" y2="80" stroke="#4b5a52" stroke-width="1.6"/>
+          <rect x="120" y="50" width="170" height="60" rx="10" fill="#10202b"/>
+          <text x="205" y="76" fill="#fff" font-weight="700">大学</text>
+          <text x="205" y="96" fill="#9fc1b8" font-size="11">解析・手法開発・育成</text>
+        </g>
+        <g>
+          <line x1="504" y1="146" x2="670" y2="80" stroke="#4b5a52" stroke-width="1.6"/>
+          <rect x="630" y="50" width="170" height="60" rx="10" fill="#10202b"/>
+          <text x="715" y="76" fill="#fff" font-weight="700">博物館</text>
+          <text x="715" y="96" fill="#9fc1b8" font-size="11">最終同定・標本保管</text>
+        </g>
+        <g>
+          <line x1="398" y1="190" x2="250" y2="190" stroke="#4b5a52" stroke-width="1.6"/>
+          <rect x="80" y="160" width="170" height="60" rx="10" fill="#1d3a4a"/>
+          <text x="165" y="186" fill="#fff" font-weight="700">行政</text>
+          <text x="165" y="206" fill="#cfe3dc" font-size="11">資金・許認可・政策</text>
+        </g>
+        <g>
+          <line x1="522" y1="190" x2="670" y2="190" stroke="#4b5a52" stroke-width="1.6"/>
+          <rect x="670" y="160" width="170" height="60" rx="10" fill="#1d3a4a"/>
+          <text x="755" y="186" fill="#fff" font-weight="700">NPO・同好会</text>
+          <text x="755" y="206" fill="#cfe3dc" font-size="11">市民組織化・地域検証</text>
+        </g>
+        <g>
+          <line x1="460" y1="252" x2="460" y2="300" stroke="#4b5a52" stroke-width="1.6"/>
+          <rect x="360" y="300" width="200" height="60" rx="10" fill="#c98a2b"/>
+          <text x="460" y="326" fill="#fff" font-weight="700">市民（データ収集の主力）</text>
+          <text x="460" y="346" fill="#fff" font-size="11">庭・地域での標準化記録</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption><b>図4.</b> 日本版モニタリング体制の連携イメージ。5主体が役割を分担し、運営コンソーシアムが標準・データ・ルールを束ねる。</figcaption>
+  </figure>
+
+  <!-- ===================== 10 ===================== -->
+  <h2 class="sec" id="s10"><span class="num">10</span>日本での課題</h2>
+
+  <div class="cards">
+    <div class="card"><h4>① 同定難易度</h4><p>6,000種超・小型蛾が多く、写真同定が困難。iNaturalist日本でも蛾のResearch Grade率は約42%（蝶は約87%）にとどまる。→ 普通種リストとAI一次同定で入口を下げる。</p></div>
+    <div class="card"><h4>② 専門家不足</h4><p>検証を担う蛾類同定者が限られ、地域偏在も大きい。→ 地域記録担当者制度＋オンライン検証で負荷分散、博物館を最終検証ハブに。</p></div>
+    <div class="card"><h4>③ 標準化手法の未確立</h4><p>学会公式の標準プロトコルが確認できない。光源・頻度・努力量の規格化が必要。→ 海外プロトコル（GMS／EU PoMS）を日本向けに調整。</p></div>
+    <div class="card"><h4>④ 長期資金</h4><p>「100年継続」を支える資金が最大の難所。→ 科研費・環境省事業・企業の自然関連財務情報開示（TNFD）対応・ふるさと納税等を多元化。</p></div>
+    <div class="card"><h4>⑤ データ品質管理</h4><p>努力量メタデータの欠落、同定誤り、機会的バイアス。→ ゼロ記録の必須化、Darwin Core、検証ステータスの明示。</p></div>
+    <div class="card"><h4>⑥ 法制度・許認可・土地調整</h4><p>保護区・国立公園・私有地での調査は許認可と土地所有者の合意が必要。光の使用にも配慮。→ 自宅の庭や同意済み地点から開始し、段階的に拡大。</p></div>
+  </div>
+
+  <!-- ===================== 11 ===================== -->
+  <h2 class="sec" id="s11"><span class="num">11</span>5年間の実装ロードマップ</h2>
+
+  <figure class="fig">
+    <svg viewBox="0 0 920 320" role="img" aria-label="5年間の実装ロードマップ（ガントチャート）">
+      <!-- year columns -->
+      <g font-size="12" fill="#4b5a52" text-anchor="middle">
+        <text x="230" y="28">1年目</text><text x="370" y="28">2年目</text>
+        <text x="510" y="28">3年目</text><text x="650" y="28">4年目</text><text x="790" y="28">5年目</text>
+      </g>
+      <g stroke="#e3e9e5" stroke-width="1">
+        <line x1="160" y1="36" x2="160" y2="300"/><line x1="300" y1="36" x2="300" y2="300"/>
+        <line x1="440" y1="36" x2="440" y2="300"/><line x1="580" y1="36" x2="580" y2="300"/>
+        <line x1="720" y1="36" x2="720" y2="300"/><line x1="860" y1="36" x2="860" y2="300"/>
+      </g>
+      <g font-size="12.5">
+        <!-- bars: x maps year1 start=160, each year=140px -->
+        <text x="12" y="62" fill="#1c2421">基盤・既存データ統合</text>
+        <rect x="160" y="50" width="180" height="20" rx="5" fill="#10202b"/>
+        <text x="12" y="98" fill="#1c2421">プロトコル策定</text>
+        <rect x="230" y="86" width="180" height="20" rx="5" fill="#1d3a4a"/>
+        <text x="12" y="134" fill="#1c2421">パイロット運用（3-5地点）</text>
+        <rect x="300" y="122" width="180" height="20" rx="5" fill="#15605a"/>
+        <text x="12" y="170" fill="#1c2421">AI同定モデル日本産調整</text>
+        <rect x="300" y="158" width="320" height="20" rx="5" fill="#15605a"/>
+        <text x="12" y="206" fill="#1c2421">拡大（20-30地点）・育成</text>
+        <rect x="440" y="194" width="180" height="20" rx="5" fill="#15605a"/>
+        <text x="12" y="242" fill="#1c2421">全国化（50-100地点）・行政連携</text>
+        <rect x="580" y="230" width="180" height="20" rx="5" fill="#c98a2b"/>
+        <text x="12" y="278" fill="#1c2421">年次「日本の蛾の現状」報告・定常運用</text>
+        <rect x="720" y="266" width="140" height="20" rx="5" fill="#c98a2b"/>
+      </g>
+    </svg>
+    <figcaption><b>図5.</b> 5年実装ロードマップの概念図。黒＝基盤整備、緑＝定量網の構築・拡大、橙＝全国化と定常運用・社会還元。</figcaption>
+  </figure>
+
+  <ul>
+    <li><strong>1年目（基盤）：</strong>コアチーム（大学・博物館・NPO）形成。既存データ（jpmoth／Biome／いきものログ／GBIF）の統合方針とDarwin Coreスキーマ確定。プロトコル原案。パイロット地点3〜5を選定。</li>
+    <li><strong>2年目（パイロット）：</strong>地点固定の標準化トラップ（撮影ベース・非致死優先）で運用開始。日本産蛾類向けにAI一次同定をファインチューニング。地域記録担当者による検証ワークフロー試行。</li>
+    <li><strong>3年目（拡大）：</strong>地点を20〜30に拡大。博物館・大学をハブに市民トレーニングを展開。希少種のデータ公開ルールを正式化。最初の年次レポートを公表。</li>
+    <li><strong>4年目（全国化）：</strong>地点50〜100へ。行政連携（モニタリングサイト1000やいきものログとの接続検討）。長期資金の多元化を確立。</li>
+    <li><strong>5年目（定常運用）：</strong>年次「日本の蛾の現状」レポートを定例化。レッドリスト・気候指標・農地／都市緑地評価への政策貢献。GBIF／国際AMIネットワークと連携。</li>
+  </ul>
+
+  <!-- ===================== 12 ===================== -->
+  <h2 class="sec" id="s12"><span class="num">12</span>最初に始めるべきパイロットプロジェクト案</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h4>案A：「ガーデンモス・ジャパン（仮）」<br><small>― GMS型の半標準化・市民主導</small></h4>
+      <p><strong>概要：</strong>全国の有志が自宅や所属機関で、規格化したライトシート（または小型UV-LED）を<strong>毎週同じ曜日</strong>に運用し、止まった蛾を撮影してアプリに投稿。</p>
+      <p><strong>同定：</strong>AIが一次候補を提示し、学会・同好会の地域記録担当者が検証。jpmoth／GBIFへ反映。</p>
+      <p><strong>対象：</strong>同定容易な<strong>指標普通種50〜100種</strong>から開始し、ゼロ記録も必ず報告。</p>
+      <p><strong>強み：</strong>低コスト・非致死・参加の裾野が広い。英国GMSという成功モデルがある。</p>
+    </div>
+    <div class="card">
+      <h4>案B：博物館連携の自動カメラ定点網<br><small>― AMI／DIOPSIS型の定量骨格</small></h4>
+      <p><strong>概要：</strong>博物館・大学・保護区の同意済み地点5〜10に、<strong>自動カメラトラップ</strong>（AMIやMothbox等のオープンソース設計を参考）を設置し、長期定量データを取得。</p>
+      <p><strong>同定：</strong>機械学習で自動計数・一次同定、専門家が定期検証。</p>
+      <p><strong>強み：</strong>努力量が完全に標準化され、トレンド検出力が高い。少人数で継続可能。</p>
+    </div>
+  </div>
+
+  <div class="callout note">
+    <b>推奨：案Aと案Bの併走（小規模から）</b>。案Aで市民参加の裾野と分布データ（定性）を、案Bで定点の定量骨格を同時に育て、両者を同一のデータ基盤（Darwin Core）に流し込みます。まずは<strong>一つの地方（例：協力博物館の集まる地域）でA数十地点＋B数地点</strong>から始め、2〜3年で運用と品質管理を固めてから全国展開するのが現実的です。
+  </div>
+
+  <!-- ===================== 図解案 ===================== -->
+  <h2 class="sec" id="figs"><span class="num">＊</span>本レポートに含めた図解案の一覧</h2>
+  <ol>
+    <li><strong>図1：</strong>蛾類が指標として優れる理由（ハブ＆スポーク概念図）</li>
+    <li><strong>図2：</strong>市民科学データの標準パイプライン（観察→同定→検証→公開→活用、希少種一般化ルール付き）</li>
+    <li><strong>図3：</strong>定性〜定量モニタリングのスペクトル（事例の位置づけ）</li>
+    <li><strong>図4：</strong>5主体（大学・博物館・行政・NPO・市民）の連携体制図</li>
+    <li><strong>図5：</strong>5年実装ロードマップ（ガントチャート）</li>
+  </ol>
+  <p><small>追加で作成を推奨する図解案：①海外主要スキーム年表（1964 RIS → 1999 Moth Night → 2007 NMRS → 2012 Moth Week → 2020年代 標準化LED＋AI）、②日本の既存資産マップ（Biome・いきものログ・jpmoth・GBIF標本の関係図と「蛾類定量網の空白」を可視化）、③標準化トラップの構成要素図（規格化光源・撮影部・点灯スケジュール・非致死運用）。</small></p>
+
+  <!-- ===================== 参考文献 ===================== -->
+  <h2 class="sec" id="refs"><span class="num">＊</span>参考文献・参照すべき海外事例</h2>
+
+  <div class="refs">
+    <h3>海外の市民科学スキーム・モニタリングネットワーク（公式サイト）</h3>
+    <ol>
+      <li>Rothamsted Insect Survey（UK, 1964〜）. <span class="src">https://www.rothamsted.ac.uk/national-capability/the-insect-survey</span></li>
+      <li id="r-nmrs">National Moth Recording Scheme（Butterfly Conservation, UK, 2007〜）. <span class="src">https://nbn.org.uk/biological-recording-scheme/national-moth-recording-scheme/ ／ https://www.brc.ac.uk/scheme/national-moth-recording-scheme</span></li>
+      <li>Garden Moth Scheme（UK・アイルランド）. <span class="src">https://gardenmothscheme.org.uk/info</span></li>
+      <li>National Moth Night（Atropos／Butterfly Conservation／UKCEH, 1999〜）. <span class="src">https://www.atropos.info/moth-night/ ／ https://www.nationalmothnight.info/</span></li>
+      <li>National Moth Week（USA発, 2012〜, 世界規模）. <span class="src">https://nationalmothweek.org/about/</span></li>
+      <li>BAMONA — Butterflies and Moths of North America（2005〜）. <span class="src">https://www.butterfliesandmoths.org/about</span></li>
+      <li id="r-mothsireland">MothsIreland（記録1,255,377件・1,497種・1840〜）／National Biodiversity Data Centre. <span class="src">https://www.mothsireland.com/ ／ https://biodiversityireland.ie/the-mothsireland-dataset-has-been-updated-making-it-the-largest-dataset-on-biodiversity-maps/</span></li>
+      <li>Irish Butterfly Monitoring Scheme（NBDC）. <span class="src">https://biodiversityireland.ie/surveys/butterfly-monitoring-scheme/</span></li>
+      <li>European Butterfly Monitoring Scheme（eBMS）. <span class="src">https://butterfly-monitoring.net/ebms</span></li>
+      <li>EU Pollinator Monitoring Scheme 蛾モジュール／SPRINGプロジェクト（5か国253地点）. <span class="src">https://butterfly-monitoring.net/spring ／ https://www.ufz.de/spring-pollination/</span></li>
+      <li>DIOPSIS 自律カメラ（オランダ・約150台・ARISE）. <span class="src">https://diopsis.eu/en/ ／ https://www.naturalis.nl/en/science/diopsis-insect-camera</span></li>
+      <li>AMI System（UKCEH 主導コンソーシアム・30か国超）. <span class="src">https://www.insectmonitoring.org/ ／ https://www.ceh.ac.uk/solutions/equipment/automated-monitoring-insects-trap</span></li>
+      <li>Mothbox（Digital Naturalism Laboratories・オープンソース・約$375）. <span class="src">https://mothbox.org/</span></li>
+    </ol>
+
+    <h3>査読論文・報告書</h3>
+    <ol start="14">
+      <li id="r-roy2024">Roy, D.B., Alison, J., August, T.A., <em>et al.</em> (2024) Towards a standardized framework for AI-assisted, image-based monitoring of nocturnal insects. <em>Philosophical Transactions of the Royal Society B</em> 379: 20230108. DOI: 10.1098/rstb.2023.0108</li>
+      <li id="r-bjerge2021">Bjerge, K., Nielsen, J.B., Sepstrup, M.V., Helsing-Nielsen, F., Høye, T.T. (2021) An Automated Light Trap to Monitor Moths Using Computer Vision-Based Tracking and Deep Learning. <em>Sensors</em> 21(2): 343. DOI: 10.3390/s21020343</li>
+      <li id="r-jain2024">Jain, A., Cunha, F., Bunsen, M.J., <em>et al.</em> (2024) Insect Identification in the Wild: The AMI Dataset. <em>ECCV 2024</em> (Springer LNCS). arXiv: 2406.12452</li>
+      <li>Høye, T.T., Ärje, J., Bjerge, K., <em>et al.</em> (2021) Deep learning and computer vision will transform entomology. <em>PNAS</em> 118(2): e2002545117. DOI: 10.1073/pnas.2002545117</li>
+      <li>van Klink, R., August, T., Bas, Y., <em>et al.</em> (2022) Emerging technologies revolutionise insect ecology and monitoring. <em>Trends in Ecology &amp; Evolution</em> 37(10): 872–885. DOI: 10.1016/j.tree.2022.06.001</li>
+      <li>Szczygieł, H.A., Johns, B., Fortet, B., Dent, D.H., Quitmeyer, K., Quitmeyer, A. (2026) Mothbox and Mothbot: Automated light trap and data processing system for scalable insect monitoring. <em>Methods in Ecology and Evolution</em>. DOI: 10.1111/2041-210x.70327</li>
+      <li>Sittinger, M., Uhler, J., Pink, M., Herz, A. (2024) Insect Detect: An open-source DIY camera trap for automated insect monitoring. <em>PLOS ONE</em> 19(4): e0295474. DOI: 10.1371/journal.pone.0295474</li>
+      <li id="r-hallmann2017">Hallmann, C.A., Sorg, M., Jongejans, E., <em>et al.</em> (2017) More than 75 percent decline over 27 years in total flying insect biomass in protected areas. <em>PLOS ONE</em> 12(10): e0185809. DOI: 10.1371/journal.pone.0185809</li>
+      <li id="r-soubm2021">Butterfly Conservation, Rothamsted Research &amp; UKCEH (2021) <em>The State of Britain's Larger Moths 2021</em>（50年で総個体数33%減・南39%／北22%・北方シフト）. <span class="src">https://butterfly-conservation.org/sites/default/files/2021-03/StateofMothsReport2021.pdf</span></li>
+      <li id="r-merckx2014">Merckx, T. &amp; Slade, E.M. (2014) Macro-moth families differ in their attraction to light: implications for light-trap monitoring programmes. <em>Insect Conservation and Diversity</em> 7(5): 453–461. DOI: 10.1111/icad.12068</li>
+      <li id="r-merckx2010">Merckx, T., <em>et al.</em> (2010) The effectiveness of agri-environment schemes for the conservation of farmland moths: assessing the importance of a landscape-scale management approach. <em>Journal of Applied Ecology</em> 47: 479–489. DOI: 10.1111/j.1365-2664.2010.01927.x</li>
+      <li id="r-merckx2009">Merckx, T., <em>et al.</em> (2009) Effect of field margins on moths depends on species mobility: field-based evidence for landscape-scale conservation. <em>Agriculture, Ecosystems &amp; Environment</em> 129: 302–309. DOI: 10.1016/j.agee.2008.10.004 <span class="unverified">（巻号・頁は要最終確認）</span></li>
+      <li id="r-boyes2021">Boyes, D.H., Evans, D.M., Fox, R., Parsons, M.S., Pocock, M.J.O. (2021) Street lighting has detrimental impacts on local insect populations. <em>Science Advances</em> 7(35): eabi8322. DOI: 10.1126/sciadv.abi8322</li>
+      <li id="r-owens2020">Owens, A.C.S., Cochard, P., Durrant, J., Farnworth, B., Perkin, E.K., Seymoure, B. (2020) Light pollution is a driver of insect declines. <em>Biological Conservation</em> 241: 108259. DOI: 10.1016/j.biocon.2019.108259</li>
+      <li>Knop, E., <em>et al.</em> (2017) Artificial light at night as a new threat to pollination. <em>Nature</em> 548: 206–209. DOI: 10.1038/nature23288</li>
+      <li>Atsumi, K., <em>et al.</em> (2024) ［Biomeの種同定AIに関する論文］. <em>eLife</em> 13: RP93694. DOI: 10.7554/eLife.93694</li>
+    </ol>
+
+    <h3>日本国内の関連リソース</h3>
+    <ol start="29">
+      <li>みんなで作る日本産蛾類図鑑Z（2003〜・国立科学博物館関与）. <span class="src">http://www.jpmoth.org/</span></li>
+      <li>バイオーム（Biome, 2019〜）. <span class="src">https://biome.co.jp/</span></li>
+      <li>いきものログ（環境省 生物多様性センター, 2013〜）. <span class="src">https://ikilog.biodic.go.jp/</span></li>
+      <li>モニタリングサイト1000（環境省, 2003〜・里地調査にチョウ類トランセクトあり、蛾類は対象外）. <span class="src">https://www.biodic.go.jp/moni1000/</span></li>
+      <li>環境省「光害対策ガイドライン」（1998初版／2021第2次改訂）. <span class="src">https://www.env.go.jp/press/109341.html</span></li>
+      <li>広渡俊哉ほか (2010) 灯火採集による小蛾類群集の評価. <em>環動昆</em> 21(1): 37–52. <span class="src">https://www.jstage.jst.go.jp/article/jjeez/21/1/21_37/_pdf/-char/ja</span></li>
+      <li>GBIF（日本産鱗翅目オキュレンス・標本主導の構造）. <span class="src">https://www.gbif.org/ ／ https://gbif.jp/</span></li>
+    </ol>
+  </div>
+
+  <footer>
+    <p><strong>出典の扱いについて：</strong>本レポートの数値・設立年・手法は、各プログラムの公式サイトおよび査読論文（DOI解決を含む）を一次ソースとして確認しました。「<span class="unverified">要確認</span>」を付した項目は一次ソースで裏が取れなかったもので、引用・公表の前に追加検証してください。誘引光を用いる調査は人工光（ALAN）による撹乱になりうるため、本レポートは非致死的な撮影ベースと最小限の光使用を基本姿勢としています。</p>
+    <p>作成日：2026-06-11 ／ 中心分類群：蛾類（鱗翅目）／ 用途：自然史・保全・市民科学・政策実装</p>
+  </footer>
+
+</div>
+</body>
+</html>

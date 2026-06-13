@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蛾類モニタリング | 調査地点一覧</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="index.html"><span class="brand-mark">M</span><span>蛾類モニタリング</span></a>
+      <nav class="main-nav" aria-label="主要ページ">
+        <a href="index.html">概要</a>
+        <a href="vision.html">背景・体制</a>
+        <a href="protocol.html">調査プロトコル</a>
+        <a href="forms.html">記録フォーム</a>
+        <a href="sites.html" aria-current="page">調査地点</a>
+        <a href="results.html">集計結果</a>
+        <a href="resources.html">資料・PDF</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow">Sites</p>
+    <h1>調査地点一覧</h1>
+    <p class="lead">公開可能な地点だけを掲載します。詳細座標、希少種情報、私有地情報は内部管理用データと分けます。</p>
+    <div class="photo-band photo-band-sites" aria-hidden="true">
+      <img src="assets/images/moths/moth-06.jpeg" alt="">
+    </div>
+
+    <section class="section grid two">
+      <div>
+        <h2>公開地図の方針</h2>
+        <p>地点は、公開可能な範囲で地名・環境区分・調査状態を表示します。必要に応じて座標を1kmメッシュ、行政区、保護区単位などに丸めます。</p>
+        <ul class="inline-list">
+          <li>公開可</li>
+          <li>位置丸め</li>
+          <li>内部限定</li>
+          <li>非公開</li>
+        </ul>
+      </div>
+      <div class="map-preview" aria-label="調査地点の概念図">
+        <span class="map-point"></span>
+        <span class="map-point"></span>
+        <span class="map-point"></span>
+        <span class="map-point"></span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>地点一覧テンプレート</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>site_id</th><th>公開名</th><th>環境区分</th><th>調査状態</th><th>公開レベル</th><th>備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>S001</td><td>準備中</td><td>森林</td><td>候補地</td><td>未判定</td><td>地点マスタ確定後に更新</td></tr>
+            <tr><td>S002</td><td>準備中</td><td>草地</td><td>候補地</td><td>未判定</td><td>管理履歴を確認</td></tr>
+            <tr><td>S003</td><td>準備中</td><td>都市緑地</td><td>候補地</td><td>未判定</td><td>周辺光環境を記録</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>地点マスタに必要な列</h2>
+      <div class="grid">
+        <article class="card"><h3>基本情報</h3><p>site_id、地点名、管理者、公開名、緯度、経度、標高。</p></article>
+        <article class="card"><h3>環境情報</h3><p>植生、土地利用、周辺光環境、水辺の有無、管理履歴。</p></article>
+        <article class="card"><h3>公開管理</h3><p>公開レベル、座標丸め方法、希少種配慮、許可条件。</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="inner">
+      <span>蛾類モニタリング</span>
+      <span><a href="results.html">集計結果へ</a></span>
+    </div>
+  </footer>
+</body>
+</html>

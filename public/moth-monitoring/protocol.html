@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蛾類モニタリング | 調査プロトコル</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="index.html"><span class="brand-mark">M</span><span>蛾類モニタリング</span></a>
+      <nav class="main-nav" aria-label="主要ページ">
+        <a href="index.html">概要</a>
+        <a href="vision.html">背景・体制</a>
+        <a href="protocol.html" aria-current="page">調査プロトコル</a>
+        <a href="forms.html">記録フォーム</a>
+        <a href="sites.html">調査地点</a>
+        <a href="results.html">集計結果</a>
+        <a href="resources.html">資料・PDF</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow">Protocol</p>
+    <h1>トラップ比較プロトコル</h1>
+    <p class="lead">LepiLEDと10W級ブラックLED、谷型入口と衝突板付き漏斗型を比較し、蛾類モニタリングに適した標準トラップを決めるための調査手順です。捕獲数だけでなく、到来、接触、入トラップ、保持を分けて記録します。</p>
+    <div class="photo-band photo-band-protocol" aria-hidden="true">
+      <img src="assets/images/moths/moth-02.jpeg" alt="">
+    </div>
+
+    <section class="section">
+      <h2>実験の基本方針</h2>
+      <div class="grid">
+        <article class="card">
+          <p class="meta">Attraction</p>
+          <h3>誘引力</h3>
+          <p>同じ時間・同じ地点条件で、トラップ周辺に来る蛾のイベント数を比較します。</p>
+        </article>
+        <article class="card">
+          <p class="meta">Capture</p>
+          <h3>捕獲過程</h3>
+          <p>接触、入トラップ、逃出、最終捕獲を分け、どの段階で差が出るかを見ます。</p>
+        </article>
+        <article class="card">
+          <p class="meta">Bias</p>
+          <h3>偏り</h3>
+          <p>種数、科構成、体サイズ、同定不能率を記録し、モニタリング上の偏りを確認します。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>標準フロー</h2>
+      <ol class="steps">
+        <li><strong>調査前準備:</strong> 調査許可、地点ID、トラップID、電源、予備機材、天候見込み、日の入り時刻を確認します。</li>
+        <li><strong>設置:</strong> トラップ位置、設置高、光源の向き、入口までの距離、周辺光環境、植生、トラップ間距離を記録します。</li>
+        <li><strong>点灯:</strong> 点灯時刻、光源仕様、電源状態、気温、風、雲量、降雨、月齢を記録します。</li>
+        <li><strong>観察:</strong> 到来、接触、入トラップ、逃出を同じ時間枠で記録します。観察者がいる場合は観察者IDも残します。</li>
+        <li><strong>回収:</strong> 消灯・回収時刻、最終捕獲数、欠測や機材トラブル、採集物の保存方法を記録します。</li>
+        <li><strong>同定:</strong> 写真、標本、同定者、同定確度、未同定理由を残します。</li>
+        <li><strong>データ整理:</strong> 採集イベントと種別記録を分け、公開可否を確認してから集計に回します。</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2>比較条件</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>条件</th><th>内容</th><th>注意点</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>光源</td><td>LepiLED、10W級バー型ブラックLED</td><td>型番、波長表記、電圧、電流、ライトIDを記録します。</td></tr>
+            <tr><td>入口構造</td><td>谷型入口、衝突板付き漏斗型</td><td>入口以外の容器、色、設置高、捕獲部をできるだけ揃えます。</td></tr>
+            <tr><td>ライトの向き</td><td>原則として両構造で同じ向き</td><td>谷型だけ横置き、漏斗型だけ縦置きにすると、構造差と光源方向が交絡します。</td></tr>
+            <tr><td>配置</td><td>同日並行、地点ローテーション</td><td>同じ地点に同じ条件を固定しないようにします。</td></tr>
+            <tr><td>反復</td><td>各条件で十分なtrap-nightを確保</td><td>短期の試作後、本番は日差・地点差を入れて評価します。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>最低限の記録項目</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>区分</th><th>項目</th><th>備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>地点</td><td>site_id、地点名、緯度、経度、標高、環境区分、植生</td><td>公開時は座標を丸める場合があります。</td></tr>
+            <tr><td>機材</td><td>trap_id、トラップ型、入口構造、光源、波長、出力、電源、設置高、光源の向き</td><td>光源変更や向きの違いは捕獲効率に影響するため必ず残します。</td></tr>
+            <tr><td>日時</td><td>date_start、date_end、点灯時刻、消灯時刻、回収時刻</td><td>調査努力量の計算に使います。</td></tr>
+            <tr><td>気象</td><td>気温、風、降雨、雲量、月齢、現地メモ</td><td>捕獲数の補正や欠測判断に使います。</td></tr>
+            <tr><td>行動イベント</td><td>到来、接触、入トラップ、逃出、最終捕獲数</td><td>捕獲数の差がどの段階で生じたかを見るために使います。</td></tr>
+            <tr><td>同定</td><td>和名、学名、同定者、同定レベル、確度、写真URL、標本有無</td><td>種群・属止めの扱いを明示します。</td></tr>
+            <tr><td>管理</td><td>採集許可、公開可否、希少種フラグ、備考</td><td>公開前に必ず確認します。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>野外チェックリスト</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>持ち出し前</h3>
+          <ul>
+            <li>バッテリー充電</li>
+            <li>光源・配線・防水確認</li>
+            <li>地点IDと調査票の確認</li>
+            <li>採集許可と緊急連絡先の確認</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>回収後</h3>
+          <ul>
+            <li>欠測・トラブルの記録</li>
+            <li>写真と標本番号の対応確認</li>
+            <li>未同定個体の保留管理</li>
+            <li>公開不可情報の分離</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section note">
+      <p>希少種の詳細地点、私有地、保護区内の採集情報は、公開ページにそのまま載せない運用を基本にします。</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="inner">
+      <span>蛾類モニタリング</span>
+      <span><a href="forms.html">記録フォームへ</a></span>
+    </div>
+  </footer>
+</body>
+</html>

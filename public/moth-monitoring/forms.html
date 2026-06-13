@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蛾類モニタリング | 記録フォーム</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="index.html"><span class="brand-mark">M</span><span>蛾類モニタリング</span></a>
+      <nav class="main-nav" aria-label="主要ページ">
+        <a href="index.html">概要</a>
+        <a href="vision.html">背景・体制</a>
+        <a href="protocol.html">調査プロトコル</a>
+        <a href="forms.html" aria-current="page">記録フォーム</a>
+        <a href="sites.html">調査地点</a>
+        <a href="results.html">集計結果</a>
+        <a href="resources.html">資料・PDF</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow">Recording</p>
+    <h1>実験記録フォーム</h1>
+    <p class="lead">トラップ比較に必要な情報を、採集イベント、行動イベント、同定結果に分けて記録します。ここには運用開始後のフォームURLを掲載します。</p>
+    <div class="photo-band photo-band-forms" aria-hidden="true">
+      <img src="assets/images/moths/moth-01.jpeg" alt="">
+    </div>
+
+    <section class="section">
+      <h2>記録先</h2>
+      <div class="grid">
+        <article class="card">
+          <p class="meta">Field event</p>
+          <h3>採集イベント記録</h3>
+          <p>地点、日時、トラップID、光源、入口構造、設置条件、気象、電源状態を記録します。</p>
+          <p class="hero-actions"><span class="button disabled">URL準備中</span></p>
+        </article>
+        <article class="card">
+          <p class="meta">Behaviour</p>
+          <h3>行動イベント記録</h3>
+          <p>到来、接触、入トラップ、逃出、観察時間、観察者IDを記録します。</p>
+          <p class="hero-actions"><span class="button disabled">URL準備中</span></p>
+        </article>
+        <article class="card">
+          <p class="meta">Identification</p>
+          <h3>同定結果記録</h3>
+          <p>種名、個体数、写真URL、標本有無、同定者、同定確度を記録します。</p>
+          <p class="hero-actions"><span class="button disabled">URL準備中</span></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>入力データの単位</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>採集イベント</h3>
+          <p>1つの地点で、1つのトラップを、一定時間動かした単位です。調査努力量、天候、機材状態をここに記録します。</p>
+          <ul class="inline-list">
+            <li>sampling_event_id</li>
+            <li>site_id</li>
+            <li>trap_id</li>
+            <li>light_source</li>
+            <li>entrance_type</li>
+            <li>date_start</li>
+            <li>date_end</li>
+            <li>weather</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>行動・同定記録</h3>
+          <p>採集イベントに紐づく、行動イベントと種ごとの記録です。捕獲数だけでなく、入るまでの過程を残します。</p>
+          <ul class="inline-list">
+            <li>arrival_event</li>
+            <li>contact_event</li>
+            <li>entry_event</li>
+            <li>escape_event</li>
+            <li>taxon_name</li>
+            <li>count</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section note">
+      <p>写真ファイルは、無料運用中はGoogle Drive等に保存し、フォーム側にはフォルダURLまたは写真URLを記録する方針にします。</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="inner">
+      <span>蛾類モニタリング</span>
+      <span><a href="protocol.html">調査プロトコルを確認</a></span>
+    </div>
+  </footer>
+</body>
+</html>
