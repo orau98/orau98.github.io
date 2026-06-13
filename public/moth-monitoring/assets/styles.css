@@ -86,8 +86,9 @@ img {
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  display: grid;
-  place-items: center;
+  display: block;
+  flex: 0 0 auto;
+  object-fit: cover;
   color: #fff;
   background: var(--green);
   font-size: 18px;
@@ -1355,7 +1356,7 @@ body:has(.hero)::before { display:none; }
 }
 .brand { color:var(--moon); }
 .brand-mark {
-  background:radial-gradient(circle at 30% 30%, #21356a, #0c1733);
+  background:#0c1733;
   color:transparent; padding:0;
   box-shadow:0 0 0 1px rgba(127,199,214,0.30), 0 4px 14px rgba(0,0,0,0.45), 0 0 18px -4px var(--lamp-glow);
 }
@@ -1591,4 +1592,127 @@ a:focus-visible { outline:2px solid var(--lamp); outline-offset:2px; box-shadow:
     right:6vw; width:84px;
     box-shadow:0 0 0 1px rgba(255,255,255,0.06), 0 0 34px 12px var(--moon-glow), 0 0 70px 26px rgba(127,199,214,0.10);
   }
+}
+
+/* ===================== モバイル：表をカード型にスタック（横スクロール廃止） ===================== */
+@media (max-width: 600px) {
+  .table-wrap { overflow: visible; }
+  .table-wrap table { min-width: 0 !important; width: 100%; border-collapse: collapse; }
+  .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td { display: block; }
+  /* 見出し行はスクリーンリーダー用に残しつつ視覚的に隠す（ラベルはdata-labelで表示） */
+  .table-wrap thead { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; }
+  .table-wrap tbody tr {
+    padding: 12px 16px 13px; border: 0; border-bottom: 1px solid var(--plate-edge);
+    background: transparent !important;
+  }
+  .table-wrap tbody tr:nth-child(even) { background: rgba(36,29,21,0.045) !important; }
+  .table-wrap tbody tr:last-child { border-bottom: 0; }
+  .table-wrap td { border: 0 !important; padding: 3px 0; background: transparent !important; }
+  /* 行頭セル＝カードの見出し */
+  .table-wrap td:first-child {
+    font-weight: 800; font-size: 15.5px; color: var(--ink);
+    margin-bottom: 5px; padding-top: 1px;
+  }
+  /* 以降のセル＝「ラベル：値」 */
+  .table-wrap td:not(:first-child) {
+    display: grid; grid-template-columns: 6.5em minmax(0,1fr); gap: 4px 12px; align-items: start; overflow-wrap: anywhere;
+    line-height: 1.65;
+  }
+  .table-wrap td:not(:first-child)::before {
+    content: attr(data-label); color: #6a5f4c; font-weight: 700; font-size: 12px;
+    word-break: keep-all; padding-top: 1px;
+  }
+}
+
+/* ===================== PHOTO-BAND — 灯火に照らし出された一頭（標本バナー） ===================== */
+figure.photo-band {
+  position: relative;
+  width: min(100%, 760px);
+  max-width: 100%;
+  min-width: 0;
+  margin: 30px 0 0;
+  border: 1px solid var(--plate-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0c1733;
+  box-shadow: 0 14px 34px rgba(4, 9, 26, 0.55), inset 0 0 0 1px rgba(232, 169, 78, 0.10);
+}
+figure.photo-band::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--lamp) 18%, var(--lamp-bright) 50%, var(--lamp) 82%, transparent);
+  opacity: 0.85; z-index: 3; pointer-events: none;
+}
+figure.photo-band::after {
+  content: ""; position: absolute; top: -26%; right: -12%; width: 54%; aspect-ratio: 1;
+  background: radial-gradient(circle at 70% 30%, var(--lamp-glow) 0%, rgba(224,164,77,0.10) 38%, transparent 68%);
+  z-index: 2; pointer-events: none; mix-blend-mode: screen; opacity: 0.9; transition: opacity 0.6s ease;
+}
+figure.photo-band img {
+  display: block; width: 100%; height: 100%;
+  aspect-ratio: 3 / 2; object-fit: cover; object-position: center 42%;
+  filter: saturate(0.97) contrast(0.99) brightness(0.94);
+  transition: transform 0.6s ease, filter 0.6s ease; min-height: 180px;
+}
+figure.photo-band figcaption {
+  position: absolute; inset: auto 0 0 0; z-index: 4;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+  padding: 46px 18px 15px; font-family: var(--font-sans); color: var(--moon);
+  background: linear-gradient(180deg, transparent 0%, rgba(6,11,28,0.52) 28%, rgba(6,11,28,0.86) 64%, rgba(6,11,28,0.97) 100%);
+}
+figure.photo-band .pb-line {
+  flex: 1 1 100%; margin: 0; font-size: 15px; font-weight: 600; line-height: 1.5; letter-spacing: 0.01em;
+  color: var(--moon); text-shadow: 0 1px 8px rgba(4,9,26,0.9); text-wrap: balance;
+}
+figure.photo-band .pb-call {
+  flex: 1 1 auto; display: inline-flex; align-items: center; gap: 7px; margin: 0;
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--lamp-bright);
+  text-shadow: 0 1px 6px rgba(4,9,26,0.9);
+}
+figure.photo-band .pb-call::before {
+  content: ""; flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle, var(--lamp-bright) 0%, var(--lamp) 60%, transparent 100%);
+  box-shadow: 0 0 8px 1px var(--lamp-glow);
+}
+figure.photo-band .pb-tag {
+  flex: 0 0 auto; margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--moonlight); padding: 3px 9px; border: 1px solid var(--plate-border); border-radius: 999px;
+  background: rgba(12,23,51,0.55); white-space: nowrap;
+}
+figure.photo-band .pb-tag:empty { display: none; }
+@media (hover: hover) {
+  figure.photo-band:hover img { transform: scale(1.03); filter: saturate(1.0) contrast(1.0) brightness(1.0); }
+  figure.photo-band:hover::after { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  figure.photo-band img, figure.photo-band::after { transition: none; }
+  figure.photo-band:hover img { transform: none; }
+}
+@media (max-width: 860px) { figure.photo-band img { aspect-ratio: 16 / 10; } }
+@media (max-width: 520px) {
+  figure.photo-band { margin-top: 18px; }
+  figure.photo-band img { aspect-ratio: 4 / 3; object-position: center 40%; }
+  figure.photo-band figcaption { padding: 38px 14px 13px; gap: 4px 8px; }
+  figure.photo-band .pb-line { font-size: 14.5px; line-height: 1.45; }
+  figure.photo-band .pb-call { font-size: 12px; }
+  figure.photo-band .pb-tag { display: none; }
+}
+
+/* ===================== 図：内側ラッパでスクロール＋導線 ===================== */
+.diagram-panel { overflow: visible; }
+.diagram-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+.diagram-scroll::-webkit-scrollbar { height: 8px; }
+.diagram-scroll::-webkit-scrollbar-thumb { background: var(--lamp-deep); border-radius: 4px; }
+.diagram-scroll::-webkit-scrollbar-track { background: rgba(36,29,21,0.10); border-radius: 4px; }
+@media (max-width: 600px) {
+  .diagram-panel figcaption::before {
+    content: "↔ 図は横にスクロールできます";
+    display: block; margin-bottom: 6px;
+    word-break: keep-all; white-space: normal;
+    color: var(--plate-link-hover); font-weight: 700; font-size: 12px;
+  }
+}
+
+/* ===================== モバイルの月：上端に置きスクロールで流す（常駐させない） ===================== */
+@media (max-width: 520px) {
+  body::before { position: absolute; top: 8px; right: 6vw; width: 84px; }
 }

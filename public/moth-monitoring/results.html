@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1530">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング | 集計結果</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260613-night">
+  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui3">
 </head>
 <body>
   <header class="site-header">
@@ -28,9 +28,14 @@
     <p class="eyebrow">Outputs</p>
     <h1>集計結果ページ</h1>
     <p class="lead">確認済みデータを使って、光源と入口構造の違いが、到来、接触、入トラップ、保持、種組成にどう影響するかを公開します。</p>
-    <div class="photo-band photo-band-results" aria-hidden="true">
-      <img src="assets/images/moths/moth-04.jpeg" alt="">
-    </div>
+    <figure class="photo-band photo-band-results">
+      <img src="assets/images/moths/moth-04.jpeg" alt="" aria-hidden="true">
+      <figcaption>
+        <p class="pb-line">集まった光の点が、分布の地図になる。</p>
+        <p class="pb-call">あなたの記録が、夜の地図をつくる。</p>
+        <span class="pb-tag"></span>
+      </figcaption>
+    </figure>
 
     <section class="section">
       <h2>サマリー</h2>
@@ -57,12 +62,12 @@
     <section class="section">
       <h2>結果テーブルの例</h2>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>条件</th><th>trap-nights</th><th>到来</th><th>入トラップ</th><th>最終捕獲</th><th>主なメモ</th></tr>
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row"><th role="columnheader">条件</th><th role="columnheader">trap-nights</th><th role="columnheader">到来</th><th role="columnheader">入トラップ</th><th role="columnheader">最終捕獲</th><th role="columnheader">主なメモ</th></tr>
           </thead>
-          <tbody>
-            <tr><td>準備中</td><td>0</td><td>0</td><td>0</td><td>0</td><td>データ確認後に更新</td></tr>
+          <tbody role="rowgroup">
+            <tr role="row"><td role="cell" data-label="条件">準備中</td><td role="cell" data-label="trap-nights">0</td><td role="cell" data-label="到来">0</td><td role="cell" data-label="入トラップ">0</td><td role="cell" data-label="最終捕獲">0</td><td role="cell" data-label="主なメモ">データ確認後に更新</td></tr>
           </tbody>
         </table>
       </div>

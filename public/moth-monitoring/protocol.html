@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1530">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング | 調査プロトコル</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260613-night">
+  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui3">
 </head>
 <body>
   <header class="site-header">
@@ -28,9 +28,14 @@
     <p class="eyebrow">Protocol</p>
     <h1>トラップ比較プロトコル</h1>
     <p class="lead">LepiLEDと10W級ブラックLED、谷型入口と衝突板付き漏斗型を比較し、蛾類モニタリングに適した標準トラップを決めるための調査手順です。捕獲数だけでなく、到来、接触、入トラップ、保持を分けて記録します。</p>
-    <div class="photo-band photo-band-protocol" aria-hidden="true">
-      <img src="assets/images/moths/moth-02.jpeg" alt="">
-    </div>
+    <figure class="photo-band photo-band-protocol">
+      <img src="assets/images/moths/moth-02.jpeg" alt="" aria-hidden="true">
+      <figcaption>
+        <p class="pb-line">同じ光、同じ手順。だから夜どうしを比べられる。</p>
+        <p class="pb-call">あなたの記録が、夜の地図をつくる。</p>
+        <span class="pb-tag"></span>
+      </figcaption>
+    </figure>
 
     <section class="section">
       <h2>実験の基本方針</h2>
@@ -69,16 +74,16 @@
     <section class="section">
       <h2>比較条件</h2>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>条件</th><th>内容</th><th>注意点</th></tr>
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row"><th role="columnheader">条件</th><th role="columnheader">内容</th><th role="columnheader">注意点</th></tr>
           </thead>
-          <tbody>
-            <tr><td>光源</td><td>LepiLED、10W級バー型ブラックLED</td><td>型番、波長表記、電圧、電流、ライトIDを記録します。</td></tr>
-            <tr><td>入口構造</td><td>谷型入口、衝突板付き漏斗型</td><td>入口以外の容器、色、設置高、捕獲部をできるだけ揃えます。</td></tr>
-            <tr><td>ライトの向き</td><td>原則として両構造で同じ向き</td><td>谷型だけ横置き、漏斗型だけ縦置きにすると、構造差と光源方向が交絡します。</td></tr>
-            <tr><td>配置</td><td>同日並行、地点ローテーション</td><td>同じ地点に同じ条件を固定しないようにします。</td></tr>
-            <tr><td>反復</td><td>各条件で十分なtrap-nightを確保</td><td>短期の試作後、本番は日差・地点差を入れて評価します。</td></tr>
+          <tbody role="rowgroup">
+            <tr role="row"><td role="cell" data-label="条件">光源</td><td role="cell" data-label="内容">LepiLED、10W級バー型ブラックLED</td><td role="cell" data-label="注意点">型番、波長表記、電圧、電流、ライトIDを記録します。</td></tr>
+            <tr role="row"><td role="cell" data-label="条件">入口構造</td><td role="cell" data-label="内容">谷型入口、衝突板付き漏斗型</td><td role="cell" data-label="注意点">入口以外の容器、色、設置高、捕獲部をできるだけ揃えます。</td></tr>
+            <tr role="row"><td role="cell" data-label="条件">ライトの向き</td><td role="cell" data-label="内容">原則として両構造で同じ向き</td><td role="cell" data-label="注意点">谷型だけ横置き、漏斗型だけ縦置きにすると、構造差と光源方向が交絡します。</td></tr>
+            <tr role="row"><td role="cell" data-label="条件">配置</td><td role="cell" data-label="内容">同日並行、地点ローテーション</td><td role="cell" data-label="注意点">同じ地点に同じ条件を固定しないようにします。</td></tr>
+            <tr role="row"><td role="cell" data-label="条件">反復</td><td role="cell" data-label="内容">各条件で十分なtrap-nightを確保</td><td role="cell" data-label="注意点">短期の試作後、本番は日差・地点差を入れて評価します。</td></tr>
           </tbody>
         </table>
       </div>
@@ -87,18 +92,18 @@
     <section class="section">
       <h2>最低限の記録項目</h2>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>区分</th><th>項目</th><th>備考</th></tr>
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row"><th role="columnheader">区分</th><th role="columnheader">項目</th><th role="columnheader">備考</th></tr>
           </thead>
-          <tbody>
-            <tr><td>地点</td><td>site_id、地点名、緯度、経度、標高、環境区分、植生</td><td>公開時は座標を丸める場合があります。</td></tr>
-            <tr><td>機材</td><td>trap_id、トラップ型、入口構造、光源、波長、出力、電源、設置高、光源の向き</td><td>光源変更や向きの違いは捕獲効率に影響するため必ず残します。</td></tr>
-            <tr><td>日時</td><td>date_start、date_end、点灯時刻、消灯時刻、回収時刻</td><td>調査努力量の計算に使います。</td></tr>
-            <tr><td>気象</td><td>気温、風、降雨、雲量、月齢、現地メモ</td><td>捕獲数の補正や欠測判断に使います。</td></tr>
-            <tr><td>行動イベント</td><td>到来、接触、入トラップ、逃出、最終捕獲数</td><td>捕獲数の差がどの段階で生じたかを見るために使います。</td></tr>
-            <tr><td>同定</td><td>和名、学名、同定者、同定レベル、確度、写真URL、標本有無</td><td>種群・属止めの扱いを明示します。</td></tr>
-            <tr><td>管理</td><td>採集許可、公開可否、希少種フラグ、備考</td><td>公開前に必ず確認します。</td></tr>
+          <tbody role="rowgroup">
+            <tr role="row"><td role="cell" data-label="区分">地点</td><td role="cell" data-label="項目">site_id、地点名、緯度、経度、標高、環境区分、植生</td><td role="cell" data-label="備考">公開時は座標を丸める場合があります。</td></tr>
+            <tr role="row"><td role="cell" data-label="区分">機材</td><td role="cell" data-label="項目">trap_id、トラップ型、入口構造、光源、波長、出力、電源、設置高、光源の向き</td><td role="cell" data-label="備考">光源変更や向きの違いは捕獲効率に影響するため必ず残します。</td></tr>
+            <tr role="row"><td role="cell" data-label="区分">日時</td><td role="cell" data-label="項目">date_start、date_end、点灯時刻、消灯時刻、回収時刻</td><td role="cell" data-label="備考">調査努力量の計算に使います。</td></tr>
+            <tr role="row"><td role="cell" data-label="区分">気象</td><td role="cell" data-label="項目">気温、風、降雨、雲量、月齢、現地メモ</td><td role="cell" data-label="備考">捕獲数の補正や欠測判断に使います。</td></tr>
+            <tr role="row"><td role="cell" data-label="区分">行動イベント</td><td role="cell" data-label="項目">到来、接触、入トラップ、逃出、最終捕獲数</td><td role="cell" data-label="備考">捕獲数の差がどの段階で生じたかを見るために使います。</td></tr>
+            <tr role="row"><td role="cell" data-label="区分">同定</td><td role="cell" data-label="項目">和名、学名、同定者、同定レベル、確度、写真URL、標本有無</td><td role="cell" data-label="備考">種群・属止めの扱いを明示します。</td></tr>
+            <tr role="row"><td role="cell" data-label="区分">管理</td><td role="cell" data-label="項目">採集許可、公開可否、希少種フラグ、備考</td><td role="cell" data-label="備考">公開前に必ず確認します。</td></tr>
           </tbody>
         </table>
       </div>

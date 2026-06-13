@@ -36,6 +36,18 @@
     td a{ color:#1c5c44; } td a:hover{ color:#9e5212; }
     .note{ background:#f3ead4; border-left:4px solid var(--lamp); color:#3a2c11; padding:12px 16px; border-radius:0 10px 10px 0; margin:16px 0; }
     .note p{ color:#3a2c11; margin:.3em 0; }
+  
+    @media (max-width:600px){
+      table{ display:block; width:100%; box-shadow:0 14px 34px rgba(3,8,24,.45); }
+      table tbody{ display:block; }
+      table tr{ display:block; padding:11px 15px 12px; border-bottom:1px solid var(--plate-edge); }
+      table tr:first-child{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+      table tr:last-child{ border-bottom:0; }
+      table td{ display:block; border:0 !important; padding:3px 0; }
+      table td:first-child{ font-weight:800; font-size:15px; color:var(--ink); margin-bottom:4px; }
+      table td:not(:first-child){ display:grid; grid-template-columns:6.5em minmax(0,1fr); gap:4px 12px; align-items:start; overflow-wrap:anywhere; line-height:1.6; }
+      table td:not(:first-child)::before{ content:attr(data-label); color:#6a5f4c; font-weight:700; font-size:12px; }
+    }
   </style>
 </head>
 <body>
@@ -52,198 +64,198 @@
   <p>この共有フォルダは、蛾類を対象にした長期・反復モニタリングを日本で実施するための資料置き場です。特に重要なのは、調査地・トラップ・光源・調査時刻・天候・月齢・同定精度・データ構造を標準化して、年変動や地点差をあとから解釈できるようにすることです。</p>
 
   <h2>2. フォルダの中身と使い方</h2>
-  <table>
-    <tr>
-      <th>フォルダ</th>
-      <th>中身</th>
-      <th>使いどころ</th>
-      <th>今後入れる資料</th>
+  <table role="table">
+    <tr role="row">
+      <th role="columnheader">フォルダ</th>
+      <th role="columnheader">中身</th>
+      <th role="columnheader">使いどころ</th>
+      <th role="columnheader">今後入れる資料</th>
     </tr>
-    <tr>
-      <td>国内手法・公的資料</td>
-      <td>環境省のモニタリング手法リスト、知床半島の昆虫類モニタリング報告書など。今回新設。</td>
-      <td>日本の自然環境調査・保全事業として説明するときの根拠。調査方法の候補、行政・保護区での実施例、報告書の体裁確認に使う。</td>
-      <td>環境省・自治体・国立公園・自然再生事業などの昆虫モニタリング報告書。特にライトトラップ、定点撮影、昆虫相調査を含むもの。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">国内手法・公的資料</td>
+      <td role="cell" data-label="中身">環境省のモニタリング手法リスト、知床半島の昆虫類モニタリング報告書など。今回新設。</td>
+      <td role="cell" data-label="使いどころ">日本の自然環境調査・保全事業として説明するときの根拠。調査方法の候補、行政・保護区での実施例、報告書の体裁確認に使う。</td>
+      <td role="cell" data-label="今後入れる資料">環境省・自治体・国立公園・自然再生事業などの昆虫モニタリング報告書。特にライトトラップ、定点撮影、昆虫相調査を含むもの。</td>
     </tr>
-    <tr>
-      <td>蛾類論文</td>
-      <td>国内外の蛾類群集・ライトトラップ・調査設計・トラップ比較に関する論文。既存の大河内2002、屋宜・広渡2019に加え、今回、水谷1982、水谷1984、関東平野の定量サンプリング、広渡ほか2010を追加。</td>
-      <td>調査設計、ライトトラップ設置位置、天候・月光補正、植生・群集差、過去研究との比較に使う。</td>
-      <td>日本国内でライトトラップを用いた蛾類群集研究、環境評価、森林・草原・都市周辺の比較研究。J-STAGE論文は出典URLも残す。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">蛾類論文</td>
+      <td role="cell" data-label="中身">国内外の蛾類群集・ライトトラップ・調査設計・トラップ比較に関する論文。既存の大河内2002、屋宜・広渡2019に加え、今回、水谷1982、水谷1984、関東平野の定量サンプリング、広渡ほか2010を追加。</td>
+      <td role="cell" data-label="使いどころ">調査設計、ライトトラップ設置位置、天候・月光補正、植生・群集差、過去研究との比較に使う。</td>
+      <td role="cell" data-label="今後入れる資料">日本国内でライトトラップを用いた蛾類群集研究、環境評価、森林・草原・都市周辺の比較研究。J-STAGE論文は出典URLも残す。</td>
     </tr>
-    <tr>
-      <td>蛾類関連学会発表 / ESJ</td>
-      <td>日本生態学会などの蛾類群集・環境指標に関する発表PDF。半自然草原、湿生草原、微環境比較など。</td>
-      <td>調査仮説、指標種・群集解析、草原管理・環境評価の先行例を探すときに使う。</td>
-      <td>学会要旨、ポスター、発表スライド。論文化されていないが調査設計に役立つものはここ。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">蛾類関連学会発表 / ESJ</td>
+      <td role="cell" data-label="中身">日本生態学会などの蛾類群集・環境指標に関する発表PDF。半自然草原、湿生草原、微環境比較など。</td>
+      <td role="cell" data-label="使いどころ">調査仮説、指標種・群集解析、草原管理・環境評価の先行例を探すときに使う。</td>
+      <td role="cell" data-label="今後入れる資料">学会要旨、ポスター、発表スライド。論文化されていないが調査設計に役立つものはここ。</td>
     </tr>
-    <tr>
-      <td>食草</td>
-      <td>科・亜科ごとの和名、学名、食草のGoogleスプレッドシート。</td>
-      <td>群集変化を植生、シカ食害、草原管理、外来植物、都市緑地の植栽などと結びつけて解釈するときに使う。</td>
-      <td>出典列、確認日、分類体系、学名シノニム、食草の確度、地域差、幼虫確認か文献記録かの区分を追加するとよい。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">食草</td>
+      <td role="cell" data-label="中身">科・亜科ごとの和名、学名、食草のGoogleスプレッドシート。</td>
+      <td role="cell" data-label="使いどころ">群集変化を植生、シカ食害、草原管理、外来植物、都市緑地の植栽などと結びつけて解釈するときに使う。</td>
+      <td role="cell" data-label="今後入れる資料">出典列、確認日、分類体系、学名シノニム、食草の確度、地域差、幼虫確認か文献記録かの区分を追加するとよい。</td>
     </tr>
-    <tr>
-      <td>De Vlinderstichting</td>
-      <td>LedEmmer/LEDバケツ型トラップの組立・部品資料、LED光源や誘引距離に関する論文。今回、UV-LED比較、LEDランプ、誘引距離の論文を追加。</td>
-      <td>日本版の低コスト・可搬型ライトトラップを作るときの機材検討に使う。光源を変更すると捕獲効率が変わるため、トラップ標準化の根拠として重要。</td>
-      <td>LED波長、照度、電源、耐候性、トラップ形状、既存トラップとの比較実験の資料。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">De Vlinderstichting</td>
+      <td role="cell" data-label="中身">LedEmmer/LEDバケツ型トラップの組立・部品資料、LED光源や誘引距離に関する論文。今回、UV-LED比較、LEDランプ、誘引距離の論文を追加。</td>
+      <td role="cell" data-label="使いどころ">日本版の低コスト・可搬型ライトトラップを作るときの機材検討に使う。光源を変更すると捕獲効率が変わるため、トラップ標準化の根拠として重要。</td>
+      <td role="cell" data-label="今後入れる資料">LED波長、照度、電源、耐候性、トラップ形状、既存トラップとの比較実験の資料。</td>
     </tr>
-    <tr>
-      <td>UKCEH AMI system</td>
-      <td>UKCEH AMI systemのマニュアルと、自動撮影・AI画像解析を用いた夜行性昆虫モニタリング論文。今回、Roy et al. 2024、Bjerge et al. 2021、Korsch et al. 2023を追加。</td>
-      <td>自動撮影・AI同定・画像データ処理・電源管理・メタデータ設計を検討するときに使う。日本導入時は、通信環境、防水、電源、画像保存、同定検証を別途設計する。</td>
-      <td>AMI、Mothbox、カメラトラップ、オンデバイス推論、画像アノテーション、データ公開標準に関する資料。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">UKCEH AMI system</td>
+      <td role="cell" data-label="中身">UKCEH AMI systemのマニュアルと、自動撮影・AI画像解析を用いた夜行性昆虫モニタリング論文。今回、Roy et al. 2024、Bjerge et al. 2021、Korsch et al. 2023を追加。</td>
+      <td role="cell" data-label="使いどころ">自動撮影・AI同定・画像データ処理・電源管理・メタデータ設計を検討するときに使う。日本導入時は、通信環境、防水、電源、画像保存、同定検証を別途設計する。</td>
+      <td role="cell" data-label="今後入れる資料">AMI、Mothbox、カメラトラップ、オンデバイス推論、画像アノテーション、データ公開標準に関する資料。</td>
     </tr>
-    <tr>
-      <td>Butterfly conservation</td>
-      <td>英国Butterfly Conservationの入門・記録・同定・市民参加向け資料。今回、Moth Recorder's Handbook、Moth Trapping Code of Practice、micro-moth verification guidanceを追加。</td>
-      <td>市民参加型調査、記録票、同定検証、初心者向け研修資料を作るときに使う。英国仕様なので、日本向けには地名・分類・データ提出先を置き換える。</td>
-      <td>記録者向けハンドブック、同定検証、イベント運営、安全・倫理、記録の最小項目に関する資料。</td>
+    <tr role="row">
+      <td role="cell" data-label="フォルダ">Butterfly conservation</td>
+      <td role="cell" data-label="中身">英国Butterfly Conservationの入門・記録・同定・市民参加向け資料。今回、Moth Recorder's Handbook、Moth Trapping Code of Practice、micro-moth verification guidanceを追加。</td>
+      <td role="cell" data-label="使いどころ">市民参加型調査、記録票、同定検証、初心者向け研修資料を作るときに使う。英国仕様なので、日本向けには地名・分類・データ提出先を置き換える。</td>
+      <td role="cell" data-label="今後入れる資料">記録者向けハンドブック、同定検証、イベント運営、安全・倫理、記録の最小項目に関する資料。</td>
     </tr>
   </table>
 
   <h2>3. 今回追加したPDF</h2>
-  <table>
-    <tr>
-      <th>配置先</th>
-      <th>ファイル</th>
-      <th>追加理由</th>
-      <th>元資料</th>
+  <table role="table">
+    <tr role="row">
+      <th role="columnheader">配置先</th>
+      <th role="columnheader">ファイル</th>
+      <th role="columnheader">追加理由</th>
+      <th role="columnheader">元資料</th>
     </tr>
-    <tr>
-      <td>国内手法・公的資料</td>
-      <td>環境省_モニタリング手法リスト_2025-03.pdf</td>
-      <td>ライトトラップを含む生物モニタリング手法の位置づけを確認できる。</td>
-      <td><a href="https://www.env.go.jp/content/000291218.pdf">環境省PDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">国内手法・公的資料</td>
+      <td role="cell" data-label="ファイル">環境省_モニタリング手法リスト_2025-03.pdf</td>
+      <td role="cell" data-label="追加理由">ライトトラップを含む生物モニタリング手法の位置づけを確認できる。</td>
+      <td role="cell" data-label="元資料"><a href="https://www.env.go.jp/content/000291218.pdf">環境省PDF</a></td>
     </tr>
-    <tr>
-      <td>国内手法・公的資料</td>
-      <td>知床半島_昆虫類モニタリング業務報告書_平成22年度.pdf</td>
-      <td>保護区・自然環境行政の昆虫類モニタリング報告書例として使える。</td>
-      <td><a href="https://shiretokodata-center.env.go.jp/data/research/report/h22/H22koncyu-monitoring.pdf">知床データセンターPDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">国内手法・公的資料</td>
+      <td role="cell" data-label="ファイル">知床半島_昆虫類モニタリング業務報告書_平成22年度.pdf</td>
+      <td role="cell" data-label="追加理由">保護区・自然環境行政の昆虫類モニタリング報告書例として使える。</td>
+      <td role="cell" data-label="元資料"><a href="https://shiretokodata-center.env.go.jp/data/research/report/h22/H22koncyu-monitoring.pdf">知床データセンターPDF</a></td>
     </tr>
-    <tr>
-      <td>蛾類論文</td>
-      <td>水谷1982_蛾類採集のためのライトトラップ最適設置場所.pdf</td>
-      <td>林縁・林内・開放地の設置位置が捕獲結果に与える影響を扱う国内の基本文献。</td>
-      <td><a href="https://www.jstage.jst.go.jp/article/jjaez1957/26/1/26_1_58/_article/-char/ja/">J-STAGE</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">蛾類論文</td>
+      <td role="cell" data-label="ファイル">水谷1982_蛾類採集のためのライトトラップ最適設置場所.pdf</td>
+      <td role="cell" data-label="追加理由">林縁・林内・開放地の設置位置が捕獲結果に与える影響を扱う国内の基本文献。</td>
+      <td role="cell" data-label="元資料"><a href="https://www.jstage.jst.go.jp/article/jjaez1957/26/1/26_1_58/_article/-char/ja/">J-STAGE</a></td>
     </tr>
-    <tr>
-      <td>蛾類論文</td>
-      <td>Mizutani1984_Weather_and_moonlight_light_trap_catches_of_moths.pdf</td>
-      <td>天候・月光がライトトラップ捕獲に与える影響を定量的に扱う。</td>
-      <td><a href="https://www.jstage.jst.go.jp/article/aez1966/19/2/19_2_133/_article">J-STAGE</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">蛾類論文</td>
+      <td role="cell" data-label="ファイル">Mizutani1984_Weather_and_moonlight_light_trap_catches_of_moths.pdf</td>
+      <td role="cell" data-label="追加理由">天候・月光がライトトラップ捕獲に与える影響を定量的に扱う。</td>
+      <td role="cell" data-label="元資料"><a href="https://www.jstage.jst.go.jp/article/aez1966/19/2/19_2_133/_article">J-STAGE</a></td>
     </tr>
-    <tr>
-      <td>蛾類論文</td>
-      <td>関東地方平野部における蛾類群集の定量的サンプリング.pdf</td>
-      <td>都市周辺・平野部でのライトトラップ定量サンプリング例。</td>
-      <td><a href="https://www.jstage.jst.go.jp/article/nesr/6/0/6_81/_pdf/-char/ja">J-STAGE PDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">蛾類論文</td>
+      <td role="cell" data-label="ファイル">関東地方平野部における蛾類群集の定量的サンプリング.pdf</td>
+      <td role="cell" data-label="追加理由">都市周辺・平野部でのライトトラップ定量サンプリング例。</td>
+      <td role="cell" data-label="元資料"><a href="https://www.jstage.jst.go.jp/article/nesr/6/0/6_81/_pdf/-char/ja">J-STAGE PDF</a></td>
     </tr>
-    <tr>
-      <td>蛾類論文</td>
-      <td>広渡ほか2010_灯火法による小蛾類群集調査の評価.pdf</td>
-      <td>小蛾類を含む灯火法評価。大型蛾だけに偏らない設計検討に使える。</td>
-      <td><a href="https://www.jstage.jst.go.jp/article/jjeez/21/1/21_37/_article/-char/ja/">J-STAGE</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">蛾類論文</td>
+      <td role="cell" data-label="ファイル">広渡ほか2010_灯火法による小蛾類群集調査の評価.pdf</td>
+      <td role="cell" data-label="追加理由">小蛾類を含む灯火法評価。大型蛾だけに偏らない設計検討に使える。</td>
+      <td role="cell" data-label="元資料"><a href="https://www.jstage.jst.go.jp/article/jjeez/21/1/21_37/_article/-char/ja/">J-STAGE</a></td>
     </tr>
-    <tr>
-      <td>Butterfly conservation</td>
-      <td>Moth_Recorders_Handbook_2013.pdf</td>
-      <td>記録者向けの標準的ハンドブック。市民参加・記録項目設計に有用。</td>
-      <td><a href="https://butterfly-conservation.org/sites/default/files/moth-recorders-handbook-20131.pdf">Butterfly Conservation PDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">Butterfly conservation</td>
+      <td role="cell" data-label="ファイル">Moth_Recorders_Handbook_2013.pdf</td>
+      <td role="cell" data-label="追加理由">記録者向けの標準的ハンドブック。市民参加・記録項目設計に有用。</td>
+      <td role="cell" data-label="元資料"><a href="https://butterfly-conservation.org/sites/default/files/moth-recorders-handbook-20131.pdf">Butterfly Conservation PDF</a></td>
     </tr>
-    <tr>
-      <td>Butterfly conservation</td>
-      <td>Butterfly_Conservation_Code_of_Practice_No14_Moth_Trapping_2021.pdf</td>
-      <td>イベントや一般参加を伴うトラップ調査の安全・運営上の注意点。</td>
-      <td><a href="https://butterfly-conservation.org/sites/default/files/2022-04/No.%2014%20Moth%20Trapping%20-%20April%202021.pdf">Butterfly Conservation PDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">Butterfly conservation</td>
+      <td role="cell" data-label="ファイル">Butterfly_Conservation_Code_of_Practice_No14_Moth_Trapping_2021.pdf</td>
+      <td role="cell" data-label="追加理由">イベントや一般参加を伴うトラップ調査の安全・運営上の注意点。</td>
+      <td role="cell" data-label="元資料"><a href="https://butterfly-conservation.org/sites/default/files/2022-04/No.%2014%20Moth%20Trapping%20-%20April%202021.pdf">Butterfly Conservation PDF</a></td>
     </tr>
-    <tr>
-      <td>Butterfly conservation</td>
-      <td>Micro-moth_verification_guidance_2023.pdf</td>
-      <td>小蛾類の同定検証・記録品質管理の参考。</td>
-      <td><a href="https://butterfly-conservation.org/sites/default/files/2023-09/Micro-moth%20verification%20guidance%20%28final%29.pdf">Butterfly Conservation PDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">Butterfly conservation</td>
+      <td role="cell" data-label="ファイル">Micro-moth_verification_guidance_2023.pdf</td>
+      <td role="cell" data-label="追加理由">小蛾類の同定検証・記録品質管理の参考。</td>
+      <td role="cell" data-label="元資料"><a href="https://butterfly-conservation.org/sites/default/files/2023-09/Micro-moth%20verification%20guidance%20%28final%29.pdf">Butterfly Conservation PDF</a></td>
     </tr>
-    <tr>
-      <td>De Vlinderstichting</td>
-      <td>vanDeijk2024_UV-LEDs_outperform_actinics_for_standalone_moth_monitoring.pdf</td>
-      <td>LEDトラップと既存光源の比較。標準化・省電力化の根拠になる。</td>
-      <td><a href="https://link.springer.com/article/10.1007/s10841-024-00568-1">Springer Open Access</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">De Vlinderstichting</td>
+      <td role="cell" data-label="ファイル">vanDeijk2024_UV-LEDs_outperform_actinics_for_standalone_moth_monitoring.pdf</td>
+      <td role="cell" data-label="追加理由">LEDトラップと既存光源の比較。標準化・省電力化の根拠になる。</td>
+      <td role="cell" data-label="元資料"><a href="https://link.springer.com/article/10.1007/s10841-024-00568-1">Springer Open Access</a></td>
     </tr>
-    <tr>
-      <td>De Vlinderstichting</td>
-      <td>Brehm2017_new_LED_lamp_nocturnal_Lepidoptera.pdf</td>
-      <td>夜行性鱗翅類用LEDランプとスペクトル比較の基本資料。</td>
-      <td><a href="https://nl.pensoft.net/article/11887/">Pensoft / Nota Lepidopterologica</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">De Vlinderstichting</td>
+      <td role="cell" data-label="ファイル">Brehm2017_new_LED_lamp_nocturnal_Lepidoptera.pdf</td>
+      <td role="cell" data-label="追加理由">夜行性鱗翅類用LEDランプとスペクトル比較の基本資料。</td>
+      <td role="cell" data-label="元資料"><a href="https://nl.pensoft.net/article/11887/">Pensoft / Nota Lepidopterologica</a></td>
     </tr>
-    <tr>
-      <td>De Vlinderstichting</td>
-      <td>Truxa_Fiedler2012_attraction_distance_weak_light_sources.pdf</td>
-      <td>弱い光源の誘引距離を扱う。トラップ間隔・局所性の解釈に重要。</td>
-      <td><a href="https://eje.cz/pdfs/eje/2012/01/10.pdf">European Journal of Entomology PDF</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">De Vlinderstichting</td>
+      <td role="cell" data-label="ファイル">Truxa_Fiedler2012_attraction_distance_weak_light_sources.pdf</td>
+      <td role="cell" data-label="追加理由">弱い光源の誘引距離を扱う。トラップ間隔・局所性の解釈に重要。</td>
+      <td role="cell" data-label="元資料"><a href="https://eje.cz/pdfs/eje/2012/01/10.pdf">European Journal of Entomology PDF</a></td>
     </tr>
-    <tr>
-      <td>UKCEH AMI system</td>
-      <td>Roy2024_standardized_framework_AI_image_based_monitoring_nocturnal_insects.pdf</td>
-      <td>AI・画像ベースの夜行性昆虫モニタリングの標準化フレームワーク。</td>
-      <td><a href="https://nora.nerc.ac.uk/id/eprint/537418/">NERC Open Research Archive</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">UKCEH AMI system</td>
+      <td role="cell" data-label="ファイル">Roy2024_standardized_framework_AI_image_based_monitoring_nocturnal_insects.pdf</td>
+      <td role="cell" data-label="追加理由">AI・画像ベースの夜行性昆虫モニタリングの標準化フレームワーク。</td>
+      <td role="cell" data-label="元資料"><a href="https://nora.nerc.ac.uk/id/eprint/537418/">NERC Open Research Archive</a></td>
     </tr>
-    <tr>
-      <td>UKCEH AMI system</td>
-      <td>Bjerge2021_automated_light_trap_computer_vision_deep_learning.pdf</td>
-      <td>自動ライトトラップと深層学習による蛾類検出・計数の代表的実装。</td>
-      <td><a href="https://www.mdpi.com/1424-8220/21/2/343">MDPI Sensors</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">UKCEH AMI system</td>
+      <td role="cell" data-label="ファイル">Bjerge2021_automated_light_trap_computer_vision_deep_learning.pdf</td>
+      <td role="cell" data-label="追加理由">自動ライトトラップと深層学習による蛾類検出・計数の代表的実装。</td>
+      <td role="cell" data-label="元資料"><a href="https://www.mdpi.com/1424-8220/21/2/343">MDPI Sensors</a></td>
     </tr>
-    <tr>
-      <td>UKCEH AMI system</td>
-      <td>Korsch2023_automated_visual_monitoring_nocturnal_insects_light_camera_traps.pdf</td>
-      <td>光ベースのカメラトラップ、画像データセット、検出・分類パイプラインの参考。</td>
-      <td><a href="https://arxiv.org/abs/2307.15433">arXiv</a></td>
+    <tr role="row">
+      <td role="cell" data-label="配置先">UKCEH AMI system</td>
+      <td role="cell" data-label="ファイル">Korsch2023_automated_visual_monitoring_nocturnal_insects_light_camera_traps.pdf</td>
+      <td role="cell" data-label="追加理由">光ベースのカメラトラップ、画像データセット、検出・分類パイプラインの参考。</td>
+      <td role="cell" data-label="元資料"><a href="https://arxiv.org/abs/2307.15433">arXiv</a></td>
     </tr>
   </table>
 
   <h2>4. PDF保存ではなくリンク管理にする候補</h2>
-  <table>
-    <tr>
-      <th>資料</th>
-      <th>理由</th>
-      <th>リンク</th>
+  <table role="table">
+    <tr role="row">
+      <th role="columnheader">資料</th>
+      <th role="columnheader">理由</th>
+      <th role="columnheader">リンク</th>
     </tr>
-    <tr>
-      <td>Leinonen et al. 1998 Intercalibration of different light-traps and bulbs</td>
-      <td>北欧モニタリングのトラップ・電球比較として重要。ただしサイト側のボット対策でPDF保存はできなかったためリンク管理。</td>
-      <td><a href="https://journal.fi/entomolfennica/article/view/83965">Entomologica Fennica</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">Leinonen et al. 1998 Intercalibration of different light-traps and bulbs</td>
+      <td role="cell" data-label="理由">北欧モニタリングのトラップ・電球比較として重要。ただしサイト側のボット対策でPDF保存はできなかったためリンク管理。</td>
+      <td role="cell" data-label="リンク"><a href="https://journal.fi/entomolfennica/article/view/83965">Entomologica Fennica</a></td>
     </tr>
-    <tr>
-      <td>Zemel &amp; Houghton 2017/2018 LED lights and night-flying insects</td>
-      <td>LED波長比較として有用。ただし配布サイトが直接保存を拒否したためリンク管理。</td>
-      <td><a href="https://scholar.valpo.edu/tgle/vol50/iss2/8/">Valpo Scholar</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">Zemel &amp; Houghton 2017/2018 LED lights and night-flying insects</td>
+      <td role="cell" data-label="理由">LED波長比較として有用。ただし配布サイトが直接保存を拒否したためリンク管理。</td>
+      <td role="cell" data-label="リンク"><a href="https://scholar.valpo.edu/tgle/vol50/iss2/8/">Valpo Scholar</a></td>
     </tr>
-    <tr>
-      <td>Butterfly Conservation: Moth recording guidance notes</td>
-      <td>複数の小PDFが随時更新されるため、親ページを残して最新版を確認する。</td>
-      <td><a href="https://butterfly-conservation.org/moths/recording-moths/how-to-record-moths/moth-recorders-handbook">Moth Recorders Handbook page</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">Butterfly Conservation: Moth recording guidance notes</td>
+      <td role="cell" data-label="理由">複数の小PDFが随時更新されるため、親ページを残して最新版を確認する。</td>
+      <td role="cell" data-label="リンク"><a href="https://butterfly-conservation.org/moths/recording-moths/how-to-record-moths/moth-recorders-handbook">Moth Recorders Handbook page</a></td>
     </tr>
-    <tr>
-      <td>環境省 レッドリスト・レッドデータブック</td>
-      <td>希少種・配慮種の確認に必要。最新版確認が重要なのでページリンク管理。</td>
-      <td><a href="https://www.env.go.jp/nature/kisho/hozen/redlist/index.html">環境省ページ</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">環境省 レッドリスト・レッドデータブック</td>
+      <td role="cell" data-label="理由">希少種・配慮種の確認に必要。最新版確認が重要なのでページリンク管理。</td>
+      <td role="cell" data-label="リンク"><a href="https://www.env.go.jp/nature/kisho/hozen/redlist/index.html">環境省ページ</a></td>
     </tr>
-    <tr>
-      <td>List-MJ / みんなで作る日本産蛾類図鑑</td>
-      <td>分類・学名・和名・画像確認の入口。更新性が高いのでリンク管理。</td>
-      <td><a href="https://www.jpmoth.org/">jpmoth.org</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">List-MJ / みんなで作る日本産蛾類図鑑</td>
+      <td role="cell" data-label="理由">分類・学名・和名・画像確認の入口。更新性が高いのでリンク管理。</td>
+      <td role="cell" data-label="リンク"><a href="https://www.jpmoth.org/">jpmoth.org</a></td>
     </tr>
-    <tr>
-      <td>国立科学博物館 鱗翅目標本データ</td>
-      <td>標本・分布データ確認用。GBIF/DwC-A等のデータとして使う場合は取得日と版を記録する。</td>
-      <td><a href="https://science-net.kahaku.go.jp/ipt2/resource?r=snet-1188-118">IPT resource</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">国立科学博物館 鱗翅目標本データ</td>
+      <td role="cell" data-label="理由">標本・分布データ確認用。GBIF/DwC-A等のデータとして使う場合は取得日と版を記録する。</td>
+      <td role="cell" data-label="リンク"><a href="https://science-net.kahaku.go.jp/ipt2/resource?r=snet-1188-118">IPT resource</a></td>
     </tr>
-    <tr>
-      <td>Finnish Moth Monitoring Scheme handbook</td>
-      <td>長期全国モニタリングの古典的手引き。PDF取得経路がやや分かりにくいため、まず書誌リンクを残す。</td>
-      <td><a href="http://hdl.handle.net/10138/169535">Handle record</a></td>
+    <tr role="row">
+      <td role="cell" data-label="資料">Finnish Moth Monitoring Scheme handbook</td>
+      <td role="cell" data-label="理由">長期全国モニタリングの古典的手引き。PDF取得経路がやや分かりにくいため、まず書誌リンクを残す。</td>
+      <td role="cell" data-label="リンク"><a href="http://hdl.handle.net/10138/169535">Handle record</a></td>
     </tr>
   </table>
 

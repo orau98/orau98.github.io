@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1530">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング | 背景・体制</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260613-night">
+  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui3">
 </head>
 <body>
   <header class="site-header">
@@ -28,9 +28,14 @@
     <p class="eyebrow">Background</p>
     <h1>市民科学と定点調査をつなぐ</h1>
     <p class="lead">海外では、蛾類モニタリングは長期定点調査、市民記録、専門家検証、公開データベースを組み合わせて、分布変化、個体数減少、気候変動、農地・都市緑地の評価に使われています。日本では、その前提となる標準化ライトトラップと記録体制を作るところから始めます。</p>
-    <div class="photo-band photo-band-vision" aria-hidden="true">
-      <img src="assets/images/moths/moth-03.jpeg" alt="">
-    </div>
+    <figure class="photo-band photo-band-vision">
+      <img src="assets/images/moths/moth-03.jpeg" alt="" aria-hidden="true">
+      <figcaption>
+        <p class="pb-line">光に引かれて、夜の森が姿をあらわす。</p>
+        <p class="pb-call">あなたの記録が、夜の地図をつくる。</p>
+        <span class="pb-tag"></span>
+      </figcaption>
+    </figure>
 
     <section class="section why-moths-section">
       <div class="section-heading">
@@ -53,16 +58,16 @@
     <section class="section">
       <h2>海外事例から得る設計原則</h2>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>事例</th><th>特徴</th><th>日本版への示唆</th></tr>
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row"><th role="columnheader">事例</th><th role="columnheader">特徴</th><th role="columnheader">日本版への示唆</th></tr>
           </thead>
-          <tbody>
-            <tr><td>Rothamsted Insect Survey</td><td>1964年から続く英国の定点ライトトラップ網。</td><td>同一地点・同一手法を長く続ける定量骨格が必要。</td></tr>
-            <tr><td>National Moth Recording Scheme</td><td>市民・愛好家の記録を地域記録担当者が検証し、全国データにする。</td><td>市民投稿だけで終わらせず、検証者と公開DBへつなぐ。</td></tr>
-            <tr><td>Garden Moth Scheme</td><td>庭での半標準化調査。ゼロ記録も含めて継続する。</td><td>初心者が参加できる普通種リストと、努力量の記録が重要。</td></tr>
-            <tr><td>EU PoMS / SPRING</td><td>標準化LEDトラップ、撮影、AI同定を組み合わせた欧州横断の試行。</td><td>非専門家でも使える標準機材と画像記録が鍵になる。</td></tr>
-            <tr><td>DIOPSIS / AMI</td><td>自律カメラと機械学習による非致死的モニタリング。</td><td>将来的には撮影ベース、自動計数、AI一次同定へ拡張する。</td></tr>
+          <tbody role="rowgroup">
+            <tr role="row"><td role="cell" data-label="事例">Rothamsted Insect Survey</td><td role="cell" data-label="特徴">1964年から続く英国の定点ライトトラップ網。</td><td role="cell" data-label="日本版への示唆">同一地点・同一手法を長く続ける定量骨格が必要。</td></tr>
+            <tr role="row"><td role="cell" data-label="事例">National Moth Recording Scheme</td><td role="cell" data-label="特徴">市民・愛好家の記録を地域記録担当者が検証し、全国データにする。</td><td role="cell" data-label="日本版への示唆">市民投稿だけで終わらせず、検証者と公開DBへつなぐ。</td></tr>
+            <tr role="row"><td role="cell" data-label="事例">Garden Moth Scheme</td><td role="cell" data-label="特徴">庭での半標準化調査。ゼロ記録も含めて継続する。</td><td role="cell" data-label="日本版への示唆">初心者が参加できる普通種リストと、努力量の記録が重要。</td></tr>
+            <tr role="row"><td role="cell" data-label="事例">EU PoMS / SPRING</td><td role="cell" data-label="特徴">標準化LEDトラップ、撮影、AI同定を組み合わせた欧州横断の試行。</td><td role="cell" data-label="日本版への示唆">非専門家でも使える標準機材と画像記録が鍵になる。</td></tr>
+            <tr role="row"><td role="cell" data-label="事例">DIOPSIS / AMI</td><td role="cell" data-label="特徴">自律カメラと機械学習による非致死的モニタリング。</td><td role="cell" data-label="日本版への示唆">将来的には撮影ベース、自動計数、AI一次同定へ拡張する。</td></tr>
           </tbody>
         </table>
       </div>
@@ -71,7 +76,7 @@
     <section class="section">
       <h2>定性記録と定量調査の位置づけ</h2>
       <figure class="diagram-panel compact">
-        <svg viewBox="0 0 1040 260" role="img" aria-label="定性記録から定量調査までのモニタリング手法のスペクトル">
+        <div class="diagram-scroll"><svg viewBox="0 0 1040 260" role="img" aria-label="定性記録から定量調査までのモニタリング手法のスペクトル">
           <defs>
             <marker id="arrow-spectrum" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
               <path d="M0,0 L7,3 L0,6 Z" fill="#566760"></path>
@@ -102,7 +107,7 @@
             <text x="870" y="94" fill="#153f31" font-size="17" font-weight="700">長期定点</text>
             <text x="870" y="218" fill="#566760" font-size="13">年変動・減少率</text>
           </g>
-        </svg>
+        </svg></div>
         <figcaption>広域の市民記録と、努力量をそろえた定点調査は役割が違います。日本版では両方を分けて設計し、後で接続します。</figcaption>
       </figure>
     </section>
@@ -124,7 +129,7 @@
     <section class="section">
       <h2>データの流れ</h2>
       <figure class="diagram-panel compact">
-        <svg viewBox="0 0 1040 300" role="img" aria-label="観察採集、画像標本、同定、検証済みデータベース、公開、活用へ進むデータの流れ">
+        <div class="diagram-scroll"><svg viewBox="0 0 1040 300" role="img" aria-label="観察採集、画像標本、同定、検証済みデータベース、公開、活用へ進むデータの流れ">
           <defs>
             <marker id="arrow-data" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
               <path d="M0,0 L7,3 L0,6 Z" fill="#2c704c"></path>
@@ -165,20 +170,20 @@
           </g>
           <path d="M816,184 C816,250 320,250 92,188" fill="none" stroke="#b5692d" stroke-width="2" stroke-dasharray="6 5"></path>
           <text x="455" y="272" text-anchor="middle" fill="#8a5a12" font-size="14" font-weight="700">希少種・私有地情報は公開前に一般化・非公開化する</text>
-        </svg>
+        </svg></div>
         <figcaption>記録を集めるだけではなく、同定検証と公開ルールを通してから活用します。</figcaption>
       </figure>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>段階</th><th>内容</th><th>注意点</th></tr>
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row"><th role="columnheader">段階</th><th role="columnheader">内容</th><th role="columnheader">注意点</th></tr>
           </thead>
-          <tbody>
-            <tr><td>観察・採集</td><td>標準トラップ、ライトシート、写真、標本で記録。</td><td>点灯時間、機材、地点、天候、ゼロ記録を残す。</td></tr>
-            <tr><td>一次同定</td><td>AI候補、図鑑、参加者の同定を使う。</td><td>同定確度と根拠を残す。</td></tr>
-            <tr><td>検証</td><td>地域記録担当者、博物館、専門家が確認。</td><td>写真で十分な種と標本確認が必要な種を分ける。</td></tr>
-            <tr><td>公開</td><td>確認済みデータを地図、集計、CSVで公開。</td><td>希少種や私有地は位置情報を一般化する。</td></tr>
-            <tr><td>活用</td><td>保全、農地・都市緑地評価、気候変動、環境教育へ使う。</td><td>定量データと機会的記録を混同しない。</td></tr>
+          <tbody role="rowgroup">
+            <tr role="row"><td role="cell" data-label="段階">観察・採集</td><td role="cell" data-label="内容">標準トラップ、ライトシート、写真、標本で記録。</td><td role="cell" data-label="注意点">点灯時間、機材、地点、天候、ゼロ記録を残す。</td></tr>
+            <tr role="row"><td role="cell" data-label="段階">一次同定</td><td role="cell" data-label="内容">AI候補、図鑑、参加者の同定を使う。</td><td role="cell" data-label="注意点">同定確度と根拠を残す。</td></tr>
+            <tr role="row"><td role="cell" data-label="段階">検証</td><td role="cell" data-label="内容">地域記録担当者、博物館、専門家が確認。</td><td role="cell" data-label="注意点">写真で十分な種と標本確認が必要な種を分ける。</td></tr>
+            <tr role="row"><td role="cell" data-label="段階">公開</td><td role="cell" data-label="内容">確認済みデータを地図、集計、CSVで公開。</td><td role="cell" data-label="注意点">希少種や私有地は位置情報を一般化する。</td></tr>
+            <tr role="row"><td role="cell" data-label="段階">活用</td><td role="cell" data-label="内容">保全、農地・都市緑地評価、気候変動、環境教育へ使う。</td><td role="cell" data-label="注意点">定量データと機会的記録を混同しない。</td></tr>
           </tbody>
         </table>
       </div>

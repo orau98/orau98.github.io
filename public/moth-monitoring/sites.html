@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1530">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング | 調査地点一覧</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260613-night">
+  <link rel="stylesheet" href="assets/styles.css?v=20260613-ui3">
 </head>
 <body>
   <header class="site-header">
@@ -28,9 +28,14 @@
     <p class="eyebrow">Sites</p>
     <h1>調査地点一覧</h1>
     <p class="lead">公開可能な地点だけを掲載します。詳細座標、希少種情報、私有地情報は内部管理用データと分けます。</p>
-    <div class="photo-band photo-band-sites" aria-hidden="true">
-      <img src="assets/images/moths/moth-06.jpeg" alt="">
-    </div>
+    <figure class="photo-band photo-band-sites">
+      <img src="assets/images/moths/moth-06.jpeg" alt="" aria-hidden="true">
+      <figcaption>
+        <p class="pb-line">あなたの町の夜にも、この翅はやってくる。</p>
+        <p class="pb-call">あなたの記録が、夜の地図をつくる。</p>
+        <span class="pb-tag"></span>
+      </figcaption>
+    </figure>
 
     <section class="section grid two">
       <div>
@@ -54,14 +59,14 @@
     <section class="section">
       <h2>地点一覧テンプレート</h2>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>site_id</th><th>公開名</th><th>環境区分</th><th>調査状態</th><th>公開レベル</th><th>備考</th></tr>
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row"><th role="columnheader">site_id</th><th role="columnheader">公開名</th><th role="columnheader">環境区分</th><th role="columnheader">調査状態</th><th role="columnheader">公開レベル</th><th role="columnheader">備考</th></tr>
           </thead>
-          <tbody>
-            <tr><td>S001</td><td>準備中</td><td>森林</td><td>候補地</td><td>未判定</td><td>地点マスタ確定後に更新</td></tr>
-            <tr><td>S002</td><td>準備中</td><td>草地</td><td>候補地</td><td>未判定</td><td>管理履歴を確認</td></tr>
-            <tr><td>S003</td><td>準備中</td><td>都市緑地</td><td>候補地</td><td>未判定</td><td>周辺光環境を記録</td></tr>
+          <tbody role="rowgroup">
+            <tr role="row"><td role="cell" data-label="site_id">S001</td><td role="cell" data-label="公開名">準備中</td><td role="cell" data-label="環境区分">森林</td><td role="cell" data-label="調査状態">候補地</td><td role="cell" data-label="公開レベル">未判定</td><td role="cell" data-label="備考">地点マスタ確定後に更新</td></tr>
+            <tr role="row"><td role="cell" data-label="site_id">S002</td><td role="cell" data-label="公開名">準備中</td><td role="cell" data-label="環境区分">草地</td><td role="cell" data-label="調査状態">候補地</td><td role="cell" data-label="公開レベル">未判定</td><td role="cell" data-label="備考">管理履歴を確認</td></tr>
+            <tr role="row"><td role="cell" data-label="site_id">S003</td><td role="cell" data-label="公開名">準備中</td><td role="cell" data-label="環境区分">都市緑地</td><td role="cell" data-label="調査状態">候補地</td><td role="cell" data-label="公開レベル">未判定</td><td role="cell" data-label="備考">周辺光環境を記録</td></tr>
           </tbody>
         </table>
       </div>
