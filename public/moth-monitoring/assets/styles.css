@@ -1287,3 +1287,308 @@ tr:last-child td {
     min-width: 620px;
   }
 }
+
+/* =====================================================================
+   NIGHT THEME — "Moonlit Field Observatory"
+   夜・月・蛾モチーフ（ライトトラップ蛾類モニタリング）
+   既存レイアウト/グリッド/レスポンシブCSSはそのまま、視覚スキン（色・背景・
+   枠・影・装飾レイヤー）のみを後段カスケードで上書きする方式。
+   密度の高いコンテンツ（表＋インライン着色SVG図）は暖色の「ランプに照らされた
+   プレート」に載せ、SVGは無改変のままAA可読性を保つ。
+   ===================================================================== */
+
+:root {
+  /* 夜空 */
+  --night-0:#0b1530; --night-1:#101d3d; --night-2:#17264c;
+  --night-edge:rgba(255,255,255,0.10);
+  /* 月光（暗い面の上の明色テキスト） */
+  --moon:#f4f1e6; --moon-h3:#e7eaf4; --moonlight:#cdd6ec; --moon-dim:#9aa7c6;
+  --moon-glow:rgba(193,206,238,0.55);
+  /* ランプ（唯一の暖色アクセント＝トラップの光） */
+  --lamp:#e0a44d; --lamp-bright:#ecb45f; --lamp-deep:#caa049;
+  --lamp-soft:rgba(224,164,77,0.16); --lamp-glow:rgba(224,164,77,0.30);
+  /* LEDシアン（冷色の副アクセント） */
+  --sky-cyan:#7fc7d6; --sky-cyan-glow:rgba(127,199,214,0.34);
+  /* ランプに照らされたプレート（暖色クリーム：既存SVG塗りと同系） */
+  --plate:#f6f1e4; --plate-2:#efe8d6; --ink:#241d15; --ink-muted:#5b5142;
+  --plate-edge:rgba(36,29,21,0.14); --plate-border:rgba(232,169,78,0.30);
+  --panel-shadow:0 16px 40px rgba(3,8,24,0.55);
+  --plate-link:#1c5c44; --plate-link-hover:#9e5212;
+  color-scheme: dark;
+}
+
+/* ---------- 夜の大気を <body> に ---------- */
+body {
+  color: var(--moonlight);
+  background-color: var(--night-1);
+  background-image:
+    radial-gradient(38vw 38vw at 14% -6%, rgba(244,241,230,0.30) 0%, rgba(193,206,238,0.16) 34%, transparent 62%),
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='30' cy='44' r='0.9' opacity='0.55'/%3E%3Ccircle cx='112' cy='20' r='0.7' opacity='0.40'/%3E%3Ccircle cx='208' cy='66' r='1' opacity='0.6'/%3E%3Ccircle cx='70' cy='120' r='0.7' opacity='0.45'/%3E%3Ccircle cx='168' cy='150' r='0.9' opacity='0.5'/%3E%3Ccircle cx='24' cy='196' r='0.8' opacity='0.4'/%3E%3Ccircle cx='226' cy='214' r='0.7' opacity='0.5'/%3E%3Ccircle cx='128' cy='96' r='0.6' opacity='0.35'/%3E%3Ccircle cx='94' cy='232' r='0.6' opacity='0.4'/%3E%3Ccircle cx='250' cy='130' r='0.5' opacity='0.35'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--night-0) 0%, var(--night-1) 30%, var(--night-1) 78%, var(--night-0) 100%);
+  background-repeat: no-repeat, repeat, no-repeat;
+  background-size: auto, 260px 260px, cover;
+  background-attachment: fixed, fixed, fixed;
+}
+
+/* 月：固定の装飾要素（左上・コンテンツの背後）。GPU負荷小・JSなし。 */
+body::before {
+  content:""; position:fixed; top:4vh; right:7vw; left:auto;
+  width:clamp(118px,12vw,188px); aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle at 38% 38%, #fffdf5 0%, #efe9d6 60%, #ddd4bc 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 0 60px 24px var(--moon-glow),
+    0 0 150px 64px rgba(127,199,214,0.12);
+  z-index:0; pointer-events:none;
+}
+/* 実コンテンツは月・星の上へ */
+.site-header, .hero, .page, .band, .site-footer { position:relative; z-index:1; }
+/* 二重月の回避：トップのヒーロー画像内に実物の月があるため装飾月を隠す */
+body:has(.hero)::before { display:none; }
+
+/* ---------- ヘッダー / ナビ / フッター ---------- */
+.site-header {
+  background:rgba(23,38,76,0.82);
+  -webkit-backdrop-filter:blur(14px) saturate(1.05);
+  backdrop-filter:blur(14px) saturate(1.05);
+  border-bottom:1px solid var(--night-edge);
+}
+.brand { color:var(--moon); }
+.brand-mark {
+  background:radial-gradient(circle at 30% 30%, #21356a, #0c1733);
+  color:transparent; padding:0;
+  box-shadow:0 0 0 1px rgba(127,199,214,0.30), 0 4px 14px rgba(0,0,0,0.45), 0 0 18px -4px var(--lamp-glow);
+}
+.main-nav a { color:var(--moon-dim); }
+.main-nav a:hover,
+.main-nav a[aria-current="page"] {
+  color:var(--moon); background:rgba(255,255,255,0.07);
+  box-shadow:inset 0 -2px 0 var(--lamp);
+}
+.site-footer {
+  background:var(--night-0); color:var(--moon-dim);
+  border-top:1px solid var(--night-edge);
+}
+.site-footer a { color:var(--sky-cyan); }
+.site-footer a:hover { color:var(--lamp); }
+
+/* ---------- 暗い面の上の素のテキスト（月光色） ---------- */
+h1 { color:var(--moon); text-shadow:0 1px 16px rgba(4,9,26,0.5); }
+h2 { color:var(--moon); }
+h3 { color:var(--moon-h3); }
+.eyebrow { color:var(--lamp); }
+.lead { color:var(--moonlight); }
+.section-heading p:not(.eyebrow) { color:var(--moon-dim); }
+
+/* ---------- 暗い面の上のリンク ---------- */
+a { color:var(--sky-cyan); }
+a:hover { color:var(--lamp); text-underline-offset:0.24em; transition:color .2s, text-underline-offset .2s; }
+a:focus-visible { outline:2px solid var(--lamp); outline-offset:2px; box-shadow:0 0 0 4px var(--moon-glow); border-radius:6px; }
+
+/* ---------- ボタン（ランプの光） ---------- */
+.button {
+  background:linear-gradient(180deg, var(--lamp-bright), var(--lamp));
+  border-color:var(--lamp-deep); color:#2a1c05;
+  box-shadow:0 8px 22px var(--lamp-glow);
+}
+.button:hover { box-shadow:0 14px 34px rgba(224,164,77,0.42); transform:translateY(-1px); }
+.button.secondary { background:transparent; color:var(--plate-link); border-color:var(--plate-link); box-shadow:none; }
+.button.secondary:hover { background:rgba(28,92,68,0.08); box-shadow:none; }
+.button.disabled { background:#e6dfce; border-color:var(--plate-edge); color:#8a8270; box-shadow:none; }
+
+/* ===================== ランプに照らされたプレート ===================== */
+.card, .feature-card, .metric-cards article, .steps li, .why-moths-point {
+  background:var(--plate); color:var(--ink); border:1px solid var(--plate-border);
+  box-shadow:var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.table-wrap, .diagram-panel, .media-panel {
+  background:var(--plate); color:var(--ink); border:1px solid var(--plate-border);
+  box-shadow:var(--panel-shadow);
+}
+/* .flow / .metric-cards は1枚のプレートを分割したもの */
+.flow { background:var(--plate); border:1px solid var(--plate-border); box-shadow:var(--panel-shadow); color:var(--ink); }
+.flow-item { background:transparent; }
+.flow-item + .flow-item { border-left-color:var(--plate-edge); }
+.flow-item::after { background:var(--plate); border-top-color:var(--plate-edge); border-right-color:var(--plate-edge); }
+.metric-cards { background:var(--plate); border:1px solid var(--plate-border); box-shadow:var(--panel-shadow); color:var(--ink); }
+.metric-cards article { background:transparent; border-right-color:var(--plate-edge); }
+.metric-cards article:nth-child(2n) { background:rgba(36,29,21,0.04); }
+/* リンクになっているプレート（クリック可能カード） */
+.link-grid a, .resource-list li {
+  background:var(--plate); color:var(--ink); border:1px solid var(--plate-border);
+  box-shadow:var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.metric { background:var(--plate); color:var(--ink); border:1px solid var(--plate-border); box-shadow:var(--panel-shadow); }
+
+/* テーブル内部 */
+.table-wrap table th { background:var(--plate-2); color:#143a2e; border-bottom-color:rgba(36,29,21,0.18); }
+.table-wrap td, .table-wrap th { border-bottom-color:var(--plate-edge); }
+.table-wrap tr:nth-child(even) td { background:rgba(36,29,21,0.035); }
+
+/* 図パネルのSVGは無改変（インライン塗りはそのまま明色プレート上で可読） */
+.diagram-panel figcaption { color:var(--ink-muted); border-top-color:var(--plate-edge); }
+.caption { color:var(--ink-muted); border-top-color:var(--plate-edge); }
+
+/* 警告/注記＝暖色ランプのコールアウト */
+.note { background:#f3ead4; border-left:4px solid var(--lamp); color:#3a2c11; }
+
+/* 継承ガード：ページ既定が明色テキストになったため、各プレートは暗いインクを再宣言 */
+.card, .table-wrap, .diagram-panel, .note, .metric-cards, .metric,
+.steps li, .flow, .flow-item, .feature-card, .media-panel,
+.link-grid a, .resource-list li, .why-moths-point, .inline-list li { color:var(--ink); }
+
+/* プレート内の見出し（暗いインク） */
+.card h3, .feature-card h3, .flow-item h3, .metric-cards h3, .steps li h3 { color:var(--ink); }
+
+/* プレート内の本文・補助テキスト */
+.card p, .flow-item p, .feature-card p { color:var(--ink-muted); }
+.metric span, .metric-cards span { color:var(--ink-muted); }
+.metric strong, .metric-cards strong { color:#143a2e; }
+.meta { color:#8a5012; }
+.why-moths-point strong { color:var(--plate-link); }
+.why-moths-point span { color:var(--ink-muted); }
+.link-grid strong { color:var(--plate-link); }
+.link-grid span { color:var(--ink-muted); }
+.resource-list strong { color:var(--ink); }
+.steps li strong { color:var(--ink); }
+
+/* プレート内のリンク（暗い面のシアンはクリーム上で不可なので上書き） */
+.card a, .table-wrap a, .diagram-panel a, .note a, .resource-list li a,
+.metric-cards a, .flow a, .steps a, .why-moths-point a { color:var(--plate-link); }
+.card a:hover, .table-wrap a:hover, .diagram-panel a:hover, .note a:hover,
+.resource-list li a:hover, .metric-cards a:hover, .flow a:hover, .steps a:hover { color:var(--plate-link-hover); }
+
+/* feature-card の色付き上枠（夜空の上で映える）を再付与 */
+.feature-card:nth-child(1) { border-top:4px solid var(--plate-link); }
+.feature-card:nth-child(2) { border-top:4px solid #2f6576; }
+.feature-card:nth-child(3) { border-top:4px solid var(--lamp-deep); }
+
+/* steps の番号バッジ＝小さな夜の灯 */
+.steps li::before {
+  background:var(--night-2); color:var(--moon);
+  box-shadow:0 0 0 1px var(--night-edge), 0 0 10px -1px var(--sky-cyan-glow);
+}
+
+/* インラインのタグ（クリーム小ピル） */
+.inline-list li { background:var(--plate-2); border:1px solid var(--plate-border); color:var(--ink); }
+
+/* 写真フレーム＝光に照らされた標本のように暗縁で囲う */
+.photo-band, .why-moths-abstract {
+  background:#0c1733; border:1px solid var(--plate-border); box-shadow:var(--panel-shadow);
+}
+.why-moths-points { background:transparent; border:0; padding:0; }
+
+/* 地点プレビュー＝夜の地図（暗・微光グリッド・発光点） */
+.map-preview {
+  background:
+    linear-gradient(90deg, rgba(127,199,214,0.08) 1px, transparent 1px),
+    linear-gradient(rgba(127,199,214,0.08) 1px, transparent 1px),
+    var(--night-2);
+  background-size:42px 42px, 42px 42px, auto;
+  border:1px solid var(--plate-border);
+}
+.map-preview::before { border-color:rgba(127,199,214,0.34); }
+.map-point { box-shadow:0 0 12px 2px rgba(255,255,255,0.25), 0 2px 10px rgba(0,0,0,0.4); }
+
+/* ===================== .band ＝唯一の暗いセクション ===================== */
+.band {
+  background:
+    radial-gradient(80% 120% at 50% -10%, rgba(127,199,214,0.08), transparent 60%),
+    var(--night-2);
+  border-top:1px solid var(--night-edge); border-bottom:1px solid var(--night-edge);
+}
+.band h2, .band h3 { color:var(--moon); }
+.band p { color:var(--moonlight); }
+.band a { color:var(--sky-cyan); }
+.band .section-heading p:not(.eyebrow) { color:var(--moon-dim); }
+
+/* ===================== ヒーロー（トップ） ===================== */
+/* moth_monitoring_hero.png（夜景＝光るトラップ・蛾・月・日本地図）を全面背景に。 */
+.hero {
+  position:relative; isolation:isolate;
+  background:var(--night-0);
+  background-image:
+    linear-gradient(90deg, rgba(8,14,34,0.95) 0%, rgba(10,18,42,0.74) 44%, rgba(10,18,42,0.22) 100%),
+    url("images/moth_monitoring_hero.png");
+  background-size:cover; background-position:center right;
+  border-bottom:1px solid var(--night-edge);
+}
+/* 光源の背後からにじむ暖×シアンのランプ・ハロー（「光に集まる」演出） */
+.hero::before {
+  content:""; position:absolute; z-index:0; pointer-events:none;
+  right:-4%; top:6%; width:64%; height:90%;
+  background:
+    radial-gradient(45% 45% at 64% 46%, var(--sky-cyan-glow) 0%, rgba(127,199,214,0.10) 38%, transparent 68%),
+    radial-gradient(60% 60% at 64% 46%, var(--lamp-glow) 0%, transparent 60%);
+  filter:blur(8px);
+}
+.hero-inner { position:relative; z-index:1; align-items:center; grid-template-columns:minmax(0,0.62fr) 1fr; }
+.hero-copy {
+  background:linear-gradient(180deg, rgba(11,18,42,0.46), rgba(11,18,42,0.34));
+  -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+  border:1px solid var(--night-edge); border-radius:14px; padding:26px 28px;
+}
+.hero .eyebrow { color:var(--lamp); }
+.hero h1 { color:var(--moon); text-shadow:0 1px 18px rgba(4,9,26,0.6); }
+.hero .lead { color:var(--moonlight); }
+.hero .button {
+  background:linear-gradient(180deg, var(--lamp-bright), var(--lamp));
+  border-color:var(--lamp-deep); color:#2a1c05;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.10), 0 10px 28px var(--lamp-glow);
+}
+.hero .button:hover { box-shadow:0 14px 34px rgba(224,164,77,0.42); transform:translateY(-1px); }
+.hero .button.secondary { background:rgba(255,255,255,0.06); color:var(--moon); border-color:rgba(205,214,236,0.55); box-shadow:none; }
+.hero-facts div { background:rgba(255,255,255,0.05); border:1px solid rgba(205,214,236,0.28); box-shadow:none; }
+.hero-facts strong { color:var(--sky-cyan); }
+.hero-facts span { color:var(--moon-dim); }
+/* 写真自体がビジュアルになったので旧モザイクは隠す（マークアップは保持） */
+.hero .hero-visual, .hero .hero-mosaic { display:none; }
+
+/* ===================== 署名的なディテール ===================== */
+/* 月相ディバイダ：連続するセクションの間に、光の筋の上の小さな月 */
+.section + .section::before {
+  content:""; display:block; height:6px; width:min(150px,46%); margin:4px auto 30px;
+  background:
+    radial-gradient(circle at 50% 50%, var(--moon) 0 2.2px, transparent 2.8px) center / 100% 6px no-repeat,
+    linear-gradient(90deg, transparent, rgba(205,214,236,0.30), transparent) center / 100% 1px no-repeat;
+  filter:drop-shadow(0 0 5px rgba(127,199,214,0.7));
+}
+/* 「光に寄る」カードホバー */
+.link-grid a { transition:transform .2s, box-shadow .2s, border-color .2s; }
+.link-grid a:hover {
+  transform:translateY(-2px); border-color:rgba(127,199,214,0.5);
+  box-shadow:var(--panel-shadow), 0 0 30px -8px var(--sky-cyan-glow);
+}
+
+/* ===================== レスポンシブ / パフォーマンス ===================== */
+@media (max-width:860px) {
+  .hero { background-position:center 30%; }
+  .hero::before { display:none; }
+  .hero-inner { grid-template-columns:1fr; min-height:480px; }
+}
+@media (max-width:520px) {
+  body { background-attachment:scroll, scroll, scroll; }
+  body::before { top:2vh; left:auto; right:4vw; width:92px; opacity:0.85; }
+}
+@media (prefers-reduced-motion:reduce) { * { animation:none !important; } }
+
+/* ===================== 検証フィードバックの反映（堅牢化） ===================== */
+/* プレート内の素のリスト/セル/段落を暗インクに明示（継承の保険） */
+.card ul, .card ol, .card li,
+.steps li ul, .steps li ol, .steps li li,
+.table-wrap td { color:var(--ink); }
+.steps li p { color:var(--ink-muted); }
+.note p { color:#3a2c11; }
+
+/* ヒーローのスクリムをモバイル（≤860px）で強め、明部写真上でも本文をAA確保 */
+@media (max-width:860px) {
+  .hero-copy { background:linear-gradient(180deg, rgba(11,18,42,0.58), rgba(11,18,42,0.44)); }
+}
+/* モバイルの月：グローを縮め端の食い込みを回避（overflow-x:hiddenの保険込み） */
+@media (max-width:520px) {
+  .page { width:100%; }
+  body::before {
+    right:6vw; width:84px;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.06), 0 0 34px 12px var(--moon-glow), 0 0 70px 26px rgba(127,199,214,0.10);
+  }
+}

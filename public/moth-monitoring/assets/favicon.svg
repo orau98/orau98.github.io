@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="蛾類モニタリング">
+  <rect width="32" height="32" rx="6" fill="#0c1733"/>
+  <circle cx="14" cy="16" r="8.5" fill="#f4f1e6"/>
+  <circle cx="18.4" cy="13.6" r="7.6" fill="#0c1733"/>
+  <path d="M21 19 C18.4 16.6 16 17.2 16.8 20 C17.6 22.3 20.4 21.8 22 20.4 C23.6 21.8 26.4 22.3 27.2 20 C28 17.2 25.6 16.6 23 19 Z" fill="#e0a44d"/>
+  <circle cx="6.5" cy="7" r="1" fill="#7fc7d6"/>
+</svg>

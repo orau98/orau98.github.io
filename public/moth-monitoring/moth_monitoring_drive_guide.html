@@ -2,17 +2,45 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1530">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <title>蛾類モニタリング資料ガイド</title>
   <style>
-    body { font-family: Arial, "Hiragino Sans", "Yu Gothic", sans-serif; line-height: 1.6; color: #222; }
-    h1, h2, h3 { margin-top: 1.2em; }
-    table { border-collapse: collapse; width: 100%; margin: 0.8em 0 1.2em; }
-    th, td { border: 1px solid #bbb; padding: 6px 8px; vertical-align: top; }
-    th { background: #f2f2f2; }
-    .note { background: #f7f7f7; border-left: 4px solid #777; padding: 8px 12px; }
+    :root{ --night-0:#0b1530; --night-1:#101d3d; --night-2:#17264c; --edge:rgba(255,255,255,.10);
+      --moon:#f4f1e6; --moonlight:#cdd6ec; --dim:#9aa7c6; --lamp:#e0a44d; --cyan:#7fc7d6;
+      --plate:#f6f1e4; --plate-2:#efe8d6; --ink:#241d15; --plate-edge:rgba(36,29,21,.16);
+      --font:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",YuGothic,"Meiryo","Noto Sans JP",sans-serif; color-scheme:dark; }
+    *{box-sizing:border-box}
+    body{ margin:0; font-family:var(--font); line-height:1.8; color:var(--moonlight); font-size:16px;
+      background-color:var(--night-1);
+      background-image:radial-gradient(34vw 34vw at 88% -4%, rgba(244,241,230,.20), transparent 60%),
+        linear-gradient(180deg,var(--night-0),var(--night-1) 32%,var(--night-1) 80%,var(--night-0)); background-attachment:fixed; }
+    .topbar{ position:sticky; top:0; z-index:5; background:rgba(23,38,76,.86); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid var(--edge); }
+    .topbar .in{ max-width:980px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand{ display:inline-flex; align-items:center; gap:10px; color:var(--moon); font-weight:700; text-decoration:none; font-size:16px; }
+    .brand svg{ width:30px; height:30px; display:block; border-radius:7px; box-shadow:0 0 0 1px rgba(127,199,214,.3), 0 0 16px -4px rgba(224,164,77,.5); }
+    .back{ color:var(--cyan); text-decoration:none; font-size:14px; font-weight:700; white-space:nowrap; }
+    .back:hover{ color:var(--lamp); }
+    .doc{ max-width:980px; margin:0 auto; padding:28px 22px 80px; }
+    h1{ color:var(--moon); font-size:29px; line-height:1.4; margin:6px 0 4px; }
+    h2{ color:var(--moon); font-size:21px; margin:1.5em 0 .4em; }
+    h3{ color:var(--moon); font-size:17px; margin:1.2em 0 .3em; }
+    a{ color:var(--cyan); } a:hover{ color:var(--lamp); }
+    p{ color:var(--moonlight); }
+    table{ border-collapse:separate; border-spacing:0; width:100%; margin:1em 0 1.4em; background:var(--plate); color:var(--ink);
+      border:1px solid rgba(232,169,78,.30); border-radius:10px; overflow:hidden; box-shadow:0 16px 40px rgba(3,8,24,.5); }
+    th,td{ border-bottom:1px solid var(--plate-edge); border-right:1px solid var(--plate-edge); padding:9px 12px; vertical-align:top; text-align:left; }
+    th{ background:var(--plate-2); color:#143a2e; font-weight:700; }
+    tr:last-child td{ border-bottom:0; } th:last-child, td:last-child{ border-right:0; }
+    td a{ color:#1c5c44; } td a:hover{ color:#9e5212; }
+    .note{ background:#f3ead4; border-left:4px solid var(--lamp); color:#3a2c11; padding:12px 16px; border-radius:0 10px 10px 0; margin:16px 0; }
+    .note p{ color:#3a2c11; margin:.3em 0; }
   </style>
 </head>
 <body>
+  <header class="topbar"><div class="in"><a class="brand" href="resources.html"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0c1733"/><circle cx="14" cy="16" r="8.5" fill="#f4f1e6"/><circle cx="18.4" cy="13.6" r="7.6" fill="#0c1733"/><path d="M21 19 C18.4 16.6 16 17.2 16.8 20 C17.6 22.3 20.4 21.8 22 20.4 C23.6 21.8 26.4 22.3 27.2 20 C28 17.2 25.6 16.6 23 19 Z" fill="#e0a44d"/><circle cx="6.5" cy="7" r="1" fill="#7fc7d6"/></svg><span>蛾類モニタリング</span></a><a class="back" href="resources.html">← 資料・PDFへ戻る</a></div></header>
+  <main class="doc">
   <h1>蛾類モニタリング資料ガイド（README・追加候補）</h1>
   <p>更新日: 2026年5月29日</p>
 
@@ -258,5 +286,6 @@
     <li>同定検証フロー: 写真で十分な種、標本確認が必要な種、交尾器・DNAが必要な種を分ける。</li>
     <li>データ公開方針: 希少種位置情報、私有地情報、画像ライセンス、AI学習データ利用条件。</li>
   </ul>
+  </main>
 </body>
 </html>
