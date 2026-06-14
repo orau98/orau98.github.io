@@ -1925,9 +1925,9 @@ main > .page-hero {
 .pick .status-item:nth-child(3) { border-color: var(--ink-muted); }
 .pick-badge {
   display: inline-flex; align-items: center; justify-content: center;
-  align-self: start;
-  min-width: 44px; height: 26px; padding: 0 12px; margin-bottom: 3px;
-  border-radius: 999px; color: #fff; font-weight: 800; font-size: 14px; letter-spacing: .02em;
+  align-self: start; justify-self: start; width: max-content;
+  min-width: 44px; height: 26px; padding: 0 14px; margin-bottom: 3px;
+  border-radius: 999px; color: #fff !important; font-weight: 800; font-size: 14px; letter-spacing: .02em;
   background: var(--green);
 }
 .pick .status-item:nth-child(2) .pick-badge { background: var(--blue); }
