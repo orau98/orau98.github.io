@@ -1969,6 +1969,13 @@ main > .page-hero {
 .cat-legend li.ct::before { background: var(--plate-link); }
 .cat-legend li.cf::before { background: var(--lamp-deep); }
 
+/* ---------- 縦インフォグラフィック図（記録過程ファネル／一夜のタイムライン）：portrait SVGで横スクロール不要 ---------- */
+.vdiagram { margin: 18px 0 6px; }
+.vdiagram svg { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; }
+.vdiagram figcaption { margin: 12px auto 0; max-width: 580px; color: var(--moon-dim); font-size: 14px; line-height: 1.7; text-align: center; }
+.vdiagram figcaption strong { color: var(--moonlight); }
+@media (max-width: 520px) { .vdiagram figcaption { font-size: 13px; text-align: left; } }
+
 @media (max-width: 860px) {
   .toc-list { grid-template-columns: 1fr; }
   .illus figcaption { font-size: 13px; }

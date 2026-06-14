@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="assets/favicon.png?v=20260613-png2">
   <link rel="apple-touch-icon" href="assets/favicon-192.png?v=20260613-png2">
   <title>蛾類モニタリング | 2026年度 トラップ構造比較プロトコル</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260614-vert">
+  <link rel="stylesheet" href="assets/styles.css?v=20260614-vsvg">
 </head>
 <body>
   <header class="site-header">
@@ -228,21 +228,117 @@
         <p>この試験では、最終的な残留数だけでなく、どの段階で差が出たかを分けて見ます。</p>
         <p class="flow-eq">飛来 → 接触 → 進入 → 逃出 → 残留 → 同定</p>
 
-        <figure class="flowfig">
-          <ol class="flowsteps proc">
-            <li class="ev"><span class="fs-t">飛来</span><span class="fs-d">光源・トラップに接近</span></li>
-            <li class="ev"><span class="fs-t">接触</span><span class="fs-d">触れる・着地する</span></li>
-            <li class="ev"><span class="fs-t">進入</span><span class="fs-d">捕獲部に入る</span></li>
-            <li class="ev"><span class="fs-t">逃出</span><span class="fs-d">外へ出る（一部は外へ）</span></li>
-            <li class="ct"><span class="fs-t">残留</span><span class="fs-d">回収時の個体数</span></li>
-            <li class="cf"><span class="fs-t">同定</span><span class="fs-d">種・属を確認</span></li>
-          </ol>
-          <ul class="cat-legend">
-            <li class="ev">観察イベント（のべ回数・同じ個体を複数回数えうる）</li>
-            <li class="ct">回収個体数</li>
-            <li class="cf">確認済み記録</li>
-          </ul>
-          <figcaption><strong>飛来・接触・進入・逃出は「観察イベント」</strong>で、同じ個体が複数回数えられることがあります。<strong>残留は回収時の「個体数」</strong>です。この2つを混同しないことが、構造比較のかぎになります。</figcaption>
+        <figure class="vdiagram">
+          <svg class="vfunnel" viewBox="0 0 360 760" role="img" aria-label="記録過程：飛来から同定までの縦フロー">
+            <defs>
+              <linearGradient id="spine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#7fc7d6"/>
+                <stop offset="0.55" stop-color="#3f9168"/>
+                <stop offset="1" stop-color="#e0a44d"/>
+              </linearGradient>
+              <radialGradient id="lampglow" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0" stop-color="#fff0c2" stop-opacity="0.95"/>
+                <stop offset="0.5" stop-color="#e0a44d" stop-opacity="0.45"/>
+                <stop offset="1" stop-color="#e0a44d" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="funnelfill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#7fc7d6" stop-opacity="0.14"/>
+                <stop offset="1" stop-color="#e0a44d" stop-opacity="0.05"/>
+              </linearGradient>
+              <g id="moth2">
+                <ellipse cx="-4" cy="0" rx="5" ry="3.2" fill="#cdd6ec" opacity="0.9"/>
+                <ellipse cx="4" cy="0" rx="5" ry="3.2" fill="#cdd6ec" opacity="0.9"/>
+                <line x1="0" y1="-3.4" x2="0" y2="3.4" stroke="#9aa7c6" stroke-width="1.4" stroke-linecap="round"/>
+              </g>
+            </defs>
+          
+            <!-- panel -->
+            <rect x="2" y="2" width="356" height="756" rx="20" fill="#16264d" stroke="#7fc7d6" stroke-opacity="0.18" stroke-width="1.5"/>
+          
+            <!-- subtle narrowing funnel behind the journey -->
+            <path d="M70 96 L300 96 L232 690 L138 690 Z" fill="url(#funnelfill)"/>
+            <path d="M70 96 L138 690 M300 96 L232 690" stroke="#7fc7d6" stroke-opacity="0.16" stroke-width="1"/>
+          
+            <!-- header: UV lamp + moths -->
+            <circle cx="185" cy="52" r="44" fill="url(#lampglow)"/>
+            <rect x="171" y="34" width="28" height="12" rx="6" fill="#f3e2a8" stroke="#caa049" stroke-width="1.2"/>
+            <rect x="180" y="44" width="10" height="14" rx="3" fill="#caa049"/>
+            <use href="#moth2" transform="translate(120,40) scale(1.05) rotate(-12)"/>
+            <use href="#moth2" transform="translate(250,44) scale(0.95) rotate(10)"/>
+            <use href="#moth2" transform="translate(150,78) scale(0.85) rotate(-4)"/>
+            <text x="185" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#9aa7c6">光に飛来</text>
+          
+            <!-- spine -->
+            <line x1="48" y1="118" x2="48" y2="636" stroke="url(#spine)" stroke-width="4" stroke-linecap="round"/>
+          
+            <!-- group label A -->
+            <text x="76" y="124" font-size="12.5" font-weight="800" fill="#7fc7d6">観察イベント（のべ回数）</text>
+          
+            <!-- ===== card helper layout: dot x48, card x70..342 ===== -->
+            <!-- card1 飛来 -->
+            <g>
+              <circle cx="48" cy="170" r="13" fill="#16264d" stroke="#7fc7d6" stroke-width="2.5"/><circle cx="48" cy="170" r="4.5" fill="#7fc7d6"/>
+              <rect x="70" y="138" width="272" height="64" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="138" width="6" height="64" rx="3" fill="#2f6576"/>
+              <text x="92" y="166" font-size="18" font-weight="800" fill="#1f4a57">飛来</text>
+              <text x="92" y="187" font-size="12.5" fill="#5b5142">光源・トラップに接近</text>
+            </g>
+            <!-- card2 接触 -->
+            <g>
+              <circle cx="48" cy="246" r="13" fill="#16264d" stroke="#7fc7d6" stroke-width="2.5"/><circle cx="48" cy="246" r="4.5" fill="#7fc7d6"/>
+              <rect x="70" y="214" width="272" height="64" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="214" width="6" height="64" rx="3" fill="#2f6576"/>
+              <text x="92" y="242" font-size="18" font-weight="800" fill="#1f4a57">接触</text>
+              <text x="92" y="263" font-size="12.5" fill="#5b5142">触れる・着地する</text>
+            </g>
+            <!-- card3 進入 -->
+            <g>
+              <circle cx="48" cy="322" r="13" fill="#16264d" stroke="#7fc7d6" stroke-width="2.5"/><circle cx="48" cy="322" r="4.5" fill="#7fc7d6"/>
+              <rect x="70" y="290" width="272" height="64" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="290" width="6" height="64" rx="3" fill="#2f6576"/>
+              <text x="92" y="318" font-size="18" font-weight="800" fill="#1f4a57">進入</text>
+              <text x="92" y="339" font-size="12.5" fill="#5b5142">捕獲部に入る</text>
+            </g>
+            <!-- card4 逃出 + escape -->
+            <g>
+              <circle cx="48" cy="398" r="13" fill="#16264d" stroke="#7fc7d6" stroke-width="2.5"/><circle cx="48" cy="398" r="4.5" fill="#7fc7d6"/>
+              <rect x="70" y="366" width="272" height="64" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="366" width="6" height="64" rx="3" fill="#2f6576"/>
+              <text x="92" y="394" font-size="18" font-weight="800" fill="#1f4a57">逃出</text>
+              <text x="92" y="415" font-size="12.5" fill="#5b5142">捕獲部の外へ出る</text>
+              <path d="M322 386 q24 0 24 18 q0 14 -14 16 m6 -7 l-7 7 7 7" fill="none" stroke="#d98aa0" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="350" y="430" text-anchor="end" font-size="10" font-weight="700" fill="#d98aa0">一部は外へ</text>
+            </g>
+          
+            <!-- group label B -->
+            <text x="76" y="468" font-size="12.5" font-weight="800" fill="#5fb588">回収・確認（個体数・記録）</text>
+          
+            <!-- card5 残留 -->
+            <g>
+              <circle cx="48" cy="514" r="13" fill="#16264d" stroke="#3f9168" stroke-width="2.5"/><circle cx="48" cy="514" r="4.5" fill="#3f9168"/>
+              <rect x="70" y="482" width="272" height="64" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="482" width="6" height="64" rx="3" fill="#1c5c44"/>
+              <text x="92" y="510" font-size="18" font-weight="800" fill="#15402f">残留</text>
+              <text x="92" y="531" font-size="12.5" fill="#5b5142">回収時に残っていた個体数</text>
+            </g>
+            <!-- card6 同定 -->
+            <g>
+              <circle cx="48" cy="600" r="13" fill="#16264d" stroke="#caa049" stroke-width="2.5"/><circle cx="48" cy="600" r="4.5" fill="#caa049"/>
+              <rect x="70" y="568" width="272" height="64" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="568" width="6" height="64" rx="3" fill="#caa049"/>
+              <text x="92" y="596" font-size="18" font-weight="800" fill="#7a4d10">同定</text>
+              <text x="92" y="617" font-size="12.5" fill="#5b5142">種・属を確認した記録</text>
+            </g>
+          
+            <!-- legend -->
+            <g font-size="10.5" font-weight="700" fill="#9aa7c6">
+              <rect x="20" y="668" width="12" height="12" rx="3" fill="#2f6576"/><text x="37" y="678">観察イベント</text>
+              <rect x="120" y="668" width="12" height="12" rx="3" fill="#1c5c44"/><text x="137" y="678">回収個体数</text>
+              <rect x="214" y="668" width="12" height="12" rx="3" fill="#caa049"/><text x="231" y="678">確認済み記録</text>
+            </g>
+            <text x="180" y="706" text-anchor="middle" font-size="10.5" fill="#9aa7c6">下にいくほど数は絞り込まれます</text>
+          </svg>
+          <figcaption><strong>飛来・接触・進入・逃出は「観察イベント」</strong>で、同じ個体が複数回数えられることがあります。<strong>残留は回収時の「個体数」</strong>、同定は確認済み記録です。下にいくほど数は絞り込まれます。</figcaption>
         </figure>
 
         <h3>各段階の数え方</h3>
@@ -271,15 +367,82 @@
         <h2>調査時間と観察窓</h2>
         <p>構造差を見るには、調査時間と観察努力量をそろえる必要があります。時計時刻だけでなく、日没からの経過時間を記録します。</p>
 
-        <figure class="flowfig">
-          <ol class="flowsteps numbered">
-            <li><span class="fs-t">日没</span><span class="fs-d">基準（0分）</span></li>
-            <li><span class="fs-t">点灯</span><span class="fs-d">日没後30分以内</span></li>
-            <li><span class="fs-t">観察窓</span><span class="fs-d">点灯後 30・60・90・120分に各5分</span></li>
-            <li><span class="fs-t">消灯・回収</span><span class="fs-d">点灯から3時間後（標準）</span></li>
-          </ol>
-          <p class="flow-note">4時間まで延長する場合は、最初の3時間を主解析に使い、残りは延長分（補助）として扱います。</p>
-          <figcaption>日没を基準に、<strong>日没後30分以内に点灯</strong>。点灯後 <strong>30・60・90・120分</strong> に各5分の観察窓を設け、<strong>3時間後に消灯・回収</strong>します。</figcaption>
+        <figure class="vdiagram">
+          <svg class="vtime" viewBox="0 0 360 600" role="img" aria-label="一夜の調査タイムライン（縦）">
+            <defs>
+              <linearGradient id="dusk2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#d8a85f"/>
+                <stop offset="0.4" stop-color="#5b6aa0"/>
+                <stop offset="1" stop-color="#2a3a66"/>
+              </linearGradient>
+              <radialGradient id="sunglow" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0" stop-color="#ffdf9e" stop-opacity="0.9"/><stop offset="1" stop-color="#d8a85f" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+          
+            <!-- panel -->
+            <rect x="2" y="2" width="356" height="596" rx="20" fill="#16264d" stroke="#7fc7d6" stroke-opacity="0.18" stroke-width="1.5"/>
+          
+            <!-- time-of-day markers on the right -->
+            <circle cx="312" cy="44" r="22" fill="url(#sunglow)"/><circle cx="312" cy="44" r="9" fill="#ffd479"/>
+            <text x="312" y="78" text-anchor="middle" font-size="10" font-weight="700" fill="#9aa7c6">夕暮れ</text>
+            <circle cx="312" cy="540" r="11" fill="#f4f1e6"/><circle cx="308" cy="537" r="9" fill="#16264d"/>
+            <text x="312" y="566" text-anchor="middle" font-size="10" font-weight="700" fill="#9aa7c6">夜</text>
+          
+            <!-- spine dusk->night -->
+            <line x1="48" y1="110" x2="48" y2="430" stroke="url(#dusk2)" stroke-width="4" stroke-linecap="round"/>
+            <!-- extension (dashed) -->
+            <line x1="48" y1="430" x2="48" y2="486" stroke="#9a8f78" stroke-width="3" stroke-dasharray="4 5" stroke-linecap="round"/>
+          
+            <!-- standard 3h annotation -->
+            <path d="M26 206 v224" stroke="#e0a44d" stroke-width="2"/>
+            <path d="M22 206 h8 M22 430 h8" stroke="#e0a44d" stroke-width="2"/>
+            <text x="17" y="318" text-anchor="middle" font-size="11.5" font-weight="800" fill="#e0a44d" transform="rotate(-90 17 318)">標準 3時間</text>
+          
+            <!-- card1 日没 -->
+            <g>
+              <circle cx="48" cy="116" r="13" fill="#16264d" stroke="#d8a85f" stroke-width="2.5"/><circle cx="48" cy="116" r="4.5" fill="#d8a85f"/>
+              <rect x="70" y="86" width="248" height="60" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="86" width="6" height="60" rx="3" fill="#caa049"/>
+              <text x="92" y="113" font-size="18" font-weight="800" fill="#7a4d10">日没</text>
+              <text x="92" y="133" font-size="12.5" fill="#5b5142">調査の基準（0分）</text>
+            </g>
+            <!-- card2 点灯 -->
+            <g>
+              <circle cx="48" cy="206" r="13" fill="#16264d" stroke="#e0a44d" stroke-width="2.5"/><circle cx="48" cy="206" r="4.5" fill="#e0a44d"/>
+              <rect x="70" y="176" width="248" height="60" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="176" width="6" height="60" rx="3" fill="#caa049"/>
+              <text x="92" y="203" font-size="18" font-weight="800" fill="#7a4d10">点灯</text>
+              <text x="92" y="223" font-size="12.5" fill="#5b5142">日没後30分以内に開始</text>
+            </g>
+            <!-- card3 観察窓 -->
+            <g>
+              <circle cx="48" cy="318" r="13" fill="#16264d" stroke="#2f6576" stroke-width="2.5"/><circle cx="48" cy="318" r="4.5" fill="#2f6576"/>
+              <rect x="70" y="270" width="248" height="96" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="270" width="6" height="96" rx="3" fill="#2f6576"/>
+              <text x="92" y="296" font-size="18" font-weight="800" fill="#1f4a57">観察窓</text>
+              <g font-size="11" font-weight="800" fill="#fff">
+                <rect x="92" y="308" width="42" height="20" rx="10" fill="#2f6576"/><text x="113" y="322" text-anchor="middle">30分</text>
+                <rect x="140" y="308" width="42" height="20" rx="10" fill="#2f6576"/><text x="161" y="322" text-anchor="middle">60分</text>
+                <rect x="188" y="308" width="42" height="20" rx="10" fill="#2f6576"/><text x="209" y="322" text-anchor="middle">90分</text>
+                <rect x="236" y="308" width="50" height="20" rx="10" fill="#2f6576"/><text x="261" y="322" text-anchor="middle">120分</text>
+              </g>
+              <text x="92" y="352" font-size="12" fill="#5b5142">各窓で5分間ずつ観察する</text>
+            </g>
+            <!-- card4 消灯・回収 -->
+            <g>
+              <circle cx="48" cy="430" r="13" fill="#16264d" stroke="#3f9168" stroke-width="2.5"/><circle cx="48" cy="430" r="4.5" fill="#3f9168"/>
+              <rect x="70" y="400" width="248" height="60" rx="12" fill="#f6f1e4"/>
+              <rect x="70" y="400" width="6" height="60" rx="3" fill="#1c5c44"/>
+              <text x="92" y="427" font-size="18" font-weight="800" fill="#15402f">消灯・回収</text>
+              <text x="92" y="447" font-size="12.5" fill="#5b5142">点灯から3時間後（標準）</text>
+            </g>
+          
+            <!-- extension note -->
+            <text x="70" y="504" font-size="11.5" font-weight="700" fill="#cdb38a">延長分（4時間まで）は補助扱い</text>
+            <text x="180" y="556" text-anchor="middle" font-size="10.5" fill="#9aa7c6">時計時刻ではなく、日没からの経過時間で管理</text>
+          </svg>
+          <figcaption>日没を基準に、<strong>日没後30分以内に点灯</strong>。点灯後 <strong>30・60・90・120分</strong> に各5分の観察窓を設け、<strong>3時間後に消灯・回収</strong>します。4時間まで延長した分は補助扱いです。</figcaption>
         </figure>
 
         <div class="grid">
