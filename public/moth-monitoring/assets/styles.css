@@ -1853,3 +1853,110 @@ main > .page-hero {
   .event-card .event-title { font-size: 20px; }
   .event-meta { flex-direction: column; gap: 5px; }
 }
+
+/* =====================================================================
+   PROTOCOL PAGE — 可読性向上の追加コンポーネント（追記のみ・既存規則は不変更）
+   目次 / 全幅イラストパネル / A型B型判定 / 配列チップ
+   夜テーマのプレート変数（--plate, --plate-border など）を利用。
+   ===================================================================== */
+
+/* ---------- 目次（クイックジャンプ） ---------- */
+.toc {
+  margin: 28px 0 0;
+  padding: 18px 22px 20px;
+  border: 1px solid var(--plate-border);
+  border-radius: 14px;
+  background: var(--plate);
+  box-shadow: var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.toc-title {
+  margin: 0 0 12px;
+  display: flex; align-items: center; gap: 9px;
+  color: var(--ink); font-weight: 800; font-size: 15px; letter-spacing: .02em;
+}
+.toc-title::before {
+  content: ""; width: 9px; height: 9px; border-radius: 50%;
+  background: linear-gradient(180deg, var(--lamp-bright), var(--lamp));
+  box-shadow: 0 0 8px 1px var(--lamp-glow); flex: 0 0 auto;
+}
+.toc-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 18px;
+  counter-reset: none;
+}
+.toc-list a {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px 9px; border-radius: 9px;
+  color: var(--plate-link); text-decoration: none;
+  font-weight: 700; font-size: 14.5px; line-height: 1.4;
+  transition: background .16s, color .16s;
+}
+.toc-list a:hover { background: rgba(36,29,21,0.055); color: var(--plate-link-hover); }
+.toc-num {
+  flex: 0 0 auto; width: 23px; height: 23px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--night-2); color: var(--moon); font-size: 12px; font-weight: 800;
+  box-shadow: 0 0 0 1px var(--night-edge), 0 0 9px -1px var(--sky-cyan-glow);
+}
+
+/* ---------- 全幅の説明イラストパネル（切り取らずに表示） ---------- */
+.illus {
+  margin: 22px 0 0;
+  border: 1px solid var(--plate-border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--plate);
+  box-shadow: var(--panel-shadow);
+}
+.illus img { width: 100%; height: auto; display: block; }
+.illus figcaption {
+  padding: 14px 18px 16px;
+  border-top: 1px solid var(--plate-edge);
+  color: var(--ink-muted); font-size: 14px; line-height: 1.7;
+}
+.illus figcaption strong { color: var(--ink); }
+
+/* ---------- A型 / B型 / 補助 の判定（status-list を流用＋バッジ） ---------- */
+.status-list.pick { margin-top: 16px; }
+.status-list.pick .status-item {
+  display: grid; align-content: start; gap: 4px;
+  padding: 15px 16px 16px; border-radius: 0 8px 8px 0;
+}
+.pick .status-item:nth-child(3) { border-color: var(--ink-muted); }
+.pick-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  align-self: start;
+  min-width: 44px; height: 26px; padding: 0 12px; margin-bottom: 3px;
+  border-radius: 999px; color: #fff; font-weight: 800; font-size: 14px; letter-spacing: .02em;
+  background: var(--green);
+}
+.pick .status-item:nth-child(2) .pick-badge { background: var(--blue); }
+.pick .status-item:nth-child(3) .pick-badge { background: #6f6552; }
+.pick .status-item strong { color: var(--ink); font-size: 16px; }
+.pick .status-item span:not(.pick-badge) { color: var(--ink-muted); font-size: 14px; line-height: 1.65; }
+
+/* ---------- 推奨配列チップ（ABBA / BAAB） ---------- */
+.seqfig { margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 12px 30px; }
+.seq { display: flex; align-items: center; gap: 8px; }
+.seq-label {
+  min-width: 50px; margin-right: 2px;
+  color: var(--moon); font-weight: 800; font-size: 14px; letter-spacing: .06em;
+}
+.seq-chip {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 16px;
+  box-shadow: 0 6px 16px rgba(3,8,24,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.seq-chip.a { background: linear-gradient(180deg, #348059, var(--green)); }
+.seq-chip.b { background: linear-gradient(180deg, #3a7689, var(--blue)); }
+.seq-arrow { color: var(--lamp); font-weight: 800; font-size: 15px; }
+
+@media (max-width: 860px) {
+  .toc-list { grid-template-columns: 1fr; }
+  .illus figcaption { font-size: 13px; }
+}
+@media (max-width: 520px) {
+  .toc { padding: 16px 16px 18px; }
+  .seqfig { gap: 12px 18px; }
+  .seq { flex-wrap: wrap; }
+}

@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="assets/favicon.png?v=20260613-png2">
   <link rel="apple-touch-icon" href="assets/favicon-192.png?v=20260613-png2">
   <title>蛾類モニタリング | 2026年度 トラップ構造比較プロトコル</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260614-protocol-short">
+  <link rel="stylesheet" href="assets/styles.css?v=20260614-protocol-visual">
 </head>
 <body>
   <header class="site-header">
@@ -37,6 +37,7 @@
     <div class="page">
       <p class="lead">今年度は、光源を10W級ブラックライトにそろえ、トラップ構造の違いが飛来から残留までの過程にどう影響するかを比較します。参加者の人数や機材に応じて、A型またはB型の方法で調査します。</p>
 
+      <!-- ===== 3行まとめ（要点カード） ===== -->
       <section class="section">
         <div class="grid">
           <article class="card">
@@ -57,6 +58,24 @@
         </div>
       </section>
 
+      <!-- ===== 目次（クイックジャンプ） ===== -->
+      <nav class="toc" aria-label="このページの目次">
+        <p class="toc-title">このページの流れ</p>
+        <ol class="toc-list">
+          <li><a href="#purpose"><span class="toc-num">1</span>今年度の目的</a></li>
+          <li><a href="#choose-type"><span class="toc-num">2</span>A型かB型かを選ぶ</a></li>
+          <li><a href="#day-flow"><span class="toc-num">3</span>当日の基本フロー</a></li>
+          <li><a href="#process"><span class="toc-num">4</span>記録過程の定義</a></li>
+          <li><a href="#time-windows"><span class="toc-num">5</span>調査時間と観察窓</a></li>
+          <li><a href="#required-fields"><span class="toc-num">6</span>必須記録項目</a></li>
+          <li><a href="#conditions"><span class="toc-num">7</span>比較条件</a></li>
+          <li><a href="#mistakes"><span class="toc-num">8</span>よくあるミス</a></li>
+          <li><a href="#targets"><span class="toc-num">9</span>論文化を見据えた目標</a></li>
+          <li><a href="#field-checklist"><span class="toc-num">10</span>野外チェックリスト</a></li>
+        </ol>
+      </nav>
+
+      <!-- ===== このページで分かること ===== -->
       <section class="section">
         <h2>このページで分かること</h2>
         <p>調査に参加する人が、実験型を選び、当日の流れを確認し、必要な記録を残せるようにまとめています。</p>
@@ -74,9 +93,16 @@
         </p>
       </section>
 
-      <section class="section">
+      <!-- ===== 1. 今年度の目的 ===== -->
+      <section class="section" id="purpose">
         <h2>今年度の目的</h2>
         <p>今年度は、全国モニタリングを始める前の準備段階です。目的は、長期的に使える標準トラップを決めるために、トラップ構造の違いが記録過程に与える影響を調べることです。</p>
+
+        <figure class="illus">
+          <img src="assets/images/generated/trap_comparison.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="同じ夜空・同じ天候・同じ観察体制のもとで、入口や漏斗の形が異なる3種類のトラップ構造を並べて比較する模式図。">
+          <figcaption><strong>比べるのは構造、そろえるのは条件。</strong>光源・点灯時間・天候・観察体制をそろえたうえで、入口や漏斗など構造の違いだけを比較します。</figcaption>
+        </figure>
+
         <div class="grid two">
           <article class="card">
             <h3>変えるもの</h3>
@@ -89,9 +115,30 @@
         </div>
       </section>
 
+      <!-- ===== 2. まず選ぶ：A型かB型か ===== -->
       <section class="section" id="choose-type">
         <h2>まず選ぶ：A型かB型か</h2>
         <p>市民科学では、参加できる人数や機材が地点ごとに異なります。このプロトコルでは、2つの実験型を用意します。大事なのは、全国の別々の場所を単純に比べることではなく、同じ地点の中で構造を比べることです。</p>
+
+        <h3>あなたはどれ？</h3>
+        <div class="status-list pick">
+          <article class="status-item">
+            <span class="pick-badge">A型</span>
+            <strong>2台を同時に置ける</strong>
+            <span>同日ペア比較。同じ日・同じ地点で2構造を同時に比べます。最も強い比較データです。</span>
+          </article>
+          <article class="status-item">
+            <span class="pick-badge">B型</span>
+            <strong>1台ずつなら置ける</strong>
+            <span>同一地点クロスオーバー比較。同じ地点で日を変えて構造を入れ替えます。解析に使える比較データです。</span>
+          </article>
+          <article class="status-item">
+            <span class="pick-badge">補助</span>
+            <strong>1構造だけ・単発で参加</strong>
+            <span>補助記録。季節記録、分布記録、運用確認として残します。構造比較の主解析には使いません。</span>
+          </article>
+        </div>
+
         <h3>実験型の選び方</h3>
         <div class="table-wrap">
           <table>
@@ -131,6 +178,22 @@
           </article>
         </div>
         <h3>推奨配列</h3>
+        <figure class="seqfig" aria-hidden="true">
+          <div class="seq">
+            <span class="seq-label">ABBA</span>
+            <span class="seq-chip a">A</span><span class="seq-arrow">→</span>
+            <span class="seq-chip b">B</span><span class="seq-arrow">→</span>
+            <span class="seq-chip b">B</span><span class="seq-arrow">→</span>
+            <span class="seq-chip a">A</span>
+          </div>
+          <div class="seq">
+            <span class="seq-label">BAAB</span>
+            <span class="seq-chip b">B</span><span class="seq-arrow">→</span>
+            <span class="seq-chip a">A</span><span class="seq-arrow">→</span>
+            <span class="seq-chip a">A</span><span class="seq-arrow">→</span>
+            <span class="seq-chip b">B</span>
+          </div>
+        </figure>
         <div class="table-wrap">
           <table>
             <thead>
@@ -145,9 +208,16 @@
         </div>
       </section>
 
-      <section class="section">
+      <!-- ===== 3. 当日の基本フロー ===== -->
+      <section class="section" id="day-flow">
         <h2>当日の基本フロー</h2>
         <p>当日は、実験型を選び、条件をそろえ、観察窓で記録し、回収後に同定できる形で整理します。</p>
+
+        <figure class="illus">
+          <img src="assets/images/generated/field_workflow.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="準備、設置、点灯・飛来、撮影・同定、記録入力という野外調査の一連の流れを円環で示した模式図。">
+          <figcaption><strong>準備 → 設置 → 点灯・観察 → 同定 → 記録入力。</strong>日没前の準備から、夜の観察、回収後の同定とデータ入力までを一連の流れで行います。</figcaption>
+        </figure>
+
         <ol class="steps">
           <li><strong>実験型を選ぶ:</strong> A型かB型かを決めます。A型では pair_id、B型では crossover_sequence を記録します。</li>
           <li><strong>設置する:</strong> 地点ID、位置ID、トラップID、光源IDを記録します。光源の高さ、向き、入口までの距離をそろえます。</li>
@@ -159,10 +229,106 @@
         </ol>
       </section>
 
-      <section class="section">
+      <!-- ===== 4. 記録過程の定義 ===== -->
+      <section class="section" id="process">
         <h2>記録過程の定義</h2>
         <p>この試験では、最終的な残留数だけでなく、どの段階で差が出たかを分けて見ます。</p>
         <p class="flow-eq">飛来 → 接触 → 進入 → 逃出 → 残留 → 同定</p>
+
+        <figure class="diagram-panel">
+          <div class="diagram-scroll">
+            <svg viewBox="0 0 920 320" role="img" aria-labelledby="funnel-title funnel-desc">
+              <title id="funnel-title">記録過程ファネル：蛾がトラップに飛来してから同定されるまで</title>
+              <desc id="funnel-desc">飛来・接触・進入・逃出は観察イベント、残留は回収個体数、同定は確認済み記録。段階を進むほど数は絞り込まれ、逃出では一部の個体が捕獲部の外へ出る。</desc>
+              <defs>
+                <g id="m-moth">
+                  <ellipse cx="-3.6" cy="0" rx="4.4" ry="2.9" fill="#7a6a52"/>
+                  <ellipse cx="3.6" cy="0" rx="4.4" ry="2.9" fill="#7a6a52"/>
+                  <line x1="0" y1="-3" x2="0" y2="3" stroke="#3a3022" stroke-width="1.4" stroke-linecap="round"/>
+                </g>
+              </defs>
+
+              <!-- 絞り込みを示す半透明ファネル -->
+              <polygon points="40,70 880,118 880,196 40,250" fill="#e0a44d" opacity="0.12"/>
+
+              <!-- 飛来する蛾（左ほど多く、右ほど少なく） -->
+              <use href="#m-moth" transform="translate(70,52) scale(1.3)"/>
+              <use href="#m-moth" transform="translate(120,40) scale(1.1)"/>
+              <use href="#m-moth" transform="translate(170,56) scale(1.2)"/>
+              <use href="#m-moth" transform="translate(300,44) scale(1.05)"/>
+              <use href="#m-moth" transform="translate(470,48) scale(1)"/>
+              <use href="#m-moth" transform="translate(640,50) scale(0.95)"/>
+
+              <!-- 6段階ノード -->
+              <!-- 観察イベント（青系） -->
+              <g>
+                <rect x="40"  y="120" width="118" height="76" rx="12" fill="#eef4f3" stroke="#2f6576" stroke-width="2"/>
+                <text x="99" y="152" text-anchor="middle" font-size="19" font-weight="800" fill="#235260">飛来</text>
+                <text x="99" y="174" text-anchor="middle" font-size="11.5" fill="#5b5142">光源・トラップに接近</text>
+              </g>
+              <g>
+                <rect x="194" y="120" width="118" height="76" rx="12" fill="#eef4f3" stroke="#2f6576" stroke-width="2"/>
+                <text x="253" y="152" text-anchor="middle" font-size="19" font-weight="800" fill="#235260">接触</text>
+                <text x="253" y="174" text-anchor="middle" font-size="11.5" fill="#5b5142">触れる・着地する</text>
+              </g>
+              <g>
+                <rect x="348" y="120" width="118" height="76" rx="12" fill="#eef4f3" stroke="#2f6576" stroke-width="2"/>
+                <text x="407" y="152" text-anchor="middle" font-size="19" font-weight="800" fill="#235260">進入</text>
+                <text x="407" y="174" text-anchor="middle" font-size="11.5" fill="#5b5142">捕獲部に入る</text>
+              </g>
+              <g>
+                <rect x="502" y="120" width="118" height="76" rx="12" fill="#eef4f3" stroke="#2f6576" stroke-width="2"/>
+                <text x="561" y="152" text-anchor="middle" font-size="19" font-weight="800" fill="#235260">逃出</text>
+                <text x="561" y="174" text-anchor="middle" font-size="11.5" fill="#5b5142">外へ出る</text>
+              </g>
+              <!-- 回収個体数（緑） -->
+              <g>
+                <rect x="656" y="120" width="100" height="76" rx="12" fill="#e7f0ea" stroke="#1c5c44" stroke-width="2.4"/>
+                <text x="706" y="152" text-anchor="middle" font-size="19" font-weight="800" fill="#15402f">残留</text>
+                <text x="706" y="174" text-anchor="middle" font-size="11.5" fill="#5b5142">回収時の個体数</text>
+              </g>
+              <!-- 確認（ランプ色） -->
+              <g>
+                <rect x="792" y="120" width="88" height="76" rx="12" fill="#f6ead2" stroke="#caa049" stroke-width="2.4"/>
+                <text x="836" y="152" text-anchor="middle" font-size="19" font-weight="800" fill="#7a4d10">同定</text>
+                <text x="836" y="174" text-anchor="middle" font-size="11.5" fill="#5b5142">種・属を確認</text>
+              </g>
+
+              <!-- ノード間の矢印 -->
+              <g fill="#9a8f78">
+                <path d="M158,158 l28,0 m-7,-5 l9,5 -9,5" stroke="#9a8f78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M312,158 l28,0 m-7,-5 l9,5 -9,5" stroke="#9a8f78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M466,158 l28,0 m-7,-5 l9,5 -9,5" stroke="#9a8f78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M620,158 l28,0 m-7,-5 l9,5 -9,5" stroke="#9a8f78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M756,158 l28,0 m-7,-5 l9,5 -9,5" stroke="#9a8f78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+
+              <!-- 逃出：個体が外へ出る（上向き破線矢印） -->
+              <path d="M561,120 C561,96 561,96 561,80 m-6,10 l6,-12 6,12" fill="none" stroke="#8b4051" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="561" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#8b4051">個体が外へ</text>
+
+              <!-- グルーピング・ブラケット -->
+              <g stroke-width="2" fill="none">
+                <path d="M40,222 v10 h580 v-10" stroke="#2f6576"/>
+                <path d="M656,222 v10 h224 v-10" stroke="#1c5c44"/>
+              </g>
+              <text x="330" y="258" text-anchor="middle" font-size="13" font-weight="800" fill="#235260">観察イベント（のべ回数・同一個体が複数回数えられる）</text>
+              <text x="768" y="258" text-anchor="middle" font-size="13" font-weight="800" fill="#15402f">回収・確認</text>
+
+              <!-- 凡例 -->
+              <g font-size="12" fill="#5b5142">
+                <rect x="40" y="284" width="14" height="14" rx="3" fill="#eef4f3" stroke="#2f6576" stroke-width="2"/>
+                <text x="62" y="295">観察イベント</text>
+                <rect x="190" y="284" width="14" height="14" rx="3" fill="#e7f0ea" stroke="#1c5c44" stroke-width="2"/>
+                <text x="212" y="295">回収個体数</text>
+                <rect x="330" y="284" width="14" height="14" rx="3" fill="#f6ead2" stroke="#caa049" stroke-width="2"/>
+                <text x="352" y="295">確認済み記録</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>段階を進むほど数は絞り込まれます。<strong>飛来・接触・進入・逃出は「観察イベント」</strong>で、同じ個体が複数回数えられることがあります。<strong>残留は回収時の「個体数」</strong>です。この2つを混同しないことが、構造比較のかぎになります。</figcaption>
+        </figure>
+
         <h3>各段階の数え方</h3>
         <div class="table-wrap">
           <table>
@@ -184,9 +350,86 @@
         </div>
       </section>
 
-      <section class="section">
+      <!-- ===== 5. 調査時間と観察窓 ===== -->
+      <section class="section" id="time-windows">
         <h2>調査時間と観察窓</h2>
         <p>構造差を見るには、調査時間と観察努力量をそろえる必要があります。時計時刻だけでなく、日没からの経過時間を記録します。</p>
+
+        <figure class="diagram-panel">
+          <div class="diagram-scroll">
+            <svg viewBox="0 0 920 250" role="img" aria-labelledby="timeline-title timeline-desc">
+              <title id="timeline-title">一夜のタイムライン：日没から点灯、観察窓、回収まで</title>
+              <desc id="timeline-desc">日没後30分以内に点灯し、点灯後30・60・90・120分に各5分の観察窓を設け、点灯から3時間後に消灯・回収する。標準は3時間で、4時間まで延長した分は補助扱い。</desc>
+              <defs>
+                <linearGradient id="dusk" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#caa56a"/>
+                  <stop offset="0.35" stop-color="#5b6aa0"/>
+                  <stop offset="1" stop-color="#17264c"/>
+                </linearGradient>
+              </defs>
+
+              <!-- 夜空ストリップ -->
+              <rect x="60" y="24" width="800" height="34" rx="6" fill="url(#dusk)"/>
+              <circle cx="120" cy="41" r="9" fill="#f4e7c4"/>
+              <circle cx="820" cy="41" r="10" fill="#f4f1e6"/>
+              <circle cx="816" cy="38" r="8.5" fill="#17264c"/>
+              <circle cx="200" cy="36" r="1.2" fill="#fff"/><circle cx="430" cy="46" r="1.2" fill="#fff"/><circle cx="600" cy="34" r="1.2" fill="#fff"/><circle cx="720" cy="48" r="1.2" fill="#fff"/>
+
+              <!-- 標準3時間バンド -->
+              <rect x="120" y="92" width="540" height="46" rx="8" fill="#e0a44d" opacity="0.18"/>
+              <text x="390" y="120" text-anchor="middle" font-size="13.5" font-weight="800" fill="#7a4d10">標準調査 3時間（主解析に使用）</text>
+
+              <!-- 延長バンド -->
+              <rect x="660" y="92" width="180" height="46" rx="8" fill="#5b5142" opacity="0.10" stroke="#9a8f78" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="750" y="120" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5b5142">延長分（補助）</text>
+
+              <!-- 時間軸 -->
+              <line x1="60" y1="158" x2="860" y2="158" stroke="#241d15" stroke-width="2"/>
+
+              <!-- 日没 -->
+              <line x1="80" y1="150" x2="80" y2="166" stroke="#241d15" stroke-width="2"/>
+              <text x="80" y="186" text-anchor="middle" font-size="13" font-weight="800" fill="#241d15">日没</text>
+              <text x="80" y="202" text-anchor="middle" font-size="11" fill="#5b5142">基準（0分）</text>
+
+              <!-- 点灯 -->
+              <g>
+                <line x1="120" y1="146" x2="120" y2="170" stroke="#caa049" stroke-width="2.4"/>
+                <circle cx="120" cy="146" r="6" fill="#ecb45f" stroke="#caa049" stroke-width="1.5"/>
+                <text x="120" y="222" text-anchor="middle" font-size="12.5" font-weight="800" fill="#7a4d10">点灯</text>
+                <text x="120" y="238" text-anchor="middle" font-size="11" fill="#5b5142">日没後30分以内</text>
+              </g>
+
+              <!-- 観察窓（点灯後 30/60/90/120分、各5分） -->
+              <g>
+                <rect x="207" y="150" width="6" height="16" rx="2" fill="#2f6576"/>
+                <text x="210" y="142" text-anchor="middle" font-size="11.5" font-weight="800" fill="#235260">30分</text>
+              </g>
+              <g>
+                <rect x="297" y="150" width="6" height="16" rx="2" fill="#2f6576"/>
+                <text x="300" y="142" text-anchor="middle" font-size="11.5" font-weight="800" fill="#235260">60分</text>
+              </g>
+              <g>
+                <rect x="387" y="150" width="6" height="16" rx="2" fill="#2f6576"/>
+                <text x="390" y="142" text-anchor="middle" font-size="11.5" font-weight="800" fill="#235260">90分</text>
+              </g>
+              <g>
+                <rect x="477" y="150" width="6" height="16" rx="2" fill="#2f6576"/>
+                <text x="480" y="142" text-anchor="middle" font-size="11.5" font-weight="800" fill="#235260">120分</text>
+              </g>
+              <text x="345" y="206" text-anchor="middle" font-size="11.5" font-weight="700" fill="#235260">観察窓：各5分間ずつ観察</text>
+
+              <!-- 消灯・回収 -->
+              <g>
+                <line x1="660" y1="146" x2="660" y2="170" stroke="#1c5c44" stroke-width="2.4"/>
+                <circle cx="660" cy="146" r="6" fill="#e7f0ea" stroke="#1c5c44" stroke-width="2"/>
+                <text x="660" y="222" text-anchor="middle" font-size="12.5" font-weight="800" fill="#15402f">消灯・回収</text>
+                <text x="660" y="238" text-anchor="middle" font-size="11" fill="#5b5142">点灯から3時間後</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>日没を基準に、<strong>日没後30分以内に点灯</strong>。点灯後 <strong>30・60・90・120分</strong> に各5分の観察窓を設け、<strong>3時間後に消灯・回収</strong>します。4時間まで延長したときは、最初の3時間を主解析に使い、残りは補助扱いです。</figcaption>
+        </figure>
+
         <div class="grid">
           <article class="card">
             <h3>標準調査</h3>
@@ -220,7 +463,8 @@
         </div>
       </section>
 
-      <section class="section">
+      <!-- ===== 6. 必須記録項目 ===== -->
+      <section class="section" id="required-fields">
         <h2>必須記録項目</h2>
         <p>最低限、以下がそろっていれば、構造比較のデータとして扱いやすくなります。</p>
         <h3>必須項目</h3>
@@ -255,7 +499,8 @@
         </ul>
       </section>
 
-      <section class="section">
+      <!-- ===== 7. 比較条件 ===== -->
+      <section class="section" id="conditions">
         <h2>比較条件</h2>
         <h3>変える条件とそろえる条件</h3>
         <div class="table-wrap">
@@ -274,7 +519,8 @@
         </div>
       </section>
 
-      <section class="section">
+      <!-- ===== 8. よくあるミス ===== -->
+      <section class="section" id="mistakes">
         <h2>よくあるミス</h2>
         <div class="grid">
           <article class="card"><h3>場所差と構造差を混ぜる</h3><p>別々の場所で違う構造を使って単純比較すると、構造比較には使いにくくなります。</p></article>
@@ -285,7 +531,8 @@
         </div>
       </section>
 
-      <section class="section">
+      <!-- ===== 9. 論文化を見据えた目標 ===== -->
+      <section class="section" id="targets">
         <h2>論文化を見据えた目標</h2>
         <p>論文化では、個体数そのものより、比較可能な地点数、有効トラップナイト、A型ペア比較、B型クロスオーバー地点が重要です。</p>
         <h3>今年度の反復数目標</h3>
@@ -304,10 +551,8 @@
         <div class="note">
           <p>同じ地点・同じ夜に多くの個体が得られても、それだけで独立したサンプルが増えたとは考えません。地点と日をまたいだ反復を増やすことを重視します。</p>
         </div>
-      </section>
 
-      <section class="section">
-        <h2>A型とB型の解析上の扱い</h2>
+        <h3>A型とB型の解析上の扱い</h3>
         <p>A型とB型は統合解析できます。ただし、単純に混ぜるのではなく、experiment_type または data_rank として区別して扱います。まずA型、B型を別々に確認し、同じ方向の構造差が見られるかを確認したうえで統合します。</p>
         <details class="note">
           <summary><strong>研究者向け：統合解析の考え方</strong></summary>
@@ -316,6 +561,7 @@
         </details>
       </section>
 
+      <!-- ===== 10. 野外チェックリスト ===== -->
       <section class="section" id="field-checklist">
         <h2>野外チェックリスト</h2>
         <div class="grid two">
