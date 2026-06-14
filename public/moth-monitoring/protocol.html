@@ -66,7 +66,7 @@
           <li><a href="#choose-type"><span class="toc-num">2</span>A型かB型かを選ぶ</a></li>
           <li><a href="#day-flow"><span class="toc-num">3</span>当日の基本フロー</a></li>
           <li><a href="#process"><span class="toc-num">4</span>記録過程の定義</a></li>
-          <li><a href="#time-windows"><span class="toc-num">5</span>調査時間と観察窓</a></li>
+          <li><a href="#time-windows"><span class="toc-num">5</span>調査時間と観察単位</a></li>
           <li><a href="#required-fields"><span class="toc-num">6</span>必須記録項目</a></li>
           <li><a href="#conditions"><span class="toc-num">7</span>比較条件</a></li>
           <li><a href="#mistakes"><span class="toc-num">8</span>よくあるミス</a></li>
@@ -82,7 +82,7 @@
           <li>A型とB型のどちらで参加するか</li>
           <li>当日の設置、観察、回収、同定の流れ</li>
           <li>飛来、接触、進入、逃出、残留、同定の定義</li>
-          <li>標準調査時間と観察窓</li>
+          <li>標準調査時間と観察単位</li>
           <li>必須記録項目</li>
           <li>論文化を見据えた反復数の目標</li>
         </ul>
@@ -103,7 +103,7 @@
           </article>
           <article class="card">
             <h3>そろえるもの</h3>
-            <p>光源、点灯時間、設置条件、観察窓、記録項目をできるだけそろえます。光源は原則として10W級ブラックライトに固定します。</p>
+            <p>光源、点灯時間、設置条件、観察タイミング、記録項目をできるだけそろえます。光源は原則として10W級ブラックライトに固定します。</p>
           </article>
         </div>
       </section>
@@ -155,7 +155,7 @@
             <ol>
               <li>同じ地点内にP1、P2の2位置を決める</li>
               <li>どちらの構造をどちらに置くかランダムに決める</li>
-              <li>光源、点灯時間、観察窓をそろえる</li>
+              <li>光源、点灯時間、観察タイミングをそろえる</li>
               <li>次回はできるだけ位置を入れ替える</li>
             </ol>
           </article>
@@ -204,7 +204,7 @@
       <!-- ===== 3. 当日の基本フロー ===== -->
       <section class="section" id="day-flow">
         <h2>当日の基本フロー</h2>
-        <p>当日は、実験型を選び、条件をそろえ、観察窓で記録し、回収後に同定できる形で整理します。</p>
+        <p>当日は、実験型を選び、条件をそろえ、観察単位ごとに記録し、回収後に同定できる形で整理します。</p>
 
         <figure class="illus">
           <img src="assets/images/generated/field_workflow.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="準備、設置、点灯・飛来、撮影・同定、記録入力という野外調査の一連の流れを円環で示した模式図。">
@@ -215,7 +215,7 @@
           <li><strong>実験型を選ぶ:</strong> A型かB型かを決めます。A型では pair_id、B型では crossover_sequence を記録します。</li>
           <li><strong>設置する:</strong> 地点ID、位置ID、トラップID、光源IDを記録します。光源の高さ、向き、入口までの距離をそろえます。</li>
           <li><strong>点灯する:</strong> 日没時刻、点灯時刻、気温、風、雲量、降雨、月齢を記録します。</li>
-          <li><strong>観察する:</strong> 観察窓ごとに、飛来、接触、進入、逃出を記録します。</li>
+          <li><strong>観察する:</strong> 観察単位ごとに、飛来、接触、進入、逃出を記録します。</li>
           <li><strong>回収する:</strong> 消灯時刻、回収時刻、残留数、死亡・損傷、機材トラブルを記録します。</li>
           <li><strong>同定する:</strong> 写真または標本に基づき、種名、属、種群、未同定などを記録します。</li>
           <li><strong>提出する:</strong> 記録フォームに入力し、写真・標本番号・公開可否を対応させます。</li>
@@ -362,9 +362,9 @@
         </div>
       </section>
 
-      <!-- ===== 5. 調査時間と観察窓 ===== -->
+      <!-- ===== 5. 調査時間と観察単位 ===== -->
       <section class="section" id="time-windows">
-        <h2>調査時間と観察窓</h2>
+        <h2>調査時間と観察単位</h2>
         <p>構造差を見るには、調査時間と観察努力量をそろえる必要があります。時計時刻だけでなく、日没からの経過時間を記録します。</p>
 
         <figure class="vdiagram">
@@ -415,12 +415,12 @@
               <text x="92" y="203" font-size="18" font-weight="800" fill="#7a4d10">点灯</text>
               <text x="92" y="223" font-size="12.5" fill="#5b5142">日没後30分以内に開始</text>
             </g>
-            <!-- card3 観察窓 -->
+            <!-- card3 観察単位 -->
             <g>
               <circle cx="48" cy="318" r="13" fill="#16264d" stroke="#2f6576" stroke-width="2.5"/><circle cx="48" cy="318" r="4.5" fill="#2f6576"/>
               <rect x="70" y="270" width="248" height="96" rx="12" fill="#f6f1e4"/>
               <rect x="70" y="270" width="6" height="96" rx="3" fill="#2f6576"/>
-              <text x="92" y="296" font-size="18" font-weight="800" fill="#1f4a57">観察窓</text>
+              <text x="92" y="296" font-size="18" font-weight="800" fill="#1f4a57">観察単位</text>
               <g font-size="11" font-weight="800" fill="#fff">
                 <rect x="92" y="308" width="42" height="20" rx="10" fill="#2f6576"/><text x="113" y="322" text-anchor="middle">30分</text>
                 <rect x="140" y="308" width="42" height="20" rx="10" fill="#2f6576"/><text x="161" y="322" text-anchor="middle">60分</text>
@@ -442,7 +442,7 @@
             <text x="70" y="504" font-size="11.5" font-weight="700" fill="#cdb38a">延長分（4時間まで）は補助扱い</text>
             <text x="180" y="556" text-anchor="middle" font-size="10.5" fill="#9aa7c6">時計時刻ではなく、日没からの経過時間で管理</text>
           </svg>
-          <figcaption>日没を基準に、<strong>日没後30分以内に点灯</strong>。点灯後 <strong>30・60・90・120分</strong> に各5分の観察窓を設け、<strong>3時間後に消灯・回収</strong>します。4時間まで延長した分は補助扱いです。</figcaption>
+          <figcaption>日没を基準に、<strong>日没後30分以内に点灯</strong>。点灯後 <strong>30・60・90・120分</strong> を目安に各5分間観察し、<strong>3時間後に消灯・回収</strong>します。4時間まで延長した分は補助扱いです。</figcaption>
         </figure>
 
         <div class="grid">
@@ -455,8 +455,8 @@
             <p>18:00〜22:00のように4時間行う場合は、最初の3時間を標準調査、残りを延長分として扱います。主解析では原則として標準3時間を使います。</p>
           </article>
           <article class="card">
-            <h3>観察窓</h3>
-            <p>点灯後30分、60分、90分、120分を目安に、それぞれ5分間観察します。人手が少ない場合は観察窓を減らしてもよいですが、観察分数を必ず記録します。</p>
+            <h3>観察単位</h3>
+            <p>点灯後30分、60分、90分、120分を目安に、それぞれ5分間観察します。人手が少ない場合は観察回数を減らしてもよいですが、観察分数を必ず記録します。</p>
           </article>
         </div>
         <h3>標準時間の扱い</h3>
@@ -474,7 +474,7 @@
           </table>
         </div>
         <div class="note">
-          <p>A型では、2つの構造で点灯時刻、消灯時刻、観察窓をそろえます。B型では、同じ地点で毎回できるだけ同じ標準時間を使います。調査時間が異なる場合は effort_hours と observation_minutes を必ず記録します。</p>
+          <p>A型では、2つの構造で点灯時刻、消灯時刻、観察タイミングをそろえます。B型では、同じ地点で毎回できるだけ同じ標準時間を使います。調査時間が異なる場合は effort_hours と observation_minutes を必ず記録します。</p>
         </div>
       </section>
 
@@ -501,7 +501,7 @@
         </div>
         <h3>可能なら記録する項目</h3>
         <ul class="inline-list">
-          <li>observation_window_id</li>
+          <li>observation_unit_id</li>
           <li>observation_minutes</li>
           <li>flyby_count</li>
           <li>contact_count</li>
@@ -528,7 +528,7 @@
               <tr><td data-label="区分">光源</td><td data-label="今年度の扱い">固定する</td><td data-label="注意点">原則として10W級ブラックライトを使います。型番や光源IDは記録します。</td></tr>
               <tr><td data-label="区分">時間</td><td data-label="今年度の扱い">そろえる</td><td data-label="注意点">標準3時間調査を基本にします。</td></tr>
               <tr><td data-label="区分">設置条件</td><td data-label="今年度の扱い">できるだけそろえる</td><td data-label="注意点">光源の高さ、向き、入口までの距離、周辺環境を記録します。</td></tr>
-              <tr><td data-label="区分">観察努力量</td><td data-label="今年度の扱い">記録する</td><td data-label="注意点">観察窓、観察分数、観察者IDを残します。</td></tr>
+              <tr><td data-label="区分">観察努力量</td><td data-label="今年度の扱い">記録する</td><td data-label="注意点">観察タイミング、観察分数、観察者IDを残します。</td></tr>
             </tbody>
           </table>
         </div>
