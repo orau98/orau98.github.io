@@ -1649,9 +1649,13 @@ a:focus-visible { outline:2px solid var(--lamp); outline-offset:2px; box-shadow:
   }
 }
 
-/* ===================== モバイルの月：上端に置きスクロールで流す（常駐させない） ===================== */
+/* ===================== モバイルの月：固定の背景要素として常駐させる =====================
+   注意（再発防止）: ここを position:absolute にすると、内部ページ（.page-hero の
+   全面写真ヘッダー）の背後に潜り込み、absolute ゆえスクロールで流れて月が消える。
+   夜空の月は fixed のまま常駐させ、内容の背後（z-index:0）で夜空に光らせる。
+   グロー（box-shadow）は上の規則で縮小済み＋ body の overflow-x:hidden で端の食い込みを防ぐ。 */
 @media (max-width: 520px) {
-  body::before { position: absolute; top: 8px; right: 6vw; width: 84px; }
+  body::before { position: fixed; top: 11vh; right: 6vw; width: 88px; }
 }
 
 /* ===================== ページヘッダー：蛾写真＋見出し（各内部ページ・全体表示） ===================== */
