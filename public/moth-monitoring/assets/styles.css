@@ -1957,6 +1957,18 @@ main > .page-hero {
 .seq-chip.b { background: linear-gradient(180deg, #3a7689, var(--blue)); }
 .seq-arrow { color: var(--lamp); font-weight: 800; font-size: 15px; }
 
+/* ---------- 記録過程フロー：カテゴリ色分け＋凡例（横スクロールSVGを廃止し flowsteps 化／PC横・スマホ縦） ---------- */
+.flowsteps.proc > li { border-top: 4px solid var(--plate-border); }
+.flowsteps.proc > li.ev { border-top-color: var(--blue); }
+.flowsteps.proc > li.ct { border-top-color: var(--plate-link); }
+.flowsteps.proc > li.cf { border-top-color: var(--lamp-deep); }
+.cat-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 14px 0 0; padding: 0; list-style: none; }
+.cat-legend li { display: flex; align-items: center; gap: 8px; color: var(--moon-dim); font-size: 13px; font-weight: 700; }
+.cat-legend li::before { content: ""; width: 13px; height: 13px; border-radius: 3px; flex: 0 0 auto; }
+.cat-legend li.ev::before { background: var(--blue); }
+.cat-legend li.ct::before { background: var(--plate-link); }
+.cat-legend li.cf::before { background: var(--lamp-deep); }
+
 @media (max-width: 860px) {
   .toc-list { grid-template-columns: 1fr; }
   .illus figcaption { font-size: 13px; }
