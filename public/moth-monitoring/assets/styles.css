@@ -1432,6 +1432,8 @@ a:focus-visible { outline:2px solid var(--lamp); outline-offset:2px; box-shadow:
 
 /* 警告/注記＝暖色ランプのコールアウト */
 .note { background:#f3ead4; border-left:4px solid var(--lamp); color:#3a2c11; }
+/* クリーム注記の上では見出しも暗インク（既定の月光色=白だと不可視になる） */
+.note h2, .note h3 { color:#2c2110; }
 
 /* 継承ガード：ページ既定が明色テキストになったため、各プレートは暗いインクを再宣言 */
 .card, .table-wrap, .diagram-panel, .note, .metric-cards, .metric,
@@ -1936,7 +1938,7 @@ main > .page-hero {
 .pick .status-item span:not(.pick-badge) { color: var(--ink-muted); font-size: 14px; line-height: 1.65; }
 
 /* ---------- 推奨配列チップ（ABBA / BAAB） ---------- */
-.seqfig { margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 12px 30px; }
+.seqfig { margin: 16px 0 22px; display: flex; flex-wrap: wrap; gap: 12px 30px; }
 .seq { display: flex; align-items: center; gap: 8px; }
 .seq-label {
   min-width: 50px; margin-right: 2px;
