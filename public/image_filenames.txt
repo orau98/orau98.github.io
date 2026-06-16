@@ -253,7 +253,6 @@ Maruca_vitrata
 Maxates_protrusa
 Mecodina_cineracea
 Meganola_fumosa
-Megopis_formosana_ishigakiana
 Melapia_electaria
 Mesoplectra_griselda
 Mesorhynchaglaea_pacifica
@@ -399,6 +398,7 @@ Sphragifera_sigillata
 Spilarctia_bifasciata
 Spilarctia_seriatopunctata
 Spilosoma punctarium Stoll
+Spinimegopis_ishigakiana
 Spirama_retorta
 Spodoptera_litura
 Spodoptera_litura_2

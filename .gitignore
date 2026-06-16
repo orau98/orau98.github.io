@@ -46,6 +46,7 @@ reports/placeholder_note_mismatch.csv
 reports/public_insects_mismatch.csv
 reports/suspicious_hostplants.csv
 reports/suspicious_scientific_names.csv
+reports/taxonomy_assertion_failures.csv
 
 # Keep optimized images in Git (for distribution)
 # Note: WebP and AVIF files are intentionally tracked

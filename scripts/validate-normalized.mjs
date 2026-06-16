@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
+import { collectTaxonomyAssertionFailures } from './lib/taxonomyAssertions.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -153,6 +154,7 @@ const suspiciousScientificNameRows = insects
     changes_since_standard: cleanString(row.changes_since_standard),
     notes: cleanString(row.notes),
   }));
+const taxonomyAssertionFailures = collectTaxonomyAssertionFailures(insects);
 const recordMissing = (source, row) => {
   const id = (row.insect_id || '').trim();
   if (!id || insectIds.has(id)) return;
@@ -311,6 +313,11 @@ writeCsvReport(
   ['insect_id', 'japanese_name', 'scientific_name', 'author', 'year', 'changes_since_standard', 'notes'],
   suspiciousScientificNameRows,
 );
+writeCsvReport(
+  'taxonomy_assertion_failures.csv',
+  ['assertion_id', 'insect_id', 'japanese_name', 'field', 'expected', 'actual', 'source'],
+  taxonomyAssertionFailures,
+);
 
 if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)) {
   const normalizedRows = parseCsv(fs.readFileSync(NORMALIZED_INSECTS_PATH, 'utf-8'));
@@ -419,6 +426,11 @@ if (aphidWrongLinkRows.length > 0) {
 
 if (suspiciousScientificNameRows.length > 0) {
   console.warn(`[validate-normalized] suspicious scientific_name rows: ${suspiciousScientificNameRows.length}`);
+}
+
+if (taxonomyAssertionFailures.length > 0) {
+  console.error(`[validate-normalized] source-backed taxonomy assertion failures: ${taxonomyAssertionFailures.length}`);
+  process.exit(1);
 }
 
 console.log('[validate-normalized] OK');
