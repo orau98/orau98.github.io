@@ -2019,3 +2019,42 @@ main > .page-hero {
   .news-list li { padding: 12px 14px 13px; }
   .news-text { flex-basis: 100%; margin-top: 3px; font-size: 14px; }
 }
+
+/* ===================== 他手法との比較（背景ページ） ===================== */
+/* 強み/注意点・向く問い：色アクセント付きカード */
+.procon .card.pros { border-top: 4px solid var(--plate-link); }
+.procon .card.cons { border-top: 4px solid var(--lamp-deep); }
+.procon .card.pros .meta { color: #1c5c44; }
+.procon .card.cons .meta { color: #8a5012; }
+.procon .card ul { margin: 8px 0 0; padding-left: 1.15em; }
+.procon .card li { margin: 5px 0; color: var(--ink-muted); line-height: 1.6; }
+.procon .card li strong { color: var(--ink); }
+
+/* 「記録数＝合成値」の式（クリームプレートにチップ） */
+.eqfig {
+  margin: 14px 0 0; padding: 16px 18px;
+  border: 1px solid var(--plate-border); border-radius: 12px;
+  background: var(--plate); box-shadow: var(--panel-shadow);
+}
+.eq-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; }
+.eq-chip {
+  display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 999px;
+  font-size: 13px; font-weight: 800; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.eq-chip.base { background: #2f6576; }
+.eq-chip.warn { background: var(--lamp-deep); color: #2a1c05; }
+.eq-chip.ctrl { background: #1c5c44; }
+.eq-x { color: var(--ink-muted); font-weight: 800; font-size: 14px; }
+.eq-result { margin: 12px 0 0; font-weight: 800; color: var(--ink); font-size: 15.5px; }
+.eq-note { margin: 10px 0 0; color: var(--ink-muted); font-size: 13.5px; line-height: 1.72; }
+.eq-note strong { color: #15402f; }
+.eqfig .cat-legend { margin-top: 12px; }
+.eqfig .cat-legend li { color: var(--ink-muted); }
+
+/* 向く問い/補助 ラベル */
+.qlabel { margin: 0 0 4px; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 7px; }
+.qlabel::before { content: ""; width: 11px; height: 11px; border-radius: 50%; flex: 0 0 auto; }
+.qlabel.ok { color: var(--moon); }
+.qlabel.ok::before { background: #3f9168; box-shadow: 0 0 8px 1px rgba(63,145,104,0.5); }
+.qlabel.need { color: var(--moon); }
+.qlabel.need::before { background: var(--lamp); box-shadow: 0 0 8px 1px var(--lamp-glow); }
