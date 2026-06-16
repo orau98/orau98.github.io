@@ -8,6 +8,7 @@ Acronicta_hercules
 Acronicta_rumicis
 Acronicta_subpurpurea
 Acronicta_subpurpurea_2
+Agapanthia_japonica
 Agrilus_spinipennis
 Agrius_convolvuli
 Agrochola_sakabei
@@ -23,11 +24,13 @@ Analthes_insignis
 Anatatha_wilemani
 Anorthoa_angustipennis
 Apamea_aquila
+Apamea_hampsoni
 Apamea_lateritia
 Apochima_juglansiaria
 Archiearis_notha
 Archiearis_parthenias
 Arctornis_l_nigrum
+Argopistes_biplagiatus
 Argyresthia_subrimosa
 Aroana_baliensis
 Aroga_mesostrepta
@@ -58,7 +61,6 @@ Camptomastix_hisbonalis
 Capua_vulgana
 Cassida_lineola
 Catocala_bella
-Catocala_bella
 Cerastis_leucographa
 Cerastis_rubricosa
 Ceroprepes_ophthalmicella
@@ -75,6 +77,7 @@ Chrysorithrum amatum Bremer & Grey
 Chrysoteuchia diplogramma Zeller
 Cifuna_locuples
 Circobotys_heterogenalis
+Circobotys_heterogenalis_2
 Cirrhochrista_brizoalis
 Clanis_bilineata
 Clavipalpula_aurariae
@@ -129,6 +132,7 @@ Dichomeris heriguronis Matsumura
 Dimorphicosmia_variegata
 Dimorphicosmia_variegata_2
 Dindica_virescens
+Diomea_discisigna
 Dioryctria_abietella
 Diphtherocome_autumnalis
 Dipterygina_cupreotincta
@@ -150,6 +154,7 @@ Eriodonta amagisana Marumo
 Eriodonta_amagisana
 Erynnis_montanus
 Etielloides_bipartitella
+Eublemma_quadrapex
 Eucarta_fasciata
 Eucosma_metzneriana
 Eucyclodes_difficta
@@ -187,6 +192,7 @@ Hemipsectra fallax Butler
 Hendecaneura_impar
 Herculia_orthogramma
 Homodes_vivida
+Homonopsis_foederatana
 Hydraecia_petasitis
 Hypena_amica
 Hypena_strigata
@@ -209,6 +215,7 @@ Kerala_decipiens
 Krananda_latimarginaria
 Krananda_latimarginaria_1
 Krananda_semihyalina
+Labanda_akioseinoi
 Labdia_citracma
 Labdia_semicoccinea
 Lecitholaxa thiodora Meyrick
@@ -246,9 +253,9 @@ Maruca_vitrata
 Maxates_protrusa
 Mecodina_cineracea
 Meganola_fumosa
+Megopis_formosana_ishigakiana
 Melapia_electaria
 Mesoplectra_griselda
-Mesorhynchaglaea_pacifica
 Mesorhynchaglaea_pacifica
 Microleon_longipalpis
 Micromelalopha_troglodyta
@@ -346,6 +353,7 @@ Plutella_xylostella
 Polytremis_pellucida
 Problepsis_albidior
 Prometopus_flavicollis
+Proschistis_marmaropa
 Protoboarmia_faustinata
 Protomiselia_bilinea
 Pseuderannis_amplipennis
@@ -395,6 +403,7 @@ Spirama_retorta
 Spodoptera_litura
 Spodoptera_litura_2
 Stauropus_basalis
+Stemmatophora_valida
 Stenoloba_clara
 Stenoloba_jankowskii
 Stericta_kogii
@@ -415,6 +424,7 @@ Tethea_consimilis_2
 Tetramoera_flammeata
 Theretra_alecto
 Theretra_japonica
+Thlaspida_cribrosa
 Thysanoplusia_intermixta
 Tiliacea_japonago
 Tiracola_aureata

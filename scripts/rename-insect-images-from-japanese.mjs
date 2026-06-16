@@ -27,13 +27,25 @@ function formatScientificNameForFilename(scientificName) {
   let cleanedName = scientificName
     .replace(/\s*\(.*?(?:\)|\s*$)/g, '') // remove parentheses blocks
     .replace(/\s*,\s*\d{4}\s*$/, '') // trailing year
-    .replace(/\s*[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '') // author + year
-    .replace(/^([A-Z][a-z]+\s+[a-z]+)\s+[A-Z][a-zA-Z\s&.]+\s*$/, '$1') // author only
+    .replace(/\s+[A-Z][a-zA-Z\s&.]+\s*\d{4}\s*$/, '') // author + year
     .replace(/[^a-zA-Z0-9\s]/g, ' ') // keep alnum and spaces
     .replace(/\s+/g, ' ') // collapse spaces
-    .trim()
-    .replace(/\s/g, '_');
-  return cleanedName;
+    .trim();
+
+  const tokens = cleanedName.split(/\s+/).filter(Boolean);
+  const taxonTokens = [];
+  for (const token of tokens) {
+    if (taxonTokens.length === 0) {
+      if (/^[A-Z][a-zA-Z0-9-]*$/.test(token)) taxonTokens.push(token);
+      continue;
+    }
+    if (/^[a-z][a-zA-Z0-9-]*$/.test(token)) {
+      taxonTokens.push(token);
+      continue;
+    }
+    break;
+  }
+  return taxonTokens.length >= 2 ? taxonTokens.join('_') : cleanedName.replace(/\s/g, '_');
 }
 
 async function loadJapaneseToScientificMap() {
@@ -106,6 +118,7 @@ async function loadJapaneseToScientificMap() {
     'ウスクロモクメヨトウ': 'Dipterygina cupreotincta Sugi, 1954',
     'ウスモンクロテンヒメシャク': 'Scopula ignobilis (Warren, 1901)',
     'テングイラガ': 'Microleon longipalpis Butler, 1885',
+    'キホソノメイガ本州以南亜種': 'Circobotys heterogenalis (Bremer, 1864)',
   };
   for (const [jp, sci] of Object.entries(manualOverrides)) {
     const key = normalizeJapaneseName(jp);
@@ -147,6 +160,29 @@ function safeExt(ext) {
   return e || '.jpg';
 }
 
+function getAvailableImageBase(dir, base, ext) {
+  const normalizedExt = safeExt(ext);
+  let candidate = base;
+  let suffix = 2;
+  while (fs.existsSync(path.join(dir, `${candidate}${normalizedExt}`))) {
+    candidate = `${base}_${suffix}`;
+    suffix += 1;
+  }
+  return candidate;
+}
+
+function parseOnlyTargets() {
+  const raw = process.env.RENAME_INSECT_IMAGES_ONLY || '';
+  const entries = raw
+    .split(',')
+    .map(s => normalizeJapaneseName(s.trim()))
+    .filter(Boolean);
+  return new Set(entries.flatMap((entry) => [
+    entry,
+    path.basename(entry, path.extname(entry)),
+  ]));
+}
+
 function updateImageIndexesFromDir(dir) {
   const names = [];
   const exts = {};
@@ -169,7 +205,16 @@ async function main() {
   const j2s = await loadJapaneseToScientificMap();
   console.log('[rename] loaded name map entries:', j2s.size);
 
-  const targets = listJapaneseNamedImages(INSECT_IMG_DIR);
+  const onlyTargets = parseOnlyTargets();
+  const targets = listJapaneseNamedImages(INSECT_IMG_DIR).filter((name) => {
+    if (onlyTargets.size === 0) return true;
+    const normalizedName = normalizeJapaneseName(name);
+    const normalizedBase = normalizeJapaneseName(path.basename(name, path.extname(name)));
+    return onlyTargets.has(normalizedName) || onlyTargets.has(normalizedBase);
+  });
+  if (onlyTargets.size > 0) {
+    console.log('[rename] restricted targets:', targets.length);
+  }
   if (targets.length === 0) {
     console.log('[rename] no Japanese-named insect images found');
   }
@@ -191,14 +236,15 @@ async function main() {
       console.warn('[rename] skip, could not format scientific name for', japaneseName, scientificFull);
       continue;
     }
-    const dstName = `${sciBase}${safeExt(ext)}`;
+    const finalBase = getAvailableImageBase(INSECT_IMG_DIR, sciBase, ext);
+    const dstName = `${finalBase}${safeExt(ext)}`;
     const dstPath = path.join(INSECT_IMG_DIR, dstName);
 
-    if (!fs.existsSync(dstPath)) {
-      fs.copyFileSync(srcPath, dstPath);
+    fs.copyFileSync(srcPath, dstPath);
+    if (finalBase === sciBase) {
       console.log('[rename] created', path.relative(PUBLIC_DIR, dstPath));
     } else {
-      console.log('[rename] dest exists, skip copy', path.relative(PUBLIC_DIR, dstPath));
+      console.log('[rename] created additional image', path.relative(PUBLIC_DIR, dstPath));
     }
 
     // Move original to backup
@@ -215,7 +261,7 @@ async function main() {
     if (fs.existsSync(INSECT_RESIZED_DIR)) {
       for (const w of [320, 640, 1024]) {
         const resizedSrc = path.join(INSECT_RESIZED_DIR, `${base}.${w}.jpg`);
-        const resizedDst = path.join(INSECT_RESIZED_DIR, `${sciBase}.${w}.jpg`);
+        const resizedDst = path.join(INSECT_RESIZED_DIR, `${finalBase}.${w}.jpg`);
         if (fs.existsSync(resizedSrc) && !fs.existsSync(resizedDst)) {
           fs.renameSync(resizedSrc, resizedDst);
           console.log('[rename] resized ->', path.relative(PUBLIC_DIR, resizedDst));

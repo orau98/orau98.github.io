@@ -45,6 +45,19 @@ const INSECT_ORDER_LABELS = Object.freeze({
   leafbeetle: { ja: 'コウチュウ目', en: 'Coleoptera' },
   aphid: { ja: 'カメムシ目', en: 'Hemiptera' },
 });
+const RESIZED_INSECT_IMAGE_RE = /\/images\/resized\/insects\/([^/?#]+)\.(320|640|1024)\.jpg/i;
+
+const escapeRegExp = (value = '') => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const getImageBaseFromResizedUrl = (url = '') => {
+  const match = String(url).match(RESIZED_INSECT_IMAGE_RE);
+  if (!match) return '';
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return match[1];
+  }
+};
 
 const extractPlantPartsFromNotes = (notes) => {
   if (!Array.isArray(notes) || notes.length === 0) return {};
@@ -519,18 +532,43 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   const mainImageProps = React.useMemo(() => {
     const firstUrl = possibleImagePaths[0];
-    if (!firstUrl) return { src: null };
+    if (!firstUrl) return { base: '', src: null, sources: [] };
     
-    const m = firstUrl.match(/\/images\/resized\/insects\/([^/?#]+)\.(320|640|1024)\.jpg/i);
-    if (m) {
-       const base = decodeURIComponent(m[1]);
-       if (imageBaseSet.has(base)) {
-         const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, widths: [320, 640, 1024], sizes: '100vw' });
-         return { src, srcSet, sizes, sources };
-       }
+    const base = getImageBaseFromResizedUrl(firstUrl);
+    if (base && imageBaseSet.has(base)) {
+      const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, widths: [320, 640, 1024], sizes: '100vw' });
+      return { base, src, srcSet, sizes, sources };
     }
-    return { src: firstUrl, sources: [] };
+    return { base: '', src: firstUrl, sources: [] };
   }, [possibleImagePaths, imageBaseSet]);
+
+  const additionalImageProps = React.useMemo(() => {
+    const primaryBase = mainImageProps.base;
+    if (!primaryBase || !Array.isArray(imageBases) || imageBases.length === 0) {
+      return [];
+    }
+    const variantPattern = new RegExp(`^${escapeRegExp(primaryBase)}_(\\d+)$`);
+    return imageBases
+      .map((base) => {
+        const match = String(base).match(variantPattern);
+        if (!match) return null;
+        return {
+          base,
+          order: Number.parseInt(match[1], 10) || Number.MAX_SAFE_INTEGER,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.order - b.order || a.base.localeCompare(b.base))
+      .map(({ base }) => ({
+        base,
+        ...buildResponsivePicture({
+          folder: 'insects',
+          filename: base,
+          widths: [320, 640, 1024],
+          sizes: '(max-width: 640px) 50vw, 33vw',
+        }),
+      }));
+  }, [imageBases, mainImageProps.base]);
 
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 
@@ -1215,6 +1253,28 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                           : formatScientificNameReact(moth.scientificName)}
                       </p>
                     </div>
+                  </div>
+                )}
+
+                {!hasInstagramPost && additionalImageProps.length > 0 && (
+                  <div className="grid grid-cols-2 gap-3 p-3 bg-white/80 dark:bg-slate-800/80 sm:grid-cols-3">
+                    {additionalImageProps.map((image, index) => (
+                      <ImageWithFallback
+                        key={image.base}
+                        src={image.src}
+                        srcSet={image.srcSet}
+                        sizes={image.sizes}
+                        sources={image.sources}
+                        alt={isEnglish
+                          ? `${primaryName} photograph ${index + 2}`
+                          : `${moth.name}（${moth.scientificName}）の写真 ${index + 2}`}
+                        className="aspect-[4/3] w-full rounded-xl"
+                        imgClassName="transition-transform duration-500 hover:scale-105"
+                        fit="cover"
+                        fallbackSrc={null}
+                        loading="lazy"
+                      />
+                    ))}
                   </div>
                 )}
                 
