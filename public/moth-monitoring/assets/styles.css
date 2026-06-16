@@ -1985,3 +1985,37 @@ main > .page-hero {
   .seqfig { gap: 12px 18px; }
   .seq { flex-wrap: wrap; }
 }
+
+/* ===================== お知らせ：更新履歴リスト（クリームのプレートに日付つき行） ===================== */
+.news-list {
+  list-style: none; margin: 16px 0 0; padding: 0;
+  border: 1px solid var(--plate-border); border-radius: 12px;
+  background: var(--plate); box-shadow: var(--panel-shadow); overflow: hidden;
+}
+.news-list li {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 11px;
+  padding: 13px 18px 14px; border-bottom: 1px solid var(--plate-edge);
+}
+.news-list li:last-child { border-bottom: 0; }
+.news-tag {
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 46px; height: 22px; padding: 0 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 800; letter-spacing: .02em; color: #fff;
+}
+.news-tag.update { background: #2f6576; }
+.news-tag.open   { background: #1c5c44; }
+.news-tag.event  { background: var(--lamp-deep); color: #2a1c05; }
+.news-date {
+  flex: 0 0 auto; color: #6a5f4c; font-size: 13px; font-weight: 700;
+  font-variant-numeric: tabular-nums; letter-spacing: .02em;
+}
+.news-text {
+  flex: 1 1 240px; min-width: 0; color: var(--ink);
+  font-size: 14.5px; line-height: 1.65;
+}
+.news-text a { color: var(--plate-link); font-weight: 700; text-underline-offset: .15em; white-space: nowrap; }
+.news-text a:hover { color: var(--plate-link-hover); }
+@media (max-width: 560px) {
+  .news-list li { padding: 12px 14px 13px; }
+  .news-text { flex-basis: 100%; margin-top: 3px; font-size: 14px; }
+}
