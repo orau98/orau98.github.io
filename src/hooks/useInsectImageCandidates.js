@@ -62,6 +62,7 @@ const useInsectImageCandidates = (options = {}) => {
       imageExtensions,
       imageNames: imageBases,
       normalizedEntries,
+      includeUnresolved: false,
     });
     const urls = [];
     const seen = new Set();

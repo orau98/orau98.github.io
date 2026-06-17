@@ -47,7 +47,12 @@ export const buildInsectImageBaseCandidates = (insect, mappedFilename) => {
 
 export const resolveImageBaseCandidates = (
   candidates,
-  { imageExtensions = {}, imageNames = new Set(), normalizedEntries = [] } = {},
+  {
+    imageExtensions = {},
+    imageNames = new Set(),
+    normalizedEntries = [],
+    includeUnresolved = true,
+  } = {},
 ) => {
   const unique = [];
   const seen = new Set();
@@ -79,7 +84,7 @@ export const resolveImageBaseCandidates = (
         }
       }
     }
-    const finalName = resolved || candidate;
+    const finalName = resolved || (includeUnresolved ? candidate : '');
     if (finalName && !seen.has(finalName)) {
       seen.add(finalName);
       unique.push(finalName);
