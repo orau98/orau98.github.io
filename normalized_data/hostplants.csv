@@ -14276,7 +14276,7 @@ hostplant-909510-split,species-6033,サクラ類,バラ科,文献,,,日本のキ
 hostplant-909511,species-6033,広葉樹,,文献,,,日本のキリガ,
 hostplant-909512,species-6043,ウバメガシ,ブナ科,文献,,,日本のキリガ,
 hostplant-909514,species-6045,トドマツ,マツ科,文献,,,日本のキリガ,
-hostplant-909515,species-6045,ヒマラヤスギ,マツ科,文献,,,日本のキリガ,有
+hostplant-909515,species-6045,ヒマラヤスギ,マツ科,文献,,,日本のキリガ,
 hostplant-909516,species-6045,モミ,マツ科,文献,,,日本のキリガ,
 hostplant-909518,species-6042,アカガシ,ブナ科,文献,,,日本のキリガ,
 hostplant-909519,species-6042,アラカシ,ブナ科,文献,,,日本のキリガ,
@@ -14288,18 +14288,17 @@ hostplant-909524,species-6047,ブナ,ブナ科,文献,,,日本のキリガ,
 hostplant-909525,species-6050,ツゲ,ツゲ科,文献,,,日本のキリガ,
 hostplant-909526,species-6051,カシワ,ブナ科,文献,,,日本のキリガ,
 hostplant-909527,species-6051,クヌギ,ブナ科,文献,,,日本のキリガ,
-hostplant-909528,species-6051,サクラ,バラ科,文献,,,日本のキリガ,有
+hostplant-909528,species-6051,サクラ,バラ科,文献,,,日本のキリガ,
 hostplant-909529,species-6057,アラカシ,ブナ科,文献,,,日本のキリガ,
 hostplant-909530,species-6057,カシワ,ブナ科,文献,,,日本のキリガ,
-hostplant-909531,species-6057,コナラ,ブナ科,文献,,,日本のキリガ,創省
+hostplant-909531,species-6057,コナラ,ブナ科,文献,,,日本のキリガ,
 hostplant-909532,species-6057,サクラ類,,文献,,,日本のキリガ,飼 / N
 hostplant-909532-split,species-6057,クヌギ,ブナ科,文献,,,日本のキリガ,飼 / N
 hostplant-909533,species-6057,ツルグミ,グミ科,文献,,,日本のキリガ,
-hostplant-909534,species-6057,ミズナラ,ブナ科,文献,,,日本のキリガ,国有
-hostplant-909549,species-6054,クリ,ブナ科,文献,,,日本のキリガ,別
-hostplant-909552,species-6054,ミスキ（創）,,文献,,,日本のキリガ,
+hostplant-909534,species-6057,ミズナラ,ブナ科,文献,,,日本のキリガ,
+hostplant-909549,species-6054,クリ,ブナ科,文献,,,日本のキリガ,
+hostplant-909552,species-6054,ミズキ,ミズキ科,文献,,,日本のキリガ,
 hostplant-909553,species-6054,ミズナラ,ブナ科,文献,,,日本のキリガ,
-hostplant-909559,species-6054,冬規美,,文献,,,日本のキリガ,
 hostplant-909569,species-6052,アベマキ,ブナ科,文献,,,日本のキリガ,
 hostplant-909570,species-6052,アラカシ,ブナ科,文献,,,日本のキリガ,
 hostplant-909571,species-6052,カシワ,ブナ科,文献,,,日本のキリガ,
@@ -14321,13 +14320,13 @@ hostplant-909594,species-6064,シナノキ,アオイ科,文献,,,日本のキリ
 hostplant-909595,species-6062,カワヤナギ,ヤナギ科,文献,,,日本のキリガ,
 hostplant-909598,species-6063,ハルニレ,ニレ科,文献,,,日本のキリガ,
 hostplant-909600,species-6072,アラカシ,ブナ科,文献,,,日本のキリガ,
-hostplant-909625,species-6066,サクラ類,,文献,,,日本のキリガ,例
+hostplant-909625,species-6066,サクラ類,,文献,,,日本のキリガ,
 hostplant-909626,species-6066,ツバキ,ツバキ科,文献,花,,日本のキリガ,
 hostplant-909627,species-6069,ウラジロガシ,ブナ科,文献,,,日本のキリガ,
-hostplant-909628,species-6069,キイチゴ,バラ科,文献,,,日本のキリガ,Mf
-hostplant-909629,species-6069,キブシ,キブシ科,文献,,,日本のキリガ,Mf
+hostplant-909628,species-6069,キイチゴ,バラ科,文献,,,日本のキリガ,
+hostplant-909629,species-6069,キブシ,キブシ科,文献,,,日本のキリガ,
 hostplant-909630,species-6069,サクラ類,バラ科,文献,,,日本のキリガ,
-hostplant-909631,species-6069,フキ,キク科,文献,,,日本のキリガ,M11
+hostplant-909631,species-6069,フキ,キク科,文献,,,日本のキリガ,
 hostplant-909632,species-6069,リンゴ,バラ科,文献,,,日本のキリガ,
 hostplant-909658,species-6108,ヨモギ,キク科,文献,,,日本のキリガ,
 hostplant-909681,species-6111,アラカシ,ブナ科,文献,,,日本のキリガ,
@@ -14345,13 +14344,13 @@ hostplant-909692,species-6116,コナラ,ブナ科,文献,,,日本のキリガ,
 hostplant-909693,species-6116,サクラ類,,文献,,,日本のキリガ,
 hostplant-909694,species-6116,シラカシ,ブナ科,文献,,,日本のキリガ,
 hostplant-909695,species-6116,リンゴ,バラ科,文献,,,日本のキリガ,
-hostplant-909696,species-6117,コデマリ,バラ科,文献,,,日本のキリガ,割付
+hostplant-909696,species-6117,コデマリ,バラ科,文献,,,日本のキリガ,
 hostplant-909697,species-6117,ホザキシモツケ,バラ科,文献,,,日本のキリガ,
 hostplant-909698,species-6118,カラマツ,マツ科,文献,,,日本のキリガ,
 hostplant-909699,species-6118,クヌギ,ブナ科,文献,,,日本のキリガ,
 hostplant-909700,species-6118,コナラ,ブナ科,文献,,,日本のキリガ,
 hostplant-909701,species-6118,サクラ類,,文献,,,日本のキリガ,
-hostplant-909702,species-6114,ウラジロモミ,マツ科,文献,,,日本のキリガ,例T
+hostplant-909702,species-6114,ウラジロモミ,マツ科,文献,,,日本のキリガ,
 hostplant-909703,species-6114,ヒマラヤスギ,マツ科,文献,,,日本のキリガ,
 hostplant-909704,species-6114,モミ,マツ科,文献,,,日本のキリガ,
 hostplant-909705,species-6115,ゴヨウマツ,マツ科,文献,,,日本のキリガ,
@@ -14375,7 +14374,7 @@ hostplant-909725-split,species-6119,カキノキ,カキノキ科,文献,,,日本
 hostplant-909726,species-6119,スモモ,バラ科,文献,,,日本のキリガ,
 hostplant-909727,species-6119,ムラサキハシドイ,モクセイ科,文献,,,日本のキリガ,
 hostplant-909728,species-6119,リンゴ,バラ科,文献,,,日本のキリガ,
-hostplant-909732,species-6126,エドヒガン,バラ科,文献,,,日本のキリガ,国省
+hostplant-909732,species-6126,エドヒガン,バラ科,文献,,,日本のキリガ,
 hostplant-909743,species-6123,アベマキ,ブナ科,文献,,,日本のキリガ,
 hostplant-909745,species-6123,カシワ,ブナ科,文献,,,日本のキリガ,
 hostplant-909746,species-6123,クヌギ,ブナ科,文献,,,日本のキリガ,

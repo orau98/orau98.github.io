@@ -84,6 +84,18 @@ const NON_PLANT_HOST_NAME_SET = new Set([
   'チャミノ',
 ]);
 const SUSPICIOUS_HOSTPLANT_NOTE_SET = new Set([
+  '有',
+  '別',
+  '例',
+  '例T',
+  'Mf',
+  'M11',
+  'N',
+  '創',
+  '創省',
+  '国省',
+  '国有',
+  '割付',
   '音',
   'し',
 ]);
@@ -101,6 +113,8 @@ const hasSuspiciousKirigaPattern = (row, plantName) => {
     /[ぁ-ん]/.test(plantName) ||
     /[0-9A-Za-z]/.test(plantName) ||
     /[<>:：!！]/.test(plantName) ||
+    /（(?:有|別|例|例T|Mf|M11|N|創|創省|国省|国有|割付|音|し)）/.test(plantName) ||
+    plantName === '冬規美' ||
     plantName.length >= 16
   );
 };

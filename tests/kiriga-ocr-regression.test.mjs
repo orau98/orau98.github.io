@@ -68,3 +68,47 @@ test('コケイロホソキリガ emergence time uses the standard-zukan 10-1 mo
     false,
   );
 });
+
+test('日本のキリガ OCR hostplant rows do not keep short note fragments', () => {
+  const blockedNoteTokens = new Set([
+    '有',
+    '別',
+    '例',
+    '例T',
+    'Mf',
+    'M11',
+    'N',
+    '創',
+    '創省',
+    '国省',
+    '国有',
+    '割付',
+    '音',
+    'し',
+  ]);
+
+  ['normalized_data/hostplants.csv', 'public/hostplants.csv'].forEach((csvPath) => {
+    const rows = parseCsv(csvPath);
+    const kirigaRows = rows.filter((row) => row.reference === '日本のキリガ');
+    assert.equal(
+      kirigaRows.some((row) => blockedNoteTokens.has((row.notes || '').trim())),
+      false,
+      `${csvPath} should not keep OCR-only short hostplant notes from 日本のキリガ`,
+    );
+    assert.equal(
+      kirigaRows.some((row) => /（(?:有|別|例|例T|Mf|M11|N|創|創省|国省|国有|割付|音|し)）/.test(row.plant_name || '')),
+      false,
+      `${csvPath} should not keep OCR-only note parentheses in plant names`,
+    );
+    assert.equal(
+      kirigaRows.some((row) => row.plant_name === '冬規美'),
+      false,
+      `${csvPath} should not keep fake plant names from OCR text`,
+    );
+
+    const mizuki = kirigaRows.find((row) => row.record_id === 'hostplant-909552');
+    assert.ok(mizuki, `${csvPath} should keep the テンスジキリガ ミズキ hostplant row`);
+    assert.equal(mizuki.plant_name, 'ミズキ');
+    assert.equal(mizuki.plant_family, 'ミズキ科');
+  });
+});
