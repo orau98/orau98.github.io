@@ -103,7 +103,20 @@ const BLOCKED_GENERAL_NOTE_RULES = [
   {
     insect_id: 'species-6031',
     phrase: '翌年5月',
+    note_type: '出現時期',
     reason: 'コケイロホソキリガは標準図鑑2由来の10～1月を採用する。日本のキリガOCR由来の翌年5月行は混入させない。',
+  },
+  {
+    insect_id: 'species-6026',
+    phrase: '翌年5月',
+    note_type: '出現時期',
+    reason: 'モンハイイロキリガの出現時期は標準図鑑2由来の9〜11月を採用する。OCR由来の翌年5月行は混入させない。',
+  },
+  {
+    insect_id: 'species-6027',
+    phrase: '翌年5月',
+    note_type: '出現時期',
+    reason: 'ウスアオキリガの出現時期は標準図鑑2由来の9〜11月を採用する。生存情報と出現時期を混同したOCR由来行は混入させない。',
   },
 ];
 const hasEmbeddedObservationType = (plantName) => /（飼育(?:可|では[^）]+)?）/.test(plantName);
@@ -258,11 +271,13 @@ if (notesPath) {
     }
     const content = cleanString(row.content);
     BLOCKED_GENERAL_NOTE_RULES.forEach((rule) => {
-      if (insectId === rule.insect_id && content.includes(rule.phrase)) {
+      const noteType = cleanString(row.note_type);
+      const noteTypeHit = !rule.note_type || noteType === rule.note_type;
+      if (insectId === rule.insect_id && noteTypeHit && content.includes(rule.phrase)) {
         blockedGeneralNoteRows.push({
           record_id: cleanString(row.record_id),
           insect_id: insectId,
-          note_type: cleanString(row.note_type),
+          note_type: noteType,
           content,
           reference: cleanString(row.reference),
           reason: rule.reason,

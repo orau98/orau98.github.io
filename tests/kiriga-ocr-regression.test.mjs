@@ -69,6 +69,42 @@ test('コケイロホソキリガ emergence time uses the standard-zukan 10-1 mo
   );
 });
 
+test('モンハイイロキリガ and ウスアオキリガ emergence use standard-zukan timing', () => {
+  const expected = new Map([
+    ['species-6026', { name: 'モンハイイロキリガ', emergenceTime: '9〜11月' }],
+    ['species-6027', { name: 'ウスアオキリガ', emergenceTime: '9〜11月' }],
+  ]);
+
+  ['normalized_data/general_notes.csv', 'public/general_notes.csv'].forEach((csvPath) => {
+    const rows = parseCsv(csvPath);
+    expected.forEach((meta, insectId) => {
+      const emergenceRows = rows.filter((row) => row.insect_id === insectId && row.note_type === '出現時期');
+      assert.equal(
+        emergenceRows.some((row) => (row.content || '').includes('翌年5月')),
+        false,
+        `${csvPath} should not include an OCR-derived 翌年5月 emergence row for ${meta.name}`,
+      );
+      assert.equal(
+        emergenceRows.some((row) => row.content === meta.emergenceTime && row.reference === '日本産蛾類標準図鑑2'),
+        true,
+        `${csvPath} should keep the standard-zukan emergence row for ${meta.name}`,
+      );
+    });
+  });
+
+  const normalized = convertNormalizedDataToStandardFormat(
+    parseCsv('normalized_data/insects.csv'),
+    parseCsv('normalized_data/hostplants.csv'),
+    parseCsv('normalized_data/general_notes.csv'),
+  );
+  expected.forEach((meta, insectId) => {
+    const target = normalized.moths.find((moth) => moth.id === insectId);
+    assert.ok(target, `normalized moth data should include ${meta.name}`);
+    assert.equal(target.name, meta.name);
+    assert.equal(target.emergenceTime, meta.emergenceTime);
+  });
+});
+
 test('日本のキリガ OCR hostplant rows do not keep short note fragments', () => {
   const blockedNoteTokens = new Set([
     '有',
