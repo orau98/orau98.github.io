@@ -264,7 +264,7 @@ const slim = (arr) => (arr || []).map(i => ({
     hostPlantsDetailed: Array.isArray(i.hostPlantsDetailed) ? i.hostPlantsDetailed : [],
     generalNotes: Array.isArray(i.generalNotes) ? i.generalNotes : [],
     emergenceTimeDetailed: Array.isArray(i.emergenceTimeDetailed) ? i.emergenceTimeDetailed : [],
-    notes: i.emergenceTime || i.notes || '',
+    notes: i.notes || '',
     emergenceTime: i.emergenceTime || ''
   }));
 

@@ -83,6 +83,17 @@ const NON_PLANT_HOST_NAME_SET = new Set([
   'ハビロキバガ',
   'チャミノ',
 ]);
+const SUSPICIOUS_HOSTPLANT_NOTE_SET = new Set([
+  '音',
+  'し',
+]);
+const BLOCKED_GENERAL_NOTE_RULES = [
+  {
+    insect_id: 'species-6031',
+    phrase: '翌年5月',
+    reason: 'コケイロホソキリガは標準図鑑2由来の10～1月を採用する。日本のキリガOCR由来の翌年5月行は混入させない。',
+  },
+];
 const hasEmbeddedObservationType = (plantName) => /（飼育(?:可|では[^）]+)?）/.test(plantName);
 const hasSuspiciousKirigaPattern = (row, plantName) => {
   if (cleanString(row.reference) !== '日本のキリガ') return false;
@@ -142,6 +153,8 @@ const missingIds = [];
 const hostplantCounts = new Map();
 const generalNoteCounts = new Map();
 const suspiciousHostplantRows = [];
+const suspiciousHostplantNoteRows = [];
+const blockedGeneralNoteRows = [];
 const aphidWrongLinkRows = [];
 const suspiciousScientificNameRows = insects
   .filter((row) => hasScientificNameNoise(row))
@@ -184,6 +197,7 @@ if (hostplantsPath) {
       }
     }
     const plantName = cleanString(row.plant_name);
+    const hostplantNote = cleanString(row.notes);
     const isSentenceLikePlantName = SUSPICIOUS_PLANT_NAME_MARKERS.some((marker) => plantName.includes(marker));
     if (
       SUSPICIOUS_PLANT_NAME_SET.has(plantName) ||
@@ -205,6 +219,15 @@ if (hostplantsPath) {
         notes: cleanString(row.notes),
       });
     }
+    if (SUSPICIOUS_HOSTPLANT_NOTE_SET.has(hostplantNote)) {
+      suspiciousHostplantNoteRows.push({
+        record_id: cleanString(row.record_id),
+        insect_id: insectId,
+        plant_name: plantName,
+        reference: cleanString(row.reference),
+        notes: hostplantNote,
+      });
+    }
     recordMissing('hostplants', row);
   });
 } else {
@@ -219,6 +242,19 @@ if (notesPath) {
     if (insectId) {
       generalNoteCounts.set(insectId, (generalNoteCounts.get(insectId) || 0) + 1);
     }
+    const content = cleanString(row.content);
+    BLOCKED_GENERAL_NOTE_RULES.forEach((rule) => {
+      if (insectId === rule.insect_id && content.includes(rule.phrase)) {
+        blockedGeneralNoteRows.push({
+          record_id: cleanString(row.record_id),
+          insect_id: insectId,
+          note_type: cleanString(row.note_type),
+          content,
+          reference: cleanString(row.reference),
+          reason: rule.reason,
+        });
+      }
+    });
     recordMissing('general_notes', row);
   });
 } else {
@@ -287,6 +323,16 @@ writeCsvReport(
   'suspicious_hostplants.csv',
   ['record_id', 'insect_id', 'plant_name', 'plant_family', 'observation_type', 'plant_part', 'life_stage', 'reference', 'notes'],
   suspiciousHostplantRows,
+);
+writeCsvReport(
+  'suspicious_hostplant_notes.csv',
+  ['record_id', 'insect_id', 'plant_name', 'reference', 'notes'],
+  suspiciousHostplantNoteRows,
+);
+writeCsvReport(
+  'blocked_general_notes.csv',
+  ['record_id', 'insect_id', 'note_type', 'content', 'reference', 'reason'],
+  blockedGeneralNoteRows,
 );
 writeCsvReport(
   'blank_japanese_name_links.csv',
@@ -406,6 +452,16 @@ if (duplicateInsectIds.length > 0) {
 
 if (suspiciousHostplantRows.length > 0) {
   console.warn(`[validate-normalized] suspicious hostplant rows: ${suspiciousHostplantRows.length}`);
+}
+
+if (suspiciousHostplantNoteRows.length > 0) {
+  console.error(`[validate-normalized] suspicious hostplant note fragments: ${suspiciousHostplantNoteRows.length}`);
+  process.exit(1);
+}
+
+if (blockedGeneralNoteRows.length > 0) {
+  console.error(`[validate-normalized] blocked general notes: ${blockedGeneralNoteRows.length}`);
+  process.exit(1);
 }
 
 if (blankJapaneseNameLinkedRows.length > 0) {

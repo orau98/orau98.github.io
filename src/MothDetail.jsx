@@ -1390,8 +1390,22 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
                 {/* 食草備考表示 */}
                 {moth.hostPlantNotes && moth.hostPlantNotes.length > 0 && (() => {
+                  const hasStructuredHostPlantDetails =
+                    (Array.isArray(moth.hostPlantsDetailed) && moth.hostPlantsDetailed.length > 0) ||
+                    (Array.isArray(moth.hostPlantDetails) && moth.hostPlantDetails.length > 0) ||
+                    (Array.isArray(fallbackHostPlants) && fallbackHostPlants.length > 0);
+                  if (hasStructuredHostPlantDetails) return null;
+
                   const filteredNotes = moth.hostPlantNotes.filter(note => {
                       if (!note) return false; // 空の場合は除外
+                      const normalizedNote = String(note).trim();
+                      const isEmergenceFragment =
+                        /^[0-9０-９]+[〜～~－-]\s*$/.test(normalizedNote) ||
+                        /^[A-Za-z]\.?\s*(?:翌年|[0-9０-９]+月|羽化|出現|発生)/.test(normalizedNote) ||
+                        /^(?:し、?|、|，|,)?(?:翌年|[0-9０-９]+月|[0-9０-９]+[〜～~－-]|羽化|出現|発生)/.test(normalizedNote) ||
+                        (/(?:羽化|出現|発生|翌年[0-9０-９]+月頃まで)/.test(normalizedNote) &&
+                          !/(?:寄主|食草|植物|葉|花|飼育)/.test(normalizedNote));
+                      if (isEmergenceFragment) return false;
                       
                       // 既存の食草データから部位情報を抽出
                       const existingParts = new Set();

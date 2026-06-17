@@ -38,12 +38,14 @@ reports/cleanup-applied-*.md
 reports/cleanup-inventory.json
 reports/aphid_wrong_links.csv
 reports/blank_japanese_name_links.csv
+reports/blocked_general_notes.csv
 reports/duplicate_insect_ids.csv
 reports/data-structure-audit.md
 reports/missing_family_insects.csv
 reports/missing_ids.csv
 reports/placeholder_note_mismatch.csv
 reports/public_insects_mismatch.csv
+reports/suspicious_hostplant_notes.csv
 reports/suspicious_hostplants.csv
 reports/suspicious_scientific_names.csv
 reports/taxonomy_assertion_failures.csv

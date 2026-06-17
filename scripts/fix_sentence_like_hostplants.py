@@ -85,6 +85,11 @@ ANNOTATION_TOKENS = {
     "葉・花",
 }
 
+IGNORED_NOTE_TOKENS = {
+    "音",
+    "し",
+}
+
 SENTENCE_EXACT = {
     "また",
     "さて",
@@ -184,6 +189,13 @@ def append_unique_notes(*parts: str) -> str:
             if chunk and chunk not in items:
                 items.append(chunk)
     return " / ".join(items)
+
+
+def clean_host_note_token(text: str) -> str:
+    text = clean(text)
+    if text in IGNORED_NOTE_TOKENS:
+        return ""
+    return text
 
 
 def dedupe_repeated_phrase(text: str) -> str:
@@ -333,6 +345,8 @@ def normalize_name_candidates(name: str, insect_name: str) -> tuple[list[str], d
         if annotation:
             if annotation == "葉・花":
                 info["plant_part"] = "葉・花"
+            elif annotation in IGNORED_NOTE_TOKENS:
+                pass
             else:
                 info["notes"] = append_unique_notes(info.get("notes", ""), annotation)
         if suffix_info.get("plant_part"):
@@ -473,7 +487,7 @@ def main() -> None:
                 fixed["plant_family"] = family
             if extra_info.get("plant_part"):
                 fixed["plant_part"] = extra_info["plant_part"]
-            fixed["notes"] = append_unique_notes(row.get("notes", ""), extra_info.get("notes", ""))
+            fixed["notes"] = append_unique_notes(clean_host_note_token(row.get("notes", "")), extra_info.get("notes", ""))
             append_host_row(fixed)
             created += 1
 
