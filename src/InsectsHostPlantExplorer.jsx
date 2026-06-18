@@ -454,8 +454,7 @@ const InsectsHostPlantExplorer = memo(
       return window.matchMedia("(min-width: 1024px)").matches;
     });
     const [isInstagramExpanded, setIsInstagramExpanded] = useState(() => {
-      if (typeof window === "undefined") return false;
-      return window.matchMedia("(min-width: 1024px)").matches;
+      return true;
     });
     const searchTimeoutRef = useRef(null);
     const heroSearchInputRef = useRef(null);
@@ -536,8 +535,8 @@ const InsectsHostPlantExplorer = memo(
         instagramUnavailable: isEnglish ? "Instagram posts are unavailable right now" : "Instagramの投稿を表示できません",
         instagramProfile: isEnglish ? "Open profile" : "プロフィールへ移動",
         instagramCollapsedHint: isEnglish
-          ? 'On mobile, Instagram is collapsed by default. Use "Open Instagram" to expand it.'
-          : 'モバイルでは初期状態で非表示です。「Instagramを開く」から表示できます。',
+          ? 'Instagram is hidden. Use "Open Instagram" to expand it.'
+          : 'Instagramは現在非表示です。「Instagramを開く」から表示できます。',
         instagramIconAlt: isEnglish ? "Instagram icon" : "Instagramアイコン",
       }),
       [isEnglish],
