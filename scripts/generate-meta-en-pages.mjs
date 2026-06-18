@@ -8,6 +8,7 @@ import {
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { comparePlantImageDisplayPriority } from '../src/utils/filename.js';
 import {
   cleanString,
   isFlowerVisitRecord,
@@ -506,7 +507,7 @@ function getPlantImageFiles(plantName, plantDetail, allPlantImages) {
   return allPlantImages.filter((file) => {
     const raw = file.replace(/\.[^.]+$/i, '');
     return raw.startsWith(baseJapanese) || (baseScientific && raw.includes(baseScientific.replace(/-/g, '_')));
-  });
+  }).sort(comparePlantImageDisplayPriority);
 }
 
 function buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite) {

@@ -15,7 +15,11 @@ import {
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
-import { createSafePlantFilename, createSafeScientificPlantFilename, PLANT_IMAGE_SUFFIXES } from './utils/filename';
+import {
+  createSafePlantFilename,
+  createSafeScientificPlantFilename,
+  PLANT_IMAGE_SUFFIXES,
+} from './utils/filename';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
 import { createSafeInsectFilename } from './utils/image';
@@ -1334,7 +1338,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     }
     const baseEntries = Array.from(baseEntryMap.values());
     const images = [];
-    const suffixes = [{ suffix: '', label: '全体' }, ...PLANT_IMAGE_SUFFIXES];
+    const flowerSuffixes = PLANT_IMAGE_SUFFIXES.filter(({ label }) => label === '花');
+    const otherSuffixes = PLANT_IMAGE_SUFFIXES.filter(({ label }) => label !== '花');
+    const suffixes = [...flowerSuffixes, { suffix: '', label: '全体' }, ...otherSuffixes];
     const addedNames = new Set();
     const addedSlots = new Set();
 

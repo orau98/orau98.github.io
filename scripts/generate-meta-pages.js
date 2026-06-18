@@ -13,6 +13,7 @@ import {
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
 import {
+  comparePlantImageDisplayPriority,
   createSafePlantFilename,
   createSafeScientificPlantFilename,
   PLANT_IMAGE_SUFFIXES,
@@ -1078,20 +1079,7 @@ function getPlantImageFilesForMeta(displayPlantName, allPlantImages, dataPlantNa
     return lookupBases.some((base) => plantImageNameMatchesBase(rawBase, base));
   });
 
-  const priority = (file) => {
-    const base = file.replace(/\.[^.]+$/i, '');
-    if (base.includes('葉表')) return 1;
-    if (base.includes('葉')) return 2;
-    if (base.includes('花')) return 3;
-    if (base.includes('実') || base.includes('果実')) return 4;
-    if (base.includes('樹皮')) return 5;
-    return 6;
-  };
-
-  return Array.from(new Set(matches)).sort((a, b) => {
-    const diff = priority(a) - priority(b);
-    return diff || a.localeCompare(b, 'ja');
-  });
+  return Array.from(new Set(matches)).sort(comparePlantImageDisplayPriority);
 }
 
 function resolveInsectImageUrl(insect) {

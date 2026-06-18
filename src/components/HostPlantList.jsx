@@ -9,7 +9,12 @@ import {
   EN_SITE_NAME,
   getPrimaryEnglishName,
 } from "../utils/englishNaming";
-import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "../utils/filename";
+import {
+  comparePlantImageDisplayPriority,
+  createSafePlantFilename,
+  createSafeScientificPlantFilename,
+  splitFilenameBase,
+} from "../utils/filename";
 import { hiraganaToKatakana } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
@@ -930,23 +935,7 @@ const HostPlantList = ({
       }
 
       if (matches.length > 0) {
-        // Sort matches to prioritize 葉表 (leaf surface)
-        matches.sort((a, b) => {
-          const aHasLeafSurface = a.includes("葉表");
-          const bHasLeafSurface = b.includes("葉表");
-          if (aHasLeafSurface && !bHasLeafSurface) return -1;
-          if (!aHasLeafSurface && bHasLeafSurface) return 1;
-          
-          const getPriority = (filename) => {
-            if (filename.includes("葉表")) return 1;
-            if (filename.includes("葉")) return 2;
-            if (filename.includes("花")) return 3;
-            if (filename.includes("実")) return 4;
-            if (filename.includes("樹皮")) return 5;
-            return 6;
-          };
-          return getPriority(a) - getPriority(b);
-        });
+        matches.sort(comparePlantImageDisplayPriority);
         map.set(plantName, matches[0]);
       }
     });

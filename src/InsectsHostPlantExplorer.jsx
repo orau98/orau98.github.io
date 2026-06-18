@@ -15,7 +15,12 @@ import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
 import { isPlantHostRecord } from "./utils/hostResource";
-import { createSafePlantFilename, createSafeScientificPlantFilename, splitFilenameBase } from "./utils/filename";
+import {
+  comparePlantImageDisplayPriority,
+  createSafePlantFilename,
+  createSafeScientificPlantFilename,
+  splitFilenameBase,
+} from "./utils/filename";
 import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { absUrl } from "./utils/origin";
 import { buildPlantPath, isKnownDetailPath } from "./utils/siteTaxonomy";
@@ -1590,21 +1595,7 @@ const InsectsHostPlantExplorer = memo(
             }
           }
           if (matches.length === 0) return null;
-          matches.sort((a, b) => {
-            const aHasLeafSurface = a.includes("葉表");
-            const bHasLeafSurface = b.includes("葉表");
-            if (aHasLeafSurface && !bHasLeafSurface) return -1;
-            if (!aHasLeafSurface && bHasLeafSurface) return 1;
-            const getPriority = (filename) => {
-              if (filename.includes("葉表")) return 1;
-              if (filename.includes("葉")) return 2;
-              if (filename.includes("花")) return 3;
-              if (filename.includes("実")) return 4;
-              if (filename.includes("樹皮")) return 5;
-              return 6;
-            };
-            return getPriority(a) - getPriority(b);
-          });
+          matches.sort(comparePlantImageDisplayPriority);
           const filename = matches[0];
           return `${normalizedBase}images/resized/plants/${encodeURIComponent(filename)}.1024.jpg`;
         };

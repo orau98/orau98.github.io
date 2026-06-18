@@ -86,6 +86,7 @@ export const createSafeScientificPlantFilename = (scientificName = '') => {
 
 // Plant image suffixes with labels (shared ordering/priority)
 export const PLANT_IMAGE_SUFFIXES = [
+  { suffix: '_花', label: '花' },
   { suffix: '_葉表', label: '葉表' },
   { suffix: '_葉', label: '葉' },
   { suffix: '_葉裏', label: '葉裏' },
@@ -95,7 +96,6 @@ export const PLANT_IMAGE_SUFFIXES = [
   { suffix: '_樹皮', label: '樹皮' },
   { suffix: '_実', label: '実' },
   { suffix: '_果実', label: '果実' },
-  { suffix: '_花', label: '花' },
   { suffix: '_蕾', label: '蕾' },
   { suffix: '_若葉', label: '若葉' },
   { suffix: '_冬芽', label: '冬芽' },
@@ -105,6 +105,23 @@ export const PLANT_IMAGE_SUFFIXES = [
   { suffix: '_枝先', label: '枝先' },
   { suffix: '_断面', label: '断面' },
 ];
+
+export const getPlantImageDisplayPriority = (filename) => {
+  const base = String(filename || '')
+    .normalize('NFC')
+    .replace(/\.[^.]+$/i, '');
+  if (base.includes('花')) return 1;
+  if (base.includes('葉表')) return 2;
+  if (base.includes('葉')) return 3;
+  if (base.includes('実') || base.includes('果実')) return 4;
+  if (base.includes('樹皮')) return 5;
+  return 6;
+};
+
+export const comparePlantImageDisplayPriority = (a, b) => {
+  const diff = getPlantImageDisplayPriority(a) - getPlantImageDisplayPriority(b);
+  return diff || String(a || '').localeCompare(String(b || ''), 'ja');
+};
 
 const SORTED_PLANT_SUFFIX_LABELS = Array.from(
   new Set(PLANT_IMAGE_SUFFIXES.map(({ label }) => label).filter(Boolean)),
