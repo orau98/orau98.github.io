@@ -81,6 +81,25 @@ const isStaticDocumentPath = (pathname = '') => {
 const hasImmediateInsectDataParams = (params) =>
   INSECT_DATA_IMMEDIATE_QUERY_PARAMS.some((name) => params.has(name));
 
+const normalizeExplorerPath = (pathname = '') => {
+  const value = String(pathname || '/').split(/[?#]/)[0] || '/';
+  return value.length > 1 ? value.replace(/\/+$/, '') : value;
+};
+
+const getExplorerInitialTabForPath = (pathname = '') => {
+  const normalizedPath = normalizeExplorerPath(pathname);
+  const config = EXPLORER_ROUTE_CONFIGS.find(
+    ({ path }) => normalizeExplorerPath(path) === normalizedPath,
+  );
+  return config?.initialTab || null;
+};
+
+const shouldLoadInsectPartitionsImmediately = (pathname = '/', params = new URLSearchParams()) => {
+  if (!isExplorerRoutePath(pathname)) return true;
+  if (hasImmediateInsectDataParams(params)) return true;
+  return getExplorerInitialTabForPath(pathname) === 'insects';
+};
+
 function App() {
   const location = useLocation();
   const locale = getLocaleFromPath(location.pathname);
@@ -501,7 +520,6 @@ function App() {
                 setPlantDetails(plantDetailsLite);
                 setFlowerVisitPlants(preloadedFlowerVisitPlants);
               }
-              setLoading(false);
 
               // Reset fetch guards for fresh lifecycle
               typesFetchStartedRef.current = false;
@@ -630,18 +648,22 @@ function App() {
 
               ensureTypesLoaderRef.current = startFetchTypes;
 
+              let loadTypesImmediately = false;
               try {
                 const params = new URLSearchParams(
                   typeof window !== 'undefined' ? window.location.search || '' : '',
                 );
                 const pathname = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
-                if (!isExplorerRoutePath(pathname) || hasImmediateInsectDataParams(params)) {
-                  startFetchTypes();
-                }
+                loadTypesImmediately = shouldLoadInsectPartitionsImmediately(pathname, params);
               } catch (error) {
                 logger.debug('Failed to interpret route data need, fetching insects immediately:', error);
-                startFetchTypes();
+                loadTypesImmediately = true;
               }
+
+              if (loadTypesImmediately) {
+                await startFetchTypes();
+              }
+              setLoading(false);
 
               prefetchFullDataset();
 
@@ -6338,7 +6360,7 @@ function App() {
   const currentRouteNeedsInsectsImmediately = () => {
     try {
       const params = new URLSearchParams(location.search || '');
-      return !isExplorerPage || hasImmediateInsectDataParams(params);
+      return shouldLoadInsectPartitionsImmediately(location.pathname || '/', params);
     } catch {
       return true;
     }
