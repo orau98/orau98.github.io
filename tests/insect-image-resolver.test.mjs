@@ -48,3 +48,34 @@ test('resolveImageBaseCandidates still returns matching indexed image names when
     ['Existing_species_2'],
   );
 });
+
+test('resolveImageBaseCandidates resolves Japanese image names with subspecies suffixes', () => {
+  const imageNames = new Set([
+    'オオミドリサルハムシ基亜種',
+    'オナガミズアオ本州・九州亜種',
+  ]);
+  const imageExtensions = {
+    オオミドリサルハムシ基亜種: '.jpg',
+    オナガミズアオ本州・九州亜種: '.jpg',
+  };
+  const normalizedEntries = buildNormalizedEntries(imageNames, imageExtensions);
+
+  assert.deepEqual(
+    resolveImageBaseCandidates(['オオミドリサルハムシ'], {
+      imageNames,
+      imageExtensions,
+      normalizedEntries,
+      includeUnresolved: false,
+    }),
+    ['オオミドリサルハムシ基亜種'],
+  );
+  assert.deepEqual(
+    resolveImageBaseCandidates(['オナガミズアオ'], {
+      imageNames,
+      imageExtensions,
+      normalizedEntries,
+      includeUnresolved: false,
+    }),
+    ['オナガミズアオ本州・九州亜種'],
+  );
+});

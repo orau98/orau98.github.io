@@ -22,6 +22,11 @@ import { loadInsectImageIndexes } from './services/imageIndex';
 import { createSafeInsectFilename } from './utils/image';
 import { buildResponsivePicture, buildResizedImageUrl } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from './utils/insectImageResolver';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
 import { buildInsectMetaPagePath, getInsectSectionConfig } from './utils/siteTaxonomy';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
@@ -434,6 +439,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const [imageBases, setImageBases] = useState([]);
   const imageBaseSet = React.useMemo(() => new Set(imageBases || []), [imageBases]);
   const isImageIndexReady = imageBases.length > 0 || Object.keys(imageExtensions || {}).length > 0;
+  const normalizedImageEntries = React.useMemo(
+    () => buildNormalizedEntries(imageBaseSet, imageExtensions),
+    [imageBaseSet, imageExtensions],
+  );
 
   useEffect(() => {
     loadInsectImageIndexes()
@@ -474,31 +483,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       push(build(name, 320));
     };
 
-    const addNameCandidates = (name) => {
-      if (!name) return;
-      const knownExt = exts[name];
-      const existsInIndex = imageBaseSet.has(name);
-      if (knownExt) {
-        pushResizedSet(name);
-        return;
-      }
-      if (existsInIndex) {
-        pushResizedSet(name);
-        return;
-      }
-      if (!ready) return;
-      pushResizedSet(name);
-    };
-
-    const baseNameCandidates = [safeFilename, japaneseName]
-      .filter(Boolean)
-      .sort((a, b) => {
-        const aKnown = Boolean(exts[a] || imageBaseSet.has(a));
-        const bKnown = Boolean(exts[b] || imageBaseSet.has(b));
-        if (aKnown === bKnown) return 0;
-        return bKnown ? 1 : -1;
-      });
-    baseNameCandidates.forEach(addNameCandidates);
+    const rawBaseCandidates = buildInsectImageBaseCandidates(moth, mappedScientificFilename);
+    const baseNameCandidates = ready
+      ? resolveImageBaseCandidates(rawBaseCandidates, {
+          imageExtensions: exts,
+          imageNames: imageBaseSet,
+          normalizedEntries: normalizedImageEntries,
+          includeUnresolved: false,
+        })
+      : rawBaseCandidates;
+    baseNameCandidates.forEach(pushResizedSet);
 
     try {
       if (imageBases && imageBases.length > 0 && moth.scientificName) {
@@ -523,7 +517,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     }
 
     return Array.from(uniq);
-  }, [imageExtensions, imageBases, safeFilename, japaneseName, moth, isImageIndexReady, imageBaseSet]);
+  }, [
+    imageExtensions,
+    imageBases,
+    moth,
+    isImageIndexReady,
+    imageBaseSet,
+    mappedScientificFilename,
+    normalizedImageEntries,
+  ]);
 
   const fallbackImageCandidates = React.useMemo(
     () => possibleImagePaths.slice(1),

@@ -22,7 +22,11 @@ import {
 } from './utils/filename';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
-import { createSafeInsectFilename } from './utils/image';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from './utils/insectImageResolver';
 import ImageWithFallback from './components/ImageWithFallback';
 import {
   buildResponsivePicture,
@@ -510,39 +514,26 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
   const [imgError, setImgError] = React.useState(false);
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
-  // Resolve the best image basename for this insect
-  const resolveImageBase = () => {
-    const nameJp = (insect.name || insect.japaneseName || '').trim();
-    const mapped = globalJapaneseToScientificMapping.get(nameJp);
-    const safe = createSafeInsectFilename(insect.scientificName || '');
-    const safeFromMapped = createSafeInsectFilename(mapped || '');
-    const safeFromExisting = createSafeInsectFilename(insect.scientificFilename || '');
-    const hasImageBase = (base) => {
-      if (!base) return false;
-      if (imageExtensions && imageExtensions[base]) return true;
-      if (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(base)) return true;
-      const keys = imageExtensions ? Object.keys(imageExtensions) : [];
-      return keys.some((k) => k === base || k.startsWith(`${base}_`));
-    };
-    const candidates = [
-      insect.scientificFilename,
-      mapped,
-      safe,
-      safeFromMapped,
-      safeFromExisting,
-      createSafeInsectFilename(nameJp),
-      nameJp
-    ].filter(Boolean);
-    for (const cand of candidates) {
-      if (hasImageBase(cand)) return cand;
-    }
-    return candidates[0] || '';
-  };
-  const filename = resolveImageBase();
-  const hasImage = Boolean(filename) && (
-    (imageExtensions && imageExtensions[filename]) ||
-    (imageFilenames && imageFilenames.size > 0 && imageFilenames.has(filename))
+  const normalizedImageEntries = React.useMemo(
+    () => buildNormalizedEntries(imageFilenames, imageExtensions),
+    [imageFilenames, imageExtensions],
   );
+  // Resolve the best image basename for this insect
+  const filename = React.useMemo(() => {
+    const nameJp = (insect?.name || insect?.japaneseName || '').trim();
+    const mapped = globalJapaneseToScientificMapping.get(nameJp);
+    const resolvedBases = resolveImageBaseCandidates(
+      buildInsectImageBaseCandidates(insect, mapped),
+      {
+        imageExtensions,
+        imageNames: imageFilenames,
+        normalizedEntries: normalizedImageEntries,
+        includeUnresolved: false,
+      },
+    );
+    return resolvedBases[0] || '';
+  }, [imageExtensions, imageFilenames, insect, normalizedImageEntries]);
+  const hasImage = Boolean(filename);
   const baseUrl = import.meta.env.BASE_URL || '/';
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
   const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';

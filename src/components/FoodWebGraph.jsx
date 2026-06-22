@@ -2,9 +2,14 @@ import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
-import { createSafeInsectFilename } from '../utils/image';
 import { createSafeScientificPlantFilename } from '../utils/filename';
 import { buildResizedImageUrl } from '../utils/imageSrcset';
+import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../utils/insectImageResolver';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
 import { isNonPlantResourceName, isPlantHostRecord } from '../utils/hostResource';
@@ -568,6 +573,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [imageExtMap, setImageExtMap] = useState({});
   const [imageBaseSet, setImageBaseSet] = useState(new Set());
   const [plantImageNames, setPlantImageNames] = useState([]);
+  const normalizedImageEntries = useMemo(
+    () => buildNormalizedEntries(imageBaseSet, imageExtMap),
+    [imageBaseSet, imageExtMap],
+  );
 
   const loadingImagesRef = useRef(new Set());
   const failedImagesRef = useRef(new Set());
@@ -700,23 +709,23 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       return [detail.image];
     }
 
-    const candidates = [
-      detail.scientificFilename,
-      detail.scientificName ? createSafeInsectFilename(detail.scientificName) : null,
-      detail.name ? createSafeInsectFilename(detail.name) : null,
-      detail.name
-    ].filter(Boolean);
+    const mappedFilename = globalJapaneseToScientificMapping.get(detail.name);
+    const candidates = buildInsectImageBaseCandidates(detail, mappedFilename);
+    const resolvedBases = resolveImageBaseCandidates(candidates, {
+      imageExtensions: imageExtMap,
+      imageNames: imageBaseSet,
+      normalizedEntries: normalizedImageEntries,
+      includeUnresolved: false,
+    });
 
     const urls = [];
-    for (const base of candidates) {
-      if (imageExtMap[base] || imageBaseSet.has(base)) {
-        urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 320, query: cacheBust }));
-        urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 640, query: cacheBust }));
-        urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 1024, query: cacheBust }));
-      }
+    for (const base of resolvedBases) {
+      urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 320, query: cacheBust }));
+      urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 640, query: cacheBust }));
+      urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 1024, query: cacheBust }));
     }
     return urls;
-  }, [assetBase, cacheBust, imageBaseSet, imageExtMap]);
+  }, [assetBase, cacheBust, imageBaseSet, imageExtMap, normalizedImageEntries]);
 
   const plantScientificBaseMap = useMemo(() => {
     const map = new Map();

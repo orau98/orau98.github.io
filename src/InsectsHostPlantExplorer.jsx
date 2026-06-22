@@ -10,7 +10,10 @@ import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
 import useSeoMeta from "./hooks/useSeoMeta";
-import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "./services/imageIndex";
+import {
+  loadInsectImageIndexes,
+  loadPlantImageFilenames as loadPlantImageFilenamesService,
+} from "./services/imageIndex";
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
@@ -22,6 +25,12 @@ import {
   splitFilenameBase,
 } from "./utils/filename";
 import { buildResizedImageUrl } from "./utils/imageSrcset";
+import { globalJapaneseToScientificMapping } from "./utils/insectImageMappings";
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from "./utils/insectImageResolver";
 import { absUrl } from "./utils/origin";
 import { buildPlantPath, isKnownDetailPath } from "./utils/siteTaxonomy";
 import { buildInsectPath } from "./utils/insectSlug";
@@ -447,6 +456,12 @@ const InsectsHostPlantExplorer = memo(
     );
     const [showBibliography, setShowBibliography] = useState(false);
     const [plantImageFilenames, setPlantImageFilenames] = useState([]);
+    const [insectImageFilenames, setInsectImageFilenames] = useState(new Set());
+    const [insectImageExtensions, setInsectImageExtensions] = useState({});
+    const normalizedInsectImageEntries = useMemo(
+      () => buildNormalizedEntries(insectImageFilenames, insectImageExtensions),
+      [insectImageFilenames, insectImageExtensions],
+    );
     const [searchByTab, setSearchByTab] = useState(() => ({
       insects: initialTabFromParams === "insects" ? initialQuery : "",
       plants: initialTabFromParams === "plants" ? initialQuery : "",
@@ -1458,7 +1473,16 @@ const InsectsHostPlantExplorer = memo(
 
       // 昆虫画像URLを生成するヘルパー
       const getInsectImageUrl = (insect) => {
-        const filename = insect.scientificFilename || insect.scientificName?.replace(/\s+/g, '_');
+        const mappedFilename = globalJapaneseToScientificMapping.get(insect?.name);
+        const [filename] = resolveImageBaseCandidates(
+          buildInsectImageBaseCandidates(insect, mappedFilename),
+          {
+            imageExtensions: insectImageExtensions,
+            imageNames: insectImageFilenames,
+            normalizedEntries: normalizedInsectImageEntries,
+            includeUnresolved: false,
+          },
+        );
         if (!filename) return null;
         return buildResizedImageUrl({
           baseUrl: normalizedBase,
@@ -1694,6 +1718,9 @@ const InsectsHostPlantExplorer = memo(
       flowerVisitPlants,
       plantDetails,
       plantImageFilenames,
+      insectImageExtensions,
+      insectImageFilenames,
+      normalizedInsectImageEntries,
       isEnglish,
       locale,
     ]);
@@ -1714,6 +1741,14 @@ const InsectsHostPlantExplorer = memo(
 
     useEffect(() => {
       let cancelled = false;
+      loadInsectImageIndexes()
+        .then(({ names, exts }) => {
+          if (!cancelled) {
+            setInsectImageFilenames(new Set(names || []));
+            setInsectImageExtensions(exts || {});
+          }
+        })
+        .catch((err) => logger.debug("insect image preload failed:", err));
       loadPlantImageFilenamesService()
         .then((filenames) => {
           if (!cancelled) {

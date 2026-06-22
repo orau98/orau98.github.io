@@ -12,7 +12,6 @@ import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
 import { hiraganaToKatakana } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
-import { createSafeInsectFilename } from '../utils/image';
 import ImageWithFallback from './ImageWithFallback';
 import SearchableSelect from './SearchableSelect';
 import { ListDisplayControls, PresetFilterChips } from './ListToolbar';
@@ -30,6 +29,11 @@ import {
   getLocalizedTaxonomyLabel,
 } from '../utils/englishNaming';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
+import {
+  buildInsectImageBaseCandidates,
+  buildNormalizedEntries,
+  resolveImageBaseCandidates,
+} from '../utils/insectImageResolver';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
 import { isEnglishLocale, localizePath } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
@@ -1289,8 +1293,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
-  const [imageFilenamesNormalized, setImageFilenamesNormalized] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
+  const normalizedImageEntries = useMemo(
+    () => buildNormalizedEntries(imageFilenames, imageExtensions),
+    [imageFilenames, imageExtensions],
+  );
 
   // 重要種の画像を必ず拾うための強制マッピング（ID -> 画像ベース名）
   const IMAGE_OVERRIDES = useMemo(() => new Map([
@@ -1305,22 +1312,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         const list = Array.from(names || []);
         const fileSet = new Set(list);
         setImageFilenames(fileSet);
-        // Build normalized base names (Genus_species)
-        const normSet = new Set();
-        list.forEach(base => {
-          const m1 = base.match(/^([A-Z][a-z]+)\s+([a-z]+)/);
-          if (m1) { normSet.add(`${m1[1]}_${m1[2]}`); return; }
-          const m2 = base.match(/^([A-Z][a-z]+)_([a-z]+)/);
-          if (m2) { normSet.add(`${m2[1]}_${m2[2]}`); return; }
-        });
-        setImageFilenamesNormalized(normSet);
         setImageExtensions(exts || {});
         logger.debug('Loaded image index via service:', list.length, 'files');
       })
       .catch((e) => {
         logger.debug('Failed to load insect image index:', e);
         setImageFilenames(new Set());
-        setImageFilenamesNormalized(new Set());
         setImageExtensions({});
       });
   }, []);
@@ -1356,59 +1353,28 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         return override;
       }
 
-      // 0. Try mapped filename first (highest priority)
       const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
-      if (mappedFilename && imageFilenames.has(mappedFilename)) {
-        return mappedFilename;
-      }
-      
-      // 1. Try scientific filename directly
-      if (insect.scientificFilename && imageFilenames.has(insect.scientificFilename)) {
-        return insect.scientificFilename;
-      }
-      
-      // 2. Try generated safe filename
-      const safeFilename = createSafeInsectFilename(insect.scientificName);
-      if (imageFilenames.has(safeFilename)) {
-        return safeFilename;
-      }
-      
-      // 2a. Try filename variants
-      // Optimize: avoid iterating entire set if possible. 
-      // But here we need prefix match.
-      // Check normalized set first for exact match
-      if (imageFilenamesNormalized.has(safeFilename)) {
-        // Find the actual original filename
-        for (const fname of imageFilenames) {
-           if (fname === safeFilename || fname.startsWith(`${safeFilename}_`)) return fname;
-        }
-      }
-      
-      // 2b. Check extensions map keys
-      if (imageExtensions[safeFilename]) return safeFilename;
-      // Check keys starting with safeFilename
-      const extKey = Object.keys(imageExtensions).find(key => key === safeFilename || key.startsWith(`${safeFilename}_`));
-      if (extKey) return extKey;
-      
-      // 3. Try Japanese name
-      if (imageFilenames.has(insect.name)) return insect.name;
-      
-      // 4. Substring search (slowest, but necessary for some)
-      // Only do this if we haven't found it yet
-      // Optimize: check if any image filename contains the name
-      // iterating 2000+ filenames x 9700 insects is too slow (19M+ ops).
-      // We should skip this expensive check for the pre-calc map if possible, 
-      // or optimize it.
-      // For now, let's trust the specific lookups above cover 99% cases.
-      // The original code did this iteration per item render. 
-      // Doing it once in useEffect is better but still slow on main thread.
-      // Let's skip the full scan for now to keep init fast.
-      
-      return null;
+      const candidates = [
+        override,
+        ...buildInsectImageBaseCandidates(insect, mappedFilename),
+      ].filter(Boolean);
+      const resolvedBases = resolveImageBaseCandidates(candidates, {
+        imageExtensions,
+        imageNames: imageFilenames,
+        normalizedEntries: normalizedImageEntries,
+        includeUnresolved: false,
+      });
+      return resolvedBases[0] || null;
     } catch {
       return null;
     }
-  }, [IMAGE_OVERRIDES, imageExtensions, imageFilenames, imageFilenamesNormalized, isImageIndexReady]);
+  }, [
+    IMAGE_OVERRIDES,
+    imageExtensions,
+    imageFilenames,
+    isImageIndexReady,
+    normalizedImageEntries,
+  ]);
 
   // Precompute image filename per insect to avoid O(n) lookups during sort/render
   const [mothImageMap, setMothImageMap] = useState(new Map());
