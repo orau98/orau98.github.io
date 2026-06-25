@@ -231,6 +231,40 @@ let currentFamily = '';
 let currentPlant  = '';
 const records = [];  // { plant, family, kamikiriNames }
 
+// OCRの植物索引だけでは近縁名・OCR崩れで誤照合しやすい箇所。
+// 本文の寄主植物欄と植物索引を照合して確認した補正を明示する。
+const MANUAL_RECORDS = [
+  { plant: 'リュウキュウアカメガシワ', family: 'トウダイグサ科', kamikiriNames: ['リュウキュウヒメアメイロカミキリ'] },
+  { plant: 'フカノキ', family: 'ウコギ科', kamikiriNames: ['リュウキュウヒメアメイロカミキリ'] },
+  { plant: 'アコウ', family: 'クワ科', kamikiriNames: ['リュウキュウヒメアメイロカミキリ'] },
+  { plant: 'タブノキ', family: 'クスノキ科', kamikiriNames: ['リュウキュウヒメアメイロカミキリ'] },
+  { plant: 'ヤブニッケイ', family: 'クスノキ科', kamikiriNames: ['リュウキュウヒメアメイロカミキリ'] },
+  { plant: 'タラノキ', family: 'ウコギ科', kamikiriNames: ['オキナワセンノカミキリ'] },
+  { plant: 'リュウキュウハリギリ', family: 'ウコギ科', kamikiriNames: ['オキナワセンノカミキリ'] },
+  { plant: 'フカノキ', family: 'ウコギ科', kamikiriNames: ['オキナワセンノカミキリ'] },
+  { plant: 'フカノキ', family: 'ウコギ科', kamikiriNames: ['キンケビロウドカミキリ 八重山諸島亜種'] },
+  { plant: 'オキナワトベラ', family: 'トベラ科', kamikiriNames: ['キンケビロウドカミキリ 八重山諸島亜種'] },
+  { plant: 'フカノキ', family: 'ウコギ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
+  { plant: 'リュウキュウハリギリ', family: 'ウコギ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
+  { plant: 'タラノキ', family: 'ウコギ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
+  { plant: 'オキナワトベラ', family: 'トベラ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
+  { plant: 'トベラ', family: 'トベラ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
+  { plant: 'フカノキ', family: 'ウコギ科', kamikiriNames: ['アマミコブヒゲカミキリ'] },
+];
+
+const DENIED_PAIRS = new Set([
+  'species-22110||ハスノハギリ',
+  'species-22753||イスノキ',
+  'species-22743||カラスザンショウ',
+  'species-22743||マメガキ',
+  'species-22743||シロバイ',
+  'species-22847||ショウベンノキ',
+  'species-22847||シロバイ',
+].map((pair) => {
+  const [iid, plant] = pair.split('||');
+  return `${iid}||${normalize(plant)}`;
+}));
+
 for (const seg of fixedSegments) {
   const s = seg.trim();
   if (!s) continue;
@@ -272,6 +306,18 @@ for (const seg of fixedSegments) {
     continue;
   }
   // それ以外（OCR誤字・不明行）はスキップ
+}
+
+const recordKeys = new Set(records.flatMap(({ plant, family, kamikiriNames }) =>
+  kamikiriNames.map((name) => `${normalize(plant)}||${normalize(family)}||${normalize(name)}`),
+));
+for (const record of MANUAL_RECORDS) {
+  for (const name of record.kamikiriNames) {
+    const key = `${normalize(record.plant)}||${normalize(record.family)}||${normalize(name)}`;
+    if (recordKeys.has(key)) continue;
+    records.push({ ...record, kamikiriNames: [name] });
+    recordKeys.add(key);
+  }
 }
 
 console.log(`\n抽出レコード数: ${records.length}`);
@@ -345,6 +391,7 @@ console.log(`\n既存カミキリムシ食草ペア数: ${existing.size}`);
 // ===================================================================
 const results = [];
 const stats   = { exact: 0, fuzzy: 0, no_match: 0 };
+let deniedCount = 0;
 
 for (const { plant, family, kamikiriNames } of records) {
   const plantNorm = normalize(plant);
@@ -363,6 +410,11 @@ for (const { plant, family, kamikiriNames } of records) {
         is_new:       false,
         note:         'no_match'
       });
+      continue;
+    }
+
+    if (DENIED_PAIRS.has(`${iid}||${plantNorm}`)) {
+      deniedCount++;
       continue;
     }
 
@@ -390,6 +442,7 @@ console.log(`\nマッチ統計: 完全=${stats.exact}, 曖昧=${stats.fuzzy}, �
 console.log(`総レコード数: ${results.length}`);
 console.log(`新規 (is_new=true): ${newCount}`);
 console.log(`既存 (is_new=false): ${matchedCount - newCount}`);
+console.log(`除外 (manual denylist): ${deniedCount}`);
 
 // ===================================================================
 // 8. JSON 出力
