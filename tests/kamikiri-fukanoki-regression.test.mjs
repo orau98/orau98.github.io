@@ -88,6 +88,16 @@ test('catalog names include OCR source aliases used by 日本産カミキリム�
   assert.match(byId.get('species-22520')?.alternative_name || '', /ヤエヤマクロオビトゲムネカミキリ/);
   assert.match(byId.get('species-22746')?.alternative_name || '', /センノキカミキリ/);
   assert.match(byId.get('species-22877')?.alternative_name || '', /オキナワコウノゴマフカミキリ/);
+  assert.match(byId.get('species-22078')?.alternative_name || '', /アオヒメコバネカミキリ/);
+  assert.match(byId.get('species-22894')?.alternative_name || '', /トカラオキナワゴマフカミキリ/);
+  assert.match(byId.get('species-22945')?.alternative_name || '', /オキナワコブバネサビカミキリ/);
+  assert.match(byId.get('species-22919')?.alternative_name || '', /アマミノブオケシカミキリ/);
+  assert.match(byId.get('species-21914')?.alternative_name || '', /ニホンチャイロヒメカミキリ/);
+  assert.match(byId.get('species-22592')?.alternative_name || '', /トカラハネナシチビカミキリ/);
+  assert.match(byId.get('species-22728')?.alternative_name || '', /アマミビロウドカミキリ/);
+  assert.match(byId.get('species-22686')?.alternative_name || '', /イズドイカミキリ/);
+  assert.match(byId.get('species-22684')?.alternative_name || '', /アマミドイカミキリ/);
+  assert.match(byId.get('species-22687')?.alternative_name || '', /ヤエヤマドイカミキリ/);
 });
 
 test('public source フカノキ data includes recovered longhorn beetles', () => {
@@ -231,6 +241,85 @@ test('curated short OCR plant blocks keep only source-supported longhorn rows', 
     ['species-22064', 'トネリコ'],
     ['species-22642', 'コバノトネリコ'],
     ['species-22867', 'クマノミズキ'],
+  ];
+
+  for (const [insectId, plantName] of falsePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), false, `${insectId} should not be linked to ${plantName}`);
+  }
+});
+
+test('curated long OCR plant blocks keep source-supported longhorn rows', () => {
+  const truePairs = [
+    ['10-1', 'イスノキ'],
+    ['7-1', 'イスノキ'],
+    ['species-21842', 'イスノキ'],
+    ['species-22311', 'イスノキ'],
+    ['species-22139', 'イスノキ'],
+    ['species-22078', 'イスノキ'],
+    ['species-22945', 'イスノキ'],
+    ['species-22946', 'イスノキ'],
+    ['species-22780', 'イスノキ'],
+    ['species-22767', 'イスノキ'],
+    ['species-22919', 'イスノキ'],
+    ['species-21914', 'カラスザンショウ'],
+    ['species-22085', 'カラスザンショウ'],
+    ['species-22592', 'カラスザンショウ'],
+    ['species-22950', 'カラスザンショウ'],
+    ['species-22728', 'カラスザンショウ'],
+    ['species-22686', 'カラスザンショウ'],
+    ['species-22684', 'カラスザンショウ'],
+    ['species-22687', 'カラスザンショウ'],
+    ['species-22696', 'カラスザンショウ'],
+  ];
+
+  for (const [insectId, plantName] of truePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), true, `${insectId} should be linked to ${plantName}`);
+  }
+});
+
+test('curated long OCR plant blocks remove adjacent-block spillovers and wrong fuzzy matches', () => {
+  const falsePairs = [
+    ['3-5', 'イスノキ'],
+    ['species-22310', 'イスノキ'],
+    ['species-21921', 'イスノキ'],
+    ['species-21885', 'イスノキ'],
+    ['species-22704', 'イスノキ'],
+    ['species-22072', 'イスノキ'],
+    ['species-22176', 'イスノキ'],
+    ['species-21973', 'イスノキ'],
+    ['species-22764', 'イスノキ'],
+    ['species-22832', 'イスノキ'],
+    ['species-21913', 'カラスザンショウ'],
+    ['species-22609', 'カラスザンショウ'],
+    ['species-22463', 'カラスザンショウ'],
+    ['species-22735', 'カラスザンショウ'],
+    ['species-22682', 'カラスザンショウ'],
+    ['species-22144', 'カラスザンショウ'],
+    ['species-22731', 'カラスザンショウ'],
+    ['species-22866', 'カラスザンショウ'],
+    ['species-22057', 'カラスザンショウ'],
+    ['species-22058', 'カラスザンショウ'],
+  ];
+
+  for (const [insectId, plantName] of falsePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), false, `${insectId} should not be linked to ${plantName}`);
+  }
+});
+
+test('high-confidence OCR residual false positives stay removed', () => {
+  const falsePairs = [
+    ['species-22515', 'キブシ'],
+    ['species-22932', 'キブシ'],
+    ['species-22927', 'キブシ'],
+    ['species-23043', 'キブシ'],
+    ['species-23013', 'ハリギリ'],
+    ['species-22910', 'ハリギリ'],
+    ['species-22676', 'ハリギリ'],
+    ['species-22927', 'ミズキ'],
+    ['species-22970', 'ハイノキ'],
+    ['species-22512', 'アマシバ'],
+    ['species-21952', 'リュウキュウチク'],
+    ['species-22933', 'メダケ'],
   ];
 
   for (const [insectId, plantName] of falsePairs) {
