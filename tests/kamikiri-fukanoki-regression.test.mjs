@@ -61,6 +61,11 @@ test('catalog names include OCR source aliases used by 日本産カミキリム�
 
   assert.match(byId.get('species-22743')?.alternative_name || '', /オキナワセンノキカミキリ/);
   assert.match(byId.get('species-22753')?.alternative_name || '', /オキナワキンケビロウドカミキリ/);
+  assert.match(byId.get('species-22040')?.alternative_name || '', /アマミトラカミキリ/);
+  assert.match(byId.get('species-22311')?.alternative_name || '', /ホンドアオバホソハナカミキリ/);
+  assert.match(byId.get('species-22520')?.alternative_name || '', /ヤエヤマクロオビトゲムネカミキリ/);
+  assert.match(byId.get('species-22746')?.alternative_name || '', /センノキカミキリ/);
+  assert.match(byId.get('species-22877')?.alternative_name || '', /オキナワコウノゴマフカミキリ/);
 });
 
 test('generated public フカノキ data and meta pages include recovered longhorn beetles', () => {
@@ -149,6 +154,58 @@ test('additional verified short-block spillovers stay removed without deleting s
   }
 });
 
+test('curated short OCR plant blocks keep only source-supported longhorn rows', () => {
+  const truePairs = [
+    ['species-22786', 'ウメ'],
+    ['species-22755', 'ウメ'],
+    ['species-22978', 'ウメ'],
+    ['species-21933', 'キリ'],
+    ['species-22047', 'キリ'],
+    ['species-22927', 'キリ'],
+    ['species-21976', 'ヤチダモ'],
+    ['species-22755', 'ヤチダモ'],
+    ['species-22040', 'リュウキュウガキ'],
+    ['species-22877', 'リュウキュウガキ'],
+    ['species-22746', 'カクレミノ'],
+    ['species-22520', 'カクレミノ'],
+    ['species-22755', 'ヤツデ'],
+    ['species-22972', 'ヤツデ'],
+    ['species-22933', 'ホテイチク'],
+    ['species-22229', 'トネリコ'],
+    ['species-22311', 'コバノトネリコ'],
+    ['species-22703', 'クマノミズキ'],
+  ];
+
+  for (const [insectId, plantName] of truePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), true, `${insectId} should be linked to ${plantName}`);
+  }
+
+  const falsePairs = [
+    ['species-22779', 'ウメ'],
+    ['species-22735', 'ウメ'],
+    ['species-22179', 'ウメ'],
+    ['1-1', 'ウメ'],
+    ['species-22064', 'キリ'],
+    ['species-22832', 'キリ'],
+    ['species-22764', 'キリ'],
+    ['species-22867', 'ヤチダモ'],
+    ['species-22947', 'ヤチダモ'],
+    ['species-21992', 'リュウキュウガキ'],
+    ['species-21995', 'リュウキュウガキ'],
+    ['species-22833', 'カクレミノ'],
+    ['species-22736', 'ヤツデ'],
+    ['species-22833', 'ヤツデ'],
+    ['species-21952', 'ホテイチク'],
+    ['species-22064', 'トネリコ'],
+    ['species-22642', 'コバノトネリコ'],
+    ['species-22867', 'クマノミズキ'],
+  ];
+
+  for (const [insectId, plantName] of falsePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), false, `${insectId} should not be linked to ${plantName}`);
+  }
+});
+
 test('generated public data reflects representative broad kamikiri corrections', () => {
   const hostplantsJson = JSON.parse(fs.readFileSync('public/assets/data-lite/hostplants.json', 'utf8'));
 
@@ -175,4 +232,17 @@ test('generated public data reflects representative broad kamikiri corrections',
   assert.doesNotMatch((hostplantsJson['レチンギク'] || []).join('\n'), /ヘリグロリンゴカミキリ/);
   assert.match((hostplantsJson['カクレミノ'] || []).join('\n'), /キボシカミキリ 基亜種/);
   assert.doesNotMatch((hostplantsJson['カクレミノ'] || []).join('\n'), /キボシカミキリ 熊毛諸島亜種/);
+
+  assert.equal((hostplantsJson['ウメ'] || []).includes('ヒメヒゲナガカミキリ 基亜種'), true);
+  assert.equal((hostplantsJson['ウメ'] || []).includes('ニセビロウドカミキリ 基亜種'), true);
+  assert.equal((hostplantsJson['ウメ'] || []).includes('ヒゲナガカミキリ'), false);
+  assert.equal((hostplantsJson['ウメ'] || []).includes('ビロウドカミキリ 基亜種'), false);
+  assert.match((hostplantsJson['キリ'] || []).join('\n'), /ムネマダラトラカミキリ 基亜種/);
+  assert.doesNotMatch((hostplantsJson['キリ'] || []).join('\n'), /イエカミキリ/);
+  assert.equal((hostplantsJson['ヤチダモ'] || []).includes('キスジトラカミキリ'), true);
+  assert.equal((hostplantsJson['ヤチダモ'] || []).includes('ナカジロサビカミキリ 基亜種'), false);
+  assert.equal((hostplantsJson['リュウキュウガキ'] || []).includes('コウノゴマフカミキリ 沖縄島亜種'), true);
+  assert.equal((hostplantsJson['リュウキュウガキ'] || []).includes('フタオビミドリトラカミキリ 御蔵島亜種'), false);
+  assert.equal((hostplantsJson['ホテイチク'] || []).includes('サビアヤカミキリ'), true);
+  assert.equal((hostplantsJson['ホテイチク'] || []).includes('タケトラカミキリ'), false);
 });
