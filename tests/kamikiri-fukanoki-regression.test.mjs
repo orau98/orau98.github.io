@@ -327,6 +327,37 @@ test('high-confidence OCR residual false positives stay removed', () => {
   }
 });
 
+test('OCR-garbled but source-supported residual rows stay present', () => {
+  const truePairs = [
+    ['species-21916', 'アオギリ'],
+    ['species-22222', 'アセビ'],
+    ['species-22169', 'イイギリ'],
+    ['species-23031', 'イケマ'],
+    ['species-21938', 'イスノキ'],
+    ['species-22004', 'イスノキ'],
+    ['species-22540', 'キブシ'],
+    ['species-22669', 'キブシ'],
+    ['species-21933', 'キリ'],
+    ['species-22739', 'クサギ'],
+    ['species-22241', 'クロキ'],
+    ['species-22313', 'サワフタギ'],
+    ['species-22664', 'シオジ'],
+    ['species-22025', 'タカノツメ'],
+    ['species-22283', 'ハイノキ類'],
+    ['species-22661', 'ハクウンボク'],
+    ['species-22980', 'ハリギリ'],
+    ['species-22755', 'ミズキ'],
+    ['species-22540', 'ムラサキシキブ'],
+    ['species-21916', 'ヤツデ'],
+    ['species-21990', 'リュウキュウガキ'],
+    ['species-23048', 'レチンギク'],
+  ];
+
+  for (const [insectId, plantName] of truePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), true, `${insectId} should remain linked to ${plantName}`);
+  }
+});
+
 test('public source data reflects representative broad kamikiri corrections', () => {
   const hostplantsJson = hostPlantNameMap;
 
