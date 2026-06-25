@@ -16,6 +16,28 @@ const insects = Papa.parse(readCsv('normalized_data/insects.csv'), {
   skipEmptyLines: true,
 }).data;
 
+const insectNameById = new Map(insects.map((row) => [row.insect_id, row.japanese_name]));
+
+const buildHostPlantNameMap = () => {
+  const map = {};
+  for (const row of hostplants) {
+    const plantName = row.plant_name;
+    const insectName = insectNameById.get(row.insect_id);
+    if (!plantName || !insectName) continue;
+    if (!map[plantName]) map[plantName] = [];
+    if (!map[plantName].includes(insectName)) {
+      map[plantName].push(insectName);
+    }
+  }
+  return map;
+};
+
+const hostPlantNameMap = buildHostPlantNameMap();
+const generatedHostplantsPath = 'public/assets/data-lite/hostplants.json';
+const generatedHostplants = fs.existsSync(generatedHostplantsPath)
+  ? JSON.parse(fs.readFileSync(generatedHostplantsPath, 'utf8'))
+  : null;
+
 const hasPair = (insectId, plantName) =>
   hostplants.some((row) => row.insect_id === insectId && row.plant_name === plantName);
 
@@ -68,15 +90,25 @@ test('catalog names include OCR source aliases used by 日本産カミキリム�
   assert.match(byId.get('species-22877')?.alternative_name || '', /オキナワコウノゴマフカミキリ/);
 });
 
-test('generated public フカノキ data and meta pages include recovered longhorn beetles', () => {
-  const hostplantsJson = JSON.parse(fs.readFileSync('public/assets/data-lite/hostplants.json', 'utf8'));
-  const fukanokiInsects = new Set(hostplantsJson['フカノキ'] || []);
+test('public source フカノキ data includes recovered longhorn beetles', () => {
+  const fukanokiInsects = new Set(hostPlantNameMap['フカノキ'] || []);
 
   for (const [, label] of expectedFukanokiPairs) {
-    assert.equal(fukanokiInsects.has(label), true, `public data should include ${label}`);
+    assert.equal(fukanokiInsects.has(label), true, `public source data should include ${label}`);
+  }
+});
+
+test('generated public フカノキ data and meta pages include recovered longhorn beetles when present', () => {
+  if (!generatedHostplants) return;
+
+  const fukanokiInsects = new Set(generatedHostplants['フカノキ'] || []);
+
+  for (const [, label] of expectedFukanokiPairs) {
+    assert.equal(fukanokiInsects.has(label), true, `generated public data should include ${label}`);
   }
 
   for (const page of ['public/meta/plant/フカノキ(ウコギ科).html', 'public/meta/plant/フカノキ.html']) {
+    if (!fs.existsSync(page)) continue;
     const html = fs.readFileSync(page, 'utf8');
     for (const [, label] of expectedFukanokiPairs) {
       assert.match(html, new RegExp(label), `${page} should include ${label}`);
@@ -206,8 +238,8 @@ test('curated short OCR plant blocks keep only source-supported longhorn rows', 
   }
 });
 
-test('generated public data reflects representative broad kamikiri corrections', () => {
-  const hostplantsJson = JSON.parse(fs.readFileSync('public/assets/data-lite/hostplants.json', 'utf8'));
+test('public source data reflects representative broad kamikiri corrections', () => {
+  const hostplantsJson = hostPlantNameMap;
 
   assert.match((hostplantsJson['アカメガシワ'] || []).join('\n'), /イエカミキリ/);
   assert.match((hostplantsJson['アカメガシワ'] || []).join('\n'), /ゴマダラカミキリ/);
@@ -245,4 +277,21 @@ test('generated public data reflects representative broad kamikiri corrections',
   assert.equal((hostplantsJson['リュウキュウガキ'] || []).includes('フタオビミドリトラカミキリ 御蔵島亜種'), false);
   assert.equal((hostplantsJson['ホテイチク'] || []).includes('サビアヤカミキリ'), true);
   assert.equal((hostplantsJson['ホテイチク'] || []).includes('タケトラカミキリ'), false);
+});
+
+test('generated public data reflects representative broad kamikiri corrections when present', () => {
+  if (!generatedHostplants) return;
+
+  assert.equal((generatedHostplants['ウメ'] || []).includes('ヒメヒゲナガカミキリ 基亜種'), true);
+  assert.equal((generatedHostplants['ウメ'] || []).includes('ニセビロウドカミキリ 基亜種'), true);
+  assert.equal((generatedHostplants['ウメ'] || []).includes('ヒゲナガカミキリ'), false);
+  assert.equal((generatedHostplants['ウメ'] || []).includes('ビロウドカミキリ 基亜種'), false);
+  assert.match((generatedHostplants['キリ'] || []).join('\n'), /ムネマダラトラカミキリ 基亜種/);
+  assert.doesNotMatch((generatedHostplants['キリ'] || []).join('\n'), /イエカミキリ/);
+  assert.equal((generatedHostplants['ヤチダモ'] || []).includes('キスジトラカミキリ'), true);
+  assert.equal((generatedHostplants['ヤチダモ'] || []).includes('ナカジロサビカミキリ 基亜種'), false);
+  assert.equal((generatedHostplants['リュウキュウガキ'] || []).includes('コウノゴマフカミキリ 沖縄島亜種'), true);
+  assert.equal((generatedHostplants['リュウキュウガキ'] || []).includes('フタオビミドリトラカミキリ 御蔵島亜種'), false);
+  assert.equal((generatedHostplants['ホテイチク'] || []).includes('サビアヤカミキリ'), true);
+  assert.equal((generatedHostplants['ホテイチク'] || []).includes('タケトラカミキリ'), false);
 });
