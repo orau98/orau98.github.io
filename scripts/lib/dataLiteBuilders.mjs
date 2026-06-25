@@ -101,6 +101,27 @@ const profileConflictsWithYlistAlias = (profile, canonical, ylistPlants) => {
   return Boolean(profileGenus && ylistGenus && profileGenus !== ylistGenus);
 };
 
+const familyConflictsWithYlistAlias = (family, canonical, ylistPlants) => {
+  const sourceFamily = cleanString(family);
+  if (!sourceFamily || !canonical) return false;
+  const canonicalFamily = cleanString(ylistPlants?.[canonical]?.familyJp);
+  return Boolean(canonicalFamily && canonicalFamily !== sourceFamily);
+};
+
+const resolvePlantCanonical = (rawName, family, aliasToCanonical, ylistPlants) => {
+  const normalized = normalizePlantNameLite(rawName) || rawName;
+  const aliasCanonical =
+    aliasToCanonical[normalized] ||
+    aliasToCanonical[rawName] ||
+    '';
+  const preserveLocalTaxonomy = familyConflictsWithYlistAlias(family, aliasCanonical, ylistPlants);
+  return {
+    normalized,
+    canonical: preserveLocalTaxonomy ? normalized : (aliasCanonical || normalized),
+    preserveLocalTaxonomy,
+  };
+};
+
 const profileGenusJpSupported = (profile, yDetail) => {
   const genusJp = cleanString(profile?.genusJp);
   if (!genusJp) return true;
@@ -125,6 +146,7 @@ const isBetterPlantProfile = (candidate, current) => {
 export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
   const flowerVisitPlants = {};
   const aliasToCanonical = { ...(ylistLite.aliasToCanonical || {}) };
+  const ylistPlants = ylistLite.plants || {};
 
   allInsects.forEach((insect) => {
     const insectName = cleanString(insect?.name || insect?.japaneseName);
@@ -135,11 +157,12 @@ export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
       if (!isFlowerVisitRecord(record)) return;
       const rawName = cleanString(record?.displayName || record?.name || record?.plant);
       if (!rawName || isSuspiciousPlantName(rawName)) return;
-      const normalized = normalizePlantNameLite(rawName) || rawName;
-      const canonical =
-        aliasToCanonical[normalized] ||
-        aliasToCanonical[rawName] ||
-        normalized;
+      const { canonical } = resolvePlantCanonical(
+        rawName,
+        record?.family,
+        aliasToCanonical,
+        ylistPlants,
+      );
       if (!canonical || canonical === '不明') return;
       if (!flowerVisitPlants[canonical]) {
         flowerVisitPlants[canonical] = [];
@@ -208,6 +231,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
         profile: null,
         profileHasFacts: false,
         preserveProfileTaxonomy: false,
+        preserveAliasTaxonomy: false,
         aliases: new Set(),
       };
     }
@@ -233,22 +257,26 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
       const rawName = cleanString(hostPlant?.name);
       if (!isPlantHostRecord(hostPlant) || isNonPlantResourceName(rawName)) return;
       if (!rawName || isSuspiciousPlantName(rawName)) return;
-      const normalized = normalizePlantNameLite(rawName) || rawName;
-      const canonical =
-        aliasToCanonical[normalized] ||
-        aliasToCanonical[rawName] ||
-        normalized;
+      const { normalized, canonical, preserveLocalTaxonomy } = resolvePlantCanonical(
+        rawName,
+        hostPlant?.family,
+        aliasToCanonical,
+        ylistPlants,
+      );
       const detail = ensureDetail(canonical);
+      if (preserveLocalTaxonomy) {
+        detail.preserveAliasTaxonomy = true;
+      }
       if (hostPlant.family && hostPlant.family !== '不明') {
         detail.family = detail.family && detail.family !== '不明' ? detail.family : hostPlant.family;
         detail.familyName = detail.familyName || hostPlant.family;
       }
       detail.aliases.add(rawName);
-      if (canonical !== normalized) {
+      if (!preserveLocalTaxonomy && canonical !== normalized) {
         detail.aliases.add(normalized);
         if (!aliasToCanonical[normalized]) aliasToCanonical[normalized] = canonical;
       }
-      if (rawName !== canonical && !aliasToCanonical[rawName]) {
+      if (!preserveLocalTaxonomy && rawName !== canonical && !aliasToCanonical[rawName]) {
         aliasToCanonical[rawName] = canonical;
       }
       if (!isFlowerVisitRecord(hostPlant)) {
@@ -303,8 +331,9 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
   });
 
   Object.entries(plantDetailsRaw).forEach(([name, detail]) => {
-    const canonical = detail.preserveProfileTaxonomy ? name : (aliasToCanonical[name] || name);
-    const yDetail = detail.preserveProfileTaxonomy
+    const preserveLocalTaxonomy = detail.preserveProfileTaxonomy || detail.preserveAliasTaxonomy;
+    const canonical = preserveLocalTaxonomy ? name : (aliasToCanonical[name] || name);
+    const yDetail = preserveLocalTaxonomy
       ? ylistPlants[name]
       : (ylistPlants[canonical] || ylistPlants[name]);
     if (yDetail) {
@@ -326,7 +355,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
       });
     }
     detail.aliases.add(name);
-    if (!detail.preserveProfileTaxonomy && !aliasToCanonical[name]) aliasToCanonical[name] = canonical;
+    if (!preserveLocalTaxonomy && !aliasToCanonical[name]) aliasToCanonical[name] = canonical;
   });
 
   const plantDetails = {};

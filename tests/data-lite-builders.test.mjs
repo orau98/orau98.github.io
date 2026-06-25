@@ -50,6 +50,42 @@ test('buildHostPlantDataset canonicalizes aliases and excludes flower visits fro
   assert.ok(plantDetails.ヤナギ.aliases.includes('ヤナギ類'));
 });
 
+test('buildHostPlantDataset keeps host records separate from YList aliases when families conflict', () => {
+  const ylistLite = {
+    aliasToCanonical: {
+      タカノツメ: 'オノマンネングサ',
+    },
+    plants: {
+      オノマンネングサ: {
+        familyJp: 'ベンケイソウ科',
+        familyEn: 'Crassulaceae',
+        orderJp: 'ユキノシタ目',
+        orderEn: 'Saxifragales',
+        scientificName: 'Sedum lineare',
+        aliases: ['タカノツメ'],
+      },
+    },
+  };
+
+  const insects = [
+    {
+      name: 'ホソトラカミキリ',
+      hostPlantsDetailed: [
+        { name: 'タカノツメ', family: 'ウコギ科', lifeStage: '幼虫', plantPart: '葉' },
+      ],
+    },
+  ];
+
+  const { hostPlantsMap, plantDetails } = buildHostPlantDataset(insects, ylistLite);
+
+  assert.deepEqual(hostPlantsMap, {
+    タカノツメ: ['ホソトラカミキリ'],
+  });
+  assert.equal(hostPlantsMap.オノマンネングサ, undefined);
+  assert.equal(plantDetails.タカノツメ.family, 'ウコギ科');
+  assert.equal(plantDetails.タカノツメ.scientificName, '');
+});
+
 test('buildFlowerVisitPlantDataset canonicalizes aliases and sorts insect names', () => {
   const insects = [
     {
