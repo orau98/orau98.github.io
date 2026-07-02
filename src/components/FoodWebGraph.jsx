@@ -219,10 +219,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!el || typeof ResizeObserver === 'undefined') return undefined;
     const updateSize = (containerWidth, containerHeight) => {
       if (containerWidth <= 0) return;
+      // モバイルも実測の高さでキャンバスを埋める。
+      // 以前は400px固定で、外側の固定高ラッパー(560px)との差分が
+      // 空白になり、グラフ下部が途切れて見えていた
       const next = {
         width: Math.max(1, Math.floor(containerWidth)),
         height: isCompactPanel
-          ? 400
+          ? Math.max(250, Math.floor(containerHeight || height))
           : Math.max(320, Math.floor(containerHeight || height))
       };
       setGraphSize((prev) => (
@@ -1692,11 +1695,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return Math.min(260, Math.max(188, Math.round(graphSize.height * 0.4)));
   }, [graphSize.height, isCompactPanel, panelCollapsed, selectedNode]);
 
-  const graphViewportHeight = useMemo(() => {
-    if (!isCompactPanel || !selectedNode) return graphSize.height;
-    return Math.max(250, graphSize.height - compactSelectionHeight);
-  }, [compactSelectionHeight, graphSize.height, isCompactPanel, selectedNode]);
-
   const statsChips = useMemo(() => {
     const chips = [];
     if (viewStats.primaryTotal > 0) {
@@ -2413,8 +2411,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       <div className="min-h-0 flex-1 flex flex-col">
         <div
           ref={containerRef}
-          className={`food-web-graph-touch relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[500px] lg:min-h-[640px] flex-1'}`}
-          style={isCompactPanel ? { height: graphViewportHeight, cursor: graphCursor } : { cursor: graphCursor }}
+          className={`food-web-graph-touch relative min-w-0 flex-1 ${isCompactPanel ? 'min-h-0' : 'min-h-[500px] lg:min-h-[640px]'}`}
+          style={{ cursor: graphCursor }}
           role="region"
           aria-label={graphAriaLabel}
           onWheelCapture={handleGraphWheelCapture}
@@ -2434,7 +2432,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           <ForceGraph2D
             ref={fgRef}
             width={graphSize.width}
-            height={isCompactPanel ? graphViewportHeight : graphSize.height}
+            height={graphSize.height}
             graphData={graphData}
             nodeLabel="name"
             nodeCanvasObject={nodeCanvasObject}
@@ -2570,20 +2568,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     </button>
                   </div>
 
-                  <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {statsChips.map((label) => (
-                        <span
-                          key={label}
-                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
-                        >
-                          {label}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 常時表示の凡例（モバイル） */}
+                  {/* 常時表示の凡例（モバイル）。ノード数などの統計は
+                      情報過多になるため「表示」ドロワー内に移動した */}
                   <div className="mt-2 border-t border-slate-200/70 pt-2 dark:border-slate-700/70">
                     {legendStrip}
                   </div>
@@ -2620,6 +2606,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   >
                     ✕
                   </button>
+                </div>
+
+                {/* 表示中のノード・関係の統計（折りたたみカードから移動） */}
+                <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                  {statsChips.map((label) => (
+                    <span
+                      key={label}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+                    >
+                      {label}
+                    </span>
+                  ))}
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
