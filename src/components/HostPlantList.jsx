@@ -34,6 +34,8 @@ import ImageWithFallback from "./ImageWithFallback";
 import SearchableSelect from "./SearchableSelect";
 import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
 import ManualAdSlot from "./ManualAdSlot";
+import { Card } from "./ui";
+import { buildMoreLabel } from "../utils/hostVisitStyle";
 
 const PER_PAGE_OPTIONS = [20, 50, 100];
 
@@ -130,7 +132,7 @@ const HostPlantListItem = React.memo(
 
     if (viewMode === "compact") {
       return (
-        <article className="group list-none rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:border-emerald-400/60 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-800">
+        <Card as="article" interactive className="group list-none overflow-hidden hover:border-emerald-400/60 dark:hover:border-emerald-500/60">
           <Link
             to={buildPlantPath(plant, locale)}
             state={makeDetailLinkState(location, { setFromList: true })}
@@ -161,7 +163,7 @@ const HostPlantListItem = React.memo(
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="line-clamp-1 text-base font-bold text-emerald-800 dark:text-emerald-100">
+                  <h3 className="line-clamp-1 text-base font-bold text-emerald-800 dark:text-emerald-200">
                     {isEnglish && detail.scientificName ? formatScientificNameReact(primaryName) : primaryName}
                   </h3>
                   {secondaryName && (
@@ -176,12 +178,12 @@ const HostPlantListItem = React.memo(
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {hasLarvalHost && (
-                  <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-300">
+                  <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
                     {isEnglish ? "Host plant" : "食草"}
                   </span>
                 )}
                 {hasFlowerVisit && (
-                  <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">
+                  <span className="rounded bg-rose-100 px-1.5 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
                     {isEnglish ? "Flower visit" : "訪花"}
                   </span>
                 )}
@@ -191,11 +193,11 @@ const HostPlantListItem = React.memo(
               </div>
               <p className="mt-2 line-clamp-1 text-sm text-slate-600 dark:text-slate-300">
                 {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
-                {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
+                {extraCount > 0 && `${isEnglish ? ' ' : '…'}${buildMoreLabel(extraCount, isEnglish)}`}
               </p>
             </div>
           </Link>
-        </article>
+        </Card>
       );
     }
 
@@ -347,7 +349,7 @@ const HostPlantListItem = React.memo(
                 {(hasLarvalHost || hasFlowerVisit) && (
                   <div className="flex flex-wrap gap-1 mt-1.5">
                     {hasLarvalHost && (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-green-200/60 dark:border-green-700/50">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-700/50">
                         <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                           <path d="M8 1C5.5 1 3.5 3 3.5 5.5c0 1.2.4 2.3 1.1 3.1L3 12h10l-1.6-3.4c.7-.8 1.1-1.9 1.1-3.1C12.5 3 10.5 1 8 1zm0 1.5c1.7 0 3 1.3 3 3S9.7 8.5 8 8.5 5 7.2 5 5.5s1.3-3 3-3z"/>
                         </svg>
@@ -355,7 +357,7 @@ const HostPlantListItem = React.memo(
                       </span>
                     )}
                     {hasFlowerVisit && (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border border-yellow-200/60 dark:border-yellow-700/50">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 border border-rose-200/60 dark:border-rose-700/50">
                         <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                           <path d="M8 2a1 1 0 0 1 .894.553l1.382 2.764 3.09.447a1 1 0 0 1 .553 1.706L11.5 9.763l.528 3.078a1 1 0 0 1-1.45 1.054L8 12.347l-2.578 1.548a1 1 0 0 1-1.45-1.054l.528-3.078-2.419-2.293a1 1 0 0 1 .553-1.706l3.09-.447L7.106 2.553A1 1 0 0 1 8 2z"/>
                         </svg>
@@ -377,7 +379,7 @@ const HostPlantListItem = React.memo(
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug sm:line-clamp-3">
                     {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
-                    {extraCount > 0 && (isEnglish ? ` and ${extraCount} more` : `...他${extraCount}種`)}
+                    {extraCount > 0 && `${isEnglish ? ' ' : '…'}${buildMoreLabel(extraCount, isEnglish)}`}
                   </span>
                 </div>
               </div>
@@ -429,6 +431,11 @@ const HostPlantList = ({
       resultCount: (value) => (isEnglish ? `${value} results` : `${value} 件が見つかりました`),
       listTitle: isEnglish ? 'Plant list' : '植物リスト',
       emptyTitle: isEnglish ? 'No matching plants found' : '結果が見つかりませんでした',
+      tryAnother: isEnglish ? 'Try another keyword or family.' : '別のキーワードや科名でお試しください。',
+      examples: isEnglish ? 'Examples:' : '例えば:',
+      exampleSearches: isEnglish
+        ? ['Quercus', 'Rosaceae', 'Salix', 'Fabaceae']
+        : ['サクラ', 'クヌギ', 'バラ科', 'ススキ'],
       activeFilters: isEnglish ? 'Current filters:' : '現在の条件:',
       searchOnlyClear: isEnglish ? 'Clear search only' : '検索のみクリア',
       clearSearch: isEnglish ? 'Clear search' : '検索をクリア',
@@ -735,6 +742,17 @@ const HostPlantList = ({
       p.delete('phost');
       p.delete('pphoto');
       p.delete('q');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  // 空状態の例示チップ。q を URL に載せると親（explorer）が activeSearchTerm を
+  // 同期し直し、initialSearchTerm 経由で本コンポーネントに戻ってくる。
+  const applyExampleSearch = useCallback((value) => {
+    const nextValue = String(value || '').trim();
+    if (!nextValue) return;
+    updateSearchParams((p) => {
+      p.set('q', nextValue);
       p.delete('ppage');
     });
   }, [updateSearchParams]);
@@ -1530,16 +1548,41 @@ const HostPlantList = ({
               })}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-slate-500 dark:text-slate-400 font-medium">
-                {ui.emptyTitle}
-              </p>
-              <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{emptyStateHint}</p>
+            <div className="text-center py-16">
+              {/* Empty state イラスト（昆虫一覧と対称） */}
+              <div className="w-24 h-24 mx-auto mb-6 relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 rounded-full animate-pulse" />
+                <div className="absolute inset-2 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-lg text-slate-600 dark:text-slate-300 font-semibold mb-2">{ui.emptyTitle}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">{emptyStateHint}</p>
               {hasAnyCriteria && (
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+                <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
                   {ui.activeFilters} {activeFilterSummary}
                 </p>
               )}
+              {!hasAnyCriteria && (
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{ui.tryAnother}</p>
+              )}
+              <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
+                <span className="w-full text-xs text-slate-400 dark:text-slate-500 sm:w-auto">
+                  {ui.examples}
+                </span>
+                {ui.exampleSearches.map((example) => (
+                  <button
+                    key={example}
+                    type="button"
+                    onClick={() => applyExampleSearch(example)}
+                    className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200 dark:hover:bg-emerald-900/50"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
               {hasAnyCriteria && (
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                   <button

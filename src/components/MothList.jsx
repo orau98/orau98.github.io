@@ -39,6 +39,7 @@ import { INSECT_SECTION_CONFIGS } from '../utils/siteTaxonomy';
 import { isEnglishLocale, localizePath } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
 import { isPlantHostRecord } from '../utils/hostResource';
+import { buildMoreLabel } from '../utils/hostVisitStyle';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
@@ -289,7 +290,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const extraHostCount = Math.max(0, localizedPlantDisplay.hostNames.length - visibleHostNames.length);
   const extraFlowerCount = Math.max(0, localizedPlantDisplay.flowerNames.length - visibleFlowerNames.length);
   const moreLabel = useCallback(
-    (value) => (isEnglish ? ` and ${value} more` : `...他${value}`),
+    (value) => `${isEnglish ? ' ' : '…'}${buildMoreLabel(value, isEnglish)}`,
     [isEnglish],
   );
 
@@ -492,9 +493,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                         {localizedPlantDisplay.hostNames.length > CARD_PLANT_PREVIEW_CAP && (
                           <span className="text-slate-500 dark:text-slate-400">
-                            {isEnglish
-                              ? ` +${localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP} more`
-                              : ` 他${localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP}種`}
+                            {' '}{buildMoreLabel(localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP, isEnglish)}
                           </span>
                         )}
                       </span>
@@ -515,9 +514,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                         {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                         {localizedPlantDisplay.flowerNames.length > CARD_PLANT_PREVIEW_CAP && (
                           <span className="text-slate-500 dark:text-slate-400">
-                            {isEnglish
-                              ? ` +${localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP} more`
-                              : ` 他${localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP}種`}
+                            {' '}{buildMoreLabel(localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP, isEnglish)}
                           </span>
                         )}
                       </span>
