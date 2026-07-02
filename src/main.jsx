@@ -170,8 +170,21 @@ if (typeof document !== 'undefined') {
   );
 }
 
-// Note: SPA deep-link redirect is handled by 404.html -> index.html
-// and restoration logic in index.html. No additional handler here.
+// オフライン再訪向けのService Worker登録（本番のみ）。
+// network-first戦略なのでオンライン時の鮮度には影響しない。
+if (
+  import.meta.env.PROD &&
+  typeof window !== 'undefined' &&
+  'serviceWorker' in navigator
+) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`)
+      .catch((error) => {
+        logger.debug('Service Worker registration skipped:', error);
+      });
+  });
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename={import.meta.env.BASE_URL}>

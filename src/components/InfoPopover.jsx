@@ -21,6 +21,9 @@ const InfoPopover = ({
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
   const panelRef = useRef(null);
+  const buttonRef = useRef(null);
+  // クリックで開いた場合のみパネルへフォーカスを移す（hoverでは移さない）
+  const shouldFocusPanelRef = useRef(false);
   const closeTimerRef = useRef(null);
   const [panelStyle, setPanelStyle] = useState(null);
   const panelId = useId();
@@ -55,13 +58,21 @@ const InfoPopover = ({
     if (!open) return undefined;
 
     const handlePointerDown = (event) => {
-      if (!wrapperRef.current?.contains(event.target)) {
+      // パネルはportalでbody直下にあるため、パネル内クリックも「内側」として扱う
+      if (
+        !wrapperRef.current?.contains(event.target) &&
+        !panelRef.current?.contains(event.target)
+      ) {
         setOpen(false);
       }
     };
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
+        // パネル内にフォーカスがある状態で閉じたら、開いたボタンへ戻す
+        if (panelRef.current?.contains(document.activeElement)) {
+          buttonRef.current?.focus();
+        }
         setOpen(false);
       }
     };
@@ -78,6 +89,14 @@ const InfoPopover = ({
   }, [open]);
 
   useEffect(() => () => clearCloseTimer(), []);
+
+  // クリック起点で開いたときはパネルにフォーカスを移し、SR/キーボードで読み進められるようにする
+  useEffect(() => {
+    if (open && shouldFocusPanelRef.current) {
+      shouldFocusPanelRef.current = false;
+      panelRef.current?.focus();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open || typeof window === 'undefined') return undefined;
@@ -136,12 +155,17 @@ const InfoPopover = ({
       onMouseLeave={scheduleClose}
       onFocusCapture={openPopover}
       onBlurCapture={(event) => {
-        if (!wrapperRef.current?.contains(event.relatedTarget)) {
+        // portal先のパネルへフォーカスが移った場合は「外に出た」とみなさない
+        if (
+          !wrapperRef.current?.contains(event.relatedTarget) &&
+          !panelRef.current?.contains(event.relatedTarget)
+        ) {
           closePopover();
         }
       }}
     >
       <button
+        ref={buttonRef}
         type="button"
         className={buttonClassName || 'relative inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition before:absolute before:-inset-2 before:content-[""] hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100 dark:hover:bg-slate-800'}
         aria-label={buttonAriaLabel}
@@ -149,7 +173,11 @@ const InfoPopover = ({
         aria-controls={panelId}
         onClick={() => {
           clearCloseTimer();
-          setOpen((prev) => !prev);
+          setOpen((prev) => {
+            const next = !prev;
+            if (next) shouldFocusPanelRef.current = true;
+            return next;
+          });
         }}
       >
         {buttonContent}
@@ -160,7 +188,8 @@ const InfoPopover = ({
           id={panelId}
           ref={panelRef}
           role="dialog"
-          className={`pointer-events-auto fixed z-[120] w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-slate-200/95 bg-white p-3 text-left text-slate-700 shadow-[0_24px_80px_-28px_rgba(15,23,42,0.55)] ring-1 ring-black/5 backdrop-blur-sm dark:border-slate-700/95 dark:bg-slate-950 dark:text-slate-100 dark:ring-white/10 ${panelClassName}`}
+          tabIndex={-1}
+          className={`pointer-events-auto fixed z-[120] w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-slate-200/95 bg-white p-3 text-left text-slate-700 shadow-[0_24px_80px_-28px_rgba(15,23,42,0.55)] ring-1 ring-black/5 backdrop-blur-sm outline-none dark:border-slate-700/95 dark:bg-slate-950 dark:text-slate-100 dark:ring-white/10 ${panelClassName}`}
           style={panelStyle || undefined}
           onMouseEnter={openPopover}
           onMouseLeave={scheduleClose}

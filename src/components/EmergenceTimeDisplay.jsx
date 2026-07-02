@@ -136,6 +136,12 @@ const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorM
 };
 
 // 成虫発生時期を解析する関数（旬単位対応）
+// 一覧カード側が「バーを描けるだけの月データがあるか」を事前判定できるよう公開する
+export const hasEmergencePeriods = (emergenceTime, supplementalTexts = []) => {
+  const parsed = parseEmergenceTime(emergenceTime, supplementalTexts);
+  return (parsed.periods?.length || 0) > 0 || (parsed.fuzzyPeriods?.length || 0) > 0;
+};
+
 const parseEmergenceTime = (emergenceTime, supplementalTexts = []) => {
   if ((!emergenceTime || emergenceTime === '不明') && (!supplementalTexts || supplementalTexts.length === 0)) {
     return { months: [], periods: [], fuzzyMonths: [], fuzzyPeriods: [] };
@@ -746,6 +752,11 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
   }
   
   if (compact) {
+    // 月データを1つも導出できない場合は空のバーを出さない
+    // （一覧カードで「壊れた真っ白のバー」に見えてしまうため）
+    if (activePeriods.length === 0 && fuzzyPeriods.length === 0) {
+      return null;
+    }
     // コンパクト表示：スマートで洗練されたタイムライン
     return (
       <div className="space-y-2">

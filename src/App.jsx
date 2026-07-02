@@ -107,6 +107,8 @@ function App() {
   const [flowerVisitPlants, setFlowerVisitPlants] = useState({});
   const [plantDetails, setPlantDetails] = useState({});
   const [loading, setLoading] = useState(true);
+  // 初回データ読み込みの実進捗（LoadingBarに渡す。0-100）
+  const [loadProgress, setLoadProgress] = useState(0);
   const [loadError, setLoadError] = useState(null);
   const [summaryCounts, setSummaryCounts] = useState(null);
   const typesFetchStartedRef = useRef(false);
@@ -398,6 +400,7 @@ function App() {
       });
       const applyLiteIndex = (lite) => {
         if (!lite || !Array.isArray(lite.moths) || !Array.isArray(lite.butterflies)) return false;
+        setLoadProgress(90);
         setMoths(lite.moths);
         setButterflies(lite.butterflies);
         setBeetles(lite.beetles || []);
@@ -444,6 +447,7 @@ function App() {
       };
       // Prefer split JSON in production and fall back to the combined index only if needed.
       try {
+        setLoadProgress(10);
         const manifestUrl = `${base}assets/data-lite/manifest.json${appVersionSuffix}`;
         // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
         const manifestRes = await fetchWithRetry(manifestUrl, { cache: cacheMode });
@@ -454,6 +458,7 @@ function App() {
         if (manifestRes?.ok) {
           manifest = await manifestRes.json();
           if (!shouldContinue()) return;
+          setLoadProgress(35);
           manifestVersion = manifest?.version || null;
           if (manifest?.counts && !cacheLoadedRef.current) {
             setSummaryCounts((prev) => prev || manifest.counts);
@@ -480,6 +485,7 @@ function App() {
             }),
           ]);
           if (!shouldContinue()) return;
+          setLoadProgress(65);
 
           if (hostRes?.ok) {
             const hostMap = await hostRes.json();
@@ -6504,7 +6510,7 @@ function App() {
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
       {/* グローバルローディングバー */}
-      <LoadingBar isLoading={loading} />
+      <LoadingBar isLoading={loading} progress={loadProgress} />
       <a
         href={skipToMainHref}
         onClick={handleSkipToMainContent}
