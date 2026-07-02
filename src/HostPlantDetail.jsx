@@ -1878,53 +1878,62 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           ]}
         />
       </div>
-      {/* Top row: back link + classification chips (unified with insect detail) */}
-      <div className="mb-6 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-center lg:justify-between">
-        <Link 
+      {/* Top row: back link + quiz link + classification chips（昆虫詳細と統一）。
+          モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ */}
+      <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
+        <Link
           to={getBackTarget(location, localizePath('/?tab=plants', locale))}
           state={makeDetailLinkState(location)}
-          className="ui-btn ui-btn-secondary text-sm shadow-sm hover:shadow-md"
+          className="ui-btn ui-btn-secondary whitespace-nowrap px-3 py-2 text-xs shadow-sm transition-transform hover:shadow-md active:scale-95 sm:text-sm"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="mr-1.5 h-4 w-4 sm:mr-2 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          {isEnglish ? 'Back to list' : '一覧に戻る'}
+          <span className="sm:hidden">{isEnglish ? 'Back' : '一覧へ'}</span>
+          <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
         </Link>
-        <div className="flex flex-wrap items-center gap-2">
-          {orderChip.label && orderChip.queryValue && (
-            <Link
-              to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
-              className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50`}
-              aria-label={isEnglish ? `Search plants in ${orderChip.label}` : `${orderChip.label} の植物を検索`}
-            >
-              <span className="font-medium">{orderChip.label}</span>
-              {orderChip.referenceLabel && (
-                <span className="ml-1 text-xs opacity-80">{orderChip.referenceLabel}</span>
-              )}
-            </Link>
-          )}
-          {familyChip.label && familyChip.queryValue && (
-            <Link
-              to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-              className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/50 bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50`}
-              aria-label={isEnglish ? `Search plants in ${familyChip.label}` : `${familyChip.label} の植物を検索`}
-            >
-              <span className="font-medium">{familyChip.label}</span>
-              {familyChip.referenceLabel && (
-                <span className="ml-1 text-xs opacity-80">{familyChip.referenceLabel}</span>
-              )}
-            </Link>
-          )}
-          {taxonomy.genus && (
-            <Link
-              to={localizePath(`/?tab=plants&q=${encodeURIComponent(taxonomy.genus)}`, locale)}
-              className="hidden items-center rounded-lg border border-slate-200/50 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 md:inline-flex"
-              aria-label={isEnglish ? `Search plants in genus ${taxonomy.genus}` : `${taxonomy.genus} の植物を検索`}
-            >
-              <span className="font-medium italic">{taxonomy.genus}</span>
-            </Link>
-          )}
-        </div>
+        {quizFocusHref && (
+          <Link
+            to={quizFocusHref}
+            className="inline-flex items-center whitespace-nowrap rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950 sm:text-sm"
+          >
+            <span className="sm:hidden">{isEnglish ? 'Review' : 'クイズ'}</span>
+            <span className="hidden sm:inline">{isEnglish ? 'Review in quiz' : 'この植物をクイズで復習'}</span>
+          </Link>
+        )}
+        {orderChip.label && orderChip.queryValue && (
+          <Link
+            to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
+            className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 sm:px-3 sm:text-sm`}
+            aria-label={isEnglish ? `Search plants in ${orderChip.label}` : `${orderChip.label} の植物を検索`}
+          >
+            <span className="font-medium">{orderChip.label}</span>
+            {orderChip.referenceLabel && (
+              <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{orderChip.referenceLabel}</span>
+            )}
+          </Link>
+        )}
+        {familyChip.label && familyChip.queryValue && (
+          <Link
+            to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyChip.queryValue)}`, locale)}
+            className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm`}
+            aria-label={isEnglish ? `Search plants in ${familyChip.label}` : `${familyChip.label} の植物を検索`}
+          >
+            <span className="font-medium">{familyChip.label}</span>
+            {familyChip.referenceLabel && (
+              <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{familyChip.referenceLabel}</span>
+            )}
+          </Link>
+        )}
+        {taxonomy.genus && (
+          <Link
+            to={localizePath(`/?tab=plants&q=${encodeURIComponent(taxonomy.genus)}`, locale)}
+            className="hidden items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm md:inline-flex"
+            aria-label={isEnglish ? `Search plants in genus ${taxonomy.genus}` : `${taxonomy.genus} の植物を検索`}
+          >
+            <span className="font-medium italic">{taxonomy.genus}</span>
+          </Link>
+        )}
       </div>
       <DetailSectionNav
         label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
@@ -1983,16 +1992,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {!isEnglish && taxonomy.scientificName && (
             <div className="mt-1 text-left text-slate-600 dark:text-slate-300 text-lg">
               {formatScientificNameReact(taxonomy.scientificName)}
-            </div>
-          )}
-          {quizFocusHref && (
-            <div className="mt-4">
-              <Link
-                to={quizFocusHref}
-                className="inline-flex items-center rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950"
-              >
-                {isEnglish ? 'Review linked insects in quiz' : 'この植物をクイズで復習'}
-              </Link>
             </div>
           )}
           </div>
