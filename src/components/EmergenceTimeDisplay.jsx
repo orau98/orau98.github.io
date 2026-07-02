@@ -785,7 +785,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                       key={periodNum}
                       className={`
                         flex-1 
-                        ${isActive ? `${month.color} opacity-60` : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
+                        ${isActive ? month.color : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
                         transition-all duration-200
                         ${dividerClass}
                       `}
@@ -844,7 +844,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                     key={periodNum}
                     className={`
                       flex-1
-                      ${isActive ? `${month.color} opacity-70` : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
+                      ${isActive ? month.color : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
                       transition-all duration-200
                       ${dividerClass}
                     `}
@@ -864,6 +864,20 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
               <span className="sm:hidden">{month.number}</span>
             </span>
           ))}
+        </div>
+
+        {/* 凡例（ツールチップはタッチ端末で見えないため常時表示する） */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-5 rounded-sm bg-orange-300" aria-hidden="true" />
+            {isEnglish ? 'Adult season' : '発生期'}
+          </span>
+          {fuzzyPeriods.length > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-3 w-5 rounded-sm bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-300/70" aria-hidden="true" />
+              {isEnglish ? 'Broad seasonal note (e.g. "spring")' : '幅のある記述（「春」など）'}
+            </span>
+          )}
         </div>
       </div>
       {/* 原文表示 - 食草セクションと同じ構造で色違い */}

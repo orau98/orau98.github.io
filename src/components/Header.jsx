@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/solid';
+import ThemeToggle from './ThemeToggle';
 import { slugifyInsectName, decodeSlug } from '../utils/insectSlug';
 import {
   isEnglishLocale,
@@ -227,20 +227,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
               <span className="hidden sm:inline">{isEnglish ? 'Quiz' : '4択図鑑'}</span>
             </Link>
             
-            <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="group relative inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 p-2.5 shadow-xl transition-all duration-300 hover:scale-110 hover:from-emerald-500/30 hover:to-blue-500/30 hover:shadow-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:border-emerald-400/20 dark:from-emerald-500/10 dark:to-blue-500/10 dark:hover:from-emerald-500/20 dark:hover:to-blue-500/20 sm:p-3"
-              aria-label={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
-            >
-              <div className="relative">
-                {theme === 'dark' ? (
-                  <SunIcon className="h-5 w-5 text-yellow-400 transition-all duration-300 group-hover:rotate-180 group-hover:text-yellow-300 sm:h-6 sm:w-6" />
-                ) : (
-                  <MoonIcon className="h-5 w-5 text-blue-400 transition-all duration-300 group-hover:-rotate-12 group-hover:text-blue-300 sm:h-6 sm:w-6" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/30 to-blue-400/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity blur-lg"></div>
-              </div>
-            </button>
+            <ThemeToggle theme={theme} setTheme={setTheme} locale={locale} variant="header" />
           </div>
         </div>
       </div>

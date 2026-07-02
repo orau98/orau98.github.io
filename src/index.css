@@ -271,6 +271,16 @@
   }
   
   /* コントラスト強化 */
+  /* ライトモード: slate-400/gray-400(白背景で約2.6:1)を500相当へ引き上げAA(4.5:1)を確保。
+     :root:not(.dark) でユーティリティより高い詳細度にする */
+  :root:not(.dark) .text-slate-400 {
+    color: rgb(100 116 139);
+  }
+
+  :root:not(.dark) .text-gray-400 {
+    color: rgb(107 114 128);
+  }
+
   .dark .text-slate-400 {
     color: rgb(203 213 225);
   }
@@ -563,10 +573,25 @@ img[loading="lazy"] {
   .animate-gradient-x,
   .animate-soft-pulse,
   .animate-float,
+  .animate-pulse,
+  .animate-spin,
+  .animate-bounce,
+  .animate-ping,
   .skeleton,
   img[loading="lazy"] {
     animation: none !important;
     transition: none !important;
+  }
+
+  /* Tailwindのtransition-*やhover時のscale/translateも含めて一括抑制する。
+     状態変化自体は瞬時に反映されるため機能は損なわない */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

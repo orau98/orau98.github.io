@@ -137,6 +137,9 @@ const FloatingActionButton = () => {
     <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 md:right-6 z-[70] flex flex-col items-end gap-3">
       {/* Menu Items */}
       <div
+        id="fab-menu"
+        inert={!isOpen ? true : undefined}
+        aria-hidden={!isOpen}
         className={`relative z-[70] flex flex-col gap-3 transition-all duration-300 origin-bottom ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
@@ -190,6 +193,8 @@ const FloatingActionButton = () => {
             : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
         }`}
         aria-label={isOpen ? (isEnglish ? 'Close contents' : '目次を閉じる') : (isEnglish ? 'Open contents' : '目次を開く')}
+        aria-expanded={isOpen}
+        aria-controls="fab-menu"
       >
         <svg
           className={`h-7 w-7 transition-transform duration-300 md:h-8 md:w-8 ${isOpen ? 'rotate-45' : ''}`}

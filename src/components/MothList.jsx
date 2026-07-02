@@ -1881,7 +1881,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       )}
       
       <div className="p-3 pt-1 sm:p-6">
-        <div ref={listTopRef} />
+        {/* ページ送り時のscrollIntoView先。スティッキーヘッダーに先頭行が隠れないようオフセットを確保 */}
+        <div ref={listTopRef} className="scroll-mt-24" />
         <div>
           {!isImageIndexReady && !imageIndexResolved ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">

@@ -166,6 +166,7 @@ export default function SearchableSelect({
                   id={`${listboxId}-${index}`}
                   role="option"
                   aria-selected={option === selectedLabel}
+                  tabIndex={-1}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => selectOption(option)}
                   className={`block w-full px-3 py-2 text-left text-sm transition ${

@@ -14,11 +14,12 @@ const SkeletonCard = () => (
 
 const SkeletonLoader = () => {
   return (
-    <div className="animate-pulse space-y-6">
+    <div className="animate-pulse space-y-6" role="status" aria-live="polite" aria-busy="true">
+      <span className="sr-only">読み込み中…</span>
       {/* ヒーロー相当のブロック */}
-      <div className="h-40 rounded-2xl bg-gradient-to-br from-slate-300/60 to-slate-200/60 dark:from-slate-800/80 dark:to-slate-900/80 sm:h-44 sm:rounded-3xl" />
+      <div aria-hidden="true" className="h-40 rounded-2xl bg-gradient-to-br from-slate-300/60 to-slate-200/60 dark:from-slate-800/80 dark:to-slate-900/80 sm:h-44 sm:rounded-3xl" />
       {/* 種一覧カードグリッド相当 */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+      <div aria-hidden="true" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}

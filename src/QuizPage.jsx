@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowPathIcon,
   ArrowRightIcon,
@@ -567,6 +567,13 @@ const QuizPage = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [selectedOptionId, setSelectedOptionId] = useState('');
+  // 回答すると選択肢がdisabledになりフォーカスがbodyへ落ちるため、「次へ」ボタンへ移す
+  const nextButtonRef = useRef(null);
+  useEffect(() => {
+    if (selectedOptionId && nextButtonRef.current) {
+      nextButtonRef.current.focus({ preventScroll: true });
+    }
+  }, [selectedOptionId]);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [startStage, setStartStage] = useState('');
@@ -1132,6 +1139,7 @@ const QuizPage = ({
                   </div>
                   <button
                     type="button"
+                    ref={nextButtonRef}
                     onClick={nextQuestion}
                     className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
                   >

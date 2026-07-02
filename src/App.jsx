@@ -229,6 +229,8 @@ function App() {
       } else {
         document.documentElement.classList.remove('dark');
       }
+      // index.html のFOUC防止スクリプトが設定したインラインcolor-schemeを追従させる
+      document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
       localStorage.setItem('theme', theme);
     } catch (error) {
       logger.debug('Theme change error (harmless):', error);
