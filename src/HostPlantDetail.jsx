@@ -839,7 +839,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       .filter((value, index, values) => value && values.indexOf(value) === index)
       .join(' / ');
     const rows = [
-      ['family', details?.family || details?.familyName],
+      // 見出しチップ（familyLabel）と科名の参照元を揃え、解説とチップで食い違わないようにする
+      ['family', familyLabel],
       ['genus', genusValue],
       ['habit', plantProfile.habit],
       ['height', plantProfile.height],
@@ -851,7 +852,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       .filter((row) => row.value);
     // 出典は facts グリッドに混ぜず、プロフィール末尾の SourceCitation に集約（サイト共通の控えめ表記）
     return rows;
-  }, [plantProfile, details, isEnglish]);
+  }, [plantProfile, details, isEnglish, familyLabel]);
 
   const classificationGroups = useMemo(() => {
     if (!isOrder || !Array.isArray(classificationMembers) || classificationMembers.length === 0) return [];
@@ -881,7 +882,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const plantProfileSummary = useMemo(() => buildPlantProfileSummary({
     name: primaryPlantName,
     profile: plantProfile,
-    family: details?.family || details?.familyName,
+    family: familyLabel,
     genus: details?.genus || taxonomy.genus,
     scientificName: details?.scientificName || taxonomy.scientificName,
     isEnglish,
@@ -892,6 +893,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     taxonomy.genus,
     taxonomy.scientificName,
     isEnglish,
+    familyLabel,
   ]);
   const japaneseReference = isEnglish ? buildJapaneseReferenceLabel(decodedPlantName) : '';
   const pageTitle = isFamily
