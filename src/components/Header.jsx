@@ -122,8 +122,18 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
           <Link to={homePath} className="group flex min-w-0 flex-1 items-center gap-2.5 transition-transform duration-200 sm:gap-3 sm:hover:scale-105">
             <div className="relative">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-emerald-500/50 sm:h-12 sm:w-12">
-                <svg className="h-6 w-6 text-white drop-shadow-lg sm:h-7 sm:w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                {/* サイトアイコンと同じ「かじられた葉」。食痕と主脈はマスクで透過させ、タイルのグラデーションを透かす */}
+                <svg className="h-6 w-6 text-white drop-shadow-lg sm:h-7 sm:w-7" viewBox="0 0 64 64" aria-hidden="true">
+                  <defs>
+                    <mask id="logo-leaf-bite">
+                      <rect width="64" height="64" fill="#fff" />
+                      <circle cx="49" cy="31" r="7.5" fill="#000" />
+                      <circle cx="23" cy="16" r="6" fill="#000" />
+                      <circle cx="27" cy="53" r="4.5" fill="#000" />
+                      <path d="M45 19 C37 27 27 37 19 45" fill="none" stroke="#000" strokeWidth="3" strokeLinecap="round" />
+                    </mask>
+                  </defs>
+                  <path d="M53 11 C54 33 34 54 11 53 C10 31 31 10 53 11 Z" fill="currentColor" mask="url(#logo-leaf-bite)" />
                 </svg>
               </div>
             </div>

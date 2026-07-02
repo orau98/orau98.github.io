@@ -1610,7 +1610,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
     <div class="meta-site-header-inner">
       <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="49" cy="31" r="7.5" fill="#000"/><circle cx="23" cy="16" r="6" fill="#000"/><circle cx="27" cy="53" r="4.5" fill="#000"/><path d="M45 19 C37 27 27 37 19 45" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/></mask></defs><path d="M53 11 C54 33 34 54 11 53 C10 31 31 10 53 11 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
@@ -1986,7 +1986,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     <div class="meta-site-header-inner">
       <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="49" cy="31" r="7.5" fill="#000"/><circle cx="23" cy="16" r="6" fill="#000"/><circle cx="27" cy="53" r="4.5" fill="#000"/><path d="M45 19 C37 27 27 37 19 45" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/></mask></defs><path d="M53 11 C54 33 34 54 11 53 C10 31 31 10 53 11 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
@@ -2971,7 +2971,7 @@ function generateMetaIndexes(indexData) {
     <div class="meta-site-header-inner">
       <a href="/" class="meta-site-logo" aria-label="昆虫植物図鑑 トップへ">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="49" cy="31" r="7.5" fill="#000"/><circle cx="23" cy="16" r="6" fill="#000"/><circle cx="27" cy="53" r="4.5" fill="#000"/><path d="M45 19 C37 27 27 37 19 45" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/></mask></defs><path d="M53 11 C54 33 34 54 11 53 C10 31 31 10 53 11 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
