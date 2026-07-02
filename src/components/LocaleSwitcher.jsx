@@ -14,8 +14,8 @@ const LocaleSwitcher = ({
   const enPath = localizePath(currentPath, ENGLISH_LOCALE);
 
   const baseItemClass = compact
-    ? 'inline-flex items-center whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-semibold transition-colors sm:rounded-lg sm:px-2.5 sm:text-xs'
-    : 'inline-flex items-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors';
+    ? 'inline-flex min-h-[36px] items-center whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors sm:rounded-lg'
+    : 'inline-flex min-h-[36px] items-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors';
   const activeItemClass = 'bg-emerald-600 text-white shadow-sm';
   const inactiveItemClass =
     'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800';

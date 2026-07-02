@@ -60,7 +60,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="group relative inline-flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-md disabled:hover:shadow-none"
+          className="group relative inline-flex min-h-[44px] items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-md disabled:hover:shadow-none"
           aria-label={isEnglish ? 'Previous page' : '前のページ'}
         >
           <svg className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
             <button
               type="button"
               onClick={() => onPageChange(1)}
-              className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-all duration-200 hover:shadow-md"
+              className="hidden sm:inline-flex min-h-[44px] items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-all duration-200 hover:shadow-md"
               aria-label={isEnglish ? 'Go to page 1' : '1ページへ移動'}
             >
               1
@@ -90,7 +90,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
             key={number}
             type="button"
             onClick={() => onPageChange(number)}
-            className={`inline-flex items-center px-2.5 sm:px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 min-w-[32px] sm:min-w-[40px] justify-center ${
+            className={`inline-flex items-center px-2.5 sm:px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 min-h-[44px] min-w-[40px] sm:min-w-[44px] justify-center ${
               number === currentPage
                 ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25 transform scale-105'
                 : 'text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 hover:bg-blue-50 dark:hover:bg-slate-700/50 hover:shadow-md'
@@ -118,7 +118,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
             <button
               type="button"
               onClick={() => onPageChange(totalPages)}
-              className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-all duration-200 hover:shadow-md"
+              className="hidden sm:inline-flex min-h-[44px] items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-all duration-200 hover:shadow-md"
               aria-label={isEnglish ? `Go to page ${totalPages}` : `${totalPages}ページへ移動`}
             >
               {totalPages}
@@ -130,7 +130,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, locale = 'ja' }) =>
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="group relative inline-flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-md disabled:hover:shadow-none"
+          className="group relative inline-flex min-h-[44px] items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-600/50 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-md disabled:hover:shadow-none"
           aria-label={isEnglish ? 'Next page' : '次のページ'}
         >
           <span>{isEnglish ? 'Next' : '次へ'}</span>

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
@@ -7,9 +8,17 @@ import { buildPlantPath } from '../utils/siteTaxonomy';
 // `items` should be sorted in the desired order (e.g., alphabetical or taxonomic)
 // `currentItemId` or `currentItemName` is used to find the current index
 const useNeighborItems = (items, currentItemIdentifier, identifierKey = 'id') => {
-  const currentIndex = items.findIndex(item => 
-    (identifierKey === 'name' ? item.name : item.id) === currentItemIdentifier
-  );
+  // 9700件超のリストを毎レンダー線形探索しないよう、識別子→indexのマップをメモ化する
+  const indexMap = useMemo(() => {
+    const map = new Map();
+    (items || []).forEach((item, index) => {
+      const key = identifierKey === 'name' ? item?.name : item?.id;
+      if (key != null && !map.has(key)) map.set(key, index);
+    });
+    return map;
+  }, [items, identifierKey]);
+
+  const currentIndex = indexMap.has(currentItemIdentifier) ? indexMap.get(currentItemIdentifier) : -1;
 
   if (currentIndex === -1) return { prevItem: null, nextItem: null };
 
@@ -55,10 +64,10 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
           {isPrev
             ? isEnglish
               ? 'Previous'
-              : '前の種'
+              : type === 'plant' ? '前の植物' : '前の種'
             : isEnglish
               ? 'Next'
-              : '次の種'}
+              : type === 'plant' ? '次の植物' : '次の種'}
         </span>
         <span className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-1">
           {displayName}

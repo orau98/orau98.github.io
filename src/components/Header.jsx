@@ -133,7 +133,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                   ? 'Insects and Host Plants of Japan'
                   : '"繋がり"が見える昆虫植物図鑑'}
               </div>
-              <p className="truncate text-sm text-emerald-400/70 font-semibold tracking-widest uppercase">
+              <p className="truncate text-sm text-emerald-300/90 font-semibold tracking-widest uppercase">
                 {isEnglish ? 'Ecological links in Japan' : 'Insect Host Plant Explorer'}
               </p>
             </div>
@@ -207,7 +207,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
 
             <Link
               to={quizPath}
-              className="group hidden sm:inline-flex items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-3 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
+              className="group inline-flex items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
               aria-label={isEnglish ? 'Open four-choice quiz' : '4択図鑑を開く'}
             >
               <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

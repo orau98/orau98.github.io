@@ -35,6 +35,7 @@ import {
   resolveImageBaseCandidates,
 } from '../utils/insectImageResolver';
 import { buildInsectPath, slugifyInsectName } from '../utils/insectSlug';
+import { INSECT_SECTION_CONFIGS } from '../utils/siteTaxonomy';
 import { isEnglishLocale, localizePath } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
 import { isPlantHostRecord } from '../utils/hostResource';
@@ -599,6 +600,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       photo: isEnglish ? 'Photo' : '写真',
       withPhoto: isEnglish ? 'With photos' : '写真あり',
       presetLabel: isEnglish ? 'Quick filters:' : 'クイック絞り込み:',
+      groupLabel: isEnglish ? 'Insect group:' : '昆虫グループ:',
+      group: isEnglish ? 'Group' : 'グループ',
       spring: isEnglish ? 'Spring' : '春',
       summer: isEnglish ? 'Summer' : '夏',
       autumn: isEnglish ? 'Autumn' : '秋',
@@ -739,6 +742,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return ['spring', 'summer', 'autumn', 'winter'].includes(v) ? v : '';
   }, [searchParams]);
   const photoFilter = useMemo(() => (searchParams.get('iphoto') === 'has' ? 'has' : 'all'), [searchParams]);
+  // 昆虫グループ（蛾/蝶/タマムシ/カミキリムシ/ハムシ/アブラムシ）のワンタップ絞り込み
+  const groupFilter = useMemo(() => {
+    const v = (searchParams.get('igroup') || '').toLowerCase();
+    return INSECT_SECTION_CONFIGS.some((section) => section.type === v) ? v : '';
+  }, [searchParams]);
   const viewMode = useMemo(() => (searchParams.get('iview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
   const sortMode = useMemo(() => {
     const v = searchParams.get('isort') || 'image';
@@ -812,6 +820,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     });
   }, [updateSearchParams]);
 
+  const setIGroupFilter = useCallback((value) => {
+    updateSearchParams((p) => {
+      const v = (value || '').toLowerCase();
+      if (INSECT_SECTION_CONFIGS.some((section) => section.type === v)) p.set('igroup', v);
+      else p.delete('igroup');
+      p.delete('ipage');
+    });
+  }, [updateSearchParams]);
+
   const setIViewMode = useCallback((value) => {
     updateSearchParams((p) => {
       if (value === 'compact') p.set('iview', 'compact');
@@ -871,6 +888,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       p.delete('imonth');
       p.delete('iseason');
       p.delete('iphoto');
+      p.delete('igroup');
       p.delete('classification');
       p.delete('q');
       p.delete('ipage');
@@ -990,7 +1008,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const computeItemsPerPage = useCallback(() => {
     if (typeof window === 'undefined') return 48;
     const w = window.innerWidth;
-    const cols = w >= 1536 ? 4 : w >= 1024 ? 3 : w >= 768 ? 2 : 1;
+    const cols = w >= 1536 ? 4 : w >= 1024 ? 3 : w >= 640 ? 2 : 1;
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
@@ -1005,7 +1023,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const classificationFilter = searchParams.get('classification');
   const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
   const hasSearchQuery = searchQuery.length > 0;
-  const hasFilterCriteria = hostFilter !== 'all' || !!familyFilter || !!genusFilter || !!emergenceFilter || !!seasonFilter || photoFilter === 'has' || !!classificationFilter;
+  const hasFilterCriteria = hostFilter !== 'all' || !!familyFilter || !!genusFilter || !!emergenceFilter || !!seasonFilter || photoFilter === 'has' || !!classificationFilter || !!groupFilter;
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
   const seasonLabels = useMemo(() => ({
     spring: ui.spring,
@@ -1013,9 +1031,22 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     autumn: ui.autumn,
     winter: ui.winter,
   }), [ui.autumn, ui.spring, ui.summer, ui.winter]);
+  const groupLabelMap = useMemo(() => {
+    const map = {};
+    INSECT_SECTION_CONFIGS.forEach((section) => {
+      map[section.type] = isEnglish ? section.labelEn : section.label;
+    });
+    return map;
+  }, [isEnglish]);
+  // 一覧に複数グループが混在している場合のみグループ切替チップを出す
+  const availableGroups = useMemo(() => {
+    const present = new Set((moths || []).map((m) => m?.type || 'moth'));
+    return INSECT_SECTION_CONFIGS.filter((section) => present.has(section.type));
+  }, [moths]);
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
+    if (groupFilter) filters.push({ type: ui.group, value: groupLabelMap[groupFilter] || groupFilter, clear: () => setIGroupFilter('') });
     if (hostFilter !== 'all') filters.push({ type: isEnglish ? 'Host plant' : '食草', value: hostFilter === 'has' ? ui.hasHostPlant : ui.unregisteredOnly, clear: () => setIHostFilter('all') });
     if (familyFilter) filters.push({ type: isEnglish ? 'Family' : '科', value: familyFilter, clear: () => setIFamilyFilter('') });
     if (genusFilter) filters.push({ type: isEnglish ? 'Genus' : '属', value: genusFilter, clear: () => setIGenusFilter('') });
@@ -1034,8 +1065,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     seasonFilter,
     photoFilter,
     classificationFilter,
+    groupFilter,
+    groupLabelMap,
     clearSearch,
     clearClassification,
+    setIGroupFilter,
     setIHostFilter,
     setIFamilyFilter,
     setIGenusFilter,
@@ -1043,6 +1077,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     setISeasonFilter,
     setIPhotoFilter,
     isEnglish,
+    ui.group,
     ui.hasHostPlant,
     ui.photo,
     ui.season,
@@ -1238,7 +1273,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           if (seasonFilter) {
             if (!checkSeasonMatch(moth, seasonFilter)) return false;
           }
-          
+
+          if (groupFilter && (moth.type || 'moth') !== groupFilter) return false;
+
           const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
           // ひらがなをカタカナに変換した検索語も用意
           const katakanaSearchTerm = hiraganaToKatakana(debouncedSearchTerm).toLowerCase();
@@ -1256,7 +1293,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                    (moth.classification?.genus?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.family?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.subfamily?.toLowerCase().includes(lowerClassification)) ||
-                   (moth.classification?.tribe?.toLowerCase().includes(lowerClassification));
+                   (moth.classification?.tribe?.toLowerCase().includes(lowerClassification)) ||
+                   (moth.scientificName?.toLowerCase().includes(lowerClassification));
           }
           
           // If no search term, include all moths
@@ -1289,7 +1327,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, hasRealHost, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, groupFilter, hasRealHost, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
@@ -1609,6 +1647,14 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   ]);
 
   const renderFilters = () => {
+    const groupChips = availableGroups.length > 1
+      ? availableGroups.map((section) => ({
+          key: section.type,
+          label: groupLabelMap[section.type] || section.label,
+          active: groupFilter === section.type,
+          onClick: () => setIGroupFilter(groupFilter === section.type ? '' : section.type),
+        }))
+      : [];
     const presetChips = [
       { key: 'host', label: ui.hasHostPlant, active: hostFilter === 'has', onClick: () => setIHostFilter(hostFilter === 'has' ? 'all' : 'has') },
       { key: 'photo', label: ui.withPhoto, active: photoFilter === 'has', onClick: () => setIPhotoFilter(photoFilter === 'has' ? 'all' : 'has') },
@@ -1718,6 +1764,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
         </div>
         </ListFilterPanel>
+        <PresetFilterChips label={ui.groupLabel} chips={groupChips} />
         <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
         <ListDisplayControls
           viewMode={viewMode}
@@ -1800,7 +1847,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         <div ref={listTopRef} />
         <div>
           {!isImageIndexReady ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
                   key={`skeleton-${i}`}
@@ -1816,7 +1863,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               ))}
             </div>
           ) : currentMoths.length > 0 ? (
-            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'}>
+            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'}>
               {currentMoths.map((moth, index) => {
                 try {
                   return (
@@ -1825,7 +1872,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         <ManualAdSlot
                           placement="inFeed"
                           locale={locale}
-                          className="animate-fadeIn self-start"
+                          className="animate-fadeIn self-start sm:col-span-full"
                           minHeight="min-h-[220px]"
                         />
                       )}

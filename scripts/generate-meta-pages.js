@@ -374,45 +374,10 @@ function buildExplorerSearchPath(tab, query) {
   return `/?${params.toString()}`;
 }
 
-function buildExplorerRedirectHtml({ lang = 'ja', title, tab, label }) {
-  const targetPath = `/?tab=${encodeURIComponent(tab)}`;
-  const targetUrl = `${BASE_ORIGIN}${targetPath}`;
-  const safeTitle = escapeRedirectHtml(title);
-  const safeLabel = escapeRedirectHtml(label);
-  const openingCopy = lang === 'en'
-    ? `Opening ${safeLabel}...`
-    : `${safeLabel}を開いています...`;
-  return `<!DOCTYPE html>
-<html lang="${lang}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, follow">
-  <title>${safeTitle}</title>
-  <link rel="canonical" href="${targetUrl}">
-  <meta http-equiv="refresh" content="0;url=${targetUrl}">
-  <script>
-    (function() {
-      var params = new URLSearchParams(window.location.search || '');
-      if (!params.has('tab')) params.set('tab', ${JSON.stringify(tab)});
-      window.location.replace('/?' + params.toString() + (window.location.hash || ''));
-    })();
-  </script>
-</head>
-<body>
-  <main>
-    <p>${openingCopy}</p>
-    <p><a href="${targetPath}">${safeLabel}</a></p>
-  </main>
-</body>
-</html>`;
-}
-
-function writeExplorerRedirect(segment, options) {
-  const routeDir = path.join(__dirname, '../public', segment);
-  ensureDir(routeDir);
-  fs.writeFileSync(path.join(routeDir, 'index.html'), buildExplorerRedirectHtml(options));
-}
+// 旧 /moth/ /plant/ 用の静的リダイレクトは廃止した。
+// これらのパスはSPAルート（siteTaxonomy の EXPLORER_ROUTE_CONFIGS）として
+// 直接描画されるため、静的な meta-refresh を置くとクリーンURLを
+// `/?tab=...` に書き換えてしまい、余計なリダイレクトホップも発生していた。
 
 function stripImageExtension(fileName) {
   return String(fileName || '').replace(/\.[^.]+$/i, '');
@@ -1612,9 +1577,9 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   <meta name="description" content="${safeInsectDescription}">
   <meta name="keywords" content="${safeInsectKeywords}">
   <link rel="canonical" href="${insectPageUrl}">
-  ${enAlternatePath ? `<link rel="alternate" hreflang="ja" href="${insectPageUrl}">
-  <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
-  <link rel="alternate" hreflang="x-default" href="${insectPageUrl}">` : ''}
+  <link rel="alternate" hreflang="ja" href="${insectPageUrl}">
+  ${enAlternatePath ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
+  ` : ''}<link rel="alternate" hreflang="x-default" href="${insectPageUrl}">
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
@@ -1988,9 +1953,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="description" content="${safePlantDescription}">
   <meta name="keywords" content="${safePlantKeywords}">
   <link rel="canonical" href="${safePlantPageUrl}">
-  ${enSlug ? `<link rel="alternate" hreflang="ja" href="${safePlantPageUrl}">
-  <link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/plant/${encodeURIComponent(enSlug)}.html">
-  <link rel="alternate" hreflang="x-default" href="${safePlantPageUrl}">` : ''}
+  <link rel="alternate" hreflang="ja" href="${safePlantPageUrl}">
+  ${enSlug ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/plant/${encodeURIComponent(enSlug)}.html">
+  ` : ''}<link rel="alternate" hreflang="x-default" href="${safePlantPageUrl}">
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
@@ -2250,18 +2215,6 @@ async function generateMetaPages() {
     if (fs.existsSync(routeDir)) {
       fs.rmSync(routeDir, { recursive: true, force: true });
     }
-  });
-  writeExplorerRedirect('plant', {
-    lang: 'ja',
-    title: '植物検索へ移動中 | 昆虫植物図鑑',
-    tab: 'plants',
-    label: '植物検索',
-  });
-  writeExplorerRedirect('moth', {
-    lang: 'ja',
-    title: '昆虫検索へ移動中 | 昆虫植物図鑑',
-    tab: 'insects',
-    label: '昆虫検索',
   });
   const legacyRedirects = new Map();
   let legacyRedirectConflicts = 0;

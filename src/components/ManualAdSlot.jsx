@@ -104,7 +104,7 @@ const ManualAdSlot = ({
       className={`manual-ad-slot rounded-xl border border-slate-200/70 bg-white/75 p-3 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55 ${className}`}
       aria-label={containerLabel}
     >
-      <div className="mb-2 text-[11px] font-semibold tracking-wide text-slate-400 dark:text-slate-500">
+      <div className="mb-2 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400">
         {containerLabel}
       </div>
       {slotId && !showPreviewPlaceholder ? (
