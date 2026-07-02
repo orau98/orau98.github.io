@@ -481,7 +481,7 @@ const SearchInput = React.forwardRef(({
                   <button
                     type="button"
                     onMouseDown={clearHistory}
-                    className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    className="-my-2 min-h-[44px] rounded-md px-2 text-xs text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                   >
                     {labels.clearHistory}
                   </button>
@@ -515,7 +515,7 @@ const SearchInput = React.forwardRef(({
                           type="button"
                           onMouseDown={(e) => { e.preventDefault(); removeFromHistory(term); }}
                           onMouseEnter={() => setActiveIndex(index)}
-                          className="rounded-md p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                           aria-label={labels.removeHistory(term)}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

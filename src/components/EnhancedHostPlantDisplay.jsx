@@ -335,9 +335,10 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
 
   return (
     <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
-      {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示） */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2 min-w-0 flex-1">
+      {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示）
+          文字サイズが違う和名と科名が上端揃えで縦にズレて見えないよう、ベースラインで揃える */}
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 min-w-0 flex-1">
           <div className="min-w-0">
             {isResourceGroup || isUnknownPlant ? (
               <span

@@ -95,6 +95,40 @@ export default function ListFilterPanel({
         </div>
       )}
 
+      {/* モバイルドロワー内でも「何で絞り込まれているか」と一括解除に到達できるようにする
+          （デスクトップ用ヘッダーはhideHeaderで消えるため、ここが唯一の可視化になる） */}
+      {hideHeader && hasAnyCriteria && (
+        <div className="mb-3 flex flex-wrap items-center gap-1.5">
+          {filteredByLabel && (
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">
+              {filteredByLabel}
+            </span>
+          )}
+          {activeFilters.map((filter, idx) => (
+            <span
+              key={`${filter.type}-${idx}`}
+              className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60"
+            >
+              {filter.type}: {filter.value}
+              <button
+                onClick={filter.clear}
+                className="-my-1 ml-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-500 hover:bg-slate-300/50 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-300 dark:hover:bg-slate-600/60 dark:hover:text-slate-100"
+                aria-label={getClearFilterLabel ? getClearFilterLabel(filter.type) : ''}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </span>
+          ))}
+          {onResetAll && (
+            <button type="button" onClick={onResetAll} className="ui-btn ui-btn-secondary">
+              {resetAllLabel}
+            </button>
+          )}
+        </div>
+      )}
+
       <div
         id={panelId}
         aria-hidden={!panelIsOpen}

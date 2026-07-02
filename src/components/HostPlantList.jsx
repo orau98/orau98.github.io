@@ -1480,9 +1480,35 @@ const HostPlantList = ({
       )}
 
       <div className="p-3 pt-1 sm:p-6">
-        <div ref={listTopRef} />
+        {/* ページ送り時のscrollIntoView先。スティッキーヘッダーに先頭行が隠れないようオフセットを確保 */}
+        <div ref={listTopRef} className="scroll-mt-24" />
         <div>
-          {currentHostPlants.length > 0 ? (
+          {plantCount === 0 && !hasAnyCriteria ? (
+            /* データ未着（検索・フィルタなしで0件はロード中）: 昆虫リストと同じスケルトンを出し、
+               「結果が見つかりませんでした」との誤認を防ぐ */
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+            >
+              <span className="sr-only">{isEnglish ? 'Loading plant list…' : '植物リストを読み込み中…'}</span>
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div
+                  key={`skeleton-${i}`}
+                  aria-hidden="true"
+                  className="rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 overflow-hidden shadow-md animate-pulse"
+                >
+                  <div className="aspect-[4/3] bg-slate-200/70 dark:bg-slate-700/60" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-4 w-3/4 bg-slate-200/70 dark:bg-slate-700/60 rounded-md" />
+                    <div className="h-3 w-1/2 bg-slate-200/60 dark:bg-slate-700/50 rounded-md" />
+                    <div className="h-3 w-2/3 bg-slate-200/60 dark:bg-slate-700/50 rounded-md" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : currentHostPlants.length > 0 ? (
             <div className={viewMode === "compact" ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"}>
               {currentHostPlants.map(([plant, mothList], index) => {
                 const normalizedPlant = normalizePlantKey(plant);
@@ -1528,7 +1554,7 @@ const HostPlantList = ({
                   {/* 行内でカード高さを揃える（短いカードの下に空白ができないように） */}
                   <div
                     className="animate-fadeIn h-full"
-                    style={{ animationDelay: `${index * 0.05}s` }}
+                    style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}
                   >
                     <HostPlantListItem
                       plant={plant}

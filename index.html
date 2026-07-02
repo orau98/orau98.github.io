@@ -11,7 +11,23 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#2c5530" />
+    <!-- FOUC防止: Reactマウント前にテーマを確定させる（App.jsxのtheme初期化と同一ロジック） -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('theme');
+          if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark';
+          }
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="application-name" content="昆虫植物図鑑" />
     <meta name="apple-mobile-web-app-title" content="昆虫植物図鑑" />
     

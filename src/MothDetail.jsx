@@ -4,6 +4,8 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
+import ImageModal from './components/ImageModal';
+import { DetailSkeleton } from './components/SkeletonLoader';
 import SourceCitation from './components/ui/SourceCitation';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
@@ -35,7 +37,6 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import NativeShareButton from './components/NativeShareButton';
 import DetailNavigation from './components/DetailNavigation';
-import DetailSectionNav from './components/DetailSectionNav';
 import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
@@ -589,6 +590,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const hasRealPhoto =
     Boolean(mainImageProps.base) ||
     (typeof mainImageProps.src === 'string' && !mainImageProps.src.includes('placeholder.jpg'));
+
+  // 写真ライトボックスの開閉状態（画像リストはprimaryName確定後にlightboxImagesとして構築）
+  const [lightboxState, setLightboxState] = useState({ open: false, index: 0 });
+  const openLightbox = useCallback((index) => {
+    setLightboxState({ open: true, index });
+  }, []);
+  const closeLightbox = useCallback(() => {
+    setLightboxState((prev) => ({ ...prev, open: false }));
+  }, []);
   // 写真パネルを出すか。画像インデックス読み込み中は写真がある前提で枠を維持し、
   // 写真ゼロと確定したら巨大な空箱を出さずコンパクトな通知に切り替える
   const showPhotoPanel = hasInstagramPost || hasRealPhoto || !isImageIndexReady;
@@ -688,6 +698,30 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const japaneseReference = isEnglish
     ? buildJapaneseReferenceLabel(displayName || moth?.name || '')
     : '';
+
+  // 写真ライトボックス用の画像リスト（植物詳細と同じImageModalを共用）
+  const lightboxImages = React.useMemo(() => {
+    if (!moth || !hasRealPhoto || hasInstagramPost) return [];
+    const speciesLabel = isEnglish ? primaryName : moth.name;
+    const main = {
+      id: 'main',
+      src: mainImageProps.src,
+      originalCandidates: [mainImageProps.src, ...fallbackImageCandidates].filter(Boolean),
+      alt: isEnglish
+        ? `${primaryName} photograph`
+        : `${moth.name}（${moth.scientificName}）の写真`,
+      label: speciesLabel,
+    };
+    const extras = additionalImageProps.map((image, index) => ({
+      id: image.base,
+      src: image.src,
+      alt: isEnglish
+        ? `${primaryName} photograph ${index + 2}`
+        : `${moth.name}（${moth.scientificName}）の写真 ${index + 2}`,
+      label: isEnglish ? `${speciesLabel} (${index + 2})` : `${speciesLabel}（${index + 2}枚目）`,
+    }));
+    return [main, ...extras];
+  }, [moth, hasRealPhoto, hasInstagramPost, isEnglish, primaryName, mainImageProps.src, fallbackImageCandidates, additionalImageProps]);
   const familyChip = buildLocalizedTaxonomyChip({
     locale,
     japaneseName: moth?.classification?.familyJapanese,
@@ -906,26 +940,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   }, [isDataLoading, moth]);
 
   // Show loading state if data is still loading
+  // （スピナー1個の全画面ではなく、実レイアウトに合わせたスケルトンでシフトを抑える）
   if (isDataLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
-        <div className="text-center p-8">
-          <div className="w-20 h-20 mx-auto mb-6 bg-blue-400 rounded-full flex items-center justify-center animate-pulse">
-            <svg className="w-10 h-10 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-            {isEnglish ? 'Loading profile...' : 'データを読み込んでいます...'}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            {isEnglish
-              ? 'Loading the insect dataset. Please wait a moment.'
-              : '昆虫データベースを読み込んでいます。しばらくお待ちください。'}
-          </p>
-        </div>
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
   if (!moth) {
@@ -1226,19 +1243,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           )}
         </div>
 
-        <DetailSectionNav
-          label={isEnglish ? 'Insect detail sections' : '昆虫詳細のセクション'}
-          items={[
-            { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
-            { id: 'basic-info', label: isEnglish ? 'Name' : '種名' },
-            { id: 'host-plants', label: isEnglish ? 'Host plants' : '食草・訪花' },
-            { id: 'adult-season', label: isEnglish ? 'Season' : '発生時期' },
-            { id: 'ecology', label: isEnglish ? 'Ecology' : '生態' },
-            { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
-            { id: 'food-web', label: isEnglish ? 'Network' : 'ネットワーク' },
-            { id: 'share', label: isEnglish ? 'Share' : '共有' },
-          ]}
-        />
 
         {/* モバイルは写真ファーストの1カラム。lg以上は写真を左に固定した2カラムにして、
             初期表示で種名・食草情報が写真と同時に見えるようにする。
@@ -1286,7 +1290,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     
                     {/* Elegant gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                    
+
                     {/* Moth name overlay */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 pointer-events-none">
                       <h3 className="text-white font-bold text-lg drop-shadow-lg">
@@ -1298,27 +1302,53 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                           : formatScientificNameReact(moth.scientificName)}
                       </p>
                     </div>
+
+                    {/* タップ/クリックで拡大（植物ページと同じライトボックス） */}
+                    {lightboxImages.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(0)}
+                        className="absolute inset-0 cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-inset"
+                        aria-label={isEnglish ? 'Enlarge photo' : '写真を拡大表示'}
+                      >
+                        <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1.5 text-xs font-medium text-white backdrop-blur-sm sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
+                          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 7v6m-3-3h6m4 0a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                          {isEnglish ? 'Zoom' : '拡大'}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 )}
 
                 {!hasInstagramPost && additionalImageProps.length > 0 && (
                   <div className="grid grid-cols-2 gap-3 p-3 bg-white/80 dark:bg-slate-800/80 sm:grid-cols-3">
                     {additionalImageProps.map((image, index) => (
-                      <ImageWithFallback
+                      <button
                         key={image.base}
-                        src={image.src}
-                        srcSet={image.srcSet}
-                        sizes={image.sizes}
-                        sources={image.sources}
-                        alt={isEnglish
-                          ? `${primaryName} photograph ${index + 2}`
-                          : `${moth.name}（${moth.scientificName}）の写真 ${index + 2}`}
-                        className="aspect-[4/3] w-full rounded-xl"
-                        imgClassName="transition-transform duration-500 hover:scale-105"
-                        fit="cover"
-                        fallbackSrc={null}
-                        loading="lazy"
-                      />
+                        type="button"
+                        onClick={() => openLightbox(index + 1)}
+                        className="cursor-zoom-in rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                        aria-label={isEnglish
+                          ? `Enlarge photograph ${index + 2}`
+                          : `写真${index + 2}を拡大表示`}
+                      >
+                        <ImageWithFallback
+                          src={image.src}
+                          srcSet={image.srcSet}
+                          sizes={image.sizes}
+                          sources={image.sources}
+                          alt={isEnglish
+                            ? `${primaryName} photograph ${index + 2}`
+                            : `${moth.name}（${moth.scientificName}）の写真 ${index + 2}`}
+                          className="aspect-[4/3] w-full rounded-xl"
+                          imgClassName="transition-transform duration-500 hover:scale-105"
+                          fit="cover"
+                          fallbackSrc={null}
+                          loading="lazy"
+                        />
+                      </button>
                     ))}
                   </div>
                 )}
@@ -1363,6 +1393,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             </div>
           </div>
           )}
+
+          {/* 写真ライトボックス */}
+          <ImageModal
+            image={lightboxImages[lightboxState.index] || null}
+            isOpen={lightboxState.open}
+            onClose={closeLightbox}
+            images={lightboxImages}
+            currentIndex={lightboxState.index}
+            onNavigate={(nextIndex) => setLightboxState({ open: true, index: nextIndex })}
+            locale={locale}
+          />
 
           {/* 情報セクション */}
           <div className={`space-y-4 ${showPhotoPanel ? 'lg:col-span-2' : ''}`}>
@@ -1891,14 +1932,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         
 
         {/* Emergence Period Section (Full Width) */}
-            {(moth.type === 'leafbeetle' || moth.type === 'moth') && (() => {
+            {(moth.type === 'leafbeetle' || moth.type === 'moth' || moth.type === 'butterfly') && (() => {
               const hasDetailedTime = moth.emergenceTimeDetailed && moth.emergenceTimeDetailed.length > 0;
               const hasExistingTime = moth.emergenceTime && moth.emergenceTime !== '不明';
-              const { emergenceTime } = extractEmergenceTime(moth.notes || '');
+              // チョウは発生時期がgeographicalRemarksに入る（HostPlantDetailのInsectCardと同じ扱い）
+              const emergenceSourceText = [
+                moth.notes,
+                moth.type === 'butterfly' ? moth.geographicalRemarks : '',
+              ].map((text) => String(text || '').trim()).filter(Boolean).join('\n');
+              const { emergenceTime } = extractEmergenceTime(emergenceSourceText);
               const normalizedTime = normalizeEmergenceTime(emergenceTime);
               const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
               const supplementalEmergenceTexts = Array.from(new Set([
-                moth.notes || '',
+                emergenceSourceText,
                 ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : [])
               ].map((text) => String(text || '').trim()).filter(Boolean)));
               const hasSupplementalEmergenceHint = supplementalEmergenceTexts.some((text) =>
@@ -1932,8 +1978,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 
                 <div className="p-4">
                   {(() => {
-                    // まず備考欄から発生時期を抽出
-                    const { emergenceTime: extractedTime } = extractEmergenceTime(moth.notes || '');
+                    // まず備考欄から発生時期を抽出（チョウはgeographicalRemarksも対象）
+                    const emergenceSourceText = [
+                      moth.notes,
+                      moth.type === 'butterfly' ? moth.geographicalRemarks : '',
+                    ].map((text) => String(text || '').trim()).filter(Boolean).join('\n');
+                    const { emergenceTime: extractedTime } = extractEmergenceTime(emergenceSourceText);
                     const normalizedTime = normalizeEmergenceTime(extractedTime);
                     
                     // 統合された発生時期データを作成
@@ -2028,7 +2078,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     }) || '';
 
                     const supplementalEmergenceTexts = Array.from(new Set([
-                      moth.notes || '',
+                      emergenceSourceText,
                       ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : []),
                       ...allEmergenceTimeData.map((item) => item?.period || ''),
                       ...allEmergenceTimeData.map((item) => item?.notes || ''),

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo, useRef, useId, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import Papa from 'papaparse';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
+import ImageModal from './components/ImageModal';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
 import useSeoRouteMap from './hooks/useSeoRouteMap';
@@ -35,7 +36,6 @@ import {
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import { sortPlantNamesTaxonomically } from './utils/taxonomicOrder';
-import DetailSectionNav from './components/DetailSectionNav';
 import NativeShareButton from './components/NativeShareButton';
 import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
@@ -92,213 +92,6 @@ const buildGenusCandidates = (name = '') => Array.from(new Set([
   name.replace(/属の一種$/, '属'),
   name.replace(/属$/, '')
 ].filter(Boolean)));
-
-const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], currentIndex = 0, onNavigate, locale = 'ja' }) => {
-  const isActive = Boolean(isOpen && image);
-  const isEnglish = isEnglishLocale(locale);
-  const dialogRef = useRef(null);
-  const closeButtonRef = useRef(null);
-  const lastActiveElementRef = useRef(null);
-  const labelId = useId();
-  const hasLabel = Boolean(image?.label);
-  const dialogLabel = image?.label || image?.alt || (isEnglish ? 'Image preview' : '画像表示');
-  const modalCandidates = useMemo(() => {
-    const originals = Array.isArray(image?.originalCandidates) ? image.originalCandidates : [];
-    return Array.from(new Set([
-      ...originals,
-      image?.modalSrc,
-      image?.finalSrc,
-      image?.src,
-    ].filter(Boolean)));
-  }, [image]);
-  const [modalSrc, setModalSrc] = useState(modalCandidates[0] || '');
-  const [modalCandidateIndex, setModalCandidateIndex] = useState(0);
-
-  const handlePrev = useCallback((e) => {
-    e.stopPropagation();
-    if (currentIndex > 0 && onNavigate) {
-      onNavigate(currentIndex - 1);
-    }
-  }, [currentIndex, onNavigate]);
-
-  const handleNext = useCallback((e) => {
-    e.stopPropagation();
-    if (currentIndex < images.length - 1 && onNavigate) {
-      onNavigate(currentIndex + 1);
-    }
-  }, [currentIndex, images.length, onNavigate]);
-
-  // キーボードナビゲーション + フォーカストラップ
-  useEffect(() => {
-    if (!isActive) return undefined;
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-      if (e.key === 'ArrowLeft') {
-        handlePrev(e);
-        return;
-      }
-      if (e.key === 'ArrowRight') {
-        handleNext(e);
-        return;
-      }
-      if (e.key === 'Tab') {
-        const dialog = dialogRef.current;
-        if (!dialog) return;
-        const focusable = Array.from(
-          dialog.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          )
-        ).filter((el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true');
-
-        if (focusable.length === 0) {
-          e.preventDefault();
-          dialog.focus();
-          return;
-        }
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        const activeEl = document.activeElement;
-
-        if (e.shiftKey) {
-          if (activeEl === first || activeEl === dialog) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else if (activeEl === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isActive, handlePrev, handleNext, onClose]);
-
-  // Open/close focus management
-  useEffect(() => {
-    if (!isActive) return undefined;
-    if (typeof document !== 'undefined') {
-      lastActiveElementRef.current = document.activeElement;
-    }
-    const focusTarget = closeButtonRef.current || dialogRef.current;
-    if (focusTarget && typeof focusTarget.focus === 'function') {
-      focusTarget.focus({ preventScroll: true });
-    }
-    return () => {
-      const prev = lastActiveElementRef.current;
-      if (prev && typeof prev.focus === 'function' && document.contains(prev)) {
-        prev.focus({ preventScroll: true });
-      }
-    };
-  }, [isActive]);
-
-  useEffect(() => {
-    setModalCandidateIndex(0);
-    setModalSrc(modalCandidates[0] || '');
-  }, [modalCandidates]);
-
-  const handleModalImageError = (event) => {
-    const nextIndex = modalCandidateIndex + 1;
-    const nextSrc = modalCandidates[nextIndex];
-    if (nextSrc) {
-      setModalCandidateIndex(nextIndex);
-      setModalSrc(nextSrc);
-      if (event?.currentTarget) event.currentTarget.src = nextSrc;
-      return;
-    }
-    onImageError?.(image?.id, event);
-  };
-
-  const hasMultiple = images.length > 1;
-
-  if (!isActive) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={hasLabel ? labelId : undefined}
-        aria-label={!hasLabel ? dialogLabel : undefined}
-        tabIndex={-1}
-        className="relative max-w-6xl max-h-[90vh] w-full"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* メイン画像 */}
-        <img
-          src={modalSrc}
-          alt={image.alt}
-          className="w-full h-full object-contain rounded-lg shadow-2xl"
-          onError={handleModalImageError}
-        />
-
-        {/* 閉じるボタン */}
-        <button
-          ref={closeButtonRef}
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
-          aria-label={isEnglish ? 'Close' : '閉じる'}
-        >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        {/* 前へボタン */}
-        {hasMultiple && currentIndex > 0 && (
-          <button
-            onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
-            aria-label={isEnglish ? 'Previous image' : '前の画像'}
-          >
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-        )}
-
-        {/* 次へボタン */}
-        {hasMultiple && currentIndex < images.length - 1 && (
-          <button
-            onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
-            aria-label={isEnglish ? 'Next image' : '次の画像'}
-          >
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        )}
-
-        {/* 下部情報バー */}
-        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-          <div className="bg-black/70 backdrop-blur-sm rounded-xl px-4 py-2">
-            <p id={hasLabel ? labelId : undefined} className="text-white font-medium">
-              {image.label}
-            </p>
-          </div>
-
-          {/* 画像カウンター */}
-          {hasMultiple && (
-            <div className="bg-black/70 backdrop-blur-sm rounded-xl px-4 py-2">
-              <p className="text-white font-medium tabular-nums">
-                {currentIndex + 1} / {images.length}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
@@ -1989,17 +1782,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </Link>
         )}
       </div>
-      <DetailSectionNav
-        label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
-        items={[
-          { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
-          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '解説' }] : []),
-          { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
-          { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
-          { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
-          { id: 'share', label: isEnglish ? 'Share' : '共有' },
-        ]}
-      />
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{
@@ -2262,7 +2044,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             {hostPlantInsects.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-emerald-700 dark:text-emerald-300 mb-4">
-                  {isEnglish ? `Insects using this plant as a larval host (${hostPlantInsects.length})` : `幼虫の食草として利用する昆虫 (${hostPlantInsects.length}種)`}
+                  {/* 「N種」に対しカードが少ないと混乱するため、写真あり件数を分けて明示する */}
+                  {hostInsectGroups.withPhoto.length > 0 && hostInsectGroups.withoutPhoto.length > 0
+                    ? (isEnglish
+                      ? `Insects using this plant as a larval host (${hostPlantInsects.length}, ${hostInsectGroups.withPhoto.length} with photos)`
+                      : `幼虫の食草として利用する昆虫 (全${hostPlantInsects.length}種・写真あり${hostInsectGroups.withPhoto.length}種)`)
+                    : (isEnglish
+                      ? `Insects using this plant as a larval host (${hostPlantInsects.length})`
+                      : `幼虫の食草として利用する昆虫 (${hostPlantInsects.length}種)`)}
                 </h3>
                 {hostInsectGroups.withPhoto.length > 0 && (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -2290,7 +2079,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             {flowerVisitInsects.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-rose-600 dark:text-rose-300 mb-4">
-                  {isEnglish ? `Insects recorded as flower visitors (${flowerVisitInsects.length})` : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`}
+                  {flowerInsectGroups.withPhoto.length > 0 && flowerInsectGroups.withoutPhoto.length > 0
+                    ? (isEnglish
+                      ? `Insects recorded as flower visitors (${flowerVisitInsects.length}, ${flowerInsectGroups.withPhoto.length} with photos)`
+                      : `訪花で利用する昆虫 (全${flowerVisitInsects.length}種・写真あり${flowerInsectGroups.withPhoto.length}種)`)
+                    : (isEnglish
+                      ? `Insects recorded as flower visitors (${flowerVisitInsects.length})`
+                      : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`)}
                 </h3>
                 {flowerInsectGroups.withPhoto.length > 0 && (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -20,29 +20,12 @@ const FloatingActionButton = () => {
   const normalizedPathname = stripLocalePrefix(location.pathname || '/');
   const isDetailPage = /\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|aphid|plant)\//.test(normalizedPathname);
 
-  // Show/hide based on scroll
+  // 詳細ページでは常時表示する。
+  // 以前は上部にDetailSectionNav（セクションナビ帯）がありデスクトップは
+  // 300pxスクロール後にのみ出していたが、目次機能をこのFABに一本化したため
+  // ページ先頭からでもセクションへジャンプできるようにする
   useEffect(() => {
-    if (!isDetailPage) {
-      setIsVisible(false);
-      return undefined;
-    }
-
-    const toggleVisibility = () => {
-      const isMobileViewport = typeof window !== 'undefined' && window.matchMedia
-        ? window.matchMedia('(max-width: 767px)').matches
-        : false;
-      if (isMobileViewport) {
-        setIsVisible(true);
-      } else if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    toggleVisibility();
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    setIsVisible(isDetailPage);
   }, [isDetailPage]);
 
   // Close menu when location changes
@@ -137,6 +120,9 @@ const FloatingActionButton = () => {
     <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 md:right-6 z-[70] flex flex-col items-end gap-3">
       {/* Menu Items */}
       <div
+        id="fab-menu"
+        inert={!isOpen ? true : undefined}
+        aria-hidden={!isOpen}
         className={`relative z-[70] flex flex-col gap-3 transition-all duration-300 origin-bottom ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
@@ -190,6 +176,8 @@ const FloatingActionButton = () => {
             : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
         }`}
         aria-label={isOpen ? (isEnglish ? 'Close contents' : '目次を閉じる') : (isEnglish ? 'Open contents' : '目次を開く')}
+        aria-expanded={isOpen}
+        aria-controls="fab-menu"
       >
         <svg
           className={`h-7 w-7 transition-transform duration-300 md:h-8 md:w-8 ${isOpen ? 'rotate-45' : ''}`}
