@@ -2710,7 +2710,8 @@ async function generateMetaPages() {
           fs.writeFileSync(legacyFilename, buildLegacyRedirectHtml({
             lang: 'ja',
             title: `${plantName} | 昆虫植物図鑑`,
-            targetUrl: `/meta/plant/${encodeURIComponent(safePlantName)}.html`,
+            // canonicalは絶対URL必須（相対だとSEO監査が失敗し、クローラにも曖昧）
+            targetUrl: `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safePlantName)}.html`,
           }));
         }
       }

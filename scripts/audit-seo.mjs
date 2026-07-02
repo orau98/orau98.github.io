@@ -393,8 +393,24 @@ const metaFiles = collectHtmlFiles(metaDir).filter(
 );
 ensure(metaFiles.length > 0, 'dist/meta HTML files not found');
 
+// 同名植物ページ統合などで生成される別名→正規ページのリダイレクトスタブは
+// noindex+meta refreshの薄いHTMLであり、フルページのメタ要件（description/OGP/JSON-LD）
+// は課さず、リダイレクトページとしての要件のみ検証する
+const isRedirectStub = (html) =>
+  getMetaHttpEquivContent(html, 'refresh').length > 0 &&
+  getMetaContent(html, 'name', 'robots').includes('noindex');
+
+const validateMetaFile = (filePath) => {
+  const html = readFile(filePath);
+  if (isRedirectStub(html)) {
+    validateLegacyRedirectHtml(filePath, html);
+  } else {
+    validateHtml(filePath, html);
+  }
+};
+
 for (const filePath of metaFiles) {
-  validateHtml(filePath, readFile(filePath));
+  validateMetaFile(filePath);
 }
 
 const englishMetaDir = path.join(DIST_DIR, 'en', 'meta');
@@ -404,7 +420,7 @@ const englishMetaFiles = collectHtmlFiles(englishMetaDir).filter(
 if (fs.existsSync(englishMetaDir)) {
   ensure(englishMetaFiles.length > 0, 'dist/en/meta HTML files not found');
   for (const filePath of englishMetaFiles) {
-    validateHtml(filePath, readFile(filePath));
+    validateMetaFile(filePath);
   }
 }
 
@@ -458,7 +474,9 @@ validateSitemapIndex(path.join(DIST_DIR, 'search-console-submit.xml'), [
   `${SITE_ORIGIN}/sitemap-en-plant.xml`,
 ]);
 validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'), {
-  minUrls: 1500,
+  // 同名植物ページの正規ページ統合でシードURL数が約1450件に減少したため、
+  // 「シードが十分に埋まっている」ことの確認として閾値を1200件に調整
+  minUrls: 1200,
   requiredPrefixes: [
     `${SITE_ORIGIN}/meta/moth/`,
     `${SITE_ORIGIN}/meta/plant/`,
