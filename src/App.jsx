@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import logger from './utils/logger';
 import lazyWithRetry from './utils/lazyWithRetry';
 import ChunkErrorBoundary from './components/ChunkErrorBoundary';
@@ -42,6 +42,7 @@ import {
   INSECT_DETAIL_ROUTE_PATTERNS,
   isExplorerRoutePath,
 } from './utils/siteTaxonomy';
+import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
 
@@ -53,8 +54,6 @@ const getPapa = async () => {
   return cachedPapa;
 };
 
-const STATIC_DOCUMENT_PATHS = new Set(['/sitemap.html']);
-const STATIC_DOCUMENT_PREFIXES = ['/meta/', '/en/meta/'];
 const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = [
   'q',
   'search',
@@ -70,13 +69,6 @@ const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = [
   'porder',
   'pvisit',
 ];
-
-const isStaticDocumentPath = (pathname = '') => {
-  const value = String(pathname || '').trim();
-  if (!value) return false;
-  if (STATIC_DOCUMENT_PATHS.has(value)) return true;
-  return STATIC_DOCUMENT_PREFIXES.some((prefix) => value.startsWith(prefix));
-};
 
 const hasImmediateInsectDataParams = (params) =>
   INSECT_DATA_IMMEDIATE_QUERY_PARAMS.some((name) => params.has(name));
@@ -102,6 +94,7 @@ const shouldLoadInsectPartitionsImmediately = (pathname = '/', params = new URLS
 
 function App() {
   const location = useLocation();
+  const navigationType = useNavigationType();
   const locale = getLocaleFromPath(location.pathname);
   const isEnglish = isEnglishLocale(locale);
   const [moths, setMoths] = useState([]);
@@ -207,6 +200,17 @@ function App() {
       );
     } catch {}
   }, [location.pathname, location.search]);
+
+  // SPA遷移（リンククリック等のPUSH）でページが変わったら先頭から表示する。
+  // POP（戻る/進む）は除外: Explorerが一覧のスクロール位置を復元するのを妨げない。
+  // REPLACE（URL正規化リダイレクト）も除外: 表示中の位置を動かさない。
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (navigationType !== 'PUSH') return;
+    if (location.hash) return;
+    window.scrollTo(0, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!shouldForceDocumentNavigation || typeof window === 'undefined') return undefined;

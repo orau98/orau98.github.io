@@ -1,4 +1,5 @@
 import logger from './utils/logger';
+import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
@@ -65,6 +66,8 @@ const isPrimaryNavigationClick = (event) =>
   !event.shiftKey &&
   !event.altKey;
 
+// 静的HTML（/meta/ 等）へのリンクだけドキュメント遷移させる。
+// SPAルート同士の遷移はReact Routerに任せる（フルリロードさせない）。
 const shouldUseDocumentNavigation = (anchor) => {
   if (typeof window === 'undefined' || !anchor?.href) return false;
   if (anchor.target && anchor.target !== '_self') return false;
@@ -78,13 +81,7 @@ const shouldUseDocumentNavigation = (anchor) => {
   }
 
   if (targetUrl.origin !== window.location.origin) return false;
-
-  const currentPath = `${window.location.pathname}${window.location.search}`;
-  const targetPath = `${targetUrl.pathname}${targetUrl.search}`;
-
-  if (targetPath === currentPath && targetUrl.hash) {
-    return false;
-  }
+  if (!isStaticDocumentPath(targetUrl.pathname)) return false;
 
   return targetUrl.href !== window.location.href;
 };
