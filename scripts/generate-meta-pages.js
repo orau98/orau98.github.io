@@ -2925,18 +2925,28 @@ function generateImageFileLists() {
       nameMapping.set('アオマダラタマムシ', 'Nipponobuprestis_amabilis');
       nameMapping.set('ルイスヒラタチビタマムシ', 'Habroloma_lewisii');
 
+      const imageExtensionPriority = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
       const mothImageFiles = fs.readdirSync(mothImagesDir)
         .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i));
-      const mothImages = mothImageFiles.map(file => file.replace(/\.[^.]+$/, '')).sort();
-      const extensionMapping = {};
+      const imageCandidatesByName = new Map();
       mothImageFiles.forEach(file => {
         const nameWithoutExt = file.replace(/\.[^.]+$/, '');
-        const extension = file.match(/\.[^.]+$/)[0];
-        extensionMapping[nameWithoutExt] = extension;
+        const extension = file.match(/\.[^.]+$/)[0].toLowerCase();
+        if (!imageCandidatesByName.has(nameWithoutExt)) {
+          imageCandidatesByName.set(nameWithoutExt, []);
+        }
+        imageCandidatesByName.get(nameWithoutExt).push(extension);
+      });
+      const mothImages = Array.from(imageCandidatesByName.keys()).sort();
+      const extensionMapping = {};
+      mothImages.forEach(nameWithoutExt => {
+        const extensions = Array.from(new Set(imageCandidatesByName.get(nameWithoutExt) || []));
+        extensions.sort((a, b) => imageExtensionPriority.indexOf(a) - imageExtensionPriority.indexOf(b));
+        extensionMapping[nameWithoutExt] = extensions[0] || '.jpg';
       });
       // クライアントの画像優先表示に必要なインデックスを公開ディレクトリに出力
       fs.writeFileSync(path.join(__dirname, '../public/image_filenames.txt'), mothImages.join('\n') + '\n');
-      fs.writeFileSync(path.join(__dirname, '../public/image_extensions.json'), JSON.stringify(extensionMapping, null, 2));
+      fs.writeFileSync(path.join(__dirname, '../public/image_extensions.json'), JSON.stringify(extensionMapping, null, 2) + '\n');
       console.log(`- 昆虫画像リスト生成完了: ${mothImages.length}件`);
       console.log(`- 画像拡張子マッピング生成完了: ${Object.keys(extensionMapping).length}件`);
     }
