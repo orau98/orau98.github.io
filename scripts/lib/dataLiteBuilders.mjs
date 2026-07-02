@@ -48,6 +48,52 @@ export const isSuspiciousPlantName = (value) => {
   );
 };
 
+// メタページ生成（scripts/generate-meta-pages.js の isValidPlantName）と同基準で
+// 「植物として表示・ページ化する価値のある名前か」を判定する。
+// data-lite の植物インデックスにも同じ基準を適用することで、
+// 「SPA一覧には出るがメタページが無く外部からは404」という不整合を防ぐ。
+const INVALID_PLANT_NAME_PATTERNS = [
+  /科が$/, // 「キョウチクトウ科が」
+  /^記録[）)]?$/,
+  /^が記録[）)]?$/,
+  /^\)[^(]*$/,
+  /^[,、，]/,
+  /[(（][^)）]*$/, // 閉じ括弧のない括弧
+];
+const DESCRIPTIVE_PLANT_NAME_PATTERNS = [
+  /野外で/, /飼育下で/, /から記録/, /による飼育/, /幼虫[がはを]/, /成虫[がはを]/,
+  /海外では/, /ヨーロッパでは/, /日本では/, /を食[すし]/, /を好む/, /から[得発]られ/,
+  /ことが[判知]明/, /推[測定]される/, /と[思考]われる/, /に固有/, /に寄生/, /害虫/,
+  /栽培/, /発生する/, /生息/, /分布/, /寄主植物/, /とするが$/, /植物で$/, /植物であるが$/,
+  /が主な/, /を主な/, /から子実体へ/, /の樹皮下から/,
+];
+const TAXONOMIC_TOKEN_PATTERNS = [
+  /^comb\.\s*nov\.?$/i, /^sp\.?$/i, /^spp\.?$/i, /^var\.?$/i, /^subsp\.?$/i,
+  /^f\.?$/i, /^emend\.?$/i, /^nom\.\s*nud\.?$/i, /^auct\.?$/i, /^non$/i,
+  /^sensu$/i, /^cf\.?$/i, /^aff\.?$/i,
+];
+
+export const isValidPlantName = (plantName) => {
+  const trimmed = cleanString(plantName);
+  if (!trimmed || trimmed === '不明') return false;
+  if (SUSPICIOUS_PLANT_NAME_SET.has(trimmed)) return false;
+  if (trimmed.length < 2 || trimmed.length > 50) return false;
+  if (/^[[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(trimmed)) return false;
+  if (INVALID_PLANT_NAME_PATTERNS.some((p) => p.test(trimmed))) return false;
+  if (/[。．]/.test(trimmed) || /で(飼育|採卵|得られ|記録)/.test(trimmed) || /による/.test(trimmed) || /からの/.test(trimmed)) return false;
+  if (/^[-ー]/.test(trimmed)) return false;
+  if (/^\([^)]*\)$/.test(trimmed)) return false;
+  if (TAXONOMIC_TOKEN_PATTERNS.some((p) => p.test(trimmed))) return false;
+  if (/[0-9０-９]月[上中下]旬|[0-9０-９]月頃/.test(trimmed)) return false;
+  if (DESCRIPTIVE_PLANT_NAME_PATTERNS.some((p) => p.test(trimmed))) return false;
+  if (/^[0-9０-９]+$/.test(trimmed) || /^[A-Za-z]+$/.test(trimmed)) return false;
+  // 純ラテンの二名法・属名連結（例「ハシバミ属 Corylus」「Carex sp」）も、
+  // 最低限の日本語文字を要求することで弾く
+  if (!/[あ-んア-ヶー一-龯]/.test(trimmed)) return false;
+  if (/^[A-Z][a-z]+[,\s]+\d{4}/.test(trimmed)) return false;
+  return true;
+};
+
 export const isFlowerVisitRecord = (record) => {
   if (!record) return false;
   if (record.isFlowerVisit === true) return true;
@@ -164,6 +210,8 @@ export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
         ylistPlants,
       );
       if (!canonical || canonical === '不明') return;
+      // 訪花植物も同じメタページ基準でフィルタし、植物一覧・詳細の整合を保つ
+      if (!isValidPlantName(canonical)) return;
       if (!flowerVisitPlants[canonical]) {
         flowerVisitPlants[canonical] = [];
       }
@@ -263,6 +311,9 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
         aliasToCanonical,
         ylistPlants,
       );
+      // 正規化後の表示名がメタページ基準で無効なら、植物データセットに載せない
+      // （SPA一覧・詳細に出るがメタページが無く外部から404、を防ぐ）
+      if (!isValidPlantName(canonical)) return;
       const detail = ensureDetail(canonical);
       if (preserveLocalTaxonomy) {
         detail.preserveAliasTaxonomy = true;

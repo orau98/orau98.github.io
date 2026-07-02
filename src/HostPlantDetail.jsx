@@ -2170,6 +2170,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                     width={graphSize.width}
                     height={graphSize.height}
                     theme={theme}
+                    locale={locale}
                   />
                 </React.Suspense>
               )}
