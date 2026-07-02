@@ -474,7 +474,9 @@ validateSitemapIndex(path.join(DIST_DIR, 'search-console-submit.xml'), [
   `${SITE_ORIGIN}/sitemap-en-plant.xml`,
 ]);
 validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'), {
-  minUrls: 1500,
+  // 同名植物ページの正規ページ統合でシードURL数が約1450件に減少したため、
+  // 「シードが十分に埋まっている」ことの確認として閾値を1200件に調整
+  minUrls: 1200,
   requiredPrefixes: [
     `${SITE_ORIGIN}/meta/moth/`,
     `${SITE_ORIGIN}/meta/plant/`,
