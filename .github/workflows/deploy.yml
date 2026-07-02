@@ -93,3 +93,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # Pages側のキュー混雑時にdeployment_queuedのまま既定の10分で
+          # タイムアウトすることがあるため、待機を30分まで許容する
+          timeout: 1800000
