@@ -34,6 +34,7 @@ import {
   buildResizedImageUrl,
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
+import { sortPlantNamesTaxonomically } from './utils/taxonomicOrder';
 import DetailSectionNav from './components/DetailSectionNav';
 import NativeShareButton from './components/NativeShareButton';
 import ManualAdSlot from './components/ManualAdSlot';
@@ -2229,11 +2230,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         minHeight="min-h-[120px]"
       />
 
-      {/* 前後の植物へのナビゲーション */}
-      <DetailNavigation 
-        allItems={useMemo(() => Object.keys(hostPlants).sort((a, b) => a.localeCompare(b, 'ja')).map(name => ({ name })), [hostPlants])} 
-        currentId={decodedPlantName} 
-        type="plant" 
+      {/* 前後の植物へのナビゲーション（五十音順ではなく分類順で近縁植物へ移動できる） */}
+      <DetailNavigation
+        allItems={useMemo(() => sortPlantNamesTaxonomically(Object.keys(hostPlants), plantDetails).map(name => ({ name })), [hostPlants, plantDetails])}
+        currentId={decodedPlantName}
+        type="plant"
         locale={locale}
       />
 

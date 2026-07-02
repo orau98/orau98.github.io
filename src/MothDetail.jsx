@@ -40,6 +40,7 @@ import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
+import { sortInsectsTaxonomically } from './utils/taxonomicOrder';
 import {
   INDEX_FOLLOW_ROBOTS,
   NOINDEX_FOLLOW_ROBOTS,
@@ -191,9 +192,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   // Combine all insects for searching
   const allInsects = React.useMemo(() => [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles, ...aphids], [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
   
-  // Sort for navigation
+  // 前後ナビ用の並び順。五十音順ではなく分類順（グループ→科→亜科→族→属→種）にして、
+  // 「次の種」で近縁種へ移動できるようにする
   const sortedInsects = React.useMemo(() => {
-    return [...allInsects].sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    return sortInsectsTaxonomically(allInsects);
   }, [allInsects]);
 
   // Utility: find by slugified Japanese name (URL-safe)
