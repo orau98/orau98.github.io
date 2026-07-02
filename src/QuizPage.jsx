@@ -462,7 +462,7 @@ const FeedbackPhotoPair = ({ question, plantDetails, plantImageFilenames, isEngl
   if (!insect && !plantName) return null;
   return (
     <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700">
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
         {labels.comparePhotos}
       </p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -525,7 +525,7 @@ const Metric = ({ icon: Icon, label, value, tone = 'slate' }) => {
         </span>
         <span className="min-w-0">
           <span className="block text-xs font-bold text-slate-500 dark:text-slate-400">{label}</span>
-          <span className="block text-base font-black leading-tight text-slate-950 dark:text-white">{value}</span>
+          <span className="block text-base font-bold leading-tight text-slate-950 dark:text-white">{value}</span>
         </span>
       </div>
     </div>
@@ -904,13 +904,13 @@ const QuizPage = ({
     const startingLabel = startStage ? labels.startStages[startStage] : labels.starting;
     return (
       <section className="mx-auto max-w-3xl px-4 py-5 md:px-8 md:py-8">
-        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <section className="rounded-card border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {labels.session}
             </p>
-            <h1 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">{labels.today}</h1>
+            <h1 className="mt-1 text-2xl font-bold text-slate-950 dark:text-white">{labels.today}</h1>
             <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">
               {labels.todayLead}
             </p>
@@ -926,7 +926,7 @@ const QuizPage = ({
         </div>
 
         {prioritySubjectKeys.length > 0 && hasPriorityCandidates && priorityIncluded !== false && (
-          <p className="mt-4 inline-flex rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-black text-blue-800 dark:bg-blue-950/60 dark:text-blue-200">
+          <p className="mt-4 inline-flex rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-bold text-blue-800 dark:bg-blue-950/60 dark:text-blue-200">
             {labels.focused}
           </p>
         )}
@@ -936,7 +936,7 @@ const QuizPage = ({
             type="button"
             onClick={startSession}
             disabled={!hasData || isStarting}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-4 text-base font-black text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-4 text-base font-bold text-white shadow-lg shadow-slate-900/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
           >
             {!hasData ? labels.loading : isStarting ? startingLabel : labels.start}
             {hasData && !isStarting && <ChevronRightIcon className="h-5 w-5" />}
@@ -961,7 +961,7 @@ const QuizPage = ({
           </p>
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             <div>
-              <p className="mb-2 text-sm font-black text-slate-700 dark:text-slate-200">{labels.mode}</p>
+              <p className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">{labels.mode}</p>
               <div className="grid grid-cols-2 gap-2">
                 <ModeButton active={mode === QUIZ_MODES.INSECT_TO_PLANT} onClick={() => setMode(QUIZ_MODES.INSECT_TO_PLANT)}>
                   {modeLabels[isEnglish ? 'en' : 'ja'][QUIZ_MODES.INSECT_TO_PLANT]}
@@ -972,7 +972,7 @@ const QuizPage = ({
               </div>
             </div>
             <div>
-              <p className="mb-2 text-sm font-black text-slate-700 dark:text-slate-200">{labels.style}</p>
+              <p className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">{labels.style}</p>
               <div className="grid grid-cols-2 gap-2">
                 <ModeButton active={quizStyle === QUIZ_STYLES.GUIDED} onClick={() => setQuizStyle(QUIZ_STYLES.GUIDED)}>
                   {labels.guidedStyle}
@@ -1011,7 +1011,7 @@ const QuizPage = ({
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                   {modeLabel}
                 </p>
-                <h1 className="mt-1 text-xl font-black text-slate-950 dark:text-white">
+                <h1 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
                   {currentIndex + 1}/{questions.length}
                 </h1>
               </div>
@@ -1040,11 +1040,11 @@ const QuizPage = ({
             variant={isPhotoStyle ? 'photo' : 'default'}
           />
 
-          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+          <div className="rounded-card border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
               {promptInstruction}
             </p>
-            <h2 className="mt-3 text-2xl font-black leading-tight tracking-normal text-slate-950 dark:text-white sm:text-3xl">
+            <h2 className="mt-3 text-2xl font-bold leading-tight tracking-normal text-slate-950 dark:text-white sm:text-3xl">
               {currentQuestion.prompt.title}
             </h2>
             {currentQuestion.prompt.subtitle && (
@@ -1079,11 +1079,11 @@ const QuizPage = ({
                             : 'border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-400 hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-500'
                     }`}
                   >
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-black text-slate-700 shadow-sm dark:bg-slate-950 dark:text-slate-100">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold text-slate-700 shadow-sm dark:bg-slate-950 dark:text-slate-100">
                       {optionNumbers[index]}
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-base font-black sm:text-lg">
+                      <span className="block text-base font-bold sm:text-lg">
                         {option.type === 'insect' && option.subtitle ? option.label : option.label}
                       </span>
                       {option.subtitle && (
@@ -1114,10 +1114,10 @@ const QuizPage = ({
                       <FeedbackIcon className="h-5 w-5" />
                     </span>
                     <div className="min-w-0">
-                      <p className={`text-sm font-black ${currentAnswer?.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
+                      <p className={`text-sm font-bold ${currentAnswer?.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
                         {currentAnswer?.isCorrect ? labels.correct : labels.incorrect}
                       </p>
-                      <p className="mt-1 text-lg font-black text-slate-950 dark:text-white">
+                      <p className="mt-1 text-lg font-bold text-slate-950 dark:text-white">
                         {currentQuestion.explanation.correctLabel}
                       </p>
                       <p className="mt-1 text-sm font-semibold text-slate-600 dark:text-slate-300">
@@ -1128,7 +1128,7 @@ const QuizPage = ({
                   <button
                     type="button"
                     onClick={nextQuestion}
-                    className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                    className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
                   >
                     {labels.next}
                     <ArrowRightIcon className="h-4 w-4" />
@@ -1220,10 +1220,10 @@ const QuizPage = ({
     const topReviewAnswers = missedAnswers.slice(0, 3);
     return (
       <section className="mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-10">
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="overflow-hidden rounded-card border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="bg-slate-950 p-5 text-white sm:p-7">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">{labels.result}</p>
-            <h1 className="mt-3 text-4xl font-black leading-tight tracking-normal sm:text-6xl">{gradeText}</h1>
+            <h1 className="mt-3 text-4xl font-bold leading-tight tracking-normal sm:text-6xl">{gradeText}</h1>
             <div className="mt-5">
               <ProgressDots total={questions.length} answered={questions.length} currentIndex={questions.length - 1} />
             </div>
@@ -1241,14 +1241,14 @@ const QuizPage = ({
                 type="button"
                 onClick={startSession}
                 disabled={isStarting}
-                className="flex items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                className="flex items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 disabled:bg-slate-400 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
               >
                 {isStarting ? (startStage ? labels.startStages[startStage] : labels.starting) : labels.nextSession}
                 <ArrowRightIcon className="h-4 w-4" />
               </button>
               <Link
                 to={localizePath('/', locale)}
-                className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-black text-slate-700 transition hover:border-slate-500 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500"
+                className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-slate-500 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500"
               >
                 {labels.home}
               </Link>
@@ -1257,8 +1257,8 @@ const QuizPage = ({
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-          <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.weakPoints}</h2>
+          <div className="rounded-card border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h2 className="text-xl font-bold text-slate-950 dark:text-white">{labels.weakPoints}</h2>
             {weakItems.length === 0 ? (
               <p className="mt-3 text-slate-600 dark:text-slate-300">{labels.noWeakPoints}</p>
             ) : (
@@ -1266,7 +1266,7 @@ const QuizPage = ({
                 {weakItems.map((item) => (
                   <div key={item.label} className="flex items-center justify-between rounded-lg bg-slate-100 px-3 py-2 dark:bg-slate-800">
                     <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{item.label}</span>
-                    <span className="rounded-md bg-white px-2 py-1 text-xs font-black text-slate-700 dark:bg-slate-950 dark:text-slate-200">
+                    <span className="rounded-md bg-white px-2 py-1 text-xs font-bold text-slate-700 dark:bg-slate-950 dark:text-slate-200">
                       {item.count}
                     </span>
                   </div>
@@ -1275,8 +1275,8 @@ const QuizPage = ({
             )}
           </div>
 
-          <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.reviewTop}</h2>
+          <div className="rounded-card border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h2 className="text-xl font-bold text-slate-950 dark:text-white">{labels.reviewTop}</h2>
             {topReviewAnswers.length === 0 ? (
               <p className="mt-3 text-slate-600 dark:text-slate-300">{labels.noReview}</p>
             ) : (
@@ -1286,7 +1286,7 @@ const QuizPage = ({
                     <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
                       {answer.question.prompt.title}
                     </p>
-                    <p className="mt-1 text-base font-black text-slate-950 dark:text-white">
+                    <p className="mt-1 text-base font-bold text-slate-950 dark:text-white">
                       {answer.correctLabel}
                     </p>
                     {answer.learningPoint && (
@@ -1299,10 +1299,10 @@ const QuizPage = ({
           </div>
         </div>
 
-        <div className="mt-4 rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="mt-4 rounded-card border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-black text-slate-950 dark:text-white">{labels.review}</h2>
-            <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-black text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+            <h2 className="text-xl font-bold text-slate-950 dark:text-white">{labels.review}</h2>
+            <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
               {missedAnswers.length}/{questions.length}
             </span>
           </div>
@@ -1315,7 +1315,7 @@ const QuizPage = ({
                   <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
                     {answer.question.prompt.title}
                   </p>
-                  <p className="mt-1 text-base font-black text-slate-950 dark:text-white">
+                  <p className="mt-1 text-base font-bold text-slate-950 dark:text-white">
                     {isEnglish ? 'Correct answer:' : '正解:'} {answer.correctLabel}
                   </p>
                   <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
@@ -1337,7 +1337,7 @@ const QuizPage = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div className="min-h-screen text-slate-900 dark:text-slate-100">
       {questions.length === 0 && renderStart()}
       {questions.length > 0 && !isResult && currentQuestion && renderQuestion()}
       {isResult && renderResult()}
