@@ -65,10 +65,10 @@ export default function ListFilterPanel({
                     {filter.type}: {filter.value}
                     <button
                       onClick={filter.clear}
-                      className="ml-1.5 text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-slate-100 focus:outline-none"
+                      className="-my-1 ml-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-500 hover:bg-slate-300/50 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 dark:text-slate-300 dark:hover:bg-slate-600/60 dark:hover:text-slate-100"
                       aria-label={getClearFilterLabel ? getClearFilterLabel(filter.type) : ''}
                     >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>

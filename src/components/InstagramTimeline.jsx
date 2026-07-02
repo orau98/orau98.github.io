@@ -14,7 +14,10 @@ const InstagramTimeline = ({ urls = [], className = '' }) => {
   return (
     <div className={`space-y-4 ${className}`}>
       {urls.map((url, idx) => (
-        <div key={`${idx}-${url}`} className="bg-white/60 dark:bg-slate-800/60 rounded-lg overflow-hidden">
+        <div
+          key={`${idx}-${url}`}
+          className="rounded-lg overflow-hidden bg-white/60 p-0 dark:bg-slate-800/60 dark:p-2 dark:ring-1 dark:ring-slate-700/80 sm:dark:p-3"
+        >
           <InstagramEmbed url={url} />
         </div>
       ))}

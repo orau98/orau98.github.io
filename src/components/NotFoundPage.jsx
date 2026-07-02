@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   NOINDEX_NOFOLLOW_ROBOTS,
   setRobotsMetaContent,
@@ -8,7 +8,16 @@ import { isEnglishLocale, localizePath } from '../utils/locale';
 
 const NotFoundPage = ({ locale = 'ja' }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isEnglish = isEnglishLocale(locale);
+  const [query, setQuery] = useState('');
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const term = query.trim();
+    if (!term) return;
+    navigate(`${localizePath('/', locale)}?q=${encodeURIComponent(term)}`);
+  };
 
   useEffect(() => {
     const prevTitle = document.title;
@@ -46,6 +55,23 @@ const NotFoundPage = ({ locale = 'ja' }) => {
             URL: {location.pathname}
           </p>
         )}
+        {/* その場で再検索できる回復動線 */}
+        <form onSubmit={handleSearchSubmit} className="mb-6 flex items-center justify-center gap-2">
+          <label htmlFor="notfound-search" className="sr-only">
+            {isEnglish ? 'Search insects and plants' : '昆虫・植物を検索'}
+          </label>
+          <input
+            id="notfound-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={isEnglish ? 'Search insects or plants…' : '昆虫名・植物名で検索…'}
+            className="w-full max-w-xs rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-transparent focus:ring-2 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+          />
+          <button type="submit" className="ui-btn ui-btn-primary shrink-0">
+            {isEnglish ? 'Search' : '検索'}
+          </button>
+        </form>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link to={localizePath('/', locale)} className="ui-btn ui-btn-primary">
             {isEnglish ? 'Go to homepage' : 'トップページへ戻る'}

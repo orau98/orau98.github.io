@@ -175,40 +175,7 @@ function buildPlantPictureHtml(file, altText) {
                   >`;
 }
 
-function buildExplorerRedirectHtml({ title, tab, label }) {
-  const targetPath = `/en/?tab=${encodeURIComponent(tab)}`;
-  const targetUrl = `${BASE_ORIGIN}${targetPath}`;
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, follow">
-  <title>${escapeHtml(title)}</title>
-  <link rel="canonical" href="${targetUrl}">
-  <meta http-equiv="refresh" content="0;url=${targetUrl}">
-  <script>
-    (function() {
-      var params = new URLSearchParams(window.location.search || '');
-      if (!params.has('tab')) params.set('tab', ${JSON.stringify(tab)});
-      window.location.replace('/en/?' + params.toString() + (window.location.hash || ''));
-    })();
-  </script>
-</head>
-<body>
-  <main>
-    <p>Opening ${escapeHtml(label)}...</p>
-    <p><a href="${targetPath}">${escapeHtml(label)}</a></p>
-  </main>
-</body>
-</html>`;
-}
-
-function writeExplorerRedirect(segment, options) {
-  const routeDir = path.join(PUBLIC_EN_DIR, segment);
-  ensureDir(routeDir);
-  fs.writeFileSync(path.join(routeDir, 'index.html'), buildExplorerRedirectHtml(options));
-}
+// 旧 /en/moth/ /en/plant/ 用の静的リダイレクトは廃止した（SPAルートが直接描画する）。
 
 function decodePathSegment(segment) {
   try {
@@ -1183,17 +1150,6 @@ async function generateEnglishMetaPages() {
   restorePreservedEnglishStaticFiles(preservedEnglishStaticFiles);
   Object.keys(insectsByType).forEach((type) => ensureDir(path.join(EN_META_DIR, type)));
   ensureDir(path.join(EN_META_DIR, 'plant'));
-  writeExplorerRedirect('plant', {
-    title: 'Opening plant search | Insects and Host Plants of Japan',
-    tab: 'plants',
-    label: 'plant search',
-  });
-  writeExplorerRedirect('moth', {
-    title: 'Opening insect search | Insects and Host Plants of Japan',
-    tab: 'insects',
-    label: 'insect search',
-  });
-
   const { plantRecords, aliasToCanonical } = buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite);
 
   const insectEntriesByType = new Map();

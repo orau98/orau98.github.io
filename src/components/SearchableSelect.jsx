@@ -1,6 +1,8 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { normalizeForSearch } from '../utils/text';
 
-const normalize = (value = '') => String(value || '').trim().toLowerCase();
+// メイン検索と同じかな正規化を通し、「ぶな」でも「ブナ」候補が出るようにする
+const normalize = (value = '') => normalizeForSearch(value);
 
 export default function SearchableSelect({
   id,
@@ -127,7 +129,7 @@ export default function SearchableSelect({
               type="button"
               onMouseDown={(event) => event.preventDefault()}
               onClick={clearValue}
-              className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              className="rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
               aria-label={isEnglish ? `Clear ${label}` : `${label}を解除`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

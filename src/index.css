@@ -362,6 +362,11 @@
   min-width: 0 !important;
 }
 
+/* iframe化で高さが確定するまでの局所レイアウトシフトを抑える */
+.instagram-embed-container {
+  min-height: 380px;
+}
+
 /* Text clamp utilities */
 .line-clamp-1 {
   display: -webkit-box;
@@ -563,6 +568,13 @@ img[loading="lazy"] {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* モバイルで食草ネットワーク図の上に指を置いても縦スクロールを奪わない。
+   縦スワイプはページスクロール、横ドラッグ・ピンチはグラフ操作に渡す */
+.food-web-graph-touch,
+.food-web-graph-touch canvas {
+  touch-action: pan-y !important;
 }
 
 /* Performance optimization for transformed elements */

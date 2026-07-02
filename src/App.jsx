@@ -190,6 +190,7 @@ function App() {
         params.has('ihost') ||
         params.has('ifamily') ||
         params.has('igenus') ||
+        params.has('igroup') ||
         params.has('imonth') ||
         params.has('pfamily') ||
         params.has('porder') ||
@@ -711,7 +712,9 @@ function App() {
       const genusMappingCsvPath = `${import.meta.env.BASE_URL}genus_mapping.csv`;
       
       // 正規化データのパス（新しい3ファイル構造）
-      const assetVersion = import.meta.env.VITE_ASSET_VERSION || '';
+      // デプロイ毎に自動更新される APP_BUILD_ID を優先し、手動版数の上げ忘れによる
+      // data-lite JSON との版ズレ（古いCSVがキャッシュから返る）を防ぐ
+      const assetVersion = APP_BUILD_ID || import.meta.env.VITE_ASSET_VERSION || '';
       const normalizedInsectsCsvPath = import.meta.env.DEV
         ? `${import.meta.env.BASE_URL}insects.csv?v=${Date.now()}`
         : `${import.meta.env.BASE_URL}insects.csv${assetVersion ? `?v=${assetVersion}` : ''}`;

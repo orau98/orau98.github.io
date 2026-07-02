@@ -143,7 +143,7 @@ const InfoPopover = ({
     >
       <button
         type="button"
-        className={buttonClassName || 'inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100 dark:hover:bg-slate-800'}
+        className={buttonClassName || 'relative inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition before:absolute before:-inset-2 before:content-[""] hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-100 dark:hover:bg-slate-800'}
         aria-label={buttonAriaLabel}
         aria-expanded={open}
         aria-controls={panelId}

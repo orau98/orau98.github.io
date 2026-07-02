@@ -44,7 +44,8 @@ const ImageWithFallback = ({
   srcSet,
   sizes,
   sources = [],
-  alt, 
+  alt = '', // alt未指定でもSRがファイル名を読み上げないよう空文字を既定にする
+
   className = '', 
   imgClassName = '',
   fit = 'contain', // contain | cover | fill | none | scale-down
@@ -235,10 +236,10 @@ const ImageWithFallback = ({
   );
 
   return (
-    <div className={`relative overflow-hidden bg-gray-100 dark:bg-gray-800 ${className}`} style={{ width, height }}>
+    <div className={`relative overflow-hidden bg-slate-100 dark:bg-slate-800 ${className}`} style={{ width, height }}>
       {/* Loading Skeleton */}
       {status === 'loading' && (
-        <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse z-10 flex items-center justify-center">
+        <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse z-10 flex items-center justify-center">
            <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin opacity-50"></div>
         </div>
       )}

@@ -50,6 +50,16 @@ const FloatingActionButton = () => {
     setIsOpen(false);
   }, [location]);
 
+  // キーボード利用者がメニューを閉じられるよう Escape に対応
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
+
   // Generate Table of Contents (TOC) for detail pages
   useEffect(() => {
     // Only generate TOC for detail pages

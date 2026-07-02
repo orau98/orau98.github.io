@@ -9,6 +9,9 @@ import logger from '../utils/logger';
 export default class ChunkErrorBoundary extends React.Component {
   static MAX_AUTO_RETRIES = 3;
   static RETRY_DELAYS = [1000, 2000, 4000]; // 指数バックオフ
+  // デプロイ直後は旧HTMLが参照するハッシュ付きチャンクが恒久404になるため、
+  // リトライ枯渇時は新しいindex.htmlを取り直すハードリロードで復旧する
+  static RELOAD_FLAG = 'chunk-error-hard-reloaded';
 
   constructor(props) {
     super(props);
@@ -18,6 +21,17 @@ export default class ChunkErrorBoundary extends React.Component {
 
   static getDerivedStateFromError(error) {
     return { error };
+  }
+
+  componentDidMount() {
+    // 正常にマウントできたら、次回デプロイでも再度ハードリロードできるようフラグを解除
+    try {
+      if (!this.state.error) {
+        sessionStorage.removeItem(ChunkErrorBoundary.RELOAD_FLAG);
+      }
+    } catch {
+      // sessionStorage が使えない環境では何もしない
+    }
   }
 
   componentDidCatch(error, info) {
@@ -37,10 +51,29 @@ export default class ChunkErrorBoundary extends React.Component {
     }
   }
 
+  attemptHardReload = () => {
+    try {
+      if (sessionStorage.getItem(ChunkErrorBoundary.RELOAD_FLAG)) {
+        return false;
+      }
+      sessionStorage.setItem(ChunkErrorBoundary.RELOAD_FLAG, '1');
+    } catch {
+      // sessionStorage が使えない場合は無限リロードを防げないため諦める
+      return false;
+    }
+    window.location.reload();
+    return true;
+  };
+
   scheduleAutoRetry = () => {
     const { autoRetryCount } = this.state;
 
     if (autoRetryCount >= ChunkErrorBoundary.MAX_AUTO_RETRIES) {
+      // 同一URLの再試行では直らない（=旧デプロイのチャンクが404）可能性が高いので
+      // 一度だけページ全体を再読み込みして最新のアセット参照を取得する
+      if (this.attemptHardReload()) {
+        return;
+      }
       this.setState({ autoRetrying: false });
       return;
     }
@@ -62,10 +95,16 @@ export default class ChunkErrorBoundary extends React.Component {
   };
 
   handleRetry = () => {
-    // 手動リトライ時はカウンターをリセット
     if (this.autoRetryTimeoutRef) {
       clearTimeout(this.autoRetryTimeoutRef);
     }
+    // 自動リトライが尽きた後の手動操作は、ユーザーの明示的な意思なので
+    // フラグに関係なくページ全体を再読み込みする
+    if (this.state.autoRetryCount >= ChunkErrorBoundary.MAX_AUTO_RETRIES) {
+      window.location.reload();
+      return;
+    }
+    // 手動リトライ時はカウンターをリセット
     this.setState((prev) => ({
       error: null,
       attempt: prev.attempt + 1,
@@ -99,7 +138,7 @@ export default class ChunkErrorBoundary extends React.Component {
               </span>
             ) : autoRetryCount >= ChunkErrorBoundary.MAX_AUTO_RETRIES ? (
               <span className="block mt-2">
-                自動リトライに失敗しました。手動で再試行してください。
+                サイトが更新された可能性があります。ページを再読み込みしてください。
               </span>
             ) : null}
           </p>
@@ -117,7 +156,11 @@ export default class ChunkErrorBoundary extends React.Component {
             disabled={autoRetrying}
             className="px-4 py-2 min-h-[44px] rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
-            {autoRetrying ? '再試行中...' : 'もう一度読み込む'}
+            {autoRetrying
+              ? '再試行中...'
+              : autoRetryCount >= ChunkErrorBoundary.MAX_AUTO_RETRIES
+                ? 'ページを再読み込み'
+                : 'もう一度読み込む'}
           </button>
         </div>
       );

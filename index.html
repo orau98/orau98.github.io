@@ -178,13 +178,9 @@
       analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H';
       analytics.onload = function () {
         window.gtag('js', new Date());
+        // page_view はSPA側の PageViewTracker に一本化する。
+        // gtag スタブは先頭で定義済みなので、初回分も dataLayer 経由で確実に届く。
         window.gtag('config', 'G-MFEQF99G0H', { send_page_view: false });
-        window.gtag('event', 'page_view', {
-          send_to: 'G-MFEQF99G0H',
-          page_title: document.title || '昆虫植物図鑑',
-          page_path: window.location.pathname + window.location.search + window.location.hash,
-          page_location: window.location.href,
-        });
       };
       document.head.appendChild(analytics);
     };
@@ -220,40 +216,6 @@
     });
   })();
 </script>
-  <!-- SPA深いURL復元スクリプト（404.htmlからのリダイレクト対応） -->
-  <script>
-  (function () {
-    // ===== GitHub Pages SPA深いURL復元スクリプト =====
-    // 404.html から index.html?redirect=... で到達した場合、
-    // 元の深いURLをアドレスバーに復元します
-    
-    // index.html?redirect=... で到達したとき、元の深いURLを復元する
-    var params = new URLSearchParams(location.search);
-    var redirectUrl = params.get('redirect');
-    
-    // リダイレクトパラメータがない場合は通常アクセスなので何もしない
-    if (!redirectUrl) {
-      // 通常アクセス時は何もしない（本番はログ出力もしない）
-      return;
-    }
-    
-    try {
-      // デコードして元のURL（パス + クエリ + ハッシュ）に戻す
-      var originalUrl = decodeURIComponent(redirectUrl);
-
-      // アドレスバーだけを書き換える（ページリロードは行わない）
-      // これにより、?redirect= パラメータがアドレスバーから消える
-      history.replaceState(null, '', originalUrl);
-
-      // 以降はSPAのルーター（React Router等）がこのURLを見て画面を描画する
-    } catch (error) {
-      // デコードエラーなどが発生した場合のフォールバック
-      // 本番ではユーザーに見えないようログを抑制
-      history.replaceState(null, '', '/');
-    }
-  })();
-  </script>
-
   </head>
   <body>
     <div id="root"></div>

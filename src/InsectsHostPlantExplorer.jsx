@@ -605,7 +605,8 @@ const InsectsHostPlantExplorer = memo(
       } else {
         newParams.delete("q");
       }
-      setSearchParams(newParams, { replace: true });
+      // 明示的な検索確定は履歴に残し、戻るで1つ前の状態に戻れるようにする
+      setSearchParams(newParams);
     }, [activeTab, getCurrentParams, setSearchParams]);
 
     const setActiveTabWithUrl = (tab) => {
@@ -619,7 +620,8 @@ const InsectsHostPlantExplorer = memo(
       const nextSearch = (searchByTab[tab] || "").trim();
       if (nextSearch) newParams.set("q", nextSearch);
       else newParams.delete("q");
-      setSearchParams(newParams, { replace: true });
+      // タブ切替は履歴に残す（戻るでタブごと離脱しないように）
+      setSearchParams(newParams);
     };
 
     // 逆引き動線: 現在の検索語を保持したまま反対のタブ（昆虫⇄植物）へ切り替える
@@ -635,7 +637,7 @@ const InsectsHostPlantExplorer = memo(
       newParams.set("tab", otherTab);
       if (term) newParams.set("q", term);
       else newParams.delete("q");
-      setSearchParams(newParams, { replace: true });
+      setSearchParams(newParams);
       const resultsEl = typeof document !== "undefined" && document.getElementById("explorer-results");
       if (resultsEl) resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
     }, [activeTab, searchByTab, setActiveTab, getCurrentParams, setSearchParams]);
@@ -1854,7 +1856,7 @@ const InsectsHostPlantExplorer = memo(
                   </svg>
                   <span className="flex items-center gap-1">
                     <span>{ui.insectsTab}</span>
-                    <span className="text-[11px] sm:text-sm">
+                    <span className="text-xs sm:text-sm">
                       (
                       {moths.length +
                         butterflies.length +
@@ -1903,7 +1905,7 @@ const InsectsHostPlantExplorer = memo(
                   </svg>
                   <span className="flex items-center gap-1">
                     <span>{ui.plantsTab}</span>
-                    <span className="text-[11px] sm:text-sm">({mergedHostPlantCount})</span>
+                    <span className="text-xs sm:text-sm">({mergedHostPlantCount})</span>
                   </span>
                 </div>
                 {activeTab === "plants" && (
