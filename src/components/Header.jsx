@@ -123,8 +123,9 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             <div className="relative">
               {/* タイル背景はサイトアイコン（favicon）と同じ緑→青緑の2色グラデに統一 */}
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-emerald-500/50 sm:h-12 sm:w-12">
-                {/* サイトアイコンと同じ「かじられた葉」。食痕と主脈はマスクで透過させ、タイルのグラデーションを透かす */}
-                <svg className="h-6 w-6 text-white drop-shadow-lg sm:h-7 sm:w-7" viewBox="0 0 64 64" aria-hidden="true">
+                {/* サイトアイコンと同じ「かじられた葉」。食痕と主脈はマスクで透過させ、タイルのグラデーションを透かす。
+                    タイル内で葉が小さく見えないよう、タイル幅の8割程度まで拡大して描画する */}
+                <svg className="h-8 w-8 text-white drop-shadow-lg sm:h-10 sm:w-10" viewBox="0 0 64 64" aria-hidden="true">
                   <defs>
                     <mask id="logo-leaf-bite">
                       <rect width="64" height="64" fill="#fff" />
@@ -221,8 +222,11 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
               className="group inline-flex min-h-[44px] items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
               aria-label={isEnglish ? 'Open four-choice quiz' : '4択図鑑を開く'}
             >
-              <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9h6m-6 4h3m-7 8h14a2 2 0 002-2V5a2 2 0 00-2-2H7L3 7v12a2 2 0 002 2z" />
+              {/* 「クイズ」と直感的に伝わる吹き出し＋？アイコン（旧: 書類アイコンは用途が伝わらなかった） */}
+              <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087A9.72 9.72 0 0012 20.25z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.1 9.4a1.95 1.95 0 113.4 1.3c-.5.55-1.4.9-1.4 1.8v.25" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.6} d="M12.1 15.5h.01" />
               </svg>
               <span className="hidden sm:inline">{isEnglish ? 'Quiz' : '4択図鑑'}</span>
             </Link>
