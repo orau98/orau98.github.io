@@ -8,6 +8,7 @@ import { isEnglishLocale } from '../utils/locale';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import { getHostResourceType } from '../utils/hostResource';
+import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisitStyle';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -549,7 +550,7 @@ const EnhancedHostPlantDisplay = ({
     <div className="space-y-4">
       {hostGroups.length > 0 && (
         <div className="space-y-2">
-          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+          <div className={`text-xs font-semibold uppercase tracking-wide ${HOST_STYLE.labelText}`}>
             {isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
           </div>
           <div className="space-y-2">
@@ -573,7 +574,7 @@ const EnhancedHostPlantDisplay = ({
                 onClick={() => setShowAllHost(!showAllHost)}
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
               >
-                {showAllHost ? (isEnglish ? 'Show less' : '簡略表示') : (isEnglish ? `Show ${hostGroups.length - maxDisplayCount} more` : `他${hostGroups.length - maxDisplayCount}種を表示`)}
+                {showAllHost ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(hostGroups.length - maxDisplayCount, isEnglish)}
                 <svg 
                   className={`ml-1 w-4 h-4 transition-transform ${showAllHost ? 'rotate-180' : ''}`}
                   fill="none" 
@@ -590,7 +591,7 @@ const EnhancedHostPlantDisplay = ({
 
       {flowerGroups.length > 0 && (
         <div className="space-y-2">
-          <div className="text-xs font-semibold text-pink-600 dark:text-pink-300 uppercase tracking-wide">
+          <div className={`text-xs font-semibold uppercase tracking-wide ${FLOWER_STYLE.labelText}`}>
             {isEnglish ? 'Adult flower visits' : '成虫の訪花'}
           </div>
           <div className="space-y-2">
@@ -612,9 +613,9 @@ const EnhancedHostPlantDisplay = ({
             <div className="text-center">
               <button
                 onClick={() => setShowAllFlower(!showAllFlower)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-lg transition-colors"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors"
               >
-                {showAllFlower ? (isEnglish ? 'Show less' : '簡略表示') : (isEnglish ? `Show ${flowerGroups.length - maxDisplayCount} more` : `他${flowerGroups.length - maxDisplayCount}種を表示`)}
+                {showAllFlower ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(flowerGroups.length - maxDisplayCount, isEnglish)}
                 <svg 
                   className={`ml-1 w-4 h-4 transition-transform ${showAllFlower ? 'rotate-180' : ''}`}
                   fill="none" 

@@ -2222,7 +2222,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             )}
             {flowerVisitInsects.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold text-pink-600 dark:text-pink-300 mb-4">
+                <h3 className="text-lg font-semibold text-rose-600 dark:text-rose-300 mb-4">
                   {isEnglish ? `Insects recorded as flower visitors (${flowerVisitInsects.length})` : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`}
                 </h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
