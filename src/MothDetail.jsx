@@ -1140,7 +1140,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       {leafbeetleId && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
       {aphidId && moth && <AphidStructuredData aphid={moth} />}
       {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
-      <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 sm:pt-8">
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 sm:pt-8">
         {/* パンくずリスト */}
         <div className="hidden md:block">
           <Breadcrumb
@@ -1163,7 +1163,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           />
         </div>
         {/* モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ */}
-        <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 scroll-fade-right sm-scroll-fade-none [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
+        <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1 scroll-fade-right sm-scroll-fade-none [&>*]:shrink-0 sm:mb-6 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
           <Link
             to={getBackTarget(location, localizePath('/?tab=insects', locale))}
             state={makeDetailLinkState(location)}
