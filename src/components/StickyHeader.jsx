@@ -100,12 +100,11 @@ const StickyHeader = ({
 
   return (
     <>
-    {/* レイアウトシフト防止用のスペースホルダー */}
-    <div
-      className="h-0 transition-[height] duration-300"
-      style={{ height: isVisible ? 'var(--app-sticky-header-height, 0px)' : '0px' }}
-      aria-hidden="true"
-    />
+    {/* 注意: ここにレイアウト用スペーサーを置いてはいけない。
+        このコンポーネントはヒーローより上のDOMにあり、表示判定はヒーローの
+        IntersectionObserverなので、表示時にスペーサーで下の内容（ヒーロー）を
+        押し下げると「表示→ヒーロー再進入→非表示→収縮→ヒーロー退出→表示…」の
+        自励発振（画面のガタつき）が起きる。ヘッダーはfixedオーバーレイのみとする */}
     <div
       id="sticky-header"
       aria-hidden={!isVisible}
