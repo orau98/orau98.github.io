@@ -4,7 +4,7 @@ export { isNonPlantResourceName, isPlantHostRecord };
 
 export const cleanString = (value) => (value ?? '').toString().trim();
 
-const SUSPICIOUS_PLANT_NAME_SET = new Set([
+export const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '葉',
   '葉裏',
   '葉表',
@@ -64,7 +64,7 @@ const INVALID_PLANT_NAME_PATTERNS = [
   /科が$/, // 「キョウチクトウ科が」
   /^記録[）)]?$/,
   /^が記録[）)]?$/,
-  /^\)[^(]*$/,
+  /^[)）][^(（]*$/, // 閉じ括弧で始まる（括弧の後半のみ／全角・半角どちらも）
   /^[,、，]/,
   /[(（][^)）]*$/, // 閉じ括弧のない括弧
 ];

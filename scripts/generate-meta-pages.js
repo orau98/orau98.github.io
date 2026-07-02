@@ -20,6 +20,13 @@ import {
 } from '../src/utils/filename.js';
 import { bibliography } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
+// 植物名バリデーションは data-lite 生成と共有する単一実装を使う。
+// （かつてローカルに重複コピーを持っていたが、正規表現の二重エスケープ等で
+//  基準がドリフトし「SPA一覧には出るがメタページが無く404」を招いていた。）
+import {
+  isValidPlantName,
+  SUSPICIOUS_PLANT_NAME_SET,
+} from './lib/dataLiteBuilders.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,29 +75,6 @@ const INSECT_TYPE_NAMES = Object.fromEntries(
 const INSECT_DEFAULT_FAMILIES = Object.fromEntries(
   INSECT_SECTION_CONFIGS.map(({ type, defaultFamilyName }) => [type, defaultFamilyName]),
 );
-const SUSPICIOUS_PLANT_NAME_SET = new Set([
-  '葉',
-  '葉裏',
-  '葉表',
-  '茎',
-  '茎と葉裏',
-  '主として茎',
-  '根',
-  '成葉の裏面',
-  '生長部の茎と葉裏',
-  '新梢の生長部',
-  '新梢の茎',
-  '穂',
-  '地中の根',
-  // 植物ではない/曖昧すぎるホスト記録（菌類・動物質・総称）。植物メタページを生成しない。
-  'カワラタケ  などの菌類',
-  'カワラタケ (サルノコシカケ科) などの菌',
-  '魚粉などの動物質',
-  'シリアル食品や豆類などの植物性のもの',
-  'アブラナ科その他の草本など多種の植物',
-  '多種の植物',
-]);
-
 function readJsonOrEmpty(filePath) {
   try {
     if (!fs.existsSync(filePath)) return {};
@@ -625,155 +609,6 @@ function findLatestBackupPath(dirPath, prefix) {
   } catch {
     return null;
   }
-}
-
-// 植物名として有効かどうかを検証
-function isValidPlantName(plantName) {
-  if (!plantName || typeof plantName !== 'string') {
-    return false;
-  }
-  
-  const trimmed = plantName.trim();
-  
-  // 空文字列や空白のみの文字列を除外
-  if (trimmed === '' || trimmed.length === 0) {
-    return false;
-  }
-  
-  // 「不明」を除外
-  if (trimmed === '不明') {
-    return false;
-  }
-
-  if (SUSPICIOUS_PLANT_NAME_SET.has(trimmed)) {
-    return false;
-  }
-  
-  // 基本的な長さチェック
-  if (trimmed.length < 2 || trimmed.length > 50) {
-    return false;
-  }
-  
-  // 年号パターンを除外（括弧・角括弧・重複閉じ括弧にも対応）
-  if (/^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test(trimmed)) {
-    return false;
-  }
-  
-  // 不正な植物名パターンを除外（「キョウチクトウ科が」「記録）」等）
-  const invalidPatterns = [
-    /科が$/,           // 「科が」で終わる
-    /^記録[）)]?$/,    // 「記録」「記録）」
-    /^が記録[）)]?$/,  // 「が記録」「が記録）」
-    /^\)[^(]*$/,       // 「）」で始まる（括弧の後半のみ）
-    /^[,、，]/,        // カンマ・読点で始まる（例：「,コウマゴヤシ」）
-    /[(（][^)）]*$/,   // 閉じ括弧のない括弧を含む（例：「Spiraea nipponica(本州」）
-  ];
-  
-  for (const pattern of invalidPatterns) {
-    if (pattern.test(trimmed)) {
-      return false;
-    }
-  }
-  
-  // 文章的なパターンを除外（句点や説明文）
-  if (/[。．]/.test(trimmed) || /で(飼育|採卵|得られ|記録)/.test(trimmed) || /による/.test(trimmed) || /からの/.test(trimmed)) {
-    return false;
-  }
-  
-  // ハイフンで始まる植物名を除外
-  if (/^[-ー]/.test(trimmed)) {
-    return false;
-  }
-  
-  // 括弧内の説明だけの場合を除外
-  if (/^\([^)]*\)$/.test(trimmed)) {
-    return false;
-  }
-  
-  // 学名記号を除外
-  const taxonomicPatterns = [
-    /^comb\.\\s*nov\.?$/i,
-    /^sp\.?$/i,
-    /^spp\.?$/i,
-    /^var\.?$/i,
-    /^subsp\.?$/i,
-    /^f\.?$/i,
-    /^emend\.?$/i,
-    /^nom\.\\s*nud\.?$/i,
-    /^auct\.?$/i,
-    /^non$/i,
-    /^sensu$/i,
-    /^cf\.?$/i,
-    /^aff\.?$/i
-  ];
-  
-  for (const pattern of taxonomicPatterns) {
-    if (pattern.test(trimmed)) {
-      return false;
-    }
-  }
-  
-  // 時期情報を含む場合は除外
-  if (/[0-9０-９]月[上中下]旬|[0-9０-９]月頃/.test(trimmed)) {
-    return false;
-  }
-  
-  // 説明文のパターンを除外
-  const descriptivePatterns = [
-    /野外で/,
-    /飼育下で/,
-    /から記録/,
-    /による飼育/,
-    /幼虫[がはを]/,
-    /成虫[がはを]/,
-    /海外では/,
-    /ヨーロッパでは/,
-    /日本では/,
-    /を食[すし]/,
-    /を好む/,
-    /から[得発]られ/,
-    /ことが[判知]明/,
-    /推[測定]される/,
-    /と[思考]われる/,
-    /に固有/,
-    /に寄生/,
-    /害虫/,
-    /栽培/,
-    /発生する/,
-    /生息/,
-    /分布/,
-    /寄主植物/,
-    /とするが$/,
-    /植物で$/,
-    /植物であるが$/,
-    /が主な/,
-    /を主な/,
-    /から子実体へ/,
-    /の樹皮下から/
-  ];
-  
-  for (const pattern of descriptivePatterns) {
-    if (pattern.test(trimmed)) {
-      return false;
-    }
-  }
-  
-  // 数字だけ、英字だけは除外
-  if (/^[0-9０-９]+$/.test(trimmed) || /^[A-Za-z]+$/.test(trimmed)) {
-    return false;
-  }
-  
-  // 最低限日本語文字を含むこと
-  if (!/[あ-ん ア-ヶー一-龯]/.test(trimmed)) {
-    return false;
-  }
-  
-  // 著者名パターンを除外
-  if (/^[A-Z][a-z]+[,\\s]+\\d{4}/.test(trimmed)) {
-    return false;
-  }
-  
-  return true;
 }
 
 // 植物名を正規化する関数
