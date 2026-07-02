@@ -121,19 +121,20 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
         <div className="flex items-center justify-between gap-2.5 py-3 sm:min-h-20 sm:py-2">
           <Link to={homePath} className="group flex min-w-0 flex-1 items-center gap-2.5 transition-transform duration-200 sm:gap-3 sm:hover:scale-105">
             <div className="relative">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-500 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-emerald-500/50 sm:h-12 sm:w-12">
+              {/* タイル背景はサイトアイコン（favicon）と同じ緑→青緑の2色グラデに統一 */}
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-emerald-500/50 sm:h-12 sm:w-12">
                 {/* サイトアイコンと同じ「かじられた葉」。食痕と主脈はマスクで透過させ、タイルのグラデーションを透かす */}
                 <svg className="h-6 w-6 text-white drop-shadow-lg sm:h-7 sm:w-7" viewBox="0 0 64 64" aria-hidden="true">
                   <defs>
                     <mask id="logo-leaf-bite">
                       <rect width="64" height="64" fill="#fff" />
-                      <circle cx="49" cy="31" r="7.5" fill="#000" />
-                      <circle cx="23" cy="16" r="6" fill="#000" />
-                      <circle cx="27" cy="53" r="4.5" fill="#000" />
-                      <path d="M45 19 C37 27 27 37 19 45" fill="none" stroke="#000" strokeWidth="3" strokeLinecap="round" />
+                      <circle cx="53" cy="25" r="8.5" fill="#000" />
+                      <circle cx="45" cy="51" r="7" fill="#000" />
+                      <circle cx="20" cy="16" r="5.5" fill="#000" />
+                      <path d="M30 15 C30 27 32 40 36 51" fill="none" stroke="#000" strokeWidth="2.6" strokeLinecap="round" />
                     </mask>
                   </defs>
-                  <path d="M53 11 C54 33 34 54 11 53 C10 31 31 10 53 11 Z" fill="currentColor" mask="url(#logo-leaf-bite)" />
+                  <path d="M32 10 C48 16 54 30 50 44 C46 54 36 56 30 54 C18 50 12 36 16 24 C19 15 26 11 32 10 Z" fill="currentColor" mask="url(#logo-leaf-bite)" />
                 </svg>
               </div>
             </div>
