@@ -6,7 +6,7 @@ import {
   formatScientificNameReact,
   renderLocalizedScientificNameListReact,
 } from '../utils/scientificNameFormatter.jsx';
-import EmergenceTimeDisplay from './EmergenceTimeDisplay';
+import EmergenceTimeDisplay, { hasEmergencePeriods } from './EmergenceTimeDisplay';
 import ListFilterPanel from './ListFilterPanel';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
@@ -546,7 +546,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中)/.test(text)
                 );
                 
-                if (normalizedTime || hasSupplementalEmergenceHint) {
+                // 月データを導出できない種では空のバー（＋区切り線）を出さない
+                if ((normalizedTime || hasSupplementalEmergenceHint) &&
+                    hasEmergencePeriods(normalizedTime || '', supplementalEmergenceTexts)) {
                   return (
                     <div className="border-t border-slate-100 pt-1.5 dark:border-slate-700/50 sm:pt-2">
                       <EmergenceTimeDisplay 
@@ -1764,7 +1766,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
         </div>
         </ListFilterPanel>
-        <PresetFilterChips label={ui.groupLabel} chips={groupChips} />
         <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
         <ListDisplayControls
           viewMode={viewMode}
@@ -1789,6 +1790,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     };
     return (
       <>
+        {/* グループ切替は主要導線なので、モバイルでも「条件」ドロワーの外に常時表示する */}
+        {groupChips.length > 0 && (
+          <div className="mb-2 sm:mb-3">
+            <PresetFilterChips label={ui.groupLabel} chips={groupChips} />
+          </div>
+        )}
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 [&::-webkit-details-marker]:hidden">
             <span className="min-w-0 truncate text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">

@@ -240,8 +240,9 @@ const SearchInput = React.forwardRef(({
 
   // 検索履歴と候補を組み合わせ（入力がない場合は履歴を表示）
   const showHistory = !localValue.trim() && history.length > 0;
+  // 1文字入力でも候補計算は走るため、0件なら無言ではなく「候補なし」を出す
   const showNoResults = showSuggestions && !showHistory && !isComposing
-    && localValue.trim().length >= 2 && displayedSuggestions.length === 0;
+    && localValue.trim().length >= 1 && displayedSuggestions.length === 0;
   const activeItems = showHistory ? history : displayedSuggestions;
   const activeItemsLength = activeItems.length;
   const expanded = showSuggestions && (displayedSuggestions.length > 0 || showHistory || showNoResults);
@@ -598,7 +599,7 @@ const SearchInput = React.forwardRef(({
                 })}
               </ul>
             )}
-            {/* 候補なしメッセージ（入力2文字以上かつIME入力中でない場合） */}
+            {/* 候補なしメッセージ（IME入力中でない場合） */}
             {showNoResults && (
               <div className="py-4 text-center text-sm text-slate-400 dark:text-slate-500">
                 {labels.noResults}

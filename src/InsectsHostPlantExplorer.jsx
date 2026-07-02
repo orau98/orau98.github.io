@@ -240,7 +240,9 @@ const renderEnglishBibliographyEntry = (entry, href) => {
   );
 };
 
-const DEFAULT_INSTAGRAM_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
+// 投稿リストの更新頻度は低いため、定期リフェッチは30分間隔で十分
+// （タブ復帰時は focus/visibilitychange で即時再取得される）
+const DEFAULT_INSTAGRAM_REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 const MIN_INSTAGRAM_REFRESH_INTERVAL_MS = 60 * 1000;
 
 const buildPlantInsectStats = (
@@ -1359,7 +1361,11 @@ const InsectsHostPlantExplorer = memo(
       };
 
       loadInstagramResources();
-      const intervalId = window.setInterval(loadInstagramResources, refreshIntervalMs);
+      const intervalId = window.setInterval(() => {
+        // 非表示タブでは通信しない（復帰時に visibilitychange で再取得される）
+        if (document.visibilityState !== "visible") return;
+        loadInstagramResources();
+      }, refreshIntervalMs);
       window.addEventListener("focus", handleResumeFetch);
       document.addEventListener("visibilitychange", handleResumeFetch);
 

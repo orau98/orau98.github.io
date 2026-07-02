@@ -2,18 +2,26 @@ import { useEffect, useState } from 'react';
 
 /**
  * グローバルローディングバー
- * ページ遷移やデータ読み込み時に上部に表示
+ * ページ遷移やデータ読み込み時に上部に表示。
+ * progress（0-100）が渡された場合は実際の読み込み段階に連動し、
+ * 渡されない場合は従来どおりタイマーによる演出で進行する。
  */
-const LoadingBar = ({ isLoading }) => {
+const LoadingBar = ({ isLoading, progress: externalProgress = null }) => {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
       setVisible(true);
-      setProgress(0);
 
-      // 段階的に進捗を増加
+      if (typeof externalProgress === 'number') {
+        // 実進捗連動: 後退しないよう max を取り、完了前は95%で頭打ち
+        setProgress((prev) => Math.max(prev, Math.min(externalProgress, 95)));
+        return undefined;
+      }
+
+      setProgress(0);
+      // 段階的に進捗を増加（演出フォールバック）
       const timer1 = setTimeout(() => setProgress(30), 100);
       const timer2 = setTimeout(() => setProgress(60), 300);
       const timer3 = setTimeout(() => setProgress(80), 600);
@@ -33,7 +41,7 @@ const LoadingBar = ({ isLoading }) => {
 
       return () => clearTimeout(hideTimer);
     }
-  }, [isLoading]);
+  }, [isLoading, externalProgress]);
 
   if (!visible && progress === 0) return null;
 

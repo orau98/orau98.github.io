@@ -1131,7 +1131,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             ]}
           />
         </div>
-        <div className="mb-6 flex flex-wrap items-center gap-2 lg:mb-8">
+        {/* モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ */}
+        <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
           <Link
             to={getBackTarget(location, localizePath('/?tab=insects', locale))}
             state={makeDetailLinkState(location)}
@@ -1215,9 +1216,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           ]}
         />
 
-        <div className="space-y-6">
-          {/* 画像セクション（1カラム：写真ファースト、植物ページと統一） */}
-          <div id="plant-photos">
+        {/* モバイルは写真ファーストの1カラム。lg以上は写真を左に固定した2カラムにして、
+            初期表示で種名・食草情報が写真と同時に見えるようにする */}
+        <div className="space-y-6 lg:grid lg:grid-cols-5 lg:items-start lg:gap-6 lg:space-y-0">
+          <div id="plant-photos" className="lg:sticky lg:top-24 lg:col-span-3">
             <div>
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
                 {hasInstagramPost ? (
@@ -1324,7 +1326,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           </div>
 
           {/* 情報セクション */}
-          <div className="space-y-4">
+          <div className="space-y-4 lg:col-span-2">
             
             {/* 種名情報 */}
             <div id="basic-info" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden p-6">
