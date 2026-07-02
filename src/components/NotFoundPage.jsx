@@ -38,7 +38,7 @@ const NotFoundPage = ({ locale = 'ja' }) => {
 
   return (
     <section className="min-h-[60vh] px-4 py-12 flex items-center justify-center">
-      <div className="w-full max-w-2xl rounded-3xl border border-slate-200/70 dark:border-slate-700/70 bg-white/90 dark:bg-slate-900/80 shadow-xl p-8 md:p-10 text-center">
+      <div className="w-full max-w-2xl rounded-card border border-line bg-surface shadow-e1 p-8 md:p-10 text-center">
         <p className="text-sm font-semibold tracking-wide text-emerald-600 dark:text-emerald-400 mb-2">
           404 Not Found
         </p>
