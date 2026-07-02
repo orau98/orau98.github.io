@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
 import { isEnglishLocale } from '../utils/locale';
 import logger from '../utils/logger';
 
@@ -58,22 +57,24 @@ const ManualAdSlot = ({
   format = 'auto',
   layout = undefined,
 }) => {
-  const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   const slotId = SLOT_IDS[placement] || '';
   const localPreview = isLocalPreview();
   const showPreviewPlaceholder = localPreview || (import.meta.env.DEV && !slotId);
   const isRenderable = Boolean(slotId) || showPreviewPlaceholder;
 
-  const routeKey = `${location.pathname}${location.search}`;
   const containerLabel = isEnglish ? 'Advertisement' : '広告';
   const placeholderText = isEnglish
     ? 'Manual ad slot'
     : '手動広告枠';
 
+  // 広告リクエストはマウント時に1回だけ。ルートをキーに含めると、
+  // 常設スロット（フッター）がSPA遷移のたびに再マウント・再リクエストされ、
+  // 毎遷移のレイアウトシフトとポリシー上のリスク（実質オートリフレッシュ）になる。
+  // ルート内のスロット（一覧・詳細）はコンポーネント自体の再マウントで従来どおり更新される。
   const adKey = useMemo(
-    () => `${placement}-${slotId || 'dev'}-${routeKey}`,
-    [placement, routeKey, slotId],
+    () => `${placement}-${slotId || 'dev'}`,
+    [placement, slotId],
   );
 
   useEffect(() => {

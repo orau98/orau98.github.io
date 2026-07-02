@@ -10,6 +10,7 @@ import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
 import useSeoMeta from "./hooks/useSeoMeta";
+import useDebounce from "./hooks/useDebounce";
 import {
   loadInsectImageIndexes,
   loadPlantImageFilenames as loadPlantImageFilenamesService,
@@ -469,6 +470,8 @@ const InsectsHostPlantExplorer = memo(
       plants: initialTabFromParams === "plants" ? initialQuery : "",
     }));
     const activeSearchTerm = searchByTab[activeTab] || "";
+    // サジェスト計算は毎打鍵ではなくdebounce後に行う（IME入力中のカクつき防止）
+    const debouncedSuggestionTerm = useDebounce(activeSearchTerm, 150);
     const [isStickyHeaderVisible, setIsStickyHeaderVisible] = useState(false);
     const [showAboutDetails, setShowAboutDetails] = useState(false);
     const [isDesktopLayout, setIsDesktopLayout] = useState(() => {
@@ -1410,30 +1413,45 @@ const InsectsHostPlantExplorer = memo(
       return Array.from(new Set(base)).slice(0, 4);
     }, [instagramTimelinePosts, instagramPosts, isInstagramPostUrl]);
 
+    // 全昆虫の結合配列。inline spreadだと毎レンダーで参照が変わり、
+    // MothList側のフィルタ再計算やサジェスト計算が毎打鍵で走ってしまう
+    const allInsects = useMemo(
+      () => [
+        ...moths,
+        ...butterflies,
+        ...beetles,
+        ...longhornbeetles,
+        ...leafbeetles,
+        ...aphids,
+      ],
+      [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids],
+    );
+
+    const baseToPlantFiles = useMemo(() => {
+      const map = new Map();
+      const plantImageIndex = Array.isArray(plantImageFilenames)
+        ? plantImageFilenames
+        : [];
+      plantImageIndex.forEach((filename) => {
+        const base = splitFilenameBase(filename);
+        if (!map.has(base)) {
+          map.set(base, []);
+        }
+        map.get(base).push(filename);
+      });
+      return map;
+    }, [plantImageFilenames]);
+
     const suggestions = useMemo(() => {
-      if (!activeSearchTerm || activeSearchTerm.trim() === "") return [];
-      const term = activeSearchTerm.toLowerCase();
-      const katakanaTerm = hiraganaToKatakana(activeSearchTerm).toLowerCase();
+      if (!debouncedSuggestionTerm || debouncedSuggestionTerm.trim() === "") return [];
+      const term = debouncedSuggestionTerm.toLowerCase();
+      const katakanaTerm = hiraganaToKatakana(debouncedSuggestionTerm).toLowerCase();
       const suggestionsByKey = new Map();
       let sequence = 0;
 
       // ベースURL計算
       const baseUrl = import.meta.env.BASE_URL || '/';
       const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-
-      const plantImageIndex = Array.isArray(plantImageFilenames)
-        ? plantImageFilenames
-        : [];
-      const baseToPlantFiles = new Map();
-      if (plantImageIndex.length > 0) {
-        plantImageIndex.forEach((filename) => {
-          const base = splitFilenameBase(filename);
-          if (!baseToPlantFiles.has(base)) {
-            baseToPlantFiles.set(base, []);
-          }
-          baseToPlantFiles.get(base).push(filename);
-        });
-      }
 
       const getMatchScore = (value) => {
         if (!value) return 0;
@@ -1501,39 +1519,7 @@ const InsectsHostPlantExplorer = memo(
       };
 
       if (activeTab === "insects") {
-        const allInsects = [
-          ...moths,
-          ...butterflies,
-          ...beetles,
-          ...longhornbeetles,
-          ...leafbeetles,
-          ...aphids,
-        ];
         for (const insect of allInsects) {
-          const insectType = getInsectType(insect);
-          const insectPrimaryName = isEnglish
-            ? getPrimaryEnglishName({
-                scientificName: insect.scientificName,
-                japaneseName: insect.name,
-                fallback: insect.name,
-              })
-            : insect.name;
-          const insectSecondaryName = isEnglish
-            ? buildJapaneseReferenceLabel(insect.name)
-            : insect.scientificName;
-          const insectSuggestion = {
-            name: insectPrimaryName,
-            value:
-              isEnglish && insect.scientificName
-                ? insect.scientificName
-                : insect.name,
-            type: insectType,
-            subText: insectSecondaryName,
-            nameIsScientific: isEnglish && Boolean(insect.scientificName),
-            subTextIsScientific: !isEnglish && Boolean(insect.scientificName),
-            image: getInsectImageUrl(insect),
-            detailPath: buildInsectPath(insect, locale),
-          };
           const alternativeNames = String(insect.alternativeNames || '')
             .split(/[、,，]/)
             .map((name) => name.trim())
@@ -1544,7 +1530,34 @@ const InsectsHostPlantExplorer = memo(
             ...alternativeNames.map((name) => getMatchScore(name)),
           );
 
+          // 画像URL解決・パス生成はマッチした候補に対してのみ行う
+          // （全件で先に実行すると1打鍵ごとに全昆虫の画像照合が走る）
+          let insectType = null;
           if (insectScore > 0) {
+            insectType = getInsectType(insect);
+            const insectPrimaryName = isEnglish
+              ? getPrimaryEnglishName({
+                  scientificName: insect.scientificName,
+                  japaneseName: insect.name,
+                  fallback: insect.name,
+                })
+              : insect.name;
+            const insectSecondaryName = isEnglish
+              ? buildJapaneseReferenceLabel(insect.name)
+              : insect.scientificName;
+            const insectSuggestion = {
+              name: insectPrimaryName,
+              value:
+                isEnglish && insect.scientificName
+                  ? insect.scientificName
+                  : insect.name,
+              type: insectType,
+              subText: insectSecondaryName,
+              nameIsScientific: isEnglish && Boolean(insect.scientificName),
+              subTextIsScientific: !isEnglish && Boolean(insect.scientificName),
+              image: getInsectImageUrl(insect),
+              detailPath: buildInsectPath(insect, locale),
+            };
             registerSuggestion(insectSuggestion, `insect:${insect.name}`, insectScore);
           }
 
@@ -1570,6 +1583,7 @@ const InsectsHostPlantExplorer = memo(
           for (const candidate of classificationSuggestions) {
             const candidateScore = getMatchScore(candidate.value);
             if (candidateScore <= 0) continue;
+            if (insectType === null) insectType = getInsectType(insect);
             registerSuggestion(
               {
                 name: candidate.value,
@@ -1640,35 +1654,36 @@ const InsectsHostPlantExplorer = memo(
             : aliasesRaw instanceof Set
               ? Array.from(aliasesRaw)
               : [];
-          const plantPrimaryName = isEnglish
-            ? getPrimaryEnglishName({
-                scientificName: detail.scientificName,
-                japaneseName: plant,
-                fallback: plant,
-              })
-            : plant;
-          const canonicalSuggestion = {
-            name: plantPrimaryName,
-            value:
-              isEnglish && detail.scientificName
-                ? detail.scientificName
-                : plant,
-            type: 'plant',
-            subText: isEnglish
-              ? buildJapaneseReferenceLabel(plant)
-              : detail.scientificName || detail.family || detail.familyName,
-            nameIsScientific: isEnglish && Boolean(detail.scientificName),
-            subTextIsScientific: !isEnglish && Boolean(detail.scientificName),
-            image: getPlantImageUrl(plant),
-            detailPath: buildPlantPath(plant, locale),
-          };
           const plantScore = Math.max(
             getMatchScore(plant),
             getMatchScore(detail.scientificName),
             ...aliases.map((alias) => getMatchScore(alias)),
           );
 
+          // 画像URL解決・パス生成はマッチした候補に対してのみ行う
           if (plantScore > 0) {
+            const plantPrimaryName = isEnglish
+              ? getPrimaryEnglishName({
+                  scientificName: detail.scientificName,
+                  japaneseName: plant,
+                  fallback: plant,
+                })
+              : plant;
+            const canonicalSuggestion = {
+              name: plantPrimaryName,
+              value:
+                isEnglish && detail.scientificName
+                  ? detail.scientificName
+                  : plant,
+              type: 'plant',
+              subText: isEnglish
+                ? buildJapaneseReferenceLabel(plant)
+                : detail.scientificName || detail.family || detail.familyName,
+              nameIsScientific: isEnglish && Boolean(detail.scientificName),
+              subTextIsScientific: !isEnglish && Boolean(detail.scientificName),
+              image: getPlantImageUrl(plant),
+              detailPath: buildPlantPath(plant, locale),
+            };
             registerSuggestion(canonicalSuggestion, `plant:${plant}`, plantScore);
           }
 
@@ -1714,9 +1729,9 @@ const InsectsHostPlantExplorer = memo(
         .slice(0, 10)
         .map((entry) => entry.item);
     }, [
-      activeSearchTerm,
+      debouncedSuggestionTerm,
       activeTab,
-      moths,
+      allInsects,
       butterflies,
       beetles,
       longhornbeetles,
@@ -1725,7 +1740,7 @@ const InsectsHostPlantExplorer = memo(
       hostPlants,
       flowerVisitPlants,
       plantDetails,
-      plantImageFilenames,
+      baseToPlantFiles,
       insectImageExtensions,
       insectImageFilenames,
       normalizedInsectImageEntries,
@@ -1958,14 +1973,7 @@ const InsectsHostPlantExplorer = memo(
                       }
                     >
                       <MothList
-                        moths={[
-                          ...moths,
-                          ...butterflies,
-                          ...beetles,
-                          ...longhornbeetles,
-                          ...leafbeetles,
-                          ...aphids,
-                        ]}
+                        moths={allInsects}
                         title={ui.insectsTab}
                         baseRoute=""
                         embedded={true}

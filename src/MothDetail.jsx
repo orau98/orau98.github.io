@@ -39,6 +39,11 @@ import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
+import {
+  INDEX_FOLLOW_ROBOTS,
+  NOINDEX_FOLLOW_ROBOTS,
+  setRobotsMetaContent,
+} from './utils/robotsMeta';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -879,6 +884,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       );
     }
   }, [isEnglish, mainImageProps.src, moth, setOgTwitterImage]);
+
+  // ソフト404対策: 存在しない種のURLは検索エンジンにインデックスさせない
+  // （データ読み込み完了後に判定。植物詳細のthin-contentガードと同じ方式）
+  useEffect(() => {
+    try {
+      if (isDataLoading) return;
+      setRobotsMetaContent(moth ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
+    } catch {}
+  }, [isDataLoading, moth]);
 
   // Show loading state if data is still loading
   if (isDataLoading) {

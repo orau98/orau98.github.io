@@ -1334,6 +1334,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
+  // 取得の成否を問わず解決済みになったか（失敗時もリストを描画するために使う）
+  const [imageIndexResolved, setImageIndexResolved] = useState(false);
   const normalizedImageEntries = useMemo(
     () => buildNormalizedEntries(imageFilenames, imageExtensions),
     [imageFilenames, imageExtensions],
@@ -1359,6 +1361,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         logger.debug('Failed to load insect image index:', e);
         setImageFilenames(new Set());
         setImageExtensions({});
+      })
+      .finally(() => {
+        setImageIndexResolved(true);
       });
   }, []);
 
@@ -1853,7 +1858,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       <div className="p-3 pt-1 sm:p-6">
         <div ref={listTopRef} />
         <div>
-          {!isImageIndexReady ? (
+          {!isImageIndexReady && !imageIndexResolved ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div

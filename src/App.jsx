@@ -456,48 +456,192 @@ function App() {
           const plantDetailsUrl = `${base}assets/data-lite/plant-details.json${versionSuffix}`;
           const flowerVisitUrl = `${base}assets/data-lite/flower-visit-plants.json${versionSuffix}`;
 
-          const [hostRes, plantDetailsRes, flowerVisitRes] = await Promise.all([
-            fetchWithRetry(hostUrl, { cache: cacheMode }),
-            fetchWithRetry(plantDetailsUrl, { cache: cacheMode }).catch((error) => {
-              logger.debug('Plant details preload skipped:', error);
-              return null;
-            }),
-            fetchWithRetry(flowerVisitUrl, { cache: cacheMode }).catch((error) => {
-              logger.debug('Flower-visit preload skipped:', error);
-              return null;
-            }),
-          ]);
-          if (!shouldContinue()) return;
-          setLoadProgress(65);
-
-          if (hostRes?.ok) {
-            const hostMap = await hostRes.json();
-            if (!shouldContinue()) return;
-            const plantDetailsPayload =
-              plantDetailsRes && plantDetailsRes.ok ? await plantDetailsRes.json() : {};
-            if (!shouldContinue()) return;
-            const flowerVisitPayload =
-              flowerVisitRes && flowerVisitRes.ok ? await flowerVisitRes.json() : {};
-
-            if (manifest && manifest.counts && hostMap && typeof hostMap === 'object') {
-              if (!shouldContinue()) return;
-              cachedVersionRef.current = manifestVersion;
-              if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
-                setSummaryCounts((prev) => prev || manifest.counts);
-                setLoading(false);
-                ensureTypesLoaderRef.current = () => {
-                  typesFetchStartedRef.current = true;
-                  typesFetchPromiseRef.current = Promise.resolve(null);
-                };
+          if (manifest && manifest.counts) {
+            cachedVersionRef.current = manifestVersion;
+            // 再訪高速化: IndexedDBキャッシュが最新版なら重いデータの再取得をすべてスキップ
+            if (cacheLoadedRef.current && cachedVersion && manifest.version === cachedVersion) {
+              setSummaryCounts((prev) => prev || manifest.counts);
+              setLoading(false);
+              ensureTypesLoaderRef.current = () => {
                 typesFetchStartedRef.current = true;
                 typesFetchPromiseRef.current = Promise.resolve(null);
-                return;
-              }
+              };
+              typesFetchStartedRef.current = true;
+              typesFetchPromiseRef.current = Promise.resolve(null);
+              return;
+            }
 
+            const fetchJsonOrNull = async (url, label) => {
+              try {
+                const res = await fetchWithRetry(url, { cache: cacheMode });
+                if (!shouldContinue() || !res?.ok) return null;
+                return await res.json();
+              } catch (error) {
+                logger.debug(`${label} preload skipped:`, error);
+                return null;
+              }
+            };
+
+            // 植物系JSONと昆虫パーティションを並列で取得する
+            // （従来は植物系の完了を待ってから昆虫パーティションを開始する直列2波だった）
+            const hostMapPromise = fetchJsonOrNull(hostUrl, 'Host plants');
+            const plantDetailsPromise = fetchJsonOrNull(plantDetailsUrl, 'Plant details');
+            const flowerVisitPromise = fetchJsonOrNull(flowerVisitUrl, 'Flower-visit');
+
+            // 再訪時に即時復元できるよう、取得済みデータをアイドル時にIndexedDBへ保存する
+            const scheduleDatasetCacheSave = (payload) => {
+              if (typeof window === 'undefined' || !payload) return;
+              if (shouldDeferHeavyWork()) return;
+              const fire = () => {
+                saveDatasetToCache(manifestVersion || null, payload).catch(() => {});
+              };
+              if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(fire, { timeout: 10000 });
+              } else {
+                window.setTimeout(fire, 3000);
+              }
+            };
+
+            // Reset fetch guards for fresh lifecycle
+            typesFetchStartedRef.current = false;
+            typesFetchPromiseRef.current = null;
+
+            const loadTypePartitions = async () => {
+              const responses = await Promise.all([
+                fetchWithRetry(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/aphids.json${versionSuffix}`, { cache: cacheMode }),
+              ]);
+              if (!shouldContinue()) {
+                return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+              }
+              const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes, aphidRes] = responses;
+              const safeJson = async (res) => (res && res.ok ? res.json() : []);
+              const [mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr] = await Promise.all([
+                safeJson(mothRes),
+                safeJson(butterflyRes),
+                safeJson(beetleRes),
+                safeJson(longhornRes),
+                safeJson(leafRes),
+                safeJson(aphidRes),
+              ]);
+              if (!shouldContinue()) {
+                return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+              }
+              if (Array.isArray(mothArr)) setMoths(mothArr);
+              if (Array.isArray(butterArr)) setButterflies(butterArr);
+              if (Array.isArray(beetleArr)) setBeetles(beetleArr);
+              if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
+              if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
+              if (Array.isArray(aphidArr)) setAphids(aphidArr);
+              setLoadProgress((prev) => Math.max(prev, 90));
+              setSummaryCounts((prev) => ({
+                ...(prev || {}),
+                moths: Array.isArray(mothArr) ? mothArr.length : 0,
+                butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
+                beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
+                longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
+                leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
+                aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
+              }));
+              let flowerVisitPayload = await flowerVisitPromise;
+              if (!flowerVisitPayload || typeof flowerVisitPayload !== 'object') {
+                flowerVisitPayload = {};
+              }
+              if (Object.keys(flowerVisitPayload).length === 0) {
+                flowerVisitPayload = buildFlowerVisitMap([
+                  ...(mothArr || []),
+                  ...(butterArr || []),
+                  ...(beetleArr || []),
+                  ...(longhornArr || []),
+                  ...(leafArr || []),
+                  ...(aphidArr || []),
+                ]);
+                setFlowerVisitPlants(flowerVisitPayload);
+              }
+              // 全パーティションと植物系データが揃ったら、再訪用キャッシュの保存を予約
+              const [hostMapForCache, plantDetailsForCache] = await Promise.all([
+                hostMapPromise,
+                plantDetailsPromise,
+              ]);
+              if (shouldContinue() && hostMapForCache && typeof hostMapForCache === 'object') {
+                scheduleDatasetCacheSave({
+                  moths: mothArr || [],
+                  butterflies: butterArr || [],
+                  beetles: beetleArr || [],
+                  longhornbeetles: longhornArr || [],
+                  leafbeetles: leafArr || [],
+                  aphids: aphidArr || [],
+                  hostPlants: hostMapForCache,
+                  flowerVisitPlants: flowerVisitPayload,
+                  plantDetails:
+                    plantDetailsForCache && typeof plantDetailsForCache === 'object'
+                      ? plantDetailsForCache
+                      : {},
+                  summaryCounts: {
+                    ...manifest.counts,
+                    moths: Array.isArray(mothArr) ? mothArr.length : 0,
+                    butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
+                    beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
+                    longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
+                    leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
+                    aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
+                    hostPlants: Object.keys(hostMapForCache).length,
+                  },
+                });
+              }
+              return { mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr };
+            };
+
+            const startFetchTypes = () => {
+              if (typesFetchStartedRef.current && typesFetchPromiseRef.current) {
+                return typesFetchPromiseRef.current;
+              }
+              if (typesFetchStartedRef.current) {
+                return Promise.resolve(null);
+              }
+              typesFetchStartedRef.current = true;
+              const promise = loadTypePartitions().catch((error) => {
+                logger.warn('Failed to load insect partitions:', error);
+                typesFetchStartedRef.current = false;
+                typesFetchPromiseRef.current = null;
+                return null;
+              });
+              typesFetchPromiseRef.current = promise;
+              return promise;
+            };
+
+            ensureTypesLoaderRef.current = startFetchTypes;
+
+            let loadTypesImmediately = false;
+            try {
+              const params = new URLSearchParams(
+                typeof window !== 'undefined' ? window.location.search || '' : '',
+              );
+              const pathname = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
+              loadTypesImmediately = shouldLoadInsectPartitionsImmediately(pathname, params);
+            } catch (error) {
+              logger.debug('Failed to interpret route data need, fetching insects immediately:', error);
+              loadTypesImmediately = true;
+            }
+
+            // 昆虫パーティションのダウンロードを植物系JSONと同時に開始する
+            const typesPromise = loadTypesImmediately ? startFetchTypes() : null;
+
+            const hostMap = await hostMapPromise;
+            if (!shouldContinue()) return;
+            if (hostMap && typeof hostMap === 'object') {
+              setLoadProgress((prev) => Math.max(prev, 65));
+              const plantDetailsPayload = await plantDetailsPromise;
+              if (!shouldContinue()) return;
               plantDetailsLite =
                 plantDetailsPayload && typeof plantDetailsPayload === 'object'
                   ? plantDetailsPayload
                   : {};
+              const flowerVisitPayload = await flowerVisitPromise;
               const preloadedFlowerVisitPlants =
                 flowerVisitPayload && typeof flowerVisitPayload === 'object'
                   ? flowerVisitPayload
@@ -508,161 +652,23 @@ function App() {
                 hostPlants: Object.keys(hostMap || {}).length,
               };
 
-              if (!cacheLoadedRef.current) {
-                setSummaryCounts(computedCounts);
-                setHostPlants(hostMap);
-                setPlantDetails(plantDetailsLite);
+              // 版が更新されている場合はキャッシュ由来の状態も置き換える（新旧データの混在防止）
+              setSummaryCounts(computedCounts);
+              setHostPlants(hostMap);
+              setPlantDetails(plantDetailsLite);
+              if (Object.keys(preloadedFlowerVisitPlants).length > 0) {
                 setFlowerVisitPlants(preloadedFlowerVisitPlants);
               }
 
-              // Reset fetch guards for fresh lifecycle
-              typesFetchStartedRef.current = false;
-              typesFetchPromiseRef.current = null;
-
-              const loadTypePartitions = async () => {
-                const responses = await Promise.all([
-                  fetchWithRetry(`${base}assets/data-lite/moths.json${versionSuffix}`, { cache: cacheMode }),
-                  fetchWithRetry(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
-                  fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
-                  fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
-                  fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
-                  fetchWithRetry(`${base}assets/data-lite/aphids.json${versionSuffix}`, { cache: cacheMode }),
-                ]);
-                if (!shouldContinue()) {
-                  return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
-                }
-                const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes, aphidRes] = responses;
-                const safeJson = async (res) => (res && res.ok ? res.json() : []);
-                const [mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr] = await Promise.all([
-                  safeJson(mothRes),
-                  safeJson(butterflyRes),
-                  safeJson(beetleRes),
-                  safeJson(longhornRes),
-                  safeJson(leafRes),
-                  safeJson(aphidRes),
-                ]);
-                if (!shouldContinue()) {
-                  return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
-                }
-                if (Array.isArray(mothArr)) setMoths(mothArr);
-                if (Array.isArray(butterArr)) setButterflies(butterArr);
-                if (Array.isArray(beetleArr)) setBeetles(beetleArr);
-                if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
-                if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
-                if (Array.isArray(aphidArr)) setAphids(aphidArr);
-                setSummaryCounts((prev) => ({
-                  ...(prev || {}),
-                  moths: Array.isArray(mothArr) ? mothArr.length : 0,
-                  butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
-                  beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
-                  longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
-                  leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
-                  aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
-                }));
-                if (Object.keys(preloadedFlowerVisitPlants).length === 0) {
-                  setFlowerVisitPlants(
-                    buildFlowerVisitMap([
-                      ...(mothArr || []),
-                      ...(butterArr || []),
-                      ...(beetleArr || []),
-                      ...(longhornArr || []),
-                      ...(leafArr || []),
-                      ...(aphidArr || []),
-                    ]),
-                  );
-                }
-                return { mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr };
-              };
-
-              const prefetchFullDataset = () => {
-                if (typeof window === 'undefined') return;
-                if (shouldDeferHeavyWork()) return;
-                let shouldPrefetchFullDataset = false;
-                try {
-                  shouldPrefetchFullDataset =
-                    window.DEBUG_LOGS === true ||
-                    window.localStorage?.getItem('ihpe-prefetch-full-dataset') === '1';
-                } catch {
-                  shouldPrefetchFullDataset = false;
-                }
-                if (!shouldPrefetchFullDataset) return;
-                const fire = async () => {
-                  try {
-                    const fullRes = await fetchWithRetry(
-                      `${base}assets/data-lite/full-dataset.json${versionSuffix}`,
-                      { cache: cacheMode },
-                    );
-                    if (!shouldContinue()) return;
-                    if (!fullRes.ok) return;
-                    const fullData = await fullRes.json();
-                    if (!shouldContinue()) return;
-                    await saveDatasetToCache(manifest.version || null, {
-                      moths: fullData.moths,
-                      butterflies: fullData.butterflies,
-                      beetles: fullData.beetles,
-                      longhornbeetles: fullData.longhornbeetles,
-                      leafbeetles: fullData.leafbeetles,
-                      aphids: fullData.aphids,
-                      hostPlants: fullData.hostPlants || hostMap,
-                      flowerVisitPlants:
-                        fullData.flowerVisitPlants ||
-                        preloadedFlowerVisitPlants ||
-                        {},
-                      plantDetails: fullData.plantDetails || plantDetailsLite,
-                      summaryCounts: fullData.summaryCounts || manifest.counts,
-                    });
-                  } catch (error) {
-                    if (import.meta.env.DEV) logger.debug('Idle prefetch full-dataset skipped:', error);
-                  }
-                };
-                if ('requestIdleCallback' in window) {
-                  window.requestIdleCallback(() => fire(), { timeout: 5000 });
-                } else {
-                  setTimeout(fire, 5000);
-                }
-              };
-
-              const startFetchTypes = () => {
-                if (typesFetchStartedRef.current && typesFetchPromiseRef.current) {
-                  return typesFetchPromiseRef.current;
-                }
-                if (typesFetchStartedRef.current) {
-                  return Promise.resolve(null);
-                }
-                typesFetchStartedRef.current = true;
-                const promise = loadTypePartitions().catch((error) => {
-                  logger.warn('Failed to load insect partitions:', error);
-                  typesFetchStartedRef.current = false;
-                  typesFetchPromiseRef.current = null;
-                  return null;
-                });
-                typesFetchPromiseRef.current = promise;
-                return promise;
-              };
-
-              ensureTypesLoaderRef.current = startFetchTypes;
-
-              let loadTypesImmediately = false;
-              try {
-                const params = new URLSearchParams(
-                  typeof window !== 'undefined' ? window.location.search || '' : '',
-                );
-                const pathname = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
-                loadTypesImmediately = shouldLoadInsectPartitionsImmediately(pathname, params);
-              } catch (error) {
-                logger.debug('Failed to interpret route data need, fetching insects immediately:', error);
-                loadTypesImmediately = true;
-              }
-
-              if (loadTypesImmediately) {
-                await startFetchTypes();
+              if (typesPromise) {
+                await typesPromise;
+                if (!shouldContinue()) return;
               }
               setLoading(false);
 
-              prefetchFullDataset();
-
               return;
             }
+            // hostplants.json が取得できなかった場合は一括データセットへフォールバック
           }
           if (await tryFullDataset(versionSuffix)) return;
           if (await tryLiteIndex(versionSuffix)) return;
