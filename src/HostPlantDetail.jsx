@@ -1921,7 +1921,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
+      <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 sm:pt-8">
       {/* パンくずリスト（昆虫詳細と同じく最上部に配置） */}
       <div className="hidden md:block mb-4">
         <Breadcrumb
@@ -1938,8 +1939,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           ]}
         />
       </div>
-      {/* Top row: back link + quiz link + classification chips（昆虫詳細と統一）。
-          モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ */}
+      {/* Top row: back link + classification chips（昆虫詳細と統一）。
+          モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ。
+          クイズ導線はヘッダーのボタンと二重に見えるためチップ行には置かず、
+          種名カード内の「この植物をクイズで復習」に一本化する */}
       <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
         <Link
           to={getBackTarget(location, localizePath('/?tab=plants', locale))}
@@ -1952,15 +1955,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           <span className="sm:hidden">{isEnglish ? 'Back' : '一覧へ'}</span>
           <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
         </Link>
-        {quizFocusHref && (
-          <Link
-            to={quizFocusHref}
-            className="inline-flex items-center whitespace-nowrap rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950 sm:text-sm"
-          >
-            <span className="sm:hidden">{isEnglish ? 'Review' : 'クイズ'}</span>
-            <span className="hidden sm:inline">{isEnglish ? 'Review in quiz' : 'この植物をクイズで復習'}</span>
-          </Link>
-        )}
         {orderChip.label && orderChip.queryValue && (
           <Link
             to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
@@ -2054,6 +2048,15 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             <div className="mt-1 text-left text-slate-600 dark:text-slate-300 text-lg">
               {formatScientificNameReact(taxonomy.scientificName)}
             </div>
+          )}
+          {/* クイズ導線は種名カード内に1つだけ置く（昆虫詳細と同じ配置） */}
+          {quizFocusHref && (
+            <Link
+              to={quizFocusHref}
+              className="mt-4 inline-flex items-center rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950"
+            >
+              {isEnglish ? 'Review linked insects in quiz' : 'この植物をクイズで復習'}
+            </Link>
           )}
           </div>
 
