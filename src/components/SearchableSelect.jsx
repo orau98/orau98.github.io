@@ -31,18 +31,28 @@ export default function SearchableSelect({
     if (blurTimerRef.current) clearTimeout(blurTimerRef.current);
   }, []);
 
-  const filteredOptions = useMemo(() => {
+  const { filteredOptions, hiddenMatchCount } = useMemo(() => {
     const q = normalize(query);
     const unique = Array.from(new Set((options || []).filter(Boolean)));
-    if (!q) return unique.slice(0, 40);
-    const startsWith = [];
-    const includes = [];
-    unique.forEach((option) => {
-      const text = normalize(option);
-      if (text.startsWith(q)) startsWith.push(option);
-      else if (text.includes(q)) includes.push(option);
-    });
-    return [...startsWith, ...includes].slice(0, 40);
+    let matched;
+    if (!q) {
+      matched = unique;
+    } else {
+      const startsWith = [];
+      const includes = [];
+      unique.forEach((option) => {
+        const text = normalize(option);
+        if (text.startsWith(q)) startsWith.push(option);
+        else if (text.includes(q)) includes.push(option);
+      });
+      matched = [...startsWith, ...includes];
+    }
+    // 表示は40件まで。切り捨てた件数はリスト末尾に案内する
+    // （上限を知らせないと、41件目以降の候補が「存在しない」ように見える）
+    return {
+      filteredOptions: matched.slice(0, 40),
+      hiddenMatchCount: Math.max(0, matched.length - 40),
+    };
   }, [options, query]);
 
   const selectedLabel = value || '';
@@ -129,7 +139,7 @@ export default function SearchableSelect({
               type="button"
               onMouseDown={(event) => event.preventDefault()}
               onClick={clearValue}
-              className="rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200 sm:min-h-0 sm:min-w-0 sm:p-2"
               aria-label={isEnglish ? `Clear ${label}` : `${label}を解除`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,6 +180,13 @@ export default function SearchableSelect({
             ) : (
               <div className="px-3 py-2 text-sm text-slate-500 dark:text-slate-400">
                 {emptyLabel || (isEnglish ? 'No options found' : '候補がありません')}
+              </div>
+            )}
+            {hiddenMatchCount > 0 && (
+              <div className="border-t border-slate-100 px-3 py-2 text-xs text-slate-400 dark:border-slate-800 dark:text-slate-500">
+                {isEnglish
+                  ? `${hiddenMatchCount} more — keep typing to narrow down`
+                  : `他${hiddenMatchCount}件 — 入力で絞り込めます`}
               </div>
             )}
           </div>

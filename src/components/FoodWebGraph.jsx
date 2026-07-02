@@ -226,10 +226,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!el || typeof ResizeObserver === 'undefined') return undefined;
     const updateSize = (containerWidth, containerHeight) => {
       if (containerWidth <= 0) return;
+      // モバイルも実測の高さでキャンバスを埋める。
+      // 以前は400px固定で、外側の固定高ラッパー(560px)との差分が
+      // 空白になり、グラフ下部が途切れて見えていた
       const next = {
         width: Math.max(1, Math.floor(containerWidth)),
         height: isCompactPanel
-          ? 400
+          ? Math.max(250, Math.floor(containerHeight || height))
           : Math.max(320, Math.floor(containerHeight || height))
       };
       setGraphSize((prev) => (
@@ -620,6 +623,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [guideDismissed, setGuideDismissed] = useState(false);
   const [pinVersion, setPinVersion] = useState(0);
   const [isPinDragging, setIsPinDragging] = useState(false);
+  // PCでのホイールズームはクリックで有効化する（ページスクロールを奪わないため）。
+  // マウスがグラフ外へ出たら自動的に無効へ戻す
+  const [desktopZoomActive, setDesktopZoomActive] = useState(false);
   const showRelatedInsects = true;
   const linkDistance = useMemo(() => {
     if (currentPlantName) {
@@ -1472,13 +1478,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const dim = dimByHighlight;
     const alpha = dim ? 0.25 : 1;
     const dense = labelMode === 'auto' && graphData.nodes.length > graphLayoutMetrics.denseLabelThreshold;
+    // 高密度グラフでは既定のフィットズームでもglobalScaleが1.35を超えることがあり、
+    // 全ラベルが重なって判読できなくなる。密なときは十分ズームした場合のみ全ラベルを出す
+    // （選択中・ハイライト中のノードのラベルは常に表示される）
+    const revealZoom = dense ? 1.8 : 1.35;
     const showLabel = labelMode !== 'none' && (
       labelMode === 'all'
       || isCurrent
       || selectedNodeId === node.id
       || (activeNodeId && inHighlight)
       || (!dense && !dim)
-      || (globalScale > 1.35 && !dim)
+      || (globalScale > revealZoom && !dim)
     );
 
     // try to ensure image is loaded
@@ -1702,11 +1712,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return Math.min(260, Math.max(188, Math.round(graphSize.height * 0.4)));
   }, [graphSize.height, isCompactPanel, panelCollapsed, selectedNode]);
 
-  const graphViewportHeight = useMemo(() => {
-    if (!isCompactPanel || !selectedNode) return graphSize.height;
-    return Math.max(250, graphSize.height - compactSelectionHeight);
-  }, [compactSelectionHeight, graphSize.height, isCompactPanel, selectedNode]);
-
   const statsChips = useMemo(() => {
     const chips = [];
     if (viewStats.primaryTotal > 0) {
@@ -1722,11 +1727,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const interactionHint = isCompactPanel
     ? (isEnglish ? 'Tips: tap to select, pinch or use the top buttons to zoom, double-tap for details, long-press to pin' : '操作: タップで選択、ピンチまたは上部ボタンで拡大、2回で詳細、長押しで固定')
-    : (isEnglish ? 'Tips: drag to move, click to select, double-click for details, use the top buttons to fit or zoom' : '操作: ドラッグで移動、クリックで選択、2回で詳細、上部ボタンで全体表示やズーム');
+    : desktopZoomActive
+      ? (isEnglish ? 'Tips: scroll to zoom, drag to move or arrange nodes, click to select, double-click for details' : '操作: ホイールで拡大縮小、ドラッグで移動・ノード配置、クリックで選択、2回で詳細')
+      : (isEnglish ? 'Tips: click the graph to enable wheel zoom. Drag to move or arrange nodes, double-click for details' : '操作: クリックするとホイールズームが有効になります。ドラッグで移動・ノード配置、2回で詳細');
 
   const enablePanInteraction = !isPinDragging;
-  const enableZoomInteraction = isCompactPanel && !isPinDragging;
-  const enableNodeDrag = isCompactPanel && !isPinDragging;
+  // PC: ノードドラッグは常時有効（ページスクロールと競合しない）。
+  // ホイールズームはグラフをクリックしてから有効（スクロールジャック防止）
+  const enableZoomInteraction = (isCompactPanel || desktopZoomActive) && !isPinDragging;
+  const enableNodeDrag = !isPinDragging;
   const desktopControlButtonClass = 'shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800';
   const desktopControlSurfaceClass = 'rounded-xl border border-slate-200/90 bg-white/94 px-3 py-3 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-200';
   const mobileControlLaunchButtonClass = 'inline-flex shrink-0 items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-800';
@@ -1738,12 +1747,20 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, []);
 
   const handleGraphWheelCapture = useCallback((event) => {
-    if (isCompactPanel) return;
+    if (isCompactPanel || desktopZoomActive) return;
     event.stopPropagation();
     if (typeof event.nativeEvent?.stopImmediatePropagation === 'function') {
       event.nativeEvent.stopImmediatePropagation();
     }
+  }, [isCompactPanel, desktopZoomActive]);
+
+  const activateDesktopZoom = useCallback(() => {
+    if (!isCompactPanel) setDesktopZoomActive(true);
   }, [isCompactPanel]);
+
+  const deactivateDesktopZoom = useCallback(() => {
+    setDesktopZoomActive(false);
+  }, []);
 
   const relationFilterButtons = (
     <div className="inline-flex flex-wrap rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
@@ -2411,8 +2428,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       <div className="min-h-0 flex-1 flex flex-col">
         <div
           ref={containerRef}
-          className={`food-web-graph-touch relative min-w-0 ${isCompactPanel ? 'min-h-0' : 'min-h-[500px] lg:min-h-[640px] flex-1'}`}
-          style={isCompactPanel ? { height: graphViewportHeight, cursor: graphCursor } : { cursor: graphCursor }}
+          className={`food-web-graph-touch relative min-w-0 flex-1 ${isCompactPanel ? 'min-h-0' : 'min-h-[500px] lg:min-h-[640px]'}`}
+          style={{ cursor: graphCursor }}
           role="region"
           aria-label={graphAriaLabel}
           onWheelCapture={handleGraphWheelCapture}
@@ -2420,6 +2437,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           onPointerMoveCapture={handlePointerMoveCapture}
           onPointerUpCapture={handlePointerUpCapture}
           onPointerCancelCapture={handlePointerUpCapture}
+          onClick={activateDesktopZoom}
+          onMouseLeave={deactivateDesktopZoom}
         >
           <p className="sr-only">
             {isEnglish ? `This food web graph shows relationships between ${insectNodeCount} insect species and ${plantNodeCount} plant species.` : `この食物網グラフには${insectNodeCount}種の昆虫と${plantNodeCount}種の植物の関係が表示されています。`}
@@ -2430,7 +2449,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           <ForceGraph2D
             ref={fgRef}
             width={graphSize.width}
-            height={isCompactPanel ? graphViewportHeight : graphSize.height}
+            height={graphSize.height}
             graphData={graphData}
             nodeLabel="name"
             nodeCanvasObject={nodeCanvasObject}
@@ -2566,20 +2585,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     </button>
                   </div>
 
-                  <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-center">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {statsChips.map((label) => (
-                        <span
-                          key={label}
-                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100/90 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
-                        >
-                          {label}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Always-visible legend (mobile) */}
+                  {/* 常時表示の凡例（モバイル）。ノード数などの統計は
+                      情報過多になるため「表示」ドロワー内に移動した */}
                   <div className="mt-2 border-t border-slate-200/70 pt-2 dark:border-slate-700/70">
                     {legendStrip}
                   </div>
@@ -2616,6 +2623,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   >
                     ✕
                   </button>
+                </div>
+
+                {/* 表示中のノード・関係の統計（折りたたみカードから移動） */}
+                <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                  {statsChips.map((label) => (
+                    <span
+                      key={label}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700/80 dark:text-slate-200"
+                    >
+                      {label}
+                    </span>
+                  ))}
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">

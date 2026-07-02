@@ -43,8 +43,9 @@ const Footer = ({ locale = 'ja' }) => {
       ]
     : [
         { href: `${import.meta.env.BASE_URL}sitemap.html`, label: 'サイトマップ' },
-        { href: `${import.meta.env.BASE_URL}${metaBase}/moth/index.html`, label: '蛾メタ一覧' },
-        { href: `${import.meta.env.BASE_URL}${metaBase}/plant/index.html`, label: '植物メタ一覧' },
+        // 「メタ一覧」は開発用語で意味が伝わらないため、英語版と同じ利用者向けの名称にする
+        { href: `${import.meta.env.BASE_URL}${metaBase}/moth/index.html`, label: '昆虫ページ一覧' },
+        { href: `${import.meta.env.BASE_URL}${metaBase}/plant/index.html`, label: '植物ページ一覧' },
       ];
   return (
     <footer className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">

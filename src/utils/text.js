@@ -15,3 +15,10 @@ export const normalizeForSearch = (str = '') => {
   return hiraganaToKatakana(s.trim().toLowerCase());
 };
 
+// NFKC正規化のみ（かな変換なし）。検索語から「原文」と「カタカナ変換」の
+// 2バリアントを作る箇所で、半角カナ・全角英数の表記ゆれを先に吸収するために使う。
+export const normalizeNFKC = (str = '') => {
+  const s = String(str ?? '');
+  return typeof s.normalize === 'function' ? s.normalize('NFKC') : s;
+};
+

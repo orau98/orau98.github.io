@@ -13,9 +13,10 @@ const LocaleSwitcher = ({
   const jaPath = localizePath(currentPath, 'ja');
   const enPath = localizePath(currentPath, ENGLISH_LOCALE);
 
+  // タッチ端末（モバイル幅）では44pxのタップ領域を確保し、sm以上は従来の高さを保つ
   const baseItemClass = compact
-    ? 'inline-flex min-h-[36px] items-center whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors sm:rounded-lg'
-    : 'inline-flex min-h-[36px] items-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors';
+    ? 'inline-flex min-h-[44px] items-center whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors sm:min-h-[36px] sm:rounded-lg'
+    : 'inline-flex min-h-[44px] items-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors sm:min-h-[36px]';
   // emerald-600 + 白文字は約3.8:1でWCAG AA未達のため emerald-700（約5:1）に引き上げ
   const activeItemClass = 'bg-emerald-700 text-white shadow-sm';
   const inactiveItemClass =

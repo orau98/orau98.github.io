@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import sharp from "sharp";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,6 +53,31 @@ const loadExistingJson = () => {
   }
 };
 
+// ギャラリーは2カラムの正方形サムネイル表示なので原寸（1MB超）は不要。
+// 長辺640pxに縮小してから保存する（失敗時は原寸のまま保存）。
+const MAX_IMAGE_DIMENSION = 640;
+export const optimizeImageBuffer = async (buffer, ext) => {
+  try {
+    const base = sharp(buffer)
+      .rotate()
+      .resize({
+        width: MAX_IMAGE_DIMENSION,
+        height: MAX_IMAGE_DIMENSION,
+        fit: "inside",
+        withoutEnlargement: true,
+      });
+    let optimized;
+    if (ext === ".png") optimized = await base.png().toBuffer();
+    else if (ext === ".webp") optimized = await base.webp({ quality: 78 }).toBuffer();
+    else if (ext === ".jpg" || ext === ".jpeg")
+      optimized = await base.jpeg({ quality: 78, mozjpeg: true }).toBuffer();
+    else return buffer; // gif/avif等はそのまま（アニメーション保持）
+    return optimized.length < buffer.length ? optimized : buffer;
+  } catch {
+    return buffer;
+  }
+};
+
 const downloadImage = async (permalink, shortcode) => {
   if (!permalink || !shortcode) return "";
   const mediaUrl = `https://www.instagram.com/p/${shortcode}/media/?size=l`;
@@ -66,7 +92,7 @@ const downloadImage = async (permalink, shortcode) => {
   const dest = path.join(OUT_DIR, filename);
   const buffer = Buffer.from(await res.arrayBuffer());
   if (!buffer.length) throw new Error("empty response");
-  fs.writeFileSync(dest, buffer);
+  fs.writeFileSync(dest, await optimizeImageBuffer(buffer, ext));
   return `/instagram/${filename}`;
 };
 

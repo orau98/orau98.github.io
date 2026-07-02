@@ -15,7 +15,7 @@ import {
   createSafeScientificPlantFilename,
   splitFilenameBase,
 } from "../utils/filename";
-import { hiraganaToKatakana } from "../utils/text";
+import { hiraganaToKatakana, normalizeNFKC } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
 import ListFilterPanel from "./ListFilterPanel";
@@ -34,6 +34,8 @@ import ImageWithFallback from "./ImageWithFallback";
 import SearchableSelect from "./SearchableSelect";
 import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
 import ManualAdSlot from "./ManualAdSlot";
+
+const PER_PAGE_OPTIONS = [20, 50, 100];
 
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
@@ -198,13 +200,13 @@ const HostPlantListItem = React.memo(
     }
 
     return (
-      <article className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+      <article className="group relative h-full overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
           to={buildPlantPath(plant, locale)}
           state={makeDetailLinkState(location, { setFromList: true })}
-          className="block relative z-0"
+          className="block relative z-0 h-full"
         >
           <div className="flex flex-col h-full">
             {/* Enhanced Plant Image/Icon section */}
@@ -417,6 +419,8 @@ const HostPlantList = ({
       view: isEnglish ? 'View' : '表示',
       cards: isEnglish ? 'Cards' : 'カード',
       compact: isEnglish ? 'Compact' : 'コンパクト',
+      perPage: isEnglish ? 'Per page' : '表示件数',
+      autoPerPage: (value) => (isEnglish ? `Auto (${value})` : `自動 (${value})`),
       sort: isEnglish ? 'Sort' : '並び替え',
       sortImage: isEnglish ? 'Photos first' : '写真あり優先',
       sortName: isEnglish ? 'Name' : '名前順',
@@ -624,6 +628,11 @@ const HostPlantList = ({
     const v = searchParams.get('psort') || 'image';
     return ['image', 'name', 'family', 'related'].includes(v) ? v : 'image';
   }, [searchParams]);
+  const requestedItemsPerPage = useMemo(() => {
+    const n = parseInt(searchParams.get('pper') || '', 10);
+    return PER_PAGE_OPTIONS.includes(n) ? n : null;
+  }, [searchParams]);
+  const effectiveItemsPerPage = requestedItemsPerPage || itemsPerPage;
 
   const setPPage = useCallback((page) => {
     updateSearchParams((p) => {
@@ -687,6 +696,15 @@ const HostPlantList = ({
     updateSearchParams((p) => {
       if (value && value !== 'image') p.set('psort', value);
       else p.delete('psort');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const setPItemsPerPage = useCallback((value) => {
+    updateSearchParams((p) => {
+      const n = parseInt(value, 10);
+      if (PER_PAGE_OPTIONS.includes(n)) p.set('pper', String(n));
+      else p.delete('pper');
       p.delete('ppage');
     });
   }, [updateSearchParams]);
@@ -827,6 +845,7 @@ const HostPlantList = ({
     visitFilter,
     hostOnlyFilter,
     photoFilter,
+    sortMode,
   });
 
   // （メタは useSeoMeta に移行）
@@ -992,10 +1011,12 @@ const HostPlantList = ({
       logger.debug("DEBUG: No host plants available");
       return [];
     }
-    const lowerCaseSearchTerm = debouncedPlantSearch.toLowerCase();
+    // NFKC正規化で半角カナ・全角英数の表記ゆれを吸収（例: ﾌﾞﾅ→ブナ）
+    const nfkcPlantSearch = normalizeNFKC(debouncedPlantSearch);
+    const lowerCaseSearchTerm = nfkcPlantSearch.toLowerCase();
     // ひらがな入力をカタカナに変換して検索
     const katakanaSearchTerm =
-      hiraganaToKatakana(debouncedPlantSearch).toLowerCase();
+      hiraganaToKatakana(nfkcPlantSearch).toLowerCase();
 
     const filtered = Object.entries(mergedHostPlants).filter(([plantName]) => {
       // Explicitly exclude empty, undefined, or invalid plant names
@@ -1175,27 +1196,28 @@ const HostPlantList = ({
   useEffect(() => {
     if (typeof document === "undefined") return;
     try {
-      const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
+      const pageCount = Math.ceil(filteredHostPlants.length / effectiveItemsPerPage);
+      const activePage = pageCount > 0 ? Math.min(currentPage, pageCount) : 1;
       document
         .querySelectorAll('link[rel="prev"], link[rel="next"]')
         .forEach((n) => n.remove());
       const url = new URL(window.location.href);
       url.searchParams.delete("ppage");
-      if (currentPage > 1) {
+      if (activePage > 1) {
         const prev = document.createElement("link");
         prev.rel = "prev";
         const prevUrl = new URL(url.href);
-        if (currentPage - 1 > 1) {
-          prevUrl.searchParams.set("ppage", String(currentPage - 1));
+        if (activePage - 1 > 1) {
+          prevUrl.searchParams.set("ppage", String(activePage - 1));
         }
         prev.href = prevUrl.toString();
         document.head.appendChild(prev);
       }
-      if (currentPage < totalPages) {
+      if (activePage < pageCount) {
         const next = document.createElement("link");
         next.rel = "next";
         const nextUrl = new URL(url.href);
-        nextUrl.searchParams.set("ppage", String(currentPage + 1));
+        nextUrl.searchParams.set("ppage", String(activePage + 1));
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
@@ -1205,19 +1227,22 @@ const HostPlantList = ({
         error,
       );
     }
-  }, [currentPage, itemsPerPage, filteredHostPlants.length]);
-  const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
+  }, [currentPage, effectiveItemsPerPage, filteredHostPlants.length]);
+  const totalPages = Math.ceil(filteredHostPlants.length / effectiveItemsPerPage);
+  // URLのppageが総ページ数を超える場合は最終ページへ丸める
+  // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
+  const effectivePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const currentHostPlants = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const startIndex = (effectivePage - 1) * effectiveItemsPerPage;
+    const endIndex = startIndex + effectiveItemsPerPage;
     return filteredHostPlants.slice(startIndex, endIndex);
-  }, [filteredHostPlants, currentPage, itemsPerPage]);
+  }, [filteredHostPlants, effectivePage, effectiveItemsPerPage]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
-    if (clampedPage === currentPage) return;
+    if (clampedPage === effectivePage) return;
     setPPage(clampedPage);
     if (typeof window !== "undefined") {
       window.requestAnimationFrame(() => {
@@ -1235,7 +1260,8 @@ const HostPlantList = ({
       prev.orderFilter !== orderFilter ||
       prev.visitFilter !== visitFilter ||
       prev.hostOnlyFilter !== hostOnlyFilter ||
-      prev.photoFilter !== photoFilter;
+      prev.photoFilter !== photoFilter ||
+      prev.sortMode !== sortMode;
 
     if (!changed) return;
 
@@ -1246,11 +1272,24 @@ const HostPlantList = ({
       visitFilter,
       hostOnlyFilter,
       photoFilter,
+      sortMode,
     };
+
+    // 条件・並び順が変わったら結果の先頭を見せる
+    // （下までスクロールした状態で「新しい並びの中盤」が表示される混乱を防ぐ）
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        const target = listTopRef.current || document.getElementById('explorer-results');
+        if (!target) return;
+        if (target.getBoundingClientRect().top < 0) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
 
     if (currentPage === 1) return;
     setPPage(1);
-  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, currentPage, setPPage]);
+  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, sortMode, currentPage, setPPage]);
 
   const renderFilters = () => {
     const presetChips = [
@@ -1346,10 +1385,15 @@ const HostPlantList = ({
           sortMode={sortMode}
           onSortModeChange={setPSortMode}
           sortOptions={sortOptions}
+          itemsPerPageValue={requestedItemsPerPage || 'auto'}
+          autoItemsPerPage={itemsPerPage}
+          onItemsPerPageChange={setPItemsPerPage}
           labels={{
             view: ui.view,
             cards: ui.cards,
             compact: ui.compact,
+            perPage: ui.perPage,
+            autoPerPage: ui.autoPerPage,
             sort: ui.sort,
           }}
         />
@@ -1427,10 +1471,17 @@ const HostPlantList = ({
                 const statsNames =
                   plantInsectStats?.namesByPlant?.[plant] ||
                   (normalizedPlant && plantInsectStats?.namesByPlant?.[normalizedPlant]);
-                const displayNames =
+                const rawDisplayNames =
                   Array.isArray(statsNames) && statsNames.length > 0
                     ? statsNames
                     : mothList;
+                // 和名を持つ種を先頭に（「Greenidea kuwanai（和名未記載）」のような
+                // 学名始まりの種が要約の先頭に来て雑然とするのを避ける）
+                const displayNames = [...rawDisplayNames].sort((a, b) => {
+                  const isLatinA = /^[A-Za-z]/.test(String(a).trim());
+                  const isLatinB = /^[A-Za-z]/.test(String(b).trim());
+                  return isLatinA === isLatinB ? 0 : isLatinA ? 1 : -1;
+                });
                 const statsCount =
                   plantInsectStats?.countsByPlant?.[plant] ??
                   (normalizedPlant && plantInsectStats?.countsByPlant?.[normalizedPlant]);
@@ -1448,16 +1499,17 @@ const HostPlantList = ({
                 );
                 return (
                 <React.Fragment key={plant}>
-                  {!hasAnyCriteria && currentPage === 1 && index === 8 && viewMode !== "compact" && (
+                  {!hasAnyCriteria && effectivePage === 1 && index === 8 && viewMode !== "compact" && (
                     <ManualAdSlot
                       placement="inFeed"
                       locale={locale}
-                      className="animate-fadeIn self-start"
+                      className="animate-fadeIn h-full"
                       minHeight="min-h-[220px]"
                     />
                   )}
+                  {/* 行内でカード高さを揃える（短いカードの下に空白ができないように） */}
                   <div
-                    className="animate-fadeIn"
+                    className="animate-fadeIn h-full"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <HostPlantListItem
@@ -1533,7 +1585,7 @@ const HostPlantList = ({
         {totalPages > 1 && (
           <div className="mt-6 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30 overflow-x-hidden">
             <Pagination
-              currentPage={currentPage}
+              currentPage={effectivePage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
               locale={locale}

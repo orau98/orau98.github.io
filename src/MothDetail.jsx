@@ -29,16 +29,23 @@ import {
   resolveImageBaseCandidates,
 } from './utils/insectImageResolver';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
-import { buildInsectMetaPagePath, getInsectSectionConfig } from './utils/siteTaxonomy';
+import { buildInsectMetaPagePath, buildPlantPath, getInsectSectionConfig } from './utils/siteTaxonomy';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
+import NativeShareButton from './components/NativeShareButton';
 import DetailNavigation from './components/DetailNavigation';
 import DetailSectionNav from './components/DetailSectionNav';
 import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
+import { sortInsectsTaxonomically } from './utils/taxonomicOrder';
+import {
+  INDEX_FOLLOW_ROBOTS,
+  NOINDEX_FOLLOW_ROBOTS,
+  setRobotsMetaContent,
+} from './utils/robotsMeta';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -185,9 +192,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   // Combine all insects for searching
   const allInsects = React.useMemo(() => [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles, ...aphids], [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
   
-  // Sort for navigation
+  // 前後ナビ用の並び順。五十音順ではなく分類順（グループ→科→亜科→族→属→種）にして、
+  // 「次の種」で近縁種へ移動できるようにする
   const sortedInsects = React.useMemo(() => {
-    return [...allInsects].sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    return sortInsectsTaxonomically(allInsects);
   }, [allInsects]);
 
   // Utility: find by slugified Japanese name (URL-safe)
@@ -577,6 +585,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   const hasInstagramPost = Boolean(moth?.instagramUrl && moth.instagramUrl.trim());
 
+  // 実写真が解決できたか（候補ゼロでプレースホルダーだけの場合はfalse）
+  const hasRealPhoto =
+    Boolean(mainImageProps.base) ||
+    (typeof mainImageProps.src === 'string' && !mainImageProps.src.includes('placeholder.jpg'));
+  // 写真パネルを出すか。画像インデックス読み込み中は写真がある前提で枠を維持し、
+  // 写真ゼロと確定したら巨大な空箱を出さずコンパクトな通知に切り替える
+  const showPhotoPanel = hasInstagramPost || hasRealPhoto || !isImageIndexReady;
+
   const nameAliasInfo = React.useMemo(() => {
     return splitJapaneseNameAliases(moth?.name || '');
   }, [moth?.name]);
@@ -880,6 +896,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     }
   }, [isEnglish, mainImageProps.src, moth, setOgTwitterImage]);
 
+  // ソフト404対策: 存在しない種のURLは検索エンジンにインデックスさせない
+  // （データ読み込み完了後に判定。植物詳細のthin-contentガードと同じ方式）
+  useEffect(() => {
+    try {
+      if (isDataLoading) return;
+      setRobotsMetaContent(moth ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
+    } catch {}
+  }, [isDataLoading, moth]);
+
   // Show loading state if data is still loading
   if (isDataLoading) {
     return (
@@ -1032,20 +1057,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           </div>
         </div>
 
-        <div className="border-b border-slate-200/80 bg-emerald-50/80 px-4 py-3 text-sm text-slate-700 dark:border-slate-700/70 dark:bg-emerald-950/20 dark:text-slate-200">
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-emerald-700 shadow-sm dark:bg-slate-900 dark:text-emerald-300">
-              {isEnglish ? 'Green: plants' : '緑: 植物'}
-            </span>
-            <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-blue-700 shadow-sm dark:bg-slate-900 dark:text-blue-300">
-              {isEnglish ? 'Blue: insects' : '青: 昆虫'}
-            </span>
-            <span className="rounded-full bg-white px-2.5 py-1 font-semibold text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
-              {isEnglish ? 'Lines: host or flower visit links' : '線: 食草/訪花の関係'}
-            </span>
-          </div>
-        </div>
-
+        {/* 凡例はグラフ内ツールバーの表示（絞り込みに追従する）に一本化し、二重表示を避ける */}
         <div className="h-[560px] lg:h-[820px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
           {graphDimensions.width === 0 || !graphNearViewport ? (
             <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
@@ -1100,9 +1112,26 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return true;
   };
 
+  // 文献記録などに現れる植物名が植物ページを持つ場合だけリンク先を返す
+  // （辞書に無い名前・「不明」はリンクにしない）
+  const resolveLinkablePlantName = (rawName) => {
+    const name = String(rawName || '').trim();
+    if (!name || name === '不明') return null;
+    const withoutParens = name.replace(/[（(][^（()）]*[）)]/g, '').trim();
+    const candidates = name === withoutParens ? [name] : [name, withoutParens];
+    for (const candidate of candidates) {
+      if (
+        (hostPlants && Object.prototype.hasOwnProperty.call(hostPlants, candidate)) ||
+        (plantDetails && Object.prototype.hasOwnProperty.call(plantDetails, candidate))
+      ) {
+        return candidate;
+      }
+    }
+    return null;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-6xl mx-auto px-4 pt-6"></div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pt-6">
       {/* 構造化データ */}
       {mothId && moth && <MothStructuredData moth={moth} />}
       {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
@@ -1133,7 +1162,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           />
         </div>
         {/* モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ */}
-        <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
+        <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 scroll-fade-right sm-scroll-fade-none [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
           <Link
             to={getBackTarget(location, localizePath('/?tab=insects', locale))}
             state={makeDetailLinkState(location)}
@@ -1212,14 +1241,30 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             { id: 'basic-info', label: isEnglish ? 'Name' : '種名' },
             { id: 'host-plants', label: isEnglish ? 'Host plants' : '食草・訪花' },
             { id: 'adult-season', label: isEnglish ? 'Season' : '発生時期' },
+            { id: 'ecology', label: isEnglish ? 'Ecology' : '生態' },
+            { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
             { id: 'food-web', label: isEnglish ? 'Network' : 'ネットワーク' },
             { id: 'share', label: isEnglish ? 'Share' : '共有' },
           ]}
         />
 
         {/* モバイルは写真ファーストの1カラム。lg以上は写真を左に固定した2カラムにして、
-            初期表示で種名・食草情報が写真と同時に見えるようにする */}
-        <div className="space-y-6 lg:grid lg:grid-cols-5 lg:items-start lg:gap-6 lg:space-y-0">
+            初期表示で種名・食草情報が写真と同時に見えるようにする。
+            写真が無い種では2カラムをやめ、種名を先頭にした1カラムに畳む */}
+        <div className={showPhotoPanel ? 'space-y-6 lg:grid lg:grid-cols-5 lg:items-start lg:gap-6 lg:space-y-0' : 'space-y-6'}>
+          {!showPhotoPanel && (
+            <div className="rounded-card border border-line bg-surface shadow-e1 flex items-center gap-2.5 px-4 py-3 text-sm text-slate-500 dark:text-slate-400">
+              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>
+                {isEnglish
+                  ? 'No photographs of this species are registered yet.'
+                  : 'この種の写真はまだ登録されていません。'}
+              </span>
+            </div>
+          )}
+          {showPhotoPanel && (
           <div id="plant-photos" className="lg:sticky lg:top-24 lg:col-span-3">
             <div>
               <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
@@ -1325,9 +1370,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               </div>
             </div>
           </div>
+          )}
 
           {/* 情報セクション */}
-          <div className="space-y-4 lg:col-span-2">
+          <div className={`space-y-4 ${showPhotoPanel ? 'lg:col-span-2' : ''}`}>
             
             {/* 種名情報 */}
             <div id="basic-info" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden p-6">
@@ -1684,11 +1730,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                                   <div>
                                     <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">{detailUi.literatureHostPlantLabel}</p>
                                     <div className="flex flex-wrap gap-1">
-                                      {foodPlants.map((plant, plantIndex) => (
-                                        <span key={plantIndex} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
-                                          {plant}
-                                        </span>
-                                      ))}
+                                      {foodPlants.map((plant, plantIndex) => {
+                                        const linkTarget = resolveLinkablePlantName(plant);
+                                        return linkTarget ? (
+                                          <Link
+                                            key={plantIndex}
+                                            to={buildPlantPath(linkTarget, locale)}
+                                            state={makeDetailLinkState(location)}
+                                            className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 underline-offset-2 hover:underline hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/70"
+                                          >
+                                            {plant}
+                                          </Link>
+                                        ) : (
+                                          <span key={plantIndex} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                            {plant}
+                                          </span>
+                                        );
+                                      })}
                                     </div>
                                   </div>
                                 </div>
@@ -2026,13 +2084,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
             {/* 保全応援セクション（テストページ専用のためSPAには含めない） */}
 
-            {/* 関連種情報 - 横スクロール式カードデザイン */}
-            <div id="related-insects"></div>
-            <RelatedInsectsSection
-              relatedMothsByPlant={relatedMothsByPlant}
-              allInsects={allInsects}
-              locale={locale}
-            />
+            {/* 関連種情報 - 横スクロール式カードデザイン
+                （アンカーで包み、関連ゼロで非表示のときは目次からも消えるようにする） */}
+            <div id="related-insects">
+              <RelatedInsectsSection
+                relatedMothsByPlant={relatedMothsByPlant}
+                allInsects={allInsects}
+                locale={locale}
+              />
+            </div>
 
             <ManualAdSlot
               placement="detail"
@@ -2061,6 +2121,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               </h2>
             </div>
             <div className="p-4 flex flex-wrap gap-3">
+              {/* OS標準の共有シート（対応環境のみ表示） */}
+              <NativeShareButton
+                url={shareUrl}
+                title={shareTitle}
+                text={shareText}
+                isEnglish={isEnglish}
+              />
+
               {/* X (Twitter) シェアボタン */}
               <a
                 href={shareXUrl}

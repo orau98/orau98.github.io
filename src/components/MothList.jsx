@@ -10,7 +10,7 @@ import EmergenceTimeDisplay, { hasEmergencePeriods } from './EmergenceTimeDispla
 import ListFilterPanel from './ListFilterPanel';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
-import { hiraganaToKatakana } from '../utils/text';
+import { hiraganaToKatakana, normalizeNFKC } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import ImageWithFallback from './ImageWithFallback';
 import SearchableSelect from './SearchableSelect';
@@ -383,13 +383,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     }
 
     return (
-      <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+      <article ref={imgRef} className="group relative h-full overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
         to={route}
         state={makeDetailLinkState(location, { setFromList: true })}
-        className="block relative z-0"
+        className="block relative z-0 h-full"
       >
         <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
@@ -478,7 +478,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 <div className="space-y-1.5 text-[13px] sm:text-sm">
                   {plantDisplay.hostNames.length > 0 && (
                     <div className="flex items-start space-x-2">
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
+                      <span
+                        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5"
+                        role="img"
+                        aria-label={isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
+                        title={isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
+                      >
                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
                         </svg>
@@ -501,7 +506,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       <span
                         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-[13px] dark:bg-rose-900/30 flex-shrink-0 mt-0.5"
                         role="img"
-                        aria-label={isEnglish ? "Flower visit" : "訪花"}
+                        aria-label={isEnglish ? "Flower-visit plants (adults)" : "成虫の訪花植物"}
+                        title={isEnglish ? "Flower-visit plants (adults)" : "成虫の訪花植物"}
                       >
                         🌸
                       </span>
@@ -1121,6 +1127,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     emergenceFilter,
     seasonFilter,
     photoFilter,
+    sortMode,
   });
   const listTopRef = useRef(null);
   const resizeInitializedRef = useRef(false);
@@ -1278,14 +1285,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
           if (groupFilter && (moth.type || 'moth') !== groupFilter) return false;
 
-          const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+          // NFKC正規化で半角カナ・全角英数の表記ゆれを吸収（例: ﾌﾞﾅ→ブナ）
+          const nfkcSearchTerm = normalizeNFKC(debouncedSearchTerm);
+          const lowerCaseSearchTerm = nfkcSearchTerm.toLowerCase();
           // ひらがなをカタカナに変換した検索語も用意
-          const katakanaSearchTerm = hiraganaToKatakana(debouncedSearchTerm).toLowerCase();
-          
+          const katakanaSearchTerm = hiraganaToKatakana(nfkcSearchTerm).toLowerCase();
+
           // If there's a classification filter from URL, prioritize that
           if (classificationFilter && !debouncedSearchTerm) {
-            const lowerClassification = classificationFilter.toLowerCase();
-            const katakanaClassification = hiraganaToKatakana(classificationFilter).toLowerCase();
+            const nfkcClassification = normalizeNFKC(classificationFilter);
+            const lowerClassification = nfkcClassification.toLowerCase();
+            const katakanaClassification = hiraganaToKatakana(nfkcClassification).toLowerCase();
             return (moth.classification?.familyJapanese?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.familyJapanese?.toLowerCase().includes(katakanaClassification)) ||
                    (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
@@ -1334,6 +1344,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
   const [imageExtensions, setImageExtensions] = useState({});
+  // 取得の成否を問わず解決済みになったか（失敗時もリストを描画するために使う）
+  const [imageIndexResolved, setImageIndexResolved] = useState(false);
   const normalizedImageEntries = useMemo(
     () => buildNormalizedEntries(imageFilenames, imageExtensions),
     [imageFilenames, imageExtensions],
@@ -1359,6 +1371,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         logger.debug('Failed to load insect image index:', e);
         setImageFilenames(new Set());
         setImageExtensions({});
+      })
+      .finally(() => {
+        setImageIndexResolved(true);
       });
   }, []);
 
@@ -1554,26 +1569,29 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   ]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / effectiveItemsPerPage);
+  // URLのipageが総ページ数を超える場合は最終ページへ丸める
+  // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
+  const effectivePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const currentMoths = useMemo(() => {
     try {
       if (!sortedMoths || sortedMoths.length === 0) {
         return [];
       }
-      
-      const startIndex = (currentPage - 1) * effectiveItemsPerPage;
+
+      const startIndex = (effectivePage - 1) * effectiveItemsPerPage;
       const endIndex = startIndex + effectiveItemsPerPage;
       return sortedMoths.slice(startIndex, endIndex);
     } catch (error) {
       logger.error('Error calculating currentMoths:', error);
       return [];
     }
-  }, [sortedMoths, currentPage, effectiveItemsPerPage]);
+  }, [sortedMoths, effectivePage, effectiveItemsPerPage]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
-    if (clampedPage === currentPage) return;
+    if (clampedPage === effectivePage) return;
     setIPage(clampedPage);
     if (typeof window !== 'undefined') {
       window.requestAnimationFrame(() => {
@@ -1589,27 +1607,27 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(n => n.remove());
       const url = new URL(window.location.href);
       url.searchParams.delete('ipage');
-      if (currentPage > 1) {
+      if (effectivePage > 1) {
         const prev = document.createElement('link');
         prev.rel = 'prev';
         const prevUrl = new URL(url.href);
-        const prevPage = currentPage - 1;
+        const prevPage = effectivePage - 1;
         if (prevPage > 1) prevUrl.searchParams.set('ipage', String(prevPage));
         prev.href = prevUrl.toString();
         document.head.appendChild(prev);
       }
-      if (currentPage < totalPages) {
+      if (effectivePage < totalPages) {
         const next = document.createElement('link');
         next.rel = 'next';
         const nextUrl = new URL(url.href);
-        nextUrl.searchParams.set('ipage', String(currentPage + 1));
+        nextUrl.searchParams.set('ipage', String(effectivePage + 1));
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
     } catch (error) {
       logger.debug('Failed to update rel prev/next links for moth list:', error);
     }
-  }, [currentPage, totalPages]);
+  }, [effectivePage, totalPages]);
 
   React.useEffect(() => {
     const prev = filterCriteriaRef.current;
@@ -1620,7 +1638,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       prev.genusFilter !== genusFilter ||
       prev.emergenceFilter !== emergenceFilter ||
       prev.seasonFilter !== seasonFilter ||
-      prev.photoFilter !== photoFilter;
+      prev.photoFilter !== photoFilter ||
+      prev.sortMode !== sortMode;
 
     if (!changed) return;
 
@@ -1632,7 +1651,20 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       emergenceFilter,
       seasonFilter,
       photoFilter,
+      sortMode,
     };
+
+    // 条件・並び順が変わったら結果の先頭を見せる
+    // （下までスクロールした状態で「新しい並びの中盤」が表示される混乱を防ぐ）
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        const target = listTopRef.current || document.getElementById('explorer-results');
+        if (!target) return;
+        if (target.getBoundingClientRect().top < 0) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
 
     if (currentPage === 1) return;
     setIPage(1);
@@ -1644,6 +1676,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     emergenceFilter,
     seasonFilter,
     photoFilter,
+    sortMode,
     currentPage,
     setIPage,
   ]);
@@ -1853,7 +1886,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       <div className="p-3 pt-1 sm:p-6">
         <div ref={listTopRef} />
         <div>
-          {!isImageIndexReady ? (
+          {!isImageIndexReady && !imageIndexResolved ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
@@ -1875,16 +1908,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                 try {
                   return (
                     <React.Fragment key={moth?.id || `moth-${index}`}>
-                      {!hasAnyCriteria && currentPage === 1 && index === 8 && viewMode !== 'compact' && (
+                      {!hasAnyCriteria && effectivePage === 1 && index === 8 && viewMode !== 'compact' && (
                         <ManualAdSlot
                           placement="inFeed"
                           locale={locale}
-                          className="animate-fadeIn self-start"
+                          className="animate-fadeIn h-full"
                           minHeight="min-h-[220px]"
                         />
                       )}
-                      <div className="animate-fadeIn" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
-                        <MothListItem 
+                      {/* 行内でカード高さを揃える（短いカードの下に空白ができないように） */}
+                      <div className="animate-fadeIn h-full" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
+                        <MothListItem
                           moth={moth} 
                           baseRoute={baseRoute} 
                           isPriority={index < 12} 
@@ -1989,7 +2023,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         {totalPages > 1 && (
           <div className="mt-6 pt-4 border-t border-blue-200/30 dark:border-blue-700/30 overflow-x-hidden">
             <Pagination
-              currentPage={currentPage}
+              currentPage={effectivePage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
               locale={locale}

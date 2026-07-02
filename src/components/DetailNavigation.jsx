@@ -86,18 +86,9 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
 };
 
 // Main Component
+// allItems は呼び出し側で並び替え済みを渡す前提（親でメモ化）。
+// 昆虫・植物いずれも分類順（科→属…）で渡され、前後が近縁種になる。
 const DetailNavigation = ({ allItems, currentId, type = 'insect', locale = 'ja' }) => {
-  // Sort items for consistent navigation order (e.g., alphabetical by Japanese name)
-  // Assuming 'allItems' might be unsorted, let's sort by name if not already.
-  // For insects, usually passed sorted or we sort here.
-  // Sorting 9700+ items on every render is heavy. 
-  // Ideally 'allItems' is already memoized/sorted in parent or we memoize here.
-  
-  // However, for simplicity and correctness with the list view:
-  // The list view sorts by `name` usually.
-  
-  // Note: useNeighborItems iterates to find index.
-  
   const { prevItem, nextItem } = useNeighborItems(allItems, currentId, type === 'plant' ? 'name' : 'id');
 
   if (!prevItem && !nextItem) return null;
