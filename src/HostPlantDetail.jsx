@@ -1917,7 +1917,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
+      <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 sm:pt-8">
       {/* Top row: back link + classification chips (unified with insect detail) */}
       <div className="mb-6 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-center lg:justify-between">
         <Link 

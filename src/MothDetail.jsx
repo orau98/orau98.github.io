@@ -1131,7 +1131,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pt-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 sm:pt-6">
       {/* 構造化データ */}
       {mothId && moth && <MothStructuredData moth={moth} />}
       {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
@@ -1139,7 +1139,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       {longhornbeetleId && moth && <LonghornBeetleStructuredData longhornbeetle={moth} />}
       {leafbeetleId && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
       {aphidId && moth && <AphidStructuredData aphid={moth} />}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
+      <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 sm:pt-8">
         {/* パンくずリスト */}
         <div className="hidden md:block">
           <Breadcrumb
@@ -1174,15 +1175,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             <span className="sm:hidden">{isEnglish ? 'Back' : '一覧へ'}</span>
             <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
           </Link>
-          {quizFocusHref && (
-            <Link
-              to={quizFocusHref}
-              className="inline-flex items-center whitespace-nowrap rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950 sm:text-sm"
-            >
-              <span className="sm:hidden">{isEnglish ? 'Review' : 'クイズ'}</span>
-              <span className="hidden sm:inline">{isEnglish ? 'Review in quiz' : 'この昆虫をクイズで復習'}</span>
-            </Link>
-          )}
           {orderChip.label && (
             <span className="inline-flex items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 sm:px-3 sm:text-sm">
               <span className="font-medium">{orderChip.label}</span>
@@ -1394,6 +1386,16 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
                   {formatScientificNameReact(moth.scientificName)}
                 </p>
+              )}
+              {/* クイズ導線は種名カード内に1つだけ置く
+                  （冒頭チップ行に置くとヘッダーのクイズボタンと二重に見える。植物詳細と同じ配置） */}
+              {quizFocusHref && (
+                <Link
+                  to={quizFocusHref}
+                  className="mt-4 inline-flex items-center rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 shadow-sm transition hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-950"
+                >
+                  {isEnglish ? 'Review this insect in quiz' : 'この昆虫をクイズで復習'}
+                </Link>
               )}
             </div>
 
