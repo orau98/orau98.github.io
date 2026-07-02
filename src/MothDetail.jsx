@@ -1037,7 +1037,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   logger.debug('Has Instagram Post:', hasInstagramPost);
 
   const renderFoodWebCard = (containerRef, className, id) => (
-    <div data-section-id={id} className={`${className} scroll-mt-28`} ref={containerRef}>
+    <div id={id} data-section-id={id} className={`${className} scroll-mt-28`} ref={containerRef}>
       <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
           <div className="flex items-center gap-3">
@@ -1081,6 +1081,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 height={graphDimensions.height}
                 imageExtensions={imageExtensions}
                 theme={theme}
+                locale={locale}
               />
             </React.Suspense>
           )}

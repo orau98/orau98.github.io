@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { isEnglishLocale } from '../utils/locale';
 import logger from '../utils/logger';
 
@@ -77,6 +77,15 @@ const ManualAdSlot = ({
     [placement, slotId],
   );
 
+  // 配信なし（unfilled）のとき、空の広告枠を出し続けないよう折りたたむ
+  // （Google公式が推奨するCLS/空枠対策。広告のクリッピングは行わない）
+  const insRef = useRef(null);
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    setCollapsed(false);
+  }, [adKey]);
+
   useEffect(() => {
     if (!slotId || localPreview) return undefined;
 
@@ -98,7 +107,22 @@ const ManualAdSlot = ({
     };
   }, [adKey, localPreview, slotId]);
 
-  if (!isRenderable) return null;
+  useEffect(() => {
+    if (!slotId || localPreview) return undefined;
+    const node = insRef.current;
+    if (!node || typeof MutationObserver === 'undefined') return undefined;
+    const check = () => {
+      if (node.getAttribute('data-ad-status') === 'unfilled') {
+        setCollapsed(true);
+      }
+    };
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(node, { attributes: true, attributeFilter: ['data-ad-status'] });
+    return () => observer.disconnect();
+  }, [adKey, localPreview, slotId]);
+
+  if (!isRenderable || collapsed) return null;
 
   return (
     <aside
@@ -111,6 +135,7 @@ const ManualAdSlot = ({
       {slotId && !showPreviewPlaceholder ? (
         <ins
           key={adKey}
+          ref={insRef}
           className={`adsbygoogle block ${minHeight}`}
           data-ad-client={ADSENSE_CLIENT}
           data-ad-slot={slotId}

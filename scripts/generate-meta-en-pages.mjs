@@ -699,7 +699,7 @@ function buildEnglishInsectPage({
     <div class="meta-site-header-inner">
       <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="53" cy="25" r="8.5" fill="#000"/><circle cx="45" cy="51" r="7" fill="#000"/><circle cx="20" cy="16" r="5.5" fill="#000"/><path d="M30 15 C30 27 32 40 36 51" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/></mask></defs><path d="M32 10 C48 16 54 30 50 44 C46 54 36 56 30 54 C18 50 12 36 16 24 C19 15 26 11 32 10 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
       </a>
@@ -871,7 +871,7 @@ function buildEnglishPlantPage({
     <div class="meta-site-header-inner">
       <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="53" cy="25" r="8.5" fill="#000"/><circle cx="45" cy="51" r="7" fill="#000"/><circle cx="20" cy="16" r="5.5" fill="#000"/><path d="M30 15 C30 27 32 40 36 51" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/></mask></defs><path d="M32 10 C48 16 54 30 50 44 C46 54 36 56 30 54 C18 50 12 36 16 24 C19 15 26 11 32 10 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
       </a>
@@ -1006,7 +1006,7 @@ function buildEnglishSectionIndex(section, entries) {
     <div class="meta-site-header-inner">
       <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="53" cy="25" r="8.5" fill="#000"/><circle cx="45" cy="51" r="7" fill="#000"/><circle cx="20" cy="16" r="5.5" fill="#000"/><path d="M30 15 C30 27 32 40 36 51" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/></mask></defs><path d="M32 10 C48 16 54 30 50 44 C46 54 36 56 30 54 C18 50 12 36 16 24 C19 15 26 11 32 10 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
       </a>
@@ -1078,7 +1078,7 @@ function buildEnglishHomePage(counts) {
     <div class="meta-site-header-inner">
       <a href="/en/" class="meta-site-logo" aria-label="${escapeAttr(EN_SITE_NAME)} home">
         <span class="meta-site-logo-icon" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><defs><mask id="logo-leaf-bite"><rect width="64" height="64" fill="#fff"/><circle cx="53" cy="25" r="8.5" fill="#000"/><circle cx="45" cy="51" r="7" fill="#000"/><circle cx="20" cy="16" r="5.5" fill="#000"/><path d="M30 15 C30 27 32 40 36 51" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/></mask></defs><path d="M32 10 C48 16 54 30 50 44 C46 54 36 56 30 54 C18 50 12 36 16 24 C19 15 26 11 32 10 Z" fill="#ffffff" mask="url(#logo-leaf-bite)"/></svg>
         </span>
         <span class="meta-site-logo-text">${escapeHtml(EN_SITE_NAME)}</span>
       </a>

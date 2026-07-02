@@ -17,7 +17,8 @@ const LocaleSwitcher = ({
   const baseItemClass = compact
     ? 'inline-flex min-h-[44px] items-center whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors sm:min-h-[36px] sm:rounded-lg'
     : 'inline-flex min-h-[44px] items-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors sm:min-h-[36px]';
-  const activeItemClass = 'bg-emerald-600 text-white shadow-sm';
+  // emerald-600 + 白文字は約3.8:1でWCAG AA未達のため emerald-700（約5:1）に引き上げ
+  const activeItemClass = 'bg-emerald-700 text-white shadow-sm';
   const inactiveItemClass =
     'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800';
   const containerClass = compact

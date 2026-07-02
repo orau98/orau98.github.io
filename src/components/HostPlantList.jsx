@@ -124,7 +124,8 @@ const HostPlantListItem = React.memo(
         })
       : /[A-Za-z]/.test(plant) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(plant)
         ? normalizeLatinBinomialPlain(plant)
-        : plant;
+        // \u898B\u51FA\u3057\u3067\u306F\u672B\u5C3E\u306E\u300C(\u25EF\u25EF\u79D1)\u300D\u3092\u843D\u3068\u3059\uFF08\u79D1\u540D\u306F secondaryName \u306B\u5225\u9014\u8868\u793A\u3055\u308C\u4E8C\u91CD\u306B\u306A\u308B\u305F\u3081\uFF09
+        : (plant.replace(/\s*[\uFF08(][^\uFF09)]*\u79D1[^\uFF09)]*[\uFF09)]\s*$/, '').trim() || plant);
     const secondaryName = isEnglish ? buildJapaneseReferenceLabel(plant) : detail.familyName;
 
     if (viewMode === "compact") {
@@ -164,7 +165,7 @@ const HostPlantListItem = React.memo(
                     {isEnglish && detail.scientificName ? formatScientificNameReact(primaryName) : primaryName}
                   </h3>
                   {secondaryName && (
-                    <p className="line-clamp-1 text-sm text-emerald-600 dark:text-emerald-400">
+                    <p className="line-clamp-1 text-sm text-emerald-700 dark:text-emerald-400">
                       {secondaryName}
                     </p>
                   )}
@@ -339,7 +340,7 @@ const HostPlantListItem = React.memo(
                     : primaryName}
                 </h3>
                 {secondaryName && (
-                  <p className="line-clamp-1 text-[13px] leading-relaxed text-emerald-600 dark:text-emerald-400 sm:line-clamp-none sm:text-sm">
+                  <p className="line-clamp-1 text-[13px] leading-relaxed text-emerald-700 dark:text-emerald-400 sm:line-clamp-none sm:text-sm">
                     {secondaryName}
                   </p>
                 )}
@@ -414,6 +415,7 @@ const HostPlantList = ({
       withPhoto: isEnglish ? 'With photos' : '写真あり',
       hostPlantsOnly: isEnglish ? 'Host plants' : '食草あり',
       presetLabel: isEnglish ? 'Quick filters:' : 'クイック絞り込み:',
+      familyLabel: isEnglish ? 'Family:' : '科で絞り込み:',
       view: isEnglish ? 'View' : '表示',
       cards: isEnglish ? 'Cards' : 'カード',
       compact: isEnglish ? 'Compact' : 'コンパクト',
@@ -737,7 +739,10 @@ const HostPlantList = ({
     });
   }, [updateSearchParams]);
 
-  const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
+  // 実際の絞り込みに使う値（debouncedPlantSearch）から表示用の検索状態を導出し、
+  // フィルタと検索チップ/空状態表示が常に一致するようにする（URL q との二系統ずれを解消）
+  const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
+  const searchQuery = useMemo(() => (debouncedPlantSearch || '').trim(), [debouncedPlantSearch]);
   const hasSearchQuery = searchQuery.length > 0;
   const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all' || hostOnlyFilter || photoFilter === 'has';
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
@@ -833,7 +838,6 @@ const HostPlantList = ({
     return () => window.removeEventListener("resize", onResize);
   }, [computeItemsPerPage, setPPage]);
 
-  const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
   const filterCriteriaRef = useRef({
     debouncedPlantSearch,
     familyFilter,
@@ -901,9 +905,12 @@ const HostPlantList = ({
 
       const detail = safePlantDetails[plantName] || {};
       const normalized = normalizePlantKey(plantName);
+      // 名前解決（mergedHostPlants と同じ経路）: alias だけでなく normalizedToCanonical も参照し、
+      // 「別名では写真が出るが正規名では出ない」逆転を防ぐ
       const canonicalFromAlias =
         aliasToCanonical.get(plantName) ||
         aliasToCanonical.get(normalized) ||
+        normalizedToCanonical.get(normalized) ||
         null;
       const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
       const synonymPairs = {
@@ -959,7 +966,7 @@ const HostPlantList = ({
       }
     });
     return map;
-  }, [plantImageFilenames, mergedHostPlants, safePlantDetails, aliasToCanonical]);
+  }, [plantImageFilenames, mergedHostPlants, safePlantDetails, aliasToCanonical, normalizedToCanonical]);
 
   // Generate filter options
   const familyOptions = useMemo(() => {
@@ -979,6 +986,19 @@ const HostPlantList = ({
     });
     return Array.from(set).sort(compareLocalizedValues);
   }, [safePlantDetails, getOrderDisplayValue, compareLocalizedValues]);
+
+  // 出現頻度の高い科をワンタップチップにする（ドロップダウンを開かず主要な科を絞れるように）
+  const topFamilies = useMemo(() => {
+    const counts = new Map();
+    Object.keys(mergedHostPlants || {}).forEach((plantName) => {
+      const fam = getFamilyDisplayValue(safePlantDetails[plantName] || {});
+      if (fam && fam !== '不明') counts.set(fam, (counts.get(fam) || 0) + 1);
+    });
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1] || compareLocalizedValues(a[0], b[0]))
+      .slice(0, 8)
+      .map(([fam]) => fam);
+  }, [mergedHostPlants, safePlantDetails, getFamilyDisplayValue, compareLocalizedValues]);
 
   const filteredHostPlants = useMemo(() => {
     logger.debug(
@@ -1125,6 +1145,8 @@ const HostPlantList = ({
       if (sortMode === "image") {
         if (aHasImage && !bHasImage) return -1;
         if (!aHasImage && bHasImage) return 1;
+        // 写真あり/なしの各グループ内は名前順で整列（写真なしが集まる後半でも探しやすく）
+        return compareLocalizedValues(getPlantPrimaryName(a), getPlantPrimaryName(b));
       }
       if (sortMode === "family") {
         const familyCompare = compareLocalizedValues(
@@ -1275,6 +1297,12 @@ const HostPlantList = ({
       { key: "flower", label: ui.flowerOnly, active: visitFilter === "flower", onClick: () => setPVisitFilter(visitFilter === "flower" ? "all" : "flower") },
       { key: "photo", label: ui.withPhoto, active: photoFilter === "has", onClick: () => setPPhotoFilter(photoFilter === "has" ? "all" : "has") },
     ];
+    const familyChips = topFamilies.map((fam) => ({
+      key: `fam-${fam}`,
+      label: fam,
+      active: familyFilter === fam,
+      onClick: () => setPFamilyFilter(familyFilter === fam ? '' : fam),
+    }));
     const sortOptions = [
       { value: "image", label: ui.sortImage },
       { value: "name", label: ui.sortName },
@@ -1374,6 +1402,12 @@ const HostPlantList = ({
     };
     return (
       <>
+        {/* 主要な科はドロワーを開かず1タップで絞れるよう常時表示（昆虫グループチップと同じ思想） */}
+        {familyChips.length > 0 && (
+          <div className="mb-2 sm:mb-3">
+            <PresetFilterChips label={ui.familyLabel} chips={familyChips} />
+          </div>
+        )}
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 [&::-webkit-details-marker]:hidden">
             <span className="min-w-0 truncate text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">

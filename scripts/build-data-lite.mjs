@@ -9,6 +9,7 @@ import {
   cleanString,
   isNonPlantResourceName,
   isSuspiciousPlantName,
+  isValidPlantName,
 } from './lib/dataLiteBuilders.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -235,8 +236,23 @@ async function build() {
   const hostplantsForInsects = hostplantsRaw.filter(
     (row) => !isSuspiciousPlantName(row?.plant_name) || isNonPlantResourceName(row?.plant_name),
   );
+  // 植物インデックス（一覧カード・植物ページの母集団）はメタページ生成と同じ
+  // isValidPlantName 基準で厳格にフィルタし、「SPAには出るがメタページが無く
+  // 外部からは404」という不整合（栽培◯◯・純ラテン属名・文章断片等）を防ぐ。
+  const invalidIndexHostplants = hostplantsRaw.filter(
+    (row) =>
+      !isSuspiciousPlantName(row?.plant_name) &&
+      !isNonPlantResourceName(row?.plant_name) &&
+      !isValidPlantName(row?.plant_name),
+  );
+  if (invalidIndexHostplants.length > 0) {
+    console.warn(`[data-lite] filtered invalid plant-index names (meta parity): ${invalidIndexHostplants.length}`);
+  }
   const hostplants = hostplantsRaw.filter(
-    (row) => !isSuspiciousPlantName(row?.plant_name) && !isNonPlantResourceName(row?.plant_name),
+    (row) =>
+      !isSuspiciousPlantName(row?.plant_name) &&
+      !isNonPlantResourceName(row?.plant_name) &&
+      isValidPlantName(row?.plant_name),
   );
   const notes = parseCsv(notesCsv);
   const ylistCsv = readText(path.join(PUBLIC_DIR, '20210514YList_download.csv'));

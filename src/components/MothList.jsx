@@ -491,7 +491,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
                         {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                         {localizedPlantDisplay.hostNames.length > CARD_PLANT_PREVIEW_CAP && (
-                          <span className="text-slate-400 dark:text-slate-500">
+                          <span className="text-slate-500 dark:text-slate-400">
                             {isEnglish
                               ? ` +${localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP} more`
                               : ` 他${localizedPlantDisplay.hostNames.length - CARD_PLANT_PREVIEW_CAP}種`}
@@ -514,7 +514,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
                         {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                         {localizedPlantDisplay.flowerNames.length > CARD_PLANT_PREVIEW_CAP && (
-                          <span className="text-slate-400 dark:text-slate-500">
+                          <span className="text-slate-500 dark:text-slate-400">
                             {isEnglish
                               ? ` +${localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP} more`
                               : ` 他${localizedPlantDisplay.flowerNames.length - CARD_PLANT_PREVIEW_CAP}種`}

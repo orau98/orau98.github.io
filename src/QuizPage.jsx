@@ -19,7 +19,9 @@ import {
   DEFAULT_QUIZ_LENGTH,
   QUIZ_MODES,
   buildQuizQuestions,
+  getQuizHostPlantRecords,
   isCorrectAnswer,
+  normalizePlantNameForQuiz,
   normalizeQuizMode,
 } from './utils/quiz';
 import {
@@ -161,7 +163,7 @@ const modeLabels = {
   },
 };
 
-const optionLetters = ['A', 'B', 'C', 'D'];
+const optionNumbers = ['1', '2', '3', '4'];
 
 const labelsFor = (isEnglish) => ({
   title: isEnglish ? 'Four-Choice Host Plant Quiz' : '昆虫と食草の4択図鑑',
@@ -568,6 +570,8 @@ const QuizPage = ({
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [startStage, setStartStage] = useState('');
+  // null = セッション未生成、true/false = 直近セッションに優先問題が含まれたか
+  const [priorityIncluded, setPriorityIncluded] = useState(null);
   const [reviewRevision, setReviewRevision] = useState(0);
   const [best, setBest] = useState(() => safeReadJson(getBestStorageKey(locale, mode), {
     score: 0,
@@ -655,10 +659,30 @@ const QuizPage = ({
     return dueReviewEntries.length;
   }, [dueReviewEntries.length]);
   const prioritySubjectKeys = useMemo(() => {
-    if (mode === QUIZ_MODES.PLANT_TO_INSECT && focusedPlantKey) return [focusedPlantKey];
+    if (mode === QUIZ_MODES.PLANT_TO_INSECT && focusedPlantKey) {
+      const normalizedPlantKey = normalizePlantNameForQuiz(focusedPlantKey);
+      return normalizedPlantKey ? [normalizedPlantKey] : [];
+    }
     if (mode === QUIZ_MODES.INSECT_TO_PLANT && focusedInsectKey) return [focusedInsectKey];
     return [];
   }, [focusedInsectKey, focusedPlantKey, mode]);
+  const hasPriorityCandidates = useMemo(() => {
+    if (prioritySubjectKeys.length === 0) return false;
+    const prioritySet = new Set(prioritySubjectKeys);
+    const candidateInsects = [...(moths || []), ...(butterflies || [])].filter(
+      (item) => item && (item.type === 'moth' || item.type === 'butterfly'),
+    );
+    if (mode === QUIZ_MODES.PLANT_TO_INSECT) {
+      return candidateInsects.some((item) =>
+        getQuizHostPlantRecords(item).some((record) => prioritySet.has(record.name)),
+      );
+    }
+    return candidateInsects.some(
+      (item) =>
+        prioritySet.has(item.id || item.name) &&
+        getQuizHostPlantRecords(item).length > 0,
+    );
+  }, [butterflies, mode, moths, prioritySubjectKeys]);
 
   const setMode = useCallback((nextMode) => {
     const normalized = normalizeQuizMode(nextMode);
@@ -669,6 +693,7 @@ const QuizPage = ({
     setCurrentIndex(0);
     setAnswers([]);
     setSelectedOptionId('');
+    setPriorityIncluded(null);
   }, [searchParams, setSearchParams]);
 
   const setQuizStyle = useCallback((nextStyle) => {
@@ -684,6 +709,7 @@ const QuizPage = ({
     setCurrentIndex(0);
     setAnswers([]);
     setSelectedOptionId('');
+    setPriorityIncluded(null);
   }, [searchParams, setSearchParams]);
 
   const startSession = useCallback(() => {
@@ -726,9 +752,15 @@ const QuizPage = ({
           prioritySubjectKeys,
         });
         setQuestions(nextQuestions);
+        setPriorityIncluded(
+          prioritySubjectKeys.length > 0
+            ? nextQuestions.some((question) => question.isPriority)
+            : null,
+        );
       } catch (error) {
         console.error('Failed to prepare quiz session', error);
         setQuestions([]);
+        setPriorityIncluded(null);
       } finally {
         setIsStarting(false);
         setStartStage('');
@@ -893,7 +925,7 @@ const QuizPage = ({
           <Metric icon={ArrowPathIcon} label={labels.reviewDue} value={reviewCount} tone={reviewCount ? 'rose' : 'slate'} />
         </div>
 
-        {prioritySubjectKeys.length > 0 && (
+        {prioritySubjectKeys.length > 0 && hasPriorityCandidates && priorityIncluded !== false && (
           <p className="mt-4 inline-flex rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-black text-blue-800 dark:bg-blue-950/60 dark:text-blue-200">
             {labels.focused}
           </p>
@@ -1048,7 +1080,7 @@ const QuizPage = ({
                     }`}
                   >
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-black text-slate-700 shadow-sm dark:bg-slate-950 dark:text-slate-100">
-                      {optionLetters[index]}
+                      {optionNumbers[index]}
                     </span>
                     <span className="min-w-0">
                       <span className="block text-base font-black sm:text-lg">
@@ -1066,6 +1098,8 @@ const QuizPage = ({
                 );
               })}
             </div>
+
+            <p className="mt-3 hidden text-xs text-slate-500 dark:text-slate-400 sm:block">{labels.keyboard}</p>
 
             {selectedOptionId && (
               // role=status + aria-live で正誤と正解をスクリーンリーダーへ即時通知する
@@ -1099,7 +1133,7 @@ const QuizPage = ({
                   <button
                     type="button"
                     onClick={nextQuestion}
-                    className="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                    className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
                   >
                     {labels.next}
                     <ArrowRightIcon className="h-4 w-4" />
@@ -1138,12 +1172,13 @@ const QuizPage = ({
                   {midpointMessage && (
                     <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
                   )}
+                  {!currentAnswer?.isCorrect && renderDetailLinks(currentQuestion)}
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setDetailsOpen((value) => !value)}
-                  className="mt-4 pl-12 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
+                  className="mt-4 inline-flex min-h-[44px] items-center py-2 pl-12 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
                 >
                   {detailsOpen ? labels.hideDetails : labels.details}
                 </button>
