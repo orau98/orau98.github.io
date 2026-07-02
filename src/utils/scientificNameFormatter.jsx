@@ -255,7 +255,20 @@ export const formatScientificNameReact = (scientificName) => {
   }
   
   // フォールバック: 最初の2語のみをイタリック体にする
+  // 種小名位置が "sp." / "sp" / "属" 等の非学名トークンなら属名だけイタリックにし、
+  // これらはローマン体のまま残す（"Carex sp"、"Schima属" の誤ったイタリック化を防ぐ）。
+  const NON_SPECIES_TOKEN = /^(sp{1,2}\.?|属|cf\.?|aff\.?|indet\.?)$/i;
   const parts = trimmed.split(/\s+/);
+  if (parts.length >= 2 && NON_SPECIES_TOKEN.test(parts[1])) {
+    const genus = parts[0];
+    const remaining = parts.slice(1).join(' ');
+    return (
+      <>
+        <em>{genus}</em>
+        {remaining && ` ${remaining}`}
+      </>
+    );
+  }
   if (parts.length >= 2) {
     const genus = parts[0];
     const species = parts[1];
@@ -269,6 +282,10 @@ export const formatScientificNameReact = (scientificName) => {
     );
   }
   
+  // 単語1つ。「◯◯属」など日本語の属名連結はローマン体のまま
+  if (/属$/.test(trimmed)) {
+    return trimmed;
+  }
   // それ以外の場合は全体をイタリック体にする
   return <em>{trimmed}</em>;
 };

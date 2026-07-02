@@ -581,6 +581,7 @@ const selectSessionQuestions = ({
     ...question,
     id: `${question.id}:${index + 1}`,
     questionNumber: index + 1,
+    isPriority: prioritySubjectSet.has(question.subjectKey),
   }));
 };
 
