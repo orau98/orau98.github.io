@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { isEnglishLocale } from '../utils/locale';
 
 const ALIGN_CLASS = {
   left: 'left',
@@ -11,7 +12,8 @@ const InfoPopover = ({
   title,
   children,
   align = 'right',
-  buttonAriaLabel = '説明を表示',
+  locale = 'ja',
+  buttonAriaLabel = isEnglishLocale(locale) ? 'Show info' : '説明を表示',
   buttonContent = '?',
   buttonClassName = '',
   panelClassName = '',
