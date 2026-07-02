@@ -117,12 +117,20 @@ test('generated public フカノキ data and meta pages include recovered longho
     assert.equal(fukanokiInsects.has(label), true, `generated public data should include ${label}`);
   }
 
-  for (const page of ['public/meta/plant/フカノキ(ウコギ科).html', 'public/meta/plant/フカノキ.html']) {
-    if (!fs.existsSync(page)) continue;
-    const html = fs.readFileSync(page, 'utf8');
+  // 同名植物の統合後、正規ページは科名なしの基底名（フカノキ.html）。
+  // 旧「フカノキ(ウコギ科).html」URL は正規ページへの noindex リダイレクトになる。
+  const canonicalPage = 'public/meta/plant/フカノキ.html';
+  if (fs.existsSync(canonicalPage)) {
+    const html = fs.readFileSync(canonicalPage, 'utf8');
     for (const [, label] of expectedFukanokiPairs) {
-      assert.match(html, new RegExp(label), `${page} should include ${label}`);
+      assert.match(html, new RegExp(label), `${canonicalPage} should include ${label}`);
     }
+  }
+  const legacyFamilyPage = 'public/meta/plant/フカノキ(ウコギ科).html';
+  if (fs.existsSync(legacyFamilyPage)) {
+    const legacyHtml = fs.readFileSync(legacyFamilyPage, 'utf8');
+    assert.match(legacyHtml, /name="robots" content="noindex/, `${legacyFamilyPage} should be noindex`);
+    assert.match(legacyHtml, /rel="canonical" href="\/meta\/plant\/[^"]+\.html"/, `${legacyFamilyPage} should redirect to the canonical page`);
   }
 });
 

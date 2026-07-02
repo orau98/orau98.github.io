@@ -847,6 +847,24 @@ function normalizePlantName(plantName) {
   return normalized;
 }
 
+// --- 植物ページの統合キー（同名植物の分裂バグ対策）---
+// 末尾の科名括弧 "(...科)" を植物名の識別子から切り離す。これにより
+// 「サクラ」と「サクラ(バラ科)」のように科名の有無で分裂していた同名植物が
+// 1つの正規ページ（基底名）に統合される。科名はページ本文の属性として別途表示する。
+function extractPlantFamilySuffix(name) {
+  if (!name || typeof name !== 'string') return '';
+  const m = name.match(/[(（]\s*([^()（）]*科)\s*[)）]\s*$/);
+  return m ? m[1].trim() : '';
+}
+function stripPlantFamilySuffix(name) {
+  if (!name || typeof name !== 'string') return name;
+  return name.replace(/\s*[(（]\s*[^()（）]*科\s*[)）]\s*$/, '').trim();
+}
+// 植物ページの正規キー: 正規化した上で末尾の科名を除いた基底名を返す
+function plantPageKey(name) {
+  return stripPlantFamilySuffix(normalizePlantName(name));
+}
+
 function normalizePlantFamilyLabel(value) {
   if (!value || typeof value !== 'string') return '';
   return value
@@ -1272,7 +1290,7 @@ function renderCoOccurringInsects(insect, fallbackType, hostPlantsArray = [], ho
   const selfId = insect && insect.id;
   const seen = new Map();
   for (const plant of hostPlantsArray) {
-    const list = hostPlantsMap.get(normalizePlantName(plant));
+    const list = hostPlantsMap.get(plantPageKey(plant));
     if (!Array.isArray(list)) continue;
     for (const other of list) {
       if (!other || !other.id || other.id === selfId) continue;
@@ -1697,8 +1715,11 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
             if (!isValidPlantName(normalizedPlant)) {
               return `<li>${plant}</li>`;
             }
-            const safePlantName = normalizedPlant.replace(/[/\\?%*:|"<>]/g, '-');
-            return `<li><a href="/meta/plant/${encodeURIComponent(safePlantName)}.html">${normalizedPlant}</a></li>`;
+            // リンク先は科名を除いた正規ページ（統合先）。科名は隣接テキストで補足表示する。
+            const key = plantPageKey(plant);
+            const safeKey = key.replace(/[/\\?%*:|"<>]/g, '-');
+            const fam = extractPlantFamilySuffix(normalizedPlant);
+            return `<li><a href="/meta/plant/${encodeURIComponent(safeKey)}.html">${key}</a>${fam ? `（${fam}）` : ''}</li>`;
           }).join('')}
         </ul>
         ${renderHostPlantGuideLinks(hostPlantsArray)}` : `
@@ -1774,9 +1795,10 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
 
 // Enhanced 植物のHTMLテンプレートを生成する関数 - フルコンテンツバージョン
 // originalPlantName: エイリアス生成時に元の植物名（科名付き）を渡すため
-function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlantName = null, enSlug = null) {
+function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlantName = null, enSlug = null, plantFamily = '') {
   // originalPlantNameが指定されている場合は、それが実際のデータの植物名
   // plantNameは表示用の名前（エイリアスの場合は科名なし）
+  // plantFamily は科名（例「バラ科」）。ページ識別子には含めず本文属性として表示する。
   const dataPlantName = originalPlantName || plantName;
   const displayPlantName = plantName;
   
@@ -2036,6 +2058,10 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         <dl>
           <dt>植物名</dt>
           <dd>${displayPlantName}</dd>
+          ${plantFamily ? `
+          <dt>科名</dt>
+          <dd>${plantFamily}</dd>
+          ` : ''}
           ${plantAliases.length > 0 ? `
           <dt>別名</dt>
           <dd>${plantAliases.join('、')}</dd>
@@ -2391,6 +2417,8 @@ async function generateMetaPages() {
     let leafbeetleCountFromInsects = 0;
     let aphidCountFromInsects = 0;
     const hostPlantsMap = new Map();
+    // 植物基底名（科名を除いたキー）-> 科名。本文の属性表示と科別インデックスに使う。
+    const plantFamilyByKey = new Map();
     // 種ページは hostPlantsMap が全ループで完成してから2パス目で書き出す（共起昆虫の相互リンクのため）
     const insectPageQueue = [];
 
@@ -2511,16 +2539,18 @@ async function generateMetaPages() {
       else if (type === 'leafbeetle') leafbeetleCountFromInsects++;
       else if (type === 'aphid') aphidCountFromInsects++;
       
-      // 食草マップに追加（植物ページ生成用）
+      // 食草マップに追加（植物ページ生成用）。
+      // キーは科名を除いた基底名に統一し、同名植物（例「サクラ」と「サクラ(バラ科)」）を
+      // 1つの正規ページに統合する。科名は plantFamilyByKey に退避し本文属性として表示する。
       insectHostPlants.forEach(hostPlant => {
-        const plantName = hostPlant.displayName;
-        const normalizedPlant = normalizePlantName(plantName);
-        
-        if (isValidPlantName(normalizedPlant)) {
-          if (!hostPlantsMap.has(normalizedPlant)) {
-            hostPlantsMap.set(normalizedPlant, []);
+        const key = plantPageKey(hostPlant.displayName);
+        if (isValidPlantName(key)) {
+          if (!hostPlantsMap.has(key)) {
+            hostPlantsMap.set(key, []);
           }
-          hostPlantsMap.get(normalizedPlant).push(insect);
+          hostPlantsMap.get(key).push(insect);
+          const fam = normalizePlantFamilyLabel(hostPlant.family || '') || extractPlantFamilySuffix(normalizePlantName(hostPlant.displayName));
+          if (fam && !plantFamilyByKey.has(key)) plantFamilyByKey.set(key, fam);
         }
       });
     });
@@ -2593,12 +2623,14 @@ async function generateMetaPages() {
         
         const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          const normalizedPlant = normalizePlantName(plant);
-          if (isValidPlantName(normalizedPlant)) {
-            if (!hostPlantsMap.has(normalizedPlant)) {
-              hostPlantsMap.set(normalizedPlant, []);
+          const key = plantPageKey(plant);
+          if (isValidPlantName(key)) {
+            if (!hostPlantsMap.has(key)) {
+              hostPlantsMap.set(key, []);
             }
-            hostPlantsMap.get(normalizedPlant).push(insect);
+            hostPlantsMap.get(key).push(insect);
+            const fam = extractPlantFamilySuffix(normalizePlantName(plant));
+            if (fam && !plantFamilyByKey.has(key)) plantFamilyByKey.set(key, fam);
           }
         });
       }
@@ -2671,12 +2703,14 @@ async function generateMetaPages() {
         
         const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          const normalizedPlant = normalizePlantName(plant);
-          if (isValidPlantName(normalizedPlant)) {
-            if (!hostPlantsMap.has(normalizedPlant)) {
-              hostPlantsMap.set(normalizedPlant, []);
+          const key = plantPageKey(plant);
+          if (isValidPlantName(key)) {
+            if (!hostPlantsMap.has(key)) {
+              hostPlantsMap.set(key, []);
             }
-            hostPlantsMap.get(normalizedPlant).push(insect);
+            hostPlantsMap.get(key).push(insect);
+            const fam = extractPlantFamilySuffix(normalizePlantName(plant));
+            if (fam && !plantFamilyByKey.has(key)) plantFamilyByKey.set(key, fam);
           }
         });
       }
@@ -2702,7 +2736,8 @@ async function generateMetaPages() {
       plantCount++;
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
       const plantEnSlug = plantNameToEnSlug.get(safePlantName) || null;
-      const html = generatePlantHTML(plantName, insects, allPlantImages, null, plantEnSlug);
+      const plantFamily = plantFamilyByKey.get(plantName) || '';
+      const html = generatePlantHTML(plantName, insects, allPlantImages, null, plantEnSlug, plantFamily);
       const filename = path.join(__dirname, `../public/meta/plant/${safePlantName}.html`);
       fs.writeFileSync(filename, html);
       queueLegacyRedirect(
@@ -2711,29 +2746,20 @@ async function generateMetaPages() {
         `${plantName} | 昆虫植物図鑑`,
       );
 
-      // 科名を含む植物名の場合、科名なしバージョンも生成（エイリアス）
-      const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
-      if (familyMatch) {
-        const plantNameWithoutFamily = familyMatch[1];
-        // デバッグ: オニグルミの場合の昆虫数を確認
-        if (plantNameWithoutFamily === 'オニグルミ') {
-          console.log(`DEBUG: オニグルミ(クルミ科)の昆虫数: ${insects.length}`);
-          console.log(`DEBUG: 最初の3種: ${insects.slice(0, 3).map(i => i.japaneseName).join(', ')}`);
+      // 旧「植物名(科名).html」URL（統合前に分裂ページとして生成・被リンクされていた分）を、
+      // 新しい基底名ページへ noindex+canonical のリダイレクトHTMLで寄せ、既存の
+      // インデックス・被リンクを失わせない。ファイル名は旧実ページと同じ生（未エンコード）表記。
+      if (plantFamily) {
+        const legacyWithFamily = `${plantName}(${plantFamily})`;
+        const safeLegacy = legacyWithFamily.replace(/[/\\?%*:|"<>]/g, '-');
+        if (safeLegacy !== safePlantName) {
+          const legacyFilename = path.join(__dirname, `../public/meta/plant/${safeLegacy}.html`);
+          fs.writeFileSync(legacyFilename, buildLegacyRedirectHtml({
+            lang: 'ja',
+            title: `${plantName} | 昆虫植物図鑑`,
+            targetUrl: `/meta/plant/${encodeURIComponent(safePlantName)}.html`,
+          }));
         }
-        // エイリアス用のHTMLを生成（科名なしの植物名で表示、元の植物名のデータを使用）
-        // エイリアスページには英語hreflangを付与しない（英語ページは正規名に対応）
-        const aliasHtml = generatePlantHTML(plantNameWithoutFamily, insects, allPlantImages, plantName);
-        const safeAliasName = plantNameWithoutFamily.replace(/[/\\?%*:|"<>]/g, '-');
-        const aliasFilename = path.join(__dirname, `../public/meta/plant/${safeAliasName}.html`);
-        fs.writeFileSync(aliasFilename, aliasHtml);
-        if (!hostPlantsMap.has(plantNameWithoutFamily)) {
-          queueLegacyRedirect(
-            `/plant/${encodeURIComponent(plantNameWithoutFamily)}/index.html`,
-            `/meta/plant/${encodeURIComponent(safePlantName)}.html`,
-            `${plantNameWithoutFamily} | 昆虫植物図鑑`,
-          );
-        }
-        console.log(`エイリアス作成: ${plantNameWithoutFamily} -> ${plantName} (昆虫数: ${insects.length})`);
       }
     });
 
@@ -2847,8 +2873,8 @@ async function generateMetaPages() {
     const plantIndexByFamily = {};
     hostPlantsMap.forEach((_plantInsects, plantName) => {
       if (!isValidPlantName(plantName)) return;
-      const familyMatch = plantName.match(/^(.+?)\(([^)]+科)\)$/);
-      const family = familyMatch ? familyMatch[2] : '科名未設定';
+      // キーは基底名なので科名は plantFamilyByKey から引く（科別グルーピング用）
+      const family = plantFamilyByKey.get(plantName) || '科名未設定';
       if (!plantIndexByFamily[family]) plantIndexByFamily[family] = [];
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
       plantIndexByFamily[family].push({ name: plantName, file: safePlantName });
