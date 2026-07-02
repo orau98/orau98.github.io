@@ -34,34 +34,61 @@
       </div>
     </header>
     <div class="page">
-      <p class="lead">本格運用前のため、公開フォームはまだ設置していません。現在は、ライトトラップ比較試験で必要な記録項目を整理している段階です。</p>
+      <p class="lead">この調査の記録フォームは、まだ一般公開していません。現在はライトトラップ比較試験の段階で、公開フォームに載せる記録項目を固めているところです。ただし、試験調査に参加する方が記録に困らないよう、いまの記録のやり方もこのページにまとめています。</p>
 
-    <section class="section">
-      <h2>今後整備する記録フォーム</h2>
+    <section class="section note compact-note">
+      <p><strong>このページの状況：</strong>公開フォームは準備中です。<strong>いま試験調査で記録する方は、下の<a href="#now">「いまの記録方法」</a></strong>をご覧ください。フォームの公開は<a href="index.html#news">トップのお知らせ</a>で告知します。</p>
+    </section>
+
+    <!-- ===== いまの記録方法（今できること） ===== -->
+    <section class="section" id="now">
+      <h2>いまの記録方法（試験調査に参加する方へ）</h2>
+      <p>公開フォームができるまでは、試験用の記録表（スプレッドシート）に手入力します。記録する項目は<a href="protocol.html#required-fields">調査プロトコルの「必須記録項目」</a>に合わせてください。</p>
+      <ol class="steps">
+        <li><strong>参加方法を確認する：</strong>試験調査の日程や集合場所は<a href="index.html#news">トップのお知らせ</a>に掲載しています。はじめての方も歓迎です。</li>
+        <li><strong>記録表を受け取る：</strong>当日、試験用の記録表（スプレッドシート）を主催者から共有します。</li>
+        <li><strong>プロトコルに沿って記録する：</strong><a href="protocol.html">調査プロトコル</a>の手順と必須記録項目に沿って、採集イベント・観察・同定を記入します。</li>
+        <li><strong>写真を保存してURLを残す：</strong>写真はGoogle Drive等に保存し、記録表にフォルダURLまたは写真URLを貼り付けます。</li>
+      </ol>
+      <p class="hero-actions">
+        <a class="button" href="protocol.html#required-fields">必須記録項目を見る</a>
+        <a class="button secondary" href="index.html#news">参加のお知らせを見る</a>
+      </p>
+    </section>
+
+    <!-- ===== 今後公開する記録フォーム ===== -->
+    <section class="section" id="planned">
+      <h2>今後公開する記録フォーム</h2>
+      <p>本格運用では、記録表への手入力に代えて、次の3つの入力フォームを用意する予定です。いずれもまだ準備中です。</p>
       <div class="grid">
         <article class="card">
-          <p class="meta">Field event</p>
+          <p class="meta">フォーム1</p>
           <h3>採集イベント記録</h3>
           <p>調査日時、地点情報、使用した光源・トラップ構造、設置条件、天候、気温、月齢、電源状態を記録できるようにします。</p>
-          <p class="hero-actions"><span class="button disabled">本格運用前</span></p>
+          <p class="hero-actions"><span class="button disabled" aria-disabled="true">準備中</span></p>
         </article>
         <article class="card">
-          <p class="meta">Behaviour</p>
-          <h3>行動イベント記録</h3>
+          <p class="meta">フォーム2</p>
+          <h3>観察イベント記録</h3>
           <p>飛来・接触・進入・逃出といった観察イベントと、回収時に残っていた残留個体数を分けて記録し、記録数の違いがどの段階で生じたかを見られるようにします。</p>
-          <p class="hero-actions"><span class="button disabled">項目整理中</span></p>
+          <p class="hero-actions"><span class="button disabled" aria-disabled="true">準備中</span></p>
         </article>
         <article class="card">
-          <p class="meta">Identification</p>
+          <p class="meta">フォーム3</p>
           <h3>同定結果記録</h3>
-          <p>写真、種名、個体数、標本有無、同定者、同定確度を記録し、後から検証できる形にします。</p>
-          <p class="hero-actions"><span class="button disabled">公開準備中</span></p>
+          <p>写真、種名、個体数、標本の有無、同定者、同定確度を記録し、後から検証できる形にします。</p>
+          <p class="hero-actions"><span class="button disabled" aria-disabled="true">準備中</span></p>
         </article>
+      </div>
+      <div class="note">
+        <p>3つのフォームで入力した内容は、大きく<strong>「採集イベント」</strong>と、<strong>それに紐づく「観察・同定記録」</strong>の2つのまとまりに保存されます（詳しくは次の項目）。</p>
       </div>
     </section>
 
-    <section class="section">
-      <h2>記録項目の設計案</h2>
+    <!-- ===== 設計中の記録項目（データ構造） ===== -->
+    <section class="section" id="fields">
+      <h2>設計中の記録項目（データ構造）</h2>
+      <p>フォームで集めたデータは、次の2つのまとまりで保存する設計です。以下は開発用の項目名（暫定）です。参加者が実際に記入する項目とその意味は、<a href="protocol.html#required-fields">調査プロトコルの「必須記録項目」</a>にまとめています。</p>
       <div class="grid two">
         <div class="card">
           <h3>採集イベント</h3>
@@ -78,8 +105,8 @@
           </ul>
         </div>
         <div class="card">
-          <h3>行動・同定記録</h3>
-          <p>採集イベントに紐づく、行動イベントと種ごとの記録です。捕獲数だけでなく、入るまでの過程を残す設計にします。</p>
+          <h3>観察・同定記録</h3>
+          <p>採集イベントに紐づく、観察イベントと種ごとの記録です。捕獲数だけでなく、捕獲部に入るまでの過程を残す設計にします。</p>
           <ul class="inline-list">
             <li>arrival_event</li>
             <li>contact_event</li>
@@ -92,8 +119,14 @@
       </div>
     </section>
 
-    <section class="section note compact-note">
-      <p>本格運用までは、写真ファイルはGoogle Drive等に保存し、試験用の記録表にフォルダURLまたは写真URLを残す方針です。公開フォームのURLは、記録項目が固まってから掲載します。</p>
+    <!-- ===== 関連ページ ===== -->
+    <section class="section">
+      <h2>関連ページ</h2>
+      <div class="link-grid">
+        <a href="protocol.html"><strong>調査プロトコル</strong><span>記録の手順、必須記録項目、記録過程の定義。いまの記録もこれに沿います。</span></a>
+        <a href="index.html#news"><strong>お知らせ・参加</strong><span>試験調査の日程と参加方法。フォームの公開もここで告知します。</span></a>
+        <a href="results.html"><strong>集計結果</strong><span>構造ごとの進入率、逃出率、残留率、同定結果。</span></a>
+      </div>
     </section>
       </div>
   </main>
