@@ -37,7 +37,6 @@ import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
 import NativeShareButton from './components/NativeShareButton';
 import DetailNavigation from './components/DetailNavigation';
-import DetailSectionNav from './components/DetailSectionNav';
 import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
@@ -1244,19 +1243,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           )}
         </div>
 
-        <DetailSectionNav
-          label={isEnglish ? 'Insect detail sections' : '昆虫詳細のセクション'}
-          items={[
-            { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
-            { id: 'basic-info', label: isEnglish ? 'Name' : '種名' },
-            { id: 'host-plants', label: isEnglish ? 'Host plants' : '食草・訪花' },
-            { id: 'adult-season', label: isEnglish ? 'Season' : '発生時期' },
-            { id: 'ecology', label: isEnglish ? 'Ecology' : '生態' },
-            { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
-            { id: 'food-web', label: isEnglish ? 'Network' : 'ネットワーク' },
-            { id: 'share', label: isEnglish ? 'Share' : '共有' },
-          ]}
-        />
 
         {/* モバイルは写真ファーストの1カラム。lg以上は写真を左に固定した2カラムにして、
             初期表示で種名・食草情報が写真と同時に見えるようにする。

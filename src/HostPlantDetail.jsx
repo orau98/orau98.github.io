@@ -36,7 +36,6 @@ import {
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import { sortPlantNamesTaxonomically } from './utils/taxonomicOrder';
-import DetailSectionNav from './components/DetailSectionNav';
 import NativeShareButton from './components/NativeShareButton';
 import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
@@ -1783,17 +1782,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </Link>
         )}
       </div>
-      <DetailSectionNav
-        label={isEnglish ? 'Plant detail sections' : '植物詳細のセクション'}
-        items={[
-          { id: 'plant-photos', label: isEnglish ? 'Photo' : '写真' },
-          ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '解説' }] : []),
-          { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
-          { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
-          { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
-          { id: 'share', label: isEnglish ? 'Share' : '共有' },
-        ]}
-      />
       {/* 構造化データ */}
       <PlantStructuredData 
         plant={{
