@@ -1,0 +1,405 @@
+{
+  "summary": "CSVデータ品質監査の判断部を多エージェントで検証（Tier3正規化・曖昧科名衝突・typo提案・homonymリスク）",
+  "agentCount": 12,
+  "logs": [],
+  "result": {
+    "approveDescriptive": [
+      "栽培ブドウ",
+      "栽培リンゴ",
+      "栽培バラ",
+      "栽培クリ",
+      "スギナと思われる",
+      "シイ類と思われるが",
+      "栽培キウイフルーツ",
+      "栽培サクラ",
+      "栽培キク",
+      "栽培種のカナヤマイチゴ"
+    ],
+    "rejectDescriptive": [],
+    "ambiguous": [
+      {
+        "plant": "サクラ",
+        "recommendation": "use_single_family",
+        "family": "バラ科",
+        "rationale": "「サクラ」は日本語で桜、すなわち Cerasus 属（旧 Prunus 属サクラ亜属）を指す一般名であり、APG IV / YList のいずれでもバラ科（Rosaceae）に分類される。サクラ類は栽培品種を含め全てバラ科に属し、「アカシア」（マメ科 Acacia と別属を混同）のように複数の科にまたがる総称ではないため、科は一意に定まる。CSV の実データを検証すると、plant_name が「サクラ」の90行がバラ科に正しく割り当てられている一方、ヤナギ科・モチノキ科はそれぞれ1行のみ（species-4430 の hostplant-001777、species-4853 の hostplant-002862）であり、明らかな入力ミス／科名の取り違えによる混入である。したがって単一の正しい科であるバラ科に統一すべきで、少数の誤った科名（ヤナギ科・モチノキ科）および空欄はバラ科へ補正する。"
+      },
+      {
+        "plant": "アカシア",
+        "recommendation": "use_single_family",
+        "family": "マメ科",
+        "rationale": "「アカシア」が指す植物（真正のアカシア属 Acacia、ニセアカシア Robinia pseudoacacia、ミモザ類のフサアカシア・ギンヨウアカシア・モリシマアカシア等）は、APG IV / YList でいずれもマメ科（Fabaceae）に属する。カバノキ科（Betulaceae：カバノキ・ハンノキ・ハシバミ類）には「アカシア」と呼ばれる分類群は存在しない。CSVでもアカシア関連の記録の大多数がマメ科で、general_notes.csv でも「アカシア…(以上マメ科)」と明記されており、カバノキ科は hostplant-002067（1件のみ）の入力誤りと判断できる。したがって総称扱いや専門家判断は不要で、単一科マメ科に統一するのが妥当。"
+      },
+      {
+        "plant": "トモエウツギ",
+        "recommendation": "needs_expert",
+        "family": "",
+        "rationale": "「トモエウツギ」はYList/APG IVに載る確立した植物名ではなく、出典（日本産蛾類標準図鑑3）のOCR抽出が全体に激しく破損している（周辺にマルミノ・シシャクヤ・ポウザキ等の断片名、意味不明な生態記述が混在）。衝突する2科はいずれも根拠が弱い。(1) セリ科(Apiaceae)にウツギと呼ばれる木本は存在せず、寄主のAgonopterix(マルハキバガ類)がセリ科を多食することによる文脈汚染とみられる。(2) アジサイ科(Hydrangeaceae)は「ウツギ」＝Deutzia(アジサイ科)という名前だけからの推測だが、ウツギの接尾辞はバラ科(コゴメウツギ)・スイカズラ科(タニウツギ)・ミツバウツギ科など多系統にまたがり、名前から科を確定できない。決定的なのは、同じ蛾2種(species-0828, species-0836)に対し別抽出で寄主「トモエソウ／オトギリソウ科」が記録されている点で(hostplant-912683, -912687)、トモエソウ(Hypericum ascyron, オトギリソウ科)はAgonopterixの寄主として妥当。すなわち「トモエウツギ」は「トモエソウ」のOCR誤読の可能性が高く、真の科は候補の2科いずれでもないオトギリソウ科と推定される。サクラ・アカシアのような総称でもない。候補家系のどちらに統一しても誤りを固定化する恐れがあり、原典照合による専門家判断が必要。"
+      },
+      {
+        "plant": "モッコク",
+        "recommendation": "use_single_family",
+        "family": "モッコク科",
+        "rationale": "「モッコク」は単一種 Ternstroemia gymnanthera を指す和名であり、「サクラ」「アカシア」のように複数分類群を含む総称ではないため、科は一義的に定まる。APG IV 分類体系では Ternstroemia 属は Pentaphylacaceae（モッコク科、サカキ科とも）に置かれる。衝突している「ツバキ科（Theaceae）」は、Engler/Cronquist 等の旧分類体系での位置づけ（かつては Theaceae ないし Ternstroemiaceae に含めた）であり、APG IV・YList の現行分類では誤り。実際、本データベース内でも同じ Pentaphylacaceae に属するサカキ・ヒサカキ・ハマヒサカキが既に「モッコク科」で統一されており、モッコクも「モッコク科」に揃えるのが整合的で正しい。したがって単一科「モッコク科」に統一すべき。"
+      }
+    ],
+    "typoFlags": [
+      {
+        "plant": "アオキ",
+        "correctVotes": 0,
+        "nonPlantVotes": 0,
+        "correctFamily": "ガリア科",
+        "notes": [
+          "A: correct=false nonPlant=false fam=ガリア科 アオキ(Aucuba japonica)はAPG分類でガリア科(Garryaceae)。ミズキ科(Cornaceae)は旧エングラー/クロンキスト体系の扱いで、系統的にも目レベルで異なり現在は誤り。独立科とする場合はアオキ科(Aucubaceae)がガリア科に近く妥当で、二択ならミズキ科よりアオキ科が適切。提案(ミズキ科)は不適切。",
+          "B: correct=false nonPlant=false fam=アオキ科(ガリア科 Garryaceae) アオキ(Aucuba japonica)は植物。旧エングラー体系ではミズキ科に置かれたが、APG分類ではガリア科(Garryaceae)に移された。日本ではアオキ科(=ガリア科)として扱われる。提案のミズキ科は古い分類で不適切。"
+        ]
+      },
+      {
+        "plant": "カエデ類",
+        "correctVotes": 2,
+        "nonPlantVotes": 0,
+        "correctFamily": "ムクロジ科",
+        "notes": [
+          "A: correct=true nonPlant=false fam=ムクロジ科 カエデ属(Acer)はAPG分類でムクロジ科(Sapindaceae)に統合。旧分類のカエデ科(Aceraceae)は現在ムクロジ科に含まれる。提案どおりムクロジ科で正しい。",
+          "B: correct=true nonPlant=false fam=ムクロジ科 カエデ属(Acer)は旧分類ではカエデ科(Aceraceae)だが、APG分類ではムクロジ科(Sapindaceae)に統合された。提案のムクロジ科が現行分類で正しい。"
+        ]
+      },
+      {
+        "plant": "ガマズミ属",
+        "correctVotes": 0,
+        "nonPlantVotes": 0,
+        "correctFamily": "レンプクソウ科",
+        "notes": [
+          "A: correct=false nonPlant=false fam=レンプクソウ科 ガマズミ属(Viburnum)はAPG分類でレンプクソウ科(Adoxaceae、近年はガマズミ科Viburnaceaeとも)。スイカズラ科(Caprifoliaceae)は旧分類で現在は誤り。提案(スイカズラ科)は不適切。",
+          "B: correct=false nonPlant=false fam=レンプクソウ科(ガマズミ科 Adoxaceae/Viburnaceae) ガマズミ属(Viburnum)は旧分類ではスイカズラ科だが、APG分類ではレンプクソウ科(Adoxaceae、近年はガマズミ科Viburnaceaeとも)に移された。提案のスイカズラ科は古い分類で不適切。"
+        ]
+      },
+      {
+        "plant": "ササ",
+        "correctVotes": 2,
+        "nonPlantVotes": 0,
+        "correctFamily": "イネ科",
+        "notes": [
+          "A: correct=true nonPlant=false fam=イネ科 ササ類はイネ科(Poaceae)タケ亜科の総称。提案どおりイネ科で正しい。もう一方の候補「ササ類などのイネ科」は科名ではなく記述の混入。",
+          "B: correct=true nonPlant=false fam=イネ科 ササ類(Sasaなど)はタケ亜科でイネ科(Poaceae)に属する。提案のイネ科が正しい。"
+        ]
+      },
+      {
+        "plant": "ツリガネタケ",
+        "correctVotes": 0,
+        "nonPlantVotes": 2,
+        "correctFamily": "多孔菌科",
+        "notes": [
+          "A: correct=false nonPlant=true fam=多孔菌科 ツリガネタケ(Fomes fomentarius)はブナ・カバノキ等の樹木に生える木材腐朽菌(キノコ)であり植物ではない。科は多孔菌科(Polyporaceae)。提案のブナ科は宿主(ブナに生える)に由来する典型的な誤付与。",
+          "B: correct=false nonPlant=true fam=多孔菌科(タマチョレイタケ科 Polyporaceae) ツリガネタケ(Fomes fomentarius)はブナやカバノキ等の樹幹に生える木材腐朽菌(担子菌)であり植物ではない。ブナ科は宿主植物の科が誤って付いたもの。正しくは多孔菌科(タマチョレイタケ科)。提案のブナ科は完全な誤り。"
+        ]
+      },
+      {
+        "plant": "ハンノキ属",
+        "correctVotes": 2,
+        "nonPlantVotes": 0,
+        "correctFamily": "カバノキ科",
+        "notes": [
+          "A: correct=true nonPlant=false fam=カバノキ科 ハンノキ属(Alnus)はカバノキ科(Betulaceae)の一属。標準分類に「ハンノキ科」という科は存在しない。提案どおりカバノキ科で正しい。",
+          "B: correct=true nonPlant=false fam=カバノキ科 ハンノキ属(Alnus)はカバノキ科(Betulaceae)に属する。独立した『ハンノキ科』は現行分類には存在しない。提案のカバノキ科が正しい。"
+        ]
+      },
+      {
+        "plant": "ヒナウチワカエデ",
+        "correctVotes": 2,
+        "nonPlantVotes": 0,
+        "correctFamily": "ムクロジ科",
+        "notes": [
+          "A: correct=true nonPlant=false fam=ムクロジ科 ヒナウチワカエデ(Acer tenuifolium)はカエデ属の一種で、APG分類ではムクロジ科(Sapindaceae)。旧カエデ科(Aceraceae)は統合済み。提案どおりムクロジ科で正しい。",
+          "B: correct=true nonPlant=false fam=ムクロジ科 ヒナウチワカエデ(Acer tenuifolium)はカエデ属。APG分類でカエデ科はムクロジ科(Sapindaceae)に統合されており、提案のムクロジ科が正しい。"
+        ]
+      },
+      {
+        "plant": "ユウスゲ",
+        "correctVotes": 0,
+        "nonPlantVotes": 0,
+        "correctFamily": "ワスレグサ科",
+        "notes": [
+          "A: correct=false nonPlant=false fam=ワスレグサ科 ユウスゲ(Hemerocallis)はAPG分類でワスレグサ科(Asphodelaceae/旧Hemerocallidaceae)。ユリ科(Liliaceae)は旧分類で現在は誤り。提案(ユリ科)は不適切。",
+          "B: correct=false nonPlant=false fam=ワスレグサ科(Asphodelaceae/Hemerocallidaceae) ユウスゲ(Hemerocallis citrina var. vespertina)はワスレグサ属。旧分類ではユリ科だが、APG分類ではワスレグサ科(ススキノキ科Asphodelaceaeのワスレグサ亜科)に移された。提案のユリ科は古い分類で不適切。"
+        ]
+      }
+    ],
+    "homonymFlags": [],
+    "excludeFamilyFix": [],
+    "counts": {
+      "tier3Approved": 10,
+      "tier3Rejected": 0,
+      "ambiguous": 4,
+      "typoChecked": 8,
+      "homonymFlagged": 0
+    }
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Tier3検証"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "曖昧衝突裁定"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 3,
+      "title": "typo検証"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 4,
+      "title": "homonym走査"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "tier3:A",
+      "phaseIndex": 1,
+      "phaseTitle": "Tier3検証",
+      "agentId": "acf08191842e11668",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988539973,
+      "queuedAt": 1782988539930,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の植物分類の専門家です。以下は昆虫の食草データCSVにある「生の植物名」を、説明的接頭辞/接尾辞を除いた「基底名」に正規化する提案です。各提案について、生名と基底名が「同一の植物（同一種または同一の指す対象）」を指すかを判定してください。観点A: 栽培品・不確実表現の除去が種の同一性を保つか厳密に。\n「栽培X」はXの栽培品を指すので植物としてはXと同一。「Xと思われる/Xと思われるが」は不確実表現を除けばXを指す。ただし基底名が曖昧・別物になる場合は samePlant=false にしてください。\n対象:\n[\n  {\n    \"raw\": \"栽培ブドウ\",\n    \"base\": \"ブドウ\"\n  },\n  {\n    \"raw\": \"栽培リンゴ\",\n    \"base\": \"リンゴ\"\n  },\n  {\n    \"raw\": \"栽培バラ\",\n    \"base\": \"バラ\"\n …",
+      "lastProgressAt": 1782988563823,
+      "tokens": 16184,
+      "toolCalls": 1,
+      "durationMs": 23850,
+      "resultPreview": "{\"results\":[{\"raw\":\"栽培ブドウ\",\"base\":\"ブドウ\",\"samePlant\":true,\"note\":\"「栽培」はブドウの栽培品を指し植物としてはブドウと同一。\"},{\"raw\":\"栽培リンゴ\",\"base\":\"リンゴ\",\"samePlant\":true,\"note\":\"栽培リンゴはリンゴの栽培品でありリンゴと同一の対象。\"},{\"raw\":\"栽培バラ\",\"base\":\"バラ\",\"samePlant\":true,\"note\":\"栽培品を除けばバラを指し同一。\"},{\"raw\":\"栽培クリ\",\"base\":\"クリ\",\"samePlant\":true,\"note\":\"栽培クリはクリの栽培品で同一の植物。\"},{\"raw\":\"スギナと思われる\",\"base\":\"スギナ\",\"samePlant\":true,\"note\":\"不確実表現「と思われる」を除けばスギナを指す。\"}…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "tier3:B",
+      "phaseIndex": 1,
+      "phaseTitle": "Tier3検証",
+      "agentId": "a8ebc538dbf6422f1",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988539978,
+      "queuedAt": 1782988539931,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の植物分類の専門家です。以下は昆虫の食草データCSVにある「生の植物名」を、説明的接頭辞/接尾辞を除いた「基底名」に正規化する提案です。各提案について、生名と基底名が「同一の植物（同一種または同一の指す対象）」を指すかを判定してください。観点B: 基底名が実在する日本の植物和名として妥当かを重視して。\n「栽培X」はXの栽培品を指すので植物としてはXと同一。「Xと思われる/Xと思われるが」は不確実表現を除けばXを指す。ただし基底名が曖昧・別物になる場合は samePlant=false にしてください。\n対象:\n[\n  {\n    \"raw\": \"栽培ブドウ\",\n    \"base\": \"ブドウ\"\n  },\n  {\n    \"raw\": \"栽培リンゴ\",\n    \"base\": \"リンゴ\"\n  },\n  {\n    \"raw\": \"栽培バラ\",\n    \"base\": \"バラ\"\n…",
+      "lastProgressAt": 1782988574070,
+      "tokens": 16180,
+      "toolCalls": 1,
+      "durationMs": 34092,
+      "resultPreview": "{\"results\":[{\"raw\":\"栽培ブドウ\",\"base\":\"ブドウ\",\"samePlant\":true,\"note\":\"「栽培」は栽培品を示す接頭辞で、ブドウ自体を指す。ブドウは妥当な和名。\"},{\"raw\":\"栽培リンゴ\",\"base\":\"リンゴ\",\"samePlant\":true,\"note\":\"栽培品のリンゴであり同一種。リンゴは妥当な和名。\"},{\"raw\":\"栽培バラ\",\"base\":\"バラ\",\"samePlant\":true,\"note\":\"栽培品のバラであり同一の指す対象。バラは妥当な和名（属・類名）。\"},{\"raw\":\"栽培クリ\",\"base\":\"クリ\",\"samePlant\":true,\"note\":\"栽培品のクリであり同一種。クリは妥当な和名。\"},{\"raw\":\"スギナと思われる\",\"base\":\"スギナ\",\"samePlant\":true,\"note\":…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "ambig:サクラ",
+      "phaseIndex": 2,
+      "phaseTitle": "曖昧衝突裁定",
+      "agentId": "af578ffcb9c121351",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988563847,
+      "queuedAt": 1782988539931,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "サクラ",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。昆虫の食草CSVで、植物名「サクラ」に複数の科名「バラ科 | ヤナギ科 | モチノキ科」が付いており衝突しています。\nこの植物名について、(a) 正しい単一の科に統一すべきか（その場合 recommendation=use_single_family, family=正しい科名）、(b) 総称的で単一種に定まらないため科を空欄にして総称扱いにすべきか（recommendation=keep_generic_no_family）、(c) 専門家の判断が必要か（recommendation=needs_expert）を判定してください。\n注意: 「サクラ」「アカシア」等は複数分類群を指す総称の可能性がある。APG IVでの標準的な科を根拠に、rationale を日本語で述べてください。family は use_singl…",
+      "lastProgressAt": 1782988639949,
+      "tokens": 20663,
+      "toolCalls": 9,
+      "durationMs": 76102,
+      "resultPreview": "{\"plant\":\"サクラ\",\"recommendation\":\"use_single_family\",\"family\":\"バラ科\",\"rationale\":\"「サクラ」は日本語で桜、すなわち Cerasus 属（旧 Prunus 属サクラ亜属）を指す一般名であり、APG IV / YList のいずれでもバラ科（Rosaceae）に分類される。サクラ類は栽培品種を含め全てバラ科に属し、「アカシア」（マメ科 Acacia と別属を混同）のように複数の科にまたがる総称ではないため、科は一意に定まる。CSV の実データを検証すると、plant_name が「サクラ」の90行がバラ科に正しく割り当てられている一方、ヤナギ科・モチノキ科はそれぞれ1行のみ（species-4430 の hostplant-001777、species-4853 の hostplant-002862）であり、明らかな…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "ambig:アカシア",
+      "phaseIndex": 2,
+      "phaseTitle": "曖昧衝突裁定",
+      "agentId": "aabd46148f0ae3057",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988574073,
+      "queuedAt": 1782988539931,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "アカシア",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。昆虫の食草CSVで、植物名「アカシア」に複数の科名「マメ科 | カバノキ科」が付いており衝突しています。\nこの植物名について、(a) 正しい単一の科に統一すべきか（その場合 recommendation=use_single_family, family=正しい科名）、(b) 総称的で単一種に定まらないため科を空欄にして総称扱いにすべきか（recommendation=keep_generic_no_family）、(c) 専門家の判断が必要か（recommendation=needs_expert）を判定してください。\n注意: 「サクラ」「アカシア」等は複数分類群を指す総称の可能性がある。APG IVでの標準的な科を根拠に、rationale を日本語で述べてください。family は use_single_fami…",
+      "lastProgressAt": 1782988614305,
+      "tokens": 20708,
+      "toolCalls": 2,
+      "durationMs": 40232,
+      "resultPreview": "{\"plant\":\"アカシア\",\"recommendation\":\"use_single_family\",\"family\":\"マメ科\",\"rationale\":\"「アカシア」が指す植物（真正のアカシア属 Acacia、ニセアカシア Robinia pseudoacacia、ミモザ類のフサアカシア・ギンヨウアカシア・モリシマアカシア等）は、APG IV / YList でいずれもマメ科（Fabaceae）に属する。カバノキ科（Betulaceae：カバノキ・ハンノキ・ハシバミ類）には「アカシア」と呼ばれる分類群は存在しない。CSVでもアカシア関連の記録の大多数がマメ科で、general_notes.csv でも「アカシア…(以上マメ科)」と明記されており、カバノキ科は hostplant-002067（1件のみ）の入力誤りと判断できる。したがって総称扱いや専門家判断は不要で、単一科マメ科に統…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "ambig:トモエウツギ",
+      "phaseIndex": 2,
+      "phaseTitle": "曖昧衝突裁定",
+      "agentId": "a456949e6d26dea98",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988614308,
+      "queuedAt": 1782988539931,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "トモエウツギ",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。昆虫の食草CSVで、植物名「トモエウツギ」に複数の科名「セリ科 | アジサイ科」が付いており衝突しています。\nこの植物名について、(a) 正しい単一の科に統一すべきか（その場合 recommendation=use_single_family, family=正しい科名）、(b) 総称的で単一種に定まらないため科を空欄にして総称扱いにすべきか（recommendation=keep_generic_no_family）、(c) 専門家の判断が必要か（recommendation=needs_expert）を判定してください。\n注意: 「サクラ」「アカシア」等は複数分類群を指す総称の可能性がある。APG IVでの標準的な科を根拠に、rationale を日本語で述べてください。family は use_single_fa…",
+      "lastProgressAt": 1782988762548,
+      "tokens": 29921,
+      "toolCalls": 8,
+      "durationMs": 148240,
+      "resultPreview": "{\"plant\":\"トモエウツギ\",\"recommendation\":\"needs_expert\",\"family\":\"\",\"rationale\":\"「トモエウツギ」はYList/APG IVに載る確立した植物名ではなく、出典（日本産蛾類標準図鑑3）のOCR抽出が全体に激しく破損している（周辺にマルミノ・シシャクヤ・ポウザキ等の断片名、意味不明な生態記述が混在）。衝突する2科はいずれも根拠が弱い。(1) セリ科(Apiaceae)にウツギと呼ばれる木本は存在せず、寄主のAgonopterix(マルハキバガ類)がセリ科を多食することによる文脈汚染とみられる。(2) アジサイ科(Hydrangeaceae)は「ウツギ」＝Deutzia(アジサイ科)という名前だけからの推測だが、ウツギの接尾辞はバラ科(コゴメウツギ)・スイカズラ科(タニウツギ)・ミツバウツギ科など多系統にまたがり、名前から科を確…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "ambig:モッコク",
+      "phaseIndex": 2,
+      "phaseTitle": "曖昧衝突裁定",
+      "agentId": "a8759e19c24096252",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988639951,
+      "queuedAt": 1782988539931,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "モッコク",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。昆虫の食草CSVで、植物名「モッコク」に複数の科名「モッコク科 | ツバキ科」が付いており衝突しています。\nこの植物名について、(a) 正しい単一の科に統一すべきか（その場合 recommendation=use_single_family, family=正しい科名）、(b) 総称的で単一種に定まらないため科を空欄にして総称扱いにすべきか（recommendation=keep_generic_no_family）、(c) 専門家の判断が必要か（recommendation=needs_expert）を判定してください。\n注意: 「サクラ」「アカシア」等は複数分類群を指す総称の可能性がある。APG IVでの標準的な科を根拠に、rationale を日本語で述べてください。family は use_single_fam…",
+      "lastProgressAt": 1782988686949,
+      "tokens": 19526,
+      "toolCalls": 2,
+      "durationMs": 46998,
+      "resultPreview": "{\"plant\":\"モッコク\",\"recommendation\":\"use_single_family\",\"family\":\"モッコク科\",\"rationale\":\"「モッコク」は単一種 Ternstroemia gymnanthera を指す和名であり、「サクラ」「アカシア」のように複数分類群を含む総称ではないため、科は一義的に定まる。APG IV 分類体系では Ternstroemia 属は Pentaphylacaceae（モッコク科、サカキ科とも）に置かれる。衝突している「ツバキ科（Theaceae）」は、Engler/Cronquist 等の旧分類体系での位置づけ（かつては Theaceae ないし Ternstroemiaceae に含めた）であり、APG IV・YList の現行分類では誤り。実際、本データベース内でも同じ Pentaphylacaceae に属するサカキ・ヒ…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "typo:A",
+      "phaseIndex": 3,
+      "phaseTitle": "typo検証",
+      "agentId": "ab403c5dfe35a2a53",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988686973,
+      "queuedAt": 1782988539932,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の生物分類の専門家です。以下は食草CSVの科名衝突に対する自動提案です。各行は plant（生物名）, families（衝突している科名, \"|\"区切り）, suggested（自動提案の科名）です。\n観点A: 提案が正しいかを是々非々で。\n各項目について: (1) suggested が分類学的に正しいか isSuggestionCorrect、(2) そもそも植物ではない（菌類・地衣類・動物等）か isNonPlant、(3) 正しい科名 correctFamily（植物でない場合はその生物の正しい科、例: ツリガネタケは多孔菌科）、(4) note(日本語) を返してください。\n重要: 「〜の上に生える」から宿主植物の科が誤って付くことがある(例: ツリガネタケはブナに生えるキノコで科はブナ科ではない)。\n対象:\n[\n  {\n    \"plant\": \"アオキ\",\n  …",
+      "lastProgressAt": 1782988815279,
+      "tokens": 16373,
+      "toolCalls": 1,
+      "durationMs": 128306,
+      "resultPreview": "{\"results\":[{\"plant\":\"アオキ\",\"isSuggestionCorrect\":false,\"isNonPlant\":false,\"correctFamily\":\"ガリア科\",\"note\":\"アオキ(Aucuba japonica)はAPG分類でガリア科(Garryaceae)。ミズキ科(Cornaceae)は旧エングラー/クロンキスト体系の扱いで、系統的にも目レベルで異なり現在は誤り。独立科とする場合はアオキ科(Aucubaceae)がガリア科に近く妥当で、二択ならミズキ科よりアオキ科が適切。提案(ミズキ科)は不適切。\"},{\"plant\":\"カエデ類\",\"isSuggestionCorrect\":true,\"isNonPlant\":false,\"correctFamily\":\"ムクロジ科\",\"note\":\"カエデ属(Acer)はAPG分類でムクロジ科(Sapindac…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 8,
+      "label": "typo:B",
+      "phaseIndex": 3,
+      "phaseTitle": "typo検証",
+      "agentId": "a77d2910ff104ed96",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988762551,
+      "queuedAt": 1782988539932,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の生物分類の専門家です。以下は食草CSVの科名衝突に対する自動提案です。各行は plant（生物名）, families（衝突している科名, \"|\"区切り）, suggested（自動提案の科名）です。\n観点B: 非植物(菌類・地衣類等)の混入を特に警戒して。\n各項目について: (1) suggested が分類学的に正しいか isSuggestionCorrect、(2) そもそも植物ではない（菌類・地衣類・動物等）か isNonPlant、(3) 正しい科名 correctFamily（植物でない場合はその生物の正しい科、例: ツリガネタケは多孔菌科）、(4) note(日本語) を返してください。\n重要: 「〜の上に生える」から宿主植物の科が誤って付くことがある(例: ツリガネタケはブナに生えるキノコで科はブナ科ではない)。\n対象:\n[\n  {\n    \"plant\": …",
+      "lastProgressAt": 1782988820483,
+      "tokens": 16384,
+      "toolCalls": 1,
+      "durationMs": 57932,
+      "resultPreview": "{\"results\":[{\"plant\":\"アオキ\",\"isSuggestionCorrect\":false,\"isNonPlant\":false,\"correctFamily\":\"アオキ科(ガリア科 Garryaceae)\",\"note\":\"アオキ(Aucuba japonica)は植物。旧エングラー体系ではミズキ科に置かれたが、APG分類ではガリア科(Garryaceae)に移された。日本ではアオキ科(=ガリア科)として扱われる。提案のミズキ科は古い分類で不適切。\"},{\"plant\":\"カエデ類\",\"isSuggestionCorrect\":true,\"isNonPlant\":false,\"correctFamily\":\"ムクロジ科\",\"note\":\"カエデ属(Acer)は旧分類ではカエデ科(Aceraceae)だが、APG分類ではムクロジ科(Sapindaceae)に統合された。提…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 9,
+      "label": "homonym:batch1",
+      "phaseIndex": 4,
+      "phaseTitle": "homonym走査",
+      "agentId": "a6e69610dcca538f9",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988815302,
+      "queuedAt": 1782988539932,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。以下は食草CSVで植物名に複数の科名が付いていた衝突を、YListの科名(ylist列)に統一する提案の一覧です。\n各植物について: (1) ylist の科名が APG IV/YList上その和名の植物として正しいか ylistFamilyCorrect、(2) その和名が「複数の別種を指す同名異物(homonym)で、統一すると別種の情報が失われる恐れ」があるか homonymRisk、(3) reason(日本語で簡潔に) を返してください。\n多くは旧分類(カエデ科/スギ科等)から新分類(ムクロジ科/ヒノキ科等)への更新であり正しい。明確に疑わしい場合のみ homonymRisk=true にしてください。\n対象:\n[\n  {\n    \"plant\": \"サカキ\",\n    \"families\": \"モッコク科 …",
+      "lastProgressAt": 1782988968806,
+      "tokens": 30064,
+      "toolCalls": 2,
+      "durationMs": 153504,
+      "resultPreview": "{\"flags\":[{\"plant\":\"サカキ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Cleyera japonicaはAPG IV/YListでモッコク科(Pentaphylacaceae)。旧ツバキ科・サカキ科からの更新で正しい。同名異物の心配なし。\"},{\"plant\":\"イタヤカエデ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Acer(カエデ属)は旧カエデ科からムクロジ科へ統合され正しい。スイカズラ科は誤記。同名異物なし。\"},{\"plant\":\"ガマズミ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Viburnumは旧スイカズラ科→現ガマズミ科(Viburnacea…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 10,
+      "label": "homonym:batch2",
+      "phaseIndex": 4,
+      "phaseTitle": "homonym走査",
+      "agentId": "ab73f0d9fb84b57df",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988820485,
+      "queuedAt": 1782988539933,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。以下は食草CSVで植物名に複数の科名が付いていた衝突を、YListの科名(ylist列)に統一する提案の一覧です。\n各植物について: (1) ylist の科名が APG IV/YList上その和名の植物として正しいか ylistFamilyCorrect、(2) その和名が「複数の別種を指す同名異物(homonym)で、統一すると別種の情報が失われる恐れ」があるか homonymRisk、(3) reason(日本語で簡潔に) を返してください。\n多くは旧分類(カエデ科/スギ科等)から新分類(ムクロジ科/ヒノキ科等)への更新であり正しい。明確に疑わしい場合のみ homonymRisk=true にしてください。\n対象:\n[\n  {\n    \"plant\": \"オオモミジ\",\n    \"families\": \"ムクロジ…",
+      "lastProgressAt": 1782988937091,
+      "tokens": 28675,
+      "toolCalls": 2,
+      "durationMs": 116606,
+      "resultPreview": "{\"flags\":[{\"plant\":\"オオモミジ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"カエデ科(Aceraceae)はAPG IVでムクロジ科(Sapindaceae)に統合。ylist正しい。\"},{\"plant\":\"オトコエシ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Patrinia。オミナエシ科(Valerianaceae)はAPGでスイカズラ科(Caprifoliaceae s.l.)に含まれる。ylist正しい。\"},{\"plant\":\"オランダイチゴ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"イチゴ(Fragaria)はバラ科で確実。シソ科はデータ誤りで別…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 11,
+      "label": "homonym:batch3",
+      "phaseIndex": 4,
+      "phaseTitle": "homonym走査",
+      "agentId": "a945bdce567f900d7",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988937095,
+      "queuedAt": 1782988539933,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。以下は食草CSVで植物名に複数の科名が付いていた衝突を、YListの科名(ylist列)に統一する提案の一覧です。\n各植物について: (1) ylist の科名が APG IV/YList上その和名の植物として正しいか ylistFamilyCorrect、(2) その和名が「複数の別種を指す同名異物(homonym)で、統一すると別種の情報が失われる恐れ」があるか homonymRisk、(3) reason(日本語で簡潔に) を返してください。\n多くは旧分類(カエデ科/スギ科等)から新分類(ムクロジ科/ヒノキ科等)への更新であり正しい。明確に疑わしい場合のみ homonymRisk=true にしてください。\n対象:\n[\n  {\n    \"plant\": \"シオデ\",\n    \"families\": \"サルトリイバ…",
+      "lastProgressAt": 1782989122775,
+      "tokens": 31267,
+      "toolCalls": 3,
+      "durationMs": 185680,
+      "resultPreview": "{\"flags\":[{\"plant\":\"シオデ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Smilax riparia。サルトリイバラ科=Smilacaceae(APG)で正しい。「シオデ科」は同科の別称にすぎず同一植物。\"},{\"plant\":\"シマイズセンリョウ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Maesa属。旧ヤブコウジ科→APGでサクラソウ科(Primulaceae広義)に統合。正しい。\"},{\"plant\":\"シマタイミンタチバナ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Myrsine属。旧ヤブコウジ科→APGでサクラソウ科。正しい。\"},{\"plant\":…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 12,
+      "label": "homonym:batch4",
+      "phaseIndex": 4,
+      "phaseTitle": "homonym走査",
+      "agentId": "ae7fae3a0059c8d20",
+      "model": "claude-opus-4-8",
+      "state": "done",
+      "startedAt": 1782988968809,
+      "queuedAt": 1782988539933,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "あなたは日本の植物分類（APG IV / YList準拠）の専門家です。以下は食草CSVで植物名に複数の科名が付いていた衝突を、YListの科名(ylist列)に統一する提案の一覧です。\n各植物について: (1) ylist の科名が APG IV/YList上その和名の植物として正しいか ylistFamilyCorrect、(2) その和名が「複数の別種を指す同名異物(homonym)で、統一すると別種の情報が失われる恐れ」があるか homonymRisk、(3) reason(日本語で簡潔に) を返してください。\n多くは旧分類(カエデ科/スギ科等)から新分類(ムクロジ科/ヒノキ科等)への更新であり正しい。明確に疑わしい場合のみ homonymRisk=true にしてください。\n対象:\n[\n  {\n    \"plant\": \"ハナイカダ\",\n    \"families\": \"ハナイカ…",
+      "lastProgressAt": 1782989137137,
+      "tokens": 33773,
+      "toolCalls": 6,
+      "durationMs": 168328,
+      "resultPreview": "{\"flags\":[{\"plant\":\"ハナイカダ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Helwingia japonica。旧ミズキ科から独立したハナイカダ科(Helwingiaceae)がAPG IV/YListで正しい。単一種で同名異物なし。\"},{\"plant\":\"ハマアカザ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason\":\"Atriplex subcordata。旧アカザ科(Chenopodiaceae)はAPGでヒユ科(Amaranthaceae)に統合。ylist正しい。同名異物なし。\"},{\"plant\":\"ハマサルトリイバラ\",\"ylistFamilyCorrect\":true,\"homonymRisk\":false,\"reason…"
+    }
+  ],
+  "totalTokens": 279718,
+  "totalToolCalls": 38
+}

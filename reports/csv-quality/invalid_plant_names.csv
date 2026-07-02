@@ -1,0 +1,42 @@
+plant_name,normalized,normalized_would_show,count,sample_record_id,sample_insect_id,reference
+Molinia japonica,Molinia japonica,no,3,hostplant-905913,species-1544,中村正直 (1993)
+Spiraea nipponica,Spiraea nipponica,no,3,hostplant-905946,species-5397,杉繁郎 (1982)
+Astragalus,Astragalus,no,2,hostplant-901346,species-5427,日本産蛾類標準図鑑2
+Vicia,Vicia,no,2,hostplant-901424,species-5425,日本産蛾類標準図鑑2
+Pasania glabra,Pasania glabra,no,2,hostplant-906016,species-6147,西尾規孝 (1987)
+卵形幼虫はアカシ,卵形幼虫はアカシ,no,1,host-B1B7-20251121002628-0083,species-4098,日本産蛾類標準図鑑1
+綿,綿,no,1,hostplant-000267,species-0292,日本産蛾類標準図鑑3
+Endospermum,Endospermum,no,1,hostplant-000835,species-3538,日本産蛾類標準図鑑1
+Ficus,Ficus,no,1,hostplant-001891,species-4461,日本産蛾類標準図鑑1
+Capparis heyncana,Capparis heyncana,no,1,hostplant-005066,species-20197,日本産蝶類標準図鑑
+Drypetes poilanei,Drypetes poilanei,no,1,hostplant-005066-2,species-20197,日本産蝶類標準図鑑
+Cocculus,Cocculus,no,1,hostplant-901370,species-5362,日本産蛾類標準図鑑2
+Larix leptolepis,Larix leptolepis,no,1,hostplant-905909,species-5795,中村正直 (1984)
+Boehmeria nipononivea,Boehmeria nipononivea,no,1,hostplant-905919,species-5552,村瀬 (1997)
+Actinidia arguta,Actinidia arguta,no,1,hostplant-905925,species-5749,松浦 (1997)
+Scaevola taccata,Scaevola taccata,no,1,hostplant-905927,species-3391,"富永智, 杉繁郎 (1998)"
+Cayratia japonica,Cayratia japonica,no,1,hostplant-905935,species-3364,"井上寛,山中浩 (1999)"
+Nerium indicum,Nerium indicum,no,1,hostplant-905948,species-3346,中村正直 (1982)
+Desmodium oryphyllum,Desmodium oryphyllum,no,1,hostplant-905971,species-5211,中村正直 (1984)
+Symplocos paniculata,Symplocos paniculata,no,1,hostplant-905977,species-1566,渡辺一雄 (1984)
+Meliosma tenuis,Meliosma tenuis,no,1,hostplant-905992,species-5217,山本義丸 (1985)
+Agrostis alba,Agrostis alba,no,1,hostplant-905993,species-20763,小木広行 (1986)
+Hypericum erectus,Hypericum erectus,no,1,hostplant-905996,species-5920,小木広行 (1986)
+Carex sp,Carex sp,no,1,hostplant-906012,species-4694,工藤広悦 (1986)
+Salix serissaefolia,Salix serissaefolia,no,1,hostplant-906013,species-4928,西尾規孝 (1986)
+Abelia grandiflora,Abelia grandiflora,no,1,hostplant-906014,species-4485,"野崎敦士, 宮田彬 (1986)"
+Villebrunea frutescens,Villebrunea frutescens,no,1,hostplant-906015,species-5171,野崎敦士 (1987)
+Astragalus adsuergens,Astragalus adsuergens,no,1,hostplant-906018,species-20642,"中村正直, 山本光人 (1987)"
+Albizzia julibrissin,Albizzia julibrissin,no,1,hostplant-906020,species-5442,中村正直 (1987)
+Cephaloziella spinicaulis,Cephaloziella spinicaulis,no,1,hostplant-906021,species-2619,坂部元宏 (1987)
+Hedysarum esculentum,Hedysarum esculentum,no,1,hostplant-906025,species-5426,"中村正直, 山本光人 (1988)"
+Spiraea pinnatifida,Spiraea pinnatifida,no,1,hostplant-906029,species-6117,小木 (1988)
+Microlepia marginata,Microlepia marginata,no,1,hostplant-906031,species-3389,"吉安, 金野 (1988)"
+Anthriscus sylvestris,Anthriscus sylvestris,no,1,hostplant-906037,species-0841,藤沢勝利 (1989)
+Asarum takanoi,Asarum takanoi,no,1,hostplant-906058,species-5587,渡辺一雄 (1990)
+Panicum crus,Panicum crus,no,1,hostplant-907315,species-1544,中村正直 (1993)
+Maesa montana,Maesa montana,no,1,hostplant-907316,species-4419,富永智 (1998)
+Typha angustifolia,Typha angustifolia,no,1,hostplant-907332,species-4694,工藤広悦 (1986)
+Scirpus mitsukurianum,Scirpus mitsukurianum,no,1,hostplant-907333,species-4694,工藤広悦 (1986)
+Lejeunea pallide,Lejeunea pallide,no,1,hostplant-907335,species-2619,坂部元宏 (1987)
+Viburnum,Viburnum,no,1,hostplant-B1B6-0307,species-3652,日本産蛾類標準図鑑1

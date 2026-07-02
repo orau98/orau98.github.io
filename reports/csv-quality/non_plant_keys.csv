@@ -1,0 +1,28 @@
+plant_name,kind,count,sample_insect_id,reference
+枯れ葉,substrate/resource,10,species-0262,日本産蛾類標準図鑑3
+朽ち木,substrate/resource,7,species-0288,日本産蛾類標準図鑑3
+枯れ木,substrate/resource,4,species-0288,日本産蛾類標準図鑑3
+枯葉,substrate/resource,3,species-2063,日本のハマキガ2
+魚粉などの動物質,suspicious/ambiguous,2,species-0271,日本産蛾類標準図鑑3
+菌類に侵された枯れ木,substrate/resource,2,species-0910,
+樹皮,substrate/resource,2,species-3711,日本産蛾類標準図鑑1
+カワラタケ,substrate/resource,2,species-5001,日本産蛾類標準図鑑2
+カワラタケ  などの菌,substrate/resource,2,species-5006,日本産蛾類標準図鑑2
+落ち葉,substrate/resource,2,species-0966,日本産蛾類標準図鑑3
+カワラタケ  などの菌類,substrate/resource,2,species-5006,日本産蛾類標準図鑑2
+シリアル食品や豆類などの植物性のもの,suspicious/ambiguous,1,species-0271,日本産蛾類標準図鑑3
+キノコ,substrate/resource,1,species-0322,日本産蛾類標準図鑑3
+トウゴマ枯れ果,substrate/resource,1,species-3946,日本産蛾類標準図鑑1
+菌類の生葉,substrate/resource,1,species-5255,日本産蛾類標準図鑑2
+アブラナ科その他の草本など多種の植物,suspicious/ambiguous,1,species-5732,日本産蛾類標準図鑑2
+菌類のカワラタケ,substrate/resource,1,species-5321,日本産蛾類標準図鑑2
+多種の植物,suspicious/ambiguous,1,species-21331,日本原色アブラムシ図鑑
+菌類のカワラタケ類,substrate/resource,1,species-5321,日本産蛾類標準図鑑2
+朽ち木の樹皮下,substrate/resource,1,species-20824,日本産蛾類標準図鑑3
+各種の枯れ葉・朽ち葉,substrate/resource,1,species-0914,日本産蛾類標準図鑑3
+広葉樹の枯れ葉,substrate/resource,1,species-0947,日本産蛾類標準図鑑3
+に多く,suspicious/ambiguous,1,species-1065,日本産蛾類標準図鑑3
+には少ない,suspicious/ambiguous,1,species-1065,日本産蛾類標準図鑑3
+であり,suspicious/ambiguous,1,species-1251,日本産蛾類標準図鑑3
+とセイヨウネズ,suspicious/ambiguous,1,species-1282,日本産蛾類標準図鑑3
+枯ススキ,substrate/resource,1,species-6006,工藤 (1988)

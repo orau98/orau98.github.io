@@ -102,6 +102,26 @@ npm run generate-sitemap  # サイトマップ生成
 - 植物、蛾、蝶、タマムシ、カミキリムシ、ハムシ別のサイトマップ分割
 - 毎日の更新日付自動設定
 
+## データ品質監査（CSV）
+
+`scripts/audit-csv-quality.mjs`（`npm run audit:csv-quality`）で
+`insects.csv`/`hostplants.csv`/`general_notes.csv`/`plant_profiles.csv` を全量走査し、
+表記ゆれ・重複・無効植物名・科名不整合・非植物キー・参照整合性を検出する。
+判定基準はサイト表示ロジック（`scripts/lib/dataLiteBuilders.mjs`）と YList を再利用するため、
+監査結果とサイトの実表示が一致する。依存パッケージ不要（RFC4180パーサは `scripts/lib/csvQuality.mjs`）。
+
+```bash
+npm run audit:csv-quality              # 監査（読み取り専用）→ reports/csv-quality-audit.md, reports/csv-quality/*.csv, reports/csv-quality-findings.json
+node scripts/audit-csv-quality.mjs --fix  # 高信頼の決定的修正を適用（reports/csv-quality/fix-decisions.json を反映）
+```
+
+- `--fix` は **表示不変（サイト出力を変えない）修正のみ** を自動適用する:
+  科名のYList権威値への整列（サイトは元々YListで科名を上書き表示）、括弧注記の正規化
+  （`normalizePlantNameLite` が元々除去）、説明的接頭辞の除去、検証済みの手動裁定（`fix-decisions.json`）。
+- 判断を要する残件は `reports/csv-quality-fixes.md` に提案として整理する。
+- 回帰テスト: `tests/csv-quality-regression.test.mjs`（既知障害の再発防止・科名整合・参照整合・public/normalized同期を固定、依存パッケージ不要）。
+- CSVデータ更新後は `npm run audit:csv-quality` を実行し、新たな不整合が入っていないか確認すること。
+
 ## トラブルシューティング
 
 ### よくある問題
@@ -109,6 +129,7 @@ npm run generate-sitemap  # サイトマップ生成
 1. **植物ページが見つからない**
    - `npm run generate-meta`でメタページ再生成
    - 植物名に無効文字が含まれていないか確認
+   - `npm run audit:csv-quality` で科名不整合・無効植物名を検出
 
 2. **ビルドエラー**
    - CSVファイルの文字エンコーディング確認（UTF-8）
