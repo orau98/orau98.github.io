@@ -7,7 +7,7 @@ const InsectsHostPlantExplorer = lazyWithRetry(() => import('./InsectsHostPlantE
 const MothDetail = lazyWithRetry(() => import('./MothDetail'));
 const HostPlantDetail = lazyWithRetry(() => import('./HostPlantDetail'));
 const QuizPage = lazyWithRetry(() => import('./QuizPage'));
-import SkeletonLoader from './components/SkeletonLoader';
+import SkeletonLoader, { DetailSkeleton } from './components/SkeletonLoader';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -919,9 +919,11 @@ function App() {
     triggerInsectsDataLoad();
   };
 
-  const renderWithChunkBoundary = (element) => (
+  // fallbackはルートのレイアウトに合わせて出し分ける
+  // （詳細ページに一覧用スケルトンを出すと、実レイアウトとの差でシフトが大きい）
+  const renderWithChunkBoundary = (element, fallback = <SkeletonLoader />) => (
     <ChunkErrorBoundary>
-      <React.Suspense fallback={<SkeletonLoader />}>
+      <React.Suspense fallback={fallback}>
         {element}
       </React.Suspense>
     </ChunkErrorBoundary>
@@ -980,14 +982,17 @@ function App() {
     ...INSECT_DETAIL_ROUTE_PATTERNS.map((path) => ({
       path,
       element: <MothDetail {...detailBaseProps} />,
+      fallback: <DetailSkeleton />,
     })),
     {
       path: '/plant/:plantName',
       element: <HostPlantDetail {...detailBaseProps} />,
+      fallback: <DetailSkeleton />,
     },
     {
       path: '/en/plant/:plantName',
       element: <HostPlantDetail {...detailBaseProps} />,
+      fallback: <DetailSkeleton />,
     },
     {
       path: '*',
@@ -1074,14 +1079,16 @@ function App() {
 
       <main id="main-content" role="main" tabIndex={-1}>
         {loading ? (
-          <SkeletonLoader />
+          routeConfigs.some(({ path, fallback }) => fallback && matchPath({ path, end: true }, location.pathname))
+            ? <DetailSkeleton />
+            : <SkeletonLoader />
         ) : (
         <Routes>
-          {routeConfigs.map(({ path, element }) => (
+          {routeConfigs.map(({ path, element, fallback }) => (
             <Route
               key={path}
               path={path}
-              element={renderWithChunkBoundary(element)}
+              element={renderWithChunkBoundary(element, fallback)}
             />
           ))}
         </Routes>

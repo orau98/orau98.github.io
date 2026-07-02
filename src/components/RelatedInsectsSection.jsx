@@ -101,7 +101,12 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                     {plant}
                   </Link>
                   <span className="text-sm text-slate-500 dark:text-slate-400">
-                    {isEnglish ? `(${relatedMothNames.length} species)` : `(${relatedMothNames.length}種)`}
+                    {/* 「20種」なのにカードが数枚だと混乱するため、写真あり件数を分けて明示する */}
+                    {withPhoto.length > 0 && withoutPhoto.length > 0
+                      ? (isEnglish
+                        ? `(${relatedMothNames.length} species, ${withPhoto.length} with photos)`
+                        : `(全${relatedMothNames.length}種・写真あり${withPhoto.length}種)`)
+                      : (isEnglish ? `(${relatedMothNames.length} species)` : `(${relatedMothNames.length}種)`)}
                   </span>
                 </div>
                 

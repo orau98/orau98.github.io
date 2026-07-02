@@ -1481,13 +1481,25 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         return mothImageMap.has(insect.id);
       };
 
+      // ソート比較のたびに植物名パース/出現期抽出を再実行すると
+      // 全件ソートでO(n log n)回の重い処理になるため、種IDでメモ化する
+      const plantCountCache = new Map();
       const getPlantLinkCount = (insect) => {
+        const key = insect?.id ?? insect;
+        if (plantCountCache.has(key)) return plantCountCache.get(key);
         const data = buildPlantDisplayData(insect);
-        return data.hostNames.length + data.flowerNames.length;
+        const count = data.hostNames.length + data.flowerNames.length;
+        plantCountCache.set(key, count);
+        return count;
       };
+      const firstMonthCache = new Map();
       const getFirstMonth = (insect) => {
+        const key = insect?.id ?? insect;
+        if (firstMonthCache.has(key)) return firstMonthCache.get(key);
         const months = getEmergenceMonthList(insect);
-        return months.length ? Math.min(...months) : 99;
+        const first = months.length ? Math.min(...months) : 99;
+        firstMonthCache.set(key, first);
+        return first;
       };
       const getFamilySortKey = (insect) => getFamilyLabel(insect) || '';
       const isSearching = (debouncedSearchTerm && debouncedSearchTerm.trim() !== '') || classificationFilter;

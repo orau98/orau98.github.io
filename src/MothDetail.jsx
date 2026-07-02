@@ -5,6 +5,7 @@ import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
 import ImageModal from './components/ImageModal';
+import { DetailSkeleton } from './components/SkeletonLoader';
 import SourceCitation from './components/ui/SourceCitation';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
@@ -940,26 +941,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   }, [isDataLoading, moth]);
 
   // Show loading state if data is still loading
+  // （スピナー1個の全画面ではなく、実レイアウトに合わせたスケルトンでシフトを抑える）
   if (isDataLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
-        <div className="text-center p-8">
-          <div className="w-20 h-20 mx-auto mb-6 bg-blue-400 rounded-full flex items-center justify-center animate-pulse">
-            <svg className="w-10 h-10 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-            {isEnglish ? 'Loading profile...' : 'データを読み込んでいます...'}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            {isEnglish
-              ? 'Loading the insect dataset. Please wait a moment.'
-              : '昆虫データベースを読み込んでいます。しばらくお待ちください。'}
-          </p>
-        </div>
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
   if (!moth) {

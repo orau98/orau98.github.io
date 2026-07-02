@@ -2056,7 +2056,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             {hostPlantInsects.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-emerald-700 dark:text-emerald-300 mb-4">
-                  {isEnglish ? `Insects using this plant as a larval host (${hostPlantInsects.length})` : `幼虫の食草として利用する昆虫 (${hostPlantInsects.length}種)`}
+                  {/* 「N種」に対しカードが少ないと混乱するため、写真あり件数を分けて明示する */}
+                  {hostInsectGroups.withPhoto.length > 0 && hostInsectGroups.withoutPhoto.length > 0
+                    ? (isEnglish
+                      ? `Insects using this plant as a larval host (${hostPlantInsects.length}, ${hostInsectGroups.withPhoto.length} with photos)`
+                      : `幼虫の食草として利用する昆虫 (全${hostPlantInsects.length}種・写真あり${hostInsectGroups.withPhoto.length}種)`)
+                    : (isEnglish
+                      ? `Insects using this plant as a larval host (${hostPlantInsects.length})`
+                      : `幼虫の食草として利用する昆虫 (${hostPlantInsects.length}種)`)}
                 </h3>
                 {hostInsectGroups.withPhoto.length > 0 && (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -2084,7 +2091,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             {flowerVisitInsects.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold text-rose-600 dark:text-rose-300 mb-4">
-                  {isEnglish ? `Insects recorded as flower visitors (${flowerVisitInsects.length})` : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`}
+                  {flowerInsectGroups.withPhoto.length > 0 && flowerInsectGroups.withoutPhoto.length > 0
+                    ? (isEnglish
+                      ? `Insects recorded as flower visitors (${flowerVisitInsects.length}, ${flowerInsectGroups.withPhoto.length} with photos)`
+                      : `訪花で利用する昆虫 (全${flowerVisitInsects.length}種・写真あり${flowerInsectGroups.withPhoto.length}種)`)
+                    : (isEnglish
+                      ? `Insects recorded as flower visitors (${flowerVisitInsects.length})`
+                      : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`)}
                 </h3>
                 {flowerInsectGroups.withPhoto.length > 0 && (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
