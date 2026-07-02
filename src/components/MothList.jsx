@@ -1879,7 +1879,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         <ManualAdSlot
                           placement="inFeed"
                           locale={locale}
-                          className="animate-fadeIn self-start sm:col-span-full"
+                          className="animate-fadeIn self-start"
                           minHeight="min-h-[220px]"
                         />
                       )}
