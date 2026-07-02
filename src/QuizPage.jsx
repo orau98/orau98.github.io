@@ -1068,7 +1068,12 @@ const QuizPage = ({
             </div>
 
             {selectedOptionId && (
-              <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700">
+              // role=status + aria-live で正誤と正解をスクリーンリーダーへ即時通知する
+              <div
+                className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700"
+                role="status"
+                aria-live="polite"
+              >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-1 gap-3">
                     <span className={`mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg ${

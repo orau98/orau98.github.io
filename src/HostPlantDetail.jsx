@@ -35,6 +35,7 @@ import {
 } from './utils/imageSrcset';
 import DetailNavigation from './components/DetailNavigation';
 import DetailSectionNav from './components/DetailSectionNav';
+import NativeShareButton from './components/NativeShareButton';
 import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
@@ -2247,6 +2248,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             </h2>
           </div>
           <div className="p-4 flex flex-wrap gap-3">
+            {/* OS標準の共有シート（対応環境のみ表示） */}
+            <NativeShareButton
+              url={shareUrl}
+              title={shareText}
+              text={shareText}
+              isEnglish={isEnglish}
+            />
+
             {/* X (Twitter) シェアボタン */}
             <a
               href={shareXUrl}

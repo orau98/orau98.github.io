@@ -207,7 +207,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
 
             <Link
               to={quizPath}
-              className="group inline-flex items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
+              className="group inline-flex min-h-[44px] items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
               aria-label={isEnglish ? 'Open four-choice quiz' : '4択図鑑を開く'}
             >
               <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +218,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="group relative rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 p-2.5 shadow-xl transition-all duration-300 hover:scale-110 hover:from-emerald-500/30 hover:to-blue-500/30 hover:shadow-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:border-emerald-400/20 dark:from-emerald-500/10 dark:to-blue-500/10 dark:hover:from-emerald-500/20 dark:hover:to-blue-500/20 sm:p-3"
+              className="group relative inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 p-2.5 shadow-xl transition-all duration-300 hover:scale-110 hover:from-emerald-500/30 hover:to-blue-500/30 hover:shadow-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:border-emerald-400/20 dark:from-emerald-500/10 dark:to-blue-500/10 dark:hover:from-emerald-500/20 dark:hover:to-blue-500/20 sm:p-3"
               aria-label={isEnglish ? 'Toggle theme' : 'テーマを切り替え'}
             >
               <div className="relative">

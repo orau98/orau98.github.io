@@ -35,6 +35,8 @@ import SearchableSelect from "./SearchableSelect";
 import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
 import ManualAdSlot from "./ManualAdSlot";
 
+const PER_PAGE_OPTIONS = [20, 50, 100];
+
 // Local: normalize Latin binomial spacing without italicizing
 const normalizeLatinBinomialPlain = (name) => {
   if (!name || typeof name !== "string") return name;
@@ -415,6 +417,8 @@ const HostPlantList = ({
       view: isEnglish ? 'View' : '表示',
       cards: isEnglish ? 'Cards' : 'カード',
       compact: isEnglish ? 'Compact' : 'コンパクト',
+      perPage: isEnglish ? 'Per page' : '表示件数',
+      autoPerPage: (value) => (isEnglish ? `Auto (${value})` : `自動 (${value})`),
       sort: isEnglish ? 'Sort' : '並び替え',
       sortImage: isEnglish ? 'Photos first' : '写真あり優先',
       sortName: isEnglish ? 'Name' : '名前順',
@@ -622,6 +626,11 @@ const HostPlantList = ({
     const v = searchParams.get('psort') || 'image';
     return ['image', 'name', 'family', 'related'].includes(v) ? v : 'image';
   }, [searchParams]);
+  const requestedItemsPerPage = useMemo(() => {
+    const n = parseInt(searchParams.get('pper') || '', 10);
+    return PER_PAGE_OPTIONS.includes(n) ? n : null;
+  }, [searchParams]);
+  const effectiveItemsPerPage = requestedItemsPerPage || itemsPerPage;
 
   const setPPage = useCallback((page) => {
     updateSearchParams((p) => {
@@ -685,6 +694,15 @@ const HostPlantList = ({
     updateSearchParams((p) => {
       if (value && value !== 'image') p.set('psort', value);
       else p.delete('psort');
+      p.delete('ppage');
+    });
+  }, [updateSearchParams]);
+
+  const setPItemsPerPage = useCallback((value) => {
+    updateSearchParams((p) => {
+      const n = parseInt(value, 10);
+      if (PER_PAGE_OPTIONS.includes(n)) p.set('pper', String(n));
+      else p.delete('pper');
       p.delete('ppage');
     });
   }, [updateSearchParams]);
@@ -1156,7 +1174,7 @@ const HostPlantList = ({
   useEffect(() => {
     if (typeof document === "undefined") return;
     try {
-      const pageCount = Math.ceil(filteredHostPlants.length / itemsPerPage);
+      const pageCount = Math.ceil(filteredHostPlants.length / effectiveItemsPerPage);
       const activePage = pageCount > 0 ? Math.min(currentPage, pageCount) : 1;
       document
         .querySelectorAll('link[rel="prev"], link[rel="next"]')
@@ -1187,16 +1205,16 @@ const HostPlantList = ({
         error,
       );
     }
-  }, [currentPage, itemsPerPage, filteredHostPlants.length]);
-  const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
+  }, [currentPage, effectiveItemsPerPage, filteredHostPlants.length]);
+  const totalPages = Math.ceil(filteredHostPlants.length / effectiveItemsPerPage);
   // URLのppageが総ページ数を超える場合は最終ページへ丸める
   // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
   const effectivePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const currentHostPlants = useMemo(() => {
-    const startIndex = (effectivePage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const startIndex = (effectivePage - 1) * effectiveItemsPerPage;
+    const endIndex = startIndex + effectiveItemsPerPage;
     return filteredHostPlants.slice(startIndex, endIndex);
-  }, [filteredHostPlants, effectivePage, itemsPerPage]);
+  }, [filteredHostPlants, effectivePage, effectiveItemsPerPage]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
@@ -1339,10 +1357,15 @@ const HostPlantList = ({
           sortMode={sortMode}
           onSortModeChange={setPSortMode}
           sortOptions={sortOptions}
+          itemsPerPageValue={requestedItemsPerPage || 'auto'}
+          autoItemsPerPage={itemsPerPage}
+          onItemsPerPageChange={setPItemsPerPage}
           labels={{
             view: ui.view,
             cards: ui.cards,
             compact: ui.compact,
+            perPage: ui.perPage,
+            autoPerPage: ui.autoPerPage,
             sort: ui.sort,
           }}
         />

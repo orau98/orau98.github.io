@@ -129,7 +129,7 @@ export default function SearchableSelect({
               type="button"
               onMouseDown={(event) => event.preventDefault()}
               onClick={clearValue}
-              className="rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200 sm:min-h-0 sm:min-w-0 sm:p-2"
               aria-label={isEnglish ? `Clear ${label}` : `${label}を解除`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

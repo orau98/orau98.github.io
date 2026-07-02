@@ -29,10 +29,11 @@ import {
   resolveImageBaseCandidates,
 } from './utils/insectImageResolver';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
-import { buildInsectMetaPagePath, getInsectSectionConfig } from './utils/siteTaxonomy';
+import { buildInsectMetaPagePath, buildPlantPath, getInsectSectionConfig } from './utils/siteTaxonomy';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
+import NativeShareButton from './components/NativeShareButton';
 import DetailNavigation from './components/DetailNavigation';
 import DetailSectionNav from './components/DetailSectionNav';
 import ManualAdSlot from './components/ManualAdSlot';
@@ -1113,6 +1114,24 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return true;
   };
 
+  // 文献記録などに現れる植物名が植物ページを持つ場合だけリンク先を返す
+  // （辞書に無い名前・「不明」はリンクにしない）
+  const resolveLinkablePlantName = (rawName) => {
+    const name = String(rawName || '').trim();
+    if (!name || name === '不明') return null;
+    const withoutParens = name.replace(/[（(][^（()）]*[）)]/g, '').trim();
+    const candidates = name === withoutParens ? [name] : [name, withoutParens];
+    for (const candidate of candidates) {
+      if (
+        (hostPlants && Object.prototype.hasOwnProperty.call(hostPlants, candidate)) ||
+        (plantDetails && Object.prototype.hasOwnProperty.call(plantDetails, candidate))
+      ) {
+        return candidate;
+      }
+    }
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pt-6">
       {/* 構造化データ */}
@@ -1698,11 +1717,23 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                                   <div>
                                     <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">{detailUi.literatureHostPlantLabel}</p>
                                     <div className="flex flex-wrap gap-1">
-                                      {foodPlants.map((plant, plantIndex) => (
-                                        <span key={plantIndex} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
-                                          {plant}
-                                        </span>
-                                      ))}
+                                      {foodPlants.map((plant, plantIndex) => {
+                                        const linkTarget = resolveLinkablePlantName(plant);
+                                        return linkTarget ? (
+                                          <Link
+                                            key={plantIndex}
+                                            to={buildPlantPath(linkTarget, locale)}
+                                            state={makeDetailLinkState(location)}
+                                            className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 underline-offset-2 hover:underline hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/70"
+                                          >
+                                            {plant}
+                                          </Link>
+                                        ) : (
+                                          <span key={plantIndex} className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                                            {plant}
+                                          </span>
+                                        );
+                                      })}
                                     </div>
                                   </div>
                                 </div>
@@ -2077,6 +2108,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               </h2>
             </div>
             <div className="p-4 flex flex-wrap gap-3">
+              {/* OS標準の共有シート（対応環境のみ表示） */}
+              <NativeShareButton
+                url={shareUrl}
+                title={shareTitle}
+                text={shareText}
+                isEnglish={isEnglish}
+              />
+
               {/* X (Twitter) シェアボタン */}
               <a
                 href={shareXUrl}

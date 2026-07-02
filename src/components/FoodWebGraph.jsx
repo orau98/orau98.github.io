@@ -613,6 +613,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [guideDismissed, setGuideDismissed] = useState(false);
   const [pinVersion, setPinVersion] = useState(0);
   const [isPinDragging, setIsPinDragging] = useState(false);
+  // PCでのホイールズームはクリックで有効化する（ページスクロールを奪わないため）。
+  // マウスがグラフ外へ出たら自動的に無効へ戻す
+  const [desktopZoomActive, setDesktopZoomActive] = useState(false);
   const showRelatedInsects = true;
   const linkDistance = useMemo(() => {
     if (currentPlantName) {
@@ -1705,11 +1708,15 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const interactionHint = isCompactPanel
     ? '操作: タップで選択、ピンチまたは上部ボタンで拡大、2回で詳細、長押しで固定'
-    : '操作: ドラッグで移動、クリックで選択、2回で詳細、上部ボタンで全体表示やズーム';
+    : desktopZoomActive
+      ? '操作: ホイールで拡大縮小、ドラッグで移動・ノード配置、クリックで選択、2回で詳細'
+      : '操作: クリックするとホイールズームが有効になります。ドラッグで移動・ノード配置、2回で詳細';
 
   const enablePanInteraction = !isPinDragging;
-  const enableZoomInteraction = isCompactPanel && !isPinDragging;
-  const enableNodeDrag = isCompactPanel && !isPinDragging;
+  // PC: ノードドラッグは常時有効（ページスクロールと競合しない）。
+  // ホイールズームはグラフをクリックしてから有効（スクロールジャック防止）
+  const enableZoomInteraction = (isCompactPanel || desktopZoomActive) && !isPinDragging;
+  const enableNodeDrag = !isPinDragging;
   const desktopControlButtonClass = 'shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800';
   const desktopControlSurfaceClass = 'rounded-xl border border-slate-200/90 bg-white/94 px-3 py-3 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/88 dark:text-slate-200';
   const mobileControlLaunchButtonClass = 'inline-flex shrink-0 items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-800';
@@ -1721,12 +1728,20 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, []);
 
   const handleGraphWheelCapture = useCallback((event) => {
-    if (isCompactPanel) return;
+    if (isCompactPanel || desktopZoomActive) return;
     event.stopPropagation();
     if (typeof event.nativeEvent?.stopImmediatePropagation === 'function') {
       event.nativeEvent.stopImmediatePropagation();
     }
+  }, [isCompactPanel, desktopZoomActive]);
+
+  const activateDesktopZoom = useCallback(() => {
+    if (!isCompactPanel) setDesktopZoomActive(true);
   }, [isCompactPanel]);
+
+  const deactivateDesktopZoom = useCallback(() => {
+    setDesktopZoomActive(false);
+  }, []);
 
   const relationFilterButtons = (
     <div className="inline-flex flex-wrap rounded-lg overflow-hidden border border-slate-200 dark:border-slate-600">
@@ -2403,6 +2418,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           onPointerMoveCapture={handlePointerMoveCapture}
           onPointerUpCapture={handlePointerUpCapture}
           onPointerCancelCapture={handlePointerUpCapture}
+          onClick={activateDesktopZoom}
+          onMouseLeave={deactivateDesktopZoom}
         >
           <p className="sr-only">
             {`この食物網グラフには${insectNodeCount}種の昆虫と${plantNodeCount}種の植物の関係が表示されています。`}
