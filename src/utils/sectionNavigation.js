@@ -23,8 +23,15 @@ export const findSectionTarget = (id) => {
   return candidates.find(isVisibleSectionTarget) || candidates[0] || null;
 };
 
+// 高さ0の空アンカーしか無いセクションは目次に載せない
+// （ジャンプしても中身の無い位置へスクロールするだけになるため）
 export const collectAvailableSectionItems = (items = []) =>
-  items.filter((item) => item?.id && item?.label && findSectionTarget(item.id));
+  items.filter(
+    (item) =>
+      item?.id &&
+      item?.label &&
+      getSectionCandidates(item.id).some(isVisibleSectionTarget),
+  );
 
 export const getSectionHeaderOffset = ({ extraOffset = 16 } = {}) => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return 0;

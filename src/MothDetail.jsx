@@ -1114,8 +1114,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="max-w-6xl mx-auto px-4 pt-6"></div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pt-6">
       {/* 構造化データ */}
       {mothId && moth && <MothStructuredData moth={moth} />}
       {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
@@ -1225,6 +1224,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             { id: 'basic-info', label: isEnglish ? 'Name' : '種名' },
             { id: 'host-plants', label: isEnglish ? 'Host plants' : '食草・訪花' },
             { id: 'adult-season', label: isEnglish ? 'Season' : '発生時期' },
+            { id: 'ecology', label: isEnglish ? 'Ecology' : '生態' },
+            { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
             { id: 'food-web', label: isEnglish ? 'Network' : 'ネットワーク' },
             { id: 'share', label: isEnglish ? 'Share' : '共有' },
           ]}
@@ -2039,13 +2040,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
             {/* 保全応援セクション（テストページ専用のためSPAには含めない） */}
 
-            {/* 関連種情報 - 横スクロール式カードデザイン */}
-            <div id="related-insects"></div>
-            <RelatedInsectsSection
-              relatedMothsByPlant={relatedMothsByPlant}
-              allInsects={allInsects}
-              locale={locale}
-            />
+            {/* 関連種情報 - 横スクロール式カードデザイン
+                （アンカーで包み、関連ゼロで非表示のときは目次からも消えるようにする） */}
+            <div id="related-insects">
+              <RelatedInsectsSection
+                relatedMothsByPlant={relatedMothsByPlant}
+                allInsects={allInsects}
+                locale={locale}
+              />
+            </div>
 
             <ManualAdSlot
               placement="detail"

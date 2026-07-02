@@ -15,7 +15,7 @@ import {
   createSafeScientificPlantFilename,
   splitFilenameBase,
 } from "../utils/filename";
-import { hiraganaToKatakana } from "../utils/text";
+import { hiraganaToKatakana, normalizeNFKC } from "../utils/text";
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
 import Pagination from "./Pagination";
 import ListFilterPanel from "./ListFilterPanel";
@@ -823,6 +823,7 @@ const HostPlantList = ({
     visitFilter,
     hostOnlyFilter,
     photoFilter,
+    sortMode,
   });
 
   // （メタは useSeoMeta に移行）
@@ -972,10 +973,12 @@ const HostPlantList = ({
       logger.debug("DEBUG: No host plants available");
       return [];
     }
-    const lowerCaseSearchTerm = debouncedPlantSearch.toLowerCase();
+    // NFKC正規化で半角カナ・全角英数の表記ゆれを吸収（例: ﾌﾞﾅ→ブナ）
+    const nfkcPlantSearch = normalizeNFKC(debouncedPlantSearch);
+    const lowerCaseSearchTerm = nfkcPlantSearch.toLowerCase();
     // ひらがな入力をカタカナに変換して検索
     const katakanaSearchTerm =
-      hiraganaToKatakana(debouncedPlantSearch).toLowerCase();
+      hiraganaToKatakana(nfkcPlantSearch).toLowerCase();
 
     const filtered = Object.entries(mergedHostPlants).filter(([plantName]) => {
       // Explicitly exclude empty, undefined, or invalid plant names
@@ -1153,27 +1156,28 @@ const HostPlantList = ({
   useEffect(() => {
     if (typeof document === "undefined") return;
     try {
-      const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
+      const pageCount = Math.ceil(filteredHostPlants.length / itemsPerPage);
+      const activePage = pageCount > 0 ? Math.min(currentPage, pageCount) : 1;
       document
         .querySelectorAll('link[rel="prev"], link[rel="next"]')
         .forEach((n) => n.remove());
       const url = new URL(window.location.href);
       url.searchParams.delete("ppage");
-      if (currentPage > 1) {
+      if (activePage > 1) {
         const prev = document.createElement("link");
         prev.rel = "prev";
         const prevUrl = new URL(url.href);
-        if (currentPage - 1 > 1) {
-          prevUrl.searchParams.set("ppage", String(currentPage - 1));
+        if (activePage - 1 > 1) {
+          prevUrl.searchParams.set("ppage", String(activePage - 1));
         }
         prev.href = prevUrl.toString();
         document.head.appendChild(prev);
       }
-      if (currentPage < totalPages) {
+      if (activePage < pageCount) {
         const next = document.createElement("link");
         next.rel = "next";
         const nextUrl = new URL(url.href);
-        nextUrl.searchParams.set("ppage", String(currentPage + 1));
+        nextUrl.searchParams.set("ppage", String(activePage + 1));
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
@@ -1185,17 +1189,20 @@ const HostPlantList = ({
     }
   }, [currentPage, itemsPerPage, filteredHostPlants.length]);
   const totalPages = Math.ceil(filteredHostPlants.length / itemsPerPage);
+  // URLのppageが総ページ数を超える場合は最終ページへ丸める
+  // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
+  const effectivePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const currentHostPlants = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
+    const startIndex = (effectivePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredHostPlants.slice(startIndex, endIndex);
-  }, [filteredHostPlants, currentPage, itemsPerPage]);
+  }, [filteredHostPlants, effectivePage, itemsPerPage]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
-    if (clampedPage === currentPage) return;
+    if (clampedPage === effectivePage) return;
     setPPage(clampedPage);
     if (typeof window !== "undefined") {
       window.requestAnimationFrame(() => {
@@ -1213,7 +1220,8 @@ const HostPlantList = ({
       prev.orderFilter !== orderFilter ||
       prev.visitFilter !== visitFilter ||
       prev.hostOnlyFilter !== hostOnlyFilter ||
-      prev.photoFilter !== photoFilter;
+      prev.photoFilter !== photoFilter ||
+      prev.sortMode !== sortMode;
 
     if (!changed) return;
 
@@ -1224,11 +1232,24 @@ const HostPlantList = ({
       visitFilter,
       hostOnlyFilter,
       photoFilter,
+      sortMode,
     };
+
+    // 条件・並び順が変わったら結果の先頭を見せる
+    // （下までスクロールした状態で「新しい並びの中盤」が表示される混乱を防ぐ）
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        const target = listTopRef.current || document.getElementById('explorer-results');
+        if (!target) return;
+        if (target.getBoundingClientRect().top < 0) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
 
     if (currentPage === 1) return;
     setPPage(1);
-  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, currentPage, setPPage]);
+  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, sortMode, currentPage, setPPage]);
 
   const renderFilters = () => {
     const presetChips = [
@@ -1414,7 +1435,7 @@ const HostPlantList = ({
                 );
                 return (
                 <React.Fragment key={plant}>
-                  {!hasAnyCriteria && currentPage === 1 && index === 8 && viewMode !== "compact" && (
+                  {!hasAnyCriteria && effectivePage === 1 && index === 8 && viewMode !== "compact" && (
                     <ManualAdSlot
                       placement="inFeed"
                       locale={locale}
@@ -1499,7 +1520,7 @@ const HostPlantList = ({
         {totalPages > 1 && (
           <div className="mt-6 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30 overflow-x-hidden">
             <Pagination
-              currentPage={currentPage}
+              currentPage={effectivePage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
               locale={locale}

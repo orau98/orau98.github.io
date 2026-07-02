@@ -195,6 +195,16 @@ function App() {
     if (navigationType !== 'PUSH') return;
     if (location.hash) return;
     window.scrollTo(0, 0);
+    // スクリーンリーダー・キーボード利用者にページ遷移を伝えるため本文へフォーカスを移す
+    // （フォーカスが前ページのリンク位置に残ったままにならないように）
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      try {
+        mainContent.focus({ preventScroll: true });
+      } catch {
+        mainContent.focus();
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 

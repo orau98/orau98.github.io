@@ -1911,6 +1911,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           ...(plantProfileFacts.length > 0 ? [{ id: 'plant-profile', label: isEnglish ? 'Profile' : '解説' }] : []),
           { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類' },
           { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク' },
+          { id: 'related-insects', label: isEnglish ? 'Related' : '関連昆虫' },
           { id: 'share', label: isEnglish ? 'Share' : '共有' },
         ]}
       />

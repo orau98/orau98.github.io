@@ -237,6 +237,9 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   const isResourceGroup = plantGroup.resourceType === 'substrate';
+  // 「不明」は植物ページが存在しないため、リンクにしない
+  // （文献記録しか無い種では全記録が「不明」のまま残ることがある）
+  const isUnknownPlant = String(plantGroup.name || '').trim() === '不明';
   // 最優先の観察タイプを決定（野外（国内）を最優先）
   const primaryRecord = plantGroup.records.reduce((prev, current) => {
     const prevPriority = getObservationTypePriority(prev.observationType);
@@ -335,7 +338,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2 min-w-0 flex-1">
           <div className="min-w-0">
-            {isResourceGroup ? (
+            {isResourceGroup || isUnknownPlant ? (
               <span
                 className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 dark:text-emerald-300' : 'text-emerald-600 dark:text-emerald-400'}`}
                 title={displayPlantName}
@@ -360,7 +363,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
               </div>
             )}
           </div>
-          {!isResourceGroup && plantGroup.family && plantGroup.family !== plantGroup.name && (
+          {!isResourceGroup && plantGroup.family && plantGroup.family !== plantGroup.name && plantGroup.family !== '不明' && (
             <Link
               to={buildPlantPath(plantGroup.family, locale)}
               state={makeDetailLinkState(location)}

@@ -10,7 +10,7 @@ import EmergenceTimeDisplay, { hasEmergencePeriods } from './EmergenceTimeDispla
 import ListFilterPanel from './ListFilterPanel';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
-import { hiraganaToKatakana } from '../utils/text';
+import { hiraganaToKatakana, normalizeNFKC } from '../utils/text';
 import { loadInsectImageIndexes } from '../services/imageIndex';
 import ImageWithFallback from './ImageWithFallback';
 import SearchableSelect from './SearchableSelect';
@@ -1121,6 +1121,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     emergenceFilter,
     seasonFilter,
     photoFilter,
+    sortMode,
   });
   const listTopRef = useRef(null);
   const resizeInitializedRef = useRef(false);
@@ -1278,14 +1279,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
 
           if (groupFilter && (moth.type || 'moth') !== groupFilter) return false;
 
-          const lowerCaseSearchTerm = debouncedSearchTerm.toLowerCase();
+          // NFKC正規化で半角カナ・全角英数の表記ゆれを吸収（例: ﾌﾞﾅ→ブナ）
+          const nfkcSearchTerm = normalizeNFKC(debouncedSearchTerm);
+          const lowerCaseSearchTerm = nfkcSearchTerm.toLowerCase();
           // ひらがなをカタカナに変換した検索語も用意
-          const katakanaSearchTerm = hiraganaToKatakana(debouncedSearchTerm).toLowerCase();
-          
+          const katakanaSearchTerm = hiraganaToKatakana(nfkcSearchTerm).toLowerCase();
+
           // If there's a classification filter from URL, prioritize that
           if (classificationFilter && !debouncedSearchTerm) {
-            const lowerClassification = classificationFilter.toLowerCase();
-            const katakanaClassification = hiraganaToKatakana(classificationFilter).toLowerCase();
+            const nfkcClassification = normalizeNFKC(classificationFilter);
+            const lowerClassification = nfkcClassification.toLowerCase();
+            const katakanaClassification = hiraganaToKatakana(nfkcClassification).toLowerCase();
             return (moth.classification?.familyJapanese?.toLowerCase().includes(lowerClassification)) ||
                    (moth.classification?.familyJapanese?.toLowerCase().includes(katakanaClassification)) ||
                    (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerClassification)) ||
@@ -1559,26 +1563,29 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   ]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / effectiveItemsPerPage);
+  // URLのipageが総ページ数を超える場合は最終ページへ丸める
+  // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
+  const effectivePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const currentMoths = useMemo(() => {
     try {
       if (!sortedMoths || sortedMoths.length === 0) {
         return [];
       }
-      
-      const startIndex = (currentPage - 1) * effectiveItemsPerPage;
+
+      const startIndex = (effectivePage - 1) * effectiveItemsPerPage;
       const endIndex = startIndex + effectiveItemsPerPage;
       return sortedMoths.slice(startIndex, endIndex);
     } catch (error) {
       logger.error('Error calculating currentMoths:', error);
       return [];
     }
-  }, [sortedMoths, currentPage, effectiveItemsPerPage]);
+  }, [sortedMoths, effectivePage, effectiveItemsPerPage]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
-    if (clampedPage === currentPage) return;
+    if (clampedPage === effectivePage) return;
     setIPage(clampedPage);
     if (typeof window !== 'undefined') {
       window.requestAnimationFrame(() => {
@@ -1594,27 +1601,27 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(n => n.remove());
       const url = new URL(window.location.href);
       url.searchParams.delete('ipage');
-      if (currentPage > 1) {
+      if (effectivePage > 1) {
         const prev = document.createElement('link');
         prev.rel = 'prev';
         const prevUrl = new URL(url.href);
-        const prevPage = currentPage - 1;
+        const prevPage = effectivePage - 1;
         if (prevPage > 1) prevUrl.searchParams.set('ipage', String(prevPage));
         prev.href = prevUrl.toString();
         document.head.appendChild(prev);
       }
-      if (currentPage < totalPages) {
+      if (effectivePage < totalPages) {
         const next = document.createElement('link');
         next.rel = 'next';
         const nextUrl = new URL(url.href);
-        nextUrl.searchParams.set('ipage', String(currentPage + 1));
+        nextUrl.searchParams.set('ipage', String(effectivePage + 1));
         next.href = nextUrl.toString();
         document.head.appendChild(next);
       }
     } catch (error) {
       logger.debug('Failed to update rel prev/next links for moth list:', error);
     }
-  }, [currentPage, totalPages]);
+  }, [effectivePage, totalPages]);
 
   React.useEffect(() => {
     const prev = filterCriteriaRef.current;
@@ -1625,7 +1632,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       prev.genusFilter !== genusFilter ||
       prev.emergenceFilter !== emergenceFilter ||
       prev.seasonFilter !== seasonFilter ||
-      prev.photoFilter !== photoFilter;
+      prev.photoFilter !== photoFilter ||
+      prev.sortMode !== sortMode;
 
     if (!changed) return;
 
@@ -1637,7 +1645,20 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       emergenceFilter,
       seasonFilter,
       photoFilter,
+      sortMode,
     };
+
+    // 条件・並び順が変わったら結果の先頭を見せる
+    // （下までスクロールした状態で「新しい並びの中盤」が表示される混乱を防ぐ）
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => {
+        const target = listTopRef.current || document.getElementById('explorer-results');
+        if (!target) return;
+        if (target.getBoundingClientRect().top < 0) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
 
     if (currentPage === 1) return;
     setIPage(1);
@@ -1649,6 +1670,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     emergenceFilter,
     seasonFilter,
     photoFilter,
+    sortMode,
     currentPage,
     setIPage,
   ]);
@@ -1880,7 +1902,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                 try {
                   return (
                     <React.Fragment key={moth?.id || `moth-${index}`}>
-                      {!hasAnyCriteria && currentPage === 1 && index === 8 && viewMode !== 'compact' && (
+                      {!hasAnyCriteria && effectivePage === 1 && index === 8 && viewMode !== 'compact' && (
                         <ManualAdSlot
                           placement="inFeed"
                           locale={locale}
@@ -1994,7 +2016,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         {totalPages > 1 && (
           <div className="mt-6 pt-4 border-t border-blue-200/30 dark:border-blue-700/30 overflow-x-hidden">
             <Pagination
-              currentPage={currentPage}
+              currentPage={effectivePage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
               locale={locale}

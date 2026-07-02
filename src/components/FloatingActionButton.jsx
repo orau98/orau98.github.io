@@ -71,23 +71,40 @@ const FloatingActionButton = () => {
     // Define section IDs and labels to look for
     // Note: Parent components (MothDetail, HostPlantDetail) need to add these IDs
     const possibleSections = [
+      { id: 'plant-photos', label: isEnglish ? 'Photos' : '写真', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z' },
       { id: 'basic-info', label: isEnglish ? 'Overview' : '基本情報', icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { id: 'plant-profile', label: isEnglish ? 'Profile' : '解説', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
       { id: 'host-plants', label: isEnglish ? 'Host plants' : '食草・食樹', icon: 'M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z' },
       { id: 'adult-season', label: isEnglish ? 'Adult season' : '発生時期', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+      { id: 'ecology', label: isEnglish ? 'Ecology' : '生態情報', icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { id: 'classification-members', label: isEnglish ? 'Relatives' : '同じ分類の植物', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+      { id: 'related-insects', label: isEnglish ? 'Related insects' : '関連昆虫', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
       { id: 'plant-network', label: isEnglish ? 'Network' : 'ネットワーク', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
       { id: 'food-web', label: isEnglish ? 'Network' : 'ネットワーク', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-      { id: 'related-insects', label: isEnglish ? 'Related insects' : '関連昆虫', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
-      { id: 'plant-photos', label: isEnglish ? 'Photos' : '写真', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z' }
+      { id: 'share', label: isEnglish ? 'Share' : '共有', icon: 'M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z' }
     ];
 
-    // Check which sections actually exist in the DOM
-    // Delay slightly to ensure DOM is ready
+    // Check which sections actually exist in the DOM.
+    // 直接URLで開いた場合はデータ読み込み完了までセクションが描画されないため、
+    // 1回きりの判定ではなく、見つかるまで一定回数リトライする
+    let cancelled = false;
+    let attempts = 0;
+    let timer = null;
     const checkSections = () => {
-      setTocItems(collectAvailableSectionItems(possibleSections));
+      if (cancelled) return;
+      const items = collectAvailableSectionItems(possibleSections);
+      setTocItems(items);
+      attempts += 1;
+      if (items.length === 0 && attempts < 20) {
+        timer = setTimeout(checkSections, 500);
+      }
     };
 
-    const timer = setTimeout(checkSections, 500);
-    return () => clearTimeout(timer);
+    timer = setTimeout(checkSections, 500);
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }, [isDetailPage, isEnglish, location.pathname]);
 
   useEffect(() => {
