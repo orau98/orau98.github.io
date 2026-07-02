@@ -1922,7 +1922,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
-      <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 sm:pt-8">
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 sm:pt-8">
       {/* パンくずリスト（昆虫詳細と同じく最上部に配置） */}
       <div className="hidden md:block mb-4">
         <Breadcrumb
@@ -1943,7 +1943,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           モバイルは1行横スクロールにして冒頭の折り返しゴチャつきを防ぐ。
           クイズ導線はヘッダーのボタンと二重に見えるためチップ行には置かず、
           種名カード内の「この植物をクイズで復習」に一本化する */}
-      <div className="mb-6 flex items-center gap-2 overflow-x-auto pb-1 [&>*]:shrink-0 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
+      <div className="mb-4 flex items-center gap-2 overflow-x-auto pb-1 [&>*]:shrink-0 sm:mb-6 sm:flex-wrap sm:overflow-visible sm:pb-0 lg:mb-8">
         <Link
           to={getBackTarget(location, localizePath('/?tab=plants', locale))}
           state={makeDetailLinkState(location)}
