@@ -138,13 +138,6 @@ const ExplorerHero = ({
           locale={locale}
         />
       </div>
-
-      {/* 初見ユーザー向け: サイトの目的を1〜2行で常時表示する */}
-      <p className="max-w-2xl text-xs leading-relaxed text-white/90 sm:text-sm">
-        {isEnglish
-          ? 'A free database of insect–host plant relationships: search moths, butterflies, jewel beetles, longhorn beetles, leaf beetles and aphids, or start from a plant and see which insects use it.'
-          : '蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと食草の「繋がり」を調べられるデータベース図鑑です。昆虫名からも植物名からも検索でき、関係をたどって回遊できます。'}
-      </p>
     </div>
   </div>
 );
