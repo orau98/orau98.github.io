@@ -1437,10 +1437,17 @@ const HostPlantList = ({
                 const statsNames =
                   plantInsectStats?.namesByPlant?.[plant] ||
                   (normalizedPlant && plantInsectStats?.namesByPlant?.[normalizedPlant]);
-                const displayNames =
+                const rawDisplayNames =
                   Array.isArray(statsNames) && statsNames.length > 0
                     ? statsNames
                     : mothList;
+                // 和名を持つ種を先頭に（「Greenidea kuwanai（和名未記載）」のような
+                // 学名始まりの種が要約の先頭に来て雑然とするのを避ける）
+                const displayNames = [...rawDisplayNames].sort((a, b) => {
+                  const isLatinA = /^[A-Za-z]/.test(String(a).trim());
+                  const isLatinB = /^[A-Za-z]/.test(String(b).trim());
+                  return isLatinA === isLatinB ? 0 : isLatinA ? 1 : -1;
+                });
                 const statsCount =
                   plantInsectStats?.countsByPlant?.[plant] ??
                   (normalizedPlant && plantInsectStats?.countsByPlant?.[normalizedPlant]);

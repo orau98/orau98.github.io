@@ -1784,6 +1784,19 @@ const InsectsHostPlantExplorer = memo(
       };
     }, []);
 
+    // ARIA Tabsパターン: 矢印キーでタブを移動し、フォーカスも追従させる
+    const handleTabListKeyDown = (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const nextTab = activeTab === 'insects' ? 'plants' : 'insects';
+      setActiveTabWithUrl(nextTab);
+      if (typeof window !== 'undefined') {
+        window.requestAnimationFrame(() => {
+          document.getElementById(nextTab === 'insects' ? 'tab-insects' : 'tab-plants')?.focus();
+        });
+      }
+    };
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <StickyHeader 
@@ -1833,12 +1846,13 @@ const InsectsHostPlantExplorer = memo(
           {/* タブナビゲーション */}
           <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden sm:rounded-3xl">
             {/* タブヘッダー */}
-            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label={isEnglish ? "Switch between insects and plants" : "昆虫/植物の切り替え"}>
+            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label={isEnglish ? "Switch between insects and plants" : "昆虫/植物の切り替え"} onKeyDown={handleTabListKeyDown}>
               <button
                 id="tab-insects"
                 role="tab"
                 aria-selected={activeTab === "insects"}
                 aria-controls="panel-insects"
+                tabIndex={activeTab === "insects" ? 0 : -1}
                 type="button"
                 onClick={() => {
                   setActiveTabWithUrl("insects");
@@ -1899,6 +1913,7 @@ const InsectsHostPlantExplorer = memo(
                 role="tab"
                 aria-selected={activeTab === "plants"}
                 aria-controls="panel-plants"
+                tabIndex={activeTab === "plants" ? 0 : -1}
                 type="button"
                 onClick={() => setActiveTabWithUrl("plants")}
                 className={`flex-1 px-4 py-2.5 text-sm font-medium tracking-tight transition-colors relative sm:px-6 sm:py-4 sm:text-base ${

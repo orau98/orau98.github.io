@@ -184,7 +184,7 @@ const FloatingActionButton = () => {
       {/* Main FAB Toggle */}
       <button
         onClick={toggleMenu}
-        className={`relative z-[70] flex h-12 items-center justify-center gap-1.5 rounded-full px-4 shadow-xl transition-all duration-300 md:h-14 md:w-14 md:px-0 ${
+        className={`relative z-[70] flex h-12 items-center justify-center gap-1.5 rounded-full px-4 shadow-xl transition-all duration-300 md:h-14 md:px-5 ${
           isOpen
             ? 'bg-slate-700 text-white'
             : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
@@ -199,15 +199,16 @@ const FloatingActionButton = () => {
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
-        <span className="text-sm font-semibold md:hidden">
+        {/* PCでも「＋」だけでは用途が分からないためラベルを常時表示する */}
+        <span className="text-sm font-semibold">
           {isOpen ? (isEnglish ? 'Close' : '閉じる') : (isEnglish ? 'Contents' : '目次')}
         </span>
       </button>
       
       {/* Overlay to close when clicking outside */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60]" 
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[65]"
           onClick={() => setIsOpen(false)}
         />
       )}
