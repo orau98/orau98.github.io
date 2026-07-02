@@ -677,3 +677,17 @@ textarea:focus-visible {
 .focus-ring:focus-visible {
   box-shadow: 0 0 0 3px rgb(var(--ring) / 0.4);
 }
+
+/* 横スクロール行の右端フェード（続きがあることを視覚的に示す） */
+.scroll-fade-right {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+
+/* sm以上で折り返しレイアウトに切り替わる行ではフェードを解除する */
+@media (min-width: 640px) {
+  .sm-scroll-fade-none {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}

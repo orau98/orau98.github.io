@@ -1458,13 +1458,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const dim = dimByHighlight;
     const alpha = dim ? 0.25 : 1;
     const dense = labelMode === 'auto' && graphData.nodes.length > graphLayoutMetrics.denseLabelThreshold;
+    // 高密度グラフでは既定のフィットズームでもglobalScaleが1.35を超えることがあり、
+    // 全ラベルが重なって判読できなくなる。密なときは十分ズームした場合のみ全ラベルを出す
+    // （選択中・ハイライト中のノードのラベルは常に表示される）
+    const revealZoom = dense ? 1.8 : 1.35;
     const showLabel = labelMode !== 'none' && (
       labelMode === 'all'
       || isCurrent
       || selectedNodeId === node.id
       || (activeNodeId && inHighlight)
       || (!dense && !dim)
-      || (globalScale > 1.35 && !dim)
+      || (globalScale > revealZoom && !dim)
     );
 
     // try to ensure image is loaded

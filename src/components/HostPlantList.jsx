@@ -199,13 +199,13 @@ const HostPlantListItem = React.memo(
     }
 
     return (
-      <article className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+      <article className="group relative h-full overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
           to={buildPlantPath(plant, locale)}
           state={makeDetailLinkState(location, { setFromList: true })}
-          className="block relative z-0"
+          className="block relative z-0 h-full"
         >
           <div className="flex flex-col h-full">
             {/* Enhanced Plant Image/Icon section */}
@@ -1462,12 +1462,13 @@ const HostPlantList = ({
                     <ManualAdSlot
                       placement="inFeed"
                       locale={locale}
-                      className="animate-fadeIn self-start"
+                      className="animate-fadeIn h-full"
                       minHeight="min-h-[220px]"
                     />
                   )}
+                  {/* 行内でカード高さを揃える（短いカードの下に空白ができないように） */}
                   <div
-                    className="animate-fadeIn"
+                    className="animate-fadeIn h-full"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <HostPlantListItem

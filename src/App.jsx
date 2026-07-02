@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
+import { Routes, Route, matchPath, useLocation, useNavigationType } from 'react-router-dom';
 import logger from './utils/logger';
 import lazyWithRetry from './utils/lazyWithRetry';
 import ChunkErrorBoundary from './components/ChunkErrorBoundary';
@@ -1086,12 +1086,15 @@ function App() {
       )}
       </main>
         <FloatingActionButton />
-      <ManualAdSlot
-        placement="footer"
-        locale={locale}
-        className="mx-auto mt-10 w-[min(100%-1rem,64rem)] sm:mt-12"
-        minHeight="min-h-[96px]"
-      />
+      {/* 404（キャッチオール）では広告を出さない: 低価値ページへの広告はポリシー上も体験上も避ける */}
+      {routeConfigs.some(({ path }) => path !== '*' && matchPath({ path, end: true }, location.pathname)) && (
+        <ManualAdSlot
+          placement="footer"
+          locale={locale}
+          className="mx-auto mt-10 w-[min(100%-1rem,64rem)] sm:mt-12"
+          minHeight="min-h-[96px]"
+        />
+      )}
       <Footer locale={locale} />
     </div>
   );

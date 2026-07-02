@@ -383,13 +383,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     }
 
     return (
-      <article ref={imgRef} className="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+      <article ref={imgRef} className="group relative h-full overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
         to={route}
         state={makeDetailLinkState(location, { setFromList: true })}
-        className="block relative z-0"
+        className="block relative z-0 h-full"
       >
         <div className="flex flex-col h-full">
           {/* Enhanced Image section - full card width */}
@@ -478,7 +478,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                 <div className="space-y-1.5 text-[13px] sm:text-sm">
                   {plantDisplay.hostNames.length > 0 && (
                     <div className="flex items-start space-x-2">
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
+                      <span
+                        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5"
+                        role="img"
+                        aria-label={isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
+                        title={isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
+                      >
                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
                         </svg>
@@ -501,7 +506,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       <span
                         className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-[13px] dark:bg-rose-900/30 flex-shrink-0 mt-0.5"
                         role="img"
-                        aria-label={isEnglish ? "Flower visit" : "訪花"}
+                        aria-label={isEnglish ? "Flower-visit plants (adults)" : "成虫の訪花植物"}
+                        title={isEnglish ? "Flower-visit plants (adults)" : "成虫の訪花植物"}
                       >
                         🌸
                       </span>
@@ -1906,12 +1912,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         <ManualAdSlot
                           placement="inFeed"
                           locale={locale}
-                          className="animate-fadeIn self-start"
+                          className="animate-fadeIn h-full"
                           minHeight="min-h-[220px]"
                         />
                       )}
-                      <div className="animate-fadeIn" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
-                        <MothListItem 
+                      {/* 行内でカード高さを揃える（短いカードの下に空白ができないように） */}
+                      <div className="animate-fadeIn h-full" style={{ animationDelay: `${Math.min(index, 12) * 0.03}s` }}>
+                        <MothListItem
                           moth={moth} 
                           baseRoute={baseRoute} 
                           isPriority={index < 12} 

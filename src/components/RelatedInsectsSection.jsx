@@ -67,11 +67,28 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
       
       <div className="p-4 space-y-6">
         {Object.entries(relatedMothsByPlant).map(([plant, relatedMothNames]) => {
+          // 写真あり種はカード、写真なし種はコンパクトなチップに分ける
+          // （写真なしの大きな空カードが並ぶのを避ける）
+          const resolvedInsects = relatedMothNames
+            .map((name) => {
+              let insect = allInsects.find((m) => m.name === name);
+              if (!insect) {
+                const alt = name.replace(/類$/, '');
+                insect = allInsects.find((m) => m.name === alt);
+              }
+              if (!insect) return null;
+              const candidates = getImageCandidates(insect);
+              return { name, insect, candidates, hasImage: candidates.length > 0 };
+            })
+            .filter(Boolean);
+          const withPhoto = resolvedInsects.filter((r) => r.hasImage);
+          const withoutPhoto = resolvedInsects.filter((r) => !r.hasImage);
+
           const isExpanded = expandedPlants.has(plant);
-          const layout = getDisplayLayout(relatedMothNames.length, isExpanded);
-          const displayCount = getDisplayCount(relatedMothNames.length, layout, isExpanded);
-          const showExpandButton = relatedMothNames.length > 6;
-          
+          const layout = getDisplayLayout(withPhoto.length, isExpanded);
+          const displayCount = getDisplayCount(withPhoto.length, layout, isExpanded);
+          const showExpandButton = withPhoto.length > 6;
+
           return (
             <div key={plant} className="space-y-4">
               <div className="flex items-center justify-between">
@@ -107,10 +124,11 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                 )}
               </div>
             
-            {/* 動的レイアウトコンテナ */}
+            {/* 写真あり種: 画像カード（横スクロール/グリッド） */}
+            {withPhoto.length > 0 && (
             <div className={`${
-              layout === 'horizontal' ? 'overflow-x-auto pb-2' :
-              layout === 'horizontal-limited' ? 'overflow-x-auto pb-2' :
+              layout === 'horizontal' ? 'overflow-x-auto pb-2 scroll-fade-right' :
+              layout === 'horizontal-limited' ? 'overflow-x-auto pb-2 scroll-fade-right' :
               'overflow-hidden'
             }`}>
               <div className={`transition-all duration-300 ${
@@ -120,14 +138,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                 layout === 'grid-3rows' ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-6' :
                 'flex space-x-4 min-w-max'
               }`}>
-                {relatedMothNames.slice(0, displayCount).map(relatedMothName => {
-                  let relatedMoth = allInsects.find(m => m.name === relatedMothName);
-                  // Fallback: try trimming common suffixes like '類' (e.g., name mismatches)
-                  if (!relatedMoth) {
-                    const alt = relatedMothName.replace(/類$/, '');
-                    relatedMoth = allInsects.find(m => m.name === alt);
-                  }
-                  if (!relatedMoth) return null;
+                {withPhoto.slice(0, displayCount).map(({ name: relatedMothName, insect: relatedMoth, candidates }) => {
                   const primaryName = isEnglish
                     ? getPrimaryEnglishName({
                         scientificName: relatedMoth.scientificName,
@@ -136,8 +147,6 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                       })
                     : relatedMothName;
                   const secondaryName = isEnglish ? buildJapaneseReferenceLabel(relatedMothName) : '';
-                  const candidates = getImageCandidates(relatedMoth);
-                  const hasImage = candidates.length > 0;
                   const primarySrc = candidates[0] || placeholderSrc;
 
                   return (
@@ -156,54 +165,33 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                         relatedMoth.type === 'longhornbeetle' ? 'border-teal-200/60 dark:border-teal-700/60 hover:border-teal-400/80 dark:hover:border-teal-500/80 hover:shadow-teal-500/20' :
                         'border-amber-200/60 dark:border-amber-700/60 hover:border-amber-400/80 dark:hover:border-amber-500/80 hover:shadow-amber-500/20'
                       }`}>
-                        {/* 昆虫画像。画像が無い種は名前が必ず読めるカードにする */}
                         <div className="relative w-full aspect-[3/2] overflow-hidden">
-                          {hasImage ? (
-                            <>
-                              <ImageWithFallback
-                                src={primarySrc}
-                                candidates={candidates.slice(1)}
-                                fallbackSrc={placeholderSrc}
-                                alt={isEnglish ? `${primaryName} photograph` : `${relatedMothName}（${relatedMoth.scientificName}）の写真`}
-                                width="600"
-                                height="400"
-                                className="w-full h-full"
-                                imgClassName="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                                fit="cover"
-                                loading="lazy"
-                                decoding="async"
-                              />
-                              {/* 画像上に昆虫名をオーバーレイ表示 */}
-                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
-                                <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
-                                  {isEnglish && relatedMoth.scientificName
-                                    ? formatScientificNameReact(primaryName)
-                                    : primaryName}
-                                </h5>
-                                {secondaryName && (
-                                  <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
-                                    {secondaryName}
-                                  </p>
-                                )}
-                              </div>
-                            </>
-                          ) : (
-                            <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-surface-raised p-3 text-center">
-                              <svg className="h-6 w-6 flex-shrink-0 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                              <h5 className="font-medium text-xs leading-tight line-clamp-3 text-ink">
-                                {isEnglish && relatedMoth.scientificName
-                                  ? formatScientificNameReact(primaryName)
-                                  : primaryName}
-                              </h5>
-                              {secondaryName && (
-                                <p className="text-[10px] leading-tight text-ink-muted line-clamp-2">
-                                  {secondaryName}
-                                </p>
-                              )}
-                            </div>
-                          )}
+                          <ImageWithFallback
+                            src={primarySrc}
+                            candidates={candidates.slice(1)}
+                            fallbackSrc={placeholderSrc}
+                            alt={isEnglish ? `${primaryName} photograph` : `${relatedMothName}（${relatedMoth.scientificName}）の写真`}
+                            width="600"
+                            height="400"
+                            className="w-full h-full"
+                            imgClassName="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                            fit="cover"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          {/* 画像上に昆虫名をオーバーレイ表示 */}
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
+                            <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
+                              {isEnglish && relatedMoth.scientificName
+                                ? formatScientificNameReact(primaryName)
+                                : primaryName}
+                            </h5>
+                            {secondaryName && (
+                              <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
+                                {secondaryName}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </Link>
@@ -211,6 +199,41 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                 })}
               </div>
             </div>
+            )}
+
+            {/* 写真なし種: 大きな空カードの羅列を避け、コンパクトな名前チップで一覧する */}
+            {withoutPhoto.length > 0 && (
+              <div>
+                {withPhoto.length > 0 && (
+                  <p className="mb-1.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">
+                    {isEnglish ? 'No photo yet:' : '写真未登録:'}
+                  </p>
+                )}
+                <div className="flex flex-wrap gap-1.5">
+                  {withoutPhoto.map(({ name: relatedMothName, insect: relatedMoth }) => {
+                    const chipName = isEnglish
+                      ? getPrimaryEnglishName({
+                          scientificName: relatedMoth.scientificName,
+                          japaneseName: relatedMothName,
+                          fallback: relatedMothName,
+                        })
+                      : relatedMothName;
+                    return (
+                      <Link
+                        key={relatedMoth.id}
+                        to={buildInsectPath(relatedMoth, locale)}
+                        state={makeDetailLinkState(location)}
+                        className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
+                      >
+                        {isEnglish && relatedMoth.scientificName
+                          ? formatScientificNameReact(chipName)
+                          : chipName}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
           );
         })}
