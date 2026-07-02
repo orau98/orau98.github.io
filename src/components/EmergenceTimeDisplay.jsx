@@ -818,100 +818,53 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
     );
   }
   
-  // フル表示：ガントチャート風デザイン
+  // フル表示：一覧カードのコンパクト表示と同じデザイン言語
+  // （連続した1本のバー＋旬セル＋下側の月ラベル）を、詳細ページ向けに拡大したもの。
+  // 旧デザインは月ごとの箱に白い縦スリットが並ぶ櫛状で、未発生月まで視覚的に
+  // 主張してしまい期間が読み取りにくかった。
   return (
     <div className="space-y-4">
-      
-      {/* 精密ガントチャート風タイムライン */}
-      <div className="space-y-3">
-        {/* 月のヘッダー */}
-        <div className="grid grid-cols-12 gap-1 text-center">
-          {MONTHS.map((month) => (
-            <div key={month.number} className="text-xs font-medium text-ink-muted">
-              <div className="flex flex-col items-center">
-                <span className="hidden sm:block">{getMonthLabel(month, 'header')}</span>
-                <span className="sm:hidden">{isEnglish ? month.number : month.number}</span>
-              </div>
+      <div>
+        {/* タイムライン（旬単位・連続バー） */}
+        <div className="flex h-7 overflow-hidden rounded-full border border-slate-200 bg-slate-100 sm:h-8 dark:border-slate-600 dark:bg-slate-700">
+          {MONTHS.map((month, monthIndex) => (
+            <div
+              key={month.number}
+              className={`flex flex-1 ${monthIndex > 0 ? 'border-l border-white/60 dark:border-slate-500/60' : ''}`}
+            >
+              {[1, 2, 3].map((periodNum) => {
+                const periodValue = month.number + periodNum * 0.1;
+                const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                const isFuzzy = !isActive && fuzzyPeriods.some(p => Math.abs(p - periodValue) < 0.05);
+                const periodName = getPeriodLabel(periodNum);
+                const dividerClass = periodNum < 3 ? 'border-r border-white/30 dark:border-slate-600/50' : '';
+
+                return (
+                  <div
+                    key={periodNum}
+                    className={`
+                      flex-1
+                      ${isActive ? `${month.color} opacity-70` : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
+                      transition-all duration-200
+                      ${dividerClass}
+                    `}
+                    title={`${getMonthLabel(month)} ${periodName}${isActive ? (isEnglish ? ' (adult season)' : ' (発生期)') : isFuzzy ? (isEnglish ? ' (broad seasonal note)' : ' (月幅のある記述)') : ''}`}
+                  />
+                );
+              })}
             </div>
           ))}
         </div>
-        
-        
-        {/* メインタイムライン（旬単位） */}
-        <div className="relative bg-surface-raised rounded-card p-2 border border-line">
-          {/* 背景グリッド */}
-          <div className="grid grid-cols-12 gap-1 h-10">
-            {MONTHS.map((month) => (
-              <div key={month.number} className="grid grid-cols-3 gap-px bg-line rounded-md p-px">
-                {[1, 2, 3].map((periodNum) => {
-                  return (
-                    <div
-                      key={periodNum}
-                      className="bg-surface rounded-sm"
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          
-          {/* アクティブ期間のバー（旬単位） */}
-          <div className="absolute inset-2 grid grid-cols-12 gap-1">
-            {MONTHS.map((month) => (
-              <div key={`fuzzy-${month.number}`} className="grid grid-cols-3 gap-px p-px">
-                {[1, 2, 3].map((periodNum) => {
-                  const periodValue = month.number + periodNum * 0.1;
-                  const isExact = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
-                  const isFuzzy = !isExact && fuzzyPeriods.some(p => Math.abs(p - periodValue) < 0.05);
 
-                  if (!isFuzzy) return <div key={periodNum} />;
-
-                  return (
-                    <div
-                      key={periodNum}
-                      className="bg-gradient-to-b from-orange-200/85 to-orange-50/10 rounded-sm min-h-[32px] border border-dashed border-orange-200/80"
-                      title={`${getMonthLabel(month)} - ${isEnglish ? 'broad seasonal note' : '月幅のある記述'}`}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-
-          <div className="absolute inset-2 grid grid-cols-12 gap-1">
-            {MONTHS.map((month) => (
-              <div key={month.number} className="grid grid-cols-3 gap-px p-px">
-                {[1, 2, 3].map((periodNum) => {
-                  const periodValue = month.number + periodNum * 0.1;
-                  const isActive = activePeriods.some(p => Math.abs(p - periodValue) < 0.05);
-                  const periodName = getPeriodLabel(periodNum);
-                  
-                  if (!isActive) return <div key={periodNum} />;
-                  
-                  return (
-                    <div
-                      key={periodNum}
-                      className={`
-                        ${month.color} 
-                        rounded-sm 
-                        transition-all 
-                        duration-200 
-                        hover:opacity-80
-                        min-h-[32px]
-                        opacity-70
-                        border border-orange-400/30
-                      `}
-                      title={`${getMonthLabel(month)} ${periodName} - ${isEnglish ? 'adult season' : '成虫発生期'}`}
-                    >
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+        {/* 月ラベル（全12・バーの月区画と揃う。モバイルは数字のみ） */}
+        <div className="mt-1.5 grid grid-cols-12 px-0.5 text-center">
+          {MONTHS.map((month) => (
+            <span key={month.number} className="text-xs font-medium text-slate-500 dark:text-slate-400">
+              <span className="hidden sm:inline">{getMonthLabel(month, 'header')}</span>
+              <span className="sm:hidden">{month.number}</span>
+            </span>
+          ))}
         </div>
-        
-        
       </div>
       {/* 原文表示 - 食草セクションと同じ構造で色違い */}
       <div>
