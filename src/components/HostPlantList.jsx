@@ -721,7 +721,10 @@ const HostPlantList = ({
     });
   }, [updateSearchParams]);
 
-  const searchQuery = useMemo(() => (searchParams.get('q') || '').trim(), [searchParams]);
+  // 実際の絞り込みに使う値（debouncedPlantSearch）から表示用の検索状態を導出し、
+  // フィルタと検索チップ/空状態表示が常に一致するようにする（URL q との二系統ずれを解消）
+  const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
+  const searchQuery = useMemo(() => (debouncedPlantSearch || '').trim(), [debouncedPlantSearch]);
   const hasSearchQuery = searchQuery.length > 0;
   const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all' || hostOnlyFilter || photoFilter === 'has';
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
@@ -817,7 +820,6 @@ const HostPlantList = ({
     return () => window.removeEventListener("resize", onResize);
   }, [computeItemsPerPage, setPPage]);
 
-  const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
   const filterCriteriaRef = useRef({
     debouncedPlantSearch,
     familyFilter,
@@ -884,9 +886,12 @@ const HostPlantList = ({
 
       const detail = safePlantDetails[plantName] || {};
       const normalized = normalizePlantKey(plantName);
+      // 名前解決（mergedHostPlants と同じ経路）: alias だけでなく normalizedToCanonical も参照し、
+      // 「別名では写真が出るが正規名では出ない」逆転を防ぐ
       const canonicalFromAlias =
         aliasToCanonical.get(plantName) ||
         aliasToCanonical.get(normalized) ||
+        normalizedToCanonical.get(normalized) ||
         null;
       const aliases = Array.isArray(detail.aliases) ? detail.aliases : [];
       const synonymPairs = {
@@ -942,7 +947,7 @@ const HostPlantList = ({
       }
     });
     return map;
-  }, [plantImageFilenames, mergedHostPlants, safePlantDetails, aliasToCanonical]);
+  }, [plantImageFilenames, mergedHostPlants, safePlantDetails, aliasToCanonical, normalizedToCanonical]);
 
   // Generate filter options
   const familyOptions = useMemo(() => {
@@ -1119,6 +1124,8 @@ const HostPlantList = ({
       if (sortMode === "image") {
         if (aHasImage && !bHasImage) return -1;
         if (!aHasImage && bHasImage) return 1;
+        // 写真あり/なしの各グループ内は名前順で整列（写真なしが集まる後半でも探しやすく）
+        return compareLocalizedValues(getPlantPrimaryName(a), getPlantPrimaryName(b));
       }
       if (sortMode === "family") {
         const familyCompare = compareLocalizedValues(
