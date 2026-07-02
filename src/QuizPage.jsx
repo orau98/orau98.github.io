@@ -1099,6 +1099,8 @@ const QuizPage = ({
               })}
             </div>
 
+            <p className="mt-3 hidden text-xs text-slate-500 dark:text-slate-400 sm:block">{labels.keyboard}</p>
+
             {selectedOptionId && (
               <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -1126,7 +1128,7 @@ const QuizPage = ({
                   <button
                     type="button"
                     onClick={nextQuestion}
-                    className="flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2 text-sm font-black text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                    className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
                   >
                     {labels.next}
                     <ArrowRightIcon className="h-4 w-4" />
@@ -1171,7 +1173,7 @@ const QuizPage = ({
                 <button
                   type="button"
                   onClick={() => setDetailsOpen((value) => !value)}
-                  className="mt-4 pl-12 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
+                  className="mt-4 inline-flex min-h-[44px] items-center py-2 pl-12 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
                 >
                   {detailsOpen ? labels.hideDetails : labels.details}
                 </button>
