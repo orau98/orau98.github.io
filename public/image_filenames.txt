@@ -7,7 +7,6 @@ Acosmetia_biguttula
 Acronicta_hercules
 Acronicta_rumicis
 Acronicta_subpurpurea
-Acronicta_subpurpurea_2
 Agapanthia_japonica
 Agrilus_spinipennis
 Agrius_convolvuli
@@ -42,7 +41,6 @@ Aterpia_circumfluxana
 Atkinsonia_ignipicta
 Atrachya_menetriesi
 Aventiola_pusilla
-Aventiola_pusilla_2
 Bactra_cerata
 Bambusiphila_vulgaris
 Bastilla_maturata
@@ -93,11 +91,8 @@ Corgatha_nitens
 Corymica_deducta
 Cosmia_affinis
 Cosmia_camptostigma
-Cosmia_camptostigma_2
 Cosmia_pyralina
-Cosmia_pyralina_2
 Cosmia_restituta
-Cosmia_restituta_2
 Cosmia_trapezina
 Cotachena_alysoni
 Crambus argyrophorus Butler
@@ -108,7 +103,6 @@ Craniophora ligustri
 Craniophora_fasciata
 Craniophora_ligustri
 Craniophora_praeclara
-Craniophora_praeclara_2
 Cryphia_mitsuhashi
 Cryptaspasma_marginifasciata
 Ctenoplusia_albostriata
@@ -122,15 +116,12 @@ Dactylioglypha_tonica
 Daemilus_fulvus
 Daseochaeta_viridis
 Deilephila_askoldensis
-Deilephila_askoldensis_2
 Deilephila_elpenor
-Deilephila_elpenor_2
 Deltote_uncula
 Descoreba_simplex
 Diarsia_deparca
 Dichomeris heriguronis Matsumura
 Dimorphicosmia_variegata
-Dimorphicosmia_variegata_2
 Dindica_virescens
 Diomea_discisigna
 Dioryctria_abietella
@@ -177,17 +168,14 @@ Garella_ruficirra
 Gigantalcis_flavolinearia
 Glyphodes_onychinalis
 Gonepatica_opalina
-Gonepatica_opalina_2
 Gonitis_mesogona
 Graphium_sarpedon
 Habroloma_lewisii
-Habroloma_lewisii_2
 Hedya_auricristana
 Hedya_dimidiana
 Helicoverpa_armigera
 Heliothis_maritima
 Helotropha_leucostigma
-Helotropha_leucostigma_2
 Hemipsectra fallax Butler
 Hendecaneura_impar
 Herculia_orthogramma
@@ -259,7 +247,6 @@ Mesorhynchaglaea_pacifica
 Microleon_longipalpis
 Micromelalopha_troglodyta
 Micromelalopha_troglodyta_2
-Micromelalopha_troglodyta_4
 Microphalera_grisea
 Microxyla_confusa
 Mimachrostia_fasciata
@@ -280,15 +267,12 @@ Mythimna_stolida
 Naganoella_timandra
 Narathura japonica
 Narosoideus_flavidorsalis
-Narosoideus_flavidorsalis_2
 Negritothripa_hampsoni
 Nemophora_staudingerella
 Nephopterix_angustella
 Niphanda_fusca
 Nipponobuprestis_amabilis
-Nipponobuprestis_amabilis_2
 Notodonta_albicosta
-Notodonta_albicosta_2
 Oberthueria_falcigera
 Ocoelophora_lentiginosaria
 Odontopera_bidentata
@@ -302,7 +286,6 @@ Operophtera_rectipostmediana
 Organopoda_carnearia
 Orgyia_postica
 Orthogonia_sera
-Orthogonia_sera_2
 Orthopygia_placens
 Orthosia_carnipennis
 Orthosia_cedermarki
@@ -340,7 +323,6 @@ Phlossa_conjuncta
 Phragmataecia_castaneae
 Phragmatobia_amurensis_amurensis_Seitz
 Phtheochroides_clandestina
-Phtheochroides_clandestina_2
 Phthonoloba_viridifasciata
 Piletocera_aegimiusalis
 Plagodis_dolabraria
@@ -360,7 +342,6 @@ Pseudeustrotia_candidula
 Pseudoips_sylpha
 Pseudopanolis_azusa
 Pseudopanolis_takao
-Pseudopanolis_takao_2
 Psyra_bluethgeni
 Ptilophora_jezoensis
 Pyralis_cardinalis_Kaila_Huemer_Mutanen_Tyllinen_Wikstr_m
@@ -385,7 +366,6 @@ Sebastosema_bubonaria
 Semidonta_biloba
 Semioscopis_japonicella
 Shachia_circumscripta
-Shachia_circumscripta_2
 Siccia_obscura
 Simplicia_niphona
 Simplicia_xanthoma
@@ -400,7 +380,6 @@ Spilosoma punctarium Stoll
 Spinimegopis_ishigakiana
 Spirama_retorta
 Spodoptera_litura
-Spodoptera_litura_2
 Stauropus_basalis
 Stemmatophora_valida
 Stenoloba_clara
@@ -419,7 +398,6 @@ Telorta_edentata
 Teratoglaea_pacifica
 Tethea ampliata ampliata Butler
 Tethea_consimilis
-Tethea_consimilis_2
 Tetramoera_flammeata
 Theretra_alecto
 Theretra_japonica
@@ -473,8 +451,8 @@ Zeiraphera_demutata
 キトビカギバエダシャク
 キヌツヤハナカミキリ
 キンケビロウドカミキリ八重山諸島亜種
-キンモンエグリバ
 ギンバネヒメシャク
+キンモンエグリバ
 クロオビシロフタオ
 ケブトハナカミキリ基亜種
 コブヤハズカミキリ佐渡島亜種

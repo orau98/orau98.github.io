@@ -76,10 +76,14 @@ export const resolveImageBaseCandidates = (
       }
       if (!resolved) {
         const compact = normalizeCompactImageBase(candidate);
-        for (const entry of normalizedEntries) {
-          if (entry.compact === compact || entry.compact.startsWith(compact)) {
-            resolved = entry.name;
-            break;
+        // compactが空（記号のみの候補等）だと startsWith('') が全エントリに真となり、
+        // 無関係な先頭画像へ誤解決してしまうためガードする
+        if (compact) {
+          for (const entry of normalizedEntries) {
+            if (entry.compact === compact || entry.compact.startsWith(compact)) {
+              resolved = entry.name;
+              break;
+            }
           }
         }
       }
