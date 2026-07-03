@@ -383,7 +383,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
   const normalizedTime = normalizeEmergenceTime(emergenceTime);
 
   return (
-    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
+    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-slate-200/70 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
@@ -481,7 +481,7 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
     <Link
       to={href}
       state={href && href !== '#' ? makeDetailLinkState(location) : undefined}
-      className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
+      className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
     >
       {isEnglish && insect.scientificName
         ? formatScientificNameReact(primaryName)
@@ -1765,7 +1765,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         {orderChip.label && orderChip.queryValue && (
           <Link
             to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
-            className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 sm:px-3 sm:text-sm`}
+            className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1.5 text-xs font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 sm:px-3 sm:text-sm`}
             aria-label={isEnglish ? `Search plants in ${orderChip.label}` : `${orderChip.label} の植物を検索`}
           >
             <span className="font-medium">{orderChip.label}</span>
@@ -1777,7 +1777,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         {familyChip.label && familyChip.queryValue && (
           <Link
             to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-            className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm`}
+            className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1.5 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm`}
             aria-label={isEnglish ? `Search plants in ${familyChip.label}` : `${familyChip.label} の植物を検索`}
           >
             <span className="font-medium">{familyChip.label}</span>
@@ -1789,7 +1789,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         {taxonomy.genus && (
           <Link
             to={localizePath(`/?tab=plants&q=${encodeURIComponent(taxonomy.genus)}`, locale)}
-            className="hidden items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm md:inline-flex"
+            className="hidden items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm md:inline-flex"
             aria-label={isEnglish ? `Search plants in genus ${taxonomy.genus}` : `${taxonomy.genus} の植物を検索`}
           >
             <span className="font-medium italic">{taxonomy.genus}</span>

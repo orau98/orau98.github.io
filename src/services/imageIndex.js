@@ -87,6 +87,16 @@ let _insectImageNames = null; // set of bases for insects
 let _insectExtMap = null; // map base -> extension (e.g., .jpg)
 let _insectLoading = null;
 
+// 読み込み済みならインデックスを同期で返す（未読込はnull）。
+// 詳細ページが初回レンダーから「写真の有無」を確定でき、
+// 読込完了後に2カラム→1カラムへ組み替わるレイアウトシフトを避けられる
+export const getCachedInsectImageIndexes = () => {
+  if (_insectImageNames && _insectExtMap) {
+    return { names: _insectImageNames, exts: _insectExtMap };
+  }
+  return null;
+};
+
 export const loadInsectImageIndexes = async () => {
   if (_insectImageNames && _insectExtMap) return { names: _insectImageNames, exts: _insectExtMap };
   if (_insectLoading) return _insectLoading;

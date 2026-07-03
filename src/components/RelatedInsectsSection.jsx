@@ -46,7 +46,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
   }
 
   return (
-    <div className="related-insects-section bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+    <div className="related-insects-section bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/70 dark:border-slate-700/50 overflow-hidden">
       <div className="p-4 bg-blue-500/10 dark:bg-blue-500/20 border-b border-blue-200/30 dark:border-blue-700/30">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-blue-500 rounded-lg">

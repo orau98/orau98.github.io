@@ -1538,8 +1538,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const isPrimary = primaryNeighborIds.has(node.id);
     const primaryDense = primaryNeighborIds.size - 1 > 14;
     const emphasize = isCurrent || selectedNodeId === node.id || (activeNodeId && inHighlight);
-    const showLabel = labelMode !== 'none' && (labelMode === 'all' || emphasize || !dim);
     const revealZoom = 1.6;
+    // ノードが極端に多いグラフ（例: クヌギ=244種）では短縮ラベルでも全表示だと
+    // 重なって判読不能になるため、autoモードではズームか選択で表示する。
+    // 中心種・選択中・ハイライト中のラベルは常に出す
+    const hideWhenCrowded = labelMode === 'auto'
+      && graphData.nodes.length > 120
+      && !emphasize
+      && globalScale < revealZoom;
+    const showLabel = labelMode !== 'none'
+      && !hideWhenCrowded
+      && (labelMode === 'all' || emphasize || !dim);
     const shorten = labelMode !== 'all'
       && dense
       && !emphasize
