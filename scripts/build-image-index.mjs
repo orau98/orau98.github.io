@@ -45,6 +45,17 @@ for (const file of files) {
   if (!allowedExt.has(ext)) continue;
   const base = path.basename(file, path.extname(file));
   if (!base) continue;
+  // 壊れたアップロード（数バイトのテキスト等）を載せると「画像あり」扱いのまま
+  // 表示が404になるため、インデックスから除外する
+  try {
+    const stat = fs.statSync(path.join(INSECT_DIR, file));
+    if (!stat.isFile() || stat.size < 100) {
+      console.warn(`[build-image-index] skip invalid image (too small): ${file}`);
+      continue;
+    }
+  } catch {
+    continue;
+  }
   if (!candidatesByBase.has(base)) candidatesByBase.set(base, []);
   candidatesByBase.get(base).push(ext);
 }

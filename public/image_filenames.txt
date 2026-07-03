@@ -289,7 +289,6 @@ Nipponobuprestis_amabilis
 Nipponobuprestis_amabilis_2
 Notodonta_albicosta
 Notodonta_albicosta_2
-Nyssiodes_lefuarius
 Oberthueria_falcigera
 Ocoelophora_lentiginosaria
 Odontopera_bidentata
