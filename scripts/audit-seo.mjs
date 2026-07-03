@@ -296,9 +296,10 @@ const validateRobotsTxt = (filePath) => {
   if (!fs.existsSync(filePath)) return;
 
   const body = readFile(filePath);
+  // robots.txt の Sitemap 行は「正規インデックス + 補助シード」の2本のみ。
+  // 同内容の重複エイリアスを並べると Search Console の統計が分裂する。
   const requiredSitemaps = [
     'sitemap.xml',
-    'search-console-submit.xml',
     'search-console-discovery-seed.xml',
   ];
 

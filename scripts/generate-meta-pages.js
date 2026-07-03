@@ -3134,17 +3134,17 @@ function generateMetaIndexes(indexData) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
   ${ADSENSE_HEAD_TAGS}
-  <title>${sec.title}</title>
+  <title>${sec.title} | 昆虫植物図鑑</title>
   <meta name="description" content="${pageDescription}">
   <link rel="canonical" href="${listUrl}">
-  <meta property="og:title" content="${sec.title}">
+  <meta property="og:title" content="${sec.title} | 昆虫植物図鑑">
   <meta property="og:description" content="${pageDescription}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${listUrl}">
   <meta property="og:site_name" content="昆虫植物図鑑">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="${sec.title}">
+  <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
   <link rel="stylesheet" href="${META_STYLE_PATH}">
@@ -3198,7 +3198,7 @@ ${headerHtml}
     }
 
     // JSON-LD: 先頭100件
-    const pageDescription = `昆虫植物図鑑の${sec.title}一覧。${flatItems.length}種を科別に掲載。`;
+    const pageDescription = `昆虫植物図鑑の${sec.title}。${flatItems.length}種を科別に掲載し、各種の食草・寄主植物ページへ案内します。`;
     const listStructuredData = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
@@ -3265,17 +3265,17 @@ ${headerHtml}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
   ${ADSENSE_HEAD_TAGS}
-  <title>${sec.title}</title>
+  <title>${sec.title} | 昆虫植物図鑑</title>
   <meta name="description" content="${pageDescription}">
   <link rel="canonical" href="${listUrl}">
-  <meta property="og:title" content="${sec.title}">
+  <meta property="og:title" content="${sec.title} | 昆虫植物図鑑">
   <meta property="og:description" content="${pageDescription}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${listUrl}">
   <meta property="og:site_name" content="昆虫植物図鑑">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="${sec.title}">
+  <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
   <link rel="stylesheet" href="${META_STYLE_PATH}">
