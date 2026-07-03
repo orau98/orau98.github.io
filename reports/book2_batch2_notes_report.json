@@ -1,9 +1,0 @@
-{
-  "source": "data/moth_ecology_book2_batch2.csv",
-  "reference": "日本産蛾類標準図鑑2",
-  "added_notes": 1490,
-  "skipped_emergence": 2,
-  "skipped_ecology": 0,
-  "unmatched": [],
-  "timestamp": "2025-11-20T03:49:34.950Z"
-}

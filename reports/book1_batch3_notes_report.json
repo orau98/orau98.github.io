@@ -1,9 +1,0 @@
-{
-  "unmatched_entries": [],
-  "skipped_emergence_due_to_placeholder": 2,
-  "skipped_ecology_due_to_placeholder": 0,
-  "source": "data/moth_ecology_book1_batch3.csv",
-  "added_records": 29,
-  "added_emergence": 14,
-  "added_ecology": 15
-}
