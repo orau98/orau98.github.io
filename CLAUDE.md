@@ -169,6 +169,13 @@ node scripts/audit-csv-quality.mjs --fix  # 高信頼の決定的修正を適用
 4. **devサーバーにCSV編集が反映されない**
    - `npm run sync:public-insects && npm run build:data-lite` を実行（predevは「不足分の生成」のみで、既存の古い生成物は作り直さない）
 
+## エージェント設定（.claude/）
+
+- `.claude/settings.json`: 共有設定。SessionStartフック（Webセッションで `npm install` を自動実行）と、開発コマンドの許可リストを定義。
+- `.claude/hooks/session-start.sh`: Web（リモート）セッション専用の依存導入フック。ローカルでは何もしない。
+- `.claude/skills/csv-data-update/`: CSVデータ更新の定型ワークフロースキル（`/csv-data-update` で呼び出し可能）。
+- `.claude/settings.local.json`: 個人設定（Git管理外）。共有すべき設定は `settings.json` へ。
+
 ## 言語設定
 - **UI言語**: 日本語
 - **データ**: 日本語（学名は英語・ラテン語）
