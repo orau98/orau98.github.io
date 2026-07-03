@@ -324,6 +324,7 @@ Paracolax_albinotata
 Paracolax_fentoni
 Paragona_cleorides
 Parapsestis_albida
+Parnassius_citrinarius
 Parum colligata Walker
 Pennithera_comis
 Peridea_gigantea
