@@ -46,6 +46,61 @@ const truncateNodeLabel = (name = '', maxChars = 8) => {
   return `${text.slice(0, maxChars)}…`;
 };
 
+// 中心からのリンク距離を複数リングに振り分けるためのパラメータ。
+// 全ノードが同一距離だと1本のリング上に密集して写真・ラベルが重なるため、
+// ノード数に応じて2〜3本の同心リングへ交互配置し、隣接ノードの半径をずらす。
+// 内側リングも「1ノードあたりに必要な弧長×ノード数」が円周に収まるよう自動拡大する。
+const computeRingLayout = (count, baseDistance, { arcSpacing, ringGap }) => {
+  const tierCount = count <= 14 ? 1 : count <= 32 ? 2 : 3;
+  const perTier = Math.ceil(Math.max(count, 1) / tierCount);
+  const innerDistance = Math.max(baseDistance, (perTier * arcSpacing) / (2 * Math.PI));
+  return {
+    tierCount,
+    distanceFor: (index) => innerDistance + (index % tierCount) * ringGap
+  };
+};
+
+// ノード（写真サムネ）同士が重ならない最小距離を保つ簡易衝突力。
+// d3-force の forceCollide 相当だが、依存を増やさないため自前実装
+// （ノード数は高々100程度なので総当たりで十分軽い）。
+const createCollideForce = (getRadius, { strength = 0.5, iterations = 2 } = {}) => {
+  let nodes = [];
+  const force = () => {
+    for (let k = 0; k < iterations; k += 1) {
+      for (let i = 0; i < nodes.length; i += 1) {
+        const a = nodes[i];
+        const ra = getRadius(a);
+        for (let j = i + 1; j < nodes.length; j += 1) {
+          const b = nodes[j];
+          const minDist = ra + getRadius(b);
+          let dx = (b.x + (b.vx || 0)) - (a.x + (a.vx || 0));
+          let dy = (b.y + (b.vy || 0)) - (a.y + (a.vy || 0));
+          const distSq = dx * dx + dy * dy;
+          if (distSq >= minDist * minDist) continue;
+          let dist = Math.sqrt(distSq);
+          if (dist === 0) {
+            // 完全に同座標の場合は決定的な方向へずらす（乱数は使わない）
+            dx = (j - i) % 2 === 0 ? 0.5 : -0.5;
+            dy = 0.5;
+            dist = Math.sqrt(dx * dx + dy * dy);
+          }
+          const push = ((minDist - dist) / dist) * strength * 0.5;
+          const ox = dx * push;
+          const oy = dy * push;
+          b.vx = (b.vx || 0) + ox;
+          b.vy = (b.vy || 0) + oy;
+          a.vx = (a.vx || 0) - ox;
+          a.vy = (a.vy || 0) - oy;
+        }
+      }
+    }
+  };
+  force.initialize = (initNodes) => {
+    nodes = Array.isArray(initNodes) ? initNodes : [];
+  };
+  return force;
+};
+
 const seedGraphNodePositions = ({
   nodes,
   centerNodeId,
@@ -73,7 +128,9 @@ const seedGraphNodePositions = ({
       Math.min(viewport * (isCompactPanel ? 0.36 : 0.46), isCompactPanel ? 140 : 250)
     );
     insects.forEach((node, index) => {
-      const point = getRadialPoint(index, insects.length, ringRadius);
+      // 複数リング配置ではノードごとの目標半径（radialDistance）で初期配置し、
+      // シミュレーション後のリンク距離と一致させて初期の重なり・暴れを抑える
+      const point = getRadialPoint(index, insects.length, node.radialDistance || ringRadius);
       node.x = point.x;
       node.y = point.y;
     });
@@ -92,7 +149,7 @@ const seedGraphNodePositions = ({
   );
 
   plants.forEach((node, index) => {
-    const point = getRadialPoint(index, plants.length, primaryRadius);
+    const point = getRadialPoint(index, plants.length, node.radialDistance || primaryRadius);
     node.x = point.x;
     node.y = point.y;
   });
@@ -630,8 +687,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   // マウスがグラフ外へ出たら自動的に無効へ戻す
   const [desktopZoomActive, setDesktopZoomActive] = useState(false);
   const showRelatedInsects = true;
-  // ノード同士が間延びしないよう距離は詰めめにする（写真ノードを大きくした分、
-  // ズームフィット時の実表示は以前より密で大きく見える）
+  // 中心からの基準リンク距離（最内リングの半径）。ノード数が多い場合は
+  // computeRingLayout がこの値を基準に複数リングへ距離を割り振る
   const linkDistance = useMemo(() => {
     if (currentPlantName) {
       return isCompactPanel ? 66 : 100;
@@ -826,12 +883,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     };
     if (!hostPlantsMap || (!currentInsect && !currentPlantName)) return { nodes, links, summary };
 
-    const addNode = (id, name, type, raw) => {
+    const addNode = (id, name, type, raw, extra) => {
       if (!nodes.find(n => n.id === id)) {
         const imgCandidates = type.includes('plant')
           ? plantImageCandidates(name)
           : insectImageCandidates(raw || { name });
-        nodes.push({ id, name, type, raw, imgCandidates });
+        nodes.push({ id, name, type, raw, imgCandidates, ...(extra || {}) });
       }
     };
 
@@ -844,7 +901,11 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       const related = allRelated.slice(0, relatedLimitSafe);
       summary.primaryTotal = allRelated.length;
       summary.primaryShown = related.length;
-      related.forEach((name) => {
+      const ringLayout = computeRingLayout(related.length, linkDistance, {
+        arcSpacing: isCompactPanel ? 30 : 36,
+        ringGap: isCompactPanel ? 42 : 52
+      });
+      related.forEach((name, index) => {
         const meta = plantInsectMeta.metaByName.get(name) || {};
         const insectDetail = meta.detail || insectLookup.get(name) || null;
         const insectId = `insect:${name}`;
@@ -857,8 +918,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             : hasHost
               ? 'insect-host'
               : 'insect';
-        addNode(insectId, name, insectType, insectDetail);
-        links.push({ source: centerId, target: insectId, relation: getRelationType(hasHost, hasFlower) });
+        const distance = ringLayout.distanceFor(index);
+        addNode(insectId, name, insectType, insectDetail, { radialDistance: distance });
+        links.push({ source: centerId, target: insectId, relation: getRelationType(hasHost, hasFlower), distance });
       });
     } else if (currentInsect) {
       const centerId = `insect:${currentInsect.name}`;
@@ -869,8 +931,14 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       summary.primaryTotal = (plantOrder || []).length;
       summary.primaryShown = limitedPlants.length;
       const relatedPerPlant = Math.max(4, Math.floor(relatedLimitSafe / Math.max(1, limitedPlants.length)));
+      const plantRingLayout = computeRingLayout(limitedPlants.length, linkDistance, {
+        arcSpacing: isCompactPanel ? 30 : 38,
+        ringGap: isCompactPanel ? 38 : 52
+      });
+      // 関連昆虫は所属する植物の近くにまとまるよう、中心リンクより短めにする
+      const relatedInsectDistance = Math.max(40, Math.round(linkDistance * 0.7));
 
-      limitedPlants.forEach(plantName => {
+      limitedPlants.forEach((plantName, plantIndex) => {
         const isHost = hostSet.has(plantName);
         const isFlower = flowerSet.has(plantName);
         const plantType = isHost && isFlower
@@ -879,8 +947,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             ? 'plant-flower'
             : 'plant-host';
         const plantId = `plant:${plantName}`;
-        addNode(plantId, plantName, plantType);
-        links.push({ source: centerId, target: plantId, relation: getRelationType(isHost, isFlower) });
+        const plantDistance = plantRingLayout.distanceFor(plantIndex);
+        addNode(plantId, plantName, plantType, undefined, { radialDistance: plantDistance });
+        links.push({ source: centerId, target: plantId, relation: getRelationType(isHost, isFlower), distance: plantDistance });
 
         if (showRelatedInsects) {
           const related = getPlantInsects(plantName)
@@ -900,7 +969,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             links.push({
               source: plantId,
               target: insectId,
-              relation: getRelationType(relatedHasHost, relatedHasFlowerVisit)
+              relation: getRelationType(relatedHasHost, relatedHasFlowerVisit),
+              distance: relatedInsectDistance
             });
           });
         }
@@ -917,7 +987,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     });
 
     return { nodes, links, summary };
-  }, [currentCenterNodeId, currentInsect, currentPlantName, getInsectPlantItems, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, height, hostPlantsMap, insectImageCandidates, insectLookup, isCompactPanel, isEnglish, plantImageCandidates, plantInsectMeta, relatedLimit, showRelatedInsects, width]);
+  }, [currentCenterNodeId, currentInsect, currentPlantName, getInsectPlantItems, getPlantInsects, hasFlowerVisitForPlant, hasLarvalHostForPlant, height, hostPlantsMap, insectImageCandidates, insectLookup, isCompactPanel, isEnglish, linkDistance, plantImageCandidates, plantInsectMeta, relatedLimit, showRelatedInsects, width]);
 
   const relationFilterConfig = useMemo(
     () => RELATION_FILTERS.find((item) => item.value === relationFilter) || RELATION_FILTERS[0],
@@ -1351,6 +1421,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     }
   }, [beginProgrammaticZoom, graphData.nodes, graphLayoutMetrics.zoomPadding, isCompactPanel, primaryNeighborIds]);
 
+  // ノード（サムネ）同士の重なりを防ぐ衝突力。半径は描画半径＋ラベル余白ぶん
+  const collideForce = useMemo(
+    () => createCollideForce((node) => (node?.type?.includes('current') ? 24 : 17)),
+    []
+  );
+
   useEffect(() => {
     if (!fgRef.current) return;
     try {
@@ -1360,13 +1436,20 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       }
       const linkForce = fgRef.current.d3Force?.('link');
       if (linkForce?.distance) {
-        linkForce.distance(linkDistance);
+        // 複数リング配置のため距離はリンクごとに持つ（未設定リンクは基準距離）
+        linkForce.distance((link) => (typeof link?.distance === 'number' ? link.distance : linkDistance));
       }
+      if (linkForce?.strength) {
+        // d3既定の強度は 1/次数 で、中心ノードの次数が大きいスポーク構造では
+        // 指定距離がほぼ効かない（chargeに負けてリングが崩れる）ため固定強度にする
+        linkForce.strength(0.9);
+      }
+      fgRef.current.d3Force?.('collide', collideForce);
       fgRef.current.d3ReheatSimulation?.();
     } catch {
       // ignore
     }
-  }, [graphData.links.length, graphData.nodes.length, graphLayoutMetrics.chargeStrength, linkDistance]);
+  }, [collideForce, graphData.links.length, graphData.nodes.length, graphLayoutMetrics.chargeStrength, linkDistance]);
 
   // initial fit
   useEffect(() => {
@@ -2527,7 +2610,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             enablePanInteraction={enablePanInteraction}
             enableZoomInteraction={enableZoomInteraction}
             enableNodeDrag={enableNodeDrag}
-            linkDistance={linkDistance}
             linkColor={link => {
               const relationStyle = getLinkStyle(link?.relation);
               const highlighted = highlightLinks.has(link);
