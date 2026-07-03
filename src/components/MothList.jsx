@@ -1233,6 +1233,21 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return plantNames.some((p) => p && !isPlaceholderHost(p));
   }, [isPlaceholderHost]);
 
+  // 食草名での検索用インデックス。UI（プレースホルダ・検索例）は食草検索を
+  // 案内しているのに実装が未対応で「サクラ/ヤナギ/Quercus」等が0件になる
+  // 行き止まりを解消するため、各昆虫の食草・訪花植物名を小文字連結して事前計算する。
+  // データロード時に1度だけ構築し、毎打鍵の再計算を避ける（キーは安定した moth.id）。
+  const hostSearchIndex = useMemo(() => {
+    const map = new Map();
+    (moths || []).forEach((moth) => {
+      if (!moth || moth.id == null) return;
+      const { hostNames, flowerNames } = buildPlantDisplayData(moth);
+      const joined = [...hostNames, ...flowerNames].join(' ').toLowerCase();
+      if (joined) map.set(moth.id, joined);
+    });
+    return map;
+  }, [moths]);
+
   const filteredMoths = useMemo(() => {
     try {
       logger.debug('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
@@ -1316,6 +1331,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           
           // Regular search filtering - check both original and katakana converted search terms
           const alt = (moth.alternativeNames || '').toLowerCase();
+          // 食草・訪花植物名も検索対象に含める（UIの案内どおり「サクラ/ヤナギ/Quercus」等で
+          // その植物を食べる昆虫がヒットするようにする）
+          const hostSearch = hostSearchIndex.get(moth.id) || '';
           return (moth.name?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.name?.toLowerCase().includes(katakanaSearchTerm)) ||
                  (alt && (alt.includes(lowerCaseSearchTerm) || alt.includes(katakanaSearchTerm))) ||
@@ -1329,7 +1347,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                  (moth.classification?.genus?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.classification?.family?.toLowerCase().includes(lowerCaseSearchTerm)) ||
                  (moth.classification?.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.tribe?.toLowerCase().includes(lowerCaseSearchTerm));
+                 (moth.classification?.tribe?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                 (hostSearch && (hostSearch.includes(lowerCaseSearchTerm) || hostSearch.includes(katakanaSearchTerm)));
         } catch (error) {
           logger.error('Error filtering moth:', moth, error);
           return false;
@@ -1339,7 +1358,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, groupFilter, hasRealHost, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
+  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, groupFilter, hasRealHost, hostSearchIndex, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
 
   // 画像インデックス（共通サービス）
   const [imageFilenames, setImageFilenames] = useState(new Set());
@@ -1899,7 +1918,10 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         {/* ページ送り時のscrollIntoView先。スティッキーヘッダーに先頭行が隠れないようオフセットを確保 */}
         <div ref={listTopRef} className="scroll-mt-24" />
         <div>
-          {!isImageIndexReady && !imageIndexResolved ? (
+          {/* データ未着(moths=[])かつ条件なしのときも、空状態ではなくスケルトンを出す。
+              画像インデックスは即時解決するため、これが無いと初回ロード中に一瞬
+              「該当する昆虫が見つかりません」「昆虫(0)」が出てしまう（植物一覧と対称化）。 */}
+          {(!isImageIndexReady && !imageIndexResolved) || ((moths?.length ?? 0) === 0 && !hasAnyCriteria) ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div

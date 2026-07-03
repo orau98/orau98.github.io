@@ -1892,13 +1892,15 @@ const InsectsHostPlantExplorer = memo(
                   <span className="flex items-center gap-1">
                     <span>{ui.insectsTab}</span>
                     <span className="text-xs sm:text-sm">
+                      {/* summaryCounts フォールバック込みの counts を使い、データ未着でも
+                          「(0)」にならずヒーローの種数と一致させる */}
                       (
-                      {moths.length +
-                        butterflies.length +
-                        beetles.length +
-                        longhornbeetles.length +
-                        leafbeetles.length +
-                        aphids.length}
+                      {counts.moths +
+                        counts.butterflies +
+                        counts.beetles +
+                        counts.longhornbeetles +
+                        counts.leafbeetles +
+                        counts.aphids}
                       )
                     </span>
                   </span>

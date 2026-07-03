@@ -1981,7 +1981,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                     title={isEnglish ? 'Legend' : '凡例'}
                     align="center"
                     buttonAriaLabel={isEnglish ? 'Show legend description' : '凡例の説明を表示'}
-                    buttonClassName="inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300/80 bg-white/90 text-[11px] font-bold text-slate-700 shadow-sm transition-colors hover:border-slate-400 hover:bg-white dark:border-slate-600/80 dark:bg-slate-900/85 dark:text-slate-100 dark:hover:bg-slate-800"
+                    buttonClassName='relative inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300/80 bg-white/90 text-[11px] font-bold text-slate-700 shadow-sm transition-colors before:absolute before:-inset-3 before:content-[""] hover:border-slate-400 hover:bg-white dark:border-slate-600/80 dark:bg-slate-900/85 dark:text-slate-100 dark:hover:bg-slate-800'
                     panelClassName="w-[min(18rem,calc(100vw-1.5rem))]"
                     contentClassName="text-[11px] leading-5"
                   >
