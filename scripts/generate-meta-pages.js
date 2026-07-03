@@ -1765,6 +1765,58 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
 </html>`;
 }
 
+// 植物プロファイル（『日本の野生植物』由来の生活形・樹高・花期・分布・生育環境）の
+// 表示ラベル。data-lite の detail.profile と対応する。
+const PLANT_PROFILE_FIELDS = [
+  ['habit', '生活形'],
+  ['height', '樹高・草丈'],
+  ['flowerPeriod', '花期'],
+  ['distribution', '分布'],
+  ['habitat', '生育環境'],
+];
+
+// 植物メタページ本文に「植物の特徴」セクションを描画する。
+// data-lite に実データ（detail.profile）がある植物のみ出力し、
+// 各ページの独自テキスト量を増やして薄コンテンツによるインデックス未登録を回避する。
+// 事実が1件も無い場合は空文字を返す（セクションごと出力しない）。
+function renderPlantProfileSection(displayPlantName, detail = {}, plantFamily = '') {
+  const profile = detail && detail.profile ? detail.profile : null;
+  if (!profile) return '';
+
+  const facts = PLANT_PROFILE_FIELDS
+    .map(([key, label]) => [label, String(profile[key] || '').trim()])
+    .filter(([, value]) => value);
+  if (facts.length === 0) return '';
+
+  const habit = String(profile.habit || '').trim();
+  const familyLabel = String(plantFamily || detail.familyName || detail.family || '').trim();
+  // 先頭の要約文は名詞（生活形・科名）のみで構成し、文法破綻を避ける。
+  const leadSentence = habit
+    ? `${displayPlantName}は${habit}${familyLabel ? `（${familyLabel}）` : ''}の植物です。`
+    : `${displayPlantName}の形態・分布に関する基本情報です。`;
+
+  const source = String(profile.source || '').trim();
+  const page = String(profile.page || '').trim();
+  const sourceText = source
+    ? `出典：${source}${page ? ` p.${page}` : ''}`
+    : '';
+
+  const dlItems = facts
+    .map(([label, value]) => `
+          <dt>${escapeRedirectHtml(label)}</dt>
+          <dd>${escapeRedirectHtml(value)}</dd>`)
+    .join('');
+
+  return `
+      <section class="description plant-profile">
+        <h3>植物の特徴</h3>
+        <p>${escapeRedirectHtml(leadSentence)}</p>
+        <dl>${dlItems}
+        </dl>${sourceText ? `
+        <p class="profile-source">${escapeRedirectHtml(sourceText)}</p>` : ''}
+      </section>`;
+}
+
 // Enhanced 植物のHTMLテンプレートを生成する関数 - フルコンテンツバージョン
 // originalPlantName: エイリアス生成時に元の植物名（科名付き）を渡すため
 function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlantName = null, enSlug = null, plantFamily = '') {
@@ -1820,6 +1872,10 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   };
   const citationEntries = buildPlantCitationEntries(relatedInsects, dataPlantName, displayPlantName);
   const citationListHtml = renderCitationListHtml(citationEntries);
+
+  // 『日本の野生植物』由来の形態・分布データを本文に描画（薄コンテンツ回避）
+  const plantDetail = getPlantDetailForMeta(dataPlantName);
+  const plantProfileHtml = renderPlantProfileSection(displayPlantName, plantDetail, plantFamily);
 
   // --- 植物ページ description テンプレート生成 ---
   // 種類別内訳を「蛾X種、蝶Y種...」形式で生成（0種は省略）
@@ -2066,6 +2122,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       </section>
       ` : ''}
       
+      ${plantProfileHtml}
       <section class="description">
         <h3>生態系での役割</h3>
         <p>${displayPlantName}は、昆虫の食草として重要な役割を果たしている植物です。</p>
