@@ -76,6 +76,22 @@ export default function SearchableSelect({
     blurTimerRef.current = setTimeout(() => {
       setOpen(false);
       setActiveIndex(0);
+      // 候補を選ばずにフォーカスを外しても、入力が一意に候補を指していれば
+      // 自動確定する（従来は入力を破棄して何も適用されず、取りこぼしが起きていた）。
+      // 「完全一致」または「絞り込み結果が1件だけ」のときのみ確定し、
+      // 曖昧な場合は従来どおり元の値に戻す。
+      const typed = normalize(query);
+      if (typed && query !== (value || '')) {
+        const exact = (options || []).find((option) => normalize(option) === typed);
+        if (exact) {
+          selectOption(exact);
+          return;
+        }
+        if (filteredOptions.length === 1) {
+          selectOption(filteredOptions[0]);
+          return;
+        }
+      }
       setQuery(value || '');
     }, 120);
   };

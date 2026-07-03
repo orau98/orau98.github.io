@@ -606,7 +606,9 @@ const HostPlantList = ({
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const listTopRef = useRef(null);
-  const updateSearchParams = useCallback((mutate) => {
+  // push:true でブラウザ履歴に積む（＝「戻る」で直前の絞り込み状態に戻せる）。
+  // 既定は replace（逐次検索・プログラム的リセット・表示専用の切替はエントリを増やさない）。
+  const updateSearchParams = useCallback((mutate, { push = false } = {}) => {
     let next;
     try {
       next = new URLSearchParams(window.location.search || '');
@@ -616,7 +618,7 @@ const HostPlantList = ({
     try {
       mutate(next);
     } catch {}
-    setSearchParams(next, { replace: true });
+    setSearchParams(next, { replace: !push });
   }, [searchParams, setSearchParams]);
 
   const currentPage = useMemo(() => {
@@ -641,21 +643,24 @@ const HostPlantList = ({
   }, [searchParams]);
   const effectiveItemsPerPage = requestedItemsPerPage || itemsPerPage;
 
-  const setPPage = useCallback((page) => {
+  // フィルタ変更に伴う自動リセット setPPage(1) は replace、
+  // ユーザーのページ送りは push（handlePageChange 側で { push: true } を渡す）。
+  const setPPage = useCallback((page, opts) => {
     updateSearchParams((p) => {
       const n = parseInt(page, 10);
       if (Number.isFinite(n) && n > 1) p.set('ppage', String(n));
       else p.delete('ppage');
-    });
+    }, opts);
   }, [updateSearchParams]);
 
+  // 内容フィルタの変更はユーザーの明示的操作なので push（戻るで解除前に戻せる）
   const setPFamilyFilter = useCallback((value) => {
     updateSearchParams((p) => {
       const v = (value || '').trim();
       if (v) p.set('pfamily', v);
       else p.delete('pfamily');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setPOrderFilter = useCallback((value) => {
@@ -664,7 +669,7 @@ const HostPlantList = ({
       if (v) p.set('porder', v);
       else p.delete('porder');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setPVisitFilter = useCallback((value) => {
@@ -673,7 +678,7 @@ const HostPlantList = ({
       if (v && v !== 'all') p.set('pvisit', v);
       else p.delete('pvisit');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setPHostOnlyFilter = useCallback((value) => {
@@ -681,7 +686,7 @@ const HostPlantList = ({
       if (value === 'has') p.set('phost', 'has');
       else p.delete('phost');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setPPhotoFilter = useCallback((value) => {
@@ -689,7 +694,7 @@ const HostPlantList = ({
       if (value === 'has') p.set('pphoto', 'has');
       else p.delete('pphoto');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setPViewMode = useCallback((value) => {
@@ -704,7 +709,7 @@ const HostPlantList = ({
       if (value && value !== 'image') p.set('psort', value);
       else p.delete('psort');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setPItemsPerPage = useCallback((value) => {
@@ -724,7 +729,7 @@ const HostPlantList = ({
       p.delete('phost');
       p.delete('pphoto');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const clearSearch = useCallback(() => {
@@ -1261,7 +1266,7 @@ const HostPlantList = ({
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
     if (clampedPage === effectivePage) return;
-    setPPage(clampedPage);
+    setPPage(clampedPage, { push: true });
     if (typeof window !== "undefined") {
       window.requestAnimationFrame(() => {
         const target = listTopRef.current || document.getElementById('explorer-results');
@@ -1396,7 +1401,6 @@ const HostPlantList = ({
           </div>
         </div>
         </ListFilterPanel>
-        <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
         <ListDisplayControls
           viewMode={viewMode}
           onViewModeChange={setPViewMode}
@@ -1424,6 +1428,12 @@ const HostPlantList = ({
         {familyChips.length > 0 && (
           <div className="mb-2 sm:mb-3">
             <PresetFilterChips label={ui.familyLabel} chips={familyChips} />
+          </div>
+        )}
+        {/* クイック絞り込みも、初訪問者が絞り込みに気づけるよう「条件」ドロワーの外に常時表示 */}
+        {presetChips.length > 0 && (
+          <div className="mb-2 sm:mb-3">
+            <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
           </div>
         )}
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">

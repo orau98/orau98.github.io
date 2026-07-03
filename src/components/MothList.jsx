@@ -676,7 +676,9 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   });
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const updateSearchParams = useCallback((mutate) => {
+  // push:true でブラウザ履歴に積む（＝「戻る」で直前の絞り込み状態に戻せる）。
+  // 既定は replace（逐次検索・プログラム的リセット・表示専用の切替はエントリを増やさない）。
+  const updateSearchParams = useCallback((mutate, { push = false } = {}) => {
     let next;
     try {
       next = new URLSearchParams(window.location.search || '');
@@ -686,7 +688,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     try {
       mutate(next);
     } catch {}
-    setSearchParams(next, { replace: true });
+    setSearchParams(next, { replace: !push });
   }, [searchParams, setSearchParams]);
   const compareLocalizedValues = useCallback(
     (a, b) =>
@@ -765,21 +767,24 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     return PER_PAGE_OPTIONS.includes(n) ? n : null;
   }, [searchParams]);
 
-  const setIPage = useCallback((page) => {
+  // ユーザーのページ送りは push（戻るで前ページへ）、フィルタ変更に伴う
+  // 自動リセット setIPage(1) は replace（履歴を増やさない）。
+  const setIPage = useCallback((page, opts) => {
     updateSearchParams((p) => {
       const n = parseInt(page, 10);
       if (Number.isFinite(n) && n > 1) p.set('ipage', String(n));
       else p.delete('ipage');
-    });
+    }, opts);
   }, [updateSearchParams]);
 
+  // 内容フィルタの変更はユーザーの明示的操作なので push（戻るで解除前に戻せる）
   const setIHostFilter = useCallback((value) => {
     updateSearchParams((p) => {
       const v = (value || '').toLowerCase();
       if (v === 'has' || v === 'none') p.set('ihost', v);
       else p.delete('ihost');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIFamilyFilter = useCallback((value) => {
@@ -788,7 +793,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       if (v) p.set('ifamily', v);
       else p.delete('ifamily');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIGenusFilter = useCallback((value) => {
@@ -797,7 +802,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       if (v) p.set('igenus', v);
       else p.delete('igenus');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIEmergenceFilter = useCallback((value) => {
@@ -807,7 +812,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       else p.delete('imonth');
       p.delete('iseason');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setISeasonFilter = useCallback((value) => {
@@ -817,7 +822,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       else p.delete('iseason');
       p.delete('imonth');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIPhotoFilter = useCallback((value) => {
@@ -825,7 +830,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       if (value === 'has') p.set('iphoto', 'has');
       else p.delete('iphoto');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIGroupFilter = useCallback((value) => {
@@ -834,7 +839,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       if (INSECT_SECTION_CONFIGS.some((section) => section.type === v)) p.set('igroup', v);
       else p.delete('igroup');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIViewMode = useCallback((value) => {
@@ -849,7 +854,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       if (value && value !== 'image') p.set('isort', value);
       else p.delete('isort');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIItemsPerPage = useCallback((value) => {
@@ -865,7 +870,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     updateSearchParams((p) => {
       p.delete('classification');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const clearFilters = useCallback(() => {
@@ -878,7 +883,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       p.delete('iphoto');
       p.delete('classification');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const clearSearch = useCallback(() => {
@@ -1623,7 +1628,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
     if (clampedPage === effectivePage) return;
-    setIPage(clampedPage);
+    setIPage(clampedPage, { push: true });
     if (typeof window !== 'undefined') {
       window.requestAnimationFrame(() => {
         const target = listTopRef.current || document.getElementById('explorer-results');
@@ -1830,7 +1835,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
         </div>
         </ListFilterPanel>
-        <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
         <ListDisplayControls
           viewMode={viewMode}
           onViewModeChange={setIViewMode}
@@ -1858,6 +1862,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         {groupChips.length > 0 && (
           <div className="mb-2 sm:mb-3">
             <PresetFilterChips label={ui.groupLabel} chips={groupChips} />
+          </div>
+        )}
+        {/* クイック絞り込み（食草あり/写真あり/季節）も、初訪問者が絞り込みに気づけるよう
+            「条件」ドロワーの外に常時表示する（グループ切替と同じ扱い） */}
+        {presetChips.length > 0 && (
+          <div className="mb-2 sm:mb-3">
+            <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
           </div>
         )}
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
