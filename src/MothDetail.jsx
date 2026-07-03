@@ -1277,7 +1277,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       sources={mainImageProps.sources}
                       alt={isEnglish
                         ? `${primaryName} photograph`
-                        : `${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
+                        : moth.classification?.familyJapanese
+                          ? `${moth.name}（${moth.scientificName}）の写真 - ${moth.classification.familyJapanese}に属する昆虫`
+                          : `${moth.name}（${moth.scientificName}）の写真`}
                       width="1200"
                       height="900"
                       className="w-full h-full"
@@ -1286,16 +1288,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       fallbackSrc={null}
                       loading="eager"
                       fetchPriority="high"
+                      errorLabel={isEnglish ? 'No image' : '画像なし'}
                     />
                     
                     {/* Elegant gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
                     {/* Moth name overlay */}
+                    {/* h1より前に出る画像オーバーレイのラベルは見出しにしない（h3だと見出し階層が逆転する） */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 pointer-events-none">
-                      <h3 className="text-white font-bold text-lg drop-shadow-lg">
+                      <p className="text-white font-bold text-lg drop-shadow-lg">
                         {isEnglish ? primaryName : moth.name}
-                      </h3>
+                      </p>
                       <p className="text-white/90 text-sm drop-shadow-md">
                         {isEnglish
                           ? (japaneseReference || moth.scientificName)
@@ -1347,12 +1351,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                           fit="cover"
                           fallbackSrc={null}
                           loading="lazy"
+                          errorLabel={isEnglish ? 'No image' : '画像なし'}
                         />
                       </button>
                     ))}
                   </div>
                 )}
                 
+                {hasInstagramPost && (
                 <div className="p-4">
                   {hasInstagramPost && (
                     <div className="flex items-center justify-end mb-4">
@@ -1389,6 +1395,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     </div>
                   )}
                 </div>
+                )}
               </div>
             </div>
           </div>
@@ -1762,7 +1769,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                         if (remark.startsWith('食草: ')) {
                           const content = remark.substring(3);
                           // 食草データが空の場合、備考の食草情報を主要食草として表示
-                          if (moth.hostPlants.length === 0) {
+                          // （hostPlantsが未定義/文字列のデータでもクラッシュしないよう配列判定を挟む）
+                          if (!Array.isArray(moth.hostPlants) || moth.hostPlants.length === 0) {
                             const foodPlants = content.split(/[、，,;；]/).map(p => p.trim()).filter(p => p.length > 0);
                             return (
                               <div key={remarkIndex} className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-700/50">
@@ -2143,6 +2151,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 relatedMothsByPlant={relatedMothsByPlant}
                 allInsects={allInsects}
                 locale={locale}
+                plantDetails={plantDetails}
               />
             </div>
 
@@ -2245,6 +2254,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       ? 'Copy link'
                       : 'リンクをコピー'}
               </button>
+              {/* コピー結果をスクリーンリーダーにも通知する（ボタン文言の変化だけでは読まれない） */}
+              <span role="status" aria-live="polite" className="sr-only">
+                {copyFeedback === 'success'
+                  ? (isEnglish ? 'Link copied to clipboard' : 'リンクをコピーしました')
+                  : copyFeedback === 'error'
+                    ? (isEnglish ? 'Failed to copy the link' : 'リンクのコピーに失敗しました')
+                    : ''}
+              </span>
             </div>
           </div>
         </div>

@@ -25,10 +25,19 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
   const [modalSrc, setModalSrc] = useState(modalCandidates[0] || '');
   const [modalCandidateIndex, setModalCandidateIndex] = useState(0);
 
+  // 端に到達してボタンがdisabledになる際、そのボタンにフォーカスが残っていると
+  // フォーカスがbodyへ落ちるため、フォーカス中のボタン操作時のみ閉じるボタンへ退避する
+  const escapeFocusIfNeeded = (event) => {
+    if (event?.currentTarget && document.activeElement === event.currentTarget) {
+      closeButtonRef.current?.focus({ preventScroll: true });
+    }
+  };
+
   const handlePrev = useCallback((e) => {
     e.stopPropagation();
     if (currentIndex > 0 && onNavigate) {
       onNavigate(currentIndex - 1);
+      if (currentIndex - 1 <= 0) escapeFocusIfNeeded(e);
     }
   }, [currentIndex, onNavigate]);
 
@@ -36,6 +45,7 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
     e.stopPropagation();
     if (currentIndex < images.length - 1 && onNavigate) {
       onNavigate(currentIndex + 1);
+      if (currentIndex + 1 >= images.length - 1) escapeFocusIfNeeded(e);
     }
   }, [currentIndex, images.length, onNavigate]);
 
@@ -173,11 +183,13 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
           </svg>
         </button>
 
-        {/* 前へボタン */}
-        {hasMultiple && currentIndex > 0 && (
+        {/* 前へ/次へボタン: 端でもアンマウントせずdisabledにする。
+            端到達時にフォーカス中のボタンが消えるとフォーカスがbodyへ落ちるため */}
+        {hasMultiple && (
           <button
             onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
+            disabled={currentIndex === 0}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110 disabled:opacity-30 disabled:hover:bg-white/20 disabled:hover:scale-100 disabled:cursor-default"
             aria-label={isEnglish ? 'Previous image' : '前の画像'}
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,11 +198,11 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
           </button>
         )}
 
-        {/* 次へボタン */}
-        {hasMultiple && currentIndex < images.length - 1 && (
+        {hasMultiple && (
           <button
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
+            disabled={currentIndex >= images.length - 1}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110 disabled:opacity-30 disabled:hover:bg-white/20 disabled:hover:scale-100 disabled:cursor-default"
             aria-label={isEnglish ? 'Next image' : '次の画像'}
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

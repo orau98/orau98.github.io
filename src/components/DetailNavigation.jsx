@@ -41,7 +41,8 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
 
   const route = getRoute(item, type);
   const isPrev = direction === 'prev';
-  const displayName = isEnglish && type === 'insect'
+  // 英語版では昆虫・植物とも学名があれば学名を表示（和名のままにならないように）
+  const displayName = isEnglish
     ? item.scientificName || item.name
     : item.name;
 
