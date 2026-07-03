@@ -9,6 +9,7 @@ import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/eng
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import { getHostResourceType } from '../utils/hostResource';
 import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisitStyle';
+import { extractPlantFamily } from '../utils/plantNameUtils';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -472,7 +473,7 @@ const EnhancedHostPlantDisplay = ({
     ? hostPlantsDetailed 
     : hostPlants.map(plant => ({
         name: typeof plant === 'string' ? plant.replace(/（.*）$/, '') : plant.name || plant,
-        family: typeof plant === 'string' ? extractFamily(plant) : plant.family || '',
+        family: typeof plant === 'string' ? extractPlantFamily(plant) : plant.family || '',
         displayName: typeof plant === 'string' ? plant : plant.displayName || plant.name || plant,
         observationType: '野外（国内）',
         plantPart: '葉',
@@ -655,14 +656,6 @@ const EnhancedHostPlantDisplay = ({
       )}
     </div>
   );
-};
-
-/**
- * 科名を抽出するヘルパー関数
- */
-const extractFamily = (plantText) => {
-  const match = plantText.match(/（([^）]+科)）/);
-  return match ? match[1] : '';
 };
 
 export default EnhancedHostPlantDisplay;

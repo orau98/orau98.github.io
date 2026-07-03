@@ -37,61 +37,19 @@ export const normalizePlantKey = (plantName) => {
 };
 
 /**
- * 植物名を表示用に正規化する（科名を保持する場合がある）
- * @param {string} plantName - 正規化する植物名
- * @returns {string} 表示用に正規化された植物名
+ * 植物名の全角括弧内の科名注記「（〇〇科）」から科名だけを取り出す。
+ * EnhancedHostPlantDisplay と integratedDataParser に重複していたローカル実装を統合したもの。
+ * 挙動は従来のローカル実装と同一（全角括弧のみ・該当なしは空文字）。
+ * @param {string} plantText - 科名注記を含みうる植物名
+ * @returns {string} 科名（例:「バラ科」）。該当しなければ空文字。
  */
-export const normalizePlantName = (plantName) => {
-  if (!plantName || typeof plantName !== 'string') return plantName || '';
-
-  let normalized = plantName.trim();
-
-  // 「科の」「科に」パターンを処理
-  normalized = normalized.replace(/^([^（(科]+科)([のに])([^（(].+)$/, '$3');
-
-  // 括弧内の科名を除去（内容は保持）
-  normalized = normalized.replace(/^([^（(]+)（[^）]*科[^）]*）(.*)$/g, '$1$2');
-  normalized = normalized.replace(/^([^（(]+)\([^)]*科[^)]*\)(.*)$/g, '$1$2');
-
-  // 以上〇〇科のパターンを除去
-  normalized = normalized.replace(/\(以上[^)]*科\)/g, '');
-  normalized = normalized.replace(/（以上[^）]*科）/g, '');
-
-  // 不完全な括弧を除去
-  normalized = normalized.replace(/（[^）]*$/g, '');
-  normalized = normalized.replace(/\([^)]*$/g, '');
-  normalized = normalized.replace(/^[^（(]*[）)]/g, '');
-  normalized = normalized.replace(/[？?]+$/g, '');
-
-  return normalized.trim();
-};
-
-/**
- * 植物名から科名を抽出する
- * @param {string} plantName - 植物名
- * @returns {string|null} 科名またはnull
- */
-export const extractFamilyFromPlantName = (plantName) => {
-  if (!plantName || typeof plantName !== 'string') return null;
-
-  // 「〇〇（〇〇科）」パターン
-  const fullWidthMatch = plantName.match(/（([^）]*科)）/);
-  if (fullWidthMatch) return fullWidthMatch[1];
-
-  // 「〇〇(〇〇科)」パターン
-  const halfWidthMatch = plantName.match(/\(([^)]*科)\)/);
-  if (halfWidthMatch) return halfWidthMatch[1];
-
-  // 「〇〇科」のみ
-  if (plantName.match(/^[^（(]+科$/)) {
-    return plantName.trim();
-  }
-
-  return null;
+export const extractPlantFamily = (plantText) => {
+  if (typeof plantText !== 'string') return '';
+  const match = plantText.match(/（([^）]+科)）/);
+  return match ? match[1] : '';
 };
 
 export default {
   normalizePlantKey,
-  normalizePlantName,
-  extractFamilyFromPlantName,
+  extractPlantFamily,
 };

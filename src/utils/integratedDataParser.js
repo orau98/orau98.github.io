@@ -4,6 +4,7 @@ import {
   INSECT_COLLECTION_KEYS,
   createEmptyInsectCollections,
 } from './siteTaxonomy.js';
+import { extractPlantFamily } from './plantNameUtils.js';
 
 /**
  * 統合CSVの食草データを解析して標準形式に変換
@@ -195,7 +196,7 @@ export const convertLegacyToIntegratedFormat = (legacyData, insectType = 'moth')
     // 食草データを新形式に変換
     const hostPlantsDetailed = (item.hostPlants || []).map(plantText => ({
       name: plantText.replace(/（.*）$/, ''), // 科名を除去
-      family: extractFamily(plantText),
+      family: extractPlantFamily(plantText),
       displayName: plantText,
       observationType: '野外（国内）', // デフォルト
       plantPart: '葉', // デフォルト
@@ -218,16 +219,6 @@ export const convertLegacyToIntegratedFormat = (legacyData, insectType = 'moth')
       dataSource: 'legacy'
     };
   });
-};
-
-/**
- * 科名を抽出するヘルパー関数
- * @param {string} plantText - 植物名テキスト
- * @returns {string} - 科名
- */
-const extractFamily = (plantText) => {
-  const match = plantText.match(/（([^）]+科)）/);
-  return match ? match[1] : '';
 };
 
 /**
