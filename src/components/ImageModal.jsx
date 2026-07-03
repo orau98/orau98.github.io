@@ -110,6 +110,16 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
     };
   }, [isActive]);
 
+  // モーダル表示中は背景ページのスクロールを止める（閉じたら元の値へ戻す）
+  useEffect(() => {
+    if (!isActive || typeof document === 'undefined') return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isActive]);
+
   useEffect(() => {
     setModalCandidateIndex(0);
     setModalSrc(modalCandidates[0] || '');
@@ -132,7 +142,7 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
   if (!isActive) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[90] flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[90] flex items-center justify-center p-4 overscroll-contain" onClick={onClose}>
       <div
         ref={dialogRef}
         role="dialog"

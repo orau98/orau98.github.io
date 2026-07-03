@@ -698,9 +698,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
 
   // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
   const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
+  // displayLatinは和名URLでは和名のままなので、そのケースでは分類データの学名を採用する。
+  // これがないと英語ページのh1が和名になり、直下の「Japanese name: 〜」と同文重複していた
   const primaryPlantName = isEnglish
     ? getPrimaryEnglishName({
-        scientificName: displayLatin,
+        scientificName: /^[A-Za-z]/.test(displayLatin)
+          ? displayLatin
+          : String(details?.scientificName || taxonomy.scientificName || '').trim(),
         japaneseName: decodedPlantName,
         fallback: decodedPlantName,
       })
@@ -1809,14 +1813,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         <div className="space-y-4 lg:col-span-2">
           {/* 概要セクション（和名＋学名のみ） */}
           <div id="basic-info" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden p-6 scroll-mt-24">
+          {/* 学名は単語間で自然に折り返す（nowrapだと長い亜種名でモバイル幅からはみ出す） */}
           <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 text-left">
             {isEnglish
-              ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryPlantName)}</span>
+              ? formatScientificNameReact(primaryPlantName)
               : /^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
                 ? decodedPlantName
-                : (<span className="whitespace-nowrap break-keep">{formatScientificNameReact(displayLatin)}</span>)}
+                : formatScientificNameReact(displayLatin)}
           </h1>
-          {isEnglish && japaneseReference && (
+          {/* h1が和名フォールバックのときは「Japanese name: 同じ和名」の重複表示を避ける */}
+          {isEnglish && japaneseReference && primaryPlantName !== decodedPlantName && (
             <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               {japaneseReference}
             </div>

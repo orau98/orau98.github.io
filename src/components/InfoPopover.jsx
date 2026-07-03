@@ -153,9 +153,25 @@ const InfoPopover = ({
     <div
       ref={wrapperRef}
       className="relative inline-flex"
-      onMouseEnter={openPopover}
-      onMouseLeave={scheduleClose}
-      onFocusCapture={openPopover}
+      // タッチ端末ではタップ時にmouseenterがエミュレートされ、直後のclickトグルで
+      // 即閉じてしまう（＝一度も開けない）ため、hover開閉はマウスポインタ限定にする
+      onPointerEnter={(event) => {
+        if (event.pointerType === 'mouse') openPopover();
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === 'mouse') scheduleClose();
+      }}
+      onFocusCapture={(event) => {
+        // キーボードフォーカス時のみ開く。タッチのタップでボタンにフォーカスが
+        // 移った場合に開くと、続くclickトグルで閉じてしまう
+        let keyboardFocus = true;
+        try {
+          keyboardFocus = event.target.matches(':focus-visible');
+        } catch {
+          // :focus-visible 未対応環境では従来どおり開く
+        }
+        if (keyboardFocus) openPopover();
+      }}
       onBlurCapture={(event) => {
         // portal先のパネルへフォーカスが移った場合は「外に出た」とみなさない
         if (
@@ -193,8 +209,12 @@ const InfoPopover = ({
           tabIndex={-1}
           className={`pointer-events-auto fixed z-[120] w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-slate-200/95 bg-white p-3 text-left text-slate-700 shadow-[0_24px_80px_-28px_rgba(15,23,42,0.55)] ring-1 ring-black/5 backdrop-blur-sm outline-none dark:border-slate-700/95 dark:bg-slate-950 dark:text-slate-100 dark:ring-white/10 ${panelClassName}`}
           style={panelStyle || undefined}
-          onMouseEnter={openPopover}
-          onMouseLeave={scheduleClose}
+          onPointerEnter={(event) => {
+            if (event.pointerType === 'mouse') openPopover();
+          }}
+          onPointerLeave={(event) => {
+            if (event.pointerType === 'mouse') scheduleClose();
+          }}
         >
           {title && (
             <div className={`mb-2 text-sm font-semibold text-slate-900 dark:text-white ${titleClassName}`}>
