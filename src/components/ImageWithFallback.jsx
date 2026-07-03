@@ -77,6 +77,10 @@ const ImageWithFallback = ({
   );
   const initialSrc = src || normalizedCandidates[0] || fallbackSrc || '';
   const lastResetSignatureRef = useRef('');
+  const containerRef = useRef(null);
+  // loading="lazy" の画像は画面外ではブラウザがフェッチ自体を開始しないため、
+  // onLoad/onErrorが来ないのは正常。可視化されるまでタイムアウト監視を保留する。
+  const [hasBeenVisible, setHasBeenVisible] = useState(loading !== 'lazy');
 
   const [currentSrc, setCurrentSrc] = useState(initialSrc || src);
   const [currentCandidates, setCurrentCandidates] = useState(
@@ -203,12 +207,29 @@ const ImageWithFallback = ({
   ]);
 
   useEffect(() => {
-    if (status !== 'loading' || !currentSrc) return undefined;
+    if (hasBeenVisible) return undefined;
+    const node = containerRef.current;
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setHasBeenVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        setHasBeenVisible(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '200px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasBeenVisible]);
+
+  useEffect(() => {
+    if (status !== 'loading' || !currentSrc || !hasBeenVisible) return undefined;
     const timer = setTimeout(() => {
       handleError();
     }, IMAGE_LOAD_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [status, currentSrc, handleError]);
+  }, [status, currentSrc, handleError, hasBeenVisible]);
 
   const fitClass =
     fit === 'cover'
@@ -236,7 +257,7 @@ const ImageWithFallback = ({
   );
 
   return (
-    <div className={`relative overflow-hidden bg-slate-100 dark:bg-slate-800 ${className}`} style={{ width, height }}>
+    <div ref={containerRef} className={`relative overflow-hidden bg-slate-100 dark:bg-slate-800 ${className}`} style={{ width, height }}>
       {/* Loading Skeleton */}
       {status === 'loading' && (
         <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse z-10 flex items-center justify-center">

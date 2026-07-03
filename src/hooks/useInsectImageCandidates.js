@@ -54,6 +54,12 @@ const useInsectImageCandidates = (options = {}) => {
     });
   }, [normalizedBase]);
 
+  const buildOriginalImageUrl = useCallback((base) => {
+    if (!base) return '';
+    const ext = (imageExtensions && imageExtensions[base]) || '.jpg';
+    return `${normalizedBase}images/insects/${encodeURIComponent(base)}${ext}${cacheBustRef.current}`;
+  }, [imageExtensions, normalizedBase]);
+
   const getImageCandidates = useCallback((insect) => {
     if (!insect) return [];
     const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
@@ -66,15 +72,19 @@ const useInsectImageCandidates = (options = {}) => {
     });
     const urls = [];
     const seen = new Set();
-    resolvedBases.forEach((base) => {
-      const url = buildImageUrl(base);
+    const push = (url) => {
       if (url && !seen.has(url)) {
         seen.add(url);
         urls.push(url);
       }
+    };
+    resolvedBases.forEach((base) => {
+      push(buildImageUrl(base));
+      // リサイズ版が未生成でも「画像あり」の種はオリジナルで表示できるようにする
+      push(buildOriginalImageUrl(base));
     });
     return urls;
-  }, [buildImageUrl, imageBases, imageExtensions, normalizedEntries]);
+  }, [buildImageUrl, buildOriginalImageUrl, imageBases, imageExtensions, normalizedEntries]);
 
   return {
     getImageCandidates,

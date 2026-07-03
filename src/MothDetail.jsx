@@ -524,6 +524,17 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       logger.debug('Failed to derive additional image candidates:', error);
     }
 
+    // リサイズ版が未生成でもオリジナルで表示できるよう最終候補に加える
+    if (ready) {
+      const normalizedBase = (import.meta.env.BASE_URL || '/').endsWith('/')
+        ? (import.meta.env.BASE_URL || '/')
+        : `${import.meta.env.BASE_URL}/`;
+      baseNameCandidates.forEach((name) => {
+        const ext = exts[name] || '.jpg';
+        push(`${normalizedBase}images/insects/${encodeURIComponent(name)}${ext}${cacheBustRef.current}`);
+      });
+    }
+
     if (uniq.size === 0) {
       push(`${import.meta.env.BASE_URL}images/placeholder.jpg`);
     }
