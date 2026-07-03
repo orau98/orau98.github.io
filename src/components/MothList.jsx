@@ -11,7 +11,7 @@ import ListFilterPanel from './ListFilterPanel';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
 import { hiraganaToKatakana, normalizeNFKC } from '../utils/text';
-import { loadInsectImageIndexes } from '../services/imageIndex';
+import { loadInsectImageIndexes, getCachedInsectImageIndexes } from '../services/imageIndex';
 import ImageWithFallback from './ImageWithFallback';
 import SearchableSelect from './SearchableSelect';
 import { ListDisplayControls, PresetFilterChips } from './ListToolbar';
@@ -43,6 +43,10 @@ import { buildMoreLabel } from '../utils/hostVisitStyle';
 
 // 食草欄でプレースホルダー扱いにする文字列
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
+// 昆虫配列（App側stateで参照が安定）ごとの画像ファイル名解決結果のキャッシュ。
+// 詳細ページから一覧へ戻った際に全種の再解決を待たず、初回レンダーから
+// 画像付きカードを確定表示するために再マウントをまたいで保持する。
+const mothImageMapCache = new WeakMap();
 // カード上で食草/訪花名を何件まで出すか（超過分は「他N種」に集約してカード高を揃える）
 const CARD_PLANT_PREVIEW_CAP = 6;
 const PER_PAGE_OPTIONS = [20, 50, 100];
@@ -182,35 +186,35 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     return output.join(' ').replace(/\s+/g, ' ').trim();
   }, []);
 
+  // 交差したら即座に可視化する。以前は trackVisibility(通知が最低100ms遅延) と
+  // requestIdleCallback(さらに最大100ms+) を挟んでいたため、一覧へ戻った直後の
+  // メインスレッドが混んでいる場面で画像リクエストの開始が段階的に遅れていた。
+  // 実際の帯域制御は loading=lazy に任せ、ここでは早めにマウントだけ済ませる。
   const handleIntersection = useCallback((entries) => {
-    if (!(entries && entries[0])) return;
-    if (entries[0].isIntersecting && !isVisible) {
-      // Use requestIdleCallback for non-critical image loading
-      if ('requestIdleCallback' in window && !isPriority) {
-        requestIdleCallback(() => setIsVisible(true), { timeout: 100 });
-      } else {
-        setIsVisible(true);
-      }
+    if (entries && entries.some((entry) => entry.isIntersecting)) {
+      setIsVisible(true);
     }
-  }, [isVisible, isPriority]);
+  }, []);
 
   useEffect(() => {
-    if (isPriority) return; // Skip observer for priority images
-    
+    if (isPriority || isVisible) return undefined; // Skip observer for priority images
+    if (typeof IntersectionObserver === 'undefined') {
+      // 未対応環境では遅延させず即マウント（native lazyが残りを担う）
+      setIsVisible(true);
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.01, // Lower threshold for earlier loading
-      rootMargin: '400px 0px', // Increased vertical margin for better preloading
-      // Use native lazy loading hints
-      trackVisibility: true,
-      delay: 100
+      threshold: 0,
+      rootMargin: '600px 0px', // スクロール到達前に読み込みを開始する先読み幅
     });
-    
+
     if (imgRef.current) {
       observer.observe(imgRef.current);
     }
-    
+
     return () => observer.disconnect();
-  }, [handleIntersection, isPriority]);
+  }, [handleIntersection, isPriority, isVisible]);
   // Determine the correct route based on insect type
   const route = baseRoute === ""
     ? buildInsectPath(moth, locale)
@@ -239,7 +243,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
         folder: 'insects',
         filename: finalImageFilename,
         widths: [320, 640, 1024],
-        sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
+        // グリッドは sm:2列 / lg:3列 / 2xl:4列。実際の表示幅に合わせて
+        // 過大なサイズ候補を選ばないよう 2xl のブレークポイントも明示する
+        sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 25vw',
         query: cacheBustRef.current,
       })
     : null;
@@ -1361,10 +1367,19 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, groupFilter, hasRealHost, hostSearchIndex, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
 
   // 画像インデックス（共通サービス）
-  const [imageFilenames, setImageFilenames] = useState(new Set());
-  const [imageExtensions, setImageExtensions] = useState({});
+  // ロード済みキャッシュがあれば同期初期化する。詳細ページから戻った再マウントで
+  // 「インデックス待ち→未掲載表示→画像表示」と3段階に揺れるのを防ぎ、
+  // 初回レンダーから確定した内容を出す。サービスのSet/objectは読み取り専用で共有する。
+  const [imageFilenames, setImageFilenames] = useState(
+    () => getCachedInsectImageIndexes()?.names || new Set(),
+  );
+  const [imageExtensions, setImageExtensions] = useState(
+    () => getCachedInsectImageIndexes()?.exts || {},
+  );
   // 取得の成否を問わず解決済みになったか（失敗時もリストを描画するために使う）
-  const [imageIndexResolved, setImageIndexResolved] = useState(false);
+  const [imageIndexResolved, setImageIndexResolved] = useState(
+    () => !!getCachedInsectImageIndexes(),
+  );
   const normalizedImageEntries = useMemo(
     () => buildNormalizedEntries(imageFilenames, imageExtensions),
     [imageFilenames, imageExtensions],
@@ -1380,11 +1395,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   useEffect(() => {
     loadInsectImageIndexes()
       .then(({ names, exts }) => {
-        const list = Array.from(names || []);
-        const fileSet = new Set(list);
-        setImageFilenames(fileSet);
+        // サービス側のSet/objectを共有参照のまま保持する（読み取り専用）。
+        // 参照が安定していると、再マウント時に解決済みマップのキャッシュ照合や
+        // Reactのstateベイルアウト（同一参照なら再レンダー省略）が効く。
+        setImageFilenames(names || new Set());
         setImageExtensions(exts || {});
-        logger.debug('Loaded image index via service:', list.length, 'files');
+        logger.debug('Loaded image index via service:', names?.size || 0, 'files');
       })
       .catch((e) => {
         logger.debug('Failed to load insect image index:', e);
@@ -1451,14 +1467,27 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   ]);
 
   // Precompute image filename per insect to avoid O(n) lookups during sort/render
-  const [mothImageMap, setMothImageMap] = useState(new Map());
+  // 再マウント時は前回計算済みのマップ（moths配列参照＋インデックス参照が一致する場合のみ）を
+  // 初期値に使い、戻った直後から画像付きカードを確定表示する
+  const [mothImageMap, setMothImageMap] = useState(() => {
+    const cached = moths ? mothImageMapCache.get(moths) : null;
+    return cached && cached.names === imageFilenames && cached.exts === imageExtensions
+      ? cached.map
+      : new Map();
+  });
 
   useEffect(() => {
     if (!isImageIndexReady || !moths || moths.length === 0) {
-      setMothImageMap(new Map());
-      return;
+      setMothImageMap((prev) => (prev.size === 0 ? prev : new Map()));
+      return undefined;
     }
-    
+
+    const cached = mothImageMapCache.get(moths);
+    if (cached && cached.names === imageFilenames && cached.exts === imageExtensions) {
+      setMothImageMap((prev) => (prev === cached.map ? prev : cached.map));
+      return undefined;
+    }
+
     // Use a timeout to avoid blocking main thread if list is huge
     const timeoutId = setTimeout(() => {
       const nextMap = new Map();
@@ -1467,11 +1496,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         const best = getBestImageForMoth(insect);
         if (best) nextMap.set(insect.id, best);
       });
+      mothImageMapCache.set(moths, {
+        names: imageFilenames,
+        exts: imageExtensions,
+        map: nextMap,
+      });
       setMothImageMap(nextMap);
     }, 0);
-    
+
     return () => clearTimeout(timeoutId);
-  }, [getBestImageForMoth, isImageIndexReady, moths]);
+  }, [getBestImageForMoth, isImageIndexReady, moths, imageFilenames, imageExtensions]);
 
   // 重要種はインデックス未準備でもあらかじめ画像ベース名を埋めておく
   useEffect(() => {
@@ -1485,6 +1519,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     });
     if (next.size > 0) {
       setMothImageMap((prev) => {
+        // 変化がない場合は参照を維持し、キャッシュ済みマップ利用時の再レンダーを避ける
+        let changed = false;
+        next.forEach((v, k) => {
+          if (prev.get(k) !== v) changed = true;
+        });
+        if (!changed) return prev;
         const merged = new Map(prev);
         next.forEach((v, k) => merged.set(k, v));
         return merged;

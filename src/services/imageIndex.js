@@ -87,6 +87,14 @@ let _insectImageNames = null; // set of bases for insects
 let _insectExtMap = null; // map base -> extension (e.g., .jpg)
 let _insectLoading = null;
 
+// ロード済みならインデックスを同期的に返す（未ロードはnull）。
+// 詳細ページから一覧へ戻った際、非同期解決を待たずに初回レンダーから
+// 画像ファイル名を確定させるために使う。返り値は読み取り専用として扱うこと。
+export const getCachedInsectImageIndexes = () =>
+  _insectImageNames && _insectExtMap
+    ? { names: _insectImageNames, exts: _insectExtMap }
+    : null;
+
 export const loadInsectImageIndexes = async () => {
   if (_insectImageNames && _insectExtMap) return { names: _insectImageNames, exts: _insectExtMap };
   if (_insectLoading) return _insectLoading;

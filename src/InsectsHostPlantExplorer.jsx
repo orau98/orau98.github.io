@@ -49,6 +49,24 @@ import {
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
 
+// 全昆虫の結合配列を再マウントをまたいで参照安定化するキャッシュ。
+// useMemoだけだと詳細ページから戻った再マウントで参照が変わり、
+// MothList側の画像解決マップやフィルタのキャッシュが全て無効化されてしまう。
+let lastCombinedInsectParts = null;
+let lastCombinedInsects = [];
+const combineInsectsStable = (parts) => {
+  if (
+    lastCombinedInsectParts &&
+    lastCombinedInsectParts.length === parts.length &&
+    lastCombinedInsectParts.every((part, index) => part === parts[index])
+  ) {
+    return lastCombinedInsects;
+  }
+  lastCombinedInsectParts = parts;
+  lastCombinedInsects = parts.flat();
+  return lastCombinedInsects;
+};
+
 const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
   const trimmed = String(html || "").trim();
   if (!trimmed) return "";
@@ -1414,16 +1432,19 @@ const InsectsHostPlantExplorer = memo(
     }, [instagramTimelinePosts, instagramPosts, isInstagramPostUrl]);
 
     // 全昆虫の結合配列。inline spreadだと毎レンダーで参照が変わり、
-    // MothList側のフィルタ再計算やサジェスト計算が毎打鍵で走ってしまう
+    // MothList側のフィルタ再計算やサジェスト計算が毎打鍵で走ってしまう。
+    // さらにモジュールレベルのキャッシュを併用し、詳細ページから戻った
+    // 再マウントでも同一データなら同一参照を返す（画像解決キャッシュが効く）
     const allInsects = useMemo(
-      () => [
-        ...moths,
-        ...butterflies,
-        ...beetles,
-        ...longhornbeetles,
-        ...leafbeetles,
-        ...aphids,
-      ],
+      () =>
+        combineInsectsStable([
+          moths,
+          butterflies,
+          beetles,
+          longhornbeetles,
+          leafbeetles,
+          aphids,
+        ]),
       [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids],
     );
 
