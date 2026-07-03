@@ -60,8 +60,8 @@ const SILHOUETTES = {
         {/* 頭部 */}
         <ellipse cx="12" cy="5.6" rx="1.8" ry="1.2" />
         {/* 片状触角の先端（扇状の塊） */}
-        <circle cx="9.3" cy="3.8" r="0.8" />
-        <circle cx="14.7" cy="3.8" r="0.8" />
+        <circle cx="9.2" cy="3.7" r="0.65" />
+        <circle cx="14.8" cy="3.7" r="0.65" />
         {/* 前胸背板（幅広・丸み） */}
         <path d="M12 6.6c2.4 0 4.1.8 4.1 2.3 0 1-1.7 1.6-4.1 1.6s-4.1-.6-4.1-1.6c0-1.5 1.7-2.3 4.1-2.3z" />
         {/* 左上翅（付け根に小楯板の三角ノッチ、中央に合わせ目） */}
@@ -69,9 +69,15 @@ const SILHOUETTES = {
         {/* 右上翅 */}
         <path d="M13.1 11h2.6c.8 0 1.3.9 1.3 2.1v1.3c0 3.2-1.9 5.7-4.75 6.2V12.4z" />
       </g>
+      {/* 短い触角の柄（脚より細く） */}
+      <path
+        d="M10.8 5.1 9.6 4M13.2 5.1 14.4 4"
+        stroke="currentColor"
+        strokeWidth="0.6"
+        strokeLinecap="round"
+        fill="none"
+      />
       <g stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none">
-        {/* 短い触角の柄 */}
-        <path d="M10.7 5.2 9.8 4.3M13.3 5.2l.9-.9" />
         {/* 脚（腿節+脛節の折れ） */}
         <path d="M8.6 8.7 6.4 7.8 4.9 8.4M7.6 12.6l-2.7-.1-1.6 1.6M8.3 16.6l-2.4 1.3-.5 2.5" />
         <path d="M15.4 8.7l2.2-.9 1.5.6M16.4 12.6l2.7-.1 1.6 1.6M15.7 16.6l2.4 1.3.5 2.5" />
