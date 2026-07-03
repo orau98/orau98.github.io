@@ -39,7 +39,7 @@ const EN_HOME_NOSCRIPT = `    <noscript>
             <ul style="margin: 0 0 0 18px; padding: 0;">
               <li><a href="/en/moth">Insect search</a></li>
               <li><a href="/en/plant">Plant search</a></li>
-              <li><a href="/en/quiz">Four-choice quiz</a></li>
+              <li><a href="/en/quiz/">Four-choice quiz</a></li>
             </ul>
           </div>
         </section>
@@ -79,7 +79,7 @@ const EN_HOME_STRUCTURED_DATA = [
     '@graph': [
       { '@type': 'SiteNavigationElement', name: 'Insects', url: `${BASE_ORIGIN}/en/meta/moth/index.html` },
       { '@type': 'SiteNavigationElement', name: 'Plants', url: `${BASE_ORIGIN}/en/meta/plant/index.html` },
-      { '@type': 'SiteNavigationElement', name: 'Four-choice quiz', url: `${BASE_ORIGIN}/en/quiz` },
+      { '@type': 'SiteNavigationElement', name: 'Four-choice quiz', url: `${BASE_ORIGIN}/en/quiz/` },
     ],
   },
 ];
@@ -113,11 +113,14 @@ const SPA_ROUTE_SHELLS = [
     lang: 'ja',
     title: '4択図鑑 | 昆虫植物図鑑',
     description: '蛾・蝶の幼虫食草を4択で学べる昆虫植物図鑑のクイズ。昆虫から食草、食草から昆虫の双方向で検索練習できます。',
-    canonicalPath: '/quiz',
+    // 実体は dist/quiz/index.html で、200 を返すのは末尾スラッシュ付きURL。
+    // スラッシュなしは GitHub Pages が 301 を返すため、canonical/hreflang は
+    // sitemap の登録URL（/quiz/）と同じ形に揃える。
+    canonicalPath: '/quiz/',
     alternates: [
-      { hreflang: 'ja', path: '/quiz' },
-      { hreflang: 'en', path: '/en/quiz' },
-      { hreflang: 'x-default', path: '/quiz' },
+      { hreflang: 'ja', path: '/quiz/' },
+      { hreflang: 'en', path: '/en/quiz/' },
+      { hreflang: 'x-default', path: '/quiz/' },
     ],
     ogTitle: '4択図鑑 | 昆虫植物図鑑',
     ogDescription: '蛾・蝶の幼虫食草を4択で学べるクイズです。',
@@ -127,11 +130,11 @@ const SPA_ROUTE_SHELLS = [
     lang: 'en',
     title: 'Four-choice Quiz | Insects and Host Plants of Japan',
     description: 'A four-choice quiz for learning larval host plants of Japanese moths and butterflies in both insect-to-plant and plant-to-insect modes.',
-    canonicalPath: '/en/quiz',
+    canonicalPath: '/en/quiz/',
     alternates: [
-      { hreflang: 'ja', path: '/quiz' },
-      { hreflang: 'en', path: '/en/quiz' },
-      { hreflang: 'x-default', path: '/quiz' },
+      { hreflang: 'ja', path: '/quiz/' },
+      { hreflang: 'en', path: '/en/quiz/' },
+      { hreflang: 'x-default', path: '/quiz/' },
     ],
     ogTitle: 'Four-choice Quiz | Insects and Host Plants of Japan',
     ogDescription: 'Practice moth and butterfly larval host plants with immediate feedback.',

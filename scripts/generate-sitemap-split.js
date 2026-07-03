@@ -428,23 +428,9 @@ function generateSplitSitemaps() {
       .filter((f) => f.endsWith('.html'))
       .sort((a, b) => a.localeCompare(b, 'en'));
 
-    // 植物は「科名付きが正」として、科名なしエイリアスをサイトマップから除外
-    if (key === 'plant') {
-      const aliasBases = new Set();
-      files.forEach((file) => {
-        if (file === 'index.html') return;
-        const base = file.replace(/\.html$/i, '');
-        const m = base.match(/^(.+?)\(([^)]+科)\)$/);
-        if (m) aliasBases.add(m[1]);
-      });
-      files = files.filter((file) => {
-        if (file === 'index.html') return true;
-        const base = file.replace(/\.html$/i, '');
-        const isFamilyVariant = /\([^)]*科\)$/.test(base);
-        if (!isFamilyVariant && aliasBases.has(base)) return false;
-        return true;
-      });
-    }
+    // 植物は基底名ページ（例「オニグルミ.html」）が正規ページで、
+    // 科名付き（例「オニグルミ(クルミ科).html」）は noindex リダイレクトスタブ。
+    // スタブは直後の noindex フィルタで除外されるため、ここでの特別扱いは不要。
 
     const preNoindexCount = files.length;
     files = files.filter((file) => {

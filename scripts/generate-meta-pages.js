@@ -1174,6 +1174,10 @@ function extractScientificGenus(scientificName = '') {
 }
 
 // 英語メタページ（public/en/meta/）から id→slug および 植物名→slug のマップを構築する
+// 注意: public/en/ と seo-route-map.*.json は gitignore された生成物なので、
+// クリーンチェックアウト直後の1回目の実行ではこのマップは空になり、
+// 日本語ページに hreflang="en" が付かない。このため generate-meta:all は
+// 「ja → en → ja再実行」の2パス構成になっている（package.json）。
 function buildEnglishSlugMaps() {
   const insectIdToEnSlug = new Map();
   const plantNameToEnSlug = new Map();
