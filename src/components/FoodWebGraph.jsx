@@ -69,8 +69,8 @@ const seedGraphNodePositions = ({
   if (currentPlantName) {
     const insects = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('insect'));
     const ringRadius = Math.max(
-      isCompactPanel ? 118 : 190,
-      Math.min(viewport * (isCompactPanel ? 0.42 : 0.5), isCompactPanel ? 170 : 280)
+      isCompactPanel ? 96 : 168,
+      Math.min(viewport * (isCompactPanel ? 0.36 : 0.46), isCompactPanel ? 140 : 250)
     );
     insects.forEach((node, index) => {
       const point = getRadialPoint(index, insects.length, ringRadius);
@@ -83,12 +83,12 @@ const seedGraphNodePositions = ({
   const plants = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('plant'));
   const insects = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('insect'));
   const primaryRadius = Math.max(
-    isCompactPanel ? 112 : 165,
-    Math.min(viewport * (isCompactPanel ? 0.38 : 0.44), isCompactPanel ? 162 : 240)
+    isCompactPanel ? 94 : 148,
+    Math.min(viewport * (isCompactPanel ? 0.32 : 0.4), isCompactPanel ? 132 : 215)
   );
   const outerRadius = Math.max(
-    primaryRadius + (isCompactPanel ? 84 : 118),
-    Math.min(viewport * (isCompactPanel ? 0.64 : 0.8), isCompactPanel ? 236 : 380)
+    primaryRadius + (isCompactPanel ? 66 : 96),
+    Math.min(viewport * (isCompactPanel ? 0.55 : 0.72), isCompactPanel ? 196 : 330)
   );
 
   plants.forEach((node, index) => {
@@ -630,11 +630,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   // マウスがグラフ外へ出たら自動的に無効へ戻す
   const [desktopZoomActive, setDesktopZoomActive] = useState(false);
   const showRelatedInsects = true;
+  // ノード同士が間延びしないよう距離は詰めめにする（写真ノードを大きくした分、
+  // ズームフィット時の実表示は以前より密で大きく見える）
   const linkDistance = useMemo(() => {
     if (currentPlantName) {
-      return isCompactPanel ? 84 : 122;
+      return isCompactPanel ? 66 : 100;
     }
-    return isCompactPanel ? 76 : 104;
+    return isCompactPanel ? 58 : 86;
   }, [currentPlantName, isCompactPanel]);
 
   const [ylistData, setYlistData] = useState(null);
@@ -971,7 +973,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const graphLayoutMetrics = useMemo(() => {
     const nodeCount = graphData.nodes.length;
     return {
-      chargeStrength: isCompactPanel ? -240 : nodeCount > 28 ? -320 : -280,
+      chargeStrength: isCompactPanel ? -170 : nodeCount > 28 ? -250 : -220,
       denseLabelThreshold: isCompactPanel ? 12 : 16,
       focusZoom: isCompactPanel ? 1.85 : nodeCount > 28 ? 1.7 : 2,
       minimumZoom: isCompactPanel ? 0.95 : nodeCount > 32 ? 1.1 : nodeCount > 18 ? 1.28 : 1.45,
@@ -1520,8 +1522,11 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       plant: '#10b981'
     };
     const isCurrent = node.type.includes('current');
-    const baseR = isCurrent ? 13 : 8;
-    const radius = baseR / Math.sqrt(globalScale);
+    // 写真がノードの情報の主役なので大きめに描く。半径はグラフ座標系で固定し、
+    // ズームインすると画像も素直に拡大されるようにする
+    // （以前は1/√zoomで縮み、拡大しても写真がほとんど大きくならなかった）
+    const baseR = isCurrent ? 18 : 12;
+    const radius = baseR;
     const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
     const dim = dimByHighlight;
@@ -1553,7 +1558,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ctx.globalAlpha = alpha * 0.35;
     ctx.fillStyle = colors[node.type] || '#94a3b8';
     ctx.beginPath();
-    ctx.arc(node.x, node.y, radius * 2, 0, Math.PI * 2);
+    ctx.arc(node.x, node.y, radius * 1.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -1606,8 +1611,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
     const isCurrent = node.type.includes('current');
-    // 視覚半径(13/8)より広いタップ判定。モバイルで小ノードを取りやすくする。
-    const radius = (isCurrent ? 20 : 15) / Math.sqrt(globalScale);
+    // 視覚半径(18/12)より広いタップ判定。ズームアウト時も画面上で最低約22pxを確保し、
+    // モバイルで小ノードを取りやすくする
+    const radius = Math.max((isCurrent ? 18 : 12) * 1.25, 22 / globalScale);
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
