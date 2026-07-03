@@ -29,6 +29,17 @@ const names = new Set();
 for (const file of files) {
   const ext = path.extname(file).toLowerCase();
   if (!allowedExt.has(ext)) continue;
+  // 壊れたアップロード（数バイトのテキスト等）を載せると「写真あり」扱いのまま
+  // 表示が404になるため、インデックスから除外する
+  try {
+    const stat = fs.statSync(path.join(PLANT_DIR, file));
+    if (!stat.isFile() || stat.size < 100) {
+      console.warn(`[update_plant_image_filenames] skip invalid image (too small): ${file}`);
+      continue;
+    }
+  } catch {
+    continue;
+  }
   const base = path.basename(file, ext);
   if (base) names.add(base);
 }
