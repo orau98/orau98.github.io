@@ -26,23 +26,18 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
     setExpandedPlants(newExpanded);
   };
   
-  // 種数に応じた表示レイアウトを決定
-  const getDisplayLayout = (count, isExpanded) => {
-    if (count <= 6) {
-      return 'horizontal'; // 横スクロール
-    } else if (count <= 12) {
-      return isExpanded ? 'grid-2rows' : 'horizontal-limited'; // 2行グリッドまたは制限付き横スクロール
-    } else {
-      return isExpanded ? 'grid-3rows' : 'horizontal-limited'; // 3行グリッドまたは制限付き横スクロール
-    }
-  };
-  
-  // 表示する昆虫数を決定
-  const getDisplayCount = (count, layout, isExpanded) => {
-    if (layout === 'horizontal') return count; // 全て表示
-    if (layout === 'horizontal-limited' && !isExpanded) return 6; // 制限表示
-    return count; // グリッド表示では全て表示
-  };
+  // 折りたたみ時に表示する写真カード数（モバイル2列×3行）。
+  // 横スクロールはモバイルで操作しづらいため使わず、常に折り返しグリッドで表示する
+  const COLLAPSED_PHOTO_COUNT = 6;
+
+  // 写真なしチップの種別ドット色（写真カードの枠色と同じ系統で揃える）
+  const typeDotClass = (type) => (
+    type === 'moth' ? 'bg-blue-400' :
+    type === 'butterfly' ? 'bg-pink-400' :
+    type === 'beetle' ? 'bg-emerald-400' :
+    type === 'longhornbeetle' ? 'bg-teal-400' :
+    'bg-amber-400'
+  );
 
   const { placeholderSrc, getImageCandidates } = useInsectImageCandidates();
 
@@ -85,9 +80,9 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
           const withoutPhoto = resolvedInsects.filter((r) => !r.hasImage);
 
           const isExpanded = expandedPlants.has(plant);
-          const layout = getDisplayLayout(withPhoto.length, isExpanded);
-          const displayCount = getDisplayCount(withPhoto.length, layout, isExpanded);
-          const showExpandButton = withPhoto.length > 6;
+          const displayCount = isExpanded ? withPhoto.length : COLLAPSED_PHOTO_COUNT;
+          const hiddenPhotoCount = Math.max(0, withPhoto.length - COLLAPSED_PHOTO_COUNT);
+          const showExpandButton = hiddenPhotoCount > 0;
 
           return (
             <div key={plant} className="space-y-4">
@@ -116,7 +111,11 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                     onClick={() => togglePlantExpansion(plant)}
                     className="flex items-center space-x-1 px-3 py-1 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
                   >
-                    <span>{isExpanded ? (isEnglish ? 'Show less' : '少なく表示') : (isEnglish ? 'Show more' : 'もっと見る')}</span>
+                    <span>
+                      {isExpanded
+                        ? (isEnglish ? 'Show less' : '少なく表示')
+                        : (isEnglish ? `Show ${hiddenPhotoCount} more` : `残り${hiddenPhotoCount}種を表示`)}
+                    </span>
                     <svg 
                       className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                       fill="none" 
@@ -129,20 +128,12 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                 )}
               </div>
             
-            {/* 写真あり種: 画像カード（横スクロール/グリッド） */}
+            {/* 写真あり種: コンテナ幅に自動追従する折り返しグリッド。
+                この列は写真パネル有無で幅が大きく変わる（狭いサイド列⇔全幅）ため、
+                ビューポート基準のbreakpointではなくauto-fillでカード幅を一定に保つ。
+                横スクロールはモバイルで操作しづらいため廃止 */}
             {withPhoto.length > 0 && (
-            <div className={`${
-              layout === 'horizontal' ? 'overflow-x-auto pb-2 scroll-fade-right' :
-              layout === 'horizontal-limited' ? 'overflow-x-auto pb-2 scroll-fade-right' :
-              'overflow-hidden'
-            }`}>
-              <div className={`transition-all duration-300 ${
-                layout === 'horizontal' ? 'flex space-x-4 min-w-max' :
-                layout === 'horizontal-limited' ? 'flex space-x-4 min-w-max' :
-                layout === 'grid-2rows' ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6' :
-                layout === 'grid-3rows' ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-6' :
-                'flex space-x-4 min-w-max'
-              }`}>
+              <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(150px,1fr))]">
                 {withPhoto.slice(0, displayCount).map(({ name: relatedMothName, insect: relatedMoth, candidates }) => {
                   const primaryName = isEnglish
                     ? getPrimaryEnglishName({
@@ -159,9 +150,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                       key={relatedMoth.id}
                       to={buildInsectPath(relatedMoth, locale)}
                       state={makeDetailLinkState(location)}
-                      className={`insect-card group ${
-                        layout.startsWith('grid') ? 'w-full' : 'flex-shrink-0 w-56'
-                      }`}
+                      className="insect-card group w-full"
                     >
                       <div className={`relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden border shadow-sm transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 ${
                         relatedMoth.type === 'moth' ? 'border-blue-200/60 dark:border-blue-700/60 hover:border-blue-400/80 dark:hover:border-blue-500/80 hover:shadow-blue-500/20' :
@@ -185,14 +174,14 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                             decoding="async"
                           />
                           {/* 画像上に昆虫名をオーバーレイ表示 */}
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3">
-                            <h5 className="text-white font-medium text-xs leading-tight line-clamp-3 drop-shadow-lg">
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-2.5 pb-2 pt-4">
+                            <h5 className="text-white font-semibold text-xs leading-snug line-clamp-2 drop-shadow-lg">
                               {isEnglish && relatedMoth.scientificName
                                 ? formatScientificNameReact(primaryName)
                                 : primaryName}
                             </h5>
                             {secondaryName && (
-                              <p className="mt-1 text-[10px] leading-tight text-white/80 line-clamp-2 drop-shadow-lg">
+                              <p className="mt-0.5 text-[10px] leading-tight text-white/80 line-clamp-1 drop-shadow-lg">
                                 {secondaryName}
                               </p>
                             )}
@@ -203,18 +192,18 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                   );
                 })}
               </div>
-            </div>
             )}
 
-            {/* 写真なし種: 大きな空カードの羅列を避け、コンパクトな名前チップで一覧する */}
+            {/* 写真なし種: 大きな空カードの羅列を避けつつ、写真カードと同系統の
+                見た目（角丸・枠・種別カラーのドット・ホバー挙動）で統一感を持たせる */}
             {withoutPhoto.length > 0 && (
               <div>
                 {withPhoto.length > 0 && (
-                  <p className="mb-1.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">
+                  <p className="mb-2 text-xs font-medium text-slate-400 dark:text-slate-500">
                     {isEnglish ? 'No photo yet:' : '写真未登録:'}
                   </p>
                 )}
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {withoutPhoto.map(({ name: relatedMothName, insect: relatedMoth }) => {
                     const chipName = isEnglish
                       ? getPrimaryEnglishName({
@@ -228,8 +217,12 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                         key={relatedMoth.id}
                         to={buildInsectPath(relatedMoth, locale)}
                         state={makeDetailLinkState(location)}
-                        className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-[13px] font-medium text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
                       >
+                        <span
+                          className={`h-2 w-2 flex-shrink-0 rounded-full ${typeDotClass(relatedMoth.type)}`}
+                          aria-hidden="true"
+                        />
                         {isEnglish && relatedMoth.scientificName
                           ? formatScientificNameReact(chipName)
                           : chipName}
