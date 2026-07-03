@@ -115,3 +115,6 @@ public/seo-route-map.insects.json
 public/seo-route-map.plants.json
 public/search-console-discovery-seed.txt
 public/search-console-discovery-seed.xml
+
+# Claude Code 個人設定（共有設定は .claude/settings.json）
+.claude/settings.local.json

@@ -5,15 +5,15 @@
 ## 正規化データを唯一のソースにする
 
 - `normalized_data/*.csv` を編集の出発点（ソース・オブ・トゥルース）と位置づけます。
-- `public/*.csv` はビルド処理や検証スクリプトの成果物として扱い、必要に応じて `npm run build:data-lite` などで再生成します。
+- `public/*.csv` はビルド処理や検証スクリプトの成果物として扱い、必要に応じて `npm run sync:public-insects`（CSV同期）や `npm run build:data-lite`（軽量JSON）で再生成します。
 - 手動編集時は、`normalized_data` を更新 → 検証スクリプトを実行 → `public`／`dist` へ反映、という手順に統一します。
 - 現在のデータ構造と安全な改善順序は `docs/data-structure.md` に整理します。
 
 ## 生成物と一次データの扱い
 
-- `dist/` は GitHub Pages 向けのビルド成果物として残しつつ、日常開発では基本的に再生成可能なものとして扱います。
-- `public/assets/data-lite/*.json` や `reports/`、`cache/` などの再生成可能ファイルは `.gitignore` に追加し、新規成果物が Git に堆積しないようにしました。
-- 解析途中の CSV やメモは `tmp/` ではなく、用途が固まったら `public/archive/legacy-data/` などに移してラベル付けします。
+- `dist/` は GitHub Actions がデプロイ時に生成するビルド成果物で、Git 管理外（`.gitignore`）です。
+- `public/assets/data-lite/*.json` や `reports/` の生成物、`cache/` などの再生成可能ファイルは `.gitignore` に追加し、新規成果物が Git に堆積しないようにしました。
+- 解析途中の CSV やメモは `tmp/` ではなく、用途が固まったら `archive/public-archive/legacy-data/` などに移してラベル付けします。
 
 ## バックアップファイルの方針
 
