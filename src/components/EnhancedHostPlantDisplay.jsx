@@ -336,8 +336,12 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
   return (
     <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
       {/* 基本情報行（食草名 + 科名 + 利用バッジを横並びで表示）
-          文字サイズが違う和名と科名が上端揃えで縦にズレて見えないよう、ベースラインで揃える */}
-      <div className="flex items-baseline justify-between gap-3">
+          和名と科名はベースラインで揃える。一方、バッジ・観察タイプのピルは
+          overflow-hidden を含むためベースラインが「箱の下端」で代用され（CSSの
+          合成ベースライン。Safari と Chrome で挙動も異なる）縦にズレるので、
+          ベースライン揃えには参加させず、和名の行箱と同じ高さ h-6(24px) に固定して
+          行頭揃え（= 視覚的センター一致）にする */}
+      <div className="flex items-start justify-between gap-3">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 min-w-0 flex-1">
           <div className="min-w-0">
             {isResourceGroup || isUnknownPlant ? (
@@ -377,25 +381,25 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
           )}
           {/* 利用バッジ（極小・横並び・折り返さない） */}
           {shownBadges.length > 0 && (
-            <div className="flex items-center gap-1 overflow-hidden">
+            <div className="self-start flex items-center gap-1 overflow-hidden">
               {shownBadges.map((b, i) => (
                 <span
                   key={i}
-                  className={`inline-flex items-center gap-1 text-[11px] leading-5 px-1.5 py-[1px] rounded border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 ${b.ls ? b.ls.color : ''}`}
+                  className={`inline-flex items-center gap-1 h-6 text-[11px] px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 ${b.ls ? b.ls.color : ''}`}
                   title={b.label}
                 >
                   <span className="truncate max-w-[8rem]">{b.label}</span>
                 </span>
               ))}
               {extra > 0 && (
-                <span className="text-[11px] leading-5 px-1 py-[1px] rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                <span className="inline-flex items-center h-6 text-[11px] px-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                   {isEnglish ? `+${extra} more` : `他+${extra}`}
                 </span>
               )}
             </div>
           )}
         </div>
-        <span className={`text-xs px-2 py-0.5 rounded shrink-0 ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
+        <span className={`inline-flex items-center h-6 text-xs px-2 rounded shrink-0 ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
           {obsStyle.label}
         </span>
       </div>
