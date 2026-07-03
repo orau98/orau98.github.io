@@ -28,7 +28,7 @@ https://orau98.github.io/
 
 ## 🛠️ データ生成とビルドフロー
 
-- ソースデータは `public/*.csv`（昆虫・食草・備考）。
+- ソースデータ（ソース・オブ・トゥルース）は `normalized_data/*.csv`（昆虫・食草・備考・植物プロフィール）。`public/*.csv` は `npm run sync:public-insects` が同期する成果物なので直接編集しません（詳細: `docs/data-structure.md`）。
 - `prebuild` フックで以下を自動生成してから `vite build` を実行します。
   - `assets/data-lite/*.json`（moths/butterflies/beetles/longhornbeetles/leafbeetles/hostplants/full-dataset 等の軽量化データ）
   - `assets/data-lite/ylist-lite.json`（植物データの科名補完用ライト版）
@@ -38,7 +38,7 @@ https://orau98.github.io/
 
 ### 開発時の注意
 
-- `npm run dev` は既存の `assets/data-lite/*.json` をそのまま読み込みます。CSVを書き換えた場合は一度 `npm run build:data-lite` などを走らせると反映されます。
+- `npm run dev` は起動時に `predev`（`scripts/ensure-dev-data.mjs`）が不足している生成データだけを自動生成します。既存の `assets/data-lite/*.json` は作り直さないため、CSVを書き換えた場合は `npm run sync:public-insects && npm run build:data-lite` を走らせると反映されます。
 - 大量画像のリサイズが走るため、変更が無いときは `npm run build:images:responsive` を省略しても構いません。
 
 ## 🆔 ID仕様について
@@ -183,7 +183,7 @@ var BASE_PATH = '/repo-name/';
 - 種IDページは静的に生成し、`public/meta/{type}/{insect_id}.html` に出力します。
   - 例: `public/meta/butterfly/species-20179.html`、`public/meta/moth/species-0123.html`、`public/meta/longhornbeetle/species-10001.html`
 - サイトマップはメタページのみを対象に分割出力し、粒度を「種ページ」に統一しています。
-  - 出力先: `public/sitemap-main.xml`、`public/sitemap-moth.xml`、`public/sitemap-butterfly.xml`、`public/sitemap-beetle.xml`、`public/sitemap-longhornbeetle.xml`、`public/sitemap-leafbeetle.xml`、`public/sitemap-plant.xml`、およびインデックス `public/sitemap.xml`
+  - 出力先: `public/sitemap-main.xml`、`public/sitemap-moth.xml`、`public/sitemap-butterfly.xml`、`public/sitemap-beetle.xml`、`public/sitemap-longhornbeetle.xml`、`public/sitemap-leafbeetle.xml`、`public/sitemap-aphid.xml`、`public/sitemap-plant.xml`、英語版 `public/sitemap-en-*.xml`、およびインデックス `public/sitemap.xml`
 - 生成コマンド（手動実行）
 
 ```bash
@@ -199,37 +199,20 @@ npm run generate-sitemap
 
 注: SPAのハッシュ/深いURL（`/#/butterfly/...` 等）はサイトマップに含めず、検索エンジン向けにはクロール可能なメタページURL（`/meta/.../*.html`）のみを掲載しています。
 
-## 🔎 データ整合性: 不明な昆虫ID参照の整理
+## 🔎 データ整合性: 不明な昆虫ID参照の検証
 
-外部ソース統合やID再編により、`hostplants.csv` / `general_notes.csv` が現行の `insects.csv` に存在しない `insect_id` を参照する場合があります。これによりビルド前の検証で `unknown insect_id` が検出されます。
+外部ソース統合やID再編により、`hostplants.csv` / `general_notes.csv` が現行の `insects.csv` に存在しない `insect_id` を参照する場合があります。
 
-- 整理用スクリプト: `scripts/prune_unknown_insect_refs.mjs`
-- 目的: 不明IDを参照する行を除去し、バックアップとレポートを出力
-- 使い方:
-
-```bash
-# 参照不整合を削除（バックアップは .bak.YYYYMMDDHH で保存）
-npm run prune-unknown
-
-# 結果の検証とビルド
-npm run validate-normalized
-npm run build
-
-# レポート出力先
-open reports/pruned_unknown_insect_refs.csv
-```
-
-注意: 将来的に旧ID→現行IDの対応表が判明した場合は、削除ではなく「置換（移行）」に切り替えるのが望ましいです。対応表（CSV/JSON）が用意できれば、置換モードのスクリプトを追加します。
+- 検証: `npm run validate-normalized`（結果は `reports/missing_ids.csv` に出力。ビルド前にも自動実行）
+- 品質監査: `npm run audit:csv-quality`（参照整合性を含む全量監査）
+- 不整合が見つかった場合は `normalized_data/*.csv` 側を修正します。旧ID→現行IDの対応が判明している場合は、行削除ではなく「置換（移行）」を優先してください。
 
 ## 🆔 IDポリシー（ハムシの統一）
 
 - ハムシ科（Chrysomelidae）の種IDは `species-H###` を正規とします。
-  - 旧 `species-LB###`（一部のレガシー採番）は、学名/和名照合のうえ `H###` に移行しました。
+  - 旧 `species-LB###`（一部のレガシー採番）は、学名/和名照合のうえ `H###` に移行済みです。
   - Criocerinae（クビボソハムシ亜科）の `species-CR###` も `H###` へ統合済みです。
-- 参照の自動置換スクリプト：
-  - `scripts/unify_leafbeetle_ids.mjs`（LB→H）
-  - `scripts/unify_criocerinae_ids.mjs`（CR→H）
-- 実行後は `scripts/sort_insects_by_id.mjs` でID整列とレポート更新、必要に応じてメタ/サイトマップを再生成してください。
+- 移行は完了しており、当時使用した一括置換スクリプトはリポジトリ整理（#61）で削除済みです。新たなID再編が必要になった場合は、`normalized_data/` を対象にスクリプトを新規作成し、実行後にメタ/サイトマップを再生成してください。
 
 
 ## 📝 開発・デバッグ

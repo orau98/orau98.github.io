@@ -1,33 +1,53 @@
-# 昆虫植物図鑑（昆虫食草図鑑） - Claude開発ガイド
+# 昆虫植物図鑑（昆虫食草図鑑） - 開発ガイド（AIエージェント用メモリ）
+
+このファイルは Claude Code（CLAUDE.md）と Codex（AGENTS.md → 本ファイルへのシンボリックリンク）が共有する開発ガイドです。編集は本ファイル（CLAUDE.md）に対して行うこと。
 
 ## プロジェクト概要
 昆虫と食草（寄主植物）の関係を詳細に記録・表示するReactベースのWebアプリケーションです。日本の蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシと植物の相互作用を可視化しています。
 
 ## 技術スタック
-- **フロントエンド**: React, Vite
-- **デプロイ**: GitHub Pages
+- **フロントエンド**: React, Vite, Tailwind CSS
+- **デプロイ**: GitHub Pages（GitHub Actions。`main` への push で自動デプロイ）
 - **データ**: CSV形式の昆虫・植物データベース
-- **SEO**: 静的メタページ生成システム
+- **SEO**: 静的メタページ生成システム（日本語 + 英語）
+
+## データフローの鉄則（最重要）
+
+- **一次データ（ソース・オブ・トゥルース）は `normalized_data/*.csv`**（`insects.csv` / `hostplants.csv` / `general_notes.csv` / `plant_profiles.csv`）と `normalized_data/ylist-lite.json`。
+- `public/insects.csv` / `public/hostplants.csv` / `public/general_notes.csv` は `npm run sync:public-insects` が `normalized_data/` からコピーする**同期成果物**。**`public/*.csv` を直接編集しないこと**（次のビルドで上書きされる）。
+- `public/assets/data-lite/*.json`・`public/meta/`・`public/en/` などの生成物はGit管理外で、CI/デプロイが毎回再生成する。
+- 詳細は `docs/data-structure.md`（構造）と `docs/data-management.md`（管理ポリシー）を参照。
 
 ## 重要なディレクトリ構造
 ```
 /
+├── normalized_data/           # ★一次データ（CSVはここを編集する）
+│   ├── insects.csv           # 昆虫の実体（主キー: insect_id）
+│   ├── hostplants.csv        # 昆虫×植物の関係行（record_id, insect_id）
+│   ├── general_notes.csv     # 昆虫単位の備考（note_type別）
+│   ├── plant_profiles.csv    # 植物プロフィール（『日本の野生植物』由来等）
+│   └── ylist-lite.json       # YList由来の植物分類・別名索引（事実上の一次データ）
 ├── public/                    # 静的ファイル
-│   ├── *.csv                 # 昆虫データベース
-│   ├── meta/                 # SEO用静的メタページ
-│   │   ├── plant/           # 植物詳細ページ
-│   │   ├── moth/            # 蛾詳細ページ
-│   │   ├── butterfly/       # 蝶詳細ページ
-│   │   ├── beetle/          # タマムシ詳細ページ
-│   │   ├── longhornbeetle/  # カミキリムシ詳細ページ
-│   │   └── leafbeetle/      # ハムシ詳細ページ
-│   ├── images/              # 画像ファイル
-│   └── sitemap.xml          # サイトマップ
-├── src/                      # Reactソースコード
-├── scripts/                  # ビルドスクリプト
-│   ├── generate-meta-pages.js # メタページ生成
-│   └── generate-sitemap.js    # サイトマップ生成
-└── dist/                     # ビルド出力
+│   ├── *.csv                 # normalized_data からの同期成果物（直接編集禁止）
+│   ├── meta/                 # SEO用静的メタページ（生成物・Git管理外）
+│   │                         #   plant/ moth/ butterfly/ beetle/
+│   │                         #   longhornbeetle/ leafbeetle/ aphid/
+│   ├── en/                   # 英語版メタページ（生成物・Git管理外）
+│   ├── images/               # 画像（insects/ plants/ resized/）
+│   └── sitemap*.xml          # 分割サイトマップ（generate-sitemap で再生成）
+├── src/                       # Reactソースコード
+├── scripts/                   # ビルド・監査スクリプト
+│   ├── generate-meta-pages.js      # メタページ生成（日本語）
+│   ├── generate-meta-en-pages.mjs  # メタページ生成（英語）
+│   ├── generate-sitemap-split.js   # 分割サイトマップ生成
+│   ├── build-data-lite.mjs         # CSV→軽量JSON生成
+│   ├── sync-public-insects-csv.mjs # normalized_data→public 同期
+│   ├── validate-normalized.mjs     # 参照整合性検証
+│   └── lib/                        # 共有ロジック（dataLiteBuilders 等）
+├── docs/                      # データ構造・運用ドキュメント
+├── tests/                     # node --test（依存パッケージ不要）
+├── reports/                   # 監査レポート（多くはGit管理外）
+└── dist/                      # ビルド出力
 ```
 
 ## データ形式
@@ -35,21 +55,12 @@
 - 各昆虫種の詳細情報（学名、食草、観察記録等）
 - 植物名は「植物名(科名)」形式で統一
 - 備考欄には詳細な食草情報や生態情報
+- IDは非連番（欠番は仕様）。ハムシの種IDは `species-H###` が正規（LB/CR系は統合済み）
 
 ## メタページ生成システム
 
 ### 植物名バリデーション
-`scripts/generate-meta-pages.js`の`isValidPlantName`関数で無効な植物名をフィルタリング：
-
-```javascript
-const invalidPatterns = [
-  /科が$/,           // 「科が」で終わる
-  /^記録[）)]?$/,    // 「記録」「記録）」
-  /^が記録[）)]?$/,  // 「が記録」「が記録）」
-  /^\)[^(]*$/,       // 「）」で始まる（括弧の後半のみ）
-  /^[（(][^）)]*$/   // 「（」で始まり「）」で終わらない（括弧の前半のみ）
-];
-```
+`scripts/generate-meta-pages.js` の `isValidPlantName` 関数が無効な植物名（説明文の断片、括弧の片割れ、「〜科が」等）をフィルタリングする。**正規表現の正はコード側**なので、パターンを変更・追加する場合は同関数を直接参照・編集すること（このファイルに正規表現をコピーして二重管理しない）。
 
 ### 重要な問題と解決策
 
@@ -58,7 +69,7 @@ const invalidPatterns = [
 
 **解決策**:
 1. `isValidPlantName`関数の強化
-2. 無効なファイル（104件）の削除
+2. 無効なファイルの削除
 3. メタページとサイトマップの再生成
 4. サイトの再デプロイ
 
@@ -66,24 +77,38 @@ const invalidPatterns = [
 
 ### 開発コマンド
 ```bash
-npm run dev          # 開発サーバー起動
-npm run build        # プロダクションビルド
-npm run deploy       # GitHub Pagesにデプロイ
+npm run dev          # 開発サーバー起動（predevが不足データを自動生成）
+npm run build        # プロダクションビルド（prebuildで前処理一式が走る）
+npm run preview      # ビルド結果のプレビュー
+npm test             # ユニットテスト（node --test tests/*.test.mjs）
+npm run lint         # ESLint
 ```
 
-### ビルド前処理
+### ビルド前処理（`npm run build` の prebuild で自動実行）
 ```bash
-npm run generate-meta     # メタページ生成
-npm run generate-sitemap  # サイトマップ生成
+npm run sync:public-insects       # normalized_data → public へCSV同期
+npm run validate-normalized       # 参照整合性検証（→ reports/missing_ids.csv）
+npm run build:data-lite           # 軽量JSON生成
+npm run build:image-index         # 画像索引生成
+npm run build:plant-image-index   # 植物画像ファイル名索引
+npm run build:images:responsive   # レスポンシブ画像生成
+npm run generate-meta:all         # メタページ生成（日本語 + 英語）
+npm run generate-sitemap          # 分割サイトマップ生成
 ```
+
+### デプロイ
+- `main` ブランチへの push で GitHub Actions（`.github/workflows/deploy.yml`）が自動デプロイする。
+- `npm run deploy` はローカルからはデプロイしない（案内メッセージを表示するだけ）。
 
 ## データメンテナンス
 
-### CSVデータの更新
-1. `public/*.csv`ファイルを更新
-2. `npm run generate-meta`でメタページ再生成
-3. `npm run build`でビルド
-4. `npm run deploy`でデプロイ
+### CSVデータの更新手順
+1. **`normalized_data/*.csv` を更新**（`public/*.csv` は編集しない）
+2. `npm run validate-normalized` で参照整合性を確認
+3. `npm run audit:csv-quality` で新たな不整合が入っていないか確認
+4. `npm test` で回帰テストを実行
+5. ローカル確認が必要なら `npm run build:data-lite`（devサーバー反映）や `npm run build`
+6. `main` へ push（またはPR経由でマージ）すると自動デプロイ
 
 ### 植物名の正規化
 - 重複データの統合（例：「オニグルミ」→「オニグルミ(クルミ科)」）
@@ -93,13 +118,14 @@ npm run generate-sitemap  # サイトマップ生成
 ## SEO対策
 
 ### メタページ機能
-- 各植物・昆虫に個別の静的HTMLページ
+- 各植物・昆虫に個別の静的HTMLページ（`public/meta/{type}/{insect_id}.html`、英語版は `public/en/`）
 - 構造化データ（JSON-LD）によるリッチスニペット対応
 - Open Graph/Twitter Card対応
 - 適切なcanonical URL設定
 
 ### サイトマップ
-- 植物、蛾、蝶、タマムシ、カミキリムシ、ハムシ別のサイトマップ分割
+- 植物、蛾、蝶、タマムシ、カミキリムシ、ハムシ、アブラムシ別 + 英語版（`sitemap-en-*.xml`）の分割サイトマップ
+- インデックスは `public/sitemap.xml`
 - 毎日の更新日付自動設定
 
 ## データ品質監査（CSV）
@@ -133,11 +159,15 @@ node scripts/audit-csv-quality.mjs --fix  # 高信頼の決定的修正を適用
 
 2. **ビルドエラー**
    - CSVファイルの文字エンコーディング確認（UTF-8）
+   - `normalized_data/ylist-lite.json` の存在確認（無いと `build:data-lite` が失敗し得る）
    - 無効な植物名パターンの追加確認
 
 3. **デプロイ失敗**
-   - GitHub Pagesの設定確認
-   - `dist`ディレクトリのファイル生成確認
+   - GitHub Actions（deploy.yml）の実行ログ確認
+   - `dist`ディレクトリのファイル生成確認・`npm run smoke:dist`
+
+4. **devサーバーにCSV編集が反映されない**
+   - `npm run sync:public-insects && npm run build:data-lite` を実行（predevは「不足分の生成」のみで、既存の古い生成物は作り直さない）
 
 ## 言語設定
 - **UI言語**: 日本語
