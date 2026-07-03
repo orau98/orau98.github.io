@@ -1,4 +1,7 @@
-requests>=2.31.0
-beautifulsoup4>=4.12.0
-PyMuPDF>=1.24.0
-anthropic>=0.40.0
+# 図鑑データ抽出・更新用Pythonスクリプト（scripts/*.py）の依存パッケージ。
+# サイト本体のビルド・デプロイには不要。
+# セットアップ: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+requests>=2.31.0        # Webからのデータ取得（check_updates_api.py, download_ga_tsushin.py など）
+beautifulsoup4>=4.12.0  # HTML解析（download_ga_tsushin.py など）
+PyMuPDF>=1.24.0         # 図鑑PDFのテキスト・画像抽出（extract_from_pdf.py, ocr_scanned_pdf.py など）
+anthropic>=0.40.0       # Claude APIによるPDFからのデータ抽出（extract_from_pdf.py）
