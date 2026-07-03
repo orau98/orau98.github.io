@@ -190,6 +190,12 @@ li a { font-weight: 500; }
   color: var(--text-primary);
 }
 
+.profile-source {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* Breadcrumb */
 .breadcrumb {
   font-size: 0.8rem;
