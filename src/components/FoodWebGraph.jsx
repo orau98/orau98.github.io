@@ -39,18 +39,11 @@ const getRadialPoint = (index, total, radius, angleOffset = -Math.PI / 2) => {
   };
 };
 
-const getNodeCenter = (nodes) => {
-  if (!Array.isArray(nodes) || nodes.length === 0) return null;
-  const points = nodes.filter((node) => Number.isFinite(node?.x) && Number.isFinite(node?.y));
-  if (points.length === 0) return { x: 0, y: 0 };
-  const totals = points.reduce((acc, node) => ({
-    x: acc.x + node.x,
-    y: acc.y + node.y
-  }), { x: 0, y: 0 });
-  return {
-    x: totals.x / points.length,
-    y: totals.y / points.length
-  };
+// 密なグラフでラベル同士の重なりを抑えるための短縮表示（全文はズーム・選択・ホバーで見える）
+const truncateNodeLabel = (name = '', maxChars = 8) => {
+  const text = String(name);
+  if (text.length <= maxChars + 1) return text;
+  return `${text.slice(0, maxChars)}…`;
 };
 
 const seedGraphNodePositions = ({
@@ -76,8 +69,8 @@ const seedGraphNodePositions = ({
   if (currentPlantName) {
     const insects = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('insect'));
     const ringRadius = Math.max(
-      isCompactPanel ? 118 : 190,
-      Math.min(viewport * (isCompactPanel ? 0.42 : 0.5), isCompactPanel ? 170 : 280)
+      isCompactPanel ? 96 : 168,
+      Math.min(viewport * (isCompactPanel ? 0.36 : 0.46), isCompactPanel ? 140 : 250)
     );
     insects.forEach((node, index) => {
       const point = getRadialPoint(index, insects.length, ringRadius);
@@ -90,12 +83,12 @@ const seedGraphNodePositions = ({
   const plants = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('plant'));
   const insects = nodes.filter((node) => node.id !== centerNodeId && node.type.startsWith('insect'));
   const primaryRadius = Math.max(
-    isCompactPanel ? 112 : 165,
-    Math.min(viewport * (isCompactPanel ? 0.38 : 0.44), isCompactPanel ? 162 : 240)
+    isCompactPanel ? 94 : 148,
+    Math.min(viewport * (isCompactPanel ? 0.32 : 0.4), isCompactPanel ? 132 : 215)
   );
   const outerRadius = Math.max(
-    primaryRadius + (isCompactPanel ? 84 : 118),
-    Math.min(viewport * (isCompactPanel ? 0.64 : 0.8), isCompactPanel ? 236 : 380)
+    primaryRadius + (isCompactPanel ? 66 : 96),
+    Math.min(viewport * (isCompactPanel ? 0.55 : 0.72), isCompactPanel ? 196 : 330)
   );
 
   plants.forEach((node, index) => {
@@ -219,6 +212,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return () => mq.removeEventListener?.('change', update);
   }, []);
 
+  // プログラム由来のズームイベントを無視するための期限（エポックms）。
+  // force-graphはzoomToFit等の自動ズームに加え、キャンバスのリサイズ時にも内部で
+  // translateBy（＝zoomイベント発火）を行うため、これがないと初期フィットが
+  // 「ユーザー操作」と誤認されて無効化され、ガイド表示も出ないまま消える。
+  // 初期値はマウント直後のキャンバス初期化イベントをカバーする
+  const programmaticZoomUntilRef = useRef(Date.now() + 1500);
+
   // モバイルレスポンシブ: コンテナ幅を監視してグラフサイズを動的に決定
   const [graphSize, setGraphSize] = useState(() => ({ width, height }));
   useEffect(() => {
@@ -226,6 +226,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!el || typeof ResizeObserver === 'undefined') return undefined;
     const updateSize = (containerWidth, containerHeight) => {
       if (containerWidth <= 0) return;
+      // サイズ変更に伴うforce-graph内部のズーム調整はユーザー操作ではない。
+      // 子コンポーネントのエフェクトが親より先に走るため、ここで期限を先に延ばす
+      programmaticZoomUntilRef.current = Math.max(programmaticZoomUntilRef.current, Date.now() + 800);
       // モバイルも実測の高さでキャンバスを埋める。
       // 以前は400px固定で、外側の固定高ラッパー(560px)との差分が
       // 空白になり、グラフ下部が途切れて見えていた
@@ -627,11 +630,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   // マウスがグラフ外へ出たら自動的に無効へ戻す
   const [desktopZoomActive, setDesktopZoomActive] = useState(false);
   const showRelatedInsects = true;
+  // ノード同士が間延びしないよう距離は詰めめにする（写真ノードを大きくした分、
+  // ズームフィット時の実表示は以前より密で大きく見える）
   const linkDistance = useMemo(() => {
     if (currentPlantName) {
-      return isCompactPanel ? 84 : 122;
+      return isCompactPanel ? 66 : 100;
     }
-    return isCompactPanel ? 76 : 104;
+    return isCompactPanel ? 58 : 86;
   }, [currentPlantName, isCompactPanel]);
 
   const [ylistData, setYlistData] = useState(null);
@@ -968,13 +973,28 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const graphLayoutMetrics = useMemo(() => {
     const nodeCount = graphData.nodes.length;
     return {
-      chargeStrength: isCompactPanel ? -240 : nodeCount > 28 ? -320 : -280,
+      chargeStrength: isCompactPanel ? -170 : nodeCount > 28 ? -250 : -220,
       denseLabelThreshold: isCompactPanel ? 12 : 16,
       focusZoom: isCompactPanel ? 1.85 : nodeCount > 28 ? 1.7 : 2,
       minimumZoom: isCompactPanel ? 0.95 : nodeCount > 32 ? 1.1 : nodeCount > 18 ? 1.28 : 1.45,
       zoomPadding: isCompactPanel ? 60 : nodeCount > 24 ? 30 : 18
     };
   }, [graphData.nodes.length, isCompactPanel]);
+
+  // 中心種と直接つながるノード（第一リング）。初期ズームの対象と、密なグラフでの
+  // ラベル常時表示の対象を決めるのに使う
+  const primaryNeighborIds = useMemo(() => {
+    const ids = new Set();
+    if (!currentCenterNodeId) return ids;
+    ids.add(currentCenterNodeId);
+    graphData.links.forEach((link) => {
+      const sId = typeof link.source === 'object' ? link.source?.id : link.source;
+      const tId = typeof link.target === 'object' ? link.target?.id : link.target;
+      if (sId === currentCenterNodeId && tId) ids.add(tId);
+      if (tId === currentCenterNodeId && sId) ids.add(sId);
+    });
+    return ids;
+  }, [currentCenterNodeId, graphData.links]);
 
   // selection safety: clear when graph changes
   useEffect(() => {
@@ -1286,22 +1306,50 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     focusNodeById(id);
   }, [focusNodeById]);
 
+  const beginProgrammaticZoom = useCallback((ms) => {
+    programmaticZoomUntilRef.current = Math.max(programmaticZoomUntilRef.current, Date.now() + ms);
+  }, []);
+
+  // 「全体表示」用: グラフ全体をそのままビューポートに収める（クロップしない）
   const fitGraphToViewport = useCallback((duration = 400) => {
     if (!fgRef.current || graphData.nodes.length === 0) return;
     try {
+      beginProgrammaticZoom(duration + 200);
       fgRef.current.zoomToFit(duration, graphLayoutMetrics.zoomPadding);
-      const currentZoom = fgRef.current.zoom ? fgRef.current.zoom() : 1;
-      if (currentZoom < graphLayoutMetrics.minimumZoom) {
-        const center = getNodeCenter(graphData.nodes);
-        if (center) {
-          fgRef.current.centerAt(center.x, center.y, Math.round(duration * 0.7));
-        }
-        fgRef.current.zoom(graphLayoutMetrics.minimumZoom, Math.round(duration * 0.7));
-      }
     } catch {
       // ignore
     }
-  }, [graphData.nodes, graphLayoutMetrics.minimumZoom, graphLayoutMetrics.zoomPadding]);
+  }, [beginProgrammaticZoom, graphData.nodes, graphLayoutMetrics.zoomPadding]);
+
+  // 初期表示用: 全体を引きで映すと名前が読めないため、中心種と直接つながる相手
+  // （第一リング）に寄せて始める。外側の関連種は画面端に見切れて「続きがある」ことを示す
+  const fitInitialView = useCallback((duration = 420) => {
+    if (!fgRef.current || graphData.nodes.length === 0) return;
+    try {
+      const hasOuterRing = primaryNeighborIds.size > 1 && primaryNeighborIds.size < graphData.nodes.length;
+      beginProgrammaticZoom(duration + 700);
+      if (hasOuterRing) {
+        fgRef.current.zoomToFit(duration, isCompactPanel ? 46 : 76, (node) => primaryNeighborIds.has(node.id));
+      } else {
+        fgRef.current.zoomToFit(duration, graphLayoutMetrics.zoomPadding);
+      }
+      // ノードが数個しかないグラフでの過剰ズームだけ抑える（ズーム値は
+      // アニメーション完了後でないと確定しないため、完了後に読んで丸める）。
+      // 最小ズームは強制しない: フィットを上書きすると第一リングが見切れる
+      window.setTimeout(() => {
+        if (!fgRef.current || hasUserInteractedRef.current) return;
+        try {
+          const zoom = fgRef.current.zoom();
+          const maxInitialZoom = isCompactPanel ? 2.1 : 2.4;
+          if (zoom > maxInitialZoom + 0.02) fgRef.current.zoom(maxInitialZoom, 200);
+        } catch {
+          // ignore
+        }
+      }, duration + 60);
+    } catch {
+      // ignore
+    }
+  }, [beginProgrammaticZoom, graphData.nodes, graphLayoutMetrics.zoomPadding, isCompactPanel, primaryNeighborIds]);
 
   useEffect(() => {
     if (!fgRef.current) return;
@@ -1325,10 +1373,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!fgRef.current) return;
     if (hasUserInteractedRef.current) return;
     const t = setTimeout(() => {
-      fitGraphToViewport(420);
+      fitInitialView(420);
     }, 250);
     return () => clearTimeout(t);
-  }, [fitGraphToViewport]);
+  }, [fitInitialView]);
 
   // hover highlight (preview only; selection takes precedence)
   const handleNodeHover = useCallback((node) => {
@@ -1434,14 +1482,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   // node renderer with image fallback
   const nodeCanvasObject = useCallback((node, ctx, globalScale) => {
-    const drawLabel = (x, y, label, dim) => {
-      const fontSize = 12 / globalScale;
-      ctx.font = `${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
+    const drawLabel = (x, y, label, { dim = false, below = false, gap = 4, emphasis = false } = {}) => {
+      // ズームアウト時はラベル文字も少し縮めて重なりを抑える（画面上で最小約9.5px）
+      const fontScale = Math.max(0.78, Math.min(1, globalScale));
+      const fontSize = ((emphasis ? 13 : 12) * fontScale) / globalScale;
+      ctx.font = `${emphasis ? '700 ' : ''}${fontSize}px "Helvetica Neue", "Segoe UI", sans-serif`;
       const textWidth = ctx.measureText(label).width;
       const padding = 4 / globalScale;
       const labelWidth = textWidth + padding * 2;
       const labelHeight = fontSize + padding * 2;
-      const top = y - labelHeight - 4;
+      // ラベルはノードの外側（中心から遠い側）に置き、ノードやリンクとの重なりを避ける
+      const top = below ? y + gap : y - gap - labelHeight;
       ctx.fillStyle = isDark
         ? `rgba(15,23,42,${dim ? 0.35 : 0.82})`
         : `rgba(248,250,252,${dim ? 0.4 : 0.9})`;
@@ -1471,25 +1522,32 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       plant: '#10b981'
     };
     const isCurrent = node.type.includes('current');
-    const baseR = isCurrent ? 13 : 8;
-    const radius = baseR / Math.sqrt(globalScale);
+    // 写真がノードの情報の主役なので大きめに描く。半径はグラフ座標系で固定し、
+    // ズームインすると画像も素直に拡大されるようにする
+    // （以前は1/√zoomで縮み、拡大しても写真がほとんど大きくならなかった）
+    const baseR = isCurrent ? 18 : 12;
+    const radius = baseR;
     const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
     const dim = dimByHighlight;
     const alpha = dim ? 0.25 : 1;
-    const dense = labelMode === 'auto' && graphData.nodes.length > graphLayoutMetrics.denseLabelThreshold;
-    // 高密度グラフでは既定のフィットズームでもglobalScaleが1.35を超えることがあり、
-    // 全ラベルが重なって判読できなくなる。密なときは十分ズームした場合のみ全ラベルを出す
-    // （選択中・ハイライト中のノードのラベルは常に表示される）
-    const revealZoom = dense ? 1.8 : 1.35;
-    const showLabel = labelMode !== 'none' && (
-      labelMode === 'all'
-      || isCurrent
-      || selectedNodeId === node.id
-      || (activeNodeId && inHighlight)
-      || (!dense && !dim)
-      || (globalScale > revealZoom && !dim)
-    );
+    // 名前が見えないと関係が読めないため、ラベルは既定で常時表示する。
+    // 代わりに密なグラフでは、第一リング以外のノードをズームするまで短縮表示にして
+    // 重なりを抑える（全文は選択・ホバー・ズーム・「全て」モードで見える）
+    const dense = graphData.nodes.length > graphLayoutMetrics.denseLabelThreshold;
+    const isPrimary = primaryNeighborIds.has(node.id);
+    const primaryDense = primaryNeighborIds.size - 1 > 14;
+    const emphasize = isCurrent || selectedNodeId === node.id || (activeNodeId && inHighlight);
+    const showLabel = labelMode !== 'none' && (labelMode === 'all' || emphasize || !dim);
+    const revealZoom = 1.6;
+    const shorten = labelMode !== 'all'
+      && dense
+      && !emphasize
+      && globalScale < revealZoom
+      && (isPrimary ? primaryDense : true);
+    const labelText = shorten
+      ? truncateNodeLabel(node.name, isPrimary ? (isEnglish ? 16 : 9) : (isEnglish ? 12 : 6))
+      : node.name;
 
     // try to ensure image is loaded
     const foundUrl = ensureImage(node.imgCandidates);
@@ -1500,7 +1558,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ctx.globalAlpha = alpha * 0.35;
     ctx.fillStyle = colors[node.type] || '#94a3b8';
     ctx.beginPath();
-    ctx.arc(node.x, node.y, radius * 2, 0, Math.PI * 2);
+    ctx.arc(node.x, node.y, radius * 1.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -1540,13 +1598,22 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.restore();
     }
 
-    if (showLabel) drawLabel(node.x, node.y, node.name, dim);
-  }, [activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, labelMode, selectedNodeId]);
+    if (showLabel) {
+      drawLabel(node.x, node.y, labelText, {
+        dim,
+        // 中心（原点付近）から遠い側にラベルを出すことで、リンクや内側ノードとの重なりを減らす
+        below: (node.y ?? 0) >= 0,
+        gap: radius * (isCurrent ? 1.45 : 1.15) + 3 / globalScale,
+        emphasis: isCurrent
+      });
+    }
+  }, [activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, isEnglish, labelMode, primaryNeighborIds, selectedNodeId]);
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
     const isCurrent = node.type.includes('current');
-    // 視覚半径(13/8)より広いタップ判定。モバイルで小ノードを取りやすくする。
-    const radius = (isCurrent ? 20 : 15) / Math.sqrt(globalScale);
+    // 視覚半径(18/12)より広いタップ判定。ズームアウト時も画面上で最低約22pxを確保し、
+    // モバイルで小ノードを取りやすくする
+    const radius = Math.max((isCurrent ? 18 : 12) * 1.25, 22 / globalScale);
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
@@ -2483,14 +2550,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             backgroundColor={isDark ? '#0b1220' : '#f8fafc'}
             cooldownTicks={110}
             d3VelocityDecay={0.35}
-            onZoom={markUserInteracted}
+            onZoom={() => {
+              // 自動ズーム（初期フィット等）はユーザー操作として扱わない
+              if (Date.now() < programmaticZoomUntilRef.current) return;
+              markUserInteracted();
+            }}
             onEngineStop={() => {
               if (!fgRef.current) return;
               if (hasUserInteractedRef.current) return;
               const runFit = () => {
                 if (!fgRef.current) return;
                 if (hasUserInteractedRef.current) return;
-                fitGraphToViewport(420);
+                fitInitialView(420);
               };
               if (typeof window !== 'undefined' && window.requestAnimationFrame) {
                 window.requestAnimationFrame(runFit);
