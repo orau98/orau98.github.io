@@ -50,6 +50,11 @@
       imagesrcset="%BASE_URL%images/resized/insects/Cucullia_argentea.320.avif 320w, %BASE_URL%images/resized/insects/Cucullia_argentea.640.avif 640w, %BASE_URL%images/resized/insects/Cucullia_argentea.1024.avif 1024w"
       imagesizes="100vw"
     >
+    <!-- 画像インデックスの早期取得: 全画面のカード画像がこのJSONの到着を待って
+         ファイル名を解決するため、JSバンドルの取得・解析と並行して読み始める。
+         クエリはランタイム(getAssetVersionQuery)と同一にしないと二重取得になる。
+         crossorigin は fetch() と資格情報モードを揃えるために必要 -->
+    <link rel="preload" as="fetch" href="%BASE_URL%assets/data-lite/image-index.json?v=%VITE_ASSET_VERSION%" fetchpriority="high" crossorigin>
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     <link rel="sitemap" type="application/xml" title="Search Console submit sitemap" href="/search-console-submit.xml">
     <link rel="sitemap" type="application/xml" title="Search Console sitemap" href="/search-console-sitemap.xml">
