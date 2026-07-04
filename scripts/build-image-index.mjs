@@ -74,9 +74,9 @@ for (const file of files) {
   candidatesByBase.get(base).push(ext);
 }
 
-const names = Array.from(candidatesByBase.keys()).sort((a, b) =>
-  a.localeCompare(b, 'ja'),
-);
+// コードポイント順で環境非依存にソートする。localeCompare(…, 'ja') は
+// Node/ICUのバージョンで並びが変わり、生成のたびに差分が出る原因になる
+const names = Array.from(candidatesByBase.keys()).sort();
 const extMap = {};
 for (const base of names) {
   const exts = Array.from(new Set(candidatesByBase.get(base) || []));
