@@ -94,3 +94,10 @@ export const getMappedScientificFilename = (japaneseName) => {
   if (!japaneseName) return undefined;
   return globalJapaneseToScientificMapping.get(japaneseName.trim());
 };
+
+// 重要種の画像を必ず拾うための強制マッピング（昆虫ID → 画像ベース名）。
+// インデックス未取得のタイミングでも即座にファイル名を返して表示を試みる。
+export const INSECT_IMAGE_BASE_OVERRIDES = new Map([
+  ['species-20176', 'Graphium_sarpedon'], // アオスジアゲハ
+  ['species-4601', 'Zaranga_permagna'],   // アオバシャチホコ
+]);
