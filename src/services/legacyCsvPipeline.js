@@ -4384,7 +4384,7 @@ export async function runLegacyCsvPipeline(ctx) {
                 const plantPartPattern = /\s*\([^)]+\)\s*[のから](花蕾|花穂|花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|新芽)/;
                 const simplePartPattern = /[のから](花蕾|花穂|花|実|果実|葉|茎|根|枝|樹皮|蕾|若葉|新芽)$/;
                 
-                const allHavePlantParts = allSegmentsTrimmed.every(segment => {
+                const allHavePlantParts = allSegmentsTrimmed.length > 0 && allSegmentsTrimmed.every(segment => {
                   // Check both patterns
                   const hasPlantPart = plantPartPattern.test(segment) || simplePartPattern.test(segment);
                   const hasParentheses = segment.includes('(') && segment.includes(')');
@@ -4439,7 +4439,7 @@ export async function runLegacyCsvPipeline(ctx) {
                 allowDebugLogs && console.log(`    Segment ${i}: "${segment}" - Pattern matches: ${matches}`);
               });
               
-              const allHavePlantParts = allSegmentsTrimmed.every(segment => 
+              const allHavePlantParts = allSegmentsTrimmed.length > 0 && allSegmentsTrimmed.every(segment => 
                 plantPartPattern.test(segment) || segment.includes('(') && segment.includes(')')
               );
               allowDebugLogs && console.log('  All have plant parts?:', allHavePlantParts);
