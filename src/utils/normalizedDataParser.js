@@ -15,6 +15,7 @@ import {
   createEmptyInsectCollections,
 } from './siteTaxonomy.js';
 import { getHostResourceType, isPlantHostRecord } from './hostResource.js';
+import { getPublicHostPlantNote } from './publicHostPlantNotes.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = createEmptyInsectCollections(() => []);
@@ -192,7 +193,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       plantPart: plantPartRaw || defaultPlantPart,
       lifeStage: lifeStageRaw || '幼虫',
       reference: referenceRaw,
-      notes: hp.notes || '',
+      notes: getPublicHostPlantNote(hp.notes || ''),
       isDetailed: true,
       isFlowerVisit,
       resourceType

@@ -20,6 +20,7 @@ import {
 } from '../src/utils/filename.js';
 import { bibliography } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
+import { getPublicHostPlantNote } from '../src/utils/publicHostPlantNotes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -2356,7 +2357,7 @@ async function generateMetaPages() {
       const plantPart = row.plant_part || '葉';
       const lifeStage = row.life_stage || '幼虫';
       const reference = row.reference || '';
-      const notes = row.notes || '';
+      const notes = getPublicHostPlantNote(row.notes || '');
       
       if (insectId && plantName) {
         if (!hostPlantsMapByInsectId.has(insectId)) {

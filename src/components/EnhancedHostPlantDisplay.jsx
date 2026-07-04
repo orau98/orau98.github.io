@@ -9,6 +9,7 @@ import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/eng
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import { getHostResourceType } from '../utils/hostResource';
 import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisitStyle';
+import { getPublicHostPlantNoteSegments } from '../utils/publicHostPlantNotes';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -418,11 +419,9 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
         // 備考のフィルタリング: 食草セクションに不適切な生活史・発生時期系の文言を除去
         const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
         const isPlantRelevant = (s) => /葉|花|蕾|若葉|茎|根|枝|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
-        // 改行も区切りに含め、改行区切りの備考が1行に潰れないようにする
-        const splitSegments = (s) => s.split(/[\r\n\/／]|。|；|;/).map(t => t.trim()).filter(Boolean);
         const filteredNotesSet = new Set();
         Array.from(allNotes).forEach(note => {
-          splitSegments(note).forEach(seg => {
+          getPublicHostPlantNoteSegments(note).forEach(seg => {
             if (!seg) return;
             // 生活史重複（出現時期等）は除外
             if (isLifecycleNote(seg) && !isPlantRelevant(seg)) return;
