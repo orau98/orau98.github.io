@@ -70,6 +70,23 @@ export const buildNormalizedEntries = (imageNames, imageExtensions) => {
   }));
 };
 
+// (imageNames, imageExtensions) の参照が変わらない限り正規化エントリ配列を
+// 再構築しない共有キャッシュ。消費側（一覧・詳細・カード等）ごとに同じ
+// 3,000件規模の正規化をやり直すのを防ぎ、配列参照が安定することで
+// 下記の検索構造キャッシュ(entryLookupCache)も全消費側で共有される。
+// インデックスは実行時に1組しか存在しないため単一スロットで足りる。
+let cachedEntriesNames = null;
+let cachedEntriesExts = null;
+let cachedEntries = [];
+export const buildNormalizedEntriesCached = (imageNames, imageExtensions) => {
+  if (imageNames !== cachedEntriesNames || imageExtensions !== cachedEntriesExts) {
+    cachedEntriesNames = imageNames;
+    cachedEntriesExts = imageExtensions;
+    cachedEntries = buildNormalizedEntries(imageNames, imageExtensions);
+  }
+  return cachedEntries;
+};
+
 export const buildInsectImageBaseCandidates = (insect, mappedFilename) => {
   if (!insect) return [];
   const nameJp = insect.name || insect.japaneseName || '';

@@ -26,9 +26,11 @@ import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
 import { buildInsectPath } from './utils/insectSlug';
 import {
   buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
+  buildNormalizedEntriesCached,
   resolveImageBaseCandidates,
 } from './utils/insectImageResolver';
+import useInsectImageIndex from './hooks/useInsectImageIndex';
+import { getAssetBase, getAssetVersionQuery } from './utils/assetPaths';
 import ImageWithFallback from './components/ImageWithFallback';
 import {
   buildResponsivePicture,
@@ -314,10 +316,9 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
   const [imgError, setImgError] = React.useState(false);
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
-  const normalizedImageEntries = React.useMemo(
-    () => buildNormalizedEntries(imageFilenames, imageExtensions),
-    [imageFilenames, imageExtensions],
-  );
+  // 正規化エントリはインデックス参照ごとの共有キャッシュを使う
+  // （カードごとにuseMemoで再構築すると関連昆虫の数だけ全件正規化が走る）
+  const normalizedImageEntries = buildNormalizedEntriesCached(imageFilenames, imageExtensions);
   // Resolve the best image basename for this insect
   const filename = React.useMemo(() => {
     const nameJp = (insect?.name || insect?.japaneseName || '').trim();
@@ -334,9 +335,8 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
     return resolvedBases[0] || '';
   }, [imageExtensions, imageFilenames, insect, normalizedImageEntries]);
   const hasImage = Boolean(filename);
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';
+  const normalizedBase = getAssetBase();
+  const assetVer = getAssetVersionQuery();
   const responsive = filename
     ? buildResponsivePicture({
         folder: 'insects',
@@ -525,37 +525,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const m = s.match(/^([A-Z][a-z]{2,})([a-z-]{3,})$/);
     return m ? `${m[1]} ${m[2]}` : s;
   };
-  const [imageFilenames, setImageFilenames] = useState(new Set());
-  const [imageExtensions, setImageExtensions] = useState({});
-  
+  // 昆虫画像インデックスは共有フックから取得。
+  // 以前はここで image_filenames.txt / image_extensions.json を直接fetchしており、
+  // サービス層のキャッシュ・リトライ・軽量インデックスを経由しない二重取得だった。
+  const { imageNames: imageFilenames, imageExtensions } = useInsectImageIndex();
+
   // Debug logging for plant detail
   logger.debug('HostPlantDetail - plantName param:', plantName);
-
-  // Load image filenames and extension mapping for insect cards (avoid 404s)
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const base = import.meta.env.BASE_URL || '/';
-        const ver = (import.meta.env.DEV ? String(Date.now()) : (import.meta.env.VITE_ASSET_VERSION || ''));
-        const bust = ver ? `?v=${ver}` : '';
-        const [fnRes, extRes] = await Promise.allSettled([
-          fetch(`${base}image_filenames.txt${bust}`),
-          fetch(`${base}image_extensions.json${bust}`)
-        ]);
-        if (fnRes.status === 'fulfilled' && fnRes.value.ok) {
-          const text = await fnRes.value.text();
-          setImageFilenames(new Set(text.trim().split('\n').filter(Boolean)));
-        }
-        if (extRes.status === 'fulfilled' && extRes.value.ok) {
-          const json = await extRes.value.json();
-          setImageExtensions(json);
-        }
-      } catch (_e) {
-        // silent
-      }
-    };
-    load();
-  }, []);
   logger.debug('HostPlantDetail - decodedPlantName:', decodedPlantName);
   logger.debug('HostPlantDetail - hostPlants keys:', Object.keys(hostPlants).slice(0, 10));
 
@@ -1054,10 +1030,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const flowerVisitInsects = classifiedInsects.filter(i => i.hasFlowerVisit);
 
   // 関連昆虫を「写真あり（カード表示）」と「写真なし（チップ表示）」に分ける
-  const relatedImageEntries = useMemo(
-    () => buildNormalizedEntries(imageFilenames, imageExtensions),
-    [imageFilenames, imageExtensions],
-  );
+  const relatedImageEntries = buildNormalizedEntriesCached(imageFilenames, imageExtensions);
   const partitionInsectsByPhoto = (list) => {
     const withPhoto = [];
     const withoutPhoto = [];
@@ -1194,7 +1167,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     const addedSlots = new Set();
 
     const has = (fullName) => nameIndexSet.has(fullName);
-    const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/';
+    const baseUrl = getAssetBase();
 
     const resolveNameWithIndex = (base, suffix) => {
       if (!suffix) return has(base) ? base : null;

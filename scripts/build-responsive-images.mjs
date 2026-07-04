@@ -2,6 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
+import {
+  MIN_IMAGE_BYTES,
+  RESIZED_WIDTHS,
+  SOURCE_IMAGE_EXTENSIONS,
+} from './lib/imageAssetConstants.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,7 +18,7 @@ const TARGETS = [
   { dir: 'images/plants', outSub: 'images/resized/plants' },
 ];
 
-const WIDTHS = [320, 640, 1024];
+const WIDTHS = RESIZED_WIDTHS;
 const FORMATS = [
   {
     ext: 'jpg',
@@ -52,7 +57,7 @@ async function processImage(srcPath, outBase, widths = WIDTHS) {
   try {
     const srcStat = fs.statSync(srcPath);
     // Skip obviously invalid placeholders or tiny files
-    if (!srcStat.isFile() || srcStat.size < 100) {
+    if (!srcStat.isFile() || srcStat.size < MIN_IMAGE_BYTES) {
       console.warn('[responsive] skip', srcPath, 'Input file too small or not a regular file');
       return;
     }
@@ -80,10 +85,12 @@ async function processImage(srcPath, outBase, widths = WIDTHS) {
 }
 
 function listImages(dir) {
-  const exts = new Set(['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.PNG', '.WEBP']);
+  // 索引(build-image-index)と同じ拡張子集合を小文字比較で使う。
+  // 集合がずれると「索引に載るのにリサイズ版が無い」404の原因になる
+  const exts = new Set(SOURCE_IMAGE_EXTENSIONS);
   const items = fs.readdirSync(dir);
   return items
-    .filter(name => exts.has(path.extname(name)))
+    .filter(name => exts.has(path.extname(name).toLowerCase()))
     .map(name => path.join(dir, name));
 }
 

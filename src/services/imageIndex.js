@@ -34,6 +34,10 @@ const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 250) => {
   throw lastErr;
 };
 
+// ロード済みなら植物画像ファイル名一覧を同期的に返す（未ロードはnull）。
+// 返り値は読み取り専用として扱うこと。
+export const getCachedPlantImageFilenames = () => _plantImageNames;
+
 export const loadPlantImageFilenames = async () => {
   if (_plantImageVersion !== ASSET_VERSION) {
     _plantImageNames = null;
