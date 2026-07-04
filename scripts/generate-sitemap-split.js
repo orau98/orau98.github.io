@@ -11,15 +11,6 @@ function formatDate(date) {
 }
 
 /**
- * 基準日（today）から N ヶ月前の月初日を "YYYY-MM-DD" 形式で返す。
- * N=0 → 今月1日, N=1 → 先月1日, N=3 → 3ヶ月前の月初日
- */
-function monthsAgoFirstDay(n, today = new Date()) {
-  const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - n, 1));
-  return formatDate(d);
-}
-
-/**
  * normalized_data/hostplants.csv を読み込み、
  * insect_id → 食草レコード数 のマップを返す。
  * CSV は UTF-8 (BOM 有無どちらも対応)。
@@ -146,10 +137,13 @@ function isNoindexPage(filePath) {
 }
 
 function buildRobotsTxt(baseUrl) {
+  // 正規の入口は sitemap.xml（分割サイトマップのインデックス）。
+  // discovery-seed は、Search Console が大量の分割サイトマップを発見しきれない
+  // 事例への対策として高価値URLを直接列挙する補助シード。
+  // 同内容の重複エイリアスを複数並べると Search Console の統計が分裂するため、
+  // ここには増やさないこと。
   const sitemapPaths = [
     '/sitemap.xml',
-    '/sitemap-core.xml',
-    '/search-console-submit.xml',
     '/search-console-discovery-seed.xml',
   ];
 
@@ -163,10 +157,6 @@ function buildRobotsTxt(baseUrl) {
   return lines.join('\n');
 }
 
-function formatRfc822Date(dateString) {
-  return new Date(`${dateString}T00:00:00Z`).toUTCString();
-}
-
 function writePublicAndDistFile(filename, content, distPath) {
   const publicPath = path.join(__dirname, '../public', filename);
   fs.writeFileSync(publicPath, content, 'utf-8');
@@ -175,103 +165,6 @@ function writePublicAndDistFile(filename, content, distPath) {
     const distFilePath = path.join(distPath, filename);
     fs.writeFileSync(distFilePath, content, 'utf-8');
   }
-}
-
-function buildGoogleFallbackFiles(baseUrl, generatedAt) {
-  const homepage = `${baseUrl}/`;
-  const indexPage = `${baseUrl}/index.html`;
-  const hubUrl = 'https://pubsubhubbub.appspot.com/';
-  const rfc822Date = formatRfc822Date(generatedAt);
-  const escapedHomepage = escapeXml(homepage);
-  const escapedIndexPage = escapeXml(indexPage);
-  const escapedHubUrl = escapeXml(hubUrl);
-  const escapedGeneratedAt = escapeXml(generatedAt);
-
-  return {
-    'search-console-sitemap.xml': [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      '  <url>',
-      `    <loc>${escapedHomepage}</loc>`,
-      `    <lastmod>${escapedGeneratedAt}</lastmod>`,
-      '  </url>',
-      '</urlset>',
-      '',
-    ].join('\n'),
-    'gsc-sitemap.xml': [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      '  <url>',
-      `    <loc>${escapedHomepage}</loc>`,
-      '  </url>',
-      '</urlset>',
-      '',
-    ].join('\n'),
-    'gsc-index-sitemap.xml': [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      '  <url>',
-      `    <loc>${escapedIndexPage}</loc>`,
-      '  </url>',
-      '</urlset>',
-      '',
-    ].join('\n'),
-    'search-console-sitemap.txt': `${homepage}\n`,
-    'gsc-sitemap.txt': `${homepage}\n`,
-    'google-sitemap.xml': [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-      '  <url>',
-      `    <loc>${escapedHomepage}</loc>`,
-      `    <lastmod>${escapedGeneratedAt}</lastmod>`,
-      '  </url>',
-      '</urlset>',
-      '',
-    ].join('\n'),
-    'google-sitemap.txt': `${homepage}\n`,
-    'google-feed.xml': [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
-      '  <channel>',
-      '    <title>orau98.github.io</title>',
-      `    <link>${escapedHomepage}</link>`,
-      '    <description>orau98.github.io sitemap feed</description>',
-      `    <atom:link href="${escapeXml(`${baseUrl}/google-feed.xml`)}" rel="self" type="application/rss+xml"/>`,
-      `    <atom:link href="${escapedHubUrl}" rel="hub"/>`,
-      `    <lastBuildDate>${escapeXml(rfc822Date)}</lastBuildDate>`,
-      '    <language>ja</language>',
-      '    <ttl>60</ttl>',
-      '    <item>',
-      '      <title>orau98.github.io</title>',
-      `      <link>${escapedHomepage}</link>`,
-      '      <description>昆虫植物図鑑のトップページ</description>',
-      `      <guid isPermaLink="true">${escapedHomepage}</guid>`,
-      `      <pubDate>${escapeXml(rfc822Date)}</pubDate>`,
-      '    </item>',
-      '  </channel>',
-      '</rss>',
-      '',
-    ].join('\n'),
-    'google-atom.xml': [
-      '<?xml version="1.0" encoding="UTF-8"?>',
-      '<feed xmlns="http://www.w3.org/2005/Atom">',
-      '  <title>orau98.github.io</title>',
-      `  <link href="${escapedHomepage}"/>`,
-      `  <link rel="self" href="${escapeXml(`${baseUrl}/google-atom.xml`)}"/>`,
-      `  <link rel="hub" href="${escapedHubUrl}"/>`,
-      `  <updated>${escapedGeneratedAt}T00:00:00Z</updated>`,
-      `  <id>${escapedHomepage}</id>`,
-      '  <entry>',
-      '    <title>orau98.github.io</title>',
-      `    <link href="${escapedHomepage}"/>`,
-      `    <id>${escapedHomepage}</id>`,
-      `    <updated>${escapedGeneratedAt}T00:00:00Z</updated>`,
-      '    <summary>昆虫植物図鑑のトップページ</summary>',
-      '  </entry>',
-      '</feed>',
-      '',
-    ].join('\n'),
-  };
 }
 
 function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {}) {
@@ -302,16 +195,16 @@ function generateSplitSitemaps() {
 
   const baseUrl = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 
-  // --- lastmod 差別化のためのデータ読み込み ---
+  // --- changefreq 差別化のためのデータ読み込み ---
   const today = new Date();
   const generatedAt = formatDate(today);
-  const DATE_RICH    = monthsAgoFirstDay(0, today); // 今月1日: データが豊富
-  const DATE_MEDIUM  = monthsAgoFirstDay(1, today); // 先月1日: データが中程度
-  const DATE_SPARSE  = monthsAgoFirstDay(3, today); // 3ヶ月前1日: データが少ない
-  // 種・植物ページのテンプレートを更新した日（施策B/C: 食草数準拠の説明文＋「同じ食草につく他の昆虫」相互リンク）。
-  // この日に全ページの本文が実際に変わったため、lastmod の下限として用い、Google 等に再クロールを促す正当なシグナルとする。
-  // 今後テンプレートを実質変更したら、この日付を更新すること。
-  const TEMPLATE_CHANGE_DATE = '2026-06-02';
+  // 全メタページ共通の lastmod。テンプレート変更やデータ一括更新で実際に
+  // ページ本文が変わった日に、手動でこの日付を更新すること。
+  // かつてはデータ充実度に応じて「今月1日/先月1日/3ヶ月前1日」を返す人工的な
+  // lastmod を使っていたが、内容が変わらないのに毎月日付が転がる虚偽シグナルは
+  // Google に lastmod 全体を無視される要因になるため廃止した。
+  // 充実度の差別化は changefreq（weekly/monthly）にのみ反映する。
+  const META_CONTENT_LASTMOD = '2026-06-02';
 
   const normalizedDataDir = path.join(__dirname, '../normalized_data');
   const hostplantCountMap = buildHostplantCountMap(
@@ -330,27 +223,19 @@ function generateSplitSitemaps() {
   );
 
   /**
-   * 昆虫メタページの insect_id からlastmodを決定する。
-   * - 食草5件以上 または 生態情報あり → DATE_RICH
-   * - 食草1-4件                      → DATE_MEDIUM
-   * - 食草なし                        → DATE_SPARSE
+   * 昆虫メタページのデータが「豊富」（食草5件以上 または 生態情報あり）か。
+   * changefreq の weekly/monthly 判定にのみ使う。
    */
-  function resolveInsectLastmod(insectId) {
+  function isRichInsectPage(insectId) {
     const hostCount = hostplantCountMap.get(insectId) || 0;
-    const hasEco = ecoNoteSet.has(insectId);
-    if (hostCount >= 5 || hasEco) return DATE_RICH;
-    if (hostCount >= 1) return DATE_MEDIUM;
-    return DATE_SPARSE;
+    return hostCount >= 5 || ecoNoteSet.has(insectId);
   }
 
   /**
    * 植物メタページのファイル名（"植物名.html" or "植物名(科名).html"）から
-   * 植物名を取り出し、hostplants.csv の昆虫種数でlastmodを決定する。
-   * - 5種以上 → DATE_RICH
-   * - 1-4種  → DATE_MEDIUM
-   * - 0種    → DATE_SPARSE
+   * 植物名を取り出し、hostplants.csv の利用昆虫が5種以上なら「豊富」と判定する。
    */
-  function resolvePlantLastmod(filename) {
+  function isRichPlantPage(filename) {
     // ファイル名から ".html" を除いたものが植物名（科名付き or なし）
     const rawName = filename.replace(/\.html$/i, '');
     // hostplants.csv の plant_name は科名なしが多いので、
@@ -360,9 +245,7 @@ function generateSplitSitemaps() {
       plantInsectCountMap.get(rawName) ||
       plantInsectCountMap.get(baseName) ||
       0;
-    if (count >= 5) return DATE_RICH;
-    if (count >= 1) return DATE_MEDIUM;
-    return DATE_SPARSE;
+    return count >= 5;
   }
 
   // 各カテゴリごとのサイトマップを格納
@@ -428,23 +311,9 @@ function generateSplitSitemaps() {
       .filter((f) => f.endsWith('.html'))
       .sort((a, b) => a.localeCompare(b, 'en'));
 
-    // 植物は「科名付きが正」として、科名なしエイリアスをサイトマップから除外
-    if (key === 'plant') {
-      const aliasBases = new Set();
-      files.forEach((file) => {
-        if (file === 'index.html') return;
-        const base = file.replace(/\.html$/i, '');
-        const m = base.match(/^(.+?)\(([^)]+科)\)$/);
-        if (m) aliasBases.add(m[1]);
-      });
-      files = files.filter((file) => {
-        if (file === 'index.html') return true;
-        const base = file.replace(/\.html$/i, '');
-        const isFamilyVariant = /\([^)]*科\)$/.test(base);
-        if (!isFamilyVariant && aliasBases.has(base)) return false;
-        return true;
-      });
-    }
+    // 植物は基底名ページ（例「オニグルミ.html」）が正規ページで、
+    // 科名付き（例「オニグルミ(クルミ科).html」）は noindex リダイレクトスタブ。
+    // スタブは直後の noindex フィルタで除外されるため、ここでの特別扱いは不要。
 
     const preNoindexCount = files.length;
     files = files.filter((file) => {
@@ -475,27 +344,15 @@ function generateSplitSitemaps() {
     files.forEach((file) => {
       if (file === 'index.html') return;
 
-      // lastmod: ファイルの mtime ではなくデータ充実度で決定する
-      let lastmod;
-      if (isPlantSection) {
-        // 植物ページ: ファイル名（植物名）から昆虫種数で決定
-        lastmod = resolvePlantLastmod(file);
-      } else {
-        // 昆虫ページ: ファイル名が "insect_id.html" なので insect_id を抽出
-        const insectId = file.replace(/\.html$/i, '');
-        lastmod = resolveInsectLastmod(insectId);
-      }
-
-      // changefreq: データが豊富なページは weekly、それ以外は monthly（充実度バケットで判定）
-      const changefreq = lastmod === DATE_RICH ? 'weekly' : 'monthly';
-
-      // テンプレート更新で全ページの本文が変わったため、lastmod は変更日を下回らないようにする
-      if (lastmod < TEMPLATE_CHANGE_DATE) lastmod = TEMPLATE_CHANGE_DATE;
+      // changefreq: データが豊富なページは weekly、それ以外は monthly
+      const isRich = isPlantSection
+        ? isRichPlantPage(file)
+        : isRichInsectPage(file.replace(/\.html$/i, ''));
 
       sitemaps[key].push({
         loc: `${baseUrl}${routePrefix}${encodeFilename(file)}`,
-        lastmod,
-        changefreq,
+        lastmod: META_CONTENT_LASTMOD,
+        changefreq: isRich ? 'weekly' : 'monthly',
         priority,
       });
       count++;
@@ -731,7 +588,6 @@ function generateSplitSitemaps() {
     fs.writeFileSync(distLegacyIndexPath, indexXml, 'utf-8');
   }
 
-  const googleFallbackFiles = buildGoogleFallbackFiles(baseUrl, generatedAt);
   // Search Console reports for this site have failed to discover the huge
   // sitemap aliases. Keep this file as a compact, high-value discovery seed;
   // the complete URL inventory remains available through sitemap.xml.
@@ -754,27 +610,19 @@ function generateSplitSitemaps() {
     searchConsoleSeedFile,
     ...sitemapFiles,
   ]) + '\n';
-  googleFallbackFiles['search-console-discovery-seed.xml'] = searchConsoleSubmitXml;
-  googleFallbackFiles['search-console-discovery-seed.txt'] = searchConsoleSubmitText;
   supplementalSitemapFiles.push(searchConsoleSeedFile);
-  [
-    'search-console-submit.xml',
-    'search-console-sitemap.xml',
-    'google-sitemap.xml',
-    'gsc-sitemap.xml',
-    'gsc-index-sitemap.xml',
-  ].forEach((filename) => {
-    googleFallbackFiles[filename] = searchConsoleSubmitIndexXml;
-  });
-  [
-    'search-console-submit.txt',
-    'search-console-sitemap.txt',
-    'google-sitemap.txt',
-    'gsc-sitemap.txt',
-  ].forEach((filename) => {
-    googleFallbackFiles[filename] = searchConsoleSubmitText;
-  });
-  Object.entries(googleFallbackFiles).forEach(([filename, content]) => {
+  // search-console-submit.xml は過去に Search Console へ登録した実績のある
+  // ファイル名のため互換として生成を継続する（内容はシード+分割サイトマップの
+  // インデックス）。かつて生成していた gsc-*/google-*/search-console-sitemap.*
+  // と RSS/Atom フィード（google-feed.xml/google-atom.xml）の同内容エイリアスは、
+  // 重複送信で Search Console の統計を分裂させるだけのため廃止した。
+  const searchConsoleFiles = {
+    'search-console-discovery-seed.xml': searchConsoleSubmitXml,
+    'search-console-discovery-seed.txt': searchConsoleSubmitText,
+    'search-console-submit.xml': searchConsoleSubmitIndexXml,
+    'search-console-submit.txt': searchConsoleSubmitText,
+  };
+  Object.entries(searchConsoleFiles).forEach(([filename, content]) => {
     writePublicAndDistFile(filename, content, distPath);
   });
 
@@ -796,7 +644,7 @@ function generateSplitSitemaps() {
   
   console.log('\n統計:');
   META_PAGE_SECTIONS.forEach((section) => {
-    const label = section.title.replace('（メタページ一覧）', '');
+    const label = section.title;
     console.log(`- ${label}（meta）: ${sectionCounts[section.key] || 0} URL`);
   });
   EN_META_PAGE_SECTIONS.forEach((section) => {
@@ -808,23 +656,19 @@ function generateSplitSitemaps() {
   const totalUrls = Object.values(sitemaps).reduce((sum, urls) => sum + urls.length, 0);
   console.log(`- 合計: ${totalUrls} URLs`);
 
-  // lastmod 分布の集計ログ（メタページのみ）
+  // changefreq 分布の集計ログ（メタページのみ）
   const allMetaUrls = [
     ...Object.keys(sectionCounts).flatMap((k) => sitemaps[k] || []),
     ...Object.keys(englishSectionCounts).flatMap((k) => sitemaps[k] || []),
   ];
-  const lastmodDist = { [DATE_RICH]: 0, [DATE_MEDIUM]: 0, [DATE_SPARSE]: 0, other: 0 };
+  const changefreqDist = { weekly: 0, monthly: 0 };
   for (const u of allMetaUrls) {
-    if (u.lastmod === DATE_RICH) lastmodDist[DATE_RICH]++;
-    else if (u.lastmod === DATE_MEDIUM) lastmodDist[DATE_MEDIUM]++;
-    else if (u.lastmod === DATE_SPARSE) lastmodDist[DATE_SPARSE]++;
-    else lastmodDist.other++;
+    if (u.changefreq === 'weekly') changefreqDist.weekly++;
+    else changefreqDist.monthly++;
   }
-  console.log('\nlastmod 分布（メタページ）:');
-  console.log(`  ${DATE_RICH}（豊富・weekly）: ${lastmodDist[DATE_RICH]} URL`);
-  console.log(`  ${DATE_MEDIUM}（中程度・monthly）: ${lastmodDist[DATE_MEDIUM]} URL`);
-  console.log(`  ${DATE_SPARSE}（少ない・monthly）: ${lastmodDist[DATE_SPARSE]} URL`);
-  if (lastmodDist.other > 0) console.log(`  その他: ${lastmodDist.other} URL`);
+  console.log('\nchangefreq 分布（メタページ）:');
+  console.log(`  weekly（データ豊富）: ${changefreqDist.weekly} URL`);
+  console.log(`  monthly: ${changefreqDist.monthly} URL`);
 }
 
 // メイン処理

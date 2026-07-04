@@ -598,7 +598,10 @@ const QuizPage = ({
     description: isEnglish
       ? 'A ten-question quiz for learning moth and butterfly host plant links in Japan.'
       : '蛾・蝶と幼虫食草のつながりを4択で学ぶ10問クイズです。',
-    url: absUrl(localizePath('/quiz', locale)),
+    // 静的シェル（postbuild-cleanup.mjs）と sitemap は末尾スラッシュ付き
+    // /quiz/ を正規URLにしている。localizePath は末尾スラッシュを除去するため
+    // ここで付け直し、クライアント側 canonical も同じ形に揃える。
+    url: absUrl(`${localizePath('/quiz', locale)}/`),
     siteName: isEnglish ? 'Insects and Host Plants of Japan' : '昆虫植物図鑑',
     htmlLang: isEnglish ? 'en' : 'ja',
   });

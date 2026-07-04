@@ -67,6 +67,18 @@ const getLinkHref = (html, relValue) => {
   return '';
 };
 
+const getAlternateLinks = (html) => {
+  const links = [];
+  for (const tag of getTags(html, 'link')) {
+    const attrs = parseAttributes(tag);
+    if (String(attrs.rel || '').toLowerCase() !== 'alternate') continue;
+    const hreflang = String(attrs.hreflang || '').trim().toLowerCase();
+    const href = String(attrs.href || '').trim();
+    if (hreflang && href) links.push({ hreflang, href });
+  }
+  return links;
+};
+
 const getMetaHttpEquivContent = (html, httpEquivValue) => {
   const targetEquiv = String(httpEquivValue || '').toLowerCase();
   for (const tag of getTags(html, 'meta')) {
@@ -284,9 +296,10 @@ const validateRobotsTxt = (filePath) => {
   if (!fs.existsSync(filePath)) return;
 
   const body = readFile(filePath);
+  // robots.txt の Sitemap 行は「正規インデックス + 補助シード」の2本のみ。
+  // 同内容の重複エイリアスを並べると Search Console の統計が分裂する。
   const requiredSitemaps = [
     'sitemap.xml',
-    'search-console-submit.xml',
     'search-console-discovery-seed.xml',
   ];
 
@@ -400,12 +413,28 @@ const isRedirectStub = (html) =>
   getMetaHttpEquivContent(html, 'refresh').length > 0 &&
   getMetaContent(html, 'name', 'robots').includes('noindex');
 
+// hreflang 相互整合チェック用に、indexable なメタページの canonical と
+// alternate リンクを収集する（noindex ページは対象外）
+const hreflangRecords = new Map();
+
+const recordHreflangEntry = (filePath, html) => {
+  const robots = getMetaContent(html, 'name', 'robots');
+  if (robots.includes('noindex')) return;
+  const canonical = getLinkHref(html, 'canonical');
+  if (!canonical) return;
+  hreflangRecords.set(canonical, {
+    relativePath: path.relative(ROOT, filePath),
+    alternates: getAlternateLinks(html),
+  });
+};
+
 const validateMetaFile = (filePath) => {
   const html = readFile(filePath);
   if (isRedirectStub(html)) {
     validateLegacyRedirectHtml(filePath, html);
   } else {
     validateHtml(filePath, html);
+    recordHreflangEntry(filePath, html);
   }
 };
 
@@ -422,6 +451,32 @@ if (fs.existsSync(englishMetaDir)) {
   for (const filePath of englishMetaFiles) {
     validateMetaFile(filePath);
   }
+}
+
+// hreflang 相互整合: 別言語ページを hreflang で指す場合、相手側からも
+// hreflang で指し返されていないと Google はアノテーション自体を無視する。
+// 生成順序の問題（英語スラグマップが空のまま日本語ページが確定するなど）で
+// 片側のリンクだけが落ちる回帰をここで検出する。
+let hreflangPairChecks = 0;
+for (const [canonical, record] of hreflangRecords) {
+  for (const alt of record.alternates) {
+    if (alt.hreflang === 'x-default') continue;
+    if (alt.href === canonical) continue;
+    const target = hreflangRecords.get(alt.href);
+    // メタページ在庫外（ホーム等）や noindex ページへの参照はここでは対象外
+    if (!target) continue;
+    hreflangPairChecks++;
+    ensure(
+      target.alternates.some((back) => back.href === canonical),
+      `${record.relativePath}: hreflang return link missing on ${target.relativePath} -> ${canonical}`,
+    );
+  }
+}
+if (englishMetaFiles.length > 0) {
+  ensure(
+    hreflangPairChecks > 0,
+    'hreflang: no reciprocal ja<->en pairs found to verify (English slug map may have been empty during ja generation)',
+  );
 }
 
 const legacyRouteDirs = [
@@ -483,6 +538,12 @@ validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'), 
     `${SITE_ORIGIN}/en/meta/moth/`,
     `${SITE_ORIGIN}/en/meta/plant/`,
   ],
+});
+validateSitemapUrlSet(path.join(DIST_DIR, 'sitemap-plant.xml'), {
+  // 植物の正規ページ（基底名URL）は約1,400件。sitemap側のエイリアス除外
+  // ロジックが正規ページを落とす回帰（過去に約100件まで激減）を検出する下限。
+  minUrls: 1000,
+  requiredPrefixes: [`${SITE_ORIGIN}/meta/plant/`],
 });
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
