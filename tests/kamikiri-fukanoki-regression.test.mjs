@@ -37,6 +37,10 @@ const generatedHostplantsPath = 'public/assets/data-lite/hostplants.json';
 const generatedHostplants = fs.existsSync(generatedHostplantsPath)
   ? JSON.parse(fs.readFileSync(generatedHostplantsPath, 'utf8'))
   : null;
+const generatedPlantDetailsPath = 'public/assets/data-lite/plant-details.json';
+const generatedPlantDetails = fs.existsSync(generatedPlantDetailsPath)
+  ? JSON.parse(fs.readFileSync(generatedPlantDetailsPath, 'utf8'))
+  : null;
 
 const hasPair = (insectId, plantName) =>
   hostplants.some((row) => row.insect_id === insectId && row.plant_name === plantName);
@@ -48,6 +52,16 @@ const hasKamikiriPair = (insectId, plantName) =>
     row.reference === '日本産カミキリムシ'
   );
 
+const resolveGeneratedPlantKey = (plantName) => {
+  if (!generatedHostplants || generatedHostplants[plantName]) return plantName;
+  if (!generatedPlantDetails) return plantName;
+
+  const aliasEntry = Object.entries(generatedPlantDetails).find(([, detail]) =>
+    Array.isArray(detail?.aliases) && detail.aliases.includes(plantName)
+  );
+  return aliasEntry?.[0] || plantName;
+};
+
 const expectedFukanokiPairs = [
   ['species-22110', 'リュウキュウヒメアメイロカミキリ'],
   ['species-22743', 'オキナワセンノカミキリ'],
@@ -56,9 +70,84 @@ const expectedFukanokiPairs = [
   ['species-22847', 'アマミコブヒゲカミキリ'],
 ];
 
+const expectedHoshbeniPlants = [
+  'バリバリノキ',
+  'クスノキ',
+  'ヤブニッケイ',
+  'コヤブニッケイ',
+  'ホソバタブ',
+  'タブノキ',
+  'シロダモ',
+  'クスノキ類',
+];
+
+const expectedEarlyPagePairs = [
+  ['species-22655', 'パンノキ類', 'イチジクカミキリ'],
+  ['species-22957', 'ホソバムクイヌビワ', 'オキナワハネナシサビカミキリ'],
+  ['species-22854', 'ハチジョウグワ', 'イズトカラコブヒゲカミキリ'],
+  ['species-23041', 'ヤブマオ', 'ラミーカミキリ'],
+  ['species-22064', 'ヤマモガシ', 'イエカミキリ'],
+  ['species-22764', 'イタドリ', 'ゴマダラカミキリ'],
+  ['species-22155', 'コブシ', 'ルリボシカミキリ'],
+  ['species-22972', 'モクレン', 'アトジロサビカミキリ'],
+  ['species-22586', 'サネカズラ', 'ヒシカミキリ'],
+  ['species-22181', 'クスノキ類', 'ヒナルリハナカミキリ'],
+  ['species-23023', 'シロダモ', 'ヒメリンゴカミキリ'],
+];
+
 test('フカノキ includes the longhorn beetles recovered from 日本産カミキリムシ OCR', () => {
   for (const [insectId, label] of expectedFukanokiPairs) {
     assert.equal(hasPair(insectId, 'フカノキ'), true, `${label} should be linked to フカノキ`);
+  }
+});
+
+test('ホシベニカミキリ host plants from early 日本産カミキリムシ OCR pages are present', () => {
+  for (const plantName of expectedHoshbeniPlants) {
+    assert.equal(hasKamikiriPair('species-22773', plantName), true, `ホシベニカミキリ should be linked to ${plantName}`);
+  }
+});
+
+test('generated public ホシベニカミキリ host plant data is present when generated data exists', () => {
+  if (!generatedHostplants) return;
+
+  for (const plantName of expectedHoshbeniPlants) {
+    const generatedPlantKey = resolveGeneratedPlantKey(plantName);
+    assert.equal(
+      (generatedHostplants[generatedPlantKey] || []).includes('ホシベニカミキリ'),
+      true,
+      `generated public data should link ホシベニカミキリ to ${plantName}`
+    );
+  }
+});
+
+test('early 日本産カミキリムシ host plant list pages are not skipped', () => {
+  for (const [insectId, plantName, label] of expectedEarlyPagePairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), true, `${label} should be linked to ${plantName}`);
+  }
+});
+
+test('OCR plant-name corrections from early 日本産カミキリムシ pages are applied', () => {
+  const badOcrPlantNames = new Set(['ホソバムクイスビワ', 'ハチジョウグウ', 'モクシン']);
+  const badRows = hostplants.filter((row) =>
+    row.reference === '日本産カミキリムシ' && badOcrPlantNames.has(row.plant_name)
+  );
+
+  assert.deepEqual(badRows, []);
+  assert.equal(hasKamikiriPair('species-22957', 'ホソバムクイヌビワ'), true);
+  assert.equal(hasKamikiriPair('species-22854', 'ハチジョウグワ'), true);
+  assert.equal(hasKamikiriPair('species-22972', 'モクレン'), true);
+});
+
+test('generated public early 日本産カミキリムシ host plant data is present when generated data exists', () => {
+  if (!generatedHostplants) return;
+
+  for (const [, plantName, label] of expectedEarlyPagePairs) {
+    const generatedPlantKey = resolveGeneratedPlantKey(plantName);
+    assert.equal(
+      (generatedHostplants[generatedPlantKey] || []).includes(label),
+      true,
+      `generated public data should link ${label} to ${plantName}`
+    );
   }
 });
 

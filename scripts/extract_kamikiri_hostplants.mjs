@@ -2,7 +2,7 @@
 /**
  * 日本産カミキリムシの寄主植物一覧テキストから食草データを抽出するスクリプト。
  *
- * OCRテキスト 18650行目〜21076行目（寄主植物一覧セクション）を解析し、
+ * OCRテキストの寄主植物一覧セクションを解析し、
  * - normalized_data/insects.csv で和名→insect_id を解決（曖昧マッチ含む）
  * - hostplants.csv の既存「日本産カミキリムシ」データとの重複を除外
  * - 結果を reports/kamikiri_hostplant_list.json に出力
@@ -16,10 +16,17 @@ import Papa from 'papaparse';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE = path.resolve(__dirname, '..');
 
-const OCR_FILE    = path.join(BASE, 'pdfs/kamikiri-ocr/日本産カミキリムシ_compressed.txt');
+const DEFAULT_OCR_FILE = path.join(BASE, 'pdfs/kamikiri-ocr/日本産カミキリムシ_compressed.txt');
+const OCR_FILE = process.env.KAMIKIRI_OCR_FILE
+  ? path.resolve(process.env.KAMIKIRI_OCR_FILE)
+  : DEFAULT_OCR_FILE;
 const INSECTS_CSV = path.join(BASE, 'normalized_data/insects.csv');
 const HOSTS_CSV   = path.join(BASE, 'normalized_data/hostplants.csv');
-const OUT_JSON    = path.join(BASE, 'reports/kamikiri_hostplant_list.json');
+const OUT_JSON = process.env.KAMIKIRI_OUT_JSON
+  ? path.resolve(process.env.KAMIKIRI_OUT_JSON)
+  : path.join(BASE, 'reports/kamikiri_hostplant_list.json');
+const HOSTPLANT_LIST_HEADING_RE = /^(寄主植物一覧|寄上植物一覧|寄王植物一覧|寺主植物一覧)\s+\d+/;
+const FAMILY_HEADING_RE = /^([ぁ-ん\u30A0-\u30FFー一-龠a-zA-Z]{2,20}?[科料])\s+[A-Z][A-Za-z]/u;
 
 // ===================================================================
 // ユーティリティ
@@ -28,6 +35,21 @@ const OUT_JSON    = path.join(BASE, 'reports/kamikiri_hostplant_list.json');
 function normalize(s) {
   if (!s) return '';
   return s.normalize('NFKC').replace(/[\s\u3000]/g, '').trim();
+}
+
+const PLANT_NAME_CORRECTIONS = new Map([
+  ['ホソバムクイスビワ', 'ホソバムクイヌビワ'],
+  ['ハチジョウグウ', 'ハチジョウグワ'],
+  ['モクシン', 'モクレン'],
+]);
+
+function normalizeExtractedPlantName(name) {
+  return PLANT_NAME_CORRECTIONS.get(name) || name;
+}
+
+function normalizeExtractedPlantFamily(family, plantName) {
+  if (plantName === 'アサ') return 'アサ科';
+  return family;
 }
 
 /** Jaro-Winkler類似度 */
@@ -103,34 +125,84 @@ const allNormKeys = [...kamikiriByNorm.keys()];
 console.log(`カミキリムシ登録エントリ数: ${kamikiriByNorm.size} (別名・亜種含む)`);
 
 // ===================================================================
-// 2. OCRテキスト読み込み (行18650〜21076, 0-indexed: 18649〜21075)
+// 2. OCRテキスト読み込み
 // ===================================================================
 const ocrText  = fs.readFileSync(OCR_FILE, 'utf8');
 const allLines = ocrText.split('\n');
-// 18650行目から21076行目まで（1-indexed）
-const rawLines = allLines.slice(18649, 21076).map(l => l.replace(/\r$/, ''));
-console.log(`OCR対象行数: ${rawLines.length}`);
+const headingIndex = allLines.findIndex((line) => HOSTPLANT_LIST_HEADING_RE.test(line.trim()));
+if (headingIndex === -1) {
+  throw new Error('OCRテキスト内に寄主植物一覧の開始行が見つかりません。');
+}
+let startIndex = -1;
+for (let index = headingIndex; index >= 0; index--) {
+  if (FAMILY_HEADING_RE.test(allLines[index].trim())) {
+    startIndex = index;
+    break;
+  }
+}
+if (startIndex === -1) {
+  startIndex = allLines.findIndex((line, index) =>
+    index > headingIndex && FAMILY_HEADING_RE.test(line.trim())
+  );
+}
+if (startIndex === -1) {
+  throw new Error('OCRテキスト内に寄主植物一覧の最初の科名行が見つかりません。');
+}
+const endLine = Number.parseInt(process.env.KAMIKIRI_HOSTPLANT_END_LINE || '21076', 10);
+const endIndex = Number.isFinite(endLine)
+  ? Math.min(endLine, allLines.length)
+  : allLines.length;
+const rawLines = allLines.slice(startIndex, endIndex).map(l => l.replace(/\r$/, ''));
+console.log(`OCR対象行数: ${rawLines.length} (${startIndex + 1}〜${endIndex}行、見出し=${headingIndex + 1}行)`);
 
 // ===================================================================
 // 3. 前処理
 //    - ページヘッダ・ページ番号・区切り行を除去
-//    - 行連結してセグメント化
+//    - 科名・植物名の見出し行でセグメント化
 //    - 「カ ミキリ」など途中に空白が混入したカミキリ名を修正
 // ===================================================================
 const SKIP_RE = /^(---|寄主植物一覧|寄上植物一覧|寄王植物一覧|寺主植物一覧|\d{3,4})(\s|$)/;
 
-// 空行で区切ってセグメント化
+function isPlantHeadingLine(line) {
+  const s = line.trim();
+  if (!s) return false;
+  if (FAMILY_HEADING_RE.test(s)) return false;
+  if (/カミキリ/.test(s)) return false;
+  if (/^(キリ|ミキリ|カミキリ)\s+(?!Paulownia\b)/.test(s)) return false;
+  if (/^植栽/.test(s)) return false;
+  if (/^植根/.test(s)) return false;
+
+  return /^[ぁ-ん\u30A0-\u30FFー一-龠\uff10-\uff19][^A-Z]{1,80}\s+[A-Z][A-Za-z.]+(?:\s+[a-z×][A-Za-z.]+|\s+spp\.|\s+var\.|\s+ssp\.|\s|$)/u.test(s);
+}
+
+// OCRにはページ単位の空白しかないため、科名行・植物名行を境界にする。
 const segments = [];
-let buf = [];
+let block = [];
+const pushBlock = () => {
+  if (block.length > 0) {
+    segments.push(block.join(' '));
+    block = [];
+  }
+};
+
 for (const line of rawLines.map(l => l.trim())) {
   if (SKIP_RE.test(line) || line.startsWith('--- ページ')) continue;
-  if (line === '') {
-    if (buf.length > 0) { segments.push(buf.join(' ')); buf = []; }
-  } else {
-    buf.push(line);
+
+  if (FAMILY_HEADING_RE.test(line)) {
+    pushBlock();
+    segments.push(line);
+    continue;
   }
+
+  if (isPlantHeadingLine(line)) {
+    pushBlock();
+    block = [line];
+    continue;
+  }
+
+  if (block.length > 0) block.push(line);
 }
-if (buf.length > 0) segments.push(buf.join(' '));
+pushBlock();
 
 // セグメント内の「カ ミキリ」「カミキ リ」などの空白混入を修正
 function fixKamikiri(s) {
@@ -187,9 +259,10 @@ function extractPlantName(seg) {
       const plant = m[1].trim();
       // 括弧内別名を除去して主名のみ
       const main = plant.replace(/[（(][^）)]*[）)]/gu, '').trim();
-      return (main.length >= 2 ? main : plant);
+      return normalizeExtractedPlantName(main.length >= 2 ? main : plant);
     }
-    return seg.split(/[\s（(A-Z]/)[0].trim() || null;
+    const plant = seg.split(/[\s（(A-Z]/)[0].trim();
+    return plant ? normalizeExtractedPlantName(plant) : null;
   }
 
   // ラテン語のみの行（Cotoneaster bullata など）
@@ -203,7 +276,7 @@ function extractPlantName(seg) {
 
 function isFamily(seg) {
   // 科名行: 日本語科名(末尾「科」か「料」) + 半角空白 + ラテン科名(大文字始まり)
-  const m = seg.match(/^([ぁ-ん\u30A0-\u30FFー一-龠a-zA-Z]{2,20}?[科料])\s+[A-Z][A-Za-z]/u);
+  const m = seg.match(FAMILY_HEADING_RE);
   if (m) return m[1].replace('料', '科').trim();
   return null;
 }
@@ -221,7 +294,7 @@ function extractPlantFromMixed(seg) {
   if (m && m[1].length >= 2) {
     const plant = m[1].trim();
     const main = plant.replace(/[（(][^）)]*[）)]/gu, '').trim();
-    return main.length >= 2 ? main : plant;
+    return normalizeExtractedPlantName(main.length >= 2 ? main : plant);
   }
   return null;
 }
@@ -250,6 +323,14 @@ const MANUAL_RECORDS = [
   { plant: 'オキナワトベラ', family: 'トベラ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
   { plant: 'トベラ', family: 'トベラ科', kamikiriNames: ['キンケビロウドカミキリ 沖縄亜種'] },
   { plant: 'フカノキ', family: 'ウコギ科', kamikiriNames: ['アマミコブヒゲカミキリ'] },
+  { plant: 'バリバリノキ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'クスノキ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'ヤブニッケイ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'コヤブニッケイ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'ホソバタブ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'タブノキ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'シロダモ', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
+  { plant: 'クスノキ類', family: 'クスノキ科', kamikiriNames: ['ホシベニカミキリ'] },
 ];
 
 const DENIED_PAIRS = new Set([
@@ -276,7 +357,7 @@ for (const seg of fixedSegments) {
     // 科名行に続くカミキリ名があれば取得
     const names = extractKamikiriNames(s);
     if (names.length > 0 && currentPlant) {
-      records.push({ plant: currentPlant, family: currentFamily, kamikiriNames: names });
+      records.push({ plant: currentPlant, family: normalizeExtractedPlantFamily(currentFamily, currentPlant), kamikiriNames: names });
     }
     continue;
   }
@@ -293,7 +374,7 @@ for (const seg of fixedSegments) {
       currentPlant = mixedPlant;
     }
     if (currentPlant) {
-      records.push({ plant: currentPlant, family: currentFamily, kamikiriNames: names });
+      records.push({ plant: currentPlant, family: normalizeExtractedPlantFamily(currentFamily, currentPlant), kamikiriNames: names });
     }
     // else: 植物名を見逃した（OCR破損等）→ スキップ
     continue;
@@ -315,10 +396,11 @@ for (const record of MANUAL_RECORDS) {
   for (const name of record.kamikiriNames) {
     const key = `${normalize(record.plant)}||${normalize(record.family)}||${normalize(name)}`;
     if (recordKeys.has(key)) continue;
-    records.push({ ...record, kamikiriNames: [name] });
+    records.push({ ...record, kamikiriNames: [name], manual: true });
     recordKeys.add(key);
   }
 }
+records.sort((a, b) => Number(Boolean(b.manual)) - Number(Boolean(a.manual)));
 
 console.log(`\n抽出レコード数: ${records.length}`);
 console.log('レコードサンプル (先頭10件):');
@@ -392,6 +474,7 @@ console.log(`\n既存カミキリムシ食草ペア数: ${existing.size}`);
 const results = [];
 const stats   = { exact: 0, fuzzy: 0, no_match: 0 };
 let deniedCount = 0;
+const seenResultPairs = new Set();
 
 for (const { plant, family, kamikiriNames } of records) {
   const plantNorm = normalize(plant);
@@ -417,6 +500,10 @@ for (const { plant, family, kamikiriNames } of records) {
       deniedCount++;
       continue;
     }
+
+    const resultPairKey = `${iid}||${plantNorm}`;
+    if (seenResultPairs.has(resultPairKey)) continue;
+    seenResultPairs.add(resultPairKey);
 
     if (score >= 0.99) stats.exact++;
     else stats.fuzzy++;
