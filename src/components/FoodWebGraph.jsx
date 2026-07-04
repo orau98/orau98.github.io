@@ -21,8 +21,8 @@ import InfoPopover from './InfoPopover';
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
 
 const RELATED_LIMIT_ALL = 'all';
-const DEFAULT_RELATED_LIMIT = 24;
-const DEFAULT_PLANT_RELATED_LIMIT = RELATED_LIMIT_ALL;
+const DEFAULT_RELATED_LIMIT = RELATED_LIMIT_ALL;
+const FALLBACK_NUMERIC_RELATED_LIMIT = 24;
 const RELATED_LIMIT_OPTIONS = [RELATED_LIMIT_ALL, 12, 24, 40, 60];
 const MAX_PANEL_ITEMS = 12;
 const RELATION_FILTERS = [
@@ -33,8 +33,7 @@ const RELATION_FILTERS = [
 ];
 const MOBILE_PANEL_COLLAPSED_HEIGHT = 86;
 
-const getDefaultRelatedLimit = (currentPlantName) =>
-  currentPlantName ? DEFAULT_PLANT_RELATED_LIMIT : DEFAULT_RELATED_LIMIT;
+const getDefaultRelatedLimit = () => DEFAULT_RELATED_LIMIT;
 
 const parseRelatedLimitValue = (value) => {
   if (value === RELATED_LIMIT_ALL) return RELATED_LIMIT_ALL;
@@ -45,7 +44,7 @@ const parseRelatedLimitValue = (value) => {
 const getRelatedLimitNumber = (value) => {
   if (value === RELATED_LIMIT_ALL) return Number.POSITIVE_INFINITY;
   const parsed = Number.parseInt(value, 10);
-  return Math.max(6, Number.isFinite(parsed) ? parsed : DEFAULT_RELATED_LIMIT);
+  return Math.max(6, Number.isFinite(parsed) ? parsed : FALLBACK_NUMERIC_RELATED_LIMIT);
 };
 
 const getRelatedLimitLabel = (value, isEnglish) =>
