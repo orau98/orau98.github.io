@@ -50,3 +50,33 @@ test('日本産蛾類標準図鑑1のチャオビコバネナミシャク寄主�
     assert.equal(names.has('ケヤキ'), true, `${csvPath} should keep ケヤキ from the source text`);
   }
 });
+
+test('日本産蝶類標準図鑑の欠落食草とCapparis綴りを保持する', () => {
+  const expected = {
+    'species-20196': ['ツゲモドキ'],
+    'species-20287': ['クロヨナ'],
+    'species-20340': ['シダレヤナギ'],
+    'species-20391': ['キジョラン', 'フルモウリンカ', 'ホウライアオカズラ'],
+    'species-20402': ['コウシュンカズラ', 'アセロラ', 'モモタマナ'],
+    'species-20435': ['ムニンススキ', 'サトウキビ', 'ススキ'],
+  };
+
+  for (const csvPath of csvPaths) {
+    const rows = parseCsv(csvPath);
+
+    for (const [insectId, plantNames] of Object.entries(expected)) {
+      const names = new Set(rows
+        .filter((row) => row.insect_id === insectId && row.reference === '日本産蝶類標準図鑑')
+        .map((row) => row.plant_name));
+
+      for (const plantName of plantNames) {
+        assert.equal(names.has(plantName), true, `${csvPath} should include ${plantName} for ${insectId}`);
+      }
+    }
+
+    const kawakami = rows.filter((row) => row.insect_id === 'species-20197');
+    const kawakamiNames = new Set(kawakami.map((row) => row.plant_name));
+    assert.equal(kawakamiNames.has('Capparis heyncana'), false, `${csvPath} should not keep the OCR typo`);
+    assert.equal(kawakamiNames.has('Capparis heyneana'), true, `${csvPath} should keep the corrected source spelling`);
+  }
+});
