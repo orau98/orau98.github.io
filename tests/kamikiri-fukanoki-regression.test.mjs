@@ -81,6 +81,46 @@ const expectedHoshbeniPlants = [
   'クスノキ類',
 ];
 
+const expectedLamiiniHostPairs = [
+  ['species-22770', 'マテバシイ', 'オオスミヒゲナガカミキリ'],
+  ['species-22771', 'ブナ', 'ヨコヤマヒゲナガカミキリ'],
+  ['species-22771', 'イヌブナ', 'ヨコヤマヒゲナガカミキリ'],
+  ['species-22774', 'ヤナギ類', 'エゾカミキリ'],
+  ['species-22777', 'アカマツ', 'マツノマダラカミキリ'],
+  ['species-22777', 'クロマツ', 'マツノマダラカミキリ'],
+  ['species-22777', 'リュウキュウマツ', 'マツノマダラカミキリ'],
+  ['species-22777', 'マツ属', 'マツノマダラカミキリ'],
+  ['species-22777', 'モミ属', 'マツノマダラカミキリ'],
+  ['species-22777', 'トウヒ属', 'マツノマダラカミキリ'],
+  ['species-22777', 'カラマツ', 'マツノマダラカミキリ'],
+  ['species-22779', 'モミ属', 'ヒゲナガカミキリ'],
+  ['species-22779', 'トウヒ属', 'ヒゲナガカミキリ'],
+  ['species-22779', 'ツガ属', 'ヒゲナガカミキリ'],
+  ['species-22779', 'マツ属', 'ヒゲナガカミキリ'],
+  ['species-22779', 'カラマツ', 'ヒゲナガカミキリ'],
+  ['species-22782', 'モミ属', 'シラフヒゲナガカミキリ'],
+  ['species-22782', 'トウヒ属', 'シラフヒゲナガカミキリ'],
+  ['species-22782', 'カラマツ', 'シラフヒゲナガカミキリ'],
+  ['species-22783', 'モミ属', 'シラフヨツボシヒゲナガカミキリ'],
+  ['species-22783', 'トウヒ属', 'シラフヨツボシヒゲナガカミキリ'],
+  ['species-22783', 'マツ属', 'シラフヨツボシヒゲナガカミキリ'],
+  ['species-22783', 'カラマツ', 'シラフヨツボシヒゲナガカミキリ'],
+  ['species-22785', 'アカマツ', 'カラフトヒゲナガカミキリ'],
+  ['species-22785', 'クロマツ', 'カラフトヒゲナガカミキリ'],
+  ['species-22785', 'カラマツ', 'カラフトヒゲナガカミキリ'],
+  ['species-22785', 'トウヒ', 'カラフトヒゲナガカミキリ'],
+  ['species-22785', 'ツガ', 'カラフトヒゲナガカミキリ'],
+  ['species-22790', 'モミ属', 'ヒメシラフヒゲナガカミキリ'],
+  ['species-22790', 'トウヒ属', 'ヒメシラフヒゲナガカミキリ'],
+  ['species-22790', 'マツ属', 'ヒメシラフヒゲナガカミキリ'],
+  ['species-22790', 'カラマツ', 'ヒメシラフヒゲナガカミキリ'],
+  ['species-22780', 'ヤブニッケイ', 'キマダラヒメヒゲナガカミキリ'],
+  ['species-22781', 'オキナワジイ', 'アマミヒメヒゲナガカミキリ'],
+  ['species-22781', 'ホルトノキ', 'アマミヒメヒゲナガカミキリ'],
+  ['species-22781', 'ナギ', 'アマミヒメヒゲナガカミキリ'],
+  ['species-22792', 'ヤンバルアワブキ', 'コゲチャフタモンヒゲナガカミキリ'],
+];
+
 const expectedEarlyPagePairs = [
   ['species-22655', 'パンノキ類', 'イチジクカミキリ'],
   ['species-22957', 'ホソバムクイヌビワ', 'オキナワハネナシサビカミキリ'],
@@ -116,6 +156,25 @@ test('generated public ホシベニカミキリ host plant data is present when 
       (generatedHostplants[generatedPlantKey] || []).includes('ホシベニカミキリ'),
       true,
       `generated public data should link ホシベニカミキリ to ${plantName}`
+    );
+  }
+});
+
+test('ヨコヤマヒゲナガカミキリ周辺の Lamiini OCR 欠落を本文確認済みデータで補う', () => {
+  for (const [insectId, plantName, label] of expectedLamiiniHostPairs) {
+    assert.equal(hasKamikiriPair(insectId, plantName), true, `${label} should be linked to ${plantName}`);
+  }
+});
+
+test('generated public Lamiini OCR補正データが存在する when generated data exists', () => {
+  if (!generatedHostplants) return;
+
+  for (const [, plantName, label] of expectedLamiiniHostPairs) {
+    const generatedPlantKey = resolveGeneratedPlantKey(plantName);
+    assert.equal(
+      (generatedHostplants[generatedPlantKey] || []).includes(label),
+      true,
+      `generated public data should link ${label} to ${plantName}`
     );
   }
 });
@@ -158,6 +217,8 @@ test('known false fuzzy matches from the same OCR section stay removed', () => {
     ['species-22743', 'カラスザンショウ'],
     ['species-22743', 'マメガキ'],
     ['species-22743', 'シロバイ'],
+    ['species-22777', 'カエデ類'],
+    ['species-22777', 'ヤマモミジ'],
     ['species-22847', 'ショウベンノキ'],
     ['species-22847', 'シロバイ'],
   ];
