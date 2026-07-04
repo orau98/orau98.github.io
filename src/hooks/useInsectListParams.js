@@ -4,11 +4,14 @@ import { INSECT_SECTION_CONFIGS } from '../utils/siteTaxonomy';
 
 // 昆虫一覧のURLクエリ（i*系パラメータと q / classification）の
 // 読み取り・更新を集約するフック。
-// すべてのsetterは replace:true で履歴を汚さず、絞り込み変更時に ipage をリセットする。
+// 内容フィルタ・並び替え・ページ送りなどユーザーの明示的操作は push で
+// ブラウザ履歴に積み（＝「戻る」で直前の絞り込み状態に戻せる）、
+// 逐次検索・プログラム的リセット・表示専用の切替は replace で履歴を汚さない。
 export default function useInsectListParams({ perPageOptions = [20, 50, 100] } = {}) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const updateSearchParams = useCallback((mutate) => {
+  // push:true でブラウザ履歴に積む。既定は replace。
+  const updateSearchParams = useCallback((mutate, { push = false } = {}) => {
     let next;
     try {
       next = new URLSearchParams(window.location.search || '');
@@ -18,7 +21,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
     try {
       mutate(next);
     } catch {}
-    setSearchParams(next, { replace: true });
+    setSearchParams(next, { replace: !push });
   }, [searchParams, setSearchParams]);
 
   const currentPage = useMemo(() => {
@@ -54,12 +57,14 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
     return perPageOptions.includes(n) ? n : null;
   }, [searchParams, perPageOptions]);
 
-  const setIPage = useCallback((page) => {
+  // ユーザーのページ送りは push（戻るで前ページへ）、フィルタ変更に伴う
+  // 自動リセット setIPage(1) は replace（履歴を増やさない）。
+  const setIPage = useCallback((page, opts) => {
     updateSearchParams((p) => {
       const n = parseInt(page, 10);
       if (Number.isFinite(n) && n > 1) p.set('ipage', String(n));
       else p.delete('ipage');
-    });
+    }, opts);
   }, [updateSearchParams]);
 
   const setIHostFilter = useCallback((value) => {
@@ -68,7 +73,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (v === 'has' || v === 'none') p.set('ihost', v);
       else p.delete('ihost');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIFamilyFilter = useCallback((value) => {
@@ -77,7 +82,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (v) p.set('ifamily', v);
       else p.delete('ifamily');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIGenusFilter = useCallback((value) => {
@@ -86,7 +91,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (v) p.set('igenus', v);
       else p.delete('igenus');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIEmergenceFilter = useCallback((value) => {
@@ -96,7 +101,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       else p.delete('imonth');
       p.delete('iseason');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setISeasonFilter = useCallback((value) => {
@@ -106,7 +111,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       else p.delete('iseason');
       p.delete('imonth');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIPhotoFilter = useCallback((value) => {
@@ -114,7 +119,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (value === 'has') p.set('iphoto', 'has');
       else p.delete('iphoto');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIGroupFilter = useCallback((value) => {
@@ -123,7 +128,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (INSECT_SECTION_CONFIGS.some((section) => section.type === v)) p.set('igroup', v);
       else p.delete('igroup');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIViewMode = useCallback((value) => {
@@ -138,7 +143,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (value && value !== 'image') p.set('isort', value);
       else p.delete('isort');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const setIItemsPerPage = useCallback((value) => {
@@ -154,7 +159,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
     updateSearchParams((p) => {
       p.delete('classification');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const clearFilters = useCallback(() => {
@@ -167,7 +172,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       p.delete('iphoto');
       p.delete('classification');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const clearSearch = useCallback(() => {

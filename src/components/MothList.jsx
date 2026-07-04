@@ -792,7 +792,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     if (!Number.isFinite(nextPage)) return;
     const clampedPage = Math.min(Math.max(nextPage, 1), Math.max(totalPages, 1));
     if (clampedPage === effectivePage) return;
-    setIPage(clampedPage);
+    setIPage(clampedPage, { push: true });
     if (typeof window !== 'undefined') {
       window.requestAnimationFrame(() => {
         const target = listTopRef.current || document.getElementById('explorer-results');
@@ -999,7 +999,6 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           </div>
         </div>
         </ListFilterPanel>
-        <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
         <ListDisplayControls
           viewMode={viewMode}
           onViewModeChange={setIViewMode}
@@ -1027,6 +1026,13 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         {groupChips.length > 0 && (
           <div className="mb-2 sm:mb-3">
             <PresetFilterChips label={ui.groupLabel} chips={groupChips} />
+          </div>
+        )}
+        {/* クイック絞り込み（食草あり/写真あり/季節）も、初訪問者が絞り込みに気づけるよう
+            「条件」ドロワーの外に常時表示する（グループ切替と同じ扱い） */}
+        {presetChips.length > 0 && (
+          <div className="mb-2 sm:mb-3">
+            <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
           </div>
         )}
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
