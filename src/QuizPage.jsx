@@ -14,7 +14,9 @@ import ImageWithFallback from './components/ImageWithFallback';
 import SourceCitation from './components/ui/SourceCitation';
 import useInsectImageCandidates from './hooks/useInsectImageCandidates';
 import useSeoMeta from './hooks/useSeoMeta';
-import { loadInsectImageIndexes, loadPlantImageFilenames } from './services/imageIndex';
+import { loadInsectImageIndexes, getCachedInsectImageIndexes } from './services/imageIndex';
+import usePlantImageFilenames from './hooks/usePlantImageFilenames';
+import { getAssetBase } from './utils/assetPaths';
 import {
   DEFAULT_QUIZ_LENGTH,
   QUIZ_MODES,
@@ -46,7 +48,8 @@ const QUIZ_STYLES = Object.freeze({
 });
 
 const normalizeInsectImageIndex = ({ names, exts } = {}, ready = true) => ({
-  names: new Set(names || []),
+  // サービス側のSetは読み取り専用の共有参照としてそのまま使う（コピーしない）
+  names: names instanceof Set ? names : new Set(names || []),
   exts: exts || {},
   ready,
 });
@@ -357,8 +360,7 @@ const resolvePlantImageFilename = ({ plantName, plantDetails = {}, plantImageFil
 
 const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, variant = 'default' }) => {
   const filename = resolvePlantImageFilename({ plantName, plantDetails, plantImageFilenames });
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const normalizedBase = getAssetBase();
   const encodedFilename = filename ? encodeURIComponent(filename) : '';
   const originalCandidates = filename
     ? ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'].map(
@@ -370,7 +372,6 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
         baseUrl: normalizedBase,
         folder: 'plants',
         filename,
-        widths: [320, 640, 1024],
         sizes: '(max-width: 768px) 100vw, 42vw',
         sourceFormats: ['webp'],
       })
@@ -410,7 +411,7 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
 };
 
 const InsectMedia = ({ insect, isEnglish, variant = 'default' }) => {
-  const { getImageCandidates, placeholderSrc } = useInsectImageCandidates({ useAssetVersionInProd: true });
+  const { getImageCandidates, placeholderSrc } = useInsectImageCandidates();
   const candidates = useMemo(() => getImageCandidates(insect), [getImageCandidates, insect]);
   return (
     <div className={`relative overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800 ${
@@ -561,8 +562,12 @@ const QuizPage = ({
   const isPhotoStyle = quizStyle === QUIZ_STYLES.PHOTO;
   const focusedInsectKey = searchParams.get('focusInsect') || '';
   const focusedPlantKey = searchParams.get('focusPlant') || '';
-  const [plantImageFilenames, setPlantImageFilenames] = useState([]);
-  const [insectImageIndex, setInsectImageIndex] = useState(EMPTY_INSECT_IMAGE_INDEX);
+  const plantImageFilenames = usePlantImageFilenames();
+  // ロード済みキャッシュがあれば同期初期化し、出題準備の待ちを省く
+  const [insectImageIndex, setInsectImageIndex] = useState(() => {
+    const cached = getCachedInsectImageIndexes();
+    return cached ? normalizeInsectImageIndex(cached) : EMPTY_INSECT_IMAGE_INDEX;
+  });
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -624,18 +629,15 @@ const QuizPage = ({
     loadInsectImageIndexes()
       .then((index) => {
         if (!cancelled) {
-          setInsectImageIndex(normalizeInsectImageIndex(index));
+          setInsectImageIndex((prev) =>
+            prev.ready && prev.names === index?.names && prev.exts === index?.exts
+              ? prev
+              : normalizeInsectImageIndex(index),
+          );
         }
       })
       .catch(() => {
-        if (!cancelled) setInsectImageIndex(normalizeInsectImageIndex({}, true));
-      });
-    loadPlantImageFilenames()
-      .then((filenames) => {
-        if (!cancelled) setPlantImageFilenames(filenames);
-      })
-      .catch(() => {
-        if (!cancelled) setPlantImageFilenames([]);
+        if (!cancelled) setInsectImageIndex((prev) => (prev.ready ? prev : normalizeInsectImageIndex({}, true)));
       });
     return () => {
       cancelled = true;

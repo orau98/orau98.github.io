@@ -1,13 +1,14 @@
 import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
-import { loadInsectImageIndexes, loadPlantImageFilenames } from '../services/imageIndex';
+import useInsectImageIndex from '../hooks/useInsectImageIndex';
+import usePlantImageFilenames from '../hooks/usePlantImageFilenames';
 import { createSafeScientificPlantFilename } from '../utils/filename';
 import { buildResizedImageUrl } from '../utils/imageSrcset';
+import { getAssetBase, getAssetVersionQuery } from '../utils/assetPaths';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import {
   buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
   resolveImageBaseCandidates,
 } from '../utils/insectImageResolver';
 import { buildInsectPath } from '../utils/insectSlug';
@@ -593,14 +594,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     return Array.from(names);
   }, [hostPlantsMap, flowerVisitMap]);
 
-  // image index caches
-  const [imageExtMap, setImageExtMap] = useState({});
-  const [imageBaseSet, setImageBaseSet] = useState(new Set());
-  const [plantImageNames, setPlantImageNames] = useState([]);
-  const normalizedImageEntries = useMemo(
-    () => buildNormalizedEntries(imageBaseSet, imageExtMap),
-    [imageBaseSet, imageExtMap],
-  );
+  // image index caches（共有フック経由・再マウント時は同期初期化）
+  const {
+    imageNames: imageBaseSet,
+    imageExtensions: imageExtMap,
+    normalizedEntries: normalizedImageEntries,
+  } = useInsectImageIndex();
+  const plantImageNames = usePlantImageFilenames();
 
   const loadingImagesRef = useRef(new Set());
   const failedImagesRef = useRef(new Set());
@@ -641,11 +641,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const [ylistData, setYlistData] = useState(null);
 
-  const assetBase = useMemo(() => import.meta.env.BASE_URL || '/', []);
-  const cacheBust = useMemo(() => {
-    if (import.meta.env.DEV) return `?v=${Date.now()}`;
-    return import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : '';
-  }, []);
+  const assetBase = getAssetBase();
+  const cacheBust = getAssetVersionQuery();
 
   useEffect(() => {
     hasUserInteractedRef.current = false;
@@ -698,30 +695,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setPanelCollapsed(isCompactPanel);
   }, [selectedNodeId, isCompactPanel]);
 
-  // load image indexes once
-  useEffect(() => {
-    let canceled = false;
-    loadInsectImageIndexes().then(({ names, exts }) => {
-      if (canceled) return;
-      setImageBaseSet(new Set(Array.from(names || [])));
-      setImageExtMap(exts || {});
-    }).catch(() => {
-      if (!canceled) {
-        setImageBaseSet(new Set());
-        setImageExtMap({});
-      }
-    });
-
-    loadPlantImageFilenames().then(list => {
-      if (!canceled) setPlantImageNames(Array.isArray(list) ? list : []);
-    }).catch(() => {
-      if (!canceled) setPlantImageNames([]);
-    });
-
-    return () => {
-      canceled = true;
-    };
-  }, []);
+  // 画像インデックスの読み込みは useInsectImageIndex / usePlantImageFilenames が担う
 
   const insectImageCandidates = useCallback((detail) => {
     if (!detail) return [];

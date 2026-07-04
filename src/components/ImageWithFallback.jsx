@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 const IMAGE_LOAD_TIMEOUT_MS = 12000;
+// loading=lazy でまだフェッチが始まらない距離（ブラウザのlazyマージンより十分内側）
+const LAZY_NEAR_VIEWPORT_MARGIN_PX = 1200;
 
 const normalizeCandidates = (list) => {
   if (!Array.isArray(list) || list.length === 0) return [];
@@ -77,6 +79,9 @@ const ImageWithFallback = ({
   );
   const initialSrc = src || normalizedCandidates[0] || fallbackSrc || '';
   const lastResetSignatureRef = useRef('');
+  const imgElRef = useRef(null);
+  // 低速回線で進行中のダウンロードをタイムアウトで打ち切らないための猶予フラグ
+  const stallGraceUsedRef = useRef(false);
 
   const [currentSrc, setCurrentSrc] = useState(initialSrc || src);
   const [currentCandidates, setCurrentCandidates] = useState(
@@ -202,12 +207,65 @@ const ImageWithFallback = ({
     srcSetDisabled,
   ]);
 
+  // キャッシュ済み画像などで load イベントを取りこぼした場合の即時回収。
+  // complete かつ実寸が取れていればスケルトンを出し続けずに表示へ切り替える。
+  useEffect(() => {
+    if (status !== 'loading') return;
+    const el = imgElRef.current;
+    if (el && el.complete && el.naturalWidth > 0) {
+      setStatus('loaded');
+    }
+  }, [status, currentSrc]);
+
   useEffect(() => {
     if (status !== 'loading' || !currentSrc) return undefined;
-    const timer = setTimeout(() => {
+    stallGraceUsedRef.current = false;
+    let timer = null;
+    const check = () => {
+      const el = imgElRef.current;
+      if (el && el.complete) {
+        if (el.naturalWidth > 0) {
+          // loadイベントを取りこぼしていても読み込み自体は完了している
+          setStatus('loaded');
+          return;
+        }
+        // 完了済みだがデコード不能（壊れた画像/404）はフォールバックへ
+        handleError();
+        return;
+      }
+      // 非表示タブではブラウザが読み込みを保留するため、エラー扱いにせず待つ
+      if (typeof document !== 'undefined' && document.hidden) {
+        timer = setTimeout(check, IMAGE_LOAD_TIMEOUT_MS);
+        return;
+      }
+      // loading=lazy でフェッチ未開始の画面外画像を誤ってエラー扱いにしない
+      if (el && typeof el.getBoundingClientRect === 'function') {
+        try {
+          const rect = el.getBoundingClientRect();
+          const viewportHeight =
+            window.innerHeight || document.documentElement.clientHeight || 0;
+          if (
+            rect.top > viewportHeight + LAZY_NEAR_VIEWPORT_MARGIN_PX ||
+            rect.bottom < -LAZY_NEAR_VIEWPORT_MARGIN_PX
+          ) {
+            timer = setTimeout(check, IMAGE_LOAD_TIMEOUT_MS);
+            return;
+          }
+        } catch {}
+      }
+      // タイムアウト時に即座に別URLへ切り替えると進行中のダウンロードが破棄され、
+      // 低速回線では毎回最初からやり直しになる。1回だけ猶予を延長する。
+      if (!stallGraceUsedRef.current) {
+        stallGraceUsedRef.current = true;
+        timer = setTimeout(check, IMAGE_LOAD_TIMEOUT_MS);
+        return;
+      }
       handleError();
-    }, IMAGE_LOAD_TIMEOUT_MS);
-    return () => clearTimeout(timer);
+    };
+    timer = setTimeout(check, IMAGE_LOAD_TIMEOUT_MS);
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [status, currentSrc, handleError]);
 
   const fitClass =
@@ -223,6 +281,7 @@ const ImageWithFallback = ({
 
   const imageElement = (
     <img
+      ref={imgElRef}
       src={currentSrc}
       srcSet={status !== 'error' && !srcSetDisabled ? currentSrcSet : undefined}
       sizes={!srcSetDisabled ? currentSizes : undefined}

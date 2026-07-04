@@ -21,13 +21,13 @@ import {
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
 import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
-import { loadInsectImageIndexes } from './services/imageIndex';
+import useInsectImageIndex from './hooks/useInsectImageIndex';
+import { getAssetVersionQuery, getPlaceholderImageUrl } from './utils/assetPaths';
 import { createSafeInsectFilename } from './utils/image';
 import { buildResponsivePicture, buildResizedImageUrl } from './utils/imageSrcset';
 import { getMappedScientificFilename } from './utils/insectImageMappings';
 import {
   buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
   resolveImageBaseCandidates,
 } from './utils/insectImageResolver';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
@@ -152,7 +152,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return id;
   };
 
-  const cacheBustRef = useRef(import.meta.env.DEV ? `?v=${Date.now()}` : (import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : ''));
+  const assetVersionQuery = getAssetVersionQuery();
   
   // 🔍 デバッグ：データ配列の状況確認
   logger.debug('🔍 Data arrays status:', {
@@ -447,27 +447,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     }
   }
   
-  const [imageExtensions, setImageExtensions] = useState({});
-  const [imageBases, setImageBases] = useState([]);
-  const imageBaseSet = React.useMemo(() => new Set(imageBases || []), [imageBases]);
-  const isImageIndexReady = imageBases.length > 0 || Object.keys(imageExtensions || {}).length > 0;
-  const normalizedImageEntries = React.useMemo(
-    () => buildNormalizedEntries(imageBaseSet, imageExtensions),
-    [imageBaseSet, imageExtensions],
-  );
-
-  useEffect(() => {
-    loadInsectImageIndexes()
-      .then(({ names, exts }) => {
-        setImageExtensions(exts || {});
-        setImageBases(Array.from(names || []));
-      })
-      .catch((error) => {
-        logger.debug('Failed to load insect image indexes:', error);
-        setImageExtensions({});
-        setImageBases([]);
-      });
-  }, []);
+  // 画像インデックスは共有フックから取得（読み込み・正規化・キャッシュを集約）
+  const {
+    imageNames: imageBaseSet,
+    imageExtensions,
+    normalizedEntries: normalizedImageEntries,
+    isReady: isImageIndexReady,
+  } = useInsectImageIndex();
+  // 学名の部分一致検索用に配列表現も保持する
+  const imageBases = React.useMemo(() => Array.from(imageBaseSet), [imageBaseSet]);
 
   const mappedScientificFilename = moth ? getMappedScientificFilename(moth.name) : '';
   const safeFilename = moth
@@ -485,7 +473,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       folder: 'insects',
       filename: name,
       width,
-      query: cacheBustRef.current,
+      query: assetVersionQuery,
     });
     const uniq = new Set();
     const push = (url) => { if (url && !uniq.has(url)) uniq.add(url); };
@@ -525,7 +513,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     }
 
     if (uniq.size === 0) {
-      push(`${import.meta.env.BASE_URL}images/placeholder.jpg`);
+      push(getPlaceholderImageUrl());
     }
 
     return Array.from(uniq);
@@ -537,6 +525,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     imageBaseSet,
     mappedScientificFilename,
     normalizedImageEntries,
+    assetVersionQuery,
   ]);
 
   const fallbackImageCandidates = React.useMemo(
@@ -550,7 +539,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     
     const base = getImageBaseFromResizedUrl(firstUrl);
     if (base && imageBaseSet.has(base)) {
-      const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, widths: [320, 640, 1024], sizes: '100vw' });
+      const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, sizes: '100vw' });
       return { base, src, srcSet, sizes, sources };
     }
     return { base: '', src: firstUrl, sources: [] };
@@ -578,7 +567,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         ...buildResponsivePicture({
           folder: 'insects',
           filename: base,
-          widths: [320, 640, 1024],
           sizes: '(max-width: 640px) 50vw, 33vw',
         }),
       }));

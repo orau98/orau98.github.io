@@ -1,4 +1,14 @@
 // Preload and cache image filename indexes shared across components
+import fetchWithRetryBase from '../utils/fetchWithRetry';
+
+// 索引取得は「HTTPエラーも例外」「過負荷時は最低3秒待つ」契約で共有utilを使う
+const fetchWithRetry = (url, opts = {}, retries = 2, delay = 250) =>
+  fetchWithRetryBase(url, opts, {
+    retries,
+    delay,
+    throwOnHttpError: true,
+    minProtectedDelayMs: 3000,
+  });
 
 const ASSET_VERSION = import.meta.env.VITE_ASSET_VERSION || 'dev';
 
@@ -7,32 +17,10 @@ let _plantImageLoading = null;
 let _plantImageVersion = null;
 let _plantImageErrorAt = 0;
 
-const fetchWithRetry = async (url, opts = {}, retries = 2, delay = 250) => {
-  let lastErr;
-  for (let i = 0; i <= retries; i++) {
-    try {
-      const res = await fetch(url, opts);
-      if (!res.ok) {
-        const err = new Error(`HTTP ${res.status}`);
-        err.status = res.status;
-        throw err;
-      }
-      return res;
-    } catch (e) {
-      lastErr = e;
-      if (i < retries) {
-        const status = Number(e?.status || 0);
-        const isProtected = status === 429 || status === 503;
-        const waitMs = isProtected
-          ? Math.max(3000, delay * Math.pow(2, i))
-          : delay * Math.pow(2, i);
-        await new Promise(r => setTimeout(r, waitMs));
-        continue;
-      }
-    }
-  }
-  throw lastErr;
-};
+
+// ロード済みなら植物画像ファイル名一覧を同期的に返す（未ロードはnull）。
+// 返り値は読み取り専用として扱うこと。
+export const getCachedPlantImageFilenames = () => _plantImageNames;
 
 export const loadPlantImageFilenames = async () => {
   if (_plantImageVersion !== ASSET_VERSION) {
@@ -86,6 +74,14 @@ export const loadPlantImageFilenames = async () => {
 let _insectImageNames = null; // set of bases for insects
 let _insectExtMap = null; // map base -> extension (e.g., .jpg)
 let _insectLoading = null;
+
+// ロード済みならインデックスを同期的に返す（未ロードはnull）。
+// 詳細ページから一覧へ戻った際、非同期解決を待たずに初回レンダーから
+// 画像ファイル名を確定させるために使う。返り値は読み取り専用として扱うこと。
+export const getCachedInsectImageIndexes = () =>
+  _insectImageNames && _insectExtMap
+    ? { names: _insectImageNames, exts: _insectExtMap }
+    : null;
 
 export const loadInsectImageIndexes = async () => {
   if (_insectImageNames && _insectExtMap) return { names: _insectImageNames, exts: _insectExtMap };
