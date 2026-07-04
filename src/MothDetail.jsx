@@ -1044,7 +1044,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   const renderFoodWebCard = (containerRef, className, id) => (
     <div id={id} data-section-id={id} className={`${className} scroll-mt-28`} ref={containerRef}>
-      <div className="bg-white/85 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-2xl shadow-lg overflow-hidden">
+      <div className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-700/70">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-emerald-500/90 text-white flex items-center justify-center shadow-md">
@@ -1182,7 +1182,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
           </Link>
           {orderChip.label && (
-            <span className="inline-flex items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 sm:px-3 sm:text-sm">
+            <span className="inline-flex items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1.5 text-xs font-medium text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 sm:px-3 sm:text-sm">
               <span className="font-medium">{orderChip.label}</span>
               {orderChip.referenceLabel && (
                 <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{orderChip.referenceLabel}</span>
@@ -1192,7 +1192,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           {familyChip.label && familyChip.queryValue && (
             <Link
               to={localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-              className="inline-flex items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm"
+              className="inline-flex items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1.5 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm"
             >
               <span className="font-medium">{familyChip.label}</span>
               {familyChip.referenceLabel && (
@@ -1203,7 +1203,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           {genusChipLabel && (
             <Link
               to={localizePath(`/?tab=insects&q=${encodeURIComponent(genusChipLabel)}`, locale)}
-              className="inline-flex items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm"
+              className="inline-flex items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm"
             >
               <span className="font-medium italic">{genusChipLabel}</span>
             </Link>
@@ -1211,7 +1211,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           {subfamilyChip.label && subfamilyChip.queryValue && (
             <Link
               to={localizePath(`/?classification=${encodeURIComponent(subfamilyChip.queryValue)}`, locale)}
-              className="hidden items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 lg:inline-flex"
+              className="hidden items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1.5 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 lg:inline-flex"
             >
               <span className="font-medium">{subfamilyChip.label}</span>
               {subfamilyChip.referenceLabel && (
@@ -1222,7 +1222,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           {tribeChip.label && tribeChip.queryValue && (
             <Link
               to={localizePath(`/?classification=${encodeURIComponent(tribeChip.queryValue)}`, locale)}
-              className="hidden items-center rounded-lg border border-blue-200/50 bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 xl:inline-flex"
+              className="hidden items-center rounded-lg border border-blue-200/50 bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 xl:inline-flex"
             >
               <span className="font-medium">{tribeChip.label}</span>
               {tribeChip.referenceLabel && (
@@ -1252,7 +1252,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
           {showPhotoPanel && (
           <div id="plant-photos" className="lg:sticky lg:top-24 lg:col-span-3">
             <div>
-              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-slate-700/50">
+              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-slate-200/70 dark:border-slate-700/50">
                 {hasInstagramPost ? (
                   <div className="p-3">
                     <InstagramEmbed url={moth.instagramUrl} />
@@ -1267,7 +1267,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       subject={resolvePlaceholderSubject(moth?.type || routeType)}
                       alt={isEnglish
                         ? `${primaryName} photograph`
-                        : `${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
+                        : moth.classification?.familyJapanese
+                          ? `${moth.name}（${moth.scientificName}）の写真 - ${moth.classification.familyJapanese}に属する昆虫`
+                          : `${moth.name}（${moth.scientificName}）の写真`}
                       width="1200"
                       height="900"
                       className="w-full h-full"
@@ -1276,16 +1278,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       fallbackSrc={null}
                       loading="eager"
                       fetchPriority="high"
+                      errorLabel={isEnglish ? 'No image' : '画像なし'}
                     />
                     
                     {/* Elegant gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
                     {/* Moth name overlay */}
+                    {/* h1より前に出る画像オーバーレイのラベルは見出しにしない（h3だと見出し階層が逆転する） */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 pointer-events-none">
-                      <h3 className="text-white font-bold text-lg drop-shadow-lg">
+                      <p className="text-white font-bold text-lg drop-shadow-lg">
                         {isEnglish ? primaryName : moth.name}
-                      </h3>
+                      </p>
                       <p className="text-white/90 text-sm drop-shadow-md">
                         {isEnglish
                           ? (japaneseReference || moth.scientificName)
@@ -1338,12 +1342,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                           fit="cover"
                           fallbackSrc={null}
                           loading="lazy"
+                          errorLabel={isEnglish ? 'No image' : '画像なし'}
                         />
                       </button>
                     ))}
                   </div>
                 )}
                 
+                {hasInstagramPost && (
                 <div className="p-4">
                   {hasInstagramPost && (
                     <div className="flex items-center justify-end mb-4">
@@ -1380,6 +1386,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     </div>
                   )}
                 </div>
+                )}
               </div>
             </div>
           </div>
@@ -1753,7 +1760,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                         if (remark.startsWith('食草: ')) {
                           const content = remark.substring(3);
                           // 食草データが空の場合、備考の食草情報を主要食草として表示
-                          if (moth.hostPlants.length === 0) {
+                          // （hostPlantsが未定義/文字列のデータでもクラッシュしないよう配列判定を挟む）
+                          if (!Array.isArray(moth.hostPlants) || moth.hostPlants.length === 0) {
                             const foodPlants = content.split(/[、，,;；]/).map(p => p.trim()).filter(p => p.length > 0);
                             return (
                               <div key={remarkIndex} className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-700/50">
@@ -2134,6 +2142,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 relatedMothsByPlant={relatedMothsByPlant}
                 allInsects={allInsects}
                 locale={locale}
+                plantDetails={plantDetails}
               />
             </div>
 
@@ -2236,6 +2245,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       ? 'Copy link'
                       : 'リンクをコピー'}
               </button>
+              {/* コピー結果をスクリーンリーダーにも通知する（ボタン文言の変化だけでは読まれない） */}
+              <span role="status" aria-live="polite" className="sr-only">
+                {copyFeedback === 'success'
+                  ? (isEnglish ? 'Link copied to clipboard' : 'リンクをコピーしました')
+                  : copyFeedback === 'error'
+                    ? (isEnglish ? 'Failed to copy the link' : 'リンクのコピーに失敗しました')
+                    : ''}
+              </span>
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ import ImageWithFallback from './ImageWithFallback';
 import { resolvePlaceholderSubject } from './ui/NoPhotoPlaceholder';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
-const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' }) => {
+const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja', plantDetails = {} }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   // 各植物の展開状態を管理
@@ -47,7 +47,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
   }
 
   return (
-    <div className="related-insects-section bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-slate-700/50 overflow-hidden">
+    <div className="related-insects-section bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/70 dark:border-slate-700/50 overflow-hidden">
       <div className="p-4 bg-blue-500/10 dark:bg-blue-500/20 border-b border-blue-200/30 dark:border-blue-700/30">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-blue-500 rounded-lg">
@@ -84,6 +84,15 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
           const displayCount = isExpanded ? withPhoto.length : COLLAPSED_PHOTO_COUNT;
           const hiddenPhotoCount = Math.max(0, withPhoto.length - COLLAPSED_PHOTO_COUNT);
           const showExpandButton = hiddenPhotoCount > 0;
+          // 英語版では植物チップも学名を優先する（昆虫名だけ英語化されて和名が混在しないように）
+          const plantScientificName = plantDetails?.[plant]?.scientificName || '';
+          const plantLabel = isEnglish
+            ? getPrimaryEnglishName({
+                scientificName: plantScientificName,
+                japaneseName: plant,
+                fallback: plant,
+              })
+            : plant;
 
           return (
             <div key={plant} className="space-y-4">
@@ -94,7 +103,9 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                     state={makeDetailLinkState(location)}
                     className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
                   >
-                    {plant}
+                    {isEnglish && plantScientificName
+                      ? formatScientificNameReact(plantLabel)
+                      : plantLabel}
                   </Link>
                   <span className="text-sm text-slate-500 dark:text-slate-400">
                     {/* 「20種」なのにカードが数枚だと混乱するため、写真あり件数を分けて明示する */}
@@ -174,14 +185,15 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                             fit="cover"
                             loading="lazy"
                             decoding="async"
+                            errorLabel={isEnglish ? 'No image' : '画像なし'}
                           />
-                          {/* 画像上に昆虫名をオーバーレイ表示 */}
+                          {/* 画像上に昆虫名をオーバーレイ表示（h5だとh2から見出しレベルが飛ぶため見出しにしない） */}
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-2.5 pb-2 pt-4">
-                            <h5 className="text-white font-semibold text-xs leading-snug line-clamp-2 drop-shadow-lg">
+                            <p className="text-white font-semibold text-xs leading-snug line-clamp-2 drop-shadow-lg">
                               {isEnglish && relatedMoth.scientificName
                                 ? formatScientificNameReact(primaryName)
                                 : primaryName}
-                            </h5>
+                            </p>
                             {secondaryName && (
                               <p className="mt-0.5 text-[10px] leading-tight text-white/80 line-clamp-1 drop-shadow-lg">
                                 {secondaryName}

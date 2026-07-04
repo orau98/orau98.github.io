@@ -24,11 +24,23 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
   }, [image]);
   const [modalSrc, setModalSrc] = useState(modalCandidates[0] || '');
   const [modalCandidateIndex, setModalCandidateIndex] = useState(0);
+  // ズーム表示（等倍fit ⇔ 2倍・スクロールでパン）。画像切替・閉時にリセット
+  const [zoomed, setZoomed] = useState(false);
+  const touchStartRef = useRef(null);
+
+  // 端に到達してボタンがdisabledになる際、そのボタンにフォーカスが残っていると
+  // フォーカスがbodyへ落ちるため、フォーカス中のボタン操作時のみ閉じるボタンへ退避する
+  const escapeFocusIfNeeded = (event) => {
+    if (event?.currentTarget && document.activeElement === event.currentTarget) {
+      closeButtonRef.current?.focus({ preventScroll: true });
+    }
+  };
 
   const handlePrev = useCallback((e) => {
     e.stopPropagation();
     if (currentIndex > 0 && onNavigate) {
       onNavigate(currentIndex - 1);
+      if (currentIndex - 1 <= 0) escapeFocusIfNeeded(e);
     }
   }, [currentIndex, onNavigate]);
 
@@ -36,6 +48,7 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
     e.stopPropagation();
     if (currentIndex < images.length - 1 && onNavigate) {
       onNavigate(currentIndex + 1);
+      if (currentIndex + 1 >= images.length - 1) escapeFocusIfNeeded(e);
     }
   }, [currentIndex, images.length, onNavigate]);
 
@@ -110,10 +123,49 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
     };
   }, [isActive]);
 
+  // モーダル表示中は背景ページのスクロールを止める（閉じたら元の値へ戻す）
+  useEffect(() => {
+    if (!isActive || typeof document === 'undefined') return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isActive]);
+
   useEffect(() => {
     setModalCandidateIndex(0);
     setModalSrc(modalCandidates[0] || '');
+    setZoomed(false);
   }, [modalCandidates]);
+
+  useEffect(() => {
+    if (!isActive) setZoomed(false);
+  }, [isActive]);
+
+  // スワイプで前後の画像へ（ズーム中はパン操作と衝突するため無効）
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    } else {
+      touchStartRef.current = null;
+    }
+  };
+  const handleTouchEnd = (e) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start || zoomed || !hasMultiple || !onNavigate) return;
+    const touch = e.changedTouches?.[0];
+    if (!touch) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0 && currentIndex < images.length - 1) {
+      onNavigate(currentIndex + 1);
+    } else if (dx > 0 && currentIndex > 0) {
+      onNavigate(currentIndex - 1);
+    }
+  };
 
   const handleModalImageError = (event) => {
     const nextIndex = modalCandidateIndex + 1;
@@ -132,7 +184,13 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
   if (!isActive) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[90] flex items-center justify-center p-4" onClick={onClose}>
+    // touch-action: pan-y pinch-zoom で横スワイプをJSに確保する。
+    // 指定しないとブラウザの「スワイプで戻る」ジェスチャに奪われてページ遷移してしまう。
+    // ズーム中はコンテナ内の横パンが必要なので制限を外す（overscroll-containが遷移を抑止）
+    <div
+      className={`fixed inset-0 bg-black/90 backdrop-blur-sm z-[90] flex items-center justify-center p-4 overscroll-contain ${zoomed ? '' : '[touch-action:pan-y_pinch-zoom]'}`}
+      onClick={onClose}
+    >
       <div
         ref={dialogRef}
         role="dialog"
@@ -142,14 +200,38 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
         tabIndex={-1}
         className="relative max-w-6xl max-h-[90vh] w-full"
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
-        {/* メイン画像 */}
-        <img
-          src={modalSrc}
-          alt={image.alt}
-          className="w-full h-full object-contain rounded-lg shadow-2xl"
-          onError={handleModalImageError}
-        />
+        {/* メイン画像: クリック/ズームボタンで等倍fit⇔2倍を切り替え。
+            ズーム中はコンテナ内スクロールでパンできる */}
+        <div className={zoomed ? 'overflow-auto max-h-[90vh] rounded-lg overscroll-contain' : ''}>
+          <img
+            src={modalSrc}
+            alt={image.alt}
+            className={zoomed
+              ? 'max-w-none w-[200%] cursor-zoom-out rounded-lg shadow-2xl'
+              : 'w-full h-full object-contain cursor-zoom-in rounded-lg shadow-2xl'}
+            onError={handleModalImageError}
+            onClick={() => setZoomed((z) => !z)}
+          />
+        </div>
+
+        {/* ズーム切替ボタン（画像クリックと等価。キーボード・SR向けの明示的な操作） */}
+        <button
+          onClick={() => setZoomed((z) => !z)}
+          className="absolute top-4 right-20 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
+          aria-label={zoomed ? (isEnglish ? 'Fit to screen' : '全体表示に戻す') : (isEnglish ? 'Zoom in' : '拡大する')}
+          aria-pressed={zoomed}
+        >
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {zoomed ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M13 10H7m10 0a7 7 0 11-14 0 7 7 0 0114 0z" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 7v6m-3-3h6m4 0a7 7 0 11-14 0 7 7 0 0114 0z" />
+            )}
+          </svg>
+        </button>
 
         {/* 閉じるボタン */}
         <button
@@ -163,11 +245,13 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
           </svg>
         </button>
 
-        {/* 前へボタン */}
-        {hasMultiple && currentIndex > 0 && (
+        {/* 前へ/次へボタン: 端でもアンマウントせずdisabledにする。
+            端到達時にフォーカス中のボタンが消えるとフォーカスがbodyへ落ちるため */}
+        {hasMultiple && (
           <button
             onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
+            disabled={currentIndex === 0}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110 disabled:opacity-30 disabled:hover:bg-white/20 disabled:hover:scale-100 disabled:cursor-default"
             aria-label={isEnglish ? 'Previous image' : '前の画像'}
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,11 +260,11 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
           </button>
         )}
 
-        {/* 次へボタン */}
-        {hasMultiple && currentIndex < images.length - 1 && (
+        {hasMultiple && (
           <button
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110"
+            disabled={currentIndex >= images.length - 1}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-200 hover:scale-110 disabled:opacity-30 disabled:hover:bg-white/20 disabled:hover:scale-100 disabled:cursor-default"
             aria-label={isEnglish ? 'Next image' : '次の画像'}
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

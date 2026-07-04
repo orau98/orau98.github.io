@@ -41,7 +41,8 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
 
   const route = getRoute(item, type);
   const isPrev = direction === 'prev';
-  const displayName = isEnglish && type === 'insect'
+  // 英語版では昆虫・植物とも学名があれば学名を表示（和名のままにならないように）
+  const displayName = isEnglish
     ? item.scientificName || item.name
     : item.name;
 
@@ -49,17 +50,19 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
     <Link
       to={route}
       state={makeDetailLinkState(location)}
-      className={`flex-1 flex items-center ${isPrev ? 'justify-start' : 'justify-end'} group p-4 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md`}
+      // min-w-0: 長い学名（分割不能な単語）でflexアイテムの最小幅が押し広げられ、
+      // 375px幅で横スクロールが発生するのを防ぐ（line-clampを効かせるため子にも付与）
+      className={`flex-1 min-w-0 flex items-center ${isPrev ? 'justify-start' : 'justify-end'} group p-4 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md`}
     >
       {isPrev && (
-        <div className="mr-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">
+        <div className="shrink-0 mr-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </div>
       )}
       
-      <div className={`flex flex-col ${isPrev ? 'items-start' : 'items-end'}`}>
+      <div className={`min-w-0 flex flex-col ${isPrev ? 'items-start' : 'items-end'}`}>
         <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-0.5">
           {isPrev
             ? isEnglish
@@ -75,7 +78,7 @@ const NeighborLink = ({ item, direction, type = 'insect', locale = 'ja' }) => {
       </div>
 
       {!isPrev && (
-        <div className="ml-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">
+        <div className="shrink-0 ml-3 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600 dark:group-hover:bg-blue-900/30 dark:group-hover:text-blue-400 transition-colors">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
