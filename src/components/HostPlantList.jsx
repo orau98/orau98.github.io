@@ -32,6 +32,7 @@ import {
   buildResponsivePicture,
 } from "../utils/imageSrcset";
 import ImageWithFallback from "./ImageWithFallback";
+import NoPhotoPlaceholder, { CameraGlyph } from "./ui/NoPhotoPlaceholder";
 import SearchableSelect from "./SearchableSelect";
 import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
 import ManualAdSlot from "./ManualAdSlot";
@@ -144,6 +145,7 @@ const HostPlantListItem = React.memo(
                 <ImageWithFallback
                   src={primaryImageSrc}
                   candidates={fallbackImageCandidates}
+                  subject="sprout"
                   alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                   width="120"
                   height="120"
@@ -154,10 +156,8 @@ const HostPlantListItem = React.memo(
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-emerald-500 dark:text-emerald-300">
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22c-4.97 0-9-4.03-9-9 0-4.97 4.03-9 9-9 1.73 0 3.35.49 4.72 1.34C15.25 4.47 13.68 4 12 4c-3.87 0-7 3.13-7 7 0 3.87 3.13 7 7 7 1.98 0 3.77-.83 5.04-2.16A8.96 8.96 0 0 1 12 22z" />
-                  </svg>
+                <div className="flex h-full w-full items-center justify-center text-emerald-500/70 dark:text-emerald-300/70">
+                  <NoPhotoPlaceholder subject="sprout" size="sm" />
                 </div>
               )}
             </div>
@@ -220,6 +220,7 @@ const HostPlantListItem = React.memo(
                   <ImageWithFallback
                     src={primaryImageSrc}
                     candidates={fallbackImageCandidates}
+                    subject="sprout"
                     alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                     width="800"
                     height="600"
@@ -233,41 +234,16 @@ const HostPlantListItem = React.memo(
                   />
                 </div>
               ) : (
-                // Fallback to beautiful plant icon with better layout
+                // Fallback: 芽生えシルエット + カメラバッジで「植物の写真が未掲載」を伝える
                 <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-700 dark:to-emerald-800 flex flex-col items-center justify-center p-5 sm:p-6">
-                  {/* No image icon at top */}
-                  <div className="flex-shrink-0 mb-4">
-                    <svg
-                      className="w-12 h-12 text-emerald-400 dark:text-emerald-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
+                  <div className="flex-shrink-0 mb-4 text-emerald-500/80 dark:text-emerald-400/80">
+                    <NoPhotoPlaceholder subject="sprout" size="lg" />
                   </div>
-                  
+
                   {/* No image indicator at bottom */}
                   <div className="flex-shrink-0 mt-4">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/70 dark:bg-emerald-600/70 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30 dark:border-emerald-500/30">
-                      <svg
-                        className="w-3 h-3 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
+                      <CameraGlyph className="w-3 h-3 mr-1" />
                       {isEnglish ? "No image listed" : "画像未掲載"}
                     </span>
                   </div>

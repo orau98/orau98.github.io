@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
+import { resolvePlaceholderSubject } from './components/ui/NoPhotoPlaceholder';
 import ImageModal from './components/ImageModal';
 import { DetailSkeleton } from './components/SkeletonLoader';
 import SourceCitation from './components/ui/SourceCitation';
@@ -1263,6 +1264,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       srcSet={mainImageProps.srcSet}
                       sizes={mainImageProps.sizes}
                       sources={mainImageProps.sources}
+                      subject={resolvePlaceholderSubject(moth?.type || routeType)}
                       alt={isEnglish
                         ? `${primaryName} photograph`
                         : `${moth.name}（${moth.scientificName}）の写真 - ${moth.classification?.familyJapanese || '蛾科'}に属する昆虫`}
@@ -1327,6 +1329,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                           srcSet={image.srcSet}
                           sizes={image.sizes}
                           sources={image.sources}
+                          subject={resolvePlaceholderSubject(moth?.type || routeType)}
                           alt={isEnglish
                             ? `${primaryName} photograph ${index + 2}`
                             : `${moth.name}（${moth.scientificName}）の写真 ${index + 2}`}

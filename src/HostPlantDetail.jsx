@@ -32,6 +32,7 @@ import {
 import useInsectImageIndex from './hooks/useInsectImageIndex';
 import { getAssetBase, getAssetVersionQuery } from './utils/assetPaths';
 import ImageWithFallback from './components/ImageWithFallback';
+import { resolvePlaceholderSubject } from './components/ui/NoPhotoPlaceholder';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,
@@ -387,6 +388,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
               srcSet={responsive.srcSet}
               sizes={responsive.sizes}
               sources={responsive.sources}
+              subject={resolvePlaceholderSubject(insect?.type)}
               alt={isEnglish ? `${primaryName} photograph` : name}
               width="1200"
               height="900"

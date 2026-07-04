@@ -7,6 +7,7 @@ import { buildPlantPath } from '../utils/siteTaxonomy';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import ImageWithFallback from './ImageWithFallback';
+import { resolvePlaceholderSubject } from './ui/NoPhotoPlaceholder';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' }) => {
@@ -164,6 +165,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja' 
                             src={primarySrc}
                             candidates={candidates.slice(1)}
                             fallbackSrc={placeholderSrc}
+                            subject={resolvePlaceholderSubject(relatedMoth.type)}
                             alt={isEnglish ? `${primaryName} photograph` : `${relatedMothName}（${relatedMoth.scientificName}）の写真`}
                             width="600"
                             height="400"

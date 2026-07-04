@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link, useSearchParams } from 'react-router-dom';
 import ImageWithFallback from './components/ImageWithFallback';
+import NoPhotoPlaceholder, { resolvePlaceholderSubject } from './components/ui/NoPhotoPlaceholder';
 import SourceCitation from './components/ui/SourceCitation';
 import useInsectImageCandidates from './hooks/useInsectImageCandidates';
 import useSeoMeta from './hooks/useSeoMeta';
@@ -392,6 +393,7 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
         <ImageWithFallback
           src={picture.src || originalCandidates[0]}
           candidates={fallbackCandidates}
+          subject="sprout"
           alt={isEnglish ? `${plantName} photograph` : `${plantName}の写真`}
           width="800"
           height="600"
@@ -400,10 +402,8 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
           fit="cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-emerald-700 dark:text-emerald-200">
-          <svg className="h-20 w-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M12 22c-4.97 0-9-4.03-9-9 0-4.97 4.03-9 9-9 1.73 0 3.35.49 4.72 1.34C15.25 4.47 13.68 4 12 4c-3.87 0-7 3.13-7 7 0 3.87 3.13 7 7 7 1.98 0 3.77-.83 5.04-2.16A8.96 8.96 0 0 1 12 22z" />
-          </svg>
+        <div className="flex h-full w-full items-center justify-center text-emerald-700/80 dark:text-emerald-200/80">
+          <NoPhotoPlaceholder subject="sprout" size="lg" label={isEnglish ? 'No photo' : '写真なし'} />
         </div>
       )}
     </div>
@@ -423,6 +423,7 @@ const InsectMedia = ({ insect, isEnglish, variant = 'default' }) => {
           src={candidates[0]}
           candidates={candidates.slice(1)}
           fallbackSrc={placeholderSrc}
+          subject={resolvePlaceholderSubject(insect?.type)}
           alt={isEnglish ? `${insect?.name || 'insect'} photograph` : `${insect?.name || '昆虫'}の写真`}
           width="800"
           height="600"
@@ -432,9 +433,7 @@ const InsectMedia = ({ insect, isEnglish, variant = 'default' }) => {
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center text-slate-500 dark:text-slate-300">
-          <svg className="h-20 w-20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C9.8 2 8 3.8 8 6v1H6c-1.1 0-2 .9-2 2v2c0 .6.4 1 1 1h1v6c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4v-6h1c.6 0 1-.4 1-1V9c0-1.1-.9-2-2-2h-2V6c0-2.2-1.8-4-4-4zm-1 6h2v2h-2V8z" />
-          </svg>
+          <NoPhotoPlaceholder subject={resolvePlaceholderSubject(insect?.type)} size="lg" label={isEnglish ? 'No photo' : '写真なし'} />
         </div>
       )}
     </div>
