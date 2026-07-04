@@ -221,22 +221,26 @@ const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
               aria-label={isEnglish ? `Open enlarged photo of ${plantName || mainImage.label || mainImage.alt}` : `${plantName || mainImage.alt}の写真を拡大表示`}
             >
               <div className="relative bg-slate-100 dark:bg-slate-900 overflow-hidden aspect-[16/10] min-h-[200px] md:min-h-[300px] lg:min-h-[400px]">
-                <img 
+                <img
                   src={mainImage.finalSrc}
                   alt={isEnglish ? `${plantName || mainImage.label || mainImage.alt} photograph` : `${mainImage.alt}の写真`}
                   width="1600"
                   height="1000"
                   className="w-full h-full object-contain"
                   onError={(event) => handleImageError(mainImage.id, event)}
-                  loading="lazy"
+                  // モバイルでは写真ファーストの最上部＝LCP要素なのでlazyにしない
+                  loading="eager"
+                  fetchpriority="high"
                 />
                 
                 {/* Elegant gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100"></div>
                 
                 {/* Image label overlay */}
+                {/* DOM順でh1より前に来るギャラリー内のラベルは見出しにしない（h3→p）。
+                    見出しアウトラインがh3→h1と逆転するのを防ぐ */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0">
-                  <h3 className="text-white font-bold text-xl drop-shadow-lg">{mainImage.label}</h3>
+                  <p className="text-white font-bold text-xl drop-shadow-lg">{mainImage.label}</p>
                   <p className="text-white/90 text-sm drop-shadow-md mt-1">{isEnglish ? 'Click to enlarge' : 'クリックで拡大表示'}</p>
                 </div>
               </div>
@@ -247,9 +251,9 @@ const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
         {/* Thumbnail gallery */}
         {availableImages.length > 1 && (
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-emerald-700 dark:text-emerald-300">
+            <p className="text-lg font-semibold text-emerald-700 dark:text-emerald-300">
               {isEnglish ? 'More photos' : 'その他の写真'}
-            </h3>
+            </p>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
               {availableImages.map((image) => (
                 <button
@@ -356,7 +360,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
     : '';
   const imgSrc = responsive.src || resizedSrc;
   const href = insect.path || '#';
-  const name = insect.name || insect.japaneseName || '（名称不明）';
+  const name = insect.name || insect.japaneseName || (isEnglish ? '(Unknown name)' : '（名称不明）');
   const primaryName = isEnglish
     ? getPrimaryEnglishName({
         scientificName: insect.scientificName,
@@ -379,7 +383,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
   const normalizedTime = normalizeEmergenceTime(emergenceTime);
 
   return (
-    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-white/30 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
+    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-slate-200/70 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
@@ -400,6 +404,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
               }}
               loading="lazy"
               decoding="async"
+              errorLabel={isEnglish ? 'No image' : '画像なし'}
             />
             {/* Hover gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent hidden"></div>
@@ -465,7 +470,7 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   const href = insect.path || '#';
-  const name = insect.name || insect.japaneseName || '（名称不明）';
+  const name = insect.name || insect.japaneseName || (isEnglish ? '(Unknown name)' : '（名称不明）');
   const primaryName = isEnglish
     ? getPrimaryEnglishName({
         scientificName: insect.scientificName,
@@ -477,7 +482,7 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
     <Link
       to={href}
       state={href && href !== '#' ? makeDetailLinkState(location) : undefined}
-      className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
+      className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
     >
       {isEnglish && insect.scientificName
         ? formatScientificNameReact(primaryName)
@@ -576,6 +581,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const [taxonomy, setTaxonomy] = useState({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
   const [showAllMembers, setShowAllMembers] = useState(false);
+  // 関連昆虫カードの段階表示（一括描画だと種数の多い植物でページが極端に長くなる）
+  const [showAllHostInsectCards, setShowAllHostInsectCards] = useState(false);
+  const [showAllFlowerInsectCards, setShowAllFlowerInsectCards] = useState(false);
   const [canonicalName, setCanonicalName] = useState('');
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
@@ -603,6 +611,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   useEffect(() => {
     setClassificationMembers([]);
     setShowAllMembers(false);
+    setShowAllHostInsectCards(false);
+    setShowAllFlowerInsectCards(false);
   }, [decodedPlantName]);
 
   const isFamily = /科$/.test(decodedPlantName);
@@ -675,9 +685,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
 
   // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
   const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
+  // displayLatinは和名URLでは和名のままなので、そのケースでは分類データの学名を採用する。
+  // これがないと英語ページのh1が和名になり、直下の「Japanese name: 〜」と同文重複していた
   const primaryPlantName = isEnglish
     ? getPrimaryEnglishName({
-        scientificName: displayLatin,
+        scientificName: /^[A-Za-z]/.test(displayLatin)
+          ? displayLatin
+          : String(details?.scientificName || taxonomy.scientificName || '').trim(),
         japaneseName: decodedPlantName,
         fallback: decodedPlantName,
       })
@@ -1709,7 +1723,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         {orderChip.label && orderChip.queryValue && (
           <Link
             to={localizePath(`/?tab=plants&porder=${encodeURIComponent(orderChip.queryValue)}`, locale)}
-            className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 sm:px-3 sm:text-sm`}
+            className={`${isFamily ? 'inline-flex' : 'hidden sm:inline-flex'} items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1.5 text-xs font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200/70 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 sm:px-3 sm:text-sm`}
             aria-label={isEnglish ? `Search plants in ${orderChip.label}` : `${orderChip.label} の植物を検索`}
           >
             <span className="font-medium">{orderChip.label}</span>
@@ -1721,7 +1735,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         {familyChip.label && familyChip.queryValue && (
           <Link
             to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-            className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm`}
+            className={`${isFamily ? 'hidden md:inline-flex' : 'inline-flex'} items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1.5 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200/70 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm`}
             aria-label={isEnglish ? `Search plants in ${familyChip.label}` : `${familyChip.label} の植物を検索`}
           >
             <span className="font-medium">{familyChip.label}</span>
@@ -1733,7 +1747,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         {taxonomy.genus && (
           <Link
             to={localizePath(`/?tab=plants&q=${encodeURIComponent(taxonomy.genus)}`, locale)}
-            className="hidden items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm md:inline-flex"
+            className="hidden items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200/70 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm md:inline-flex"
             aria-label={isEnglish ? `Search plants in genus ${taxonomy.genus}` : `${taxonomy.genus} の植物を検索`}
           >
             <span className="font-medium italic">{taxonomy.genus}</span>
@@ -1767,14 +1781,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         <div className="space-y-4 lg:col-span-2">
           {/* 概要セクション（和名＋学名のみ） */}
           <div id="basic-info" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden p-6 scroll-mt-24">
+          {/* 学名は単語間で自然に折り返す（nowrapだと長い亜種名でモバイル幅からはみ出す） */}
           <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 text-left">
             {isEnglish
-              ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryPlantName)}</span>
+              ? formatScientificNameReact(primaryPlantName)
               : /^[\u3040-\u30ff\u3400-\u9fff]/.test(decodedPlantName)
                 ? decodedPlantName
-                : (<span className="whitespace-nowrap break-keep">{formatScientificNameReact(displayLatin)}</span>)}
+                : formatScientificNameReact(displayLatin)}
           </h1>
-          {isEnglish && japaneseReference && (
+          {/* h1が和名フォールバックのときは「Japanese name: 同じ和名」の重複表示を避ける */}
+          {isEnglish && japaneseReference && primaryPlantName !== decodedPlantName && (
             <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               {japaneseReference}
             </div>
@@ -1800,6 +1816,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           )}
           </div>
 
+          {/* 要約だけ存在する植物（構造化factsが0件）でも解説を出す。
+              facts件数にセクション全体の表示を連動させない */}
           {plantProfileFacts.length > 0 && (
             <section id="plant-profile" className="scroll-mt-24">
               <div className="rounded-card border border-line bg-surface p-5 shadow-e1">
@@ -1854,7 +1872,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                   <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">{group.family}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     {group.members.map(name => (
-                      <Link key={group.family + ':' + name} to={buildPlantPath(name, locale)} state={makeDetailLinkState(location)} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                      <Link key={group.family + ':' + name} to={buildPlantPath(name, locale)} state={makeDetailLinkState(location)} title={name} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
                         <span className="truncate">{name}</span>
                       </Link>
                     ))}
@@ -1866,7 +1884,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {(showAllMembers ? classificationMembers : classificationMembers.slice(0, 48)).map((name) => (
-                  <Link key={name} to={buildPlantPath(name, locale)} state={makeDetailLinkState(location)} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
+                  <Link key={name} to={buildPlantPath(name, locale)} state={makeDetailLinkState(location)} title={name} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors">
                     <span className="truncate">{name}</span>
                   </Link>
                 ))}
@@ -1913,12 +1931,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
                     {isEnglish ? `${totalInsectCount} species` : `関連 ${totalInsectCount}種`}
                   </span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
-                    {isEnglish ? `Larval hosts ${hostPlantInsects.length}` : `食草 ${hostPlantInsects.length}種`}
-                  </span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-900/30 dark:text-rose-200">
-                    {isEnglish ? `Flower visitors ${flowerVisitInsects.length}` : `訪花 ${flowerVisitInsects.length}種`}
-                  </span>
+                  {/* 0種のチップはノイズになるだけなので出さない（「両方」と同じ扱い） */}
+                  {hostPlantInsects.length > 0 && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
+                      {isEnglish ? `Larval hosts ${hostPlantInsects.length}` : `食草 ${hostPlantInsects.length}種`}
+                    </span>
+                  )}
+                  {flowerVisitInsects.length > 0 && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-900/30 dark:text-rose-200">
+                      {isEnglish ? `Flower visitors ${flowerVisitInsects.length}` : `訪花 ${flowerVisitInsects.length}種`}
+                    </span>
+                  )}
                   {bothInsectCount > 0 && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-800 dark:bg-violet-900/30 dark:text-violet-200">
                       {isEnglish ? `Both ${bothInsectCount}` : `両方 ${bothInsectCount}種`}
@@ -2004,11 +2027,28 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                       : `幼虫の食草として利用する昆虫 (${hostPlantInsects.length}種)`)}
                 </h3>
                 {hostInsectGroups.withPhoto.length > 0 && (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {hostInsectGroups.withPhoto.map((insect, idx) => (
-                      <InsectCard key={`host-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {(showAllHostInsectCards ? hostInsectGroups.withPhoto : hostInsectGroups.withPhoto.slice(0, 24)).map((insect, idx) => (
+                        <InsectCard key={`host-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
+                      ))}
+                    </div>
+                    {hostInsectGroups.withPhoto.length > 24 && (
+                      <div className="mt-6 text-center">
+                        <button
+                          type="button"
+                          onClick={() => setShowAllHostInsectCards(s => !s)}
+                          className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
+                        >
+                          {showAllHostInsectCards
+                            ? (isEnglish ? 'Show less' : '簡略表示')
+                            : (isEnglish
+                              ? `Show ${hostInsectGroups.withPhoto.length - 24} more`
+                              : `他${hostInsectGroups.withPhoto.length - 24}種を表示`)}
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
                 {hostInsectGroups.withoutPhoto.length > 0 && (
                   <div className={hostInsectGroups.withPhoto.length > 0 ? 'mt-5' : ''}>
@@ -2038,11 +2078,28 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                       : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`)}
                 </h3>
                 {flowerInsectGroups.withPhoto.length > 0 && (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {flowerInsectGroups.withPhoto.map((insect, idx) => (
-                      <InsectCard key={`flower-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {(showAllFlowerInsectCards ? flowerInsectGroups.withPhoto : flowerInsectGroups.withPhoto.slice(0, 24)).map((insect, idx) => (
+                        <InsectCard key={`flower-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
+                      ))}
+                    </div>
+                    {flowerInsectGroups.withPhoto.length > 24 && (
+                      <div className="mt-6 text-center">
+                        <button
+                          type="button"
+                          onClick={() => setShowAllFlowerInsectCards(s => !s)}
+                          className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
+                        >
+                          {showAllFlowerInsectCards
+                            ? (isEnglish ? 'Show less' : '簡略表示')
+                            : (isEnglish
+                              ? `Show ${flowerInsectGroups.withPhoto.length - 24} more`
+                              : `他${flowerInsectGroups.withPhoto.length - 24}種を表示`)}
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
                 {flowerInsectGroups.withoutPhoto.length > 0 && (
                   <div className={flowerInsectGroups.withPhoto.length > 0 ? 'mt-5' : ''}>
@@ -2073,7 +2130,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
 
       {/* 前後の植物へのナビゲーション（五十音順ではなく分類順で近縁植物へ移動できる） */}
       <DetailNavigation
-        allItems={useMemo(() => sortPlantNamesTaxonomically(Object.keys(hostPlants), plantDetails).map(name => ({ name })), [hostPlants, plantDetails])}
+        // 英語版で学名表示できるよう、plantDetailsから学名も渡す
+        allItems={useMemo(() => sortPlantNamesTaxonomically(Object.keys(hostPlants), plantDetails).map(name => ({
+          name,
+          scientificName: plantDetails?.[name]?.scientificName || '',
+        })), [hostPlants, plantDetails])}
         currentId={decodedPlantName}
         type="plant"
         locale={locale}
@@ -2162,6 +2223,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                     ? 'Copy link'
                     : 'リンクをコピー'}
             </button>
+            {/* コピー結果をスクリーンリーダーにも通知する（ボタン文言の変化だけでは読まれない） */}
+            <span role="status" aria-live="polite" className="sr-only">
+              {copyFeedback === 'success'
+                ? (isEnglish ? 'Link copied to clipboard' : 'リンクをコピーしました')
+                : copyFeedback === 'error'
+                  ? (isEnglish ? 'Failed to copy the link' : 'リンクのコピーに失敗しました')
+                  : ''}
+            </span>
           </div>
         </div>
       </div>

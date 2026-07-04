@@ -1595,8 +1595,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const isPrimary = primaryNeighborIds.has(node.id);
     const primaryDense = primaryNeighborIds.size - 1 > 14;
     const emphasize = isCurrent || selectedNodeId === node.id || (activeNodeId && inHighlight);
-    const showLabel = labelMode !== 'none' && (labelMode === 'all' || emphasize || !dim);
     const revealZoom = 1.6;
+    // ノードが極端に多いグラフ（例: クヌギ=244種）では短縮ラベルでも全表示だと
+    // 重なって判読不能になるため、autoモードではズームか選択で表示する。
+    // 中心種・選択中・ハイライト中のラベルは常に出す
+    const hideWhenCrowded = labelMode === 'auto'
+      && graphData.nodes.length > 120
+      && !emphasize
+      && globalScale < revealZoom;
+    const showLabel = labelMode !== 'none'
+      && !hideWhenCrowded
+      && (labelMode === 'all' || emphasize || !dim);
     const shorten = labelMode !== 'all'
       && dense
       && !emphasize
@@ -2018,17 +2027,63 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   );
 
   // 常時表示用のコンパクト凡例（従来は ? ポップオーバー内に隠れていた）
+  // 実際の描画色（中心=ローズ/緑・訪花=アンバー・食草＋訪花=バイオレット/ライム）と
+  // 凡例が食い違わないよう、グラフに存在するノード種別ごとに色を出し分ける
   const legendStrip = (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
       <span className="font-semibold text-slate-500 dark:text-slate-400">{isEnglish ? 'Legend' : '凡例'}</span>
-      {(showInsectLegend || showInsectHostLegend || showInsectFlowerLegend || showInsectBothLegend) && (
+      {legendTypeSet.has('insect-current') && (
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-sky-400" aria-hidden="true"></span>{isEnglish ? 'Insect' : '昆虫'}
+          <span className="relative inline-flex h-3 w-3 items-center justify-center" aria-hidden="true">
+            <span className="absolute inset-0 rounded-full border border-slate-700/80 dark:border-slate-100/90"></span>
+            <span className="h-1.5 w-1.5 rounded-full bg-rose-400"></span>
+          </span>
+          {isEnglish ? 'Current insect' : '現在の昆虫'}
         </span>
       )}
-      {(showHostPlantLegend || showFlowerPlantLegend || showBothPlantLegend) && (
+      {legendTypeSet.has('plant-current') && (
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" aria-hidden="true"></span>{isEnglish ? 'Plant' : '植物'}
+          <span className="relative inline-flex h-3 w-3 items-center justify-center" aria-hidden="true">
+            <span className="absolute inset-0 rounded-full border border-slate-700/80 dark:border-slate-100/90"></span>
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+          </span>
+          {isEnglish ? 'Current plant' : '現在の植物'}
+        </span>
+      )}
+      {(showInsectLegend || showInsectHostLegend) && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-sky-400" aria-hidden="true"></span>
+          {(showInsectFlowerLegend || showInsectBothLegend)
+            ? (isEnglish ? 'Host-plant insect' : '食草昆虫')
+            : (isEnglish ? 'Insect' : '昆虫')}
+        </span>
+      )}
+      {showInsectFlowerLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400" aria-hidden="true"></span>{isEnglish ? 'Flower-visit insect' : '訪花昆虫'}
+        </span>
+      )}
+      {showInsectBothLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-violet-400" aria-hidden="true"></span>{isEnglish ? 'Host + flower insect' : '食草＋訪花昆虫'}
+        </span>
+      )}
+      {showHostPlantLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+          {(showFlowerPlantLegend || showBothPlantLegend)
+            ? (isEnglish ? 'Host plant' : '食草植物')
+            : (isEnglish ? 'Plant' : '植物')}
+        </span>
+      )}
+      {showFlowerPlantLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400" aria-hidden="true"></span>{isEnglish ? 'Flower-visit plant' : '訪花植物'}
+        </span>
+      )}
+      {showBothPlantLegend && (
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-lime-400" aria-hidden="true"></span>{isEnglish ? 'Host + flower plant' : '食草＋訪花植物'}
         </span>
       )}
       {showHostRelationLegend && (

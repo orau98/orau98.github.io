@@ -346,7 +346,8 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
           <div className="min-w-0">
             {isResourceGroup || isUnknownPlant ? (
               <span
-                className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 dark:text-emerald-300' : 'text-emerald-600 dark:text-emerald-400'}`}
+                // truncateはinline要素には効かないため、inline-block化して省略を有効にする
+                className={`inline-block max-w-full font-medium truncate ${isDomesticWild ? 'text-emerald-700 dark:text-emerald-300' : 'text-emerald-600 dark:text-emerald-400'}`}
                 title={displayPlantName}
               >
                 {primaryPlantName}
@@ -355,7 +356,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
               <Link
                 to={buildPlantPath(plantGroup.name, locale)}
                 state={makeDetailLinkState(location)}
-                className={`font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
+                className={`inline-block max-w-full font-medium truncate ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
                 title={isEnglish ? `${primaryPlantName}${japaneseReference ? ` (${displayPlantName})` : ''}` : `${displayPlantName} の詳細へ`}
               >
                 {isEnglish && plantDetail.scientificName
@@ -374,7 +375,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
               to={buildPlantPath(plantGroup.family, locale)}
               state={makeDetailLinkState(location)}
               className={`text-sm shrink-0 underline-offset-2 hover:underline ${isDomesticWild ? 'text-slate-500 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-300' : 'text-slate-400 hover:text-emerald-600 dark:text-slate-500 dark:hover:text-emerald-300'}`}
-              title={`${plantGroup.family} の詳細へ`}
+              title={isEnglish ? `Go to ${plantGroup.family}` : `${plantGroup.family} の詳細へ`}
             >
               {plantGroup.family}
             </Link>
@@ -399,7 +400,9 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
             </div>
           )}
         </div>
-        <span className={`inline-flex items-center h-6 text-xs px-2 rounded shrink-0 ${obsStyle.bgColor} ${obsStyle.textColor} font-medium`}>
+        {/* カード背景と同じ bgColor だとバッジが地の文に埋没するため白系の面+枠線にし、
+            縦ずれ防止のため h-6 固定・行頭揃え(#63/#69)も維持する */}
+        <span className={`inline-flex items-center h-6 text-xs px-2 rounded shrink-0 border ${obsStyle.borderColor} bg-white/80 dark:bg-slate-900/50 ${obsStyle.textColor} font-medium`}>
           {obsStyle.label}
         </span>
       </div>

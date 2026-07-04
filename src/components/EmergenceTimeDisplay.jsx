@@ -785,7 +785,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                       key={periodNum}
                       className={`
                         flex-1 
-                        ${isActive ? month.color : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
+                        ${isActive ? month.color : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70 dark:from-orange-300/60 dark:to-orange-200/15 dark:ring-orange-300/60' : 'bg-transparent'}
                         transition-all duration-200
                         ${dividerClass}
                       `}
@@ -844,7 +844,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
                     key={periodNum}
                     className={`
                       flex-1
-                      ${isActive ? month.color : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70' : 'bg-transparent'}
+                      ${isActive ? month.color : isFuzzy ? 'bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-200/70 dark:from-orange-300/60 dark:to-orange-200/15 dark:ring-orange-300/60' : 'bg-transparent'}
                       transition-all duration-200
                       ${dividerClass}
                     `}
@@ -874,7 +874,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
           </span>
           {fuzzyPeriods.length > 0 && (
             <span className="inline-flex items-center gap-1.5">
-              <span className="h-3 w-5 rounded-sm bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-300/70" aria-hidden="true" />
+              <span className="h-3 w-5 rounded-sm bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-300/70 dark:from-orange-300/60 dark:to-orange-200/15 dark:ring-orange-300/60" aria-hidden="true" />
               {isEnglish ? 'Broad seasonal note (e.g. "spring")' : '幅のある記述（「春」など）'}
             </span>
           )}
