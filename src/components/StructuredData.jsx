@@ -8,7 +8,7 @@ import {
 } from '../utils/siteTaxonomy';
 
 const toJsonLd = (data) =>
-  JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+  JSON.stringify(data).replace(/</g, '\\u003c');
 
 const DATASET_DESCRIPTION =
   '日本産の蛾・蝶・甲虫・アブラムシなど9700種超について、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。';

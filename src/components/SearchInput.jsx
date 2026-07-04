@@ -135,15 +135,20 @@ const useSearchHistory = (scope = 'default') => {
 
   useEffect(() => {
     try {
+      // 履歴が配列以外や文字列以外を含んで壊れていても表示を巻き込まないよう検証する
+      const sanitizeHistory = (raw) => {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+      };
       const saved = localStorage.getItem(storageKey);
       if (saved) {
-        setHistory(JSON.parse(saved));
+        setHistory(sanitizeHistory(saved));
         return;
       }
       if (scope === 'default') {
         const legacy = localStorage.getItem(SEARCH_HISTORY_KEY);
         if (legacy) {
-          setHistory(JSON.parse(legacy));
+          setHistory(sanitizeHistory(legacy));
         }
       }
     } catch {}
