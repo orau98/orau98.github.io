@@ -70,6 +70,7 @@ test('normalized hostplant conversion does not expose OCR metadata in public rec
         scientific_name: 'Testus testus',
         family: 'Cerambycidae',
         family_jp: 'カミキリムシ科',
+        notes: '日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。',
       },
     ],
     [
@@ -101,6 +102,7 @@ test('normalized hostplant conversion does not expose OCR metadata in public rec
 
   const target = converted.longhornbeetles.find((item) => item.id === 'species-test');
   assert.ok(target);
+  assert.equal(target.notes, '');
   assert.deepEqual(
     target.hostPlantsDetailed.map((record) => record.notes),
     ['', '葉裏に潜る'],

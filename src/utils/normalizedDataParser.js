@@ -15,7 +15,10 @@ import {
   createEmptyInsectCollections,
 } from './siteTaxonomy.js';
 import { getHostResourceType, isPlantHostRecord } from './hostResource.js';
-import { getPublicHostPlantNote } from './publicHostPlantNotes.js';
+import {
+  getPublicHostPlantNote,
+  getPublicHostPlantSectionNote,
+} from './publicHostPlantNotes.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = createEmptyInsectCollections(() => []);
@@ -344,7 +347,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         // 詳細な成虫発生時期（ノート由来）
         emergenceTimeDetailed: emergenceNotes,
         dataSource: 'normalized_csv',
-        notes: insect.notes?.trim() || '',
+        notes: getPublicHostPlantSectionNote(insect.notes || ''),
         alternativeNames,
         synonyms: insect.synonyms?.trim() || '',
         // 分類用フィールド（英語キー）
