@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import NoPhotoPlaceholder from './ui/NoPhotoPlaceholder';
 
 const IMAGE_LOAD_TIMEOUT_MS = 12000;
 // loading=lazy でまだフェッチが始まらない距離（ブラウザのlazyマージンより十分内側）
@@ -52,6 +53,7 @@ const ImageWithFallback = ({
   imgClassName = '',
   fit = 'contain', // contain | cover | fill | none | scale-down
   errorLabel = '画像なし',
+  subject = 'butterfly', // エラー表示のシルエット: butterfly | bug | sprout（resolvePlaceholderSubject参照）
   width, 
   height, 
   loading = 'lazy',
@@ -303,15 +305,16 @@ const ImageWithFallback = ({
         </div>
       )}
       
-      {/* Error State (Icon) */}
+      {/* Error State (被写体シルエット + カメラバッジ) */}
       {status === 'error' && (
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400 z-10 bg-slate-100 dark:bg-slate-800">
-          <div className="text-center p-4">
-            <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-            </svg>
-            <span className="text-xs text-slate-500 dark:text-slate-400">{errorLabel}</span>
-          </div>
+        <div className="absolute inset-0 flex items-center justify-center z-10 bg-slate-100 dark:bg-slate-800">
+          <NoPhotoPlaceholder
+            subject={subject}
+            size="md"
+            label={errorLabel}
+            className="p-4 text-slate-400 dark:text-slate-500"
+            labelClassName="text-slate-500 dark:text-slate-400"
+          />
         </div>
       )}
 

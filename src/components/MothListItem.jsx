@@ -10,6 +10,7 @@ import EmergenceTimeDisplay, { hasEmergencePeriods } from './EmergenceTimeDispla
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 import ImageWithFallback from './ImageWithFallback';
+import NoPhotoPlaceholder, { SubjectSilhouette, CameraGlyph, resolvePlaceholderSubject } from './ui/NoPhotoPlaceholder';
 import { Card, Badge } from './ui';
 import {
   buildResponsivePicture,
@@ -157,6 +158,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   sources={responsiveImage?.sources}
                   candidates={imageFallbackCandidates}
                   fallbackSrc={placeholderFallbackSrc}
+                  subject={resolvePlaceholderSubject(moth.type)}
                   alt={isEnglish ? `${primaryName} photograph` : `${moth.name}（${moth.scientificName}）の写真`}
                   width="120"
                   height="120"
@@ -168,10 +170,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   fetchPriority={isPriority ? 'high' : 'auto'}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-slate-400">
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01" />
-                  </svg>
+                <div className="flex h-full w-full items-center justify-center text-slate-400 dark:text-slate-500">
+                  <NoPhotoPlaceholder subject={resolvePlaceholderSubject(moth.type)} size="sm" />
                 </div>
               )}
             </div>
@@ -245,6 +245,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     sources={responsiveImage?.sources}
                     candidates={imageFallbackCandidates}
                     fallbackSrc={placeholderFallbackSrc}
+                    subject={resolvePlaceholderSubject(moth.type)}
                     alt={
                       isEnglish
                         ? `${primaryName} photograph`
@@ -265,9 +266,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   />
                 ) : (
                   <div className="w-full h-full bg-slate-200 dark:bg-slate-700 animate-pulse flex items-center justify-center">
-                    <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+                    <SubjectSilhouette subject={resolvePlaceholderSubject(moth.type)} className="w-8 h-8 text-slate-400" />
                   </div>
                 )}
               </div>
@@ -276,19 +275,15 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             {!hasImageFilename && (
 
               <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex flex-col items-center justify-center p-5 sm:p-6">
-                {/* No image icon at top */}
-                <div className="flex-shrink-0 mb-4">
-                  <svg className="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                  </svg>
+                {/* 被写体シルエット + カメラバッジ */}
+                <div className="flex-shrink-0 mb-4 text-slate-400 dark:text-slate-500">
+                  <NoPhotoPlaceholder subject={resolvePlaceholderSubject(moth.type)} size="lg" />
                 </div>
-                
+
                 {/* No image indicator at bottom */}
                 <div className="flex-shrink-0 mt-4">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-300/70 dark:bg-slate-600/70 text-slate-700 dark:text-slate-300 border border-slate-400/30 dark:border-slate-500/30">
-                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
-                    </svg>
+                    <CameraGlyph className="w-3 h-3 mr-1" />
                     {isEnglish ? 'No image listed' : '画像未掲載'}
                   </span>
                 </div>
