@@ -11,10 +11,8 @@ import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
 import useSeoMeta from "./hooks/useSeoMeta";
 import useDebounce from "./hooks/useDebounce";
-import {
-  loadInsectImageIndexes,
-  loadPlantImageFilenames as loadPlantImageFilenamesService,
-} from "./services/imageIndex";
+import useInsectImageIndex from "./hooks/useInsectImageIndex";
+import usePlantImageFilenames from "./hooks/usePlantImageFilenames";
 import lazyWithRetry from "./utils/lazyWithRetry";
 import { hiraganaToKatakana } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
@@ -29,9 +27,9 @@ import { buildResizedImageUrl } from "./utils/imageSrcset";
 import { globalJapaneseToScientificMapping } from "./utils/insectImageMappings";
 import {
   buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
   resolveImageBaseCandidates,
 } from "./utils/insectImageResolver";
+import { getAssetBase } from "./utils/assetPaths";
 import { absUrl } from "./utils/origin";
 import { buildPlantPath, isKnownDetailPath } from "./utils/siteTaxonomy";
 import { buildInsectPath } from "./utils/insectSlug";
@@ -48,6 +46,24 @@ import {
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
+
+// 全昆虫の結合配列を再マウントをまたいで参照安定化するキャッシュ。
+// useMemoだけだと詳細ページから戻った再マウントで参照が変わり、
+// MothList側の画像解決マップやフィルタのキャッシュが全て無効化されてしまう。
+let lastCombinedInsectParts = null;
+let lastCombinedInsects = [];
+const combineInsectsStable = (parts) => {
+  if (
+    lastCombinedInsectParts &&
+    lastCombinedInsectParts.length === parts.length &&
+    lastCombinedInsectParts.every((part, index) => part === parts[index])
+  ) {
+    return lastCombinedInsects;
+  }
+  lastCombinedInsectParts = parts;
+  lastCombinedInsects = parts.flat();
+  return lastCombinedInsects;
+};
 
 const buildInstagramWidgetSrcDoc = (html, baseHref = "/") => {
   const trimmed = String(html || "").trim();
@@ -451,20 +467,19 @@ const InsectsHostPlantExplorer = memo(
     const [instagramPostCards, setInstagramPostCards] = useState([]);
     const [instagramWidgetHtml, setInstagramWidgetHtml] = useState("");
     const [instagramGalleryFailed, setInstagramGalleryFailed] = useState(false);
-    const baseUrl = import.meta.env.BASE_URL || "/";
-    const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+    const normalizedBaseUrl = getAssetBase();
     const instagramWidgetSrcDoc = useMemo(
       () => buildInstagramWidgetSrcDoc(instagramWidgetHtml, normalizedBaseUrl),
       [instagramWidgetHtml, normalizedBaseUrl],
     );
     const [showBibliography, setShowBibliography] = useState(false);
-    const [plantImageFilenames, setPlantImageFilenames] = useState([]);
-    const [insectImageFilenames, setInsectImageFilenames] = useState(new Set());
-    const [insectImageExtensions, setInsectImageExtensions] = useState({});
-    const normalizedInsectImageEntries = useMemo(
-      () => buildNormalizedEntries(insectImageFilenames, insectImageExtensions),
-      [insectImageFilenames, insectImageExtensions],
-    );
+    // 画像インデックスは共有フックから取得（再マウント時も同期初期化される）
+    const plantImageFilenames = usePlantImageFilenames();
+    const {
+      imageNames: insectImageFilenames,
+      imageExtensions: insectImageExtensions,
+      normalizedEntries: normalizedInsectImageEntries,
+    } = useInsectImageIndex();
     const [searchByTab, setSearchByTab] = useState(() => ({
       insects: initialTabFromParams === "insects" ? initialQuery : "",
       plants: initialTabFromParams === "plants" ? initialQuery : "",
@@ -1414,16 +1429,19 @@ const InsectsHostPlantExplorer = memo(
     }, [instagramTimelinePosts, instagramPosts, isInstagramPostUrl]);
 
     // 全昆虫の結合配列。inline spreadだと毎レンダーで参照が変わり、
-    // MothList側のフィルタ再計算やサジェスト計算が毎打鍵で走ってしまう
+    // MothList側のフィルタ再計算やサジェスト計算が毎打鍵で走ってしまう。
+    // さらにモジュールレベルのキャッシュを併用し、詳細ページから戻った
+    // 再マウントでも同一データなら同一参照を返す（画像解決キャッシュが効く）
     const allInsects = useMemo(
-      () => [
-        ...moths,
-        ...butterflies,
-        ...beetles,
-        ...longhornbeetles,
-        ...leafbeetles,
-        ...aphids,
-      ],
+      () =>
+        combineInsectsStable([
+          moths,
+          butterflies,
+          beetles,
+          longhornbeetles,
+          leafbeetles,
+          aphids,
+        ]),
       [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids],
     );
 
@@ -1450,8 +1468,7 @@ const InsectsHostPlantExplorer = memo(
       let sequence = 0;
 
       // ベースURL計算
-      const baseUrl = import.meta.env.BASE_URL || '/';
-      const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+      const normalizedBase = getAssetBase();
 
       const getMatchScore = (value) => {
         if (!value) return 0;
@@ -1761,28 +1778,6 @@ const InsectsHostPlantExplorer = memo(
           : selection;
       commitSearchValue(value);
     };
-
-    useEffect(() => {
-      let cancelled = false;
-      loadInsectImageIndexes()
-        .then(({ names, exts }) => {
-          if (!cancelled) {
-            setInsectImageFilenames(new Set(names || []));
-            setInsectImageExtensions(exts || {});
-          }
-        })
-        .catch((err) => logger.debug("insect image preload failed:", err));
-      loadPlantImageFilenamesService()
-        .then((filenames) => {
-          if (!cancelled) {
-            setPlantImageFilenames(filenames);
-          }
-        })
-        .catch((err) => logger.debug("plant image preload failed:", err));
-      return () => {
-        cancelled = true;
-      };
-    }, []);
 
     // ARIA Tabsパターン: 矢印キーでタブを移動し、フォーカスも追従させる
     const handleTabListKeyDown = (event) => {

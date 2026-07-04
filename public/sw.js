@@ -1,16 +1,32 @@
 /*
- * ネットワーク優先のService Worker。
+ * Service Worker。
  *
  * 方針:
- * - 常にネットワークから最新を取得し、成功したGETレスポンスをキャッシュに複製する
- * - ネットワークが失敗したとき（オフライン・圏外）だけキャッシュから返す
- * - プリキャッシュは行わない（古いHTML/JSを配り続ける事故を構造的に避ける）
- * - 外部オリジン（GA/AdSense/Instagram等）には一切関与しない
- *
- * これにより、野外など電波の悪い環境での再訪時に、
- * 一度見たページ・データ・画像をオフラインでも閲覧できる。
+ * - HTML/JS/データ(JSON/CSV)は「ネットワーク優先」: 常に最新を取得し、
+ *   成功したGETレスポンスをキャッシュへ複製。ネットワーク失敗時のみキャッシュで代替。
+ *   プリキャッシュは行わない（古いHTML/JSを配り続ける事故を構造的に避ける）。
+ * - 画像は「stale-while-revalidate」: キャッシュがあれば即座に表示し、
+ *   裏でネットワークから取り直してキャッシュを更新する。
+ *   GitHub Pages は Cache-Control: max-age=600 のため、以前は10分以上経って
+ *   戻ってくると全カード画像が条件付きGETのネットワーク往復を待ってから
+ *   表示されていた（キャッシュに実体があるのにスピナーが並ぶ）。
+ *   画像は差し替え頻度が低く、差し替え時も「次回訪問で最新化」で十分。
+ * - 外部オリジン（GA/AdSense/Instagram等）には一切関与しない。
  */
-const CACHE_NAME = 'ihpe-offline-v1';
+const OFFLINE_CACHE = 'ihpe-offline-v1';
+const IMAGE_CACHE = 'ihpe-images-v1';
+const ACTIVE_CACHES = [OFFLINE_CACHE, IMAGE_CACHE];
+// 画像キャッシュの上限（best-effort・挿入順で古いものから削除）。
+// リサイズ画像は1枚あたり数十KBなので、上限到達時でも概ね数十MB規模に収まる
+const IMAGE_CACHE_MAX_ENTRIES = 1000;
+
+const isCacheableResponse = (response) =>
+  !!response &&
+  response.ok &&
+  (response.type === 'basic' || response.type === 'default');
+
+const isImageRequest = (request, url) =>
+  request.destination === 'image' || url.pathname.includes('/images/');
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -21,12 +37,85 @@ self.addEventListener('activate', (event) => {
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)),
+        keys
+          .filter((key) => !ACTIVE_CACHES.includes(key))
+          .map((key) => caches.delete(key)),
       );
+      // 旧SW時代にオフライン用キャッシュへ入った画像は今後参照されないため掃除する
+      try {
+        const offline = await caches.open(OFFLINE_CACHE);
+        const requests = await offline.keys();
+        await Promise.all(
+          requests
+            .filter((request) => new URL(request.url).pathname.includes('/images/'))
+            .map((request) => offline.delete(request)),
+        );
+      } catch {}
       await self.clients.claim();
     })(),
   );
 });
+
+let trimming = false;
+const trimImageCache = async (cache) => {
+  if (trimming) return;
+  trimming = true;
+  try {
+    const keys = await cache.keys();
+    const excess = keys.length - IMAGE_CACHE_MAX_ENTRIES;
+    for (let i = 0; i < excess; i += 1) {
+      await cache.delete(keys[i]);
+    }
+  } catch {} finally {
+    trimming = false;
+  }
+};
+
+// 画像: キャッシュ即返し + 背景更新（未キャッシュ時はネットワーク待ち）
+const handleImageRequest = async (event) => {
+  const { request } = event;
+  const cache = await caches.open(IMAGE_CACHE);
+  const cached = await cache.match(request);
+  const networkFetch = fetch(request).then((response) => {
+    if (isCacheableResponse(response)) {
+      cache
+        .put(request, response.clone())
+        .then(() => trimImageCache(cache))
+        .catch(() => {});
+    }
+    return response;
+  });
+
+  if (cached) {
+    // 背景更新の完了までSWを生かす（失敗は無視して次回に任せる）
+    event.waitUntil(networkFetch.then(() => {}, () => {}));
+    return cached;
+  }
+  return networkFetch;
+};
+
+// それ以外: ネットワーク優先 + オフライン時のみキャッシュ代替
+const handleNetworkFirst = async (request) => {
+  try {
+    const response = await fetch(request);
+    if (isCacheableResponse(response)) {
+      const cache = await caches.open(OFFLINE_CACHE);
+      cache.put(request, response.clone()).catch(() => {});
+    }
+    return response;
+  } catch (error) {
+    const cache = await caches.open(OFFLINE_CACHE);
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    // ナビゲーションはSPAシェルでフォールバック（React Routerが描画する）
+    if (request.mode === 'navigate') {
+      const shell =
+        (await cache.match('/index.html')) || (await cache.match('/'));
+      if (shell) return shell;
+    }
+    throw error;
+  }
+};
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
@@ -40,27 +129,9 @@ self.addEventListener('fetch', (event) => {
   }
   if (url.origin !== self.location.origin) return;
 
-  event.respondWith(
-    (async () => {
-      try {
-        const response = await fetch(request);
-        if (response && response.ok && (response.type === 'basic' || response.type === 'default')) {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(request, response.clone()).catch(() => {});
-        }
-        return response;
-      } catch (error) {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match(request);
-        if (cached) return cached;
-        // ナビゲーションはSPAシェルでフォールバック（React Routerが描画する）
-        if (request.mode === 'navigate') {
-          const shell =
-            (await cache.match('/index.html')) || (await cache.match('/'));
-          if (shell) return shell;
-        }
-        throw error;
-      }
-    })(),
-  );
+  if (isImageRequest(request, url)) {
+    event.respondWith(handleImageRequest(event));
+    return;
+  }
+  event.respondWith(handleNetworkFirst(request));
 });

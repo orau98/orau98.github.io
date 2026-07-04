@@ -23,6 +23,7 @@ import {
 } from './utils/robotsMeta';
 import { shouldDeferHeavyWork } from './utils/plantMetadata';
 import { loadInsectImageIndexes } from './services/imageIndex';
+import fetchWithRetryShared from './utils/fetchWithRetry';
 import { getLocaleFromPath, isEnglishLocale } from './utils/locale';
 import {
   buildCurrentHashHref,
@@ -352,28 +353,13 @@ function App() {
       const base = import.meta.env.BASE_URL || '/';
       let plantDetailsLite = {};
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-      const fetchWithRetry = async (url, opts = {}, retries = 4, delay = 300) => {
-        let lastErr = null;
-        for (let attempt = 0; attempt <= retries; attempt += 1) {
-          try {
-            const res = await fetch(url, { ...opts, signal: externalSignal || opts.signal });
-            if ([429, 502, 503, 504].includes(res.status) && attempt < retries) {
-              await sleep(delay * Math.pow(2, attempt));
-              continue;
-            }
-            return res;
-          } catch (error) {
-            lastErr = error;
-            if (externalSignal?.aborted) throw error;
-            if (attempt < retries) {
-              await sleep(delay * Math.pow(2, attempt));
-              continue;
-            }
-            throw error;
-          }
-        }
-        throw lastErr || new Error('fetch failed');
-      };
+      // データ取得は「レスポンスを返し呼び出し側が res.ok を見る」契約で共有utilを使う
+      const fetchWithRetry = (url, opts = {}) =>
+        fetchWithRetryShared(
+          url,
+          { ...opts, signal: externalSignal || opts.signal },
+          { retries: 4, delay: 300 },
+        );
       const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
       const appVersionSuffix = import.meta.env.DEV
         ? `?v=${Date.now()}`

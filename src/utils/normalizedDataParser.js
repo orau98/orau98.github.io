@@ -84,6 +84,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     target.year = preferValue(target.year, incoming.year);
     target.notes = preferValue(target.notes, incoming.notes);
     target.alternativeNames = preferValue(target.alternativeNames, incoming.alternativeNames);
+    target.synonyms = preferValue(target.synonyms, incoming.synonyms);
     target.emergenceTime = preferValue(target.emergenceTime, incoming.emergenceTime);
     target.emergenceTimeSource = preferValue(target.emergenceTimeSource, incoming.emergenceTimeSource);
     target.emergenceTimeDescription = preferValue(target.emergenceTimeDescription, incoming.emergenceTimeDescription);
@@ -261,9 +262,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       const altName = (insect.alternative_name || '').trim();
       const otherNames = (insect.other_names || '').trim();
       if (parenAliases.length > 0) altNamesRaw.push(...parenAliases);
-      if (oldName) altNamesRaw.push(oldName);
-      if (altName) altNamesRaw.push(...altName.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
-      if (otherNames) altNamesRaw.push(...otherNames.split(/[、,，]/).map(s => s.trim()).filter(Boolean));
+      if (oldName) altNamesRaw.push(...oldName.split(/[、,，;；]/).map(s => s.trim()).filter(Boolean));
+      if (altName) altNamesRaw.push(...altName.split(/[、,，;；]/).map(s => s.trim()).filter(Boolean));
+      if (otherNames) altNamesRaw.push(...otherNames.split(/[、,，;；]/).map(s => s.trim()).filter(Boolean));
       // remove exact duplicates and names identical to the primary name
       const altNames = Array.from(new Set(altNamesRaw.filter(n => n && n !== primaryName)));
       const alternativeNames = altNames.join('、');
@@ -343,6 +344,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         dataSource: 'normalized_csv',
         notes: insect.notes?.trim() || '',
         alternativeNames,
+        synonyms: insect.synonyms?.trim() || '',
         // 分類用フィールド（英語キー）
         type: getTypeKey(insect.family_jp, insect.family)
       };

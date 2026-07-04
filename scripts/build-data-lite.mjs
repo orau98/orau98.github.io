@@ -274,6 +274,7 @@ const slim = (arr) => (arr || []).map(i => ({
     scientificName: i.scientificName,
     scientificFilename: i.scientificFilename || '',
     alternativeNames: i.alternativeNames || '',
+    synonyms: i.synonyms || '',
     type: i.type,
     classification: i.classification || {},
     hostPlants: Array.isArray(i.hostPlants) ? i.hostPlants.slice() : [],

@@ -10,6 +10,82 @@ export const isScientificNameLike = (value = '') => {
   return /[A-Za-z]/.test(text) && !/[\u3040-\u30FF\u3400-\u9FFF]/.test(text);
 };
 
+// 潰れた二名法表記を表示用に修復する（例: "Genusspecies" → "Genus species"、
+// ファイル名由来の "Genus_species" → "Genus species"）。
+// 種小名3文字以上を要求し "Carex" のような一語の属名は誤分割しない。
+// ※ formatScientificNameHTML 内部の preRepair はスペース無し一語を信頼して
+//   分割しない方針のため、こちらはカード見出し等の明示的な修復用途で使う。
+export const repairScientificBinomial = (name) => {
+  if (!name || typeof name !== 'string') return name;
+  const t = name.trim();
+  if (!t) return t;
+  if (t.includes(' ')) return t;
+  // From filename pattern Genus_species
+  if (t.includes('_')) {
+    const mU = t.match(/^([A-Z][a-z]+)_([a-z-]{2,})(.*)$/);
+    if (mU) return `${mU[1]} ${mU[2]}${mU[3] || ''}`;
+  }
+  const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
+  if (m) return `${m[1]} ${m[2]}${m[3] || ''}`;
+  return t;
+};
+
+// 学名から亜種小名だけを落とし、種小名・著者名・年は保持する。
+export const dropSubspeciesEpithet = (name) => {
+  if (!name || typeof name !== 'string') return name;
+
+  const tokens = name.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length <= 2) return name; // もともと亜種がない
+
+  const genus = tokens[0];
+  if (!genus) return name;
+
+  // 亜属 (Subgenus) を飛ばしつつ最初の小文字トークンを種小名とみなす
+  let speciesIdx = -1;
+  for (let i = 1; i < tokens.length; i += 1) {
+    const t = tokens[i];
+    if (/^\(.*\)$/.test(t)) continue; // (Subgenus) をスキップ
+    if (/^[a-z][a-z-]*$/.test(t)) { // 純小文字（ハイフン含む）は種小名候補
+      speciesIdx = i;
+      break;
+    }
+  }
+  if (speciesIdx === -1) return name; // 種が見つからない場合はそのまま
+
+  const species = tokens[speciesIdx];
+
+  const output = [genus, species];
+  let skippingInfraspecific = true; // 種直後の純小文字を亜種扱いで除外
+
+  for (let i = speciesIdx + 1; i < tokens.length; i += 1) {
+    const t = tokens[i];
+
+    // 亜属など括弧付きはそのまま残す（ただし subspecies とは無関係）
+    if (/^\(.*\)$/.test(t)) {
+      output.push(t);
+      skippingInfraspecific = false;
+      continue;
+    }
+
+    // 変種/品種などの階級表記（var., f., ssp., subsp. など）は表示しない
+    if (/^(subsp\.?|ssp\.?|var\.?|f\.?|forma)$/i.test(t)) {
+      skippingInfraspecific = true;
+      continue;
+    }
+
+    // 種の後に続く純小文字は亜種小名としてスキップ（著者名など大文字開始は残す）
+    if (skippingInfraspecific && /^[a-z][a-z-]*$/.test(t)) {
+      continue;
+    }
+
+    // ここまで来たら著者名・年などなので残す
+    output.push(t);
+    skippingInfraspecific = false;
+  }
+
+  return output.join(' ').replace(/\s+/g, ' ').trim();
+};
+
 /**
  * 学名を正しくフォーマットする関数
  * @param {string} scientificName - 学名（著者名・年含む）

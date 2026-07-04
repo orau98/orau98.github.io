@@ -16,7 +16,8 @@ import {
   splitFilenameBase,
 } from "../utils/filename";
 import { hiraganaToKatakana, normalizeNFKC } from "../utils/text";
-import { loadPlantImageFilenames as loadPlantImageFilenamesService } from "../services/imageIndex";
+import usePlantImageFilenames from "../hooks/usePlantImageFilenames";
+import { getAssetBase, getAssetVersionQuery } from "../utils/assetPaths";
 import Pagination from "./Pagination";
 import ListFilterPanel from "./ListFilterPanel";
 import { isEnglishLocale } from "../utils/locale";
@@ -69,9 +70,8 @@ const HostPlantListItem = React.memo(
     const [imageError, setImageError] = useState(false);
 
     const safePlantName = createSafePlantFilename(plant);
-    const baseUrl = import.meta.env.BASE_URL || "/";
-    const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-    const assetVer = import.meta.env.VITE_ASSET_VERSION ? `?v=${import.meta.env.VITE_ASSET_VERSION}` : "";
+    const normalizedBase = getAssetBase();
+    const assetVer = getAssetVersionQuery();
     const encoded = imageFilename ? encodeURIComponent(imageFilename) : "";
     const originalBaseUrl = `${normalizedBase}images/plants/`;
     const responsiveImage = imageFilename
@@ -79,8 +79,9 @@ const HostPlantListItem = React.memo(
           baseUrl: normalizedBase,
           folder: "plants",
           filename: imageFilename,
-          widths: [320, 640, 1024],
-          sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",
+          // グリッドは md:2列 / lg:3列 / 2xl:4列。実際の表示幅と一致させ、
+          // 過小指定でぼやけたり過大指定で帯域を無駄にしないようにする
+          sizes: "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 25vw",
           query: assetVer,
           sourceFormats: ["webp"],
         })
@@ -598,9 +599,12 @@ const HostPlantList = ({
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
-  const [plantImageFilenames, setPlantImageFilenames] = useState(
-    preloadedImageFilenames,
-  );
+  // 植物画像ファイル名は共有フックで取得し、親から事前供給があればそちらを優先
+  const loadedPlantImageFilenames = usePlantImageFilenames();
+  const plantImageFilenames =
+    preloadedImageFilenames && preloadedImageFilenames.length > 0
+      ? preloadedImageFilenames
+      : loadedPlantImageFilenames;
   
   // State for filters
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -823,21 +827,6 @@ const HostPlantList = ({
   const familyFilterId = `${filterIdBase}-family`;
   const visitFilterId = `${filterIdBase}-visit`;
   const filtersPanelId = `${filterIdBase}-filters`;
-
-  // Load plant image filenames on component mount
-  useEffect(() => {
-    if (preloadedImageFilenames && preloadedImageFilenames.length > 0) {
-      setPlantImageFilenames(preloadedImageFilenames);
-      return;
-    }
-    let cancelled = false;
-    loadPlantImageFilenamesService().then((filenames) => {
-      if (!cancelled) setPlantImageFilenames(filenames);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [preloadedImageFilenames]);
 
   // Update itemsPerPage on resize to keep pages filling complete rows
   useEffect(() => {

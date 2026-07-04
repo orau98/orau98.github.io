@@ -1156,6 +1156,14 @@ function splitAlternativeNames(value = '') {
     .filter(Boolean);
 }
 
+function combineInsectAlternativeNames(row = {}) {
+  return uniqueNonEmpty([
+    ...splitAlternativeNames(row.old_japanese_name),
+    ...splitAlternativeNames(row.alternative_name),
+    ...splitAlternativeNames(row.other_names),
+  ]).join('、');
+}
+
 function uniqueNonEmpty(values = []) {
   const seen = new Set();
   const result = [];
@@ -2457,7 +2465,8 @@ async function generateMetaPages() {
       const _author = row.author || '';
       const _year = row.year || '';
       const notes = row.notes || '';
-      const alternativeNames = row.alternative_name || '';
+      const alternativeNames = combineInsectAlternativeNames(row);
+      const synonyms = row.synonyms || '';
       
     if (!insectId) return;
     // Skip malformed IDs like "species-" (missing suffix)
@@ -2531,6 +2540,7 @@ async function generateMetaPages() {
         source: '',
         remarks: notes,
         alternativeNames: alternativeNames,
+        synonyms: synonyms,
         emergenceTime: emergenceTime,
         scientificFilename: (() => {
           // Extract binomial name (genus + species) from scientific name for filename

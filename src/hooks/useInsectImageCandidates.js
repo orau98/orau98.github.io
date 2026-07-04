@@ -1,58 +1,32 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { loadInsectImageIndexes } from '../services/imageIndex';
+import { useCallback } from 'react';
+import useInsectImageIndex from './useInsectImageIndex';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 import { buildResizedImageUrl } from '../utils/imageSrcset';
 import {
+  getAssetBase,
+  getAssetVersionQuery,
+  getPlaceholderImageUrl,
+} from '../utils/assetPaths';
+import {
   buildInsectImageBaseCandidates,
-  buildNormalizedEntries,
   resolveImageBaseCandidates,
 } from '../utils/insectImageResolver';
 
-const createCacheBustQuery = (useAssetVersionInProd) => {
-  if (import.meta.env.DEV) return `?v=${Date.now()}`;
-  if (useAssetVersionInProd && import.meta.env.VITE_ASSET_VERSION) {
-    return `?v=${import.meta.env.VITE_ASSET_VERSION}`;
-  }
-  return '';
-};
-
-const useInsectImageCandidates = (options = {}) => {
-  const { useAssetVersionInProd = false } = options;
-  const [imageExtensions, setImageExtensions] = useState({});
-  const [imageBases, setImageBases] = useState(new Set());
-
-  useEffect(() => {
-    loadInsectImageIndexes()
-      .then(({ names, exts }) => {
-        setImageExtensions(exts || {});
-        setImageBases(new Set(names || []));
-      })
-      .catch(() => {
-        setImageExtensions({});
-        setImageBases(new Set());
-      });
-  }, []);
-
-  const cacheBustRef = useRef(createCacheBustQuery(useAssetVersionInProd));
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const placeholderSrc = `${normalizedBase}images/placeholder.jpg${cacheBustRef.current}`;
-
-  const normalizedEntries = useMemo(
-    () => buildNormalizedEntries(imageBases, imageExtensions),
-    [imageBases, imageExtensions],
-  );
+// 昆虫1体から表示候補URL群（解決済みリサイズ画像）を得るフック。
+// インデックスの読み込み・正規化は useInsectImageIndex に集約されている。
+const useInsectImageCandidates = () => {
+  const { imageNames, imageExtensions, normalizedEntries } = useInsectImageIndex();
 
   const buildImageUrl = useCallback((base) => {
     if (!base) return '';
     return buildResizedImageUrl({
-      baseUrl: normalizedBase,
+      baseUrl: getAssetBase(),
       folder: 'insects',
       filename: base,
       width: 1024,
-      query: cacheBustRef.current,
+      query: getAssetVersionQuery(),
     });
-  }, [normalizedBase]);
+  }, []);
 
   const getImageCandidates = useCallback((insect) => {
     if (!insect) return [];
@@ -60,7 +34,7 @@ const useInsectImageCandidates = (options = {}) => {
     const candidateBases = buildInsectImageBaseCandidates(insect, mappedFilename);
     const resolvedBases = resolveImageBaseCandidates(candidateBases, {
       imageExtensions,
-      imageNames: imageBases,
+      imageNames,
       normalizedEntries,
       includeUnresolved: false,
     });
@@ -74,11 +48,11 @@ const useInsectImageCandidates = (options = {}) => {
       }
     });
     return urls;
-  }, [buildImageUrl, imageBases, imageExtensions, normalizedEntries]);
+  }, [buildImageUrl, imageNames, imageExtensions, normalizedEntries]);
 
   return {
     getImageCandidates,
-    placeholderSrc,
+    placeholderSrc: getPlaceholderImageUrl(),
   };
 };
 

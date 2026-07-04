@@ -17,6 +17,7 @@ import {
   safeDeepClone,
 } from '../utils/plantMetadata';
 import { extractEmergenceTime } from '../utils/emergenceTimeUtils';
+import { repairScientificBinomial } from '../utils/scientificNameFormatter.jsx';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
@@ -5350,20 +5351,11 @@ export async function runLegacyCsvPipeline(ctx) {
         }
         
         // Repair collapsed scientific binomials (e.g., Genusspecies -> Genus species)
-        const repairScientificBinomial = (name) => {
-          if (!name || typeof name !== 'string') return name || '';
-          const t = name.trim();
-          if (t.includes(' ')) return t; // already spaced
-          // Try to split into Genus + species; keep species length >= 3 to avoid single-char tails
-          const m = t.match(/^([A-Z][a-z]+)([a-z-]{3,})(.*)$/);
-          if (m) return `${m[1]} ${m[2]}${m[3] || ''}`;
-          return t;
-        };
-
+        // 実装は scientificNameFormatter.jsx の共有関数（表示側カードと同一ロジック）
         // Apply repair to all insects for consistent rendering across views
         const fixScientificNames = (arr) => (arr || []).map(i => ({
           ...i,
-          scientificName: repairScientificBinomial(i.scientificName)
+          scientificName: repairScientificBinomial(i.scientificName) || ''
         }));
 
         finalMothData = fixScientificNames(finalMothData);
