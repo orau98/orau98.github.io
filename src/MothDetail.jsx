@@ -539,7 +539,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     
     const base = getImageBaseFromResizedUrl(firstUrl);
     if (base && imageBaseSet.has(base)) {
-      const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, widths: [320, 640, 1024], sizes: '100vw' });
+      const { src, srcSet, sizes, sources } = buildResponsivePicture({ folder: 'insects', filename: base, sizes: '100vw' });
       return { base, src, srcSet, sizes, sources };
     }
     return { base: '', src: firstUrl, sources: [] };
@@ -567,7 +567,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         ...buildResponsivePicture({
           folder: 'insects',
           filename: base,
-          widths: [320, 640, 1024],
           sizes: '(max-width: 640px) 50vw, 33vw',
         }),
       }));

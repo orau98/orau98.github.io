@@ -77,7 +77,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     ? buildResponsivePicture({
         folder: 'insects',
         filename: finalImageFilename,
-        widths: [320, 640, 1024],
         // グリッドは sm:2列 / lg:3列 / 2xl:4列。実際の表示幅に合わせて
         // 過大なサイズ候補を選ばないよう 2xl のブレークポイントも明示する
         sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 25vw',

@@ -79,8 +79,9 @@ const HostPlantListItem = React.memo(
           baseUrl: normalizedBase,
           folder: "plants",
           filename: imageFilename,
-          widths: [320, 640, 1024],
-          sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",
+          // グリッドは md:2列 / lg:3列 / 2xl:4列。実際の表示幅と一致させ、
+          // 過小指定でぼやけたり過大指定で帯域を無駄にしないようにする
+          sizes: "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 25vw",
           query: assetVer,
           sourceFormats: ["webp"],
         })

@@ -341,7 +341,6 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
     ? buildResponsivePicture({
         folder: 'insects',
         filename,
-        widths: [320, 640, 1024],
         sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
       })
     : {};

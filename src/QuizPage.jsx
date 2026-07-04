@@ -372,7 +372,6 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
         baseUrl: normalizedBase,
         folder: 'plants',
         filename,
-        widths: [320, 640, 1024],
         sizes: '(max-width: 768px) 100vw, 42vw',
         sourceFormats: ['webp'],
       })
