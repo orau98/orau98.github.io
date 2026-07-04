@@ -7,6 +7,17 @@ const splitSegments = (note = '') => String(note)
   .map((segment) => segment.trim())
   .filter(Boolean);
 
+const isInternalCatalogNoteSegment = (segment = '') => {
+  const value = String(segment || '').trim();
+  if (!value) return true;
+
+  if (/^日本列島の甲虫全種目録\(2026\)参照/.test(value)) return true;
+  if (/^食草・生態情報(?:は未入力|の再配分は未実施)/.test(value)) return true;
+  if (/^寄主植物情報は日本産カミキリムシにもとづく/.test(value)) return true;
+
+  return false;
+};
+
 export const isInternalHostPlantNoteSegment = (segment = '') => {
   const value = String(segment || '').trim();
   if (!value) return true;
@@ -25,3 +36,9 @@ export const getPublicHostPlantNoteSegments = (note = '') =>
 
 export const getPublicHostPlantNote = (note = '') =>
   getPublicHostPlantNoteSegments(note).join(' / ');
+
+export const getPublicHostPlantSectionNote = (note = '') =>
+  splitSegments(note)
+    .filter((segment) => !isInternalHostPlantNoteSegment(segment))
+    .filter((segment) => !isInternalCatalogNoteSegment(segment))
+    .join(' / ');

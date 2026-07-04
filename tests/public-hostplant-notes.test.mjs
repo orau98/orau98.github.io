@@ -8,6 +8,7 @@ import Papa from 'papaparse';
 import { convertNormalizedDataToStandardFormat } from '../src/utils/normalizedDataParser.js';
 import {
   getPublicHostPlantNote,
+  getPublicHostPlantSectionNote,
   getPublicHostPlantNoteSegments,
   isInternalHostPlantNoteSegment,
 } from '../src/utils/publicHostPlantNotes.js';
@@ -38,6 +39,25 @@ test('host plant note filter removes OCR audit metadata', () => {
   assert.equal(
     getPublicHostPlantNote('葉裏に潜る / OCR索引:19918/19919-19923; OCR名=テスト'),
     '葉裏に潜る',
+  );
+});
+
+test('host plant section notes hide source bookkeeping and no-data placeholders', () => {
+  assert.equal(
+    getPublicHostPlantSectionNote('日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。'),
+    '',
+  );
+  assert.equal(
+    getPublicHostPlantSectionNote('日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。'),
+    '',
+  );
+  assert.equal(
+    getPublicHostPlantSectionNote('葉裏に潜る。日本列島の甲虫全種目録(2026)参照。'),
+    '葉裏に潜る',
+  );
+  assert.equal(
+    getPublicHostPlantSectionNote('材中で越冬。日本列島の甲虫全種目録(2026)参照。'),
+    '材中で越冬',
   );
 });
 

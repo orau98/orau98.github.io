@@ -43,6 +43,7 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
 import { sortInsectsTaxonomically } from './utils/taxonomicOrder';
+import { getPublicHostPlantSectionNote } from './utils/publicHostPlantNotes';
 import {
   INDEX_FOLLOW_ROBOTS,
   NOINDEX_FOLLOW_ROBOTS,
@@ -1882,6 +1883,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                       remainingNotes = '';
                     }
                   }
+
+                  remainingNotes = getPublicHostPlantSectionNote(remainingNotes);
                   
                   // 重複チェック
                   const trimmedNotes = remainingNotes.trim();
@@ -1909,6 +1912,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                               remainingNotes = '';
                             }
                           }
+
+                          remainingNotes = getPublicHostPlantSectionNote(remainingNotes);
                           
                           return remainingNotes.trim();
                         })()}
