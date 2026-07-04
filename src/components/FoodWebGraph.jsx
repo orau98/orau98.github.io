@@ -20,8 +20,10 @@ import InfoPopover from './InfoPopover';
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
 
+const RELATED_LIMIT_ALL = 'all';
 const DEFAULT_RELATED_LIMIT = 24;
-const RELATED_LIMIT_OPTIONS = [12, 24, 40, 60];
+const DEFAULT_PLANT_RELATED_LIMIT = RELATED_LIMIT_ALL;
+const RELATED_LIMIT_OPTIONS = [RELATED_LIMIT_ALL, 12, 24, 40, 60];
 const MAX_PANEL_ITEMS = 12;
 const RELATION_FILTERS = [
   { value: 'all', label: 'すべて', labelEn: 'All', shortLabel: '全て', shortLabelEn: 'All', helper: '全ての関係を表示', helperEn: 'Show all relationships' },
@@ -30,6 +32,26 @@ const RELATION_FILTERS = [
   { value: 'both', label: '両方のみ', labelEn: 'Both only', shortLabel: '両方', shortLabelEn: 'Both', helper: '食草と訪花の両方がある関係のみ表示', helperEn: 'Show only relationships with both host and flower visits' }
 ];
 const MOBILE_PANEL_COLLAPSED_HEIGHT = 86;
+
+const getDefaultRelatedLimit = (currentPlantName) =>
+  currentPlantName ? DEFAULT_PLANT_RELATED_LIMIT : DEFAULT_RELATED_LIMIT;
+
+const parseRelatedLimitValue = (value) => {
+  if (value === RELATED_LIMIT_ALL) return RELATED_LIMIT_ALL;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) ? parsed : DEFAULT_RELATED_LIMIT;
+};
+
+const getRelatedLimitNumber = (value) => {
+  if (value === RELATED_LIMIT_ALL) return Number.POSITIVE_INFINITY;
+  const parsed = Number.parseInt(value, 10);
+  return Math.max(6, Number.isFinite(parsed) ? parsed : DEFAULT_RELATED_LIMIT);
+};
+
+const getRelatedLimitLabel = (value, isEnglish) =>
+  value === RELATED_LIMIT_ALL
+    ? (isEnglish ? 'All' : '全て')
+    : value;
 
 const getRadialPoint = (index, total, radius, angleOffset = -Math.PI / 2) => {
   const count = Math.max(total, 1);
@@ -677,7 +699,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [labelMode, setLabelMode] = useState('auto'); // auto | all | none
   const [relationFilter, setRelationFilter] = useState('all');
-  const [relatedLimit, setRelatedLimit] = useState(DEFAULT_RELATED_LIMIT);
+  const [relatedLimit, setRelatedLimit] = useState(() => getDefaultRelatedLimit(currentPlantName));
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [nodeListOpen, setNodeListOpen] = useState(false);
   const [guideDismissed, setGuideDismissed] = useState(false);
@@ -722,6 +744,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   useEffect(() => {
     setRelationFilter('all');
+    setRelatedLimit(getDefaultRelatedLimit(currentPlantName));
     setNodeListOpen(false);
     setIsPinDragging(false);
     setDesktopControlsOpen(false);
@@ -853,7 +876,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         : (currentPlantName ? '昆虫' : currentInsect ? '植物' : '関連'),
       primaryShown: 0,
       primaryTotal: 0,
-      limit: Math.max(6, relatedLimit || DEFAULT_RELATED_LIMIT)
+      limit: getRelatedLimitNumber(relatedLimit)
     };
     if (!hostPlantsMap || (!currentInsect && !currentPlantName)) return { nodes, links, summary };
 
@@ -2556,12 +2579,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   </label>
                   <select
                     value={relatedLimit}
-                    onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                    onChange={(e) => setRelatedLimit(parseRelatedLimitValue(e.target.value))}
                     className="shrink-0 text-xs rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 px-2 py-1"
                     aria-label={isEnglish ? 'Related count' : '関連数'}
                   >
-                    {RELATED_LIMIT_OPTIONS.map((n) => (
-                      <option key={n} value={n}>{n}</option>
+                    {RELATED_LIMIT_OPTIONS.map((option) => (
+                      <option key={option} value={option}>{getRelatedLimitLabel(option, isEnglish)}</option>
                     ))}
                   </select>
                   <button
@@ -2859,12 +2882,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                     <span>{isEnglish ? 'Related count' : '関連数'}</span>
                     <select
                       value={relatedLimit}
-                      onChange={(e) => setRelatedLimit(parseInt(e.target.value, 10))}
+                      onChange={(e) => setRelatedLimit(parseRelatedLimitValue(e.target.value))}
                       className="min-w-[3.5rem] rounded-md border border-slate-200 bg-white px-2 py-1 text-[12px] dark:border-slate-600 dark:bg-slate-900/70"
                       aria-label={isEnglish ? 'Related count' : '関連数'}
                     >
-                      {RELATED_LIMIT_OPTIONS.map((n) => (
-                        <option key={n} value={n}>{n}</option>
+                      {RELATED_LIMIT_OPTIONS.map((option) => (
+                        <option key={option} value={option}>{getRelatedLimitLabel(option, isEnglish)}</option>
                       ))}
                     </select>
                   </label>
