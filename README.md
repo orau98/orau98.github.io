@@ -82,101 +82,15 @@ https://www.instagram.com/reel/YYYYYYYYYYY/
 
 ローカルから `npm run deploy` を実行してもデプロイは行いません（Actions を利用してください）。
 
-## 🚀 SPA深いURL直アクセス対応について
+## 🌐 SPA深いURL直アクセスへの対応
 
-### 問題の背景
+GitHub Pages は静的ホスティングのため、`/plant/ノイバラ` や `/moth/species-0123` のような深いURLへ直接アクセスすると、対応する物理ファイルが無く 404 になります。
 
-GitHub PagesでSPA（Single Page Application）を運用する場合、以下のような深いURLに直接アクセスすると404エラーが発生します：
+本プロジェクトでは、ビルド後処理（`scripts/postbuild-cleanup.mjs` の `ensureSpa404`）で `dist/index.html` をそのまま `dist/404.html` に複製します（`noindex` メタと SPA フラグのみ付与）。GitHub Pages は存在しないパスに対して 404.html＝同じ SPA シェルを返すため、React Router がそのままルートを解決します。
 
-```
-https://orau98.github.io/plant/ノイバラ
-https://orau98.github.io/moth/catalog-3123
-```
-
-これは、GitHub Pagesが静的ファイルホスティングサービスのため、実際の `/plant/ノイバラ.html` ファイルが存在しないためです。
-
-### 解決方法：リダイレクトハック
-
-本プロジェクトでは、以下の2段階のリダイレクトハックを実装して、この問題を解決しています：
-
-#### 📊 動作フロー図
-
-```
-1. ユーザーが深いURLに直アクセス
-   https://orau98.github.io/plant/ノイバラ
-   ↓
-2. GitHub Pagesが404.htmlを表示
-   ↓
-3. 404.htmlのスクリプトが動作
-   元のURL (/plant/ノイバラ) を保存
-   ↓
-4. index.html?redirect=%2Fplant%2F%E3%83%8E%E3%82%A4%E3%83%90%E3%83%A9 にリダイレクト
-   ↓
-5. index.htmlの復元スクリプトが動作
-   URLを /plant/ノイバラ に復元
-   ↓
-6. React Routerが正常にページを表示
-```
-
-#### 🔧 実装詳細
-
-**1. 404.html のリダイレクトスクリプト**
-
-```javascript
-// 深いURLを検出してindex.htmlに転送
-var original = location.pathname + location.search + location.hash;
-var dest = '/' + 'index.html?redirect=' + encodeURIComponent(original);
-location.replace(dest); // 履歴に404を残さない
-```
-
-**2. index.html のURL復元スクリプト**
-
-```javascript
-// ?redirect= パラメータから元のURLを復元
-var params = new URLSearchParams(location.search);
-var redirectUrl = params.get('redirect');
-if (redirectUrl) {
-  var originalUrl = decodeURIComponent(redirectUrl);
-  history.replaceState(null, '', originalUrl); // アドレスバーを復元
-}
-```
-
-### 🎯 メリット
-
-- ✅ **SEO維持**: 検索エンジンには適切なURLが表示される
-- ✅ **ユーザー体験**: アドレスバーに `?redirect=` が残らない
-- ✅ **ブラウザ履歴**: 戻るボタンで404に戻らない
-- ✅ **シェア対応**: URLをコピー&シェアしても正常に動作
-
-### ⚙️ 設定変更が必要な場合
-
-#### プロジェクトページへの移行
-
-もしこのサイトをプロジェクトページ (`https://username.github.io/repo-name/`) に移行する場合は、以下の変更が必要です：
-
-**404.html と index.html の BASE_PATH を変更：**
-
-```javascript
-// 変更前（ユーザーサイト）
-var BASE_PATH = '/';
-
-// 変更後（プロジェクトページ）
-var BASE_PATH = '/repo-name/';
-```
-
-**React Router の basename も合わせて変更：**
-
-```javascript
-<BrowserRouter basename="/repo-name">
-```
-
-## 🔮 将来の改善予定
-
-現在のリダイレクトハックは暫定対策です。より安定したSEO対応のため、以下への移行を検討中：
-
-- **SSG (Static Site Generation)**: Next.js、Gatsby等
-- **SSR (Server Side Rendering)**: Vercel、Netlify等
-- **プリレンダリング**: react-snap等での静的ファイル事前生成
+- リダイレクト（`?redirect=` への往復）は行いません。アドレスバーの URL はそのまま維持されます。
+- SEO 向けには、クロール可能な静的メタページ（`/meta/.../*.html`）を別途生成しています（後述）。
+- プロジェクトページ（`https://username.github.io/repo-name/`）へ移す場合は、`vite.config.js` の `base` と `BrowserRouter` の `basename`（`src/main.jsx` は `import.meta.env.BASE_URL` を使用）を合わせて変更してください。
 
 ## 🧭 メタページとサイトマップ（種ID粒度）
 
@@ -199,37 +113,12 @@ npm run generate-sitemap
 
 注: SPAのハッシュ/深いURL（`/#/butterfly/...` 等）はサイトマップに含めず、検索エンジン向けにはクロール可能なメタページURL（`/meta/.../*.html`）のみを掲載しています。
 
-## 🔎 データ整合性: 不明な昆虫ID参照の整理
-
-外部ソース統合やID再編により、`hostplants.csv` / `general_notes.csv` が現行の `insects.csv` に存在しない `insect_id` を参照する場合があります。これによりビルド前の検証で `unknown insect_id` が検出されます。
-
-- 整理用スクリプト: `scripts/prune_unknown_insect_refs.mjs`
-- 目的: 不明IDを参照する行を除去し、バックアップとレポートを出力
-- 使い方:
-
-```bash
-# 参照不整合を削除（バックアップは .bak.YYYYMMDDHH で保存）
-npm run prune-unknown
-
-# 結果の検証とビルド
-npm run validate-normalized
-npm run build
-
-# レポート出力先
-open reports/pruned_unknown_insect_refs.csv
-```
-
-注意: 将来的に旧ID→現行IDの対応表が判明した場合は、削除ではなく「置換（移行）」に切り替えるのが望ましいです。対応表（CSV/JSON）が用意できれば、置換モードのスクリプトを追加します。
-
 ## 🆔 IDポリシー（ハムシの統一）
 
 - ハムシ科（Chrysomelidae）の種IDは `species-H###` を正規とします。
-  - 旧 `species-LB###`（一部のレガシー採番）は、学名/和名照合のうえ `H###` に移行しました。
+  - 旧 `species-LB###`（一部のレガシー採番）は、学名/和名照合のうえ `H###` に移行済みです。
   - Criocerinae（クビボソハムシ亜科）の `species-CR###` も `H###` へ統合済みです。
-- 参照の自動置換スクリプト：
-  - `scripts/unify_leafbeetle_ids.mjs`（LB→H）
-  - `scripts/unify_criocerinae_ids.mjs`（CR→H）
-- 実行後は `scripts/sort_insects_by_id.mjs` でID整列とレポート更新、必要に応じてメタ/サイトマップを再生成してください。
+- この統一は適用済みで、一度きりの移行スクリプトは役目を終えたため撤去しています（変更履歴は Git に残存）。今後 ID を追加する際は `species-H###` の採番規則に従ってください。
 
 
 ## 📝 開発・デバッグ
@@ -246,20 +135,6 @@ npm run dev
 ```bash
 npm run build
 npm run preview
-```
-
-### リダイレクトハックのデバッグ
-
-ブラウザの開発者ツールのConsoleタブで、以下のログを確認できます：
-
-```
-[SPA Redirect] 404ページでリダイレクト処理開始
-[SPA Redirect] 元のURL: /plant/ノイバラ
-[SPA Redirect] リダイレクト先: /index.html?redirect=%2Fplant%2F%E3%83%8E%E3%82%A4%E3%83%90%E3%83%A9
-
-[SPA Restore] URL復元処理開始
-[SPA Restore] 復元対象URL: /plant/ノイバラ
-[SPA Restore] URL復元完了。SPAルーターが処理を引き継ぎます。
 ```
 
 ## 📄 ライセンス

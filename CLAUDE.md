@@ -67,9 +67,10 @@ const invalidPatterns = [
 ### 開発コマンド
 ```bash
 npm run dev          # 開発サーバー起動
-npm run build        # プロダクションビルド
-npm run deploy       # GitHub Pagesにデプロイ
+npm run build        # プロダクションビルド（prebuildでデータ・メタ・サイトマップを再生成）
 ```
+
+デプロイは `main` への push で GitHub Actions が自動実行する（`npm run deploy` は実行せず案内メッセージを出すだけ）。
 
 ### ビルド前処理
 ```bash
@@ -80,10 +81,10 @@ npm run generate-sitemap  # サイトマップ生成
 ## データメンテナンス
 
 ### CSVデータの更新
-1. `public/*.csv`ファイルを更新
-2. `npm run generate-meta`でメタページ再生成
-3. `npm run build`でビルド
-4. `npm run deploy`でデプロイ
+1. `normalized_data/*.csv`（ソース・オブ・トゥルース）を更新（`public/*.csv`はビルド時に同期される生成物）
+2. `npm run audit:csv-quality`で不整合を確認
+3. `npm run build`でビルド（prebuildがメタページ・サイトマップも再生成）
+4. `main`へpushしてGitHub Actionsでデプロイ
 
 ### 植物名の正規化
 - 重複データの統合（例：「オニグルミ」→「オニグルミ(クルミ科)」）
