@@ -33,6 +33,7 @@ for (const file of files) {
   if (base) names.add(base);
 }
 
-const sorted = Array.from(names).sort((a, b) => a.localeCompare(b, 'ja'));
+// コードポイント順で環境非依存にソート（localeCompareはICU差で並びが揺れる）
+const sorted = Array.from(names).sort();
 fs.writeFileSync(OUT_FILE, sorted.join('\n') + (sorted.length ? '\n' : ''), 'utf-8');
 console.log(`[update_plant_image_filenames] wrote ${sorted.length} entries to ${path.relative(ROOT, OUT_FILE)}`);
