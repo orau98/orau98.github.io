@@ -62,16 +62,7 @@
 ### 植物名バリデーション
 `scripts/generate-meta-pages.js` の `isValidPlantName` 関数が無効な植物名（説明文の断片、括弧の片割れ、「〜科が」等）をフィルタリングする。**正規表現の正はコード側**なので、パターンを変更・追加する場合は同関数を直接参照・編集すること（このファイルに正規表現をコピーして二重管理しない）。
 
-### 重要な問題と解決策
-
-#### 問題: 広告プレビューでの「ページが見つかりません」エラー
-**原因**: 不正な植物名（例：「キョウチクトウ科が」「アブラナ科(オオアラセイトウ」）が無効なHTMLファイルを生成
-
-**解決策**:
-1. `isValidPlantName`関数の強化
-2. 無効なファイルの削除
-3. メタページとサイトマップの再生成
-4. サイトの再デプロイ
+過去の障害事例（広告プレビューでの404等）と対処は `docs/troubleshooting.md` を参照。
 
 ## ビルド・デプロイプロセス
 
@@ -103,12 +94,8 @@ npm run generate-sitemap          # 分割サイトマップ生成
 ## データメンテナンス
 
 ### CSVデータの更新手順
-1. **`normalized_data/*.csv` を更新**（`public/*.csv` は編集しない）
-2. `npm run validate-normalized` で参照整合性を確認
-3. `npm run audit:csv-quality` で新たな不整合が入っていないか確認
-4. `npm test` で回帰テストを実行
-5. ローカル確認が必要なら `npm run build:data-lite`（devサーバー反映）や `npm run build`
-6. `main` へ push（またはPR経由でマージ）すると自動デプロイ
+定型手順は `/csv-data-update` スキル（`.claude/skills/csv-data-update/SKILL.md`）を参照。
+要点: `normalized_data/*.csv` を編集 → `validate-normalized` → `audit:csv-quality` → `npm test` → `main` へ push で自動デプロイ。
 
 ### 植物名の正規化
 - 重複データの統合（例：「オニグルミ」→「オニグルミ(クルミ科)」）
@@ -150,24 +137,7 @@ node scripts/audit-csv-quality.mjs --fix  # 高信頼の決定的修正を適用
 
 ## トラブルシューティング
 
-### よくある問題
-
-1. **植物ページが見つからない**
-   - `npm run generate-meta`でメタページ再生成
-   - 植物名に無効文字が含まれていないか確認
-   - `npm run audit:csv-quality` で科名不整合・無効植物名を検出
-
-2. **ビルドエラー**
-   - CSVファイルの文字エンコーディング確認（UTF-8）
-   - `normalized_data/ylist-lite.json` の存在確認（無いと `build:data-lite` が失敗し得る）
-   - 無効な植物名パターンの追加確認
-
-3. **デプロイ失敗**
-   - GitHub Actions（deploy.yml）の実行ログ確認
-   - `dist`ディレクトリのファイル生成確認・`npm run smoke:dist`
-
-4. **devサーバーにCSV編集が反映されない**
-   - `npm run sync:public-insects && npm run build:data-lite` を実行（predevは「不足分の生成」のみで、既存の古い生成物は作り直さない）
+よくある問題（植物ページ未生成・ビルド/デプロイ失敗・devサーバーへのCSV反映等）の対処は `docs/troubleshooting.md` を参照。
 
 ## エージェント設定（.claude/）
 
