@@ -129,7 +129,7 @@ const SIZE_STYLES = {
   sm: {
     silhouette: 'w-9 h-9',
     badge: '-right-1.5 -bottom-0.5 h-4 w-4 p-[2px]',
-    label: 'text-[10px]',
+    label: 'text-[11px]',
     gap: 'gap-0.5',
   },
   md: {

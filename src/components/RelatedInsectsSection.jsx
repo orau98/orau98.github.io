@@ -195,7 +195,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                                 : primaryName}
                             </p>
                             {secondaryName && (
-                              <p className="mt-0.5 text-[10px] leading-tight text-white/80 line-clamp-1 drop-shadow-lg">
+                              <p className="mt-0.5 text-[11px] leading-tight text-white/90 line-clamp-1 drop-shadow-lg">
                                 {secondaryName}
                               </p>
                             )}

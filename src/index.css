@@ -141,6 +141,27 @@
                  "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
     letter-spacing: 0;
   }
+
+  /* 学名(ラテン語)のタイポグラフィ。
+     日本語ページでは :lang(ja) により Noto Sans JP のLatinが使われるが、
+     Noto Sans JP はイタリック体を持たないため <em> が「合成斜体」になり、
+     細く歪んで見える（直立の命名者名が相対的に太く見える原因）。
+     真のイタリック体を持つ Inter を明示して二名法を正しく組む */
+  /* :lang(ja)の指定(擬似クラス=詳細度0,1,0)に負けないよう、
+     ja文脈用のセレクタも併記して詳細度を確保する */
+  em, .sci-author,
+  :lang(ja) em, :lang(ja) .sci-author {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont,
+                 "Helvetica Neue", "Segoe UI", sans-serif;
+  }
+
+  /* 学名の命名者・年は、見出しやfont-mediumの中でも地の太さ(400)・
+     ローマン体に固定する（二名法=イタリック、命名者=通常体という
+     動物命名規約の慣行に合わせ、命名者だけ太って見えないようにする） */
+  .sci-author {
+    font-weight: 400;
+    font-style: normal;
+  }
   
   /* 見出しのモダンなスタイリング */
   h1, h2, h3, h4, h5, h6 {
@@ -151,7 +172,9 @@
   }
   
   h1 {
-    font-weight: 800;
+    /* 800はWebフォントを読み込んでおらず「合成太字」になり滲むため、
+       実体のある700で組む */
+    font-weight: 700;
     letter-spacing: 0;
   }
   

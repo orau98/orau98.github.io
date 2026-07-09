@@ -524,7 +524,7 @@ const EnhancedHostPlantDisplay = ({
   
   if (!plantsToDisplay || plantsToDisplay.length === 0) {
     return (
-      <div className="text-sm text-slate-500 dark:text-slate-400 italic">
+      <div className="text-sm text-slate-500 dark:text-slate-400">
         {isEnglish ? 'No plant-use records available.' : '食草情報なし'}
       </div>
     );

@@ -142,7 +142,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
               </div>
             </div>
             <div className="hidden min-w-0 sm:block">
-              <div className="truncate text-2xl font-black bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
+              <div className="truncate text-2xl font-bold bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-teal-100 group-hover:to-blue-200 transition-all duration-500 tracking-tight xl:text-3xl">
                 {isEnglish
                   ? 'Insects and Host Plants of Japan'
                   : '"繋がり"が見える昆虫植物図鑑'}
@@ -153,7 +153,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             </div>
             <div className="min-w-0 sm:hidden">
               {isEnglish ? (
-                <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-black leading-none text-transparent">
+                <div className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(0.95rem,4.2vw,1.15rem)] font-bold leading-none text-transparent">
                   <span className="block whitespace-nowrap">Insects &amp;</span>
                   <span className="block whitespace-nowrap">Host Plants</span>
                 </div>
@@ -162,7 +162,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                   <span className="max-w-full truncate text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-100/75">
                     &quot;繋がり&quot;が見える
                   </span>
-                  <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-black leading-none text-transparent whitespace-nowrap">
+                  <span className="bg-gradient-to-r from-emerald-100 via-white to-blue-100 bg-clip-text text-[clamp(1.15rem,4.7vw,1.4rem)] font-bold leading-none text-transparent whitespace-nowrap">
                     昆虫植物図鑑
                   </span>
                 </div>
@@ -221,7 +221,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
 
             <Link
               to={quizPath}
-              className="group inline-flex min-h-[44px] items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-black text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
+              className="group inline-flex min-h-[44px] items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-bold text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
               aria-label={isEnglish ? 'Open four-choice quiz' : '4択図鑑を開く'}
             >
               {/* 「クイズ」と直感的に伝わる吹き出し＋？アイコン（旧: 書類アイコンは用途が伝わらなかった） */}

@@ -127,7 +127,7 @@ export const formatScientificNameHTML = (scientificName) => {
       const subgenus = gss[2];
       const species = gss[3];
       const extraInfo = (gss[4] || '').trim();
-      return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extraInfo ? ' ' + extraInfo : ''} ${bracketInfo}`;
+      return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extraInfo ? ' ' + extraInfo : ''} <span class="sci-author">${bracketInfo}</span>`;
     }
 
     // 属名と種小名を分離（最初の2語のみを取得）
@@ -138,8 +138,8 @@ export const formatScientificNameHTML = (scientificName) => {
       const binomialName = `${genus}\u00A0${species}`; // ノーブレークスペース
       const extraInfo = nameParts.slice(2).join(' ');
       
-      // イタリック体の学名 + 通常体の著者情報
-      return `<em>${binomialName}</em>${extraInfo ? ' ' + extraInfo : ''} ${bracketInfo}`;
+      // イタリック体の学名 + 通常体(400固定)の著者情報
+      return `<em>${binomialName}</em>${extraInfo ? ' ' + extraInfo : ''} <span class="sci-author">${bracketInfo}</span>`;
     }
   }
   
@@ -152,7 +152,7 @@ export const formatScientificNameHTML = (scientificName) => {
     const binomialName = `${genus}\u00A0${species}`; // ノーブレークスペース
     const authorYear = authorYearMatch[2];
     
-    return `<em>${binomialName}</em> ${authorYear}`;
+    return `<em>${binomialName}</em> <span class="sci-author">${authorYear}</span>`;
   }
   
   // 属名・種小名のみの場合
@@ -245,7 +245,8 @@ export const formatScientificNameReact = (scientificName) => {
         <>
           <em>{genus}</em> (<em>{subgenus}</em>) <em>{species}</em>
           {extraInfo && ` ${extraInfo}`}
-          {` ${bracketInfo}`}
+          {' '}
+          <span className="sci-author">{bracketInfo}</span>
         </>
       );
     }
@@ -261,7 +262,8 @@ export const formatScientificNameReact = (scientificName) => {
         <>
           <em className="whitespace-nowrap">{genus}{'\u00A0'}{species}</em>
           {extraInfo && ` ${extraInfo}`}
-          {` ${bracketInfo}`}
+          {' '}
+          <span className="sci-author">{bracketInfo}</span>
         </>
       );
     }
@@ -278,7 +280,8 @@ export const formatScientificNameReact = (scientificName) => {
     return (
       <>
         <em className="whitespace-nowrap">{genus}{'\u00A0'}{species}</em>
-        {` ${authorYear}`}
+        {' '}
+        <span className="sci-author">{authorYear}</span>
       </>
     );
   }
