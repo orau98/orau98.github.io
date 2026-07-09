@@ -1058,7 +1058,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
             </span>
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300/70 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-600/70 dark:bg-slate-800 dark:text-slate-200">
               {hasAnyCriteria && (
-                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
+                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[11px] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
                   {activeControlsLabel}
                 </span>
               )}

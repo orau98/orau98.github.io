@@ -431,7 +431,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
             <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">{secondaryName}</p>
           )
         ) : insect.scientificName && (
-          <p className="text-slate-600 dark:text-slate-400 text-sm italic mb-3">{formatScientificNameReact(insect.scientificName)}</p>
+          <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">{formatScientificNameReact(insect.scientificName)}</p>
         )}
         
         {(() => {

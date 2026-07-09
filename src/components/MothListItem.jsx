@@ -182,7 +182,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     {isEnglish ? formatScientificNameReact(primaryName) : moth.name}
                   </h3>
                   {secondaryName && (
-                    <p className={`line-clamp-1 text-sm text-slate-600 dark:text-slate-400 ${isEnglish ? '' : 'italic'}`}>
+                    <p className="line-clamp-1 text-sm text-slate-600 dark:text-slate-400">
                       {isEnglish ? secondaryName : formatScientificNameReact(dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName)))}
                     </p>
                   )}
@@ -304,7 +304,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               </h3>
               {secondaryName && (
                 <p
-                  className={`line-clamp-1 text-[13px] text-slate-600 dark:text-slate-400 sm:text-sm ${isEnglish ? '' : 'italic'}`}
+                  className="line-clamp-1 text-[13px] text-slate-600 dark:text-slate-400 sm:text-sm"
                   title={isEnglish ? secondaryName : dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName))}
                 >
                   {isEnglish
