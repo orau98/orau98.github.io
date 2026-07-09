@@ -10,6 +10,17 @@ function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
+// サイト全体のコンテンツ版数を表す安定した lastmod。
+// トップページ・各カテゴリハブ・静的ページ・全メタページで共有する。
+// かつてはファイル mtime を使っていたが、CI（actions/checkout や生成物）では
+// 毎デプロイで mtime がビルド時刻になり、内容が変わらないのに lastmod が
+// 毎日転がる。Instagram 自動更新で日次デプロイが走るこのリポジトリでは
+// これが「常に今日」の虚偽 lastmod となり、Google に lastmod 全体を
+// 無視される典型的なアンチパターンだった。
+// テンプレート変更やデータ一括更新で実際にページ本文が変わった日に、
+// この定数を手動で更新すること。
+const SITE_CONTENT_LASTMOD = '2026-06-02';
+
 /**
  * normalized_data/hostplants.csv を読み込み、
  * insect_id → 食草レコード数 のマップを返す。
@@ -116,17 +127,6 @@ function escapeXml(value) {
     .replace(/'/g, '&apos;');
 }
 
-function getFileLastmod(filePath) {
-  try {
-    const stat = fs.statSync(filePath);
-    const now = Date.now();
-    const clamped = Math.min(stat.mtimeMs || stat.mtime.getTime(), now);
-    return formatDate(new Date(clamped));
-  } catch {
-    return formatDate(new Date());
-  }
-}
-
 function isNoindexPage(filePath) {
   try {
     const html = fs.readFileSync(filePath, 'utf-8');
@@ -147,9 +147,20 @@ function buildRobotsTxt(baseUrl) {
     '/search-console-discovery-seed.xml',
   ];
 
+  // SPA ディープルート（/moth/... /plant/... など）は noindex のリダイレクト／
+  // シェルスタブしか無く、正規の実ページは /meta/... /en/meta/... 側にある
+  // （これらは Disallow プレフィックスに前方一致しないのでクロール可能なまま）。
+  // 低権威サイトでは有限のクロール予算を、これら noindex の重複URLに費やさせず
+  // 実ページの発見・再クロールに集中させる。サイトマップには実ページのみ載る。
+  const spaStubPrefixes = [
+    '/moth/', '/butterfly/', '/beetle/', '/longhornbeetle/', '/leafbeetle/', '/aphid/', '/plant/',
+    '/en/moth/', '/en/butterfly/', '/en/beetle/', '/en/longhornbeetle/', '/en/leafbeetle/', '/en/aphid/', '/en/plant/',
+  ];
+
   const lines = [
     'User-agent: *',
     'Allow: /',
+    ...spaStubPrefixes.map((prefix) => `Disallow: ${prefix}`),
     '',
     ...sitemapPaths.map((sitemapPath) => `Sitemap: ${baseUrl}${sitemapPath}`),
     '',
@@ -174,7 +185,7 @@ function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {
   const targetKey = options.targetKey || 'main';
   sitemaps[targetKey].push({
     loc: `${baseUrl}${routePath}`,
-    lastmod: getFileLastmod(filePath),
+    lastmod: options.lastmod || SITE_CONTENT_LASTMOD,
     changefreq: options.changefreq || 'monthly',
     priority: options.priority || '0.6',
   });
@@ -198,13 +209,10 @@ function generateSplitSitemaps() {
   // --- changefreq 差別化のためのデータ読み込み ---
   const today = new Date();
   const generatedAt = formatDate(today);
-  // 全メタページ共通の lastmod。テンプレート変更やデータ一括更新で実際に
-  // ページ本文が変わった日に、手動でこの日付を更新すること。
-  // かつてはデータ充実度に応じて「今月1日/先月1日/3ヶ月前1日」を返す人工的な
-  // lastmod を使っていたが、内容が変わらないのに毎月日付が転がる虚偽シグナルは
-  // Google に lastmod 全体を無視される要因になるため廃止した。
+  // 全メタページ共通の lastmod。トップ・ハブ・静的ページと同じ
+  // SITE_CONTENT_LASTMOD を共有し、単一の版数で管理する。
   // 充実度の差別化は changefreq（weekly/monthly）にのみ反映する。
-  const META_CONTENT_LASTMOD = '2026-06-02';
+  const META_CONTENT_LASTMOD = SITE_CONTENT_LASTMOD;
 
   const normalizedDataDir = path.join(__dirname, '../normalized_data');
   const hostplantCountMap = buildHostplantCountMap(
@@ -259,7 +267,7 @@ function generateSplitSitemaps() {
   const topLevelFile = path.join(__dirname, '../index.html');
   sitemaps.main.push({
     loc: `${baseUrl}/`,
-    lastmod: getFileLastmod(topLevelFile),
+    lastmod: SITE_CONTENT_LASTMOD,
     changefreq: 'weekly',
     priority: '1.0'
   });
@@ -327,11 +335,10 @@ function generateSplitSitemaps() {
 
     // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）
     if (includeIndexInMain && files.includes('index.html')) {
-      const indexPath = path.join(absDir, 'index.html');
       const targetMain = routePrefix.startsWith('/en/') ? sitemaps['en-main'] : sitemaps.main;
       targetMain.push({
         loc: `${baseUrl}${routePrefix}index.html`,
-        lastmod: getFileLastmod(indexPath),
+        lastmod: SITE_CONTENT_LASTMOD,
         changefreq: 'weekly',
         priority: '0.8',
       });

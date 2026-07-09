@@ -49,6 +49,9 @@ loadProductionEnv();
 
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+// 画像を持たない植物ページ用の中立フォールバック（ブランドロゴ）。
+// 無関係な昆虫写真を使うと内容と食い違うため、植物側はこちらを使う。
+const BRAND_SOCIAL_IMAGE_PATH = '/favicon-512.png';
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
 const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
@@ -1113,14 +1116,25 @@ function buildRobotsContent(shouldIndex) {
   return `${shouldIndex ? 'index' : 'noindex'}, ${ROBOTS_PREVIEW_DIRECTIVES}`;
 }
 
-function computeInsectRobotsContent({ insect }) {
+function computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect }) {
   const name = String(insect?.japaneseName || insect?.name || '').trim();
   if (!name || name === '不明') {
     return buildRobotsContent(false);
   }
-  // 種名検索での発見性を優先し、昆虫の個別種ページは原則 index へ。
-  // 食草が未整理でも、和名・学名・分類だけでロングテール検索の入口になる。
-  return buildRobotsContent(true);
+  // 品質ゲート: 食草・画像・成虫出現時期・生態備考のいずれか実データを持つページのみ index。
+  // 和名と学名しか無い「食草情報は現在調査中です」だけの空ページは、
+  // 全体の半数以上を占めるとサイト全体の品質評価とクロール予算を圧迫し、
+  // 中身のある種ページのインデックス／順位まで巻き添えで下げるため noindex（follow は維持）にする。
+  // 植物ページ computePlantRobotsContent および英語版 computeInsectRobotsContent と同一方針。
+  const hasHostPlants = Array.isArray(hostPlantsArray) && hostPlantsArray.length > 0;
+  const hasImage = Boolean(imageUrl);
+  const emergence = String(insect?.emergenceTime || '').trim();
+  const hasEmergence = emergence !== '' && emergence !== '不明';
+  const notesLen = String(insect?.remarks || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, '').length;
+  const hasRichNotes = notesLen >= 40;
+  return buildRobotsContent(hasHostPlants || hasImage || hasEmergence || hasRichNotes);
 }
 
 function computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles }) {
@@ -1473,7 +1487,12 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
 
   const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
   const insectPageUrl = `${BASE_ORIGIN}/meta/${type}/${insect.id}.html`;
-  const insectTitle = `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`;
+  // タイトルは実際の中身に合わせる。食草データが無いページで「食草・寄主植物」を
+  // 名乗るとタイトルと本文が不一致になり、スニペットの信頼性とCTRを損なうため、
+  // 食草が無い場合は「分類・生態」に切り替える。
+  const insectTitle = hostPlantsArray.length > 0
+    ? `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`
+    : `${insect.japaneseName}（${familyName}）の分類・生態 - ${typeNames[type]}図鑑`;
   const insectKeywords = insectKeywordList.join(',');
   const insectEntityId = `${insectPageUrl}#species`;
   const insectImageObject = imageUrl ? {
@@ -1851,10 +1870,13 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const mainImageUrl = plantImageFiles.length > 0 
     ? buildPlantResizedImageUrl(plantImageFiles[0]) 
     : '';
-  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
+  // 植物ページに実画像が無い場合、無関係な蛾の写真（DEFAULT_SOCIAL_IMAGE_PATH）を
+  // og:image に使うと、SNS/Discover のプレビューが内容と食い違い誤解を招く。
+  // ブランドロゴ（葉のアイコン）を中立的なフォールバックに使う。
+  const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || BRAND_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
     ? `${displayPlantName}の写真`
-    : `${displayPlantName}のイメージ画像`;
+    : `昆虫植物図鑑`;
   const robotsContent = computePlantRobotsContent({ isAlias, relatedInsects, plantImageFiles });
 
   const getPlantGroupingType = (insect) => {
@@ -3076,7 +3098,43 @@ function generateMetaIndexes(indexData) {
     .species-list li a { text-decoration: none; color: var(--color-link, #1976d2); }
     .species-list li a:hover { text-decoration: underline; }
     .index-summary { margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: var(--color-bg-card, #fff); border: 1px solid var(--color-border, #ddd); border-radius: 8px; }
+    .hub-nav { margin: 0 0 1.25rem; }
+    .hub-nav-inner { display: flex; flex-wrap: wrap; gap: 0.4rem 0.75rem; font-size: 0.85rem; }
+    .hub-nav a { text-decoration: none; color: var(--color-link, #1976d2); }
+    .hub-nav a:hover { text-decoration: underline; }
+    .hub-nav span[aria-current="page"] { font-weight: 700; color: var(--color-text, #333); }
   </style>`;
+
+  // 全カテゴリハブへの相互リンク（ハブ同士が孤立する「リンクの島」を解消し、
+  // クローラが1つのハブから他カテゴリ・サイトマップへ回遊できるようにする）。
+  const hubNavSections = [
+    ...sections.map((s) => ({ href: `/meta/${s.dir}/index.html`, label: s.title, key: s.key })),
+    { href: '/sitemap.html', label: 'サイトマップ', key: '__sitemap' },
+  ];
+  const buildHubNavHtml = (currentKey) => {
+    const items = hubNavSections
+      .map((n) =>
+        n.key === currentKey
+          ? `<span aria-current="page">${n.label}</span>`
+          : `<a href="${n.href}">${n.label}</a>`,
+      )
+      .join('\n        ');
+    return `    <nav class="hub-nav" aria-label="カテゴリ一覧">
+      <div class="hub-nav-inner">
+        ${items}
+      </div>
+    </nav>`;
+  };
+  // ハブページ用パンくず構造化データ（トップ → 当カテゴリ）。
+  const buildHubBreadcrumb = (title, url) =>
+    JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '昆虫植物図鑑', item: `${BASE_ORIGIN}/` },
+        { '@type': 'ListItem', position: 2, name: title, item: url },
+      ],
+    });
 
   for (const sec of sections) {
     const dirPath = path.join(base, sec.dir);
@@ -3158,15 +3216,23 @@ function generateMetaIndexes(indexData) {
   <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
+  <script type="application/ld+json">${buildHubBreadcrumb(sec.title, listUrl)}</script>
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 ${indexStyles}
 </head>
 <body>
 ${headerHtml}
   <div class="meta-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/">昆虫植物図鑑</a></li>
+        <li aria-current="page">${sec.title}</li>
+      </ol>
+    </nav>
     <header class="meta-header">
       <h1>${sec.title}</h1>
     </header>
+${buildHubNavHtml(sec.key)}
     <main>
       <p class="index-summary">全${totalPlants}種の食草植物を${sortedFamilies.length}科に分けて掲載しています。</p>
       ${sectionBlocks}
@@ -3289,15 +3355,23 @@ ${headerHtml}
   <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
+  <script type="application/ld+json">${buildHubBreadcrumb(sec.title, listUrl)}</script>
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 ${indexStyles}
 </head>
 <body>
 ${headerHtml}
   <div class="meta-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/">昆虫植物図鑑</a></li>
+        <li aria-current="page">${sec.title}</li>
+      </ol>
+    </nav>
     <header class="meta-header">
       <h1>${sec.title}</h1>
     </header>
+${buildHubNavHtml(sec.key)}
     <main>
       <p class="index-summary">${summaryLabel}</p>
       ${mainContent}

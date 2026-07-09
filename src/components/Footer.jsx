@@ -35,17 +35,34 @@ const Footer = ({ locale = 'ja' }) => {
     : [
         { to: localizePath('/quiz', locale), label: '4択図鑑' },
       ];
+  // 7カテゴリのハブへ個別リンクを張る。以前は蛾・植物の2つしか無く、
+  // 蝶・タマムシ・カミキリムシ・ハムシ・アブラムシのハブ（約3,400種ページの入口）が
+  // レンダー後DOMの内部リンクグラフから欠落していた。カテゴリ名を明示した
+  // アンカーテキストにすることで発見性とアンカー品質も高める。
+  const hubLink = (segment, label) => ({
+    href: `${import.meta.env.BASE_URL}${metaBase}/${segment}/index.html`,
+    label,
+  });
   const utilityLinks = isEnglish
     ? [
         { href: `${import.meta.env.BASE_URL}sitemap.html`, label: 'Sitemap' },
-        { href: `${import.meta.env.BASE_URL}${metaBase}/moth/index.html`, label: 'All insect pages' },
-        { href: `${import.meta.env.BASE_URL}${metaBase}/plant/index.html`, label: 'All plant pages' },
+        hubLink('moth', 'Moths'),
+        hubLink('butterfly', 'Butterflies'),
+        hubLink('beetle', 'Jewel beetles'),
+        hubLink('longhornbeetle', 'Longhorn beetles'),
+        hubLink('leafbeetle', 'Leaf beetles'),
+        hubLink('aphid', 'Aphids'),
+        hubLink('plant', 'Host plants'),
       ]
     : [
         { href: `${import.meta.env.BASE_URL}sitemap.html`, label: 'サイトマップ' },
-        // 「メタ一覧」は開発用語で意味が伝わらないため、英語版と同じ利用者向けの名称にする
-        { href: `${import.meta.env.BASE_URL}${metaBase}/moth/index.html`, label: '昆虫ページ一覧' },
-        { href: `${import.meta.env.BASE_URL}${metaBase}/plant/index.html`, label: '植物ページ一覧' },
+        hubLink('moth', '蛾一覧'),
+        hubLink('butterfly', '蝶一覧'),
+        hubLink('beetle', 'タマムシ一覧'),
+        hubLink('longhornbeetle', 'カミキリムシ一覧'),
+        hubLink('leafbeetle', 'ハムシ一覧'),
+        hubLink('aphid', 'アブラムシ一覧'),
+        hubLink('plant', '食草・植物一覧'),
       ];
   return (
     <footer className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm mt-12">

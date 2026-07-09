@@ -1060,7 +1060,8 @@ function buildEnglishHomePage(counts) {
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
   <link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/">
   <link rel="alternate" hreflang="en" href="${canonicalUrl}">
-  <link rel="alternate" hreflang="x-default" href="${canonicalUrl}">
+  <!-- x-default は主要コンテンツである日本語トップに統一（サイト全体で一貫）。 -->
+  <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/">
   <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
   <meta property="og:title" content="${escapeAttr(EN_SITE_NAME)}">
   <meta property="og:description" content="${escapeAttr(description)}">
@@ -1208,7 +1209,12 @@ async function generateEnglishMetaPages() {
       };
       insectEntriesByType.get(type).push(entry);
       insectEntriesById.set(insect.id, entry);
-      englishInsectRouteMap[insect.id] = entry.href;
+      // hreflang は index 可能な英語ページにのみ張る。noindex の英語ページを
+      // 日本語ページの hreflang="en" 代替として登録すると、Google は noindex 代替を
+      // 無視し Search Console に hreflang 不整合として計上する（相互リンクの無駄）。
+      if (isGeneratedMetaPageIndexableByHref(entry.href)) {
+        englishInsectRouteMap[insect.id] = entry.href;
+      }
       const japaneseName = cleanString(insect.name || insect.japaneseName);
       if (japaneseName) {
         if (!insectObjectsByJapaneseName.has(japaneseName)) {
@@ -1255,7 +1261,10 @@ async function generateEnglishMetaPages() {
         scientificName: display.scientificName,
         japaneseReference: display.japaneseReference,
       });
-      englishPlantRouteMap[plantRecord.canonicalName] = plantRecord.href;
+      // 日本語ページの hreflang="en" は index 可能な英語ページにのみ張る（上記と同方針）。
+      if (isGeneratedMetaPageIndexableByHref(plantRecord.href)) {
+        englishPlantRouteMap[plantRecord.canonicalName] = plantRecord.href;
+      }
       queueLegacyRedirect(
         `/en/plant/${encodeURIComponent(plantRecord.canonicalName)}/index.html`,
         plantRecord.href,
