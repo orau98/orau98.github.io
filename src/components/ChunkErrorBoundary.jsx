@@ -12,22 +12,41 @@ export default class ChunkErrorBoundary extends React.Component {
   // デプロイ直後は旧HTMLが参照するハッシュ付きチャンクが恒久404になるため、
   // リトライ枯渇時は新しいindex.htmlを取り直すハードリロードで復旧する
   static RELOAD_FLAG = 'chunk-error-hard-reloaded';
+  // フラグ解除はマウント直後ではなく「しばらく安定表示できた後」に行う。
+  // マウント直後に解除すると、リロード→即エラーのループでガードが毎回消され
+  // 無限ハードリロードになる
+  static RELOAD_FLAG_CLEAR_DELAY_MS = 10000;
+
+  // 動的import（チャンク読み込み）の失敗だけが自動リトライ・ハードリロードの対象。
+  // 子コンポーネントのレンダー例外（URIError等）まで通信障害と誤分類すると、
+  // 決定的なエラーなのに「通信が混み合っています」+リロードの無限ループになる
+  static isChunkLoadError(error) {
+    const text = `${error?.name || ''} ${error?.message || ''}`;
+    return /ChunkLoadError|Loading chunk|dynamically imported module|Importing a module script failed|Failed to fetch/i.test(
+      text,
+    );
+  }
 
   constructor(props) {
     super(props);
-    this.state = { error: null, attempt: 0, autoRetrying: false, autoRetryCount: 0 };
+    this.state = { error: null, isChunkError: false, attempt: 0, autoRetrying: false, autoRetryCount: 0 };
     this.autoRetryTimeoutRef = null;
+    this.flagClearTimeoutRef = null;
   }
 
   static getDerivedStateFromError(error) {
-    return { error };
+    return { error, isChunkError: ChunkErrorBoundary.isChunkLoadError(error) };
   }
 
   componentDidMount() {
-    // 正常にマウントできたら、次回デプロイでも再度ハードリロードできるようフラグを解除
+    // 一定時間エラーなく表示できたら、次回デプロイでも再度ハードリロードできるようフラグを解除
     try {
       if (!this.state.error) {
-        sessionStorage.removeItem(ChunkErrorBoundary.RELOAD_FLAG);
+        this.flagClearTimeoutRef = setTimeout(() => {
+          try {
+            sessionStorage.removeItem(ChunkErrorBoundary.RELOAD_FLAG);
+          } catch {}
+        }, ChunkErrorBoundary.RELOAD_FLAG_CLEAR_DELAY_MS);
       }
     } catch {
       // sessionStorage が使えない環境では何もしない
@@ -40,14 +59,23 @@ export default class ChunkErrorBoundary extends React.Component {
     } catch {
       // ignore logging errors
     }
+    if (this.flagClearTimeoutRef) {
+      clearTimeout(this.flagClearTimeoutRef);
+      this.flagClearTimeoutRef = null;
+    }
 
-    // 自動リトライを開始
-    this.scheduleAutoRetry();
+    // チャンク読み込み失敗のみ自動リトライ（それ以外は手動リトライUIで停止）
+    if (ChunkErrorBoundary.isChunkLoadError(error)) {
+      this.scheduleAutoRetry();
+    }
   }
 
   componentWillUnmount() {
     if (this.autoRetryTimeoutRef) {
       clearTimeout(this.autoRetryTimeoutRef);
+    }
+    if (this.flagClearTimeoutRef) {
+      clearTimeout(this.flagClearTimeoutRef);
     }
   }
 
@@ -117,8 +145,27 @@ export default class ChunkErrorBoundary extends React.Component {
   };
 
   render() {
-    const { error, attempt, autoRetrying, autoRetryCount } = this.state;
+    const { error, isChunkError, attempt, autoRetrying, autoRetryCount } = this.state;
     const { fallback } = this.props;
+
+    if (error && !isChunkError) {
+      // レンダー例外など通信起因でないエラー: リロードで直らないため
+      // 自動リトライせず、安定したエラーUIと帰還導線だけを出す
+      return (
+        <div className="max-w-3xl mx-auto my-10 p-6 rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-900/30 dark:border-amber-700 text-amber-900 dark:text-amber-200 shadow-sm">
+          <p className="font-semibold mb-2">ページの表示中に問題が発生しました</p>
+          <p className="text-sm mb-4 text-amber-800 dark:text-amber-300">
+            URLが正しくない可能性があります。トップページからやり直してください。
+          </p>
+          <a
+            href={import.meta.env.BASE_URL || '/'}
+            className="inline-block px-4 py-2 min-h-[44px] rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition"
+          >
+            トップページへ戻る
+          </a>
+        </div>
+      );
+    }
 
     if (error) {
       if (fallback) {

@@ -23,6 +23,13 @@ const NotFoundPage = ({ locale = 'ja' }) => {
     const prevTitle = document.title;
     const robots = document.querySelector('meta[name="robots"]');
     const prevRobots = robots ? robots.getAttribute('content') : null;
+    // 親Appのrobotsメタeffect（location変化時にINDEXへ更新する）が
+    // 404表示中に上書きしないよう、表示中はフラグで noindex を占有する
+    const prevForceNoindex =
+      typeof window !== 'undefined' && window.__SEO_FORCE_NOINDEX__ === true;
+    if (typeof window !== 'undefined') {
+      window.__SEO_FORCE_NOINDEX__ = true;
+    }
     setRobotsMetaContent(NOINDEX_NOFOLLOW_ROBOTS);
     document.title = isEnglish
       ? '404 | Page not found - Insects and Host Plants of Japan'
@@ -30,6 +37,9 @@ const NotFoundPage = ({ locale = 'ja' }) => {
 
     return () => {
       document.title = prevTitle;
+      if (typeof window !== 'undefined') {
+        window.__SEO_FORCE_NOINDEX__ = prevForceNoindex;
+      }
       if (robots && prevRobots != null) {
         robots.setAttribute('content', prevRobots);
       }

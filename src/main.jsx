@@ -66,6 +66,30 @@ const isPrimaryNavigationClick = (event) =>
   !event.shiftKey &&
   !event.altKey;
 
+// 同一URLへの再クリック（lazyチャンク読込中のダブルクリック等）を無効化する。
+// React RouterのLinkはpushStateを同期実行するため、2回目のクリック時点で
+// window.location は既に遷移先と一致している。そのままRouterに渡すと同じ
+// 詳細ページが履歴に二重pushされ、戻る1回で一覧に戻れなくなる。
+// preventDefaultはRouterのナビゲーションだけを抑止し、要素自身のonClick
+// ハンドラ（スキップリンクのスクロール等）はそのまま実行される。
+const isDuplicateNavigationClick = (anchor) => {
+  if (typeof window === 'undefined' || !anchor?.href) return false;
+  if (anchor.target && anchor.target !== '_self') return false;
+  if (anchor.hasAttribute('download')) return false;
+  let targetUrl;
+  try {
+    targetUrl = new URL(anchor.href, window.location.href);
+  } catch {
+    return false;
+  }
+  if (targetUrl.origin !== window.location.origin) return false;
+  return (
+    targetUrl.pathname === window.location.pathname &&
+    targetUrl.search === window.location.search &&
+    targetUrl.hash === window.location.hash
+  );
+};
+
 // 静的HTML（/meta/ 等）へのリンクだけドキュメント遷移させる。
 // SPAルート同士の遷移はReact Routerに任せる（フルリロードさせない）。
 const shouldUseDocumentNavigation = (anchor) => {
@@ -162,7 +186,12 @@ if (typeof document !== 'undefined') {
     (event) => {
       if (!isPrimaryNavigationClick(event)) return;
       const anchor = event.target?.closest?.('a[href]');
-      if (!anchor || !shouldUseDocumentNavigation(anchor)) return;
+      if (!anchor) return;
+      if (isDuplicateNavigationClick(anchor)) {
+        event.preventDefault();
+        return;
+      }
+      if (!shouldUseDocumentNavigation(anchor)) return;
       event.preventDefault();
       window.location.assign(anchor.href);
     },

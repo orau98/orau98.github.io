@@ -23,7 +23,7 @@ import {
   PLANT_IMAGE_SUFFIXES,
 } from './utils/filename';
 import { globalJapaneseToScientificMapping } from './utils/insectImageMappings';
-import { buildInsectPath } from './utils/insectSlug';
+import { buildInsectPath, decodeSlug } from './utils/insectSlug';
 import {
   buildInsectImageBaseCandidates,
   buildNormalizedEntriesCached,
@@ -230,7 +230,7 @@ const PlantImageGallery = ({ images, plantName = '', locale = 'ja' }) => {
                   onError={(event) => handleImageError(mainImage.id, event)}
                   // モバイルでは写真ファーストの最上部＝LCP要素なのでlazyにしない
                   loading="eager"
-                  fetchpriority="high"
+                  fetchPriority="high"
                 />
                 
                 {/* Elegant gradient overlay on hover */}
@@ -491,11 +491,14 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
   );
 });
 
-const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja' }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja', insectPartitionsReady = true }) => {
   const isEnglish = isEnglishLocale(locale);
   const englishPlantRouteMap = useSeoRouteMap('plants');
   const { plantName } = useParams();
-  const rawDecodedPlantName = decodeURIComponent(plantName);
+  // useParamsの値はReact Routerが復号済み。ここでの再復号は %を含む値で
+  // throwし得る（ChunkErrorBoundaryがチャンク障害と誤認してリロードループになる）
+  // ため、失敗時は原文のまま扱うガード付きデコードにする
+  const rawDecodedPlantName = decodeSlug(plantName);
   const sanitizePlantParam = (s) => {
     if (!s) return s;
     // Trim whitespace and common stray quote/hyphen characters from both ends
@@ -582,12 +585,40 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const [classificationMembers, setClassificationMembers] = useState([]); // 科/目/属ページ用の構成員（植物名）
   const [showAllMembers, setShowAllMembers] = useState(false);
   // 関連昆虫カードの段階表示（一括描画だと種数の多い植物でページが極端に長くなる）
-  const [showAllHostInsectCards, setShowAllHostInsectCards] = useState(false);
-  const [showAllFlowerInsectCards, setShowAllFlowerInsectCards] = useState(false);
+  // 「他N種を表示」の展開状態は履歴state(usr)に保存し、詳細へ遷移して
+  // 戻ってきた時(POP)に復元する。復元しないと24枚に畳まれた高さへ
+  // ブラウザのスクロール復元がクランプされ、クリックしたカードが
+  // 見えない位置に着地する
+  const readExpansionFromHistory = (key) => {
+    try {
+      return Boolean(window.history.state?.usr?.[key]);
+    } catch {
+      return false;
+    }
+  };
+  const [showAllHostInsectCards, setShowAllHostInsectCards] = useState(
+    () => readExpansionFromHistory('showAllHostInsectCards'),
+  );
+  const [showAllFlowerInsectCards, setShowAllFlowerInsectCards] = useState(
+    () => readExpansionFromHistory('showAllFlowerInsectCards'),
+  );
   const [canonicalName, setCanonicalName] = useState('');
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  // 展開トグル: stateの更新と同時に履歴エントリ(usr)へ複製し、POP復帰時に
+  // readExpansionFromHistoryで初期値として復元できるようにする
+  const toggleInsectCardsExpansion = (key) => {
+    const next = !(key === 'showAllHostInsectCards' ? showAllHostInsectCards : showAllFlowerInsectCards);
+    if (key === 'showAllHostInsectCards') setShowAllHostInsectCards(next);
+    else setShowAllFlowerInsectCards(next);
+    try {
+      navigate(`${location.pathname}${location.search}${location.hash}`, {
+        replace: true,
+        state: { ...(location.state || {}), [key]: next },
+      });
+    } catch {}
+  };
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
   const orderChip = buildLocalizedTaxonomyChip({
     locale,
@@ -611,8 +642,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   useEffect(() => {
     setClassificationMembers([]);
     setShowAllMembers(false);
-    setShowAllHostInsectCards(false);
-    setShowAllFlowerInsectCards(false);
+    setShowAllHostInsectCards(readExpansionFromHistory('showAllHostInsectCards'));
+    setShowAllFlowerInsectCards(readExpansionFromHistory('showAllFlowerInsectCards'));
+    // 前の植物の正準名・別名・分類が残ると、科/目/属ページや次の植物の
+    // 関連昆虫一覧に前ページの種が混入する（別名表示も汚染される）ため
+    // ルートが変わったら必ず初期化する
+    setCanonicalName('');
+    setAliasNames([]);
+    setTaxonomy({ familyJp: '', familyEn: '', orderJp: '', orderEn: '', genus: '', scientificName: '' });
   }, [decodedPlantName]);
 
   const isFamily = /科$/.test(decodedPlantName);
@@ -1297,6 +1334,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   // Thin-content guard: if this is a plant page with no related insects, mark as noindex
   useEffect(() => {
     try {
+      // 昆虫パーティション未着のうちは「関連0種」が確定ではないため、
+      // noindexへの切替判定を保留する（着弾後に正しく再評価される）
+      if (!insectPartitionsReady) return;
       const isTaxonList = isFamily || isOrder || isGenus;
       const shouldIndex =
         isTaxonList ||
@@ -1304,7 +1344,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         (Array.isArray(flowerVisitInsects) && flowerVisitInsects.length > 0);
       setRobotsMetaContent(shouldIndex ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
     } catch {}
-  }, [isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects]);
+  }, [insectPartitionsReady, isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects]);
 
   // Load classification: prefer lite JSON, fallback to CSV
   useEffect(() => {
@@ -1929,7 +1969,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 </h2>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
-                    {isEnglish ? `${totalInsectCount} species` : `関連 ${totalInsectCount}種`}
+                    {/* 昆虫データ未着の間は0種と断定せず読み込み中表示にする */}
+                    {!insectPartitionsReady && totalInsectCount === 0
+                      ? (isEnglish ? 'Loading…' : '読み込み中…')
+                      : (isEnglish ? `${totalInsectCount} species` : `関連 ${totalInsectCount}種`)}
                   </span>
                   {/* 0種のチップはノイズになるだけなので出さない（「両方」と同じ扱い） */}
                   {hostPlantInsects.length > 0 && (
@@ -2009,9 +2052,17 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           {isEnglish ? 'Related insects' : '関連する昆虫'}
         </h2>
         {hostPlantInsects.length === 0 && flowerVisitInsects.length === 0 ? (
+          !insectPartitionsReady ? (
+            // 昆虫データ未着: 「見つかりませんでした」と断定せず読み込み中を示す
+            <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400">
+              <div className="w-5 h-5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
+              {isEnglish ? 'Loading related insects…' : '関連する昆虫を読み込んでいます…'}
+            </div>
+          ) : (
           <div className="text-slate-500 dark:text-slate-400">
             {isEnglish ? 'No related insects were found.' : '関連する昆虫が見つかりませんでした。'}
           </div>
+          )
         ) : (
           <div className="space-y-10">
             {hostPlantInsects.length > 0 && (
@@ -2037,7 +2088,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                       <div className="mt-6 text-center">
                         <button
                           type="button"
-                          onClick={() => setShowAllHostInsectCards(s => !s)}
+                          onClick={() => toggleInsectCardsExpansion('showAllHostInsectCards')}
                           className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
                         >
                           {showAllHostInsectCards
@@ -2088,7 +2139,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                       <div className="mt-6 text-center">
                         <button
                           type="button"
-                          onClick={() => setShowAllFlowerInsectCards(s => !s)}
+                          onClick={() => toggleInsectCardsExpansion('showAllFlowerInsectCards')}
                           className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
                         >
                           {showAllFlowerInsectCards
@@ -2126,6 +2177,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         locale={locale}
         className="mt-10"
         minHeight="min-h-[120px]"
+        instanceKey={decodedPlantName || ''}
       />
 
       {/* 前後の植物へのナビゲーション（五十音順ではなく分類順で近縁植物へ移動できる） */}

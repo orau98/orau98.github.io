@@ -59,8 +59,11 @@ export const scrollElementWithOffset = (
   window.scrollTo({ top: offsetPosition, behavior });
   if (updateHashId) {
     try {
+      // 第1引数にnullを渡すとReact Routerの履歴state({usr,key,idx})が丸ごと
+      // 破壊され、戻る/進む後にlocation.state(「一覧に戻る」のフィルタ・ページ
+      // 情報など)が失われる。既存のstateを保持したままURLのみ更新する
       window.history.replaceState(
-        null,
+        window.history.state,
         '',
         buildCurrentHashHref(window.location, updateHashId),
       );
@@ -80,4 +83,18 @@ export const scrollToSection = (
     extraOffset,
     updateHashId: updateHash ? id : undefined,
   });
+};
+
+// セクションハッシュをURLから取り除く（「トップへ戻る」等でセクションを
+// 離れた後もハッシュが残ると、リロード・共有時に先頭ではなくセクションを
+// 指してしまう）。React Routerの履歴stateは保持する
+export const clearSectionHash = () => {
+  if (typeof window === 'undefined' || !window.location.hash) return;
+  try {
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${window.location.pathname}${window.location.search}`,
+    );
+  } catch {}
 };

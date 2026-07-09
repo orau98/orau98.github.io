@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react';
+import { useNavigationType } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import useInsectImageMap from '../hooks/useInsectImageMap';
 import useInsectListParams from '../hooks/useInsectListParams';
@@ -192,10 +193,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     const nextValue = String(value || '').trim();
     if (!nextValue) return;
     setSearchTerm(nextValue);
+    // 例示チップのクリックも明示的な検索確定なのでpush
     updateSearchParams((p) => {
       p.set('q', nextValue);
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const allowDebugLogs = (import.meta.env?.DEV || (typeof window !== 'undefined' && !!window.DEBUG_LOGS));
@@ -400,8 +402,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     () => activeFilters.map((filter) => `${filter.type}:${filter.value}`).join(' / '),
     [activeFilters],
   );
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  // classification指定でマウントした場合も最初から適用する。
+  // effect経由の後追い同期だけだと、デバウンス着弾(約300ms後)が
+  // 「ユーザーの新規検索」と誤検知されてページリセットの原因になる
+  const [searchTerm, setSearchTerm] = useState(
+    () => classificationFilter || initialSearchTerm || '',
+  );
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  // 戻る/進む(POP)による復元をユーザーの絞り込み操作と区別するために参照する
+  const navigationType = useNavigationType();
   const filterCriteriaRef = useRef({
     debouncedSearchTerm,
     hostFilter,
@@ -854,6 +863,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       sortMode,
     };
 
+    // 戻る/進む(POP)・初期ロードによる変化は「復元」であって新しい絞り込みでは
+    // ない。ここでリセットすると、履歴から復元されたページ番号(ipage)を即座に
+    // 1へ書き戻し(しかもreplaceで元エントリを恒久破壊)、復元済みのスクロール
+    // 位置も先頭へ引き戻してしまう。基準値の同期だけ行い早期リターンする
+    if (navigationType === 'POP') return;
+
     // 条件・並び順が変わったら結果の先頭を見せる
     // （下までスクロールした状態で「新しい並びの中盤」が表示される混乱を防ぐ）
     if (typeof window !== 'undefined') {
@@ -869,6 +884,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     if (currentPage === 1) return;
     setIPage(1);
   }, [
+    navigationType,
     debouncedSearchTerm,
     hostFilter,
     familyFilter,

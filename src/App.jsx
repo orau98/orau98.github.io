@@ -27,6 +27,8 @@ import fetchWithRetryShared from './utils/fetchWithRetry';
 import { getLocaleFromPath, isEnglishLocale } from './utils/locale';
 import {
   buildCurrentHashHref,
+  findSectionTarget,
+  isVisibleSectionTarget,
   scrollElementWithOffset,
 } from './utils/sectionNavigation';
 import {
@@ -56,6 +58,21 @@ const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = [
 
 const hasImmediateInsectDataParams = (params) =>
   INSECT_DATA_IMMEDIATE_QUERY_PARAMS.some((name) => params.has(name));
+
+// 検索・絞り込み結果ページを検索エンジンにインデックスさせないための
+// 対象パラメータ一覧。新しいフィルタを追加したらここにも足すこと
+// （表示専用の tab / iview / pview 等は対象外）
+const NOINDEX_SEARCH_PARAMS = [
+  'q', 'search', 'term', 'classification', 'page', 'redirect',
+  // 昆虫一覧の絞り込み
+  'ipage', 'ihost', 'ifamily', 'igenus', 'igroup', 'imonth', 'iseason', 'iphoto',
+  // 植物一覧の絞り込み
+  'ppage', 'pfamily', 'porder', 'pvisit', 'phost', 'pphoto',
+];
+
+// 静的パス強制遷移のループ検知窓。この時間内に同じURLで再びSPAが起動したら
+// 「サーバーが静的ファイルではなくSPAシェルを返している」と判断する
+const STATIC_DOC_NAV_LOOP_WINDOW_MS = 10000;
 
 const normalizeExplorerPath = (pathname = '') => {
   const value = String(pathname || '/').split(/[?#]/)[0] || '/';
@@ -122,7 +139,27 @@ function App() {
   const cachedVersionRef = useRef(null);
   
   const isExplorerPage = isExplorerRoutePath(location.pathname);
-  const shouldForceDocumentNavigation = isStaticDocumentPath(location.pathname);
+  // 静的ドキュメントパス(/meta/等)のセーフティネット(location.replace)が
+  // 無限フルリロードに陥らないためのガード:
+  // - __IS_SPA_404__: サーバーが404フォールバックとしてSPAを配信した
+  //   (=その静的ファイルは存在しない)。再遷移しても同じ404が返るだけ
+  // - sessionStorageスタンプ: 直近に同じURLへ強制遷移したのに再びSPAが
+  //   起動した(=devサーバー等がSPAシェルで応答する環境)。この場合も再遷移は
+  //   ループにしかならないので、SPA側のNotFoundにフォールバックする
+  const [staticDocNavBlocked] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    if (window.__IS_SPA_404__ === true) return true;
+    try {
+      const stamp = Number(
+        sessionStorage.getItem(`static-doc-nav:${window.location.pathname}`) || 0,
+      );
+      return Date.now() - stamp < STATIC_DOC_NAV_LOOP_WINDOW_MS;
+    } catch {
+      return false;
+    }
+  });
+  const shouldForceDocumentNavigation =
+    isStaticDocumentPath(location.pathname) && !staticDocNavBlocked;
   const skipToMainHref = buildCurrentHashHref(location, 'main-content');
 
   const handleSkipToMainContent = (event) => {
@@ -165,23 +202,7 @@ function App() {
         typeof window !== 'undefined' &&
         (window.__SEO_FORCE_NOINDEX__ === true || location.pathname === '/404.html');
       const params = new URLSearchParams(location.search);
-      const hasSearch =
-        params.has('q') ||
-        params.has('search') ||
-        params.has('term') ||
-        params.has('classification') ||
-        params.has('page') ||
-        params.has('ipage') ||
-        params.has('ppage') ||
-        params.has('ihost') ||
-        params.has('ifamily') ||
-        params.has('igenus') ||
-        params.has('igroup') ||
-        params.has('imonth') ||
-        params.has('pfamily') ||
-        params.has('porder') ||
-        params.has('pvisit') ||
-        params.has('redirect');
+      const hasSearch = NOINDEX_SEARCH_PARAMS.some((key) => params.has(key));
       setRobotsMetaContent(
         isSpa404Fallback || hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS,
       );
@@ -209,10 +230,57 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
+  // #セクションID 付きURLの直リンク・リロード・戻る/進むで該当セクションへ
+  // スクロールする（目次ジャンプが書き込むハッシュURLを開き直しても先頭に
+  // 留まってしまう穴を塞ぐ）。セクションは非同期データの描画後に現れるため、
+  // 可視ターゲットが見つかるまでリトライして待つ。ユーザーが自分で
+  // スクロールし始めたら奪わずに中止する
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const id = (location.hash || '').slice(1);
+    if (!id || id === 'main-content') return undefined;
+    let cancelled = false;
+    let attempts = 0;
+    let timer = null;
+    const cancel = () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+      window.removeEventListener('wheel', cancel);
+      window.removeEventListener('touchmove', cancel);
+    };
+    window.addEventListener('wheel', cancel, { passive: true });
+    window.addEventListener('touchmove', cancel, { passive: true });
+    const tryScroll = () => {
+      if (cancelled) return;
+      const target = findSectionTarget(id);
+      if (target && isVisibleSectionTarget(target)) {
+        scrollElementWithOffset(target, { behavior: 'auto', extraOffset: 16 });
+        cancel();
+        return;
+      }
+      attempts += 1;
+      if (attempts < 12) {
+        timer = setTimeout(tryScroll, 500);
+      } else {
+        cancel();
+      }
+    };
+    timer = setTimeout(tryScroll, 100);
+    return cancel;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key]);
+
   useEffect(() => {
     if (!shouldForceDocumentNavigation || typeof window === 'undefined') return undefined;
     const target = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     const timerId = window.setTimeout(() => {
+      try {
+        // ループ検知用スタンプ: 遷移後に再びSPAが起動したらループと判定する
+        sessionStorage.setItem(
+          `static-doc-nav:${window.location.pathname}`,
+          String(Date.now()),
+        );
+      } catch {}
       window.location.replace(target);
     }, 0);
     return () => window.clearTimeout(timerId);
@@ -626,6 +694,19 @@ function App() {
               loadTypesImmediately = true;
             }
 
+            // 版不一致のIndexedDBキャッシュから起動した場合、昆虫パーティションを
+            // 遅延させると「植物データは新版・昆虫データは旧版」の混在が
+            // セッション中固定化される（旧データ表示済みのため遅延ロードの
+            // 起動ガードにも弾かれる）。ルートに関係なく直ちに再取得して揃える
+            if (
+              cacheLoadedRef.current &&
+              cachedVersion &&
+              manifestVersion &&
+              manifestVersion !== cachedVersion
+            ) {
+              loadTypesImmediately = true;
+            }
+
             // 昆虫パーティションのダウンロードを植物系JSONと同時に開始する
             const typesPromise = loadTypesImmediately ? startFetchTypes() : null;
 
@@ -945,6 +1026,9 @@ function App() {
     plantDetails,
     theme,
     locale,
+    // /plant系ランディングでは昆虫パーティションが遅延読み込みのため、
+    // 「まだ届いていない」と「本当に関連昆虫が0」を詳細ページ側で区別できるようにする
+    insectPartitionsReady: hasLoadedInsectPartitions,
   };
 
   const routeConfigs = [

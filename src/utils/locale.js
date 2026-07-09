@@ -10,7 +10,10 @@ export const isEnglishLocale = (locale = DEFAULT_LOCALE) =>
   normalizeLocale(locale) === ENGLISH_LOCALE;
 
 export const getLocaleFromPath = (pathname = '') => {
-  const value = String(pathname || '').trim();
+  // React Routerのルート照合は大文字小文字を区別しない（/EN/mothも英語ルートに
+  // マッチする）ため、ロケール判定も同じ基準に揃える。ずれると英語ルートに
+  // 日本語UI・誤ったcanonicalが出る
+  const value = String(pathname || '').trim().toLowerCase();
   return value === '/en' || value.startsWith('/en/')
     ? ENGLISH_LOCALE
     : DEFAULT_LOCALE;
@@ -24,8 +27,9 @@ export const getCurrentLocale = () => {
 export const stripLocalePrefix = (pathname = '') => {
   const value = String(pathname || '').trim();
   if (!value) return '/';
-  if (value === '/en') return '/';
-  if (value.startsWith('/en/')) {
+  const lower = value.toLowerCase();
+  if (lower === '/en') return '/';
+  if (lower.startsWith('/en/')) {
     const stripped = value.slice(3);
     return stripped.startsWith('/') ? stripped : `/${stripped}`;
   }

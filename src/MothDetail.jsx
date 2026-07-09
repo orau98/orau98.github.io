@@ -278,6 +278,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       return;
     }
     let aborted = false;
+    // フェッチ完了を待たず、種の切り替わり時点で前種の値を消しておく
+    setFallbackHostPlants([]);
     const v = import.meta.env.DEV ? `?v=${Date.now()}` : '';
     fetch(`${import.meta.env.BASE_URL}hostplants.csv${v}`)
       .then(res => res.ok ? res.text() : '')
@@ -332,7 +334,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             isDetailed: true
           });
         }
-        if (!aborted && out.length > 0) setFallbackHostPlants(out);
+        // 0件でも必ず反映する: 前の種のフォールバック食草(出典付き)が
+        // 食草記録の無い種のページに残留すると、誤った学術情報の提示になる
+        if (!aborted) setFallbackHostPlants(out);
       })
       .catch(() => {})
     return () => { aborted = true; };
@@ -583,6 +587,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   // 写真ライトボックスの開閉状態（画像リストはprimaryName確定後にlightboxImagesとして構築）
   const [lightboxState, setLightboxState] = useState({ open: false, index: 0 });
+  // ライトボックスを開いたまま別種のページへ遷移(戻る/進む含む)しても、
+  // Routeのkeyがパターン単位でstateが持ち越されるため、開いたままだと
+  // 別種の写真へ無言ですり替わった全画面表示になる。種が変わったら必ず閉じる
+  useEffect(() => {
+    setLightboxState({ open: false, index: 0 });
+  }, [resolvedInsectId]);
   const openLightbox = useCallback((index) => {
     setLightboxState({ open: true, index });
   }, []);
@@ -1474,6 +1484,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     : (fallbackHostPlants || []);
                   return (
                     <EnhancedHostPlantDisplay 
+                      key={resolvedInsectId || 'unknown'}
                       hostPlants={hostPlantsArray}
                       hostPlantsDetailed={mergedDetailed}
                       showDetailsByDefault={false}
@@ -2156,6 +2167,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
               locale={locale}
               className="mt-10"
               minHeight="min-h-[120px]"
+              instanceKey={resolvedInsectId || ''}
             />
 
           </div>

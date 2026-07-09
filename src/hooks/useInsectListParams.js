@@ -152,7 +152,8 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       if (perPageOptions.includes(n)) p.set('iper', String(n));
       else p.delete('iper');
       p.delete('ipage');
-    });
+      // ipageを消す＝表示内容が変わる明示的操作なのでpush（戻るで復帰可能に）
+    }, { push: true });
   }, [updateSearchParams, perPageOptions]);
 
   const clearClassification = useCallback(() => {
@@ -175,11 +176,13 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
     }, { push: true });
   }, [updateSearchParams]);
 
+  // 「検索をクリア」「すべてリセット」はユーザーの明示的操作なので
+  // clearFilters等と同様にpushし、戻るで直前の絞り込み状態へ復帰できるようにする
   const clearSearch = useCallback(() => {
     updateSearchParams((p) => {
       p.delete('q');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const resetAll = useCallback(() => {
@@ -194,7 +197,7 @@ export default function useInsectListParams({ perPageOptions = [20, 50, 100] } =
       p.delete('classification');
       p.delete('q');
       p.delete('ipage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const classificationFilter = searchParams.get('classification');

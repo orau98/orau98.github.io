@@ -31,7 +31,7 @@ import {
 } from "./utils/insectImageResolver";
 import { getAssetBase } from "./utils/assetPaths";
 import { absUrl } from "./utils/origin";
-import { buildPlantPath, isKnownDetailPath } from "./utils/siteTaxonomy";
+import { buildPlantPath, isKnownDetailPath, isExplorerRoutePath } from "./utils/siteTaxonomy";
 import { buildInsectPath } from "./utils/insectSlug";
 import {
   EN_SITE_NAME,
@@ -601,6 +601,15 @@ const InsectsHostPlantExplorer = memo(
       }
 
       searchTimeoutRef.current = setTimeout(() => {
+        // 入力から300ms以内に候補クリック等で別ページへ遷移した場合、
+        // このタイマーが遅れて発火すると詳細ページのURLをreplaceで上書きして
+        // 一覧へ引き戻してしまう。Explorerルートを離れていたら何もしない
+        if (
+          typeof window !== "undefined" &&
+          !isExplorerRoutePath(window.location.pathname)
+        ) {
+          return;
+        }
         const newParams = getCurrentParams();
         newParams.set("tab", activeTab);
         if (val) {
@@ -625,7 +634,10 @@ const InsectsHostPlantExplorer = memo(
       } else {
         newParams.delete("q");
       }
-      // 明示的な検索確定は履歴に残し、戻るで1つ前の状態に戻れるようにする
+      // 明示的な検索確定は履歴に残し、戻るで1つ前の状態に戻れるようにする。
+      // ただしデバウンスのreplace反映後などURLが既に同一の場合は、重複エントリを
+      // 積むと「戻る」1回が無反応になるためスキップする
+      if (newParams.toString() === getCurrentParams().toString()) return;
       setSearchParams(newParams);
     }, [activeTab, getCurrentParams, setSearchParams]);
 
@@ -640,7 +652,9 @@ const InsectsHostPlantExplorer = memo(
       const nextSearch = (searchByTab[tab] || "").trim();
       if (nextSearch) newParams.set("q", nextSearch);
       else newParams.delete("q");
-      // タブ切替は履歴に残す（戻るでタブごと離脱しないように）
+      // タブ切替は履歴に残す（戻るでタブごと離脱しないように）。
+      // 既に同じURLなら重複pushしない（同じタブの再クリック等）
+      if (newParams.toString() === getCurrentParams().toString()) return;
       setSearchParams(newParams);
     };
 
@@ -824,9 +838,30 @@ const InsectsHostPlantExplorer = memo(
       }
 
       const startedAt = Date.now();
-      const maxWaitMs = 1800;
+      const maxWaitMs = 4000;
+
+      const finish = () => {
+        didRestoreScrollRef.current = true;
+        safeSessionRemove(SCROLL_RESTORE_KEY);
+        safeSessionRemove("insectExplorerScrollPosition");
+        removeUserScrollListeners();
+      };
+
+      // ユーザーが自分でスクロールし始めたら復元で奪い合わない
+      const onUserScroll = () => {
+        cancelled = true;
+        if (timeoutId) clearTimeout(timeoutId);
+        finish();
+      };
+      const removeUserScrollListeners = () => {
+        window.removeEventListener("wheel", onUserScroll);
+        window.removeEventListener("touchmove", onUserScroll);
+      };
+      window.addEventListener("wheel", onUserScroll, { passive: true });
+      window.addEventListener("touchmove", onUserScroll, { passive: true });
 
       const tryRestore = () => {
+        if (cancelled) return;
         const resultsEl = document.getElementById("explorer-results");
         const maxScroll =
           Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
@@ -836,21 +871,13 @@ const InsectsHostPlantExplorer = memo(
           window.scrollTo(0, targetY);
         }
 
-        const done =
-          resultsEl &&
-          (Math.abs(window.scrollY - targetY) < 2 ||
-            Date.now() - startedAt > maxWaitMs);
-        if (done) {
-          didRestoreScrollRef.current = true;
-          safeSessionRemove(SCROLL_RESTORE_KEY);
-          safeSessionRemove("insectExplorerScrollPosition");
-          return;
-        }
-
-        if (Date.now() - startedAt > maxWaitMs) {
-          didRestoreScrollRef.current = true;
-          safeSessionRemove(SCROLL_RESTORE_KEY);
-          safeSessionRemove("insectExplorerScrollPosition");
+        // 注意: 「クランプ後のtargetYに到達した」だけで完了にしない。
+        // カード・ページネーションの描画途中はページがまだ低く、そこで
+        // 打ち切ると本来の位置より手前で復元が終わってしまう。
+        // 保存した本来のyに到達するまで(またはタイムアウトまで)待つ
+        const reachedSavedY = resultsEl && Math.abs(window.scrollY - y) < 2;
+        if (reachedSavedY || Date.now() - startedAt > maxWaitMs) {
+          finish();
           return;
         }
 
@@ -861,6 +888,7 @@ const InsectsHostPlantExplorer = memo(
       return () => {
         cancelled = true;
         if (timeoutId) clearTimeout(timeoutId);
+        removeUserScrollListeners();
       };
     }, [SCROLL_RESTORE_KEY, activeTab]);
 
@@ -1769,6 +1797,10 @@ const InsectsHostPlantExplorer = memo(
       // 特定の種・植物の候補（detailPath あり）は詳細ページへ直接遷移。
       // 「科で検索」などの集合候補は従来どおり検索を確定して一覧を絞り込む。
       if (selection && typeof selection === "object" && selection.detailPath) {
+        // 遷移後に検索デバウンスが発火して一覧へ引き戻さないよう先にクリアする
+        if (searchTimeoutRef.current) {
+          clearTimeout(searchTimeoutRef.current);
+        }
         navigate(selection.detailPath);
         return;
       }

@@ -56,6 +56,10 @@ const ManualAdSlot = ({
   minHeight = 'min-h-[120px]',
   format = 'auto',
   layout = undefined,
+  // ルート内スロット用の識別子（種ID等）。詳細→詳細のSPA遷移はコンポーネントが
+  // 再マウントされないため、これをadKeyに含めないと広告が更新されず、
+  // unfilled時のcollapsed状態も以降の全詳細ページへ持ち越される
+  instanceKey = '',
 }) => {
   const isEnglish = isEnglishLocale(locale);
   const slotId = SLOT_IDS[placement] || '';
@@ -73,8 +77,8 @@ const ManualAdSlot = ({
   // 毎遷移のレイアウトシフトとポリシー上のリスク（実質オートリフレッシュ）になる。
   // ルート内のスロット（一覧・詳細）はコンポーネント自体の再マウントで従来どおり更新される。
   const adKey = useMemo(
-    () => `${placement}-${slotId || 'dev'}`,
-    [placement, slotId],
+    () => `${placement}-${slotId || 'dev'}${instanceKey ? `-${instanceKey}` : ''}`,
+    [placement, slotId, instanceKey],
   );
 
   // 配信なし（unfilled）のとき、空の広告枠を出し続けないよう折りたたむ

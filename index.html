@@ -40,16 +40,9 @@
     </noscript>
 
     <!-- Performance optimization -->
-    <!-- Use Vite's BASE_URL placeholder to support subpath deployments -->
-    <link
-      rel="preload"
-      as="image"
-      type="image/avif"
-      fetchpriority="high"
-      href="%BASE_URL%images/resized/insects/Cucullia_argentea.1024.avif"
-      imagesrcset="%BASE_URL%images/resized/insects/Cucullia_argentea.320.avif 320w, %BASE_URL%images/resized/insects/Cucullia_argentea.640.avif 640w, %BASE_URL%images/resized/insects/Cucullia_argentea.1024.avif 1024w"
-      imagesizes="100vw"
-    >
+    <!-- 注: ヒーロー画像のpreloadは撤去済み。現在のヒーローUIは画像を描画せず、
+         カード画像は?v=付きの別バリアントを使うため、preloadしても全ルートで
+         約47KBの無駄ダウンロードにしかならない（OG/JSON-LD用のURLはメタ参照のみ） -->
     <!-- 画像インデックスの早期取得: 全画面のカード画像がこのJSONの到着を待って
          ファイル名を解決するため、JSバンドルの取得・解析と並行して読み始める。
          クエリはランタイム(getAssetVersionQuery)と同一にしないと二重取得になる。
