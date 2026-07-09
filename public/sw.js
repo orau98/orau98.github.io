@@ -16,6 +16,9 @@
 const OFFLINE_CACHE = 'ihpe-offline-v1';
 const IMAGE_CACHE = 'ihpe-images-v1';
 const ACTIVE_CACHES = [OFFLINE_CACHE, IMAGE_CACHE];
+// SPAシェルの正準キャッシュキー。実際のナビゲーションURLはクエリ付き
+// （/?tab=insects 等）でキーが揺れるため、クエリなしの固定キーで別途保持する
+const SHELL_URL = new URL('./', self.location.href).href;
 // 画像キャッシュの上限（best-effort・挿入順で古いものから削除）。
 // リサイズ画像は1枚あたり数十KBなので、上限到達時でも概ね数十MB規模に収まる
 const IMAGE_CACHE_MAX_ENTRIES = 1000;
@@ -28,8 +31,24 @@ const isCacheableResponse = (response) =>
 const isImageRequest = (request, url) =>
   request.destination === 'image' || url.pathname.includes('/images/');
 
-self.addEventListener('install', () => {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
+  // シェルを1部だけ確保しておく（オフライン時のナビゲーション代替用）。
+  // 初回訪問のナビゲーションはSW制御前に発生してfetchハンドラを通らないため、
+  // ここで取得しないと「一度も開き直していないタブしか無い状態」で
+  // オフラインフォールバックが空振りする。
+  // ネットワークから今その場で取得するため、古いHTMLを配る事故にはならない。
+  event.waitUntil(
+    (async () => {
+      try {
+        const response = await fetch(new Request(SHELL_URL, { cache: 'no-cache' }));
+        if (isCacheableResponse(response)) {
+          const cache = await caches.open(OFFLINE_CACHE);
+          await cache.put(SHELL_URL, response);
+        }
+      } catch {}
+    })(),
+  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -101,6 +120,10 @@ const handleNetworkFirst = async (request) => {
     if (isCacheableResponse(response)) {
       const cache = await caches.open(OFFLINE_CACHE);
       cache.put(request, response.clone()).catch(() => {});
+      // 成功したナビゲーション(=シェルHTML)は正準キーにも複製して常に最新へ更新
+      if (request.mode === 'navigate') {
+        cache.put(SHELL_URL, response.clone()).catch(() => {});
+      }
     }
     return response;
   } catch (error) {
@@ -110,7 +133,9 @@ const handleNetworkFirst = async (request) => {
     // ナビゲーションはSPAシェルでフォールバック（React Routerが描画する）
     if (request.mode === 'navigate') {
       const shell =
-        (await cache.match('/index.html')) || (await cache.match('/'));
+        (await cache.match(SHELL_URL)) ||
+        // 正準キー導入前にクエリ付きで入った旧エントリも救済
+        (await cache.match(SHELL_URL, { ignoreSearch: true }));
       if (shell) return shell;
     }
     throw error;

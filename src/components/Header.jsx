@@ -51,7 +51,9 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
     const [, routeSegment, slug] = normalizedPath.split('/');
 
     if (routeSegment === 'plant' && slug) {
-      const plantName = decodeURIComponent(slug);
+      // decodeURIComponentは不正な%エンコードでthrowする。Headerはエラーバウンダリの
+      // 外にあり、ここで例外が出るとアプリ全体が白画面になるため必ずガード付きで復号する
+      const plantName = decodeSlug(slug);
       const displayName = repairLatinBinomial(plantName);
       const plantDetail = plantDetails[plantName];
       if (plantDetail) {

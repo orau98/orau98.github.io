@@ -340,6 +340,21 @@ const SearchInput = React.forwardRef(({
   };
 
   const handleKeyDown = (e) => {
+    // Escapeは候補の開閉状態に依らず処理する（!expandedの早期returnより前に
+    // 置かないと「候補を閉じた後に続けてEscで入力クリア」が到達不能になる）
+    if (e.key === "Escape") {
+      // IME変換中のEscは変換取り消し操作なので奪わない
+      if (e.isComposing || e.nativeEvent?.isComposing) return;
+      if (expanded) {
+        e.preventDefault();
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+      } else if (localValue) {
+        e.preventDefault();
+        handleClear();
+      }
+      return;
+    }
     if (!expanded) {
       if (e.key === "ArrowDown" && activeItemsLength > 0) {
         setShowSuggestions(true);
@@ -387,16 +402,6 @@ const SearchInput = React.forwardRef(({
       addToHistory(trimmed);
       if (typeof onSubmit === "function") {
         onSubmit(trimmed);
-      }
-      setShowSuggestions(false);
-      setActiveIndex(-1);
-      return;
-    }
-    if (e.key === "Escape") {
-      e.preventDefault();
-      if (!expanded && localValue) {
-        handleClear();
-        return;
       }
       setShowSuggestions(false);
       setActiveIndex(-1);

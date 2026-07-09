@@ -4,6 +4,16 @@ export { isNonPlantResourceName, isPlantHostRecord };
 
 export const cleanString = (value) => (value ?? '').toString().trim();
 
+// 科・目のラテン名の大文字小文字ゆれ（ROSACEAE / rosaceae 等）を正規形
+// （先頭大文字+小文字）へ統一する。出典によって表記が割れると、英語UIの
+// 科フィルタが同一科を別項目として分裂させ、どれを選んでも部分集合しか
+// 表示されなくなる
+export const normalizeLatinTaxonName = (value = '') => {
+  const v = cleanString(value);
+  if (!/^[A-Za-z]+$/.test(v)) return v;
+  return v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
+};
+
 const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '葉',
   '葉裏',
@@ -248,7 +258,7 @@ export function normalizePlantProfileRows(rows = []) {
         name,
         scientificName: cleanString(row?.scientific_name),
         family: cleanString(row?.family),
-        familyLatin: cleanString(row?.family_latin),
+        familyLatin: normalizeLatinTaxonName(row?.family_latin),
         genus: cleanString(row?.genus_scientific),
         genusJp: normalizeGenusJp(row?.genus_jp),
         habit: cleanString(row?.habit),
@@ -362,7 +372,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
     }
     detail.family = profile.family || (detail.family && detail.family !== '不明' ? detail.family : '');
     detail.familyName = profile.family || detail.familyName || detail.family;
-    detail.familyLatin = profile.familyLatin || detail.familyLatin || '';
+    detail.familyLatin = normalizeLatinTaxonName(profile.familyLatin || detail.familyLatin || '');
     detail.scientificName = detail.scientificName || profile.scientificName;
     const profileLatinGenus = profile.scientificName
       ? profile.scientificName.split(/\s+/)[0] || ''
@@ -398,9 +408,9 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
     if (yDetail) {
       detail.family = yDetail.familyJp || detail.family || '';
       detail.familyName = yDetail.familyJp || detail.familyName || detail.family;
-      detail.familyLatin = yDetail.familyEn || detail.familyLatin || '';
+      detail.familyLatin = normalizeLatinTaxonName(yDetail.familyEn || detail.familyLatin || '');
       detail.order = yDetail.orderJp || detail.order || '';
-      detail.orderLatin = yDetail.orderEn || detail.orderLatin || '';
+      detail.orderLatin = normalizeLatinTaxonName(yDetail.orderEn || detail.orderLatin || '');
       const scientificName = yDetail.scientificName || detail.scientificName || '';
       detail.scientificName = scientificName || detail.scientificName || '';
       if (scientificName) {

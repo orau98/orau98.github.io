@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef, useId } from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigationType, useSearchParams } from "react-router-dom";
 import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
 import { absUrl } from "../utils/origin";
@@ -698,7 +698,8 @@ const HostPlantList = ({
       if (PER_PAGE_OPTIONS.includes(n)) p.set('pper', String(n));
       else p.delete('pper');
       p.delete('ppage');
-    });
+      // ppageを消す＝表示内容が変わる明示的操作なのでpush（戻るで復帰可能に）
+    }, { push: true });
   }, [updateSearchParams]);
 
   const clearFilters = useCallback(() => {
@@ -712,11 +713,13 @@ const HostPlantList = ({
     }, { push: true });
   }, [updateSearchParams]);
 
+  // 「検索をクリア」「すべてリセット」はユーザーの明示的操作なので
+  // clearFiltersと同様にpushし、戻るで直前の絞り込み状態へ復帰できるようにする
   const clearSearch = useCallback(() => {
     updateSearchParams((p) => {
       p.delete('q');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   const resetAll = useCallback(() => {
@@ -728,7 +731,7 @@ const HostPlantList = ({
       p.delete('pphoto');
       p.delete('q');
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   // 空状態の例示チップ。q を URL に載せると親（explorer）が activeSearchTerm を
@@ -736,24 +739,58 @@ const HostPlantList = ({
   const applyExampleSearch = useCallback((value) => {
     const nextValue = String(value || '').trim();
     if (!nextValue) return;
+    // 例示チップのクリックも明示的な検索確定なのでpush
     updateSearchParams((p) => {
       p.set('q', nextValue);
       p.delete('ppage');
-    });
+    }, { push: true });
   }, [updateSearchParams]);
 
   // 実際の絞り込みに使う値（debouncedPlantSearch）から表示用の検索状態を導出し、
   // フィルタと検索チップ/空状態表示が常に一致するようにする（URL q との二系統ずれを解消）
   const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
+  // 戻る/進む(POP)による復元をユーザーの絞り込み操作と区別するために参照する
+  const navigationType = useNavigationType();
   const searchQuery = useMemo(() => (debouncedPlantSearch || '').trim(), [debouncedPlantSearch]);
   const hasSearchQuery = searchQuery.length > 0;
   const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all' || hostOnlyFilter || photoFilter === 'has';
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
+  // URLパラメータの科/目は選択時のロケール表記のまま残るため、表示前に
+  // 現在ロケールの表記へ解決する（照合は元々ゆれ耐性がある。表示だけの問題）
+  const resolveTaxonDisplay = useCallback((rawValue, pickValues, getDisplay) => {
+    const value = String(rawValue || '').trim();
+    if (!value) return '';
+    const target = value.toLowerCase();
+    for (const detail of Object.values(safePlantDetails)) {
+      const values = pickValues(detail)
+        .map((v) => String(v || '').trim().toLowerCase())
+        .filter(Boolean);
+      if (values.includes(target)) return getDisplay(detail) || value;
+    }
+    return value;
+  }, [safePlantDetails]);
+  const familyFilterDisplay = useMemo(
+    () => resolveTaxonDisplay(
+      familyFilter,
+      (d) => [d.family, d.familyName, d.familyLatin],
+      getFamilyDisplayValue,
+    ),
+    [familyFilter, resolveTaxonDisplay, getFamilyDisplayValue],
+  );
+  const orderFilterDisplay = useMemo(
+    () => resolveTaxonDisplay(
+      orderFilter,
+      (d) => [d.order, d.orderLatin],
+      getOrderDisplayValue,
+    ),
+    [orderFilter, resolveTaxonDisplay, getOrderDisplayValue],
+  );
+
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
-    if (familyFilter) filters.push({ type: ui.family, value: familyFilter, clear: () => setPFamilyFilter('') });
-    if (orderFilter) filters.push({ type: ui.order, value: orderFilter, clear: () => setPOrderFilter('') });
+    if (familyFilter) filters.push({ type: ui.family, value: familyFilterDisplay, clear: () => setPFamilyFilter('') });
+    if (orderFilter) filters.push({ type: ui.order, value: orderFilterDisplay, clear: () => setPOrderFilter('') });
     if (visitFilter !== 'all') filters.push({ type: ui.flowerVisit, value: isEnglish ? 'Only' : 'のみ', clear: () => setPVisitFilter('all') });
     if (hostOnlyFilter) filters.push({ type: isEnglish ? 'Host plant' : '食草', value: isEnglish ? 'Yes' : 'あり', clear: () => setPHostOnlyFilter('all') });
     if (photoFilter === 'has') filters.push({ type: ui.photo, value: ui.withPhoto, clear: () => setPPhotoFilter('all') });
@@ -762,7 +799,9 @@ const HostPlantList = ({
     hasSearchQuery,
     searchQuery,
     familyFilter,
+    familyFilterDisplay,
     orderFilter,
+    orderFilterDisplay,
     visitFilter,
     hostOnlyFilter,
     photoFilter,
@@ -957,22 +996,33 @@ const HostPlantList = ({
   }, [plantImageFilenames, mergedHostPlants, safePlantDetails, aliasToCanonical, normalizedToCanonical]);
 
   // Generate filter options
+  // ラテン名は出典により大文字小文字がゆれる（Rosaceae/ROSACEAE）ため、
+  // 大小無視で重複排除して1項目に束ねる（ビルド側でも正規化しているが防御的に）
+  const dedupeCaseInsensitive = (values) => {
+    const byKey = new Map();
+    values.forEach((value) => {
+      const key = value.toLowerCase();
+      if (!byKey.has(key)) byKey.set(key, value);
+    });
+    return Array.from(byKey.values());
+  };
+
   const familyOptions = useMemo(() => {
-    const set = new Set();
+    const list = [];
     Object.values(safePlantDetails).forEach((d) => {
       const fam = getFamilyDisplayValue(d);
-      if (fam && fam !== '不明') set.add(fam);
+      if (fam && fam !== '不明') list.push(fam);
     });
-    return Array.from(set).sort(compareLocalizedValues);
+    return dedupeCaseInsensitive(list).sort(compareLocalizedValues);
   }, [safePlantDetails, getFamilyDisplayValue, compareLocalizedValues]);
 
   const orderOptions = useMemo(() => {
-    const set = new Set();
+    const list = [];
     Object.values(safePlantDetails).forEach((d) => {
       const ord = getOrderDisplayValue(d);
-      if (ord && ord !== '不明') set.add(ord);
+      if (ord && ord !== '不明') list.push(ord);
     });
-    return Array.from(set).sort(compareLocalizedValues);
+    return dedupeCaseInsensitive(list).sort(compareLocalizedValues);
   }, [safePlantDetails, getOrderDisplayValue, compareLocalizedValues]);
 
   // 出現頻度の高い科をワンタップチップにする（ドロップダウンを開かず主要な科を絞れるように）
@@ -1021,15 +1071,16 @@ const HostPlantList = ({
       
       // Apply Family Filter
       if (familyFilter) {
+        // ラテン名の大小文字ゆれで同一科が分裂しないよう大小無視で照合する
         const familyValues = [
           getFamilyDisplayValue(detail),
           detail.family,
           detail.familyName,
           detail.familyLatin,
         ]
-          .map((value) => String(value || "").trim())
+          .map((value) => String(value || "").trim().toLowerCase())
           .filter(Boolean);
-        if (!familyValues.includes(familyFilter)) return false;
+        if (!familyValues.includes(familyFilter.trim().toLowerCase())) return false;
       }
 
       // Apply Order Filter
@@ -1039,9 +1090,9 @@ const HostPlantList = ({
           detail.order,
           detail.orderLatin,
         ]
-          .map((value) => String(value || "").trim())
+          .map((value) => String(value || "").trim().toLowerCase())
           .filter(Boolean);
-        if (!orderValues.includes(orderFilter)) return false;
+        if (!orderValues.includes(orderFilter.trim().toLowerCase())) return false;
       }
 
       // Apply Flower Visit Filter
@@ -1263,6 +1314,12 @@ const HostPlantList = ({
       sortMode,
     };
 
+    // 戻る/進む(POP)・初期ロードによる変化は「復元」であって新しい絞り込みでは
+    // ない。ここでリセットすると、履歴から復元されたページ番号(ppage)を即座に
+    // 1へ書き戻し(しかもreplaceで元エントリを恒久破壊)、復元済みのスクロール
+    // 位置も先頭へ引き戻してしまう。基準値の同期だけ行い早期リターンする
+    if (navigationType === 'POP') return;
+
     // 条件・並び順が変わったら結果の先頭を見せる
     // （下までスクロールした状態で「新しい並びの中盤」が表示される混乱を防ぐ）
     if (typeof window !== "undefined") {
@@ -1277,7 +1334,7 @@ const HostPlantList = ({
 
     if (currentPage === 1) return;
     setPPage(1);
-  }, [debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, sortMode, currentPage, setPPage]);
+  }, [navigationType, debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, sortMode, currentPage, setPPage]);
 
   const renderFilters = () => {
     const presetChips = [
@@ -1329,7 +1386,7 @@ const HostPlantList = ({
           <SearchableSelect
             id={orderId}
             label={ui.order}
-            value={orderFilter}
+            value={orderFilterDisplay}
             options={orderOptions}
             onChange={setPOrderFilter}
             placeholder={ui.any}
@@ -1339,7 +1396,7 @@ const HostPlantList = ({
           <SearchableSelect
             id={familyId}
             label={ui.family}
-            value={familyFilter}
+            value={familyFilterDisplay}
             options={familyOptions}
             onChange={setPFamilyFilter}
             placeholder={ui.any}

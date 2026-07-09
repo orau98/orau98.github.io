@@ -8,6 +8,7 @@ import {
 import {
   collectAvailableSectionItems,
   scrollToSection as scrollToSectionHelper,
+  clearSectionHash,
 } from '../utils/sectionNavigation';
 
 const FloatingActionButton = () => {
@@ -101,6 +102,9 @@ const FloatingActionButton = () => {
       top: 0,
       behavior: 'smooth',
     });
+    // 目次ジャンプで付いたセクションハッシュを掃除する（残っているとリロードや
+    // URL共有時に先頭ではなくセクション位置を指す）
+    clearSectionHash();
     setIsOpen(false);
   };
 
