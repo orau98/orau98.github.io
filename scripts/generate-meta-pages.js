@@ -3182,6 +3182,10 @@ function generateMetaIndexes(indexData) {
     .hub-nav a { text-decoration: none; color: var(--color-link, #1976d2); }
     .hub-nav a:hover { text-decoration: underline; }
     .hub-nav span[aria-current="page"] { font-weight: 700; color: var(--color-text, #333); }
+    .pager { margin: 1.5rem 0; }
+    .pager-inner { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+    .pager a, .pager span { min-width: 2rem; text-align: center; padding: 0.3rem 0.55rem; border: 1px solid var(--color-border, #ddd); border-radius: 6px; text-decoration: none; font-size: 0.9rem; color: var(--color-link, #1976d2); }
+    .pager span[aria-current="page"] { font-weight: 700; background: var(--color-accent, #4caf50); color: #fff; border-color: var(--color-accent, #4caf50); }
   </style>`;
 
   // 全カテゴリハブへの相互リンク（ハブ同士が孤立する「リンクの島」を解消し、
@@ -3215,10 +3219,182 @@ function generateMetaIndexes(indexData) {
       ],
     });
 
+  // 1ハブページあたりの掲載種数。これを超えるカテゴリは複数ページに分割し、
+  // 1ページから数千リンクを出してリンクエクイティを希釈するのを防ぐ。
+  const HUB_PAGE_SIZE = 600;
+
+  const hubPageFileName = (pageNo) => (pageNo === 1 ? 'index.html' : `page-${pageNo}.html`);
+  const hubPageUrl = (dir, pageNo) =>
+    pageNo === 1
+      ? `${BASE_ORIGIN}/meta/${dir}/index.html`
+      : `${BASE_ORIGIN}/meta/${dir}/page-${pageNo}.html`;
+
+  // ページ送りナビ（1..M）。rel=prev/next も付与する。
+  const buildPagerHtml = (dir, pageCount, current) => {
+    if (pageCount <= 1) return '';
+    const links = [];
+    for (let n = 1; n <= pageCount; n++) {
+      if (n === current) {
+        links.push(`<span aria-current="page">${n}</span>`);
+      } else {
+        const rel = n === current - 1 ? ' rel="prev"' : n === current + 1 ? ' rel="next"' : '';
+        links.push(`<a href="${hubPageUrl(dir, n).replace(BASE_ORIGIN, '')}"${rel}>${n}</a>`);
+      }
+    }
+    return `    <nav class="pager" aria-label="ページ送り">
+      <div class="pager-inner">
+        ${links.join('\n        ')}
+      </div>
+    </nav>`;
+  };
+
+  // カテゴリのハブを（必要ならページ分割して）書き出す共通処理。
+  // familyBlocks: [{ family, items: [{ href, label }] }]（科ごと・50音順）。
+  // twitterCard は植物=summary / 昆虫=summary で共通。
+  const emitHubPages = ({ sec, dirPath, familyBlocks, totalCount, describeBase }) => {
+    const familyTotals = new Map(familyBlocks.map((b) => [b.family, b.items.length]));
+    const flat = [];
+    for (const b of familyBlocks) {
+      for (const it of b.items) flat.push({ family: b.family, ...it });
+    }
+    const pageCount = Math.max(1, Math.ceil(flat.length / HUB_PAGE_SIZE));
+
+    for (let pageNo = 1; pageNo <= pageCount; pageNo++) {
+      const slice = flat.slice((pageNo - 1) * HUB_PAGE_SIZE, pageNo * HUB_PAGE_SIZE);
+      const pageUrl = hubPageUrl(sec.dir, pageNo);
+
+      // 同一科の連続要素を family-group にまとめる（科が複数ページにまたがる場合も
+      // 見出しは科の総数を表示して一貫させる）。
+      let mainContent = '';
+      let curFam = null;
+      let buf = [];
+      const flush = () => {
+        if (curFam !== null && buf.length) {
+          const showFam = curFam
+            ? `${curFam}（${familyTotals.get(curFam)}種）`
+            : `全${familyTotals.get(curFam)}種`;
+          mainContent += `<section class="family-group">
+        <h2>${showFam}</h2>
+        <ul class="species-list">
+          ${buf.join('\n          ')}
+        </ul>
+      </section>
+      `;
+        }
+        buf = [];
+      };
+      for (const e of slice) {
+        if (e.family !== curFam) {
+          flush();
+          curFam = e.family;
+        }
+        buf.push(`<li><a href="${e.href}">${e.label}</a></li>`);
+      }
+      flush();
+
+      const listStructuredData = JSON.stringify(
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: sec.title,
+          description: describeBase,
+          url: pageUrl,
+          inLanguage: 'ja',
+          isPartOf: pageCount > 1 ? { '@type': 'WebSite', '@id': `${BASE_ORIGIN}/#website` } : undefined,
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: totalCount,
+            itemListElement: slice.slice(0, 100).map((e, idx) => ({
+              '@type': 'ListItem',
+              position: (pageNo - 1) * HUB_PAGE_SIZE + idx + 1,
+              item: {
+                '@type': 'WebPage',
+                name: e.label,
+                url: `${BASE_ORIGIN}${e.href}`,
+              },
+            })),
+          },
+        },
+        null,
+        2,
+      );
+
+      const pageSuffix = pageCount > 1 ? `（${pageNo}/${pageCount}）` : '';
+      const title = `${sec.title}${pageSuffix} | 昆虫植物図鑑`;
+      const description = pageCount > 1 ? `${describeBase}（${pageNo}/${pageCount}ページ）` : describeBase;
+      const summaryLabel =
+        `全${totalCount}種を${familyBlocks.length}科に分けて掲載しています。` +
+        (pageCount > 1 ? `（${pageNo}/${pageCount}ページ）` : '');
+      const prevLink = pageNo > 1 ? `\n  <link rel="prev" href="${hubPageUrl(sec.dir, pageNo - 1)}">` : '';
+      const nextLink = pageNo < pageCount ? `\n  <link rel="next" href="${hubPageUrl(sec.dir, pageNo + 1)}">` : '';
+      const pagerHtml = buildPagerHtml(sec.dir, pageCount, pageNo);
+
+      const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  ${ADSENSE_HEAD_TAGS}
+  <title>${title}</title>
+  <meta name="description" content="${description}">
+  <link rel="canonical" href="${pageUrl}">${prevLink}${nextLink}
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${description}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="${pageUrl}">
+  <meta property="og:site_name" content="昆虫植物図鑑">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${description}">
+  <script type="application/ld+json">${listStructuredData}</script>
+  <script type="application/ld+json">${buildHubBreadcrumb(sec.title, pageUrl)}</script>
+  <link rel="stylesheet" href="${META_STYLE_PATH}">
+${indexStyles}
+</head>
+<body>
+${headerHtml}
+  <div class="meta-page">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <ol>
+        <li><a href="/">昆虫植物図鑑</a></li>
+        <li aria-current="page">${sec.title}${pageSuffix}</li>
+      </ol>
+    </nav>
+    <header class="meta-header">
+      <h1>${sec.title}</h1>
+    </header>
+${buildHubNavHtml(sec.key)}
+    <main>
+      <p class="index-summary">${summaryLabel}</p>
+${pagerHtml}
+      ${mainContent}
+${pagerHtml}
+    </main>
+    <section class="navigation">
+      <a href="/" class="back-link">図鑑トップへ</a>
+    </section>
+  </div>
+</body>
+</html>`;
+      fs.writeFileSync(path.join(dirPath, hubPageFileName(pageNo)), html);
+    }
+
+    // 前回ビルドで種数が多くページ数が増えていた場合の残骸を削除する
+    // （ローカル再生成時にサイトマップが古い page-N を拾わないように）。
+    for (const f of fs.readdirSync(dirPath)) {
+      const m = /^page-(\d+)\.html$/.exec(f);
+      if (m && Number(m[1]) > pageCount) {
+        try { fs.unlinkSync(path.join(dirPath, f)); } catch { /* ignore */ }
+      }
+    }
+    console.log(`[index] ${sec.dir}: ${totalCount}種 / ${familyBlocks.length}科 / ${pageCount}ページ`);
+  };
+
   for (const sec of sections) {
     const dirPath = path.join(base, sec.dir);
     if (!fs.existsSync(dirPath)) continue;
-    const listUrl = `${BASE_ORIGIN}/meta/${sec.dir}/index.html`;
 
     // ---- 植物インデックス ----
     if (sec.dir === 'plant') {
@@ -3234,96 +3410,23 @@ function generateMetaIndexes(indexData) {
       );
       const sortedFamilies = Object.keys(familyData).sort(jaSort);
       const totalPlants = sortedFamilies.reduce((s, f) => s + familyData[f].length, 0);
-      const flatPlants = sortedFamilies.flatMap(f => familyData[f]).slice(0, 100);
-      const pageDescription = `昆虫植物図鑑の食草植物一覧。${totalPlants}種の植物を科別に掲載。`;
-
-      const listStructuredData = JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'CollectionPage',
-        name: sec.title,
-        description: pageDescription,
-        url: listUrl,
-        inLanguage: 'ja',
-        mainEntity: {
-          '@type': 'ItemList',
-          numberOfItems: totalPlants,
-          itemListElement: flatPlants.map((p, idx) => ({
-            '@type': 'ListItem',
-            position: idx + 1,
-            item: {
-              '@type': 'WebPage',
-              name: p.name,
-              url: `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(p.file)}.html`,
-            },
+      const familyBlocks = sortedFamilies.map((family) => ({
+        family,
+        items: familyData[family]
+          .slice()
+          .sort((a, b) => jaSort(a.name, b.name))
+          .map((p) => ({
+            href: `/meta/plant/${encodeURIComponent(p.file)}.html`,
+            label: p.name.replace(/\([^)]+科\)$/, '').trim() || p.name,
           })),
-        },
-      }, null, 2);
-
-      const sectionBlocks = sortedFamilies.map(family => {
-        const plants = familyData[family].slice().sort((a, b) => jaSort(a.name, b.name));
-        const items = plants
-          .map(p => {
-            const displayName = p.name.replace(/\([^)]+科\)$/, '').trim() || p.name;
-            return `<li><a href="/meta/plant/${encodeURIComponent(p.file)}.html">${displayName}</a></li>`;
-          })
-          .join('\n          ');
-        return `<section class="family-group">
-        <h2>${family}（${plants.length}種）</h2>
-        <ul class="species-list">
-          ${items}
-        </ul>
-      </section>`;
-      }).join('\n      ');
-
-      const html = `<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="index, follow">
-  ${ADSENSE_HEAD_TAGS}
-  <title>${sec.title} | 昆虫植物図鑑</title>
-  <meta name="description" content="${pageDescription}">
-  <link rel="canonical" href="${listUrl}">
-  <meta property="og:title" content="${sec.title} | 昆虫植物図鑑">
-  <meta property="og:description" content="${pageDescription}">
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="${listUrl}">
-  <meta property="og:site_name" content="昆虫植物図鑑">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
-  <meta name="twitter:description" content="${pageDescription}">
-  <script type="application/ld+json">${listStructuredData}</script>
-  <script type="application/ld+json">${buildHubBreadcrumb(sec.title, listUrl)}</script>
-  <link rel="stylesheet" href="${META_STYLE_PATH}">
-${indexStyles}
-</head>
-<body>
-${headerHtml}
-  <div class="meta-page">
-    <nav class="breadcrumb" aria-label="breadcrumb">
-      <ol>
-        <li><a href="/">昆虫植物図鑑</a></li>
-        <li aria-current="page">${sec.title}</li>
-      </ol>
-    </nav>
-    <header class="meta-header">
-      <h1>${sec.title}</h1>
-    </header>
-${buildHubNavHtml(sec.key)}
-    <main>
-      <p class="index-summary">全${totalPlants}種の食草植物を${sortedFamilies.length}科に分けて掲載しています。</p>
-      ${sectionBlocks}
-    </main>
-    <section class="navigation">
-      <a href="/" class="back-link">図鑑トップへ</a>
-    </section>
-  </div>
-</body>
-</html>`;
-      fs.writeFileSync(path.join(dirPath, 'index.html'), html);
-      console.log(`[index] plant: ${totalPlants}種 / ${sortedFamilies.length}科`);
+      }));
+      emitHubPages({
+        sec,
+        dirPath,
+        familyBlocks,
+        totalCount: totalPlants,
+        describeBase: `昆虫植物図鑑の食草植物一覧。${totalPlants}種の植物を科別に掲載。`,
+      });
       continue;
     }
 
@@ -3341,128 +3444,48 @@ ${buildHubNavHtml(sec.key)}
     const sortedFamilies = Object.keys(typeData).sort(jaSort);
     const totalSpecies = sortedFamilies.reduce((s, f) => s + typeData[f].length, 0);
 
-    // フォールバック: データなしの場合はファイルスキャン
-    let flatItems;
-    if (totalSpecies === 0) {
-      flatItems = fs.readdirSync(dirPath)
-        .filter(f => f.endsWith('.html') && f !== 'index.html')
-        .filter(f => isGeneratedMetaPageIndexable(path.join(dirPath, f)))
-        .sort(jaSort)
-        .map(f => ({ id: f.replace(/\.html$/i, ''), name: f.replace(/\.html$/i, '') }));
-    } else {
-      flatItems = sortedFamilies.flatMap(f => typeData[f]);
-    }
-
-    // JSON-LD: 先頭100件
-    const pageDescription = `昆虫植物図鑑の${sec.title}。${flatItems.length}種を科別に掲載し、各種の食草・寄主植物ページへ案内します。`;
-    const listStructuredData = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: sec.title,
-      description: pageDescription,
-      url: listUrl,
-      inLanguage: 'ja',
-      mainEntity: {
-        '@type': 'ItemList',
-        numberOfItems: flatItems.length,
-        itemListElement: flatItems.slice(0, 100).map((item, idx) => ({
-          '@type': 'ListItem',
-          position: idx + 1,
-          item: {
-            '@type': 'WebPage',
-            name: item.name,
-            url: `${BASE_ORIGIN}/meta/${sec.dir}/${encodeURIComponent(item.id)}.html`,
-          },
-        })),
-      },
-    }, null, 2);
-
-    // 科別セクション（データあり）またはフラットリスト（フォールバック）
-    let mainContent;
+    let familyBlocks;
+    let totalCount;
     if (totalSpecies > 0) {
-      mainContent = sortedFamilies
-        .map(family => {
-          const speciesList = typeData[family].slice().sort((a, b) => jaSort(a.name, b.name));
-          const items = speciesList
-            .map(
-              s =>
-                `<li><a href="/meta/${sec.dir}/${encodeURIComponent(s.id)}.html">${s.name}</a></li>`,
-            )
-            .join('\n          ');
-          return `<section class="family-group">
-        <h2>${family}（${speciesList.length}種）</h2>
-        <ul class="species-list">
-          ${items}
-        </ul>
-      </section>`;
-        })
-        .join('\n      ');
+      familyBlocks = sortedFamilies.map((family) => ({
+        family,
+        items: typeData[family]
+          .slice()
+          .sort((a, b) => jaSort(a.name, b.name))
+          .map((s) => ({
+            href: `/meta/${sec.dir}/${encodeURIComponent(s.id)}.html`,
+            label: s.name,
+          })),
+      }));
+      totalCount = totalSpecies;
     } else {
-      const items = flatItems
-        .map(
-          s =>
-            `<li><a href="/meta/${sec.dir}/${encodeURIComponent(s.id)}.html">${s.name}</a></li>`,
-        )
-        .join('\n          ');
-      mainContent = `<ul class="species-list" style="columns:3;gap:1rem;list-style:none;padding:0;">
-          ${items}
-        </ul>`;
+      // フォールバック: インデックスデータが無い場合はファイルスキャン
+      // （index.html と page-N.html は除外して再帰的な取り込みを防ぐ）。
+      const scanned = fs
+        .readdirSync(dirPath)
+        .filter((f) => f.endsWith('.html') && f !== 'index.html' && !/^page-\d+\.html$/.test(f))
+        .filter((f) => isGeneratedMetaPageIndexable(path.join(dirPath, f)))
+        .sort(jaSort)
+        .map((f) => ({
+          href: `/meta/${sec.dir}/${encodeURIComponent(f.replace(/\.html$/i, ''))}.html`,
+          label: f.replace(/\.html$/i, ''),
+        }));
+      familyBlocks = scanned.length ? [{ family: '', items: scanned }] : [];
+      totalCount = scanned.length;
     }
 
-    const summaryLabel =
-      totalSpecies > 0
-        ? `全${flatItems.length}種を${sortedFamilies.length}科に分けて掲載しています。`
-        : `全${flatItems.length}種を掲載しています。`;
+    if (!familyBlocks.length) {
+      console.log(`[index] ${sec.dir}: 0種（インデックス生成をスキップ）`);
+      continue;
+    }
 
-    const html = `<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="index, follow">
-  ${ADSENSE_HEAD_TAGS}
-  <title>${sec.title} | 昆虫植物図鑑</title>
-  <meta name="description" content="${pageDescription}">
-  <link rel="canonical" href="${listUrl}">
-  <meta property="og:title" content="${sec.title} | 昆虫植物図鑑">
-  <meta property="og:description" content="${pageDescription}">
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="${listUrl}">
-  <meta property="og:site_name" content="昆虫植物図鑑">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
-  <meta name="twitter:description" content="${pageDescription}">
-  <script type="application/ld+json">${listStructuredData}</script>
-  <script type="application/ld+json">${buildHubBreadcrumb(sec.title, listUrl)}</script>
-  <link rel="stylesheet" href="${META_STYLE_PATH}">
-${indexStyles}
-</head>
-<body>
-${headerHtml}
-  <div class="meta-page">
-    <nav class="breadcrumb" aria-label="breadcrumb">
-      <ol>
-        <li><a href="/">昆虫植物図鑑</a></li>
-        <li aria-current="page">${sec.title}</li>
-      </ol>
-    </nav>
-    <header class="meta-header">
-      <h1>${sec.title}</h1>
-    </header>
-${buildHubNavHtml(sec.key)}
-    <main>
-      <p class="index-summary">${summaryLabel}</p>
-      ${mainContent}
-    </main>
-    <section class="navigation">
-      <a href="/" class="back-link">図鑑トップへ</a>
-    </section>
-  </div>
-</body>
-</html>`;
-    fs.writeFileSync(path.join(dirPath, 'index.html'), html);
-    console.log(`[index] ${sec.dir}: ${flatItems.length}種 / ${sortedFamilies.length}科`);
+    emitHubPages({
+      sec,
+      dirPath,
+      familyBlocks,
+      totalCount,
+      describeBase: `昆虫植物図鑑の${sec.title}。${totalCount}種を科別に掲載し、各種の食草・寄主植物ページへ案内します。`,
+    });
   }
 }
 
