@@ -454,17 +454,102 @@ function buildPlantResizedImageUrl(fileName, width = 1024, format = 'jpg') {
   return `/images/resized/plants/${encodeURIComponent(baseName)}.${width}.${format}`;
 }
 
-function buildPlantPictureHtml(img, altText) {
-  const fileUrl = buildPlantResizedImageUrl(img);
-  const escapedAlt = escapeRedirectHtml(altText);
-  const escapedFallback = escapeRedirectHtml(fileUrl);
+// resized 画像の生成幅（build-responsive-images と対応）。
+const RESIZED_HERO_WIDTHS = [320, 640, 1024];
+const PUBLIC_DIR_ABS = path.join(__dirname, '../public');
+const _imgSizeCache = new Map();
 
-  return `<img
-                    src="${escapedFallback}"
-                    alt="${escapedAlt}"
-                    loading="lazy"
-                    decoding="async"
-                  >`;
+// 依存を増やさず JPEG の SOF マーカーから実寸を取得する（CLS 対策の width/height 用）。
+// resized 画像は sharp 生成の正常な JPEG のため、最初の SOFn を読めば十分。
+function readJpegSize(absPath) {
+  if (_imgSizeCache.has(absPath)) return _imgSizeCache.get(absPath);
+  let size = null;
+  try {
+    const buf = fs.readFileSync(absPath);
+    if (buf.length > 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+      let off = 2;
+      while (off + 9 < buf.length) {
+        if (buf[off] !== 0xff) { off++; continue; }
+        const marker = buf[off + 1];
+        if (marker === 0xff) { off++; continue; }
+        // SOF0..SOF15（DHT=0xc4, JPG=0xc8, DAC=0xcc を除く）で幅・高さが読める
+        if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+          size = { height: buf.readUInt16BE(off + 5), width: buf.readUInt16BE(off + 7) };
+          break;
+        }
+        // 長さを持たないスタンドアロンマーカー（SOI/EOI/RSTn/TEM）
+        if (marker === 0xd8 || marker === 0xd9 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
+          off += 2;
+          continue;
+        }
+        off += 2 + buf.readUInt16BE(off + 2);
+      }
+    }
+  } catch { /* 読めなければ寸法なしで続行 */ }
+  _imgSizeCache.set(absPath, size);
+  return size;
+}
+
+// resized 画像からレスポンシブ <picture> を生成する。
+// Pages では容量節約のため昆虫 AVIF を配信しないため、昆虫は WebP/JPG、
+// 植物は AVIF/WebP/JPG を使う（src/utils/imageSrcset.js と同じ方針）。
+// dir: 'insects' | 'plants'、base: 拡張子・幅を除いたファイル名（未エンコードでも可）。
+// aboveFold=true で fetchpriority=high（lazy 無し）、false で loading=lazy。
+function buildResponsivePicture({ dir, base, alt, aboveFold = false }) {
+  const decodedBase = decodeURIComponent(String(base || ''));
+  if (!decodedBase) return '';
+  const dirAbs = path.join(PUBLIC_DIR_ABS, 'images/resized', dir);
+  const widths = RESIZED_HERO_WIDTHS.filter((w) =>
+    fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.jpg`)),
+  );
+  if (!widths.length) return '';
+  const enc = encodeURIComponent(decodedBase);
+  const maxW = Math.max(...widths);
+  const srcset = (fmt, formatWidths = widths) =>
+    formatWidths.map((w) => `/images/resized/${dir}/${enc}.${w}.${fmt} ${w}w`).join(', ');
+  const sizesAttr = '(max-width: 640px) 100vw, 640px';
+  const fallback = `/images/resized/${dir}/${enc}.${maxW}.jpg`;
+  const dims = readJpegSize(path.join(dirAbs, `${decodedBase}.${maxW}.jpg`));
+  const dimAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : '';
+  const loadAttrs = aboveFold ? 'decoding="async" fetchpriority="high"' : 'loading="lazy" decoding="async"';
+  const safeAlt = escapeRedirectHtml(alt);
+  const sourceFormats = dir === 'insects' ? ['webp'] : ['avif', 'webp'];
+  const sources = sourceFormats.flatMap((fmt) => {
+    const formatWidths = widths.filter((w) =>
+      fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.${fmt}`)),
+    );
+    if (!formatWidths.length) return [];
+    return [`                    <source type="image/${fmt}" srcset="${srcset(fmt, formatWidths)}" sizes="${sizesAttr}">`];
+  });
+  return `<picture>
+${sources.join('\n')}
+                    <img src="${fallback}"${dimAttrs} alt="${safeAlt}" ${loadAttrs} style="max-width:100%;height:auto;">
+                  </picture>`;
+}
+
+// above-the-fold ヒーロー画像の preload リンク（LCP の早期発見用）。
+function buildHeroPreloadLink({ dir, base }) {
+  const decodedBase = decodeURIComponent(String(base || ''));
+  if (!decodedBase) return '';
+  const dirAbs = path.join(PUBLIC_DIR_ABS, 'images/resized', dir);
+  const format = dir === 'insects' ? 'webp' : 'avif';
+  const widths = RESIZED_HERO_WIDTHS.filter((w) =>
+    fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.${format}`)),
+  );
+  if (!widths.length) return '';
+  const enc = encodeURIComponent(decodedBase);
+  const maxW = Math.max(...widths);
+  const imagesrcset = widths.map((w) => `/images/resized/${dir}/${enc}.${w}.${format} ${w}w`).join(', ');
+  return `<link rel="preload" as="image" type="image/${format}" fetchpriority="high" href="/images/resized/${dir}/${enc}.${maxW}.${format}" imagesrcset="${imagesrcset}" imagesizes="(max-width: 640px) 100vw, 640px">`;
+}
+
+function buildPlantPictureHtml(img, altText) {
+  const base = stripImageExtension(img);
+  const picture = buildResponsivePicture({ dir: 'plants', base, alt: altText, aboveFold: false });
+  if (picture) return picture;
+  // resized が見つからない場合のフォールバック
+  const fileUrl = buildPlantResizedImageUrl(img);
+  return `<img src="${escapeRedirectHtml(fileUrl)}" alt="${escapeRedirectHtml(altText)}" loading="lazy" decoding="async">`;
 }
 
 function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '', noindex = true }) {
@@ -1218,6 +1303,15 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   const citationSummaryHtml = renderCitationSummaryHtml(citationEntries);
   const citationListHtml = renderCitationListHtml(citationEntries);
   const imageUrl = resolveInsectImageUrl(insect);
+  // ヒーロー画像のベース名（/images/resized/insects/<enc>.<w>.jpg → <enc>）。
+  // レスポンシブ <picture> と preload の生成に使う。
+  const insectImageBase = (() => {
+    const m = /\/images\/resized\/insects\/(.+)\.(?:320|640|1024)\.jpg$/.exec(imageUrl || '');
+    return m ? m[1] : '';
+  })();
+  const heroPreloadHtml = insectImageBase
+    ? buildHeroPreloadLink({ dir: 'insects', base: insectImageBase })
+    : '';
   const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = imageUrl
     ? `${insect.japaneseName}（${scientificName}）の写真`
@@ -1513,6 +1607,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   ${enAlternatePath ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
   ` : ''}<link rel="alternate" hreflang="x-default" href="${insectPageUrl}">
   <link rel="stylesheet" href="${META_STYLE_PATH}">
+  ${heroPreloadHtml}
 
   <!-- Open Graph -->
   <meta property="og:title" content="${safeInsectTitle}">
@@ -1593,12 +1688,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
       
       ${imageUrl ? `
       <section class="image-section">
-        <img src="${imageUrl}" 
-             alt="${insect.japaneseName}（${scientificName}）の写真" 
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div style="display:none; padding: 40px; text-align: center; background-color: #f0f0f0; border-radius: 8px; color: #666;">
-          画像を読み込み中...
-        </div>
+        ${buildResponsivePicture({ dir: 'insects', base: insectImageBase, alt: `${insect.japaneseName}（${scientificName}）の写真`, aboveFold: true })}
         <div class="image-caption">${insect.japaneseName}の生態写真</div>
       </section>` : ''}
       
