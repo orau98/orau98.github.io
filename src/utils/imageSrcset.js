@@ -18,6 +18,7 @@ const JPG_ONLY_INSECT_IMAGE_NAMES = new Set([
   'Bhadorcosma_lonicerae',
   'Botyodes_principalis',
   'Cnephasia_stephensiana',
+  'Cyrtoclytus_caproides',
   'Enarmonia_flammeata',
   'Epiblema_strenuana',
   'Epodonta_lineata',
@@ -42,6 +43,7 @@ const JPG_ONLY_INSECT_IMAGE_NAMES = new Set([
   'Xerodes_rufescentarius',
   'Xestia_fuscostigma',
   'Xestia_semiherbida',
+  'Zizeeria_maha',
 ]);
 
 const shouldUseJpgFallbackOnly = (folder, filename) =>
