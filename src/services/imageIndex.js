@@ -75,6 +75,50 @@ let _insectImageNames = null; // set of bases for insects
 let _insectExtMap = null; // map base -> extension (e.g., .jpg)
 let _insectLoading = null;
 
+const SUPPLEMENTAL_INSECT_IMAGE_EXTS = {
+  Acronicta_alni: '.jpg',
+  Acropteris_iphiata: '.jpg',
+  Actebia_praecurrens: '.jpg',
+  Actias_aliena: '.jpg',
+  Albocosta_triangularis: '.jpg',
+  Ambulyx_ochracea: '.jpg',
+  Aromia_bungii: '.jpg',
+  Bhadorcosma_lonicerae: '.jpg',
+  Botyodes_principalis: '.jpg',
+  Cnephasia_stephensiana: '.jpg',
+  Enarmonia_flammeata: '.jpg',
+  Epiblema_strenuana: '.jpg',
+  Epodonta_lineata: '.jpg',
+  Eugnathia_pulcherrima: '.jpg',
+  Eugoa_grisea: '.jpg',
+  Euplexia_angusta: '.jpg',
+  Gesonia_fallax: '.jpg',
+  Hedya_inouei: '.jpg',
+  Hypostrotia_cinerea: '.jpg',
+  Lamprodila_vivata: '.jpg',
+  Lethe_diana: '.jpg',
+  Lithophane_plumbeolimbata: '.jpg',
+  Lomaspilis_marginata: '.jpg',
+  Menophra_senilis: '.jpg',
+  Mythimna_flavostigma: '.jpg',
+  Neoanathamna_nipponica: '.jpg',
+  Pandemis_monticolana: '.jpg',
+  Polygonia_c: '.jpg',
+  Psacothea_hilaris: '.jpg',
+  Pygopteryx_suava: '.jpg',
+  Rusicada_leucolopha: '.jpg',
+  Xerodes_rufescentarius: '.jpg',
+  Xestia_fuscostigma: '.jpg',
+  Xestia_semiherbida: '.jpg',
+};
+
+const mergeSupplementalInsectImages = (namesSet, extsMap) => {
+  Object.entries(SUPPLEMENTAL_INSECT_IMAGE_EXTS).forEach(([name, ext]) => {
+    namesSet.add(name);
+    extsMap[name] = ext;
+  });
+};
+
 // ロード済みならインデックスを同期的に返す（未ロードはnull）。
 // 詳細ページから一覧へ戻った際、非同期解決を待たずに初回レンダーから
 // 画像ファイル名を確定させるために使う。返り値は読み取り専用として扱うこと。
@@ -102,7 +146,7 @@ export const loadInsectImageIndexes = async () => {
           const json = await res.json();
           const arr = Array.isArray(json.names) ? json.names : Object.keys(json.exts || {});
           namesSet = new Set(arr.map(s => String(s).trim()).filter(Boolean));
-          extsMap = json.exts || {};
+          extsMap = { ...(json.exts || {}) };
         }
       } catch {}
       if (!namesSet || !extsMap) {
@@ -114,6 +158,7 @@ export const loadInsectImageIndexes = async () => {
         namesSet = new Set(namesText.split('\n').map(s => s.trim()).filter(Boolean));
         extsMap = extsRes.ok ? await extsRes.json() : {};
       }
+      mergeSupplementalInsectImages(namesSet, extsMap);
       _insectImageNames = namesSet;
       _insectExtMap = extsMap;
       return { names: _insectImageNames, exts: _insectExtMap };
