@@ -1,10 +1,20 @@
 import logger from './utils/logger';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
+import { recoverFromChunkLoadError } from './utils/chunkRecovery';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import PageViewTracker from './components/PageViewTracker';
 import './index.css';
+
+// A long-lived tab may still reference hashed chunks removed by a newer Pages
+// deployment. Vite emits this event before rethrowing the failed import, so
+// recover immediately instead of showing retries that reuse the stale URL.
+if (typeof window !== 'undefined') {
+  window.addEventListener('vite:preloadError', (event) => {
+    recoverFromChunkLoadError({ event });
+  });
+}
 
 // Enable debug logs via query param (?debug=1) in production
 try {

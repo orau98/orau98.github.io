@@ -116,7 +116,12 @@ const handleImageRequest = async (event) => {
 // それ以外: ネットワーク優先 + オフライン時のみキャッシュ代替
 const handleNetworkFirst = async (request) => {
   try {
-    const response = await fetch(request);
+    // GitHub Pages serves HTML with a shared max-age. Revalidate navigations so
+    // a reload after deployment receives the new entry script/chunk names.
+    const networkRequest = request.mode === 'navigate'
+      ? new Request(request, { cache: 'no-cache' })
+      : request;
+    const response = await fetch(networkRequest);
     if (isCacheableResponse(response)) {
       const cache = await caches.open(OFFLINE_CACHE);
       cache.put(request, response.clone()).catch(() => {});
