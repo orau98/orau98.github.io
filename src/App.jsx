@@ -37,6 +37,7 @@ import {
   isExplorerRoutePath,
 } from './utils/siteTaxonomy';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
+import { hasExplorerResultQuery } from './utils/explorerQueryParams';
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
 
@@ -58,17 +59,6 @@ const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = [
 
 const hasImmediateInsectDataParams = (params) =>
   INSECT_DATA_IMMEDIATE_QUERY_PARAMS.some((name) => params.has(name));
-
-// 検索・絞り込み結果ページを検索エンジンにインデックスさせないための
-// 対象パラメータ一覧。新しいフィルタを追加したらここにも足すこと
-// （表示専用の tab / iview / pview 等は対象外）
-const NOINDEX_SEARCH_PARAMS = [
-  'q', 'search', 'term', 'classification', 'page', 'redirect',
-  // 昆虫一覧の絞り込み
-  'ipage', 'ihost', 'ifamily', 'igenus', 'igroup', 'imonth', 'iseason', 'iphoto',
-  // 植物一覧の絞り込み
-  'ppage', 'pfamily', 'porder', 'pvisit', 'phost', 'pphoto',
-];
 
 // 静的パス強制遷移のループ検知窓。この時間内に同じURLで再びSPAが起動したら
 // 「サーバーが静的ファイルではなくSPAシェルを返している」と判断する
@@ -202,7 +192,7 @@ function App() {
         typeof window !== 'undefined' &&
         (window.__SEO_FORCE_NOINDEX__ === true || location.pathname === '/404.html');
       const params = new URLSearchParams(location.search);
-      const hasSearch = NOINDEX_SEARCH_PARAMS.some((key) => params.has(key));
+      const hasSearch = hasExplorerResultQuery(params);
       setRobotsMetaContent(
         isSpa404Fallback || hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS,
       );
