@@ -15,6 +15,7 @@ import { buildInsectPath } from '../utils/insectSlug';
 import { makeDetailLinkState } from '../utils/navState';
 import { isNonPlantResourceName, isPlantHostRecord } from '../utils/hostResource';
 import { isEnglishLocale } from '../utils/locale';
+import { buildPlantPath } from '../utils/siteTaxonomy';
 import InfoPopover from './InfoPopover';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
@@ -1496,7 +1497,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         const path = node.raw?.path || buildInsectPath(node.raw || { name: node.name });
         navigate(path, { state: makeDetailLinkState(location) });
       } else {
-        navigate(`/plant/${encodeURIComponent(node.name)}`, { state: makeDetailLinkState(location) });
+        navigate(buildPlantPath(node.name), { state: makeDetailLinkState(location) });
       }
       lastClickRef.current = { id: null, ts: 0 };
       return;
@@ -2430,7 +2431,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
                   const path = selectedNode.raw?.path || buildInsectPath(selectedNode.raw || { name: selectedNode.name });
                   navigate(path, { state: makeDetailLinkState(location) });
                 } else {
-                  navigate(`/plant/${encodeURIComponent(selectedNode.name)}`, { state: makeDetailLinkState(location) });
+                  navigate(buildPlantPath(selectedNode.name), { state: makeDetailLinkState(location) });
                 }
               }}
             >

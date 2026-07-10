@@ -225,10 +225,14 @@ export const buildPlantMetaPagePath = (
 
 export const buildPlantPath = (plantName, locale = DEFAULT_LOCALE) => {
   if (!plantName) return localizePath('/plant', locale);
-  return localizePath(
+  const localizedPath = localizePath(
     `/${PLANT_SECTION_CONFIG.routeSegment}/${encodeURIComponent(plantName)}`,
     locale,
   );
+  // Detail pages are real directories on GitHub Pages. Requesting them
+  // without `/` triggers the same mojibake-producing canonical redirect as
+  // insect pages, so restore the slash removed by localizePath.
+  return `${localizedPath.replace(/\/+$/, '')}/`;
 };
 
 export const getSearchTypeLabel = (type, locale = DEFAULT_LOCALE) => {
