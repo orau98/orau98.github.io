@@ -325,6 +325,105 @@ assert(
   `English moth index leaves ${missingEnglishMothHubLinks.length} indexable profile(s) unlinked`,
 );
 
+const butterflyHubHtml = readDistText(path.join('meta', 'butterfly', 'index.html'));
+assert(
+  butterflyHubHtml.includes('<title>蝶の食草一覧｜植物名と蝶の名前から探す｜昆虫植物図鑑</title>') &&
+    butterflyHubHtml.includes('<h1>蝶の食草一覧</h1>') &&
+    butterflyHubHtml.includes('<h2 id="butterfly-host-plant-heading">蝶を食草植物・分類群から探す</h2>') &&
+    butterflyHubHtml.includes('<h2 id="butterfly-name-heading">蝶の名前・科から探す</h2>'),
+  'butterfly hub must answer both plant-name and butterfly-name lookup intent',
+);
+assert(
+  butterflyHubHtml.includes('主要食草や野外での利用頻度の順位を示すものではありません') &&
+    /食草植物・分類群\d+件/.test(butterflyHubHtml) &&
+    butterflyHubHtml.includes('id="butterfly-host-plant-filter"') &&
+    butterflyHubHtml.includes('aria-live="polite"'),
+  'butterfly host-plant lookup must explain record scope and provide an accessible filter',
+);
+assert(
+  butterflyHubHtml.includes('rel="canonical" href="https://orau98.github.io/meta/butterfly/index.html"') &&
+    /name=["']robots["'] content=["']index, follow/i.test(butterflyHubHtml),
+  'butterfly hub must remain self-canonical and indexable',
+);
+
+const decodeHtmlText = (value) => String(value || '')
+  .replaceAll('&amp;', '&')
+  .replaceAll('&lt;', '<')
+  .replaceAll('&gt;', '>')
+  .replaceAll('&quot;', '"')
+  .replaceAll('&#39;', "'");
+const featuredHostPlantBlock = butterflyHubHtml.match(
+  /<ul class="featured-host-plants" data-butterfly-featured-host-plants>([\s\S]*?)<\/ul>/,
+)?.[1] || '';
+const featuredHostPlants = Array.from(
+  featuredHostPlantBlock.matchAll(
+    /<a href="([^"]+)">\s*<span>([^<]+)<\/span>\s*<span class="host-plant-count">蝶(\d+)種<\/span>/g,
+  ),
+  (match) => ({ href: match[1], name: decodeHtmlText(match[2]), count: Number(match[3]) }),
+);
+assert(featuredHostPlants.length === 12, 'butterfly hub must feature exactly 12 host plants');
+
+const hostPlantDirectoryBlock = butterflyHubHtml.match(
+  /<ul class="host-plant-directory-list" data-butterfly-host-plant-directory>([\s\S]*?)<\/ul>/,
+)?.[1] || '';
+const hostPlantDirectory = Array.from(
+  hostPlantDirectoryBlock.matchAll(
+    /<li class="host-plant-directory-item"[^>]*>\s*<a href="([^"]+)">([^<]+)<\/a>\s*<span class="host-plant-count">(\d+)種<\/span>/g,
+  ),
+  (match) => ({ href: match[1], name: decodeHtmlText(match[2]), count: Number(match[3]) }),
+);
+assert(
+  hostPlantDirectory.length >= 500,
+  `butterfly host-plant directory unexpectedly shrank to ${hostPlantDirectory.length} entries`,
+);
+assert(
+  new Set(hostPlantDirectory.map(({ href }) => href)).size === hostPlantDirectory.length,
+  'butterfly host-plant directory must not contain duplicate target links',
+);
+assert(
+  hostPlantDirectory.every((item, index, items) =>
+    index === 0 || items[index - 1].name.localeCompare(item.name, 'ja') <= 0),
+  'butterfly host-plant directory must remain in Japanese name order',
+);
+
+const expectedFeaturedHostPlants = hostPlantDirectory
+  .slice()
+  .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'ja'))
+  .slice(0, 12);
+assert(
+  JSON.stringify(featuredHostPlants) === JSON.stringify(expectedFeaturedHostPlants),
+  'featured butterfly host plants must be the deterministic top 12 from the full directory',
+);
+
+for (const { href, name, count } of hostPlantDirectory) {
+  const relativePath = decodeURIComponent(new URL(href, 'https://orau98.github.io').pathname)
+    .replace(/^\/+/, '');
+  assert(fs.existsSync(path.join(DIST_DIR, relativePath)), `missing butterfly host-plant target: ${href}`);
+  const plantHtml = readDistText(relativePath);
+  assert(
+    !/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(plantHtml),
+    `butterfly host-plant target must be indexable: ${href}`,
+  );
+  assert(
+    plantHtml.includes(`rel="canonical" href="https://orau98.github.io${href}"`),
+    `butterfly host-plant target must be self-canonical: ${href}`,
+  );
+  if (featuredHostPlants.some((item) => item.href === href)) {
+    assert(
+      plantHtml.includes(`<strong>蝶</strong>では${count}種`),
+      `featured count must match the ${name} plant profile`,
+    );
+  }
+}
+
+for (const segment of insectProfileSegments.filter((segment) => segment !== 'butterfly')) {
+  assert(
+    !readDistText(path.join('meta', segment, 'index.html'))
+      .includes('data-butterfly-host-plant-directory'),
+    `${segment} hub must not inherit the butterfly-only host-plant directory`,
+  );
+}
+
 for (const localePrefix of ['', 'en']) {
   const routeRoot = path.join(DIST_DIR, ...(localePrefix ? [localePrefix, 'plant'] : ['plant']));
   for (const entry of fs.readdirSync(routeRoot, { withFileTypes: true })) {
