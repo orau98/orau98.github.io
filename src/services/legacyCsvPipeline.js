@@ -19,6 +19,7 @@ import {
 import { extractEmergenceTime } from '../utils/emergenceTimeUtils';
 import { repairScientificBinomial } from '../utils/scientificNameFormatter.jsx';
 import { globalJapaneseToScientificMapping } from '../utils/insectImageMappings';
+import { normalizeCsvLineEndings } from '../utils/csvText';
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
 
@@ -503,7 +504,7 @@ export async function runLegacyCsvPipeline(ctx) {
             
             // Parse normalized CSVs (worker to reduce main-thread blocking)
             const parseNormalizedCsv = (text, config) => new Promise((resolve) => {
-              Papa.parse(text, {
+              Papa.parse(normalizeCsvLineEndings(text), {
                 ...config,
                 worker: true,
                 complete: (results) => resolve(results),

@@ -1,6 +1,6 @@
 plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_id
 キキョウ科,yes,33,ツリガネニンジン,,hostplant-903006
-カエデ科,yes,33,ヒナウチワ,,hostplant-907745
+カエデ科,yes,32,ヒナウチワ,,hostplant-907745
 キジカクシ科,yes,7,ジャノヒゲ,,hostplant-902363
 サルノコシカケ科,yes,6,カワラタケ,,hostplant-002971
 セミ科,yes,6,ヒグラシ,,hostplant-908161
@@ -8,9 +8,10 @@ plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_i
 キシメジ科,yes,4,シイタケ,,hostplant-000211
 アオキ科,yes,4,アオキ,,hostplant-903633
 多孔菌科,yes,3,ツリガネタケ,,hostplant-000205
+ツゲモドキ科,yes,3,ツゲモドキ,,hostplant-butterfly-audit-20260704-0001
+キントラノオ科,yes,3,コウシュンカズラ,,hostplant-butterfly-audit-20260704-0011
 ヤマゴボウ科,yes,3,ヨウシュヤマゴボウ,,hostplant-902782
 タコノキ科,yes,3,タコノキ,,hostplant-907638
-ツゲモドキ科,yes,2,Drypetes属,,hostplant-900101
 ワスレグサ科,yes,2,ユウスゲ,,hostplant-903048
 シナノキ科,yes,2,シナノキ類,,hostplant-908521
 ，ナス科,yes,2,タパコ,,hostplant-912945
@@ -42,3 +43,4 @@ plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_i
 ヘゴ科,yes,1,ヒカゲヘゴ,,hostplant-H3-0222
 オオバヤドリギ科,yes,1,マツグミ,,hostplant-H3-0342
 ヤマグルマ科,yes,1,ヤマグルマ,,hostplant-kamikiri-audit-20260625-0001
+フタバガキ科,yes,1,サラソウジュ,,hostplant-PDFAUDIT-20260710-0150
