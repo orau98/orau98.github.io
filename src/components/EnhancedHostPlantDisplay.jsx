@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logger from '../utils/logger';
 import { Link, useLocation } from 'react-router-dom';
 import SourceCitation from './ui/SourceCitation';
 import { makeDetailLinkState } from '../utils/navState';
@@ -10,6 +9,11 @@ import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx'
 import { getHostResourceType } from '../utils/hostResource';
 import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisitStyle';
 import { getPublicHostPlantNoteSegments } from '../utils/publicHostPlantNotes';
+import {
+  getObservationTypePresentation,
+  getObservationTypePriority,
+  isDomesticObservationType,
+} from '../utils/observationType';
 
 /**
  * 生活史段階のスタイル（アイコンは使用しない）
@@ -116,68 +120,6 @@ const isFlowerVisitRecord = (record) => {
 };
 
 /**
- * 観察タイプ別のスタイルを取得
- */
-const getObservationTypeStyle = (observationType, isEnglish = false) => {
-  switch (observationType) {
-    case '文献':
-      return {
-        label: isEnglish ? 'Literature' : '文献',
-        bgColor: 'bg-amber-50 dark:bg-amber-900/20',
-        textColor: 'text-amber-700 dark:text-amber-300',
-        borderColor: 'border-amber-200 dark:border-amber-700'
-      };
-    case '飼育':
-    case '飼育記録':
-      return {
-        label: isEnglish ? 'Reared' : '飼育',
-        bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-        textColor: 'text-blue-700 dark:text-blue-300',
-        borderColor: 'border-blue-200 dark:border-blue-700'
-      };
-    case '野外（国内）':
-      return {
-        label: isEnglish ? 'Field' : '野外',
-        bgColor: 'bg-green-50 dark:bg-green-900/20',
-        textColor: 'text-green-700 dark:text-green-300',
-        borderColor: 'border-green-200 dark:border-green-700'
-      };
-    case '海外':
-    case '国外':
-    case '野外（国外）':
-      return {
-        label: isEnglish ? 'Overseas' : '海外',
-        bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-        textColor: 'text-purple-700 dark:text-purple-300',
-        borderColor: 'border-purple-200 dark:border-purple-700'
-      };
-    default:
-      return {
-        label: isEnglish ? 'Other' : 'その他',
-        bgColor: 'bg-gray-50 dark:bg-gray-900/20',
-        textColor: 'text-gray-700 dark:text-gray-300',
-        borderColor: 'border-gray-200 dark:border-gray-700'
-      };
-  }
-};
-
-/**
- * 観察タイプ別の優先度を取得（数値が小さいほど優先度が高い）
- */
-const getObservationTypePriority = (observationType) => {
-  switch (observationType) {
-    case '野外（国内）': return 1; // 最優先
-    case '文献': return 2;
-    case '飼育':
-    case '飼育記録': return 2;
-    case '野外（国外）':
-    case '海外':
-    case '国外': return 3;
-    default: return 4; // その他は最後
-  }
-};
-
-/**
  * 植物記録をグループ化する関数
  */
 const groupPlantsByName = (plants) => {
@@ -211,6 +153,7 @@ const groupPlantsByName = (plants) => {
  * 個別食草情報の詳細表示コンポーネント（統合版）
  */
 const getLifeStageLabel = (lifeStage, isEnglish = false) => {
+  if (['記載なし', '未記載', '不明'].includes(lifeStage)) return '';
   if (!isEnglish) return lifeStage;
   return ({
     幼虫: 'Larva',
@@ -249,28 +192,8 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
     return currentPriority < prevPriority ? current : prev;
   });
   
-  // species-6115関連のデバッグ - ゴヨウマツまたは不明の植物
-  if (plantGroup.name === 'ゴヨウマツ' || plantGroup.name === '不明') {
-    logger.debug(`DEBUG ${plantGroup.name} observation processing:`, {
-      plantName: plantGroup.name,
-      records: plantGroup.records,
-      primaryRecord: primaryRecord,
-      primaryObservationType: primaryRecord.observationType
-    });
-    
-    plantGroup.records.forEach((record, idx) => {
-      logger.debug(`DEBUG ${plantGroup.name} record[${idx}]:`, {
-        observationType: record.observationType,
-        plantPart: record.plantPart,
-        lifeStage: record.lifeStage,
-        reference: record.reference,
-        notes: record.notes
-      });
-    });
-  }
-  
-  const obsStyle = getObservationTypeStyle(primaryRecord.observationType, isEnglish);
-  const isDomesticWild = primaryRecord.observationType === '野外（国内）';
+  const obsStyle = getObservationTypePresentation(primaryRecord.observationType, isEnglish);
+  const isDomesticWild = isDomesticObservationType(primaryRecord.observationType);
   
   // 利用情報をグループ化
   const usageInfo = plantGroup.records.reduce((acc, record) => {

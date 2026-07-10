@@ -98,6 +98,12 @@ test('host plant section notes hide source bookkeeping and no-data placeholders'
     getPublicHostPlantSectionNote('材中で越冬。日本列島の甲虫全種目録(2026)参照。'),
     '材中で越冬',
   );
+  assert.equal(
+    getPublicHostPlantSectionNote(
+      '日本列島の甲虫全種目録2026年版 キクイムシ亜科 No.157（2026-07-10参照）。国内分布: HOK, HON, SHI。国外分布: Korea, China。',
+    ),
+    '',
+  );
 });
 
 test('normalized hostplant conversion does not expose OCR metadata in public records', () => {
