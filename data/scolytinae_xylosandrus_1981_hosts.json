@@ -1,0 +1,1165 @@
+{
+  "schema_version": 1,
+  "ylist_accessed_date": "2026-07-10",
+  "source_host_count_note": "X. germanusの本文は日本で156種と記すが、Hosts欄で列挙を確認できた146分類単位のみ収録",
+  "groups": [
+    {
+      "reference": "Nobuchi (1981) Revision of the genus Xylosandrus from Japan",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/314-4.pdf",
+      "review_status": "approved",
+      "plant_part": "材・枝",
+      "life_stage": "記載なし",
+      "record_prefix": "N81-BREV",
+      "insect_id": "species-SC305",
+      "insect_scientific_name": "Xylosandrus brevis (Eichhoff, 1877)",
+      "page": "29",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明",
+      "geography_basis": "Hosts欄に国別対応がなく、分布欄は日本・韓国・台湾・タイを含むため国内外を分離できない",
+      "evidence_type": "原著のHosts欄",
+      "notes": "日本産Xylosandrusの再検討論文だが、植物ごとの産地は示されない",
+      "hosts": [
+        {
+          "plant_name": "サルトリイバラ",
+          "plant_family": "サルトリイバラ科",
+          "plant_scientific_name_accepted": "Smilax china",
+          "plant_scientific_name_original": "Smilax china"
+        },
+        {
+          "plant_name": "コナラ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus serrata",
+          "plant_scientific_name_original": "Quercus serrata"
+        },
+        {
+          "plant_name": "アラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus glauca",
+          "plant_scientific_name_original": "Quercus glauca"
+        },
+        {
+          "plant_name": "シラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus myrsinaefolia",
+          "plant_scientific_name_original": "Quercus myrsinaefolia"
+        },
+        {
+          "plant_name": "ウラジロガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus salicina",
+          "plant_scientific_name_original": "Quercus salicina"
+        },
+        {
+          "plant_name": "コウゾ",
+          "plant_scientific_name_accepted": "Broussonetia x kazinoki",
+          "plant_family": "クワ科",
+          "plant_scientific_name_original": "Broussonetia kazinoki"
+        },
+        {
+          "plant_name": "ヤブニッケイ",
+          "plant_scientific_name_accepted": "Cinnamomum yabunikkei",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Cinnamomum japonicum"
+        },
+        {
+          "plant_name": "タブノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Machilus thunbergii",
+          "plant_scientific_name_original": "Machilus thunbergii"
+        },
+        {
+          "plant_name": "カナクギノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Lindera erythrocarpa",
+          "plant_scientific_name_original": "Lindera erythrocarpa"
+        },
+        {
+          "plant_name": "クロモジ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Lindera umbellata",
+          "plant_scientific_name_original": "Lindera umbellata"
+        },
+        {
+          "plant_name": "オオバクロモジ",
+          "plant_scientific_name_accepted": "Lindera umbellata var. membranacea",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Lindera umbellata subsp. membranacea"
+        },
+        {
+          "plant_name": "アブラチャン",
+          "plant_scientific_name_accepted": "Lindera praecox",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Parabenzoin praecox"
+        },
+        {
+          "plant_name": "マルバマンサク",
+          "plant_scientific_name_accepted": "Hamamelis japonica var. discolor f. obtusata",
+          "plant_family": "マンサク科",
+          "plant_scientific_name_original": "Hamamelis japonica var. obtusata"
+        },
+        {
+          "plant_name": "アワブキ",
+          "plant_family": "アワブキ科",
+          "plant_scientific_name_accepted": "Meliosma myriantha",
+          "plant_scientific_name_original": "Meliosma myriantha"
+        },
+        {
+          "plant_name": "ヤブツバキ",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_accepted": "Camellia japonica",
+          "plant_scientific_name_original": "Camellia japonica"
+        },
+        {
+          "plant_name": "シマイズセンリョウ",
+          "plant_scientific_name_accepted": "Maesa perlaria var. formosana",
+          "plant_family": "サクラソウ科",
+          "plant_scientific_name_original": "Maesa tenera"
+        },
+        {
+          "plant_name": "カキノキ",
+          "plant_family": "カキノキ科",
+          "plant_scientific_name_accepted": "Diospyros kaki",
+          "plant_scientific_name_original": "Diospyros kaki"
+        },
+        {
+          "plant_name": "タニウツギ",
+          "plant_family": "スイカズラ科",
+          "plant_scientific_name_accepted": "Weigela hortensis",
+          "plant_scientific_name_original": "Weigela hortensis"
+        }
+      ]
+    },
+    {
+      "reference": "Nobuchi (1981) Revision of the genus Xylosandrus from Japan",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/314-4.pdf",
+      "review_status": "approved",
+      "plant_part": "材・枝",
+      "life_stage": "記載なし",
+      "record_prefix": "N81-GERM",
+      "insect_id": "species-SC310",
+      "insect_scientific_name": "Xylosandrus germanus (Blandford, 1894)",
+      "page": "31-32",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本",
+      "geography_basis": "本文が本種は日本で156種の木材から見出されたと明記する一方、Hosts欄は146分類単位を列挙",
+      "evidence_type": "本文の日本産寄主数記述と原著のHosts欄",
+      "notes": "本文の156と列挙146の差は解消できないため、実際に列挙された146件だけを採用",
+      "hosts": [
+        {
+          "plant_name": "チャボガヤ",
+          "plant_family": "イチイ科",
+          "plant_scientific_name_accepted": "Torreya nucifera var. radicans",
+          "plant_scientific_name_original": "Torreya nucifera var. radicans"
+        },
+        {
+          "plant_name": "ハイイヌガヤ",
+          "plant_scientific_name_accepted": "Cephalotaxus harringtonia var. nana",
+          "plant_family": "イチイ科",
+          "plant_scientific_name_original": "Cephalotaxus harringtonia subsp. nana"
+        },
+        {
+          "plant_name": "モミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_accepted": "Abies firma",
+          "plant_scientific_name_original": "Abies firma"
+        },
+        {
+          "plant_name": "ツガ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_accepted": "Tsuga sieboldii",
+          "plant_scientific_name_original": "Tsuga sieboldii"
+        },
+        {
+          "plant_name": "ドイツトウヒ",
+          "plant_scientific_name_accepted": "Picea abies",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea excelsa"
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_scientific_name_accepted": "Larix kaempferi",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_accepted": "Pinus densiflora",
+          "plant_scientific_name_original": "Pinus densiflora"
+        },
+        {
+          "plant_name": "キタゴヨウ",
+          "plant_scientific_name_accepted": "Pinus parviflora var. pentaphylla",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla"
+        },
+        {
+          "plant_name": "スギ",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_accepted": "Cryptomeria japonica",
+          "plant_scientific_name_original": "Cryptomeria japonica"
+        },
+        {
+          "plant_name": "ヒノキ",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_accepted": "Chamaecyparis obtusa",
+          "plant_scientific_name_original": "Chamaecyparis obtusa"
+        },
+        {
+          "plant_name": "サワラ",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_accepted": "Chamaecyparis pisifera",
+          "plant_scientific_name_original": "Chamaecyparis pisifera"
+        },
+        {
+          "plant_name": "アスナロ",
+          "plant_scientific_name_accepted": "Thujopsis dolabrata var. dolabrata",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_original": "Thujopsis dolabrata"
+        },
+        {
+          "plant_name": "ヤマモモ",
+          "plant_scientific_name_accepted": "Morella rubra",
+          "plant_family": "ヤマモモ科",
+          "plant_scientific_name_original": "Myrica rubra"
+        },
+        {
+          "plant_name": "オニグルミ",
+          "plant_scientific_name_accepted": "Juglans mandshurica var. sachalinensis",
+          "plant_family": "クルミ科",
+          "plant_scientific_name_original": "Juglans mandshurica subsp. sieboldiana"
+        },
+        {
+          "plant_name": "サワグルミ",
+          "plant_family": "クルミ科",
+          "plant_scientific_name_accepted": "Pterocarya rhoifolia",
+          "plant_scientific_name_original": "Pterocarya rhoifolia"
+        },
+        {
+          "plant_name": "イヌシデ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_accepted": "Carpinus tschonoskii",
+          "plant_scientific_name_original": "Carpinus tschonoskii"
+        },
+        {
+          "plant_name": "シラカンバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_accepted": "Betula platyphylla var. japonica",
+          "plant_scientific_name_original": "Betula platyphylla var. japonica"
+        },
+        {
+          "plant_name": "ミズメ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_accepted": "Betula grossa",
+          "plant_scientific_name_original": "Betula grossa"
+        },
+        {
+          "plant_name": "ヤマハンノキ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_accepted": "Alnus hirsuta var. sibirica",
+          "plant_scientific_name_original": "Alnus hirsuta var. sibirica"
+        },
+        {
+          "plant_name": "ハンノキ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_accepted": "Alnus japonica",
+          "plant_scientific_name_original": "Alnus japonica"
+        },
+        {
+          "plant_name": "ブナ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Fagus crenata",
+          "plant_scientific_name_original": "Fagus crenata"
+        },
+        {
+          "plant_name": "イヌブナ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Fagus japonica",
+          "plant_scientific_name_original": "Fagus japonica"
+        },
+        {
+          "plant_name": "カシワ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus dentata",
+          "plant_scientific_name_original": "Quercus dentata"
+        },
+        {
+          "plant_name": "ミズナラ",
+          "plant_scientific_name_accepted": "Quercus crispula var. crispula",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus mongolica var. grosseserrata"
+        },
+        {
+          "plant_name": "コナラ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus serrata",
+          "plant_scientific_name_original": "Quercus serrata"
+        },
+        {
+          "plant_name": "ツクバネガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus sessilifolia",
+          "plant_scientific_name_original": "Quercus sessilifolia"
+        },
+        {
+          "plant_name": "アカガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus acuta",
+          "plant_scientific_name_original": "Quercus acuta"
+        },
+        {
+          "plant_name": "シラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus myrsinaefolia",
+          "plant_scientific_name_original": "Quercus myrsinaefolia"
+        },
+        {
+          "plant_name": "クリ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Castanea crenata",
+          "plant_scientific_name_original": "Castanea crenata"
+        },
+        {
+          "plant_name": "ツブラジイ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Castanopsis cuspidata",
+          "plant_scientific_name_original": "Castanopsis cuspidata"
+        },
+        {
+          "plant_name": "スダジイ",
+          "plant_scientific_name_accepted": "Castanopsis sieboldii subsp. sieboldii",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Castanopsis cuspidata var. sieboldii"
+        },
+        {
+          "plant_name": "ハルニレ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_accepted": "Ulmus davidiana var. japonica",
+          "plant_scientific_name_original": "Ulmus davidiana var. japonica"
+        },
+        {
+          "plant_name": "オヒョウ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_accepted": "Ulmus laciniata",
+          "plant_scientific_name_original": "Ulmus laciniata"
+        },
+        {
+          "plant_name": "ケヤキ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_accepted": "Zelkova serrata",
+          "plant_scientific_name_original": "Zelkova serrata"
+        },
+        {
+          "plant_name": "エノキ",
+          "plant_scientific_name_accepted": "Celtis sinensis",
+          "plant_family": "アサ科",
+          "plant_scientific_name_original": "Celtis sinensis var. japonica"
+        },
+        {
+          "plant_name": "ムクノキ",
+          "plant_family": "アサ科",
+          "plant_scientific_name_accepted": "Aphananthe aspera",
+          "plant_scientific_name_original": "Aphananthe aspera"
+        },
+        {
+          "plant_name": "マグワ",
+          "plant_scientific_name_accepted": "Morus alba",
+          "plant_family": "クワ科",
+          "plant_scientific_name_original": "Morus alba"
+        },
+        {
+          "plant_name": "ヤマグワ",
+          "plant_scientific_name_accepted": "Morus australis",
+          "plant_family": "クワ科",
+          "plant_scientific_name_original": "Morus bombycis"
+        },
+        {
+          "plant_name": "コウゾ",
+          "plant_scientific_name_accepted": "Broussonetia x kazinoki",
+          "plant_family": "クワ科",
+          "plant_scientific_name_original": "Broussonetia kazinoki"
+        },
+        {
+          "plant_name": "イチジク",
+          "plant_scientific_name_accepted": "Ficus carica",
+          "plant_family": "クワ科",
+          "plant_scientific_name_original": "Ficus carica var. johannis"
+        },
+        {
+          "plant_name": "ヤマグルマ",
+          "plant_scientific_name_accepted": "Trochodendron aralioides",
+          "plant_family": "ヤマグルマ科",
+          "plant_scientific_name_original": "Trochodendron aralioides"
+        },
+        {
+          "plant_name": "カツラ",
+          "plant_family": "カツラ科",
+          "plant_scientific_name_accepted": "Cercidiphyllum japonicum",
+          "plant_scientific_name_original": "Cercidiphyllum japonicum"
+        },
+        {
+          "plant_name": "ホオノキ",
+          "plant_family": "モクレン科",
+          "plant_scientific_name_accepted": "Magnolia obovata",
+          "plant_scientific_name_original": "Magnolia obovata"
+        },
+        {
+          "plant_name": "コブシ",
+          "plant_family": "モクレン科",
+          "plant_scientific_name_accepted": "Magnolia kobus",
+          "plant_scientific_name_original": "Magnolia kobus"
+        },
+        {
+          "plant_name": "シキミ",
+          "plant_scientific_name_accepted": "Illicium anisatum",
+          "plant_family": "マツブサ科",
+          "plant_scientific_name_original": "Illicium religiosum"
+        },
+        {
+          "plant_name": "クスノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Cinnamomum camphora",
+          "plant_scientific_name_original": "Cinnamomum camphora"
+        },
+        {
+          "plant_name": "ヤブニッケイ",
+          "plant_scientific_name_accepted": "Cinnamomum yabunikkei",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Cinnamomum japonicum"
+        },
+        {
+          "plant_name": "タブノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Machilus thunbergii",
+          "plant_scientific_name_original": "Machilus thunbergii"
+        },
+        {
+          "plant_name": "アオガシ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Machilus japonica",
+          "plant_scientific_name_original": "Machilus japonica"
+        },
+        {
+          "plant_name": "クロモジ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Lindera umbellata",
+          "plant_scientific_name_original": "Lindera umbellata"
+        },
+        {
+          "plant_name": "オオバクロモジ",
+          "plant_scientific_name_accepted": "Lindera umbellata var. membranacea",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Lindera umbellata subsp. membranacea"
+        },
+        {
+          "plant_name": "アブラチャン",
+          "plant_scientific_name_accepted": "Lindera praecox",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Parabenzoin praecox"
+        },
+        {
+          "plant_name": "シロダモ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Neolitsea sericea",
+          "plant_scientific_name_original": "Neolitsea sericea"
+        },
+        {
+          "plant_name": "バリバリノキ",
+          "plant_scientific_name_accepted": "Actinodaphne acuminata",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Actinodaphne longifolia"
+        },
+        {
+          "plant_name": "ハマビワ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Litsea japonica",
+          "plant_scientific_name_original": "Litsea japonica"
+        },
+        {
+          "plant_name": "ツルアジサイ",
+          "plant_family": "アジサイ科",
+          "plant_scientific_name_accepted": "Hydrangea petiolaris",
+          "plant_scientific_name_original": "Hydrangea petiolaris"
+        },
+        {
+          "plant_name": "ノリウツギ",
+          "plant_family": "アジサイ科",
+          "plant_scientific_name_accepted": "Hydrangea paniculata",
+          "plant_scientific_name_original": "Hydrangea paniculata"
+        },
+        {
+          "plant_name": "ウツギ",
+          "plant_family": "アジサイ科",
+          "plant_scientific_name_accepted": "Deutzia crenata",
+          "plant_scientific_name_original": "Deutzia crenata"
+        },
+        {
+          "plant_name": "マルバマンサク",
+          "plant_scientific_name_accepted": "Hamamelis japonica var. discolor f. obtusata",
+          "plant_family": "マンサク科",
+          "plant_scientific_name_original": "Hamamelis japonica var. obtusata"
+        },
+        {
+          "plant_name": "イスノキ",
+          "plant_family": "マンサク科",
+          "plant_scientific_name_accepted": "Distylium racemosum",
+          "plant_scientific_name_original": "Distylium racemosum"
+        },
+        {
+          "plant_name": "クマイチゴ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_accepted": "Rubus crataegifolius",
+          "plant_scientific_name_original": "Rubus crataegifolius"
+        },
+        {
+          "plant_name": "モミジイチゴ",
+          "plant_scientific_name_accepted": "Rubus palmatus",
+          "plant_family": "バラ科",
+          "notes": "YListではRubus palmatusを広義として掲載",
+          "plant_scientific_name_original": "Rubus palmatus"
+        },
+        {
+          "plant_name": "ウワミズザクラ",
+          "plant_scientific_name_accepted": "Padus grayana",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus grayana"
+        },
+        {
+          "plant_name": "オクチョウジザクラ",
+          "plant_scientific_name_accepted": "Cerasus apetala var. pilosa",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus apetala var. pilosa"
+        },
+        {
+          "plant_name": "オオヤマザクラ",
+          "plant_scientific_name_accepted": "Cerasus sargentii var. sargentii",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sargentii"
+        },
+        {
+          "plant_name": "ヤマザクラ",
+          "plant_scientific_name_accepted": "Cerasus jamasakura",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sargentii subsp. jamasakura"
+        },
+        {
+          "plant_name": "カスミザクラ",
+          "plant_scientific_name_accepted": "Cerasus leveilleana",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus lannesiana subsp. verecunda"
+        },
+        {
+          "plant_name": "セイヨウリンゴ",
+          "plant_scientific_name_accepted": "Malus domestica",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Malus pumila"
+        },
+        {
+          "plant_name": "ナナカマド",
+          "plant_family": "バラ科",
+          "plant_scientific_name_accepted": "Sorbus commixta",
+          "plant_scientific_name_original": "Sorbus commixta"
+        },
+        {
+          "plant_name": "アズキナシ",
+          "plant_scientific_name_accepted": "Aria alnifolia",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Sorbus alnifolia"
+        },
+        {
+          "plant_name": "ネムノキ",
+          "plant_family": "マメ科",
+          "plant_scientific_name_accepted": "Albizia julibrissin",
+          "plant_scientific_name_original": "Albizia julibrissin"
+        },
+        {
+          "plant_name": "サイカチ",
+          "plant_family": "マメ科",
+          "plant_scientific_name_accepted": "Gleditsia japonica",
+          "plant_scientific_name_original": "Gleditsia japonica"
+        },
+        {
+          "plant_name": "フジ",
+          "plant_family": "マメ科",
+          "plant_scientific_name_accepted": "Wisteria floribunda",
+          "plant_scientific_name_original": "Wisteria floribunda"
+        },
+        {
+          "plant_name": "モリシマアカシア",
+          "plant_scientific_name_accepted": "Acacia mearnsii",
+          "plant_family": "マメ科",
+          "plant_scientific_name_original": "Acacia mollissima"
+        },
+        {
+          "plant_name": "ハリエンジュ",
+          "plant_family": "マメ科",
+          "plant_scientific_name_accepted": "Robinia pseudoacacia",
+          "plant_scientific_name_original": "Robinia pseudoacacia"
+        },
+        {
+          "plant_name": "サンショウ",
+          "plant_family": "ミカン科",
+          "plant_scientific_name_accepted": "Zanthoxylum piperitum",
+          "plant_scientific_name_original": "Zanthoxylum piperitum"
+        },
+        {
+          "plant_name": "イヌザンショウ",
+          "plant_scientific_name_accepted": "Zanthoxylum schinifolium var. schinifolium",
+          "plant_family": "ミカン科",
+          "plant_scientific_name_original": "Zanthoxylum schinifolium"
+        },
+        {
+          "plant_name": "カラスザンショウ",
+          "plant_scientific_name_accepted": "Zanthoxylum ailanthoides var. ailanthoides",
+          "plant_family": "ミカン科",
+          "plant_scientific_name_original": "Zanthoxylum ailanthoides"
+        },
+        {
+          "plant_name": "ハマセンダン",
+          "plant_scientific_name_accepted": "Tetradium glabrifolium var. glaucum",
+          "plant_family": "ミカン科",
+          "plant_scientific_name_original": "Evodia glauca"
+        },
+        {
+          "plant_name": "キハダ",
+          "plant_scientific_name_accepted": "Phellodendron amurense var. amurense",
+          "plant_family": "ミカン科",
+          "plant_scientific_name_original": "Phellodendron amurense var. sachalinense"
+        },
+        {
+          "plant_name": "ニガキ",
+          "plant_family": "ニガキ科",
+          "plant_scientific_name_accepted": "Picrasma quassioides",
+          "plant_scientific_name_original": "Picrasma quassioides"
+        },
+        {
+          "plant_name": "センダン",
+          "plant_scientific_name_accepted": "Melia azedarach",
+          "plant_family": "センダン科",
+          "plant_scientific_name_original": "Melia azedarach var. subtripinnata"
+        },
+        {
+          "plant_name": "アカメガシワ",
+          "plant_family": "トウダイグサ科",
+          "plant_scientific_name_accepted": "Mallotus japonicus",
+          "plant_scientific_name_original": "Mallotus japonicus"
+        },
+        {
+          "plant_name": "ツタウルシ",
+          "plant_scientific_name_accepted": "Toxicodendron orientale subsp. orientale",
+          "plant_family": "ウルシ科",
+          "plant_scientific_name_original": "Rhus ambigua"
+        },
+        {
+          "plant_name": "ヌルデ",
+          "plant_scientific_name_accepted": "Rhus javanica var. chinensis",
+          "plant_family": "ウルシ科",
+          "plant_scientific_name_original": "Rhus chinensis"
+        },
+        {
+          "plant_name": "ハゼノキ",
+          "plant_scientific_name_accepted": "Toxicodendron succedaneum",
+          "plant_family": "ウルシ科",
+          "plant_scientific_name_original": "Rhus succedanea"
+        },
+        {
+          "plant_name": "ヤマウルシ",
+          "plant_scientific_name_accepted": "Toxicodendron trichocarpum",
+          "plant_family": "ウルシ科",
+          "plant_scientific_name_original": "Rhus trichocarpa"
+        },
+        {
+          "plant_name": "ウルシ",
+          "plant_scientific_name_accepted": "Toxicodendron vernicifluum",
+          "plant_family": "ウルシ科",
+          "plant_scientific_name_original": "Rhus verniciflua"
+        },
+        {
+          "plant_name": "ヤマハゼ",
+          "plant_scientific_name_accepted": "Toxicodendron sylvestre",
+          "plant_family": "ウルシ科",
+          "plant_scientific_name_original": "Rhus silvestris"
+        },
+        {
+          "plant_name": "アオハダ",
+          "plant_family": "モチノキ科",
+          "plant_scientific_name_accepted": "Ilex macropoda",
+          "plant_scientific_name_original": "Ilex macropoda"
+        },
+        {
+          "plant_name": "ソヨゴ",
+          "plant_family": "モチノキ科",
+          "plant_scientific_name_accepted": "Ilex pedunculosa",
+          "plant_scientific_name_original": "Ilex pedunculosa"
+        },
+        {
+          "plant_name": "カントウマユミ",
+          "plant_scientific_name_accepted": "Euonymus sieboldianus var. sanguineus",
+          "plant_family": "ニシキギ科",
+          "plant_scientific_name_original": "Euonymus sieboldianus var. sanguineus"
+        },
+        {
+          "plant_name": "ウリハダカエデ",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_accepted": "Acer rufinerve",
+          "plant_scientific_name_original": "Acer rufinerve"
+        },
+        {
+          "plant_name": "エゾイタヤ",
+          "plant_scientific_name_accepted": "Acer pictum subsp. mono",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Acer mono"
+        },
+        {
+          "plant_name": "ハウチワカエデ",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_accepted": "Acer japonicum",
+          "plant_scientific_name_original": "Acer japonicum"
+        },
+        {
+          "plant_name": "ヤマモミジ",
+          "plant_scientific_name_accepted": "Acer amoenum var. matsumurae",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Acer palmatum subsp. matsumurae"
+        },
+        {
+          "plant_name": "コミネカエデ",
+          "plant_scientific_name_accepted": "Acer micranthum",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Acer micranthum"
+        },
+        {
+          "plant_name": "ミツデカエデ",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_accepted": "Acer cissifolium",
+          "plant_scientific_name_original": "Acer cissifolium"
+        },
+        {
+          "plant_name": "トチノキ",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_accepted": "Aesculus turbinata",
+          "plant_scientific_name_original": "Aesculus turbinata"
+        },
+        {
+          "plant_name": "イソノキ",
+          "plant_scientific_name_accepted": "Frangula crenata",
+          "plant_family": "クロウメモドキ科",
+          "plant_scientific_name_original": "Rhamnus crenata"
+        },
+        {
+          "plant_name": "ケンポナシ",
+          "plant_family": "クロウメモドキ科",
+          "plant_scientific_name_accepted": "Hovenia dulcis",
+          "plant_scientific_name_original": "Hovenia dulcis"
+        },
+        {
+          "plant_name": "ヨーロッパブドウ",
+          "plant_family": "ブドウ科",
+          "plant_scientific_name_accepted": "Vitis vinifera",
+          "plant_scientific_name_original": "Vitis vinifera"
+        },
+        {
+          "plant_name": "ヤマブドウ",
+          "plant_family": "ブドウ科",
+          "plant_scientific_name_accepted": "Vitis coignetiae",
+          "plant_scientific_name_original": "Vitis coignetiae"
+        },
+        {
+          "plant_name": "ノブドウ",
+          "plant_scientific_name_accepted": "Ampelopsis glandulosa var. heterophylla",
+          "plant_family": "ブドウ科",
+          "plant_scientific_name_original": "Ampelopsis brevipedunculata var. heterophylla"
+        },
+        {
+          "plant_name": "シナノキ",
+          "plant_family": "アオイ科",
+          "plant_scientific_name_accepted": "Tilia japonica",
+          "plant_scientific_name_original": "Tilia japonica"
+        },
+        {
+          "plant_name": "アオギリ",
+          "plant_scientific_name_accepted": "Firmiana simplex",
+          "plant_family": "アオイ科",
+          "plant_scientific_name_original": "Firmiana platanifolia"
+        },
+        {
+          "plant_name": "ムクゲ",
+          "plant_family": "アオイ科",
+          "plant_scientific_name_accepted": "Hibiscus syriacus",
+          "plant_scientific_name_original": "Hibiscus syriacus"
+        },
+        {
+          "plant_name": "ヤブツバキ",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_accepted": "Camellia japonica",
+          "plant_scientific_name_original": "Camellia japonica"
+        },
+        {
+          "plant_name": "ユキツバキ",
+          "plant_scientific_name_accepted": "Camellia rusticana",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_original": "Camellia japonica subsp. rusticana"
+        },
+        {
+          "plant_name": "チャノキ",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_accepted": "Camellia sinensis",
+          "plant_scientific_name_original": "Camellia sinensis"
+        },
+        {
+          "plant_name": "ヒメシャラ",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_accepted": "Stewartia monadelpha",
+          "plant_scientific_name_original": "Stewartia monadelpha"
+        },
+        {
+          "plant_name": "サカキ",
+          "plant_family": "モッコク科",
+          "plant_scientific_name_accepted": "Cleyera japonica",
+          "plant_scientific_name_original": "Cleyera japonica"
+        },
+        {
+          "plant_name": "ハマヒサカキ",
+          "plant_family": "モッコク科",
+          "plant_scientific_name_accepted": "Eurya emarginata",
+          "plant_scientific_name_original": "Eurya emarginata"
+        },
+        {
+          "plant_name": "キブシ",
+          "plant_family": "キブシ科",
+          "plant_scientific_name_accepted": "Stachyurus praecox",
+          "plant_scientific_name_original": "Stachyurus praecox"
+        },
+        {
+          "plant_name": "シマウリノキ",
+          "plant_scientific_name_accepted": "Alangium premnifolium",
+          "plant_family": "ミズキ科",
+          "plant_scientific_name_original": "Alangium premnifolium"
+        },
+        {
+          "plant_name": "フカノキ",
+          "plant_scientific_name_accepted": "Heptapleurum heptaphyllum",
+          "plant_family": "ウコギ科",
+          "plant_scientific_name_original": "Schefflera octophylla"
+        },
+        {
+          "plant_name": "ヤツデ",
+          "plant_scientific_name_accepted": "Fatsia japonica",
+          "plant_family": "ウコギ科",
+          "plant_scientific_name_original": "Fatsia japonica"
+        },
+        {
+          "plant_name": "コシアブラ",
+          "plant_scientific_name_accepted": "Chengiopanax sciadophylloides",
+          "plant_family": "ウコギ科",
+          "plant_scientific_name_original": "Acanthopanax sciadophylloides"
+        },
+        {
+          "plant_name": "タカノツメ（樹木）",
+          "plant_scientific_name_accepted": "Gamblea innovans",
+          "plant_family": "ウコギ科",
+          "plant_scientific_name_original": "Evodiopanax innovans",
+          "notes": "同名のベンケイソウ科植物との混同を避けるため樹木と付記"
+        },
+        {
+          "plant_name": "ハリギリ",
+          "plant_family": "ウコギ科",
+          "plant_scientific_name_accepted": "Kalopanax septemlobus",
+          "plant_scientific_name_original": "Kalopanax septemlobus"
+        },
+        {
+          "plant_name": "アオキ",
+          "plant_scientific_name_accepted": "Aucuba japonica var. japonica",
+          "plant_family": "アオキ科",
+          "plant_scientific_name_original": "Aucuba japonica"
+        },
+        {
+          "plant_name": "ミズキ",
+          "plant_scientific_name_accepted": "Cornus controversa var. controversa",
+          "plant_family": "ミズキ科",
+          "plant_scientific_name_original": "Cornus controversa"
+        },
+        {
+          "plant_name": "ヤマボウシ",
+          "plant_scientific_name_accepted": "Cornus kousa subsp. kousa",
+          "plant_family": "ミズキ科",
+          "plant_scientific_name_original": "Cornus kousa"
+        },
+        {
+          "plant_name": "リョウブ",
+          "plant_family": "リョウブ科",
+          "plant_scientific_name_accepted": "Clethra barbinervis",
+          "plant_scientific_name_original": "Clethra barbinervis"
+        },
+        {
+          "plant_name": "ツクシシャクナゲ",
+          "plant_scientific_name_accepted": "Rhododendron japonoheptamerum var. japonoheptamerum",
+          "plant_family": "ツツジ科",
+          "plant_scientific_name_original": "Rhododendron metternichii"
+        },
+        {
+          "plant_name": "オオバツツジ",
+          "plant_scientific_name_accepted": "Rhododendron nipponicum",
+          "plant_family": "ツツジ科",
+          "plant_scientific_name_original": "Rhododendron nipponicum"
+        },
+        {
+          "plant_name": "モチツツジ",
+          "plant_family": "ツツジ科",
+          "plant_scientific_name_accepted": "Rhododendron macrosepalum",
+          "plant_scientific_name_original": "Rhododendron macrosepalum"
+        },
+        {
+          "plant_name": "ネジキ",
+          "plant_scientific_name_accepted": "Lyonia ovalifolia var. elliptica",
+          "plant_family": "ツツジ科",
+          "plant_scientific_name_original": "Lyonia elliptica"
+        },
+        {
+          "plant_name": "ナツハゼ",
+          "plant_family": "ツツジ科",
+          "plant_scientific_name_accepted": "Vaccinium oldhamii",
+          "plant_scientific_name_original": "Vaccinium oldhamii"
+        },
+        {
+          "plant_name": "シマイズセンリョウ",
+          "plant_scientific_name_accepted": "Maesa perlaria var. formosana",
+          "plant_family": "サクラソウ科",
+          "plant_scientific_name_original": "Maesa tenera"
+        },
+        {
+          "plant_name": "モクタチバナ",
+          "plant_family": "サクラソウ科",
+          "plant_scientific_name_accepted": "Ardisia sieboldii",
+          "plant_scientific_name_original": "Ardisia sieboldii"
+        },
+        {
+          "plant_name": "カキノキ",
+          "plant_family": "カキノキ科",
+          "plant_scientific_name_accepted": "Diospyros kaki",
+          "plant_scientific_name_original": "Diospyros kaki"
+        },
+        {
+          "plant_name": "エゴノキ",
+          "plant_scientific_name_accepted": "Styrax japonicus",
+          "plant_family": "エゴノキ科",
+          "plant_scientific_name_original": "Styrax japonica"
+        },
+        {
+          "plant_name": "ハクウンボク",
+          "plant_family": "エゴノキ科",
+          "plant_scientific_name_accepted": "Styrax obassia",
+          "plant_scientific_name_original": "Styrax obassia"
+        },
+        {
+          "plant_name": "ヤチダモ",
+          "plant_scientific_name_accepted": "Fraxinus mandshurica",
+          "plant_family": "モクセイ科",
+          "plant_scientific_name_original": "Fraxinus mandshurica var. japonica"
+        },
+        {
+          "plant_name": "ヤマトアオダモ",
+          "plant_family": "モクセイ科",
+          "plant_scientific_name_accepted": "Fraxinus longicuspis",
+          "plant_scientific_name_original": "Fraxinus longicuspis"
+        },
+        {
+          "plant_name": "アオダモ",
+          "plant_scientific_name_accepted": "Fraxinus lanuginosa f. serrata",
+          "plant_family": "モクセイ科",
+          "plant_scientific_name_original": "Fraxinus lanuginosa var. serrata"
+        },
+        {
+          "plant_name": "ムラサキシキブ",
+          "plant_family": "シソ科",
+          "plant_scientific_name_accepted": "Callicarpa japonica",
+          "plant_scientific_name_original": "Callicarpa japonica"
+        },
+        {
+          "plant_name": "クサギ",
+          "plant_scientific_name_accepted": "Clerodendrum trichotomum var. trichotomum",
+          "plant_family": "シソ科",
+          "plant_scientific_name_original": "Clerodendron trichotomum"
+        },
+        {
+          "plant_name": "ハマクサギ",
+          "plant_scientific_name_accepted": "Premna microphylla",
+          "plant_family": "シソ科",
+          "plant_scientific_name_original": "Premna japonica"
+        },
+        {
+          "plant_name": "キリ",
+          "plant_family": "キリ科",
+          "plant_scientific_name_accepted": "Paulownia tomentosa",
+          "plant_scientific_name_original": "Paulownia tomentosa"
+        },
+        {
+          "plant_name": "キササゲ",
+          "plant_family": "ノウゼンカズラ科",
+          "plant_scientific_name_accepted": "Catalpa ovata",
+          "plant_scientific_name_original": "Catalpa ovata"
+        },
+        {
+          "plant_name": "ニワトコ",
+          "plant_family": "ガマズミ科",
+          "plant_scientific_name_accepted": "Sambucus racemosa subsp. sieboldiana",
+          "plant_scientific_name_original": "Sambucus racemosa subsp. sieboldiana"
+        },
+        {
+          "plant_name": "ヤブデマリ",
+          "plant_family": "ガマズミ科",
+          "plant_scientific_name_accepted": "Viburnum plicatum var. tomentosum",
+          "plant_scientific_name_original": "Viburnum plicatum var. tomentosum"
+        },
+        {
+          "plant_name": "ガマズミ",
+          "plant_family": "ガマズミ科",
+          "plant_scientific_name_accepted": "Viburnum dilatatum",
+          "plant_scientific_name_original": "Viburnum dilatatum"
+        },
+        {
+          "plant_name": "タニウツギ",
+          "plant_family": "スイカズラ科",
+          "plant_scientific_name_accepted": "Weigela hortensis",
+          "plant_scientific_name_original": "Weigela hortensis"
+        }
+      ]
+    },
+    {
+      "reference": "Nobuchi (1981) Revision of the genus Xylosandrus from Japan",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/314-4.pdf",
+      "review_status": "approved",
+      "plant_part": "材・枝",
+      "life_stage": "記載なし",
+      "record_prefix": "N81-COMP",
+      "insect_id": "species-SC306",
+      "insect_scientific_name": "Xylosandrus compactus (Eichhoff, 1876)",
+      "page": "34",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明",
+      "geography_basis": "Hosts欄に国別対応がなく、分布欄は日本を含む広域のため、チャ以外は国内外を分離できない",
+      "evidence_type": "原著のHosts欄",
+      "notes": "Camellia sinensisだけはRemarks欄の日本記録により国内・明記へ上書き",
+      "hosts": [
+        {
+          "plant_name": "アラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus glauca",
+          "plant_scientific_name_original": "Quercus glauca"
+        },
+        {
+          "plant_name": "シラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Quercus myrsinaefolia",
+          "plant_scientific_name_original": "Quercus myrsinaefolia"
+        },
+        {
+          "plant_name": "ツブラジイ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_accepted": "Castanopsis cuspidata",
+          "plant_scientific_name_original": "Castanopsis cuspidata"
+        },
+        {
+          "plant_name": "スダジイ",
+          "plant_scientific_name_accepted": "Castanopsis sieboldii subsp. sieboldii",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Castanopsis cuspidata var. sieboldii"
+        },
+        {
+          "plant_name": "ナンテン",
+          "plant_scientific_name_accepted": "Nandina domestica",
+          "plant_family": "メギ科",
+          "plant_scientific_name_original": "Nandina domestica"
+        },
+        {
+          "plant_name": "クスノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Cinnamomum camphora",
+          "plant_scientific_name_original": "Cinnamomum camphora"
+        },
+        {
+          "plant_name": "ヤブニッケイ",
+          "plant_scientific_name_accepted": "Cinnamomum yabunikkei",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Cinnamomum japonicum"
+        },
+        {
+          "plant_name": "タブノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Machilus thunbergii",
+          "plant_scientific_name_original": "Machilus thunbergii"
+        },
+        {
+          "plant_name": "ゲッケイジュ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_accepted": "Laurus nobilis",
+          "plant_scientific_name_original": "Laurus nobilis"
+        },
+        {
+          "plant_name": "ギンゴウカン",
+          "plant_scientific_name_accepted": "Leucaena leucocephala",
+          "plant_family": "マメ科",
+          "plant_scientific_name_original": "Leucaena glauca"
+        },
+        {
+          "plant_name": "モリシマアカシア",
+          "plant_scientific_name_accepted": "Acacia mearnsii",
+          "plant_family": "マメ科",
+          "plant_scientific_name_original": "Acacia mollissima"
+        },
+        {
+          "plant_name": "ネムノキ",
+          "plant_family": "マメ科",
+          "plant_scientific_name_accepted": "Albizia julibrissin",
+          "plant_scientific_name_original": "Albizia julibrissin"
+        },
+        {
+          "plant_name": "ヤマザクラ",
+          "plant_scientific_name_accepted": "Cerasus jamasakura",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sargentii subsp. jamasakura"
+        },
+        {
+          "plant_name": "サンショウ",
+          "plant_family": "ミカン科",
+          "plant_scientific_name_accepted": "Zanthoxylum piperitum",
+          "plant_scientific_name_original": "Zanthoxylum piperitum"
+        },
+        {
+          "plant_name": "ホルトノキ",
+          "plant_scientific_name_accepted": "Elaeocarpus zollingeri var. zollingeri",
+          "plant_family": "ホルトノキ科",
+          "plant_scientific_name_original": "Elaeocarpus sylvestris var. ellipticus"
+        },
+        {
+          "plant_name": "チャノキ",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_accepted": "Camellia sinensis",
+          "plant_scientific_name_original": "Camellia sinensis",
+          "geographic_scope": "japan_explicit",
+          "geography_label": "日本",
+          "geography_basis": "Remarks欄が日本のチャの枝での加害を明記",
+          "evidence_type": "Hosts欄と日本のチャに関するRemarks欄"
+        },
+        {
+          "plant_name": "ヌマミズキ",
+          "plant_scientific_name_accepted": "Nyssa sylvatica",
+          "plant_family": "ヌマミズキ科",
+          "plant_scientific_name_original": "Nyssa sylvatica"
+        },
+        {
+          "plant_name": "カキノキ",
+          "plant_family": "カキノキ科",
+          "plant_scientific_name_accepted": "Diospyros kaki",
+          "plant_scientific_name_original": "Diospyros kaki"
+        },
+        {
+          "plant_name": "オリーブ",
+          "plant_family": "モクセイ科",
+          "plant_scientific_name_accepted": "Olea europaea",
+          "plant_scientific_name_original": "Olea europaea"
+        }
+      ]
+    }
+  ]
+}

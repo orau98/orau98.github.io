@@ -46,6 +46,7 @@ export async function runLegacyCsvPipeline(ctx) {
     setButterflies,
     setBeetles,
     setLonghornbeetles,
+    setBarkbeetles,
     setLeafbeetles,
     setAphids,
     setHostPlants,
@@ -634,6 +635,7 @@ export async function runLegacyCsvPipeline(ctx) {
               (normalizedData.butterflies?.length || 0) +
               (normalizedData.beetles?.length || 0) +
               (normalizedData.longhornbeetles?.length || 0) +
+              (normalizedData.barkbeetles?.length || 0) +
               (normalizedData.leafbeetles?.length || 0) +
               (normalizedData.aphids?.length || 0)
             : 0;
@@ -5290,7 +5292,7 @@ export async function runLegacyCsvPipeline(ctx) {
         });
         
         // Decide whether to use normalized data or legacy data
-        let finalMothData, finalButterflyData, finalBeetleData, finalLonghornbeetleData, finalLeafbeetleData, finalAphidData;
+        let finalMothData, finalButterflyData, finalBeetleData, finalLonghornbeetleData, finalBarkbeetleData, finalLeafbeetleData, finalAphidData;
         
         if (normalizedData && normalizedData.moths?.length > 0) {
           logger.debug("正規化データを使用します");
@@ -5300,6 +5302,7 @@ export async function runLegacyCsvPipeline(ctx) {
           finalButterflyData = normalizedData.butterflies;
           finalBeetleData = normalizedData.beetles;
           finalLonghornbeetleData = normalizedData.longhornbeetles || [];
+          finalBarkbeetleData = normalizedData.barkbeetles || [];
           finalLeafbeetleData = normalizedData.leafbeetles;
           finalAphidData = normalizedData.aphids || [];
           
@@ -5308,9 +5311,10 @@ export async function runLegacyCsvPipeline(ctx) {
             butterflies: finalButterflyData.length,
             beetles: finalBeetleData.length,
             longhornbeetles: finalLonghornbeetleData.length,
+            barkbeetles: finalBarkbeetleData.length,
             leafbeetles: finalLeafbeetleData.length,
             aphids: finalAphidData.length,
-            total: finalMothData.length + finalButterflyData.length + finalBeetleData.length + finalLonghornbeetleData.length + finalLeafbeetleData.length + finalAphidData.length
+            total: finalMothData.length + finalButterflyData.length + finalBeetleData.length + finalLonghornbeetleData.length + finalBarkbeetleData.length + finalLeafbeetleData.length + finalAphidData.length
           });
           
         } else {
@@ -5321,6 +5325,7 @@ export async function runLegacyCsvPipeline(ctx) {
             finalButterflyData = [];
             finalBeetleData = [];
             finalLonghornbeetleData = [];
+            finalBarkbeetleData = [];
             finalLeafbeetleData = [];
             finalAphidData = [];
           } else {
@@ -5329,6 +5334,7 @@ export async function runLegacyCsvPipeline(ctx) {
             finalButterflyData = butterflyData;
             finalBeetleData = combinedBeetleData;
             finalLonghornbeetleData = [];
+            finalBarkbeetleData = [];
             finalLeafbeetleData = combinedLeafbeetleData;
             finalAphidData = [];
             
@@ -5340,6 +5346,7 @@ export async function runLegacyCsvPipeline(ctx) {
               finalButterflyData = convertLegacyToIntegratedFormat(finalButterflyData, 'butterfly');
               finalBeetleData = convertLegacyToIntegratedFormat(finalBeetleData, 'beetle');
               finalLonghornbeetleData = convertLegacyToIntegratedFormat(finalLonghornbeetleData, 'longhornbeetle');
+              finalBarkbeetleData = convertLegacyToIntegratedFormat(finalBarkbeetleData, 'barkbeetle');
               finalLeafbeetleData = convertLegacyToIntegratedFormat(finalLeafbeetleData, 'leafbeetle');
               finalAphidData = convertLegacyToIntegratedFormat(finalAphidData, 'aphid');
               
@@ -5363,6 +5370,7 @@ export async function runLegacyCsvPipeline(ctx) {
         finalButterflyData = fixScientificNames(finalButterflyData);
         finalBeetleData = fixScientificNames(finalBeetleData);
         finalLonghornbeetleData = fixScientificNames(finalLonghornbeetleData);
+        finalBarkbeetleData = fixScientificNames(finalBarkbeetleData);
         finalLeafbeetleData = fixScientificNames(finalLeafbeetleData);
         finalAphidData = fixScientificNames(finalAphidData);
 
@@ -5395,6 +5403,7 @@ export async function runLegacyCsvPipeline(ctx) {
         finalButterflyData = fillEmergenceFromNotes(finalButterflyData);
         finalBeetleData = fillEmergenceFromNotes(finalBeetleData);
         finalLonghornbeetleData = fillEmergenceFromNotes(finalLonghornbeetleData);
+        finalBarkbeetleData = fillEmergenceFromNotes(finalBarkbeetleData);
         finalLeafbeetleData = fillEmergenceFromNotes(finalLeafbeetleData);
         finalAphidData = fillEmergenceFromNotes(finalAphidData);
 
@@ -5453,8 +5462,8 @@ export async function runLegacyCsvPipeline(ctx) {
             }
           });
         };
-        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalLeafbeetleData, ...finalAphidData].forEach(addInsectPlants);
-        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalLeafbeetleData, ...finalAphidData].forEach((insect) => {
+        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalBarkbeetleData, ...finalLeafbeetleData, ...finalAphidData].forEach(addInsectPlants);
+        [...finalMothData, ...finalButterflyData, ...finalBeetleData, ...finalLonghornbeetleData, ...finalBarkbeetleData, ...finalLeafbeetleData, ...finalAphidData].forEach((insect) => {
           pruneFlowerOnlyHosts(unifiedHostPlantMap, insect);
         });
 
@@ -5468,6 +5477,7 @@ export async function runLegacyCsvPipeline(ctx) {
         setButterflies(finalButterflyData);
         setBeetles(finalBeetleData);
         setLonghornbeetles(finalLonghornbeetleData);
+        setBarkbeetles(finalBarkbeetleData);
         setLeafbeetles(finalLeafbeetleData);
         setAphids(finalAphidData);
         setFlowerVisitPlants(
@@ -5476,6 +5486,7 @@ export async function runLegacyCsvPipeline(ctx) {
             ...finalButterflyData,
             ...finalBeetleData,
             ...finalLonghornbeetleData,
+            ...finalBarkbeetleData,
             ...finalLeafbeetleData,
             ...finalAphidData,
           ]),
@@ -5487,6 +5498,7 @@ export async function runLegacyCsvPipeline(ctx) {
           butterflies: finalButterflyData.length,
           beetles: finalBeetleData.length,
           longhornbeetles: finalLonghornbeetleData.length,
+          barkbeetles: finalBarkbeetleData.length,
           leafbeetles: finalLeafbeetleData.length,
           aphids: finalAphidData.length,
           hostPlants: Object.keys(unifiedHostPlantMap).length,
@@ -5503,6 +5515,7 @@ export async function runLegacyCsvPipeline(ctx) {
               butterflies: finalButterflyData,
               beetles: finalBeetleData,
               longhornbeetles: finalLonghornbeetleData,
+              barkbeetles: finalBarkbeetleData,
               leafbeetles: finalLeafbeetleData,
               aphids: finalAphidData,
               hostPlants: cleanedHostPlantData,
@@ -5511,6 +5524,7 @@ export async function runLegacyCsvPipeline(ctx) {
                 ...finalButterflyData,
                 ...finalBeetleData,
                 ...finalLonghornbeetleData,
+                ...finalBarkbeetleData,
                 ...finalLeafbeetleData,
                 ...finalAphidData,
               ]),
@@ -5554,6 +5568,7 @@ export async function runLegacyCsvPipeline(ctx) {
         setButterflies([]);
         setBeetles([]);
         setLonghornbeetles([]);
+        setBarkbeetles([]);
         setLeafbeetles([]);
         setAphids([]);
         setHostPlants({});

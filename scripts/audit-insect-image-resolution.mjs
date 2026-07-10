@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 const ROOT = path.join(__dirname, '..');
 const DATA_PATH = path.join(ROOT, 'public', 'assets', 'data-lite', 'index.json');
 const IMAGE_EXTENSIONS_PATH = path.join(ROOT, 'public', 'image_extensions.json');
-const GROUPS = ['moths', 'butterflies', 'beetles', 'longhornbeetles', 'leafbeetles', 'aphids'];
+const GROUPS = ['moths', 'butterflies', 'beetles', 'longhornbeetles', 'barkbeetles', 'leafbeetles', 'aphids'];
 
 const data = JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
 const imageExtensions = JSON.parse(fs.readFileSync(IMAGE_EXTENSIONS_PATH, 'utf8'));

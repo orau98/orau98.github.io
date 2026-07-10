@@ -104,12 +104,14 @@ reports/butterfly_book_samples/
 public/meta/
 public/en/
 public/aphid/
+public/barkbeetle/
 public/beetle/
 public/butterfly/
 public/leafbeetle/
 public/longhornbeetle/
 public/moth/
 public/plant/
+public/guides/
 public/assets/data-lite/
 public/seo-route-map.insects.json
 public/seo-route-map.plants.json

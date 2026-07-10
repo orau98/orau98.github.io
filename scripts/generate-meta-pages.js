@@ -1286,7 +1286,7 @@ function buildEnglishSlugMaps() {
   }
 
   // 昆虫: /en/meta/{type}/*.html の Japanese page リンクからIDとスラグを対応付ける
-  const insectTypes = ['moth', 'butterfly', 'beetle', 'longhornbeetle', 'leafbeetle', 'aphid'];
+  const insectTypes = INSECT_SECTION_CONFIGS.map(({ type }) => type);
   for (const type of insectTypes) {
     const typeDir = path.join(enMetaDir, type);
     if (!fs.existsSync(typeDir)) continue;
@@ -1947,6 +1947,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     butterfly: relatedInsects.filter(i => getPlantGroupingType(i) === 'butterfly'),
     beetle: relatedInsects.filter(i => getPlantGroupingType(i) === 'beetle'),
     longhornbeetle: relatedInsects.filter(i => getPlantGroupingType(i) === 'longhornbeetle'),
+    barkbeetle: relatedInsects.filter(i => getPlantGroupingType(i) === 'barkbeetle'),
     leafbeetle: relatedInsects.filter(i => getPlantGroupingType(i) === 'leafbeetle'),
     aphid: relatedInsects.filter(i => getPlantGroupingType(i) === 'aphid')
   };
@@ -1956,6 +1957,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     butterfly: '蝶',
     beetle: 'タマムシ',
     longhornbeetle: 'カミキリムシ',
+    barkbeetle: 'キクイムシ',
     leafbeetle: 'ハムシ',
     aphid: 'アブラムシ'
   };
@@ -2539,6 +2541,7 @@ async function generateMetaPages() {
     let butterflyCountFromInsects = 0;
     let beetleCountFromInsects = 0;
     let longhornbeetleCountFromInsects = 0;
+    let barkbeetleCountFromInsects = 0;
     let leafbeetleCountFromInsects = 0;
     let aphidCountFromInsects = 0;
     const hostPlantsMap = new Map();
@@ -2593,17 +2596,22 @@ async function generateMetaPages() {
       const isButterfly = /チョウ科$/.test(famJP) || /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/.test(famLatin);
       const isLeafBeetle = famJP.includes('ハムシ') || famLatin === 'Chrysomelidae' || famLatin === 'Megalopodidae';
       const isLonghornBeetle = famJP === 'カミキリムシ科' || famLatin === 'Cerambycidae';
+      const isBarkBeetle =
+        (row.subfamily || '').trim() === 'Scolytinae' ||
+        (row.subfamily_jp || '').includes('キクイムシ');
       const isBeetle = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
       const isAphid = famJP.includes('アブラムシ') || famLatin === 'Aphididae';
       const type = isButterfly
         ? 'butterfly'
-        : (isLeafBeetle
+        : (isBarkBeetle
+          ? 'barkbeetle'
+          : (isLeafBeetle
           ? 'leafbeetle'
           : (isLonghornBeetle
             ? 'longhornbeetle'
             : (isBeetle
               ? 'beetle'
-              : (isAphid ? 'aphid' : 'moth'))));
+              : (isAphid ? 'aphid' : 'moth')))));
       
       // 成虫出現時期の検索（外部CSV→general_notesの順にフォールバック）
       let emergenceTime = emergenceTimeMap.get(japaneseName) || 
@@ -2664,6 +2672,7 @@ async function generateMetaPages() {
       else if (type === 'butterfly') butterflyCountFromInsects++;
       else if (type === 'beetle') beetleCountFromInsects++;
       else if (type === 'longhornbeetle') longhornbeetleCountFromInsects++;
+      else if (type === 'barkbeetle') barkbeetleCountFromInsects++;
       else if (type === 'leafbeetle') leafbeetleCountFromInsects++;
       else if (type === 'aphid') aphidCountFromInsects++;
       
@@ -2768,6 +2777,7 @@ async function generateMetaPages() {
     // ハムシデータの処理（従来通り）
     let beetleCount = beetleCountFromInsects;
     let longhornbeetleCount = longhornbeetleCountFromInsects;
+    const barkbeetleCount = barkbeetleCountFromInsects;
     let leafbeetleCount = leafbeetleCountFromInsects;
     let aphidCount = aphidCountFromInsects;
     
@@ -2979,6 +2989,7 @@ async function generateMetaPages() {
     console.log(`- 蝶: ${butterflyCount}種`);
     console.log(`- タマムシ: ${beetleCount}種`);
     console.log(`- カミキリムシ: ${longhornbeetleCount}種`);
+    console.log(`- キクイムシ: ${barkbeetleCount}種`);
     console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- アブラムシ: ${aphidCount}種`);
     console.log(`- 食草: ${plantCount}種`);
@@ -3024,11 +3035,16 @@ async function generateMetaPages() {
         famLatin === 'Chrysomelidae' ||
         famLatin === 'Megalopodidae';
       const isLHB = famJP === 'カミキリムシ科' || famLatin === 'Cerambycidae';
+      const isBB =
+        (row.subfamily || '').trim() === 'Scolytinae' ||
+        (row.subfamily_jp || '').includes('キクイムシ');
       const isBtl = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
       const isAph =
         famJP.includes('アブラムシ') || famLatin === 'Aphididae';
       const insType = isBfly
         ? 'butterfly'
+        : isBB
+        ? 'barkbeetle'
         : isLB
         ? 'leafbeetle'
         : isLHB

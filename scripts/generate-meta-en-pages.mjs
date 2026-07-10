@@ -1169,6 +1169,7 @@ function buildEnglishHomePage(counts) {
           <dt>Butterflies</dt><dd>${counts.butterflies}</dd>
           <dt>Jewel beetles</dt><dd>${counts.beetles}</dd>
           <dt>Longhorn beetles</dt><dd>${counts.longhornbeetles}</dd>
+          <dt>Bark beetles</dt><dd>${counts.barkbeetles}</dd>
           <dt>Leaf beetles</dt><dd>${counts.leafbeetles}</dd>
           <dt>Aphids</dt><dd>${counts.aphids}</dd>
           <dt>Host plants</dt><dd>${counts.hostPlants}</dd>
@@ -1182,6 +1183,7 @@ function buildEnglishHomePage(counts) {
           <li><a href="/en/meta/butterfly/index.html">Butterflies</a></li>
           <li><a href="/en/meta/beetle/index.html">Jewel beetles</a></li>
           <li><a href="/en/meta/longhornbeetle/index.html">Longhorn beetles</a></li>
+          <li><a href="/en/meta/barkbeetle/index.html">Bark beetles</a></li>
           <li><a href="/en/meta/leafbeetle/index.html">Leaf beetles</a></li>
           <li><a href="/en/meta/aphid/index.html">Aphids</a></li>
           <li><a href="/en/meta/plant/index.html">Plants</a></li>
@@ -1205,6 +1207,7 @@ async function generateEnglishMetaPages() {
     butterfly: loadJson('butterflies.json', []),
     beetle: loadJson('beetles.json', []),
     longhornbeetle: loadJson('longhornbeetles.json', []),
+    barkbeetle: loadJson('barkbeetles.json', []),
     leafbeetle: loadJson('leafbeetles.json', []),
     aphid: loadJson('aphids.json', []),
   };
@@ -1383,6 +1386,7 @@ async function generateEnglishMetaPages() {
     butterflies: (indexableInsectEntriesByType.get('butterfly') || []).length,
     beetles: (indexableInsectEntriesByType.get('beetle') || []).length,
     longhornbeetles: (indexableInsectEntriesByType.get('longhornbeetle') || []).length,
+    barkbeetles: (indexableInsectEntriesByType.get('barkbeetle') || []).length,
     leafbeetles: (indexableInsectEntriesByType.get('leafbeetle') || []).length,
     aphids: (indexableInsectEntriesByType.get('aphid') || []).length,
     hostPlants: indexablePlantEntries.length,
@@ -1394,6 +1398,7 @@ async function generateEnglishMetaPages() {
   console.log(`[meta-en] butterflies: ${counts.butterflies}`);
   console.log(`[meta-en] beetles: ${counts.beetles}`);
   console.log(`[meta-en] longhorn beetles: ${counts.longhornbeetles}`);
+  console.log(`[meta-en] bark beetles: ${counts.barkbeetles}`);
   console.log(`[meta-en] leaf beetles: ${counts.leafbeetles}`);
   console.log(`[meta-en] aphids: ${counts.aphids}`);
   console.log(`[meta-en] plants: ${counts.hostPlants}`);

@@ -12,8 +12,9 @@ const INSECT_TYPE_ORDER = Object.freeze({
   butterfly: 1,
   beetle: 2,
   longhornbeetle: 3,
-  leafbeetle: 4,
-  aphid: 5,
+  barkbeetle: 4,
+  leafbeetle: 5,
+  aphid: 6,
 });
 
 // 学名から属名と種小名を取り出す。

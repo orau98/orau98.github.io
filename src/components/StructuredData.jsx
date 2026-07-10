@@ -11,7 +11,7 @@ const toJsonLd = (data) =>
   JSON.stringify(data).replace(/</g, '\\u003c');
 
 const DATASET_DESCRIPTION =
-  '日本産の蛾・蝶・甲虫・アブラムシなど9700種超について、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。';
+  '日本産の蛾・蝶・甲虫・アブラムシなど10,000種超について、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。';
 
 const isFlowerVisitRecord = (record) => {
   if (!record) return false;
@@ -594,6 +594,148 @@ export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
   );
 };
 
+export const BarkBeetleStructuredData = ({ barkbeetle }) => {
+  if (!barkbeetle) return null;
+
+  const detailUrl = absUrl(
+    buildInsectMetaPagePath(
+      barkbeetle.type,
+      barkbeetle.id,
+      'barkbeetle',
+    ),
+  );
+  const hostPlantsList = extractLarvalHostPlants(
+    barkbeetle.hostPlantsDetailed,
+    barkbeetle.hostPlants,
+  );
+  const familyName =
+    barkbeetle.classification?.familyJapanese ||
+    barkbeetle.classification?.family ||
+    'ゾウムシ科';
+  const subfamilyName =
+    barkbeetle.classification?.subfamilyJapanese ||
+    barkbeetle.classification?.subfamily ||
+    'キクイムシ亜科';
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': ['Animal', 'Species'],
+    name: barkbeetle.name,
+    alternateName: [barkbeetle.scientificName, barkbeetle.name],
+    scientificName: barkbeetle.scientificName,
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'species_id',
+      value: barkbeetle.id,
+    },
+    classification: {
+      '@type': 'Taxon',
+      taxonRank: 'species',
+      parentTaxon: [
+        {
+          '@type': 'Taxon',
+          name:
+            barkbeetle.classification?.genus ||
+            barkbeetle.scientificName?.split(' ')[0] ||
+            'unknown',
+          taxonRank: 'genus',
+        },
+        {
+          '@type': 'Taxon',
+          name: subfamilyName,
+          taxonRank: 'subfamily',
+        },
+        {
+          '@type': 'Taxon',
+          name: familyName,
+          taxonRank: 'family',
+        },
+        {
+          '@type': 'Taxon',
+          name: 'コウチュウ目',
+          taxonRank: 'order',
+        },
+      ],
+    },
+    description: `${barkbeetle.name}（${barkbeetle.scientificName}）は${familyName}${subfamilyName ? `・${subfamilyName}` : ''}に属するキクイムシです。${hostPlantsList.length ? `文献で${hostPlantsList.slice(0, 3).join('、')}など${hostPlantsList.length}件の寄主植物が登録されています。` : '寄主植物情報は現在調査中です。'}`,
+    url: detailUrl,
+    sameAs: detailUrl,
+    inLanguage: 'ja',
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: '和名',
+        value: barkbeetle.name,
+      },
+      {
+        '@type': 'PropertyValue',
+        name: '学名',
+        value: barkbeetle.scientificName,
+      },
+      {
+        '@type': 'PropertyValue',
+        name: '分類',
+        value: `${familyName} / ${subfamilyName}`,
+      },
+      {
+        '@type': 'PropertyValue',
+        name: '寄主植物数',
+        value: hostPlantsList.length || 0,
+      },
+    ],
+  };
+
+  const imageObject = buildInsectImageObject(
+    barkbeetle,
+    `${barkbeetle.name}（${barkbeetle.scientificName}）の写真`,
+    `${barkbeetle.name}の生態写真`,
+  );
+  if (imageObject) structuredData.image = imageObject;
+
+  if (hostPlantsList.length) {
+    structuredData.hasEcologicalInteraction = hostPlantsList.map((plant) => ({
+      '@type': 'EcologicalInteraction',
+      interactionType: 'host plant association',
+      participantOrganism: {
+        '@type': ['Plant', 'Species'],
+        name: plant,
+      },
+      description: `${barkbeetle.name}と${plant}の寄主植物関係`,
+    }));
+  }
+
+  structuredData.breadcrumb = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '昆虫植物図鑑',
+        item: absUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'キクイムシ',
+        item: absUrl('/meta/barkbeetle/index.html'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: barkbeetle.name,
+        item: detailUrl,
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
+    />
+  );
+};
+
 // Enhanced ハムシの構造化データ with Species, detailed taxonomy and emergence time
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
@@ -1005,7 +1147,7 @@ export const MainStructuredData = () => {
     "name": "昆虫植物図鑑",
     "alternateName": ["昆虫食草図鑑", "昆虫食草DB", "InsectPlantDB"],
     "url": siteUrl,
-    "description": "蛾・蝶・タマムシ・カミキリムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を検索できるデータベース。",
+    "description": "蛾・蝶・タマムシ・カミキリムシ・キクイムシ・ハムシ・アブラムシなど、日本産昆虫と食草・寄主植物の関係を検索できるデータベース。",
     "inLanguage": "ja",
     "image": absUrl('/images/resized/insects/Cucullia_argentea.1024.jpg'),
     "isAccessibleForFree": true,
@@ -1041,7 +1183,7 @@ export const MainStructuredData = () => {
       "inLanguage": "ja",
       "isAccessibleForFree": true,
       "image": absUrl('/images/resized/insects/Cucullia_argentea.1024.jpg'),
-      "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "カミキリムシ", "ハムシ", "植物", "生態学"],
+      "keywords": ["昆虫", "食草", "蛾", "蝶", "タマムシ", "カミキリムシ", "キクイムシ", "ハムシ", "植物", "生態学"],
       "creator": {
         "@type": "Organization",
         "name": "昆虫植物図鑑"
@@ -1074,6 +1216,7 @@ export const ExplorerStructuredData = ({
     (counts.butterflies || 0) +
     (counts.beetles || 0) +
     (counts.longhornbeetles || 0) +
+    (counts.barkbeetles || 0) +
     (counts.leafbeetles || 0) +
     (counts.aphids || 0);
 

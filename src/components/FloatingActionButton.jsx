@@ -19,7 +19,7 @@ const FloatingActionButton = () => {
   const locale = getLocaleFromPath(location.pathname || '/');
   const isEnglish = isEnglishLocale(locale);
   const normalizedPathname = stripLocalePrefix(location.pathname || '/');
-  const isDetailPage = /\/(moth|butterfly|beetle|longhornbeetle|leafbeetle|aphid|plant)\//.test(normalizedPathname);
+  const isDetailPage = /\/(moth|butterfly|beetle|longhornbeetle|barkbeetle|leafbeetle|aphid|plant)\//.test(normalizedPathname);
 
   // 詳細ページでは常時表示する。
   // 以前は上部にDetailSectionNav（セクションナビ帯）がありデスクトップは

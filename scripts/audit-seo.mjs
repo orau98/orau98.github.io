@@ -239,7 +239,7 @@ const validateLegacyRedirectHtml = (filePath, html) => {
   const refreshContent = getMetaHttpEquivContent(html, 'refresh');
 
   const isCrawlableMigration =
-    /^(?:en\/)?(?:moth|butterfly|beetle|longhornbeetle|leafbeetle|aphid)\/.+\/index\.html$/u.test(distRelativePath) ||
+    /^(?:en\/)?(?:moth|butterfly|beetle|longhornbeetle|barkbeetle|leafbeetle|aphid)\/.+\/index\.html$/u.test(distRelativePath) ||
     /^(?:en\/)?guides\//u.test(distRelativePath);
   if (isCrawlableMigration) {
     ensure(!robots.includes('noindex'), `${relativePath}: permanent public redirect must be crawlable`);
@@ -499,6 +499,7 @@ const legacyRouteDirs = [
   'butterfly',
   'beetle',
   'longhornbeetle',
+  'barkbeetle',
   'leafbeetle',
   'aphid',
   'plant',
@@ -506,6 +507,7 @@ const legacyRouteDirs = [
   'en/butterfly',
   'en/beetle',
   'en/longhornbeetle',
+  'en/barkbeetle',
   'en/leafbeetle',
   'en/aphid',
   'en/plant',

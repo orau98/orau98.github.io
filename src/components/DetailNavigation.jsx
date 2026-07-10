@@ -8,7 +8,7 @@ import { buildPlantPath } from '../utils/siteTaxonomy';
 // `items` should be sorted in the desired order (e.g., alphabetical or taxonomic)
 // `currentItemId` or `currentItemName` is used to find the current index
 const useNeighborItems = (items, currentItemIdentifier, identifierKey = 'id') => {
-  // 9700件超のリストを毎レンダー線形探索しないよう、識別子→indexのマップをメモ化する
+  // 1万件超のリストを毎レンダー線形探索しないよう、識別子→indexのマップをメモ化する
   const indexMap = useMemo(() => {
     const map = new Map();
     (items || []).forEach((item, index) => {

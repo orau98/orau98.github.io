@@ -24,7 +24,13 @@ export const sourceLinks = {
   "日本のハマキガ1": "https://www.moth.jp/",
   "日本のハマキガ2": "https://www.moth.jp/",
   "Tinea": "https://www.moth.jp/pubs/tinea",
-  "さやばね": "https://coleoptera.sakura.ne.jp/publication/sayabane/sayabane-bibliography.html"
+  "さやばね": "https://coleoptera.sakura.ne.jp/publication/sayabane/sayabane-bibliography.html",
+  "Nobuchi (1964) Studies on Scolytidae III": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+  "Nobuchi (1973) Studies on Scolytidae XI": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+  "Nobuchi (1974) Studies on Scolytidae XII": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+  "Nobuchi (1975) Studies on Scolytidae XIII": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+  "Nobuchi (1979) Studies on Scolytidae XVIII": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+  "Nobuchi (1981) Revision of the genus Xylosandrus from Japan": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/314-4.pdf",
 };
 
 const referenceAliases = {

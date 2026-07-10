@@ -145,6 +145,9 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
         case 'カミキリムシ類':
           result.longhornbeetles.push(insectData);
           break;
+        case 'キクイムシ類':
+          result.barkbeetles.push(insectData);
+          break;
         case 'ハムシ類':
           result.leafbeetles.push(insectData);
           break;
@@ -162,8 +165,9 @@ export const convertIntegratedDataToStandardFormat = (csvData) => {
     butterflies: result.butterflies.length,
     beetles: result.beetles.length,
     longhornbeetles: result.longhornbeetles.length,
+    barkbeetles: result.barkbeetles.length,
     leafbeetles: result.leafbeetles.length,
-    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.leafbeetles.length
+    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.barkbeetles.length + result.leafbeetles.length
   });
   
   return result;
@@ -180,6 +184,7 @@ const getInsectType = (classification) => {
     case '蝶類': return 'butterfly';
     case 'タマムシ類': return 'beetle';
     case 'カミキリムシ類': return 'longhornbeetle';
+    case 'キクイムシ類': return 'barkbeetle';
     case 'ハムシ類': return 'leafbeetle';
     default: return 'unknown';
   }

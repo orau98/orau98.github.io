@@ -491,7 +491,7 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
   );
 });
 
-const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja', insectPartitionsReady = true }) => {
+const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja', insectPartitionsReady = true }) => {
   const isEnglish = isEnglishLocale(locale);
   const englishPlantRouteMap = useSeoRouteMap('plants');
   const { plantName } = useParams();
@@ -902,7 +902,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName]);
   
   // All insects for RelatedPlants component
-  const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...leafbeetles, ...aphids];
+  const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...barkbeetles, ...leafbeetles, ...aphids];
   
   // Debug: オニグルミを含む昆虫を探す
   if (decodedPlantName === 'オニグルミ') {

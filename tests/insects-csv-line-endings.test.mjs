@@ -25,7 +25,12 @@ test('insects CSV parses every mixed-source row independently', () => {
     const parsed = Papa.parse(raw, { header: true, skipEmptyLines: true });
 
     assert.deepEqual(parsed.errors, [], `${csvPath} should parse without joined rows`);
-    assert.equal(parsed.data.length, 9738, `${csvPath} should keep every insect row`);
+    assert.equal(parsed.data.length, 10060, `${csvPath} should keep every insect row`);
+    assert.equal(
+      parsed.data.filter((row) => row.subfamily === 'Scolytinae').length,
+      322,
+      `${csvPath} should keep every Scolytinae catalog row`,
+    );
 
     const byId = new Map(parsed.data.map((row) => [row.insect_id, row]));
     for (const [insectId, japaneseName] of expectedLamiini) {

@@ -187,6 +187,7 @@ const buildReport = () => {
     ['butterflies', manifest?.counts?.butterflies ?? ''],
     ['beetles', manifest?.counts?.beetles ?? ''],
     ['longhornbeetles', manifest?.counts?.longhornbeetles ?? ''],
+    ['barkbeetles', manifest?.counts?.barkbeetles ?? ''],
     ['leafbeetles', manifest?.counts?.leafbeetles ?? ''],
     ['aphids', manifest?.counts?.aphids ?? ''],
     ['hostPlants', manifest?.counts?.hostPlants ?? ''],

@@ -43,7 +43,9 @@
     "apply:updates": ".venv/bin/python scripts/apply_updates.py",
     "extract:parallel": "bash scripts/run_extract_parallel.sh",
     "check:api:parallel": "bash scripts/run_api_parallel.sh",
-    "extract:kamikiri-hostplants": "node scripts/extract_kamikiri_hostplants.mjs"
+    "extract:kamikiri-hostplants": "node scripts/extract_kamikiri_hostplants.mjs",
+    "import:scolytinae-catalog": "node scripts/import-scolytinae-catalog.mjs",
+    "import:scolytinae-hosts": "node scripts/import-scolytinae-host-records.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.3",

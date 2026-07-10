@@ -37,6 +37,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
     type === 'butterfly' ? 'bg-pink-400' :
     type === 'beetle' ? 'bg-emerald-400' :
     type === 'longhornbeetle' ? 'bg-teal-400' :
+    type === 'barkbeetle' ? 'bg-stone-500' :
     'bg-amber-400'
   );
 
@@ -169,6 +170,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                         relatedMoth.type === 'butterfly' ? 'border-pink-200/60 dark:border-pink-700/60 hover:border-pink-400/80 dark:hover:border-pink-500/80 hover:shadow-pink-500/20' :
                         relatedMoth.type === 'beetle' ? 'border-emerald-200/60 dark:border-emerald-700/60 hover:border-emerald-400/80 dark:hover:border-emerald-500/80 hover:shadow-emerald-500/20' :
                         relatedMoth.type === 'longhornbeetle' ? 'border-teal-200/60 dark:border-teal-700/60 hover:border-teal-400/80 dark:hover:border-teal-500/80 hover:shadow-teal-500/20' :
+                        relatedMoth.type === 'barkbeetle' ? 'border-stone-200/60 dark:border-stone-700/60 hover:border-stone-400/80 dark:hover:border-stone-500/80 hover:shadow-stone-500/20' :
                         'border-amber-200/60 dark:border-amber-700/60 hover:border-amber-400/80 dark:hover:border-amber-500/80 hover:shadow-amber-500/20'
                       }`}>
                         <div className="relative w-full aspect-[3/2] overflow-hidden">

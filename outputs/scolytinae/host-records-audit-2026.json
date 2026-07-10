@@ -1,0 +1,152 @@
+{
+  "source_files": [
+    "data/scolytinae_host_record_groups.json",
+    "data/scolytinae_nobuchi_1964_hosts.json",
+    "data/scolytinae_xylosandrus_1981_hosts.json"
+  ],
+  "source_record_count": 394,
+  "approved_record_count": 372,
+  "excluded_record_count": 22,
+  "approved_insect_count": 61,
+  "approved_plant_count": 203,
+  "geography_counts": {
+    "japan_explicit": 191,
+    "japan_inferred": 93,
+    "overseas_explicit": 2,
+    "unknown": 86
+  },
+  "excluded_records": [
+    {
+      "source_record_id": "N73-CHIK-BETU-EXCLUDED-01",
+      "insect_scientific_name": "Scolytus chikisanii / Scolytus betulae",
+      "plant_scientific_name_original": "Betula platyphylla var. japonica",
+      "reason": "原著はS. betulaeをS. chikisaniiの新参異名とするが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N73-CHIK-BETU-EXCLUDED-02",
+      "insect_scientific_name": "Scolytus chikisanii / Scolytus betulae",
+      "plant_scientific_name_original": "Ulmus davidiana var. japonica",
+      "reason": "原著はS. betulaeをS. chikisaniiの新参異名とするが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N73-ESUR-TRIS-EXCLUDED-01",
+      "insect_scientific_name": "Scolytus esuriens / Scolytus trispinosus",
+      "plant_scientific_name_original": "Pterocarya rhoifolia",
+      "reason": "原著はS. trispinosusをS. esuriensの異名として扱うが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N73-ESUR-TRIS-EXCLUDED-02",
+      "insect_scientific_name": "Scolytus esuriens / Scolytus trispinosus",
+      "plant_scientific_name_original": "Betula platyphylla var. japonica",
+      "reason": "原著はS. trispinosusをS. esuriensの異名として扱うが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N73-ESUR-TRIS-EXCLUDED-03",
+      "insect_scientific_name": "Scolytus esuriens / Scolytus trispinosus",
+      "plant_scientific_name_original": "Ulmus davidiana var. japonica",
+      "reason": "原著はS. trispinosusをS. esuriensの異名として扱うが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N73-ESUR-TRIS-EXCLUDED-04",
+      "insect_scientific_name": "Scolytus esuriens / Scolytus trispinosus",
+      "plant_scientific_name_original": "Tilia maximowicziana",
+      "reason": "原著はS. trispinosusをS. esuriensの異名として扱うが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N73-USSU-EXCLUDED-01",
+      "insect_scientific_name": "Scolytus ussuriensis",
+      "plant_scientific_name_original": "Prunus mume",
+      "reason": "Scolytus ussuriensisを2026年目録の採用種へ一意に対応できない"
+    },
+    {
+      "source_record_id": "N73-USSU-EXCLUDED-02",
+      "insect_scientific_name": "Scolytus ussuriensis",
+      "plant_scientific_name_original": "Prunus persica",
+      "reason": "Scolytus ussuriensisを2026年目録の採用種へ一意に対応できない"
+    },
+    {
+      "source_record_id": "N79-MAGN-EXCLUDED-01",
+      "insect_scientific_name": "Polygraphus magnus",
+      "plant_scientific_name_original": "Illicium religiosum",
+      "reason": "Polygraphus magnusを2026年目録の採用種へ一意に対応できない"
+    },
+    {
+      "source_record_id": "N74-ANGU-EXCLUDED-01",
+      "insect_scientific_name": "Orthotomicus angulatus (Eichhoff, 1876)",
+      "plant_scientific_name_original": "Quercus gilva",
+      "reason": "原著自身がThe last may be a mistake in host recordと注記するため公開寄主から除外"
+    },
+    {
+      "source_record_id": "N74-CURV-EXCLUDED-01",
+      "insect_scientific_name": "Pityokteines curvidens",
+      "plant_scientific_name_original": "Abies firma",
+      "reason": "Pityokteines curvidensを2026年目録の採用種へ一意に対応できず、原著も日本産標本を1点しか確認していない"
+    },
+    {
+      "source_record_id": "N74-CURV-EXCLUDED-02",
+      "insect_scientific_name": "Pityokteines curvidens",
+      "plant_scientific_name_original": "Abies homolepis",
+      "reason": "Pityokteines curvidensを2026年目録の採用種へ一意に対応できず、原著も日本産標本を1点しか確認していない"
+    },
+    {
+      "source_record_id": "N74-CURV-EXCLUDED-03",
+      "insect_scientific_name": "Pityokteines curvidens",
+      "plant_scientific_name_original": "Abies mariesii",
+      "reason": "Pityokteines curvidensを2026年目録の採用種へ一意に対応できず、原著も日本産標本を1点しか確認していない"
+    },
+    {
+      "source_record_id": "N74-CURV-EXCLUDED-04",
+      "insect_scientific_name": "Pityokteines curvidens",
+      "plant_scientific_name_original": "Abies sachalinensis",
+      "reason": "Pityokteines curvidensを2026年目録の採用種へ一意に対応できず、原著も日本産標本を1点しか確認していない"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-01",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Abies sachalinensis",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-02",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Picea excelsa",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-03",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Larix leptolepis",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-04",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Pinus densiflora",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-05",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Pinus koraiensis",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-06",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Pinus sylvestris",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N74-CEMB-SUBE-EXCLUDED-07",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "plant_scientific_name_original": "Pinus strobus",
+      "reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能"
+    },
+    {
+      "source_record_id": "N64-OLEI-01",
+      "insect_scientific_name": "Hylesinus oleiperda Fabricius, 1792",
+      "plant_scientific_name_original": "Fraxinus mandshurica var. japonica",
+      "reason": "原著名Hylesinus oleiperdaを2026年目録のHylesinus toranioへ結ぶ一次分類文献を今回確認できず、目録自体にもこの異名が明記されないため保留"
+    }
+  ]
+}

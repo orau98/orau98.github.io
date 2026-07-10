@@ -11,7 +11,7 @@ import { getSectionConfigByRouteSegment } from '../utils/siteTaxonomy';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import LocaleSwitcher from './LocaleSwitcher';
 
-const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], leafbeetles = [], aphids = [], hostPlants: _hostPlants, plantDetails }) => {
+const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants: _hostPlants, plantDetails }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
   const insectListsByType = {
@@ -19,6 +19,7 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
     butterfly: butterflies,
     beetle: beetles,
     longhornbeetle: longhornbeetles,
+    barkbeetle: barkbeetles,
     leafbeetle: leafbeetles,
     aphid: aphids,
   };

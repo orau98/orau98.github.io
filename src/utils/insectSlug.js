@@ -12,7 +12,7 @@ export const slugifyInsectName = (name = '') => {
 };
 
 export const isLikelyInsectId = (value = '') =>
-  /^(species|catalog|moth|butterfly|butterfly-csv|beetle|longhornbeetle|leafbeetle|aphid)[-_]?[a-z]*\d+[a-z]*$/i
+  /^(species|catalog|moth|butterfly|butterfly-csv|beetle|longhornbeetle|barkbeetle|leafbeetle|aphid)[-_]?[a-z]*\d+[a-z]*$/i
     .test(String(value));
 
 export const buildInsectPath = (insect, locale = getCurrentLocale()) => {

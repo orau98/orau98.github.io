@@ -1,0 +1,2222 @@
+{
+  "schema_version": 1,
+  "geography_policy": {
+    "japan_explicit": "標本ラベル、採集地、または本文が日本での当該寄主記録を直接示す",
+    "japan_inferred": "日本産分類群を扱う節に寄主が列挙されるが、植物ごとの採集地は示されない",
+    "overseas_explicit": "原著が日本国外の国・地域を寄主記録に直接付記する",
+    "unknown": "寄主欄と分布欄を対応付けられず、日本か海外かを判定できない"
+  },
+  "groups": [
+    {
+      "record_prefix": "N73-ARAT",
+      "insect_id": "species-SC208",
+      "insect_scientific_name": "Scolytus aratus Blandford, 1894",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "17",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（論文の日本産節から推定。個別産地なし）",
+      "geography_basis": "日本産標本について述べた直後のHosts欄だが、植物ごとの標本産地は未記載",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アオガシ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Machilus japonica",
+          "plant_scientific_name_accepted": "Machilus japonica"
+        },
+        {
+          "plant_name": "ウメ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus mume",
+          "plant_scientific_name_accepted": "Prunus mume"
+        },
+        {
+          "plant_name": "カラミザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus pseudocerasus",
+          "plant_scientific_name_accepted": "Cerasus pseudocerasus"
+        },
+        {
+          "plant_name": "リンゴ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Malus pumila var. domestica",
+          "plant_scientific_name_accepted": "Malus pumila var. domestica"
+        },
+        {
+          "plant_name": "ナナカマド",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Sorbus commixta",
+          "plant_scientific_name_accepted": "Sorbus commixta"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-CLAV",
+      "insect_id": "species-SC211",
+      "insect_scientific_name": "Scolytus claviger Blandford, 1894",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "19",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（論文の日本産節から推定。個別産地なし）",
+      "geography_basis": "日本産標本を再検討した節のHosts欄だが、植物ごとの標本産地は未記載",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アカシデ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus laxiflora",
+          "plant_scientific_name_accepted": "Carpinus laxiflora"
+        },
+        {
+          "plant_name": "クマシデ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus japonica",
+          "plant_scientific_name_accepted": "Carpinus japonica"
+        },
+        {
+          "plant_name": "サワシバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus cordata",
+          "plant_scientific_name_accepted": "Carpinus cordata var. cordata"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-DAHU",
+      "insect_id": "species-SC212",
+      "insect_scientific_name": "Scolytus dahuricus Chapuis, 1879",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "20",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（論文の日本産節から推定。個別産地なし）",
+      "geography_basis": "北海道産標本を列挙した節のHosts欄だが、植物ごとの標本産地は未記載",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "シラカンバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Betula platyphylla var. japonica",
+          "plant_scientific_name_accepted": "Betula platyphylla var. japonica"
+        },
+        {
+          "plant_name": "ダケカンバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Betula ermanii",
+          "plant_scientific_name_accepted": "Betula ermanii"
+        },
+        {
+          "plant_name": "タブノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Machilus thunbergii",
+          "plant_scientific_name_accepted": "Machilus thunbergii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-ELLI",
+      "insect_id": "species-SC213",
+      "insect_scientific_name": "Scolytus ellipticus Murayama, 1958",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "20",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（群馬県をタイプ産地とする日本産節から推定）",
+      "geography_basis": "タイプ産地は群馬県、分布は日本とされるが、植物ごとの標本産地は未記載",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "クマシデ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus japonica",
+          "plant_scientific_name_accepted": "Carpinus japonica"
+        },
+        {
+          "plant_name": "ウメ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus mume",
+          "plant_scientific_name_accepted": "Prunus mume"
+        },
+        {
+          "plant_name": "サクラ属",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sp. (Cherry)",
+          "plant_scientific_name_accepted": "Cerasus spp."
+        },
+        {
+          "plant_name": "ナナカマド",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Sorbus commixta",
+          "plant_scientific_name_accepted": "Sorbus commixta"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-FRON-ZELK",
+      "insect_id": "species-SC215",
+      "insect_scientific_name": "Scolytus frontalis Blandford, 1894",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "22",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（本文でケヤキ樹皮下から普通に見つかると明記）",
+      "geography_basis": "本文に In Japan, this species is commonly found under bark of Zelkova serrata と明記",
+      "evidence_type": "本文の日本産樹皮下記録とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ケヤキ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_original": "Zelkova serrata",
+          "plant_scientific_name_accepted": "Zelkova serrata"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-FRON-OTHER",
+      "insect_id": "species-SC215",
+      "insect_scientific_name": "Scolytus frontalis Blandford, 1894",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "22",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（論文の日本産節から推定。個別産地なし）",
+      "geography_basis": "日本産節のHosts欄だが、ケヤキ以外は本文中に国別対応がない",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ナラガシワ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus aliena",
+          "plant_scientific_name_accepted": "Quercus aliena"
+        },
+        {
+          "plant_name": "オオヤマザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sargentii",
+          "plant_scientific_name_accepted": "Cerasus sargentii var. sargentii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-JAPO",
+      "insect_id": "species-SC217",
+      "insect_scientific_name": "Scolytus japonicus Chapuis, 1876",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "23",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（日本で最も普通とする節から推定。植物ごとの産地なし）",
+      "geography_basis": "本文は日本で最も広く普通な種とし国内標本を列挙するが、Hosts欄は植物別産地を示さない",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ハルニレ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_original": "Ulmus davidiana var. japonica",
+          "plant_scientific_name_accepted": "Ulmus davidiana var. japonica"
+        },
+        {
+          "plant_name": "ケヤキ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_original": "Zelkova serrata",
+          "plant_scientific_name_accepted": "Zelkova serrata"
+        },
+        {
+          "plant_name": "スモモ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus salicina",
+          "plant_scientific_name_accepted": "Prunus salicina"
+        },
+        {
+          "plant_name": "ウメ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus mume",
+          "plant_scientific_name_accepted": "Prunus mume"
+        },
+        {
+          "plant_name": "モモ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus persica",
+          "plant_scientific_name_accepted": "Prunus persica"
+        },
+        {
+          "plant_name": "ヤマザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sargentii subsp. jamasakura",
+          "plant_scientific_name_accepted": "Cerasus jamasakura"
+        },
+        {
+          "plant_name": "サクラ属",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sp.",
+          "plant_scientific_name_accepted": "Cerasus spp."
+        },
+        {
+          "plant_name": "リンゴ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Malus pumila var. domestica",
+          "plant_scientific_name_accepted": "Malus pumila var. domestica"
+        },
+        {
+          "plant_name": "ヤマナシ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Pyrus serotina",
+          "plant_scientific_name_accepted": "Pyrus pyrifolia"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-CHIK-BETU-EXCLUDED",
+      "insect_id": "",
+      "insect_scientific_name": "Scolytus chikisanii / Scolytus betulae",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "18",
+      "review_status": "excluded",
+      "exclusion_reason": "原著はS. betulaeをS. chikisaniiの新参異名とするが、2026年目録は両種を別種として採用しており寄主の再配分不能",
+      "geographic_scope": "unknown",
+      "geography_label": "分類対応保留",
+      "geography_basis": "現行目録と原著の種概念が不一致",
+      "evidence_type": "原著のHosts欄",
+      "hosts": [
+        {
+          "plant_name": "シラカンバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Betula platyphylla var. japonica",
+          "plant_scientific_name_accepted": "Betula platyphylla var. japonica"
+        },
+        {
+          "plant_name": "ハルニレ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_original": "Ulmus davidiana var. japonica",
+          "plant_scientific_name_accepted": "Ulmus davidiana var. japonica"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-ESUR-TRIS-EXCLUDED",
+      "insect_id": "",
+      "insect_scientific_name": "Scolytus esuriens / Scolytus trispinosus",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "21",
+      "review_status": "excluded",
+      "exclusion_reason": "原著はS. trispinosusをS. esuriensの異名として扱うが、2026年目録は両種を別種として採用しており寄主の再配分不能",
+      "geographic_scope": "unknown",
+      "geography_label": "分類対応保留",
+      "geography_basis": "現行目録と原著の種概念が不一致",
+      "evidence_type": "原著のHosts欄",
+      "hosts": [
+        {
+          "plant_name": "サワグルミ",
+          "plant_family": "クルミ科",
+          "plant_scientific_name_original": "Pterocarya rhoifolia",
+          "plant_scientific_name_accepted": "Pterocarya rhoifolia"
+        },
+        {
+          "plant_name": "シラカンバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Betula platyphylla var. japonica",
+          "plant_scientific_name_accepted": "Betula platyphylla var. japonica"
+        },
+        {
+          "plant_name": "ハルニレ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_original": "Ulmus davidiana var. japonica",
+          "plant_scientific_name_accepted": "Ulmus davidiana var. japonica"
+        },
+        {
+          "plant_name": "オオバボダイジュ",
+          "plant_family": "アオイ科",
+          "plant_scientific_name_original": "Tilia maximowicziana",
+          "plant_scientific_name_accepted": "Tilia maximowicziana"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N73-USSU-EXCLUDED",
+      "insect_id": "",
+      "insect_scientific_name": "Scolytus ussuriensis",
+      "reference": "Nobuchi (1973) Studies on Scolytidae XI",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf",
+      "page": "24",
+      "review_status": "excluded",
+      "exclusion_reason": "Scolytus ussuriensisを2026年目録の採用種へ一意に対応できない",
+      "geographic_scope": "unknown",
+      "geography_label": "分類対応保留",
+      "geography_basis": "現行目録に同名の採用種なし",
+      "evidence_type": "原著のHosts欄",
+      "hosts": [
+        {
+          "plant_name": "ウメ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus mume",
+          "plant_scientific_name_accepted": "Prunus mume"
+        },
+        {
+          "plant_name": "モモ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus persica",
+          "plant_scientific_name_accepted": "Prunus persica"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-FULV",
+      "insect_id": "species-SC191",
+      "insect_scientific_name": "Polygraphus fulvipennis Niijima, 1941",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "4",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（八ヶ岳タイプ産地の日本産節から推定）",
+      "geography_basis": "タイプ産地と分布は本州だが、植物ごとの標本ラベルは未記載",
+      "evidence_type": "原著のHost欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "オオシラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies mariesii",
+          "plant_scientific_name_accepted": "Abies mariesii"
+        },
+        {
+          "plant_name": "シラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies veitchii",
+          "plant_scientific_name_accepted": "Abies veitchii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-GRAC-TODO",
+      "insect_id": "species-SC192",
+      "insect_scientific_name": "Polygraphus gracilis Niijima, 1909",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "5",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（北海道のタイプ標本ラベル）",
+      "geography_basis": "北海道Mihonai産タイプ標本にTodomatsuと寄主ラベルあり",
+      "evidence_type": "タイプ標本の寄主ラベルとHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-GRAC-OTHER",
+      "insect_id": "species-SC192",
+      "insect_scientific_name": "Polygraphus gracilis Niijima, 1909",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "5",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "分布は日本・サハリン・シベリアを含み、各植物の産地を分離できない",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-HORY",
+      "insect_id": "species-SC193",
+      "insect_scientific_name": "Polygraphus horyurensis Murayama, 1937",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "5",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "タイプ産地は韓国、分布と検視標本は日本・海外の双方を含む",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "オオシラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies mariesii",
+          "plant_scientific_name_accepted": "Abies mariesii"
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi"
+        },
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        },
+        {
+          "plant_name": "ヒメコマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla var. himekomatsu",
+          "plant_scientific_name_accepted": "Pinus parviflora var. parviflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-JEZO-NATIVE",
+      "insect_id": "species-SC195",
+      "insect_scientific_name": "Polygraphus jezoensis Niijima, 1909",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "6",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（北海道タイプ標本と日本産節から推定）",
+      "geography_basis": "北海道タイプ産地と国内標本を示すが、植物ごとの標本産地は未記載",
+      "evidence_type": "原著のHost・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "ハリモミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea polita",
+          "plant_scientific_name_accepted": "Picea polita"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-JEZO-UNKNOWN",
+      "insect_id": "species-SC195",
+      "insect_scientific_name": "Polygraphus jezoensis Niijima, 1909",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "6",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "国外にも広く分布し、外来樹種の寄主記録を日本へ割り当てる根拠がない",
+      "evidence_type": "原著のHost・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ドイツトウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea excelsa",
+          "plant_scientific_name_accepted": "Picea abies"
+        },
+        {
+          "plant_name": "ヨーロッパアカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus sylvestris",
+          "plant_scientific_name_accepted": "Pinus sylvestris"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-KISO",
+      "insect_id": "species-SC197",
+      "insect_scientific_name": "Polygraphus kisoensis Niijima, 1941",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "6",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（本州固有の記録として推定）",
+      "geography_basis": "原著の分布は本州のみで、国内標本を列挙する",
+      "evidence_type": "原著のHosts・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "トウヒ属",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea sp.",
+          "plant_scientific_name_accepted": "Picea spp."
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-MEAK",
+      "insect_id": "species-SC198",
+      "insect_scientific_name": "Polygraphus meakanensis Niijima, 1935",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "7",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（雌阿寒岳タイプ産地の日本産節から推定）",
+      "geography_basis": "タイプ産地は雌阿寒岳、分布は北海道・本州とされる",
+      "evidence_type": "原著のHost・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-NIGR",
+      "insect_id": "species-SC199",
+      "insect_scientific_name": "Polygraphus nigrielytris Niijima, 1913",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "8",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（北海道焼尻島のタイプ標本ラベル）",
+      "geography_basis": "焼尻島産タイプ標本にNanakamadoと寄主ラベルあり",
+      "evidence_type": "タイプ標本の寄主ラベルとHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "ナナカマド",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Sorbus commixta",
+          "plant_scientific_name_accepted": "Sorbus commixta"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-PARV",
+      "insect_id": "species-SC200",
+      "insect_scientific_name": "Polygraphus parvulus Murayama, 1956",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "8",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（国内タイプ産地・国内分布から推定）",
+      "geography_basis": "福岡・高知をタイプ産地とし、分布は日本のみだが植物別産地は未記載",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ケヤキ",
+          "plant_family": "ニレ科",
+          "plant_scientific_name_original": "Zelkova serrata",
+          "plant_scientific_name_accepted": "Zelkova serrata"
+        },
+        {
+          "plant_name": "ソメイヨシノ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus yedoensis",
+          "plant_scientific_name_accepted": "Cerasus yedoensis"
+        },
+        {
+          "plant_name": "サクラ属",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sp. (Cherry)",
+          "plant_scientific_name_accepted": "Cerasus spp."
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-PROX",
+      "insect_id": "species-SC202",
+      "insect_scientific_name": "Polygraphus proximus Blandford, 1894",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "10",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（北海道・本州での被害記述と国内標本群から推定）",
+      "geography_basis": "原著は北海道・北本州での加害を明記し多数の国内標本を列挙するが、植物別産地は未記載",
+      "evidence_type": "原著のHost trees・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "モミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies firma",
+          "plant_scientific_name_accepted": "Abies firma"
+        },
+        {
+          "plant_name": "チョウセンモミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies holophylla",
+          "plant_scientific_name_accepted": "Abies holophylla"
+        },
+        {
+          "plant_name": "ウラジロモミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies homolepis",
+          "plant_scientific_name_accepted": "Abies homolepis"
+        },
+        {
+          "plant_name": "オオシラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies mariesii",
+          "plant_scientific_name_accepted": "Abies mariesii"
+        },
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        },
+        {
+          "plant_name": "シラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies veitchii",
+          "plant_scientific_name_accepted": "Abies veitchii"
+        },
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "ダフリアカラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix dahurica",
+          "plant_scientific_name_accepted": "Larix gmelinii"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "ツガ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Tsuga sieboldii",
+          "plant_scientific_name_accepted": "Tsuga sieboldii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-SHAR",
+      "insect_id": "species-SC203",
+      "insect_scientific_name": "Polygraphus shariensis Niijima, 1941",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "10",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（日本のみの分布と本文の寄主記述から推定）",
+      "geography_basis": "原著はハンノキ・カエデ類で普通と述べ、分布を北海道・本州のみとする",
+      "evidence_type": "本文の寄主記述とHost trees欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ハンノキ属",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Alnus spp.",
+          "plant_scientific_name_accepted": "Alnus spp."
+        },
+        {
+          "plant_name": "シウリザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus ssiori",
+          "plant_scientific_name_accepted": "Padus ssiori"
+        },
+        {
+          "plant_name": "ナナカマド",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Sorbus commixta",
+          "plant_scientific_name_accepted": "Sorbus commixta"
+        },
+        {
+          "plant_name": "オガラバナ",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Acer caudatum subsp. ukurunduense",
+          "plant_scientific_name_accepted": "Acer ukurunduense"
+        },
+        {
+          "plant_name": "カエデ属",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Acer sp.",
+          "plant_scientific_name_accepted": "Acer spp."
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-SQUA",
+      "insect_id": "species-SC204",
+      "insect_scientific_name": "Polygraphus squamulatus Niijima, 1941",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "11",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（北海道・サハリンのどちらか判定不能）",
+      "geography_basis": "タイプ産地と分布に北海道・サハリンを含み、Host tree欄は産地を付さない",
+      "evidence_type": "原著のHost tree・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-SSIO",
+      "insect_id": "species-SC205",
+      "insect_scientific_name": "Polygraphus ssiori Niijima, 1909",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "11",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（国内タイプ産地・国内標本群から推定）",
+      "geography_basis": "北海道タイプ産地と国内標本を示すが、植物ごとの産地は未記載",
+      "evidence_type": "原著のHost trees・Gallery欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ブナ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Fagus crenata",
+          "plant_scientific_name_accepted": "Fagus crenata"
+        },
+        {
+          "plant_name": "ミズナラ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus mongolica var. grosseserrata",
+          "plant_scientific_name_accepted": "Quercus crispula var. crispula"
+        },
+        {
+          "plant_name": "マンサク",
+          "plant_family": "マンサク科",
+          "plant_scientific_name_original": "Hamamelis japonica",
+          "plant_scientific_name_accepted": "Hamamelis japonica"
+        },
+        {
+          "plant_name": "シウリザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus ssiori",
+          "plant_scientific_name_accepted": "Padus ssiori"
+        },
+        {
+          "plant_name": "ヤマザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus sargentii subsp. jamasakura",
+          "plant_scientific_name_accepted": "Cerasus jamasakura"
+        },
+        {
+          "plant_name": "カラミザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus pseudocerasus",
+          "plant_scientific_name_accepted": "Cerasus pseudocerasus"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-SUBO-KOREA",
+      "insect_id": "species-SC206",
+      "insect_scientific_name": "Polygraphus subopacus C. G. Thomson, 1871",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "12",
+      "review_status": "approved",
+      "geographic_scope": "overseas_explicit",
+      "geography_label": "海外（韓国）",
+      "geography_basis": "Host trees欄の2植物の直後に(Korea)と明記",
+      "evidence_type": "原著のHost trees欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-JAPO",
+      "insect_id": "species-SC194",
+      "insect_scientific_name": "Polygraphus japonicus Nunberg, 1956",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "13",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（青森県タイプ産地・本州のみの分布から推定）",
+      "geography_basis": "原著ではPolygraphus uchimappensisとして扱い、青森県タイプ産地と本州分布を示す",
+      "evidence_type": "原著のHost tree欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "notes": "原著名Polygraphus uchimappensisは2026年目録でP. japonicusの異名",
+      "hosts": [
+        {
+          "plant_name": "オオシラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies mariesii",
+          "plant_scientific_name_accepted": "Abies mariesii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N79-MAGN-EXCLUDED",
+      "insect_id": "",
+      "insect_scientific_name": "Polygraphus magnus",
+      "reference": "Nobuchi (1979) Studies on Scolytidae XVIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf",
+      "page": "7",
+      "review_status": "excluded",
+      "exclusion_reason": "Polygraphus magnusを2026年目録の採用種へ一意に対応できない",
+      "geographic_scope": "unknown",
+      "geography_label": "分類対応保留",
+      "geography_basis": "現行目録に同名の採用種なし",
+      "evidence_type": "原著のHost欄",
+      "hosts": [
+        {
+          "plant_name": "シキミ",
+          "plant_family": "マツブサ科",
+          "plant_scientific_name_original": "Illicium religiosum",
+          "plant_scientific_name_accepted": "Illicium anisatum"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-BIST",
+      "insect_id": "species-SC172",
+      "insect_scientific_name": "Pityogenes bistridentatus (Eichhoff, 1878)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "37",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（長野県から北海道の高山帯との本文記述から推定）",
+      "geography_basis": "Hosts欄の直前に日本では長野県から北海道の高山に生息すると記載",
+      "evidence_type": "本文の国内分布記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "キタゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla",
+          "plant_scientific_name_accepted": "Pinus parviflora var. pentaphylla"
+        },
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-CHAL",
+      "insect_id": "species-SC173",
+      "insect_scientific_name": "Pityogenes chalcographus (Linnaeus, 1760)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "38",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "分布と検視標本が日本・海外を含み、Host欄には外来樹種も列挙される",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "モミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies firma",
+          "plant_scientific_name_accepted": "Abies firma"
+        },
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        },
+        {
+          "plant_name": "ベイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pseudotsuga taxifolia",
+          "plant_scientific_name_accepted": "Pseudotsuga menziesii"
+        },
+        {
+          "plant_name": "ドイツトウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea excelsa",
+          "plant_scientific_name_accepted": "Picea abies"
+        },
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis"
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi"
+        },
+        {
+          "plant_name": "ダフリアカラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix gmelini",
+          "plant_scientific_name_accepted": "Larix gmelinii"
+        },
+        {
+          "plant_name": "バンクスマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus banksiana",
+          "plant_scientific_name_accepted": "Pinus banksiana"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "キタゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla",
+          "plant_scientific_name_accepted": "Pinus parviflora var. pentaphylla"
+        },
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        },
+        {
+          "plant_name": "ストローブマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus strobus",
+          "plant_scientific_name_accepted": "Pinus strobus"
+        },
+        {
+          "plant_name": "ヨーロッパアカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus sylvestris",
+          "plant_scientific_name_accepted": "Pinus sylvestris"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-FOVE",
+      "insect_id": "species-SC175",
+      "insect_scientific_name": "Pityogenes foveolatus Eggers, 1926",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "39",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（本州・北海道の高山帯との本文記述から推定）",
+      "geography_basis": "Hosts欄の直前に本州・北海道の高山で見られると記載",
+      "evidence_type": "本文の国内分布記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-JAPO",
+      "insect_id": "species-SC176",
+      "insect_scientific_name": "Pityogenes japonicus Nobuchi, 1974",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "40",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（青森県八甲田山）",
+      "geography_basis": "ホロタイプとパラタイプをMt. Hakkoda, in Pinus pumilaとして明記",
+      "evidence_type": "タイプ標本の寄主・産地ラベルとHost欄",
+      "plant_part": "樹皮下",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-SEIR-NATIVE",
+      "insect_id": "species-SC177",
+      "insect_scientific_name": "Pityogenes seirindensis Murayama, 1929",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "41",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（北海道産標本群と日本産節から推定）",
+      "geography_basis": "北海道の複数標本を列挙する日本産節だが植物別産地は未記載",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        },
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-SEIR-UNKNOWN",
+      "insect_id": "species-SC177",
+      "insect_scientific_name": "Pityogenes seirindensis Murayama, 1929",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "41",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "外来樹種の寄主を北海道記録へ割り当てる直接根拠がない",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ヨーロッパアカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus sylvestris",
+          "plant_scientific_name_accepted": "Pinus sylvestris"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-ANGU",
+      "insect_id": "species-SC163",
+      "insect_scientific_name": "Orthotomicus angulatus (Eichhoff, 1876)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "44",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（南日本のマツ林で普通との本文記述から推定）",
+      "geography_basis": "本文は南日本のマツ林で最も普通とし、多数の国内標本を列挙する",
+      "evidence_type": "本文の国内生態記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ツガ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Tsuga sieboldii",
+          "plant_scientific_name_accepted": "Tsuga sieboldii"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "リュウキュウマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus luchuensis",
+          "plant_scientific_name_accepted": "Pinus luchuensis"
+        },
+        {
+          "plant_name": "ヒメコマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla var. himekomatsu",
+          "plant_scientific_name_accepted": "Pinus parviflora var. parviflora"
+        },
+        {
+          "plant_name": "クロマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus thunbergii",
+          "plant_scientific_name_accepted": "Pinus thunbergii"
+        },
+        {
+          "plant_name": "スギ",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_original": "Cryptomeria japonica",
+          "plant_scientific_name_accepted": "Cryptomeria japonica"
+        },
+        {
+          "plant_name": "ヒノキ",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_original": "Chamaecyparis obtusa",
+          "plant_scientific_name_accepted": "Chamaecyparis obtusa"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-ANGU-EXCLUDED",
+      "insect_id": "species-SC163",
+      "insect_scientific_name": "Orthotomicus angulatus (Eichhoff, 1876)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "44",
+      "review_status": "excluded",
+      "exclusion_reason": "原著自身がThe last may be a mistake in host recordと注記するため公開寄主から除外",
+      "geographic_scope": "unknown",
+      "geography_label": "原著が誤記疑い",
+      "geography_basis": "原著の明示的な疑義注記",
+      "evidence_type": "原著のHosts欄",
+      "hosts": [
+        {
+          "plant_name": "イチイガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus gilva",
+          "plant_scientific_name_accepted": "Quercus gilva"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-GOLO",
+      "insect_id": "species-SC164",
+      "insect_scientific_name": "Orthotomicus golovjankoi Pyatnitskiy, 1930",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "45",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "国内外標本を検視し、Host欄に植物別の採集国を示さない",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ドイツトウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea excelsa",
+          "plant_scientific_name_accepted": "Picea abies"
+        },
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "クロマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus thunbergii",
+          "plant_scientific_name_accepted": "Pinus thunbergii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-KUNI",
+      "insect_id": "species-SC165",
+      "insect_scientific_name": "Orthotomicus kuniyoshii (Nobuchi, 1959)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "45",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（沖縄）",
+      "geography_basis": "本文で沖縄のみから知られるとした直後にHostと分布を記載",
+      "evidence_type": "本文の限定分布記述とHost欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "リュウキュウマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus luchuensis",
+          "plant_scientific_name_accepted": "Pinus luchuensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-LARI",
+      "insect_id": "species-SC166",
+      "insect_scientific_name": "Orthotomicus laricis (Fabricius, 1792)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "46",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "日本では稀とする一方、検視標本は欧州産で、植物ごとの記録国を示さない",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-PROX",
+      "insect_id": "species-SC168",
+      "insect_scientific_name": "Orthotomicus proximus (Eichhoff, 1868)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "47",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "原著が検視した日本ラベル標本は別種だったとし、検視標本は国外産のみ",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "クロマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus thunbergii",
+          "plant_scientific_name_accepted": "Pinus thunbergii"
+        },
+        {
+          "plant_name": "キタゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla",
+          "plant_scientific_name_accepted": "Pinus parviflora var. pentaphylla"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-SUTU",
+      "insect_id": "species-SC169",
+      "insect_scientific_name": "Orthotomicus suturalis (Gyllenhal, 1827)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "47",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（日本のカラマツ林で普通との本文記述から推定）",
+      "geography_basis": "本文で日本のカラマツ林に普通とし、国内標本を列挙する",
+      "evidence_type": "本文の国内生態記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis"
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "ハイマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pumila",
+          "plant_scientific_name_accepted": "Pinus pumila"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-TOSA",
+      "insect_id": "species-SC170",
+      "insect_scientific_name": "Orthotomicus tosaensis (Murayama, 1950)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "48",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（本州・四国・九州）",
+      "geography_basis": "本文で南日本の海岸近くの枯死・衰弱マツを加害すると述べ、直後に2寄主を列挙",
+      "evidence_type": "本文の国内加害記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "クロマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus thunbergii",
+          "plant_scientific_name_accepted": "Pinus thunbergii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-ACUM-PINE",
+      "insect_id": "species-SC157",
+      "insect_scientific_name": "Ips acuminatus (Gyllenhal, 1827)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "50",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（北本州のアカマツ地域との本文記述から推定）",
+      "geography_basis": "本文で北本州のred pine regionsに普通で衰弱・倒木を加害すると記載",
+      "evidence_type": "本文の国内加害記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-ACUM-OTHER",
+      "insect_id": "species-SC157",
+      "insect_scientific_name": "Ips acuminatus (Gyllenhal, 1827)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "50",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（Host欄に国別対応なし）",
+      "geography_basis": "アカマツ以外のHosts欄は日本・海外のどの記録かを分離できない",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "キタゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla",
+          "plant_scientific_name_accepted": "Pinus parviflora var. pentaphylla"
+        },
+        {
+          "plant_name": "ヒメコマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla var. himekomatsu",
+          "plant_scientific_name_accepted": "Pinus parviflora var. parviflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-DUPL",
+      "insect_id": "species-SC159",
+      "insect_scientific_name": "Ips duplicatus (C. R. Sahlberg, 1836)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "52",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（日本記録の標本を著者が未確認）",
+      "geography_basis": "原著は日本への移入を述べるが、日本産標本を確認せずHostの産地も示さない",
+      "evidence_type": "原著のHost欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-MULT",
+      "insect_id": "species-SC167",
+      "insect_scientific_name": "Orthotomicus multidentatus (Murayama, 1953)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "52",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（日本のみの分布から推定）",
+      "geography_basis": "原著名Ips multidentatusの分布を本州・四国・九州のみとする",
+      "evidence_type": "原著のHost欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "notes": "原著名Ips multidentatusは現行目録でOrthotomicus multidentatus",
+      "hosts": [
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-TYPO-NATIVE",
+      "insect_id": "species-SC162",
+      "insect_scientific_name": "Ips typographus (Linnaeus, 1758)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "53",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（日本型I. typographus japonicusの節から推定）",
+      "geography_basis": "原著は日本型を扱い北海道のトウヒ被害と多数の国内標本を記載するが植物別産地は未記載",
+      "evidence_type": "本文の国内被害記述とHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "notes": "原著名Ips typographus japonicusは現行目録でI. typographusの異名",
+      "hosts": [
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        },
+        {
+          "plant_name": "アカエゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea glehnii",
+          "plant_scientific_name_accepted": "Picea glehnii"
+        },
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        },
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "ヒメコマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus pentaphylla var. himekomatsu",
+          "plant_scientific_name_accepted": "Pinus parviflora var. parviflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-TYPO-UNKNOWN",
+      "insect_id": "species-SC162",
+      "insect_scientific_name": "Ips typographus (Linnaeus, 1758)",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "53",
+      "review_status": "approved",
+      "geographic_scope": "unknown",
+      "geography_label": "地域不明（外来樹種のHost欄に国別対応なし）",
+      "geography_basis": "Host欄の外来樹種を日本記録へ割り当てる直接根拠がない",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "ドイツトウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea excelsa",
+          "plant_scientific_name_accepted": "Picea abies"
+        },
+        {
+          "plant_name": "ポンデローサマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus ponderosa",
+          "plant_scientific_name_accepted": "Pinus ponderosa"
+        },
+        {
+          "plant_name": "ヨーロッパアカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus sylvestris",
+          "plant_scientific_name_accepted": "Pinus sylvestris"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-SPIN",
+      "insect_id": "species-SC156",
+      "insect_scientific_name": "Acanthotomicus spinosus Blandford, 1894",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "54",
+      "review_status": "approved",
+      "geographic_scope": "japan_inferred",
+      "geography_label": "日本（日本産Ipini再検討の当該節から推定）",
+      "geography_basis": "日本産分類群の節にHostsを記載するが植物ごとの採集地は未記載",
+      "evidence_type": "原著のHosts欄",
+      "plant_part": "樹皮下",
+      "life_stage": "記載なし",
+      "hosts": [
+        {
+          "plant_name": "イチイガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus gilva",
+          "plant_scientific_name_accepted": "Quercus gilva"
+        },
+        {
+          "plant_name": "シラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus myrsinaefolia",
+          "plant_scientific_name_accepted": "Quercus myrsinifolia"
+        },
+        {
+          "plant_name": "ウラジロガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus salicina",
+          "plant_scientific_name_accepted": "Quercus salicina"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-CURV-EXCLUDED",
+      "insect_id": "",
+      "insect_scientific_name": "Pityokteines curvidens",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "42",
+      "review_status": "excluded",
+      "exclusion_reason": "Pityokteines curvidensを2026年目録の採用種へ一意に対応できず、原著も日本産標本を1点しか確認していない",
+      "geographic_scope": "unknown",
+      "geography_label": "分類対応保留",
+      "geography_basis": "現行目録に同名の採用種なし",
+      "evidence_type": "原著のHosts欄",
+      "hosts": [
+        {
+          "plant_name": "モミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies firma",
+          "plant_scientific_name_accepted": "Abies firma"
+        },
+        {
+          "plant_name": "ウラジロモミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies homolepis",
+          "plant_scientific_name_accepted": "Abies homolepis"
+        },
+        {
+          "plant_name": "オオシラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies mariesii",
+          "plant_scientific_name_accepted": "Abies mariesii"
+        },
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N74-CEMB-SUBE-EXCLUDED",
+      "insect_id": "",
+      "insect_scientific_name": "Ips cembrae / Ips subelongatus",
+      "reference": "Nobuchi (1974) Studies on Scolytidae XII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf",
+      "page": "51",
+      "review_status": "excluded",
+      "exclusion_reason": "原著はI. subelongatusをI. cembraeの異名として一括するが、2026年目録は両種を別種として採用しており寄主の再配分不能",
+      "geographic_scope": "unknown",
+      "geography_label": "分類対応保留",
+      "geography_basis": "現行目録と原著の種概念が不一致",
+      "evidence_type": "原著のHosts欄",
+      "hosts": [
+        {
+          "plant_name": "トドマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies sachalinensis",
+          "plant_scientific_name_accepted": "Abies sachalinensis"
+        },
+        {
+          "plant_name": "ドイツトウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea excelsa",
+          "plant_scientific_name_accepted": "Picea abies"
+        },
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi"
+        },
+        {
+          "plant_name": "アカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus densiflora",
+          "plant_scientific_name_accepted": "Pinus densiflora"
+        },
+        {
+          "plant_name": "チョウセンゴヨウ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus koraiensis",
+          "plant_scientific_name_accepted": "Pinus koraiensis"
+        },
+        {
+          "plant_name": "ヨーロッパアカマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus sylvestris",
+          "plant_scientific_name_accepted": "Pinus sylvestris"
+        },
+        {
+          "plant_name": "ストローブマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Pinus strobus",
+          "plant_scientific_name_accepted": "Pinus strobus"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-ELON",
+      "insect_id": "species-SC055",
+      "insect_scientific_name": "Eidophelus insularum (Krivolutskaya, 1968)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "42",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Ericryphalus elongatus は2026年目録で本種の異名として明記",
+      "hosts": [
+        {
+          "plant_name": "ミズキ",
+          "plant_family": "ミズキ科",
+          "plant_scientific_name_original": "Cornus controversa",
+          "plant_scientific_name_accepted": "Cornus controversa var. controversa",
+          "geography_label": "日本（東京都高尾山・福岡県英彦山）",
+          "geography_basis": "ホロタイプとパラタイプをMt. TakaoおよびMt. Hiko, in Cornus controversaとして明記"
+        },
+        {
+          "plant_name": "カエデ属",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Acer sp.",
+          "plant_scientific_name_accepted": "Acer sp.",
+          "geography_label": "日本（福島県）",
+          "geography_basis": "パラタイプ29個体をYashirogoya, Fukushima Pref., in Acer sp.として明記"
+        },
+        {
+          "plant_name": "ブドウ類",
+          "plant_family": "ブドウ科",
+          "plant_scientific_name_original": "grape-vine",
+          "plant_scientific_name_accepted": "",
+          "geography_label": "日本（福岡県浮羽）",
+          "geography_basis": "パラタイプ3個体をUkita, Fukuoka Pref., in grape-vineとして明記",
+          "notes": "原著はgrape-vineとのみ記し、種・属を推定していない"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-ATER",
+      "insect_id": "species-SC058",
+      "insect_scientific_name": "Eidophelus niger Johnson, 2020",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "42",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（埼玉県秩父・惣小屋）",
+      "geography_basis": "ホロタイプとパラタイプにSogoya, Chichibu, Saitama Pref.の産地と寄主を明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Ernoporicus ater は2026年目録で本種の異名として明記",
+      "hosts": [
+        {
+          "plant_name": "サワグルミ",
+          "plant_family": "クルミ科",
+          "plant_scientific_name_original": "Pterocarya rhoifolia",
+          "plant_scientific_name_accepted": "Pterocarya rhoifolia"
+        },
+        {
+          "plant_name": "ハリギリ",
+          "plant_family": "ウコギ科",
+          "plant_scientific_name_original": "Kalopanax septemlobus",
+          "plant_scientific_name_accepted": "Kalopanax septemlobus"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-ALNI",
+      "insect_id": "species-SC044",
+      "insect_scientific_name": "Eidophelus alniphagus Nobuchi, 1975",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "43",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（群馬県）",
+      "geography_basis": "ホロタイプとパラタイプをKonseitoge, Gunma Pref., in Alnus hirsutaとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "ケヤマハンノキ類",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Alnus hirsuta",
+          "plant_scientific_name_accepted": "",
+          "notes": "原著は変種を記さないため、YListのケヤマハンノキとヤマハンノキへ分配していない"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-TAKA",
+      "insect_id": "species-SC060",
+      "insect_scientific_name": "Eidophelus takahashii (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "44",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（青森県八甲田山）",
+      "geography_basis": "パラタイプ51個体をHakkoda, Aomori Pref., in Sorbus commixtaとして明記",
+      "evidence_type": "パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Ernoporicus takahashii は2026年目録で本種の異名として明記",
+      "hosts": [
+        {
+          "plant_name": "ナナカマド",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Sorbus commixta",
+          "plant_scientific_name_accepted": "Sorbus commixta"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-BADI",
+      "insect_id": "species-SC045",
+      "insect_scientific_name": "Eidophelus badius (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "45",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（福岡県犬鳴峠・英彦山、東京都浅川）",
+      "geography_basis": "ホロタイプと複数のパラタイプを各産地, in Wisteria floribundaとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Cryphalomorphus badius は2026年目録の異名欄を介して本種へ対応",
+      "hosts": [
+        {
+          "plant_name": "フジ",
+          "plant_family": "マメ科",
+          "plant_scientific_name_original": "Wisteria floribunda",
+          "plant_scientific_name_accepted": "Wisteria floribunda"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-CAME",
+      "insect_id": "species-SC047",
+      "insect_scientific_name": "Eidophelus camelliae (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "46",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（新潟県胎内小屋）",
+      "geography_basis": "ホロタイプとパラタイプをTainaigoya, Niigata Pref., in Camellia japonica rusticanaとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Cryphalomorphus camelliae は2026年目録の異名欄を介して本種へ対応",
+      "hosts": [
+        {
+          "plant_name": "ユキツバキ",
+          "plant_family": "ツバキ科",
+          "plant_scientific_name_original": "Camellia japonica rusticana",
+          "plant_scientific_name_accepted": "Camellia rusticana"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-FUJI",
+      "insect_id": "species-SC051",
+      "insect_scientific_name": "Eidophelus fujisanus (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "46",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（山梨県富士山）",
+      "geography_basis": "ホロタイプとパラタイプをMt. Fuji, Yamanashi Pref., in Pterocarya rhoifoliaとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Cryphalomorphus fujisanus は2026年目録の異名欄を介して本種へ対応",
+      "hosts": [
+        {
+          "plant_name": "サワグルミ",
+          "plant_family": "クルミ科",
+          "plant_scientific_name_original": "Pterocarya rhoifolia",
+          "plant_scientific_name_accepted": "Pterocarya rhoifolia"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-SCOL",
+      "insect_id": "species-SC049",
+      "insect_scientific_name": "Eidophelus darwini (Eichhoff, 1878)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "51",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（東京都浅川、福岡県立花山）",
+      "geography_basis": "ホロタイプとパラタイプを各産地, in Trachelospermum asiaticumとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Cryphalomorphus scolytomimoides は2026年目録で本種の異名として明記",
+      "hosts": [
+        {
+          "plant_name": "テイカカズラ",
+          "plant_family": "キョウチクトウ科",
+          "plant_scientific_name_original": "Trachelospermum asiaticum",
+          "plant_scientific_name_accepted": "Trachelospermum asiaticum var. asiaticum"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-AQUI",
+      "insect_id": "species-SC006",
+      "insect_scientific_name": "Cryphalus aquilonius (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "52",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（北海道濁川）",
+      "geography_basis": "ホロタイプとパラタイプをNigorikawa, Hokkaido, in Carpinus cordataとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Taenioglyptes aquilonius は現行組合せへ更新",
+      "hosts": [
+        {
+          "plant_name": "サワシバ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus cordata",
+          "plant_scientific_name_accepted": "Carpinus cordata var. cordata"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-PULC",
+      "insect_id": "species-SC037",
+      "insect_scientific_name": "Cryphalus pulchellus (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "55",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（奈良県東川、群馬県島温泉）",
+      "geography_basis": "ホロタイプとパラタイプを各産地, in Aesculus turbinataとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Taenioglyptes pulchellus は現行組合せへ更新",
+      "hosts": [
+        {
+          "plant_name": "トチノキ",
+          "plant_family": "ムクロジ科",
+          "plant_scientific_name_original": "Aesculus turbinata",
+          "plant_scientific_name_accepted": "Aesculus turbinata"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-LONG",
+      "insect_id": "species-SC027",
+      "insect_scientific_name": "Cryphalus longisetosus (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "57",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Taenioglyptes longisetosus は現行組合せへ更新",
+      "hosts": [
+        {
+          "plant_name": "ウラジロモミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies homolepis",
+          "plant_scientific_name_accepted": "Abies homolepis",
+          "geography_label": "日本（山梨県広河原）",
+          "geography_basis": "ホロタイプとパラタイプをHirogawara, Yamanashi Pref., in Abies homolepisとして明記"
+        },
+        {
+          "plant_name": "コメツガ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Tsuga diversifolia",
+          "plant_scientific_name_accepted": "Tsuga diversifolia",
+          "geography_label": "日本（埼玉県雁坂峠）",
+          "geography_basis": "パラタイプ11個体をKarisakatoge, Saitama Pref., in Tsuga diversifoliaとして明記"
+        },
+        {
+          "plant_name": "シラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies veitchii",
+          "plant_scientific_name_accepted": "Abies veitchii",
+          "geography_label": "日本（山梨県富士山）",
+          "geography_basis": "パラタイプ3個体をMt. Fuji, Yamanashi Pref., in Abies veitchiiとして明記"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N75-DISS",
+      "insect_id": "species-SC014",
+      "insect_scientific_name": "Cryphalus dissimilis (Nobuchi, 1975)",
+      "reference": "Nobuchi (1975) Studies on Scolytidae XIII",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf",
+      "page": "58",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（山梨県富士山）",
+      "geography_basis": "ホロタイプとパラタイプをMt. Fuji, Yamanashi Pref., in Abies homolepisとして明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名 Taenioglyptes dissimilis は現行組合せへ更新",
+      "hosts": [
+        {
+          "plant_name": "ウラジロモミ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies homolepis",
+          "plant_scientific_name_accepted": "Abies homolepis"
+        }
+      ]
+    }
+  ]
+}

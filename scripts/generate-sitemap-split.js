@@ -506,12 +506,14 @@ function generateSplitSitemaps() {
     ...takeDiscoverySeedUrls('moth', 500),
     ...takeDiscoverySeedUrls('plant', 220),
     ...takeDiscoverySeedUrls('longhornbeetle', 120),
+    ...takeDiscoverySeedUrls('barkbeetle', 100),
     ...takeDiscoverySeedUrls('butterfly', 80),
     ...takeDiscoverySeedUrls('leafbeetle', 80),
     ...takeDiscoverySeedUrls('aphid', 80),
     ...takeDiscoverySeedUrls('beetle', 60),
     ...takeDiscoverySeedUrls('en-moth', 240),
     ...takeDiscoverySeedUrls('en-plant', 180),
+    ...takeDiscoverySeedUrls('en-barkbeetle', 80),
   ]);
   
   // 各サイトマップファイルを生成

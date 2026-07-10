@@ -92,6 +92,7 @@ function App() {
   const [butterflies, setButterflies] = useState([]);
   const [beetles, setBeetles] = useState([]);
   const [longhornbeetles, setLonghornbeetles] = useState([]);
+  const [barkbeetles, setBarkbeetles] = useState([]);
   const [leafbeetles, setLeafbeetles] = useState([]);
   const [aphids, setAphids] = useState([]);
   const [hostPlants, setHostPlants] = useState({});
@@ -327,12 +328,14 @@ function App() {
     const butterflyArr = Array.isArray(data.butterflies) ? data.butterflies : [];
     const beetleArr = Array.isArray(data.beetles) ? data.beetles : [];
     const longhornArr = Array.isArray(data.longhornbeetles) ? data.longhornbeetles : [];
+    const barkArr = Array.isArray(data.barkbeetles) ? data.barkbeetles : [];
     const leafArr = Array.isArray(data.leafbeetles) ? data.leafbeetles : [];
     const aphidArr = Array.isArray(data.aphids) ? data.aphids : [];
     setMoths(mothArr);
     setButterflies(butterflyArr);
     setBeetles(beetleArr);
     setLonghornbeetles(longhornArr);
+    setBarkbeetles(barkArr);
     setLeafbeetles(leafArr);
     setAphids(aphidArr);
     setHostPlants(data.hostPlants || {});
@@ -343,6 +346,7 @@ function App() {
           ...butterflyArr,
           ...beetleArr,
           ...longhornArr,
+          ...barkArr,
           ...leafArr,
           ...aphidArr,
         ]),
@@ -356,6 +360,7 @@ function App() {
         butterflyArr.length +
         beetleArr.length +
         longhornArr.length +
+        barkArr.length +
         leafArr.length +
         aphidArr.length >
         0 ||
@@ -430,6 +435,7 @@ function App() {
         butterflies: Array.isArray(lite.butterflies) ? lite.butterflies.length : 0,
         beetles: Array.isArray(lite.beetles) ? lite.beetles.length : 0,
         longhornbeetles: Array.isArray(lite.longhornbeetles) ? lite.longhornbeetles.length : 0,
+        barkbeetles: Array.isArray(lite.barkbeetles) ? lite.barkbeetles.length : 0,
         leafbeetles: Array.isArray(lite.leafbeetles) ? lite.leafbeetles.length : 0,
         aphids: Array.isArray(lite.aphids) ? lite.aphids.length : 0,
         hostPlants:
@@ -444,6 +450,7 @@ function App() {
         setButterflies(lite.butterflies);
         setBeetles(lite.beetles || []);
         setLonghornbeetles(lite.longhornbeetles || []);
+        setBarkbeetles(lite.barkbeetles || []);
         setLeafbeetles(lite.leafbeetles || []);
         setAphids(lite.aphids || []);
         setHostPlants(lite.hostPlants || {});
@@ -568,29 +575,32 @@ function App() {
                 fetchWithRetry(`${base}assets/data-lite/butterflies.json${versionSuffix}`, { cache: cacheMode }),
                 fetchWithRetry(`${base}assets/data-lite/beetles.json${versionSuffix}`, { cache: cacheMode }),
                 fetchWithRetry(`${base}assets/data-lite/longhornbeetles.json${versionSuffix}`, { cache: cacheMode }),
+                fetchWithRetry(`${base}assets/data-lite/barkbeetles.json${versionSuffix}`, { cache: cacheMode }),
                 fetchWithRetry(`${base}assets/data-lite/leafbeetles.json${versionSuffix}`, { cache: cacheMode }),
                 fetchWithRetry(`${base}assets/data-lite/aphids.json${versionSuffix}`, { cache: cacheMode }),
               ]);
               if (!shouldContinue()) {
-                return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+                return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], barkArr: [], leafArr: [], aphidArr: [] };
               }
-              const [mothRes, butterflyRes, beetleRes, longhornRes, leafRes, aphidRes] = responses;
+              const [mothRes, butterflyRes, beetleRes, longhornRes, barkRes, leafRes, aphidRes] = responses;
               const safeJson = async (res) => (res && res.ok ? res.json() : []);
-              const [mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr] = await Promise.all([
+              const [mothArr, butterArr, beetleArr, longhornArr, barkArr, leafArr, aphidArr] = await Promise.all([
                 safeJson(mothRes),
                 safeJson(butterflyRes),
                 safeJson(beetleRes),
                 safeJson(longhornRes),
+                safeJson(barkRes),
                 safeJson(leafRes),
                 safeJson(aphidRes),
               ]);
               if (!shouldContinue()) {
-                return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], leafArr: [], aphidArr: [] };
+                return { mothArr: [], butterArr: [], beetleArr: [], longhornArr: [], barkArr: [], leafArr: [], aphidArr: [] };
               }
               if (Array.isArray(mothArr)) setMoths(mothArr);
               if (Array.isArray(butterArr)) setButterflies(butterArr);
               if (Array.isArray(beetleArr)) setBeetles(beetleArr);
               if (Array.isArray(longhornArr)) setLonghornbeetles(longhornArr);
+              if (Array.isArray(barkArr)) setBarkbeetles(barkArr);
               if (Array.isArray(leafArr)) setLeafbeetles(leafArr);
               if (Array.isArray(aphidArr)) setAphids(aphidArr);
               setLoadProgress((prev) => Math.max(prev, 90));
@@ -600,6 +610,7 @@ function App() {
                 butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
                 beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
                 longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
+                barkbeetles: Array.isArray(barkArr) ? barkArr.length : 0,
                 leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
                 aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
               }));
@@ -613,6 +624,7 @@ function App() {
                   ...(butterArr || []),
                   ...(beetleArr || []),
                   ...(longhornArr || []),
+                  ...(barkArr || []),
                   ...(leafArr || []),
                   ...(aphidArr || []),
                 ]);
@@ -629,6 +641,7 @@ function App() {
                   butterflies: butterArr || [],
                   beetles: beetleArr || [],
                   longhornbeetles: longhornArr || [],
+                  barkbeetles: barkArr || [],
                   leafbeetles: leafArr || [],
                   aphids: aphidArr || [],
                   hostPlants: hostMapForCache,
@@ -643,13 +656,14 @@ function App() {
                     butterflies: Array.isArray(butterArr) ? butterArr.length : 0,
                     beetles: Array.isArray(beetleArr) ? beetleArr.length : 0,
                     longhornbeetles: Array.isArray(longhornArr) ? longhornArr.length : 0,
+                    barkbeetles: Array.isArray(barkArr) ? barkArr.length : 0,
                     leafbeetles: Array.isArray(leafArr) ? leafArr.length : 0,
                     aphids: Array.isArray(aphidArr) ? aphidArr.length : 0,
                     hostPlants: Object.keys(hostMapForCache).length,
                   },
                 });
               }
-              return { mothArr, butterArr, beetleArr, longhornArr, leafArr, aphidArr };
+              return { mothArr, butterArr, beetleArr, longhornArr, barkArr, leafArr, aphidArr };
             };
 
             const startFetchTypes = () => {
@@ -776,6 +790,7 @@ function App() {
         setButterflies,
         setBeetles,
         setLonghornbeetles,
+        setBarkbeetles,
         setLeafbeetles,
         setAphids,
         setHostPlants,
@@ -920,6 +935,7 @@ function App() {
       butterflies.length +
       beetles.length +
       longhornbeetles.length +
+      barkbeetles.length +
       leafbeetles.length +
       aphids.length >
     0;
@@ -991,6 +1007,7 @@ function App() {
     butterflies,
     beetles,
     longhornbeetles,
+    barkbeetles,
     leafbeetles,
     aphids,
     hostPlants,
@@ -1009,6 +1026,7 @@ function App() {
     butterflies,
     beetles,
     longhornbeetles,
+    barkbeetles,
     leafbeetles,
     aphids,
     hostPlants,
@@ -1105,6 +1123,7 @@ function App() {
         butterflies={butterflies}
         beetles={beetles}
         longhornbeetles={longhornbeetles}
+        barkbeetles={barkbeetles}
         leafbeetles={leafbeetles}
         aphids={aphids}
         hostPlants={hostPlants}

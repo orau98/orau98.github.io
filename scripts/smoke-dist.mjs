@@ -52,6 +52,7 @@ const RUNTIME_DATA_FILES = [
   'assets/data-lite/butterflies.json',
   'assets/data-lite/beetles.json',
   'assets/data-lite/longhornbeetles.json',
+  'assets/data-lite/barkbeetles.json',
   'assets/data-lite/leafbeetles.json',
   'assets/data-lite/aphids.json',
   'assets/data-lite/hostplants.json',
@@ -304,6 +305,7 @@ const insectProfileSegments = [
   'butterfly',
   'beetle',
   'longhornbeetle',
+  'barkbeetle',
   'leafbeetle',
   'aphid',
 ];

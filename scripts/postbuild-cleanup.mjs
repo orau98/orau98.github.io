@@ -6,8 +6,8 @@ import path from 'path';
 const MAX_PAGES_DIST_BYTES = 900 * 1024 * 1024;
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const EN_SITE_NAME = 'Insects and Host Plants of Japan';
-const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. Search moths, butterflies, beetles, aphids, and host plants by scientific name, Japanese name, plant name, or taxonomy.';
-const EN_HOME_KEYWORDS = 'Japanese insects, host plants, larval host plants, moths, butterflies, beetles, aphids, plant-insect relationships, Japan biodiversity, scientific names';
+const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. Search moths, butterflies, beetles, bark beetles, aphids, and host plants by scientific name, Japanese name, plant name, or taxonomy.';
+const EN_HOME_KEYWORDS = 'Japanese insects, host plants, larval host plants, moths, butterflies, beetles, bark beetles, aphids, plant-insect relationships, Japan biodiversity, scientific names';
 const DEFAULT_SOCIAL_IMAGE_URL = `${BASE_ORIGIN}/images/resized/insects/Cucullia_argentea.1024.jpg`;
 const DEFAULT_SOCIAL_IMAGE_ALT_EN = 'Cucullia argentea on Insects and Host Plants of Japan';
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
@@ -24,6 +24,7 @@ const EN_HOME_NOSCRIPT = `    <noscript>
               <li><a href="/en/meta/butterfly/index.html">Butterflies</a></li>
               <li><a href="/en/meta/beetle/index.html">Jewel beetles</a></li>
               <li><a href="/en/meta/longhornbeetle/index.html">Longhorn beetles</a></li>
+              <li><a href="/en/meta/barkbeetle/index.html">Bark beetles</a></li>
               <li><a href="/en/meta/leafbeetle/index.html">Leaf beetles</a></li>
               <li><a href="/en/meta/aphid/index.html">Aphids</a></li>
             </ul>
@@ -339,6 +340,7 @@ const INSECT_PROFILE_ROUTE_SEGMENTS = [
   'butterfly',
   'beetle',
   'longhornbeetle',
+  'barkbeetle',
   'leafbeetle',
   'aphid',
 ];

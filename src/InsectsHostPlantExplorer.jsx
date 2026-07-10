@@ -422,6 +422,7 @@ const InsectsHostPlantExplorer = memo(
     butterflies,
     beetles,
     longhornbeetles,
+    barkbeetles = [],
     leafbeetles,
     aphids = [],
     hostPlants,
@@ -726,6 +727,7 @@ const InsectsHostPlantExplorer = memo(
         butterflies: butterflies.length,
         beetles: beetles.length,
         longhornbeetles: longhornbeetles.length,
+        barkbeetles: barkbeetles.length,
         leafbeetles: leafbeetles.length,
         aphids: aphids.length,
         total:
@@ -733,6 +735,7 @@ const InsectsHostPlantExplorer = memo(
           butterflies.length +
           beetles.length +
           longhornbeetles.length +
+          barkbeetles.length +
           leafbeetles.length +
           aphids.length,
       });
@@ -931,6 +934,7 @@ const InsectsHostPlantExplorer = memo(
         ...butterflies,
         ...beetles,
         ...longhornbeetles,
+        ...barkbeetles,
         ...leafbeetles,
         ...aphids,
       ];
@@ -961,7 +965,7 @@ const InsectsHostPlantExplorer = memo(
         });
       });
       return map;
-    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
+    }, [moths, butterflies, beetles, longhornbeetles, barkbeetles, leafbeetles, aphids]);
     const flowerVisitPlants = useMemo(() => {
       const merged = { ...(flowerVisitPlantsProp || {}) };
       Object.entries(computedFlowerVisitPlants || {}).forEach(([plant, insects]) => {
@@ -982,6 +986,7 @@ const InsectsHostPlantExplorer = memo(
         ...butterflies,
         ...beetles,
         ...longhornbeetles,
+        ...barkbeetles,
         ...leafbeetles,
         ...aphids,
       ];
@@ -997,6 +1002,7 @@ const InsectsHostPlantExplorer = memo(
       butterflies,
       beetles,
       longhornbeetles,
+      barkbeetles,
       leafbeetles,
       aphids,
       plantDetails,
@@ -1036,6 +1042,7 @@ const InsectsHostPlantExplorer = memo(
         butterflies: summaryCounts?.butterflies ?? butterflies.length,
         beetles: summaryCounts?.beetles ?? beetles.length,
         longhornbeetles: summaryCounts?.longhornbeetles ?? longhornbeetles.length,
+        barkbeetles: summaryCounts?.barkbeetles ?? barkbeetles.length,
         leafbeetles: summaryCounts?.leafbeetles ?? leafbeetles.length,
         aphids: summaryCounts?.aphids ?? aphids.length,
         hostPlants: mergedHostPlantCount,
@@ -1046,6 +1053,7 @@ const InsectsHostPlantExplorer = memo(
         butterflies.length,
         beetles.length,
         longhornbeetles.length,
+        barkbeetles.length,
         leafbeetles.length,
         aphids.length,
         mergedHostPlantCount,
@@ -1058,6 +1066,7 @@ const InsectsHostPlantExplorer = memo(
         ...butterflies,
         ...beetles,
         ...longhornbeetles,
+        ...barkbeetles,
         ...leafbeetles,
         ...aphids,
       ].forEach((insect) => {
@@ -1073,7 +1082,7 @@ const InsectsHostPlantExplorer = memo(
         );
       });
       return map;
-    }, [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids]);
+    }, [moths, butterflies, beetles, longhornbeetles, barkbeetles, leafbeetles, aphids]);
     const heroStats = useMemo(
       () => [
         {
@@ -1087,6 +1096,10 @@ const InsectsHostPlantExplorer = memo(
         {
           label: isEnglish ? "Longhorn beetles" : "カミキリムシ",
           value: countLabel(counts.longhornbeetles),
+        },
+        {
+          label: isEnglish ? "Bark beetles" : "キクイムシ",
+          value: countLabel(counts.barkbeetles),
         },
         {
           label: isEnglish ? "Leaf beetles" : "ハムシ",
@@ -1110,12 +1123,13 @@ const InsectsHostPlantExplorer = memo(
           ...butterflies,
           ...beetles,
           ...longhornbeetles,
+          ...barkbeetles,
           ...leafbeetles,
           ...aphids,
         ]
           .filter(Boolean)
           .slice(0, 10),
-      [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids],
+      [moths, butterflies, beetles, longhornbeetles, barkbeetles, leafbeetles, aphids],
     );
     const featuredPlants = useMemo(() => {
       const merged = new Map();
@@ -1155,11 +1169,13 @@ const InsectsHostPlantExplorer = memo(
               )} of jewel beetles, ${countLabel(
                 counts.longhornbeetles,
               )} of longhorn beetles, ${countLabel(
+                counts.barkbeetles,
+              )} of bark beetles, ${countLabel(
                 counts.leafbeetles,
               )} of leaf beetles, and ${countLabel(
                 counts.aphids,
               )} of aphids by Japanese name, scientific name, or taxonomy.`
-            : `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
+            : `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、キクイムシ ${counts.barkbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
           canonical: absUrl(localizePath("/meta/moth/index.html", locale)),
           breadcrumbItems: [
             { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
@@ -1193,7 +1209,7 @@ const InsectsHostPlantExplorer = memo(
       return {
         title: isEnglish
           ? "Insects and Host Plants of Japan"
-          : "昆虫植物図鑑｜9700種超の昆虫と食草を検索",
+          : "昆虫植物図鑑｜10,000種超の昆虫と食草を検索",
         description: isEnglish
           ? `Explore insects and host plants recorded in Japan. Includes ${countLabel(
               counts.moths + counts.butterflies,
@@ -1202,13 +1218,15 @@ const InsectsHostPlantExplorer = memo(
             )} of jewel beetles, ${countLabel(
               counts.longhornbeetles,
             )} of longhorn beetles, ${countLabel(
+              counts.barkbeetles,
+            )} of bark beetles, ${countLabel(
               counts.leafbeetles,
             )} of leaf beetles, ${countLabel(
               counts.aphids,
             )} of aphids, and ${countLabel(
               counts.hostPlants,
             )} of plants.`
-          : `蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種を掲載。和名・学名・植物名から検索できる昆虫食草データベース。`,
+          : `蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、キクイムシ ${counts.barkbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種を掲載。和名・学名・植物名から検索できる昆虫食草データベース。`,
         canonical: absUrl(localizePath("/", locale)),
         breadcrumbItems: [
           { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
@@ -1467,10 +1485,11 @@ const InsectsHostPlantExplorer = memo(
           butterflies,
           beetles,
           longhornbeetles,
+          barkbeetles,
           leafbeetles,
           aphids,
         ]),
-      [moths, butterflies, beetles, longhornbeetles, leafbeetles, aphids],
+      [moths, butterflies, beetles, longhornbeetles, barkbeetles, leafbeetles, aphids],
     );
 
     const baseToPlantFiles = useMemo(() => {
@@ -1529,6 +1548,7 @@ const InsectsHostPlantExplorer = memo(
           insect?.type === 'butterfly' ||
           insect?.type === 'beetle' ||
           insect?.type === 'longhornbeetle' ||
+          insect?.type === 'barkbeetle' ||
           insect?.type === 'leafbeetle' ||
           insect?.type === 'aphid'
         ) {
@@ -1537,6 +1557,7 @@ const InsectsHostPlantExplorer = memo(
         if (butterflies.includes(insect)) return 'butterfly';
         if (beetles.includes(insect)) return 'beetle';
         if (longhornbeetles.includes(insect)) return 'longhornbeetle';
+        if (barkbeetles.includes(insect)) return 'barkbeetle';
         if (leafbeetles.includes(insect)) return 'leafbeetle';
         if (aphids.includes(insect)) return 'aphid';
         return 'moth';
@@ -1780,6 +1801,7 @@ const InsectsHostPlantExplorer = memo(
       butterflies,
       beetles,
       longhornbeetles,
+      barkbeetles,
       leafbeetles,
       aphids,
       hostPlants,
@@ -1926,6 +1948,7 @@ const InsectsHostPlantExplorer = memo(
                         counts.butterflies +
                         counts.beetles +
                         counts.longhornbeetles +
+                        counts.barkbeetles +
                         counts.leafbeetles +
                         counts.aphids}
                       )

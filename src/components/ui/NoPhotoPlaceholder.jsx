@@ -18,6 +18,7 @@ export const resolvePlaceholderSubject = (insectType) => {
   switch (insectType) {
     case 'beetle':
     case 'longhornbeetle':
+    case 'barkbeetle':
     case 'leafbeetle':
     case 'aphid':
       return 'bug';
@@ -51,7 +52,7 @@ const SILHOUETTES = {
       />
     </>
   ),
-  // 甲虫（タマムシ・カミキリムシ・ハムシ・アブラムシ）
+  // 甲虫など（タマムシ・カミキリムシ・キクイムシ・ハムシ・アブラムシ）
   // コガネムシをモデルにしたシルエット: 片状触角（先端の扇状の塊）・幅広の前胸背板・
   // ずんぐりした上翅（合わせ目と付け根の小楯板ノッチ入り）・がっしりした脚
   bug: (

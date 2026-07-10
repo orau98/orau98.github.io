@@ -39,3 +39,30 @@ test('getSourceLink resolves the Schizaphis taxonomy references', () => {
   assert.match(getSourceLink('Blackman & Eastop, Aphids on the World\'s Plants') || '', /aphidsonworldsplants\.info/);
   assert.match(getSourceLink('Aphid Species File') || '', /speciesfile\.org/);
 });
+
+test('getSourceLink resolves the primary Scolytinae papers', () => {
+  assert.equal(
+    getSourceLink('Nobuchi (1964) Studies on Scolytidae III'),
+    'https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf',
+  );
+  assert.equal(
+    getSourceLink('Nobuchi (1973) Studies on Scolytidae XI'),
+    'https://www.ffpri.go.jp/pubs/bulletin/251/documents/258-2.pdf',
+  );
+  assert.equal(
+    getSourceLink('Nobuchi (1974) Studies on Scolytidae XII'),
+    'https://www.ffpri.go.jp/pubs/bulletin/251/documents/266-4.pdf',
+  );
+  assert.equal(
+    getSourceLink('Nobuchi (1975) Studies on Scolytidae XIII'),
+    'https://www.ffpri.go.jp/pubs/bulletin/251/documents/277-3.pdf',
+  );
+  assert.equal(
+    getSourceLink('Nobuchi (1979) Studies on Scolytidae XVIII'),
+    'https://www.ffpri.go.jp/pubs/bulletin/301/documents/308-1.pdf',
+  );
+  assert.equal(
+    getSourceLink('Nobuchi (1981) Revision of the genus Xylosandrus from Japan'),
+    'https://www.ffpri.go.jp/pubs/bulletin/301/documents/314-4.pdf',
+  );
+});

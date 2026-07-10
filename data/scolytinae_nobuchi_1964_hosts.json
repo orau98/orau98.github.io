@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "source": {
+    "reference": "Nobuchi (1964) Studies on Scolytidae III",
+    "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+    "scope": "日本産標本の植物名と採集地が同じ標本記録に明記されたものだけを採用"
+  },
+  "groups": [
+    {
+      "record_prefix": "N64-MONT",
+      "insect_id": "species-SC031",
+      "insect_scientific_name": "Cryphalus montanus Nobuchi, 1964",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "130",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（群馬県奥日光・尾瀬、山梨県金峰山、埼玉県雁坂峠）",
+      "geography_basis": "ホロタイプ、アロタイプ、パラタイプの日本産地と植物名を同じ標本記録に明記",
+      "evidence_type": "タイプ標本・パラタイプの寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "オオシラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies mariesii",
+          "plant_scientific_name_accepted": "Abies mariesii"
+        },
+        {
+          "plant_name": "シラビソ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Abies veitchii",
+          "plant_scientific_name_accepted": "Abies veitchii"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-NIIS",
+      "insect_id": "species-SC155",
+      "insect_scientific_name": "Sueus niisimai (Eggers, 1926)",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "130-131",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（東京都、奈良県、静岡県）",
+      "geography_basis": "Specimens examined欄で各日本産地と植物名を同じ標本記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名Neohyorrhynchus niisimaiはCognato et al. (2024) の分類学的再検討と2026年目録によりSueus niisimaiへ対応。原著の奈良県標本の日付1458はPDF画像でも確認できる印刷上の誤植で、地域判定には用いていない",
+      "hosts": [
+        {
+          "plant_name": "ヒノキ",
+          "plant_family": "ヒノキ科",
+          "plant_scientific_name_original": "Chamaecyparis obtusa",
+          "plant_scientific_name_accepted": "Chamaecyparis obtusa"
+        },
+        {
+          "plant_name": "クマシデ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus carpinoides",
+          "plant_scientific_name_accepted": "Carpinus japonica"
+        },
+        {
+          "plant_name": "シリブカガシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus sieboldiana",
+          "plant_scientific_name_accepted": "Lithocarpus glaber"
+        },
+        {
+          "plant_name": "アラカシ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Quercus glauca",
+          "plant_scientific_name_accepted": "Quercus glauca"
+        },
+        {
+          "plant_name": "エゴノキ",
+          "plant_family": "エゴノキ科",
+          "plant_scientific_name_original": "Styrax japonica",
+          "plant_scientific_name_accepted": "Styrax japonicus"
+        },
+        {
+          "plant_name": "ヤマザクラ",
+          "plant_family": "バラ科",
+          "plant_scientific_name_original": "Prunus donarium",
+          "plant_scientific_name_accepted": "Cerasus jamasakura"
+        },
+        {
+          "plant_name": "マテバシイ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Lithocarpus edulis",
+          "plant_scientific_name_accepted": "Lithocarpus edulis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-COMP",
+      "insect_id": "species-SC306",
+      "insect_scientific_name": "Xylosandrus compactus (Eichhoff, 1876)",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "131",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "モリシマアカシア",
+          "plant_family": "マメ科",
+          "plant_scientific_name_original": "Acacia mollisima",
+          "plant_scientific_name_accepted": "Acacia mearnsii",
+          "geography_label": "日本（熊本県天草）",
+          "geography_basis": "天草および坂瀬川の標本をAcacia mollisimaから採集したと明記",
+          "notes": "原著はAcacia mollisima Willd.と印刷。YListのAcacia mollissima auct. non Willd.（モリシマアカシア）として正規化したが、原著の著者名表記とは不整合があるため原綴りを保存"
+        },
+        {
+          "plant_name": "ヌマミズキ",
+          "plant_family": "ヌマミズキ科",
+          "plant_scientific_name_original": "Nyssa sylvatica",
+          "plant_scientific_name_accepted": "Nyssa sylvatica",
+          "geography_label": "日本（東京都目黒）",
+          "geography_basis": "目黒の標本をNyssa sylvaticaから採集したと明記"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-ATER",
+      "insect_id": "species-SC238",
+      "insect_scientific_name": "Cnestus aterrimus (Eggers, 1927)",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "132",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（静岡県Ganshoen、原著表記）",
+      "geography_basis": "Ganshoenの標本とCinnamomum camphoraを同じ標本記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名Cnestus murayamaiは2026年目録でCnestus aterrimusの異名として明記",
+      "hosts": [
+        {
+          "plant_name": "クスノキ",
+          "plant_family": "クスノキ科",
+          "plant_scientific_name_original": "Cinnamomum camphora",
+          "plant_scientific_name_accepted": "Cinnamomum camphora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-OLEI",
+      "insect_id": "",
+      "insect_scientific_name": "Hylesinus oleiperda Fabricius, 1792",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "132",
+      "review_status": "excluded",
+      "exclusion_reason": "原著名Hylesinus oleiperdaを2026年目録のHylesinus toranioへ結ぶ一次分類文献を今回確認できず、目録自体にもこの異名が明記されないため保留",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（北海道千歳市宇佐久舞）",
+      "geography_basis": "北海道標本と植物名を同じ記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "ヤチダモ",
+          "plant_family": "モクセイ科",
+          "plant_scientific_name_original": "Fraxinus mandshurica var. japonica",
+          "plant_scientific_name_accepted": "Fraxinus mandshurica"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-SPIN",
+      "insect_id": "species-SC190",
+      "insect_scientific_name": "Phloeotribus spinulosus (Rey, 1883)",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "132",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（北海道層雲峡天幕沢）",
+      "geography_basis": "北海道標本とPicea jezoensisを同じ記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著名Phthorophloeus spinulosusは2026年目録に現行種の異名として明記",
+      "hosts": [
+        {
+          "plant_name": "エゾマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. jezoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-LONG",
+      "insect_id": "species-SC128",
+      "insect_scientific_name": "Hylurgops longipillus Reitter, 1895",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "132",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（山梨県富士山鳴沢）",
+      "geography_basis": "鳴沢の標本とPicea jezoensis var. hondoensisを同じ記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "notes": "原著の印刷はHylurops longipilis Reitter, 1894。著者・原記載年と2026年目録の異名欄を照合し、現行名Hylurgops longipillusへ対応",
+      "hosts": [
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-TRAN",
+      "insect_id": "species-SC131",
+      "insect_scientific_name": "Hylurgops transbaicalicus Eggers, 1941",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "132",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（山梨県富士山鳴沢）",
+      "geography_basis": "鳴沢の標本とPicea jezoensis var. hondoensisを同じ記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-PALL",
+      "insect_id": "species-SC129",
+      "insect_scientific_name": "Hylurgops palliatus (Gyllenhal, 1813)",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "133",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "カラマツ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Larix leptolepis",
+          "plant_scientific_name_accepted": "Larix kaempferi",
+          "geography_label": "日本（静岡県富士山御殿場）",
+          "geography_basis": "御殿場の標本とLarix leptolepisを同じ記録に明記"
+        },
+        {
+          "plant_name": "トウヒ",
+          "plant_family": "マツ科",
+          "plant_scientific_name_original": "Picea jezoensis var. hondoensis",
+          "plant_scientific_name_accepted": "Picea jezoensis var. hondoensis",
+          "geography_label": "日本（山梨県富士山鳴沢）",
+          "geography_basis": "鳴沢の標本とPicea jezoensis var. hondoensisを同じ記録に明記"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-CARP",
+      "insect_id": "species-SC010",
+      "insect_scientific_name": "Cryphalus carpini Berger, 1917",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "133",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（東京都高尾山、神奈川県大山）",
+      "geography_basis": "各日本産標本とCarpinus laxifloraを同じ記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "アカシデ",
+          "plant_family": "カバノキ科",
+          "plant_scientific_name_original": "Carpinus laxiflora",
+          "plant_scientific_name_accepted": "Carpinus laxiflora"
+        }
+      ]
+    },
+    {
+      "record_prefix": "N64-SCOP",
+      "insect_id": "species-SC040",
+      "insect_scientific_name": "Cryphalus scopiger Berger, 1917",
+      "reference": "Nobuchi (1964) Studies on Scolytidae III",
+      "source_url": "https://www.ffpri.go.jp/pubs/bulletin/151/documents/171-3.pdf",
+      "page": "133",
+      "review_status": "approved",
+      "geographic_scope": "japan_explicit",
+      "geography_label": "日本（群馬県尾瀬、東京都奥多摩・高尾山、福岡県英彦山）",
+      "geography_basis": "各日本産標本と植物名を同じ記録に明記",
+      "evidence_type": "標本の寄主・産地記載",
+      "plant_part": "材（詳細不明）",
+      "life_stage": "成虫",
+      "hosts": [
+        {
+          "plant_name": "ブナ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Fagus crenatus",
+          "plant_scientific_name_accepted": "Fagus crenata"
+        },
+        {
+          "plant_name": "イヌブナ",
+          "plant_family": "ブナ科",
+          "plant_scientific_name_original": "Fagus japonica",
+          "plant_scientific_name_accepted": "Fagus japonica"
+        }
+      ]
+    }
+  ]
+}

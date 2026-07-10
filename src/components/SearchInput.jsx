@@ -29,6 +29,7 @@ const CategoryIcon = ({ type, className = "w-4 h-4" }) => {
       );
     case 'beetle':
     case 'longhornbeetle':
+    case 'barkbeetle':
     case 'leafbeetle':
     case 'aphid':
       return (
@@ -115,6 +116,8 @@ const getSuggestionBadgeClass = (type) => {
       return 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300';
     case 'longhornbeetle':
       return 'bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300';
+    case 'barkbeetle':
+      return 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200';
     case 'leafbeetle':
       return 'bg-lime-100 dark:bg-lime-900/50 text-lime-700 dark:text-lime-300';
     case 'aphid':

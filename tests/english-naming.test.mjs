@@ -4,10 +4,17 @@ import assert from 'node:assert/strict';
 import {
   buildJapaneseReferenceLabel,
   ENGLISH_NAMING_NOTICE,
+  EN_TYPE_LABELS,
+  EN_TYPE_PLURALS,
   getPrimaryEnglishName,
   slugifyScientificLabel,
   stripScientificAuthor,
 } from '../scripts/lib/englishNaming.mjs';
+
+test('bark beetle labels are available to static English pages', () => {
+  assert.equal(EN_TYPE_LABELS.barkbeetle, 'Bark Beetle');
+  assert.equal(EN_TYPE_PLURALS.barkbeetle, 'Bark Beetles');
+});
 
 test('stripScientificAuthor removes authorship suffix', () => {
   assert.equal(

@@ -1,0 +1,20 @@
+{
+  "catalog_url": "https://japanesebeetles.jimdofree.com/%E7%9B%AE%E9%8C%B2/129-%E3%82%BE%E3%82%A6%E3%83%A0%E3%82%B7%E7%A7%91/129-17-%E3%82%AD%E3%82%AF%E3%82%A4%E3%83%A0%E3%82%B7%E4%BA%9C%E7%A7%91/",
+  "accessed_date": "2026-07-10",
+  "expected_species_count": 322,
+  "parsed_species_count": 322,
+  "first_catalog_number": 1,
+  "last_catalog_number": 322,
+  "unique_scientific_name_count": 322,
+  "domestic_distribution_present": 322,
+  "overseas_distribution_present": 224,
+  "corrections": [
+    {
+      "field": "catalog_number",
+      "original": "2144",
+      "corrected": "214",
+      "scientific_name": "Scolytus esuriens Blandford, 1894",
+      "reason": "213と215の間にある連番誤記"
+    }
+  ]
+}

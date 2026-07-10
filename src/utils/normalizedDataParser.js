@@ -163,7 +163,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     // 表示用の食草名を構築
     let displayName = rawName;
     if (resourceType === 'plant' && hp.plant_family && hp.plant_family !== '以上バラ科' && hp.plant_family !== '以上ブナ科') {
-      displayName += `（${hp.plant_family}）`;
+      displayName = rawName.endsWith('）')
+        ? `${rawName.slice(0, -1)}・${hp.plant_family}）`
+        : `${rawName}（${hp.plant_family}）`;
     }
     
     // species-6115のデバッグログ
@@ -310,6 +312,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         if (fj.includes('アブラムシ') || f === 'Aphididae') return 'aphid';
         if (f === 'Chrysomelidae' || fj.includes('ハムシ')) return 'leafbeetle';
         if (f === 'Cerambycidae' || fj.includes('カミキリ')) return 'longhornbeetle';
+        if (insect.subfamily === 'Scolytinae' || insect.subfamily_jp?.includes('キクイムシ')) return 'barkbeetle';
         if (f === 'Buprestidae' || fj.includes('タマムシ')) return 'beetle';
         return 'moth';
       };
@@ -400,6 +403,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         case 'カミキリムシ類':
           pushWithDedupe(result.longhornbeetles, dedupeMaps.longhornbeetles);
           break;
+        case 'キクイムシ類':
+          pushWithDedupe(result.barkbeetles, dedupeMaps.barkbeetles);
+          break;
         case 'ハムシ類':
           pushWithDedupe(result.leafbeetles, dedupeMaps.leafbeetles);
           break;
@@ -421,9 +427,10 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     butterflies: result.butterflies.length,
     beetles: result.beetles.length,
     longhornbeetles: result.longhornbeetles.length,
+    barkbeetles: result.barkbeetles.length,
     leafbeetles: result.leafbeetles.length,
     aphids: result.aphids.length,
-    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.leafbeetles.length + result.aphids.length
+    total: result.moths.length + result.butterflies.length + result.beetles.length + result.longhornbeetles.length + result.barkbeetles.length + result.leafbeetles.length + result.aphids.length
   });
 
   return result;
@@ -437,6 +444,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 const classifyInsect = (insect) => {
   const familyJp = insect.family_jp?.trim() || '';
   const family = insect.family?.trim() || '';
+  const subfamilyJp = insect.subfamily_jp?.trim() || '';
+  const subfamily = insect.subfamily?.trim() || '';
   
   // 日本語科名による判定
   if (familyJp.includes('チョウ') || familyJp.includes('シジミ') || familyJp.includes('セセリ')) {
@@ -453,6 +462,10 @@ const classifyInsect = (insect) => {
   
   if (familyJp.includes('カミキリ')) {
     return 'カミキリムシ類';
+  }
+
+  if (subfamily === 'Scolytinae' || subfamilyJp.includes('キクイムシ')) {
+    return 'キクイムシ類';
   }
   
   if (familyJp.includes('ハムシ')) {
