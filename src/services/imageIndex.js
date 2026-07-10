@@ -86,6 +86,7 @@ const SUPPLEMENTAL_INSECT_IMAGE_EXTS = {
   Bhadorcosma_lonicerae: '.jpg',
   Botyodes_principalis: '.jpg',
   Cnephasia_stephensiana: '.jpg',
+  Cyrtoclytus_caproides: '.jpg',
   Enarmonia_flammeata: '.jpg',
   Epiblema_strenuana: '.jpg',
   Epodonta_lineata: '.jpg',
@@ -110,6 +111,7 @@ const SUPPLEMENTAL_INSECT_IMAGE_EXTS = {
   Xerodes_rufescentarius: '.jpg',
   Xestia_fuscostigma: '.jpg',
   Xestia_semiherbida: '.jpg',
+  Zizeeria_maha: '.jpg',
 };
 
 const mergeSupplementalInsectImages = (namesSet, extsMap) => {
