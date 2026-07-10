@@ -57,7 +57,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   // Determine the correct route based on insect type
   const route = baseRoute === ""
     ? buildInsectPath(moth, locale)
-    : `${localizePath(baseRoute, locale)}/${slugifyInsectName(moth.routeName || moth.name) || moth.id}`;
+    : `${localizePath(baseRoute, locale).replace(/\/+$/, '')}/${slugifyInsectName(moth.routeName || moth.name) || moth.id}/`;
   const primaryName = isEnglish
     ? getPrimaryEnglishName({
         scientificName: moth.scientificName,

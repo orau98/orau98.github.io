@@ -606,6 +606,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Normalize old no-slash links before a reload can hit GitHub Pages'
+  // problematic directory redirect. decodeSlug also repairs URLs that have
+  // already become UTF-8-as-Latin-1 mojibake.
+  useEffect(() => {
+    if (!plantName || !decodedPlantName) return;
+    const expectedPath = buildPlantPath(decodedPlantName, locale);
+    if (expectedPath && location.pathname !== expectedPath) {
+      navigate(expectedPath, { replace: true, state: location.state });
+    }
+  }, [decodedPlantName, locale, location.pathname, location.state, navigate, plantName]);
+
   // 展開トグル: stateの更新と同時に履歴エントリ(usr)へ複製し、POP復帰時に
   // readExpansionFromHistoryで初期値として復元できるようにする
   const toggleInsectCardsExpansion = (key) => {

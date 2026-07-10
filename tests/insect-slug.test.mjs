@@ -12,7 +12,7 @@ test('insect names use readable encoded routes when the name is path-safe', () =
   assert.equal(slugifyInsectName(name), encodeURIComponent(name));
   assert.equal(
     buildInsectPath({ id: 'species-0001', name, type: 'moth' }, 'ja'),
-    `/moth/${encodeURIComponent(name)}`,
+    `/moth/${encodeURIComponent(name)}/`,
   );
 });
 
@@ -23,8 +23,8 @@ test('insect names containing path delimiters fall back to the stable id', () =>
     type: 'aphid',
   };
   assert.equal(slugifyInsectName(insect.name), '');
-  assert.equal(buildInsectPath(insect, 'ja'), '/aphid/species-21296');
-  assert.equal(buildInsectPath(insect, 'en'), '/en/aphid/species-21296');
+  assert.equal(buildInsectPath(insect, 'ja'), '/aphid/species-21296/');
+  assert.equal(buildInsectPath(insect, 'en'), '/en/aphid/species-21296/');
 });
 
 test('duplicate insect names use a generated unique route name', () => {
@@ -36,7 +36,7 @@ test('duplicate insect names use a generated unique route name', () => {
   };
   assert.equal(
     buildInsectPath(insect, 'ja'),
-    '/leafbeetle/species-H027',
+    '/leafbeetle/species-H027/',
   );
   assert.equal(isLikelyInsectId('species-H027'), true);
   assert.equal(isLikelyInsectId('species-6131m'), true);
