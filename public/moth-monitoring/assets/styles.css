@@ -1711,6 +1711,138 @@ main > .page-hero {
   .page-hero-inner h1 { max-width: none; }
 }
 
+/* ===================== 記録フォーム案内 ===================== */
+.forms-page .hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  color: var(--moonlight);
+  font-size: 14px;
+  font-weight: 700;
+}
+.forms-page .hero-status span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--lamp);
+  box-shadow: 0 0 12px var(--lamp-glow);
+}
+.forms-page .form-status-panel {
+  border: 1px solid var(--plate-border);
+  border-top: 4px solid var(--lamp);
+  border-radius: 10px;
+  padding: 24px;
+  color: var(--ink);
+  background: var(--plate);
+  box-shadow: var(--panel-shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.forms-page .form-status-panel h2 {
+  color: var(--ink);
+}
+.forms-page .form-status-panel > p:not(.meta) {
+  color: var(--ink-muted);
+}
+.forms-page .form-status-panel .hero-actions {
+  margin-top: 20px;
+}
+.forms-page .status-update {
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--plate-edge);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.forms-page .record-number {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  float: right;
+  margin: 0 0 8px 12px;
+  border: 1px solid rgba(47,101,118,0.24);
+  border-radius: 50%;
+  color: #214b58;
+  background: rgba(127,199,214,0.18);
+  font-weight: 800;
+  line-height: 1;
+}
+.forms-page .field-keys {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--plate-edge);
+}
+.forms-page .field-keys summary {
+  width: fit-content;
+  color: var(--plate-link);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+}
+.forms-page .field-keys summary:hover {
+  color: var(--plate-link-hover);
+}
+.forms-page .field-keys summary:focus-visible {
+  outline: 2px solid var(--plate-link-hover);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.forms-page .field-keys p {
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.forms-page .field-keys code {
+  color: #3f3529;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.forms-page .more-link {
+  margin: 18px 0 0;
+  font-weight: 800;
+}
+.forms-page .more-link a::after {
+  content: " →";
+}
+.forms-page .form-privacy-note {
+  margin-top: 18px;
+}
+.forms-page .form-privacy-note h3 {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 860px) {
+  .forms-page .form-status-panel {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .forms-page .site-header {
+    position: static;
+  }
+  .forms-page .main-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    overflow: visible;
+  }
+  .forms-page .main-nav a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 5px;
+    white-space: normal;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .forms-page .form-status-panel {
+    padding: 18px 16px;
+  }
+}
+
 /* ===================== フロー図：PC横・スマホ縦のレスポンシブ・ステップ ===================== */
 .flowfig { margin: 18px 0 0; }
 .flowsteps {
