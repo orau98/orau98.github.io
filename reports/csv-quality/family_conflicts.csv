@@ -1,12 +1,1 @@
 plant_name,families,family_count,ylist_family,non_standard_families,resolution,suggested_family
-アオキ,アオキ科 | ミズキ科,2,,アオキ科,typo_to_real_family,ミズキ科
-カエデ類,ムクロジ科 | カエデ科,2,,カエデ科,typo_to_real_family,ムクロジ科
-ガマズミ属,レンプクソウ科 | スイカズラ科,2,,レンプクソウ科,typo_to_real_family,スイカズラ科
-ササ,イネ科 | ササ類などのイネ科,2,,ササ類などのイネ科,typo_to_real_family,イネ科
-シロバナエンレイソウ,ユリ科 | シュロソウ科,2,シュロソウ科,,ylist_authoritative,シュロソウ科
-ツリガネタケ,多孔菌科 | ブナ科,2,,多孔菌科,typo_to_real_family,ブナ科
-テリハハマボウ,オトギリソウ科 | アオイ科,2,アオイ科,,ylist_authoritative,アオイ科
-トモエウツギ,セリ科 | アジサイ科,2,,,ambiguous,
-ハンノキ属,カバノキ科 | ハンノキ科,2,,ハンノキ科,typo_to_real_family,カバノキ科
-ヒナウチワカエデ,ムクロジ科 | カエデ科,2,,カエデ科,typo_to_real_family,ムクロジ科
-ユウスゲ,ワスレグサ科 | ユリ科,2,,ワスレグサ科,typo_to_real_family,ユリ科

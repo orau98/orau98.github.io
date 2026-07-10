@@ -31,7 +31,7 @@ import {
   isNonPlantResourceName,
   normalizePlantNameLite,
 } from './lib/dataLiteBuilders.mjs';
-import { parseCsv, serializeField, applyEdits, toObjects as toObjectsBase } from './lib/csvQuality.mjs';
+import { parseCsv, applyEdits, toObjects as toObjectsBase } from './lib/csvQuality.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,6 +74,27 @@ const writeReportCsv = (name, headers, rows) => {
   fs.writeFileSync(path.join(OUT_DIR, name), lines.join('\n') + '\n', 'utf8');
 };
 
+// 任意の承認/除外/上書きリスト（原典・分類データベース照合済み）。
+// familyOverrides はローカルの軽量YListに未収録の総称・別名・菌類を補完する。
+// fillBlankFamily は原典照合済みで、空欄にも上書き値を適用できる植物名に限定する。
+const loadDecisions = () => {
+  const p = path.join(OUT_DIR, 'fix-decisions.json');
+  if (!fs.existsSync(p)) return { excludeFamilyFix: new Set(), approveDescriptive: null, familyOverrides: {}, fillBlankFamily: new Set() };
+  try {
+    const d = JSON.parse(fs.readFileSync(p, 'utf8'));
+    return {
+      excludeFamilyFix: new Set(d.excludeFamilyFix || []),
+      approveDescriptive: d.approveDescriptive ? new Set(d.approveDescriptive) : null,
+      familyOverrides: d.familyOverrides || {},
+      fillBlankFamily: new Set(d.fillBlankFamily || []),
+    };
+  } catch {
+    return { excludeFamilyFix: new Set(), approveDescriptive: null, familyOverrides: {}, fillBlankFamily: new Set() };
+  }
+};
+
+const VERIFIED_FAMILY_OVERRIDES = loadDecisions().familyOverrides;
+
 // --------------------------------------------------------------------------
 // YList（権威的分類データ）ロード
 // --------------------------------------------------------------------------
@@ -109,8 +130,6 @@ const normVariantKey = (value) =>
     .replace(/\s+/g, '')
     .trim();
 
-// 「科」ヘッダ的な名前か（植物個体名ではなく分類群名）
-const isFamilyToken = (name) => /科$/.test(cleanString(name));
 const isGenusToken = (name) => /属$/.test(cleanString(name));
 
 // --------------------------------------------------------------------------
@@ -320,6 +339,7 @@ for (const [nm, fams] of familyByPlant) {
   const yl = ylistFamilyFor(nm);
   const famArr = Array.from(fams);
   const ylFam = yl?.familyJp || '';
+  const verifiedFam = cleanString(VERIFIED_FAMILY_OVERRIDES[nm]);
   const realFams = famArr.filter((f) => YL_FAMILIES.has(f));
   const fakeFams = famArr.filter((f) => !YL_FAMILIES.has(f) && !isGenusToken(f));
   let resolution = 'ambiguous';
@@ -327,6 +347,9 @@ for (const [nm, fams] of familyByPlant) {
   if (ylFam) {
     resolution = 'ylist_authoritative';
     suggested = ylFam;
+  } else if (verifiedFam) {
+    resolution = 'verified_override';
+    suggested = verifiedFam;
   } else if (fakeFams.length && realFams.length === 1) {
     resolution = 'typo_to_real_family';
     suggested = realFams[0];
@@ -457,6 +480,7 @@ findings.summary = {
   invalid_plant_names: invalidNameFindings.length,
   family_conflicts: familyConflictFindings.length,
   family_conflicts_ylist_resolvable: familyConflictFindings.filter((f) => f.resolution === 'ylist_authoritative').length,
+  family_conflicts_verified_override: familyConflictFindings.filter((f) => f.resolution === 'verified_override').length,
   family_conflicts_typo: familyConflictFindings.filter((f) => f.resolution === 'typo_to_real_family').length,
   family_conflicts_ambiguous: familyConflictFindings.filter((f) => f.resolution === 'ambiguous').length,
   non_standard_families: badFamilyRows.length,
@@ -514,6 +538,7 @@ const md = [
     ['無効植物名（種類数）', s.invalid_plant_names],
     ['科名不整合（植物数）', s.family_conflicts],
     ['　└ YListで裁定可', s.family_conflicts_ylist_resolvable],
+    ['　└ 原典・外部分類DBで裁定済み', s.family_conflicts_verified_override],
     ['　└ 誤記(実在科へ)', s.family_conflicts_typo],
     ['　└ 要判断', s.family_conflicts_ambiguous],
     ['非標準の科名（種類数）', s.non_standard_families],
@@ -545,7 +570,7 @@ const md = [
   '',
   '## 4. 科名不整合',
   '',
-  `合計 ${familyConflictFindings.length} 植物。うち YList権威で裁定可 ${s.family_conflicts_ylist_resolvable}、誤記→実在科 ${s.family_conflicts_typo}、要判断 ${s.family_conflicts_ambiguous}。`,
+  `合計 ${familyConflictFindings.length} 植物。うち YList権威で裁定可 ${s.family_conflicts_ylist_resolvable}、原典・外部分類DBで裁定済み ${s.family_conflicts_verified_override}、誤記→実在科 ${s.family_conflicts_typo}、要判断 ${s.family_conflicts_ambiguous}。`,
   '',
   familyConflictFindings.length ? mdTable(['plant_name', 'families', 'ylist_family', 'resolution', 'suggested_family'], top(familyConflictFindings, 40)) : '- なし',
   '',
@@ -592,31 +617,13 @@ const descriptiveStrip = (name) => {
   return s.trim();
 };
 
-// 任意の承認/除外/上書きリスト（workflow検証結果）。存在すれば反映する。
-//   excludeFamilyFix : 科名整列から除外する植物名（同名異物リスク等）
-//   approveDescriptive: Tier3説明的正規化を許可する生名（null=明確なもの全て）
-//   familyOverrides   : YList非収録だが検証済みの科名（例 サクラ→バラ科）
-const loadDecisions = () => {
-  const p = path.join(OUT_DIR, 'fix-decisions.json');
-  if (!fs.existsSync(p)) return { excludeFamilyFix: new Set(), approveDescriptive: null, familyOverrides: {} };
-  try {
-    const d = JSON.parse(fs.readFileSync(p, 'utf8'));
-    return {
-      excludeFamilyFix: new Set(d.excludeFamilyFix || []),
-      approveDescriptive: d.approveDescriptive ? new Set(d.approveDescriptive) : null,
-      familyOverrides: d.familyOverrides || {},
-    };
-  } catch {
-    return { excludeFamilyFix: new Set(), approveDescriptive: null, familyOverrides: {} };
-  }
-};
-
 function applyFixes() {
   console.log('\n[audit-csv-quality] --fix: 高信頼の決定的修正を適用します');
   const decisions = loadDecisions();
   const excludeFamily = decisions.excludeFamilyFix instanceof Set ? decisions.excludeFamilyFix : new Set();
   const approveDescriptive = decisions.approveDescriptive; // null = 明確なもの全て許可
   const familyOverrides = decisions.familyOverrides || {};
+  const fillBlankFamily = decisions.fillBlankFamily instanceof Set ? decisions.fillBlankFamily : new Set();
 
   // 対象: hostplants.csv（public / normalized_data の両方に同一規則を適用）
   const targets = ['public/hostplants.csv', 'normalized_data/hostplants.csv']
@@ -656,22 +663,22 @@ function applyFixes() {
         }
       }
 
-      // --- 検証済み手動裁定（YList非収録の植物）---
-      if (familyOverrides[name] && rawFam && !isGenusToken(rawFam) && rawFam !== familyOverrides[name]) {
+      const directFam = !excludeFamily.has(name) ? ylistDirectFamily(name) : '';
+
+      // --- Tier1A: ローカルYListの直接正準を最優先 ---
+      if (directFam && rawFam && !isGenusToken(rawFam) && directFam !== rawFam) {
+        edits.push({ recordIndex, fieldIndex: colIndex.plant_family, newValue: directFam });
+        if (isPrimary) fixLog.push({ type: 'family_align_ylist', record_id: cleanString(r.record_id), plant_name: name, from: rawFam, to: directFam });
+      // --- 検証済み手動裁定（軽量YList非収録の総称・別名・菌類。空欄も補完）---
+      } else if (!directFam && familyOverrides[name] && (rawFam || fillBlankFamily.has(name)) && !isGenusToken(rawFam) && rawFam !== familyOverrides[name]) {
         edits.push({ recordIndex, fieldIndex: colIndex.plant_family, newValue: familyOverrides[name] });
-        if (isPrimary) fixLog.push({ type: 'family_verified_override', record_id: cleanString(r.record_id), plant_name: name, from: rawFam, to: familyOverrides[name] });
-      // --- Tier1: 科名を YList 権威値に合わせる（サイト表示は元々YList基準＝表示不変） ---
-      } else if (rawFam && !isGenusToken(rawFam) && !excludeFamily.has(name)) {
-        const directFam = ylistDirectFamily(name); // Tier1A: 直接正準
-        if (directFam && directFam !== rawFam) {
-          edits.push({ recordIndex, fieldIndex: colIndex.plant_family, newValue: directFam });
-          if (isPrimary) fixLog.push({ type: 'family_align_ylist', record_id: cleanString(r.record_id), plant_name: name, from: rawFam, to: directFam });
-        } else if (!directFam && !YL_FAMILIES.has(rawFam)) {
-          const yl = ylistFamilyFor(name); // Tier1B: 別名経由（非標準科名のみ）
-          if (yl && yl.familyJp && yl.familyJp !== rawFam) {
-            edits.push({ recordIndex, fieldIndex: colIndex.plant_family, newValue: yl.familyJp });
-            if (isPrimary) fixLog.push({ type: 'family_nonstandard_to_ylist', record_id: cleanString(r.record_id), plant_name: name, from: rawFam, to: yl.familyJp });
-          }
+        if (isPrimary) fixLog.push({ type: 'family_verified_override', record_id: cleanString(r.record_id), plant_name: name, from: rawFam || '(blank)', to: familyOverrides[name] });
+      // --- Tier1B: 別名経由のYList値（非標準科名のみ）---
+      } else if (!directFam && rawFam && !isGenusToken(rawFam) && !excludeFamily.has(name) && !YL_FAMILIES.has(rawFam)) {
+        const yl = ylistFamilyFor(name);
+        if (yl && yl.familyJp && yl.familyJp !== rawFam) {
+          edits.push({ recordIndex, fieldIndex: colIndex.plant_family, newValue: yl.familyJp });
+          if (isPrimary) fixLog.push({ type: 'family_nonstandard_to_ylist', record_id: cleanString(r.record_id), plant_name: name, from: rawFam, to: yl.familyJp });
         }
       }
     }
