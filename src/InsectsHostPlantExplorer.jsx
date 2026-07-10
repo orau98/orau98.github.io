@@ -4,7 +4,6 @@ import InstagramIcon from "./components/InstagramIcon";
 import InstagramGallery from "./components/InstagramGallery";
 import InstagramTimeline from "./components/InstagramTimeline";
 import ExplorerHero from "./components/ExplorerHero";
-import DiscoveryLinks from "./components/DiscoveryLinks";
 import StickyHeader from "./components/StickyHeader";
 import { ExplorerStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
@@ -34,7 +33,6 @@ import { getAssetBase } from "./utils/assetPaths";
 import { absUrl } from "./utils/origin";
 import { buildPlantPath, isKnownDetailPath, isExplorerRoutePath } from "./utils/siteTaxonomy";
 import { buildInsectPath } from "./utils/insectSlug";
-import { shouldShowDiscoveryLinks } from "./utils/discoveryLinks";
 import {
   EN_SITE_NAME,
   buildJapaneseReferenceLabel,
@@ -1871,10 +1869,6 @@ const InsectsHostPlantExplorer = memo(
             theme={theme}
             ui={ui}
           />
-
-          {shouldShowDiscoveryLinks(location.pathname, activeSearchTerm, location.search) && (
-            <DiscoveryLinks locale={locale} />
-          )}
 
           {/* タブナビゲーション */}
           <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden sm:rounded-3xl">
