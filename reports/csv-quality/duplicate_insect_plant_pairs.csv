@@ -32,6 +32,9 @@ species-6124,ツルグミ,3,ツルグミ,hostplant-004335 | record-007962 | host
 species-6127,ウラジロガシ,3,ウラジロガシ,hostplant-004347 | hostplant-909769 | hostplant-913391
 species-6155,シナノキ,3,シナノキ,hostplant-004432 | hostplant-913332 | hostplant-913420
 species-20438,シロバナエンレイソウ,3,シロバナエンレイソウ,hostplant-905901 | record-008035 | hostplant-909848
+species-5725,ハンノキ,3,ハンノキ,hostplant-906665 | hostplant-913282 | hostplant-PDFAUDIT-20260710-0141
+species-20644,ヨモギ,3,ヨモギ,hostplant-906685 | hostplant-913376 | hostplant-PDFAUDIT-20260710-0055
+species-4956,アキニレ,3,アキニレ,hostplant-906711 | hostplant-913266 | hostplant-PDFAUDIT-20260710-0096
 species-20438,アマドコロ,3,アマドコロ,hostplant-907312 | record-008036 | hostplant-909846
 species-4442,クヌギ,2,クヌギ,host-B1B7-20251121002628-0278 | hostplant-001816
 species-0024,ブナ,2,ブナ,hostplant-000018 | hostplant-912571
@@ -174,17 +177,18 @@ species-4538,キバナカワラマツバ,2,キバナカワラマツバ,hostplant
 species-4539,クワズイモ,2,クワズイモ,hostplant-002189 | hostplant-913408
 species-4610,ウバメガシ,2,ウバメガシ,hostplant-002348 | hostplant-906049
 species-4624,エノキ,2,エノキ,hostplant-002369 | hostplant-913403
+species-4650,コナラ,2,コナラ,hostplant-002425 | hostplant-PDFAUDIT-20260710-0275
+species-4650,クヌギ,2,クヌギ,hostplant-002426 | hostplant-PDFAUDIT-20260710-0273
+species-4650,カシ,2,カシ,hostplant-002427 | hostplant-PDFAUDIT-20260710-0276
 species-4651,ブナ,2,ブナ,hostplant-002428 | hostplant-913362
 species-4670,ミズナラ,2,ミズナラ,hostplant-002483 | hostplant-913370
 species-4684,クヌギ,2,クヌギ,hostplant-002528 | hostplant-913377
 species-4694,スゲ,2,スゲ,hostplant-002586 | hostplant-901091
 species-4694,マツカサススキ,2,マツカサススキ,hostplant-002587 | hostplant-913335
 species-4694,ヒメガマ,2,ヒメガマ,hostplant-002588 | hostplant-913334
-species-4703,ニワトコ,2,ニワトコ,hostplant-002598 | hostplant-901097
 species-4794,ミミズバイ,2,ミミズバイ,hostplant-002749 | hostplant-913379
 species-4794,ヒサカキ,2,ヒサカキ,hostplant-002750 | hostplant-913380
 species-4794,サカキ,2,サカキ,hostplant-002751 | hostplant-913381
-species-4844,ホウビカンジュ,2,ホウビカンジュ,hostplant-002836 | hostplant-901200
 species-4849,イチジク,2,イチジク,hostplant-002840 | hostplant-913233
 species-4849,ギシギシ,2,ギシギシ,hostplant-002841 | hostplant-913234
 species-4849,イタドリ,2,イタドリ,hostplant-002842 | hostplant-913235
@@ -208,9 +212,7 @@ species-5359,コウシュウウヤク,2,コウシュウウヤク,hostplant-00307
 species-5376,ムクゲ,2,ムクゲ,hostplant-003103 | hostplant-901376
 species-5376,オクラ,2,オクラ,hostplant-003104 | hostplant-901377
 species-5376,フヨウ,2,フヨウ,hostplant-003105 | hostplant-003106
-species-5376,ローゼル,2,ローゼル,hostplant-003107 | hostplant-901380
 species-5383,シナノキ,2,シナノキ,hostplant-003124 | hostplant-913248
-species-5389,ヤマナラシ,2,ヤマナラシ,hostplant-003139 | hostplant-901391
 species-5397,イワシモツケ,2,イワシモツケ,hostplant-003151 | hostplant-913280
 species-5404,イワシモツケ,2,イワシモツケ,hostplant-003156 | hostplant-913289
 species-5404,イワガサ,2,イワガサ,hostplant-003157 | hostplant-913219
@@ -271,7 +273,6 @@ species-5792,ハルニレ,2,ハルニレ,hostplant-003788 | hostplant-909422
 species-5793,チドリノキ,2,チドリノキ,hostplant-003789 | hostplant-909419
 species-5793,ヤマザクラ,2,ヤマザクラ,hostplant-003790 | hostplant-909420
 species-5795,カラマツ,2,カラマツ,hostplant-003792 | hostplant-913242
-species-5806,キリ,2,キリ,hostplant-003819 | hostplant-913331
 species-5807,ノアズキ,2,ノアズキ,hostplant-003822 | hostplant-913396
 species-5810,ミゾソバ,2,ミゾソバ,hostplant-003829 | hostplant-913407
 species-5815,ヨモギ,2,ヨモギ,hostplant-003833 | hostplant-913220
@@ -505,6 +506,7 @@ species-1542,ダケカンバ,2,ダケカンバ,hostplant-902147 | hostplant-9131
 species-1530,カエデ属,2,カエデ属,hostplant-902154 | hostplant-913121
 species-1532,アワブキ,2,アワブキ,hostplant-902162 | hostplant-913122
 species-1536,サクラ属,2,サクラ属,hostplant-902166 | hostplant-913123
+species-21591,モチノキ,2,モチノキ,hostplant-904026 | hostplant-PDFAUDIT-20260710-0031
 species-6111,ソメイヨシノ,2,ソメイヨシノ,hostplant-904471 | hostplant-909683
 species-6069,サクラ類,2,サクラ類,hostplant-905425 | hostplant-909630
 species-6137,サクラ類,2,サクラ類,hostplant-905427 | hostplant-909795
@@ -512,30 +514,31 @@ species-6017,サクラ類,2,サクラ類,hostplant-905430 | hostplant-909449
 species-6033,サクラ類,2,サクラ類,hostplant-905436 | hostplant-909510-split
 species-5786,ヤナギ類,2,ヤナギ類,hostplant-905437 | hostplant-909416
 species-5786,サクラ類,2,サクラ類,hostplant-905438 | hostplant-909412
+species-3505,ミズキ,2,ミズキ,hostplant-905884 | hostplant-PDFAUDIT-20260710-0004
 species-1968,クマシデ,2,クマシデ,hostplant-905907 | hostplant-H3-0160
 species-3896,ウラジロエノキ,2,ウラジロエノキ,hostplant-905934 | hostplant-913273
 species-0852,コナラ,2,コナラ,hostplant-905979 | hostplant-912696
 species-1568,アカギ,2,アカギ,hostplant-905986 | hostplant-913164
+species-5591,エゾイラクサ,2,エゾイラクサ,hostplant-905997 | hostplant-PDFAUDIT-20260710-0106
+species-4199,ヨモギ,2,ヨモギ,hostplant-905999 | hostplant-PDFAUDIT-20260710-0016
 species-0934,ヤブツバキ,2,ヤブツバキ,hostplant-906001 | hostplant-912765
 species-0829,シシウド,2,シシウド,hostplant-906005 | hostplant-912684
 species-5026,オオキゴケ,2,オオキゴケ,hostplant-906024 | hostplant-913349
 species-0839,キオン,2,キオン,hostplant-906041 | hostplant-912688
 species-0833,タムラソウ,2,タムラソウ,hostplant-906043 | hostplant-912686
-species-5725,ハンノキ,2,ハンノキ,hostplant-906665 | hostplant-913282
+species-4967,ヤマハギ,2,ヤマハギ,hostplant-906670 | hostplant-PDFAUDIT-20260710-0103
 species-0039,アキタブキ,2,アキタブキ,hostplant-906682 | hostplant-912576
-species-20644,ヨモギ,2,ヨモギ,hostplant-906685 | hostplant-913376
 species-1997,枯葉,2,枯葉,hostplant-906697 | hostplant-H3-0207
 species-1930,ヒナウチワカエデ,2,ヒナウチワカエデ,hostplant-906698 | hostplant-H3-0070
-species-4956,アキニレ,2,アキニレ,hostplant-906711 | hostplant-913266
 species-1541,タチスズメノヒエ,2,タチスズメノヒエ,hostplant-906727 | hostplant-913126
-species-0051,シナノキ,2,シナノキ,hostplant-907298 | hostplant-913426
 species-0852,ミズナラ,2,ミズナラ,hostplant-907323 | hostplant-908039
+species-5591,エゾゴマナ,2,エゾゴマナ,hostplant-907329 | hostplant-PDFAUDIT-20260710-0107
+species-5591,チシマアザミ,2,チシマアザミ,hostplant-907330 | hostplant-PDFAUDIT-20260710-0108
 species-1569,ミミズバイ,2,ミミズバイ,hostplant-907476 | hostplant-913167
+species-1569,ヒサカキ,2,ヒサカキ,hostplant-907478 | hostplant-PDFAUDIT-20260710-0222
 species-3770,ヤマモモ,2,ヤマモモ,hostplant-907486 | hostplant-B1B6-0597
 species-0039,クサソテツ,2,クサソテツ,hostplant-907487 | hostplant-912577
-species-1375,スモモ,2,スモモ,hostplant-907718 | hostplant-913010
 species-0774,マルバアサガオ,2,マルバアサガオ,hostplant-907963 | hostplant-912648
-species-0802,チシャノキ,2,チシャノキ,hostplant-908002 | hostplant-912675
 species-2166,トドマツ,2,トドマツ,hostplant-908315 | hostplant-912614
 species-2315,オクラ,2,オクラ,hostplant-908340 | hostplant-913421
 species-2224,キバナシャクナゲ,2,キバナシャクナゲ,hostplant-908375 | hostplant-913244
@@ -596,7 +599,13 @@ species-6136,アラカシ,2,アラカシ,record-008032 | hostplant-909836
 species-20438,ウラシマソウ,2,ウラシマソウ,record-008034 | hostplant-909847
 species-20440,ハクサンチドリ,2,ハクサンチドリ,record-008038 | hostplant-909850
 species-20440,ミツガシワ,2,ミツガシワ,record-008039 | hostplant-909851
+species-3753,コナラ,2,コナラ,record-7503 | hostplant-PDFAUDIT-20260710-0005
+species-3753,イロハモミジ,2,イロハモミジ,record-7504 | hostplant-PDFAUDIT-20260710-0006
+species-3753,クヌギ,2,クヌギ,record-7505 | hostplant-PDFAUDIT-20260710-0007
+species-3753,ソメイヨシノ,2,ソメイヨシノ,record-7506 | hostplant-PDFAUDIT-20260710-0008
 species-4253,ミズナラ,2,ミズナラ,record-7666 | hostplant-913218
 species-22647,カマツカ,2,カマツカ,hostplant-909883 | hostplant-kamikiri-audit-20260625-0110
 species-0841,シャク,2,シャク,hostplant-912690 | hostplant-913355
 species-1541,ハイキビ,2,ハイキビ,hostplant-913125 | hostplant-913413
+species-5591,シソ科,2,シソ科,hostplant-913322 | hostplant-PDFAUDIT-20260710-0109
+species-20642,ムラサキモメンズル,2,ムラサキモメンズル,hostplant-913341 | hostplant-PDFAUDIT-20260710-0052

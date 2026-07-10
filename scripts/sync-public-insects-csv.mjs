@@ -37,15 +37,17 @@ function syncCsv({ name, normalizedPath, publicPath }) {
   }
 
   let sanitizedCount = 0;
-  const rows = parsed.data.map((row) => {
+  parsed.data.forEach((row) => {
     const current = row.notes || '';
     const sanitized = getPublicHostPlantNote(current);
     if (sanitized !== current) sanitizedCount += 1;
-    return { ...row, notes: sanitized };
   });
-  const csv = Papa.unparse(rows, { columns: parsed.meta.fields }) + '\n';
-  fs.writeFileSync(publicPath, csv, 'utf-8');
-  console.log(`[sync-public-insects-csv] synced ${path.relative(ROOT, publicPath)} from normalized_data/${name} (${sanitizedCount} internal notes removed)`);
+  if (sanitizedCount > 0) {
+    throw new Error(`[sync-public-insects-csv] normalized_data/${name} contains ${sanitizedCount} internal note(s); clean the source CSV before syncing`);
+  }
+
+  fs.copyFileSync(normalizedPath, publicPath);
+  console.log(`[sync-public-insects-csv] synced ${path.relative(ROOT, publicPath)} from normalized_data/${name} (no internal notes)`);
 }
 
 for (const { name, required } of SYNC_TARGETS) {

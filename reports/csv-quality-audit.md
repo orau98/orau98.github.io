@@ -1,6 +1,6 @@
 # CSVデータ品質 全量監査レポート
 
-生成日時: 2026-07-02T10:52:39.881Z
+生成日時: 2026-07-10T03:12:21.241Z
 
 本レポートは `scripts/audit-csv-quality.mjs` により自動生成される。判定基準はサイト表示ロジック
 （`scripts/lib/dataLiteBuilders.mjs` = メタページ生成と同基準）および YList（`normalized_data/ylist-lite.json`,
@@ -10,20 +10,20 @@
 
 | 指標 | 件数 |
 | --- | --- |
-| hostplants 行数 | 16794 |
+| hostplants 行数 | 17410 |
 | 表記ゆれバケット | 2 |
-| 完全重複グループ | 6 |
-| 昆虫-植物ペア重複 | 601 |
+| 完全重複グループ | 0 |
+| 昆虫-植物ペア重複 | 610 |
 | record_id 重複 | 0 |
 | insect_id 重複 | 0 |
 | ノート重複 | 4 |
 | プロファイル重複 | 1007 |
-| 無効植物名（種類数） | 41 |
+| 無効植物名（種類数） | 43 |
 | 科名不整合（植物数） | 11 |
 | 　└ YListで裁定可 | 2 |
 | 　└ 誤記(実在科へ) | 8 |
 | 　└ 要判断 | 1 |
-| 非標準の科名（種類数） | 43 |
+| 非標準の科名（種類数） | 45 |
 | 非植物キー（種類数） | 27 |
 | 孤立 hostplants(insect_id欠落) | 0 |
 | 孤立 notes(insect_id欠落) | 0 |
@@ -40,17 +40,10 @@
 
 ## 2. 重複
 
-### 完全重複行（record_id以外一致）: 6グループ
-| plant_name | plant_family | count | record_ids |
-| --- | --- | --- | --- |
-| ホウビカンジュ | タマシダ科 | 2 | hostplant-002836 \| hostplant-901200 |
-| ローゼル | アオイ科 | 2 | hostplant-003107 \| hostplant-901380 |
-| ヤマナラシ | ヤナギ科 | 2 | hostplant-003139 \| hostplant-901391 |
-| シナノキ | アオイ科 | 2 | hostplant-907298 \| hostplant-913426 |
-| スモモ | バラ科 | 2 | hostplant-907718 \| hostplant-913010 |
-| チシャノキ | ムラサキ科 | 2 | hostplant-908002 \| hostplant-912675 |
+### 完全重複行（record_id以外一致）: 0グループ
+- なし
 
-### 昆虫-植物ペア重複: 601
+### 昆虫-植物ペア重複: 610
 | insect_id | normalized_plant | count | plant_names |
 | --- | --- | --- | --- |
 | species-3749 | ブナ | 3 | ブナ |
@@ -85,11 +78,10 @@
 | Astragalus | Astragalus | no | 2 |
 | Vicia | Vicia | no | 2 |
 | Pasania glabra | Pasania glabra | no | 2 |
-| 卵形幼虫はアカシ | 卵形幼虫はアカシ | no | 1 |
 | 綿 | 綿 | no | 1 |
 | Endospermum | Endospermum | no | 1 |
 | Ficus | Ficus | no | 1 |
-| Capparis heyncana | Capparis heyncana | no | 1 |
+| Capparis heyneana | Capparis heyneana | no | 1 |
 | Drypetes poilanei | Drypetes poilanei | no | 1 |
 | Cocculus | Cocculus | no | 1 |
 | Larix leptolepis | Larix leptolepis | no | 1 |
@@ -100,6 +92,7 @@
 | Nerium indicum | Nerium indicum | no | 1 |
 | Desmodium oryphyllum | Desmodium oryphyllum | no | 1 |
 | Symplocos paniculata | Symplocos paniculata | no | 1 |
+| Meliosma tenuis | Meliosma tenuis | no | 1 |
 
 ## 4. 科名不整合
 
@@ -119,7 +112,7 @@
 | ヒナウチワカエデ | ムクロジ科 \| カエデ科 |  | typo_to_real_family | ムクロジ科 |
 | ユウスゲ | ワスレグサ科 \| ユリ科 |  | typo_to_real_family | ユリ科 |
 
-### 非標準の科名（YList-lite の科集合に無い値）: 43
+### 非標準の科名（YList-lite の科集合に無い値）: 45
 注: YList-lite は収録植物に現れる科のみを持つ部分集合のため、この一覧には
 (a) OCR誤記・説明混入等の真の異常値（例「，ナス科」「キネ科」「クリノキ科（推定）」）と、
 (b) 部分集合外の正当な科（例「キキョウ科」「キジカクシ科」）や菌類・地衣類・非植物ホストの科（例「サルノコシカケ科」「多孔菌科」「セミ科」）が混在する。
@@ -127,7 +120,7 @@
 | plant_family | ends_with_ka | count | sample_plant | sample_ylist_family |
 | --- | --- | --- | --- | --- |
 | キキョウ科 | yes | 33 | ツリガネニンジン |  |
-| カエデ科 | yes | 33 | ヒナウチワ |  |
+| カエデ科 | yes | 32 | ヒナウチワ |  |
 | キジカクシ科 | yes | 7 | ジャノヒゲ |  |
 | サルノコシカケ科 | yes | 6 | カワラタケ |  |
 | セミ科 | yes | 6 | ヒグラシ |  |
@@ -135,9 +128,10 @@
 | キシメジ科 | yes | 4 | シイタケ |  |
 | アオキ科 | yes | 4 | アオキ |  |
 | 多孔菌科 | yes | 3 | ツリガネタケ |  |
+| ツゲモドキ科 | yes | 3 | ツゲモドキ |  |
+| キントラノオ科 | yes | 3 | コウシュンカズラ |  |
 | ヤマゴボウ科 | yes | 3 | ヨウシュヤマゴボウ |  |
 | タコノキ科 | yes | 3 | タコノキ |  |
-| ツゲモドキ科 | yes | 2 | Drypetes属 |  |
 | ワスレグサ科 | yes | 2 | ユウスゲ |  |
 | シナノキ科 | yes | 2 | シナノキ類 |  |
 | ，ナス科 | yes | 2 | タパコ |  |
@@ -145,13 +139,12 @@
 | キンボウゲ科 | yes | 2 | ヤエヤマセンニンソウ |  |
 | ミズオアイ科 | yes | 1 | ミズオアイ属 |  |
 | イチャクソウ科 | yes | 1 | ベニバナイチャクソウ |  |
-| サルオガセ科 | yes | 1 | コフキイバラキノリ |  |
 
 ## 5. 非植物キー（植物ページに載せるべきでない記録） 上位
 
 | plant_name | kind | count |
 | --- | --- | --- |
-| 枯れ葉 | substrate/resource | 10 |
+| 枯れ葉 | substrate/resource | 17 |
 | 朽ち木 | substrate/resource | 7 |
 | 枯れ木 | substrate/resource | 4 |
 | 枯葉 | substrate/resource | 3 |
