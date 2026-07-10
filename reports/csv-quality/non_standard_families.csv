@@ -1,18 +1,18 @@
 plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_id
 キキョウ科,yes,33,ツリガネニンジン,,hostplant-903006
-カエデ科,yes,32,ヒナウチワ,,hostplant-907745
+カエデ科,yes,11,ヒナウチワ,,hostplant-907745
+アオキ科,yes,7,アオキ,,hostplant-902324
 キジカクシ科,yes,7,ジャノヒゲ,,hostplant-902363
 サルノコシカケ科,yes,6,カワラタケ,,hostplant-002971
 セミ科,yes,6,ヒグラシ,,hostplant-908161
 アオギリ科,yes,5,アオギリ,,hostplant-908689
+多孔菌科,yes,4,ツリガネタケ,,hostplant-000205
 キシメジ科,yes,4,シイタケ,,hostplant-000211
-アオキ科,yes,4,アオキ,,hostplant-903633
-多孔菌科,yes,3,ツリガネタケ,,hostplant-000205
 ツゲモドキ科,yes,3,ツゲモドキ,,hostplant-butterfly-audit-20260704-0001
 キントラノオ科,yes,3,コウシュンカズラ,,hostplant-butterfly-audit-20260704-0011
 ヤマゴボウ科,yes,3,ヨウシュヤマゴボウ,,hostplant-902782
+ワスレグサ科,yes,3,ユウスゲ,,hostplant-903048
 タコノキ科,yes,3,タコノキ,,hostplant-907638
-ワスレグサ科,yes,2,ユウスゲ,,hostplant-903048
 シナノキ科,yes,2,シナノキ類,,hostplant-908521
 ，ナス科,yes,2,タパコ,,hostplant-912945
 ウロコゴケ綱,no,2,ウニヤバネゴケ,,hostplant-913347
@@ -23,7 +23,6 @@ plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_i
 ムカデゴケ科,yes,1,ムカデゴケ,,hostplant-003883
 パンレイシ科,yes,1,イヌパンレイシ,,hostplant-004793
 ダイコンなどアブラナ科,yes,1,野菜,,hostplant-006621
-ササ類などのイネ科,yes,1,ササ,,hostplant-901095
 キネ科,yes,1,シマザサ,,hostplant-901135
 フヨウ科,yes,1,シマフヨウ,,hostplant-901283
 ハナゴケ科,yes,1,ハナゴケ属,,hostplant-907675
@@ -31,7 +30,6 @@ plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_i
 ミズキナ科,yes,1,キンカ,,hostplant-908127
 イワデンダ科,yes,1,シケシダ,,hostplant-908264
 ドクウツギ科,yes,1,ドクウツギ,,hostplant-908513
-レンプクソウ科,yes,1,ガマズミ属,,hostplant-B1B6-0125
 サカキ科,yes,1,ササキ,,hostplant-B1B6-0464
 ガガイモ科,yes,1,カモメヅル類,,hostplant-909019
 ウメパチソウ科,yes,1,ウメパチソウ,,hostplant-912668
@@ -39,7 +37,6 @@ plant_family,ends_with_ka,count,sample_plant,sample_ylist_family,sample_record_i
 トウヒ科,yes,1,とセイヨウネズ,,hostplant-912935
 キゴケ科,yes,1,オオキゴケ,,hostplant-913349
 コメツブノボタン科,yes,1,ソメモノコメツブノボタン,,hostplant-H3-0082
-ハンノキ科,yes,1,ハンノキ属,,hostplant-H3-0175
 ヘゴ科,yes,1,ヒカゲヘゴ,,hostplant-H3-0222
 オオバヤドリギ科,yes,1,マツグミ,,hostplant-H3-0342
 ヤマグルマ科,yes,1,ヤマグルマ,,hostplant-kamikiri-audit-20260625-0001

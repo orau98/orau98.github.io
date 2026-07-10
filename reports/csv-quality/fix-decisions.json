@@ -1,5 +1,5 @@
 {
-  "_note": "audit-csv-quality.mjs --fix が参照する検証済み決定。多エージェント検証(csv-quality-verify)の結果に基づく。",
+  "_note": "audit-csv-quality.mjs --fix が参照する検証済み決定。YListを優先し、原典OCR・Kew POWO・NCBI/GBIFでも照合した。",
   "approveDescriptive": [
     "栽培ブドウ",
     "栽培リンゴ",
@@ -13,9 +13,43 @@
     "栽培種のカナヤマイチゴ"
   ],
   "familyOverrides": {
+    "アオキ": "アオキ科",
+    "カエデ類": "ムクロジ科",
+    "ガマズミ属": "ガマズミ科",
+    "ササ": "イネ科",
+    "シロバナエンレイソウ": "シュロソウ科",
+    "ツリガネタケ": "多孔菌科",
+    "テリハハマボウ": "アオイ科",
+    "ハンノキ属": "カバノキ科",
+    "ヒナウチワカエデ": "ムクロジ科",
+    "ユウスゲ": "ワスレグサ科",
     "サクラ": "バラ科",
     "アカシア": "マメ科",
     "モッコク": "モッコク科"
+  },
+  "fillBlankFamily": [
+    "アオキ",
+    "カエデ類",
+    "ガマズミ属",
+    "ササ",
+    "シロバナエンレイソウ",
+    "ツリガネタケ",
+    "テリハハマボウ",
+    "ハンノキ属",
+    "ヒナウチワカエデ",
+    "ユウスゲ"
+  ],
+  "familyOverrideEvidence": {
+    "アオキ": "YList pass=44（APG: アオキ科）。POWOはGarryaceaeを採用するため、本DBではYList優先とする。",
+    "カエデ類": "YList pass=653およびPOWO Acer属（Sapindaceae）。",
+    "ガマズミ属": "YList pass=1730およびPOWO Viburnum dilatatum（Viburnaceae）。",
+    "ササ": "YListのササ属各種およびPOWO Sasa属（Poaceae）。",
+    "シロバナエンレイソウ": "YList検索（Melanthiaceae）およびPOWO Trillium tschonoskii。",
+    "ツリガネタケ": "鳥取大学菌類きのこ遺伝資源研究センター、NCBI Taxonomy 40442、GBIF 8068867でFomes fomentariusを確認。Polyporaceaeの日本語科名には多孔菌科・サルノコシカケ科・タマチョレイタケ科の揺れがあるため、原典・既存DBの多孔菌科を維持。",
+    "テリハハマボウ": "YList検索からモンテンボク pass=6524（Malvaceae）へ対応。原典では隣接するテリハボクの科名が誤結合。",
+    "ハンノキ属": "YList pass=5073およびPOWO Alnus japonica（Betulaceae）。",
+    "ヒナウチワカエデ": "YList pass=5163およびPOWO Acer tenuifolium（Sapindaceae）。",
+    "ユウスゲ": "YList pass=6840およびPOWO Hemerocallis citrina var. vespertina（Asphodelaceae）。"
   },
   "excludeFamilyFix": []
 }

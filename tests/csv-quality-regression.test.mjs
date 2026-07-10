@@ -60,7 +60,6 @@ const insectIds = new Set(insectRows.map((r) => cleanString(r.insect_id)).filter
 
 const ylist = JSON.parse(readText('normalized_data/ylist-lite.json'));
 const YL_PLANTS = ylist.plants || {};
-const YL_FAMILIES = new Set(Object.keys(ylist.familiesMap || {}));
 
 // YListが権威的に科名を裁定できず統一を保留した同名異物（homonym）等。
 // これらは family 整合チェックから除外する（レポートで別途追跡）。
@@ -117,6 +116,63 @@ test('YList正準植物の plant_family は YList権威の科名に一致する'
     }
   }
   assert.deepEqual(violations, [], `科名不整合 ${violations.length}件:\n${violations.slice(0, 20).join('\n')}`);
+});
+
+const VERIFIED_FAMILIES = {
+  アオキ: 'アオキ科',
+  カエデ類: 'ムクロジ科',
+  ガマズミ属: 'ガマズミ科',
+  ササ: 'イネ科',
+  シロバナエンレイソウ: 'シュロソウ科',
+  ツリガネタケ: '多孔菌科',
+  テリハハマボウ: 'アオイ科',
+  ハンノキ属: 'カバノキ科',
+  ヒナウチワカエデ: 'ムクロジ科',
+  ユウスゲ: 'ワスレグサ科',
+};
+
+test('原典・分類DBで裁定した10植物は全行が正規化科名を持つ', () => {
+  const violations = [];
+  for (const [name, expectedFamily] of Object.entries(VERIFIED_FAMILIES)) {
+    const rows = hostRows.filter((r) => cleanString(r.plant_name) === name);
+    assert.ok(rows.length > 0, `${name} の寄主記録が必要`);
+    for (const row of rows) {
+      const actual = cleanString(row.plant_family);
+      if (actual !== expectedFamily) {
+        violations.push(`${cleanString(row.record_id)}: ${name} = ${actual || '(blank)'} (expected: ${expectedFamily})`);
+      }
+    }
+  }
+  assert.deepEqual(violations, [], `検証済み科名の不整合:\n${violations.join('\n')}`);
+});
+
+test('同一植物名に複数の非空科名が存在しない', () => {
+  const familiesByPlant = new Map();
+  for (const row of hostRows) {
+    const name = cleanString(row.plant_name);
+    const family = cleanString(row.plant_family);
+    if (!name || !family) continue;
+    if (!familiesByPlant.has(name)) familiesByPlant.set(name, new Set());
+    familiesByPlant.get(name).add(family);
+  }
+  const conflicts = [...familiesByPlant.entries()]
+    .filter(([, families]) => families.size > 1)
+    .map(([name, families]) => `${name}: ${[...families].join(' | ')}`);
+  assert.deepEqual(conflicts, [], `科名競合:\n${conflicts.join('\n')}`);
+});
+
+test('トモエウツギ誤抽出を除去し、2種のトモエソウ記録を保持する', () => {
+  assert.equal(hostRows.some((r) => cleanString(r.plant_name) === 'トモエウツギ'), false);
+  for (const insectId of ['species-0828', 'species-0836']) {
+    assert.equal(
+      hostRows.some((r) => cleanString(r.insect_id) === insectId
+        && cleanString(r.plant_name) === 'トモエソウ'
+        && cleanString(r.plant_family) === 'オトギリソウ科'
+        && cleanString(r.reference) === '日本産蛾類標準図鑑3'),
+      true,
+      `${insectId} の正しいトモエソウ記録が必要`,
+    );
+  }
 });
 
 // ---------------------------------------------------------------------------

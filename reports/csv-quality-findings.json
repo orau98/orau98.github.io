@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-10T03:12:21.241Z",
+  "generatedAt": "2026-07-10T04:02:33.368Z",
   "files": {
     "hostplants": {
       "path": "public/hostplants.csv",
-      "rows": 17410
+      "rows": 17408
     },
     "insects": {
       "path": "public/insects.csv",
@@ -19,7 +19,7 @@
     }
   },
   "summary": {
-    "hostplant_rows": 17410,
+    "hostplant_rows": 17408,
     "variant_buckets": 2,
     "exact_duplicate_groups": 0,
     "insect_plant_pair_dups": 610,
@@ -28,11 +28,12 @@
     "duplicate_notes": 4,
     "duplicate_profiles": 1007,
     "invalid_plant_names": 43,
-    "family_conflicts": 11,
-    "family_conflicts_ylist_resolvable": 2,
-    "family_conflicts_typo": 8,
-    "family_conflicts_ambiguous": 1,
-    "non_standard_families": 45,
+    "family_conflicts": 0,
+    "family_conflicts_ylist_resolvable": 0,
+    "family_conflicts_verified_override": 0,
+    "family_conflicts_typo": 0,
+    "family_conflicts_ambiguous": 0,
+    "non_standard_families": 42,
     "non_plant_keys": 27,
     "orphan_hostplants": 0,
     "orphan_notes": 0,
@@ -8781,107 +8782,7 @@
         "reference": "日本産蛾類標準図鑑3"
       }
     ],
-    "family_conflicts": [
-      {
-        "plant_name": "アオキ",
-        "families": "アオキ科 | ミズキ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "アオキ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "ミズキ科"
-      },
-      {
-        "plant_name": "カエデ類",
-        "families": "ムクロジ科 | カエデ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "カエデ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "ムクロジ科"
-      },
-      {
-        "plant_name": "ガマズミ属",
-        "families": "レンプクソウ科 | スイカズラ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "レンプクソウ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "スイカズラ科"
-      },
-      {
-        "plant_name": "ササ",
-        "families": "イネ科 | ササ類などのイネ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "ササ類などのイネ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "イネ科"
-      },
-      {
-        "plant_name": "シロバナエンレイソウ",
-        "families": "ユリ科 | シュロソウ科",
-        "family_count": 2,
-        "ylist_family": "シュロソウ科",
-        "non_standard_families": "",
-        "resolution": "ylist_authoritative",
-        "suggested_family": "シュロソウ科"
-      },
-      {
-        "plant_name": "ツリガネタケ",
-        "families": "多孔菌科 | ブナ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "多孔菌科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "ブナ科"
-      },
-      {
-        "plant_name": "テリハハマボウ",
-        "families": "オトギリソウ科 | アオイ科",
-        "family_count": 2,
-        "ylist_family": "アオイ科",
-        "non_standard_families": "",
-        "resolution": "ylist_authoritative",
-        "suggested_family": "アオイ科"
-      },
-      {
-        "plant_name": "トモエウツギ",
-        "families": "セリ科 | アジサイ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "",
-        "resolution": "ambiguous",
-        "suggested_family": ""
-      },
-      {
-        "plant_name": "ハンノキ属",
-        "families": "カバノキ科 | ハンノキ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "ハンノキ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "カバノキ科"
-      },
-      {
-        "plant_name": "ヒナウチワカエデ",
-        "families": "ムクロジ科 | カエデ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "カエデ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "ムクロジ科"
-      },
-      {
-        "plant_name": "ユウスゲ",
-        "families": "ワスレグサ科 | ユリ科",
-        "family_count": 2,
-        "ylist_family": "",
-        "non_standard_families": "ワスレグサ科",
-        "resolution": "typo_to_real_family",
-        "suggested_family": "ユリ科"
-      }
-    ],
+    "family_conflicts": [],
     "non_standard_families": [
       {
         "plant_family": "キキョウ科",
@@ -8894,10 +8795,18 @@
       {
         "plant_family": "カエデ科",
         "ends_with_ka": "yes",
-        "count": 32,
+        "count": 11,
         "sample_plant": "ヒナウチワ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-907745"
+      },
+      {
+        "plant_family": "アオキ科",
+        "ends_with_ka": "yes",
+        "count": 7,
+        "sample_plant": "アオキ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-902324"
       },
       {
         "plant_family": "キジカクシ科",
@@ -8932,28 +8841,20 @@
         "sample_record_id": "hostplant-908689"
       },
       {
+        "plant_family": "多孔菌科",
+        "ends_with_ka": "yes",
+        "count": 4,
+        "sample_plant": "ツリガネタケ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-000205"
+      },
+      {
         "plant_family": "キシメジ科",
         "ends_with_ka": "yes",
         "count": 4,
         "sample_plant": "シイタケ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-000211"
-      },
-      {
-        "plant_family": "アオキ科",
-        "ends_with_ka": "yes",
-        "count": 4,
-        "sample_plant": "アオキ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-903633"
-      },
-      {
-        "plant_family": "多孔菌科",
-        "ends_with_ka": "yes",
-        "count": 3,
-        "sample_plant": "ツリガネタケ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-000205"
       },
       {
         "plant_family": "ツゲモドキ科",
@@ -8980,20 +8881,20 @@
         "sample_record_id": "hostplant-902782"
       },
       {
+        "plant_family": "ワスレグサ科",
+        "ends_with_ka": "yes",
+        "count": 3,
+        "sample_plant": "ユウスゲ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-903048"
+      },
+      {
         "plant_family": "タコノキ科",
         "ends_with_ka": "yes",
         "count": 3,
         "sample_plant": "タコノキ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-907638"
-      },
-      {
-        "plant_family": "ワスレグサ科",
-        "ends_with_ka": "yes",
-        "count": 2,
-        "sample_plant": "ユウスゲ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-903048"
       },
       {
         "plant_family": "シナノキ科",
@@ -9076,14 +8977,6 @@
         "sample_record_id": "hostplant-006621"
       },
       {
-        "plant_family": "ササ類などのイネ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "ササ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-901095"
-      },
-      {
         "plant_family": "キネ科",
         "ends_with_ka": "yes",
         "count": 1,
@@ -9140,14 +9033,6 @@
         "sample_record_id": "hostplant-908513"
       },
       {
-        "plant_family": "レンプクソウ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "ガマズミ属",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-B1B6-0125"
-      },
-      {
         "plant_family": "サカキ科",
         "ends_with_ka": "yes",
         "count": 1,
@@ -9202,14 +9087,6 @@
         "sample_plant": "ソメモノコメツブノボタン",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-H3-0082"
-      },
-      {
-        "plant_family": "ハンノキ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "ハンノキ属",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-H3-0175"
       },
       {
         "plant_family": "ヘゴ科",
