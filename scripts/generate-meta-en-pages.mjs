@@ -60,9 +60,37 @@ const PUBLIC_DIR = path.join(__dirname, '../public');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+const EN_INDEX_PAGE_SIZE = 1000;
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
 const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
+const GA_MEASUREMENT_ID = process.env.VITE_GA_MEASUREMENT_ID || 'G-MFEQF99G0H';
+const GA_HEAD_TAGS = `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_MEASUREMENT_ID}');
+</script>`;
+
+const buildLegacyInsectSlug = (displayName, insectId) => {
+  const normalizedName = cleanString(displayName);
+  const routeKey = normalizedName && !/[/\\?#%]/.test(normalizedName)
+    ? normalizedName
+    : cleanString(insectId);
+  return encodeURIComponent(routeKey);
+};
+
+const routePathToOutputPath = (rootDir, routePath) => {
+  const segments = String(routePath)
+    .replace(/^\/+/, '')
+    .split('/')
+    .map((segment) => decodeURIComponent(segment));
+  if (segments.some((segment) => !segment || /[/\\\0]/.test(segment))) {
+    throw new Error(`unsafe route path: ${routePath}`);
+  }
+  return path.join(rootDir, ...segments);
+};
 const MANUAL_AD_SLOTS = Object.freeze({
   detail: process.env.VITE_ADSENSE_SLOT_DETAIL || '',
 });
@@ -209,7 +237,7 @@ function sitePathExists(sitePath) {
   return Boolean(filePath && fs.existsSync(filePath));
 }
 
-function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '' }) {
+function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '', noindex = true }) {
   const safeTitle = escapeAttr(title || EN_SITE_NAME);
   const safeTargetUrl = escapeAttr(targetUrl);
   return `<!DOCTYPE html>
@@ -217,7 +245,7 @@ function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '' }) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, follow">
+  ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
   <title>${safeTitle}</title>
   <link rel="canonical" href="${safeTargetUrl}">
   <meta http-equiv="refresh" content="0;url=${safeTargetUrl}">
@@ -670,6 +698,7 @@ function buildEnglishInsectPage({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${escapeAttr(robotsContent)}">
+  ${GA_HEAD_TAGS}
   <meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeAttr(description)}">
@@ -843,6 +872,7 @@ function buildEnglishPlantPage({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${escapeAttr(robotsContent)}">
+  ${GA_HEAD_TAGS}
   <meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeAttr(description)}">
@@ -966,14 +996,36 @@ function buildEnglishPlantPage({
 </html>`;
 }
 
-function buildEnglishSectionIndex(section, entries) {
-  const listDescription = `English index for ${section.pluralLabel.toLowerCase()} pages from Japan. Scientific names are used as the primary identifier when available.`;
-  const indexPath = `/en/meta/${section.routeSegment}/index.html`;
+function buildEnglishSectionIndex(section, entries, pageNumber = 1) {
+  const totalPages = Math.max(1, Math.ceil(entries.length / EN_INDEX_PAGE_SIZE));
+  const currentPage = Math.min(Math.max(1, pageNumber), totalPages);
+  const startIndex = (currentPage - 1) * EN_INDEX_PAGE_SIZE;
+  const pageEntries = entries.slice(startIndex, startIndex + EN_INDEX_PAGE_SIZE);
+  const pageLabel = currentPage > 1 ? ` (page ${currentPage} of ${totalPages})` : '';
+  const listDescription = `English index for ${section.pluralLabel.toLowerCase()} pages from Japan${pageLabel}. Scientific names are used as the primary identifier when available.`;
+  const indexPath = currentPage === 1
+    ? `/en/meta/${section.routeSegment}/index.html`
+    : `/en/meta/${section.routeSegment}/page-${currentPage}.html`;
   const canonicalUrl = `${BASE_ORIGIN}${indexPath}`;
+  const pageTitle = currentPage === 1
+    ? `${section.pluralLabel} | ${EN_SITE_NAME}`
+    : `${section.pluralLabel} – Page ${currentPage} | ${EN_SITE_NAME}`;
+  const paginationHtml = totalPages > 1
+    ? `<nav aria-label="${escapeAttr(`${section.pluralLabel} index pages`)}" style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;justify-content:center;margin:1.25rem 0;">
+        ${Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => {
+          const href = page === 1
+            ? `/en/meta/${section.routeSegment}/index.html`
+            : `/en/meta/${section.routeSegment}/page-${page}.html`;
+          return page === currentPage
+            ? `<strong aria-current="page" style="padding:0.4rem 0.7rem;">${page}</strong>`
+            : `<a href="${escapeAttr(href)}" style="padding:0.4rem 0.7rem;">${page}</a>`;
+        }).join('\n        ')}
+      </nav>`
+    : '';
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${section.pluralLabel} | ${EN_SITE_NAME}`,
+    name: pageTitle,
     description: listDescription,
     url: canonicalUrl,
     inLanguage: 'en',
@@ -985,19 +1037,20 @@ function buildEnglishSectionIndex(section, entries) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${buildRobotsContent(true)}">
+  ${GA_HEAD_TAGS}
   ${ADSENSE_HEAD_TAGS}
-  <title>${escapeHtml(section.pluralLabel)} | ${escapeHtml(EN_SITE_NAME)}</title>
+  <title>${escapeHtml(pageTitle)}</title>
   <meta name="description" content="${escapeAttr(listDescription)}">
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
   <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
-  <meta property="og:title" content="${escapeAttr(`${section.pluralLabel} | ${EN_SITE_NAME}`)}">
+  <meta property="og:title" content="${escapeAttr(pageTitle)}">
   <meta property="og:description" content="${escapeAttr(listDescription)}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
   <meta property="og:url" content="${escapeAttr(canonicalUrl)}">
   <meta property="og:site_name" content="${escapeAttr(EN_SITE_NAME)}">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="${escapeAttr(`${section.pluralLabel} | ${EN_SITE_NAME}`)}">
+  <meta name="twitter:title" content="${escapeAttr(pageTitle)}">
   <meta name="twitter:description" content="${escapeAttr(listDescription)}">
   <script type="application/ld+json">${renderJsonLd(structuredData)}</script>
 </head>
@@ -1020,13 +1073,15 @@ function buildEnglishSectionIndex(section, entries) {
     <main>
       <section style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:1rem 1.25rem 1.25rem;">
         <p>${escapeHtml(listDescription)}</p>
+        ${paginationHtml}
         <ul style="list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;padding:0;margin:1rem 0 0;">
-          ${entries.slice(0, 1500).map((entry) => `<li style="border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.9rem 1rem;">
+          ${pageEntries.map((entry) => `<li style="border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.9rem 1rem;">
             <a href="${escapeAttr(entry.href)}" style="font-weight:700;display:block;margin-bottom:0.25rem;">${escapeHtml(entry.primaryName)}</a>
             ${entry.scientificName && entry.scientificName !== entry.primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(entry.scientificName)}</div>` : ''}
             ${entry.japaneseReference ? `<div class="meta-note">${escapeHtml(entry.japaneseReference)}</div>` : ''}
           </li>`).join('\n          ')}
         </ul>
+        ${paginationHtml}
       </section>
     </main>
     <section class="navigation">
@@ -1035,6 +1090,18 @@ function buildEnglishSectionIndex(section, entries) {
   </div>
 </body>
 </html>`;
+}
+
+function writeEnglishSectionIndexPages(section, entries) {
+  const sectionDir = path.join(EN_META_DIR, section.routeSegment);
+  const totalPages = Math.max(1, Math.ceil(entries.length / EN_INDEX_PAGE_SIZE));
+  for (let page = 1; page <= totalPages; page += 1) {
+    const filename = page === 1 ? 'index.html' : `page-${page}.html`;
+    fs.writeFileSync(
+      path.join(sectionDir, filename),
+      buildEnglishSectionIndex(section, entries, page),
+    );
+  }
 }
 
 function buildEnglishHomePage(counts) {
@@ -1054,13 +1121,14 @@ function buildEnglishHomePage(counts) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${buildRobotsContent(true)}">
+  ${GA_HEAD_TAGS}
   ${ADSENSE_HEAD_TAGS}
   <title>${escapeHtml(EN_SITE_NAME)}</title>
   <meta name="description" content="${escapeAttr(description)}">
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
   <link rel="alternate" hreflang="ja" href="${BASE_ORIGIN}/">
   <link rel="alternate" hreflang="en" href="${canonicalUrl}">
-  <link rel="alternate" hreflang="x-default" href="${canonicalUrl}">
+  <link rel="alternate" hreflang="x-default" href="${BASE_ORIGIN}/">
   <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
   <meta property="og:title" content="${escapeAttr(EN_SITE_NAME)}">
   <meta property="og:description" content="${escapeAttr(description)}">
@@ -1215,11 +1283,18 @@ async function generateEnglishMetaPages() {
           insectObjectsByJapaneseName.set(japaneseName, []);
         }
         insectObjectsByJapaneseName.get(japaneseName).push({ ...insect, type });
-        queueLegacyRedirect(
-          `/en/${type}/${encodeURIComponent(japaneseName)}/index.html`,
-          `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
-          `${entry.primaryName} | ${section.singularLabel} profile from Japan`,
-        );
+        const targetPath = `/en/meta/${type}/${encodeURIComponent(slug)}.html`;
+        const routeNames = new Set([
+          cleanString(insect.routeName || japaneseName),
+          japaneseName,
+        ].filter(Boolean));
+        for (const routeName of routeNames) {
+          queueLegacyRedirect(
+            `/en/${type}/${buildLegacyInsectSlug(routeName, insect.id)}/index.html`,
+            targetPath,
+            `${entry.primaryName} | ${section.singularLabel} profile from Japan`,
+          );
+        }
       }
     });
   });
@@ -1269,8 +1344,7 @@ async function generateEnglishMetaPages() {
       isGeneratedMetaPageIndexableByHref(entry.href),
     );
     indexableInsectEntriesByType.set(section.type, indexableEntries);
-    const indexHtml = buildEnglishSectionIndex(section, indexableEntries);
-    fs.writeFileSync(path.join(EN_META_DIR, section.routeSegment, 'index.html'), indexHtml);
+    writeEnglishSectionIndexPages(section, indexableEntries);
   });
   const indexablePlantEntries = plantEntries.filter((entry) =>
     isGeneratedMetaPageIndexableByHref(entry.href),
@@ -1280,15 +1354,16 @@ async function generateEnglishMetaPages() {
     singularLabel: EN_TYPE_LABELS.plant,
     pluralLabel: EN_TYPE_PLURALS.plant,
   };
-  fs.writeFileSync(
-    path.join(EN_META_DIR, 'plant', 'index.html'),
-    buildEnglishSectionIndex(plantSection, indexablePlantEntries),
-  );
+  writeEnglishSectionIndexPages(plantSection, indexablePlantEntries);
   legacyRedirects.forEach(({ targetUrl, title }, routePath) => {
-    const outputPath = path.join(PUBLIC_DIR, ...routePath.replace(/^\//, '').split('/'));
     try {
+      const outputPath = routePathToOutputPath(PUBLIC_DIR, routePath);
       ensureDir(path.dirname(outputPath));
-      fs.writeFileSync(outputPath, buildLegacyRedirectHtml({ title, targetUrl }));
+      fs.writeFileSync(outputPath, buildLegacyRedirectHtml({
+        title,
+        targetUrl,
+        noindex: false,
+      }));
     } catch (error) {
       legacyRedirectWriteSkips++;
       console.warn(`[meta-en] legacy redirect skipped: ${routePath} (${error.code || error.message})`);

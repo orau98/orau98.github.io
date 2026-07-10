@@ -102,6 +102,28 @@ function readJsonOrEmpty(filePath) {
   }
 }
 
+const runtimeInsectRouteById = new Map();
+for (const section of INSECT_SECTION_CONFIGS) {
+  const runtimeInsects = readJsonOrEmpty(
+    path.join(__dirname, `../public/assets/data-lite/${section.collectionKey}.json`),
+  );
+  if (!Array.isArray(runtimeInsects)) continue;
+  for (const insect of runtimeInsects) {
+    const insectId = String(insect?.id || '').trim();
+    const routeName = String(
+      insect?.routeName || insect?.name || insect?.japaneseName || '',
+    ).trim();
+    const legacyName = String(insect?.name || insect?.japaneseName || '').trim();
+    if (insectId && routeName) {
+      runtimeInsectRouteById.set(insectId, {
+        type: section.type,
+        name: routeName,
+        legacyName,
+      });
+    }
+  }
+}
+
 const plantDetailIndex = readJsonOrEmpty(PLANT_DETAILS_PATH);
 
 function ensureDir(dirPath) {
@@ -318,6 +340,56 @@ function renderCitationListHtml(entries = []) {
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
 const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
+const GA_MEASUREMENT_ID = process.env.VITE_GA_MEASUREMENT_ID || 'G-MFEQF99G0H';
+const GA_HEAD_TAGS = `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_MEASUREMENT_ID}');
+</script>`;
+
+const buildLegacyInsectSlug = (displayName, insectId) => {
+  const normalizedName = String(displayName || '').trim();
+  const routeKey = normalizedName && !/[/\\?#%]/.test(normalizedName)
+    ? normalizedName
+    : String(insectId || '').trim();
+  return encodeURIComponent(routeKey);
+};
+
+const routePathToOutputPath = (rootDir, routePath) => {
+  const segments = String(routePath)
+    .replace(/^\/+/, '')
+    .split('/')
+    .map((segment) => decodeURIComponent(segment));
+  if (segments.some((segment) => !segment || /[/\\\0]/.test(segment))) {
+    throw new Error(`unsafe route path: ${routePath}`);
+  }
+  return path.join(rootDir, ...segments);
+};
+// GA4 の直近28日ランディングページで実流入を確認した、削除済みガイドURL。
+// 旧AI量産ガイド本文は復元せず、意味的に同一の現行植物プロフィールへ恒久移転する。
+const LEGACY_TRAFFIC_GUIDE_PLANTS = Object.freeze([
+  ['keyaki', 'ケヤキ'],
+  ['konara', 'コナラ'],
+  ['fuji', 'フジ'],
+  ['nemunoki', 'ネムノキ'],
+  ['akebia-quinata', 'アケビ'],
+  ['asebi', 'アセビ'],
+  ['chengiopanax-sciadophylloides', 'コシアブラ'],
+  ['chenopodium-album', 'シロザ'],
+  ['cornus-kousa-subsp-kousa', 'ヤマボウシ'],
+  ['kashiwa', 'カシワ'],
+  ['litchi-chinensis', 'レイシ'],
+  ['magnolia-obovata', 'ホオノキ'],
+  ['meliosma-myriantha', 'アワブキ'],
+  ['plant-f3ca3f', 'ミネヤナギ'],
+  ['sakura', 'サクラ'],
+  ['salix-udensis', 'オノエヤナギ'],
+  ['schima-wallichii-subsp-noronhae', 'イジュ'],
+  ['seitaka-awadachiso', 'セイタカアワダチソウ'],
+  ['yamamomo', 'ヤマモモ'],
+]);
 const MANUAL_AD_SLOTS = Object.freeze({
   footer: process.env.VITE_ADSENSE_SLOT_FOOTER || '',
   detail: process.env.VITE_ADSENSE_SLOT_DETAIL || '',
@@ -410,7 +482,7 @@ function buildPlantPictureHtml(img, altText) {
                   >`;
 }
 
-function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '' }) {
+function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '', noindex = true }) {
   const safeTitle = escapeRedirectHtml(title || '昆虫植物図鑑');
   const safeTargetUrl = escapeRedirectHtml(targetUrl);
   const bodyCopy = lang === 'en'
@@ -424,7 +496,7 @@ function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '' }) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, follow">
+  ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
   <title>${safeTitle}</title>
   <link rel="canonical" href="${safeTargetUrl}">
   <meta http-equiv="refresh" content="0;url=${safeTargetUrl}">
@@ -1473,7 +1545,10 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
 
   const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
   const insectPageUrl = `${BASE_ORIGIN}/meta/${type}/${insect.id}.html`;
-  const insectTitle = `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`;
+  const familyTitlePart = familyName ? `（${familyName}）` : '';
+  const insectTitle = hostPlantsArray.length > 0
+    ? `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`
+    : `${insect.japaneseName}${familyTitlePart}の分類・生態 - ${typeNames[type]}図鑑`;
   const insectKeywords = insectKeywordList.join(',');
   const insectEntityId = `${insectPageUrl}#species`;
   const insectImageObject = imageUrl ? {
@@ -1590,6 +1665,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${robotsContent}">
+  ${GA_HEAD_TAGS}
   <!-- Google AdSense account verification -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   ${DEFERRED_ADS_SCRIPT}
@@ -1909,7 +1985,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 
   const explorerSearchPath = buildExplorerSearchPath('plants', displayPlantName);
   const plantPageUrl = `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html`;
-  const plantTitle = `${displayPlantName} - 昆虫植物図鑑 | ${relatedInsects.length}種の昆虫が利用`;
+  const plantTitle = `${displayPlantName}につく虫・幼虫${relatedInsects.length}種｜食草記録と出典｜昆虫植物図鑑`;
   const plantKeywords = `${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}`;
   const plantEntityId = `${plantPageUrl}#plant`;
   const plantImageObject = mainImageUrl ? {
@@ -2011,7 +2087,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const safePlantDescription = escapeRedirectHtml(plantDescription);
   const safePlantKeywords = escapeRedirectHtml(plantKeywords);
   const safePlantOgDescription = escapeRedirectHtml(plantOgDescription);
-  const safePlantTwitterTitle = escapeRedirectHtml(`${displayPlantName} - 昆虫植物図鑑`);
+  const safePlantTwitterTitle = safePlantTitle;
   const safePlantImageAlt = escapeRedirectHtml(socialImageAlt);
   const safePlantPageUrl = escapeRedirectHtml(plantPageUrl);
   const safePlantExplorerSearchPath = escapeRedirectHtml(explorerSearchPath);
@@ -2022,6 +2098,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="${robotsContent}">
+  ${GA_HEAD_TAGS}
   <!-- Google AdSense account verification -->
   <meta name="google-adsense-account" content="ca-pub-6982051533473293">
   ${DEFERRED_ADS_SCRIPT}
@@ -2309,6 +2386,24 @@ async function generateMetaPages() {
       legacyRedirects.set(normalizedRoutePath, { targetUrl, title, lang });
     }
   };
+  const queueInsectLegacyRedirects = ({ type, insectId, displayName, targetPath, title }) => {
+    const runtimeRoute = runtimeInsectRouteById.get(insectId);
+    const routeEntries = [
+      runtimeRoute,
+      runtimeRoute?.legacyName
+        ? { type: runtimeRoute.type, name: runtimeRoute.legacyName }
+        : null,
+      { type, name: displayName || insectId },
+    ].filter((entry) => entry?.type && entry?.name);
+    const seenRoutes = new Set();
+    for (const routeEntry of routeEntries) {
+      const legacySlug = buildLegacyInsectSlug(routeEntry.name, insectId);
+      const routePath = `/${routeEntry.type}/${legacySlug}/index.html`;
+      if (seenRoutes.has(routePath)) continue;
+      seenRoutes.add(routePath);
+      queueLegacyRedirect(routePath, targetPath, title);
+    }
+  };
   
   META_SECTION_KEYS.forEach(type => {
     const typeDir = path.join(metaDir, type);
@@ -2474,7 +2569,7 @@ async function generateMetaPages() {
     if (/^species-$/.test(insectId)) return;
 
       // 年号だけが和名欄に混入するケース（例: "1758)"）は無効として扱う
-      if (looksLikeYearOnly(japaneseName)) {
+      if (looksLikeYearOnly(japaneseName) || japaneseName.length < 2) {
         japaneseName = '';
       }
       const displayName = japaneseName || (scientificName ? `${scientificName}（和名未記載）` : '');
@@ -2558,12 +2653,13 @@ async function generateMetaPages() {
       const enSlugEntry = insectIdToEnSlug.get(insectId);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       insectPageQueue.push({ insect, type, enSlugEntry, filename });
-      const legacySlug = encodeURIComponent(String(displayName || insectId).trim());
-      queueLegacyRedirect(
-        `/${type}/${legacySlug}/index.html`,
-        `/meta/${type}/${insectId}.html`,
-        `${displayName || insectId} | 昆虫植物図鑑`,
-      );
+      queueInsectLegacyRedirects({
+        type,
+        insectId,
+        displayName,
+        targetPath: `/meta/${type}/${insectId}.html`,
+        title: `${displayName || insectId} | 昆虫植物図鑑`,
+      });
       if (type === 'moth') mothCount++;
       else if (type === 'butterfly') butterflyCountFromInsects++;
       else if (type === 'beetle') beetleCountFromInsects++;
@@ -2626,12 +2722,13 @@ async function generateMetaPages() {
       const enSlugEntryB = insectIdToEnSlug.get(insectId);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryB, filename });
-      const legacySlug = encodeURIComponent(String(japaneseName || insectId).trim());
-      queueLegacyRedirect(
-        `/${type}/${legacySlug}/index.html`,
-        `/meta/${type}/${insectId}.html`,
-        `${japaneseName || insectId} | 昆虫植物図鑑`,
-      );
+      queueInsectLegacyRedirects({
+        type,
+        insectId,
+        displayName: japaneseName,
+        targetPath: `/meta/${type}/${insectId}.html`,
+        title: `${japaneseName || insectId} | 昆虫植物図鑑`,
+      });
       butterflyCount++;
 
       if (hostPlants && hostPlants !== '不明') {
@@ -2706,12 +2803,13 @@ async function generateMetaPages() {
       const enSlugEntryH = insectIdToEnSlug.get(insectId);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
       insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryH, filename });
-      const legacySlug = encodeURIComponent(String(japaneseName || insectId).trim());
-      queueLegacyRedirect(
-        `/${type}/${legacySlug}/index.html`,
-        `/meta/${type}/${insectId}.html`,
-        `${japaneseName || insectId} | 昆虫植物図鑑`,
-      );
+      queueInsectLegacyRedirects({
+        type,
+        insectId,
+        displayName: japaneseName,
+        targetPath: `/meta/${type}/${insectId}.html`,
+        title: `${japaneseName || insectId} | 昆虫植物図鑑`,
+      });
       leafbeetleCount++;
       
       if (hostPlants && hostPlants !== '不明') {
@@ -2796,11 +2894,80 @@ async function generateMetaPages() {
       }
     });
 
+    // 削除前の /guides/plants/*.html へ今も入ってくる検索・外部リンク流入を、
+    // 同じ植物の現行 canonical ページへ一対一で回収する。0秒 meta refresh は
+    // GitHub Pages のようにHTTP 301を設定できない環境でGoogleが恒久移転として扱う。
+    const legacyGuidePlantDir = path.join(publicDir, 'guides', 'plants');
+    const legacyEnglishGuidePlantDir = path.join(publicDir, 'en', 'guides', 'plants');
+    fs.rmSync(legacyGuidePlantDir, { recursive: true, force: true });
+    fs.rmSync(legacyEnglishGuidePlantDir, { recursive: true, force: true });
+    ensureDir(legacyGuidePlantDir);
+    ensureDir(legacyEnglishGuidePlantDir);
+    let legacyGuideRedirectCount = 0;
+    let legacyGuideRedirectSkips = 0;
+
+    const writePermanentGuideRedirect = ({ outputPath, lang, title, targetPath, verifyTarget = true }) => {
+      const targetFile = path.join(publicDir, ...decodeURIComponent(targetPath).replace(/^\//, '').split('/'));
+      if (verifyTarget && !fs.existsSync(targetFile)) {
+        legacyGuideRedirectSkips++;
+        console.warn(`[meta] legacy guide target missing: ${targetPath}`);
+        return;
+      }
+      ensureDir(path.dirname(outputPath));
+      fs.writeFileSync(outputPath, buildLegacyRedirectHtml({
+        lang,
+        title,
+        targetUrl: `${BASE_ORIGIN}${targetPath}`,
+        noindex: false,
+      }));
+      legacyGuideRedirectCount++;
+    };
+
+    for (const [legacySlug, plantName] of LEGACY_TRAFFIC_GUIDE_PLANTS) {
+      const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+      writePermanentGuideRedirect({
+        outputPath: path.join(legacyGuidePlantDir, `${legacySlug}.html`),
+        lang: 'ja',
+        title: `${plantName}につく虫 | 昆虫植物図鑑`,
+        targetPath: `/meta/plant/${encodeURIComponent(safePlantName)}.html`,
+      });
+
+      const englishSlug = plantNameToEnSlug.get(safePlantName);
+      if (englishSlug) {
+        writePermanentGuideRedirect({
+          outputPath: path.join(legacyEnglishGuidePlantDir, `${legacySlug}.html`),
+          lang: 'en',
+          title: `${plantName} host-plant insects | Insects and Host Plants of Japan`,
+          targetPath: `/en/meta/plant/${encodeURIComponent(englishSlug)}.html`,
+        });
+      }
+    }
+
+    writePermanentGuideRedirect({
+      outputPath: path.join(legacyGuidePlantDir, 'index.html'),
+      lang: 'ja',
+      title: '植物から昆虫を探す | 昆虫植物図鑑',
+      targetPath: '/meta/plant/index.html',
+      verifyTarget: false,
+    });
+    writePermanentGuideRedirect({
+      outputPath: path.join(publicDir, 'guides', 'host-plant-search.html'),
+      lang: 'ja',
+      title: '食草・寄主植物から昆虫を探す | 昆虫植物図鑑',
+      targetPath: '/meta/plant/index.html',
+      verifyTarget: false,
+    });
+
     legacyRedirects.forEach(({ targetUrl, title, lang }, routePath) => {
-      const outputPath = path.join(publicDir, ...routePath.replace(/^\//, '').split('/'));
       try {
+        const outputPath = routePathToOutputPath(publicDir, routePath);
         ensureDir(path.dirname(outputPath));
-        fs.writeFileSync(outputPath, buildLegacyRedirectHtml({ lang, title, targetUrl }));
+        fs.writeFileSync(outputPath, buildLegacyRedirectHtml({
+          lang,
+          title,
+          targetUrl,
+          noindex: false,
+        }));
       } catch (error) {
         legacyRedirectWriteSkips++;
         console.warn(`[meta] legacy redirect skipped: ${routePath} (${error.code || error.message})`);
@@ -2816,6 +2983,7 @@ async function generateMetaPages() {
     console.log(`- アブラムシ: ${aphidCount}種`);
     console.log(`- 食草: ${plantCount}種`);
     console.log(`- レガシールート redirect: ${legacyRedirects.size}件`);
+    console.log(`- 実流入ガイド redirect: ${legacyGuideRedirectCount}件`);
     if (skippedPlants > 0) {
       console.log(`- スキップされた無効な植物: ${skippedPlants}件`);
     }
@@ -2824,6 +2992,9 @@ async function generateMetaPages() {
     }
     if (legacyRedirectWriteSkips > 0) {
       console.warn(`[meta] レガシールート書き出しをスキップ: ${legacyRedirectWriteSkips}件`);
+    }
+    if (legacyGuideRedirectSkips > 0) {
+      console.warn(`[meta] 実流入ガイド redirect をスキップ: ${legacyGuideRedirectSkips}件`);
     }
     
   // 画像ファイルリストを生成
@@ -2838,7 +3009,7 @@ async function generateMetaPages() {
       const insectId = (row.insect_id || '').trim();
       if (!insectId || /^species-$/.test(insectId)) return;
       let japaneseName = (row.japanese_name || '').trim();
-      if (looksLikeYearOnly(japaneseName)) japaneseName = '';
+      if (looksLikeYearOnly(japaneseName) || japaneseName.length < 2) japaneseName = '';
       const displayName =
         japaneseName ||
         (row.scientific_name ? `${row.scientific_name}（和名未記載）` : '');
@@ -3144,6 +3315,7 @@ function generateMetaIndexes(indexData) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
+  ${GA_HEAD_TAGS}
   ${ADSENSE_HEAD_TAGS}
   <title>${sec.title} | 昆虫植物図鑑</title>
   <meta name="description" content="${pageDescription}">
@@ -3275,6 +3447,7 @@ ${headerHtml}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
+  ${GA_HEAD_TAGS}
   ${ADSENSE_HEAD_TAGS}
   <title>${sec.title} | 昆虫植物図鑑</title>
   <meta name="description" content="${pageDescription}">

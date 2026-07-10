@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { createHash } from 'crypto';
 import Papa from 'papaparse';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
@@ -267,10 +268,31 @@ async function build() {
   const { convertNormalizedDataToStandardFormat } = await import(pathToFileURL(path.join(ROOT, 'src', 'utils', 'normalizedDataParser.js')).href);
   const normalized = convertNormalizedDataToStandardFormat(insects, hostplantsForInsects, notes);
 
+  const insectRouteNameCounts = new Map();
+  for (const key of INSECT_COLLECTION_KEYS) {
+    for (const insect of normalized[key] || []) {
+      const name = String(insect?.name || '').trim();
+      const type = String(insect?.type || key).trim();
+      if (!name) continue;
+      const countKey = `${type}:${name}`;
+      insectRouteNameCounts.set(countKey, (insectRouteNameCounts.get(countKey) || 0) + 1);
+    }
+  }
+  for (const key of INSECT_COLLECTION_KEYS) {
+    for (const insect of normalized[key] || []) {
+      const name = String(insect?.name || '').trim();
+      const countKey = `${insect?.type || key}:${name}`;
+      insect.routeName = name && insectRouteNameCounts.get(countKey) > 1
+        ? insect.id
+        : '';
+    }
+  }
+
   // Slim each record for list/search use
 const slim = (arr) => (arr || []).map(i => ({
     id: i.id,
     name: i.name,
+    routeName: i.routeName || '',
     scientificName: i.scientificName,
     scientificFilename: i.scientificFilename || '',
     alternativeNames: i.alternativeNames || '',
@@ -378,9 +400,23 @@ const slim = (arr) => (arr || []).map(i => ({
     ),
     hostPlants: Object.keys(fullHostPlants).length,
   };
+  // Date.now() を版数にすると、Instagramだけの更新を含む毎デプロイで
+  // 1.45MB超のデータURLが変わり、HTTP/IndexedDBキャッシュが全失効する。
+  // 実際にランタイムへ渡す内容から安定した版数を作り、データが変わった時だけ更新する。
+  const dataVersion = createHash('sha256')
+    .update(JSON.stringify({
+      slimmedCollections,
+      hostPlants: fullHostPlants,
+      plantDetails,
+      flowerVisitPlants,
+      aliasToCanonical,
+      summaryCounts,
+    }))
+    .digest('hex')
+    .slice(0, 16);
   const manifest = {
     counts: summaryCounts,
-    version: Date.now(),
+    version: dataVersion,
   };
   write('manifest.json', manifest);
 
@@ -394,7 +430,7 @@ const slim = (arr) => (arr || []).map(i => ({
   };
   write('index.json', out);
   const fullDataset = {
-    version: Date.now(),
+    version: dataVersion,
     summaryCounts,
     ...processedCollections,
     hostPlants: fullHostPlants,

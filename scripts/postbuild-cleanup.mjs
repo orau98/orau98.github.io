@@ -93,7 +93,7 @@ const SPA_ROUTE_SHELLS = [
     alternates: [
       { hreflang: 'ja', path: '/' },
       { hreflang: 'en', path: '/en/' },
-      { hreflang: 'x-default', path: '/en/' },
+      { hreflang: 'x-default', path: '/' },
     ],
     appName: EN_SITE_NAME,
     appleTitle: EN_SITE_NAME,
@@ -141,6 +141,7 @@ const SPA_ROUTE_SHELLS = [
   },
 ];
 const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
+const SPA_ROUTE_INDEX_ROBOTS = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const SPA_ROUTE_NOINDEX_ROBOTS = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
@@ -235,6 +236,23 @@ const replaceJsonLdBlocks = (html, structuredData) => {
   return withoutExistingJsonLd.replace('</head>', `${scripts}\n  </head>`);
 };
 
+// index.html には Google Fonts 用の <head><noscript> と、JavaScript 無効時の
+// コンテンツ用 <body><noscript> がある。先頭の noscript を単純置換すると
+// EN_HOME_NOSCRIPT の <section> が head 内へ入り、それ以降の title/canonical/
+// hreflang が HTML パーサーから head metadata として扱われなくなる。
+const replaceBodyNoscript = (html, noscriptHtml) => {
+  const bodyStart = html.search(/<body\b[^>]*>/i);
+  if (bodyStart === -1) return html;
+
+  const beforeBody = html.slice(0, bodyStart);
+  const body = html.slice(bodyStart);
+  const bodyNoscriptPattern = /<noscript>[\s\S]*?<\/noscript>/i;
+  if (bodyNoscriptPattern.test(body)) {
+    return `${beforeBody}${body.replace(bodyNoscriptPattern, noscriptHtml)}`;
+  }
+  return `${beforeBody}${body.replace('</body>', `${noscriptHtml}\n  </body>`)}`;
+};
+
 const buildSpaRouteShell = (indexHtml, route) => {
   const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
   const alternateLinks = route.alternates
@@ -283,7 +301,7 @@ const buildSpaRouteShell = (indexHtml, route) => {
     html = replaceMetaContent(html, 'name', 'twitter:image:alt', route.imageAlt);
   }
   if (route.noscriptHtml) {
-    html = html.replace(/<noscript>[\s\S]*?<\/noscript>/i, route.noscriptHtml);
+    html = replaceBodyNoscript(html, route.noscriptHtml);
   }
   html = replaceJsonLdBlocks(html, route.structuredData);
   if (route.requireAdsenseScript) {
@@ -316,19 +334,64 @@ const ensureSpaRouteShells = () => {
   }
 };
 
-const buildPlantRouteMetadata = (plantName, locale) => {
+const INSECT_PROFILE_ROUTE_SEGMENTS = [
+  'moth',
+  'butterfly',
+  'beetle',
+  'longhornbeetle',
+  'leafbeetle',
+  'aphid',
+];
+
+// Compatibility cleanup for any older/custom generator that leaves an
+// encodeURIComponent(name) value as a literal directory name. The current
+// generators write decoded filesystem paths directly, so this normally moves 0.
+const ensureDecodedInsectProfileRedirects = () => {
+  try {
+    const routeGroups = [
+      ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => path.join('dist', segment)),
+      ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => path.join('dist', 'en', segment)),
+    ];
+    let moved = 0;
+
+    for (const baseDir of routeGroups) {
+      if (!fs.existsSync(baseDir)) continue;
+      const entries = fs.readdirSync(baseDir, { withFileTypes: true });
+      for (const entry of entries) {
+        if (!entry.isDirectory() || !/%[0-9a-f]{2}/i.test(entry.name)) continue;
+        const decodedName = decodeRouteSegment(entry.name);
+        if (decodedName === entry.name || !isSafeRouteSegment(decodedName)) continue;
+
+        const sourceDir = path.join(baseDir, entry.name);
+        const sourceIndex = path.join(sourceDir, 'index.html');
+        if (!fs.existsSync(sourceIndex)) continue;
+
+        const targetDir = path.join(baseDir, decodedName);
+        const targetIndex = path.join(targetDir, 'index.html');
+        fs.mkdirSync(targetDir, { recursive: true });
+        fs.writeFileSync(targetIndex, fs.readFileSync(sourceIndex));
+        fs.rmSync(sourceDir, { recursive: true, force: true });
+        moved++;
+      }
+    }
+
+    console.log(`[postbuild] Decoded ${moved} insect profile redirect route(s).`);
+  } catch (error) {
+    console.warn('[postbuild] Failed to decode insect profile redirects:', error?.message || error);
+  }
+};
+
+const buildPlantRouteMetadata = (plantName, locale, canonicalPath, canonicalIndexable) => {
   const encodedPlantName = encodeURIComponent(plantName);
   if (locale === 'en') {
     return {
       lang: 'en',
       title: `${plantName} | Plant Profile | ${EN_SITE_NAME}`,
       description: `Interactive plant profile for ${plantName}, showing recorded plant-insect relationships from Japan.`,
-      canonicalPath: `/en/plant/${encodedPlantName}`,
-      alternates: [
-        { hreflang: 'ja', path: `/plant/${encodedPlantName}` },
-        { hreflang: 'en', path: `/en/plant/${encodedPlantName}` },
-        { hreflang: 'x-default', path: `/en/plant/${encodedPlantName}` },
-      ],
+      canonicalPath: canonicalPath || `/en/plant/${encodedPlantName}`,
+      // The canonical English meta page owns the reciprocal hreflang set.
+      // This interactive duplicate only needs to consolidate into that page.
+      alternates: [],
       appName: EN_SITE_NAME,
       appleTitle: EN_SITE_NAME,
       ogTitle: `${plantName} | Plant Profile | ${EN_SITE_NAME}`,
@@ -338,27 +401,29 @@ const buildPlantRouteMetadata = (plantName, locale) => {
       keywords: `${plantName}, Japanese host plants, plant-insect relationships, Japan biodiversity`,
       ogLocale: 'en_US',
       imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
-      robotsContent: SPA_ROUTE_NOINDEX_ROBOTS,
+      robotsContent: canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS,
     };
   }
   return {
     lang: 'ja',
     title: `${plantName} | 昆虫植物図鑑`,
     description: `${plantName}を利用する昆虫と食草・訪花関係を検索できる昆虫植物図鑑の植物詳細ページ。`,
-    canonicalPath: `/plant/${encodedPlantName}`,
-    alternates: [
-      { hreflang: 'ja', path: `/plant/${encodedPlantName}` },
-      { hreflang: 'en', path: `/en/plant/${encodedPlantName}` },
-      { hreflang: 'x-default', path: `/en/plant/${encodedPlantName}` },
-    ],
+    canonicalPath: canonicalPath || `/meta/plant/${encodedPlantName}.html`,
+    alternates: [],
     ogTitle: `${plantName} | 昆虫植物図鑑`,
     ogDescription: `${plantName}を利用する昆虫と食草・訪花関係を検索できます。`,
-    robotsContent: SPA_ROUTE_NOINDEX_ROBOTS,
+    robotsContent: canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS,
   };
 };
 
-const buildPlantProfileRouteShell = (indexHtml, plantName, locale = 'ja') => {
-  const route = buildPlantRouteMetadata(plantName, locale);
+const buildPlantProfileRouteShell = (
+  indexHtml,
+  plantName,
+  locale = 'ja',
+  canonicalPath = '',
+  canonicalIndexable = false,
+) => {
+  const route = buildPlantRouteMetadata(plantName, locale, canonicalPath, canonicalIndexable);
   const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
   const assetTags = extractSpaAssetTags(indexHtml);
   if (!assetTags) {
@@ -394,7 +459,7 @@ const buildPlantProfileRouteShell = (indexHtml, plantName, locale = 'ja') => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtmlText(route.title)}</title>
     <meta name="description" content="${escapeHtmlAttr(route.description)}">
-    <meta name="robots" content="${escapeHtmlAttr(route.robotsContent || SPA_ROUTE_NOINDEX_ROBOTS)}">
+    <meta name="robots" content="${escapeHtmlAttr(route.robotsContent || SPA_ROUTE_INDEX_ROBOTS)}">
     <link rel="canonical" href="${escapeHtmlAttr(canonicalUrl)}">
 ${alternateLinks}
     <meta property="og:title" content="${escapeHtmlAttr(route.ogTitle)}">
@@ -405,7 +470,7 @@ ${alternateLinks}
     <meta name="twitter:title" content="${escapeHtmlAttr(route.ogTitle)}">
     <meta name="twitter:description" content="${escapeHtmlAttr(route.ogDescription)}">
 ${renderJsonLdScript(structuredData)}
-    <script>window.__SEO_FORCE_NOINDEX__ = true; ${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>
+    <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>
 ${assetTags}
   </head>
   <body>
@@ -439,11 +504,37 @@ const collectExistingPlantRouteIndexes = (baseDir) => {
     .filter((entry) => entry.isDirectory())
     .map((entry) => {
       const plantName = decodeRouteSegment(entry.name);
+      const indexPath = path.join(baseDir, entry.name, 'index.html');
+      let canonicalPath = '';
+      let canonicalIndexable = false;
+      try {
+        const sourceHtml = fs.readFileSync(indexPath, 'utf8');
+        const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+        if (canonicalHref) {
+          const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
+          if (canonicalUrl.origin === BASE_ORIGIN) {
+            canonicalPath = canonicalUrl.pathname;
+            const targetSegments = canonicalUrl.pathname
+              .replace(/^\/+/, '')
+              .split('/')
+              .map((segment) => decodeRouteSegment(segment));
+            if (targetSegments.every((segment) => isSafeRouteSegment(segment))) {
+              const canonicalFile = path.join('dist', ...targetSegments);
+              const canonicalHtml = readTextIfExists(canonicalFile);
+              canonicalIndexable = Boolean(
+                canonicalHtml && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml),
+              );
+            }
+          }
+        }
+      } catch {}
       return {
         plantName,
+        canonicalPath,
+        canonicalIndexable,
         sourceDir: path.join(baseDir, entry.name),
         targetDir: path.join(baseDir, plantName),
-        indexPath: path.join(baseDir, entry.name, 'index.html'),
+        indexPath,
       };
     })
     .filter(({ plantName, indexPath }) => isSafeRouteSegment(plantName) && fs.existsSync(indexPath));
@@ -463,9 +554,15 @@ const ensurePlantProfileRouteShells = () => {
 
     for (const { baseDir, locale } of routeGroups) {
       const routes = collectExistingPlantRouteIndexes(baseDir);
-      for (const { plantName, sourceDir, targetDir } of routes) {
+      for (const { plantName, canonicalPath, canonicalIndexable, sourceDir, targetDir } of routes) {
         const routeIndexPath = path.join(targetDir, 'index.html');
-        const shellHtml = buildPlantProfileRouteShell(indexHtml, plantName, locale);
+        const shellHtml = buildPlantProfileRouteShell(
+          indexHtml,
+          plantName,
+          locale,
+          canonicalPath,
+          canonicalIndexable,
+        );
         fs.mkdirSync(targetDir, { recursive: true });
         if (readTextIfExists(routeIndexPath) !== shellHtml) {
           fs.writeFileSync(routeIndexPath, shellHtml, 'utf8');
@@ -515,6 +612,24 @@ const assertPagesSizeBudget = () => {
   }
 };
 
+// deploy.yml intentionally regenerates discovery files after Vite has copied
+// public/ into dist/. Refresh those top-level artifacts here so Pages receives
+// the new sitemap/robots outputs rather than the versions from checkout time.
+const syncGeneratedDiscoveryArtifacts = () => {
+  const publicDir = path.join('public');
+  const distDir = path.join('dist');
+  if (!fs.existsSync(publicDir) || !fs.existsSync(distDir)) return;
+
+  const discoveryPattern = /^(?:robots\.txt|opensearch\.xml|sitemap(?:[_-].+)?\.(?:xml|txt|html)|search-console-.+\.(?:xml|txt)|google-.+\.(?:xml|txt)|gsc-.+\.(?:xml|txt))$/i;
+  let copied = 0;
+  for (const entry of fs.readdirSync(publicDir, { withFileTypes: true })) {
+    if (!entry.isFile() || !discoveryPattern.test(entry.name)) continue;
+    fs.copyFileSync(path.join(publicDir, entry.name), path.join(distDir, entry.name));
+    copied++;
+  }
+  console.log(`[postbuild] Synced ${copied} generated discovery artifact(s).`);
+};
+
 for (const p of targets) {
   try {
     if (fs.existsSync(p)) {
@@ -534,5 +649,7 @@ for (const p of targets) {
 
 ensureSpa404();
 ensureSpaRouteShells();
+ensureDecodedInsectProfileRedirects();
 ensurePlantProfileRouteShells();
+syncGeneratedDiscoveryArtifacts();
 assertPagesSizeBudget();

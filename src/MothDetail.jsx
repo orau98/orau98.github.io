@@ -21,7 +21,7 @@ import {
 } from './utils/englishNaming';
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
-import { buildInsectPath, decodeSlug, slugifyInsectName } from './utils/insectSlug';
+import { buildInsectPath, decodeSlug, isLikelyInsectId, slugifyInsectName } from './utils/insectSlug';
 import useInsectImageIndex from './hooks/useInsectImageIndex';
 import { getAssetVersionQuery, getPlaceholderImageUrl } from './utils/assetPaths';
 import { createSafeInsectFilename } from './utils/image';
@@ -138,9 +138,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     // Add more mappings as needed
   };
   
-  // Helper: determine whether the parameter looks like an internal ID (species-XXXX etc.)
-  const isLikelyInsectId = (value = '') => /^(species|catalog|moth|butterfly|butterfly-csv|beetle|longhornbeetle|leafbeetle|aphid)[-_]?\d+/i.test(value);
-  
   // Apply ID mapping only when the route param looks like an ID
   const mappedInsectId = isLikelyInsectId(decodedRouteParam) ? (idMapping[decodedRouteParam] || decodedRouteParam) : decodedRouteParam;
   const insectId = decodedRouteParam; // original (decoded) route param for logging/compatibility
@@ -208,10 +205,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return allInsects.find((m) => slugifyInsectName(m.name) === normalized || m.name === value);
   };
 
-  let moth = null;
+  let moth = allInsects.find(
+    (candidate) => candidate.id === mappedInsectId || candidate.id === decodedRouteParam,
+  ) || null;
 
   // 1) Try ID search when the param looks like an ID
-  if (isLikelyInsectId(mappedInsectId)) {
+  if (!moth && isLikelyInsectId(mappedInsectId)) {
     moth = allInsects.find(m => m.id === mappedInsectId);
     if (!moth) {
       const fallbackId = resolveInsectId(mappedInsectId);

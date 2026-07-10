@@ -1,5 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import { buildInsectPath } from '../src/utils/insectSlug.js';
+import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -82,6 +84,34 @@ for (const relativePath of REQUIRED_FILES) {
   assert(fs.existsSync(fullPath), `missing dist artifact: ${relativePath}`);
 }
 
+for (const relativePath of ['robots.txt', 'sitemap.xml', 'sitemap-en-moth.xml']) {
+  const publicPath = path.join(ROOT, 'public', relativePath);
+  assert(
+    fs.existsSync(publicPath) && readDistText(relativePath) === fs.readFileSync(publicPath, 'utf8'),
+    `${relativePath} must match the freshly generated public discovery artifact`,
+  );
+}
+
+const englishHomeHtml = readDistText('en/index.html');
+const englishHead = englishHomeHtml.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1] || '';
+const englishBody = englishHomeHtml.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+assert(englishHead, 'en/index.html must contain a valid head element');
+assert(
+  !/<(?:section|h1|h2|p|div|ul|li)\b/i.test(englishHead),
+  'en/index.html head must not contain body-only content from the no-JavaScript fallback',
+);
+assert(
+  englishHead.includes('<title>Insects and Host Plants of Japan</title>') &&
+    englishHead.includes('<link rel="canonical" href="https://orau98.github.io/en/">') &&
+    englishHead.includes('hreflang="en" href="https://orau98.github.io/en/"') &&
+    englishHead.includes('hreflang="x-default" href="https://orau98.github.io/"'),
+  'en/index.html title, canonical, and hreflang metadata must remain inside head',
+);
+assert(
+  /<noscript>[\s\S]*?<section\b/.test(englishBody),
+  'en/index.html must keep the English no-JavaScript navigation inside body',
+);
+
 for (const relativePath of RUNTIME_DATA_FILES) {
   const fullPath = path.join(DIST_DIR, relativePath);
   assert(
@@ -94,6 +124,10 @@ for (const relativePath of RUNTIME_DATA_FILES) {
 const manifest = readDistJson('assets/data-lite/manifest.json');
 assert(manifest && typeof manifest === 'object', 'manifest.json must be an object');
 assert(Boolean(manifest.version), 'manifest.json must declare a version');
+assert(
+  /^[a-f0-9]{16}$/.test(String(manifest.version)),
+  'manifest.json version must be a stable content hash',
+);
 assert(
   manifest.counts && typeof manifest.counts === 'object',
   'manifest.json must declare dataset counts',
@@ -150,6 +184,11 @@ assert(
   !/http-equiv=["']refresh["']/i.test(okinagusaRouteHtml),
   'オキナグサ direct route must not redirect away from the app plant detail',
 );
+assert(
+  okinagusaRouteHtml.includes('name="robots" content="index, follow') &&
+    okinagusaRouteHtml.includes('rel="canonical" href="https://orau98.github.io/meta/plant/'),
+  'オキナグサ interactive route must consolidate into the indexable static plant profile',
+);
 
 const okinagusaEnglishRoutePath = path.join('en', 'plant', 'オキナグサ', 'index.html');
 assert(
@@ -168,6 +207,169 @@ assert(
   !/http-equiv=["']refresh["']/i.test(okinagusaEnglishRouteHtml),
   'English オキナグサ direct route must not redirect away from the app plant detail',
 );
+assert(
+  okinagusaEnglishRouteHtml.includes('name="robots" content="index, follow') &&
+    okinagusaEnglishRouteHtml.includes('rel="canonical" href="https://orau98.github.io/en/meta/plant/'),
+  'English オキナグサ interactive route must consolidate into the English static profile',
+);
+
+const insectProfileSegments = [
+  'moth',
+  'butterfly',
+  'beetle',
+  'longhornbeetle',
+  'leafbeetle',
+  'aphid',
+];
+for (const segment of insectProfileSegments) {
+  const routeDir = path.join(DIST_DIR, segment);
+  const routeDirectories = fs.readdirSync(routeDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory());
+  assert(
+    !routeDirectories.some((entry) => /%[0-9a-f]{2}/i.test(entry.name)),
+    `${segment} shared routes must not keep literal percent-encoded directory names`,
+  );
+  const decodedRoute = routeDirectories.find((entry) =>
+    Array.from(entry.name).some((character) => character.codePointAt(0) > 127),
+  );
+  assert(decodedRoute, `${segment} must include at least one decoded shared route`);
+  const decodedRouteHtml = readDistText(path.join(segment, decodedRoute.name, 'index.html'));
+  assert(
+    /http-equiv=["']refresh["']/i.test(decodedRouteHtml) &&
+      decodedRouteHtml.includes(`https://orau98.github.io/meta/${segment}/`),
+    `${segment} shared route must permanently forward to its canonical static profile`,
+  );
+}
+
+for (const section of INSECT_SECTION_CONFIGS) {
+  const insects = readDistJson(`assets/data-lite/${section.collectionKey}.json`);
+  const englishRouteMap = readDistJson('seo-route-map.insects.json');
+  for (const insect of insects) {
+    for (const locale of ['ja', 'en']) {
+      const routePath = decodeURIComponent(buildInsectPath(insect, locale));
+      const routeFile = path.join(
+        DIST_DIR,
+        ...routePath.replace(/^\/+/, '').split('/'),
+        'index.html',
+      );
+      assert(
+        fs.existsSync(routeFile),
+        `${locale} app route has no static entry: ${routePath} (${insect.id})`,
+      );
+      const routeHtml = fs.readFileSync(routeFile, 'utf8');
+      const expectedTarget = locale === 'en'
+        ? englishRouteMap[insect.id]
+        : `/${insect.id}.html`;
+      assert(
+        expectedTarget && routeHtml.includes(expectedTarget),
+        `${locale} app route points to the wrong profile: ${routePath} (${insect.id})`,
+      );
+      assert(
+        !/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml),
+        `${locale} permanent insect redirect must remain crawlable: ${routePath}`,
+      );
+      if (insect.routeName) {
+        const legacyRoutePath = decodeURIComponent(
+          buildInsectPath({ ...insect, routeName: '' }, locale),
+        );
+        const legacyRouteFile = path.join(
+          DIST_DIR,
+          ...legacyRoutePath.replace(/^\/+/, '').split('/'),
+          'index.html',
+        );
+        assert(
+          fs.existsSync(legacyRouteFile),
+          `${locale} duplicate-name legacy route disappeared: ${legacyRoutePath}`,
+        );
+      }
+    }
+  }
+}
+
+const unsafeAphidRouteHtml = readDistText(
+  path.join('aphid', 'species-21296', 'index.html'),
+);
+assert(
+  unsafeAphidRouteHtml.includes(
+    'https://orau98.github.io/meta/aphid/species-21296.html',
+  ),
+  'insect names containing a slash must fall back to a stable id route',
+);
+
+const englishMothHubDir = path.join(DIST_DIR, 'en', 'meta', 'moth');
+const englishMothHubFiles = fs.readdirSync(englishMothHubDir)
+  .filter((filename) => filename === 'index.html' || /^page-\d+\.html$/.test(filename))
+  .sort();
+assert(
+  englishMothHubFiles.length >= 4,
+  'English moth index must paginate beyond the former 1,500-link cap',
+);
+const englishMothHubLinks = new Set(
+  englishMothHubFiles
+    .flatMap((filename) => Array.from(
+      readDistText(path.join('en', 'meta', 'moth', filename))
+        .matchAll(/href=["']([^"']+)["']/g),
+      (match) => match[1],
+    )),
+);
+const missingEnglishMothHubLinks = fs.readdirSync(englishMothHubDir)
+  .filter((filename) => filename.endsWith('.html'))
+  .filter((filename) => filename !== 'index.html' && !/^page-\d+\.html$/.test(filename))
+  .filter((filename) => {
+    const html = readDistText(path.join('en', 'meta', 'moth', filename));
+    if (!/name=["']robots["'] content=["']index, follow/i.test(html)) return false;
+    return !englishMothHubLinks.has(`/en/meta/moth/${encodeURIComponent(filename)}`);
+  });
+assert(
+  missingEnglishMothHubLinks.length === 0,
+  `English moth index leaves ${missingEnglishMothHubLinks.length} indexable profile(s) unlinked`,
+);
+
+for (const localePrefix of ['', 'en']) {
+  const routeRoot = path.join(DIST_DIR, ...(localePrefix ? [localePrefix, 'plant'] : ['plant']));
+  for (const entry of fs.readdirSync(routeRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const routeRelativePath = path.join(localePrefix, 'plant', entry.name, 'index.html');
+    const routeHtml = readDistText(routeRelativePath);
+    const canonicalHref = routeHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+    assert(canonicalHref, `${routeRelativePath} must declare a canonical target`);
+    const canonicalUrl = new URL(canonicalHref);
+    const canonicalRelativePath = decodeURIComponent(canonicalUrl.pathname).replace(/^\/+/, '');
+    const canonicalHtml = readDistText(canonicalRelativePath);
+    const routeNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml);
+    const canonicalNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml);
+    assert(
+      routeNoindex === canonicalNoindex,
+      `${routeRelativePath} robots must match canonical target indexability`,
+    );
+  }
+}
+
+const legacyGuideChecks = [
+  {
+    source: path.join('guides', 'plants', 'keyaki.html'),
+    target: 'https://orau98.github.io/meta/plant/%E3%82%B1%E3%83%A4%E3%82%AD.html',
+  },
+  {
+    source: path.join('guides', 'host-plant-search.html'),
+    target: 'https://orau98.github.io/meta/plant/index.html',
+  },
+  {
+    source: path.join('en', 'guides', 'plants', 'fuji.html'),
+    targetPrefix: 'https://orau98.github.io/en/meta/plant/',
+  },
+];
+for (const { source, target, targetPrefix } of legacyGuideChecks) {
+  assert(fs.existsSync(path.join(DIST_DIR, source)), `missing migrated guide URL: ${source}`);
+  const html = readDistText(source);
+  assert(/http-equiv=["']refresh["']/i.test(html), `${source} must use an instant meta refresh`);
+  assert(!/name=["']robots["'][^>]*noindex/i.test(html), `${source} migration must remain crawlable`);
+  if (target) {
+    assert(html.includes(`rel="canonical" href="${target}"`), `${source} canonical target mismatch`);
+  } else {
+    assert(html.includes(`rel="canonical" href="${targetPrefix}`), `${source} canonical target mismatch`);
+  }
+}
 
 const okinagusaImagePath = '/images/resized/plants/%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5.1024.jpg';
 const okinagusaImageFile = path.join(DIST_DIR, 'images', 'resized', 'plants', 'オキナグサ.1024.jpg');
