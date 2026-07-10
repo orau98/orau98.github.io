@@ -210,6 +210,13 @@ const validateHtml = (filePath, html, options = {}) => {
       `${relativePath}: missing AdSense script`,
     );
   }
+  if (options.requireAnalytics === true) {
+    ensure(
+      html.includes('https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H') &&
+        html.includes("gtag('config', 'G-MFEQF99G0H')"),
+      `${relativePath}: missing static-page Google Analytics measurement`,
+    );
+  }
 
   if (options.requireSocial !== false) {
     ensure(ogTitle.length > 0, `${relativePath}: missing og:title`);
@@ -226,11 +233,19 @@ const validateHtml = (filePath, html, options = {}) => {
 
 const validateLegacyRedirectHtml = (filePath, html) => {
   const relativePath = path.relative(ROOT, filePath);
+  const distRelativePath = path.relative(DIST_DIR, filePath).split(path.sep).join('/');
   const robots = getMetaContent(html, 'name', 'robots');
   const canonical = getLinkHref(html, 'canonical');
   const refreshContent = getMetaHttpEquivContent(html, 'refresh');
 
-  ensure(robots.includes('noindex'), `${relativePath}: legacy redirect must be noindex`);
+  const isCrawlableMigration =
+    /^(?:en\/)?(?:moth|butterfly|beetle|longhornbeetle|leafbeetle|aphid)\/.+\/index\.html$/u.test(distRelativePath) ||
+    /^(?:en\/)?guides\//u.test(distRelativePath);
+  if (isCrawlableMigration) {
+    ensure(!robots.includes('noindex'), `${relativePath}: permanent public redirect must be crawlable`);
+  } else {
+    ensure(robots.includes('noindex'), `${relativePath}: legacy alias redirect must be noindex`);
+  }
   ensure(canonical.length > 0, `${relativePath}: missing canonical link`);
   ensure(
     canonical.startsWith(SITE_ORIGIN),
@@ -433,7 +448,7 @@ const validateMetaFile = (filePath) => {
   if (isRedirectStub(html)) {
     validateLegacyRedirectHtml(filePath, html);
   } else {
-    validateHtml(filePath, html);
+    validateHtml(filePath, html, { requireAnalytics: true });
     recordHreflangEntry(filePath, html);
   }
 };

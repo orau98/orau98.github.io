@@ -260,7 +260,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       // 別名の統合（旧和名・別名・その他の和名）
       const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test((value || '').toString().trim());
       const rawPrimaryName = (insect.japanese_name || '').trim();
-      const primaryNameRaw = looksLikeYearOnly(rawPrimaryName) ? '' : rawPrimaryName;
+      const primaryNameRaw = looksLikeYearOnly(rawPrimaryName) || rawPrimaryName.length < 2
+        ? ''
+        : rawPrimaryName;
       const { name: primaryName, aliases: parenAliases } = splitJapaneseNameAliases(primaryNameRaw);
       const altNamesRaw = [];
       const oldName = (insect.old_japanese_name || '').trim();
@@ -277,7 +279,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       // 和名が欠落/壊れている場合（例: "1758)" など年号だけが入っている）に、表示用の名称をフォールバック
       const displayName = (() => {
         if (primaryName) return primaryName;
-        const fallbackFromAlt = altNames.find((n) => n && !looksLikeYearOnly(n));
+        const fallbackFromAlt = altNames.find((n) => n.length >= 2 && !looksLikeYearOnly(n));
         if (fallbackFromAlt) return fallbackFromAlt;
         const sci = (insect.scientific_name || '').trim();
         if (sci) return `${sci}（和名未記載）`;
