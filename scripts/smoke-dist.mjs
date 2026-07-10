@@ -2,10 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
-import {
-  DISCOVERY_HUB_LINKS,
-  JAPANESE_PLANT_DISCOVERY_LINKS,
-} from '../src/utils/discoveryLinks.js';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -16,6 +12,9 @@ const REQUIRED_FILES = [
   'quiz/index.html',
   'en/index.html',
   'en/quiz/index.html',
+  'meta/butterfly/index.html',
+  'meta/moth/index.html',
+  'meta/plant/index.html',
   'en/meta/moth/index.html',
   'en/meta/plant/index.html',
   'robots.txt',
@@ -142,57 +141,34 @@ const japaneseHomeHtml = readDistText('index.html');
 const japaneseHomeBody = japaneseHomeHtml.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
 const japaneseHomeNoscript = japaneseHomeBody.match(/<noscript>([\s\S]*?)<\/noscript>/i)?.[1] || '';
 assert(
-  japaneseHomeNoscript.includes('身近な植物から虫・幼虫を探す'),
-  'Japanese home must expose the reviewed plant discovery section without JavaScript',
+  japaneseHomeNoscript.includes('JavaScript が無効な環境では') &&
+    japaneseHomeNoscript.includes('植物・科から探す') &&
+    japaneseHomeNoscript.includes('/meta/moth/index.html') &&
+    japaneseHomeNoscript.includes('/meta/butterfly/index.html') &&
+    japaneseHomeNoscript.includes('/meta/plant/index.html'),
+  'Japanese home must retain generic static navigation when JavaScript is unavailable',
 );
 
-const plantDiscoveryBlock = japaneseHomeNoscript.match(
-  /<div data-home-discovery-links-noscript="plants">([\s\S]*?)<\/div>/,
-)?.[1] || '';
-const noscriptPlantLinks = Array.from(
-  plantDiscoveryBlock.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g),
-  (match) => ({
-    path: new URL(match[1], 'https://orau98.github.io').pathname,
-    label: match[2],
-  }),
-);
-assert(
-  JSON.stringify(noscriptPlantLinks) === JSON.stringify(
-    JAPANESE_PLANT_DISCOVERY_LINKS.map(({ path, label }) => ({ path, label })),
-  ),
-  'Japanese home noscript plant links must exactly match the reviewed discovery set',
-);
-
-const noscriptHubLinks = Array.from(
-  japaneseHomeNoscript.matchAll(
-    /<li data-home-discovery-hub><a href="([^"]+)">([^<]+)<\/a><\/li>/g,
-  ),
-  (match) => ({ path: match[1], label: match[2] }),
-);
-assert(
-  JSON.stringify(noscriptHubLinks) === JSON.stringify(
-    DISCOVERY_HUB_LINKS.ja.map(({ path, label }) => ({ path, label })),
-  ),
-  'Japanese home noscript hub links must exactly match the visible discovery hubs',
-);
-
-const reviewedDiscoveryTargets = [
-  ...DISCOVERY_HUB_LINKS.ja,
-  ...DISCOVERY_HUB_LINKS.en,
-  ...JAPANESE_PLANT_DISCOVERY_LINKS,
+const staticIndexTargets = [
+  '/meta/butterfly/index.html',
+  '/meta/moth/index.html',
+  '/meta/plant/index.html',
+  '/en/meta/butterfly/index.html',
+  '/en/meta/moth/index.html',
+  '/en/meta/plant/index.html',
 ];
-for (const link of reviewedDiscoveryTargets) {
-  const targetPath = decodeURIComponent(link.path).replace(/^\/+/, '');
+for (const targetUrl of staticIndexTargets) {
+  const targetPath = targetUrl.replace(/^\/+/, '');
   assert(
     fs.existsSync(path.join(DIST_DIR, targetPath)),
-    `reviewed discovery target is missing: ${link.path}`,
+    `static index target is missing: ${targetUrl}`,
   );
   const targetHtml = readDistText(targetPath);
   assert(
     hasIndexFollowRobots(targetHtml) &&
-      targetHtml.includes(`rel="canonical" href="https://orau98.github.io${link.path}"`) &&
+      targetHtml.includes(`rel="canonical" href="https://orau98.github.io${targetUrl}"`) &&
       !/http-equiv=["']refresh["']/i.test(targetHtml),
-    `reviewed discovery target must be indexable, self-canonical, and direct: ${link.path}`,
+    `static index must be indexable, self-canonical, and direct: ${targetUrl}`,
   );
 }
 
@@ -258,32 +234,25 @@ const builtJavaScript = assetFiles
     name,
     content: fs.readFileSync(path.join(assetsDir, name), 'utf8'),
   }));
-const discoveryBundles = builtJavaScript.filter(({ content }) =>
-  content.includes('data-home-discovery-links'),
+const homeExperienceBundles = builtJavaScript.filter(({ content }) =>
+  content.includes('data-explorer-heading') && content.includes('explorer-results'),
 );
 assert(
-  discoveryBundles.length === 1,
-  `home discovery component must appear in exactly one built JS asset (got: ${discoveryBundles.map(({ name }) => name).join(', ') || 'none'})`,
+  homeExperienceBundles.length === 1,
+  `home experience must appear in exactly one built JS asset (got: ${homeExperienceBundles.map(({ name }) => name).join(', ') || 'none'})`,
 );
-const discoveryBundle = discoveryBundles[0].content;
 assert(
-  discoveryBundle.includes('data-explorer-heading'),
+  homeExperienceBundles[0].content.includes('data-explorer-heading'),
   'built home experience must retain the localized accessible h1',
 );
-for (const link of [...DISCOVERY_HUB_LINKS.ja, ...DISCOVERY_HUB_LINKS.en]) {
-  assert(
-    discoveryBundle.includes(link.path) &&
-      discoveryBundle.includes(link.label) &&
-      discoveryBundle.includes(link.description),
-    `built home discovery component is missing a reviewed hub: ${link.path}`,
-  );
-}
-for (const link of JAPANESE_PLANT_DISCOVERY_LINKS) {
-  assert(
-    discoveryBundle.includes(link.plantName) && discoveryBundle.includes(link.label),
-    `built home discovery component is missing a reviewed plant: ${link.plantName}`,
-  );
-}
+assert(
+  builtJavaScript.every(({ content }) =>
+    !content.includes('data-home-discovery-links') &&
+    !content.includes('目的から探す') &&
+    !content.includes('Browse by topic')
+  ),
+  'built app must keep the search hero adjacent to results without the removed discovery block',
+);
 
 const okinagusaRoutePath = path.join('plant', 'オキナグサ', 'index.html');
 assert(
