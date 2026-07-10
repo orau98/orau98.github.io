@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1530">
+  <meta name="description" content="蛾類モニタリングの記録フォーム案内。現在の受付状況、公開予定の記録内容、試験運用中の記録方法を説明します。">
   <link rel="icon" type="image/png" href="assets/favicon.png?v=20260613-png2">
   <link rel="apple-touch-icon" href="assets/favicon-192.png?v=20260613-png2">
-  <title>蛾類モニタリング | 記録フォーム｜準備中</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260614-moon">
+  <title>蛾類モニタリング | 記録フォーム</title>
+  <link rel="stylesheet" href="assets/styles.css?v=20260710-forms-ux">
 </head>
-<body>
+<body class="forms-page">
   <header class="site-header">
     <div class="nav-wrap">
       <a class="brand" href="index.html"><img class="brand-mark" src="assets/favicon.png?v=20260613-png2" alt="" aria-hidden="true"><span>蛾類モニタリング</span></a>
@@ -30,72 +31,107 @@
       <img class="ph-fg" src="assets/images/moths/moth-01.jpeg" alt="" aria-hidden="true">
       <div class="page-hero-inner">
         <p class="eyebrow">Recording</p>
-        <h1>記録フォーム｜準備中</h1>
+        <h1>記録フォーム</h1>
+        <p class="hero-status"><span aria-hidden="true"></span>試験運用の準備中</p>
       </div>
     </header>
+
     <div class="page">
-      <p class="lead">本格運用前のため、公開フォームはまだ設置していません。現在は、ライトトラップ比較試験で必要な記録項目を整理している段階です。</p>
+      <p class="lead">現在、一般向けの記録受付はまだ始まっていません。2026年度のライトトラップ構造比較に向けて、記録項目と入力手順を確認しています。</p>
 
-    <section class="section">
-      <h2>今後整備する記録フォーム</h2>
-      <div class="grid">
-        <article class="card">
-          <p class="meta">Field event</p>
-          <h3>採集イベント記録</h3>
-          <p>調査日時、地点情報、使用した光源・トラップ構造、設置条件、天候、気温、月齢、電源状態を記録できるようにします。</p>
-          <p class="hero-actions"><span class="button disabled">本格運用前</span></p>
-        </article>
-        <article class="card">
-          <p class="meta">Behaviour</p>
-          <h3>行動イベント記録</h3>
-          <p>飛来・接触・進入・逃出といった観察イベントと、回収時に残っていた残留個体数を分けて記録し、記録数の違いがどの段階で生じたかを見られるようにします。</p>
-          <p class="hero-actions"><span class="button disabled">項目整理中</span></p>
-        </article>
-        <article class="card">
-          <p class="meta">Identification</p>
-          <h3>同定結果記録</h3>
-          <p>写真、種名、個体数、標本有無、同定者、同定確度を記録し、後から検証できる形にします。</p>
-          <p class="hero-actions"><span class="button disabled">公開準備中</span></p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>記録項目の設計案</h2>
-      <div class="grid two">
-        <div class="card">
-          <h3>採集イベント</h3>
-          <p>1つの地点で、1つのトラップを、一定時間動かした単位です。本格運用時には、調査努力量、天候、機材状態をここに記録します。</p>
-          <ul class="inline-list">
-            <li>sampling_event_id</li>
-            <li>site_id</li>
-            <li>trap_id</li>
-            <li>light_source</li>
-            <li>entrance_type</li>
-            <li>date_start</li>
-            <li>date_end</li>
-            <li>weather</li>
-          </ul>
+      <section class="section form-status-panel" aria-labelledby="current-status">
+        <p class="meta">現在の状況</p>
+        <h2 id="current-status">公開フォームは準備中です</h2>
+        <p>調査への参加を検討している方は、まず調査プロトコルで実験方法と必要な記録を確認してください。フォームの受付を開始したら、このページから入力できるようにします。</p>
+        <div class="hero-actions">
+          <a class="button" href="protocol.html#choose-type">調査プロトコルを見る</a>
+          <a class="button secondary" href="#recording-plan">記録する内容を見る</a>
         </div>
-        <div class="card">
-          <h3>行動・同定記録</h3>
-          <p>採集イベントに紐づく、行動イベントと種ごとの記録です。捕獲数だけでなく、入るまでの過程を残す設計にします。</p>
-          <ul class="inline-list">
-            <li>arrival_event</li>
-            <li>contact_event</li>
-            <li>entry_event</li>
-            <li>escape_event</li>
-            <li>taxon_name</li>
-            <li>count</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+        <p class="status-update"><strong>このページでお知らせすること：</strong>受付開始日、フォームへのリンク、写真の提出方法、地点情報の公開範囲。</p>
+      </section>
 
-    <section class="section note compact-note">
-      <p>本格運用までは、写真ファイルはGoogle Drive等に保存し、試験用の記録表にフォルダURLまたは写真URLを残す方針です。公開フォームのURLは、記録項目が固まってから掲載します。</p>
-    </section>
-      </div>
+      <section class="section" aria-labelledby="planned-records">
+        <div class="section-heading">
+          <p class="eyebrow">Record structure</p>
+          <h2 id="planned-records">公開予定の3つの記録</h2>
+          <p>1回の調査を、調査条件・観察した行動・同定結果に分けて残します。</p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <p class="record-number" aria-hidden="true">1</p>
+            <p class="meta">調査条件</p>
+            <h3>いつ・どこで・どの機材を使ったか</h3>
+            <p>調査日時、地点、光源、トラップ構造、設置条件、天候、気温、月齢、電源状態を記録します。</p>
+          </article>
+          <article class="card">
+            <p class="record-number" aria-hidden="true">2</p>
+            <p class="meta">観察した行動</p>
+            <h3>蛾がどの段階まで進んだか</h3>
+            <p>飛来・接触・進入・逃出を分け、回収時にトラップ内に残っていた個体数も記録します。</p>
+          </article>
+          <article class="card">
+            <p class="record-number" aria-hidden="true">3</p>
+            <p class="meta">同定結果</p>
+            <h3>何が何個体確認されたか</h3>
+            <p>写真、種名または分類群、個体数、標本の有無、同定者、同定の確度を記録し、後から確認できるようにします。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="recording-plan" aria-labelledby="recording-plan-title">
+        <div class="section-heading">
+          <p class="eyebrow">Planned fields</p>
+          <h2 id="recording-plan-title">記録する内容</h2>
+          <p>入力画面では、専門的な項目名だけでなく、何を記録する欄か分かる日本語の説明を付ける予定です。</p>
+        </div>
+        <div class="grid two">
+          <article class="card">
+            <h3>調査1回ごとの情報</h3>
+            <p>1つの地点で、1つのトラップを一定時間動かした単位です。調査努力量や条件を後から比較できるようにします。</p>
+            <ul class="inline-list">
+              <li>調査日と開始・終了時刻</li>
+              <li>地点とトラップのID</li>
+              <li>光源と入口構造</li>
+              <li>天候・気温・風・月齢</li>
+              <li>電源と機材の状態</li>
+            </ul>
+            <details class="field-keys">
+              <summary>データ項目名を見る</summary>
+              <p><code>sampling_event_id</code>、<code>site_id</code>、<code>trap_id</code>、<code>light_source</code>、<code>entrance_type</code>、<code>date_start</code>、<code>date_end</code>、<code>weather</code></p>
+            </details>
+          </article>
+          <article class="card">
+            <h3>観察と同定の情報</h3>
+            <p>調査1回ごとに、観察した行動と分類群別の記録を紐づけます。捕獲数だけでなく、トラップへ入るまでの過程も残します。</p>
+            <ul class="inline-list">
+              <li>飛来・接触・進入・逃出</li>
+              <li>終了時の残留個体数</li>
+              <li>種名または分類群</li>
+              <li>個体数と同定確度</li>
+              <li>写真または標本番号</li>
+            </ul>
+            <details class="field-keys">
+              <summary>データ項目名を見る</summary>
+              <p><code>arrival_event</code>、<code>contact_event</code>、<code>entry_event</code>、<code>escape_event</code>、<code>taxon_name</code>、<code>count</code></p>
+            </details>
+          </article>
+        </div>
+        <p class="more-link"><a href="protocol.html#required-fields">必須記録項目をプロトコルで確認する</a></p>
+      </section>
+
+      <section class="section" aria-labelledby="before-launch">
+        <h2 id="before-launch">公開までの記録方法</h2>
+        <ol class="steps">
+          <li><strong>一般の方：</strong>現在、このページから記録を送ることはできません。受付開始後にフォームへのリンクを掲載します。</li>
+          <li><strong>試験に参加中の方：</strong>案内された試験用の記録表を使い、写真の保存先URLを記録してください。</li>
+          <li><strong>写真と地点情報：</strong>保存先、公開範囲、必須・任意の区別は、フォーム公開時に入力画面で明記します。</li>
+        </ol>
+        <div class="note form-privacy-note">
+          <h3>送信前に分かるようにします</h3>
+          <p>フォーム公開時には、収集する情報、利用目的、写真・地点情報の扱い、送信後の修正方法を、このページと入力画面の両方に掲載します。</p>
+        </div>
+      </section>
+    </div>
   </main>
 </body>
 </html>
