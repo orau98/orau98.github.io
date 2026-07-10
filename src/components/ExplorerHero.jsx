@@ -53,6 +53,16 @@ const ExplorerHero = ({
     <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.22),transparent_55%)] sm:rounded-3xl" />
 
     <div className="relative z-10 flex flex-col gap-3 p-4 sm:gap-3.5 sm:p-5 md:p-6">
+      <h1 className="sr-only" data-explorer-heading>
+        {isEnglish
+          ? activeTab === 'plants'
+            ? 'Find insects by host plant'
+            : 'Find host plants by insect'
+          : activeTab === 'plants'
+            ? '食草・寄主植物から昆虫を探す'
+            : '昆虫から食草・寄主植物を探す'}
+      </h1>
+
       {showHeaderControls && !isStickyHeaderVisible && (
         <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
           <LocaleSwitcher locale={locale} compact />
