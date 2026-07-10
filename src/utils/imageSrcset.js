@@ -7,6 +7,46 @@ const normalizeResizedImageFormat = (value = 'jpg') => {
   return normalized || 'jpg';
 };
 
+const JPG_ONLY_INSECT_IMAGE_NAMES = new Set([
+  'Acronicta_alni',
+  'Acropteris_iphiata',
+  'Actebia_praecurrens',
+  'Actias_aliena',
+  'Albocosta_triangularis',
+  'Ambulyx_ochracea',
+  'Aromia_bungii',
+  'Bhadorcosma_lonicerae',
+  'Botyodes_principalis',
+  'Cnephasia_stephensiana',
+  'Enarmonia_flammeata',
+  'Epiblema_strenuana',
+  'Epodonta_lineata',
+  'Eugnathia_pulcherrima',
+  'Eugoa_grisea',
+  'Euplexia_angusta',
+  'Gesonia_fallax',
+  'Hedya_inouei',
+  'Hypostrotia_cinerea',
+  'Lamprodila_vivata',
+  'Lethe_diana',
+  'Lithophane_plumbeolimbata',
+  'Lomaspilis_marginata',
+  'Menophra_senilis',
+  'Mythimna_flavostigma',
+  'Neoanathamna_nipponica',
+  'Pandemis_monticolana',
+  'Polygonia_c',
+  'Psacothea_hilaris',
+  'Pygopteryx_suava',
+  'Rusicada_leucolopha',
+  'Xerodes_rufescentarius',
+  'Xestia_fuscostigma',
+  'Xestia_semiherbida',
+]);
+
+const shouldUseJpgFallbackOnly = (folder, filename) =>
+  folder === 'insects' && JPG_ONLY_INSECT_IMAGE_NAMES.has(filename);
+
 export function buildResizedImageUrl({
   baseUrl = import.meta.env.BASE_URL || '/',
   folder = 'insects',
@@ -79,6 +119,7 @@ export function buildResponsivePicture({
   sourceFormats = ['avif', 'webp'],
 }) {
   if (!filename) return { src: '', srcSet: '', sizes, sources: [] };
+  const jpgFallbackOnly = shouldUseJpgFallbackOnly(folder, filename);
   const fallback = buildResponsiveSrcset({
     baseUrl,
     folder,
@@ -88,10 +129,12 @@ export function buildResponsivePicture({
     query,
     format: 'jpg',
   });
-  const formats = Array.isArray(sourceFormats)
-    ? Array.from(new Set(sourceFormats.map(normalizeResizedImageFormat)))
-        .filter((format) => format && format !== 'jpg')
-    : ['avif', 'webp'];
+  const formats = jpgFallbackOnly
+    ? []
+    : (Array.isArray(sourceFormats)
+      ? Array.from(new Set(sourceFormats.map(normalizeResizedImageFormat)))
+          .filter((format) => format && format !== 'jpg')
+      : ['avif', 'webp']);
   return {
     ...fallback,
     sources: formats.map((type) => ({
