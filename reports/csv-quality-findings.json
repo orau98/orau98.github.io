@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-10T04:02:33.368Z",
+  "generatedAt": "2026-07-10T05:20:11.525Z",
   "files": {
     "hostplants": {
       "path": "public/hostplants.csv",
-      "rows": 17408
+      "rows": 17409
     },
     "insects": {
       "path": "public/insects.csv",
@@ -19,7 +19,7 @@
     }
   },
   "summary": {
-    "hostplant_rows": 17408,
+    "hostplant_rows": 17409,
     "variant_buckets": 2,
     "exact_duplicate_groups": 0,
     "insect_plant_pair_dups": 610,
@@ -33,7 +33,7 @@
     "family_conflicts_verified_override": 0,
     "family_conflicts_typo": 0,
     "family_conflicts_ambiguous": 0,
-    "non_standard_families": 42,
+    "non_standard_families": 43,
     "non_plant_keys": 27,
     "orphan_hostplants": 0,
     "orphan_notes": 0,
@@ -8855,6 +8855,14 @@
         "sample_plant": "シイタケ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-000211"
+      },
+      {
+        "plant_family": "ショウブ科",
+        "ends_with_ka": "yes",
+        "count": 4,
+        "sample_plant": "ショウブ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-SCHIZAPHIS-20260710-0001"
       },
       {
         "plant_family": "ツゲモドキ科",

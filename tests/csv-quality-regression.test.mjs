@@ -124,6 +124,7 @@ const VERIFIED_FAMILIES = {
   ガマズミ属: 'ガマズミ科',
   ササ: 'イネ科',
   シロバナエンレイソウ: 'シュロソウ科',
+  ショウブ: 'ショウブ科',
   ツリガネタケ: '多孔菌科',
   テリハハマボウ: 'アオイ科',
   ハンノキ属: 'カバノキ科',
@@ -131,7 +132,7 @@ const VERIFIED_FAMILIES = {
   ユウスゲ: 'ワスレグサ科',
 };
 
-test('原典・分類DBで裁定した10植物は全行が正規化科名を持つ', () => {
+test('原典・分類DBで裁定した11植物は全行が正規化科名を持つ', () => {
   const violations = [];
   for (const [name, expectedFamily] of Object.entries(VERIFIED_FAMILIES)) {
     const rows = hostRows.filter((r) => cleanString(r.plant_name) === name);

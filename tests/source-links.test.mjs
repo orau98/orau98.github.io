@@ -31,3 +31,11 @@ test('getReferenceMetaList merges 日本のキリガ into a single 日本の冬�
   assert.equal(metas[0].displayLabel, '日本の冬夜蛾');
   assert.match(metas[0].link || '', /000000000506/);
 });
+
+test('getSourceLink resolves the Schizaphis taxonomy references', () => {
+  assert.match(getSourceLink('日本昆虫目録 第4巻 準新翅類') || '', /ndlsearch\.ndl\.go\.jp/);
+  assert.match(getSourceLink('松本嘉幸 (2005)') || '', /kahaku\.go\.jp/);
+  assert.equal(getSourceLink('Miyazaki (1988)'), 'https://dl.ndl.go.jp/pid/10653578');
+  assert.match(getSourceLink('Blackman & Eastop, Aphids on the World\'s Plants') || '', /aphidsonworldsplants\.info/);
+  assert.match(getSourceLink('Aphid Species File') || '', /speciesfile\.org/);
+});

@@ -100,21 +100,21 @@
 | スギウラナガタマムシ (`species-21791`) | 寄主0件を維持。原文は「寄主植物: 不明」 |
 | ヒラシマナガタマムシ (`species-21759`) | スダジイ1件。前種ではなく本種の欄と確認 |
 
-## 保留した記録
+## 保留・解決した記録
 
-- 日本原色アブラムシ図鑑の `Schizaphis acori` と `S. rotundiventris` は和名・分類対応が不確実なため、ショウブ、オニガヤツリ、ガマを `species-21313` へ機械的に移していない。
+- 【解決済み】`Schizaphis (Paraschizaphis) acori` と `S. rotundiventris` は別種。『日本昆虫目録 第4巻』134-135頁で前者=ショウブアブラムシ、後者=ニセナシアブラムシの対応も確認した。旧図鑑は `Toxoptera acori` Shinji を後者の異名としていた。松本（2005）の採集記録に基づきショウブを `species-21313` へ追加。オニガヤツリとガマは追加しない。旧図鑑が `species-21323` に記した3寄主は現行モノグラフと日本産標本記録で独立に裏づけられるため維持した。詳細は `outputs/schizaphis-taxonomy-resolution-2026-07-10.md`。
 - 「おそらく利用」「可能性が高い」「食草か判別できない」だけの記録は確定寄主に含めていない。
 - 自動監査の「無効植物名」43種類には、今回原文どおり採用した `Salix caprea`、`Caragana frutex`、`Hippocrepis comosa` の3学名を含む。これらはOCR誤りではなく、YList部分辞書にない国外寄主名である。
 
 ## 検証
 
-- 全テスト: 110/110成功（今回追加した回帰テスト6件を含む）
+- 全テスト: 121/121成功（`Schizaphis` 分類・寄主回帰テスト2件を追加）
 - `validate-normalized`: 成功
 - CSV品質監査: 完全重複0、重複ID 0、孤立ID 0、不正行0
 - `normalized_data` と `public` の寄主植物CSV: 同一内容
-- 本番ビルド: 成功（9,738種ページ、3,082食草ページを生成）
+- 本番ビルド: 成功（9,738種ページ、3,081食草ページを生成）
 - 配布物の簡易検査: 成功
-- SEO監査: 53,591 HTMLを検査し成功
-- 静的検査: エラー0（既存警告7件）
+- SEO監査: 53,587 HTMLを検査し成功
+- 静的検査: エラー0（既存警告4件）
 
 アブラムシの分類照合には、[Aphids on World Plants](https://aphidsonworldsplants.info/?p=2310)、[岩手県の生物目録](https://www.pref.iwate.jp/_res/projects/default_project/_page_/001/005/480/seibutsu_mokuroku_04.pdf)、[Aphid Species File](https://aphid.archive.speciesfile.org/Common/basic/Taxa.aspx?TaxonNameID=1166104)、[分子系統による再検討](https://pmc.ncbi.nlm.nih.gov/articles/PMC4547034/)を併用した。日本・韓国で `Tuberculatus fulviabdominalis` とされた記録は、現在 `T. indicus` の誤同定記録として扱われるため、その注記を付した。
