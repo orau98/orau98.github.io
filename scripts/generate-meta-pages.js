@@ -3084,7 +3084,7 @@ async function generateMetaPages() {
       plantIndexByFamily[family].push({ name: plantName, file: safePlantName });
     });
 
-    generateMetaIndexes({ insectIndexData, plantIndexByFamily });
+    generateMetaIndexes({ insectIndexData, plantIndexByFamily, hostPlantsMap });
   } catch (e) {
     console.warn('メタインデックス生成で警告:', e.message || e);
   }
@@ -3216,15 +3216,56 @@ function generateImageFileLists() {
 }
 
 // メタページ用インデックスを生成（全種リンク・科別グルーピング対応）
-// indexData: { insectIndexData, plantIndexByFamily } を受け取る
+// indexData: { insectIndexData, plantIndexByFamily, hostPlantsMap } を受け取る
 function generateMetaIndexes(indexData) {
   const base = path.join(__dirname, '../public/meta');
   const sections = META_PAGE_SECTIONS;
   const insectIndexData = (indexData && indexData.insectIndexData) || null;
   const plantIndexByFamily = (indexData && indexData.plantIndexByFamily) || null;
+  const hostPlantsMap = (indexData && indexData.hostPlantsMap) || null;
 
   // 50音順比較
   const jaSort = (a, b) => a.localeCompare(b, 'ja');
+
+  // 蝶ハブでは、植物ページと蝶ページの双方が indexable な関係だけを逆引きに使う。
+  // 件数は利用頻度ではなく、収録レコードにひもづく distinct な蝶ID数として数える。
+  const buildButterflyHostPlantDirectory = () => {
+    if (!hostPlantsMap) return [];
+    const butterflyDir = path.join(base, 'butterfly');
+    const plantDir = path.join(base, 'plant');
+    const butterflyIndexability = new Map();
+    const isIndexableButterfly = (insectId) => {
+      if (!butterflyIndexability.has(insectId)) {
+        butterflyIndexability.set(
+          insectId,
+          isGeneratedMetaPageIndexable(path.join(butterflyDir, `${insectId}.html`)),
+        );
+      }
+      return butterflyIndexability.get(insectId);
+    };
+    const plantsByFile = new Map();
+
+    hostPlantsMap.forEach((insects, plantName) => {
+      if (!isValidPlantName(plantName) || !Array.isArray(insects)) return;
+      const file = plantName.replace(/[/\\?%*:|"<>]/g, '-');
+      if (!isGeneratedMetaPageIndexable(path.join(plantDir, `${file}.html`))) return;
+
+      const butterflyIds = new Set(
+        insects
+          .filter((insect) => insect?.type === 'butterfly' && insect?.id)
+          .map((insect) => insect.id)
+          .filter(isIndexableButterfly),
+      );
+      if (butterflyIds.size === 0) return;
+
+      // ファイル名の安全化で衝突した場合は、誤った重複リンクを作らず件数の多い方を残す。
+      const candidate = { name: plantName, file, count: butterflyIds.size };
+      const current = plantsByFile.get(file);
+      if (!current || candidate.count > current.count) plantsByFile.set(file, candidate);
+    });
+
+    return [...plantsByFile.values()].sort((a, b) => jaSort(a.name, b.name));
+  };
 
   // ヘッダーHTML（共通）
   const headerHtml = `  <header class="meta-site-header" role="banner">
@@ -3241,12 +3282,35 @@ function generateMetaIndexes(indexData) {
   // 共通スタイル
   const indexStyles = `  <style>
     .family-group { margin-bottom: 1.5rem; }
-    .family-group h2 { font-size: 1rem; font-weight: bold; padding: 0.4rem 0.75rem; background: var(--color-bg-secondary, #f5f5f5); border-left: 4px solid var(--color-accent, #4caf50); margin-bottom: 0.5rem; }
+    .family-group h2, .family-group h3 { font-size: 1rem; font-weight: bold; padding: 0.4rem 0.75rem; background: var(--color-bg-secondary, #f5f5f5); border-left: 4px solid var(--color-accent, #4caf50); margin-bottom: 0.5rem; }
     .species-list { list-style: none; columns: 3; gap: 1rem; line-height: 1.85; padding: 0; }
     @media (max-width: 600px) { .species-list { columns: 2; } }
     .species-list li a { text-decoration: none; color: var(--color-link, #1976d2); }
     .species-list li a:hover { text-decoration: underline; }
     .index-summary { margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: var(--color-bg-card, #fff); border: 1px solid var(--color-border, #ddd); border-radius: 8px; }
+    .lookup-section { margin: 0 0 2rem; }
+    .lookup-section > h2 { margin: 0 0 0.65rem; font-size: 1.35rem; }
+    .lookup-lead { margin: 0 0 1rem; line-height: 1.75; }
+    .record-scope-note { margin: 0 0 1.25rem; padding: 0.75rem 1rem; border-left: 4px solid #c78b19; background: #fff8e7; line-height: 1.7; }
+    .featured-host-plants { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; padding: 0; margin: 0 0 1.5rem; }
+    .featured-host-plants a { display: flex; justify-content: space-between; gap: 0.75rem; height: 100%; padding: 0.75rem; border: 1px solid var(--color-border, #ddd); border-radius: 8px; color: var(--color-link, #1976d2); text-decoration: none; background: var(--color-bg-card, #fff); }
+    .featured-host-plants a:hover { text-decoration: underline; border-color: var(--color-accent, #4caf50); }
+    .host-plant-count { white-space: nowrap; color: var(--color-text-secondary, #555); font-variant-numeric: tabular-nums; }
+    .host-plant-filter-label { display: block; margin-bottom: 0.35rem; font-weight: bold; }
+    .host-plant-filter { width: min(100%, 32rem); min-height: 44px; padding: 0.65rem 0.75rem; border: 1px solid var(--color-border, #bbb); border-radius: 7px; font: inherit; }
+    .host-plant-filter:focus { outline: 3px solid rgba(25, 118, 210, 0.25); border-color: var(--color-link, #1976d2); }
+    .host-plant-result-count { margin: 0.65rem 0; color: var(--color-text-secondary, #555); }
+    .host-plant-directory { max-height: 34rem; overflow: auto; border: 1px solid var(--color-border, #ddd); border-radius: 8px; background: var(--color-bg-card, #fff); }
+    .host-plant-directory-list { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 0; padding: 0; }
+    .host-plant-directory-item { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--color-border, #eee); }
+    .host-plant-directory-item a { color: var(--color-link, #1976d2); text-decoration: none; }
+    .host-plant-directory-item a:hover { text-decoration: underline; }
+    @media (max-width: 760px) {
+      .featured-host-plants, .host-plant-directory-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .featured-host-plants, .host-plant-directory-list { grid-template-columns: 1fr; }
+    }
   </style>`;
 
   for (const sec of sections) {
@@ -3367,6 +3431,12 @@ ${headerHtml}
     );
     const sortedFamilies = Object.keys(typeData).sort(jaSort);
     const totalSpecies = sortedFamilies.reduce((s, f) => s + typeData[f].length, 0);
+    const isButterflyHub = sec.dir === 'butterfly';
+    const butterflyHostPlants = isButterflyHub ? buildButterflyHostPlantDirectory() : [];
+    const featuredButterflyHostPlants = butterflyHostPlants
+      .slice()
+      .sort((a, b) => b.count - a.count || jaSort(a.name, b.name))
+      .slice(0, 12);
 
     // フォールバック: データなしの場合はファイルスキャン
     let flatItems;
@@ -3381,11 +3451,17 @@ ${headerHtml}
     }
 
     // JSON-LD: 先頭100件
-    const pageDescription = `昆虫植物図鑑の${sec.title}。${flatItems.length}種を科別に掲載し、各種の食草・寄主植物ページへ案内します。`;
+    const pageHeading = isButterflyHub ? '蝶の食草一覧' : sec.title;
+    const documentTitle = isButterflyHub
+      ? `蝶の食草一覧｜植物名と蝶の名前から探す｜昆虫植物図鑑`
+      : `${sec.title} | 昆虫植物図鑑`;
+    const pageDescription = isButterflyHub
+      ? `昆虫植物図鑑に収録した蝶${flatItems.length}種の食草一覧。食草植物・分類群${butterflyHostPlants.length}件からの逆引きと、蝶の科別一覧から調べられます。各植物ページに出典付き記録を掲載。`
+      : `昆虫植物図鑑の${sec.title}。${flatItems.length}種を科別に掲載し、各種の食草・寄主植物ページへ案内します。`;
     const listStructuredData = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
-      name: sec.title,
+      name: pageHeading,
       description: pageDescription,
       url: listUrl,
       inLanguage: 'ja',
@@ -3407,6 +3483,7 @@ ${headerHtml}
     // 科別セクション（データあり）またはフラットリスト（フォールバック）
     let mainContent;
     if (totalSpecies > 0) {
+      const familyHeadingTag = isButterflyHub ? 'h3' : 'h2';
       mainContent = sortedFamilies
         .map(family => {
           const speciesList = typeData[family].slice().sort((a, b) => jaSort(a.name, b.name));
@@ -3417,7 +3494,7 @@ ${headerHtml}
             )
             .join('\n          ');
           return `<section class="family-group">
-        <h2>${family}（${speciesList.length}種）</h2>
+        <${familyHeadingTag}>${family}（${speciesList.length}種）</${familyHeadingTag}>
         <ul class="species-list">
           ${items}
         </ul>
@@ -3437,9 +3514,77 @@ ${headerHtml}
     }
 
     const summaryLabel =
-      totalSpecies > 0
+      isButterflyHub
+        ? `蝶${flatItems.length}種と食草植物・分類群${butterflyHostPlants.length}件を、植物名の逆引きと蝶の科別一覧から探せます。`
+        : totalSpecies > 0
         ? `全${flatItems.length}種を${sortedFamilies.length}科に分けて掲載しています。`
         : `全${flatItems.length}種を掲載しています。`;
+
+    const butterflyHostPlantContent = isButterflyHub
+      ? (() => {
+          const featuredItems = featuredButterflyHostPlants
+            .map(({ name, file, count }) => `<li>
+            <a href="/meta/plant/${encodeURIComponent(file)}.html">
+              <span>${escapeRedirectHtml(name)}</span>
+              <span class="host-plant-count">蝶${count}種</span>
+            </a>
+          </li>`)
+            .join('\n          ');
+          const directoryItems = butterflyHostPlants
+            .map(({ name, file, count }) => `<li class="host-plant-directory-item" data-host-plant-name="${escapeRedirectHtml(name.normalize('NFKC').toLocaleLowerCase('ja'))}">
+            <a href="/meta/plant/${encodeURIComponent(file)}.html">${escapeRedirectHtml(name)}</a>
+            <span class="host-plant-count">${count}種</span>
+          </li>`)
+            .join('\n          ');
+          return `<section class="lookup-section" aria-labelledby="butterfly-host-plant-heading">
+        <h2 id="butterfly-host-plant-heading">蝶を食草植物・分類群から探す</h2>
+        <p class="lookup-lead">植物名や分類群から、その植物を食草として収録した蝶を逆引きできます。リンク先では蝶の種名とレコードごとの出典を確認できます。</p>
+        <p class="record-scope-note"><strong>件数の見方：</strong>この図鑑の食草レコードにひもづく蝶の種数です。主要食草や野外での利用頻度の順位を示すものではありません。</p>
+        <h3>収録レコードが多い植物・分類群</h3>
+        <ul class="featured-host-plants" data-butterfly-featured-host-plants>
+          ${featuredItems}
+        </ul>
+        <label class="host-plant-filter-label" for="butterfly-host-plant-filter">植物名・分類群で絞り込む</label>
+        <input class="host-plant-filter" id="butterfly-host-plant-filter" type="search" placeholder="例：スミレ、エノキ、サンショウ" autocomplete="off">
+        <p class="host-plant-result-count" id="butterfly-host-plant-result-count" role="status" aria-live="polite">食草植物・分類群${butterflyHostPlants.length}件</p>
+        <div class="host-plant-directory" tabindex="0" aria-label="蝶の食草植物・分類群一覧">
+          <ul class="host-plant-directory-list" data-butterfly-host-plant-directory>
+          ${directoryItems}
+          </ul>
+        </div>
+      </section>`;
+        })()
+      : '';
+
+    if (isButterflyHub) {
+      mainContent = `<section class="lookup-section" aria-labelledby="butterfly-name-heading">
+        <h2 id="butterfly-name-heading">蝶の名前・科から探す</h2>
+        <p class="lookup-lead">蝶の名前を選ぶと、その種に記録された食草・食樹と出典を確認できます。</p>
+        ${mainContent}
+      </section>`;
+    }
+
+    const butterflyFilterScript = isButterflyHub
+      ? `  <script>
+    (() => {
+      const input = document.getElementById('butterfly-host-plant-filter');
+      const status = document.getElementById('butterfly-host-plant-result-count');
+      const items = Array.from(document.querySelectorAll('[data-host-plant-name]'));
+      if (!input || !status || items.length === 0) return;
+      const total = items.length;
+      input.addEventListener('input', () => {
+        const query = input.value.normalize('NFKC').toLocaleLowerCase('ja').trim();
+        let visible = 0;
+        items.forEach((item) => {
+          const matches = !query || item.dataset.hostPlantName.includes(query);
+          item.hidden = !matches;
+          if (matches) visible += 1;
+        });
+        status.textContent = query ? visible + '件が一致' : '食草植物・分類群' + total + '件';
+      });
+    })();
+  </script>`
+      : '';
 
     const html = `<!DOCTYPE html>
 <html lang="ja">
@@ -3449,17 +3594,17 @@ ${headerHtml}
   <meta name="robots" content="index, follow">
   ${GA_HEAD_TAGS}
   ${ADSENSE_HEAD_TAGS}
-  <title>${sec.title} | 昆虫植物図鑑</title>
+  <title>${documentTitle}</title>
   <meta name="description" content="${pageDescription}">
   <link rel="canonical" href="${listUrl}">
-  <meta property="og:title" content="${sec.title} | 昆虫植物図鑑">
+  <meta property="og:title" content="${documentTitle}">
   <meta property="og:description" content="${pageDescription}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:url" content="${listUrl}">
   <meta property="og:site_name" content="昆虫植物図鑑">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="${sec.title} | 昆虫植物図鑑">
+  <meta name="twitter:title" content="${documentTitle}">
   <meta name="twitter:description" content="${pageDescription}">
   <script type="application/ld+json">${listStructuredData}</script>
   <link rel="stylesheet" href="${META_STYLE_PATH}">
@@ -3469,16 +3614,18 @@ ${indexStyles}
 ${headerHtml}
   <div class="meta-page">
     <header class="meta-header">
-      <h1>${sec.title}</h1>
+      <h1>${pageHeading}</h1>
     </header>
     <main>
       <p class="index-summary">${summaryLabel}</p>
+      ${butterflyHostPlantContent}
       ${mainContent}
     </main>
     <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
     </section>
   </div>
+${butterflyFilterScript}
 </body>
 </html>`;
     fs.writeFileSync(path.join(dirPath, 'index.html'), html);
