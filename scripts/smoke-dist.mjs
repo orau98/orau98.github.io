@@ -323,11 +323,27 @@ for (const segment of insectProfileSegments) {
   assert(decodedRoute, `${segment} must include at least one decoded shared route`);
   const decodedRouteHtml = readDistText(path.join(segment, decodedRoute.name, 'index.html'));
   assert(
-    /http-equiv=["']refresh["']/i.test(decodedRouteHtml) &&
+    decodedRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
+      decodedRouteHtml.includes('/assets/index-') &&
+      decodedRouteHtml.includes('<div id="root"></div>') &&
       decodedRouteHtml.includes(`https://orau98.github.io/meta/${segment}/`),
-    `${segment} shared route must permanently forward to its canonical static profile`,
+    `${segment} shared route must serve the SPA detail shell with a canonical static profile`,
+  );
+  assert(
+    !/http-equiv=["']refresh["']/i.test(decodedRouteHtml) &&
+      !decodedRouteHtml.includes('window.location.replace'),
+    `${segment} shared route must not redirect away from the app detail`,
   );
 }
+
+const aoAtsubaRouteHtml = readDistText(path.join('moth', 'アオアツバ', 'index.html'));
+assert(
+  aoAtsubaRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
+    aoAtsubaRouteHtml.includes('<div id="root"></div>') &&
+    !/http-equiv=["']refresh["']/i.test(aoAtsubaRouteHtml) &&
+    !aoAtsubaRouteHtml.includes('window.location.replace'),
+  'アオアツバ reload route must keep the React insect detail instead of redirecting to /meta/',
+);
 
 for (const section of INSECT_SECTION_CONFIGS) {
   const insects = readDistJson(`assets/data-lite/${section.collectionKey}.json`);
@@ -353,8 +369,24 @@ for (const section of INSECT_SECTION_CONFIGS) {
         `${locale} app route points to the wrong profile: ${routePath} (${insect.id})`,
       );
       assert(
-        !/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml),
-        `${locale} permanent insect redirect must remain crawlable: ${routePath}`,
+        routeHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
+          routeHtml.includes('<div id="root"></div>') &&
+          !/http-equiv=["']refresh["']/i.test(routeHtml) &&
+          !routeHtml.includes('window.location.replace'),
+        `${locale} app route must render the React detail without redirecting: ${routePath}`,
+      );
+      const canonicalHref = routeHtml.match(
+        /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i,
+      )?.[1];
+      assert(canonicalHref, `${locale} app route must declare its canonical profile: ${routePath}`);
+      const canonicalRelativePath = decodeURIComponent(new URL(canonicalHref).pathname)
+        .replace(/^\/+/, '');
+      const canonicalHtml = readDistText(canonicalRelativePath);
+      const routeNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml);
+      const canonicalNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml);
+      assert(
+        routeNoindex === canonicalNoindex,
+        `${locale} app route robots must match canonical target indexability: ${routePath}`,
       );
       if (insect.routeName) {
         const legacyRoutePath = decodeURIComponent(
