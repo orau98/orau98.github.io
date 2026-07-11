@@ -3,7 +3,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const MAX_PAGES_DIST_BYTES = 900 * 1024 * 1024;
+// Keep a small margin below GitHub Pages' 1 GiB published-site limit.
+const MAX_PAGES_DIST_BYTES = 980 * 1024 * 1024;
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const EN_SITE_NAME = 'Insects and Host Plants of Japan';
 const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. Search moths, butterflies, beetles, bark beetles, aphids, and host plants by scientific name, Japanese name, plant name, or taxonomy.';
