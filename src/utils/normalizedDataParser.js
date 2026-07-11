@@ -190,7 +190,8 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     const isAdultOrUnknown = lifeStageRaw === '成虫' || lifeStageRaw === '';
     const isFlowerVisit = isAdultOrUnknown && partCompact && partCompact.includes('花');
     const preservesBlankPlantPart = /^日本のハマキガ[123]$/.test(referenceRaw);
-    const defaultPlantPart = preservesBlankPlantPart ? '' : '葉';
+    // 枯死木や菌類などの非植物資源に、植物向けの既定値「葉」を補わない。
+    const defaultPlantPart = resourceType === 'substrate' || preservesBlankPlantPart ? '' : '葉';
 
     hostPlantsByInsect[hp.insect_id].push({
       name: rawName,
