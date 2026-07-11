@@ -20,6 +20,10 @@ const insects = readCsv('normalized_data/insects.csv');
 const hostplants = readCsv('normalized_data/hostplants.csv');
 const notes = readCsv('normalized_data/general_notes.csv');
 const audit = readCsv('data/source_audits/japanese-longhorn-beetles-2007.csv');
+const comprehensiveAudit = JSON.parse(fs.readFileSync(
+  'data/source_audits/japanese-longhorn-beetles-2007-comprehensive-integrity-2026-07-12.json',
+  'utf8',
+));
 const officialDuplicates = readCsv('data/source_audits/japanese-beetles-2026-duplicate-combinations.csv');
 
 const insectsById = new Map(insects.map((row) => [row.insect_id, row]));
@@ -41,6 +45,23 @@ const accountHostsFor = (insectId) => {
   return sourceHostsFor(insectId).filter((row) =>
     row.record_id.startsWith(`host-${auditRow.audit_id}-`)
   );
+};
+const accountNotesFor = (insectId) => {
+  const auditRow = accountAuditByInsectId.get(insectId);
+  if (!auditRow) return [];
+  return sourceNotesFor(insectId).filter((row) =>
+    row.record_id.startsWith(`note-${auditRow.audit_id}-`)
+  );
+};
+const comprehensiveTransitionByRecordId = new Map(
+  comprehensiveAudit.actions
+    .filter((action) => action.before?.record_id)
+    .map((action) => [action.before.record_id, action]),
+);
+const transitionedExpected = (recordId, fallback) => {
+  const action = comprehensiveTransitionByRecordId.get(recordId);
+  if (!action) return fallback;
+  return action.after;
 };
 const accountHostNamesFor = (insectId) => new Set(
   accountHostsFor(insectId).map((row) => row.plant_name),
@@ -118,14 +139,15 @@ test('アヤモンチビカミキリ各亜種の出現期と生態を原典ペ�
   }
 });
 
-test('沖縄亜種は6寄主・3〜12月・成虫越冬の原典記述を持つ', () => {
+test('沖縄亜種は6寄主・3〜12月と客観的な枯枝生態を持つ', () => {
   const insectId = 'species-22628';
   assert.deepEqual(accountHostNamesFor(insectId), new Set([
     'アコウ', 'ガジュマル', 'イヌビワ', 'ヤマグワ', 'アカメガシワ', 'ウラジロエノキ',
   ]));
   const sourceNotes = sourceNotesFor(insectId);
   assert.equal(sourceNotes.some((row) => row.note_type === '出現時期' && row.content === '3〜12月'), true);
-  assert.equal(sourceNotes.some((row) => row.content.includes('成虫越冬')), true);
+  assert.equal(sourceNotes.some((row) => row.content === '成虫はクワ科植物の枯枝に多く見られる。'), true);
+  assert.equal(sourceNotes.some((row) => row.content.includes('成虫越冬すると考えられている')), false);
   assert.equal(sourceNotes.some((row) => row.content === '3〜11月'), false);
   assert.equal(
     accountHostsFor(insectId).find((row) => row.plant_name === 'ウラジロエノキ')?.plant_family,
@@ -292,14 +314,12 @@ test('追加バッチBは欄なし・寄主未知・地域限定記録を区別�
   );
 });
 
-test('完全一致していた未入力6種にも原典の未知・記録評価を保持する', () => {
+test('完全一致していた未入力種には客観的な未知・採集記録だけを保持する', () => {
   const expectedNotes = new Map([
     ['species-22376', /寄主植物も未知/],
     ['species-22198', /シイの花/],
     ['species-21981', /寄主植物は未知/],
-    ['species-21871', /日本に分布していない可能性/],
     ['species-21985', /基準標本も紛失/],
-    ['species-22762', /本州からの記録をゴマダラカミキリの誤同定/],
   ]);
   for (const [insectId, pattern] of expectedNotes) {
     assert.equal(sourceNotesFor(insectId).some((row) => pattern.test(row.content)), true, insectId);
@@ -308,6 +328,8 @@ test('完全一致していた未入力6種にも原典の未知・記録評価�
   assert.deepEqual(accountHostNamesFor('species-22198'), new Set(['リュウキュウマツ']));
   assert.equal(sourceNotesFor('species-22198').some((row) => row.content === '4〜6月'), true);
   assert.equal(sourceNotesFor('species-21981').some((row) => row.content === '3月'), true);
+  assert.deepEqual(sourceNotesFor('species-21871'), []);
+  assert.deepEqual(sourceNotesFor('species-22762'), []);
 });
 
 test('OCR崩れで漏れた追加18分類群を原典の亜種欄へ戻す', () => {
@@ -356,9 +378,12 @@ test('分類年を原記載まで確認した2種は生態を収録し、標準�
   assert.equal(insectsById.get('species-22444').year, '1901');
 });
 
-test('2007年原典にない粟国島亜種へ基亜種データをコピーしない', () => {
+test('2007年原典にない粟国島亜種へ亜種限定の月・寄主をコピーしない', () => {
   assert.deepEqual(sourceHostsFor('species-22627'), []);
-  assert.deepEqual(sourceNotesFor('species-22627'), []);
+  assert.deepEqual(
+    sourceNotesFor('species-22627').map((row) => [row.note_type, row.content]),
+    [['生態情報', '成虫はクワ科植物の枯枝に多く見られる。']],
+  );
   assert.match(insectsById.get('species-22627').notes, /2023年記載/);
   assert.doesNotMatch(insectsById.get('species-22627').notes, /原典ページを再監査済み/);
 });
@@ -493,17 +518,31 @@ test('監査台帳の全採用行が正規化CSVへ過不足なく反映され�
       `${row.audit_id} host rows`,
     );
 
-    const sourceNotes = sourceNotesFor(row.insect_id);
+    const sourceNotes = accountNotesFor(row.insect_id);
     const emergenceNotes = sourceNotes.filter((note) => note.note_type === '出現時期');
     const ecologyNotes = sourceNotes.filter((note) => note.note_type === '生態情報');
+    const expectedEmergence = row.emergence
+      ? transitionedExpected(`note-${row.audit_id}-emergence`, {
+          content: row.emergence,
+          page: row.printed_page,
+          year: '2007',
+        })
+      : null;
+    const expectedEcology = row.ecology
+      ? transitionedExpected(`note-${row.audit_id}-ecology`, {
+          content: row.ecology,
+          page: row.printed_page,
+          year: '2007',
+        })
+      : null;
     assert.deepEqual(
       emergenceNotes.map((note) => [note.content, note.page, note.year]),
-      row.emergence ? [[row.emergence, row.printed_page, '2007']] : [],
+      expectedEmergence ? [[expectedEmergence.content, expectedEmergence.page, expectedEmergence.year]] : [],
       `${row.audit_id} emergence note`,
     );
     assert.deepEqual(
       ecologyNotes.map((note) => [note.content, note.page, note.year]),
-      row.ecology ? [[row.ecology, row.printed_page, '2007']] : [],
+      expectedEcology ? [[expectedEcology.content, expectedEcology.page, expectedEcology.year]] : [],
       `${row.audit_id} ecology note`,
     );
 
@@ -525,8 +564,16 @@ test('除外・統合判断の行は文献行を残さない', () => {
   for (const row of audit.filter((candidate) =>
     !['include', 'include_shared_group'].includes(candidate.decision)
   )) {
-    assert.deepEqual(sourceHostsFor(row.insect_id), [], `${row.audit_id} hosts`);
-    assert.deepEqual(sourceNotesFor(row.insect_id), [], `${row.audit_id} notes`);
+    assert.deepEqual(
+      sourceHostsFor(row.insect_id).filter((entry) => entry.record_id.startsWith(`host-${row.audit_id}-`)),
+      [],
+      `${row.audit_id} legacy hosts`,
+    );
+    assert.deepEqual(
+      sourceNotesFor(row.insect_id).filter((entry) => entry.record_id.startsWith(`note-${row.audit_id}-`)),
+      [],
+      `${row.audit_id} legacy notes`,
+    );
     if (row.decision === 'merge_duplicate_taxon') {
       assert.equal(insectsById.has(row.insect_id), false, `${row.audit_id} merged row`);
     }

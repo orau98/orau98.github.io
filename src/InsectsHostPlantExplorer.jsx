@@ -1590,10 +1590,15 @@ const InsectsHostPlantExplorer = memo(
             .split(/[、,，]/)
             .map((name) => name.trim())
             .filter(Boolean);
+          const scientificSynonyms = String(insect.synonyms || '')
+            .split(/[;；]/)
+            .map((name) => name.trim())
+            .filter(Boolean);
           const insectScore = Math.max(
             getMatchScore(insect.name),
             getMatchScore(insect.scientificName),
             ...alternativeNames.map((name) => getMatchScore(name)),
+            ...scientificSynonyms.map((name) => getMatchScore(name)),
           );
 
           // 画像URL解決・パス生成はマッチした候補に対してのみ行う

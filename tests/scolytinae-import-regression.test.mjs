@@ -21,6 +21,12 @@ const insectIds = new Set(insects.map((row) => row.insect_id));
 const hostplants = readCsv("normalized_data/hostplants.csv").filter((row) =>
   insectIds.has(row.insect_id),
 );
+// This regression suite verifies the six Nobuchi import ledgers. Other
+// independently audited Scolytinae sources are tested in their own suites.
+const importedHostplants = hostplants.filter((row) =>
+  row.record_id.startsWith("hostplant-SC-")
+  && !row.record_id.startsWith("hostplant-SCOLYT-KABE-"),
+);
 const sourceRecords = new Map(
   [
     "data/scolytinae_host_record_groups.json",
@@ -68,8 +74,8 @@ test("normalized parser keeps Scolytinae out of the moth collection", () => {
 });
 
 test("host records retain explicit, inferred, overseas, and unknown geography", () => {
-  assert.equal(hostplants.length, 372);
-  const counts = hostplants.reduce((groups, row) => {
+  assert.equal(importedHostplants.length, 372);
+  const counts = importedHostplants.reduce((groups, row) => {
     groups[row.observation_type] ||= [];
     groups[row.observation_type].push(row);
     return groups;
@@ -79,7 +85,7 @@ test("host records retain explicit, inferred, overseas, and unknown geography", 
   assert.equal(counts["文献（海外・明記）"]?.length, 2);
   assert.equal(counts["文献（地域不明）"]?.length, 86);
 
-  const hakkoda = hostplants.find(
+  const hakkoda = importedHostplants.find(
     (row) => row.insect_id === "species-SC176" && row.plant_name === "ハイマツ",
   );
   assert.equal(hakkoda?.observation_type, "文献（国内・明記）");
@@ -89,7 +95,7 @@ test("host records retain explicit, inferred, overseas, and unknown geography", 
     /青森県八甲田山/,
   );
 
-  const korea = hostplants.filter((row) => row.insect_id === "species-SC206");
+  const korea = importedHostplants.filter((row) => row.insect_id === "species-SC206");
   assert.equal(korea.length, 2);
   assert.ok(
     korea.every((row) => row.observation_type === "文献（海外・明記）"),
@@ -192,14 +198,14 @@ test("1975 type records and 1981 Xylosandrus hosts keep their evidence scope", (
 
 test("ambiguous taxonomy and source-flagged host errors stay excluded", () => {
   assert.equal(
-    hostplants.some(
+    importedHostplants.some(
       (row) =>
         row.insect_id === "species-SC163" && row.plant_name === "イチイガシ",
     ),
     false,
   );
   assert.equal(
-    hostplants.some((row) =>
+    importedHostplants.some((row) =>
       ["species-SC210", "species-SC209"].includes(row.insect_id),
     ),
     false,

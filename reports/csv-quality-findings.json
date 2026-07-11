@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-07-10T05:20:11.525Z",
+  "generatedAt": "2026-07-11T23:45:06.524Z",
   "files": {
     "hostplants": {
       "path": "public/hostplants.csv",
-      "rows": 17409
+      "rows": 21247
     },
     "insects": {
       "path": "public/insects.csv",
-      "rows": 9738
+      "rows": 9953
     },
     "general_notes": {
       "path": "public/general_notes.csv",
-      "rows": 7811
+      "rows": 8245
     },
     "plant_profiles": {
       "path": "normalized_data/plant_profiles.csv",
@@ -19,22 +19,22 @@
     }
   },
   "summary": {
-    "hostplant_rows": 17409,
+    "hostplant_rows": 21247,
     "variant_buckets": 2,
     "exact_duplicate_groups": 0,
-    "insect_plant_pair_dups": 610,
+    "insect_plant_pair_dups": 667,
     "duplicate_record_ids": 0,
     "duplicate_insect_ids": 0,
-    "duplicate_notes": 4,
+    "duplicate_notes": 26,
     "duplicate_profiles": 1007,
-    "invalid_plant_names": 43,
+    "invalid_plant_names": 48,
     "family_conflicts": 0,
     "family_conflicts_ylist_resolvable": 0,
     "family_conflicts_verified_override": 0,
     "family_conflicts_typo": 0,
     "family_conflicts_ambiguous": 0,
-    "non_standard_families": 43,
-    "non_plant_keys": 27,
+    "non_standard_families": 48,
+    "non_plant_keys": 24,
     "orphan_hostplants": 0,
     "orphan_notes": 0,
     "malformed_rows": 0
@@ -42,17 +42,17 @@
   "categories": {
     "variant_spellings": [
       {
+        "key": "タカノツメ",
+        "distinct": 2,
+        "total": 5,
+        "variants": "タカノツメ (4) | タカノツメ（樹木） (1)",
+        "ylist_canonical": "オノマンネングサ"
+      },
+      {
         "key": "マルメロ",
         "distinct": 2,
         "total": 5,
         "variants": "マルメロ (4) | マルメロ？ (1)",
-        "ylist_canonical": ""
-      },
-      {
-        "key": "ヤナギ属Salix",
-        "distinct": 2,
-        "total": 2,
-        "variants": "ヤナギ属 Salix (1) | ヤナギ属Salix (1)",
         "ylist_canonical": ""
       }
     ],
@@ -240,20 +240,6 @@
           "count": 3,
           "plant_names": "カシワ",
           "record_ids": "hostplant-004220 | hostplant-909581 | hostplant-913284"
-        },
-        {
-          "insect_id": "species-6112",
-          "normalized_plant": "ヒノキ",
-          "count": 3,
-          "plant_names": "ヒノキ",
-          "record_ids": "hostplant-004285 | hostplant-909686 | hostplant-913283"
-        },
-        {
-          "insect_id": "species-6112",
-          "normalized_plant": "スギ",
-          "count": 3,
-          "plant_names": "スギ",
-          "record_ids": "hostplant-004287 | hostplant-909685 | hostplant-913290"
         },
         {
           "insect_id": "species-6117",
@@ -814,13 +800,6 @@
           "count": 2,
           "plant_names": "ハナヤサイ",
           "record_ids": "hostplant-000452 | hostplant-907918"
-        },
-        {
-          "insect_id": "species-2276",
-          "normalized_plant": "キク",
-          "count": 2,
-          "plant_names": "キク",
-          "record_ids": "hostplant-000597 | hostplant-908387"
         },
         {
           "insect_id": "species-3434",
@@ -2552,13 +2531,6 @@
           "record_ids": "hostplant-004284 | hostplant-909682"
         },
         {
-          "insect_id": "species-6112",
-          "normalized_plant": "アスナロ",
-          "count": 2,
-          "plant_names": "アスナロ",
-          "record_ids": "hostplant-004286 | hostplant-909684"
-        },
-        {
           "insect_id": "species-6113",
           "normalized_plant": "アカマツ",
           "count": 2,
@@ -2592,27 +2564,6 @@
           "count": 2,
           "plant_names": "ウラジロモミ",
           "record_ids": "hostplant-004291-2 | hostplant-909702"
-        },
-        {
-          "insect_id": "species-6115",
-          "normalized_plant": "コメツガ",
-          "count": 2,
-          "plant_names": "コメツガ",
-          "record_ids": "hostplant-004294 | hostplant-913258"
-        },
-        {
-          "insect_id": "species-6115",
-          "normalized_plant": "ウラジロモミ",
-          "count": 2,
-          "plant_names": "ウラジロモミ",
-          "record_ids": "hostplant-004296 | hostplant-913257"
-        },
-        {
-          "insect_id": "species-6115",
-          "normalized_plant": "ゴヨウマツ",
-          "count": 2,
-          "plant_names": "ゴヨウマツ",
-          "record_ids": "hostplant-004297 | hostplant-909705"
         },
         {
           "insect_id": "species-6116",
@@ -3042,32 +2993,18 @@
           "record_ids": "hostplant-004419 | hostplant-913300"
         },
         {
-          "insect_id": "species-10007",
-          "normalized_plant": "ハリエンジュ",
+          "insect_id": "species-20215",
+          "normalized_plant": "クロマメノキ",
           "count": 2,
-          "plant_names": "ハリエンジュ",
-          "record_ids": "hostplant-004457 | hostplant-909280"
+          "plant_names": "クロマメノキ",
+          "record_ids": "hostplant-005215 | hostplant-913438"
         },
         {
-          "insect_id": "species-10106",
-          "normalized_plant": "シャシャンボ",
+          "insect_id": "species-20393",
+          "normalized_plant": "トウワタ",
           "count": 2,
-          "plant_names": "シャシャンボ",
-          "record_ids": "hostplant-004637 | hostplant-909194"
-        },
-        {
-          "insect_id": "species-H001",
-          "normalized_plant": "チョウジタデ",
-          "count": 2,
-          "plant_names": "チョウジタデ",
-          "record_ids": "hostplant-006374 | hostplant-900195"
-        },
-        {
-          "insect_id": "species-H137",
-          "normalized_plant": "ヤマヨモギ",
-          "count": 2,
-          "plant_names": "ヤマヨモギ",
-          "record_ids": "hostplant-006533 | hostplant-900391"
+          "plant_names": "トウワタ",
+          "record_ids": "hostplant-006254 | hostplant-913483"
         },
         {
           "insect_id": "species-H445",
@@ -3112,6 +3049,41 @@
           "record_ids": "hostplant-007051 | hostplant-900868"
         },
         {
+          "insect_id": "species-H943",
+          "normalized_plant": "ウメ",
+          "count": 2,
+          "plant_names": "ウメ",
+          "record_ids": "hostplant-007055 | hostplant-909903"
+        },
+        {
+          "insect_id": "species-H492",
+          "normalized_plant": "コナラ",
+          "count": 2,
+          "plant_names": "コナラ",
+          "record_ids": "hostplant-007209 | hostplant-900889"
+        },
+        {
+          "insect_id": "species-H498",
+          "normalized_plant": "クヌギ",
+          "count": 2,
+          "plant_names": "クヌギ",
+          "record_ids": "hostplant-007210 | hostplant-900900"
+        },
+        {
+          "insect_id": "species-H628",
+          "normalized_plant": "マユミ",
+          "count": 2,
+          "plant_names": "マユミ",
+          "record_ids": "hostplant-007242 | hostplant-hhb-audit-20260712-0001"
+        },
+        {
+          "insect_id": "species-H628",
+          "normalized_plant": "ニシキギ",
+          "count": 2,
+          "plant_names": "ニシキギ",
+          "record_ids": "hostplant-007243 | hostplant-hhb-audit-20260712-0002"
+        },
+        {
           "insect_id": "species-3926",
           "normalized_plant": "カツラ",
           "count": 2,
@@ -3124,6 +3096,342 @@
           "count": 2,
           "plant_names": "ミヤマザクラ",
           "record_ids": "hostplant-091046 | hostplant-913216"
+        },
+        {
+          "insect_id": "species-H704",
+          "normalized_plant": "ヤマノイモ",
+          "count": 2,
+          "plant_names": "ヤマノイモ",
+          "record_ids": "hostplant-900003 | hostplant-hhb-audit-20260712-0008"
+        },
+        {
+          "insect_id": "species-H706",
+          "normalized_plant": "ヤマノイモ",
+          "count": 2,
+          "plant_names": "ヤマノイモ",
+          "record_ids": "hostplant-900004 | hostplant-hhb-audit-20260712-0009"
+        },
+        {
+          "insect_id": "species-H470",
+          "normalized_plant": "メダケ",
+          "count": 2,
+          "plant_names": "メダケ",
+          "record_ids": "hostplant-900113 | hostplant-hhb-audit-20260712-0105"
+        },
+        {
+          "insect_id": "species-H637",
+          "normalized_plant": "フキ",
+          "count": 2,
+          "plant_names": "フキ",
+          "record_ids": "hostplant-900115 | hostplant-hhb-audit-20260712-0107"
+        },
+        {
+          "insect_id": "species-H637",
+          "normalized_plant": "ヨメナ",
+          "count": 2,
+          "plant_names": "ヨメナ",
+          "record_ids": "hostplant-900116 | hostplant-hhb-audit-20260712-0108"
+        },
+        {
+          "insect_id": "species-H074",
+          "normalized_plant": "ジャガイモ",
+          "count": 2,
+          "plant_names": "ジャガイモ",
+          "record_ids": "hostplant-900310 | hostplant-hhb-audit-20260712-0112"
+        },
+        {
+          "insect_id": "species-H074",
+          "normalized_plant": "ナス",
+          "count": 2,
+          "plant_names": "ナス",
+          "record_ids": "hostplant-900311 | hostplant-hhb-audit-20260712-0113"
+        },
+        {
+          "insect_id": "species-H086",
+          "normalized_plant": "ネズミモチ",
+          "count": 2,
+          "plant_names": "ネズミモチ",
+          "record_ids": "hostplant-900318 | hostplant-hhb-audit-20260712-0098"
+        },
+        {
+          "insect_id": "species-H086",
+          "normalized_plant": "コバノトネリコ",
+          "count": 2,
+          "plant_names": "コバノトネリコ",
+          "record_ids": "hostplant-900319 | hostplant-hhb-audit-20260712-0099"
+        },
+        {
+          "insect_id": "species-H113",
+          "normalized_plant": "キチジョウソウ",
+          "count": 2,
+          "plant_names": "キチジョウソウ",
+          "record_ids": "hostplant-900337 | hostplant-hhb-audit-20260712-0095"
+        },
+        {
+          "insect_id": "species-H136",
+          "normalized_plant": "オオバコ",
+          "count": 2,
+          "plant_names": "オオバコ",
+          "record_ids": "hostplant-900386 | hostplant-hhb-audit-20260712-0096"
+        },
+        {
+          "insect_id": "species-H136",
+          "normalized_plant": "エゾオオバコ",
+          "count": 2,
+          "plant_names": "エゾオオバコ",
+          "record_ids": "hostplant-900387 | hostplant-hhb-audit-20260712-0097"
+        },
+        {
+          "insect_id": "species-H284",
+          "normalized_plant": "サルナシ",
+          "count": 2,
+          "plant_names": "サルナシ",
+          "record_ids": "hostplant-900767 | hostplant-hhb-audit-20260712-0092"
+        },
+        {
+          "insect_id": "species-H284",
+          "normalized_plant": "オオバアサガラ",
+          "count": 2,
+          "plant_names": "オオバアサガラ",
+          "record_ids": "hostplant-900768 | hostplant-hhb-audit-20260712-0093"
+        },
+        {
+          "insect_id": "species-H285",
+          "normalized_plant": "ハンノキ",
+          "count": 2,
+          "plant_names": "ハンノキ",
+          "record_ids": "hostplant-900770 | hostplant-hhb-audit-20260712-0087"
+        },
+        {
+          "insect_id": "species-H285",
+          "normalized_plant": "シラカバ",
+          "count": 2,
+          "plant_names": "シラカバ",
+          "record_ids": "hostplant-900772 | hostplant-hhb-audit-20260712-0089"
+        },
+        {
+          "insect_id": "species-H286",
+          "normalized_plant": "ハンノキ",
+          "count": 2,
+          "plant_names": "ハンノキ",
+          "record_ids": "hostplant-900777 | hostplant-hhb-audit-20260712-0091"
+        },
+        {
+          "insect_id": "species-H253",
+          "normalized_plant": "ブナ",
+          "count": 2,
+          "plant_names": "ブナ",
+          "record_ids": "hostplant-900807 | hostplant-hhb-audit-20260712-0081"
+        },
+        {
+          "insect_id": "species-H347",
+          "normalized_plant": "クリ",
+          "count": 2,
+          "plant_names": "クリ",
+          "record_ids": "hostplant-900815 | hostplant-hhb-audit-20260712-0090"
+        },
+        {
+          "insect_id": "species-H318",
+          "normalized_plant": "クワ",
+          "count": 2,
+          "plant_names": "クワ",
+          "record_ids": "hostplant-900816 | hostplant-hhb-audit-20260712-0082"
+        },
+        {
+          "insect_id": "species-H318",
+          "normalized_plant": "コウゾ",
+          "count": 2,
+          "plant_names": "コウゾ",
+          "record_ids": "hostplant-900817 | hostplant-hhb-audit-20260712-0083"
+        },
+        {
+          "insect_id": "species-H318",
+          "normalized_plant": "クリ",
+          "count": 2,
+          "plant_names": "クリ",
+          "record_ids": "hostplant-900819 | hostplant-hhb-audit-20260712-0085"
+        },
+        {
+          "insect_id": "species-H318",
+          "normalized_plant": "フジ",
+          "count": 2,
+          "plant_names": "フジ",
+          "record_ids": "hostplant-900821 | hostplant-hhb-audit-20260712-0086"
+        },
+        {
+          "insect_id": "species-H318",
+          "normalized_plant": "ヤマノイモ",
+          "count": 2,
+          "plant_names": "ヤマノイモ",
+          "record_ids": "hostplant-900822 | hostplant-hhb-audit-20260712-0084"
+        },
+        {
+          "insect_id": "species-H254",
+          "normalized_plant": "アザミ",
+          "count": 2,
+          "plant_names": "アザミ",
+          "record_ids": "hostplant-900828 | hostplant-hhb-audit-20260712-0075"
+        },
+        {
+          "insect_id": "species-H254",
+          "normalized_plant": "フキ",
+          "count": 2,
+          "plant_names": "フキ",
+          "record_ids": "hostplant-900829 | hostplant-hhb-audit-20260712-0076"
+        },
+        {
+          "insect_id": "species-H259",
+          "normalized_plant": "ミゾソバ",
+          "count": 2,
+          "plant_names": "ミゾソバ",
+          "record_ids": "hostplant-900830 | hostplant-hhb-audit-20260712-0077"
+        },
+        {
+          "insect_id": "species-H259",
+          "normalized_plant": "イタドリ",
+          "count": 2,
+          "plant_names": "イタドリ",
+          "record_ids": "hostplant-900831 | hostplant-hhb-audit-20260712-0078"
+        },
+        {
+          "insect_id": "species-H259",
+          "normalized_plant": "ギシギシ",
+          "count": 2,
+          "plant_names": "ギシギシ",
+          "record_ids": "hostplant-900833 | hostplant-hhb-audit-20260712-0079"
+        },
+        {
+          "insect_id": "species-H259",
+          "normalized_plant": "オランダイチゴ",
+          "count": 2,
+          "plant_names": "オランダイチゴ",
+          "record_ids": "hostplant-900834 | hostplant-hhb-audit-20260712-0080"
+        },
+        {
+          "insect_id": "species-H533",
+          "normalized_plant": "ハンノキ",
+          "count": 2,
+          "plant_names": "ハンノキ",
+          "record_ids": "hostplant-900846 | hostplant-hhb-audit-20260712-0020"
+        },
+        {
+          "insect_id": "species-H536",
+          "normalized_plant": "ヨモギ",
+          "count": 2,
+          "plant_names": "ヨモギ",
+          "record_ids": "hostplant-900849 | hostplant-hhb-audit-20260712-0021"
+        },
+        {
+          "insect_id": "species-H540",
+          "normalized_plant": "コナラ",
+          "count": 2,
+          "plant_names": "コナラ",
+          "record_ids": "hostplant-900864 | hostplant-hhb-audit-20260712-0018"
+        },
+        {
+          "insect_id": "species-H540",
+          "normalized_plant": "クリ",
+          "count": 2,
+          "plant_names": "クリ",
+          "record_ids": "hostplant-900865 | hostplant-hhb-audit-20260712-0019"
+        },
+        {
+          "insect_id": "species-H530",
+          "normalized_plant": "サツマイモ",
+          "count": 2,
+          "plant_names": "サツマイモ",
+          "record_ids": "hostplant-900883 | hostplant-hhb-audit-20260712-0022"
+        },
+        {
+          "insect_id": "species-H530",
+          "normalized_plant": "ヒルガオ",
+          "count": 2,
+          "plant_names": "ヒルガオ",
+          "record_ids": "hostplant-900884 | hostplant-hhb-audit-20260712-0023"
+        },
+        {
+          "insect_id": "species-H492",
+          "normalized_plant": "ツバキ",
+          "count": 2,
+          "plant_names": "ツバキ",
+          "record_ids": "hostplant-900890 | hostplant-hhb-audit-20260712-0031"
+        },
+        {
+          "insect_id": "species-H492",
+          "normalized_plant": "ヒサカキ",
+          "count": 2,
+          "plant_names": "ヒサカキ",
+          "record_ids": "hostplant-900891 | hostplant-hhb-audit-20260712-0032"
+        },
+        {
+          "insect_id": "species-H492",
+          "normalized_plant": "ヤマグワ",
+          "count": 2,
+          "plant_names": "ヤマグワ",
+          "record_ids": "hostplant-900892 | hostplant-hhb-audit-20260712-0033"
+        },
+        {
+          "insect_id": "species-H498",
+          "normalized_plant": "コジイ",
+          "count": 2,
+          "plant_names": "コジイ",
+          "record_ids": "hostplant-900901 | hostplant-hhb-audit-20260712-0038"
+        },
+        {
+          "insect_id": "species-H513",
+          "normalized_plant": "クヌギ",
+          "count": 2,
+          "plant_names": "クヌギ",
+          "record_ids": "hostplant-900928 | hostplant-hhb-audit-20260712-0030"
+        },
+        {
+          "insect_id": "species-H513",
+          "normalized_plant": "クリ",
+          "count": 2,
+          "plant_names": "クリ",
+          "record_ids": "hostplant-900929 | hostplant-hhb-audit-20260712-0029"
+        },
+        {
+          "insect_id": "species-H484",
+          "normalized_plant": "ノブドウ",
+          "count": 2,
+          "plant_names": "ノブドウ",
+          "record_ids": "hostplant-900934 | hostplant-hhb-audit-20260712-0035"
+        },
+        {
+          "insect_id": "species-H484",
+          "normalized_plant": "ブドウ",
+          "count": 2,
+          "plant_names": "ブドウ",
+          "record_ids": "hostplant-900935 | hostplant-hhb-audit-20260712-0036"
+        },
+        {
+          "insect_id": "species-H504",
+          "normalized_plant": "クルミ",
+          "count": 2,
+          "plant_names": "クルミ",
+          "record_ids": "hostplant-900952 | hostplant-hhb-audit-20260712-0042"
+        },
+        {
+          "insect_id": "species-H504",
+          "normalized_plant": "リンゴ",
+          "count": 2,
+          "plant_names": "リンゴ",
+          "record_ids": "hostplant-900956 | hostplant-hhb-audit-20260712-0039"
+        },
+        {
+          "insect_id": "species-H504",
+          "normalized_plant": "ナシ",
+          "count": 2,
+          "plant_names": "ナシ",
+          "record_ids": "hostplant-900957 | hostplant-hhb-audit-20260712-0040"
+        },
+        {
+          "insect_id": "species-H504",
+          "normalized_plant": "ウメ",
+          "count": 2,
+          "plant_names": "ウメ",
+          "record_ids": "hostplant-900958 | hostplant-hhb-audit-20260712-0041"
         },
         {
           "insect_id": "species-4849",
@@ -3327,13 +3635,6 @@
           "count": 2,
           "plant_names": "オニシモツケ",
           "record_ids": "hostplant-901898 | hostplant-912824"
-        },
-        {
-          "insect_id": "species-1065",
-          "normalized_plant": "ムラサキツメクサ",
-          "count": 2,
-          "plant_names": "ムラサキツメクサ",
-          "record_ids": "hostplant-901906 | hostplant-912826"
         },
         {
           "insect_id": "species-1071",
@@ -3609,6 +3910,13 @@
           "record_ids": "hostplant-902166 | hostplant-913123"
         },
         {
+          "insect_id": "species-3979",
+          "normalized_plant": "フジ",
+          "count": 2,
+          "plant_names": "フジ",
+          "record_ids": "hostplant-903473 | hostplant-SMGHOSTAUDIT-20260712-Z1-0010"
+        },
+        {
           "insect_id": "species-21591",
           "normalized_plant": "モチノキ",
           "count": 2,
@@ -3838,6 +4146,13 @@
           "count": 2,
           "plant_names": "マルバアサガオ",
           "record_ids": "hostplant-907963 | hostplant-912648"
+        },
+        {
+          "insect_id": "species-0814",
+          "normalized_plant": "オヤマボクチ",
+          "count": 2,
+          "plant_names": "オヤマボクチ",
+          "record_ids": "hostplant-908017 | hostplant-912680"
         },
         {
           "insect_id": "species-2166",
@@ -4295,11 +4610,53 @@
           "record_ids": "record-7666 | hostplant-913218"
         },
         {
+          "insect_id": "species-22988",
+          "normalized_plant": "シナノキ",
+          "count": 2,
+          "plant_names": "シナノキ",
+          "record_ids": "hostplant-908644 | host-kamikiri-comprehensive-2c894b1caba82e"
+        },
+        {
+          "insect_id": "species-22995",
+          "normalized_plant": "ノブドウ",
+          "count": 2,
+          "plant_names": "ノブドウ",
+          "record_ids": "hostplant-909865 | host-kamikiri-comprehensive-4b349ee2a5ff2d"
+        },
+        {
           "insect_id": "species-22647",
           "normalized_plant": "カマツカ",
           "count": 2,
           "plant_names": "カマツカ",
           "record_ids": "hostplant-909883 | hostplant-kamikiri-audit-20260625-0110"
+        },
+        {
+          "insect_id": "species-H743",
+          "normalized_plant": "ヒメシロネ",
+          "count": 2,
+          "plant_names": "ヒメシロネ",
+          "record_ids": "hostplant-909975 | hostplant-hhb-audit-20260712-0052"
+        },
+        {
+          "insect_id": "species-H743",
+          "normalized_plant": "シロネ",
+          "count": 2,
+          "plant_names": "シロネ",
+          "record_ids": "hostplant-909976 | hostplant-hhb-audit-20260712-0051"
+        },
+        {
+          "insect_id": "species-22592",
+          "normalized_plant": "カラスザンショウ",
+          "count": 2,
+          "plant_names": "カラスザンショウ",
+          "record_ids": "hostplant-911962 | host-kamikiri-comprehensive-1ec2dd92fdd34f"
+        },
+        {
+          "insect_id": "species-22989",
+          "normalized_plant": "シナノキ",
+          "count": 2,
+          "plant_names": "シナノキ",
+          "record_ids": "hostplant-912531 | host-kamikiri-comprehensive-9f6b199fbc1775"
         },
         {
           "insect_id": "species-0841",
@@ -4328,6 +4685,48 @@
           "count": 2,
           "plant_names": "ムラサキモメンズル",
           "record_ids": "hostplant-913341 | hostplant-PDFAUDIT-20260710-0052"
+        },
+        {
+          "insect_id": "species-SC306",
+          "normalized_plant": "モリシマアカシア",
+          "count": 2,
+          "plant_names": "モリシマアカシア",
+          "record_ids": "hostplant-SC-N64-COMP-01 | hostplant-SC-N81-COMP-11"
+        },
+        {
+          "insect_id": "species-SC306",
+          "normalized_plant": "ヌマミズキ",
+          "count": 2,
+          "plant_names": "ヌマミズキ",
+          "record_ids": "hostplant-SC-N64-COMP-02 | hostplant-SC-N81-COMP-17"
+        },
+        {
+          "insect_id": "species-22988",
+          "normalized_plant": "オヒョウ",
+          "count": 2,
+          "plant_names": "オヒョウ",
+          "record_ids": "host-KDB-0153 | host-kamikiri-comprehensive-59f39131cf2e47"
+        },
+        {
+          "insect_id": "species-22988",
+          "normalized_plant": "トチノキ",
+          "count": 2,
+          "plant_names": "トチノキ",
+          "record_ids": "host-kamikiri-derived-base-192-220-0255 | host-kamikiri-comprehensive-90810160d5b0d3"
+        },
+        {
+          "insect_id": "species-22989",
+          "normalized_plant": "オヒョウ",
+          "count": 2,
+          "plant_names": "オヒョウ",
+          "record_ids": "host-kamikiri-comprehensive-c6b5899098973a | host-kamikiri-comprehensive-9690e0bb55c5af"
+        },
+        {
+          "insect_id": "species-22989",
+          "normalized_plant": "トチノキ",
+          "count": 2,
+          "plant_names": "トチノキ",
+          "record_ids": "host-kamikiri-comprehensive-774fe2641261cb | host-kamikiri-comprehensive-86e07cd6544fdb"
         }
       ],
       "duplicate_record_ids": [],
@@ -4341,18 +4740,172 @@
           "record_ids": "note-1000730 | note-H3-0283"
         },
         {
-          "insect_id": "species-6136",
+          "insect_id": "species-6021",
           "note_type": "出現時期",
-          "content": "3～5月",
+          "content": "8月下旬〜9月",
           "count": 2,
-          "record_ids": "note-1002106 | note-1004913"
+          "record_ids": "note-1002083 | note-KIRIGA-EMERGENCE-018"
         },
         {
-          "insect_id": "species-H699",
+          "insect_id": "species-6032",
           "note_type": "出現時期",
-          "content": "4-11月",
+          "content": "11〜12月",
           "count": 2,
-          "record_ids": "note-000557 | note-900001"
+          "record_ids": "note-1002090 | note-KIRIGA-EMERGENCE-029"
+        },
+        {
+          "insect_id": "species-H001",
+          "note_type": "出現時期",
+          "content": "5〜11月",
+          "count": 2,
+          "record_ids": "note-000250 | note-hamushi6-audit-20260712-0001"
+        },
+        {
+          "insect_id": "species-H011",
+          "note_type": "出現時期",
+          "content": "4〜9月",
+          "count": 2,
+          "record_ids": "note-000251 | note-hamushi6-audit-20260712-0013"
+        },
+        {
+          "insect_id": "species-H014",
+          "note_type": "出現時期",
+          "content": "3〜11月",
+          "count": 2,
+          "record_ids": "note-000252 | note-hamushi6-audit-20260712-0017"
+        },
+        {
+          "insect_id": "species-H024",
+          "note_type": "出現時期",
+          "content": "4〜9月",
+          "count": 2,
+          "record_ids": "note-000253 | note-hamushi6-audit-20260712-0034"
+        },
+        {
+          "insect_id": "species-H026",
+          "note_type": "出現時期",
+          "content": "3〜11月",
+          "count": 2,
+          "record_ids": "note-000254 | note-hamushi6-audit-20260712-0038"
+        },
+        {
+          "insect_id": "species-H028",
+          "note_type": "出現時期",
+          "content": "4〜10月",
+          "count": 2,
+          "record_ids": "note-000255 | note-hamushi6-audit-20260712-0042"
+        },
+        {
+          "insect_id": "species-H029",
+          "note_type": "出現時期",
+          "content": "3〜7月",
+          "count": 2,
+          "record_ids": "note-000256 | note-hamushi6-audit-20260712-0044"
+        },
+        {
+          "insect_id": "species-H032",
+          "note_type": "出現時期",
+          "content": "4〜11月",
+          "count": 2,
+          "record_ids": "note-000257 | note-hamushi6-audit-20260712-0049"
+        },
+        {
+          "insect_id": "species-H036",
+          "note_type": "出現時期",
+          "content": "5〜9月",
+          "count": 2,
+          "record_ids": "note-000258 | note-hamushi6-audit-20260712-0053"
+        },
+        {
+          "insect_id": "species-H040",
+          "note_type": "出現時期",
+          "content": "4〜10月",
+          "count": 2,
+          "record_ids": "note-000259 | note-hamushi6-audit-20260712-0059"
+        },
+        {
+          "insect_id": "species-H053",
+          "note_type": "出現時期",
+          "content": "4〜10月",
+          "count": 2,
+          "record_ids": "note-000265 | note-hamushi6-audit-20260712-0073"
+        },
+        {
+          "insect_id": "species-H069",
+          "note_type": "出現時期",
+          "content": "5〜10月",
+          "count": 2,
+          "record_ids": "note-000267 | note-hamushi6-audit-20260712-0087"
+        },
+        {
+          "insect_id": "species-H070",
+          "note_type": "出現時期",
+          "content": "4〜10月",
+          "count": 2,
+          "record_ids": "note-000268 | note-hamushi6-audit-20260712-0089"
+        },
+        {
+          "insect_id": "species-H074",
+          "note_type": "出現時期",
+          "content": "5〜11月",
+          "count": 2,
+          "record_ids": "note-000269 | note-hamushi6-audit-20260712-0094"
+        },
+        {
+          "insect_id": "species-H086",
+          "note_type": "出現時期",
+          "content": "4〜7月",
+          "count": 2,
+          "record_ids": "note-000271 | note-hamushi6-audit-20260712-0100"
+        },
+        {
+          "insect_id": "species-H089",
+          "note_type": "出現時期",
+          "content": "4〜8月",
+          "count": 2,
+          "record_ids": "note-000272 | note-hamushi6-audit-20260712-0103"
+        },
+        {
+          "insect_id": "species-H109",
+          "note_type": "出現時期",
+          "content": "4〜10月",
+          "count": 2,
+          "record_ids": "note-000273 | note-hamushi6-audit-20260712-0117"
+        },
+        {
+          "insect_id": "species-H113",
+          "note_type": "出現時期",
+          "content": "4〜7月",
+          "count": 2,
+          "record_ids": "note-000274 | note-hamushi6-audit-20260712-0124"
+        },
+        {
+          "insect_id": "species-H115",
+          "note_type": "出現時期",
+          "content": "4〜11月",
+          "count": 2,
+          "record_ids": "note-000276 | note-hamushi6-audit-20260712-0126"
+        },
+        {
+          "insect_id": "species-H121",
+          "note_type": "出現時期",
+          "content": "3〜11月",
+          "count": 2,
+          "record_ids": "note-000282 | note-hamushi6-audit-20260712-0131"
+        },
+        {
+          "insect_id": "species-H136",
+          "note_type": "出現時期",
+          "content": "4〜11月",
+          "count": 2,
+          "record_ids": "note-000297 | note-hamushi6-audit-20260712-0146"
+        },
+        {
+          "insect_id": "species-H137",
+          "note_type": "出現時期",
+          "content": "4〜10月",
+          "count": 2,
+          "record_ids": "note-000298 | note-hamushi6-audit-20260712-0147"
         },
         {
           "insect_id": "species-H703",
@@ -8780,6 +9333,51 @@
         "sample_record_id": "hostplant-PDFAUDIT-20260710-0218",
         "sample_insect_id": "species-1442",
         "reference": "日本産蛾類標準図鑑3"
+      },
+      {
+        "plant_name": "Artemisia laciniata",
+        "normalized": "Artemisia laciniata",
+        "normalized_would_show": "no",
+        "count": 1,
+        "sample_record_id": "hostplant-ZUKAN4-P086155-0012",
+        "sample_insect_id": "species-0352",
+        "reference": "日本産蛾類標準図鑑4"
+      },
+      {
+        "plant_name": "Artemisia maritima",
+        "normalized": "Artemisia maritima",
+        "normalized_would_show": "no",
+        "count": 1,
+        "sample_record_id": "hostplant-ZUKAN4-P086155-0013",
+        "sample_insect_id": "species-0353",
+        "reference": "日本産蛾類標準図鑑4"
+      },
+      {
+        "plant_name": "栽培豆類",
+        "normalized": "栽培豆類",
+        "normalized_would_show": "no",
+        "count": 1,
+        "sample_record_id": "hostplant-ZUKAN4-P086155-0144",
+        "sample_insect_id": "species-0419",
+        "reference": "日本産蛾類標準図鑑4"
+      },
+      {
+        "plant_name": "栽培ブドウ",
+        "normalized": "栽培ブドウ",
+        "normalized_would_show": "no",
+        "count": 1,
+        "sample_record_id": "hostplant-ZUKAN4-P086155-0444",
+        "sample_insect_id": "species-0601",
+        "reference": "日本産蛾類標準図鑑4"
+      },
+      {
+        "plant_name": "Glochidion ferdinandi",
+        "normalized": "Glochidion ferdinandi",
+        "normalized_would_show": "no",
+        "count": 1,
+        "sample_record_id": "hostplant-hamakiga1-foreign-20260712-215-01",
+        "sample_insect_id": "species-23154",
+        "reference": "日本のハマキガ1"
       }
     ],
     "family_conflicts": [],
@@ -8787,15 +9385,15 @@
       {
         "plant_family": "キキョウ科",
         "ends_with_ka": "yes",
-        "count": 33,
+        "count": 36,
         "sample_plant": "ツリガネニンジン",
         "sample_ylist_family": "",
-        "sample_record_id": "hostplant-903006"
+        "sample_record_id": "hostplant-902809"
       },
       {
         "plant_family": "カエデ科",
         "ends_with_ka": "yes",
-        "count": 11,
+        "count": 9,
         "sample_plant": "ヒナウチワ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-907745"
@@ -8803,18 +9401,18 @@
       {
         "plant_family": "アオキ科",
         "ends_with_ka": "yes",
-        "count": 7,
+        "count": 8,
         "sample_plant": "アオキ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-902324"
       },
       {
-        "plant_family": "キジカクシ科",
+        "plant_family": "ワスレグサ科",
         "ends_with_ka": "yes",
         "count": 7,
-        "sample_plant": "ジャノヒゲ",
+        "sample_plant": "ユウスゲ",
         "sample_ylist_family": "",
-        "sample_record_id": "hostplant-902363"
+        "sample_record_id": "hostplant-903048"
       },
       {
         "plant_family": "サルノコシカケ科",
@@ -8833,14 +9431,6 @@
         "sample_record_id": "hostplant-908161"
       },
       {
-        "plant_family": "アオギリ科",
-        "ends_with_ka": "yes",
-        "count": 5,
-        "sample_plant": "アオギリ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-908689"
-      },
-      {
         "plant_family": "多孔菌科",
         "ends_with_ka": "yes",
         "count": 4,
@@ -8857,12 +9447,28 @@
         "sample_record_id": "hostplant-000211"
       },
       {
+        "plant_family": "キジカクシ科",
+        "ends_with_ka": "yes",
+        "count": 4,
+        "sample_plant": "ジャノヒゲ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-902363"
+      },
+      {
         "plant_family": "ショウブ科",
         "ends_with_ka": "yes",
         "count": 4,
         "sample_plant": "ショウブ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-SCHIZAPHIS-20260710-0001"
+      },
+      {
+        "plant_family": "キンボウゲ科",
+        "ends_with_ka": "yes",
+        "count": 4,
+        "sample_plant": "ヤエヤマセンニンソウ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-kamikiri-audit-20260625-0008"
       },
       {
         "plant_family": "ツゲモドキ科",
@@ -8889,20 +9495,28 @@
         "sample_record_id": "hostplant-902782"
       },
       {
-        "plant_family": "ワスレグサ科",
-        "ends_with_ka": "yes",
-        "count": 3,
-        "sample_plant": "ユウスゲ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-903048"
-      },
-      {
         "plant_family": "タコノキ科",
         "ends_with_ka": "yes",
         "count": 3,
         "sample_plant": "タコノキ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-907638"
+      },
+      {
+        "plant_family": "センリョウ科",
+        "ends_with_ka": "yes",
+        "count": 3,
+        "sample_plant": "ヒトリシズカ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-ZUKAN4-P086155-0435"
+      },
+      {
+        "plant_family": "スギ科",
+        "ends_with_ka": "yes",
+        "count": 3,
+        "sample_plant": "コウヨウザン",
+        "sample_ylist_family": "",
+        "sample_record_id": "host-kamikiri-shared-9cc92cad021d"
       },
       {
         "plant_family": "シナノキ科",
@@ -8929,12 +9543,20 @@
         "sample_record_id": "hostplant-913347"
       },
       {
-        "plant_family": "キンボウゲ科",
+        "plant_family": "ヤマグルマ科",
         "ends_with_ka": "yes",
         "count": 2,
-        "sample_plant": "ヤエヤマセンニンソウ",
+        "sample_plant": "ヤマグルマ",
         "sample_ylist_family": "",
-        "sample_record_id": "hostplant-kamikiri-audit-20260625-0008"
+        "sample_record_id": "hostplant-kamikiri-audit-20260625-0001"
+      },
+      {
+        "plant_family": "ヌマミズキ科",
+        "ends_with_ka": "yes",
+        "count": 2,
+        "sample_plant": "ヌマミズキ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-SC-N64-COMP-02"
       },
       {
         "plant_family": "ミズオアイ科",
@@ -9017,22 +9639,6 @@
         "sample_record_id": "hostplant-907680"
       },
       {
-        "plant_family": "ミズキナ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "キンカ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-908127"
-      },
-      {
-        "plant_family": "イワデンダ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "シケシダ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-908264"
-      },
-      {
         "plant_family": "ドクウツギ科",
         "ends_with_ka": "yes",
         "count": 1,
@@ -9049,6 +9655,14 @@
         "sample_record_id": "hostplant-B1B6-0464"
       },
       {
+        "plant_family": "アオギリ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "サキシマスオウノキ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-908705"
+      },
+      {
         "plant_family": "ガガイモ科",
         "ends_with_ka": "yes",
         "count": 1,
@@ -9063,22 +9677,6 @@
         "sample_plant": "ウメパチソウ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-912668"
-      },
-      {
-        "plant_family": "以ヒヤシ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "カナリーヤシ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-912797"
-      },
-      {
-        "plant_family": "トウヒ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "とセイヨウネズ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-912935"
       },
       {
         "plant_family": "キゴケ科",
@@ -9113,20 +9711,60 @@
         "sample_record_id": "hostplant-H3-0342"
       },
       {
-        "plant_family": "ヤマグルマ科",
-        "ends_with_ka": "yes",
-        "count": 1,
-        "sample_plant": "ヤマグルマ",
-        "sample_ylist_family": "",
-        "sample_record_id": "hostplant-kamikiri-audit-20260625-0001"
-      },
-      {
         "plant_family": "フタバガキ科",
         "ends_with_ka": "yes",
         "count": 1,
         "sample_plant": "サラソウジュ",
         "sample_ylist_family": "",
         "sample_record_id": "hostplant-PDFAUDIT-20260710-0150"
+      },
+      {
+        "plant_family": "キンコウカ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "ネバリノギラン",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-913437"
+      },
+      {
+        "plant_family": "ハエドクソウ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "ハエドクソウ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-913461"
+      },
+      {
+        "plant_family": "イワウメ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "イワウメ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-913476"
+      },
+      {
+        "plant_family": "ミカンソウ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "Glochidion ferdinandi",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-hamakiga1-foreign-20260712-215-01"
+      },
+      {
+        "plant_family": "ハナシノブ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "シバザクラ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-btg-full-audit-20260712-0007"
+      },
+      {
+        "plant_family": "シュウカイドウ科",
+        "ends_with_ka": "yes",
+        "count": 1,
+        "sample_plant": "シュウカイドウ",
+        "sample_ylist_family": "",
+        "sample_record_id": "hostplant-SMGHOSTAUDIT-20260712-Z1-0005"
       }
     ],
     "non_plant_keys": [
@@ -9140,14 +9778,14 @@
       {
         "plant_name": "朽ち木",
         "kind": "substrate/resource",
-        "count": 7,
+        "count": 6,
         "sample_insect_id": "species-0288",
         "reference": "日本産蛾類標準図鑑3"
       },
       {
         "plant_name": "枯れ木",
         "kind": "substrate/resource",
-        "count": 4,
+        "count": 3,
         "sample_insect_id": "species-0288",
         "reference": "日本産蛾類標準図鑑3"
       },
@@ -9170,7 +9808,7 @@
         "kind": "substrate/resource",
         "count": 2,
         "sample_insect_id": "species-0910",
-        "reference": ""
+        "reference": "日本産蛾類標準図鑑3"
       },
       {
         "plant_name": "樹皮",
@@ -9212,6 +9850,13 @@
         "kind": "suspicious/ambiguous",
         "count": 1,
         "sample_insect_id": "species-0271",
+        "reference": "日本産蛾類標準図鑑3"
+      },
+      {
+        "plant_name": "朽ち木・枯れ木の樹皮",
+        "kind": "substrate/resource",
+        "count": 1,
+        "sample_insect_id": "species-0294",
         "reference": "日本産蛾類標準図鑑3"
       },
       {
@@ -9282,34 +9927,6 @@
         "kind": "substrate/resource",
         "count": 1,
         "sample_insect_id": "species-0947",
-        "reference": "日本産蛾類標準図鑑3"
-      },
-      {
-        "plant_name": "に多く",
-        "kind": "suspicious/ambiguous",
-        "count": 1,
-        "sample_insect_id": "species-1065",
-        "reference": "日本産蛾類標準図鑑3"
-      },
-      {
-        "plant_name": "には少ない",
-        "kind": "suspicious/ambiguous",
-        "count": 1,
-        "sample_insect_id": "species-1065",
-        "reference": "日本産蛾類標準図鑑3"
-      },
-      {
-        "plant_name": "であり",
-        "kind": "suspicious/ambiguous",
-        "count": 1,
-        "sample_insect_id": "species-1251",
-        "reference": "日本産蛾類標準図鑑3"
-      },
-      {
-        "plant_name": "とセイヨウネズ",
-        "kind": "suspicious/ambiguous",
-        "count": 1,
-        "sample_insect_id": "species-1282",
         "reference": "日本産蛾類標準図鑑3"
       },
       {

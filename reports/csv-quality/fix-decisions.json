@@ -26,7 +26,9 @@
     "ユウスゲ": "ワスレグサ科",
     "サクラ": "バラ科",
     "アカシア": "マメ科",
-    "モッコク": "モッコク科"
+    "モッコク": "モッコク科",
+    "ギボウシ": "クサスギカズラ科",
+    "ギボウシ類": "クサスギカズラ科"
   },
   "fillBlankFamily": [
     "アオキ",
@@ -52,7 +54,9 @@
     "テリハハマボウ": "YList検索からモンテンボク pass=6524（Malvaceae）へ対応。原典では隣接するテリハボクの科名が誤結合。",
     "ハンノキ属": "YList pass=5073およびPOWO Alnus japonica（Betulaceae）。",
     "ヒナウチワカエデ": "YList pass=5163およびPOWO Acer tenuifolium（Sapindaceae）。",
-    "ユウスゲ": "YList pass=6840およびPOWO Hemerocallis citrina var. vespertina（Asphodelaceae）。"
+    "ユウスゲ": "YList pass=6840およびPOWO Hemerocallis citrina var. vespertina（Asphodelaceae）。",
+    "ギボウシ": "本サイトのYList-liteに収録されたギボウシ属ミズギボウシ（Hosta longissima）と日本の野生植物のギボウシ属各種はいずれもクサスギカズラ科（Asparagaceae）。総称も同じ科名へ統一。",
+    "ギボウシ類": "ギボウシ属（Hosta）の総称。本サイトのYList-liteと日本の野生植物で採用済みのクサスギカズラ科（Asparagaceae）へ統一。"
   },
   "excludeFamilyFix": []
 }

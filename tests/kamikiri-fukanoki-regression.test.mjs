@@ -417,7 +417,6 @@ test('curated long OCR plant blocks keep source-supported longhorn rows', () => 
     ['species-22945', 'イスノキ'],
     ['species-22946', 'イスノキ'],
     ['species-22780', 'イスノキ'],
-    ['species-22767', 'イスノキ'],
     ['species-22919', 'イスノキ'],
     ['species-21914', 'カラスザンショウ'],
     ['species-22085', 'カラスザンショウ'],
@@ -433,6 +432,8 @@ test('curated long OCR plant blocks keep source-supported longhorn rows', () => 
   for (const [insectId, plantName] of truePairs) {
     assert.equal(hasKamikiriPair(insectId, plantName), true, `${insectId} should be linked to ${plantName}`);
   }
+  assert.equal(hasKamikiriPair('species-22767', 'イスノキ'), false, '徳之島亜種へ基亜種のイスノキを継承しない');
+  assert.equal(hasKamikiriPair('species-22767', 'イヌツゲ'), true, '徳之島亜種は原典記載のイヌツゲを保持する');
 });
 
 test('curated long OCR plant blocks remove adjacent-block spillovers and wrong fuzzy matches', () => {

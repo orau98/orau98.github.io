@@ -30,7 +30,7 @@ import {
   isValidPlantName,
   SUSPICIOUS_PLANT_NAME_SET,
 } from './lib/dataLiteBuilders.mjs';
-import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
+import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,6 +65,10 @@ const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plan
 const KAMIKIRI_AUDIT_PATH = path.join(
   __dirname,
   '../data/source_audits/japanese-longhorn-beetles-2007.csv',
+);
+const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json',
 );
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
@@ -2794,7 +2798,10 @@ async function generateMetaPages() {
     const insectPageById = new Map(
       insectPageQueue.map(({ insect, type }) => [insect.id, { insect, type }]),
     );
-    const mergedTaxonRedirects = loadKamikiriMergedTaxonRedirects(KAMIKIRI_AUDIT_PATH);
+    const mergedTaxonRedirects = loadMergedTaxonRedirects({
+      kamikiriPath: KAMIKIRI_AUDIT_PATH,
+      leafBeetlePath: LEAF_BEETLE_CANONICAL_AUDIT_PATH,
+    });
     for (const redirect of mergedTaxonRedirects) {
       const canonical = insectPageById.get(redirect.canonicalId);
       if (!canonical) {
@@ -2821,13 +2828,18 @@ async function generateMetaPages() {
         redirectKind: 'taxonomy-merge',
       }));
 
+      const canonicalRouteNames = new Set([
+        canonical.insect.routeName,
+        canonical.insect.name,
+        canonical.insect.japaneseName,
+      ].map((value) => String(value || '').trim()).filter(Boolean));
       for (const legacyName of new Set([
         redirect.legacyDisplayName,
         redirect.legacyRouteName,
         redirect.legacyJapaneseName,
         redirect.duplicateJapaneseName,
         redirect.sourceJapaneseName,
-      ].filter(Boolean))) {
+      ].filter((name) => name && !canonicalRouteNames.has(String(name).trim())))) {
         queueLegacyRedirect(
           `/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
           targetPath,

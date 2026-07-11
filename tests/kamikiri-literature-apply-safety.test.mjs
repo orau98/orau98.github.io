@@ -77,6 +77,41 @@ test('統合済み旧IDに新しい文献行が付いたら削除せず停止す
   }
 });
 
+test('共有台帳のrecord_idが壊れていたら正規化CSVを一切変更しない', () => {
+  const temporaryAudit = path.join(
+    os.tmpdir(),
+    `kamikiri-invalid-shared-audit-${process.pid}.csv`,
+  );
+  const dataRoot = createTemporaryDataRoot();
+  const source = fs.readFileSync(
+    'data/source_audits/japanese-longhorn-beetles-2007-shared-host-index.csv',
+    'utf8',
+  );
+  fs.writeFileSync(
+    temporaryAudit,
+    source.replace(/host-kamikiri-shared-[0-9a-f]{12}/, 'host-kamikiri-shared-invalid'),
+    'utf8',
+  );
+  const before = hashes(dataRoot);
+  try {
+    const result = spawnSync(process.execPath, ['scripts/apply-kamikiri-literature-audit.mjs'], {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        KAMIKIRI_SHARED_HOST_INDEX_AUDIT_PATH: temporaryAudit,
+        KAMIKIRI_LITERATURE_DATA_ROOT: dataRoot,
+      },
+      encoding: 'utf8',
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /invalid proposed record_id/);
+    assert.deepEqual(hashes(dataRoot), before);
+  } finally {
+    fs.rmSync(temporaryAudit, { force: true });
+    fs.rmSync(dataRoot, { recursive: true, force: true });
+  }
+});
+
 test('監査適用は再実行しても同じCSVを生成する', () => {
   const dataRoot = createTemporaryDataRoot();
   try {

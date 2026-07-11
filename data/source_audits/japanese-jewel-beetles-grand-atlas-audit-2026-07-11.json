@@ -1,0 +1,57 @@
+{
+  "source": {
+    "title": "日本産タマムシ大図鑑",
+    "pdf_file": "日本産タマムシ大図鑑.pdf",
+    "pdf_sha256": "7893e51f670e7a42e6d3df3bb5b224f7ef547112e6e7cdb1954b1f254a673415",
+    "pdf_pages": 104,
+    "ocr_file": "日本産タマムシ大図鑑.txt",
+    "ocr_sha256": "e299ff950c8c84fc1f297971f2053a38206c27dbbfcabf48486118a081d80b40",
+    "ocr_role": "candidate_location_only"
+  },
+  "audit": {
+    "reviewed_on": "2026-07-11",
+    "baseline_commit": "40ebb448c38e545170b24afca7fbd3a58dc95c31",
+    "method": "PDF原本画像を種解説単位で目視確認し、OCR候補を原本へ照合",
+    "pdf_to_printed_page_rule": "printed_left = 2 * pdf_page - 2",
+    "preexisting_note_taxa_reviewed": 211,
+    "note_taxa_after_recovery": 222,
+    "numbered_species_accounts": 219,
+    "numbered_accounts_missing_before_audit": 5,
+    "supplementary_accounts_recovered": 1,
+    "host_unknown_taxa": 50,
+    "host_unknown_no_confirmed_host": 22,
+    "adult_association_only_host_unknown": 25,
+    "confirmed_adult_association_host_unknown": 3,
+    "integrity_action_rows": 129,
+    "species_10007_misassigned_host_rows": 69,
+    "duplicate_note_groups": 12,
+    "source_scope_groups": 34,
+    "source_scope_species_level_shared": 32,
+    "source_scope_locality_identifiable_subspecies": 2,
+    "source_scope_target_rows_absent_fail_closed": 23,
+    "source_scope_source_row_only_no_copy_needed": 11,
+    "final_public_note_rows_scanned": 400,
+    "final_public_note_policy_reviewed_on": "2026-07-12",
+    "final_public_note_policy_replacements": 23,
+    "final_inference_rows_cleaned": 6,
+    "final_eponym_rows_cleaned": 14,
+    "final_synonym_judgment_rows_cleaned": 3
+  },
+  "files": {
+    "integrity_actions": "japanese-jewel-beetles-grand-atlas-integrity-2026-07-11.csv",
+    "integrity_actions_sha256": "eed4c28862703b48c0f28fb8f5e21a11f3c037e4a86c0f69185d9aea3d19ef9a",
+    "account_pages": "japanese-jewel-beetles-grand-atlas-pages-2026-07-11.csv",
+    "host_unknown_review": "japanese-jewel-beetles-grand-atlas-host-unknown-2026-07-11.csv",
+    "source_scope_review": "japanese-jewel-beetles-grand-atlas-source-scope-2026-07-11.csv",
+    "species_10007_misassignment": "japanese-jewel-beetles-grand-atlas-species10007-misassignment-2026-07-11.csv",
+    "duplicate_note_review": "japanese-jewel-beetles-grand-atlas-duplicate-notes-2026-07-11.csv"
+  },
+  "guardrails": [
+    "寄主植物欄が不明の分類群では、植物上の採集・飛来だけを幼虫寄主へ昇格しない",
+    "ヤエヤマムナビロタマムシのタイワンウオクサギは成虫後食として登録し、寄主不明を維持する",
+    "リュウキュウナガタマムシとコーヨーナガタマムシの植物関係は成虫採集植物として登録し、幼虫寄主へ昇格しない",
+    "亜種分割後の現行insect_id行がない23群は自動複製せず、将来の分類群収載まで保留する",
+    "地域文脈で亜種を一意にできない記録は共有しない",
+    "著者の分類解釈、移動要因の仮説、献名説明は公開生態情報から除き、客観的な時期・分布・食性・形態だけを掲載する"
+  ]
+}

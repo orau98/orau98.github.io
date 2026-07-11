@@ -1,0 +1,3369 @@
+{
+  "audit_version": "2026-07-12-full-scan",
+  "reference": "日本産蛾類標準図鑑1",
+  "note_types": [
+    "生態情報",
+    "出現時期"
+  ],
+  "reviewed_on": "2026-07-12",
+  "source_pdf": {
+    "filename": "日本産蛾類標準図鑑1 2.pdf",
+    "sha256": "35e3a46b1c91a6f16a6aff7522be708ed8a94ccfc8dc39d23c3d3e9171cfd0d9",
+    "page_count": 115,
+    "verification": "All accepted text was checked against the original PDF page image. OCR was used only to locate and transcribe candidates."
+  },
+  "scope": {
+    "reviewed_reference_rows": 1485,
+    "prior_ledger_entries_excluded": 31,
+    "candidate_entries": 120,
+    "expected_entries": 120,
+    "expected_actions": {
+      "replace": 119,
+      "delete": 1,
+      "hold": 0
+    },
+    "candidate_reason_counts": {
+      "semantic_breakdown": 90,
+      "symbol_corruption": 9,
+      "field_bleed": 40,
+      "page_bleed": 1,
+      "broken_marker": 9
+    },
+    "irrecoverable_entries": [
+      {
+        "record_id": "note-1001307",
+        "reason": "The complete imported text belongs to a different species account; no target-species ecology can be recovered from this row."
+      }
+    ],
+    "hold_entries": [],
+    "content_policy": {
+      "public": "Objective ecology, phenology, distribution, abundance and documented observations explicitly stated in the source.",
+      "separate_or_exclude": [
+        "host-field text",
+        "editorial or cross-reference guidance",
+        "subjective or collector-oriented prose",
+        "conjectural interpretation not stated as fact"
+      ],
+      "non_corruption_rule": "Inference and relative-frequency statements were not classified as corruption on those grounds alone."
+    }
+  },
+  "entries": [
+    {
+      "audit_id": "jmsg1-full-001",
+      "record_id": "note-1003417",
+      "insect_id": "species-3479",
+      "japanese_name": "フタテントガリバ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では関東地方。中部地方の重高山部から高山金に多産するが、それより低い山地でも流する。年1化で7～8月に相現する",
+      "approved_content": "本州では関東地方、中部地方の亜高山帯から高山帯に多産するが、それより低い山地にも産する。年1化で7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "120",
+      "source_location": {
+        "pdf_pages": [
+          6
+        ],
+        "printed_pages": [
+          120
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-002",
+      "record_id": "note-1002148",
+      "insect_id": "species-3561",
+      "japanese_name": "キスジシロエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "5～6月と8～9月に出現する。超久島では3月と8月に得られている。厳種同様日本海備ではブナ番にも生息する",
+      "approved_content": "5〜6月と8〜9月に出現する。屋久島では3月と8月に得られている。日本海側ではブナ帯にも生息する。",
+      "expected_page": "",
+      "approved_page": "137",
+      "source_location": {
+        "pdf_pages": [
+          14
+        ],
+        "printed_pages": [
+          137
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-003",
+      "record_id": "note-1002160",
+      "insect_id": "species-3581",
+      "japanese_name": "シロミャクオエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "産地が限られているため、N年通は明確でないが、地域によって3月から9月まで採集報告がある。鹿児島県志布志市では、 5月上旬と6月上旬に得られた幼虫から、それぞれ5月下旬と7月中旬に成虫が羽化している。",
+      "approved_content": "地域によって3〜9月まで採集報告がある。鹿児島県志布志市では、5月上旬と6月上旬に得られた幼虫から、それぞれ5月下旬と7月中旬に成虫が羽化している。",
+      "expected_page": "",
+      "approved_page": "141",
+      "source_location": {
+        "pdf_pages": [
+          16
+        ],
+        "printed_pages": [
+          141
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-004",
+      "record_id": "note-1002165",
+      "insect_id": "species-3594",
+      "japanese_name": "オオツカハグルマエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "6月と8月に得られているが、既知記録は少なく周年経通は不明である",
+      "approved_content": "6月と8月に得られている。",
+      "expected_page": "",
+      "approved_page": "143",
+      "source_location": {
+        "pdf_pages": [
+          17
+        ],
+        "printed_pages": [
+          143
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-005",
+      "record_id": "note-1002169",
+      "insect_id": "species-3598",
+      "japanese_name": "オオハグルマエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年経道は不明だが、沖縄島で10月に得られた幼虫がり］ 月に羽化している。西表島では2、3月、5月、8月、10月、12月に成虫が集されている",
+      "approved_content": "沖縄島で10月に得られた幼虫が11月に羽化している。西表島では2月、3月、5月、8月、10月、12月に成虫が採集されている。",
+      "expected_page": "",
+      "approved_page": "144",
+      "source_location": {
+        "pdf_pages": [
+          18
+        ],
+        "printed_pages": [
+          144
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-006",
+      "record_id": "note-1003451",
+      "insect_id": "species-3608",
+      "japanese_name": "ナガオエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "4回では5～6月と7～8月に出現する。［寄主植物］未知、中国ではエンジュ（マメ科）の苦虫として知られている",
+      "approved_content": "韓国では5〜6月と7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "146",
+      "source_location": {
+        "pdf_pages": [
+          19
+        ],
+        "printed_pages": [
+          146
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-007",
+      "record_id": "note-1002176",
+      "insect_id": "species-3610",
+      "japanese_name": "オキナワオエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "沖縄島では、5月上旬、7月上旬、8月上旬。1月上旬に得られた老熱幼虫からそれぞれ同月下旬に成虫が現化している。沖縄島でも少ないが、屋久島からは1972年に得られた1名しか知られていない",
+      "approved_content": "沖縄島では5月上旬、7月上旬、8月上旬、11月上旬に得られた老熟幼虫から、それぞれ同月下旬に成虫が羽化している。屋久島では1972年に雌1頭が得られている。",
+      "expected_page": "",
+      "approved_page": "146",
+      "source_location": {
+        "pdf_pages": [
+          19
+        ],
+        "printed_pages": [
+          146
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-008",
+      "record_id": "note-1002190",
+      "insect_id": "species-3633",
+      "japanese_name": "ダイセツタカネエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "昆布性でハイマツ帝の風衝地に生息は早より活発に飛増する。雪解けの早い風街地では6月後半から出現し、発生の遅い所では8月上旬まで見られる。野外調査と育結果から、卵からは虫まで足掛け3年を要すると判断される",
+      "approved_content": "昼飛性でハイマツ帯の風衝地に生息し、雄は雌より活発に飛翔する。雪解けの早い風衝地では6月後半から出現し、発生の遅い場所では8月上旬まで見られる。",
+      "expected_page": "",
+      "approved_page": "150",
+      "source_location": {
+        "pdf_pages": [
+          21
+        ],
+        "printed_pages": [
+          150
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-009",
+      "record_id": "note-1001285",
+      "insect_id": "species-3657",
+      "japanese_name": "コケエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化で7～8月に出現し、幼虫で越冬。北海道では低地にも生息するが、本州以南では主として1000m以上の山地に産する。［寄主植物］パンダイキノリ、コフキイバラキノリ（以上サルオガセ科）。ヨーロッパで地衣類につくことは古くから知られている。",
+      "approved_content": "年1化で7〜8月に出現し、幼虫で越冬する。北海道では低地にも生息するが、本州以南では主として標高1000m以上の山地に産する。",
+      "expected_page": "",
+      "approved_page": "155",
+      "source_location": {
+        "pdf_pages": [
+          23
+        ],
+        "printed_pages": [
+          155
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-010",
+      "record_id": "note-1002213",
+      "insect_id": "species-3679",
+      "japanese_name": "リュウキュウフトスジエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年経通は不明であるが、西表島では年間にわたって各月の採集記録があり、年に何回か発生を繰り返している。それぞれの環境に適応するように発生期を調整しているものと思われる",
+      "approved_content": "西表島では1〜11月の各月に採集されており、年に何回か発生を繰り返す。屋久島以北では四国の太平洋沿岸で8月下旬〜10月上旬に見られ、鹿児島県と三重県でも採集されている。",
+      "expected_page": "",
+      "approved_page": "160",
+      "source_location": {
+        "pdf_pages": [
+          26
+        ],
+        "printed_pages": [
+          160
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-011",
+      "record_id": "note-1002214",
+      "insect_id": "species-3680",
+      "japanese_name": "フトスジエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "地域によって異なるが、年に2～3化するものと思われる。現地では普通種である。［寄主植物］センダン（センダン科）、同種に固有。",
+      "approved_content": "暖地では普通種である。",
+      "expected_page": "",
+      "approved_page": "160",
+      "source_location": {
+        "pdf_pages": [
+          26
+        ],
+        "printed_pages": [
+          160
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-012",
+      "record_id": "note-1001292",
+      "insect_id": "species-3740",
+      "japanese_name": "コツマキウスグロエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化で78月に出現する、幼感冬と確定している。［寄主植物］リョウメンシダ（オシダ科）、各種のシグ物につくものと思われる",
+      "approved_content": "年1化で7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "173",
+      "source_location": {
+        "pdf_pages": [
+          32
+        ],
+        "printed_pages": [
+          173
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-013",
+      "record_id": "note-1001294",
+      "insect_id": "species-3748",
+      "japanese_name": "トギレフユエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "早の気年で、北海道では5月上～14、関水地方の平地では3月下旬～4月上旬、山地では4月中旬～5月上旬に取する。保行動は日没後早い時間に行われる。地盤は麺。",
+      "approved_content": "早春の蛾で、年1化する。北海道では5月上旬〜中旬、関東地方の平地では3月下旬〜4月上旬、山地では4月中旬〜5月上旬に出現する。配偶行動は日没後早い時間に行われ、蛹で越冬する。",
+      "expected_page": "",
+      "approved_page": "174-175",
+      "source_location": {
+        "pdf_pages": [
+          33
+        ],
+        "printed_pages": [
+          174,
+          175
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-014",
+      "record_id": "note-1003520",
+      "insect_id": "species-3754",
+      "japanese_name": "シモフリトゲエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "晩～早春の親関東地方の平地～低山番では12月下旬から3月上旬まで見られる。北海道や本州中部地方の山地では4月中旬～5月中旬に出現する。でき、配開行動は日没後かなり時間を経過してから起こり、尾からフェロモンを突き出してコーリングを行う",
+      "approved_content": "晩冬〜早春の蛾で、関東地方の平地〜低山帯では12月下旬〜3月上旬、北海道や本州中部地方の山地では4月中旬〜5月中旬に出現する。蛹で越冬する。配偶行動は日没後かなり時間を経過してから起こり、尾端からフェロモン腺を突出してコーリングを行う。交尾ペアは樹幹の上方に移動する傾向がある。",
+      "expected_page": "",
+      "approved_page": "176",
+      "source_location": {
+        "pdf_pages": [
+          34
+        ],
+        "printed_pages": [
+          176
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-015",
+      "record_id": "note-1001607",
+      "insect_id": "species-3756",
+      "japanese_name": "シロトゲエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "早春の規平地・低緯度地域では2月下旬～3月中旬に、山地や高神度地域では4月中旬～5月上旬に出現する。婚越冬、配行動は日没後違い時間に起こり、条件がよければ午前2時頃まで続く、 ［寄主植物］は食性で、すでに10時以上の広美物から幼虫が相られている。",
+      "approved_content": "早春の蛾で、平地・低緯度地域では2月下旬〜3月中旬、山地や高緯度地域では4月中旬〜5月上旬に出現する。蛹で越冬する。配偶行動は日没後遅い時間に起こり、条件がよければ午前2時頃まで続く。",
+      "expected_page": "",
+      "approved_page": "176",
+      "source_location": {
+        "pdf_pages": [
+          34
+        ],
+        "printed_pages": [
+          176
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-016",
+      "record_id": "note-1003526",
+      "insect_id": "species-3778",
+      "japanese_name": "ニッコウエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "春の銀で、地域によっては3月からあらわれ、5月頃まで見られる。蛹で越冬、各地に普通に産する。［寄主植物］ミズナラ",
+      "approved_content": "春の蛾で、地域によっては3月からあらわれ、5月頃まで見られる。蛹で越冬し、各地に普通に産する。",
+      "expected_page": "",
+      "approved_page": "181",
+      "source_location": {
+        "pdf_pages": [
+          36
+        ],
+        "printed_pages": [
+          181
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-017",
+      "record_id": "note-1002277",
+      "insect_id": "species-3780",
+      "japanese_name": "カバエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "晩秋から初の観10～11月に出現し、卵で越冬する。［寄主植物］会性で10以上の広葉が報告されている",
+      "approved_content": "晩秋から初冬の蛾で、10〜11月に出現し、卵で越冬する。",
+      "expected_page": "",
+      "approved_page": "182",
+      "source_location": {
+        "pdf_pages": [
+          37
+        ],
+        "printed_pages": [
+          182
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-018",
+      "record_id": "note-1002283",
+      "insect_id": "species-3785",
+      "japanese_name": "ナンカイキイロエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "2～4月に密見するなの観賞種より早い時期からあらわれる塩肉がある。●生物）ハマセンタン（ミカン科）、タブノキ（クスノキ科）。アカメガンワ（トウダイグサ科）. 他の広島物でも開されており広食性",
+      "approved_content": "2〜4月に出現し、他の春季蛾より早い時期からあらわれる傾向がある。",
+      "expected_page": "",
+      "approved_page": "183",
+      "source_location": {
+        "pdf_pages": [
+          37
+        ],
+        "printed_pages": [
+          183
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-019",
+      "record_id": "note-1003529",
+      "insect_id": "species-3787",
+      "japanese_name": "ホソバトガリエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "前種と同様に3月下旬から4月にかけてあらわれる。蛹で越冬し、普通種であるが、♀が灯火に飛来することは少ない。［寄主植物］多食性で多くの広葉樹から幼虫が得られている。",
+      "approved_content": "3月下旬〜4月に出現する春の蛾で、蛹で越冬する。普通種であるが、雌が灯火に飛来することは少ない。",
+      "expected_page": "",
+      "approved_page": "183",
+      "source_location": {
+        "pdf_pages": [
+          37
+        ],
+        "printed_pages": [
+          183
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-020",
+      "record_id": "note-1003535",
+      "insect_id": "species-3809",
+      "japanese_name": "オオマエキトビエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "地域によって年3～1化を大島や沖構島では、3月から出現している。前間より暖かい地域に普通に産する",
+      "approved_content": "地域によって年3〜4化する。奄美大島や沖縄島では3月から出現し、より暖かい地域に普通に産する。",
+      "expected_page": "",
+      "approved_page": "187",
+      "source_location": {
+        "pdf_pages": [
+          39
+        ],
+        "printed_pages": [
+          187
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-021",
+      "record_id": "note-1003537",
+      "insect_id": "species-3811",
+      "japanese_name": "ヒメキリバエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "8月上旬から9月上に出現する。あまり多い種ではない。［寄主植物］未知",
+      "approved_content": "8月上旬〜9月上旬に出現する。個体数は多くない。",
+      "expected_page": "",
+      "approved_page": "187",
+      "source_location": {
+        "pdf_pages": [
+          39
+        ],
+        "printed_pages": [
+          187
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-022",
+      "record_id": "note-1002298",
+      "insect_id": "species-3815",
+      "japanese_name": "エグリヅマエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州中部地方では4～7月と8～10月に出現するが、九州では4～12月に断続的に見られるので、年に3～4化するものと思われる。幼虫または蛹で超冬、各地に普通に産する",
+      "approved_content": "本州中部地方では4〜7月と8〜10月、九州では4〜12月に断続的に見られる。幼虫または蛹で越冬し、各地に普通に産する。",
+      "expected_page": "",
+      "approved_page": "188",
+      "source_location": {
+        "pdf_pages": [
+          40
+        ],
+        "printed_pages": [
+          188
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-023",
+      "record_id": "note-1002304",
+      "insect_id": "species-3826",
+      "japanese_name": "ミカンコエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "沖縄島では、1月から11月まで幼由が観察されており、年に何回か発生するものと思われる。沖縄島では、柑橘類（ミカン科） や熱果のレイシ（ムクロジ科）。ユーカリ類（フトモモ科）の害虫として報告されている",
+      "approved_content": "沖縄島では1〜11月に幼虫が観察されている。",
+      "expected_page": "",
+      "approved_page": "190",
+      "source_location": {
+        "pdf_pages": [
+          41
+        ],
+        "printed_pages": [
+          190
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-024",
+      "record_id": "note-1003542",
+      "insect_id": "species-3827",
+      "japanese_name": "キマダラツマキリエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化で7～8月に出現する。［寄主植物］ツルウメモドキ（ニシキギ科）。",
+      "approved_content": "年1化で7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "190-191",
+      "source_location": {
+        "pdf_pages": [
+          41
+        ],
+        "printed_pages": [
+          190,
+          191
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-025",
+      "record_id": "note-1002327",
+      "insect_id": "species-3860",
+      "japanese_name": "ウラモントガリエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年11で5～6月に出現する。産地は北海道の東部に限られており、生息密度も高い種ではない",
+      "approved_content": "年1化で5〜6月に出現する。北海道東部に産する。",
+      "expected_page": "",
+      "approved_page": "197",
+      "source_location": {
+        "pdf_pages": [
+          44
+        ],
+        "printed_pages": [
+          197
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-026",
+      "record_id": "note-1003560",
+      "insect_id": "species-3862",
+      "japanese_name": "ウスアカオビエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "対馬では、年11で3月下旬に出現し、比較的多く採集されている。台湾では2000m以上の高地番に産し、3月下旬から6月上何に揺れている。［寄主植物］未知",
+      "approved_content": "対馬では年1化で3月下旬に出現し、比較的多く採集されている。台湾では標高2000m以上の高地帯に産し、3月下旬〜6月上旬に採れている。",
+      "expected_page": "",
+      "approved_page": "197",
+      "source_location": {
+        "pdf_pages": [
+          44
+        ],
+        "printed_pages": [
+          197
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-027",
+      "record_id": "note-1003562",
+      "insect_id": "species-3866",
+      "japanese_name": "ヘリグロキエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "周年程通は不明だが、地域によって年に2～3化と推定される。三重県大宮町で12月31日に得た幼虫を飼育し、翌年2月1日に羽化させたという報告があり、本州で幼虫の可能性がある",
+      "approved_content": "三重県大宮町で12月31日に得られた幼虫を飼育し、翌年2月1日に羽化させた報告がある。",
+      "expected_page": "",
+      "approved_page": "198",
+      "source_location": {
+        "pdf_pages": [
+          45
+        ],
+        "printed_pages": [
+          198
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-028",
+      "record_id": "note-1001307",
+      "insect_id": "species-3888",
+      "japanese_name": "ハスオビトガリシャク",
+      "note_type": "生態情報",
+      "action": "delete",
+      "expected_content": "本州では、紀伊半島南部、九州では鹿児島県、熊本県で得られている。南西諸島では3～12月まで出現しており、年間を通して連続的に発生していると思われる。［荷",
+      "approved_content": "",
+      "expected_page": "",
+      "approved_page": "",
+      "intermediate_content": "本州では紀伊半島南部、九州では鹿児島県と熊本県で得られている。南西諸島では3〜12月に出現する。",
+      "intermediate_page": "203-204",
+      "source_location": {
+        "pdf_pages": [
+          47,
+          48
+        ],
+        "printed_pages": [
+          203,
+          204
+        ],
+        "columns": [
+          3,
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Delete the entire row. The target account is ハスオビトガリシャク on printed page 203, but the imported content belongs to the following Eumelea biflavata account on printed page 204; repairing the prose would preserve a cross-species misassignment."
+    },
+    {
+      "audit_id": "jmsg1-full-029",
+      "record_id": "note-1003570",
+      "insect_id": "species-3900",
+      "japanese_name": "ウスアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "北海道では道南に産し、本州から九州の各地では無山地がら重高山番まで広く分布する。関東施方開辺では、4月下旬から9月下旬までの間に2～3回出現する",
+      "approved_content": "北海道では道南に産し、本州から九州では低山地から亜高山帯まで広く分布する。関東地方周辺では4月下旬〜9月下旬に2〜3回出現し、蛹で越冬する。",
+      "expected_page": "",
+      "approved_page": "206",
+      "source_location": {
+        "pdf_pages": [
+          49
+        ],
+        "printed_pages": [
+          206
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-030",
+      "record_id": "note-1001309",
+      "insect_id": "species-3902",
+      "japanese_name": "アシブトチズモンアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "八重山諸島では1～12月まで採れており、年間を通じて継続的に発生していると思われる。［寄主植物］オキナワテイカカズラ（キョウチクトウ科）。",
+      "approved_content": "八重山諸島では1〜12月に採れている。",
+      "expected_page": "",
+      "approved_page": "206-207",
+      "source_location": {
+        "pdf_pages": [
+          49
+        ],
+        "printed_pages": [
+          206,
+          207
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-031",
+      "record_id": "note-1001654",
+      "insect_id": "species-3919",
+      "japanese_name": "シロフアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "6～7月と9月に出現する。［寄主植物］ネコヤナギ、コリヤナギ、カワヤナギ（以上ヤナギ）。",
+      "approved_content": "6〜7月と9月に出現する。",
+      "expected_page": "",
+      "approved_page": "209",
+      "source_location": {
+        "pdf_pages": [
+          50
+        ],
+        "printed_pages": [
+          209
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-032",
+      "record_id": "note-1002349",
+      "insect_id": "species-3937",
+      "japanese_name": "ズグロツバメアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方開辺では低山地から山地まで広く産し、6～7月に出現する",
+      "approved_content": "関東地方周辺では低山地から山地まで広く産し、6〜7月に出現する。",
+      "expected_page": "",
+      "approved_page": "215",
+      "source_location": {
+        "pdf_pages": [
+          53
+        ],
+        "printed_pages": [
+          215
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-033",
+      "record_id": "note-1002351",
+      "insect_id": "species-3938",
+      "japanese_name": "ヒロバツバメアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化。年1化関東地方閣辺では平地から低山地に産し",
+      "approved_content": "年1化で、関東地方周辺では平地から低山地に産し、6〜7月に出現する。個体数は多くない。",
+      "expected_page": "",
+      "approved_page": "215",
+      "source_location": {
+        "pdf_pages": [
+          53
+        ],
+        "printed_pages": [
+          215
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-034",
+      "record_id": "note-1002356",
+      "insect_id": "species-3945",
+      "japanese_name": "ハラアカヒメアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方以西に産するが、非常にまれな種である。5～6月と7～8月に揺れているが、くわしい出現状況は不明。［寄主植物］」未知",
+      "approved_content": "関東地方以西に産する非常にまれな種で、5〜6月と7〜8月に採れている。",
+      "expected_page": "",
+      "approved_page": "217",
+      "source_location": {
+        "pdf_pages": [
+          54
+        ],
+        "printed_pages": [
+          217
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-035",
+      "record_id": "note-1001658",
+      "insect_id": "species-3959",
+      "japanese_name": "ウラジロアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "2～10月下まで持られており、年間を通して数回出現すると思われる。［寄主植物］ハカマカズラ（マメ希）。",
+      "approved_content": "2〜10月下旬まで得られている。",
+      "expected_page": "",
+      "approved_page": "221",
+      "source_location": {
+        "pdf_pages": [
+          56
+        ],
+        "printed_pages": [
+          221
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-036",
+      "record_id": "note-1003578",
+      "insect_id": "species-3961",
+      "japanese_name": "アマミヨツモンアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "奄美大島湯湾岳で1961年（18）と1963年（1号）に得られた標本によって記載され、その後まったく記録がなかったが、奄美大島湯湾岳において1（2009年7月26日木村正期採集）得られ、さらに翌年同氏により奄美大島（181名）、沖縄島（17）で採集された。出現期は不明だか6～9月に採れている",
+      "approved_content": "奄美大島湯湾岳で1961年に雄1頭、1963年に雌1頭が得られた。2009年7月26日に同地で雄1頭が得られ、翌年には奄美大島で雄1頭・雌1頭、沖縄島で雌1頭が採集された。6〜9月に採れている。",
+      "expected_page": "",
+      "approved_page": "222",
+      "source_location": {
+        "pdf_pages": [
+          57
+        ],
+        "printed_pages": [
+          222
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-037",
+      "record_id": "note-1001312",
+      "insect_id": "species-3967",
+      "japanese_name": "カラフトウスアオシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では関車地方から中部地方の山地の亜高山容下部の針薬物材香に少なくないが、東北地方では記録がない。年中部地方の山地では7～8月に出現する。",
+      "approved_content": "本州では関東地方から中部地方の山地の亜高山帯下部にある針葉樹林帯に見られる。年1化で、中部地方の山地では7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "223",
+      "source_location": {
+        "pdf_pages": [
+          57
+        ],
+        "printed_pages": [
+          223
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-038",
+      "record_id": "note-1002386",
+      "insect_id": "species-3996",
+      "japanese_name": "オキナワウスチャヒメシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "国内では1929年7月に沖縄島北部で採れた！しか知られておらず。その標本はイギリス自然史博物館に所蔵されている",
+      "approved_content": "1929年7月に沖縄島北部で採集された雄1頭がイギリス自然史博物館に所蔵されている。",
+      "expected_page": "",
+      "approved_page": "228",
+      "source_location": {
+        "pdf_pages": [
+          60
+        ],
+        "printed_pages": [
+          228
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-039",
+      "record_id": "note-1003583",
+      "insect_id": "species-3998",
+      "japanese_name": "クスイウスチャヒメシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "小笠取諸島で5～6月に少数個体が得られている。［寄主植物］未知",
+      "approved_content": "小笠原諸島で5〜6月に少数個体が得られている。",
+      "expected_page": "",
+      "approved_page": "228",
+      "source_location": {
+        "pdf_pages": [
+          60
+        ],
+        "printed_pages": [
+          228
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-040",
+      "record_id": "note-1002388",
+      "insect_id": "species-4009",
+      "japanese_name": "ウスアカヒメシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "国内では、西表島で1963年に探れた！しか知られていなかったが、それから45年後の2008年に中島秀氏かりみを採集しており、 おそらく土着しているものと思われる、いずれも10月に得られている",
+      "approved_content": "西表島で1963年に雌1頭、2008年に雄1頭が採集されており、いずれも10月に得られている。",
+      "expected_page": "",
+      "approved_page": "230",
+      "source_location": {
+        "pdf_pages": [
+          61
+        ],
+        "printed_pages": [
+          230
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-041",
+      "record_id": "note-1001317",
+      "insect_id": "species-4084",
+      "japanese_name": "モンウスキヒメシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "分布も地的で、未にまれ、 ［寄主植物］未ヨーロッパではさまざまな車本につき、広食性",
+      "approved_content": "山地で6〜7月に得られる。",
+      "expected_page": "",
+      "approved_page": "247",
+      "source_location": {
+        "pdf_pages": [
+          69
+        ],
+        "printed_pages": [
+          247
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-042",
+      "record_id": "note-1002395",
+      "insect_id": "species-4095",
+      "japanese_name": "シロシタコバネナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化。全国的に低山地から山地に産し、比較的#通年1化関東地方周辺では丘政部では3月中旬から",
+      "approved_content": "全国的に低山地から亜高山帯下部まで広く産し、普通に見られる。年1化で、関東地方周辺の低山地では4月上旬から、高標高地では5月中旬〜下旬に出現する。",
+      "expected_page": "",
+      "approved_page": "249",
+      "source_location": {
+        "pdf_pages": [
+          70
+        ],
+        "printed_pages": [
+          249
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-043",
+      "record_id": "note-1002401",
+      "insect_id": "species-4103",
+      "japanese_name": "ウスミドリコバネナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方開辺では低山地から亜高山容の低部まで産するが、あまり多くない。関東地方辺の低山地では3月下旬から出現し、 1500mくらいの山地でも4月上旬から得られ、出現期は比較的早い",
+      "approved_content": "関東地方周辺では低山地から亜高山帯下部まで産する。低山地では3月下旬から、標高1500mほどの山地でも4月上旬から得られる。",
+      "expected_page": "",
+      "approved_page": "250",
+      "source_location": {
+        "pdf_pages": [
+          71
+        ],
+        "printed_pages": [
+          250
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-044",
+      "record_id": "note-1003602",
+      "insect_id": "species-4113",
+      "japanese_name": "クロフシロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方開辺では低山地に生品年1金外性で関来地方辺では4月上旬から出し、天気のよい日中に井内や料線を活発に発見する",
+      "approved_content": "関東地方周辺の低山地に生息する。年1化で昼飛性。関東地方周辺では4月上旬から出現し、天気のよい日中に林内や林縁を活発に飛翔する。",
+      "expected_page": "",
+      "approved_page": "252",
+      "source_location": {
+        "pdf_pages": [
+          72
+        ],
+        "printed_pages": [
+          252
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-045",
+      "record_id": "note-1003609",
+      "insect_id": "species-4143",
+      "japanese_name": "クロモンミヤマナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "北海道では大雪山のみに産し、本州では東北地方からは未発見中部地方山地では高山。飛山駅、赤石山駅木曽山駅に分布し、重高山価から高山番に産する高山線で、各地とも多産しない。年1本州では7月下旬～8月中旬に出現する",
+      "approved_content": "同図鑑刊行時点で、北海道では大雪山から記録され、本州中部地方では妙高山、飛騨山脈、赤石山脈、木曽山脈の亜高山帯から高山帯に見られた。年1化で、本州では7月下旬〜8月中旬、大雪山の高山帯では7月下旬〜8月上旬に出現する。層雲峡の標高660m地点では6月に雄1頭が採集されている。",
+      "expected_page": "",
+      "approved_page": "257",
+      "source_location": {
+        "pdf_pages": [
+          74
+        ],
+        "printed_pages": [
+          257
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-046",
+      "record_id": "note-1003621",
+      "insect_id": "species-4162",
+      "japanese_name": "フタモンクロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "北海道をのぞいて全国的に広く分布し、各地でごく＃通に産する。関東地方周辺では丘陵部～低山地に多産する。関東地方辺では4月上旬～9月下旬まで探れており、年2～3回出現し、取地ではさらに発生回数は増すと思われる",
+      "approved_content": "北海道を除いて全国的に広く分布し、各地で普通に産する。関東地方周辺では丘陵部〜低山地に多産し、4月上旬〜9月下旬に年2〜3回出現する。",
+      "expected_page": "",
+      "approved_page": "261",
+      "source_location": {
+        "pdf_pages": [
+          76
+        ],
+        "printed_pages": [
+          261
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-047",
+      "record_id": "note-1002430",
+      "insect_id": "species-4166",
+      "japanese_name": "ウラウスキナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方辺では浅い山地から針業林まで産するが、 あまり多くない。年2位春と秋に出する。261",
+      "approved_content": "関東地方周辺では浅い山地から針葉樹林帯まで産する。年2化で春と秋に出現する。",
+      "expected_page": "",
+      "approved_page": "261",
+      "source_location": {
+        "pdf_pages": [
+          76
+        ],
+        "printed_pages": [
+          261
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-048",
+      "record_id": "note-1002433",
+      "insect_id": "species-4169",
+      "japanese_name": "クロアシナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "北海道では普通に産するが、本州では長野県松本市で得られているのみで、非常にめずらしい。年2化で6～8月に出現する。麺は冬、 262",
+      "approved_content": "北海道では普通に産する。同図鑑刊行時点の本州記録は長野県松本市からであった。年2化で6〜8月に出現し、蛹で越冬する。",
+      "expected_page": "",
+      "approved_page": "262",
+      "source_location": {
+        "pdf_pages": [
+          77
+        ],
+        "printed_pages": [
+          262
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "page_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-049",
+      "record_id": "note-1002435",
+      "insect_id": "species-4178",
+      "japanese_name": "シロテンサザナミナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "北海道では大雪山の高山番に多産し、亜高山帯でも見られる。本州ではまれな種といわれていたが、飛津山脈（白馬",
+      "approved_content": "北海道では大雪山の高山帯に多産し、亜高山帯でも見られる。本州では飛騨山脈、八ヶ岳、赤石山脈などで記録され、比較的広く分布する。高山帯では7月下旬〜8月中旬に出現する。",
+      "expected_page": "",
+      "approved_page": "264",
+      "source_location": {
+        "pdf_pages": [
+          78
+        ],
+        "printed_pages": [
+          264
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-050",
+      "record_id": "note-1001327",
+      "insect_id": "species-4192",
+      "japanese_name": "ツマグロヤエナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方、中部地方では標高2000mをこえる亜高山帯から高山帯で得られている。年1化、中部地方山地では7～8月に出現する。［寄主植物］未知。",
+      "approved_content": "関東地方と中部地方では、標高2000mを超える亜高山帯から高山帯で得られている。年1化で、中部地方山地では7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "267",
+      "source_location": {
+        "pdf_pages": [
+          79
+        ],
+        "printed_pages": [
+          267
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-051",
+      "record_id": "note-1003639",
+      "insect_id": "species-4202",
+      "japanese_name": "マルモンシロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "全的に飯山地～亜高山番まで広く分析、各地で普通年化関東地方期辺では6～7月に、北海道では7月44～8月上旬に出現する",
+      "approved_content": "全国的に低山地から亜高山帯まで広く分布し、各地で普通に見られる。年1化で、関東地方周辺では6〜7月、北海道では7月中旬〜8月上旬に出現する。",
+      "expected_page": "",
+      "approved_page": "269",
+      "source_location": {
+        "pdf_pages": [
+          80
+        ],
+        "printed_pages": [
+          269
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-052",
+      "record_id": "note-1001331",
+      "insect_id": "species-4220",
+      "japanese_name": "セスジナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では各地に広く産し、低山地から山地まで採れる普通種である。年2化。関東地方周辺では4月中旬～6月と9～10月に出現する。高標高地の産地では7～8月に得られる。成虫がノイバラでアブラムシの分泌物を吸汁するのが観察されている。［寄主植物］アケビ、ミツバアケビ（以上アケビ科）。",
+      "approved_content": "本州では各地に広く産し、低山地から山地まで採れる普通種である。年2化で、関東地方周辺では4月中旬〜6月と9〜10月、高標高地では7〜8月に出現する。成虫がノイバラでアブラムシの分泌物を吸汁するのが観察されている。",
+      "expected_page": "",
+      "approved_page": "273",
+      "source_location": {
+        "pdf_pages": [
+          82
+        ],
+        "printed_pages": [
+          273
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-053",
+      "record_id": "note-1002456",
+      "insect_id": "species-4224",
+      "japanese_name": "ソトキナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方辺では山地から高山番で得られるが多くない。［寄主植物］未知",
+      "approved_content": "関東地方周辺では山地から高山帯で得られるが、個体数は多くない。",
+      "expected_page": "",
+      "approved_page": "273",
+      "source_location": {
+        "pdf_pages": [
+          82
+        ],
+        "printed_pages": [
+          273
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-054",
+      "record_id": "note-1003654",
+      "insect_id": "species-4233",
+      "japanese_name": "キスジビロードナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "各島で探れているが、個体数は多くない。3～10月まで採れており、年間を通じて出現する。［寄主植物］リュウキュウコンテリギ（アジサイ料）.",
+      "approved_content": "各島で採れている。3〜10月に採集され、年間を通じて出現する。",
+      "expected_page": "",
+      "approved_page": "275",
+      "source_location": {
+        "pdf_pages": [
+          83
+        ],
+        "printed_pages": [
+          275
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-055",
+      "record_id": "note-1003656",
+      "insect_id": "species-4235",
+      "japanese_name": "ウチジロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "分布は本州中央の高山番に限られ、糸山脈、奥山。赤石山屋木山駅に産する",
+      "approved_content": "本州中央部の高山帯に限られ、飛騨山脈、御嶽山、八ヶ岳、赤石山脈、木曽山脈に産する。高山帯の中でも高標高地に生息し、7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "275",
+      "source_location": {
+        "pdf_pages": [
+          83
+        ],
+        "printed_pages": [
+          275
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-056",
+      "record_id": "note-1003659",
+      "insect_id": "species-4238",
+      "japanese_name": "ツマキナカジロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化。成虫越冬。的に分布、平地から高山番まで産し、各地にごく普通に見られる。幼虫は平地では4月に見られ、成虫の出現状況と合わせて見ると、成虫越冬の可能性が高い",
+      "approved_content": "全国的に分布し、平地から高山帯まで産する。平地から低山地では5〜11月に年2〜3回出現する。亜高山帯から高山帯では年1化で9〜10月に出現し、11月にも得られている。幼虫は平地では4月に見られる。",
+      "expected_page": "",
+      "approved_page": "276",
+      "source_location": {
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          276
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-057",
+      "record_id": "note-1003663",
+      "insect_id": "species-4242",
+      "japanese_name": "ネアカナカジロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では、東北地方。関東地方、中部地方の山地の亜高山布で得られるが比較的少ない。年1関東地方開辺の山地では8月下旬～10月に出現する",
+      "approved_content": "本州では東北地方、関東地方、中部地方の山地の亜高山帯で得られる。年1化で、関東地方周辺の山地では8月下旬〜10月に出現する。",
+      "expected_page": "",
+      "approved_page": "277",
+      "source_location": {
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          277
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-058",
+      "record_id": "note-1003664",
+      "insect_id": "species-4243",
+      "japanese_name": "キオビハガタナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では来と地方より産し、関収差方関辺では山地から運高山番まで得られる。年1化で6～7月に出現する",
+      "approved_content": "本州では東北地方から産し、関東地方周辺では山地から亜高山帯まで得られる。年1化で6〜7月に出現する。",
+      "expected_page": "",
+      "approved_page": "277",
+      "source_location": {
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          277
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-059",
+      "record_id": "note-1002464",
+      "insect_id": "species-4245",
+      "japanese_name": "ミヤマクロオビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化で7月中～下旬に採れている。［寄主植物］未知",
+      "approved_content": "年1化で、7月中旬〜下旬に採れている。",
+      "expected_page": "",
+      "approved_page": "277",
+      "source_location": {
+        "pdf_pages": [
+          84
+        ],
+        "printed_pages": [
+          277
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-060",
+      "record_id": "note-1001707",
+      "insect_id": "species-4246",
+      "japanese_name": "クロオビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化。地方では低山地から高山番まで広く産し、 ごく普通、笹山地では10～11月に出現し、山地から亜高山番では8月下",
+      "approved_content": "関東地方から中部地方では低山地から高山帯まで広く産する。低山地では10〜11月、山地から高山帯では8月下旬〜9月に出現する。6〜7月にも少数個体が採集されている。",
+      "expected_page": "",
+      "approved_page": "278",
+      "source_location": {
+        "pdf_pages": [
+          85
+        ],
+        "printed_pages": [
+          278
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-061",
+      "record_id": "note-1002466",
+      "insect_id": "species-4248",
+      "japanese_name": "モトクロオビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州中央部の亜高山から高山番に分布し、年1化で7～8月に出現する",
+      "approved_content": "本州中央部の亜高山帯から高山帯に分布し、年1化で7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "278",
+      "source_location": {
+        "pdf_pages": [
+          85
+        ],
+        "printed_pages": [
+          278
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-062",
+      "record_id": "note-1001720",
+      "insect_id": "species-4282",
+      "japanese_name": "マンサクシロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方周辺では山地に産するが、前種の生息域が広いので混生する地域が多い。出現期、経過習性は前種とはほぼ同じで、年2化で蛹越冬である。［寄主植物］カツラ（カツラ科）、マンサク（マンサク科）。",
+      "approved_content": "関東地方周辺の山地に産し、年2化で蛹越冬する。",
+      "expected_page": "",
+      "approved_page": "285",
+      "source_location": {
+        "pdf_pages": [
+          88
+        ],
+        "printed_pages": [
+          285
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-063",
+      "record_id": "note-1001336",
+      "insect_id": "species-4284",
+      "japanese_name": "フタマタシロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年2化。関東地方開辺では紙山地から山地まで産し、比較的書通に見られる",
+      "approved_content": "関東地方周辺では低山地から山地まで産し、比較的普通に見られる。年2化で、5月中旬〜6月と8月〜9月上旬に出現する。",
+      "expected_page": "",
+      "approved_page": "285",
+      "source_location": {
+        "pdf_pages": [
+          88
+        ],
+        "printed_pages": [
+          285
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-064",
+      "record_id": "note-1002485",
+      "insect_id": "species-4290",
+      "japanese_name": "キイロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方、中部地方では山間部から産し、標高1000mくらいのブナ番に多産する。5～9月に得られる",
+      "approved_content": "関東地方と中部地方では山間部に産し、標高1000mほどのブナ帯に多産する。5〜9月に得られる。",
+      "expected_page": "",
+      "approved_page": "286",
+      "source_location": {
+        "pdf_pages": [
+          89
+        ],
+        "printed_pages": [
+          286
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-065",
+      "record_id": "note-1003684",
+      "insect_id": "species-4292",
+      "japanese_name": "セジロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "低山地から亜高山番下部まで産し、各地でごく普通に見られる",
+      "approved_content": "全国的に分布し、低山地から亜高山帯下部まで産して各地で普通に見られる。山地では7〜8月、低山地では5月下旬から出現する。",
+      "expected_page": "",
+      "approved_page": "286",
+      "source_location": {
+        "pdf_pages": [
+          89
+        ],
+        "printed_pages": [
+          286
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-066",
+      "record_id": "note-1003691",
+      "insect_id": "species-4302",
+      "japanese_name": "キオビカバスジナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方・中部地方では標高1000m前後のブナ番で得られるが、比較的少ない。7月中旬～8月に出現する。九州では6～7月に得られる",
+      "approved_content": "関東地方・中部地方では標高1000m前後のブナ帯で得られ、7月中旬〜8月に出現する。九州では6〜7月に得られる。",
+      "expected_page": "",
+      "approved_page": "288",
+      "source_location": {
+        "pdf_pages": [
+          90
+        ],
+        "printed_pages": [
+          288
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-067",
+      "record_id": "note-1001340",
+      "insect_id": "species-4305",
+      "japanese_name": "ミヤマチビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "分布は本州中央部に限られる高山線である、未開赤石山県加賀白山の高山番に産するが、尼番（笠ヶ面）、群馬県利現地方でも得られている。年1、7月下一8月に出現する。",
+      "approved_content": "本州中央部に限られる高山蛾で、飛騨山脈、赤石山脈、加賀白山の高山帯のほか、尾瀬の燧ヶ岳や群馬県利根地方でも得られている。年1化で7月下旬〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "289",
+      "source_location": {
+        "pdf_pages": [
+          90
+        ],
+        "printed_pages": [
+          289
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-068",
+      "record_id": "note-1002490",
+      "insect_id": "species-4306",
+      "japanese_name": "ウスモンチビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では、長野県、山梨県の山地から亜高山番で8～9月に得られているが、かなりまれである",
+      "approved_content": "本州では長野県と山梨県の山地から亜高山帯で8〜9月に得られている。年1化する。",
+      "expected_page": "",
+      "approved_page": "289",
+      "source_location": {
+        "pdf_pages": [
+          90
+        ],
+        "printed_pages": [
+          289
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-069",
+      "record_id": "note-1002492",
+      "insect_id": "species-4311",
+      "japanese_name": "フトオビヒメナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年山施性だが厳種より低際高地にも産し、7～8月に多い。［寄主植物］エゾマツ、アカマツ、ストローブマツ。トドマツ（以トマツ科）などの球果",
+      "approved_content": "年1化で、山地性だが近縁種より低標高地にも産し、7〜8月に多い。",
+      "expected_page": "",
+      "approved_page": "289",
+      "source_location": {
+        "pdf_pages": [
+          90
+        ],
+        "printed_pages": [
+          289
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-070",
+      "record_id": "note-1002494",
+      "insect_id": "species-4312",
+      "japanese_name": "ウスアカチビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "平地から低山地に分布し、関東地方の低地では5～7月に現するが、個体数はあまり多くない。おそらく年1",
+      "approved_content": "平地から低山地に分布し、関東地方の低地では5〜7月に出現する。",
+      "expected_page": "",
+      "approved_page": "289-290",
+      "source_location": {
+        "pdf_pages": [
+          90,
+          91
+        ],
+        "printed_pages": [
+          289,
+          290
+        ],
+        "columns": [
+          4,
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-071",
+      "record_id": "note-1001344",
+      "insect_id": "species-4323",
+      "japanese_name": "ヒメカバナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年/主に山地で3一月に出現するが宿に少ない。［寄主植物］未",
+      "approved_content": "年1化で、主に低山地で3〜4月に出現する。",
+      "expected_page": "",
+      "approved_page": "292-293",
+      "source_location": {
+        "pdf_pages": [
+          92
+        ],
+        "printed_pages": [
+          292,
+          293
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-072",
+      "record_id": "note-1002503",
+      "insect_id": "species-4327",
+      "japanese_name": "ヤスジカバナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "関東地方では低山地から山地で6～9月に普通に見られる。おそらく年1",
+      "approved_content": "関東地方では低山地から山地で6〜9月に普通に見られる。",
+      "expected_page": "",
+      "approved_page": "294",
+      "source_location": {
+        "pdf_pages": [
+          93
+        ],
+        "printed_pages": [
+          294
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-073",
+      "record_id": "note-1001348",
+      "insect_id": "species-4328",
+      "japanese_name": "クロテンヤスジカバナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "山崎で8～10月に探れるが、多くない。おそらく年 ［寄主植物］アキノキリンソウ。シロヨメナ花（以上キク科）",
+      "approved_content": "山地で8〜10月に採れる。",
+      "expected_page": "",
+      "approved_page": "294",
+      "source_location": {
+        "pdf_pages": [
+          93
+        ],
+        "printed_pages": [
+          294
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-074",
+      "record_id": "note-1001735",
+      "insect_id": "species-4329",
+      "japanese_name": "ホソチビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化本州中部地方の山地では7～8月に探れる",
+      "approved_content": "年1化で、本州中部地方の山地では7〜8月に採れる。",
+      "expected_page": "",
+      "approved_page": "294",
+      "source_location": {
+        "pdf_pages": [
+          93
+        ],
+        "printed_pages": [
+          294
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-075",
+      "record_id": "note-1002507",
+      "insect_id": "species-4337",
+      "japanese_name": "ウラモンウストビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州中部地方ではおよそ1500m以上の山地で7～8月に出現するが、あまり多くない。年化",
+      "approved_content": "本州中部地方では標高約1500m以上の山地で7〜8月に出現する。年1化する。",
+      "expected_page": "",
+      "approved_page": "297",
+      "source_location": {
+        "pdf_pages": [
+          94
+        ],
+        "printed_pages": [
+          297
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-076",
+      "record_id": "note-1002508",
+      "insect_id": "species-4338",
+      "japanese_name": "ウストビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化山地で7～8月に出するが、前種より少ない。［寄主植物］タカネナデシコ（ナデシコ科）の花",
+      "approved_content": "年1化で、山地で7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "297",
+      "source_location": {
+        "pdf_pages": [
+          94
+        ],
+        "printed_pages": [
+          297
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-077",
+      "record_id": "note-1001738",
+      "insect_id": "species-4339",
+      "japanese_name": "オオウストビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化本州中部地方では、山地で6～7月に出現するが、産地は限定され、個体数は非常に少ない。北海道では各地に比較的多い",
+      "approved_content": "年1化で、本州中部地方では山地で6〜7月に出現する。北海道では各地に見られる。",
+      "expected_page": "",
+      "approved_page": "298",
+      "source_location": {
+        "pdf_pages": [
+          95
+        ],
+        "printed_pages": [
+          298
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-078",
+      "record_id": "note-1001739",
+      "insect_id": "species-4342",
+      "japanese_name": "シタジロカバナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化本州中部地方の高橋店の山地で6月に探れているが、 産地は限定され、未常にめずらしい。［寄主植物］未ヨーロッパではドイツトウヒ（マツ科）に固布。",
+      "approved_content": "年1化で、本州中部地方の高標高地で6月に採れている。",
+      "expected_page": "",
+      "approved_page": "298",
+      "source_location": {
+        "pdf_pages": [
+          95
+        ],
+        "printed_pages": [
+          298
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-079",
+      "record_id": "note-1001743",
+      "insect_id": "species-4365",
+      "japanese_name": "マダラカバスジナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化山地で4～6月に出現するが、音様よりも低標高のところに多い",
+      "approved_content": "年1化で、山地では4〜6月に出現し、近縁種より低標高地に多い。",
+      "expected_page": "",
+      "approved_page": "305",
+      "source_location": {
+        "pdf_pages": [
+          98
+        ],
+        "printed_pages": [
+          305
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-080",
+      "record_id": "note-1003698",
+      "insect_id": "species-4381",
+      "japanese_name": "ムラサキカバナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "記録は少なく、2～5月と12月に探れているがくわしい周年経通は不明。［寄主植物］ナンテンカメラ（マメ科）.",
+      "approved_content": "2〜5月と12月に採れている。",
+      "expected_page": "",
+      "approved_page": "293",
+      "source_location": {
+        "pdf_pages": [
+          92
+        ],
+        "printed_pages": [
+          293
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-081",
+      "record_id": "note-1003716",
+      "insect_id": "species-4397",
+      "japanese_name": "ウラジロチビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "3月および78月に出現するが、個体数は少ない。肉主植物］ムニンセンニンソウ花（キンポウゲ科）、ムニンヒメツバキ （ツバキ科）",
+      "approved_content": "3月と7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "311",
+      "source_location": {
+        "pdf_pages": [
+          101
+        ],
+        "printed_pages": [
+          311
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-082",
+      "record_id": "note-1001752",
+      "insect_id": "species-4398",
+      "japanese_name": "ウラグロチビナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "＃島の乳房山で1980年7月に採集された1（ホロタイプ）しか知られていなかったが、同地で2010年3月に数顔のみ子が集された",
+      "approved_content": "母島の乳房山で1980年7月に雄1頭が採集され、同地で2010年3月に数頭の雄と雌が採集された。",
+      "expected_page": "",
+      "approved_page": "311",
+      "source_location": {
+        "pdf_pages": [
+          101
+        ],
+        "printed_pages": [
+          311
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-083",
+      "record_id": "note-1003720",
+      "insect_id": "species-4409",
+      "japanese_name": "テンスジアオナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "記録された産地は少なく、兵庫県で6月に探れた！子と、北海道で5月に幼虫から制育・羽化させた2322しか知られていない",
+      "approved_content": "兵庫県で6月に雌1頭が採集され、北海道では5月に幼虫から飼育して雄2頭・雌2頭を羽化させた記録がある。",
+      "expected_page": "",
+      "approved_page": "313",
+      "source_location": {
+        "pdf_pages": [
+          102
+        ],
+        "printed_pages": [
+          313
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-084",
+      "record_id": "note-1002541",
+      "insect_id": "species-4411",
+      "japanese_name": "チビアオナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化、7～8月に出現し、比較的高の高い山地に多い",
+      "approved_content": "年1化で7〜8月に出現し、比較的標高の高い山地に多い。",
+      "expected_page": "",
+      "approved_page": "314",
+      "source_location": {
+        "pdf_pages": [
+          103
+        ],
+        "printed_pages": [
+          314
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-085",
+      "record_id": "note-1001760",
+      "insect_id": "species-4418",
+      "japanese_name": "テングナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年に2～3化し、5～10月に採れている。［寄主植物］マンリョウ、カラタチバナ、ヤブコウジ、モクタチバナ、イズセンリョウ、タイミンタチバナ、オカトラノオ、ハマボッス（以上サクラソウ科）。",
+      "approved_content": "年2〜3化で、5〜10月に採れている。",
+      "expected_page": "",
+      "approved_page": "314-315",
+      "source_location": {
+        "pdf_pages": [
+          103
+        ],
+        "printed_pages": [
+          314,
+          315
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-086",
+      "record_id": "note-1003723",
+      "insect_id": "species-4428",
+      "japanese_name": "ナカジロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "平地から山まで広く分布し、関東道方開辺では1～10月に見られ、各地に普通 ［寄主植物］センニンソウ。ポタングル（以上キンポウケ料）.",
+      "approved_content": "平地から山地まで広く分布し、関東地方周辺では4〜10月に見られ、各地に普通に産する。",
+      "expected_page": "",
+      "approved_page": "316",
+      "source_location": {
+        "pdf_pages": [
+          104
+        ],
+        "printed_pages": [
+          316
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-087",
+      "record_id": "note-1003724",
+      "insect_id": "species-4430",
+      "japanese_name": "ヒロバカレハ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "8月に成由が得られているが、少ない種である。［寄主植物］野外では未知。サクラ類（バラ科）で割可能ヨー ロッパではバラ科、ヤナギ科などの多くの植物を食すことが知られる",
+      "approved_content": "8月に成虫が得られている。",
+      "expected_page": "",
+      "approved_page": "317",
+      "source_location": {
+        "pdf_pages": [
+          104
+        ],
+        "printed_pages": [
+          317
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-088",
+      "record_id": "note-1003727",
+      "insect_id": "species-4439",
+      "japanese_name": "タケヒメカレハ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化で7～8月に曲する。［寄主植物］未知",
+      "approved_content": "年1化で7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "318",
+      "source_location": {
+        "pdf_pages": [
+          105
+        ],
+        "printed_pages": [
+          318
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-089",
+      "record_id": "note-1002561",
+      "insect_id": "species-4454",
+      "japanese_name": "ウスズミカレハ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化、晩状から初にかけて出現する。寒い時間に出るので、よいコンディションの日になかなか恵まれず。採るのは難しい",
+      "approved_content": "年1化で、晩秋から初冬にかけて出現する。",
+      "expected_page": "",
+      "approved_page": "320",
+      "source_location": {
+        "pdf_pages": [
+          106
+        ],
+        "printed_pages": [
+          320
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-090",
+      "record_id": "note-1002569",
+      "insect_id": "species-4466",
+      "japanese_name": "シンジュサン",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年1化。日本の亜種は温暖地では年25～6月と8～9月に、来始地では年1化7～8月に出現す",
+      "approved_content": "温暖地では年2化で5〜6月と8〜9月、寒冷地では年1化で7〜8月に出現する。蛹化の際は食樹の葉を繭に巻いて硬い繭を作り、蛹で越冬する。",
+      "expected_page": "",
+      "approved_page": "323",
+      "source_location": {
+        "pdf_pages": [
+          107
+        ],
+        "printed_pages": [
+          323
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-091",
+      "record_id": "note-1001362",
+      "insect_id": "species-4471",
+      "japanese_name": "クスサン",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年に夏の彩わりから部めに出現する。［寄主植物］きわめて多食で、クリ、コナラ",
+      "approved_content": "年1化で、夏の終わりから秋の初めに出現し、卵で越冬する。",
+      "expected_page": "",
+      "approved_page": "324-325",
+      "source_location": {
+        "pdf_pages": [
+          108
+        ],
+        "printed_pages": [
+          324,
+          325
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-092",
+      "record_id": "note-1003735",
+      "insect_id": "species-4492",
+      "japanese_name": "タイワンサザナミスズメ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "3月から9月に記録がある。年2～3化と思われる。［寄主植物］日本では未知、国外ではモクセイ科で記録がある。",
+      "approved_content": "3〜9月に記録がある。",
+      "expected_page": "",
+      "approved_page": "329",
+      "source_location": {
+        "pdf_pages": [
+          110
+        ],
+        "printed_pages": [
+          329
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-093",
+      "record_id": "note-1002586",
+      "insect_id": "species-4508",
+      "japanese_name": "ウチスズメ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年2化で5～9月に出する。北海道では年化",
+      "approved_content": "5〜9月に出現し、年2化する。北海道では年1化する。",
+      "expected_page": "",
+      "approved_page": "329",
+      "source_location": {
+        "pdf_pages": [
+          110
+        ],
+        "printed_pages": [
+          329
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-094",
+      "record_id": "note-1003741",
+      "insect_id": "species-4517",
+      "japanese_name": "トモエスズメ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "調外では多化で3〜1月に得られる。力では特通■ 種のような移動性はないとされる",
+      "approved_content": "国外では多化性で5〜11月に得られる。台湾では普通に見られる。",
+      "expected_page": "",
+      "approved_page": "333",
+      "source_location": {
+        "pdf_pages": [
+          112
+        ],
+        "printed_pages": [
+          333
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-095",
+      "record_id": "note-1003743",
+      "insect_id": "species-4525",
+      "japanese_name": "フリッツェホウジャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州中部では年26～10月に出現する。成虫冬、女水にもよく飛来する。［寄主植物］コンロンカ",
+      "approved_content": "本州中部では年2化で6〜10月に出現する。成虫で越冬し、灯火にもよく飛来する。",
+      "expected_page": "",
+      "approved_page": "334",
+      "source_location": {
+        "pdf_pages": [
+          113
+        ],
+        "printed_pages": [
+          334
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-096",
+      "record_id": "note-1002597",
+      "insect_id": "species-4532",
+      "japanese_name": "ホシホウジャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年2～37～11月に出現する。本種は飛期分数をする性賞があり、南方定点観運上でも採集されている。日本列島北部で結冬しているかは不明、都市部でも発生しており、日本産本属中最普通種",
+      "approved_content": "年2〜3化で7〜11月に出現する。飛翔分散する性質があり、南方定点観測船上でも採集されている。都市部でも発生し、日本産本属中で最も普通に見られる。",
+      "expected_page": "",
+      "approved_page": "335-336",
+      "source_location": {
+        "pdf_pages": [
+          113,
+          114
+        ],
+        "printed_pages": [
+          335,
+          336
+        ],
+        "columns": [
+          4,
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-097",
+      "record_id": "note-1001369",
+      "insect_id": "species-4535",
+      "japanese_name": "イブキスズメ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年に68月に出現する。高級に発し、成当は得にくいか、 幼虫抹集は容易である。［生植物］カワラマッパ（アカネ料）、ヤナギラン（アカバナ科） が記録されている",
+      "approved_content": "年1化で6〜8月に出現する。高原に産し、成虫は得にくいが幼虫の採集は容易である。",
+      "expected_page": "",
+      "approved_page": "336",
+      "source_location": {
+        "pdf_pages": [
+          114
+        ],
+        "printed_pages": [
+          336
+        ],
+        "columns": [
+          1,
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "field_bleed",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-098",
+      "record_id": "note-1005361",
+      "insect_id": "species-3602",
+      "japanese_name": "オオヨスジアカエダシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "前種と同様、5～6月と7～9月に出現する。麺越冬であろう。前種より普通に産するが、混生している地域もある。",
+      "approved_content": "5〜6月と7〜9月に出現する。",
+      "expected_page": "",
+      "approved_page": "145",
+      "source_location": {
+        "pdf_pages": [
+          18
+        ],
+        "printed_pages": [
+          145
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-099",
+      "record_id": "note-1005372",
+      "insect_id": "species-3658",
+      "japanese_name": "オオナカホシエダシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "北海道や東北地方～中部地方山地番では7～9月に、本州の低標高の地や西日本では、5～6月と7～9月に出現する。周年経道は不明であるが、地域によって年1～2化",
+      "approved_content": "北海道、東北地方〜中部地方山地では7〜9月、本州の低標高地や西日本では5〜6月と7〜9月に出現する。",
+      "expected_page": "",
+      "approved_page": "155",
+      "source_location": {
+        "pdf_pages": [
+          23
+        ],
+        "printed_pages": [
+          155
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-100",
+      "record_id": "note-1005377",
+      "insect_id": "species-3693",
+      "japanese_name": "アキバエダシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "職本属の他種と異なり、年1化で、6月下旬一8月中旬に出現8月に早から得た卵がそのまま地し。翌合化したことから卵越冬と考えられる。",
+      "approved_content": "年1化で6月下旬〜8月中旬に出現する。8月に雌から得た卵がそのまま越冬し、翌春に孵化した記録がある。",
+      "expected_page": "",
+      "approved_page": "163",
+      "source_location": {
+        "pdf_pages": [
+          27
+        ],
+        "printed_pages": [
+          163
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-101",
+      "record_id": "note-1005381",
+      "insect_id": "species-3730",
+      "japanese_name": "リンゴツノエダシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "北海道では年1化で7～8月に出現するが、本州中部では59月に見られるので、おそらく年2化地域によっては年3化の可能性もある。超想は麺各地に多産する。",
+      "approved_content": "北海道では年1化で7〜8月に出現し、本州中部では5〜9月に見られる。蛹で越冬し、各地に多産する。",
+      "expected_page": "",
+      "approved_page": "171",
+      "source_location": {
+        "pdf_pages": [
+          31
+        ],
+        "printed_pages": [
+          171
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-102",
+      "record_id": "note-1005391",
+      "insect_id": "species-21591",
+      "japanese_name": "オオマエキトビエダシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "地域によって年3～1化を大島や沖構島では、3月から出現している。前間より暖かい地域に普通に産する。",
+      "approved_content": "地域によって年3〜4化する。奄美大島や沖縄島では3月から出現し、より暖かい地域に普通に産する。",
+      "expected_page": "",
+      "approved_page": "187",
+      "source_location": {
+        "pdf_pages": [
+          39
+        ],
+        "printed_pages": [
+          187
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-103",
+      "record_id": "note-1005394",
+      "insect_id": "species-3824",
+      "japanese_name": "コガタツマキリエダシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "4～5月、7～8月、11月に得られているが、11月の子から採卵飼育し1月下旬に羽化しているので、年に3～4するものと思われる。原記級では「沖縄本島」の標本がラタイプに指定されているが、ロンドン自然史博物館所蔵のバラタイプを調査したところ。「Kuroshima、Okinawa」のラベルの付いた標本のみあり、沖縄島は分布城からのぞいておく。",
+      "approved_content": "4〜5月、7〜8月、11月に得られている。11月に得られた雌から採卵して飼育したところ、1月下旬に羽化した。",
+      "expected_page": "",
+      "approved_page": "190",
+      "source_location": {
+        "pdf_pages": [
+          41
+        ],
+        "printed_pages": [
+          190
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-104",
+      "record_id": "note-1005396",
+      "insect_id": "species-3850",
+      "japanese_name": "リョクモンエダシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "職］ほは通年探されており、年に何国が発生するのであろう。奄美大島以南の南西講島の各地に普通に産する。種子島。屋久島の記録は少数である。",
+      "approved_content": "ほぼ通年採集されている。奄美大島以南の南西諸島各地に普通に産し、種子島と屋久島でも記録されている。",
+      "expected_page": "",
+      "approved_page": "195",
+      "source_location": {
+        "pdf_pages": [
+          43
+        ],
+        "printed_pages": [
+          195
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-105",
+      "record_id": "note-1005401",
+      "insect_id": "species-20462",
+      "japanese_name": "メスキベニホソシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "之島。宮古島で！みずつが採れたのみで、定着しているかどうかは不明であったが、最近西表島で得られた。",
+      "approved_content": "徳之島と宮古島では雄が1頭ずつ採集され、その後、西表島でも得られている。",
+      "expected_page": "",
+      "approved_page": "204",
+      "source_location": {
+        "pdf_pages": [
+          48
+        ],
+        "printed_pages": [
+          204
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "symbol_corruption"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-106",
+      "record_id": "note-1005403",
+      "insect_id": "species-3896",
+      "japanese_name": "タイワンアヤシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "類南諸島に多産する。南西諸島では1～12月まで採れており。年間を通じて連続的に発生していると思われる。",
+      "approved_content": "南西諸島に多産し、1〜12月に採れている。",
+      "expected_page": "",
+      "approved_page": "205",
+      "source_location": {
+        "pdf_pages": [
+          48
+        ],
+        "printed_pages": [
+          205
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-107",
+      "record_id": "note-1005406",
+      "insect_id": "species-3911",
+      "japanese_name": "オオシロオビアオシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "北海道、東北地方では平地から低山地に産し、関東地方辺では山地に多産する。年1化関東地方周辺では7～8月に出現する。",
+      "approved_content": "北海道と東北地方では平地から低山地に産し、関東地方周辺では山地に多産する。年1化で、関東地方周辺では7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "208",
+      "source_location": {
+        "pdf_pages": [
+          50
+        ],
+        "printed_pages": [
+          208
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-108",
+      "record_id": "note-1005410",
+      "insect_id": "species-3923",
+      "japanese_name": "チビサザナミシロアオシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "間1～8月に移られている。",
+      "approved_content": "4〜8月に得られている。",
+      "expected_page": "",
+      "approved_page": "210-211",
+      "source_location": {
+        "pdf_pages": [
+          51
+        ],
+        "printed_pages": [
+          210,
+          211
+        ],
+        "columns": [
+          2,
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-109",
+      "record_id": "note-1005426",
+      "insect_id": "species-4096",
+      "japanese_name": "シタコバネナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "全国的に低山地から高山帯の下まで広く産し、本種中で個体数も普通に見られる。年1化。関東地方周辺の山地では4月上旬から出現し始め、高標高の地域では5月中～下旬に出現する。",
+      "approved_content": "全国的に低山地から亜高山帯下部まで広く産し、普通に見られる。年1化で、関東地方周辺の低山地では4月上旬から、高標高地では5月中旬〜下旬に出現する。",
+      "expected_page": "",
+      "approved_page": "249",
+      "source_location": {
+        "pdf_pages": [
+          70
+        ],
+        "printed_pages": [
+          249
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-110",
+      "record_id": "note-1005428",
+      "insect_id": "species-4107",
+      "japanese_name": "ホソクロオビシロナミシャク",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "本州では東北地方から産し。関東地方・中部地方の山地では飯種と現生する。年1化関東地方辺の山地では曲期は飲種と同じ。",
+      "approved_content": "本州では東北地方から産し、関東地方・中部地方の山地で近縁種と混生する。年1化する。",
+      "expected_page": "",
+      "approved_page": "251",
+      "source_location": {
+        "pdf_pages": [
+          71
+        ],
+        "printed_pages": [
+          251
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-111",
+      "record_id": "note-1005429",
+      "insect_id": "species-4114",
+      "japanese_name": "ゴマダラシロナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "類関東地方辺では標高1000m前後の山間部に産するか少ない。5～6月と7～8月に出現し、年2化と思われる。",
+      "approved_content": "関東地方周辺では標高1000m前後の山間部に産し、5〜6月と7〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "252",
+      "source_location": {
+        "pdf_pages": [
+          72
+        ],
+        "printed_pages": [
+          252
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-112",
+      "record_id": "note-1005431",
+      "insect_id": "species-4120",
+      "japanese_name": "モンクロキイロナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "本州では、関東地方部から中越地方の山地の重高山番から森山番に座する。年1化で7月中旬～8月上旬に出現する。昼外性で針業橋林をかけた草原上に生息する。",
+      "approved_content": "本州では関東地方北部から中部地方の山地の亜高山帯から高山帯に産する。年1化で7月中旬〜8月上旬に出現する。昼飛性で、針葉樹林を欠いた草原上に生息する。",
+      "expected_page": "",
+      "approved_page": "253",
+      "source_location": {
+        "pdf_pages": [
+          72
+        ],
+        "printed_pages": [
+          253
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-113",
+      "record_id": "note-1005432",
+      "insect_id": "species-4130",
+      "japanese_name": "シラユキナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "類］本州では、関東地方・中部地方の山地に産するが、宿に少ない。関東地方辺では片沢の600mの域で探れているが、一枚的には1000m以上の山地に分析する。年1化中部地方山地では8月に出現するが、低標高の地域では7月中旬に探れている。",
+      "approved_content": "本州では関東地方・中部地方の山地に産し、関東地方周辺では丹沢の標高600m地点でも採れているが、一般には標高1000m以上の山地に分布する。年1化で、中部地方山地では8月、低標高地では7月中旬に出現する。",
+      "expected_page": "",
+      "approved_page": "255",
+      "source_location": {
+        "pdf_pages": [
+          73
+        ],
+        "printed_pages": [
+          255
+        ],
+        "columns": [
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-114",
+      "record_id": "note-1005438",
+      "insect_id": "species-4247",
+      "japanese_name": "ウスクロオビナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "」関東地方開辺では低山地から山地まで分布し、10～11月に出現するがあまり多くない。",
+      "approved_content": "関東地方周辺では低山地から山地まで分布し、10〜11月に出現する。",
+      "expected_page": "",
+      "approved_page": "278",
+      "source_location": {
+        "pdf_pages": [
+          85
+        ],
+        "printed_pages": [
+          278
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-115",
+      "record_id": "note-1005439",
+      "insect_id": "species-4252",
+      "japanese_name": "フタクロテンナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "本州では低山地から山地まで産し、比較的普通に見られる。年多化で、関東地方周辺の低山地では5～6月と9月に出現する。",
+      "approved_content": "本州では低山地から山地まで産し、比較的普通に見られる。年2化で、関東地方周辺の低山地では5〜6月と9月に出現する。",
+      "expected_page": "",
+      "approved_page": "279",
+      "source_location": {
+        "pdf_pages": [
+          85
+        ],
+        "printed_pages": [
+          279
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-116",
+      "record_id": "note-1005445",
+      "insect_id": "species-4354",
+      "japanese_name": "フジカバナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "北海道には比較的広く分布しているが、個体数は少ない。本州では産地は限定され、亜高山番で7～8月に採れているが、きわめてまれ。",
+      "approved_content": "北海道には比較的広く分布する。本州では産地が限られ、亜高山帯で7〜8月に採れている。",
+      "expected_page": "",
+      "approved_page": "302",
+      "source_location": {
+        "pdf_pages": [
+          97
+        ],
+        "printed_pages": [
+          302
+        ],
+        "columns": [
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-117",
+      "record_id": "note-1005449",
+      "insect_id": "species-4379",
+      "japanese_name": "オガサワラカバナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "間］小笠原諸島（母店）で3月に採された！しか知られていない。",
+      "approved_content": "小笠原諸島の母島で3月に雄1頭が採集されている。",
+      "expected_page": "",
+      "approved_page": "308",
+      "source_location": {
+        "pdf_pages": [
+          100
+        ],
+        "printed_pages": [
+          308
+        ],
+        "columns": [
+          2
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker",
+        "symbol_corruption",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-118",
+      "record_id": "note-1005456",
+      "insect_id": "species-4421",
+      "japanese_name": "アオスジナミシャク",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "想］東北地方では皆装県から記録があるだけで、主に関東地方以西に分布．4～8月に出現するが、あまり多くない。おそらく年2化",
+      "approved_content": "東北地方では宮城県から記録があり、主に関東地方以西に分布する。4〜8月に出現する。",
+      "expected_page": "",
+      "approved_page": "315",
+      "source_location": {
+        "pdf_pages": [
+          103
+        ],
+        "printed_pages": [
+          315
+        ],
+        "columns": [
+          3
+        ]
+      },
+      "candidate_reasons": [
+        "broken_marker",
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-119",
+      "record_id": "note-1005459",
+      "insect_id": "species-4458",
+      "japanese_name": "カイコ",
+      "note_type": "生態情報",
+      "action": "replace",
+      "expected_content": "年化。および年多化",
+      "approved_content": "飼育系統には、気温の高い地方で多化性、北方で1化性のものがある。",
+      "expected_page": "",
+      "approved_page": "321-322",
+      "source_location": {
+        "pdf_pages": [
+          106,
+          107
+        ],
+        "printed_pages": [
+          321,
+          322
+        ],
+        "columns": [
+          3,
+          1
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    },
+    {
+      "audit_id": "jmsg1-full-120",
+      "record_id": "note-1005463",
+      "insect_id": "species-4465",
+      "japanese_name": "ヨナグニサン",
+      "note_type": "出現時期",
+      "action": "replace",
+      "expected_content": "では年25～6月と8～9月に出現するすることが知られているが、日本では、はっきり知られていない。期でする。",
+      "approved_content": "台湾では年2化で5〜6月と8〜9月に出現し、蛹で越冬する。",
+      "expected_page": "",
+      "approved_page": "323",
+      "source_location": {
+        "pdf_pages": [
+          107
+        ],
+        "printed_pages": [
+          323
+        ],
+        "columns": [
+          3,
+          4
+        ]
+      },
+      "candidate_reasons": [
+        "semantic_breakdown"
+      ],
+      "decision": "Confirmed against the original PDF page image. Repair OCR corruption, truncation or column bleed and retain objective ecology only; exclude host-field text, editorial guidance, subjective or collector-oriented commentary and conjectural interpretation where present."
+    }
+  ]
+}

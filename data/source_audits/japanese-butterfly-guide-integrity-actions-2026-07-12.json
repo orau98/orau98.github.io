@@ -1,0 +1,4449 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-12",
+  "source": {
+    "reference": "日本産蝶類標準図鑑",
+    "pdf_pages": 170,
+    "audited_main_account_pdf_pages": "11-164",
+    "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+    "ocr_sha256": "5a7d0cce9b60692773878948af3311895a8c9a721bdc07c32bc1172ed548125e",
+    "evidence_policy": "OCR generates candidates; every changed public fact in this bundle was checked against the original page image."
+  },
+  "counts": {
+    "source_accounts": 274,
+    "current_taxa": 270,
+    "name_actions": 21,
+    "new_taxon_actions": 4,
+    "host_rows_reviewed_for_renamed_taxa": 60,
+    "host_actions": 49,
+    "note_actions": 38,
+    "note_continuation_or_keep_reviews": 10
+  },
+  "name_actions": [
+    {
+      "action_id": "BTG-NAME-20171",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20171",
+        "family": "Papilionidae",
+        "family_jp": "アゲハチョウ科",
+        "subfamily": "Parnassiinae",
+        "subfamily_jp": "ウスバアゲハ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnassius",
+        "subgenus": "",
+        "species": "hoenei",
+        "subspecies": "",
+        "author": "",
+        "year": "",
+        "japanese_name": "ヒメウスパアゲハ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnassius hoenei",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20171",
+        "family": "Papilionidae",
+        "family_jp": "アゲハチョウ科",
+        "subfamily": "Parnassiinae",
+        "subfamily_jp": "ウスバアゲハ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnassius",
+        "subgenus": "",
+        "species": "hoenei",
+        "subspecies": "",
+        "author": "",
+        "year": "",
+        "japanese_name": "ヒメウスバアゲハ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnassius hoenei",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 12,
+        "printed_page": 3,
+        "source_account_id": "BTG-0005",
+        "source_japanese_name": "ヒメウスバアゲハ",
+        "source_scientific_name_ocr": "Parnassias hoenei Schweitzer, 1912",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20172",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20172",
+        "family": "Papilionidae",
+        "family_jp": "アゲハチョウ科",
+        "subfamily": "Parnassiinae",
+        "subfamily_jp": "ウスバアゲハ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnassius",
+        "subgenus": "",
+        "species": "eversmanni",
+        "subspecies": "",
+        "author": "Ménétriès",
+        "year": "1851",
+        "japanese_name": "キイロウスパアゲハ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnassius eversmanni Ménétriès, 1851",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20172",
+        "family": "Papilionidae",
+        "family_jp": "アゲハチョウ科",
+        "subfamily": "Parnassiinae",
+        "subfamily_jp": "ウスバアゲハ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnassius",
+        "subgenus": "",
+        "species": "eversmanni",
+        "subspecies": "",
+        "author": "Ménétriès",
+        "year": "1851",
+        "japanese_name": "キイロウスバアゲハ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnassius eversmanni Ménétriès, 1851",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 12,
+        "printed_page": 4,
+        "source_account_id": "BTG-0006",
+        "source_japanese_name": "キイロウスバアゲハ",
+        "source_scientific_name_ocr": "Parnassius euersmanni Menetries, 1850",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20327",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20327",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Heliconiinae",
+        "subfamily_jp": "ドクチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Brenthis",
+        "subgenus": "",
+        "species": "ino",
+        "subspecies": "",
+        "author": "Rottemburg",
+        "year": "1775",
+        "japanese_name": "カラフトヒョウモン",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Brenthis ino Rottemburg, 1775",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20327",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Heliconiinae",
+        "subfamily_jp": "ドクチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Brenthis",
+        "subgenus": "",
+        "species": "ino",
+        "subspecies": "",
+        "author": "Rottemburg",
+        "year": "1775",
+        "japanese_name": "コヒョウモン",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Brenthis ino Rottemburg, 1775",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 108,
+        "printed_page": 108,
+        "source_account_id": "BTG-0163",
+        "source_japanese_name": "コヒョウモン",
+        "source_scientific_name_ocr": "Brenthis ino （Rottemburg, 1775）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20329",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20329",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Heliconiinae",
+        "subfamily_jp": "ドクチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Boloria",
+        "subgenus": "",
+        "species": "iphigenia",
+        "subspecies": "",
+        "author": "",
+        "year": "",
+        "japanese_name": "コヒョウモン",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Boloria iphigenia",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20329",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Heliconiinae",
+        "subfamily_jp": "ドクチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Boloria",
+        "subgenus": "",
+        "species": "iphigenia",
+        "subspecies": "",
+        "author": "",
+        "year": "",
+        "japanese_name": "カラフトヒョウモン",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Boloria iphigenia",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 107,
+        "printed_page": 107,
+        "source_account_id": "BTG-0161",
+        "source_japanese_name": "カラフトヒョウモン",
+        "source_scientific_name_ocr": "Clossiana iphigenia（Graeser, 1888）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20344",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20344",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "pryeri",
+        "subspecies": "",
+        "author": "Butler",
+        "year": "1871",
+        "japanese_name": "ヤエヤマイチモンジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis pryeri Butler, 1871",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20344",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "pryeri",
+        "subspecies": "",
+        "author": "Butler",
+        "year": "1871",
+        "japanese_name": "ホシミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis pryeri Butler, 1871",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "source_japanese_name": "ホシミスジ",
+        "source_scientific_name_ocr": "Neptis pryeni Butler, 1871",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20346",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20346",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "alwina",
+        "subspecies": "",
+        "author": "Bremer et Grey",
+        "year": "1852",
+        "japanese_name": "ミスジチョウ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis alwina Bremer et Grey, 1852",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20346",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "alwina",
+        "subspecies": "",
+        "author": "Bremer et Grey",
+        "year": "1852",
+        "japanese_name": "オオミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis alwina Bremer et Grey, 1852",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 119,
+        "source_account_id": "BTG-0181",
+        "source_japanese_name": "オオミスジ",
+        "source_scientific_name_ocr": "Neptis alwina （Bremer & Grey, 1852）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20347",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20347",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "sappho",
+        "subspecies": "",
+        "author": "Pallas",
+        "year": "1771",
+        "japanese_name": "オオミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis sappho Pallas, 1771",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20347",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "sappho",
+        "subspecies": "",
+        "author": "Pallas",
+        "year": "1771",
+        "japanese_name": "コミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis sappho Pallas, 1771",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 121,
+        "source_account_id": "BTG-0184",
+        "source_japanese_name": "コミスジ",
+        "source_scientific_name_ocr": "Neptis sappho （Pallas, 1771）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20348",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20348",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "hylas",
+        "subspecies": "",
+        "author": "Linnaeus",
+        "year": "1758",
+        "japanese_name": "ホシミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis hylas Linnaeus, 1758",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20348",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "hylas",
+        "subspecies": "",
+        "author": "Linnaeus",
+        "year": "1758",
+        "japanese_name": "リュウキュウミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis hylas Linnaeus, 1758",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 120,
+        "printed_page": 122,
+        "source_account_id": "BTG-0185",
+        "source_japanese_name": "リュウキュウミスジ",
+        "source_scientific_name_ocr": "Neptis hylas （Linnaeus, 1758）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20350",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20350",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "philyra",
+        "subspecies": "",
+        "author": "Ménétriès",
+        "year": "1858",
+        "japanese_name": "コミスジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis philyra Ménétriès, 1858",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20350",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Neptis",
+        "subgenus": "",
+        "species": "philyra",
+        "subspecies": "",
+        "author": "Ménétriès",
+        "year": "1858",
+        "japanese_name": "ミスジチョウ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Neptis philyra Ménétriès, 1858",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 119,
+        "source_account_id": "BTG-0180",
+        "source_japanese_name": "ミスジチョウ",
+        "source_scientific_name_ocr": "Neptis philyra",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20373",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20373",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Satyrinae",
+        "subfamily_jp": "ジャノメチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Lasiommata",
+        "subgenus": "",
+        "species": "deidamia",
+        "subspecies": "",
+        "author": "Eversmann",
+        "year": "1851",
+        "japanese_name": "ウラジャノメ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Lasiommata deidamia Eversmann, 1851",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20373",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Satyrinae",
+        "subfamily_jp": "ジャノメチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Lasiommata",
+        "subgenus": "",
+        "species": "deidamia",
+        "subspecies": "",
+        "author": "Eversmann",
+        "year": "1851",
+        "japanese_name": "ツマジロウラジャノメ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Lasiommata deidamia Eversmann, 1851",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 133,
+        "printed_page": 139,
+        "source_account_id": "BTG-0209",
+        "source_japanese_name": "ツマジロウラジャノメ",
+        "source_scientific_name_ocr": "Lasiommata deidamia",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20380",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20380",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Satyrinae",
+        "subfamily_jp": "ジャノメチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Lethe",
+        "subgenus": "",
+        "species": "sicelis",
+        "subspecies": "",
+        "author": "Hewitson",
+        "year": "1862",
+        "japanese_name": "シロオビヒカゲ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Lethe sicelis Hewitson, 1862",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20380",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Satyrinae",
+        "subfamily_jp": "ジャノメチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Lethe",
+        "subgenus": "",
+        "species": "sicelis",
+        "subspecies": "",
+        "author": "Hewitson",
+        "year": "1862",
+        "japanese_name": "ヒカゲチョウ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Lethe sicelis Hewitson, 1862",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 139,
+        "printed_page": 145,
+        "source_account_id": "BTG-0217",
+        "source_japanese_name": "ヒカゲチョウ",
+        "source_scientific_name_ocr": "Lethe sicelis （Hewitson, 1862）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20382",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20382",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Satyrinae",
+        "subfamily_jp": "ジャノメチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Lethe",
+        "subgenus": "",
+        "species": "marginalis",
+        "subspecies": "",
+        "author": "Motschulsky",
+        "year": "1861",
+        "japanese_name": "ヒカゲチョウ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Lethe marginalis Motschulsky, 1861",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20382",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Satyrinae",
+        "subfamily_jp": "ジャノメチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Lethe",
+        "subgenus": "",
+        "species": "marginalis",
+        "subspecies": "",
+        "author": "Motschulsky",
+        "year": "1861",
+        "japanese_name": "クロヒカゲモドキ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Lethe marginalis Motschulsky, 1861",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 139,
+        "printed_page": 145,
+        "source_account_id": "BTG-0218",
+        "source_japanese_name": "クロヒカゲモドキ",
+        "source_scientific_name_ocr": "Lethe marginalis",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20389",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20389",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parantica",
+        "subgenus": "",
+        "species": "swinhoei",
+        "subspecies": "",
+        "author": "Moore",
+        "year": "1883",
+        "japanese_name": "リュウキュウアサギマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parantica swinhoei Moore, 1883",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20389",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parantica",
+        "subgenus": "",
+        "species": "swinhoei",
+        "subspecies": "",
+        "author": "Moore",
+        "year": "1883",
+        "japanese_name": "タイワンアサギマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parantica swinhoei Moore, 1883",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 143,
+        "printed_page": 151,
+        "source_account_id": "BTG-0227",
+        "source_japanese_name": "タイワンアサギマダラ",
+        "source_scientific_name_ocr": "Parantica suinhoed （Moore, 1883）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20395",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20395",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "core",
+        "subspecies": "",
+        "author": "Cramer",
+        "year": "1780",
+        "japanese_name": "ミナミムラサキマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea core Cramer, 1780",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20395",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "core",
+        "subspecies": "",
+        "author": "Cramer",
+        "year": "1780",
+        "japanese_name": "ガランピマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea core Cramer, 1780",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 146,
+        "printed_page": 156,
+        "source_account_id": "BTG-0237",
+        "source_japanese_name": "ガランピマダラ",
+        "source_scientific_name_ocr": "Euploea core （Cramer, 1780）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20397",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20397",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "mulciber",
+        "subspecies": "",
+        "author": "Cramer",
+        "year": "1777",
+        "japanese_name": "ルリマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea mulciber Cramer, 1777",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20397",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "mulciber",
+        "subspecies": "",
+        "author": "Cramer",
+        "year": "1777",
+        "japanese_name": "ツマムラサキマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea mulciber Cramer, 1777",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 146,
+        "printed_page": 155,
+        "source_account_id": "BTG-0235",
+        "source_japanese_name": "ツマムラサキマダラ",
+        "source_scientific_name_ocr": "Euploea mulciber",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20400",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20400",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "sylvester",
+        "subspecies": "",
+        "author": "Fabricius",
+        "year": "1793",
+        "japanese_name": "ガランピマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea sylvester Fabricius, 1793",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20400",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "sylvester",
+        "subspecies": "",
+        "author": "Fabricius",
+        "year": "1793",
+        "japanese_name": "ルリマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea sylvester Fabricius, 1793",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 146,
+        "printed_page": 155,
+        "source_account_id": "BTG-0234",
+        "source_japanese_name": "ルリマダラ",
+        "source_scientific_name_ocr": "Euploea sylester （Fabricius, 1793）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20401",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20401",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Coeliadinae",
+        "subfamily_jp": "コウモリセセリ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Badamia",
+        "subgenus": "",
+        "species": "exclamationis",
+        "subspecies": "",
+        "author": "Fabricius",
+        "year": "1775",
+        "japanese_name": "アオバセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Badamia exclamationis Fabricius, 1775",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20401",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Coeliadinae",
+        "subfamily_jp": "コウモリセセリ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Badamia",
+        "subgenus": "",
+        "species": "exclamationis",
+        "subspecies": "",
+        "author": "Fabricius",
+        "year": "1775",
+        "japanese_name": "タイワンアオバセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Badamia exclamationis Fabricius, 1775",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 150,
+        "printed_page": 157,
+        "source_account_id": "BTG-0239",
+        "source_japanese_name": "タイワンアオバセセリ",
+        "source_scientific_name_ocr": "Badamia exclamationis （Fabricius, 1775）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20419",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20419",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Ochlodes",
+        "subgenus": "",
+        "species": "ochraceus",
+        "subspecies": "",
+        "author": "Bremer",
+        "year": "1861",
+        "japanese_name": "ヘリグロチャバネセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Ochlodes ochraceus Bremer, 1861",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20419",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Ochlodes",
+        "subgenus": "",
+        "species": "ochraceus",
+        "subspecies": "",
+        "author": "Bremer",
+        "year": "1861",
+        "japanese_name": "ヒメキマダラセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Ochlodes ochraceus Bremer, 1861",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 158,
+        "printed_page": 168,
+        "source_account_id": "BTG-0258",
+        "source_japanese_name": "ヒメキマダラセセリ",
+        "source_scientific_name_ocr": "Ochlodes ochraceus",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20431",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20431",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnara",
+        "subgenus": "",
+        "species": "bada",
+        "subspecies": "",
+        "author": "Moore",
+        "year": "1878",
+        "japanese_name": "トガリチャバネセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnara bada Moore, 1878",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20431",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnara",
+        "subgenus": "",
+        "species": "bada",
+        "subspecies": "",
+        "author": "Moore",
+        "year": "1878",
+        "japanese_name": "ヒメイチモンジセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnara bada Moore, 1878",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 163,
+        "printed_page": 176,
+        "source_account_id": "BTG-0272",
+        "source_japanese_name": "ヒメイチモンジセセリ",
+        "source_scientific_name_ocr": "Parnara bada（Moore,1878）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20432",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20432",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnara",
+        "subgenus": "",
+        "species": "guttata",
+        "subspecies": "",
+        "author": "Bremer et Grey",
+        "year": "1852",
+        "japanese_name": "チャバネセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnara guttata Bremer et Grey, 1852",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20432",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Parnara",
+        "subgenus": "",
+        "species": "guttata",
+        "subspecies": "",
+        "author": "Bremer et Grey",
+        "year": "1852",
+        "japanese_name": "イチモンジセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Parnara guttata Bremer et Grey, 1852",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "source_japanese_name": "イチモンジセセリ",
+        "source_scientific_name_ocr": "Parnara guttata",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    },
+    {
+      "action_id": "BTG-NAME-20434",
+      "action": "update_insect_japanese_name",
+      "before": {
+        "insect_id": "species-20434",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Pelopidas",
+        "subgenus": "",
+        "species": "jansonis",
+        "subspecies": "",
+        "author": "Butler",
+        "year": "1878",
+        "japanese_name": "ヒメイチモンジセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Pelopidas jansonis Butler, 1878",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "after": {
+        "insect_id": "species-20434",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Pelopidas",
+        "subgenus": "",
+        "species": "jansonis",
+        "subspecies": "",
+        "author": "Butler",
+        "year": "1878",
+        "japanese_name": "ミヤマチャバネセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Pelopidas jansonis Butler, 1878",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "printed_page": 174,
+        "source_account_id": "BTG-0268",
+        "source_japanese_name": "ミヤマチャバネセセリ",
+        "source_scientific_name_ocr": "Pelopidas jansonis （Butler, 1878）",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "The source heading pairs this Japanese name with the current row scientific name."
+    }
+  ],
+  "new_taxon_actions": [
+    {
+      "action_id": "BTG-NEW-BTG-001",
+      "action": "add_insect_taxon",
+      "before": null,
+      "after": {
+        "insect_id": "species-BTG-001",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Limenitidinae",
+        "subfamily_jp": "イチモンジチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Athyma",
+        "subgenus": "",
+        "species": "selenophora",
+        "subspecies": "",
+        "author": "Kollar",
+        "year": "1844",
+        "japanese_name": "ヤエヤマイチモンジ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Athyma selenophora (Kollar, 1844)",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 118,
+        "source_account_id": "BTG-0178",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "collision_check": {
+        "insect_id": 0,
+        "scientific_binomial": 0
+      }
+    },
+    {
+      "action_id": "BTG-NEW-BTG-002",
+      "action": "add_insect_taxon",
+      "before": null,
+      "after": {
+        "insect_id": "species-BTG-002",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Danaus",
+        "subgenus": "",
+        "species": "melanippus",
+        "subspecies": "",
+        "author": "Cramer",
+        "year": "1777",
+        "japanese_name": "スジグロシロマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Danaus melanippus (Cramer, 1777)",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 145,
+        "printed_page": 154,
+        "source_account_id": "BTG-0231",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "collision_check": {
+        "insect_id": 0,
+        "scientific_binomial": 0
+      }
+    },
+    {
+      "action_id": "BTG-NEW-BTG-003",
+      "action": "add_insect_taxon",
+      "before": null,
+      "after": {
+        "insect_id": "species-BTG-003",
+        "family": "Nymphalidae",
+        "family_jp": "タテハチョウ科",
+        "subfamily": "Danainae",
+        "subfamily_jp": "マダラチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Euploea",
+        "subgenus": "",
+        "species": "midamus",
+        "subspecies": "",
+        "author": "Linnaeus",
+        "year": "1758",
+        "japanese_name": "ミダムスルリマダラ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Euploea midamus (Linnaeus, 1758)",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 145,
+        "printed_page": 154,
+        "source_account_id": "BTG-0232",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "collision_check": {
+        "insect_id": 0,
+        "scientific_binomial": 0
+      }
+    },
+    {
+      "action_id": "BTG-NEW-BTG-004",
+      "action": "add_insect_taxon",
+      "before": null,
+      "after": {
+        "insect_id": "species-BTG-004",
+        "family": "Hesperiidae",
+        "family_jp": "セセリチョウ科",
+        "subfamily": "Hesperiinae",
+        "subfamily_jp": "セセリチョウ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Suastus",
+        "subgenus": "",
+        "species": "gremius",
+        "subspecies": "",
+        "author": "Fabricius",
+        "year": "1798",
+        "japanese_name": "クロボシセセリ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Suastus gremius (Fabricius, 1798)",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "original_image_verified",
+      "collision_check": {
+        "insect_id": 0,
+        "scientific_binomial": 0
+      }
+    }
+  ],
+  "host_reviews": [
+    {
+      "record_id": "hostplant-004762",
+      "insect_id": "species-20171",
+      "plant_name": "エゾエンゴサク",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-004763",
+      "insect_id": "species-20171",
+      "plant_name": "エゾキケマン",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-004764",
+      "insect_id": "species-20171",
+      "plant_name": "ヤマエンゴサク",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-004765",
+      "insect_id": "species-20171",
+      "plant_name": "ジロボウエンゴサク",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-004766",
+      "insect_id": "species-20172",
+      "plant_name": "コマクサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006051",
+      "insect_id": "species-20327",
+      "plant_name": "ワレモコウ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006052",
+      "insect_id": "species-20327",
+      "plant_name": "ナガボノシロワレモコウ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006054",
+      "insect_id": "species-20329",
+      "plant_name": "ミヤマスミレ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006120",
+      "insect_id": "species-20344",
+      "plant_name": "リュウキュウフジ",
+      "decision": "delete_unsupported_hold",
+      "action_id": "BTG-HOST-DELETE_UNSUPPORTED_HOLD-hostplant-006120"
+    },
+    {
+      "record_id": "hostplant-006122",
+      "insect_id": "species-20346",
+      "plant_name": "コデマリ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006123",
+      "insect_id": "species-20346",
+      "plant_name": "ユキヤナギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006124",
+      "insect_id": "species-20346",
+      "plant_name": "シモツケ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006125",
+      "insect_id": "species-20347",
+      "plant_name": "ハギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006126",
+      "insect_id": "species-20347",
+      "plant_name": "クズ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006127",
+      "insect_id": "species-20347",
+      "plant_name": "ニセアカシア",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006128",
+      "insect_id": "species-20347",
+      "plant_name": "フジ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006129",
+      "insect_id": "species-20348",
+      "plant_name": "タマツナギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006130",
+      "insect_id": "species-20348",
+      "plant_name": "フジ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006131",
+      "insect_id": "species-20348",
+      "plant_name": "クズ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006132",
+      "insect_id": "species-20348",
+      "plant_name": "タイワンクズ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006133",
+      "insect_id": "species-20348",
+      "plant_name": "トビカズラ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006135",
+      "insect_id": "species-20350",
+      "plant_name": "イワガサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006136",
+      "insect_id": "species-20350",
+      "plant_name": "コゴメウツギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006137",
+      "insect_id": "species-20350",
+      "plant_name": "ユキヤナギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006196",
+      "insect_id": "species-20373",
+      "plant_name": "チヂミザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006197",
+      "insect_id": "species-20373",
+      "plant_name": "ノガリヤス",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006216",
+      "insect_id": "species-20380",
+      "plant_name": "アズマザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006217",
+      "insect_id": "species-20380",
+      "plant_name": "チマキザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006218",
+      "insect_id": "species-20380",
+      "plant_name": "ミヤコザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006225",
+      "insect_id": "species-20382",
+      "plant_name": "アズマザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006226",
+      "insect_id": "species-20382",
+      "plant_name": "ミヤコザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006241",
+      "insect_id": "species-20389",
+      "plant_name": "ツルモウリンカ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006242",
+      "insect_id": "species-20389",
+      "plant_name": "コイケマ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006243",
+      "insect_id": "species-20389",
+      "plant_name": "サクララン",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006258",
+      "insect_id": "species-20395",
+      "plant_name": "キョウチクトウ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006259",
+      "insect_id": "species-20395",
+      "plant_name": "ミフクラギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006264",
+      "insect_id": "species-20397",
+      "plant_name": "オオバイヌビワ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006265",
+      "insect_id": "species-20397",
+      "plant_name": "ホソバイヌビワ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006269",
+      "insect_id": "species-20400",
+      "plant_name": "オオバイヌビワ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006270",
+      "insect_id": "species-20401",
+      "plant_name": "サツマイモ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006271",
+      "insect_id": "species-20401",
+      "plant_name": "アサガオ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006272",
+      "insect_id": "species-20401",
+      "plant_name": "ノアサガオ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006312",
+      "insect_id": "species-20419",
+      "plant_name": "チヂミザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006313",
+      "insect_id": "species-20419",
+      "plant_name": "ヌカキビ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006314",
+      "insect_id": "species-20419",
+      "plant_name": "アズマザサ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006351",
+      "insect_id": "species-20431",
+      "plant_name": "イネ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006352",
+      "insect_id": "species-20431",
+      "plant_name": "ヨシ",
+      "decision": "merge_duplicate",
+      "action_id": "BTG-HOST-MERGE_DUPLICATE-hostplant-006352"
+    },
+    {
+      "record_id": "hostplant-006353",
+      "insect_id": "species-20431",
+      "plant_name": "マコモ",
+      "decision": "delete_unsupported_hold",
+      "action_id": "BTG-HOST-DELETE_UNSUPPORTED_HOLD-hostplant-006353"
+    },
+    {
+      "record_id": "hostplant-006354",
+      "insect_id": "species-20431",
+      "plant_name": "アシボソ",
+      "decision": "move_hostplant",
+      "action_id": "BTG-HOST-MOVE_HOSTPLANT-hostplant-006354"
+    },
+    {
+      "record_id": "hostplant-006365",
+      "insect_id": "species-20434",
+      "plant_name": "ススキ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-006366",
+      "insect_id": "species-20434",
+      "plant_name": "メヒシバ",
+      "decision": "move_hostplant",
+      "action_id": "BTG-HOST-MOVE_HOSTPLANT-hostplant-006366"
+    },
+    {
+      "record_id": "hostplant-909153",
+      "insect_id": "species-20432",
+      "plant_name": "イネ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-909154",
+      "insect_id": "species-20432",
+      "plant_name": "ススキ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-909155",
+      "insect_id": "species-20432",
+      "plant_name": "アシ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-909156",
+      "insect_id": "species-20432",
+      "plant_name": "ヨシ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-909157",
+      "insect_id": "species-20432",
+      "plant_name": "ジュズダマ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-909158",
+      "insect_id": "species-20432",
+      "plant_name": "マコモ",
+      "decision": "delete_unsupported_hold",
+      "action_id": "BTG-HOST-DELETE_UNSUPPORTED_HOLD-hostplant-909158"
+    },
+    {
+      "record_id": "hostplant-913480",
+      "insect_id": "species-20382",
+      "plant_name": "ノリウツギ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-913481",
+      "insect_id": "species-20382",
+      "plant_name": "ヒヨドリバナ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    },
+    {
+      "record_id": "hostplant-913482",
+      "insect_id": "species-20382",
+      "plant_name": "オカトラノオ",
+      "decision": "keep_source_scientific_account_supported",
+      "action_id": ""
+    }
+  ],
+  "host_actions": [
+    {
+      "action_id": "BTG-HOST-DELETE_UNSUPPORTED_HOLD-hostplant-006120",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "hostplant-006120",
+        "insect_id": "species-20344",
+        "plant_name": "リュウキュウフジ",
+        "plant_family": "マメ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 118,
+        "source_account_id": "BTG-0178",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "リュウキュウフジはヤエヤマイチモンジの原本食草欄にも、Neptis pryeri の原本食草欄にもない。旧行は監査台帳に保持し、公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-MERGE_DUPLICATE-hostplant-006352",
+      "action": "merge_duplicate",
+      "before": {
+        "record_id": "hostplant-006352",
+        "insect_id": "species-20431",
+        "plant_name": "ヨシ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "ヨシは Parnara guttata の「アシ（ヨシ）」に対応するが、移動先 species-20432 に同一行 hostplant-909156 がある。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-DELETE_UNSUPPORTED_HOLD-hostplant-006353",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "hostplant-006353",
+        "insect_id": "species-20431",
+        "plant_name": "マコモ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 163,
+        "printed_page": 176,
+        "source_account_id": "BTG-0272",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "マコモは Parnara bada の原本食草欄に明記されず、移動先候補 Parnara guttata の原本食草欄にもない。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-MOVE_HOSTPLANT-hostplant-006354",
+      "action": "move_hostplant",
+      "before": {
+        "record_id": "hostplant-006354",
+        "insect_id": "species-20431",
+        "plant_name": "アシボソ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "after": {
+        "record_id": "hostplant-006354",
+        "insect_id": "species-20432",
+        "plant_name": "アシボソ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "アシボソは Parnara guttata の原本食草欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-MOVE_HOSTPLANT-hostplant-006366",
+      "action": "move_hostplant",
+      "before": {
+        "record_id": "hostplant-006366",
+        "insect_id": "species-20434",
+        "plant_name": "メヒシバ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "after": {
+        "record_id": "hostplant-006366",
+        "insect_id": "species-20432",
+        "plant_name": "メヒシバ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "メヒシバは Pelopidas jansonis の原本食草欄にはなく、Parnara guttata の原本食草欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-DELETE_UNSUPPORTED_HOLD-hostplant-909158",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "hostplant-909158",
+        "insect_id": "species-20432",
+        "plant_name": "マコモ",
+        "plant_family": "イネ科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "マコモは Parnara guttata の原本食草欄に明記されない。旧行は監査台帳に保持し、公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0001",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0001",
+        "insect_id": "species-20344",
+        "plant_name": "ユキヤナギ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ユキヤナギ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0002",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0002",
+        "insect_id": "species-20344",
+        "plant_name": "シモツケ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シモツケ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0003",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0003",
+        "insect_id": "species-20344",
+        "plant_name": "シジミバナ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シジミバナ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0004",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0004",
+        "insect_id": "species-20344",
+        "plant_name": "コデマリ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に コデマリ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0005",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0005",
+        "insect_id": "species-20344",
+        "plant_name": "イワガサ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に イワガサ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0006",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0006",
+        "insect_id": "species-20344",
+        "plant_name": "ミツバイワガサ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "原文：ミツバイワガサ（タンゴイワガサ）"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ミツバイワガサ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0007",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0007",
+        "insect_id": "species-20344",
+        "plant_name": "シバザクラ",
+        "plant_family": "ハナシノブ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シバザクラ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0008",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0008",
+        "insect_id": "species-20344",
+        "plant_name": "ホザキシモツケ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ホザキシモツケ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0009",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0009",
+        "insect_id": "species-20344",
+        "plant_name": "イワシモツケ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に イワシモツケ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0010",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0010",
+        "insect_id": "species-20344",
+        "plant_name": "アイヅシモツケ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に アイヅシモツケ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0011",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0011",
+        "insect_id": "species-20344",
+        "plant_name": "イブキシモツケ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に イブキシモツケ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0012",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0012",
+        "insect_id": "species-20431",
+        "plant_name": "ススキ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 163,
+        "printed_page": 176,
+        "source_account_id": "BTG-0272",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ススキ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0013",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0013",
+        "insect_id": "species-20434",
+        "plant_name": "オオアブラススキ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "printed_page": 174,
+        "source_account_id": "BTG-0268",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に オオアブラススキ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0014",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0014",
+        "insect_id": "species-20434",
+        "plant_name": "チガヤ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "printed_page": 174,
+        "source_account_id": "BTG-0268",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に チガヤ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0015",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0015",
+        "insect_id": "species-20434",
+        "plant_name": "アシ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "原文：アシ（ヨシ）"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "printed_page": 174,
+        "source_account_id": "BTG-0268",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に アシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0016",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0016",
+        "insect_id": "species-20434",
+        "plant_name": "ヒメノガリヤス",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "printed_page": 174,
+        "source_account_id": "BTG-0268",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ヒメノガリヤス を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0017",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0017",
+        "insect_id": "species-20434",
+        "plant_name": "トダシバ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "printed_page": 174,
+        "source_account_id": "BTG-0268",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に トダシバ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0018",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0018",
+        "insect_id": "species-20432",
+        "plant_name": "イヌムギ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に イヌムギ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0019",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0019",
+        "insect_id": "species-20432",
+        "plant_name": "クサヨシ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に クサヨシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0020",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0020",
+        "insect_id": "species-20432",
+        "plant_name": "エノコログサ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に エノコログサ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0021",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0021",
+        "insect_id": "species-20432",
+        "plant_name": "オヒシバ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に オヒシバ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0022",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0022",
+        "insect_id": "species-20432",
+        "plant_name": "イヌビエ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "原文：イヌビエ（ノビエ）"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に イヌビエ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0023",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0023",
+        "insect_id": "species-20432",
+        "plant_name": "チガヤ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に チガヤ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0024",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0024",
+        "insect_id": "species-20432",
+        "plant_name": "シバ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シバ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0025",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0025",
+        "insect_id": "species-20432",
+        "plant_name": "ネザサ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ネザサ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0026",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0026",
+        "insect_id": "species-20432",
+        "plant_name": "アズマネザサ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に アズマネザサ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0027",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0027",
+        "insect_id": "species-20432",
+        "plant_name": "ハチク",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ハチク を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0028",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0028",
+        "insect_id": "species-20432",
+        "plant_name": "メダケ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に メダケ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0029",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0029",
+        "insect_id": "species-20432",
+        "plant_name": "リュウキュウチク",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に リュウキュウチク を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0030",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0030",
+        "insect_id": "species-20432",
+        "plant_name": "サトウキビ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に サトウキビ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0031",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0031",
+        "insect_id": "species-20432",
+        "plant_name": "シラスゲ",
+        "plant_family": "カヤツリグサ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "カヤツリグサ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シラスゲ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0032",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0032",
+        "insect_id": "species-BTG-001",
+        "plant_name": "アカミズキ",
+        "plant_family": "アカネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 118,
+        "source_account_id": "BTG-0178",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に アカミズキ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0033",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0033",
+        "insect_id": "species-BTG-001",
+        "plant_name": "ヤエヤマコンロンカ",
+        "plant_family": "アカネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 118,
+        "source_account_id": "BTG-0178",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ヤエヤマコンロンカ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0034",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0034",
+        "insect_id": "species-BTG-001",
+        "plant_name": "コンロンカ",
+        "plant_family": "アカネ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 118,
+        "source_account_id": "BTG-0178",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に コンロンカ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0035",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0035",
+        "insect_id": "species-BTG-004",
+        "plant_name": "シュロチク",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "ヤシ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シュロチク を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0036",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0036",
+        "insect_id": "species-BTG-004",
+        "plant_name": "シンノウヤシ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "ヤシ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に シンノウヤシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0037",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0037",
+        "insect_id": "species-BTG-004",
+        "plant_name": "ワシントンヤシ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "ヤシ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ワシントンヤシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0038",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0038",
+        "insect_id": "species-BTG-004",
+        "plant_name": "カナリーヤシ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "原文：カナリーヤシ（フェニックス）"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に カナリーヤシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0039",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0039",
+        "insect_id": "species-BTG-004",
+        "plant_name": "トックリヤシモドキ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "ヤシ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に トックリヤシモドキ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0040",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0040",
+        "insect_id": "species-BTG-004",
+        "plant_name": "トックリヤシ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "ヤシ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に トックリヤシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0041",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0041",
+        "insect_id": "species-BTG-004",
+        "plant_name": "カンノンチク",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "ヤシ科"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に カンノンチク を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0042",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0042",
+        "insect_id": "species-BTG-004",
+        "plant_name": "ヤハズヤシ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "原文：ヤハズヤシ（コモチケンチャ）"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ヤハズヤシ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-HOST-ADD-hostplant-btg-full-audit-20260712-0043",
+      "action": "add_hostplant",
+      "before": null,
+      "after": {
+        "record_id": "hostplant-btg-full-audit-20260712-0043",
+        "insect_id": "species-BTG-004",
+        "plant_name": "ビロウ",
+        "plant_family": "ヤシ科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蝶類標準図鑑",
+        "notes": "原文：ビロウ（クバ）"
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の［食草］欄に ビロウ を明記。"
+      },
+      "verification_status": "original_image_verified"
+    }
+  ],
+  "note_actions": [
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1004935",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1004935",
+        "insect_id": "species-20203",
+        "note_type": "出現時期",
+        "content": "年2、3回",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "33",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004935",
+        "insect_id": "species-20204",
+        "note_type": "出現時期",
+        "content": "年2、3回",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "33",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 33,
+        "printed_page": 25,
+        "source_account_id": "BTG-0038",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はヤマトスジグロシロチョウの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はヤマトスジグロシロチョウの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1004947",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1004947",
+        "insect_id": "species-20232",
+        "note_type": "出現時期",
+        "content": "5～6月、7～8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "120",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 120,
+        "printed_page": 122,
+        "source_account_id": "BTG-0186",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "イチモンジチョウの既存注記に含まれる別分類群への重複流入。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "イチモンジチョウの既存注記に含まれる別分類群への重複流入。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1004984",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1004984",
+        "insect_id": "species-20334",
+        "note_type": "出現時期",
+        "content": "5月、6月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "110",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 110,
+        "printed_page": 112,
+        "source_account_id": "BTG-0169",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1005163 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1005163 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1004999",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1004999",
+        "insect_id": "species-20366",
+        "note_type": "出現時期",
+        "content": "6月、8～9月、10～11月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "130",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004999",
+        "insect_id": "species-20367",
+        "note_type": "出現時期",
+        "content": "6月、8～9月、10～11月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "130",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 130,
+        "printed_page": 135,
+        "source_account_id": "BTG-0202",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はリュウキュウウラナミジャノメの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はリュウキュウウラナミジャノメの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005027",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005027",
+        "insect_id": "species-20434",
+        "note_type": "出現時期",
+        "content": "5月、1月、4月、3月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "163",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 163,
+        "printed_page": 175,
+        "source_account_id": "BTG-0270",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "Pelopidas jansonis の注記ではなく、同一誤内容が別行にもある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "Pelopidas jansonis の注記ではなく、同一誤内容が別行にもある。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005047",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005047",
+        "insect_id": "species-20209",
+        "note_type": "出現時期",
+        "content": "7～8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "38",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 38,
+        "printed_page": 32,
+        "source_account_id": "BTG-0047",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1004939 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1004939 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005048",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005048",
+        "insect_id": "species-20210",
+        "note_type": "出現時期",
+        "content": "5月下旬～6月上旬、9月～11月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "35",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 35,
+        "printed_page": 27,
+        "source_account_id": "BTG-0040",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "ツマグロキチョウの既存注記に含まれる別分類群への流入。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "ツマグロキチョウの既存注記に含まれる別分類群への流入。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005051",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005051",
+        "insect_id": "species-20221",
+        "note_type": "出現時期",
+        "content": "7月上旬～8月上旬、8月上旬～中旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "74",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 74,
+        "printed_page": 70,
+        "source_account_id": "BTG-0099",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1004962 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1004962 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005061",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005061",
+        "insect_id": "species-20246",
+        "note_type": "出現時期",
+        "content": "6～7月、7～8月、9月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "58",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 58,
+        "printed_page": 55,
+        "source_account_id": "BTG-0078",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1004952 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1004952 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005071",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005071",
+        "insect_id": "species-20269",
+        "note_type": "出現時期",
+        "content": "3月、2月、12月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "76",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 76,
+        "printed_page": 73,
+        "source_account_id": "BTG-0104",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1004963 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1004963 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005080",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005080",
+        "insect_id": "species-20293",
+        "note_type": "出現時期",
+        "content": "6～8月、6月、7月中旬～8月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "84",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 84,
+        "printed_page": 84,
+        "source_account_id": "BTG-0125",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1005159 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1005159 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-UPDATE_GENERAL_NOTE_PAGE-note-1005087",
+      "action": "update_general_note_page",
+      "before": {
+        "record_id": "note-1005087",
+        "insect_id": "species-20306",
+        "note_type": "出現時期",
+        "content": "年1化、年2化",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "6",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005087",
+        "insect_id": "species-20306",
+        "note_type": "出現時期",
+        "content": "年1化、年2化",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "94",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 94,
+        "printed_page": 94,
+        "source_account_id": "BTG-0140",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "ページ6は誤記。原本のサカハチチョウ解説はPDF94頁。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "ページ6は誤記。原本のサカハチチョウ解説はPDF94頁。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1005088",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1005088",
+        "insect_id": "species-20308",
+        "note_type": "出現時期",
+        "content": "6～8月、8～9月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "97",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005088",
+        "insect_id": "species-20315",
+        "note_type": "出現時期",
+        "content": "6～8月、8～9月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "97",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 97,
+        "printed_page": 100,
+        "source_account_id": "BTG-0149",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はクジャクチョウの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はクジャクチョウの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005090",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005090",
+        "insect_id": "species-20312",
+        "note_type": "出現時期",
+        "content": "4月中旬、5月、10月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "93",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 93,
+        "printed_page": 91,
+        "source_account_id": "BTG-0134",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1004969 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1004969 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005096",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005096",
+        "insect_id": "species-20322",
+        "note_type": "出現時期",
+        "content": "一年中",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "102",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 102,
+        "printed_page": 105,
+        "source_account_id": "BTG-0157",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1004978 がある。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1004978 がある。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1005098",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1005098",
+        "insect_id": "species-20331",
+        "note_type": "出現時期",
+        "content": "6月下旬、7月上旬～1月下旬、7月上旬～9月、10月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "109",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005098",
+        "insect_id": "species-20332",
+        "note_type": "出現時期",
+        "content": "6月下旬、7月上旬～11月下旬、7月上旬～9月、10月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "109",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 109,
+        "printed_page": 110,
+        "source_account_id": "BTG-0166",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はオオウラギンスジヒョウモンの生態欄。OCRで欠落した「11月下旬」も原本画像から復元。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はオオウラギンスジヒョウモンの生態欄。OCRで欠落した「11月下旬」も原本画像から復元。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1005099",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1005099",
+        "insect_id": "species-20332",
+        "note_type": "出現時期",
+        "content": "7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "108",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005099",
+        "insect_id": "species-20331",
+        "note_type": "出現時期",
+        "content": "7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "108",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 108,
+        "printed_page": 109,
+        "source_account_id": "BTG-0165",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はウラギンスジヒョウモンの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はウラギンスジヒョウモンの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1005162",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1005162",
+        "insect_id": "species-20327",
+        "note_type": "出現時期",
+        "content": "5月下旬、6月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "107",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005162",
+        "insect_id": "species-20329",
+        "note_type": "出現時期",
+        "content": "5月下旬、6月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "107",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 107,
+        "printed_page": 107,
+        "source_account_id": "BTG-0161",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はカラフトヒョウモンの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はカラフトヒョウモンの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1005097",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1005097",
+        "insect_id": "species-20329",
+        "note_type": "出現時期",
+        "content": "6～8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "108",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005097",
+        "insect_id": "species-20327",
+        "note_type": "出現時期",
+        "content": "6～8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "108",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 108,
+        "printed_page": 108,
+        "source_account_id": "BTG-0163",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はコヒョウモンの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はコヒョウモンの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1005104",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1005104",
+        "insect_id": "species-20346",
+        "note_type": "出現時期",
+        "content": "5月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "118",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005104",
+        "insect_id": "species-20350",
+        "note_type": "出現時期",
+        "content": "5月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "118",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 119,
+        "source_account_id": "BTG-0180",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はミスジチョウの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はミスジチョウの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-MOVE_GENERAL_NOTE-note-1004990",
+      "action": "move_general_note",
+      "before": {
+        "record_id": "note-1004990",
+        "insect_id": "species-20347",
+        "note_type": "出現時期",
+        "content": "5～7月、8～9月、1月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "119",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004990",
+        "insect_id": "species-20344",
+        "note_type": "出現時期",
+        "content": "5～7月、8～9月、1月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "119",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 120,
+        "source_account_id": "BTG-0182",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "本文位置はホシミスジの生態欄。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "本文位置はホシミスジの生態欄。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_UNSUPPORTED_HOLD-note-1005003",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "note-1005003",
+        "insect_id": "species-20373",
+        "note_type": "出現時期",
+        "content": "年1回",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "133",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 133,
+        "printed_page": 139,
+        "source_account_id": "BTG-0208",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "Lopinga achine の現行受容先は追加資料なしで断定しない。現行 species-20373 への誤帰属は原本で確認できるため、旧行を台帳に保持して公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "Lopinga achine の現行受容先は追加資料なしで断定しない。現行 species-20373 への誤帰属は原本で確認できるため、旧行を台帳に保持して公開正規化から隔離する。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_DUPLICATE_SPILL-note-1005166",
+      "action": "delete_duplicate_spill",
+      "before": {
+        "record_id": "note-1005166",
+        "insect_id": "species-20382",
+        "note_type": "出現時期",
+        "content": "5～6月、8～9月、7月上旬、8月中旬～10月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "139",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 139,
+        "printed_page": null,
+        "source_account_id": null,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一内容の正規行 note-1005008 があり、Lethe marginalis の注記ではない。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一内容の正規行 note-1005008 があり、Lethe marginalis の注記ではない。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_UNSUPPORTED_HOLD-note-1005122",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "note-1005122",
+        "insect_id": "species-20397",
+        "note_type": "出現時期",
+        "content": "7月、12月、1月、3月、4月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "146",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 146,
+        "printed_page": 156,
+        "source_account_id": "BTG-0236",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "Euploea camaralzeman の現行受容先は追加資料なしで断定しない。現行 species-20397 への誤帰属は原本で確認できるため、旧行を台帳に保持して公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "Euploea camaralzeman の現行受容先は追加資料なしで断定しない。現行 species-20397 への誤帰属は原本で確認できるため、旧行を台帳に保持して公開正規化から隔離する。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_NON_BIOLOGICAL_DATE_SPILL-note-1005123",
+      "action": "delete_non_biological_date_spill",
+      "before": {
+        "record_id": "note-1005123",
+        "insect_id": "species-20400",
+        "note_type": "出現時期",
+        "content": "8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "146",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 146,
+        "printed_page": 156,
+        "source_account_id": "BTG-0237",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "採集記録の月だけを出現時期として切り出した行。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "採集記録の月だけを出現時期として切り出した行。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_UNSUPPORTED_HOLD-note-1005017",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "note-1005017",
+        "insect_id": "species-20401",
+        "note_type": "出現時期",
+        "content": "5～6月、7～8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "150",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 150,
+        "printed_page": 157,
+        "source_account_id": "BTG-0238",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "Choaspes benjaminii の現行受容先は追加資料なしで断定しない。現行 species-20401 への誤帰属は原本で確認できるため、旧行を台帳に保持して公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "Choaspes benjaminii の現行受容先は追加資料なしで断定しない。現行 species-20401 への誤帰属は原本で確認できるため、旧行を台帳に保持して公開正規化から隔離する。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_UNSUPPORTED_HOLD-note-1005137",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "note-1005137",
+        "insect_id": "species-20431",
+        "note_type": "出現時期",
+        "content": "5月、1月、4月、3月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "163",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 163,
+        "printed_page": 175,
+        "source_account_id": "BTG-0270",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "Parnara bada の生態欄に対応しない月列。旧行を台帳に保持して公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "Parnara bada の生態欄に対応しない月列。旧行を台帳に保持して公開正規化から隔離する。"
+    },
+    {
+      "action_id": "BTG-NOTE-REPLACE_GENERAL_NOTE-note-1005138",
+      "action": "replace_general_note",
+      "before": {
+        "record_id": "note-1005138",
+        "insect_id": "species-20432",
+        "note_type": "出現時期",
+        "content": "6月、7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "163",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005138",
+        "insect_id": "species-20432",
+        "note_type": "出現時期",
+        "content": "4～6月、3月下旬、7月、8～9月、9～10月、8月下旬～9月上旬、3月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "164",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "printed_page": 177,
+        "source_account_id": "BTG-0274",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同一学名の既存 source-backed 行 note-1005139 の内容で置換。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同一学名の既存 source-backed 行 note-1005139 の内容で置換。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_UNSUPPORTED_HOLD-note-1005105",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "note-1005105",
+        "insect_id": "species-20350",
+        "note_type": "出現時期",
+        "content": "5～6月、7～8月、5月中旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "119",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 119,
+        "printed_page": 121,
+        "source_account_id": "BTG-0184",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "同頁複数アカウントの月列が混合しており、一意な原文復元前は適用しない。旧行を台帳に保持して公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "同頁複数アカウントの月列が混合しており、一意な原文復元前は適用しない。旧行を台帳に保持して公開正規化から隔離する。"
+    },
+    {
+      "action_id": "BTG-NOTE-DELETE_UNSUPPORTED_HOLD-note-1005110",
+      "action": "delete_unsupported_hold",
+      "before": {
+        "record_id": "note-1005110",
+        "insect_id": "species-20360",
+        "note_type": "出現時期",
+        "content": "5～8月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "125",
+        "year": ""
+      },
+      "after": null,
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 125,
+        "printed_page": 128,
+        "source_account_id": "BTG-0194",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "Erebia ligea の開始頁と一致せず、本文位置を一意に確定できない。旧行を台帳に保持して公開正規化から隔離する。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "Erebia ligea の開始頁と一致せず、本文位置を一意に確定できない。旧行を台帳に保持して公開正規化から隔離する。"
+    },
+    {
+      "action_id": "BTG-NOTE-UPDATE_GENERAL_NOTE_PAGE-note-000248",
+      "action": "update_general_note_page",
+      "before": {
+        "record_id": "note-000248",
+        "insect_id": "species-20276",
+        "note_type": "生態情報",
+        "content": "タラノウツギより幼虫が採集されているが、羽化にいたっていない。ヤマモモ、エビヅルより卵が確認されているが、成育するかどうかは不明。ヤマゴボウ、ヨウシュヤマゴボウ、カキノキ、チシャノキ、ヤナギの1種、ネズミモチ、シソ、ギシギシ、エゾノギシギシ、オオバコ、スズメノヤリ、イチジク、カラムシ、サンゴジュなどの花蕾・花穂・新芽にも産卵が確認されているが、これらの植物では幼虫は成育しないようである。飼育下ではインゲンマメで良好に成育する。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-000248",
+        "insect_id": "species-20276",
+        "note_type": "生態情報",
+        "content": "タラノウツギより幼虫が採集されているが、羽化にいたっていない。ヤマモモ、エビヅルより卵が確認されているが、成育するかどうかは不明。ヤマゴボウ、ヨウシュヤマゴボウ、カキノキ、チシャノキ、ヤナギの1種、ネズミモチ、シソ、ギシギシ、エゾノギシギシ、オオバコ、スズメノヤリ、イチジク、カラムシ、サンゴジュなどの花蕾・花穂・新芽にも産卵が確認されているが、これらの植物では幼虫は成育しないようである。飼育下ではインゲンマメで良好に成育する。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "78",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 78,
+        "printed_page": 77,
+        "source_account_id": "BTG-0110",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "空欄だったページを原本の当該種解説開始頁に補完。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "空欄だったページを原本の当該種解説開始頁に補完。"
+    },
+    {
+      "action_id": "BTG-NOTE-UPDATE_GENERAL_NOTE_PAGE-note-000249",
+      "action": "update_general_note_page",
+      "before": {
+        "record_id": "note-000249",
+        "insect_id": "species-20298",
+        "note_type": "生態情報",
+        "content": "幼虫期前半の食草はシソ科のカメバヒキオコシ・クロバナヒキオコシの花穂。オオゴマシジミの宿主となるアリは、シワクシケアリ。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-000249",
+        "insect_id": "species-20298",
+        "note_type": "生態情報",
+        "content": "幼虫期前半の食草はシソ科のカメバヒキオコシ・クロバナヒキオコシの花穂。オオゴマシジミの宿主となるアリは、シワクシケアリ。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "87",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 87,
+        "printed_page": 89,
+        "source_account_id": "BTG-0132",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "空欄だったページを原本の当該種解説開始頁に補完。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "空欄だったページを原本の当該種解説開始頁に補完。"
+    },
+    {
+      "action_id": "BTG-NOTE-REPLACE_GENERAL_NOTE-note-1005175",
+      "action": "replace_general_note",
+      "before": {
+        "record_id": "note-1005175",
+        "insect_id": "species-20433",
+        "note_type": "出現時期",
+        "content": "1月～1月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "163",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005175",
+        "insect_id": "species-20433",
+        "note_type": "出現時期",
+        "content": "1月～11月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "163",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 163,
+        "printed_page": 175,
+        "source_account_id": "BTG-0271",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "OCRで両端が同じ数字になった月範囲を原本画像から復元。"
+      },
+      "verification_status": "original_image_verified",
+      "decision": "OCRで両端が同じ数字になった月範囲を原本画像から復元。"
+    },
+    {
+      "action_id": "BTG-NOTE-ADD-note-btg-full-audit-20260712-0001",
+      "action": "add_general_note",
+      "before": null,
+      "after": {
+        "record_id": "note-btg-full-audit-20260712-0001",
+        "insect_id": "species-20232",
+        "note_type": "出現時期",
+        "content": "6月中旬～下旬、7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "51",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 51,
+        "printed_page": 46,
+        "source_account_id": "BTG-0066",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の生態欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-NOTE-ADD-note-btg-full-audit-20260712-0002",
+      "action": "add_general_note",
+      "before": null,
+      "after": {
+        "record_id": "note-btg-full-audit-20260712-0002",
+        "insect_id": "species-BTG-001",
+        "note_type": "出現時期",
+        "content": "多化性。成虫は2～12月に採集記録があり、とくに7～8月の記録が多い。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "118",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 118,
+        "printed_page": 118,
+        "source_account_id": "BTG-0178",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の生態欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-NOTE-ADD-note-btg-full-audit-20260712-0003",
+      "action": "add_general_note",
+      "before": null,
+      "after": {
+        "record_id": "note-btg-full-audit-20260712-0003",
+        "insect_id": "species-BTG-002",
+        "note_type": "生態情報",
+        "content": "日本では八重山諸島からの記録のみで、生態的知見はほとんど報告されていない。訪花中の個体が採集されている。日本での幼虫食草は未確認。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "145",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 145,
+        "printed_page": 154,
+        "source_account_id": "BTG-0231",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の生態欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-NOTE-ADD-note-btg-full-audit-20260712-0004",
+      "action": "add_general_note",
+      "before": null,
+      "after": {
+        "record_id": "note-btg-full-audit-20260712-0004",
+        "insect_id": "species-BTG-003",
+        "note_type": "生態情報",
+        "content": "国内での発生記録はない。国外食草の記述には産卵・摂食を否定する例や蛹のみの発見例が含まれるため、確定した食草関係としては登録しない。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "145",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 145,
+        "printed_page": 154,
+        "source_account_id": "BTG-0232",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の生態欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    },
+    {
+      "action_id": "BTG-NOTE-ADD-note-btg-full-audit-20260712-0005",
+      "action": "add_general_note",
+      "before": null,
+      "after": {
+        "record_id": "note-btg-full-audit-20260712-0005",
+        "insect_id": "species-BTG-004",
+        "note_type": "生態情報",
+        "content": "ヤシ類の生える開けた市街地や海岸付近に生息する。飛翔は非常に敏速で、シロバナセンダングサなどに訪花する。卵はヤシ科植物の葉に1個ずつ産みつけられる。",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "155",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 155,
+        "printed_page": 165,
+        "source_account_id": "BTG-0253",
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c",
+        "evidence": "原本の生態欄に明記。"
+      },
+      "verification_status": "original_image_verified"
+    }
+  ],
+  "note_keep_reviews": [
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1004961",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1004961",
+        "insect_id": "species-20258",
+        "note_type": "出現時期",
+        "content": "3月下旬、5月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "69",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004961",
+        "insect_id": "species-20258",
+        "note_type": "出現時期",
+        "content": "3月下旬、5月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "69",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 69,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1004967",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1004967",
+        "insect_id": "species-20292",
+        "note_type": "出現時期",
+        "content": "6月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "85",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004967",
+        "insect_id": "species-20292",
+        "note_type": "出現時期",
+        "content": "6月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "85",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 85,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1004968",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1004968",
+        "insect_id": "species-20294",
+        "note_type": "出現時期",
+        "content": "5月中旬～下旬、7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "86",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004968",
+        "insect_id": "species-20294",
+        "note_type": "出現時期",
+        "content": "5月中旬～下旬、7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "86",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 86,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1004970",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1004970",
+        "insect_id": "species-20303",
+        "note_type": "出現時期",
+        "content": "6月上旬、6月中旬～7月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "94",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004970",
+        "insect_id": "species-20303",
+        "note_type": "出現時期",
+        "content": "6月上旬、6月中旬～7月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "94",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 94,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1004993",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1004993",
+        "insect_id": "species-20353",
+        "note_type": "出現時期",
+        "content": "6月下旬～8月中旬、5月、7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "121",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1004993",
+        "insect_id": "species-20353",
+        "note_type": "出現時期",
+        "content": "6月下旬～8月中旬、5月、7月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "121",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 121,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1005007",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1005007",
+        "insect_id": "species-20379",
+        "note_type": "出現時期",
+        "content": "4～5月、6～7月、9～10月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "138",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005007",
+        "insect_id": "species-20379",
+        "note_type": "出現時期",
+        "content": "4～5月、6～7月、9～10月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "138",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 138,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1005026",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1005026",
+        "insect_id": "species-20428",
+        "note_type": "出現時期",
+        "content": "5月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "162",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005026",
+        "insect_id": "species-20428",
+        "note_type": "出現時期",
+        "content": "5月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "162",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 162,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1005028",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1005028",
+        "insect_id": "species-20435",
+        "note_type": "出現時期",
+        "content": "3月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "164",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005028",
+        "insect_id": "species-20435",
+        "note_type": "出現時期",
+        "content": "3月",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "164",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 164,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1005069",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1005069",
+        "insect_id": "species-20266",
+        "note_type": "出現時期",
+        "content": "9月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "75",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005069",
+        "insect_id": "species-20266",
+        "note_type": "出現時期",
+        "content": "9月上旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "75",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 75,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    },
+    {
+      "action_id": "BTG-NOTE-HOLD-note-1005109",
+      "action": "keep_or_continuation_reviewed",
+      "before": {
+        "record_id": "note-1005109",
+        "insect_id": "species-20356",
+        "note_type": "出現時期",
+        "content": "2月～翌1月、3月下旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "122",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005109",
+        "insect_id": "species-20356",
+        "note_type": "出現時期",
+        "content": "2月～翌1月、3月下旬",
+        "reference": "日本産蝶類標準図鑑",
+        "page": "122",
+        "year": ""
+      },
+      "source": {
+        "reference": "日本産蝶類標準図鑑",
+        "pdf_page": 122,
+        "pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+      },
+      "verification_status": "page_layout_reviewed",
+      "decision": "開始頁との差は次頁継続または本文位置として説明でき、誤帰属の根拠がない。"
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "audit_version": "2026-07-12",
+  "reference": "日本産蛾類標準図鑑1",
+  "reviewed_on": "2026-07-12",
+  "source_pdf": {
+    "filename": "日本産蛾類標準図鑑1 2.pdf",
+    "sha256": "35e3a46b1c91a6f16a6aff7522be708ed8a94ccfc8dc39d23c3d3e9171cfd0d9",
+    "page_count": 115,
+    "verification": "The species heading, distribution, ecology, host and classification fields were checked on the original PDF page image."
+  },
+  "scope": {
+    "taxon_groups_reviewed": 2,
+    "expected_actions": {
+      "update_note": 1,
+      "add_note": 2,
+      "add_host": 3
+    },
+    "source_scope_policy": "A species-level heading is not sufficient by itself. Geography and the source classification field must agree before a record is assigned directly to a named current subspecies; geographically incompatible subspecies are excluded."
+  },
+  "taxon_reviews": [
+    {
+      "review_id": "jmsg1-subscope-001",
+      "source_heading": "Eumelea biflavata Warren, 1896",
+      "source_japanese_name": "オビベニホソシャク（改称）",
+      "source_location": {
+        "pdf_pages": [48],
+        "printed_pages": [204],
+        "columns": [1]
+      },
+      "source_scope": "subspecies_explicit_via_geography",
+      "source_scope_evidence": "The heading is binominal, but the classification field explicitly states that Japanese populations are subspecies insulata Warren, 1896. The ecology concerns Honshu, Kyushu and the Nansei Islands, and the host field is part of that Japanese account.",
+      "source_record_insect_id": "species-20461",
+      "apply_targets": [
+        {
+          "insect_id": "species-21572",
+          "scientific_name": "Eumelea biflavata insulata",
+          "japanese_name": "オレベニホシシャク",
+          "reason": "Direct assignment to the subspecies that the source explicitly identifies for the Japanese population."
+        }
+      ],
+      "excluded_targets": [
+        {
+          "scope": "non-Japanese subspecies",
+          "reason": "The nominal subspecies is stated to occur in Sundaland; the reviewed Japanese ecology and hosts are not shared outside insulata."
+        }
+      ],
+      "host_field": "オオバギ、アカメガシワ、クスノハガシワ（以上トウダイグサ科）",
+      "conjectural_text_excluded": "年間を通して連続的に発生していると思われる。"
+    },
+    {
+      "review_id": "jmsg1-subscope-002",
+      "source_heading": "Xenortholitha propinguata (Kollar, 1844)",
+      "source_japanese_name": "フタクロテンナミシャク",
+      "source_location": {
+        "pdf_pages": [85],
+        "printed_pages": [279],
+        "columns": [3]
+      },
+      "source_scope": "subspecies_explicit_via_geography",
+      "source_scope_evidence": "The heading is binominal, but the classification field assigns Honshu, Shikoku and the Korean Peninsula to subspecies niphonica (Butler, 1878). The ecology is explicitly restricted to Honshu and the Kanto region.",
+      "source_record_insect_id": "species-4252",
+      "apply_targets": [
+        {
+          "insect_id": "species-21573",
+          "scientific_name": "Xenortholitha propinguata niphonica",
+          "japanese_name": "フタクチトガリナミシャク",
+          "reason": "Direct assignment to niphonica because the source maps the stated Honshu and Kanto range to that subspecies."
+        }
+      ],
+      "excluded_targets": [
+        {
+          "scope": "nominal subspecies and other Asian subspecies",
+          "reason": "The source assigns the nominal subspecies to Kashmir and suavata to Hokkaido, northeastern China and the Russian Far East; the Honshu/Kanto ecology is not shared with them."
+        }
+      ],
+      "host_field": "未知",
+      "excluded_content": "No host action is created because the source contains no affirmative host record."
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "jmsg1-subscope-action-001",
+      "action": "update_note",
+      "source_scope": "subspecies_explicit_via_geography",
+      "record_id": "note-1005400",
+      "insect_id": "species-20461",
+      "note_type": "出現時期",
+      "reference": "日本産蛾類標準図鑑1",
+      "expected_content": "本州では、紀伊半島南部、九州では鹿児島県、熊本県で得られている。南西諸島では3～12月まで出現しており、年間を通して連続的に発生していると思われる。",
+      "approved_content": "本州では紀伊半島南部、九州では鹿児島県と熊本県で得られている。南西諸島では3〜12月に出現する。",
+      "expected_page": "",
+      "approved_page": "204",
+      "decision": "Retain the observed Japanese distribution and March–December occurrence, exclude the explicitly conjectural continuous-breeding interpretation, and add the verified source page."
+    },
+    {
+      "action_id": "jmsg1-subscope-action-002",
+      "action": "add_note",
+      "source_scope": "subspecies_explicit_via_geography",
+      "record_id": "note-jmsg1-subscope-eumelea-insulata",
+      "insect_id": "species-21572",
+      "note_type": "出現時期",
+      "reference": "日本産蛾類標準図鑑1",
+      "expected_absent": true,
+      "approved_content": "本州では紀伊半島南部、九州では鹿児島県と熊本県で得られている。南西諸島では3〜12月に出現する。",
+      "approved_page": "204",
+      "decision": "Assign the reviewed Japanese ecology directly to insulata; do not share it to non-Japanese subspecies."
+    },
+    {
+      "action_id": "jmsg1-subscope-action-003",
+      "action": "add_host",
+      "source_scope": "subspecies_explicit_via_geography",
+      "record_id": "hostplant-jmsg1-subscope-eumelea-insulata-001",
+      "source_record_id": "hostplant-B1B6-0851",
+      "insect_id": "species-21572",
+      "plant_name": "オオバギ",
+      "plant_family": "トウダイグサ科",
+      "observation_type": "文献",
+      "plant_part": "",
+      "life_stage": "",
+      "reference": "日本産蛾類標準図鑑1",
+      "notes": "",
+      "expected_absent": true,
+      "decision": "Assign the source account's host record directly to the Japanese subspecies insulata."
+    },
+    {
+      "action_id": "jmsg1-subscope-action-004",
+      "action": "add_host",
+      "source_scope": "subspecies_explicit_via_geography",
+      "record_id": "hostplant-jmsg1-subscope-eumelea-insulata-002",
+      "source_record_id": "hostplant-B1B6-0852",
+      "insect_id": "species-21572",
+      "plant_name": "アカメガシワ",
+      "plant_family": "トウダイグサ科",
+      "observation_type": "文献",
+      "plant_part": "",
+      "life_stage": "",
+      "reference": "日本産蛾類標準図鑑1",
+      "notes": "",
+      "expected_absent": true,
+      "decision": "Assign the source account's host record directly to the Japanese subspecies insulata."
+    },
+    {
+      "action_id": "jmsg1-subscope-action-005",
+      "action": "add_host",
+      "source_scope": "subspecies_explicit_via_geography",
+      "record_id": "hostplant-jmsg1-subscope-eumelea-insulata-003",
+      "source_record_id": "hostplant-B1B6-0853",
+      "insect_id": "species-21572",
+      "plant_name": "クスノハガシワ",
+      "plant_family": "トウダイグサ科",
+      "observation_type": "文献",
+      "plant_part": "",
+      "life_stage": "",
+      "reference": "日本産蛾類標準図鑑1",
+      "notes": "",
+      "expected_absent": true,
+      "decision": "Assign the source account's host record directly to the Japanese subspecies insulata."
+    },
+    {
+      "action_id": "jmsg1-subscope-action-006",
+      "action": "add_note",
+      "source_scope": "subspecies_explicit_via_geography",
+      "record_id": "note-jmsg1-subscope-xenortholitha-niphonica",
+      "insect_id": "species-21573",
+      "note_type": "出現時期",
+      "reference": "日本産蛾類標準図鑑1",
+      "expected_absent": true,
+      "approved_content": "本州では低山地から山地まで産し、比較的普通に見られる。年2化で、関東地方周辺の低山地では5〜6月と9月に出現する。",
+      "approved_page": "279",
+      "decision": "Assign the Honshu/Kanto ecology directly to niphonica; do not share it to the nominal subspecies or suavata."
+    }
+  ]
+}

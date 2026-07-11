@@ -1,0 +1,275 @@
+source_account_id,source_pdf_page,source_printed_page,source_japanese_name_ocr,source_scientific_name_ocr,matched_current_ids,new_taxon_id,coverage_status
+BTG-0001,11,1,ギフチョウ,"Laehdorfia japonica Leech, 1889",species-20167,,scientific_match
+BTG-0002,11,1,ヒメギフチョウ,"Luehdorfia puziloi （Erschofi, 1872）",species-20168,,scientific_match
+BTG-0003,11,2,ホソオチョウ,"Sericinus montela Gray, 1852",species-20169,,scientific_match
+BTG-0004,12,3,ウスバアゲハ,"Parnassius citrinarius Motschulsky, 1866",species-20170,,scientific_match
+BTG-0005,12,3,ヒメウスバアゲハ,"Parnassias hoenei Schweitzer, 1912",species-20171,,scientific_match
+BTG-0006,12,4,キイロウスバアゲハ,"Parnassius euersmanni Menetries, 1850",species-20172,,scientific_match
+BTG-0007,14,5,ジャコウアゲハ,Byasa alcinous,species-20173,,scientific_match
+BTG-0008,14,6,ベニモンアゲハ,Pachliopta aristolochiae,species-20174,,scientific_match
+BTG-0009,14,6,キシタアゲハ,"Troides aeacus （C.& R. Felder, 1860）",species-20175,,scientific_match
+BTG-0010,16,7,アオスジアゲハ,Graphium sarpecon,species-20176,,scientific_match
+BTG-0011,16,7,ミカドアゲハ,"Graphium doson （C.& R. Felder, 1864）",species-20177,,scientific_match
+BTG-0012,16,8,コモンタイマイ,Graphium agamemnon,species-20178,,scientific_match
+BTG-0013,17,9,アゲハ,"Papilio xthus Linnaeus, 1767",species-20179,,scientific_match
+BTG-0014,17,9,キアゲハ,Papilio machaon Linnaeus，,species-20180,,scientific_match
+BTG-0015,17,10,オナシアゲハ,Papilio demoleus Linnaeus，,species-20181,,scientific_match
+BTG-0016,19,11,ナガサキアゲハ,Papiio memnon,species-20182,,scientific_match
+BTG-0017,19,12,モンキアゲハ,Papilio helenas Linnaeus，,species-20183,,scientific_match
+BTG-0018,21,13,シロオビアゲハ,Papilio polytes Linnaeus，,species-20184,,scientific_match
+BTG-0019,21,13,クロアゲハ,"Papilio protenor Cramer, 1775",species-20185,,scientific_match
+BTG-0020,21,14,オナガアゲハ,Papilio macientus Janson，,species-20186,,scientific_match
+BTG-0021,23,15,カラスアゲハ,"Papio dehaani C. & R. Felder, 1864",,,alias_or_missing_target_hold
+BTG-0022,23,15,オキナワカラスアゲハ,Papilio okinawensis Fruhstorfer，,species-20188,,scientific_match
+BTG-0023,24,16,ヤエヤマカラスアゲハ,"Papilio bianor Cramer, 1778",species-20189,,scientific_match
+BTG-0024,24,16,ミヤマカラスアゲハ,Papilio maackii Menetries，,species-20190,,scientific_match
+BTG-0025,27,18,ヒメシロチョウ,"Leptidea amurensis（Menetries, 1858）",species-20191,,scientific_match
+BTG-0026,27,18,エゾヒメシロチョウ,Leptidea morsei,species-20192,,scientific_match
+BTG-0027,28,19,ツマキチョウ,Anthocharis scolymus Butler，,species-20193,,scientific_match
+BTG-0028,28,19,クモマツマキチョウ,Anthocharis cardamines,species-20194,,scientific_match
+BTG-0029,28,20,ツマベニチョウ,Hebomoia glaucippe,species-20195,,scientific_match
+BTG-0030,31,21,ナミエシロチョウ,"Appias paulina （Cramer, 1777）",species-20196,,scientific_match
+BTG-0031,31,21,カワカミシロチョウ,Appias albina,species-20197,,scientific_match
+BTG-0032,31,22,タイワンシロチョウ,"Appias byncida （Cramer, 1777）",species-20198,,scientific_match
+BTG-0033,31,22,クロテンシロチョウ,"Lebtosia mimna （Fabricius, 1793）",,,alias_or_missing_target_hold
+BTG-0034,32,23,オオモンシロチョウ,Pieris brassicae,species-20200,,scientific_match
+BTG-0035,32,23,モンシロチョウ,"Pieris rapae （Linnaeus, 1758）",species-20201,,scientific_match
+BTG-0036,32,24,タイワンモンシロチョウ,Pieris canidia,species-20202,,scientific_match
+BTG-0037,32,24,エゾスジグロシロチョウ,Pieris dulcinea,species-20203,,scientific_match
+BTG-0038,33,25,ヤマトスジグロシロチョウ,Pieris nesis,species-20204,,scientific_match
+BTG-0039,33,26,スジグロシロチョウ,"Pieris melete（Menetries, 1857）",species-20205,,scientific_match
+BTG-0040,35,27,ツマグロキチョウ,"Eurema laeta （Boisduval, 1836）",species-20206,,scientific_match
+BTG-0041,35,27,ホシボシキチョウ,"Eurema brigitta （Stoll, 1780）",species-20207,,scientific_match
+BTG-0042,35,28,タイワンキチョウ,Eurema blanda,species-20208,,scientific_match
+BTG-0043,35,28,キチョウ,"Earema hecabe（Linnaeus, 1758）",species-20209,,scientific_match
+BTG-0044,36,29,キタキチョウ,Eurema mandarina,species-20210,,scientific_match
+BTG-0045,37,31,ミヤマシロチョウ,"Aporia hippia （Bremer,1861）",species-20211,,scientific_match
+BTG-0046,37,31,エゾシロチョウ,Aporia crataegi,species-20212,,scientific_match
+BTG-0047,38,32,ヤマキチョウ,"Gonepteryr rhamni （Linnaeus, 1758）",species-20213,,scientific_match
+BTG-0048,38,33,スジボソヤマキチョウ,"Gonepterss aspasia （Menetries,1858）",species-20214,,scientific_match
+BTG-0049,40,34,ミヤマモンキチョウ,"Colias palaeno （Linnaeus, 1761）",species-20215,,scientific_match
+BTG-0050,40,35,モンキチョウ,"Colias erate（Esper, 1805）",species-20216,,scientific_match
+BTG-0051,41,36,キシタウスキシロチョウ,Catopsilia scylla,species-20217,,scientific_match
+BTG-0052,41,36,ウラナミシロチョウ,Catopsilia pyranthe,species-20218,,scientific_match
+BTG-0053,41,37,ウスキシロチョウ,"Catopsilia pomona （Fabricius, 1775）",species-20219,,scientific_match
+BTG-0054,45,38,ウラギンシジミ,"Curetis acuta Moore, 1877",species-20220,,scientific_match
+BTG-0055,45,38,ゴイシシジミ,Taraka hamada,species-20221,,scientific_match
+BTG-0056,45,39,シロモンクロシジミ,"Spalgis epius （Westwood, 1851）",species-20222,,scientific_match
+BTG-0057,46,40,キマダラルリツバメ,Spindasis takanonis,species-20223,,scientific_match
+BTG-0058,46,41,ルーミスシジミ,Panchala ganesa,species-20224,,scientific_match
+BTG-0059,46,41,ムラサキシジミ,Narathura japonica,species-20225,,scientific_match
+BTG-0060,47,42,ムラサキツバメ,"Narathura bazalus （Hewitson, 1862）",species-20226,,scientific_match
+BTG-0061,47,43,ウラゴマダラシジミ,"Artopoetes pryeri （Murtay, 1873）",species-20227,,scientific_match
+BTG-0062,49,44,ムモンアカシジミ,Shirozua jonasi,species-20228,,scientific_match
+BTG-0063,49,44,チョウセンアカシジミ,"Coreana raphaelis （Oberthir,1880）",species-20229,,scientific_match
+BTG-0064,49,45,ウラキンシジミ,Ussuriana stygiana,species-20230,,scientific_match
+BTG-0065,51,46,アカシジミ,"Jabonica lutea （Hewitson, 1865）",species-20231,,scientific_match
+BTG-0066,51,46,カシワアカシジミ,Japonica onoi Murayama，,species-20232,,scientific_match
+BTG-0067,51,47,ウラナミアカシジミ,"Japonica saepestriata （Hewitson, 1865）",species-20233,,scientific_match
+BTG-0068,54,48,ミズイロオナガシジミ,Antigius attilia,species-20234,,scientific_match
+BTG-0069,54,48,ウスイロオナガシジミ,Antigius batieni,,,alias_or_missing_target_hold
+BTG-0070,54,49,オナガシジミ,Araragi enthea,species-20236,,scientific_match
+BTG-0071,55,50,ウラミスジシジミ,Wagimo signatus,species-20237,,scientific_match
+BTG-0072,55,50,ウラクロシジミ,Iratsume orsedice,species-20238,,scientific_match
+BTG-0073,55,51,フジミドリシジミ,"Stbataniozepkyrus fuisanas （Matsumura, 1910）",species-20239,,scientific_match
+BTG-0074,55,51,ウラジロミドリシジミ,"Favonius saphininas （Staudinger, 1887）",species-20240,,scientific_match
+BTG-0075,56,52,ヒロオビミドリシジミ,Favonius cognatus,species-20241,,scientific_match
+BTG-0076,58,54,ハヤシミドリシジミ,Favonius altramarinus,species-20242,,scientific_match
+BTG-0077,58,54,エゾミドリシジミ,Favonius jezoensis,species-20243,,scientific_match
+BTG-0078,58,55,オオミドリシジミ,"Favonius orientalis （Murray, 1875）",species-20244,,scientific_match
+BTG-0079,60,56,クロミドリシジミ,"Favonins yuasai Shirozu, 1947",species-20245,,scientific_match
+BTG-0080,60,56,ジョウザンミドリシジミ,Favonius tarila,species-20246,,scientific_match
+BTG-0081,60,57,ミドリシジミ,"Neozephyrus japonicus （Murray, 1874）",species-20247,,scientific_match
+BTG-0082,63,58,アイノミドリシジミ,"Chrysozephyms brillantinus （Staudinger, 1887）",species-20248,,scientific_match
+BTG-0083,63,58,メスアカミドリシジミ,"Chrysozephyrus smaragdinas （Bremer, 1861）",species-20249,,scientific_match
+BTG-0084,63,59,ヒサマツミドリシジミ,Chrysozephyras hisamatsusanas,species-20250,,scientific_match
+BTG-0085,64,60,キリシマミドリシジミ,Chrysozephyrus ataxus,species-20251,,scientific_match
+BTG-0086,67,62,カラスシジミ,Firsenia w-album,species-20252,,scientific_match
+BTG-0087,67,62,ミヤマカラスシジミ,Fizsenia mera,species-20253,,scientific_match
+BTG-0088,67,63,ベニモンカラスシジミ,"Fixsenia iyonis （Ota & Kusunoki, 1957）",species-20254,,scientific_match
+BTG-0089,68,64,リンゴシジミ,Fiassenia pruni,species-20255,,scientific_match
+BTG-0090,68,64,コツバメ,"Collophrys ferea （Butler, 1866）",species-20256,,scientific_match
+BTG-0091,68,65,トラフシジミ,"Rabala arata （Bremer, 1861）",species-20257,,scientific_match
+BTG-0092,68,65,イワカワシジミ,"Artipe eryx （Linnaeus, 1771）",species-20258,,scientific_match
+BTG-0093,69,66,ベニシジミ,"Lycaena phlaeas （Linnaeus, 1761）",species-20259,,scientific_match
+BTG-0094,69,67,クロシジミ,"Niphanda fusca （Bremer & Grey, 1852）",species-20260,,scientific_match
+BTG-0095,71,68,ホリイコシジミ,Zizula hylar,species-20261,,scientific_match
+BTG-0096,71,68,シルビアシジミ,"Zizina otis （Fabricius, 1787）",species-20262,,scientific_match
+BTG-0097,71,69,ハマヤマトシジミ,Zizeeria karsandra,species-20263,,scientific_match
+BTG-0098,71,69,ヤマトシジミ,"Zizeeria maha （Kollar, 1844）",species-20264,,scientific_match
+BTG-0099,74,70,ゴイシツバメシジミ,"Shuimia moorei （Leech, 1889）",species-20265,,scientific_match
+BTG-0100,74,70,タイワンツバメシジミ,Everes lacturnus,species-20266,,scientific_match
+BTG-0101,75,71,ツバメシジミ,"Everes argiades （Pallas, 1771）",species-20267,,scientific_match
+BTG-0102,75,71,クロツバメシジミ,"Tongeia fischeri （Eversmann, 1843）",species-20268,,scientific_match
+BTG-0103,75,72,ツシマウラボシシジミ,"Pithecops fulgens Doherty, 1889",species-20269,,scientific_match
+BTG-0104,76,73,リュウキュウウラボシシジミ,"Pithecops corvus Fruhstorfer, 1919",species-20270,,scientific_match
+BTG-0105,76,73,ヒメウラボシシジミ,"Neopithecops zalmora （Butler, 1870）",species-20271,,scientific_match
+BTG-0106,76,74,タイワンクロボシシジミ,"Megisba malaya（Horsfield, 1828）",species-20272,,scientific_match
+BTG-0107,76,74,ヤクシマルリシジミ,"Acytolepis puspa （Horsfield, 1828）",species-20273,,scientific_match
+BTG-0108,77,75,タッパンルリシジミ,"Udara dilecta （Moore, 1879）",species-20274,,scientific_match
+BTG-0109,77,76,サツマシジミ,Udara albocaenlea,species-20275,,scientific_match
+BTG-0110,78,77,ルリシジミ,Celastrina argiolaus,species-20276,,scientific_match
+BTG-0111,78,77,オガサワラシジミ,"Celastrina ogasawaraensis （H. Pryer, 1883）",species-20277,,scientific_match
+BTG-0112,78,78,スギタニルリシジミ,"Celastrina sugitanii （Matsumura, 1919）",species-20278,,scientific_match
+BTG-0113,79,79,カクモンシジミ,Leptotes plinius,species-20279,,scientific_match
+BTG-0114,79,79,ウラナミシジミ,Lampides boeticus,species-20280,,scientific_match
+BTG-0115,79,80,ヒメウラナミシジミ,Prosotas nora,species-20281,,scientific_match
+BTG-0116,79,80,マルバネウラナミシジミ,Petrelaea tombugensis,species-20282,,scientific_match
+BTG-0117,79,80,アマミウラナミシジミ,Nacaduba karaua,,,alias_or_missing_target_hold
+BTG-0118,80,81,ルリウラナミシジミ,Jamides bochus,species-20284,,scientific_match
+BTG-0119,80,82,シロウラナミシジミ,"Jamides alecto （C. Felder, 1860）",species-20285,,scientific_match
+BTG-0120,80,82,ウスアオオナガウラナミシジミ,"Catochrysops panormas （C. Felder, 1860）",species-20286,,scientific_match
+BTG-0121,80,82,ムラサキオナガウラナミシジミ,"Catocieysops strabo （Fabricius, 1793）",species-20287,,scientific_match
+BTG-0122,84,83,オジロシジミ,Euchrysops cnejus,species-20288,,scientific_match
+BTG-0123,84,83,ソテツシジミ,Chilades mindorus,species-20289,,scientific_match
+BTG-0124,84,83,クロマダラソテツシジミ,"Chilades pandava （Horsfield, 1829）",species-20290,,scientific_match
+BTG-0125,84,84,ヒメシジミ,"Plebejus argus （Linnacus, 1758）",species-20291,,scientific_match
+BTG-0126,84,84,アサマシジミ,"Lycaeides subsolana （Eversmann, 1851）",species-20292,,scientific_match
+BTG-0127,85,85,ミヤマシジミ,"Lycaeides argyrognomon（Bergstrasser, 1779）",species-20293,,scientific_match
+BTG-0128,85,86,ジョウザンシジミ,"Scolitantides orion（Pallas, 1771）",species-20294,,scientific_match
+BTG-0129,86,87,カラフトルリシジミ,"Vacinina optilete （Knoch, 1781）",species-20295,,scientific_match
+BTG-0130,86,88,オオルリシジミ,Shimiaeoides divinus,species-20296,,scientific_match
+BTG-0131,86,88,カバイロシジミ,"Glaucopsyche lycormas （Butler, 1866）",species-20297,,scientific_match
+BTG-0132,87,89,オオゴマシジミ,"Maculinea arionides （Staudinger, 1887）",species-20298,,scientific_match
+BTG-0133,87,90,ゴマシジミ,Maculinea teleius,species-20299,,scientific_match
+BTG-0134,93,91,テングチョウ,"Libythea lepita Moore, 1858",species-20300,,scientific_match
+BTG-0135,93,92,ムラサキテングチョウ,"Libythea geoffrroy Godart, 1824",species-20301,,scientific_match
+BTG-0136,93,92,コヒョウモンモドキ,"Melitaea ambigua Menetries, 1859",species-20302,,scientific_match
+BTG-0137,93,92,ヒョウモンモドキ,"Melitaea scotosia Butler, 1878",species-20303,,scientific_match
+BTG-0138,94,93,ウスイロヒョウモンモドキ,"Melitaea protomedia Menetries, 1858",species-20304,,scientific_match
+BTG-0139,94,94,アカマダラ,"Araschnia leuana （Linnaeus, 1758）",species-20305,,scientific_match
+BTG-0140,94,94,サカハチチョウ,"Araschnia burejiana Bremer, 1861",species-20306,,scientific_match
+BTG-0141,95,95,ヒメアカタテハ,"Vanessa cardui （Linnaeus, 1758）",species-20307,,scientific_match
+BTG-0142,95,95,アカタテハ,"Vanessa indica （Herbst, 1794）",species-20308,,scientific_match
+BTG-0143,95,96,キタテハ,Polygonia c-auream,species-20309,,scientific_match
+BTG-0144,96,97,シータテハ,Polygonia c-album,species-20310,,scientific_match
+BTG-0145,96,97,エルタテハ,"Nymphalis k-albam（Esper,1781）",,,alias_or_missing_target_hold
+BTG-0146,96,98,ヒオドシチョウ,"Nymphalis ranthomelas （Esper, 1781）",species-20312,,scientific_match
+BTG-0147,97,99,キベリタテハ,"Nymphalis antiopa （Linnaeus, 1758）",species-20313,,scientific_match
+BTG-0148,97,99,コヒオドシ,"Aglais urticae （Linnaeus, 1758）",species-20314,,scientific_match
+BTG-0149,97,100,クジャクチョウ,"Inachis io （Linnaeus, 1758）",species-20315,,scientific_match
+BTG-0150,100,101,ルリタテハ,"Kaniska canace （Linnaeus, 1763）",species-20316,,scientific_match
+BTG-0151,100,101,タテハモドキ,"Janonia almana （Linnaeus, 1758）",species-20317,,scientific_match
+BTG-0152,100,102,アオタテハモドキ,Junonia orithya （Linnaeus，,species-20318,,scientific_match
+BTG-0153,101,103,イワサキタテハモドキ,Janonia hedonia,species-20319,,scientific_match
+BTG-0154,101,103,イワサキコノハ,"Doleschallia bisaltide （Cramer, 1777）",species-20320,,scientific_match
+BTG-0155,101,103,コノハチョウ,"Kalima inachas （Doyere, 1840）",species-20321,,scientific_match
+BTG-0156,101,104,メスアカムラサキ,Hypolimnas misippus,species-20322,,scientific_match
+BTG-0157,102,105,リュウキュウムラサキ,"Hypolimnas bolina （Linnacus, 1758）",species-20323,,scientific_match
+BTG-0158,102,105,ヤエヤマムラサキ,"Hypolimnas anomala （Wallace,1869）",species-20324,,scientific_match
+BTG-0159,102,106,イシガケチョウ,"Cyrestis thyodamas Doyere, 1840",species-20325,,scientific_match
+BTG-0160,107,107,ホソバヒョウモン,"Clossiana thore（Hibner, 1803-1804）",,,alias_or_missing_target_hold
+BTG-0161,107,107,カラフトヒョウモン,"Clossiana iphigenia（Graeser, 1888）",,,alias_or_missing_target_hold
+BTG-0162,108,108,アサヒヒョウモン,Clossiana freija,,,alias_or_missing_target_hold
+BTG-0163,108,108,コヒョウモン,"Brenthis ino （Rottemburg, 1775）",species-20327,,scientific_match
+BTG-0164,108,109,ヒョウモンチョウ,Brenthis daphne,species-20330,,scientific_match
+BTG-0165,108,109,ウラギンスジヒョウモン,"Argyronome laodice （Pallas, 1771）",species-20331,,scientific_match
+BTG-0166,109,110,オオウラギンスジヒョウモン,"Argyronome nslana （Motschulsky, 1866）",species-20332,,scientific_match
+BTG-0167,109,110,クモガタヒョウモン,Nephargynnis anadyomene,species-20333,,scientific_match
+BTG-0168,109,111,メスグロヒョウモン,Damora sagana,species-20334,,scientific_match
+BTG-0169,110,112,ミドリヒョウモン,Argynnis paphia,species-20335,,scientific_match
+BTG-0170,110,113,ギンボシヒョウモン,Speyeria aglaja,species-20336,,scientific_match
+BTG-0171,111,114,ウラギンヒョウモン,"Fabriciana adippe （Denis & Schiffermiller, 1775）",species-20337,,scientific_match
+BTG-0172,111,115,オオウラギンヒョウモン,"Fabriciama neribpbe IC. &R. Felder, 1862）",,,alias_or_missing_target_hold
+BTG-0173,112,116,ツマグロヒョウモン,Argyreus hyperbius,species-20339,,scientific_match
+BTG-0174,112,116,ウラベニヒョウモン,"Phalanta phalantha （Drury, 1773）",,,alias_or_missing_target_hold
+BTG-0175,112,117,タイワンキマダラ,Cupha erymanthis,,,alias_or_missing_target_hold
+BTG-0176,112,117,カバタテハ,Ariadne ariadne,species-20342,,scientific_match
+BTG-0177,118,118,スミナガシ,"Dichorragia nesimachus （Doyere, 1840）",species-20343,,scientific_match
+BTG-0178,118,118,ヤエヤマイチモンジ,"Athyma selenophora （Kollar, 1844）",,species-BTG-001,new_taxon_original_verified
+BTG-0179,118,119,シロミスジ,Athyma perius,species-20345,,scientific_match
+BTG-0180,118,119,ミスジチョウ,Neptis philyra,species-20350,,scientific_match
+BTG-0181,118,119,オオミスジ,"Neptis alwina （Bremer & Grey, 1852）",species-20346,,scientific_match
+BTG-0182,119,120,ホシミスジ,"Neptis pryeni Butler, 1871",species-20344,,scientific_match
+BTG-0183,119,121,フタスジチョウ,Neptis niuularis,species-20349,,scientific_match
+BTG-0184,119,121,コミスジ,"Neptis sappho （Pallas, 1771）",species-20347,,scientific_match
+BTG-0185,120,122,リュウキュウミスジ,"Neptis hylas （Linnaeus, 1758）",species-20348,,scientific_match
+BTG-0186,120,122,イチモンジチョウ,"Ladoga camilla （Linnacus, 1764）",,,alias_or_missing_target_hold
+BTG-0187,120,123,アサマイチモンジ,Ladoga glorifica,,,alias_or_missing_target_hold
+BTG-0188,120,123,オオイチモンジ,Limenitis populi,species-20353,,scientific_match
+BTG-0189,121,124,フタオチョウ,Polyara eudamippus,species-20354,,scientific_match
+BTG-0190,121,125,ゴマダラチョウ,Hestina japonica,,,alias_or_missing_target_hold
+BTG-0191,121,125,アカボシゴマダラ,"Hestina assimilis （Linnaeus, 1758）",species-20355|species-20356,,scientific_match
+BTG-0192,122,126,コムラサキ,"Apatura metis Freyer, 1829",species-20357,,scientific_match
+BTG-0193,122,127,オオムラサキ,"Sasahia charonda （Hewitson, 1863）",species-20358,,scientific_match
+BTG-0194,125,128,ベニヒカゲ,Erebia neniene,,,alias_or_missing_target_hold
+BTG-0195,126,130,クモマベニヒカゲ,"Erebia ligea （Linnaeus, 1758）",species-20360,,scientific_match
+BTG-0196,126,131,タカネヒカゲ,"Oeneis nomna （Thunberg, 1791）",species-20361,,scientific_match
+BTG-0197,127,132,ダイセツタカネヒカゲ,Oeneis melissa,species-20362,,scientific_match
+BTG-0198,127,132,ヒメヒカゲ,"Coenonympha oedibpas （Fabricius, 1787）",species-20363,,scientific_match
+BTG-0199,127,133,シロオビヒメヒカゲ,Coenonympha hero,,,alias_or_missing_target_hold
+BTG-0200,129,134,ヒメウラナミジャノメ,"Ypthima argus Butler, 1866",species-20365,,scientific_match
+BTG-0201,129,134,ウラナミジャノメ,"Ypthima maltistriata Butler, 1883",species-20366,,scientific_match
+BTG-0202,130,135,リュウキュウウラナミジャノメ,"Ypthima riukizana Matsumura, 1906",species-20367,,scientific_match
+BTG-0203,130,136,ヤエヤマウラナミジャノメ,"Ypthima yayeyamana Nire, 1920",,,alias_or_missing_target_hold
+BTG-0204,130,136,マサキウラナミジャノメ,"Ipthima masakia Ito, 1947",species-20369,,scientific_match
+BTG-0205,131,137,コジャノメ,Mycalesis francisca,species-20370,,scientific_match
+BTG-0206,131,137,ヒメジャノメ,"Mycalesis gotama Moore, 1858",species-20371,,scientific_match
+BTG-0207,131,138,リュウキュウヒメジャノメ,"Mycalesis madiicosa Butler, 1868",species-20372,,scientific_match
+BTG-0208,133,139,ウラジャノメ,Lopinga achine,,,alias_or_missing_target_hold
+BTG-0209,133,139,ツマジロウラジャノメ,Lasiommata deidamia,species-20373,,scientific_match
+BTG-0210,133,140,キマダラモドキ,Kirinia fentoni,,,alias_or_missing_target_hold
+BTG-0211,137,141,オオヒカゲ,Ninguta schrenckii,species-20376,,scientific_match
+BTG-0212,137,141,ジャノメチョウ,"Minois dryas （Scopoli, 1763）",species-20377,,scientific_match
+BTG-0213,137,142,ウスイロコノマチョウ,"Melanitis leda （Linnaeus, 1758）",species-20378,,scientific_match
+BTG-0214,137,142,クロコノマチョウ,Melanitis phedima,species-20379,,scientific_match
+BTG-0215,138,143,シロオビヒカゲ,Lethe euroba,,,alias_or_missing_target_hold
+BTG-0216,138,144,クロヒカゲ,Lethe diana,species-20381,,scientific_match
+BTG-0217,139,145,ヒカゲチョワ,"Lethe sicelis （Hewitson, 1862）",species-20380,,scientific_match
+BTG-0218,139,145,クロヒカゲモドキ,Lethe marginalis,species-20382,,scientific_match
+BTG-0219,139,146,ヒメキマダラヒカゲ,"Zophoessa callipteris （Butler, 1877）",species-20384,,scientific_match
+BTG-0220,140,147,サトキマダラヒカゲ,"Neope goschkeuitschii （Menetries, 1857）",species-20385,,scientific_match
+BTG-0221,140,148,ヤマキマダラヒカゲ,"Neope niphonica Butler, 1881",species-20386,,scientific_match
+BTG-0222,142,149,オオゴマダラ,"ldea leuconoe Erichson, 1834",species-20387,,scientific_match
+BTG-0223,142,149,ウスコモンマダラ,"Tinmala imniace （Cramer, 1775）",,,alias_or_missing_target_hold
+BTG-0224,142,150,ミナミコモンマダラ,Tirumala hamata,,,alias_or_missing_target_hold
+BTG-0225,142,150,リュウキュウアサギマダラ,Ideopsis similis,,,alias_or_missing_target_hold
+BTG-0226,143,151,ヒメアサギマダラ,Parantica aglea,species-20390,,scientific_match
+BTG-0227,143,151,タイワンアサギマダラ,"Parantica suinhoed （Moore, 1883）",species-20389,,scientific_match
+BTG-0228,143,152,アサギマダラ,"Parantica sita （Kollar, 1844）",species-20392,,scientific_match
+BTG-0229,145,153,カバマダラ,Danaus chrysippus,,,alias_or_missing_target_hold
+BTG-0230,145,153,スシグロカバマダラ,Danaus genutia,,,alias_or_missing_target_hold
+BTG-0231,145,154,スジグロシロマダラ,Danaus melanippus,,species-BTG-002,new_taxon_original_verified
+BTG-0232,145,154,ミダムスルリマダラ,Euploea midamas,,species-BTG-003,new_taxon_original_verified
+BTG-0233,146,155,マルバネルリマダラ,Euploea eunice,species-20396,,scientific_match
+BTG-0234,146,155,ルリマダラ,"Euploea sylester （Fabricius, 1793）",species-20400,,scientific_match
+BTG-0235,146,155,ツマムラサキマダラ,Euploea mulciber,species-20397,,scientific_match
+BTG-0236,146,156,シロオビマダラ,"Euploea camaralzeman Butler, 1866",,,alias_or_missing_target_hold
+BTG-0237,146,156,ガランピマダラ,"Euploea core （Cramer, 1780）",species-20395,,scientific_match
+BTG-0238,150,157,アオバセセリ,"Choaspes benjaminii （Guerin-Meneville, 1843）",,,alias_or_missing_target_hold
+BTG-0239,150,157,タイワンアオバセセリ,"Badamia exclamationis （Fabricius, 1775）",species-20401,,scientific_match
+BTG-0240,150,158,オキナワビロウドセセリ,Hasora chromus,,,alias_or_missing_target_hold
+BTG-0241,150,158,テツイロビロウドセセリ,Hasora badra,,,alias_or_missing_target_hold
+BTG-0242,151,159,キバネセセリ,Barara aguiina,,,alias_or_missing_target_hold
+BTG-0243,151,159,コウトウシロシタセセリ,"Tagiades trebellius （Hopffer, 1874）",,,alias_or_missing_target_hold
+BTG-0244,151,160,ダイミョウセセリ,Daimio tethys,species-20407,,scientific_match
+BTG-0245,152,161,チャマダラセセリ,"Prgus maculatus （Bremer & Grey, 1852）",species-20408,,scientific_match
+BTG-0246,152,161,ヒメチャマダラセセリ,"Prgus malvae （Linnaeus, 1758）",species-20409,,scientific_match
+BTG-0247,152,162,ミヤマセセリ,Erynnis montanas,species-20410,,scientific_match
+BTG-0248,154,163,ギンイチモンジセセリ,Leptalina unicolor,species-20411,,scientific_match
+BTG-0249,154,163,ホソバセセリ,"Isoteinon lamprospius C. & R. Felder, 1862",species-20412,,scientific_match
+BTG-0250,154,164,タカネキマダラセセリ,"Carterocephais palaemon （Pallas, 1771）",species-20413,,scientific_match
+BTG-0251,154,164,カラフトタカネキマダラセセリ,"Carterocephals silvicola（Meigen, 1828）",species-20414,,scientific_match
+BTG-0252,155,165,ホシチャバネセセリ,Aeromachus inachus,species-20415,,scientific_match
+BTG-0253,155,165,クロボシセセリ,Suastus gremius,,species-BTG-004,new_taxon_original_verified
+BTG-0254,155,165,コチャバネセセリ,Thoressa varia,species-20416,,scientific_match
+BTG-0255,155,166,カラフトセセリ,"Thymelicus lineola （Ochsenheimer, 1808）",,,alias_or_missing_target_hold
+BTG-0256,157,167,スジグロチャバネセセリ,Thymelicus leoninus,,,alias_or_missing_target_hold
+BTG-0257,157,167,ヘリグロチャバネセセリ,"Tlhymelicus syleaticus （Bremer, 1861）",,,alias_or_missing_target_hold
+BTG-0258,158,168,ヒメキマダラセセリ,Ochlodes ochraceus,species-20419,,scientific_match
+BTG-0259,158,168,アサヒナキマダラセセリ,"Ochlodes asahinai Shirozu, 1964",species-20421,,scientific_match
+BTG-0260,158,169,コキマダラセセリ,"Ochlodes venatus （Bremer & Grey, 1852）",species-20422,,scientific_match
+BTG-0261,159,170,アカセセリ,Hesperia forinda,species-20423,,scientific_match
+BTG-0262,159,170,キマダラセセリ,"Potanthus fauus（Murray, 1875）",,,alias_or_missing_target_hold
+BTG-0263,159,171,ネッタイアカセセリ,Telicota colon,species-20425,,scientific_match
+BTG-0264,159,171,バナナセセリ,Erionota torus Evans，,species-20426,,scientific_match
+BTG-0265,161,172,オオシロモンセセリ,"Udaspes folus （Cramer, 1775）",species-20427,,scientific_match
+BTG-0266,161,172,クロセセリ,"Notocrypta curvifascia （C. &R. Felder, 1862）",species-20428,,scientific_match
+BTG-0267,162,173,オオチャバネセセリ,Polytremis pellucida,species-20429,,scientific_match
+BTG-0268,162,174,ミヤマチャバネセセリ,"Pelopidas jansonis （Butler, 1878）",species-20434,,scientific_match
+BTG-0269,162,174,トガリチャバネセセリ,Pelopidas agna,,,alias_or_missing_target_hold
+BTG-0270,163,175,チャバネセセリ,Pelopidas mathias,,,alias_or_missing_target_hold
+BTG-0271,163,175,ユウレイセセリ,Borbo cinnara,species-20433,,scientific_match
+BTG-0272,163,176,ヒメイチモンジセセリ,"Parnara bada（Moore,1878）",species-20431,,scientific_match
+BTG-0273,163,176,オガサワラセセリ,"Parnara ogasawarensis Matsumura, 1906",species-20435,,scientific_match
+BTG-0274,164,177,イチモンジセセリ,Parnara guttata,species-20432|species-20436,,scientific_match

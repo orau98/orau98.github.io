@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import { fileURLToPath } from 'url';
-import { collectGeneralNoteIssues } from './lib/generalNoteQuality.mjs';
+import {
+  collectGeneralNoteIssues,
+  collectLiteratureSourceTaxonIssues,
+} from './lib/generalNoteQuality.mjs';
 import { collectTaxonomyAssertionFailures } from './lib/taxonomyAssertions.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,9 +20,16 @@ const KIRIGA_ECOLOGY_AUDIT_PATH = path.join(
   'source_audits',
   'japan-winter-noctuid-ecology.csv',
 );
+const KIRIGA_EMERGENCE_AUDIT_PATH = path.join(
+  ROOT,
+  'data',
+  'source_audits',
+  'japan-winter-noctuid-emergence.csv',
+);
 const KIRIGA_LEGACY_REFERENCE = '日本のキリガ';
 const KIRIGA_CANONICAL_REFERENCE = '日本の冬夜蛾';
 const KIRIGA_CANONICAL_NOTE_TYPE = '生態情報';
+const KIRIGA_EMERGENCE_NOTE_TYPE = '出現時期';
 const KIRIGA_SOURCE_PDF_FILE = '日本のキリガ.pdf';
 const KIRIGA_SOURCE_PDF_SHA256 = '8d6fdad849c967ec2ea5659fd1b455ea088e13d7bde74d936bbbea97586d703d';
 
@@ -85,6 +95,48 @@ kirigaAuditRows.forEach((row) => {
   }
   kirigaAuditById.set(recordId, row);
 });
+const kirigaEmergenceAuditRows = fs.existsSync(KIRIGA_EMERGENCE_AUDIT_PATH)
+  ? parseCsv(fs.readFileSync(KIRIGA_EMERGENCE_AUDIT_PATH, 'utf-8'))
+  : [];
+const kirigaEmergenceAuditByRecordId = new Map();
+const kirigaEmergenceInsectIds = new Set();
+kirigaEmergenceAuditRows.forEach((row) => {
+  const auditId = cleanString(row.audit_id);
+  const insectId = cleanString(row.insect_id);
+  const recordId = `note-${auditId}`;
+  if (!auditId || kirigaEmergenceAuditByRecordId.has(recordId)) {
+    throw new Error(`Invalid or duplicate Kiriga emergence audit_id: ${auditId}`);
+  }
+  if (!insectId || kirigaEmergenceInsectIds.has(insectId)) {
+    throw new Error(`Invalid or duplicate Kiriga emergence insect_id: ${insectId}`);
+  }
+  if (cleanString(row.canonical_reference) !== KIRIGA_CANONICAL_REFERENCE) {
+    throw new Error(`Kiriga emergence audit reference mismatch: ${auditId}`);
+  }
+  if (
+    cleanString(row.pdf_file) !== KIRIGA_SOURCE_PDF_FILE ||
+    cleanString(row.source_pdf_sha256) !== KIRIGA_SOURCE_PDF_SHA256
+  ) {
+    throw new Error(`Kiriga emergence audit PDF evidence mismatch: ${auditId}`);
+  }
+  if (!cleanString(row.pdf_page) || !cleanString(row.printed_page)) {
+    throw new Error(`Kiriga emergence audit page evidence is missing: ${auditId}`);
+  }
+  if (cleanString(row.note_type) !== KIRIGA_EMERGENCE_NOTE_TYPE || !cleanString(row.approved_content)) {
+    throw new Error(`Kiriga emergence audit content is incomplete: ${auditId}`);
+  }
+  if (!['include_canonical', 'include_missing', 'replace_incorrect', 'merge_duplicates'].includes(cleanString(row.decision))) {
+    throw new Error(`Unsupported Kiriga emergence audit decision: ${auditId}`);
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(cleanString(row.reviewed_on))) {
+    throw new Error(`Kiriga emergence audit review date is invalid: ${auditId}`);
+  }
+  kirigaEmergenceInsectIds.add(insectId);
+  kirigaEmergenceAuditByRecordId.set(recordId, row);
+});
+if (kirigaEmergenceAuditRows.length !== 103) {
+  throw new Error(`Kiriga emergence audit should contain 103 species accounts, got ${kirigaEmergenceAuditRows.length}`);
+}
 const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '葉',
   '葉裏',
@@ -146,26 +198,8 @@ const SUSPICIOUS_HOSTPLANT_NOTE_SET = new Set([
   '音',
   'し',
 ]);
-const BLOCKED_GENERAL_NOTE_RULES = [
-  {
-    insect_id: 'species-6031',
-    phrase: '翌年5月',
-    note_type: '出現時期',
-    reason: 'コケイロホソキリガは標準図鑑2由来の10～1月を採用する。日本のキリガOCR由来の翌年5月行は混入させない。',
-  },
-  {
-    insect_id: 'species-6026',
-    phrase: '翌年5月',
-    note_type: '出現時期',
-    reason: 'モンハイイロキリガの出現時期は標準図鑑2由来の9〜11月を採用する。OCR由来の翌年5月行は混入させない。',
-  },
-  {
-    insect_id: 'species-6027',
-    phrase: '翌年5月',
-    note_type: '出現時期',
-    reason: 'ウスアオキリガの出現時期は標準図鑑2由来の9〜11月を採用する。生存情報と出現時期を混同したOCR由来行は混入させない。',
-  },
-];
+// 出現時期は個別語句の禁止ではなく、103種すべてを原本PDF監査台帳と完全照合する。
+const BLOCKED_GENERAL_NOTE_RULES = [];
 const hasEmbeddedObservationType = (plantName) => /（飼育(?:可|では[^）]+)?）/.test(plantName);
 const hasSuspiciousKirigaPattern = (row, plantName) => {
   if (cleanString(row.reference) !== '日本のキリガ') return false;
@@ -231,7 +265,9 @@ const suspiciousHostplantNoteRows = [];
 const blockedGeneralNoteRows = [];
 const suspiciousGeneralNoteRows = [];
 const seenKirigaAuditIds = new Set();
+const seenKirigaEmergenceAuditIds = new Set();
 const aphidWrongLinkRows = [];
+const literatureSourceTaxonMismatchRows = [];
 const suspiciousScientificNameRows = insects
   .filter((row) => hasScientificNameNoise(row))
   .map((row) => ({
@@ -255,11 +291,11 @@ if (hostplantsPath) {
   const hostRows = parseCsv(hostText);
   hostRows.forEach((row) => {
     const insectId = cleanString(row.insect_id);
+    const linkedInsect = insectsById.get(insectId);
     if (insectId) {
       hostplantCounts.set(insectId, (hostplantCounts.get(insectId) || 0) + 1);
     }
     if (cleanString(row.reference) === '日本原色アブラムシ図鑑') {
-      const linkedInsect = insectsById.get(insectId);
       if (!isAphidLinkedRow(linkedInsect)) {
         aphidWrongLinkRows.push({
           record_id: cleanString(row.record_id),
@@ -271,6 +307,22 @@ if (hostplantsPath) {
           linked_scientific_name: cleanString(linkedInsect?.scientific_name),
         });
       }
+    }
+    const sourceTaxonIssues = collectLiteratureSourceTaxonIssues(
+      cleanString(row.reference),
+      linkedInsect,
+    );
+    if (sourceTaxonIssues.length > 0) {
+      literatureSourceTaxonMismatchRows.push({
+        source_table: 'hostplants',
+        record_id: cleanString(row.record_id),
+        insect_id: insectId,
+        reference: cleanString(row.reference),
+        linked_family: cleanString(linkedInsect?.family),
+        linked_family_jp: cleanString(linkedInsect?.family_jp),
+        linked_japanese_name: cleanString(linkedInsect?.japanese_name),
+        issue_codes: sourceTaxonIssues.join(';'),
+      });
     }
     const plantName = cleanString(row.plant_name);
     const hostplantNote = cleanString(row.notes);
@@ -324,7 +376,35 @@ if (notesPath) {
     const reference = cleanString(row.reference);
     const page = cleanString(row.page);
     const audit = kirigaAuditById.get(recordId);
+    const emergenceAudit = kirigaEmergenceAuditByRecordId.get(recordId);
     const issueCodes = [];
+
+    // Content-quality rules apply to every public literature note, not only
+    // the source-specific ledgers below. Historical imports often omit a
+    // page column, so page provenance remains enforced by each source ledger;
+    // OCR gaps, column bleed, subjective prose, and legacy note types fail
+    // globally.
+    issueCodes.push(...collectGeneralNoteIssues(row).filter(
+      (issue) => issue !== 'missing_source_page',
+    ));
+    const sourceTaxonIssues = collectLiteratureSourceTaxonIssues(
+      reference,
+      insectsById.get(insectId),
+    );
+    issueCodes.push(...sourceTaxonIssues);
+    if (sourceTaxonIssues.length > 0) {
+      const linkedInsect = insectsById.get(insectId);
+      literatureSourceTaxonMismatchRows.push({
+        source_table: 'general_notes',
+        record_id: recordId,
+        insect_id: insectId,
+        reference,
+        linked_family: cleanString(linkedInsect?.family),
+        linked_family_jp: cleanString(linkedInsect?.family_jp),
+        linked_japanese_name: cleanString(linkedInsect?.japanese_name),
+        issue_codes: sourceTaxonIssues.join(';'),
+      });
+    }
 
     if (audit) {
       seenKirigaAuditIds.add(recordId);
@@ -342,8 +422,23 @@ if (notesPath) {
       issueCodes.push('missing_audit_entry');
     }
 
+    if (emergenceAudit) {
+      seenKirigaEmergenceAuditIds.add(recordId);
+      if (insectId !== cleanString(emergenceAudit.insect_id)) issueCodes.push('emergence_audit_insect_id_mismatch');
+      if (noteType !== KIRIGA_EMERGENCE_NOTE_TYPE) issueCodes.push('emergence_audit_note_type_mismatch');
+      if (reference !== KIRIGA_CANONICAL_REFERENCE) issueCodes.push('emergence_audit_source_mismatch');
+      if (page !== cleanString(emergenceAudit.printed_page)) issueCodes.push('emergence_audit_page_mismatch');
+      if (content !== cleanString(emergenceAudit.approved_content)) issueCodes.push('emergence_audit_content_mismatch');
+      issueCodes.push(...collectGeneralNoteIssues(row));
+    } else if (reference === KIRIGA_CANONICAL_REFERENCE && noteType === KIRIGA_EMERGENCE_NOTE_TYPE) {
+      issueCodes.push('missing_emergence_audit_entry');
+    }
+
     if (reference === KIRIGA_LEGACY_REFERENCE && ['生態', '生態情報'].includes(noteType)) {
       issueCodes.push('legacy_unaudited_kiriga_ecology');
+    }
+    if (reference === KIRIGA_LEGACY_REFERENCE && noteType === KIRIGA_EMERGENCE_NOTE_TYPE) {
+      issueCodes.push('legacy_unaudited_kiriga_emergence');
     }
 
     if (issueCodes.length > 0) {
@@ -384,6 +479,19 @@ if (notesPath) {
       reference: KIRIGA_CANONICAL_REFERENCE,
       page: cleanString(audit.printed_page),
       issue_codes: 'missing_approved_row',
+    });
+  });
+  kirigaEmergenceAuditRows.forEach((audit) => {
+    const recordId = `note-${cleanString(audit.audit_id)}`;
+    if (seenKirigaEmergenceAuditIds.has(recordId)) return;
+    suspiciousGeneralNoteRows.push({
+      record_id: recordId,
+      insect_id: cleanString(audit.insect_id),
+      note_type: KIRIGA_EMERGENCE_NOTE_TYPE,
+      content: cleanString(audit.approved_content),
+      reference: KIRIGA_CANONICAL_REFERENCE,
+      page: cleanString(audit.printed_page),
+      issue_codes: 'audited_emergence_row_missing_from_general_notes',
     });
   });
 } else {
@@ -463,13 +571,11 @@ writeCsvReport(
   ['record_id', 'insect_id', 'note_type', 'content', 'reference', 'reason'],
   blockedGeneralNoteRows,
 );
-if (suspiciousGeneralNoteRows.length > 0) {
-  writeCsvReport(
-    'suspicious_general_notes.csv',
-    ['record_id', 'insect_id', 'note_type', 'content', 'reference', 'page', 'issue_codes'],
-    suspiciousGeneralNoteRows,
-  );
-}
+writeCsvReport(
+  'suspicious_general_notes.csv',
+  ['record_id', 'insect_id', 'note_type', 'content', 'reference', 'page', 'issue_codes'],
+  suspiciousGeneralNoteRows,
+);
 writeCsvReport(
   'blank_japanese_name_links.csv',
   ['insect_id', 'family_jp', 'scientific_name', 'hostplant_count', 'general_note_count', 'notes'],
@@ -489,6 +595,11 @@ writeCsvReport(
   'aphid_wrong_links.csv',
   ['record_id', 'insect_id', 'plant_name', 'plant_part', 'linked_family_jp', 'linked_japanese_name', 'linked_scientific_name'],
   aphidWrongLinkRows,
+);
+writeCsvReport(
+  'literature_source_taxon_mismatches.csv',
+  ['source_table', 'record_id', 'insect_id', 'reference', 'linked_family', 'linked_family_jp', 'linked_japanese_name', 'issue_codes'],
+  literatureSourceTaxonMismatchRows,
 );
 writeCsvReport(
   'suspicious_scientific_names.csv',
@@ -600,6 +711,13 @@ if (blockedGeneralNoteRows.length > 0) {
   process.exit(1);
 }
 
+if (literatureSourceTaxonMismatchRows.length > 0) {
+  console.error(
+    `[validate-normalized] literature source/taxon mismatches: ${literatureSourceTaxonMismatchRows.length}`,
+  );
+  process.exit(1);
+}
+
 if (kirigaAuditRows.length === 0) {
   console.error('[validate-normalized] Kiriga ecology PDF audit ledger is missing or empty');
   process.exit(1);
@@ -615,7 +733,8 @@ if (blankJapaneseNameLinkedRows.length > 0) {
 }
 
 if (placeholderNoteMismatchRows.length > 0) {
-  console.warn(`[validate-normalized] placeholder notes mismatching linked data: ${placeholderNoteMismatchRows.length}`);
+  console.error(`[validate-normalized] stale placeholder notes despite linked data: ${placeholderNoteMismatchRows.length}`);
+  process.exit(1);
 }
 
 if (missingFamilyRows.length > 0) {
