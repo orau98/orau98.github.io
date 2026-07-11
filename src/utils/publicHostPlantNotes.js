@@ -40,7 +40,8 @@ const isInternalCatalogNoteSegment = (segment = '') => {
   const value = String(segment || '').trim();
   if (!value) return true;
 
-  if (/^日本列島の甲虫全種目録\(2026\)参照/.test(value)) return true;
+  if (/^日本列島の甲虫全種目録(?:\(2026\)参照|2026年版)/.test(value)) return true;
+  if (/^(?:国内|国外)分布\s*[:：]/.test(value)) return true;
   if (/^食草・生態情報(?:は未入力|の再配分は未実施)/.test(value)) return true;
   if (/^寄主植物情報は日本産カミキリムシにもとづく/.test(value)) return true;
 
