@@ -25,6 +25,7 @@ import {
   getPublicHostPlantSectionNote,
 } from '../src/utils/publicHostPlantNotes.js';
 import { normalizeJapaneseInsectName } from '../src/utils/insectNameAliases.js';
+import { getHostResourceType } from '../src/utils/hostResource.js';
 import {
   isValidPlantName,
   SUSPICIOUS_PLANT_NAME_SET,
@@ -2377,7 +2378,8 @@ async function generateMetaPages() {
       const plantName = row.plant_name;
       const plantFamily = normalizePlantFamilyLabel(row.plant_family || '');
       const observationType = row.observation_type || '野外（国内）';
-      const plantPart = row.plant_part || '葉';
+      const resourceType = getHostResourceType(plantName);
+      const plantPart = row.plant_part || (resourceType === 'substrate' ? '' : '葉');
       const lifeStage = row.life_stage || '幼虫';
       const reference = row.reference || '';
       const notes = getPublicHostPlantNote(row.notes || '');
@@ -2402,7 +2404,8 @@ async function generateMetaPages() {
           lifeStage,
           reference,
           notes,
-          isDetailed: true
+          isDetailed: true,
+          resourceType
         });
       }
     });
