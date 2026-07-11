@@ -21,6 +21,7 @@ import {
 import { bibliography } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 import { getPublicHostPlantNote } from '../src/utils/publicHostPlantNotes.js';
+import { normalizeJapaneseInsectName } from '../src/utils/insectNameAliases.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1223,7 +1224,7 @@ function isGeneratedMetaPageIndexable(filePath) {
 }
 
 function splitAlternativeNames(value = '') {
-  return String(value || '')
+  return normalizeJapaneseInsectName(value)
     .split(/[、，,;；／/]/)
     .map((name) => name.trim())
     .filter(Boolean);
@@ -2555,7 +2556,7 @@ async function generateMetaPages() {
     
     insectsData.forEach((row) => {
       const insectId = row.insect_id;
-      let japaneseName = (row.japanese_name || '').trim();
+      let japaneseName = normalizeJapaneseInsectName(row.japanese_name);
       const scientificName = (row.scientific_name || '').trim();
       const familyJapanese = row.family_jp || row.family || '';
       const subfamily = row.subfamily_jp || row.subfamily || '';
@@ -2575,7 +2576,7 @@ async function generateMetaPages() {
       if (looksLikeYearOnly(japaneseName) || japaneseName.length < 2) {
         japaneseName = '';
       }
-      const displayName = japaneseName || (scientificName ? `${scientificName}（和名未記載）` : '');
+      const displayName = japaneseName || scientificName;
       if (!displayName) return;
       
       // プレースホルダーや無効な昆虫名を除外
@@ -3019,11 +3020,11 @@ async function generateMetaPages() {
     insectsData.forEach((row) => {
       const insectId = (row.insect_id || '').trim();
       if (!insectId || /^species-$/.test(insectId)) return;
-      let japaneseName = (row.japanese_name || '').trim();
+      let japaneseName = normalizeJapaneseInsectName(row.japanese_name);
       if (looksLikeYearOnly(japaneseName) || japaneseName.length < 2) japaneseName = '';
       const displayName =
         japaneseName ||
-        (row.scientific_name ? `${row.scientific_name}（和名未記載）` : '');
+        (row.scientific_name || '').trim();
       if (!displayName || displayName.length < 2) return;
       const famJP = (row.family_jp || '').trim();
       const famLatin = (row.family || '').trim();
@@ -3062,7 +3063,7 @@ async function generateMetaPages() {
     });
     // butterfly_host.csv 由来のデータも追加
     butterflyData.forEach((row, index) => {
-      const japaneseName = (row['和名'] || '').trim();
+      const japaneseName = normalizeJapaneseInsectName(row['和名']);
       const genus = (row['属'] || '').trim();
       const species = (row['種小名'] || '').trim();
       if (!japaneseName || !genus || !species) return;
@@ -3075,10 +3076,10 @@ async function generateMetaPages() {
     });
     // hamushi 由来のデータも追加
     hamushiData.forEach((row, index) => {
-      const japaneseName = (row['和名'] || '').trim();
+      const japaneseName = normalizeJapaneseInsectName(row['和名']);
       const sciName = (row['学名'] || '').trim();
       if (!japaneseName && !sciName) return;
-      const displayName = japaneseName || `${sciName}（和名未記載）`;
+      const displayName = japaneseName || sciName;
       const id =
         row['大図鑑カタログNo'] || row['ID'] || row['id'] || '';
       const insectId = id ? id.replace(/^H/, 'leafbeetle-') : `leafbeetle-${index}`;

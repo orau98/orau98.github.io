@@ -9,7 +9,10 @@
  */
 import logger from './logger.js';
 import { createSafeInsectFilename } from './image.js';
-import { splitJapaneseNameAliases } from './insectNameAliases.js';
+import {
+  normalizeJapaneseInsectName,
+  splitJapaneseNameAliases,
+} from './insectNameAliases.js';
 import {
   INSECT_COLLECTION_KEYS,
   createEmptyInsectCollections,
@@ -261,15 +264,15 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       // 基本昆虫データを構築
       // 別名の統合（旧和名・別名・その他の和名）
       const looksLikeYearOnly = (value = '') => /^[\[(（]?\s*\d{3,4}\s*[\])）)]*\s*$/.test((value || '').toString().trim());
-      const rawPrimaryName = (insect.japanese_name || '').trim();
+      const rawPrimaryName = normalizeJapaneseInsectName(insect.japanese_name);
       const primaryNameRaw = looksLikeYearOnly(rawPrimaryName) || rawPrimaryName.length < 2
         ? ''
         : rawPrimaryName;
       const { name: primaryName, aliases: parenAliases } = splitJapaneseNameAliases(primaryNameRaw);
       const altNamesRaw = [];
-      const oldName = (insect.old_japanese_name || '').trim();
-      const altName = (insect.alternative_name || '').trim();
-      const otherNames = (insect.other_names || '').trim();
+      const oldName = normalizeJapaneseInsectName(insect.old_japanese_name);
+      const altName = normalizeJapaneseInsectName(insect.alternative_name);
+      const otherNames = normalizeJapaneseInsectName(insect.other_names);
       if (parenAliases.length > 0) altNamesRaw.push(...parenAliases);
       if (oldName) altNamesRaw.push(...oldName.split(/[、,，;；]/).map(s => s.trim()).filter(Boolean));
       if (altName) altNamesRaw.push(...altName.split(/[、,，;；]/).map(s => s.trim()).filter(Boolean));
@@ -284,12 +287,12 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         const fallbackFromAlt = altNames.find((n) => n.length >= 2 && !looksLikeYearOnly(n));
         if (fallbackFromAlt) return fallbackFromAlt;
         const sci = (insect.scientific_name || '').trim();
-        if (sci) return `${sci}（和名未記載）`;
+        if (sci) return sci;
         const genus = (insect.genus || '').trim();
         const species = (insect.species || '').trim();
         const subspecies = (insect.subspecies || '').trim();
         const binomial = [genus, species, subspecies].filter(Boolean).join(' ').trim();
-        if (binomial) return `${binomial}（和名未記載）`;
+        if (binomial) return binomial;
         return '不明';
       })();
 

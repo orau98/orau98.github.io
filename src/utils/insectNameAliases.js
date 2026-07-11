@@ -32,6 +32,14 @@ const NON_ALIAS_KEYWORDS = [
 
 const hasJapanese = (text = '') => /[ぁ-んァ-ヶ一-龠]/.test(text);
 
+const JAPANESE_NAME_PLACEHOLDER = /[（(]?\s*和名(?:未記載|なし|不明|未登録)\s*[）)]?/g;
+
+export const normalizeJapaneseInsectName = (rawName = '') =>
+  String(rawName || '')
+    .replace(JAPANESE_NAME_PLACEHOLDER, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
 const isAliasToken = (token = '') => {
   const t = token.trim();
   if (!t || t.length <= 1) return false;
@@ -43,7 +51,7 @@ const isAliasToken = (token = '') => {
 };
 
 export const splitJapaneseNameAliases = (rawName = '') => {
-  const source = (rawName || '').toString().trim();
+  const source = normalizeJapaneseInsectName(rawName);
   if (!source) return { name: '', aliases: [] };
 
   const aliasSet = new Set();
