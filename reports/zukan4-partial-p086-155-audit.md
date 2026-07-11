@@ -14,7 +14,7 @@
 - 国内または地域を限定しない文献記録: 429件
 - 原典が国外と明記した記録: 16件
 - 参照名: `日本産蛾類標準図鑑4`
-- ページ証跡: 全レコードの `notes` に `図鑑4 p.N` を記録
+- ページ証跡: 抽出台帳の `book_page` 列に記録（サイト表示用の `notes` には入れない）
 
 抽出台帳は [`reports/zukan4-partial-p086-155-hostplants.csv`](./zukan4-partial-p086-155-hostplants.csv) に保存した。台帳の `record_id` は `normalized_data/hostplants.csv` および `public/hostplants.csv` と一対一で対応する。
 
@@ -48,4 +48,4 @@
 
 `reports/zukan4-partial-p086-155-hostplants.csv` → `normalized_data/hostplants.csv` → `public/hostplants.csv` → `public/assets/data-lite/hostplants.json`
 
-この監査では、正規化CSVと公開CSVを同一内容にし、代表種・誤割り当て防止・除外条件・台帳との一致を回帰テストで固定する。
+この監査では、正規化CSVと公開CSVを同一内容にし、代表種・誤割り当て防止・除外条件・台帳との一致を回帰テストで固定する。ページ番号、国内外区分、抽出判断などの監査情報は台帳側に保持し、サイト表示用の備考へ重複して入れない。
