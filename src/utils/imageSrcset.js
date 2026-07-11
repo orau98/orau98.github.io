@@ -118,10 +118,11 @@ export function buildResponsivePicture({
   widths = [320, 640, 1024],
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
   query,
-  sourceFormats = ['avif', 'webp'],
+  sourceFormats,
 }) {
   if (!filename) return { src: '', srcSet: '', sizes, sources: [] };
   const jpgFallbackOnly = shouldUseJpgFallbackOnly(folder, filename);
+  const defaultSourceFormats = folder === 'insects' ? ['webp'] : ['avif', 'webp'];
   const fallback = buildResponsiveSrcset({
     baseUrl,
     folder,
@@ -136,7 +137,7 @@ export function buildResponsivePicture({
     : (Array.isArray(sourceFormats)
       ? Array.from(new Set(sourceFormats.map(normalizeResizedImageFormat)))
           .filter((format) => format && format !== 'jpg')
-      : ['avif', 'webp']);
+      : defaultSourceFormats);
   return {
     ...fallback,
     sources: formats.map((type) => ({

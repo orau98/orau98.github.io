@@ -61,8 +61,12 @@ async function processImage(srcPath, outBase, widths = WIDTHS) {
       console.warn('[responsive] skip', srcPath, 'Input file too small or not a regular file');
       return;
     }
+    // Insect pictures use high-quality WebP with JPEG fallback; AVIF is pruned from Pages.
+    const formats = outBase.includes(`${path.sep}resized${path.sep}insects${path.sep}`)
+      ? FORMATS.filter(({ ext }) => ext !== 'avif')
+      : FORMATS;
     for (const w of widths) {
-      for (const format of FORMATS) {
+      for (const format of formats) {
         const outPath = `${outBase}.${w}.${format.ext}`;
         const outStat = statOrNull(outPath);
         if (!FORCE_REBUILD && outStat) {

@@ -716,6 +716,32 @@ const getDirectorySizeBytes = (dirPath) => {
 
 const formatMiB = (bytes) => `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
 
+const pruneUnusedInsectAvifVariants = () => {
+  const rootDir = path.join('dist', 'images', 'resized', 'insects');
+  if (!fs.existsSync(rootDir)) return;
+
+  let removedCount = 0;
+  let removedBytes = 0;
+  const stack = [rootDir];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(fullPath);
+      } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.avif')) {
+        removedBytes += fs.statSync(fullPath).size;
+        fs.rmSync(fullPath, { force: true });
+        removedCount++;
+      }
+    }
+  }
+  console.log(
+    `[postbuild] Removed ${removedCount} unused insect AVIF variant(s) (${formatMiB(removedBytes)}).`,
+  );
+};
+
 const assertPagesSizeBudget = () => {
   const distDir = path.join('dist');
   const sizeBytes = getDirectorySizeBytes(distDir);
@@ -767,4 +793,5 @@ ensureSpaRouteShells();
 ensureInsectProfileRouteShells();
 ensurePlantProfileRouteShells();
 syncGeneratedDiscoveryArtifacts();
+pruneUnusedInsectAvifVariants();
 assertPagesSizeBudget();
