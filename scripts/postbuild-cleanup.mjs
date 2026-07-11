@@ -142,6 +142,7 @@ const SPA_ROUTE_SHELLS = [
   },
 ];
 const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
+const INSECT_PROFILE_ROUTE_SHELL_MARKER = 'window.__INSECT_ROUTE_SHELL__';
 const SPA_ROUTE_INDEX_ROBOTS = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const SPA_ROUTE_NOINDEX_ROBOTS = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const targets = [
@@ -345,41 +346,152 @@ const INSECT_PROFILE_ROUTE_SEGMENTS = [
   'aphid',
 ];
 
-// Compatibility cleanup for any older/custom generator that leaves an
-// encodeURIComponent(name) value as a literal directory name. The current
-// generators write decoded filesystem paths directly, so this normally moves 0.
-const ensureDecodedInsectProfileRedirects = () => {
-  try {
-    const routeGroups = [
-      ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => path.join('dist', segment)),
-      ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => path.join('dist', 'en', segment)),
-    ];
-    let moved = 0;
+const buildInsectProfileRouteShell = ({
+  indexHtml,
+  routeName,
+  routeSegment,
+  locale,
+  canonicalPath,
+  canonicalIndexable,
+}) => {
+  const isEnglish = locale === 'en';
+  const siteName = isEnglish ? EN_SITE_NAME : '昆虫植物図鑑';
+  const title = isEnglish
+    ? `${routeName} | Insect profile | ${siteName}`
+    : `${routeName} | 昆虫詳細 - ${siteName}`;
+  const description = isEnglish
+    ? `Interactive insect profile for ${routeName}, including host plants, adult season, photographs, and ecological links.`
+    : `${routeName}の食草・食樹、発生時期、写真、生態情報、植物との関係を表示する昆虫詳細ページ。`;
+  const canonicalUrl = new URL(
+    canonicalPath || `/${isEnglish ? 'en/' : ''}meta/${routeSegment}/${encodeURIComponent(routeName)}.html`,
+    BASE_ORIGIN,
+  ).href;
+  const robotsContent = canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS;
+  const assetTags = extractSpaAssetTags(indexHtml);
+  if (!assetTags) {
+    throw new Error('SPA asset tags are missing from dist/index.html');
+  }
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: canonicalUrl,
+    inLanguage: locale,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: siteName,
+      url: `${BASE_ORIGIN}${isEnglish ? '/en/' : '/'}`,
+    },
+  };
 
-    for (const baseDir of routeGroups) {
+  return `<!doctype html>
+<html lang="${escapeHtmlAttr(locale)}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtmlText(title)}</title>
+    <meta name="description" content="${escapeHtmlAttr(description)}">
+    <meta name="robots" content="${escapeHtmlAttr(robotsContent)}">
+    <link rel="canonical" href="${escapeHtmlAttr(canonicalUrl)}">
+    <meta property="og:title" content="${escapeHtmlAttr(title)}">
+    <meta property="og:description" content="${escapeHtmlAttr(description)}">
+    <meta property="og:url" content="${escapeHtmlAttr(canonicalUrl)}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeHtmlAttr(title)}">
+    <meta name="twitter:description" content="${escapeHtmlAttr(description)}">
+${renderJsonLdScript(structuredData)}
+    <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${INSECT_PROFILE_ROUTE_SHELL_MARKER} = true;</script>
+${assetTags}
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`;
+};
+
+// The generators create route inventories before Vite knows the hashed asset
+// names. Replace those intermediate redirect files with lightweight SPA entry
+// shells so a direct visit or reload keeps the same React detail experience.
+const ensureInsectProfileRouteShells = () => {
+  try {
+    const indexPath = path.join('dist', 'index.html');
+    if (!fs.existsSync(indexPath)) return;
+    const indexHtml = fs.readFileSync(indexPath, 'utf8');
+    const routeGroups = [
+      ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => ({
+        baseDir: path.join('dist', segment),
+        locale: 'ja',
+        routeSegment: segment,
+      })),
+      ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => ({
+        baseDir: path.join('dist', 'en', segment),
+        locale: 'en',
+        routeSegment: segment,
+      })),
+    ];
+    let count = 0;
+
+    for (const { baseDir, locale, routeSegment } of routeGroups) {
       if (!fs.existsSync(baseDir)) continue;
       const entries = fs.readdirSync(baseDir, { withFileTypes: true });
       for (const entry of entries) {
-        if (!entry.isDirectory() || !/%[0-9a-f]{2}/i.test(entry.name)) continue;
+        if (!entry.isDirectory()) continue;
         const decodedName = decodeRouteSegment(entry.name);
-        if (decodedName === entry.name || !isSafeRouteSegment(decodedName)) continue;
+        if (!isSafeRouteSegment(decodedName)) continue;
 
         const sourceDir = path.join(baseDir, entry.name);
         const sourceIndex = path.join(sourceDir, 'index.html');
         if (!fs.existsSync(sourceIndex)) continue;
 
+        const sourceHtml = fs.readFileSync(sourceIndex, 'utf8');
+        let canonicalPath = '';
+        let canonicalIndexable = false;
+        const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+        if (canonicalHref) {
+          const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
+          if (canonicalUrl.origin === BASE_ORIGIN) {
+            canonicalPath = canonicalUrl.pathname;
+            const canonicalFile = path.join(
+              'dist',
+              ...canonicalUrl.pathname
+                .replace(/^\/+/, '')
+                .split('/')
+                .map((segment) => decodeRouteSegment(segment)),
+            );
+            const canonicalHtml = readTextIfExists(canonicalFile);
+            canonicalIndexable = Boolean(
+              canonicalHtml && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml),
+            );
+          }
+        }
+
         const targetDir = path.join(baseDir, decodedName);
         const targetIndex = path.join(targetDir, 'index.html');
+        const shellHtml = buildInsectProfileRouteShell({
+          indexHtml,
+          routeName: decodedName,
+          routeSegment,
+          locale,
+          canonicalPath,
+          canonicalIndexable,
+        });
         fs.mkdirSync(targetDir, { recursive: true });
-        fs.writeFileSync(targetIndex, fs.readFileSync(sourceIndex));
-        fs.rmSync(sourceDir, { recursive: true, force: true });
-        moved++;
+        if (readTextIfExists(targetIndex) !== shellHtml) {
+          fs.writeFileSync(targetIndex, shellHtml, 'utf8');
+        }
+        if (sourceDir !== targetDir && fs.existsSync(sourceDir)) {
+          fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+        count++;
       }
     }
 
-    console.log(`[postbuild] Decoded ${moved} insect profile redirect route(s).`);
+    console.log(`[postbuild] Synced ${count} insect profile SPA route shell(s).`);
   } catch (error) {
-    console.warn('[postbuild] Failed to decode insect profile redirects:', error?.message || error);
+    console.warn('[postbuild] Failed to sync insect profile SPA route shells:', error?.message || error);
   }
 };
 
@@ -651,7 +763,7 @@ for (const p of targets) {
 
 ensureSpa404();
 ensureSpaRouteShells();
-ensureDecodedInsectProfileRedirects();
+ensureInsectProfileRouteShells();
 ensurePlantProfileRouteShells();
 syncGeneratedDiscoveryArtifacts();
 assertPagesSizeBudget();

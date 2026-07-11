@@ -277,6 +277,23 @@ const validatePlantRouteHtml = (filePath, html) => {
   validateLegacyRedirectHtml(filePath, html);
 };
 
+const validateInsectRouteHtml = (filePath, html) => {
+  const relativePath = path.relative(ROOT, filePath);
+  ensure(
+    html.includes('window.__INSECT_ROUTE_SHELL__'),
+    `${relativePath}: insect detail route must use the SPA shell`,
+  );
+  ensure(
+    html.includes('<div id="root"></div>'),
+    `${relativePath}: insect detail route is missing the React root`,
+  );
+  ensure(
+    !getMetaHttpEquivContent(html, 'refresh') && !html.includes('window.location.replace'),
+    `${relativePath}: insect detail route must not redirect to a different design`,
+  );
+  validateHtml(filePath, html);
+};
+
 const validateSeoRouteMap = (filePath) => {
   const relativePath = path.relative(ROOT, filePath);
   ensure(fs.existsSync(filePath), `${relativePath}: route map not found`);
@@ -528,7 +545,7 @@ for (const relativeDir of legacyRouteDirs) {
     if (relativeDir === 'plant' || relativeDir === 'en/plant') {
       validatePlantRouteHtml(filePath, html);
     } else {
-      validateLegacyRedirectHtml(filePath, html);
+      validateInsectRouteHtml(filePath, html);
     }
   }
 }
