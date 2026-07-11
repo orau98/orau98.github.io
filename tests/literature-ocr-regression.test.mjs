@@ -49,7 +49,8 @@ test('日本原色アブラムシ図鑑の見出し種に連続する寄主だ�
 
     const isunoki = hostNames(rows, 'species-21000', ref);
     const todo = hostNames(rows, 'species-21067', ref);
-    const kashiwa = hostNames(rows, 'species-21136', ref);
+    const yokoyamai = hostNames(rows, 'species-21150', ref);
+    const quercicola = hostNames(rows, 'species-21136', ref);
     const ichigo = hostNames(rows, 'species-21249', ref);
     const yomogi = hostNames(rows, 'species-21378', ref);
 
@@ -58,7 +59,8 @@ test('日本原色アブラムシ図鑑の見出し種に連続する寄主だ�
       assert.equal(todo.has(plantName), true, `${csvPath} should include ${plantName} for トドワタムシ`);
     }
     for (const plantName of ['コナラ', 'カシワ', 'ミズナラ']) {
-      assert.equal(kashiwa.has(plantName), true, `${csvPath} should include ${plantName} for カシワトゲマダラアブラムシ`);
+      assert.equal(yokoyamai.has(plantName), true, `${csvPath} should keep account 25 ${plantName} on Tuberculatus yokoyamai`);
+      assert.equal(quercicola.has(plantName), false, `${csvPath} should not duplicate account 25 ${plantName} on Tuberculatus quercicola`);
     }
     assert.equal(ichigo.has('カジイチゴ'), true, `${csvPath} should correct カチイチゴ to カジイチゴ for Aphis ichigo`);
     assert.equal(ichigo.has('クマイチゴ'), true, `${csvPath} should include クマイチゴ for Aphis ichigo`);

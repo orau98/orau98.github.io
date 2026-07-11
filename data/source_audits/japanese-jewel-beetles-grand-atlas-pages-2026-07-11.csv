@@ -1,0 +1,213 @@
+insect_id,japanese_name,scientific_name,pdf_page,printed_page_spread,mapping_method,score,score_margin,source_note_rows
+species-10001,キボシフナガタタマムシ,"Acmaeodera (Cobosiella) luzonica Nonfried, 1895",55,108-109,numbered_account_exact_name,,,1
+species-10002,モンキタマムシ,"Ptosima chinensis Marseul, 1867",55,108-109,numbered_account_exact_name,,,2
+species-10003,ケシツブタマムシ,"Mastogenius insperatus Y. Kurosawa, 1972",55,108-109,numbered_account_exact_name,,,2
+species-10004,ミスジツブタマムシ,"Paratrachys hederae E. Saunders, 1873",55,108-109,numbered_account_exact_name,,,2
+species-10005,ダイトウツブタマムシ,"Paratrachys (Paratrachys) mixtipubescens Y. Kurosawa, 1985",55,108-109,numbered_account_exact_name,,,2
+species-10006,オオシマツブタマムシ,Paratrachys princeps,56,110-111,numbered_account_exact_name,,,2
+species-10007,タマムシ,Chrysochroa fulgidissima,56,110-111,manual_account_check,,,2
+species-10008,オガサワラタマムシ,"Chrysochroa holstii Waterhouse & Gahan, 1890",56,110-111,numbered_account_exact_name,,,2
+species-10009,アオムネスジタマムシ,"Chrysodema (Chrysodema) dalmanni (Mannerheim, 1837)",57,112-113,numbered_account_exact_name,,,3
+species-10010,アヤムネスジタマムシ,"Chrysodema (Chrysodema) lewisii E. Saunders, 1873",57,112-113,manual_account_check,,,1
+species-10011,ツマベニタマムシ,Tamamushia virida,57,112-113,numbered_account_exact_name,,,2
+species-10012,ウバタマムシ,Chalcophora japonica,57,112-113,numbered_account_exact_name,,,2
+species-10013,サツマウバタマムシ,Chalcophora yunnana,58,114-115,numbered_account_exact_name,,,2
+species-10014,アオマダラタマムシ,"Nipponobuprestis (Nipponobuprestis) amabilis (Snellen van Vollenhoven, 1864)",58,114-115,note_ocr_trigram,211,198,2
+species-10015,クロマダラタマムシ,"Nipponobuprestis (Nipponobuprestisia) querceti (E. Saunders, 1873)",58,114-115,numbered_account_exact_name,,,2
+species-10016,クロホシタマムシ,"Lamprodila (Palmar) virgata (Motschulsky, 1859)",59,116-117,numbered_account_exact_name,,,3
+species-10017,キュウシュウクロホシタマムシ,"Lamprodila (Palmar) davidis (Fairmaire, 1887)",59,116-117,manual_account_check,,,2
+species-10018,マスダクロホシタマムシ,"Lamprodila (Palmar) vivata (Lewis, 1893)",59,116-117,numbered_account_exact_name,,,2
+species-10019,キンヘリタマムシ,Lamprodila pretiosa,59,116-117,numbered_account_exact_name,,,2
+species-10020,ハビロキンヘリタマムシ,"Lamprodila (Lamprodila) nipponensis (Y. Kurosawa, 1953)",59,116-117,numbered_account_exact_name,,,2
+species-10021,エサキキンヘリタマムシ,"Lamprodila (Lamprodila) decipiens (Gebler, 1847)",59,116-117,numbered_account_exact_name,,,2
+species-10022,クロコモンタマムシ,"Poecilonota variolosa chinensis Théry, 1926",60,118-119,numbered_account_exact_name,,,2
+species-10023,フタオタマムシ,"Dicerca furcata (Thunberg, 1787)",60,118-119,numbered_account_exact_name,,,2
+species-10024,トゲフタオタマムシ,"Dicerca tabialis Lewis, 1893",60,118-119,numbered_account_exact_name,,,2
+species-10025,キンモンフタオタマムシ,"Tokaranodicerca nishidai (Tôyama, 1986)",60,118-119,numbered_account_exact_name,,,2
+species-10026,アマミキンモンフタオタマムシ,"Tokaranodicerca shimonoi Hattori, 2005",60,118-119,numbered_account_exact_name,,,1
+species-10027,エサキクロタマムシ,"Buprestis (Ancylocheira) esakii Y. Kurosawa, 1954",61,120-121,numbered_account_exact_name,,,2
+species-10028,クロタマムシ,Buprestis haemorrhoidalis,61,120-121,numbered_account_exact_name,,,2
+species-10029,アカヘリミドリタマムシ,Buprestis splendens,61,120-121,numbered_account_exact_name,,,2
+species-10030,エゾアオタマムシ,"Eurythyrea eoa Semenov, 1895",61,120-121,manual_account_check,,,2
+species-10031,アオタマムシ,"Eurythyrea tenuistriata Lewis, 1893",61,120-121,numbered_account_exact_name,,,2
+species-10032,ツメアカナガヒラタタマムシ,"Melanophila obscurata Lewis, 1893",62,122-123,numbered_account_exact_name,,,2
+species-10033,イリエヒメマルタマムシ,"Philanthaxia iriei Y. Kurosawa, 1985",62,122-123,numbered_account_exact_name,,,2
+species-10034,ツヤヒメマルタマムシ,"Kurosawaia yanoi (Y. Kurosawa, 1963)",62,122-123,numbered_account_exact_name,,,2
+species-10035,クロヒメヒラタタマムシ,"Anthaxia (Melanthaxia) reticulata Y.Kurosawa, 1860",62,122-123,numbered_account_exact_name,,,2
+species-10036,フチトリヒメヒラタタマムシ,"Anthaxia (Haplanthaxia) rubromarginata Miwa & Chûjô, 1935",62,122-123,numbered_account_exact_name,,,2
+species-10037,ヒメヒラタタマムシ,"Anthaxia (Haplanthaxia) proteus E. Saunders, 1873",62,122-123,numbered_account_exact_name,,,2
+species-10038,アマミヒメヒラタタマムシ,"Anthaxia (Haplanthaxia) arakii Y. Kurosawa, 1956",63,124-125,numbered_account_exact_name,,,2
+species-10039,オキナワヒメヒラタタマムシ,"Anthaxia (Haplanthaxia) ihanatumi Chûjô, 1970",63,124-125,numbered_account_exact_name,,,2
+species-10040,ヤエヤマヒメヒラタタマムシ,"Anthaxia (Haplanthaxia) moya Chûjô, 1970",63,124-125,numbered_account_exact_name,,,2
+species-10041,ムツボシタマムシ,"Chrysobothris (Chrysobothris) succedanea E. Saunders, 1873",63,124-125,numbered_account_exact_name,,,2
+species-10042,アムールムツボシタマムシ,"Chrysobothris amurensis Pic, 1904",63,124-125,numbered_account_exact_name,,,2
+species-10043,チョウセンムツボシタマムシ,"Chrysobothris (Chrysobothris) pulchripes Fairmaire, 1887",64,126-127,numbered_account_exact_name,,,2
+species-10044,ヤマムツボシタマムシ,"Chrysobothris (Chrysobothris) igai Y. Kurosawa, 1948",64,126-127,numbered_account_exact_name,,,2
+species-10045,ツシマムツボシタマムシ,"Chrysobothris (Chrysobothris) samurai Obenberger, 1935",64,126-127,numbered_account_exact_name,,,3
+species-10047,オキナワムツボシタマムシ,Chrysobothris saliaris,64,126-127,numbered_account_exact_name,,,2
+species-10048,オガサワラムツボシタマムシ,Chrysobothris boninensis,64,126-127,numbered_account_exact_name,,,2
+species-10049,カクムネムツボシタマムシ,"Chrysobothris chrysostigma (Linnaeus, 1758)",64,126-127,manual_account_check,,,1
+species-10050,オオムツボシタマムシ,"Chrysobothris (Chrysobothris) ohbayashii Y. Kurosawa, 1948",64,126-127,numbered_account_exact_name,,,2
+species-10051,オオムネアカチビナカボソタマムシ,"Nalanda lagerstraemiae Ohmomo & Akiyama, 1989",65,128-129,note_ocr_trigram,53,34,2
+species-10052,ムネアカチビナカボソタマムシ,Nalanda rutilicollis,65,128-129,numbered_account_exact_name,,,2
+species-10053,クロチビナカボソタマムシ,"Nalanda chinensis (Obenberger, 1927)",65,128-129,note_ocr_trigram,79,32,2
+species-10054,カラカネチビナカボソタマムシ,"Nalanda ohbayashii Y. Kurosawa, 1957",65,128-129,numbered_account_exact_name,,,2
+species-10055,ヤナギチビナカボソタマムシ,"Nalanda primoriensis Alexeev, 1979",65,128-129,manual_account_check,,,2
+species-10056,クリタマムシ,Toxoscelus auriceps,66,130-131,note_ocr_trigram,237,50,2
+species-10057,ホソクリタマムシ,"Toxoscelus matobai Tôyama, 1985",66,130-131,numbered_account_exact_name,,,2
+species-10058,カラカネクリタマムシ,"Toxoscelus sasakii Y. Kurosawa, 1957",66,130-131,numbered_account_exact_name,,,2
+species-10059,リュウキュウクリタマムシ,"Toxoscelus nakajimai Ohmomo, 2002",66,130-131,numbered_account_exact_name,,,1
+species-10060,アマミクリタマムシ,"Toxoscelus amamiensis Y. Kurosawa, 1963",66,130-131,numbered_account_exact_name,,,2
+species-10062,ヤエヤマクリタマムシ,Toxoscelus miwai,67,132-133,numbered_account_exact_name,,,2
+species-10063,ヒメナカボソタマムシ,Coraebus iriei,67,132-133,numbered_account_exact_name,,,2
+species-10065,シロオビナカボソタマムシ,"Coraebus quadriundulatus Motschulsky, 1866",67,132-133,manual_account_check,,,2
+species-10066,ルリナカボソタマムシ,"Coraebus niponicus Lewis, 1894",67,132-133,numbered_account_exact_name,,,2
+species-10067,シリグロナカボソタマムシ,"Coraebus nigromaculatus Y. Kurosawa, 1953",67,132-133,note_ocr_trigram,84,48,2
+species-10068,ミヤマナカボソタマムシ,"Coraebus daisenesis Miwa, 1940",67,132-133,numbered_account_exact_name,,,2
+species-10069,オキナワナカボソタマムシ,"Coraebus loochooensis Kano, 1929",68,134-135,numbered_account_exact_name,,,2
+species-10070,アマミナカボソタマムシ,"Coraebus amamianus Y. Kurosawa, 1985",68,134-135,numbered_account_exact_name,,,3
+species-10071,ルイスナカボソタマムシ,Coraebus rusticanus,68,134-135,numbered_account_exact_name,,,2
+species-10072,サビナカボソタマムシ,"Coraebus ishiharai Y. Kurosawa, 1953",68,134-135,manual_account_check,,,1
+species-10073,ホソナカボソタマムシ,"Coraebus sakagutii Y. Kurosawa, 1963",68,134-135,note_ocr_trigram,79,54,2
+species-10074,カラカネナカボソタマムシ,Coraebus ignotus,68,134-135,numbered_account_exact_name,,,2
+species-10075,ミドリナカボソタマムシ,"Coraebus hastanus Gory & Laporte, 1839",69,136-137,note_ocr_trigram,72,53,2
+species-10076,タイワンナカボソタマムシ,Coraebus formosanus,69,136-137,numbered_account_exact_name,,,2
+species-10078,ヒシモンナガタマムシ,"Agrilus discalis E. Saunders, 1873",70,138-139,numbered_account_exact_name,,,2
+species-10079,クロナガタマムシ,"Agrilus cyaneoniger E. Saunders, 1873",70,138-139,numbered_account_exact_name,,,2
+species-10080,アオナガタマムシ,"Agrilus planipennis Fairmaire, 1888",70,138-139,numbered_account_exact_name,,,2
+species-10081,オオムネアカナガタマムシ,"Agrilus sinensis Thomson, 1879",70,138-139,numbered_account_exact_name,,,1
+species-10082,オキナワナガタマムシ,Agrilus okinawensis,70,138-139,numbered_account_exact_name,,,2
+species-10083,シラホシナガタマムシ,"Agrilus decoloratus Kerremans, 1892",70,138-139,numbered_account_exact_name,,,2
+species-10084,トオヤマシラホシナガタマムシ,"Agrilus ventricosus Fairmaire, 1888",70,138-139,numbered_account_exact_name,,,2
+species-10085,フライシャーナガタマムシ,"Agrilus fleischeri Obenberger, 1925",70,138-139,numbered_account_exact_name,,,2
+species-10086,ホソクロナガタマムシ,"Agrilus kawarai Y. Kurosawa, 1963",71,140-141,numbered_account_exact_name,,,2
+species-10087,スジバナガタマムシ,"Agrilus sachalinicola Obenberger, 1940",71,140-141,numbered_account_exact_name,,,2
+species-10088,ケヤキナガタマムシ,"Agrilus spinipennis Lewis, 1893",71,140-141,numbered_account_exact_name,,,2
+species-10089,トガリバシラホシナガタマムシ,"Agrilus tokyoensis Y. Kurosawa, 1985",71,140-141,numbered_account_exact_name,,,2
+species-10090,キンモンナガタマムシ,"Agrilus auropictus Kerremans, 1912",71,140-141,numbered_account_exact_name,,,3
+species-10091,トガリカラカネナガタマムシ,"Agrilus madeci Baudon, 1968",71,140-141,numbered_account_exact_name,,,2
+species-10092,サトウナガタマムシ,"Agrilus satoi Y. Kurosawa, 1954",71,140-141,numbered_account_exact_name,,,2
+species-10093,コガネナガタマムシ,"Agrilus fortunatus Lewis, 1893",71,140-141,numbered_account_exact_name,,,2
+species-10094,シロテンナガタマムシ,"Agrilus sospes Lewis, 1893",71,140-141,numbered_account_exact_name,,,1
+species-10095,オキナワシロテンナガタマムシ,"Agrilus inadai Fukutomi, 2006",72,142-143,numbered_account_exact_name,,,2
+species-10096,ツヤケシナガタマムシ,"Agrilus nipponigena Obenberger, 1935",72,142-143,numbered_account_exact_name,,,3
+species-10097,ネムノキナガタマムシ,"Agrilus subrobustus E. Saunders, 1873",72,142-143,numbered_account_exact_name,,,2
+species-10098,コクロナガタマムシ,"Agrilus yamawakii Y. Kurosawa, 1957",72,142-143,manual_account_check,,,1
+species-10099,ミカンナガタマムシ,"Agrilus auriventris E. Saunders, 1873",72,142-143,numbered_account_exact_name,,,2
+species-10100,アレスミカンナガタマムシ,"Agrilus alesi Obenberger, 1935",72,142-143,numbered_account_exact_name,,,3
+species-10101,ヤエヤマミカンナガタマムシ,"Agrilus aritai Tôyama, 1985",72,142-143,numbered_account_exact_name,,,2
+species-10102,ツマキナガタマムシ,"Agrilus auroapicalis Y. Kurosawa, 1957",72,142-143,numbered_account_exact_name,,,3
+species-10103,ウンモンナガタマムシ,"Agrilus undulatipennis Y. Kurosawa, 1976",72,142-143,numbered_account_exact_name,,,2
+species-10104,ダイミョウナガタマムシ,"Agrilus daimio Obenberger, 1936",73,144-145,numbered_account_exact_name,,,2
+species-10105,ネルソンダイミョウナガタマムシ,"Agrilus nelsonodaimio Ohmomo, 2006",73,144-145,numbered_account_exact_name,,,3
+species-10106,シャシャンボナガタマムシ,"Agrilus shashamboe Y. Kurosawa, 1963",73,144-145,numbered_account_exact_name,,,2
+species-10107,ヒロオビナガタマムシ,"Agrilus sudai Y. Kurosawa, 1985",73,144-145,numbered_account_exact_name,,,2
+species-10108,イマサカナガタマムシ,"Agrilus imasakai Tôyama, 1985",73,144-145,numbered_account_exact_name,,,2
+species-10109,カクムネナガタマムシ,"Agrilus maculifer E. Saunders, 1873",73,144-145,numbered_account_exact_name,,,3
+species-10110,ナオミナガタマムシ,"Agrilus naomii Tôyama, 1988",73,144-145,numbered_account_exact_name,,,2
+species-10111,マサキナガタマムシ,"Agrilus euonymi Tôyama, 1985",73,144-145,numbered_account_exact_name,,,2
+species-10112,ツシマナガタマムシ,"Agrilus tsushimanus Y. Kurosawa, 1963",73,144-145,numbered_account_exact_name,,,2
+species-10113,ヒコサンナガタマムシ,"Agrilus yamabusi Miwa & Chûjô, 1940",73,144-145,numbered_account_exact_name,,,2
+species-10114,タゾエナガタマムシ,"Agrilus tazoei Y. Kurosawa, 1985",74,146-147,numbered_account_exact_name,,,2
+species-10115,ムネアカナガタマムシ,"Agrilus imitans Lewis, 1893",74,146-147,numbered_account_exact_name,,,2
+species-10117,セキナガタマムシ,Agrilus sekii,74,146-147,numbered_account_exact_name,,,1
+species-10118,オガサワラナガタマムシ,"Agrilus boninensis Y. Kurosawa, 1963",74,146-147,numbered_account_exact_name,,,2
+species-10119,ウグイスナガタマムシ,"Agrilus tempestivus Lewis, 1893",74,146-147,numbered_account_exact_name,,,2
+species-10120,オオウグイスナガタマムシ,"Agrilus asiaticus Kerremans, 1898",74,146-147,numbered_account_exact_name,,,2
+species-10121,キタウグイスナガタマムシ,Agrilus sp.1,74,146-147,numbered_account_exact_name,,,2
+species-10122,キュウシュウナガタマムシ,"Agrilus chekiangensis Gebhardt, 1928",75,148-149,note_ocr_trigram,220,194,2
+species-10123,エサキナガタマムシ,"Agrilus esakii Y. Kurosawa, 1964",75,148-149,numbered_account_exact_name,,,2
+species-10124,トヨシマナガタマムシ,"Agrilus toyoshimai Tôyama, 1988",75,148-149,numbered_account_exact_name,,,2
+species-10125,シバタナガタマムシ,"Agrilus shibatai Y. Kurosawa, 1964",75,148-149,numbered_account_exact_name,,,3
+species-10126,マキハラナガタマムシ,"Agrilus makiharai Ohmomo, 2005",75,148-149,numbered_account_exact_name,,,1
+species-10127,エゾナガタマムシ,"Agrilus hokkaidoensis Tôyama, 1985",75,148-149,numbered_account_exact_name,,,2
+species-10128,スギノナガタマムシ,"Agrilus suginoi Tôyama, 1985",75,148-149,numbered_account_exact_name,,,1
+species-10129,ヒゲブトケシタマムシ,"Aphanisticus antennatus E. Saunders, 1873",81,160-161,numbered_account_exact_name,,,1
+species-10130,クロケシタマムシ,"Aphanisticus congener E. Saunders, 1873",81,160-161,numbered_account_exact_name,,,2
+species-10131,チュウジョウケシタマムシ,"Aphanisticus okinawanus Ohmomo, 2004",81,160-161,numbered_account_exact_name,,,2
+species-10132,ヤスマツケシタマムシ,"Aphanisticus yasumatsui Y. Kurosawa, 1954",81,160-161,numbered_account_exact_name,,,2
+species-10133,キヌツヤエグリタマムシ,"Kubaniellus opacipennis opacipennis (Y. Kurosawa, 1985)",82,162-163,numbered_account_exact_name,,,2
+species-10134,クロエグリタマムシ,"Endelus (Endelus) bicarinatus Théry, 1932",82,162-163,numbered_account_exact_name,,,2
+species-10135,キンイロエグリタマムシ,Endelus collaris,82,162-163,numbered_account_exact_name,,,2
+species-10136,アカガネエグリタマムシ,Endelus pyrrosiae,82,162-163,numbered_account_exact_name,,,2
+species-10137,ホソツツタマムシ,"Paracylindromorphus japanensis E. Saunders, 1873",82,162-163,numbered_account_exact_name,,,2
+species-10138,クズノチビタマムシ,"Trachys auricollis E. Saunders, 1873",83,164-165,numbered_account_exact_name,,,3
+species-10139,ソーンダーズチビタマムシ,"Trachys saundersi Lewis, 1893",83,164-165,note_ocr_trigram,54,32,1
+species-10140,ウメチビタマムシ,"Trachys inconspicuus E. Saunders, 1873",84,166-167,numbered_account_exact_name,,,1
+species-10141,クロチビタマムシ,"Trachys pseudoscrobiculatus Obenberger, 1940",84,166-167,numbered_account_exact_name,,,1
+species-10142,ヤナギチビタマムシ,"Trachys minutus (Linnaeus, 1758)",84,166-167,numbered_account_exact_name,,,1
+species-10143,シナノキチビタマムシ,"Trachys aurifluus Solsky, 1875",84,166-167,numbered_account_exact_name,,,1
+species-10144,ドウイロチビタマムシ,"Trachys cupricolor E. Saunders, 1873",84,166-167,numbered_account_exact_name,,,1
+species-10145,キタドウイロチビタマムシ,"Trachys pecirkai Obenberger, 1925",84,166-167,numbered_account_exact_name,,,1
+species-10146,マメチビタマムシ,"Trachys reitteri Obenberger, 1930",84,166-167,numbered_account_exact_name,,,1
+species-10147,ヌスビトハギチビタマムシ,"Trachys tokyoensis Obenberger, 1940",84,166-167,numbered_account_exact_name,,,1
+species-10148,アカガネチビタマムシ,"Trachys tsushimae Obenberger, 1922",84,166-167,numbered_account_exact_name,,,1
+species-10149,マルガタチビタマムシ,"Trachys ineditus E. Saunders, 1873",84,166-167,numbered_account_exact_name,,,1
+species-10150,コウゾチビタマムシ,"Trachys broussonetiae Y. Kurosawa, 1985",84,166-167,numbered_account_exact_name,,,1
+species-10151,サシゲチビタマムシ,"Trachys robustus E. Saunders, 1873",85,168-169,numbered_account_exact_name,,,1
+species-10152,ダンダラチビタマムシ,"Trachys variolaris E. Saunders, 1873",85,168-169,numbered_account_exact_name,,,1
+species-10153,オオダンダラチビタマムシ,"Trachys dilaticeps Gebhardt, 1929",85,168-169,numbered_account_exact_name,,,1
+species-10154,ナミガタチビタマムシ,"Trachys griseofasciatus E. Saunders, 1873",85,168-169,numbered_account_exact_name,,,1
+species-10155,ヤノナミガタチビタマムシ,"Trachys yanoi Y. Kurosawa, 1959",85,168-169,numbered_account_exact_name,,,1
+species-10156,スジチビタマムシ,"Habroloma (Habroloma) bifrons (Kiesenwetter, 1879)",86,170-171,numbered_account_exact_name,,,2
+species-10157,ルイスヒラタチビタマムシ,"Habroloma (Parahabroloma) lewisii (E. Saunders, 1873)",86,170-171,numbered_account_exact_name,,,1
+species-10158,ツマキヒラタチビタマムシ,Habroloma eximium,86,170-171,note_ocr_trigram,241,61,1
+species-10159,オキナワツマキヒラタチビタマムシ,"Habroloma (Parahabroloma) liukiuense (Obenberger, 1940)",86,170-171,numbered_account_exact_name,,,1
+species-10160,ハイイロヒラタチビタマムシ,"Habroloma (Parahabroloma) griseonigrum (E. Saunders, 1873)",86,170-171,numbered_account_exact_name,,,1
+species-10161,カラカネヒラタチビタマムシ,"Habroloma (Parahabroloma) nixilla insulicola Y. Kurosawa, 1959",86,170-171,numbered_account_exact_name,,,1
+species-10162,シロウズヒラタチビタマムシ,"Habroloma (Parahabroloma) marginicolle (Fairmaire, 1888)",86,170-171,manual_account_check,,,1
+species-10163,アサヒナヒラタチビタマムシ,"Habroloma (Parahabroloma) asahinai Y. Kurosawa, 1959",87,172-173,numbered_account_exact_name,,,1
+species-10164,ヒコサンヒラタチビタマムシ,"Habroloma (Parahabroloma) hikosanense Y. Kurosawa, 1959",87,172-173,numbered_account_exact_name,,,1
+species-10165,ナガヒラタチビタマムシ,"Habroloma (Parahabroloma) yuasai Y. Kurosawa, 1976",87,172-173,numbered_account_exact_name,,,1
+species-10166,ヒラタチビタマムシ,"Habroloma (Parahabroloma) subbicorne (Motschulsky, 1860)",87,172-173,numbered_account_exact_name,,,1
+species-10167,ヒメヒラタチビタマムシ,"Habroloma (Parahabroloma) atronitidum (Gebhardt, 1929)",87,172-173,numbered_account_exact_name,,,1
+species-21743,ニセホソアシナガタマムシ,"Agrilus adelphinus Kerremans, 1895",77,152-153,numbered_account_exact_name,,,1
+species-21745,アサヒナルリナガタマムシ,"Agrilus asahinai Y. Kurosawa, 1956",76,150-151,numbered_account_exact_name,,,2
+species-21746,ババナガタマムシ,"Agrilus babai Tôyama, 1988",81,160-161,numbered_account_exact_name,,,1
+species-21747,ツヤケシアサギナガタマムシ,"Agrilus betuleti (Retzburg, 1867)",79,156-157,numbered_account_exact_name,,,2
+species-21748,カタスジナガタマムシ,"Agrilus carinihumeralis Y. Kurosawa, 1964",79,156-157,numbered_account_exact_name,,,2
+species-21750,チュウジョウナガタマムシ,"Agrilus chujoi Y. Kurosawa, 1985",76,150-151,numbered_account_exact_name,,,2
+species-21751,ツヤナガタマムシ,"Agrilus cupes Lewis, 1893",76,150-151,numbered_account_exact_name,,,1
+species-21752,ハマナスナガタマムシ,"Agrilus cuprescens (Ménétriés, 1832)",76,150-151,numbered_account_exact_name,,,2
+species-21754,デグチナガタマムシ,"Agrilus deguchii Tôyama, 1985",80,158-159,numbered_account_exact_name,,,2
+species-21756,クヌギナガタマムシ,"Agrilus friebi Obenberger, 1922",78,154-155,numbered_account_exact_name,,,2
+species-21758,ヒメアサギナガタマムシ,"Agrilus hattorii Nakane, 1983",79,156-157,numbered_account_exact_name,,,2
+species-21762,イリエナガタマムシ,"Agrilus iriei Tôyama, 1985",81,160-161,numbered_account_exact_name,,,2
+species-21763,ニッポンカタスジナガタマムシ,"Agrilus japanocarinatus Ohmomo, 2002",79,156-157,numbered_account_exact_name,,,2
+species-21765,クワナガタマムシ,"Agrilus komareki Obenberger, 1925",80,158-159,numbered_account_exact_name,,,2
+species-21766,ロニノナガタマムシ,"Agrilus nicolanus Obenberger, 1924",77,152-153,note_ocr_trigram,198,5,2
+species-21768,クルミナガタマムシ,"Agrilus kurumi Y. Kurosawa, 1957",79,156-157,numbered_account_exact_name,,,2
+species-21771,クモガタナガタマムシ,"Agrilus mallotiellus Y. Kurosawa, 1985",79,156-157,note_ocr_trigram,217,183,2
+species-21772,ブドウナガタマムシ,"Agrilus marginicollis E. Saunders, 1873",78,154-155,numbered_account_exact_name,,,2
+species-21773,ニセシラケナガタマムシ,"Agrilus masumotoi Ohmomo, 2011",80,158-159,numbered_account_exact_name,,,2
+species-21775,アサギナガタマムシ,"Agrilus moerens E. Saunders, 1873",78,154-155,numbered_account_exact_name,,,2
+species-21776,オキナワミドリナガタマムシ,"Agrilus obscurecinctus Obenberger, 1935",76,150-151,numbered_account_exact_name,,,2
+species-21777,オガタナガタマムシ,"Agrilus ogatai Ohmomo, 2002",77,152-153,note_ocr_trigram,214,191,1
+species-21779,シラケナガタマムシ,"Agrilus pilosovittatus E. Saunders, 1873",80,158-159,numbered_account_exact_name,,,2
+species-21781,ニガキナガタマムシ,"Agrilus pusillesculptus Obenberger, 1940",79,156-157,numbered_account_exact_name,,,2
+species-21782,ホソアシナガタマムシ,"Agrilus ribbei Kiesenwetter, 1879",77,152-153,numbered_account_exact_name,,,2
+species-21783,ヤエヤマナガタマムシ,"Agrilus samuelsoni Tôyama, 1985",81,160-161,numbered_account_exact_name,,,2
+species-21785,シマバラナガタマムシ,"Agrilus shimabarensis Ohmomo, 2011",78,154-155,numbered_account_exact_name,,,2
+species-21786,ミドリツヤナガタマムシ,"Agrilus sibiricus fukushimensis Jendek, 1994",77,152-153,numbered_account_exact_name,,,2
+species-21788,アカバナガタマムシ,"Agrilus sinuatus sachalinensis Obenberger, 1935",75,148-149,numbered_account_exact_name,,,2
+species-21790,アムールナガタマムシ,"Agrilus subauratus amurensis Obenberger, 1922",76,150-151,numbered_account_exact_name,,,2
+species-21791,スギウラナガタマムシ,"Agrilus sugiurai Jendek, 2007",80,158-159,numbered_account_exact_name,,,2
+species-21792,シラフオガサワラナガタマムシ,"Agrilus suzukii Y. Kurosawa, 1985",80,158-159,numbered_account_exact_name,,,2
+species-21793,ニセウグイスナガタマムシ,"Agrilus takahashii Tôyama, 1988",78,154-155,numbered_account_exact_name,,,2
+species-21794,ミツボシナガタマムシ,"Agrilus trinotatus E. Saunders, 1873",78,154-155,note_ocr_trigram,229,206,2
+species-21795,ツツミウチナガタマムシ,"Agrilus tsutsumiuchii Ohmomo, 2006",75,148-149,numbered_account_exact_name,,,1
+species-21796,ウエノナガタマムシ,"Agrilus uenoi Y. Kurosawa, 1963",79,156-157,numbered_account_exact_name,,,2
+species-21797,ヒメクロナガタマムシ,"Agrilus ussuricola Obenberger, 1924",78,154-155,note_ocr_trigram,208,171,2
+species-21799,ベニナガタマムシ,"Agrilus viduus Kerremans, 1914",75,148-149,numbered_account_exact_name,,,2
+species-21801,アオグロナガタマムシ,"Agrilus viridiobscurus E. Saunders, 1873",79,156-157,numbered_account_exact_name,,,2
+species-21802,シンリョクナガタマムシ,"Agrilus viridis (Linnaeus, 1758)",76,150-151,numbered_account_exact_name,,,2
+species-21804,ワタナベナガタマムシ,"Agrilus watanabei Tôyama, 1985",78,154-155,numbered_account_exact_name,,,2
+species-21805,ワタヌキミドリナガタマムシ,"Agrilus watanukiorum Fukutomi, 2010",76,150-151,numbered_account_exact_name,,,2
+species-21806,ヤクシマナガタマムシ,"Agrilus yakushimensis Tôyama, 1985",78,154-155,numbered_account_exact_name,,,2
+species-21808,ヤマジナガタマムシ,"Agrilus yamajii Tôyama, 1985",78,154-155,numbered_account_exact_name,,,2
+species-21809,ヤスマツナガタマムシ,"Agrilus yasumatsui Y. Kurosawa, 1964",81,160-161,numbered_account_exact_name,,,2
+species-21810,ヨナハナガタマムシ,"Agrilus yonahaensis Tôyama, 1985",81,160-161,numbered_account_exact_name,,,2
+species-21813,ヤエヤマムナビロタマムシ,"Sambus yaeyamanus Y. Kurosawa, 1985",69,136-137,numbered_account_exact_name,,,2
+species-21828,クサビチビタマムシ,"Trachys cuneiferus Y. Kurosawa, 1959",83,164-165,numbered_account_exact_name,,,1
+species-21834,ズミチビタマムシ,"Trachys toringoi Y. Kurosawa, 1951",83,164-165,numbered_account_exact_name,,,1
+

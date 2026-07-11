@@ -1,0 +1,104 @@
+audit_id,entity,record_id,insect_id,action,field,approved_value,plant_name,plant_family,observation_type,plant_part,life_stage,reference,notes,source_pdf_file,source_pdf_sha256,pdf_page,printed_page,evidence,decision,reviewed_on
+LITINT-REF-001,hostplant,hostplant-000461,species-0910,update_field,reference,日本産蛾類標準図鑑3,,,,,,日本産蛾類標準図鑑3,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-002,hostplant,hostplant-000462,species-0910,update_field,reference,日本産蛾類標準図鑑3,,,,,,日本産蛾類標準図鑑3,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-003,hostplant,hostplant-000488,species-2147,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-004,hostplant,hostplant-000490,species-2149,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-005,hostplant,hostplant-000491,species-2149,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-006,hostplant,hostplant-000492,species-2149,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-007,hostplant,hostplant-000493,species-2149,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-008,hostplant,hostplant-000495,species-2152,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-009,hostplant,hostplant-000496,species-2152,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-010,hostplant,hostplant-000506,species-2167,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-011,hostplant,hostplant-000507,species-2167,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-012,hostplant,hostplant-000508,species-2168,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-013,hostplant,hostplant-000509,species-2168,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-014,hostplant,hostplant-000510,species-2168,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-015,hostplant,hostplant-000511,species-2168,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-016,hostplant,hostplant-000512,species-2169,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-017,hostplant,hostplant-000513,species-2169,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-018,hostplant,hostplant-000515,species-2172,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-019,hostplant,hostplant-000516,species-2174,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-020,hostplant,hostplant-000517,species-2174,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-021,hostplant,hostplant-000519,species-2176,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-022,hostplant,hostplant-000530,species-2188,retire,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,後続の『日本のハマキガ1』全216種監査で原典のモミ属行と意味重複すると確認し、H1-015で削除するため出典補完対象から廃止,retired_by_later_full_source_audit,2026-07-11
+LITINT-REF-023,hostplant,hostplant-000531,species-2188,retire,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,後続の『日本のハマキガ1』全216種監査で原典のトウヒ属行と意味重複すると確認し、H1-015で削除するため出典補完対象から廃止,retired_by_later_full_source_audit,2026-07-11
+LITINT-REF-024,hostplant,hostplant-000538,species-2196,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-025,hostplant,hostplant-000539,species-2197,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-026,hostplant,hostplant-000540,species-2198,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-027,hostplant,hostplant-000541,species-2198,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-028,hostplant,hostplant-000542,species-2198,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-029,hostplant,hostplant-000543,species-2198,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-030,hostplant,hostplant-000544,species-2198,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-031,hostplant,hostplant-000550,species-2204,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-032,hostplant,hostplant-000551,species-2204,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-033,hostplant,hostplant-000552,species-2204,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-034,hostplant,hostplant-000553,species-2205,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-035,hostplant,hostplant-000554,species-2205,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-036,hostplant,hostplant-000557,species-2208,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-037,hostplant,hostplant-000561,species-2213,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-038,hostplant,hostplant-000562,species-2214,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-039,hostplant,hostplant-000564,species-2217,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-040,hostplant,hostplant-000565,species-2218,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-041,hostplant,hostplant-000566,species-2218,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-042,hostplant,hostplant-000567,species-2218,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-043,hostplant,hostplant-000568,species-2218,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-044,hostplant,hostplant-000572,species-2222,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-045,hostplant,hostplant-000573,species-2222,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-046,hostplant,hostplant-000574,species-2222,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-047,hostplant,hostplant-000575,species-2222,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-048,hostplant,hostplant-000579,species-2228,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-049,hostplant,hostplant-000580,species-2228,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-050,hostplant,hostplant-000581,species-2229,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-051,hostplant,hostplant-000594,species-2276,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-052,hostplant,hostplant-000595,species-2276,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-053,hostplant,hostplant-000596,species-2276,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-054,hostplant,hostplant-000597,species-2276,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-055,hostplant,hostplant-000598,species-2278,update_field,reference,日本のハマキガ1,,,,,,日本のハマキガ1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-056,hostplant,hostplant-001106,species-3741,update_field,reference,日本産蛾類標準図鑑1,,,,,,日本産蛾類標準図鑑1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-057,hostplant,hostplant-001107,species-3741,update_field,reference,日本産蛾類標準図鑑1,,,,,,日本産蛾類標準図鑑1,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-058,hostplant,hostplant-002281,species-4574,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-059,hostplant,hostplant-002590,species-4698,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-060,hostplant,hostplant-002591,species-4698,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-061,hostplant,hostplant-002602,species-4705,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-062,hostplant,hostplant-002603,species-4705,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-063,hostplant,hostplant-002604,species-4705,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-064,hostplant,hostplant-002649,species-4719,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-065,hostplant,hostplant-002650,species-4719,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-066,hostplant,hostplant-002651,species-4719,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-067,hostplant,hostplant-002745,species-4780,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-068,hostplant,hostplant-002958,species-4983,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-069,hostplant,hostplant-002959,species-4983,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-070,hostplant,hostplant-003014,species-5242,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-071,hostplant,hostplant-003966,species-5926,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-072,hostplant,hostplant-003967,species-5926,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-073,hostplant,hostplant-003968,species-5926,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-074,hostplant,hostplant-003969,species-5926,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-075,hostplant,hostplant-003970,species-5926,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-076,hostplant,hostplant-003971,species-5926,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-077,hostplant,hostplant-004039,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-078,hostplant,hostplant-004040,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-079,hostplant,hostplant-004041,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-080,hostplant,hostplant-004042,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-081,hostplant,hostplant-004044,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-082,hostplant,hostplant-004045,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-083,hostplant,hostplant-004046,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-084,hostplant,hostplant-004047,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-085,hostplant,hostplant-004048,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-086,hostplant,hostplant-004049,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-087,hostplant,hostplant-004050,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-088,hostplant,hostplant-004051,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-089,hostplant,hostplant-004052,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-090,hostplant,hostplant-004053,species-5989,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-091,hostplant,hostplant-004394,species-6142,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-092,hostplant,hostplant-004395,species-6142,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-093,hostplant,hostplant-004396,species-6142,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-REF-094,hostplant,hostplant-004397,species-6142,update_field,reference,日本産蛾類標準図鑑2,,,,,,日本産蛾類標準図鑑2,,,,,,既存抽出バッチの前後行、同一分類群の出典付き行・生態行、および2026-07-10 PDF再監査範囲との一致,include,2026-07-11
+LITINT-Z3-001,hostplant,hostplant-912825,species-1065,delete,,,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,85,236,原PDFの寄主欄では「シロツメクサに多く」の修飾語であり植物名ではない,exclude_ocr_fragment,2026-07-11
+LITINT-Z3-002,hostplant,hostplant-912826,species-1065,delete,,,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,85,236,同じ原典・同じ植物の既存行 hostplant-901906 と重複する後発OCR行,exclude_duplicate,2026-07-11
+LITINT-Z3-003,hostplant,hostplant-912827,species-1065,delete,,,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,85,236,原PDFの寄主欄では「ムラサキツメクサには少ない」の修飾語であり植物名ではない,exclude_ocr_fragment,2026-07-11
+LITINT-Z3-004,hostplant,hostplant-912918,species-1251,delete,,,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,100,267,原PDF文中の接続語「であり」であり植物名ではない,exclude_ocr_fragment,2026-07-11
+LITINT-Z3-005,hostplant,hostplant-907660,species-1251,update_field,observation_type,野外（国外）,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,100,267,原PDFはヨーロッパでの寄主記録と明記し、国内寄主は不明とする,include,2026-07-11
+LITINT-Z3-006,hostplant,hostplant-907660,species-1251,update_field,notes,,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,100,267,国外の確定記録はobservation_typeへ保持し、国内についての推測と監査説明は公開notesへ重複させない,include,2026-07-11
+LITINT-Z3-007,hostplant,hostplant-912935,species-1282,delete,,,,,,,,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,104,275,2植物をまたいだOCR断片であり植物名ではない,replace_ocr_fragment,2026-07-11
+LITINT-Z3-008,hostplant,hostplant-Z3-INTEGRITY-20260711-001,species-1282,add,,,オウシュウトウヒ,マツ科,野外（国外）,,幼虫,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,104,275,原PDF寄主欄を画像確認。国外区分はobservation_typeへ保持,include,2026-07-11
+LITINT-Z3-009,hostplant,hostplant-Z3-INTEGRITY-20260711-002,species-1282,add,,,セイヨウネズ,ヒノキ科,野外（国外）,,幼虫,日本産蛾類標準図鑑3,,日本産蛾類標準図鑑Ⅲ_compressed.pdf,205b3090c799655004bae148d6931e90a2abb968c85c376b2680ce105ed37850,104,275,原PDF寄主欄を画像確認し、原典のトウヒ科表記を現行分類のヒノキ科へ正規化。監査説明は公開notesに入れない,include,2026-07-11

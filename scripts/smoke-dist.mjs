@@ -4,6 +4,7 @@ import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 import { slugifyScientificLabel } from './lib/englishNaming.mjs';
 import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
+import { loadLeafBeetleMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -11,6 +12,10 @@ const RESPONSIVE_IMAGES_SKIPPED = process.env.SKIP_RESPONSIVE_IMAGES === '1';
 const KAMIKIRI_AUDIT_PATH = path.join(
   ROOT,
   'data/source_audits/japanese-longhorn-beetles-2007.csv',
+);
+const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
+  ROOT,
+  'data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json',
 );
 const REQUIRED_FILES = [
   'index.html',
@@ -695,6 +700,93 @@ for (const redirect of mergedKamikiriRedirects) {
         namedHtml.includes(`rel="canonical" href="${target}"`),
         `${namedRelativePath} canonical mismatch`,
       );
+      assert(
+        namedHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'),
+        `${namedRelativePath} migration marker missing`,
+      );
+      assert(!/noindex/i.test(namedHtml), `${namedRelativePath} migration must remain crawlable`);
+    }
+  }
+}
+
+const mergedLeafBeetleRedirects = loadLeafBeetleMergedTaxonRedirects(
+  LEAF_BEETLE_CANONICAL_AUDIT_PATH,
+);
+assert(
+  mergedLeafBeetleRedirects.length === 13,
+  `expected 13 merged leaf-beetle redirects, found ${mergedLeafBeetleRedirects.length}`,
+);
+const leafBeetleRuntimeIds = new Set(
+  readDistJson('assets/data-lite/leafbeetles.json').map((insect) => insect.id),
+);
+const japaneseLeafBeetleSitemap = readDistText('sitemap-leafbeetle.xml');
+const englishLeafBeetleSitemap = readDistText('sitemap-en-leafbeetle.xml');
+for (const redirect of mergedLeafBeetleRedirects) {
+  assert(
+    !leafBeetleRuntimeIds.has(redirect.duplicateId)
+      && leafBeetleRuntimeIds.has(redirect.canonicalId),
+    `merged leaf-beetle runtime IDs are inconsistent: ${redirect.duplicateId} -> ${redirect.canonicalId}`,
+  );
+
+  const jaRelativePath = path.join('meta', 'leafbeetle', `${redirect.duplicateId}.html`);
+  assert(
+    fs.existsSync(path.join(DIST_DIR, jaRelativePath)),
+    `missing merged leaf-beetle ID redirect: ${jaRelativePath}`,
+  );
+  const jaHtml = readDistText(jaRelativePath);
+  const jaTarget = `https://orau98.github.io/meta/leafbeetle/${redirect.canonicalId}.html`;
+  assert(/http-equiv=["']refresh["']/i.test(jaHtml), `${jaRelativePath} must refresh immediately`);
+  assert(jaHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} canonical mismatch`);
+  assert(jaHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} migration marker missing`);
+  assert(!/noindex/i.test(jaHtml), `${jaRelativePath} migration must remain crawlable`);
+  assert(
+    !japaneseLeafBeetleSitemap.includes(`/meta/leafbeetle/${redirect.duplicateId}.html`),
+    `${jaRelativePath} migration URL must not be submitted in the sitemap`,
+  );
+
+  const englishTargetPath = englishInsectRoutes[redirect.canonicalId];
+  assert(englishTargetPath, `missing English canonical route for ${redirect.canonicalId}`);
+  const legacyScientificSlug = slugifyScientificLabel(redirect.legacyScientificName);
+  const enRelativePath = path.join('en', 'meta', 'leafbeetle', `${legacyScientificSlug}.html`);
+  assert(
+    fs.existsSync(path.join(DIST_DIR, enRelativePath)),
+    `missing merged leaf-beetle English redirect: ${enRelativePath}`,
+  );
+  const enHtml = readDistText(enRelativePath);
+  const enTarget = `https://orau98.github.io${englishTargetPath}`;
+  assert(/http-equiv=["']refresh["']/i.test(enHtml), `${enRelativePath} must refresh immediately`);
+  assert(enHtml.includes(`rel="canonical" href="${enTarget}"`), `${enRelativePath} canonical mismatch`);
+  assert(enHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} migration marker missing`);
+  assert(!/noindex/i.test(enHtml), `${enRelativePath} migration must remain crawlable`);
+  assert(
+    !englishLeafBeetleSitemap.includes(`/en/meta/leafbeetle/${legacyScientificSlug}.html`),
+    `${enRelativePath} migration URL must not be submitted in the sitemap`,
+  );
+
+  for (const legacyName of new Set([
+    redirect.legacyDisplayName,
+    redirect.legacyRouteName,
+  ].filter(Boolean))) {
+    const legacyNamedRouteKey = /[/\\?#%]/.test(legacyName)
+      ? redirect.duplicateId
+      : legacyName;
+    for (const { prefix, target, label } of [
+      { prefix: [], target: jaTarget, label: 'Japanese' },
+      { prefix: ['en'], target: enTarget, label: 'English' },
+    ]) {
+      const namedRelativePath = path.join(
+        ...prefix,
+        'leafbeetle',
+        legacyNamedRouteKey,
+        'index.html',
+      );
+      assert(
+        fs.existsSync(path.join(DIST_DIR, namedRelativePath)),
+        `missing merged leaf-beetle ${label} named-route redirect: ${namedRelativePath}`,
+      );
+      const namedHtml = readDistText(namedRelativePath);
+      assert(/http-equiv=["']refresh["']/i.test(namedHtml), `${namedRelativePath} must refresh immediately`);
+      assert(namedHtml.includes(`rel="canonical" href="${target}"`), `${namedRelativePath} canonical mismatch`);
       assert(
         namedHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'),
         `${namedRelativePath} migration marker missing`,

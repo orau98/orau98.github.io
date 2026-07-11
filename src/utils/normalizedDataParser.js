@@ -26,6 +26,11 @@ import {
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = createEmptyInsectCollections(() => []);
   const dedupeMaps = createEmptyInsectCollections(() => new Map());
+  const insectRowsById = new Map(
+    (insectsData || [])
+      .map((row) => [(row?.insect_id || '').trim(), row])
+      .filter(([id]) => id)
+  );
 
   const normalizeScientificBase = (name = '') => {
     const s = (name || '').toString().trim();
@@ -187,7 +192,15 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
     const plantPartRaw = (hp.plant_part || '').trim();
     const referenceRaw = (hp.reference || '').trim();
     const partCompact = plantPartRaw.replace(/\s+/g, '');
-    const isAdultOrUnknown = lifeStageRaw === '成虫' || lifeStageRaw === '';
+    const linkedInsect = insectRowsById.get((hp.insect_id || '').trim());
+    const isAphid = (linkedInsect?.family || '').trim() === 'Aphididae'
+      || (linkedInsect?.family_jp || '').includes('アブラムシ');
+    // The aphid source describes colonies without separating adults and
+    // nymphs. Treating a blank stage as the site-wide larval default is
+    // biologically wrong and can also misclassify flower stalk feeding as an
+    // adult flower visit.
+    const resolvedLifeStage = lifeStageRaw || (isAphid ? '成虫・幼虫' : '幼虫');
+    const isAdultOrUnknown = !isAphid && (lifeStageRaw === '成虫' || lifeStageRaw === '');
     const isFlowerVisit = isAdultOrUnknown && partCompact && partCompact.includes('花');
     const preservesBlankPlantPart =
       /^日本のハマキガ[123]$/.test(referenceRaw) ||
@@ -202,7 +215,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       observationType: hp.observation_type || '野外（国内）',
       // Keep display defaults but preserve flower-visit detection via isFlowerVisit flag.
       plantPart: plantPartRaw || defaultPlantPart,
-      lifeStage: lifeStageRaw || '幼虫',
+      lifeStage: resolvedLifeStage,
       reference: referenceRaw,
       notes: getPublicHostPlantNote(hp.notes || ''),
       isDetailed: true,
@@ -369,7 +382,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
       // general_notes から出現時期を既存フィールドへも反映（表示の安定化のため）
       try {
-        const emergenceFromNotes = (generalNotes || []).find(n => {
+        const emergenceCandidates = (generalNotes || []).filter(n => {
           const t = (n.type || '').trim();
           const c = (n.content || '').trim();
           if (!c) return false;
@@ -378,6 +391,11 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
           const contentHit = /\d+\s*月|成虫|発生/.test(c);
           return typeHit || (!t && contentHit);
         });
+        // 「日本の冬夜蛾」は全種アカウントを原本PDFで再確認した監査済みデータ。
+        // 旧図鑑由来の行も詳細一覧には残すが、単一値の表示では監査済み値を優先する。
+        const emergenceFromNotes = emergenceCandidates.find(
+          n => (n.reference || '').trim() === '日本の冬夜蛾',
+        ) || emergenceCandidates[0];
         if (emergenceFromNotes && (!insectData.emergenceTime || insectData.emergenceTime === '不明')) {
           insectData.emergenceTime = emergenceFromNotes.content;
           insectData.emergenceTimeSource = emergenceFromNotes.reference || '';

@@ -2207,8 +2207,8 @@ species-20168,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ
 species-20169,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ亜科,,,Sericinus,,montela,,Gray,1853,ホソオチョウ,,,,"Sericinus montela Gray, 1853",,,
 species-2017,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Olethreutes,,metallicana,,(Hübner),[1799],ホソギンスジヒメハマキ,,,,"Olethreutes metallicana (Hübner, [1799])",,,
 species-20170,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ亜科,,,Parnassius,,citrinarius,,Motschulsky,1866,ウスバアゲハ,ウスバシロチョウ,,,"Parnassius citrinarius Motschulsky, 1866","Parnassius glacialis Butler, 1866",,
-species-20171,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ亜科,,,Parnassius,,hoenei,,,,ヒメウスパアゲハ,,,,Parnassius hoenei,,,
-species-20172,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ亜科,,,Parnassius,,eversmanni,,Ménétriès,1851,キイロウスパアゲハ,,,,"Parnassius eversmanni Ménétriès, 1851",,,
+species-20171,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ亜科,,,Parnassius,,hoenei,,,,ヒメウスバアゲハ,,,,Parnassius hoenei,,,
+species-20172,Papilionidae,アゲハチョウ科,Parnassiinae,ウスバアゲハ亜科,,,Parnassius,,eversmanni,,Ménétriès,1851,キイロウスバアゲハ,,,,"Parnassius eversmanni Ménétriès, 1851",,,
 species-20173,Papilionidae,アゲハチョウ科,Papilioninae,アゲハチョウ亜科,,,Byasa,,alcinous,,Klug,1836,ジャコウアゲハ,,,,"Byasa alcinous Klug, 1836",,,
 species-20174,Papilionidae,アゲハチョウ科,Papilioninae,アゲハチョウ亜科,,,Pachliopta,,aristolochiae,,Fabricius,1775,ベニモンアゲハ,,,,"Pachliopta aristolochiae Fabricius, 1775",,,
 species-20175,Papilionidae,アゲハチョウ科,Papilioninae,アゲハチョウ亜科,,,Troides,,aeacus,,C. Felder et R. Felder,1860,キシタアゲハ,,,,"Troides aeacus C. Felder et R. Felder, 1860",,,
@@ -2378,9 +2378,9 @@ species-20323,Nymphalidae,タテハチョウ科,Nymphalinae,タテハチョウ�
 species-20324,Nymphalidae,タテハチョウ科,Nymphalinae,タテハチョウ亜科,,,Hypolimnas,,anomala,,Wallace,1869,ヤエヤマムラサキ,,,,"Hypolimnas anomala Wallace, 1869",,,
 species-20325,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Cyrestis,,thyodamas,,Doyère,1840,イシガケチョウ,,,,"Cyrestis thyodamas Doyère, 1840",,,
 species-20326,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Brenthis,,hecate,,,,ホソバヒョウモン,,,,Brenthis hecate,,,
-species-20327,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Brenthis,,ino,,Rottemburg,1775,カラフトヒョウモン,,,,"Brenthis ino Rottemburg, 1775",,,
+species-20327,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Brenthis,,ino,,Rottemburg,1775,コヒョウモン,,,,"Brenthis ino Rottemburg, 1775",,,
 species-20328,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Boloria,,pales,,,,アサヒヒョウモン,,,,Boloria pales,,,
-species-20329,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Boloria,,iphigenia,,,,コヒョウモン,,,,Boloria iphigenia,,,
+species-20329,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Boloria,,iphigenia,,,,カラフトヒョウモン,,,,Boloria iphigenia,,,
 species-2033,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Rudisociaria,,"sp. 1 of Nasu, 2013",,,2013,クリオビクロヒメハマキ,,,,"Rudisociaria sp. 1 of Nasu, 2013",,,
 species-20330,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Brenthis,,daphne,,[Denis et Schiffermüller],1775,ヒョウモンチョウ,,,,"Brenthis daphne [Denis et Schiffermüller], 1775",,,
 species-20331,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜科,,,Argyronome,,laodice,,Pallas,1771,ウラギンスジヒョウモン,,,,"Argyronome laodice Pallas, 1771",,,
@@ -2397,14 +2397,14 @@ species-20340,Nymphalidae,タテハチョウ科,Heliconiinae,ドクチョウ亜�
 species-20341,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Symbrenthia,,lilaea,,Hewitson,1864,タイワンキマダラ,,,,"Symbrenthia lilaea Hewitson, 1864",,,
 species-20342,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Ariadne,,ariadne,,Linnaeus,1763,カバタテハ,,,,"Ariadne ariadne Linnaeus, 1763",,,
 species-20343,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Dichorragia,,nesimachus,,Doyère,1840,スミナガシ,,,,"Dichorragia nesimachus Doyère, 1840",,,
-species-20344,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,pryeri,,Butler,1871,ヤエヤマイチモンジ,,,,"Neptis pryeri Butler, 1871",,,
+species-20344,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,pryeri,,Butler,1871,ホシミスジ,,,,"Neptis pryeri Butler, 1871",,,
 species-20345,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Athyma,,perius,,Linnaeus,1758,シロミスジ,,,,"Athyma perius Linnaeus, 1758",,,
-species-20346,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,alwina,,Bremer et Grey,1852,ミスジチョウ,,,,"Neptis alwina Bremer et Grey, 1852",,,
-species-20347,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,sappho,,Pallas,1771,オオミスジ,,,,"Neptis sappho Pallas, 1771",,,
-species-20348,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,hylas,,Linnaeus,1758,ホシミスジ,,,,"Neptis hylas Linnaeus, 1758",,,
+species-20346,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,alwina,,Bremer et Grey,1852,オオミスジ,,,,"Neptis alwina Bremer et Grey, 1852",,,
+species-20347,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,sappho,,Pallas,1771,コミスジ,,,,"Neptis sappho Pallas, 1771",,,
+species-20348,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,hylas,,Linnaeus,1758,リュウキュウミスジ,,,,"Neptis hylas Linnaeus, 1758",,,
 species-20349,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,rivularis,,Scopoli,1763,フタスジチョウ,,,,"Neptis rivularis Scopoli, 1763",,,
 species-2035,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Celypha,,cornigera,,Oku,1968,コウスクリイロヒメハマキ,,,,"Celypha cornigera Oku, 1968",,,
-species-20350,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,philyra,,Ménétriès,1858,コミスジ,,,,"Neptis philyra Ménétriès, 1858",,,
+species-20350,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Neptis,,philyra,,Ménétriès,1858,ミスジチョウ,,,,"Neptis philyra Ménétriès, 1858",,,
 species-20351,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Limenitis,,camilla,,Linnaeus,1764,イチモンジチョウ,,,,"Limenitis camilla Linnaeus, 1764",,,
 species-20352,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Limenitis,,glorifica,,Fruhstorfer,1909,アサマイチモンジ,,,,"Limenitis glorifica Fruhstorfer, 1909",,,
 species-20353,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Limenitis,,populi,,Linnaeus,1758,オオイチモンジ,,,,"Limenitis populi Linnaeus, 1758",,,
@@ -2429,7 +2429,7 @@ species-2037,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-20370,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Mycalesis,,francisca,,Stoll,1780,コジャノメ,,,,"Mycalesis francisca Stoll, 1780",,,
 species-20371,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Mycalesis,,gotama,,Moore,1858,ヒメジャノメ,,,,"Mycalesis gotama Moore, 1858",,,
 species-20372,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Mycalesis,,madjicosa,,Butler,1868,リュウキュウヒメジャノメ,,,,"Mycalesis madjicosa Butler, 1868",,,
-species-20373,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lasiommata,,deidamia,,Eversmann,1851,ウラジャノメ,,,,"Lasiommata deidamia Eversmann, 1851",,,
+species-20373,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lasiommata,,deidamia,,Eversmann,1851,ツマジロウラジャノメ,,,,"Lasiommata deidamia Eversmann, 1851",,,
 species-20374,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lasiommata,,epimenides,,,,ツマジロウラジャノメ,,,,Lasiommata epimenides,,,
 species-20375,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Kirinia,,epaminondas,,,,キマダラモドキ,,,,Kirinia epaminondas,,,
 species-20376,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Ninguta,,schrenckii,,Ménétriès,1858,オオヒカゲ,,,,"Ninguta schrenckii Ménétriès, 1858",,,
@@ -2437,30 +2437,30 @@ species-20377,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ�
 species-20378,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Melanitis,,leda,,Linnaeus,1758,ウスイロコノマチョウ,,,,"Melanitis leda Linnaeus, 1758",,,
 species-20379,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Melanitis,,phedima,,Cramer,1780,クロコノマチョウ,,,,"Melanitis phedima Cramer, 1780",,,
 species-2038,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Pristerognatha,,penthinana,,(Guenée),1845,キシタヒメハマキ,,キシタシンムシ,,"Pristerognatha penthinana (Guenée, 1845)",,,
-species-20380,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lethe,,sicelis,,Hewitson,1862,シロオビヒカゲ,,,,"Lethe sicelis Hewitson, 1862",,,
+species-20380,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lethe,,sicelis,,Hewitson,1862,ヒカゲチョウ,,,,"Lethe sicelis Hewitson, 1862",,,
 species-20381,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lethe,,diana,,Butler,1866,クロヒカゲ,,,,"Lethe diana Butler, 1866",,,
-species-20382,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lethe,,marginalis,,Motschulsky,1861,ヒカゲチョウ,,,,"Lethe marginalis Motschulsky, 1861",,,
+species-20382,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lethe,,marginalis,,Motschulsky,1861,クロヒカゲモドキ,,,,"Lethe marginalis Motschulsky, 1861",,,
 species-20383,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Lethe,,kansa,,,,クロヒカゲモドキ,,,,Lethe kansa,,,
 species-20384,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Zophoessa,,callipteris,,Butler,1877,ヒメキマダラヒカゲ,,,,"Zophoessa callipteris Butler, 1877",,,
 species-20385,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Neope,,goschkevitschii,,Ménétriès,1857,サトキマダラヒカゲ,,,,"Neope goschkevitschii Ménétriès, 1857",,,
 species-20386,Nymphalidae,タテハチョウ科,Satyrinae,ジャノメチョウ亜科,,,Neope,,niphonica,,Butler,1881,ヤマキマダラヒカゲ,,,,"Neope niphonica Butler, 1881",,,
 species-20387,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Idea,,leuconoe,,Erichson,1834,オオゴマダラ,,,,"Idea leuconoe Erichson, 1834",,,
 species-20388,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Tirumala,,septentrionis,,Butler,1874,ウスコモンマダラ,,,,"Tirumala septentrionis Butler, 1874",,,
-species-20389,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Parantica,,swinhoei,,Moore,1883,リュウキュウアサギマダラ,,,,"Parantica swinhoei Moore, 1883",,,
+species-20389,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Parantica,,swinhoei,,Moore,1883,タイワンアサギマダラ,,,,"Parantica swinhoei Moore, 1883",,,
 species-2039,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Pristerognatha,,fuligana,,(Denis & Schiffermüller),1775,キツリフネヒメハマキ,,,,"Pristerognatha fuligana (Denis & Schiffermüller, 1775)",,,
 species-20390,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Parantica,,aglea,,Stoll,1782,ヒメアサギマダラ,,,,"Parantica aglea Stoll, 1782",,,
 species-20391,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Parantica,,melaneus,,,,タイワンアサギマダラ,,,,Parantica melaneus,,,
 species-20392,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Parantica,,sita,,Kollar,1844,アサギマダラ,,,,"Parantica sita Kollar, 1844",,,
 species-20393,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Anosia,,chrysippus,,,,カバマダラ,,,,Anosia chrysippus,,,
 species-20394,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Salatura,,genutia,,,,スジグロカバマダラ,,,,Salatura genutia,,,
-species-20395,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,core,,Cramer,1780,ミナミムラサキマダラ,,,,"Euploea core Cramer, 1780",,,
+species-20395,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,core,,Cramer,1780,ガランピマダラ,,,,"Euploea core Cramer, 1780",,,
 species-20396,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,eunice,,Godart,1819,マルバネルリマダラ,,,,"Euploea eunice Godart, 1819",,,
-species-20397,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,mulciber,,Cramer,1777,ルリマダラ,,,,"Euploea mulciber Cramer, 1777",,,
+species-20397,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,mulciber,,Cramer,1777,ツマムラサキマダラ,,,,"Euploea mulciber Cramer, 1777",,,
 species-20398,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,tulliolus,,Fabricius,1793,ツマムラサキマダラ,,,,"Euploea tulliolus Fabricius, 1793",,,
 species-20399,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,leucostictos,,,,シロオビマダラ,,,,Euploea leucostictos,,,
 species-2040,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Pseudohermenias,,abietana,,(Fabricius),1787,アミメモンヒメハマキ,,,,"Pseudohermenias abietana (Fabricius, 1787)",,,
-species-20400,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,sylvester,,Fabricius,1793,ガランピマダラ,,,,"Euploea sylvester Fabricius, 1793",,,
-species-20401,Hesperiidae,セセリチョウ科,Coeliadinae,コウモリセセリ亜科,,,Badamia,,exclamationis,,Fabricius,1775,アオバセセリ,,,,"Badamia exclamationis Fabricius, 1775",,,
+species-20400,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,sylvester,,Fabricius,1793,ルリマダラ,,,,"Euploea sylvester Fabricius, 1793",,,
+species-20401,Hesperiidae,セセリチョウ科,Coeliadinae,コウモリセセリ亜科,,,Badamia,,exclamationis,,Fabricius,1775,タイワンアオバセセリ,,,,"Badamia exclamationis Fabricius, 1775",,,
 species-20402,Hesperiidae,セセリチョウ科,Coeliadinae,コウモリセセリ亜科,,,Ismene,,compunis,,,,タイワンアオバセセリ,,,,Ismene compunis,,,
 species-20403,Hesperiidae,セセリチョウ科,Coeliadinae,コウモリセセリ亜科,,,Hasora,,anura,,,,オキナワビロウドセセリ,,,,Hasora anura,,,
 species-20404,Hesperiidae,セセリチョウ科,Coeliadinae,コウモリセセリ亜科,,,Hasora,,taminatus,,Hübner,1818,テツイロビロウドセセリ,,,,"Hasora taminatus Hübner, 1818",,,
@@ -2479,7 +2479,7 @@ species-20415,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ�
 species-20416,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Thoressa,,varia,,Murray,1875,コチャバネセセリ,,,,"Thoressa varia Murray, 1875",,,
 species-20417,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Hesperia,,comma,,,,カラフトセセリ,,,,Hesperia comma,,,
 species-20418,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Ochlodes,,subhyalinus,,Bremer et Grey,1852,スジグロチャバネセセリ,,,,"Ochlodes subhyalinus Bremer et Grey, 1852",,,
-species-20419,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Ochlodes,,ochraceus,,Bremer,1861,ヘリグロチャバネセセリ,,,,"Ochlodes ochraceus Bremer, 1861",,,
+species-20419,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Ochlodes,,ochraceus,,Bremer,1861,ヒメキマダラセセリ,,,,"Ochlodes ochraceus Bremer, 1861",,,
 species-2042,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Piniphila,,bifasciana,,(Haworth),[1811],アカマツハナムシガ,,,,"Piniphila bifasciana (Haworth, [1811])",,,
 species-20420,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Ochlodes,,sylvanus,,,,ヒメキマダラセセリ,,,,Ochlodes sylvanus,,,
 species-20421,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Ochlodes,,asahinai,,,,アサヒナキマダラセセリ,,,,Ochlodes asahinai,,,
@@ -2493,10 +2493,10 @@ species-20428,Hesperiidae,セセリチョウ科,Pyrginae,ホソバセセリ亜�
 species-20429,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Polytremis,,pellucida,,Murray,1875,オオチャバネセセリ,,,,"Polytremis pellucida Murray, 1875",,,
 species-2043,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Orthotaenia,,undulana,,(Denis & Schiffermüller),1775,イラクサヒメハマキ,,,,"Orthotaenia undulana (Denis & Schiffermüller, 1775)",,,
 species-20430,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Polytremis,,mori,,,,ミヤマチャバネセセリ,,,,Polytremis mori,,,
-species-20431,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,bada,,Moore,1878,トガリチャバネセセリ,,,,"Parnara bada Moore, 1878",,,
-species-20432,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,guttata,,Bremer et Grey,1852,チャバネセセリ,,,,"Parnara guttata Bremer et Grey, 1852",,,
+species-20431,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,bada,,Moore,1878,ヒメイチモンジセセリ,,,,"Parnara bada Moore, 1878",,,
+species-20432,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,guttata,,Bremer et Grey,1852,イチモンジセセリ,,,,"Parnara guttata Bremer et Grey, 1852",,,
 species-20433,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Borbo,,cinnara,,Wallace,1866,ユウレイセセリ,,,,"Borbo cinnara Wallace, 1866",,,
-species-20434,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Pelopidas,,jansonis,,Butler,1878,ヒメイチモンジセセリ,,,,"Pelopidas jansonis Butler, 1878",,,
+species-20434,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Pelopidas,,jansonis,,Butler,1878,ミヤマチャバネセセリ,,,,"Pelopidas jansonis Butler, 1878",,,
 species-20435,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,ogasawarensis,,Matsumura,1906,オガサワラセセリ,,,,"Parnara ogasawarensis Matsumura, 1906",,,
 species-20436,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,guttata,,Bremer et Grey,1852,イチモンジセセリ,,,,"Parnara guttata Bremer et Grey, 1852",,,
 species-20438,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Cerastis,,pallescens,,,1878,カギモンヤガ,,,,"Cerastis pallescens (Butler, 1878)",,,
@@ -2924,7 +2924,7 @@ species-21147,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラム
 species-21148,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,paranaracola,,Lambers,1974,ニセカシワブチアブラムシ (新称),,,,"Tuberculatus paranaracola Lambers, 1974",,,
 species-21149,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,querciformosanus,,Takahashi,1921,カシワトゲムネアブラムシ (新称),,,,"Tuberculatus (Orientuberculoides) querciformosanus (Takahashi, 1921)",,,
 species-2115,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,chidorinoki,,Nasu,2021,モトグロギンヅマヒメハマキ,,,,"Rhopalovalva chidorinoki Nasu, 2021",,新記録・再分類等,
-species-21150,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,ヒゲナガアブラムシ族,Tuberculatus,Orientuberculoides,foeniculus,,,,1923),,,,Tuberculatus yokoyamai,,,
+species-21150,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,yokoyamai,,,,1923),,,,Tuberculatus yokoyamai,,,
 species-21151,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Tuberculoides,fulviabdominalis,,,,1941),,,,Tuberculatus fulviabdominalis,,,
 species-21153,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Subsaltusaphis,,kamijiensis,,,,Subsaltusaphis kamijiensis Sorin,,,,Subsaltusaphis kamijiensis Sorin,,,
 species-21154,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Subsaltusaphis,,pulchra,,,,Subsaltusaphis pulchra Quednau et Shaposhnikov,,,,Subsaltusaphis pulchra Quednau et Shaposhnikov,,,
@@ -2966,7 +2966,7 @@ species-2119,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21190,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,apicifuscum,,,,Eutrichosiphum apicifuscum Sugimoto,,,,Eutrichosiphum apicifuscum Sugimoto,,,
 species-21191,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,heterotrichum,,,,1956),,,,Eutrichosiphum heterotrichum,,,
 species-21192,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,nigrisiphon,,,,Eutrichosiphum nigrisiphon Sugimoto,,,,Eutrichosiphum nigrisiphon Sugimoto,,,
-species-21193,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Mollitrichosiphum,Mollitrichosiphum,tenuicorpus,,,,1908),,,,Mollitrichosiphum tenuicorpus,,,
+species-21193,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,pasaniae,,,,1908),,,,Eutrichosiphum pasaniae,,,
 species-21194,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,shiicola,,,,Eutrichosiphum shiicola Takahashi,,,,Eutrichosiphum shiicola Takahashi,,,
 species-21195,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,sinense,,,,Eutrichosiphum sinense RayChaudhuri,,,,Eutrichosiphum sinense RayChaudhuri,,,
 species-21196,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,tattakanum,,,,1925),,,,Eutrichosiphum tattakanum,,,
@@ -3104,8 +3104,8 @@ species-21321,Aphididae,アブラムシ科,Aphidinae,亜科,Rhopalosiphini,ク�
 species-21322,Aphididae,アブラムシ科,Aphidinae,亜科,Rhopalosiphini,クビレアブラムシ族,Schizaphis,Schizaphis,piricola,,Matsumura,1917,ナシアブラムシ,,,,"Schizaphis (Schizaphis) piricola (Matsumura,1917)",,,
 species-21323,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Rhopalosiphini,クビレアブラムシ族,Schizaphis,Schizaphis,rotundiventris,,Signoret,1860,ニセナシアブラムシ,,,,"Schizaphis (Schizaphis) rotundiventris (Signoret,1860)","Schizoneura rotundiventris Signoret, 1860; Aphis acori Theobald, 1923; Acaudus calami Theobald, 1923; Toxoptera cyperi van der Goot, 1917; Toxoptera punjabipyri Das, 1918",,"Aphis acori Theobald, 1923は本種の異名だが、Toxoptera acori Shinji, 1922（species-21313）とは別種。旧図鑑の同物異名処理は現行分類では採用しない。"
 species-21324,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,azukii,,Shinji,1932,,,,,"Acyrthosiphon azukii (Shinji,1932)",,,
-species-21325,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Mollitrichosiphum,Metatrichosiphon,luchuanum,,,,1930),,,,Mollitrichosiphum luchuanum,,,
-species-21326,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ヒゲナガアブラムシ族,Chaitophorus,Cavariellinepicauda,linderae,,,,1922),,,,Aulacorthum linderae,,,
+species-21325,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Aulacorthum,kerriae,,,,1930),,,,Aulacorthum kerriae,,,
+species-21326,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Aulacorthum,linderae,,,,1922),,,,Aulacorthum linderae,,,
 species-21327,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Aulacorthum,muradachi,,,,1928),,,,Aulacorthum muradachi,,,
 species-21328,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Aulacorthum,nepetifolii,,Aulacorthum (Aulacorthum) nepetifolii Miyazaki,1968,ミソガワソウヒゲナガアブラムシ (新称),,,,"Aulacorthum nepetifolii Aulacorthum (Aulacorthum) nepetifolii Miyazaki, 1968",,,
 species-21329,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Aulacorthum,phytolaccae,,Aulacorthum (Aulacorthum) phytolaccae Miyazaki,1968,テンニンソウヒゲナガアブラムシ,,,,"Aulacorthum phytolaccae Aulacorthum (Aulacorthum) phytolaccae Miyazaki, 1968",,,
@@ -3121,14 +3121,14 @@ species-21338,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macro
 species-21339,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Perillaphis,perillae,,,,1924),,,,Aulacorthum perillae,,,
 species-2134,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,"sp. 1 of Nasu, 2013",,,2013,カンバシロヒメハマキ,,,,"Spilonota sp. 1 of Nasu, 2013",,,
 species-21341,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Brachycaudus,Brachycaudus,helichrysi,,,,1843),,,,Brachycaudus helichrysi,,,
-species-21344,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Brachycaudus,Hyperomyzus,brassicae,,,,1758),,,,Brevicoryne brassicae,,,
+species-21344,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Brevicoryne,,brassicae,,,,1758),,,,Brevicoryne brassicae,,,
 species-21345,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,cirsiiphagus,,Capitophorus cirsiiphagus Takahashi,1961,アザミイボアブラムシ,,,,"Capitophorus cirsiiphagus Takahashi,1961",,,
 species-21346,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,elaeagni,,,,1894),,,,Capitophorus elaeagni,,,
 species-21347,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,eniwanus,,Capitophorus eniwanus Miyazaki,1971,エニワケクダアブラムシ,,,,"Capitophorus eniwanus Miyazaki,1971",,,
 species-21348,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,formosartemisiae,,,,1921),,,,Capitophorus formosartemisiae,,,
 species-21349,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,gnathaliifoliae,,Capitophorus gnathaliifoliae Shinji,1924,,,,,"Capitophorus gnathaliifoliae Shinji,1924",,,
 species-2135,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,"sp. 2 of Nasu, 2013",,,2013,ナツハゼシロヒメハマキ,,,,"Spilonota sp. 2 of Nasu, 2013",,,
-species-21350,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,hippophaes,,,,1852),,,,Capitophorus hippophaes,,,
+species-21350,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,hippophaes,,,,タデクギケアブラムシ,,,,Capitophorus hippophaes,,,
 species-21351,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,hippophaes,javanicus,Capitophorus hippophaes javanicus Hille Ris Lambers,1953,タデクギケアブラムシ,,,,"Capitophorus hippophaes javanicus Hille Ris Lambers,1953",,,
 species-21352,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,montanus,,Capitophorus montanus Takahashi,1931,ノアザミヤマクギケアブラムシ,,,,"Capitophorus montanus Takahashi,1931",,,
 species-21353,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,prunifoliae,,Capitophorus prunifoliae Shinji,1924,,,,,"Capitophorus prunifoliae Shinji,1924",,,
@@ -3142,11 +3142,11 @@ species-2136,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21360,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,aegopodii,,,,1763),,,,Cavariella aegopodii,,,
 species-21362,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,araliae,,Cavariella (Cavariella) araliae Takahashi,1921,タラフタオアブラムシ (ウドフタオアブラムシ),,,,"Cavariella araliae Cavariella (Cavariella) araliae Takahashi, 1921",,,
 species-21363,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,gilibertiae,,Cavariella (Cavariella) gilibertiae Takahashi,1961,カクレミノフタオアブラムシ,,,,"Cavariella gilibertiae Cavariella (Cavariella) gilibertiae Takahashi, 1961",,,
-species-21364,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Brachycaudus,Aulacorthum,corniculum,,,,1918),,,,Brachycaudus corniculum,,,
+species-21364,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,japonica,,,,1918),,,,Cavariella japonica,,,
 species-21365,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,konoi,,Cavariella (Cavariella) konoi Takahashi,1939,コウノフタオアブラムシ,,,,"Cavariella konoi Cavariella (Cavariella) konoi Takahashi, 1939",,,
 species-21366,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,nigrocaudata,,Cavariella (Cavariella) nigrocaudata Takahashi,1965,カミカエデフタオアブラムシ (新称),,,,"Cavariella nigrocaudata Cavariella (Cavariella) nigrocaudata Takahashi, 1965",,,
 species-21367,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,nipponica,,Cavariella (Cavariella) nipponica Takahashi,1961,ニッポンフタオアブラムシ,,,,"Cavariella nipponica Cavariella (Cavariella) nipponica Takahashi, 1961",,,
-species-21368,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,ヒゲナガアブラムシ族,Brachysiphoniella,Trichosiphum,salicicola,,,,1917),,,,Brachysiphoniella montana,Subsaltusaphis saracola Higuchi,,
+species-21368,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,salicicola,,,,1917),,,,Cavariella salicicola,,,
 species-21369,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,takahashii,,Cavariella (Cavariella) takahashii Hille Ris Lambers,1965,タカハシフタオアブラムシ,,,,"Cavariella takahashii Cavariella (Cavariella) takahashii Hille Ris Lambers, 1965",,,
 species-2137,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,albicana,,(Motschulsky),1866,ニセシロヒメシンクイ,,,,"Spilonota albicana (Motschulsky, 1866)",,,
 species-21370,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariellinepicauda,heraclei,,Cavariella (Cavariellinepicauda) heraclei Takahashi,1961,ハナウドフタオアブラムシ (シシウドフタオアブラムシ,,,,"Cavariella heraclei Cavariella (Cavariellinepicauda) heraclei Takahashi, 1961",,,
@@ -3166,7 +3166,7 @@ species-21384,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲ�
 species-21386,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,radicola,,,,1897),,,,Dysaphis radicola,,,
 species-21387,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,rumecicola,,,,1927),,,,Dysaphis rumecicola,,,
 species-21388,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,taisetsusana,,,,1971),,,,Dysaphis taisetsusana,,,
-species-21389,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ヒゲナガアブラムシ族,Chaitophorus,Dysaphis,populialbae,,,,1841),,,,Chaitophorus populialbae,,,
+species-21389,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,tulipae,,,,1841),,,,Dysaphis tulipae,,,
 species-2139,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,prognathana,,(Snellen),1883,ハシバミシロヒメハマキ,,,,"Spilonota prognathana (Snellen, 1883)",,,
 species-21390,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Pomaphis,plantaginea,,,,1860),,,,Dysaphis plantaginea,,,
 species-21392,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Elatobium,,trochodendri,,Elatobium trochodendri Takahashi,1960,ヤマグルマアブラムシ,,,,"Elatobium trochodendri Takahashi,1960",,,
@@ -3191,12 +3191,12 @@ species-2141,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21410,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Impatientinum,,impatiens,,,,1922),,,,Impatientinum impatiens,,,
 species-21411,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Indomegoura,,indica,,,,1916),,,,Indomegoura indica,,,
 species-21412,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Indomegoura,,nigrotibiae,,,,1963),,,,Indomegoura nigrotibiae,,,
-species-21413,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aleurosiphon,,smilacifoliae,,,,1921),,,,Aleurosiphon smilacifoliae,,,
+species-21413,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Kaochiaoja,,arthraxonis,,,,1921),,,,Kaochiaoja arthraxonis,,,
 species-21415,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Liosomaphis,,ornata,,Liosomaphis ornata Miyazaki,1971,メギソツアブラムシ,,,,"Liosomaphis ornata Miyazaki,1971",,,
-species-21416,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Liosomaphis,,berberidis,,,,1843),,,,Liosomaphis berberidis,,,
+species-21416,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Lipaphis,,erysimi,,,,1843),,,,Lipaphis erysimi,,,
 species-21417,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Longicaudus,,corydalisicola,,,,1962),,,,Longicaudus corydalisicola,,,
 species-21418,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Longicaudus,,trirhodus,,,,1849),,,,Longicaudus trirhodus,,,
-species-21419,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Pterocommatini,ヒゲナガアブラムシ族,Macchiatiella,,salijaponica,,,,1924),,,,Pterocomma salijaponica,,,
+species-21419,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macchiatiella,,itadori,,,,1924),,,,Macchiatiella itadori,,,
 species-2142,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,amamiana,,Nasu,2012,アマイロクロモンヒメハマキ,,,,"Spilonota amamiana Nasu, 2012",,,
 species-21420,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macchiatiella,,rhamni,,Boyer de Fonscolombe,1841,クロウメモドキオマルアブラムシ,,,,"Macchiatiella rhamni (Boyer de Fonscolombe, 1841)",,,
 species-21421,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macromyzella,,celticola,,,2005,エノキコブアブラムシ,,,,"Macromyzella celticola Sorin et Arakawa, 2005",,,
@@ -3365,7 +3365,6 @@ species-21572,Geometridae,シャクガ科,Desmobathrinae,ホソシャク亜科,,
 species-21573,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,Xenortholitha,,propinguata,niphonica,,,フタクチトガリナミシャク,,,,Xenortholitha propinguata niphonica,,,文献記録
 species-21574,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,limitatoidea,,,,スジハグルマエダシャク,,,,Synegia limitatoidea,,,文献記録
 species-21575,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,ichinosawana,,,,マルハグルマエダシャク,,,,Synegia ichinosawana,,,文献記録
-species-21576,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Thinopteryx,,delectans,,,,ミヤマツバメエダシャク,,,,Thinopteryx delectans,,,文献記録
 species-21578,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Apochima,,praecutaria,,,,キイロトゲエダシャク,,,,Apochima praecutaria,,,
 species-2158,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,brunnichana,,,1767,ダケカンバヒメハマキ,,,,"Epinotia brunnichana (Linnaeus, 1767)",,,
 species-2159,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,solandriana,,(Linnaeus),1758,セウスモンヒメハマキ,,,セウスモンハマキ,"Epinotia solandriana (Linnaeus, 1758)",,,
@@ -3408,83 +3407,83 @@ species-2174,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21740,Buprestidae,タマムシ科,Buprestinae,タマムシ亜科,Chrysobothrini,,Chrysobothris,Chrysobothris,indica,,Gory & Laporte,1873,インドムツボシタマムシ,,,,"Chrysobothris (Chrysobothris) indica Gory & Laporte, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21741,Buprestidae,タマムシ科,Buprestinae,タマムシ亜科,Chrysobothrini,,Chrysobothris,,daisenensis,,Y. Kurosawa,1963,ダイセンムツボシタマムシ,,,,"Chrysobothris daisenensis Y. Kurosawa, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21742,Buprestidae,タマムシ科,Buprestinae,タマムシ亜科,Melanophilini,,Trachypteris,,obscurata,,(Lewis),1893,,,,,"Trachypteris obscurata (Lewis, 1893)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21743,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,adelphinus,,Kerremans,1895,ニセホソアシナガタマムシ,,,,"Agrilus adelphinus Kerremans, 1895",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21744,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,amamioshimanus,,Y. Kurosawa,1964,オオシマナガタマムシ,,,,"Agrilus amamioshimanus Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21745,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,asahinai,,Y. Kurosawa,1956,アサヒナルリナガタマムシ,,,,"Agrilus asahinai Y. Kurosawa, 1956",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21743,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,adelphinus,,Kerremans,1895,ニセホソアシナガタマムシ,,,,"Agrilus adelphinus Kerremans, 1895",,,日本列島の甲虫全種目録(2026)参照。
+species-21744,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,amamioshimanus,,Y. Kurosawa,1964,オオシマナガタマムシ,,,,"Agrilus amamioshimanus Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。
+species-21745,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,asahinai,,Y. Kurosawa,1956,アサヒナルリナガタマムシ,,,,"Agrilus asahinai Y. Kurosawa, 1956",,,日本列島の甲虫全種目録(2026)参照。
 species-21746,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,babai,,Tôyama,1988,ババナガタマムシ,,,,"Agrilus babai Tôyama, 1988",,,日本列島の甲虫全種目録(2026)参照。
-species-21747,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,betuleti,,(Retzburg),1867,ツヤケシアサギナガタマムシ,,,,"Agrilus betuleti (Retzburg, 1867)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21748,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,carinihumeralis,,Y. Kurosawa,1964,カタスジナガタマムシ,,,,"Agrilus carinihumeralis Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21747,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,betuleti,,(Retzburg),1867,ツヤケシアサギナガタマムシ,,,,"Agrilus betuleti (Retzburg, 1867)",,,日本列島の甲虫全種目録(2026)参照。
+species-21748,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,carinihumeralis,,Y. Kurosawa,1964,カタスジナガタマムシ,,,,"Agrilus carinihumeralis Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。
 species-21749,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,semivittatus,,Tôyama,1985,,,,,"Agrilus semivittatus Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-2175,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,tsurugisana,,Oku,2005,ツルギクシヒゲヒメハマキ,,,,"Epinotia tsurugisana Oku, 2005",,,
-species-21750,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,chujoi,,Y. Kurosawa,1985,チュウジョウナガタマムシ,,,,"Agrilus chujoi Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21751,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,cupes,,Lewis,1893,ツヤナガタマムシ,,,,"Agrilus cupes Lewis, 1893",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21750,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,chujoi,,Y. Kurosawa,1985,チュウジョウナガタマムシ,,,,"Agrilus chujoi Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。
+species-21751,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,cupes,,Lewis,1893,ツヤナガタマムシ,,,,"Agrilus cupes Lewis, 1893",,,日本列島の甲虫全種目録(2026)参照。
 species-21752,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,cuprescens,,(Ménétriés),1832,ハマナスナガタマムシ,,,,"Agrilus cuprescens (Ménétriés, 1832)",,,日本列島の甲虫全種目録(2026)参照。
 species-21753,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,melanopterus,melanopterus,Solsky,1875,,,,,"Agrilus melanopterus melanopterus Solsky, 1875",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21754,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,deguchii,,Tôyama,1985,デグチナガタマムシ,,,,"Agrilus deguchii Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21754,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,deguchii,,Tôyama,1985,デグチナガタマムシ,,,,"Agrilus deguchii Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21755,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrirus,,fleischeri,nipponicola,Y. Kurosawa,1963,,,,,"Agrirus fleischeri nipponicola Y. Kurosawa, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21756,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,friebi,,Obenberger,1922,クヌギナガタマムシ,,,,"Agrilus friebi Obenberger, 1922",,,日本列島の甲虫全種目録(2026)参照。
 species-21757,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,tibialis,,Lewis,1892,,,,,"Agrilus tibialis Lewis, 1892","Agrilus tibialis Lewis, 1893; Agrilus friebi ainu Miwa & Chûjô, 1940; Agrilus tibialis Lewis, 1892; Agrilus tibialis Lewis, 1893; Agrilus friebi ainu Miwa & Chûjô, 1940",,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21758,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hattorii,,Nakane,1983,ヒメアサギナガタマムシ,,,,"Agrilus hattorii Nakane, 1983",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21759,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hirashimai,hirashimai,Y. Kurosawa,1964,ヒラシマナガタマムシ 基亜種,,,,"Agrilus hirashimai hirashimai Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21758,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hattorii,,Nakane,1983,ヒメアサギナガタマムシ,,,,"Agrilus hattorii Nakane, 1983",,,日本列島の甲虫全種目録(2026)参照。
+species-21759,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hirashimai,hirashimai,Y. Kurosawa,1964,ヒラシマナガタマムシ 基亜種,,,,"Agrilus hirashimai hirashimai Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。
 species-2176,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,rubiginosana,,(Herrich-Schäffer),1851,マツヒメハマキ,,マツノクロマダラヒメハマキ,,"Epinotia rubiginosana (Herrich-Schaffer, 1851)",,,
-species-21760,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hirashimai,yaeyamaensis,Tôyama,1985,ヒラシマナガタマムシ 八重山亜種,,,,"Agrilus hirashimai yaeyamaensis Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21760,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hirashimai,yaeyamaensis,Tôyama,1985,ヒラシマナガタマムシ 八重山亜種,,,,"Agrilus hirashimai yaeyamaensis Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21761,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hornianus,,Kerremans,1913,ホルンナガタマムシ,,,,"Agrilus hornianus Kerremans, 1913",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21762,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,iriei,,Tôyama,1985,イリエナガタマムシ,,,,"Agrilus iriei Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21762,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,iriei,,Tôyama,1985,イリエナガタマムシ,,,,"Agrilus iriei Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21763,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,japanocarinatus,,Ohmomo,2002,ニッポンカタスジナガタマムシ,,,,"Agrilus japanocarinatus Ohmomo, 2002",,,日本列島の甲虫全種目録(2026)参照。
 species-21764,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,kaluganus,,Obenberger,1940,,,,,"Agrilus kaluganus Obenberger, 1940",,,日本列島の甲虫全種目録(2026)参照。
-species-21765,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,komareki,,Obenberger,1925,クワナガタマムシ,,,,"Agrilus komareki Obenberger, 1925",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21766,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,nicolanus,,Obenberger,1924,ロニノナガタマムシ,,,,"Agrilus nicolanus Obenberger, 1924","Agrilus ronino Obenberger, 1935; Agrilus nicolanus Obenberger, 1924",,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21767,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,koyoi,,Ohmomo,2002,コウヨウナガタマムシ,,,,"Agrilus koyoi Ohmomo, 2002",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21768,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,kurumi,,Y. Kurosawa,1957,クルミナガタマムシ,,,,"Agrilus kurumi Y. Kurosawa, 1957",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21765,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,komareki,,Obenberger,1925,クワナガタマムシ,,,,"Agrilus komareki Obenberger, 1925",,,日本列島の甲虫全種目録(2026)参照。
+species-21766,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,nicolanus,,Obenberger,1924,ロニノナガタマムシ,,,,"Agrilus nicolanus Obenberger, 1924","Agrilus ronino Obenberger, 1935; Agrilus nicolanus Obenberger, 1924",,日本列島の甲虫全種目録(2026)参照。
+species-21767,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,koyoi,,Ohmomo,2002,コウヨウナガタマムシ,,,,"Agrilus koyoi Ohmomo, 2002",,,日本列島の甲虫全種目録(2026)参照。
+species-21768,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,kurumi,,Y. Kurosawa,1957,クルミナガタマムシ,,,,"Agrilus kurumi Y. Kurosawa, 1957",,,日本列島の甲虫全種目録(2026)参照。
 species-21769,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,nagaoi,,Nakane,1983,ナガオナガタマムシ,,,,"Agrilus nagaoi Nakane, 1983",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2177,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,utsugijinboi,,Nasu,2019,ヤツガタケヒメハマキ,,,,"Epinotia utsugijinboi Nasu, 2019",,新記録・再分類等,
 species-21770,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,rokuyai,rokuyai,Y. Kurosawa,1976,,,,,"Agrilus rokuyai rokuyai Y. Kurosawa, 1976",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21771,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,mallotiellus,,Y. Kurosawa,1985,クモガタナガタマムシ,,,,"Agrilus mallotiellus Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21772,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,marginicollis,,E. Saunders,1873,ブドウナガタマムシ,,,,"Agrilus marginicollis E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21773,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,masumotoi,,Ohmomo,2011,ニセシラケナガタマムシ,,,,"Agrilus masumotoi Ohmomo, 2011",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21771,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,mallotiellus,,Y. Kurosawa,1985,クモガタナガタマムシ,,,,"Agrilus mallotiellus Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。
+species-21772,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,marginicollis,,E. Saunders,1873,ブドウナガタマムシ,,,,"Agrilus marginicollis E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。
+species-21773,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,masumotoi,,Ohmomo,2011,ニセシラケナガタマムシ,,,,"Agrilus masumotoi Ohmomo, 2011",,,日本列島の甲虫全種目録(2026)参照。
 species-21774,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,melanolucidus,,Ohmomo,2005,ヒメクロツヤナガタマムシ,,,,"Agrilus melanolucidus Ohmomo, 2005",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21775,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,moerens,,E. Saunders,1873,アサギナガタマムシ,,,,"Agrilus moerens E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21776,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,obscurecinctus,,Obenberger,1935,オキナワミドリナガタマムシ,,,,"Agrilus obscurecinctus Obenberger, 1935",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21775,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,moerens,,E. Saunders,1873,アサギナガタマムシ,,,,"Agrilus moerens E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。
+species-21776,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,obscurecinctus,,Obenberger,1935,オキナワミドリナガタマムシ,,,,"Agrilus obscurecinctus Obenberger, 1935",,,日本列島の甲虫全種目録(2026)参照。
 species-21777,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,ogatai,,Ohmomo,2002,オガタナガタマムシ,,,,"Agrilus ogatai Ohmomo, 2002",,,日本列島の甲虫全種目録(2026)参照。
 species-21778,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,takaii,,Nakane,1983,,,,,"Agrilus takaii Nakane, 1983",,,日本列島の甲虫全種目録(2026)参照。
 species-21779,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,pilosovittatus,,E. Saunders,1873,シラケナガタマムシ,,,,"Agrilus pilosovittatus E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。
 species-2178,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,rubricana,,Kuznetzov,1968,ムモンハンノメムシガ,,,,"Epinotia rubricana Kuznetzov, 1968",,,
 species-21780,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,marcopoli,ulmi,Y.Kurosawa,1956,,,,,"Agrilus marcopoli ulmi Y.Kurosawa, 1956",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21781,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,pusillesculptus,,Obenberger,1940,ニガキナガタマムシ,,,,"Agrilus pusillesculptus Obenberger, 1940",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21781,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,pusillesculptus,,Obenberger,1940,ニガキナガタマムシ,,,,"Agrilus pusillesculptus Obenberger, 1940",,,日本列島の甲虫全種目録(2026)参照。
 species-21782,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,ribbei,,Kiesenwetter,1879,ホソアシナガタマムシ,,,,"Agrilus ribbei Kiesenwetter, 1879",,,日本列島の甲虫全種目録(2026)参照。
 species-21783,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,samuelsoni,,Tôyama,1985,ヤエヤマナガタマムシ,,,,"Agrilus samuelsoni Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21784,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,hornianus,shibatai,Y. Kurosawa,1964,,,,,"Agrilus hornianus shibatai Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21785,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,shimabarensis,,Ohmomo,2011,シマバラナガタマムシ,,,,"Agrilus shimabarensis Ohmomo, 2011",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21785,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,shimabarensis,,Ohmomo,2011,シマバラナガタマムシ,,,,"Agrilus shimabarensis Ohmomo, 2011",,,日本列島の甲虫全種目録(2026)参照。
 species-21786,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,sibiricus,fukushimensis,Jendek,1994,ミドリツヤナガタマムシ,,,,"Agrilus sibiricus fukushimensis Jendek, 1994",,,日本列島の甲虫全種目録(2026)参照。
 species-21787,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,insuspectus,,Obenberger,1924,,,,,"Agrilus insuspectus Obenberger, 1924",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21788,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,sinuatus,sachalinensis,Obenberger,1935,アカバナガタマムシ,,,,"Agrilus sinuatus sachalinensis Obenberger, 1935",,,日本列島の甲虫全種目録(2026)参照。
-species-21789,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,sinuatus,yokoyamai,Iga,1955,,,,,"Agrilus sinuatus yokoyamai Iga, 1955",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21789,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,sinuatus,yokoyamai,Iga,1955,,,,,"Agrilus sinuatus yokoyamai Iga, 1955",,,日本列島の甲虫全種目録(2026)参照。
 species-2179,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,autumnalis,,Oku,2005,ツチイロヒメハマキ,,,,"Epinotia autumnalis Oku, 2005",,,
 species-21790,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,subauratus,amurensis,Obenberger,1922,アムールナガタマムシ,,,,"Agrilus subauratus amurensis Obenberger, 1922",,,日本列島の甲虫全種目録(2026)参照。
 species-21791,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,sugiurai,,Jendek,2007,スギウラナガタマムシ,,,,"Agrilus sugiurai Jendek, 2007",,,日本列島の甲虫全種目録(2026)参照。
-species-21792,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,suzukii,,Y. Kurosawa,1985,シラフオガサワラナガタマムシ,,,,"Agrilus suzukii Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21792,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,suzukii,,Y. Kurosawa,1985,シラフオガサワラナガタマムシ,,,,"Agrilus suzukii Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21793,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,takahashii,,Tôyama,1988,ニセウグイスナガタマムシ,,,,"Agrilus takahashii Tôyama, 1988",,,日本列島の甲虫全種目録(2026)参照。
-species-21794,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,trinotatus,,E. Saunders,1873,ミツボシナガタマムシ,,,,"Agrilus trinotatus E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21795,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,tsutsumiuchii,,Ohmomo,2006,ツツミウチナガタマムシ,,,,"Agrilus tsutsumiuchii Ohmomo, 2006",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21796,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,uenoi,,Y. Kurosawa,1963,ウエノナガタマムシ,,,,"Agrilus uenoi Y. Kurosawa, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21797,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,ussuricola,,Obenberger,1924,ヒメクロナガタマムシ,,,,"Agrilus ussuricola Obenberger, 1924",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21794,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,trinotatus,,E. Saunders,1873,ミツボシナガタマムシ,,,,"Agrilus trinotatus E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。
+species-21795,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,tsutsumiuchii,,Ohmomo,2006,ツツミウチナガタマムシ,,,,"Agrilus tsutsumiuchii Ohmomo, 2006",,,日本列島の甲虫全種目録(2026)参照。
+species-21796,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,uenoi,,Y. Kurosawa,1963,ウエノナガタマムシ,,,,"Agrilus uenoi Y. Kurosawa, 1963",,,日本列島の甲虫全種目録(2026)参照。
+species-21797,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,ussuricola,,Obenberger,1924,ヒメクロナガタマムシ,,,,"Agrilus ussuricola Obenberger, 1924",,,日本列島の甲虫全種目録(2026)参照。
 species-21798,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,toyamai,,Y.Kurosawa,1985,,,,,"Agrilus toyamai Y.Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21799,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viduus,,Kerremans,1914,ベニナガタマムシ,,,,"Agrilus viduus Kerremans, 1914",,,日本列島の甲虫全種目録(2026)参照。
 species-2180,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,tenerana,,(Denis & Schiffermüller),1775,ハンノメムシガ,,,,"Epinotia tenerana (Denis & Schiffermüller, 1775)",,,
-species-21800,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viduus,subviduus,Y. Kurosawa,1957,,,,,"Agrilus viduus subviduus Y. Kurosawa, 1957",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21801,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viridiobscurus,,E. Saunders,1873,アオグロナガタマムシ,,,,"Agrilus viridiobscurus E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21802,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viridis,,(Linnaeus),1758,シンリョクナガタマムシ,,,,"Agrilus viridis (Linnaeus, 1758)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21800,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viduus,subviduus,Y. Kurosawa,1957,,,,,"Agrilus viduus subviduus Y. Kurosawa, 1957",,,日本列島の甲虫全種目録(2026)参照。
+species-21801,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viridiobscurus,,E. Saunders,1873,アオグロナガタマムシ,,,,"Agrilus viridiobscurus E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。
+species-21802,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,viridis,,(Linnaeus),1758,シンリョクナガタマムシ,,,,"Agrilus viridis (Linnaeus, 1758)",,,日本列島の甲虫全種目録(2026)参照。
 species-21803,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,brevitarsis,brevitarsis,Lewis,1893,ヤナギナガタマムシ,,,,"Agrilus brevitarsis brevitarsis Lewis, 1893",,"Agrilus salicivola Kurosawa, 1963",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21804,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,watanabei,,Tôyama,1985,ワタナベナガタマムシ,,,,"Agrilus watanabei Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
-species-21805,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,watanukiorum,,Fukutomi,2010,ワタヌキミドリナガタマムシ,,,,"Agrilus watanukiorum Fukutomi, 2010",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21805,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,watanukiorum,,Fukutomi,2010,ワタヌキミドリナガタマムシ,,,,"Agrilus watanukiorum Fukutomi, 2010",,,日本列島の甲虫全種目録(2026)参照。
 species-21806,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yakushimensis,,Tôyama,1985,ヤクシマナガタマムシ,,,,"Agrilus yakushimensis Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
-species-21808,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yamajii,,Tôyama,1985,ヤマジナガタマムシ,,,,"Agrilus yamajii Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21809,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yasumatsui,,Y. Kurosawa,1964,ヤスマツナガタマムシ,,,,"Agrilus yasumatsui Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21808,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yamajii,,Tôyama,1985,ヤマジナガタマムシ,,,,"Agrilus yamajii Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
+species-21809,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yasumatsui,,Y. Kurosawa,1964,ヤスマツナガタマムシ,,,,"Agrilus yasumatsui Y. Kurosawa, 1964",,,日本列島の甲虫全種目録(2026)参照。
 species-2181,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,coryli,,Kuznetzov,1970,アカバヒメハマキ,,,,"Epinotia coryli Kuznetzov, 1970",,,
-species-21810,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yonahaensis,,Tôyama,1985,ヨナハナガタマムシ,,,,"Agrilus yonahaensis Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21811,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Sambus,,quadricolor,quadricolor,E. Saunders,1873,アヤムナビロタマムシ 基亜種,,,,"Sambus quadricolor quadricolor E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21812,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Sambus,,quadricolor,unifasciatus,Y. Kurosawa,1985,アヤムナビロタマムシ 八重山亜種,,,,"Sambus quadricolor unifasciatus Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21813,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Sambus,,yaeyamanus,,Y. Kurosawa,1985,ヤエヤマムナビロタマムシ,,,,"Sambus yaeyamanus Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21810,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Agrilus,,yonahaensis,,Tôyama,1985,ヨナハナガタマムシ,,,,"Agrilus yonahaensis Tôyama, 1985",,,日本列島の甲虫全種目録(2026)参照。
+species-21811,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Sambus,,quadricolor,quadricolor,E. Saunders,1873,アヤムナビロタマムシ 基亜種,,,,"Sambus quadricolor quadricolor E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。
+species-21812,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Sambus,,quadricolor,unifasciatus,Y. Kurosawa,1985,アヤムナビロタマムシ 八重山亜種,,,,"Sambus quadricolor unifasciatus Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。
+species-21813,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Agrilini,,Sambus,,yaeyamanus,,Y. Kurosawa,1985,ヤエヤマムナビロタマムシ,,,,"Sambus yaeyamanus Y. Kurosawa, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-21814,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Aphanisticini,,Paracylindromorphus,,richteri,,Théry,1937,アラメホソツツタマムシ,,,,"Paracylindromorphus richteri Théry, 1937",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21815,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Coraebini,,Coraebus,,montanus,,Miwa & Chujo,1940,,,,,"Coraebus montanus Miwa & Chujo, 1940",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21816,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Coraebini,,Coraebus,,diminutus,,Gebhardt,1929,,,,,"Coraebus diminutus Gebhardt, 1929",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -3500,18 +3499,18 @@ species-21824,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tra
 species-21825,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Habroloma,,elegantulum,,(E.Saunders),1873,,,,,"Habroloma elegantulum (E.Saunders, 1873)",,"Habroloma ronino Obenberger, 1918",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21826,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Habroloma,Parahabroloma,taxillusi,,Kato & Kawakita,2023,オオバヤドリギヒラタチビタマムシ,,,,"Habroloma (Parahabroloma) taxillusi Kato & Kawakita, 2023",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21827,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Habroloma,Parahabroloma,tsutsumiuchii,,Tamadera,2025,オニヒラタチビタマムシ,,,,"Habroloma (Parahabroloma) tsutsumiuchii Tamadera, 2025",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21828,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,cuneiferus,,Y. Kurosawa,1959,クサビチビタマムシ,,,,"Trachys cuneiferus Y. Kurosawa, 1959",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21828,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,cuneiferus,,Y. Kurosawa,1959,クサビチビタマムシ,,,,"Trachys cuneiferus Y. Kurosawa, 1959",,,日本列島の甲虫全種目録(2026)参照。
 species-21829,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,yoshidai,,Kurosawa,1959,ヨシダチビタマムシ,,,,"Trachys yoshidai Kurosawa, 1959",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2183,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,takabotti,,Nasu,2018,ツマグロアカチャヒメハマキ,,,,"Epinotia takabotti Nasu, 2018",,新記録・再分類等,
 species-21830,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,oviformis,,Kurosawa,1959,,,,,"Trachys oviformis Kurosawa, 1959",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21831,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,pseudoscrobiculata,shirozui,Y. Kurosawa,1959,スミレチビタマムシ,,,,"Trachys pseudoscrobiculata shirozui Y. Kurosawa, 1959",,"Trachys violae Y. Kurosawa, 1959",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21832,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,falcatae,,Kurosawa,1959,,,,,"Trachys falcatae Kurosawa, 1959",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-21833,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,robusta,,E. Saunders,1873,,,,,"Trachys robusta E. Saunders, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21834,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,toringoi,,Y. Kurosawa,1951,ズミチビタマムシ,,,,"Trachys toringoi Y. Kurosawa, 1951",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21834,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,toringoi,,Y. Kurosawa,1951,ズミチビタマムシ,,,,"Trachys toringoi Y. Kurosawa, 1951",,,日本列島の甲虫全種目録(2026)参照。
 species-21835,Buprestidae,タマムシ科,Agrilinae,ナガタマムシ亜科,Tracheini,,Trachys,,japonica,,Obenberger,1923,ニホンチビタマムシ,,,,"Trachys japonica Obenberger, 1923",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2184,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,nisella,,(Clerck),1759,ヤナギメムシガ,,,,"Epinotia nisella (Clerck, 1759)",,,
 species-21847,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Achrysonini,,Nortia,,carinicollis,hanatanii,Fujita,2018,ムネスジウスバカミキリ 八重山亜種,,,,"Nortia carinicollis hanatanii Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
-species-21848,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Achrysonini,,Nortia,,carinicollis,kobayashii,Fujita,2018,ムネスジウスバカミキリ 吐噶喇亜種,,,,"Nortia carinicollis kobayashii Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21848,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Achrysonini,,Nortia,,carinicollis,kobayashii,Fujita,2018,ムネスジウスバカミキリ 吐噶喇亜種,,,,"Nortia carinicollis kobayashii Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
 species-21849,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Achrysonini,,Nortia,,carinicollis,pruinicollis,Gressitt,1965,ムネスジウスバカミキリ 奄美沖縄亜種,,,,"Nortia carinicollis pruinicollis Gressitt, 1965",,,日本列島の甲虫全種目録(2026)参照。
 species-2185,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,cinereana,,(Haworth),[1811],ニセヤナギメムシガ,,,,"Epinotia cinereana (Haworth, [1811])",,,
 species-21850,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Achrysonini,,Nortia,,geniculata,satsumana,Niisato & N. Ohbayashi,2005,サツマムネスジウスバカミキリ,,,,"Nortia geniculata satsumana Niisato & N. Ohbayashi, 2005",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
@@ -3540,7 +3539,7 @@ species-21871,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-21872,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Chloridolum,kurosawae,kurosawae,Hayashi,1956,ヤクシマミドリカミキリ 基亜種,,,,"Chloridolum (Chloridolum) kurosawae kurosawae Hayashi, 1956",,,日本列島の甲虫全種目録(2026)参照。
 species-21873,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Chloridolum,kurosawae,ohsumiense,Ohbayashi,1992,ヤクシマミドリカミキリ 九州亜種,,,,"Chloridolum (Chloridolum) kurosawae ohsumiense Ohbayashi, 1992",,,日本列島の甲虫全種目録(2026)参照。
 species-21874,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Chloridolum,loochooanum,,Gressitt,1934,オオシマミドリカミキリ,,,,"Chloridolum (Chloridolum) loochooanum Gressitt, 1934",,,日本列島の甲虫全種目録(2026)参照。
-species-21875,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Chloridolum,loochooanum,chujoi,Makihara,2005,,,,,"Chloridolum (Chloridolum) loochooanum chujoi Makihara, 2005",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21875,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Chloridolum,loochooanum,chujoi,Makihara,2005,,,,,"Chloridolum (Chloridolum) loochooanum chujoi Makihara, 2005",,,日本列島の甲虫全種目録(2026)参照。
 species-21876,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Chloridolum,thaliodes,,Bates,1884,オオアオカミキリ,,,,"Chloridolum (Chloridolum) thaliodes Bates, 1884",,,日本列島の甲虫全種目録(2026)参照。
 species-21877,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Leontium,viride,,(Thomson),1864,ミドリカミキリ,,,,"Chloridolum (Leontium) viride (Thomson, 1864)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-21878,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callichromatini,,Chloridolum,Leontium,multiplicatum,,(Pic),1946,,,,,"Chloridolum (Leontium) multiplicatum (Pic, 1946)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -3569,7 +3568,7 @@ species-2190,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21900,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiini,,Semanotus,,japonicus,japonicus,(Lacordaire),1869,スギカミキリ 基亜種,,,,"Semanotus japonicus japonicus (Lacordaire, 1869)",,,日本列島の甲虫全種目録(2026)参照。
 species-21901,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiini,,Semanotus,,japonicus,yakushimanus,Makihara,2004,スギカミキリ 屋久島亜種,,,,"Semanotus japonicus yakushimanus Makihara, 2004",,,日本列島の甲虫全種目録(2026)参照。
 species-21902,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,elongatum,elongatum,Matsushita,1933,ホソガタヒメカミキリ 基亜種,,,,"Ceresium elongatum elongatum Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。
-species-21903,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,elongatum,tsuchiyai,Fujita,2018,ホソガタヒメカミキリ 先島亜種,,,,"Ceresium elongatum tsuchiyai Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21903,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,elongatum,tsuchiyai,Fujita,2018,ホソガタヒメカミキリ 先島亜種,,,,"Ceresium elongatum tsuchiyai Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
 species-21904,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,fuscum,fuscum,Matsumura & Matsushita,1932,リュウキュウヒメカミキリ 基亜種,,,,"Ceresium fuscum fuscum Matsumura & Matsushita, 1932",,,日本列島の甲虫全種目録(2026)参照。
 species-21905,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,fuscum,hachijoense,Matsumura & Matsushita,1932,リュウキュウヒメカミキリ 伊豆諸島トカラ亜種,,,,"Ceresium fuscum hachijoense Matsumura & Matsushita, 1932",,,日本列島の甲虫全種目録(2026)参照。
 species-21906,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,hachijoense,,Matsumura & Matsushita,1932,,,,,"Ceresium hachijoense Matsumura & Matsushita, 1932",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -3582,7 +3581,7 @@ species-21911,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-21912,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,signaticolle,,Matsumura & Matsushita,1932,クロモンヒメカミキリ,,,,"Ceresium signaticolle Matsumura & Matsushita, 1932",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-21913,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,simile,simile,Gahan,1890,チャイロヒメカミキリ 基亜種,,,,"Ceresium simile simile Gahan, 1890",,,日本列島の甲虫全種目録(2026)参照。
 species-21914,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,simile,flavopubescens,Kusama & Takakuwa,1984,チャイロヒメカミキリ 本土亜種,,ニホンチャイロヒメカミキリ,,"Ceresium simile flavopubescens Kusama & Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。
-species-21915,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,simile,miyamotoi,Fujita,2018,チャイロヒメカミキリ 八重山亜種,,,,"Ceresium simile miyamotoi Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21915,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,simile,miyamotoi,Fujita,2018,チャイロヒメカミキリ 八重山亜種,,,,"Ceresium simile miyamotoi Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
 species-21916,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,sinicum,,A. White,1855,テツイロヒメカミキリ,,,,"Ceresium sinicum A. White, 1855",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-21917,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,unicolor,unicolor,(Fabricius),1787,フトガタヒメカミキリ 基亜種,,,,"Ceresium unicolor unicolor (Fabricius, 1787)",,,日本列島の甲虫全種目録(2026)参照。
 species-21918,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Ceresium,,unicolor,pseudounicolor,Kusama & Komiya,1972,フトガタヒメカミキリ 琉球亜種,,,,"Ceresium unicolor pseudounicolor Kusama & Komiya, 1972",,,日本列島の甲虫全種目録(2026)参照。
@@ -3593,10 +3592,10 @@ species-21921,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-21922,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Stenodryas,,clavigera,insularis,Yokoyama,1966,アメイロカミキリ 琉球亜種,,,,"Stenodryas clavigera insularis Yokoyama, 1966",,,日本列島の甲虫全種目録(2026)参照。
 species-21923,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Callidiopini,,Stenygrinum,,quadrinotatum,,Bates,1873,ヨツボシカミキリ,,,,"Stenygrinum quadrinotatum Bates, 1873",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-21924,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,chrysothrix,(Bates),1873,キマダラカミキリ 基亜種,キマダラミヤマカミキリ,,,"Aeolesthes (Pseudaeolesthes) chrysothrix chrysothrix (Bates, 1873)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
-species-21925,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,fukidai,Fujita,2018,キマダラカミキリ 奄美亜種,,,,"Aeolesthes (Pseudaeolesthes) chrysothrix fukidai Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21926,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,kurosawai,(Gressitt),1965,キマダラカミキリ 徳之島沖縄亜種,,,,"Aeolesthes (Pseudaeolesthes) chrysothrix kurosawai (Gressitt, 1965)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21927,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,nakamurai,Kusama & Takakuwa,1984,キマダラカミキリ 八重山亜種,,,,"Aeolesthes (Pseudaeolesthes) chrysothrix nakamurai Kusama & Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-21928,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,yonaguniensis,(K. Ohbayashi & N. Ohbayashi),1965,キマダラカミキリ 与那国島亜種,ヨナグニキマダラカミキリ,,,"Aeolesthes (Pseudaeolesthes) chrysothrix yonaguniensis (K. Ohbayashi & N. Ohbayashi, 1965)","Pseudaeolesthes chrysothrix yonaguniensis K. Ohbayashi & N. Ohbayashi, 1965",,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21925,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,fukidai,Fujita,2018,キマダラカミキリ 奄美亜種,,,,"Aeolesthes (Pseudaeolesthes) chrysothrix fukidai Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
+species-21926,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,kurosawai,(Gressitt),1965,キマダラカミキリ 徳之島沖縄亜種,,,,"Aeolesthes (Pseudaeolesthes) chrysothrix kurosawai (Gressitt, 1965)",,,日本列島の甲虫全種目録(2026)参照。
+species-21927,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,nakamurai,Kusama & Takakuwa,1984,キマダラカミキリ 八重山亜種,,,,"Aeolesthes (Pseudaeolesthes) chrysothrix nakamurai Kusama & Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。
+species-21928,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Aeolesthes,Pseudaeolesthes,chrysothrix,yonaguniensis,(K. Ohbayashi & N. Ohbayashi),1965,キマダラカミキリ 与那国島亜種,ヨナグニキマダラカミキリ,,,"Aeolesthes (Pseudaeolesthes) chrysothrix yonaguniensis (K. Ohbayashi & N. Ohbayashi, 1965)","Pseudaeolesthes chrysothrix yonaguniensis K. Ohbayashi & N. Ohbayashi, 1965",,日本列島の甲虫全種目録(2026)参照。
 species-2193,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,piceicola,,Kuznetzov,1970,トウヒシロスジヒメハマキ,,,,"Epinotia piceicola Kuznetzov, 1970",,,
 species-21930,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Dymasius,Elydnus,hirayamai,,Matsushita,1941,キマダラヒメミヤマカミキリ,,,,"Dymasius (Elydnus) hirayamai Matsushita, 1941",,,日本列島の甲虫全種目録(2026)参照。
 species-21931,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Cerambycini,,Margites,Margites,fulvidus,,(Pascoe),1858,キイロミヤマカミキリ,,,,"Margites (Margites) fulvidus (Pascoe, 1858)",,,日本列島の甲虫全種目録(2026)参照。
@@ -3619,7 +3618,7 @@ species-21947,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-21948,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Brachyclytus,,singularis,,Kraatz,1879,アカネトラカミキリ,,,,"Brachyclytus singularis Kraatz, 1879",,,日本列島の甲虫全種目録(2026)参照。
 species-21949,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Chlorophorus,Humeromaculatus,diadema,inhisutus,(Matsushita),1934,クロトラカミキリ 北海道亜種,,,,"Chlorophorus (Humeromaculatus) diadema inhisutus (Matsushita, 1934)",,,日本列島の甲虫全種目録(2026)参照。
 species-2195,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,bilunana,,(Haworth),[1811],キタシロヒメハマキ,,,,"Epinotia bilunana (Haworth, [1811])",,新記録・再分類等,
-species-21950,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Chlorophorus,Humeromaculatus,diadema,kurotora,Hayashi,1961,クロトラカミキリ 本州以南亜種,,,,"Chlorophorus (Humeromaculatus) diadema kurotora Hayashi, 1961",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-21950,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Chlorophorus,Humeromaculatus,diadema,kurotora,Hayashi,1961,クロトラカミキリ 本州以南亜種,,,,"Chlorophorus (Humeromaculatus) diadema kurotora Hayashi, 1961",,,日本列島の甲虫全種目録(2026)参照。
 species-21951,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Chlorophorus,,amami,,Hayashi,1968,アマミキイロトラカミキリ,,,,"Chlorophorus amami Hayashi, 1968",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-21952,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Chlorophorus,,annularis,,(Fabricius),1787,タケトラカミキリ,,,,"Chlorophorus annularis (Fabricius, 1787)",,,日本列島の甲虫全種目録(2026)参照。
 species-21953,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Chlorophorus,,aritai,,(K. Ohbayashi),1964,イリオモテトラカミキリ,,,,"Chlorophorus aritai (K. Ohbayashi, 1964)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
@@ -3689,7 +3688,7 @@ species-22013,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-22014,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Plagionotus,,christophi,,(Kraatz),1879,クリストフコトラカミキリ,,,,"Plagionotus christophi (Kraatz, 1879)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22015,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Plagionotus,,pulcher,,(Blessig),1872,コトラカミキリ,,,,"Plagionotus pulcher (Blessig, 1872)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22016,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Rhabdoclytus,,acutivittis,acutivittis,(Kraatz),1879,カンボウトラカミキリ 基亜種,,,,"Rhabdoclytus acutivittis acutivittis (Kraatz, 1879)","Hayashiclytus acutivittis acutivittis (Kraatz, 1879)",,日本列島の甲虫全種目録(2026)参照。
-species-22018,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Rhabdoclytus,,acutivittis,inscriptus,(Bates),1884,カンボウトラカミキリ 本土亜種,,,,"Rhabdoclytus acutivittis inscriptus (Bates, 1884)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22018,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Rhabdoclytus,,acutivittis,inscriptus,(Bates),1884,カンボウトラカミキリ 本土亜種,,,,"Rhabdoclytus acutivittis inscriptus (Bates, 1884)",,,日本列島の甲虫全種目録(2026)参照。
 species-22019,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Hayashiclytus,,acutivittis,inscriptus,(Bates),1844,フトオビカンボウトラカミキリ,,,,"Hayashiclytus acutivittis inscriptus (Bates, 1844)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2202,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Zeiraphera,,shimekii,,Kawabe,1974,マエジロミドリモンヒメハマキ,,,,"Zeiraphera shimekii Kawabe, 1974",,,
 species-22020,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Rhaphuma,,amamiensis,,Hayashi,1983,カギモンミドリホソトラカミキリ,アマミカギモンミドリホソトラカミキリ,,,"Rhaphuma amamiensis Hayashi, 1983","Rhaphuma virens amamiensis Hayashi, 1983",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
@@ -3703,7 +3702,7 @@ species-22028,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-22029,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Igneotrechus,pyrrhoderus,pyrrhoderus,Bates,1873,ブドウトラカミキリ,,,,"Xylotrechus (Igneotrechus) pyrrhoderus pyrrhoderus Bates, 1873",,,日本列島の甲虫全種目録(2026)参照。
 species-2203,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Zeiraphera,,bicolora,,Kawabe,1976,セギンモンヒメハマキ,,,,"Zeiraphera bicolora Kawabe, 1976",,,
 species-22030,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Igneotrechus,rufilius,rufilus,Bates,1884,クビアカトラカミキリ,,,,"Xylotrechus (Igneotrechus) rufilius rufilus Bates, 1884",,,日本列島の甲虫全種目録(2026)参照。
-species-22031,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,rufilius,kadowakii,Nakane,1981,オキクビアカトラカミキリ,,,,"Xylotrechus (Xylotrechus) rufilius kadowakii Nakane, 1981",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22031,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,rufilius,kadowakii,Nakane,1981,オキクビアカトラカミキリ,,,,"Xylotrechus (Xylotrechus) rufilius kadowakii Nakane, 1981",,,日本列島の甲虫全種目録(2026)参照。
 species-22032,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Rusticoclytus,adspersus,,(Gebler),1830,オクエゾトラカミキリ,,,,"Xylotrechus (Rusticoclytus) adspersus (Gebler, 1830)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22033,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,,rusticus,,(Linnaeus),1758,クワヤマトラカミキリ,,,,"Xylotrechus rusticus (Linnaeus, 1758)","Xylotrechus (Rusticoclytus) rusticus (Linnaeus, 1758); Xylotrechus rusticus (Linnaeus, 1758)",,日本列島の甲虫全種目録(2026)参照。
 species-22034,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,,salicis,,Takakuwa & Oda,1978,ヤナギトラカミキリ,,,,"Xylotrechus salicis Takakuwa & Oda, 1978","Xylotrechus (Rusticoclytus) salicis Takakuwa & Oda, 1978; Xylotrechus salicis Takakuwa & Oda, 1978",,日本列島の甲虫全種目録(2026)参照。
@@ -3714,7 +3713,7 @@ species-22038,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-22039,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,janbar,,Niisato & N. Ohbayashi,2002,スギノズマルトラカミキリ,,,,"Xylotrechus (Xylotrechus) janbar Niisato & N. Ohbayashi, 2002",,,日本列島の甲虫全種目録(2026)参照。
 species-2204,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Zeiraphera,,demutata,,(Walsingham),1900,シロマルモンヒメハマキ,,,シロマルモンハマキ、トビイロヒメハマキ,"Zeiraphera demutata (Walsingham, 1900)",,,
 species-22040,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,atronotatus,angulithorax,Gresssitt,1934,ムネモンアカネトラカミキリ 琉球北部亜種,,アマミトラカミキリ,,"Xylotrechus (Xylotrechus) atronotatus angulithorax Gresssitt, 1934",,,日本列島の甲虫全種目録(2026)参照。
-species-22041,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,atronotatus,generosus,Matsushita,1933,ムネモンアカネトラカミキリ 琉球南部亜種,,,,"Xylotrechus (Xylotrechus) atronotatus generosus Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22041,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,atronotatus,generosus,Matsushita,1933,ムネモンアカネトラカミキリ 琉球南部亜種,,,,"Xylotrechus (Xylotrechus) atronotatus generosus Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。
 species-22042,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,chujoi,chujoi,Hayashi,1960,チュウジョウトラカミキリ 基亜種,,,,"Xylotrechus (Xylotrechus) chujoi chujoi Hayashi, 1960",,,日本列島の甲虫全種目録(2026)参照。
 species-22043,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,chujoi,ishigakianus,(Ohbayashi),1964,チュウジョウトラカミキリ 八重山諸島亜種,,,,"Xylotrechus (Xylotrechus) chujoi ishigakianus (Ohbayashi, 1964)",,,日本列島の甲虫全種目録(2026)参照。
 species-22044,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,clarinus,,Bates,1884,ツマキトラカミキリ,,,,"Xylotrechus (Xylotrechus) clarinus Bates, 1884",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
@@ -3729,9 +3728,9 @@ species-22052,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-22053,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,lautus,,Matsushita,1933,ズマルトラカミキリ,,,,"Xylotrechus (Xylotrechus) lautus Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22054,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,ogasawarensis,,Matsushita,1933,オガサワライカリモントラカミキリ,,,,"Xylotrechus (Xylotrechus) ogasawarensis Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22055,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,reductemaculatus,Hayashi,1968,アマミズマルトラカミキリ 基亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus reductemaculatus Hayashi, 1968",,,日本列島の甲虫全種目録(2026)参照。
-species-22056,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,,chujoi,reductemaculatus,Hayashi,,チュウジョウトラカミキリ奄美群島亜種,,,,Xylotrechus chujoi reductemaculatus Hayashi,,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22057,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,fujitai,Takakuwa,1984,アマミズマルトラカミキリ 吐噶喇列島亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus fujitai Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22058,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,ohtsuboi,Fujita,2010,アマミズマルトラカミキリ 徳之島亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus ohtsuboi Fujita, 2010",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22056,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,,chujoi,reductemaculatus,Hayashi,,チュウジョウトラカミキリ奄美群島亜種,,,,Xylotrechus chujoi reductemaculatus Hayashi,,,日本列島の甲虫全種目録(2026)参照。
+species-22057,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,fujitai,Takakuwa,1984,アマミズマルトラカミキリ 吐噶喇列島亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus fujitai Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。
+species-22058,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,ohtsuboi,Fujita,2010,アマミズマルトラカミキリ 徳之島亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus ohtsuboi Fujita, 2010",,,日本列島の甲虫全種目録(2026)参照。
 species-22059,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,takakuwai,,Kusama,1977,ミイロトラカミキリ,,,,"Xylotrechus (Xylotrechus) takakuwai Kusama, 1977",,,日本列島の甲虫全種目録(2026)参照。
 species-2206,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Zeiraphera,,suzukii,,Oku,1968,コエゾマツアミメヒメハマキ,,,,"Zeiraphera suzukii Oku, 1968",,,
 species-22060,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,yanoi,,Gressitt,1934,ヤノトラカミキリ,,,,"Xylotrechus (Xylotrechus) yanoi Gressitt, 1934",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
@@ -3836,7 +3835,7 @@ species-22161,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-22162,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Stenopterini,,Merionoeda,Ocytasia,formosana,septentrionalis,Tamu & Tsukamoto,1952,ニッポンモモブトコバネカミキリ 本土亜種,,,,"Merionoeda (Ocytasia) formosana septentrionalis Tamu & Tsukamoto, 1952",,,日本列島の甲虫全種目録(2026)参照。
 species-22163,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Stenopterini,,Merionoeda,Ocytasia,tosawai,,Kobayashi,1932,オガサワラモモブトコバネカミキリ,,,,"Merionoeda (Ocytasia) tosawai Kobayashi, 1932",,,日本列島の甲虫全種目録(2026)参照。
 species-22164,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Thraniini,,Thranius,,multinotatus,latipennis,Hayashi,1963,ヤエヤマホソバネカミキリ 八重山亜種,,,,"Thranius multinotatus latipennis Hayashi, 1963",,,日本列島の甲虫全種目録(2026)参照。
-species-22165,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Thraniini,,Thranius,,multinotatus,okinawensis,Makihara,1978,ヤエヤマホソバネカミキリ 沖縄島亜種,,,,"Thranius multinotatus okinawensis Makihara, 1978",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22165,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Thraniini,,Thranius,,multinotatus,okinawensis,Makihara,1978,ヤエヤマホソバネカミキリ 沖縄島亜種,,,,"Thranius multinotatus okinawensis Makihara, 1978",,,日本列島の甲虫全種目録(2026)参照。
 species-22166,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Thraniini,,Thranius,,rufescens,rufescens,(Bates),1884,ムモンチャイロホソバネカミキリ 基亜種,,,,"Thranius rufescens rufescens (Bates, 1884)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22167,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Thraniini,,Thranius,,rufescens,kobayashii,Fujita,2023,ムモンチャイロホソバネカミキリ 八重山亜種,,,,"Thranius rufescens kobayashii Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22168,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Thraniini,,Thranius,,rufescens,matsumurai,Fujita,2023,ムモンチャイロホソバネカミキリ 沖縄本島亜種,,,,"Thranius rufescens matsumurai Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
@@ -3918,7 +3917,7 @@ species-2224,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-22240,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,amamiana,watanabei,Hayashi,1962,オキナワヨツスジハナカミキリ,アマミヨツスジハナカミキリ 沖縄本島亜種; オキナワヨツスジハナカミキリ,,,"Leptura amamiana watanabei Hayashi, 1962",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22241,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,annularis,mimica,Bates,1884,ヤツボシハナカミキリ 北海道以北亜種,,,,"Leptura annularis mimica Bates, 1884",,,日本列島の甲虫全種目録(2026)参照。
 species-22242,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,mimica,,Panzer,1884,,,,,"Leptura mimica Panzer, 1884",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22243,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,annularis,modicenotata,(Pic),1901,ヤツボシハナカミキリ 本州以南亜種,,,,"Leptura annularis modicenotata (Pic, 1901)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22243,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,annularis,modicenotata,(Pic),1901,ヤツボシハナカミキリ 本州以南亜種,,,,"Leptura annularis modicenotata (Pic, 1901)",,,日本列島の甲虫全種目録(2026)参照。
 species-22244,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,modicenotata,,(Pic),1901,ツマグロハナカミキリ,,,,"Leptura modicenotata (Pic, 1901)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22245,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,dimorpha,,Bates,1873,ムネアカクロハナカミキリ,,,,"Leptura dimorpha Bates, 1873",,,日本列島の甲虫全種目録(2026)参照。
 species-22246,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Leptura,,doii,,(Matsushita),1933,ドイハナカミキリ,,,,"Leptura doii (Matsushita, 1933)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -3944,7 +3943,7 @@ species-22264,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ�
 species-22265,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Munamizoa,,maculata,,(Matsushita & Tamanuki),1935,ムナミゾハナカミキリ,,,,"Munamizoa maculata (Matsushita & Tamanuki, 1935)",,,日本列島の甲虫全種目録(2026)参照。
 species-22266,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Nanostrangalia,,chujoi,,(Mitono),1938,チュウジョウホソハナカミキリ,,,,"Nanostrangalia chujoi (Mitono, 1938)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22267,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Nivellia,Nivellia,extensa,umbratilis,Shimomura & Toyoshima,1988,スミイロハナカミキリ 北海道亜種,,,,"Nivellia (Nivellia) extensa umbratilis Shimomura & Toyoshima, 1988",,,日本列島の甲虫全種目録(2026)参照。
-species-22268,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Nivellia,Nivellia,extensa,yuzawai,Shimomura & Toyoshima,1988,スミイロハナカミキリ 本州亜種,,,,"Nivellia (Nivellia) extensa yuzawai Shimomura & Toyoshima, 1988",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22268,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Nivellia,Nivellia,extensa,yuzawai,Shimomura & Toyoshima,1988,スミイロハナカミキリ 本州亜種,,,,"Nivellia (Nivellia) extensa yuzawai Shimomura & Toyoshima, 1988",,,日本列島の甲虫全種目録(2026)参照。
 species-22269,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Nivellia,Nivellia,sanguinosa,,(Gyllenhal),1827,クビボソハナカミキリ,,,,"Nivellia (Nivellia) sanguinosa (Gyllenhal, 1827)",,,日本列島の甲虫全種目録(2026)参照。
 species-2227,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhyacionia,,dativa,,Heinrich,1928,マツアカシンムシ,,マツトビハマキ; マツトビヒメハマキ; マツアカシンムシガ,マツベニヒメハマキ,"Rhyacionia dativa Heinrich, 1928",,,
 species-22270,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Oedecnema,,gebleri,,Ganglbauer,1889,モモブトハナカミキリ,,,,"Oedecnema gebleri Ganglbauer, 1889",,,日本列島の甲虫全種目録(2026)参照。
@@ -3981,8 +3980,8 @@ species-22301,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ�
 species-22302,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Stictoleptura,Stictoleptura,pyrrha,,(Bates),1884,ヒメアカハナカミキリ,,,,"Stictoleptura (Stictoleptura) pyrrha (Bates, 1884)","Brachyleptura pyrrha (Bates, 1884)",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22304,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Stictoleptura,Variileptura,variicornis,tuyukii,Fujita,2018,ブチヒゲハナカミキリ,,,,"Stictoleptura (Variileptura) variicornis tuyukii Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
 species-22305,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,attenuata,,(Linnaeus),1758,ヨスジホソハナカミキリ,,,,"Strangalia attenuata (Linnaeus, 1758)",,,日本列島の甲虫全種目録(2026)参照。
-species-22306,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,gracilis,gracilis,Gressitt,1935,オオシマホソハナカミキリ 基亜種,,,,"Strangalia gracilis gracilis Gressitt, 1935",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22307,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,gracilis,matsumurai,Fujita,2018,オオシマホソハナカミキリ 沖縄本島亜種,,,,"Strangalia gracilis matsumurai Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22306,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,gracilis,gracilis,Gressitt,1935,オオシマホソハナカミキリ 基亜種,,,,"Strangalia gracilis gracilis Gressitt, 1935",,,日本列島の甲虫全種目録(2026)参照。
+species-22307,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,gracilis,matsumurai,Fujita,2018,オオシマホソハナカミキリ 沖縄本島亜種,,,,"Strangalia gracilis matsumurai Fujita, 2018",,,日本列島の甲虫全種目録(2026)参照。
 species-22308,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,koyaensis,,Matsushita,1933,コウヤホソハナカミキリ,,,,"Strangalia koyaensis Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22309,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Lepturini,,Strangalia,,takeuchii,,Matsushita & Tamanuki,1935,タケウチホソハナカミキリ,,,,"Strangalia takeuchii Matsushita & Tamanuki, 1935",,,日本列島の甲虫全種目録(2026)参照。
 species-2231,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhyacionia,,vernalis,,Nasu & Kawahara,2004,アトシロモンヒメハマキ,,,,"Rhyacionia vernalis Nasu & Kawahara, 2004",,,
@@ -4066,7 +4065,7 @@ species-22397,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ�
 species-22398,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,matsushitai,matsushitai,(K. Ohbayashi),1958,マツシタヒメハナカミキリ 基亜種,マツシタヒメハナカミキリ,,,"Pseudopidonia matsushitai matsushitai (K. Ohbayashi, 1958)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22399,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pidonia,Pseudopidonia,matsushitai,,K. Ohbayashi,1958,ヘリモンヒメハナカミキリ,,,,"Pidonia (Pseudopidonia) matsushitai K. Ohbayashi, 1958",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2240,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Notocelia,,incarnatana,,(Hübner),[1796-99],エゾシロヒメハマキ,,,,"Notocelia incarnatana (Hübner, [1796-99])",,,
-species-22400,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,matsushitai,pallidicolor,(Hayashi),1983,マツシタヒメハナカミキリ 中部地方北域亜種,,,,"Pseudopidonia matsushitai pallidicolor (Hayashi, 1983)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22400,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,matsushitai,pallidicolor,(Hayashi),1983,マツシタヒメハナカミキリ 中部地方北域亜種,,,,"Pseudopidonia matsushitai pallidicolor (Hayashi, 1983)",,,日本列島の甲虫全種目録(2026)参照。
 species-22401,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pidonia,Pseudopidonia,pallidicolor,,Hayashi,1983,ハクバヒメハナカミキリ,,,,"Pidonia (Pseudopidonia) pallidicolor Hayashi, 1983",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22402,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,michinokuensis,,(Hayashi),1981,トウホクヒメハナカミキリ,,,,"Pseudopidonia michinokuensis (Hayashi, 1981)","Pidonia (Pseudopidonia) michinokuensis Hayashi, 1981",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22404,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,misenia,,(S. Saito & A. Saito),1992,ミセンヒメハナカミキリ,,,,"Pseudopidonia misenia (S. Saito & A. Saito, 1992)",,,日本列島の甲虫全種目録(2026)参照。
@@ -4075,10 +4074,10 @@ species-22406,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ�
 species-22407,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pidonia,,shikokuana,,Hayashi,,,,,,Pidonia shikokuana Hayashi,,"Pidonia (Pseudopidonia) mutata (Bates, 1884)",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-22408,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,neglecta,neglecta,(Kuboki),1982,ヒミコヒメハナカミキリ 基亜種,ヒミコヒメハナカミキリ,,,"Pseudopidonia neglecta neglecta (Kuboki, 1982)","Pidonia (Pseudopidonia) neglecta neglecta Kuboki, 1982",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-2241,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Notocelia,,nimia,,Falkovitsh,1965,ニセバラシロヒメハマキ,,,,"Notocelia nimia Falkovitsh, 1965",,,
-species-22410,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,neglecta,hizena,(Imasaka & Amano),2001,ヒミコヒメハナカミキリ 西九州亜種,,,,"Pseudopidonia neglecta hizena (Imasaka & Amano, 2001)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22410,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,neglecta,hizena,(Imasaka & Amano),2001,ヒミコヒメハナカミキリ 西九州亜種,,,,"Pseudopidonia neglecta hizena (Imasaka & Amano, 2001)",,,日本列島の甲虫全種目録(2026)参照。
 species-22411,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,obscurior,obscurior,(Pic),1901,シラネヒメハナカミキリ 基亜種,シラネヒメハナカミキリ,,,"Pseudopidonia obscurior obscurior (Pic, 1901)","Pidonia (Pseudopidonia) obscurior obscurior Pic, 1901",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
-species-22413,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,obscurior,hakusana,(K. Ohbayashi & Hayashi),1960,シラネヒメハナカミキリ 中部山岳西域亜種,,,,"Pseudopidonia obscurior hakusana (K. Ohbayashi & Hayashi, 1960)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22414,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,obscurior,yokoyamai,(Hayashi),1968,シラネヒメハナカミキリ 中部山岳東域亜種,,,,"Pseudopidonia obscurior yokoyamai (Hayashi, 1968)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22413,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,obscurior,hakusana,(K. Ohbayashi & Hayashi),1960,シラネヒメハナカミキリ 中部山岳西域亜種,,,,"Pseudopidonia obscurior hakusana (K. Ohbayashi & Hayashi, 1960)",,,日本列島の甲虫全種目録(2026)参照。
+species-22414,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,obscurior,yokoyamai,(Hayashi),1968,シラネヒメハナカミキリ 中部山岳東域亜種,,,,"Pseudopidonia obscurior yokoyamai (Hayashi, 1968)",,,日本列島の甲虫全種目録(2026)参照。
 species-22415,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,oculata,,(Matsushita),1933,,,,,"Pseudopidonia oculata (Matsushita, 1933)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-22416,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,ohminesana,,(Mizuno),1987,オオミネヒメハナカミキリ,,,,"Pseudopidonia ohminesana (Mizuno, 1987)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22417,Cerambycidae,カミキリムシ科,Lepturinae,ハナカミキリ亜科,Pidoniini,,Pseudopidonia,,orientalis,,(Matsushita),1933,カクムネヒメハナカミキリ,,,,"Pseudopidonia orientalis (Matsushita, 1933)",,,日本列島の甲虫全種目録(2026)参照。
@@ -4133,7 +4132,7 @@ species-22467,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ�
 species-22468,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Asemum,,amurense,,Kraatz,,マルクビヒラタカミキリ,,,,Asemum amurense Kraatz,,,日本列島の甲虫全種目録(2026)参照。
 species-22469,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Cephalallus,,unicolor,unicolor,(Gahan),1906,ツシマムナクボカミキリ 基亜種,ツシマムナクボカミキリ,,,"Cephalallus unicolor unicolor (Gahan, 1906)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-2247,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epiblema,,foenella,,(Linnaeus),1758,ヨモギネムシガ,,,,"Epiblema foenella (Linnaeus, 1758)",,,
-species-22470,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Cephalallus,,unicolor,ryukyuensis,Makihara,2003,ツシマムナクボカミキリ 奄美沖縄亜種,,,,"Cephalallus unicolor ryukyuensis Makihara, 2003",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22470,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Cephalallus,,unicolor,ryukyuensis,Makihara,2003,ツシマムナクボカミキリ 奄美沖縄亜種,,,,"Cephalallus unicolor ryukyuensis Makihara, 2003",,,日本列島の甲虫全種目録(2026)参照。
 species-22471,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Megasemum,,quadricostulatum,,Kraatz,1879,オオクロカミキリ,,,,"Megasemum quadricostulatum Kraatz, 1879",,,日本列島の甲虫全種目録(2026)参照。
 species-22472,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Nothorhina,,muricata,,(Dalman),1817,ケブカヒラタカミキリ,,,,"Nothorhina muricata (Dalman, 1817)",,,日本列島の甲虫全種目録(2026)参照。
 species-22473,Cerambycidae,カミキリムシ科,Spondylinae,クロカミキリ亜科,Asemini,,Nothorhina,,punctata,,(Fabricius),1798,,,,,"Nothorhina punctata (Fabricius, 1798)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -4186,7 +4185,7 @@ species-22519,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-2252,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epiblema,,macrorris,,Walsingham,1900,ニセシロモンクロヒメハマキ,,,,"Epiblema macrorris Walsingham, 1900",,,
 species-22520,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Estoliopus,fasciatus,yaeyamanus,Ohbayashi,1984,クロオビトゲムネカミキリ 八重山亜種,,ヤエヤマクロオビトゲムネカミキリ,,"Sciades (Estoliopus) fasciatus yaeyamanus Ohbayashi, 1984",,,日本列島の甲虫全種目録(2026)参照。
 species-22521,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Estoliopus,sakishimanus,sakishimanus,(Gressitt),1951,サキシマトゲムネカミキリ 基亜種,サキシマトゲムネカミキリ,,,"Sciades (Estoliopus) sakishimanus sakishimanus (Gressitt, 1951)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
-species-22522,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Estoliopus,sakishimanus,deguchii,Ohbayashi,1984,サキシマトゲムネカミキリ 奄美沖縄亜種,,,,"Sciades (Estoliopus) sakishimanus deguchii Ohbayashi, 1984",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22522,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Estoliopus,sakishimanus,deguchii,Ohbayashi,1984,サキシマトゲムネカミキリ 奄美沖縄亜種,,,,"Sciades (Estoliopus) sakishimanus deguchii Ohbayashi, 1984",,,日本列島の甲虫全種目録(2026)参照。
 species-22523,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Miaenia,brevicollis,,(Gressitt),1951,ヤエヤマケシカミキリ,,,,"Sciades (Miaenia) brevicollis (Gressitt, 1951)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22524,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Miaenia,longicollis,,(Breuning & K. Ohbayashi),1964,クビナガケシカミキリ,,,,"Sciades (Miaenia) longicollis (Breuning & K. Ohbayashi, 1964)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22525,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Acanthocinini,,Sciades,Miaenia,nakanei,,(Hayashi),1956,トカラケシカミキリ,,,,"Sciades (Miaenia) nakanei (Hayashi, 1956)",,,日本列島の甲虫全種目録(2026)参照。
@@ -4216,7 +4215,7 @@ species-22547,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22548,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pothyne,,variegata,hayashii,Breuning,1953,カスリドウボソカミキリ 屋久島奄美諸島亜種,,,,"Pothyne variegata hayashii Breuning, 1953",,,日本列島の甲虫全種目録(2026)参照。
 species-22549,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pothyne,,hayashii,hayashii,Breuning,,アラキドウボソカミキリ基亜種,,,,Pothyne hayashii hayashii Breuning,,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2255,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epiblema,,autolitha,,(Meyrick),1931,ウスシロモンヒメハマキ,,,ウスシロモンハマキ,"Epiblema autolitha (Meyrick, 1931)",,,
-species-22550,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pothyne,,variegata,okinoerabua,Takakuwa & Kusama,1979,カスリドウボソカミキリ 沖永良部島亜種,,,,"Pothyne variegata okinoerabua Takakuwa & Kusama, 1979",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22550,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pothyne,,variegata,okinoerabua,Takakuwa & Kusama,1979,カスリドウボソカミキリ 沖永良部島亜種,,,,"Pothyne variegata okinoerabua Takakuwa & Kusama, 1979",,,日本列島の甲虫全種目録(2026)参照。
 species-22551,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pothyne,,variegata,ryukyuana,Yokoyama,1974,カスリドウボソカミキリ 沖縄亜種,オキナワカスリドウボソカミキリ,,,"Pothyne variegata ryukyuana Yokoyama, 1974",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22552,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pothyne,,variegata,yayeyamana,Breuning & Ohbayashi,1966,カスリドウボソカミキリ 八重山亜種,ヤエヤマカスリドウボソカミキリ,,,"Pothyne variegata yayeyamana Breuning & Ohbayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22553,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Agapanthiini,,Pseudocalamobius,,japonicus,,(Bates),1873,ドウボソカミキリ,,,,"Pseudocalamobius japonicus (Bates, 1873)",,,日本列島の甲虫全種目録(2026)参照。
@@ -4247,7 +4246,7 @@ species-22575,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22576,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,kani,,Hayashi,1976,ニセシナノクロフカミキリ,,,,"Asaperda kani Hayashi, 1976",,,日本列島の甲虫全種目録(2026)参照。
 species-22577,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,rufipes,rufipes,Bates,1873,キクスイモドキカミキリ 基亜種,,,,"Asaperda rufipes rufipes Bates, 1873",,,日本列島の甲虫全種目録(2026)参照。
 species-22578,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,rufipes,albosuturalis,Breuning,1957,キクスイモドキカミキリ 九州亜種,,,,"Asaperda rufipes albosuturalis Breuning, 1957",,,日本列島の甲虫全種目録(2026)参照。
-species-22579,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,rufipes,tsushimae,Breuning,1955,ツシマキクスイモドキカミキリ,,,,"Asaperda rufipes tsushimae Breuning, 1955",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22579,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,rufipes,tsushimae,Breuning,1955,ツシマキクスイモドキカミキリ,,,,"Asaperda rufipes tsushimae Breuning, 1955",,,日本列島の甲虫全種目録(2026)参照。
 species-2258,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Hendecaneura,,impar,,Walsingham,1900,オオツマキクロヒメハマキ,,,,"Hendecaneura impar Walsingham, 1900",,,
 species-22580,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,silvicultrix,,Toyoshima & Iwata,1990,フトキクスイモドキカミキリ,,,,"Asaperda silvicultrix Toyoshima & Iwata, 1990",,,日本列島の甲虫全種目録(2026)参照。
 species-22581,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Asaperda,,tenuicornis,,Komiya,1984,トゲムネホソヒゲカミキリ,,,,"Asaperda tenuicornis Komiya, 1984",,,日本列島の甲虫全種目録(2026)参照。
@@ -4260,7 +4259,7 @@ species-22587,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22588,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Mycerinopsis,Zotale,apomecynoides,,Hayashi,1972,イリエシラホシサビカミキリ,,,,"Mycerinopsis (Zotale) apomecynoides Hayashi, 1972",,,日本列島の甲虫全種目録(2026)参照。
 species-22589,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Neosybra,,cribrella,,(Bates),1873,ヒメアヤモンチビカミキリ,,,,"Neosybra cribrella (Bates, 1873)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-2259,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Hendecaneura,,rhododendrophaga,,Nasu & Komai,1997,ツツジヒメシンクイ,,,,"Hendecaneura rhododendrophaga Nasu & Komai, 1997",,,
-species-22590,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Neosybra,,hachijoensis,hachijoensis,(Hayashi),1961,ハネナシサビカミキリ 基亜種,,,,"Neosybra hachijoensis hachijoensis (Hayashi, 1961)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22590,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Neosybra,,hachijoensis,hachijoensis,(Hayashi),1961,ハネナシサビカミキリ 基亜種,,,,"Neosybra hachijoensis hachijoensis (Hayashi, 1961)",,,日本列島の甲虫全種目録(2026)参照。
 species-22591,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Palausybra,,hachijoensis,,Hayashi,1961,,,,,"Palausybra hachijoensis Hayashi, 1961",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-22592,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Neosybra,,hachijoensis,tokaraensis,(Makihara),1977,ハネナシサビカミキリ 吐噶喇亜種,,トカラハネナシチビカミキリ,,"Neosybra hachijoensis tokaraensis (Makihara, 1977)","Palausybra hachijoensis tokaraensis Makihara, 1977",,日本列島の甲虫全種目録(2026)参照。
 species-22594,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Neosybra,,mizoguchii,mizoguchii,(Hayashi),1956,サタサビカミキリ 基亜種,,,,"Neosybra mizoguchii mizoguchii (Hayashi, 1956)",,,日本列島の甲虫全種目録(2026)参照。
@@ -4291,7 +4290,7 @@ species-22617,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22618,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,maculiclunis,hanatanii,Fujita,2023,ヤンバルアトモンチビカミキリ 八重山亜種,,,,"Sybra (Sybra) maculiclunis hanatanii Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-22619,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,maculiclunis,hisaoi,Fujita,2023,ヤンバルアトモンチビカミキリ 宮古亜種,,,,"Sybra (Sybra) maculiclunis hisaoi Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2262,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,cana,,(Haworth),[1811],アザミスソモンヒメハマキ,,,アザミハナムシガ、アザミヒメハマキ、ホソバウンモンヒメハマキ,"Eucosma cana (Haworth, [1811])",,,
-species-22620,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,maculiclunis,makiharai,Fujita,2023,ヤンバルアトモンチビカミキリ 沖縄亜種,,,,"Sybra (Sybra) maculiclunis makiharai Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22620,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,maculiclunis,makiharai,Fujita,2023,ヤンバルアトモンチビカミキリ 沖縄亜種,,,,"Sybra (Sybra) maculiclunis makiharai Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。
 species-22621,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,maculiclunis,shoyamai,Fujita,2023,ヤンバルアトモンチビカミキリ 与那国島亜種,,,,"Sybra (Sybra) maculiclunis shoyamai Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。
 species-22622,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,miscanthivola,,Makihara,1977,ススキハネナシチビカミキリ,,,,"Sybra (Sybra) miscanthivola Makihara, 1977",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22623,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,nishinoi,nishinoi,Fujita & Hirayama,2017,カズラアトモンチビカミキリ 基亜種,,,,"Sybra (Sybra) nishinoi nishinoi Fujita & Hirayama, 2017",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -4307,9 +4306,9 @@ species-22631,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22632,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,ordinata,tokara,Hayashi,1972,アヤモンチビカミキリ 吐噶喇亜種,トカラアヤモンチビカミキリ,,,"Sybra (Sybra) ordinata tokara Hayashi, 1972",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22633,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,oshimana,oshimana,Breuning,1958,アトモンチビカミキリ 基亜種,,,,"Sybra (Sybra) oshimana oshimana Breuning, 1958",,,日本列島の甲虫全種目録(2026)参照。
 species-22634,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,,baculina,nipponensis,Hayashi,1972,オオシマアトモンチビカミキリ,,,,"Sybra baculina nipponensis Hayashi, 1972",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22635,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,oshimana,mimogeminata,Breuning & K. Ohbayashi,1964,アトモンチビカミキリ 先島諸島亜種,,,,"Sybra (Sybra) oshimana mimogeminata Breuning & K. Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22635,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,oshimana,mimogeminata,Breuning & K. Ohbayashi,1964,アトモンチビカミキリ 先島諸島亜種,,,,"Sybra (Sybra) oshimana mimogeminata Breuning & K. Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。
 species-22636,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,,baculina,mimogeminata,Breuning & Ohbayashi,1964,イシガキアトモンチビカミキリ,,,,"Sybra baculina mimogeminata Breuning & Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22637,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,oshimana,miyamotoi,Fujita,2023,アトモンチビカミキリ 波照間島亜種,,,,"Sybra (Sybra) oshimana miyamotoi Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22637,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,oshimana,miyamotoi,Fujita,2023,アトモンチビカミキリ 波照間島亜種,,,,"Sybra (Sybra) oshimana miyamotoi Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。
 species-22638,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,mimogeminata,,Breuning & K. Ohbayashi,1964,サキシマアトモンチビカミキリ,,,,"Sybra (Sybra) mimogeminata Breuning & K. Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22639,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Apomecynini,,Sybra,Sybra,pascoei,ishigakii,Breuning & K. Ohbayashi,1964,タイワンチビカミキリ 先島諸島亜種,イシガキタイワンチビカミキリ,,,"Sybra (Sybra) pascoei ishigakii Breuning & K. Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-2264,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,denigratana,,(Kennel),1901,オオコゲチャスソモンヒメハマキ,,,,"Eucosma denigratana (Kennel, 1901)",,,
@@ -4379,7 +4378,7 @@ species-22703,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22704,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Desmiphorini,,Zotalemimon,,costatum,,(Matsushita),1933,オキナワサビカミキリ,,,,"Zotalemimon costatum (Matsushita, 1933)",,,日本列島の甲虫全種目録(2026)参照。
 species-22705,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Dorcaschematini,,Microlenecamptus,,nakabayashii,,Takakuwa,1992,オキナワジャノメカミキリ,,,,"Microlenecamptus nakabayashii Takakuwa, 1992",,,日本列島の甲虫全種目録(2026)参照。
 species-22706,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Dorcaschematini,,Olenecamptus,,bilobus,bilobus,(Fabricius),1801,イツホシシロカミキリ,,,,"Olenecamptus bilobus bilobus (Fabricius, 1801)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
-species-22707,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Dorcaschematini,,Olenecamptus,,bilobus,nipponensis,Dillon & Dillon,1948,,,,,"Olenecamptus bilobus nipponensis Dillon & Dillon, 1948",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22707,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Dorcaschematini,,Olenecamptus,,bilobus,nipponensis,Dillon & Dillon,1948,,,,,"Olenecamptus bilobus nipponensis Dillon & Dillon, 1948",,,日本列島の甲虫全種目録(2026)参照。
 species-22708,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Dorcaschematini,,Olenecamptus,,clarus,clarus,Pascoe,1859,ムネホシシロカミキリ,,,,"Olenecamptus clarus clarus Pascoe, 1859",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22709,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Dorcaschematini,,Olenecamptus,,cretaceus,cretaceus,Bates,1873,オオシロカミキリ,,,,"Olenecamptus cretaceus cretaceus Bates, 1873",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-2271,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,brachysticta,,Meyrick,1935,クロモンシロヒメハマキ,,,,"Eucosma brachysticta Meyrick, 1935",,,
@@ -4391,20 +4390,20 @@ species-22714,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22715,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,brevicornis,,Makihara,1978,オモトウスアヤカミキリ,,,,"Bumetopia brevicornis Makihara, 1978",,,日本列島の甲虫全種目録(2026)参照。
 species-22716,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,adachii,Fujita,2023,ウスアヤカミキリ 男女群島亜種,,,,"Bumetopia oscitans adachii Fujita, 2023",,,日本列島の甲虫全種目録(2026)参照。
 species-22717,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,japonica,japonica,(J. Thomson),1868,ウスアヤカミキリ 基亜種,,,,"Bumetopia japonica japonica (J. Thomson, 1868)",,,日本列島の甲虫全種目録(2026)参照。
-species-22718,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,ishigaki,Hayashi,1966,ウスアヤカミキリ 八重山亜種,,,,"Bumetopia oscitans ishigaki Hayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22719,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,japonica,(Thomson),1868,ウスアヤカミキリ 本土亜種,,,,"Bumetopia oscitans japonica (Thomson, 1868)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22718,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,ishigaki,Hayashi,1966,ウスアヤカミキリ 八重山亜種,,,,"Bumetopia oscitans ishigaki Hayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。
+species-22719,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,japonica,(Thomson),1868,ウスアヤカミキリ 本土亜種,,,,"Bumetopia oscitans japonica (Thomson, 1868)",,,日本列島の甲虫全種目録(2026)参照。
 species-2272,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,glebana,,(Snellen),1883,カバイロスソモンヒメハマキ,,,スソモンカバハマキ,"Eucosma glebana (Snellen, 1883)",,,
 species-22720,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,okinawana,Hayashi,1963,ウスアヤカミキリ 沖縄亜種,オキナワウスアヤカミキリ,,,"Bumetopia oscitans okinawana Hayashi, 1963","Bumetopia okinawana Hayashi, 1963; Bumetopia japonica okinawana Hayashi, 1963",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
-species-22722,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,oshimana,Breuning,1939,ウスアヤカミキリ 奄美亜種,,,,"Bumetopia oscitans oshimana Breuning, 1939",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22723,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,sakishimana,Hayashi,1966,ウスアヤカミキリ 宮古亜種,,,,"Bumetopia oscitans sakishimana Hayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-22724,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,senkakuana,Hayashi,1972,ウスアヤカミキリ 尖閣諸島亜種,,,,"Bumetopia oscitans senkakuana Hayashi, 1972",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22722,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,oshimana,Breuning,1939,ウスアヤカミキリ 奄美亜種,,,,"Bumetopia oscitans oshimana Breuning, 1939",,,日本列島の甲虫全種目録(2026)参照。
+species-22723,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,sakishimana,Hayashi,1966,ウスアヤカミキリ 宮古亜種,,,,"Bumetopia oscitans sakishimana Hayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。
+species-22724,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,senkakuana,Hayashi,1972,ウスアヤカミキリ 尖閣諸島亜種,,,,"Bumetopia oscitans senkakuana Hayashi, 1972",,,日本列島の甲虫全種目録(2026)参照。
 species-22725,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,senkakuana,,Hayashi,1972,センカクウスアヤカミキリ,,,,"Bumetopia senkakuana Hayashi, 1972",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-22726,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Bumetopia,,oscitans,yonaguni,Hayashi,1966,ヨナグニウスアヤカミキリ,ウスアヤカミキリ 与那国島亜種; ヨナグニウスアヤカミキリ,,,"Bumetopia oscitans yonaguni Hayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。
 species-22727,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Homonoeini,,Notomulciber,Micromulciber,quadrisignatus,,(Schwarzer),1925,ヨツスジカミキリ,,,,"Notomulciber (Micromulciber) quadrisignatus (Schwarzer, 1925)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22728,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,amamaiana,amamaiana,(Hayashi),1962,アマミニセビロウドカミキリ 基亜種,,アマミビロウドカミキリ,,"Acalolepta amamaiana amamaiana (Hayashi, 1962)",,,日本列島の甲虫全種目録(2026)参照。
 species-22729,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Cypriola,,sejuncta,amamiana,Hayashi,1962,,,,,"Cypriola sejuncta amamiana Hayashi, 1962",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-2273,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,striatiradix,,Kuznetzov,1964,コカバスソモンヒメハマキ,,,,"Eucosma striatiradix Kuznetzov, 1964",,,
-species-22730,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,amamaiana,simillima,Breuning & K. Ohbayashi,1966,アマミニセビロウドカミキリ 沖縄八重山亜種,,,,"Acalolepta amamaiana simillima Breuning & K. Ohbayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22730,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,amamaiana,simillima,Breuning & K. Ohbayashi,1966,アマミニセビロウドカミキリ 沖縄八重山亜種,,,,"Acalolepta amamaiana simillima Breuning & K. Ohbayashi, 1966",,,日本列島の甲虫全種目録(2026)参照。
 species-22731,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,boninensis,,Hayashi,1971,オガサワラビロウドカミキリ,,,,"Acalolepta boninensis Hayashi, 1971",,,日本列島の甲虫全種目録(2026)参照。
 species-22732,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,degener,degener,(Bates),1873,ヒメビロウドカミキリ,,,,"Acalolepta degener degener (Bates, 1873)",,,日本列島の甲虫全種目録(2026)参照。
 species-22733,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,ferriei,,(Breuning),1954,フェリエビロウドカミキリ,,,,"Acalolepta ferriei (Breuning, 1954)","Cypriola ferriei Breuning, 1954",,日本列島の甲虫全種目録(2026)参照。
@@ -4418,7 +4417,7 @@ species-22740,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22741,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,mikurensis,,Hayashi,1969,ミクラビロウドカミキリ,,,,"Acalolepta mikurensis Hayashi, 1969",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-22742,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,iwahashii,,Makihara,1992,イシガキビロウドカミキリ,,,,"Acalolepta iwahashii Makihara, 1992",,,日本列島の甲虫全種目録(2026)参照。
 species-22743,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,kuniyoshii,,Hayashi,1963,オキナワセンノカミキリ,,オキナワセンノキカミキリ,,"Acalolepta kuniyoshii Hayashi, 1963",,,日本列島の甲虫全種目録(2026)参照。
-species-22744,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,luxuriosa,kuniyoshii,Hayashi,1963,,,,,"Acalolepta luxuriosa kuniyoshii Hayashi, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22744,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,luxuriosa,kuniyoshii,Hayashi,1963,,,,,"Acalolepta luxuriosa kuniyoshii Hayashi, 1963",,,日本列島の甲虫全種目録(2026)参照。
 species-22745,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,kusamai,,Hayashi,1969,チャイロヒゲビロウドカミキリ,,,,"Acalolepta kusamai Hayashi, 1969",,,日本列島の甲虫全種目録(2026)参照。
 species-22746,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,luxuriosa,luxuriosa,(Bates),1873,センノカミキリ 基亜種,,センノキカミキリ,,"Acalolepta luxuriosa luxuriosa (Bates, 1873)",,,日本列島の甲虫全種目録(2026)参照。
 species-22747,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Acalolepta,,luxuriosa,kawadai,Takakuwa,1984,センノカミキリ 奄美亜種,アマミセンノキカミキリ,,,"Acalolepta luxuriosa kawadai Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
@@ -4445,7 +4444,7 @@ species-22765,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22766,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Anoplophora,,oshimana,oshimana,(Fairmaire),1895,オオシマゴマダラカミキリ 基亜種,,,,"Anoplophora oshimana oshimana (Fairmaire, 1895)",,,日本列島の甲虫全種目録(2026)参照。
 species-22767,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Anoplophora,,oshimana,tokunoshimana,Samuelson,1965,オオシマゴマダラカミキリ 徳之島亜種,,,,"Anoplophora oshimana tokunoshimana Samuelson, 1965",,,日本列島の甲虫全種目録(2026)参照。
 species-22768,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Anoplophora,,ryukyuensis,,Breuning & K. Ohbayashi,1964,ヨナグニゴマダラカミキリ,,,,"Anoplophora ryukyuensis Breuning & K. Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。
-species-22769,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Anoplophora,,oshimana,ryukyuensis,Breuning & Ohbayashi,1964,,,,,"Anoplophora oshimana ryukyuensis Breuning & Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22769,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Anoplophora,,oshimana,ryukyuensis,Breuning & Ohbayashi,1964,,,,,"Anoplophora oshimana ryukyuensis Breuning & Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。
 species-2277,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,lignana,,(Snellen),1883,トビモンヒメハマキ,,,,"Eucosma lignana (Snellen, 1883)",,新記録・再分類等,日本のハマキガ1に従い Eucosma tundrana から訂正
 species-22770,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Dolichoprosopus,,sameshimai,,N. Ohbayashi,2001,オオスミヒゲナガカミキリ,,,,"Dolichoprosopus sameshimai N. Ohbayashi, 2001",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22771,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Dolichoprosopus,,yokoyamai,,(Gressitt),1937,ヨコヤマヒゲナガカミキリ,,,,"Dolichoprosopus yokoyamai (Gressitt, 1937)","Monochamus yokoyamai Gressitt, 1937",,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
@@ -4477,7 +4476,7 @@ species-22795,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22796,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Nanohammus,,rufescens,,Bates,1884,クリイロシラホシカミキリ,,,,"Nanohammus rufescens Bates, 1884",,,日本列島の甲虫全種目録(2026)参照。
 species-22797,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Parechthistatus,Hayashiechthistatus,inexpectus,,(Hayashi),1959,ヤクシマコブヤハズカミキリ,,,,"Parechthistatus (Hayashiechthistatus) inexpectus (Hayashi, 1959)",,,日本列島の甲虫全種目録(2026)参照。
 species-22798,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Parechthistatus,Mesechthistatus,binodosus,binodosus,(C. O. Waterhouse),1881,コブヤハズカミキリ 基亜種,コブヤハズカミキリ,,,"Parechthistatus (Mesechthistatus) binodosus binodosus (C. O. Waterhouse, 1881)",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
-species-22799,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Parechthistatus,Mesechthistatus,binodosus,insularis,Hayashi,1955,コブヤハズカミキリ 佐渡島亜種,,,,"Parechthistatus (Mesechthistatus) binodosus insularis Hayashi, 1955",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22799,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Parechthistatus,Mesechthistatus,binodosus,insularis,Hayashi,1955,コブヤハズカミキリ 佐渡島亜種,,,,"Parechthistatus (Mesechthistatus) binodosus insularis Hayashi, 1955",,,日本列島の甲虫全種目録(2026)参照。
 species-2280,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,abacana,,(Erschoff),1877,スソクロモンヒメハマキ,,,スソクロモンアカヒメハマキ,"Eucosma abacana (Erschoff, 1877)",,,
 species-22800,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Parechthistatus,Mesechthistatus,fujisanus,,Hayashi,1957,フジコブヤハズカミキリ,,,,"Parechthistatus (Mesechthistatus) fujisanus Hayashi, 1957",,,日本列島の甲虫全種目録(2026)参照。
 species-22801,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Parechthistatus,Mesechthistatus,furcifer,furcifer,(Bates),1884,マヤサンコブヤハズカミキリ 基亜種,,,,"Parechthistatus (Mesechthistatus) furcifer furcifer (Bates, 1884)",,,日本列島の甲虫全種目録(2026)参照。
@@ -4509,7 +4508,7 @@ species-22825,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22826,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,okinawanus,doii,Fujita,2002,オキナワフトカミキリ 伊平屋島亜種,,,,"Peblephaeus okinawanus doii Fujita, 2002",,,日本列島の甲虫全種目録(2026)参照。
 species-22827,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,satoi,,Makihara,2003,アマミフトカミキリ,,,,"Peblephaeus satoi Makihara, 2003",,,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22828,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,yayeyamai,,(Breuning),1955,ヤエヤマフトカミキリ,,,,"Peblephaeus yayeyamai (Breuning, 1955)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
-species-22829,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,yayeyamai,caesius,Takakuwa,1984,ホクブヤエヤマフトカミキリ,,,,"Peblephaeus yayeyamai caesius Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22829,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,yayeyamai,caesius,Takakuwa,1984,ホクブヤエヤマフトカミキリ,,,,"Peblephaeus yayeyamai caesius Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。
 species-2283,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Eucosma,,striatulana,,Walsingham,1900,コシワヒメハマキ,,,,"Eucosma striatulana Walsingham, 1900",,,
 species-22830,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,yonagunii,,(Breuning & K. Ohbayashi),1964,ウスイロフトカミキリ,,,,"Peblephaeus yonagunii (Breuning & K. Ohbayashi, 1964)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22831,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Lamiini,,Peblephaeus,,decoloratus,yonagunii,(Breuning & Ohbayashi),1964,,,,,"Peblephaeus decoloratus yonagunii (Breuning & Ohbayashi, 1964)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -4665,7 +4664,7 @@ species-22971,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-22972,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Pteropliini,,Pterolophia,Pterolophia,zonata,,(Bates),1873,アトジロサビカミキリ,,,,"Pterolophia (Pterolophia) zonata (Bates, 1873)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22973,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Pteropliini,,Rhytiphora,,bankii,,(Fabricius),1775,ムラヤマムネコブサビカミキリ,,,,"Rhytiphora bankii (Fabricius, 1775)","Prosoplus bankii (Fabricius, 1775)",,日本列島の甲虫全種目録(2026)参照。『日本産カミキリムシ』(2007)の原典ページを再監査済み。
 species-22975,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Cagosima,,sanguinolenta,,Thomson,1864,ハンノキカミキリ,,,,"Cagosima sanguinolenta Thomson, 1864",,,日本列島の甲虫全種目録(2026)参照。
-species-22976,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Cagosima,,sanguinolenta,oshimensis,Kano,,,,,,Cagosima sanguinolenta oshimensis Kano,,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-22976,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Cagosima,,sanguinolenta,oshimensis,Kano,,,,,,Cagosima sanguinolenta oshimensis Kano,,,日本列島の甲虫全種目録(2026)参照。
 species-22977,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Epiglenea,,comes,comes,Bates,1884,ヨツキボシカミキリ,,,,"Epiglenea comes comes Bates, 1884",,,日本列島の甲虫全種目録(2026)参照。
 species-22978,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Eumecocera,,anomala,,(Bates),1884,キバネニセリンゴカミキリ,,,,"Eumecocera anomala (Bates, 1884)",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22979,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Eumecocera,,morii,,Makihara,2002,オオスミキバネニセリンゴカミキリ,,,,"Eumecocera morii Makihara, 2002",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -4696,7 +4695,7 @@ species-23000,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜�
 species-23001,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,kusamai,,Makihara,1988,ミヤコルリボシカミキリ,,,,"Glenea (Glenea) kusamai Makihara, 1988",,,日本列島の甲虫全種目録(2026)参照。
 species-23002,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,lineata,lineata,Gahan,1897,スジシロカミキリ 基亜種,,,,"Glenea (Glenea) lineata lineata Gahan, 1897",,,日本列島の甲虫全種目録(2026)参照。
 species-23003,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,lineata,ihai,Hayashi,1960,スジシロカミキリ 沖縄亜種,,,,"Glenea (Glenea) lineata ihai Hayashi, 1960",,,日本列島の甲虫全種目録(2026)参照。
-species-23004,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,lineata,okinawana,K. Ohbayashi & N. Ohbayashi,1965,,,,,"Glenea (Glenea) lineata okinawana K. Ohbayashi & N. Ohbayashi, 1965",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-23004,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,lineata,okinawana,K. Ohbayashi & N. Ohbayashi,1965,,,,,"Glenea (Glenea) lineata okinawana K. Ohbayashi & N. Ohbayashi, 1965",,,日本列島の甲虫全種目録(2026)参照。
 species-23005,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,lineata,ryukyuensis,Breuning & K. Ohbayashi,1964,スジシロカミキリ 八重山亜種,,,,"Glenea (Glenea) lineata ryukyuensis Breuning & K. Ohbayashi, 1964",,,日本列島の甲虫全種目録(2026)参照。
 species-23006,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,masakii,,Makihara,1978,センカクキラホシカミキリ,,,,"Glenea (Glenea) masakii Makihara, 1978",,,日本列島の甲虫全種目録(2026)参照。
 species-23007,Cerambycidae,カミキリムシ科,Lamiinae,フトカミキリ亜科,Saperdini,,Glenea,Glenea,relicta,relicta,Pascoe,1868,シラホシカミキリ 基亜種,,,,"Glenea (Glenea) relicta relicta Pascoe, 1868",,,日本列島の甲虫全種目録(2026)参照。
@@ -6288,7 +6287,7 @@ species-3739,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Scion
 species-3740,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Scionomia,,parasinuosa,,Inoue,1982,コツマキウスグロエダシャク,,,,"Scionomia parasinuosa Inoue, 1982",,,
 species-3741,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Scionomia,,mendica,,(Butler),1879,ソトキクロエダシャク,,,,"Scionomia mendica (Butler, 1879)",,,
 species-3742,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Thinopteryx,,crocoptera,,(Kollar),1844,キマダラツバメエダシャク,,,,"Thinopteryx crocoptera (Kollar, 1844)",,,
-species-3743,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Thinopteryx,,delectans,,(Butler),1878,Thinopteryx sp.,,,,"Thinopteryx delectans (Butler, 1878)",,,
+species-3743,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Thinopteryx,,delectans,,(Butler),1878,ミヤマツバメエダシャク,,,,"Thinopteryx delectans (Butler, 1878)",,,
 species-3744,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Larerannis,,miracula,,(Prout),1929,ヒロバフユエダシャク,,,,"Larerannis miracula (Prout, 1929)",,,
 species-3745,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Larerannis,,filipjevi,,Wehrli,1935,フタマタフユエダシャク,,,,"Larerannis filipjevi Wehrli, 1935",,,
 species-3746,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Larerannis,,orthogrammaria,,(Wehrli),1927,ウスオビフユエダシャク,,,,"Larerannis orthogrammaria (Wehrli, 1927)",,,
@@ -8726,7 +8725,7 @@ species-6183,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-6184,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Fibuloides,,matsugumi,,"Nasu, 2023",2023,マツグミヒメハマキ,,,,"Fibuloides matsugumi Nasu, 2023",,,日本のハマキガ3で掲載
 species-6185,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Fibuloides,,vaneeae,,"(Pinkaew, 2005)",2005,シリブカガシヒメハマキ,,,,"Fibuloides vaneeae (Pinkaew, 2005)",,,日本のハマキガ3で掲載
 species-6186,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,ayanishiki,,"Nasu, 2022",2022,アヤニシキヒメハマキ,,,,"Rhopalovalva ayanishiki Nasu, 2022",,,日本のハマキガ3で掲載
-species-H001,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,aenea,,(Olivier),1808,カミナリハムシ,,,,"Altica aenea (Olivier, 1808)",,,
+species-H001,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,aenea,,(Olivier),1808,カミナリハムシ,,,,"Altica aenea (Olivier, 1808)","Altica cyanea (Weber, 1801)",,
 species-H002,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,birmanensis,,(Jacoby),1896,ビルマカミナリハムシ,,,,"Altica birmanensis (Jacoby, 1896)",,,
 species-H003,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,caerulescens,,(Baly),1874,ヒメカミナリハムシ,,,,"Altica caerulescens (Baly, 1874)",,,
 species-H004,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,circaeae,,Ohno,1960,ミズタマソウカミナリハムシ,,,,"Altica circaeae Ohno, 1960",,,
@@ -8741,9 +8740,9 @@ species-H013,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H014,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,oleracea,oleracea,(Linnaeus),1758,アカバナカミナリハムシ,,,,"Altica oleracea oleracea (Linnaeus, 1758)",,,
 species-H015,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,sanguisorbae,,Ohno,1960,クロカミナリハムシ,,,,"Altica sanguisorbae Ohno, 1960",,,
 species-H016,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,viridicyanea,,(Baly),1874,コカミナリハムシ,,,,"Altica viridicyanea (Baly, 1874)",,,
-species-H017,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Amphimela,,metallica,,(S. -H. Chen),1933,レモントビハムシ,,,,"Amphimela metallica (S. -H. Chen, 1933)",,,
+species-H017,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Amphimela,,metallica,,(S. -H. Chen),1933,レモントビハムシ,,,,"Amphimela metallica (S. -H. Chen, 1933)","Clitea metallica Chen, 1933; Clitea citri Chûjô, 1958",,
 species-H018,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,abdominalis,,Duftschmid,1825,キイロツブノミハムシ,,,,"Aphthona abdominalis Duftschmid, 1825",,,
-species-H019,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,albescens,,Motschulsky,1866,オキナワアシナガトビハムシ,,,,"Aphthona albescens Motschulsky, 1866",,,
+species-H019,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,albescens,,Motschulsky,1866,オキナワアシナガトビハムシ,,,,"Aphthona albescens Motschulsky, 1866","Longitarsus (Longitarsus) ihai Chûjô, 1958; Aphthona opaca Allard, 1889",,
 species-H020,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,amamiana,,Ohno,1962,アマミツブノミハムシ,,,,"Aphthona amamiana Ohno, 1962",,,
 species-H021,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,erichsoni,,(Zetterstedt),1838,キアシツブノミハムシ,キアシツブノミハムシ1,,,"Aphthona erichsoni (Zetterstedt, 1838)",,,
 species-H022,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,formosana,,S. -H. Chen,1934,タイワンツブノミハムシ,,,,"Aphthona formosana S. -H. Chen, 1934",,日本列島の甲虫全種目録(2026)では「シワハダツブノミハムシ」に細分。食草・生態情報の再配分は未実施。,
@@ -8756,8 +8755,7 @@ species-H028,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H029,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthonaltica,,angustata,,(Baly),1874,ホソルリトビハムシ,,,,"Aphthonaltica angustata (Baly, 1874)",,,
 species-H030,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthonoides,,beccaril,,Jacoby,1885,トゲアシトビハムシ,,,,"Aphthonoides beccaril Jacoby, 1885",,,
 species-H031,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopistes,,biplagiatus,,Motschulsky,1860,テントウノミハムシ,,,,"Argopistes biplagiatus Motschulsky, 1860",,,
-species-H032,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopistes,,rufus,,Chen,1934,ヘリグロテントウノミハムシ,,,,"Argopistes rufus Chen, 1934",,,
-species-H033,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Argopistes,,ryukyuensis,,Shigetoh & Suenaga,2022,リュウキュウテントウノミハムシ,,,,"Argopistes ryukyuensis Shigetoh & Suenaga, 2022",,"2024年の整理で Argopistes rufus Chen, 1934 のジュニアシノニム扱い","2024年の整理で Argopistes rufus Chen, 1934 のジュニアシノニム扱い。食草・生態情報は未入力。"
+species-H032,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Argopistes,,rufus,,Chen,1934,ヘリグロテントウノミハムシ,,,リュウキュウテントウノミハムシ,"Argopistes rufus Chen, 1934","Argopistes coccinelliformis Csiki, 1940; Argopistes ryukyuensis Shigetoh & Suenaga, 2022",Lee et al. (2024) により Argopistes coccinelliformis と A. ryukyuensis は A. rufus の新参異名とされた。,"分類根拠: Lee, Chiang & Suenaga (2024), ZooKeys 1215:151–183. DOI: 10.3897/zookeys.1215.134871"
 species-H034,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopistes,,tsekooni,,Chen,1934,ヒメテントウノミハムシ,,,,"Argopistes tsekooni Chen, 1934",,,
 species-H035,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopistes,,unicolor,,Jacoby,1885,クロテントウノミハムシ,,,,"Argopistes unicolor Jacoby, 1885",,,
 species-H036,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopus,,balyi,,Harold,1878,オオキイロマルノミハムシ,,,,"Argopus balyi Harold, 1878",,,
@@ -8768,11 +8766,11 @@ species-H040,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H041,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopus,,unicolor,,Motschulsky,1860,ウスイロマルノミハムシ,,,,"Argopus unicolor Motschulsky, 1860",,,
 species-H042,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Batophila,,acutangula,,Heikertinger,1921,ハネナシトビハムシ,,,,"Batophila acutangula Heikertinger, 1921",,,
 species-H043,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Batophila,,latissima,,Chûjô,1957,ハバビロハネナシトビハムシ,,,,"Batophila latissima Chûjô, 1957",,,
-species-H044,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Bikasha,,collaris,,(Baly),1877,フタイロセマルトビハムシ,,,,"Bikasha collaris (Baly, 1877)",,,
+species-H044,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Bikasha,,collaris,,(Baly),1877,フタイロセマルトビハムシ,,,,"Bikasha collaris (Baly, 1877)","Aphthonomorpha collaris (Baly, 1877)",,
 species-H045,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Bikasha,,nipponica,,(Chûjô),1959,コバンマメトビハムシ,,,,"Bikasha nipponica (Chûjô, 1959)",,,
 species-H046,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Bikasha,,simplicithorax,,(S. -H. Chen),1934,キイロマメトビハムシ,,,,"Bikasha simplicithorax (S. -H. Chen, 1934)",,,
 species-H047,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Cangshanaltica,,ogatai,,Takemoto & Suenaga,2021,オガタマンマルトビハムシ,,,,"Cangshanaltica ogatai Takemoto & Suenaga, 2021",,,
-species-H048,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Chaetocnema,chujoi,,Takizawa,2021,オカボヒサゴトビハムシ,,,,"Chaetocnema (Chaetocnema) chujoi Takizawa, 2021",,,
+species-H048,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Chaetocnema,chujoi,,Takizawa,2021,オカボヒサゴトビハムシ,,,オカボトビハムシ,"Chaetocnema (Chaetocnema) chujoi Takizawa, 2021","Chaetocnema (Tlanoma) nigrica (Motschulsky, 1858)",,
 species-H049,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Chaetocnema,concinnicollis,,(Baly),1874,ヒメドウガネトビハムシ,,,,"Chaetocnema (Chaetocnema) concinnicollis (Baly, 1874)",,,
 species-H050,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Chaetocnema,constricta,,"Ruan, Konstantinov & Yang",2014,キイチゴヒサゴトビハムシ,,,,"Chaetocnema (Chaetocnema) constricta Ruan, Konstantinov & Yang, 2014","Chaetocnema constricta Konstantinov & Yang, 2014",,
 species-H051,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Chaetocnema,cylindrica,,(Baly),1874,ムギヒサゴトビハムシ,,,,"Chaetocnema (Chaetocnema) cylindrica (Baly, 1874)",,,
@@ -8787,8 +8785,8 @@ species-H059,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H060,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,kimotoi,,Gruev,1980,ニセテンサイトビハムシ,,,,"Chaetocnema (Tlanoma) kimotoi Gruev, 1980",,,
 species-H061,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,koreana,,Chûjô,1942,アオバドウガネトビハムシ,,,,"Chaetocnema (Tlanoma) koreana Chûjô, 1942",,,
 species-H062,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,major,,(Jacquelin du Val),1852,オオヒサゴトビハムシ,,,,"Chaetocnema (Tlanoma) major (Jacquelin du Val, 1852)","Chaetocnema major Jacquelin du Val, 1852",,
-species-H063,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,puncticollis,puncticollis,(Motschulsky),1858,キイチゴトビハムシ,,,,"Chaetocnema (Tlanoma) puncticollis puncticollis (Motschulsky, 1858)",,,
-species-H064,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Udorpes,bella,,(Baly),1876,タイワンヒサゴトビハムシ,,,,"Chaetocnema (Udorpes) bella (Baly, 1876)",,,
+species-H063,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,puncticollis,puncticollis,(Motschulsky),1858,キイチゴトビハムシ,,,,"Chaetocnema (Tlanoma) puncticollis puncticollis (Motschulsky, 1858)","Chaetocnema discreta (Baly, 1877)",,
+species-H064,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Udorpes,bella,,(Baly),1876,タイワンヒサゴトビハムシ,,,,"Chaetocnema (Udorpes) bella (Baly, 1876)","Chaetocnema formosensis Chûjô, 1935",,
 species-H065,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Udorpes,hiromui,,Takizawa,2021,ウミベヒサゴトビハムシ,,,,"Chaetocnema (Udorpes) hiromui Takizawa, 2021",,,
 species-H066,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Clavicornaltica,,nakanoi,,Suenaga,2023,エグリヒゲブトコマルトビハムシ,,,,"Clavicornaltica nakanoi Suenaga, 2023",,,
 species-H067,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Clavicornaltica,,sakishimana,,Suenaga & Yoshida,2016,サキシマヒゲブトコマルトビハムシ,,,,"Clavicornaltica sakishimana Suenaga & Yoshida, 2016",,,
@@ -8813,14 +8811,14 @@ species-H085,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H086,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,flavipennis,,(Baly),1874,キバネマルノミハムシ,,,,"Hemipyxis flavipennis (Baly, 1874)",,,
 species-H087,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Hemipyxis,,foveolata,,,,キイロミゾアシノミハムシ,,,,Hemipyxis foveolata,,日本列島の甲虫全種目録(2026)では「キイロミゾアシノミハムシ 基亜種」に細分。食草・生態情報の再配分は未実施。,
 species-H088,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,foveolata,miyakoana,Kimoto,1978,キイロミゾアシノミハムシ　宮古島亜種,,,,"Hemipyxis foveolata miyakoana Kimoto, 1978",,,
-species-H089,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,plagioderoides,,(Motschulsky),1861,ヒゲナガルリマルノミハムシ,,,,"Hemipyxis plagioderoides (Motschulsky, 1861)",,,
+species-H089,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,plagioderoides,,(Motschulsky),1861,ヒゲナガルリマルノミハムシ,,,ヒゲナガマルノミハムシ,"Hemipyxis plagioderoides (Motschulsky, 1861)",,,
 species-H090,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,shirakii,,Nakane & Kimoto,1961,マエモンヒラタノミハムシ,,,,"Hemipyxis shirakii Nakane & Kimoto, 1961",,,
 species-H091,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,takarai,,Kimoto & Gressitt,1966,タカラミゾアシノミハムシ,,,,"Hemipyxis takarai Kimoto & Gressitt, 1966",,,
 species-H092,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hermaeophaga,Orthocrepis,adamsii,,(Baly),1874,ヒメトビハムシ,,,,"Hermaeophaga (Orthocrepis) adamsii (Baly, 1874)",,,
 species-H093,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hespera,,lomasa,,Maulik,1926,シロヒゲトビハムシ,,,,"Hespera lomasa Maulik, 1926",,,
 species-H094,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hippuriphila,,babai,,(Chûjô),1959,アカガネトビハムシ,,,,"Hippuriphila babai (Chûjô, 1959)",,,
 species-H095,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hyphasis,,inconstans,,(Jacoby),1885,コブアシトビハムシ,,,,"Hyphasis inconstans (Jacoby, 1885)","Hyphasis inconstans (Jacoby, 1885); Hyphasis inconstans Jacoby, 1885",,
-species-H096,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Ivalia,,bistripunctata,,(Chen),1933,ムツボシトビハムシ,,,,"Ivalia bistripunctata (Chen, 1933)",,,
+species-H096,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Ivalia,,bistripunctata,,(Chen),1933,ムツボシトビハムシ,,,,"Ivalia bistripunctata (Chen, 1933)","Amphimeloides bistripunctatus Chen, 1933",,
 species-H097,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Ivalia,,hiranoi,,Takemoto & Suenaga,2021,イリオモテコダマトビハムシ,,,,"Ivalia hiranoi Takemoto & Suenaga, 2021",,,
 species-H098,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Ivalia,,kodama,,Takemoto & Suenaga,2021,アマミコダマトビハムシ,,,,"Ivalia kodama Takemoto & Suenaga, 2021",,,
 species-H099,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Ivalia,,nakanoi,,Takemoto & Suenaga,2021,ナカノコダマトビハムシ,,,,"Ivalia nakanoi Takemoto & Suenaga, 2021",,,
@@ -8856,12 +8854,12 @@ species-H128,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H129,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,nitidus,,Jacoby,1885,オオアシナガトビハムシ,,,,"Longitarsus (Longitarsus) nitidus Jacoby, 1885",,,
 species-H130,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,ohnoi,,Gruev,1995,チュウジョウアシナガトビハムシ,,,,"Longitarsus (Longitarsus) ohnoi Gruev, 1995",,,
 species-H131,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,okushiriensis,,Gruev,1995,ヒナノウスツボアシナガトビハムシ,,,,"Longitarsus (Longitarsus) okushiriensis Gruev, 1995",,,
-species-H132,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,orientalis,,Jacoby,1885,トウヨウアシナガトビハムシ,,,,"Longitarsus (Longitarsus) orientalis Jacoby, 1885",,,
+species-H132,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,orientalis,,Jacoby,1885,トウヨウアシナガトビハムシ,,,,"Longitarsus (Longitarsus) orientalis Jacoby, 1885","Longitarsus (Longitarsus) tabidus orientalis Jacoby, 1885",,
 species-H133,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,osimaensis,,Takizawa,2015,マルアシナガトビハムシ,,,,"Longitarsus (Longitarsus) osimaensis Takizawa, 2015",,,
 species-H134,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,quadraticollis,,Jacoby,1885,カクムネアシナガトビハムシ,,,,"Longitarsus (Longitarsus) quadraticollis Jacoby, 1885",,,
 species-H135,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,scutellariae,,Ohno,1968,タツナミソウアシナガトビハムシ,,,,"Longitarsus (Longitarsus) scutellariae Ohno, 1968",,,
 species-H136,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,,scutellaris,,(Rey),1873,オオバコアシナガトビハムシ,オオバコトビハムシ; オオバコアシナガトビハムシ,,,"Longitarsus scutellaris (Rey, 1873)","Longitarsus scutellaris Mulsant & Rey, 1874; Longitarsus (Longitarsus) scutellaris (Mulsant & Rey, 1874); Longitarsus scutellaris (Rey, 1873); Longitarsus lewisi(Baly, 1874)","Longitarsus lewisi(Baly, 1874)",
-species-H137,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,succineus,,(Foudras),1860,ヨモギトビハムシ,,,,"Longitarsus (Longitarsus) succineus (Foudras, 1860)",,,
+species-H137,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,succineus,,(Foudras),1860,ヨモギトビハムシ,,,ヨモギアシナガトビハムシ,"Longitarsus (Longitarsus) succineus (Foudras, 1860)","Longitarsus amiculus (Baly, 1874)",,
 species-H138,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,suturellus,,(Duftschmid),1825,ハンゴンソウアシナガトビハムシ,,,,"Longitarsus (Longitarsus) suturellus (Duftschmid, 1825)",,,
 species-H139,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,suzukii,,Ohno,1968,スズキアシナガトビハムシ,,,,"Longitarsus (Longitarsus) suzukii Ohno, 1968",,,
 species-H140,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,tokaranus,,Nakane & Kimoto,1961,トカラアシナガトビハムシ,,,,"Longitarsus (Longitarsus) tokaranus Nakane & Kimoto, 1961","Longitarsus tokaranus Nakane & Kimoto, 1961",,
@@ -9348,7 +9346,6 @@ species-H672,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomeli
 species-H673,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Luperini,,Exosoma,,flaviventre,,(Motschulsky),1860,キバラツメヒメハムシ,,,キバラルリヒゲナガハムシ,"Exosoma flaviventre (Motschulsky, 1860)",,,
 species-H674,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Trachyaphthona,,sordida,,(Baly),1874,クロズトビハムシ,,,,"Trachyaphthona sordida (Baly, 1874)",,,
 species-H675,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Phygasia,,fulvipennis,,,,チャバネツヤトビハムシ,,,,Phygasia fulvipennis,,,
-species-H676,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Hemipyxis,,hegenagae,,,,ヒゲナガマルノミハムシ,,,,Hemipyxis hegenagae,,,
 species-H677,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Neocrepidodera,,obscuritarsis,,,,オオカクムネトビハムシ,,,,Neocrepidodera obscuritarsis,,,
 species-H678,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,ノミハムシ族,Psylliodes,,scripta,,,,クソトビハムシ,,,,Psylliodes scripta,,,
 species-H679,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Hispini,トゲハムシ族,Dactylispa,,issikii,,,,イッシキトゲハムシ,,,,Dactylispa issikii,,,
@@ -9402,7 +9399,7 @@ species-H731,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Plat
 species-H732,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Agrosteomela,,indica,,(Hope),1831,オオハムシ,,,,"Agrosteomela indica (Hope, 1831)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H733,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,?,seriepunctata,,(Weise),1887,シラタカハムシ,,,,"Chrysolina (?) seriepunctata (Weise, 1887)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H734,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Allohypericia,orochi,,Takemoto,2022,ナナセキハムシ,,,,"Chrysolina (Allohypericia) orochi Takemoto, 2022",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H735,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Anopachys,aurichalcea,,(Mannerheim),1825,ヨモギハムシ,,,,"Chrysolina (Anopachys) aurichalcea (Mannerheim, 1825)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H735,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Anopachys,aurichalcea,,(Mannerheim),1825,ヨモギハムシ,,,,"Chrysolina (Anopachys) aurichalcea (Mannerheim, 1825)",,,日本列島の甲虫全種目録(2026)参照。
 species-H736,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Anopachys,watanabei,,Takizawa,1970,ワタナベハムシ,,,,"Chrysolina (Anopachys) watanabei Takizawa, 1970",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H737,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,,aino,,Takizawa,1970,アイヌヨモギハムシ,,,,"Chrysolina aino Takizawa, 1970","Chrysolina (Apterosoma) aino Takizawa, 1970; Chrysolina aino Takizawa, 1970",,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H738,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Apterosoma,angusticollis,,(Motschulsky),1861,オオヨモギハムシ,,,,"Chrysolina (Apterosoma) angusticollis (Motschulsky, 1861)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9410,18 +9407,18 @@ species-H739,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomeli
 species-H740,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Bourdonneana,koltzei,lamii,Takizawa,1970,オドリコソウハムシ,,,,"Chrysolina (Bourdonneana) koltzei lamii Takizawa, 1970",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H741,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Bourdonneana,koltzei,brunneipennis,(Matsumura),1911,,,,,"Chrysolina (Bourdonneana) koltzei brunneipennis (Matsumura, 1911)",,サハリン産で記載,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H742,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Chrysocrosita,nikolskyi,,(Jacobson),1898,カワカミハムシ,,,,"Chrysolina (Chrysocrosita) nikolskyi (Jacobson, 1898)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H743,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Erythrochrysa,virgata,,(Motschulsky),1860,オオルリハムシ,,,,"Chrysolina (Erythrochrysa) virgata (Motschulsky, 1860)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H743,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Erythrochrysa,virgata,,(Motschulsky),1860,オオルリハムシ,,,,"Chrysolina (Erythrochrysa) virgata (Motschulsky, 1860)",,,日本列島の甲虫全種目録(2026)参照。
 species-H744,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Hypericia,difficilis,yezoensis,(Matsumura),1911,クロルリハムシ,,,,"Chrysolina (Hypericia) difficilis yezoensis (Matsumura, 1911)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H745,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Hypericia,shikokensis,,Nakane,1963,,,,,"Chrysolina (Hypericia) shikokensis Nakane, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H746,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Hypericia,nikkoensis,,(Jacoby),1885,ニッコウルリハムシ,,,,"Chrysolina (Hypericia) nikkoensis (Jacoby, 1885)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H747,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysolina,Pleurosticha,pirka,,Takizawa,1970,サメハダヨモギハムシ,,,,"Chrysolina (Pleurosticha) pirka Takizawa, 1970",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H748,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysomela,,cuprea,,Fabricius,1775,ムラサキハムシ,,,,"Chrysomela cuprea Fabricius, 1775",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H749,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysomela,,lapponica,,Linnaeus,1758,ウズマキハムシ,,,,"Chrysomela lapponica Linnaeus, 1758",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H750,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysomela,,populi,,Linnaeus,1758,ドロノキハムシ,,,,"Chrysomela populi Linnaeus, 1758",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H750,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysomela,,populi,,Linnaeus,1758,ドロノキハムシ,,,,"Chrysomela populi Linnaeus, 1758",,,日本列島の甲虫全種目録(2026)参照。
 species-H751,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Chrysomela,,tremula,tremula,Fabricius,1787,ポプラハムシ,,,,"Chrysomela tremula tremula Fabricius, 1787",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H752,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrolina,,depressa,,Baly,1859,クルミハムシ,,,,"Gastrolina depressa Baly, 1859",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H752,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrolina,,depressa,,Baly,1859,クルミハムシ,,,,"Gastrolina depressa Baly, 1859",,,日本列島の甲虫全種目録(2026)参照。
 species-H753,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrolina,,thoracica,,Baly,1864,クルミヒラタハムシ,,,,"Gastrolina thoracica Baly, 1864",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H754,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrophysa,Gastrophysa,mannerheimi,,(Stål),1858,コガタルリハムシ,,,,"Gastrophysa (Gastrophysa) mannerheimi (Stål, 1858)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H754,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrophysa,Gastrophysa,mannerheimi,,(Stål),1858,コガタルリハムシ,,,,"Gastrophysa (Gastrophysa) mannerheimi (Stål, 1858)",,,日本列島の甲虫全種目録(2026)参照。
 species-H755,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrophysa,Gastrophysa,atrocyanea,,Motschulsky,1860,ギシギシハムシ,,,,"Gastrophysa (Gastrophysa) atrocyanea Motschulsky, 1860",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H756,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Brachyphytodecta,jamadai,,Takizawa,2015,ヤマダクロフジハムシ,,,,"Gonioctena (Brachyphytodecta) jamadai Takizawa, 2015",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H757,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Brachyphytodecta,kidoi,,Takizawa & Daccordi,1998,カワリムジハムシ,,,,"Gonioctena (Brachyphytodecta) kidoi Takizawa & Daccordi, 1998",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9445,8 +9442,8 @@ species-H774,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomeli
 species-H775,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,tatesinensis,,Takizawa,2007,,,,,"Gonioctena (Gonioctena) tatesinensis Takizawa, 2007",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H776,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Sinomela,hikosana,,Kimoto,1974,ヒコサンクロボシハムシ,,,,"Gonioctena (Sinomela) hikosana Kimoto, 1974",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H777,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Sinomela,nagaii,,Nakane,1963,リュウキュウクロボシハムシ,,,,"Gonioctena (Sinomela) nagaii Nakane, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H778,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Sinomela,nigroplagiata,,Baly,1862,ヤツボシハムシ,,,,"Gonioctena (Sinomela) nigroplagiata Baly, 1862",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H779,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Paropsides,,soriculata,,Swartz,1808,ヤマトヨダンハムシ,,,,"Paropsides soriculata Swartz, 1808",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H778,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Sinomela,nigroplagiata,,Baly,1862,ヤツボシハムシ,,,,"Gonioctena (Sinomela) nigroplagiata Baly, 1862",,,日本列島の甲虫全種目録(2026)参照。
+species-H779,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Paropsides,,soriculata,,Swartz,1808,ヤマトヨダンハムシ,,,,"Paropsides soriculata Swartz, 1808",,,日本列島の甲虫全種目録(2026)参照。
 species-H780,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Paropsides,,duodecimpustulatus,,(Gebler),1825,,,,,"Paropsides duodecimpustulatus (Gebler, 1825)",,"Paropsides duodecimpustulatus yuasai Ohno, 1958",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H781,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Phaedon,,nigritus,,Chujo,1951,コンロンソウハムシ,,,,"Phaedon nigritus Chujo, 1951",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H782,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Phola,,octodecimguttata,,(Fabricius),1775,ハマゴウハムシ,,,,"Phola octodecimguttata (Fabricius, 1775)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9457,36 +9454,28 @@ species-H786,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomeli
 species-H787,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Phratora,Phyllodecta,koreana,,Takizawa,1985,フタイロホソルリハムシ,,,,"Phratora (Phyllodecta) koreana Takizawa, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H788,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Phratora,Phyllodecta,laticollis,,(Suffrian),1851,ヤマナラシハムシ,,,,"Phratora (Phyllodecta) laticollis (Suffrian, 1851)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H789,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Plagiosterna,,adamsi,,(Baly),1884,,,,,"Plagiosterna adamsi (Baly, 1884)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H790,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Plagiosterna,,aenea,aenea,(Linnaeus),1758,ルリハムシ 基亜種,タイワンハムシ,,,"Plagiosterna aenea aenea (Linnaeus, 1758)","Linaeidea aenea aenea (Linnaeus, 1758); Plagiosterna formosana (Bates, 1866)",旧称タイワンハムシ等を別名・シノニムとして整理,旧称タイワンハムシ等を別名・シノニムとして整理。日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H790,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Plagiosterna,,aenea,aenea,(Linnaeus),1758,ルリハムシ 基亜種,タイワンハムシ,,,"Plagiosterna aenea aenea (Linnaeus, 1758)","Linaeidea aenea aenea (Linnaeus, 1758); Plagiosterna formosana (Bates, 1866)",旧称タイワンハムシ等を別名・シノニムとして整理,旧称タイワンハムシ等を別名・シノニムとして整理。日本列島の甲虫全種目録(2026)参照。
 species-H791,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gastrolinoides,,japonicus,,(Harold),1877,シデハムシ,,,,"Gastrolinoides japonicus (Harold, 1877)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H792,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Plagiosterna,,maculicollis,,(Jacoby),1890,,,,,"Plagiosterna maculicollis (Jacoby, 1890)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H793,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Plagiosterna,,nigripes,,(Kimoto),1969,,,,,"Plagiosterna nigripes (Kimoto, 1969)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H794,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Prasocuris,,phelloandrii,,(Linnaeus),1758,キスジホソハムシ,,,,"Prasocuris phelloandrii (Linnaeus, 1758)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H795,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Suinzona,,cyrtonoides,,(Jacoby),1885,アカソハムシ,,,,"Suinzona cyrtonoides (Jacoby, 1885)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H796,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Potaninia,,cyrtonoides,,(Jacoby),1885,,,,,"Potaninia cyrtonoides (Jacoby, 1885)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H797,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Trachymela,,sloanei,,(Blackburn),1896,ユーカリハムシ,,,,"Trachymela sloanei (Blackburn, 1896)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H798,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,cyanea,,(Weber),1801,,,,,"Altica cyanea (Weber, 1801)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H797,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Trachymela,,sloanei,,(Blackburn),1896,ユーカリハムシ,,,,"Trachymela sloanei (Blackburn, 1896)",,,日本列島の甲虫全種目録(2026)参照。
 species-H799,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Haltica,,fragariae,,Nakane,1955,,,,,"Haltica fragariae Nakane, 1955",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H800,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,fukutai,,Nakane,1963,フクタカミナリハムシ,,,,"Altica fukutai Nakane, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H801,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Clitea,,metallica,,Chen,1933,,,,,"Clitea metallica Chen, 1933",,"Clitea citri Chûjô, 1958",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H802,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,foudrasi,,Jacoby,1885,,,,,"Aphthona foudrasi Jacoby, 1885",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H803,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,ihai,,Chûjô,1958,,,,,"Longitarsus (Longitarsus) ihai Chûjô, 1958",,"Aphthona opaca Allard, 1889",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H804,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,yuasai,,"Ohno, 196",,,,,,"Aphthona yuasai Ohno, 196",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H805,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,niisatoi,,Takizawa,2017,,,,,"Aphthona niisatoi Takizawa, 2017",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H806,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,okinawaensis,,Konstantinov & Lingafelter,2002,,,,,"Aphthona okinawaensis Konstantinov & Lingafelter, 2002",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H806,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,okinawaensis,,Konstantinov & Lingafelter,2002,オキナワツブノミハムシ,,,,"Aphthona okinawaensis Konstantinov & Lingafelter, 2002",,,日本列島の甲虫全種目録(2026)参照。
 species-H807,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,varipes,,Jacoby,1890,,,,,"Aphthona varipes Jacoby, 1890",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H808,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopistes,,coccinelliformis,,Csiki,1940,リュウキュウテントウノミハムシ,,,,"Argopistes coccinelliformis Csiki, 1940","Argopistes ryukyuensis Shigetoh & Suenaga, 2022","2024年の整理で Argopistes rufus Chen, 1934 のジュニアシノニム扱い","2024年の整理で Argopistes rufus Chen, 1934 のジュニアシノニム扱い。日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。"
 species-H809,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Argopus,,nigritarsis,,(Gebler),1823,,,,,"Argopus nigritarsis (Gebler, 1823)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H810,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthonomorpha,,collaris,,(Baly),1877,,,,,"Aphthonomorpha collaris (Baly, 1877)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H811,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Manobidia,,nipponica,,Chûjô,1959,,,,,"Manobidia nipponica Chûjô, 1959",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H812,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Manobidia,,simplicithorax,,Chen,1934,,,,,"Manobidia simplicithorax Chen, 1934",,"Aphthonomorpha fulva Chûjô, 1957",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H813,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,nigrica,,(Motschulsky),1858,オカボトビハムシ,,,,"Chaetocnema (Tlanoma) nigrica (Motschulsky, 1858)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H814,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,,japonica,,Jacoby,1885,アカヒゲヒサゴトビハムシ,,,,"Chaetocnema japonica Jacoby, 1885",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H815,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,lewisii,,Chûjô,1942,ルイスヒサゴトビハムシ,,,,"Chaetocnema (Tlanoma) lewisii Chûjô, 1942",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H816,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,septentrionalis,,Kimoto,1963,,,,,"Chaetocnema (Tlanoma) septentrionalis Kimoto, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H817,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,Tlanoma,mandschurica,,Heikertinger,1951,,,,,"Chaetocnema (Tlanoma) mandschurica Heikertinger, 1951",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H818,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,,discreta,,(Baly),1877,,,,,"Chaetocnema discreta (Baly, 1877)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H819,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Chaetocnema,,formosensis,,Chûjô,1935,,,,,"Chaetocnema formosensis Chûjô, 1935",,"Chaetocnema (Chaetocnema) bella (Baly, 1876)",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H820,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Neorthaea,,nisotroides,,Chen,1833,,,,,"Neorthaea nisotroides Chen, 1833",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H821,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Schenklingia,,duodecimmaculata,,(Chen),1934,,,,,"Schenklingia duodecimmaculata (Chen, 1934)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H822,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Schenklingia,,hiranoi,,Takizawa,1982,,,,,"Schenklingia hiranoi Takizawa, 1982",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9497,7 +9486,6 @@ species-H826,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H827,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Hemipyxis,,quadripustulata,,(Baly),1876,,,,,"Hemipyxis quadripustulata (Baly, 1876)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H828,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Orthocrepis,,adamsii,,(Baly),1874,,,,,"Orthocrepis adamsii (Baly, 1874)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H829,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Parachalcoides,,babai,,Chûjô,1959,,,,,"Parachalcoides babai Chûjô, 1959",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H830,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Amphimeloides,,bistripunctatus,,Chen,1933,,,,,"Amphimeloides bistripunctatus Chen, 1933",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H831,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Horaia,,esakii,,Chûjô & Ohno,1961,,,,,"Horaia esakii Chûjô & Ohno, 1961",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H832,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Horaia,,fulva,,Chûjô,1937,,,,,"Horaia fulva Chûjô, 1937",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H833,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Horaia,,magnoliae,,Chujo & Ohno,1961,,,,,"Horaia magnoliae Chujo & Ohno, 1961",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9508,8 +9496,6 @@ species-H837,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,
 species-H838,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Lipromorpha,,difficilis,,(S. -H. Chen),1934,,,,,"Lipromorpha difficilis (S. -H. Chen, 1934)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H839,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,arisanus,,Chûjô,1937,,,,,"Longitarsus (Longitarsus) arisanus Chûjô, 1937",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H840,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,,haemorrhoidalis,,Jacoby,1885,ツマアカアシナガトビハムシ,,,,"Longitarsus haemorrhoidalis Jacoby, 1885",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H841,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,Longitarsus,tabidus,orientalis,Jacoby,1885,,,,,"Longitarsus (Longitarsus) tabidus orientalis Jacoby, 1885",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H842,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Longitarsus,,amiculus,,(Baly),1874,ヨモギアシナガトビハムシ,,,,"Longitarsus amiculus (Baly, 1874)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H843,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Luperomorpha,,japonica,,Chujo & Ohno,1965,,,,ムネアカオオホソトビハムシ,"Luperomorpha japonica Chujo & Ohno, 1965",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H844,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Phyllotreta,,funesta,,Baly,1874,,,,,"Phyllotreta funesta Baly, 1874",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H845,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Luperomorpha,,nobilis,,Weisw,1889,,,,,"Luperomorpha nobilis Weisw, 1889",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9598,9 +9584,9 @@ species-H927,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,C
 species-H928,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Cassida,,viridis,,Linnaeus,1758,,,,,"Cassida viridis Linnaeus, 1758",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H929,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Thlaspida,,biramosa,biramosa,(Boheman),1855,,,,,"Thlaspida biramosa biramosa (Boheman, 1855)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H930,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Hispini,,Dactylispa,Triplispa,adinae,,Kato,2025,オビトゲハムシ,,,,"Dactylispa (Triplispa) adinae Kato, 2025",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H931,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Acrothinium,,gaschkevitchii,okinawense,Nakane,1985,アカガネサルハムシ 沖縄亜種,,,,"Acrothinium gaschkevitchii okinawense Nakane, 1985",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H931,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Acrothinium,,gaschkevitchii,okinawense,Nakane,1985,アカガネサルハムシ 沖縄亜種,,,,"Acrothinium gaschkevitchii okinawense Nakane, 1985",,,日本列島の甲虫全種目録(2026)参照。
 species-H932,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Demotina,,japana,,Ohno,1960,,,,,"Demotina japana Ohno, 1960",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H933,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Lypesthes,,fulvus,,(Baly),1878,,,,,"Lypesthes fulvus (Baly, 1878)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H933,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Lypesthes,,fulvus,,(Baly),1878,セアカケブカハムシ,,セアカケブカサルハムシ,,"Lypesthes fulvus (Baly, 1878)",,,日本列島の甲虫全種目録(2026)参照。
 species-H934,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Lypesthes,,itoi,,Chûjô,1954,,,,,"Lypesthes itoi Chûjô, 1954",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H935,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Lypesthes,,japonicus,,Ohno,1958,,,,,"Lypesthes japonicus Ohno, 1958",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H936,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Lypesthes,,kiiensis,,Ohno,1958,,,,,"Lypesthes kiiensis Ohno, 1958",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9610,7 +9596,7 @@ species-H939,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiin
 species-H940,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Bromiini,,Osnaparis,,nucea,,Fairmaire,1889,アカチャサルハムシ,,,,"Osnaparis nucea Fairmaire, 1889",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H941,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Euryopini,,Colasposoma,,auripenne,,Motschulsky,1860,,,,,"Colasposoma auripenne Motschulsky, 1860",,"Colasposoma oberthuri Jacoby, 1896",日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H942,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Typophorini,,Basilepta,,uenoi,,Nakane,1958,ドウイロムナゲサルハムシ,,,,"Basilepta uenoi Nakane, 1958",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H943,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Typophorini,,Cleoporus,,variabilis,,(Baly),1874,ヒトミヒメサルハムシ,ヒトミヒメサルハムシ; サクラサルハムシ,,,"Cleoporus variabilis (Baly, 1874)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H943,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Typophorini,,Cleoporus,,variabilis,,(Baly),1874,ヒトミヒメサルハムシ,ヒトミヒメサルハムシ; サクラサルハムシ,,,"Cleoporus variabilis (Baly, 1874)",,,日本列島の甲虫全種目録(2026)参照。
 species-H944,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Typophorini,,Cleorina,,aeneomicans,,(Baly),1867,イクビルリハムシ,,,,"Cleorina aeneomicans (Baly, 1867)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H945,Chrysomelidae,ハムシ科,Eumolpinae,サルハムシ亜科,Typophorini,,Nodina,,issikii,,Chûjô,1956,,,,,"Nodina issikii Chûjô, 1956",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H946,Chrysomelidae,ハムシ科,Lamprosomatinae,ツヤハムシ亜科,Lamprosomatini,,Lamprosoma,,cupraetum,,Baly,1873,タラノキツヤハムシ,,,,"Lamprosoma cupraetum Baly, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9631,8 +9617,8 @@ species-H960,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,C
 species-H961,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,mannerheimi,,Gebler,1825,,,,,"Cryptocephalus (Cryptocephalus) mannerheimi Gebler, 1825",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H962,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,multiplex,multiplex,Suffrian,1860,,,,,"Cryptocephalus (Cryptocephalus) multiplex multiplex Suffrian, 1860",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H963,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,,permodestus,,Baly,1873,,,,,"Cryptocephalus permodestus Baly, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H964,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,perelegans,perelegans,Baly,1873,キボシツツハムシ 基亜種,,,,"Cryptocephalus (Cryptocephalus) perelegans perelegans Baly, 1873",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H965,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,,perelegans,takahasii,Chûjô,1935,,,,,"Cryptocephalus perelegans takahasii Chûjô, 1935",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H964,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,perelegans,perelegans,Baly,1873,キボシツツハムシ 基亜種,,,,"Cryptocephalus (Cryptocephalus) perelegans perelegans Baly, 1873",,,日本列島の甲虫全種目録(2026)参照。
+species-H965,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,,perelegans,takahasii,Chûjô,1935,,,,,"Cryptocephalus perelegans takahasii Chûjô, 1935",,,日本列島の甲虫全種目録(2026)参照。
 species-H966,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,regalis,regalis,Gebler,1830,,,,,"Cryptocephalus (Cryptocephalus) regalis regalis Gebler, 1830",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H967,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,trifasciatus,,Fabricius,1787,,,,,"Cryptocephalus (Cryptocephalus) trifasciatus Fabricius, 1787",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H968,Chrysomelidae,ハムシ科,Cryptocephalinae,ツツハムシ亜科,Cryptocephalini,,Cryptocephalus,Cryptocephalus,tsutsumiuchii,,Shigetoh,2025,ニセキボシツツハムシ,,,,"Cryptocephalus (Cryptocephalus) tsutsumiuchii Shigetoh, 2025",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9962,3 +9948,7 @@ species-SC319,Curculionidae,ゾウムシ科,Scolytinae,キクイムシ亜科,Xyl
 species-SC320,Curculionidae,ゾウムシ科,Scolytinae,キクイムシ亜科,Xyloterini,,Trypodendron,,proximum,,Niijima,1909,クロツヤキクイムシ,,,,"Trypodendron proximum (Niijima, 1909)",,,"日本列島の甲虫全種目録2026年版 キクイムシ亜科 No.320（2026-07-10参照）。国内分布: HOK, HON, SHI, KYU。国外分布: Sakhalin, Russian Far East, Korea, China。目録備考: Xyloterus proximum Niijima, 1909"
 species-SC321,Curculionidae,ゾウムシ科,Scolytinae,キクイムシ亜科,Xyloterini,,Trypodendron,,pulchellum,,Murayama,1957,エゴザイノキクイムシ,,,,"Trypodendron pulchellum (Murayama, 1957)",,,日本列島の甲虫全種目録2026年版 キクイムシ亜科 No.321（2026-07-10参照）。国内分布: SHI。国外分布: 記載なし
 species-SC322,Curculionidae,ゾウムシ科,Scolytinae,キクイムシ亜科,Xyloterini,,Trypodendron,,signatum,,Fabricius,1792,カシワノキクイムシ,,,,"Trypodendron signatum (Fabricius, 1792)",,,"日本列島の甲虫全種目録2026年版 キクイムシ亜科 No.322（2026-07-10参照）。国内分布: HOK, HON, SHI, KYU。国外分布: Kuril, Kamchatka, Sakhalin, Russian Far East, Korea, China, Siberia, Mongolia, Iran, Turkey, Europe。目録備考: Trypodendron obtusum Eggers, 1939 / スギザイノキクイムシ"
+species-BTG-001,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジチョウ亜科,,,Athyma,,selenophora,,Kollar,1844,ヤエヤマイチモンジ,,,,"Athyma selenophora (Kollar, 1844)",,,
+species-BTG-002,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Danaus,,melanippus,,Cramer,1777,スジグロシロマダラ,,,,"Danaus melanippus (Cramer, 1777)",,,
+species-BTG-003,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,midamus,,Linnaeus,1758,ミダムスルリマダラ,,,,"Euploea midamus (Linnaeus, 1758)",,,
+species-BTG-004,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Suastus,,gremius,,Fabricius,1798,クロボシセセリ,,,,"Suastus gremius (Fabricius, 1798)",,,

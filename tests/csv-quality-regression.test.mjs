@@ -92,6 +92,17 @@ test('hostplants / general_notes の insect_id は insects.csv に存在する',
   assert.deepEqual(orphanNotes, [], `孤立 general_notes insect_id: ${orphanNotes.slice(0, 10).join(', ')}`);
 });
 
+test('実データがある分類群に未入力プレースホルダーを残さない', () => {
+  const linkedIds = new Set([
+    ...hostRows.map((row) => row.insect_id),
+    ...noteRows.map((row) => row.insect_id),
+  ]);
+  const stale = insectRows
+    .filter((row) => linkedIds.has(row.insect_id) && row.notes?.includes('食草・生態情報は未入力'))
+    .map((row) => row.insect_id);
+  assert.deepEqual(stale, [], `実データと矛盾する未入力表示: ${stale.join(', ')}`);
+});
+
 // ---------------------------------------------------------------------------
 // 3. 科名整合: YListの直接正準（別名でない）植物の plant_family は YList権威値に一致
 //    （audit-csv-quality.mjs --fix が保証する不変条件。科名衝突の再発を防ぐ）

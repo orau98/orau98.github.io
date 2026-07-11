@@ -1,0 +1,1666 @@
+{
+  "audit_version": "japanese-winter-geometrid-all-notes-v1-2026-07-12",
+  "reviewed_on": "2026-07-12",
+  "reference": "日本の冬尺蛾",
+  "source_pdf": {
+    "file": "日本のフユシャク.pdf",
+    "sha256": "7f11b77cd05835aa39d4e45dd5130ad58824e40ac0ba782a48d4ac920504d992",
+    "page_count": 9,
+    "printed_pages": "54-70",
+    "role": "original_pdf_image_review"
+  },
+  "scan_scope": {
+    "source_accounts": 35,
+    "general_note_rows": 70,
+    "note_type_counts": {
+      "出現時期": 35,
+      "生態情報": 35
+    },
+    "replace_note": 9,
+    "verify_and_add_page": 61,
+    "unresolved_or_hold": 0
+  },
+  "method": "全9 PDFページ（冊子54-70ページ）を原画像で確認。OCRは候補探索に限定し、35種解説の既存70注記を全件照合した。客観的な生態・相対頻度・確認記録を保持し、壊れた月表記を復元、推論と採集難易度の案内を公開本文から分離した。",
+  "rows": [
+    {
+      "audit_id": "WINTER-GEOMETRID-001",
+      "record_id": "note-000567",
+      "insect_id": "species-3744",
+      "japanese_name": "ヒロバフユエダシャク",
+      "scientific_name": "Larerannis miracula (Prout, 1929)",
+      "note_type": "出現時期",
+      "source_account": 1,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        54
+      ],
+      "old_content": "関東地方の平地・丘陵部では2月上旬から3月上旬。ピークは2月下旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東地方の平地・丘陵部では2月上旬から3月上旬。ピークは2月下旬。",
+      "approved_page": "54",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-002",
+      "record_id": "note-000568",
+      "insect_id": "species-3745",
+      "japanese_name": "フタマタフユエダシャク",
+      "scientific_name": "Larerannis filipjevi Wehrli, 1935",
+      "note_type": "出現時期",
+      "source_account": 2,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        54
+      ],
+      "old_content": "北海道や関東周辺の山地では4月中旬から5月上旬。標高の低い所(軽井沢等)では3月下旬から。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "北海道や関東周辺の山地では4月中旬から5月上旬。標高の低い所(軽井沢等)では3月下旬から。",
+      "approved_page": "54",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-003",
+      "record_id": "note-000569",
+      "insect_id": "species-3746",
+      "japanese_name": "ウスオビフユエダシャク",
+      "scientific_name": "Larerannis orthogrammaria (Wehrli, 1927)",
+      "note_type": "出現時期",
+      "source_account": 3,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        55
+      ],
+      "old_content": "北海道では10月下旬から。関東地方の山地では11月上旬から下旬。ピークは11月10日前後。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "北海道では10月下旬から。関東地方の山地では11月上旬から下旬。ピークは11月10日前後。",
+      "approved_page": "55",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-004",
+      "record_id": "note-000570",
+      "insect_id": "species-3747",
+      "japanese_name": "ナカジマフユエダシャク",
+      "scientific_name": "Larerannis nakajimai Inoue, 1986",
+      "note_type": "出現時期",
+      "source_account": 4,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        55
+      ],
+      "old_content": "関東地方では11月中旬から12月上旬。ピークは11月20日前後。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東地方では11月中旬から12月上旬。ピークは11月20日前後。",
+      "approved_page": "55",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-005",
+      "record_id": "note-000571",
+      "insect_id": "species-3748",
+      "japanese_name": "トギレフユエダシャク",
+      "scientific_name": "Protalcis concinnata (Wileman, 1911)",
+      "note_type": "出現時期",
+      "source_account": 5,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1,
+        2
+      ],
+      "printed_pages": [
+        55,
+        56
+      ],
+      "old_content": "北海道では4月下旬~5月中旬。関東地方の平地では3月中旬~4月上旬。山地では4月下旬~5月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "北海道では4月下旬~5月中旬。関東地方の平地では3月中旬~4月上旬。山地では4月下旬~5月上旬。",
+      "approved_page": "56",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-006",
+      "record_id": "note-000572",
+      "insect_id": "species-3749",
+      "japanese_name": "シロフフユエダシャク",
+      "scientific_name": "Agriopis dira (Butler, 1878)",
+      "note_type": "出現時期",
+      "source_account": 6,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2
+      ],
+      "printed_pages": [
+        56
+      ],
+      "old_content": "関東平地では2月中旬~3月上旬(暖冬年は1月上旬から)。山地や高緯度地域では4月中旬~5月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東平地では2月中旬~3月上旬(暖冬年は1月上旬から)。山地や高緯度地域では4月中旬~5月上旬。",
+      "approved_page": "56",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-007",
+      "record_id": "note-000573",
+      "insect_id": "species-3750",
+      "japanese_name": "クロスジフユエダシャク",
+      "scientific_name": "Pachyerannis obliquaria (Motschulsky, 1861)",
+      "note_type": "出現時期",
+      "source_account": 7,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2
+      ],
+      "printed_pages": [
+        56,
+        57
+      ],
+      "old_content": "関東平地では12月中旬頃~1月中旬。ピークは12月下旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東平地では12月中旬頃~1月中旬。ピークは12月下旬。",
+      "approved_page": "57",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-008",
+      "record_id": "note-000574",
+      "insect_id": "species-3751",
+      "japanese_name": "チャバネフユエダシャク",
+      "scientific_name": "Erannis golda Djakonov, 1929",
+      "note_type": "出現時期",
+      "source_account": 8,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2
+      ],
+      "printed_pages": [
+        57
+      ],
+      "old_content": "関東平地では12月中旬~1月上旬。ピークは12月下旬。山地では11月上旬~12月上旬。ピークは11月中旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東平地では12月中旬~1月上旬。ピークは12月下旬。山地では11月上旬~12月上旬。ピークは11月中旬。",
+      "approved_page": "57",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-009",
+      "record_id": "note-000575",
+      "insect_id": "species-3752",
+      "japanese_name": "オオチャバネフユエダシャク",
+      "scientific_name": "Erannis gigantea Inoue, 1955",
+      "note_type": "出現時期",
+      "source_account": 9,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2,
+        3
+      ],
+      "printed_pages": [
+        57,
+        58
+      ],
+      "old_content": "関東から中部の山地では10月中旬~11月中旬。ピークは11月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東から中部の山地では10月中旬~11月中旬。ピークは11月上旬。",
+      "approved_page": "58",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-010",
+      "record_id": "note-000576",
+      "insect_id": "species-3753",
+      "japanese_name": "チャオビフユエダシャク",
+      "scientific_name": "Phigaliohybernia fulvinfula Inoue, 1942",
+      "note_type": "出現時期",
+      "source_account": 10,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        58
+      ],
+      "old_content": "平地では2月上旬~3月上旬、ピークは2月10日前後。山地では3月中旬~4月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "平地では2月上旬~3月上旬、ピークは2月10日前後。山地では3月中旬~4月上旬。",
+      "approved_page": "58",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-011",
+      "record_id": "note-000577",
+      "insect_id": "species-3754",
+      "japanese_name": "シモフリトゲエダシャク",
+      "scientific_name": "Phigalia sinuosaria Leech, 1897",
+      "note_type": "出現時期",
+      "source_account": 11,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        59
+      ],
+      "old_content": "関東平地から低山帯では1月上旬~3月上旬(近年は12月下旬から)。山地では4月中旬~5月中旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東平地から低山帯では1月上旬~3月上旬(近年は12月下旬から)。山地では4月中旬~5月中旬。",
+      "approved_page": "59",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-012",
+      "record_id": "note-000578",
+      "insect_id": "species-3755",
+      "japanese_name": "ウスシモフリトゲエダシャク",
+      "scientific_name": "Phigalia djakonovi Moltrecht, 1933",
+      "note_type": "出現時期",
+      "source_account": 12,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        59
+      ],
+      "old_content": "関東地方周辺の山地では4月中旬~5月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東地方周辺の山地では4月中旬~5月上旬。",
+      "approved_page": "59",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-013",
+      "record_id": "note-000579",
+      "insect_id": "species-3756",
+      "japanese_name": "シロトゲエダシャク",
+      "scientific_name": "Phigalia verecundaria (Leech, 1897)",
+      "note_type": "出現時期",
+      "source_account": 13,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3,
+        4
+      ],
+      "printed_pages": [
+        59,
+        60
+      ],
+      "old_content": "関東地方の平地から丘陵部では2月下旬~3月中旬。山地や高緯度の地域では4月中旬~5月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東地方の平地から丘陵部では2月下旬~3月中旬。山地や高緯度の地域では4月中旬~5月上旬。",
+      "approved_page": "60",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-014",
+      "record_id": "note-000580",
+      "insect_id": "species-3757",
+      "japanese_name": "フチグロトゲエダシャク",
+      "scientific_name": "Nyssiodes lefuarius (Erschoff, 1872)",
+      "note_type": "出現時期",
+      "source_account": 14,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        4
+      ],
+      "printed_pages": [
+        60
+      ],
+      "old_content": "関東周辺では3月上旬~下旬(年によっては4月上旬まで)。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺では3月上旬~下旬(年によっては4月上旬まで)。",
+      "approved_page": "60",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-015",
+      "record_id": "note-000581",
+      "insect_id": "species-3758",
+      "japanese_name": "カバシタムクゲエダシャク",
+      "scientific_name": "Sebastosema bubonaria Warren, 1896",
+      "note_type": "出現時期",
+      "source_account": 15,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        4
+      ],
+      "printed_pages": [
+        61
+      ],
+      "old_content": "3月上旬~下旬(以前は4月上旬まで記録あり)。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "3月上旬~下旬(以前は4月上旬まで記録あり)。",
+      "approved_page": "61",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-016",
+      "record_id": "note-000582",
+      "insect_id": "species-3874",
+      "japanese_name": "シロオビフユシャク",
+      "scientific_name": "Alsophila japonensis (Warren, 1894)",
+      "note_type": "出現時期",
+      "source_account": 16,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        4,
+        5
+      ],
+      "printed_pages": [
+        61,
+        62
+      ],
+      "old_content": "関東周辺の平地・丘陵部では12月下旬~2月中旬。山地や高緯度地域では10月下旬~11月下旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の平地・丘陵部では12月下旬~2月中旬。山地や高緯度地域では10月下旬~11月下旬。",
+      "approved_page": "62",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-017",
+      "record_id": "note-000583",
+      "insect_id": "species-3875",
+      "japanese_name": "ユキムカエフユシャク",
+      "scientific_name": "Alsophila inouei Nakajima, 1989",
+      "note_type": "出現時期",
+      "source_account": 17,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        62
+      ],
+      "old_content": "関東の山地や東北地方では11月下旬~12月上旬。埼玉県秋ヶ瀬公園では12月中・下旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東の山地や東北地方では11月下旬~12月上旬。埼玉県秋ヶ瀬公園では12月中・下旬。",
+      "approved_page": "62",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-018",
+      "record_id": "note-000584",
+      "insect_id": "species-3876",
+      "japanese_name": "サクフウフユシャク",
+      "scientific_name": "Alsophila yanagitai Nakajima, 1995",
+      "note_type": "出現時期",
+      "source_account": 18,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        62
+      ],
+      "old_content": "1〜2月上旬から下旬。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "12月上旬から下旬に採れている。",
+      "approved_page": "62",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "restore_corrupt_emergence_from_original_pdf"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-019",
+      "record_id": "note-000585",
+      "insect_id": "species-3877",
+      "japanese_name": "クロバネフユシャク",
+      "scientific_name": "Alsophila foedata Inoue, 1944",
+      "note_type": "出現時期",
+      "source_account": 19,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        63
+      ],
+      "old_content": "1月中旬~3月上旬(近年は12月下旬~2月上旬に早まる傾向)。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "1月中旬~3月上旬(近年は12月下旬~2月上旬に早まる傾向)。",
+      "approved_page": "63",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-020",
+      "record_id": "note-000586",
+      "insect_id": "species-3878",
+      "japanese_name": "スジモンフユシャク",
+      "scientific_name": "Alsophiloides acroama (Inoue, 1944)",
+      "note_type": "出現時期",
+      "source_account": 20,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        63
+      ],
+      "old_content": "関東周辺の低山帯では2月下旬~3月中旬。ピークは3月上旬。山地では5月上~中旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の低山帯では2月下旬~3月中旬。ピークは3月上旬。山地では5月上~中旬。",
+      "approved_page": "63",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-021",
+      "record_id": "note-000587",
+      "insect_id": "species-3879",
+      "japanese_name": "クロテンフユシャク",
+      "scientific_name": "Inurois membranaria (Christoph, 1881)",
+      "note_type": "出現時期",
+      "source_account": 21,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5,
+        6
+      ],
+      "printed_pages": [
+        63,
+        64
+      ],
+      "old_content": "平地では12月下旬~3月上旬の長期出現型。山地では11月中旬~12月上旬と4月中旬~5月上旬の出現分離型。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "平地では12月下旬~3月上旬の長期出現型。山地では11月中旬~12月上旬と4月中旬~5月上旬の出現分離型。",
+      "approved_page": "64",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-022",
+      "record_id": "note-000588",
+      "insect_id": "species-3880",
+      "japanese_name": "ウスバフユシャク",
+      "scientific_name": "Inurois fletcheri Inoue, 1954",
+      "note_type": "出現時期",
+      "source_account": 22,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6
+      ],
+      "printed_pages": [
+        64
+      ],
+      "old_content": "関東周辺の平地・丘陵地では12月中旬~2月上旬。ピークは12月下旬~1月上旬。山地では11月中旬~12月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の平地・丘陵地では12月中旬~2月上旬。ピークは12月下旬~1月上旬。山地では11月中旬~12月上旬。",
+      "approved_page": "64",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-023",
+      "record_id": "note-000590",
+      "insect_id": "species-3881",
+      "japanese_name": "ヤマウスバフユシャク",
+      "scientific_name": "Inurois nikkoensis Nakajima, 1992",
+      "note_type": "出現時期",
+      "source_account": 24,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6
+      ],
+      "printed_pages": [
+        65
+      ],
+      "old_content": "山地では11月中旬~12月上旬。北海道ではほぼ同時期。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "山地では11月中旬~12月上旬。北海道ではほぼ同時期。",
+      "approved_page": "65",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-024",
+      "record_id": "note-000593",
+      "insect_id": "species-3882",
+      "japanese_name": "シュゼンジフユシャク",
+      "scientific_name": "Inurois kobayashii Nakajima, 1992",
+      "note_type": "出現時期",
+      "source_account": 27,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        66
+      ],
+      "old_content": "1月上旬から下旬(近年は早まる傾向)。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "1月上旬から下旬(近年は早まる傾向)。",
+      "approved_page": "66",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-025",
+      "record_id": "note-000589",
+      "insect_id": "species-3883",
+      "japanese_name": "アカウスバフユシャク",
+      "scientific_name": "Inurois minutulus Nakajima & Kudo, 1987",
+      "note_type": "出現時期",
+      "source_account": 23,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6
+      ],
+      "printed_pages": [
+        65
+      ],
+      "old_content": "1〜2月下旬~1月中旬。ピークは1月上旬。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "12月下旬から出現し始め、1月中旬まで見られ、1月上旬がピークとなる。",
+      "approved_page": "65",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "restore_corrupt_emergence_from_original_pdf"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-026",
+      "record_id": "note-000591",
+      "insect_id": "species-3884",
+      "japanese_name": "フタスジフユシャク",
+      "scientific_name": "Inurois asahinai Inoue, 1974",
+      "note_type": "出現時期",
+      "source_account": 25,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6,
+        7
+      ],
+      "printed_pages": [
+        65,
+        66
+      ],
+      "old_content": "関東周辺の山地では11月中旬~12月上旬。ピークは11月20日前後。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の山地では11月中旬~12月上旬。ピークは11月20日前後。",
+      "approved_page": "66",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-027",
+      "record_id": "note-000592",
+      "insect_id": "species-3885",
+      "japanese_name": "クジュウフユシャク",
+      "scientific_name": "Inurois kyushuensis Inoue, 1974",
+      "note_type": "出現時期",
+      "source_account": 26,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        66
+      ],
+      "old_content": "1月上旬から下旬(地域により12月上旬まで)。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "九重連山では11月上旬から下旬に出現する。",
+      "approved_page": "66",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "restore_emergence_exclude_source_inference"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-028",
+      "record_id": "note-000594",
+      "insect_id": "species-3886",
+      "japanese_name": "ホソウスバフユシャク",
+      "scientific_name": "Inurois tenuis Butler, 1879",
+      "note_type": "出現時期",
+      "source_account": 28,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        67
+      ],
+      "old_content": "関東周辺の平地では2月下旬~3月上旬。山地では4月下旬~5月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の平地では2月下旬~3月上旬。山地では4月下旬~5月上旬。",
+      "approved_page": "67",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-029",
+      "record_id": "note-000595",
+      "insect_id": "species-3887",
+      "japanese_name": "ウスモンフユシャク",
+      "scientific_name": "Inurois fumosa (Inoue, 1944)",
+      "note_type": "出現時期",
+      "source_account": 29,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        67
+      ],
+      "old_content": "関東周辺の平地・丘陵地では12月下旬~1月下旬。ピークは1月中旬頃。山地では11月中旬~12月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の平地・丘陵地では12月下旬~1月下旬。ピークは1月中旬頃。山地では11月中旬~12月上旬。",
+      "approved_page": "67",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-030",
+      "record_id": "note-000596",
+      "insect_id": "species-4253",
+      "japanese_name": "ナミスジフユナミシャク",
+      "scientific_name": "Operophtera brunnea Nakajima, 1991",
+      "note_type": "出現時期",
+      "source_account": 30,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        68
+      ],
+      "old_content": "関東周辺の平地・丘陵部では12月下旬~1月下旬。ピークは1月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の平地・丘陵部では12月下旬~1月下旬。ピークは1月上旬。",
+      "approved_page": "68",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-031",
+      "record_id": "note-000597",
+      "insect_id": "species-4255",
+      "japanese_name": "イチモジフユナミシャク",
+      "scientific_name": "Operophtera rectipostmediana Inoue, 1942",
+      "note_type": "出現時期",
+      "source_account": 31,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        68
+      ],
+      "old_content": "関東地方では12月下旬~1月上旬。ピークは12月下旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東地方では12月下旬~1月上旬。ピークは12月下旬。",
+      "approved_page": "68",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-032",
+      "record_id": "note-000598",
+      "insect_id": "species-4256",
+      "japanese_name": "サザナミフユナミシャク",
+      "scientific_name": "Operophtera japonaria (Leech, 1891)",
+      "note_type": "出現時期",
+      "source_account": 32,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        69
+      ],
+      "old_content": "関東周辺の平地では12月上旬~下旬。秋田では10月下旬~11月中旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "関東周辺の平地では12月上旬~下旬。秋田では10月下旬~11月中旬。",
+      "approved_page": "69",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-033",
+      "record_id": "note-000599",
+      "insect_id": "species-4257",
+      "japanese_name": "ミヤマフユナミシャク",
+      "scientific_name": "Operophtera nana Inoue, 1955",
+      "note_type": "出現時期",
+      "source_account": 33,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        69
+      ],
+      "old_content": "山地(日光、八ヶ岳など)では10月下旬~11月中旬。ピークは11月上旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "山地(日光、八ヶ岳など)では10月下旬~11月中旬。ピークは11月上旬。",
+      "approved_page": "69",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-034",
+      "record_id": "note-000600",
+      "insect_id": "species-4258",
+      "japanese_name": "クロオビフユナミシャク",
+      "scientific_name": "Operophtera relegata Prout, 1908",
+      "note_type": "出現時期",
+      "source_account": 34,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [
+        69,
+        70
+      ],
+      "old_content": "平地では12月中旬~1月下旬。ピークは12月20日過ぎ。山地では10月下旬~11月下旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "平地では12月中旬~1月下旬。ピークは12月20日過ぎ。山地では10月下旬~11月下旬。",
+      "approved_page": "70",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-035",
+      "record_id": "note-000601",
+      "insect_id": "species-4259",
+      "japanese_name": "ヒメクロオビフユナミシャク",
+      "scientific_name": "Operophtera crispifascia Inoue, 1982",
+      "note_type": "出現時期",
+      "source_account": 35,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        9
+      ],
+      "printed_pages": [
+        70
+      ],
+      "old_content": "高尾山では11月下旬~12月中旬。ピークは12月上旬。山地では10月下旬~11月中旬。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "高尾山では11月下旬~12月中旬。ピークは12月上旬。山地では10月下旬~11月中旬。",
+      "approved_page": "70",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-036",
+      "record_id": "note-1004716",
+      "insect_id": "species-3744",
+      "japanese_name": "ヒロバフユエダシャク",
+      "scientific_name": "Larerannis miracula (Prout, 1929)",
+      "note_type": "生態情報",
+      "source_account": 1,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        54
+      ],
+      "old_content": "比較的広食性だがサクラ類によく見られる。配偶行動は日没後比較的早い時間に起き交尾に至る。産卵は小枝の樹皮上や割れ目に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "比較的広食性だがサクラ類によく見られる。配偶行動は日没後比較的早い時間に起き交尾に至る。産卵は小枝の樹皮上や割れ目に産みつける。",
+      "approved_page": "54",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-037",
+      "record_id": "note-1004717",
+      "insect_id": "species-3745",
+      "japanese_name": "フタマタフユエダシャク",
+      "scientific_name": "Larerannis filipjevi Wehrli, 1935",
+      "note_type": "生態情報",
+      "source_account": 2,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        54
+      ],
+      "old_content": "比較的広食性。シダレヤナギ、ソメイヨシノは食いつきが悪い。配偶行動は日没後比較的早い時間に生じる。産卵は樹皮下に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "比較的広食性。シダレヤナギ、ソメイヨシノは食いつきが悪い。配偶行動は日没後比較的早い時間に生じる。産卵は樹皮下に産みつける。",
+      "approved_page": "54",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-038",
+      "record_id": "note-1004718",
+      "insect_id": "species-3746",
+      "japanese_name": "ウスオビフユエダシャク",
+      "scientific_name": "Larerannis orthogrammaria (Wehrli, 1927)",
+      "note_type": "生態情報",
+      "source_account": 3,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        55
+      ],
+      "old_content": "野外ではケヤキで採集。飼育でケヤキ、クヌギはよく食べたがヤマハンノキ、コナラには食いつかなかった。配偶行動は日没後比較的早い時間に起こる。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "野外ではケヤキで採集。飼育でケヤキ、クヌギはよく食べたがヤマハンノキ、コナラには食いつかなかった。配偶行動は日没後比較的早い時間に起こる。",
+      "approved_page": "55",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-039",
+      "record_id": "note-1004719",
+      "insect_id": "species-3747",
+      "japanese_name": "ナカジマフユエダシャク",
+      "scientific_name": "Larerannis nakajimai Inoue, 1986",
+      "note_type": "生態情報",
+      "source_account": 4,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1
+      ],
+      "printed_pages": [
+        55
+      ],
+      "old_content": "野外での食草は未知だが、ケヤキで飼育されている。飼育幼虫にクヌギ、ヤマハンノキ、サクラを与えるとサクラは多少食べたが他はほとんど食いつかなかった。配偶行動は日没後1〜2時間の早い時間から遅い時間まで見られる。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "野外での食草は未知だが、ケヤキで飼育されている。飼育幼虫にクヌギ、ヤマハンノキ、サクラを与えるとサクラは多少食べたが他はほとんど食いつかなかった。配偶行動は日没後1〜2時間の早い時間から遅い時間まで見られる。",
+      "approved_page": "55",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-040",
+      "record_id": "note-1004720",
+      "insect_id": "species-3748",
+      "japanese_name": "トギレフユエダシャク",
+      "scientific_name": "Protalcis concinnata (Wileman, 1911)",
+      "note_type": "生態情報",
+      "source_account": 5,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        1,
+        2
+      ],
+      "printed_pages": [
+        55,
+        56
+      ],
+      "old_content": "配偶行動は日没後すぐに生じ交尾に至る。交尾したペアはあまり移動しないので周辺の樹木の比較的低い位置で見つかることが多い。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "配偶行動は日没後すぐに生じ交尾に至る。交尾したペアはあまり移動しないので周辺の樹木の比較的低い位置で見つかることが多い。",
+      "approved_page": "56",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-041",
+      "record_id": "note-1004721",
+      "insect_id": "species-3749",
+      "japanese_name": "シロフフユエダシャク",
+      "scientific_name": "Agriopis dira (Butler, 1878)",
+      "note_type": "生態情報",
+      "source_account": 6,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2
+      ],
+      "printed_pages": [
+        56
+      ],
+      "old_content": "ブナ科に固有。コナラ・クヌギによく見られる。幼虫の体色に2型あり（Ⅰ型：淡緑色頭・黄緑体、Ⅱ型：黒色頭・黄白体）。配偶行動は日没後比較的早い時間に起きて交尾に至ることが多い。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "ブナ科に固有。コナラ・クヌギによく見られる。幼虫の体色に2型あり（Ⅰ型：淡緑色頭・黄緑体、Ⅱ型：黒色頭・黄白体）。配偶行動は日没後比較的早い時間に起きて交尾に至ることが多い。",
+      "approved_page": "56",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-042",
+      "record_id": "note-1004722",
+      "insect_id": "species-3750",
+      "japanese_name": "クロスジフユエダシャク",
+      "scientific_name": "Pachyerannis obliquaria (Motschulsky, 1861)",
+      "note_type": "生態情報",
+      "source_account": 7,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2
+      ],
+      "printed_pages": [
+        56,
+        57
+      ],
+      "old_content": "昼飛性。午前中から日没まで飛翔し、多少曇っていても活動する。配偶行動は昼間も夕方にも生じ、日没後夜間も観察されている。産卵は樹皮下や割れ目に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "昼飛性。午前中から日没まで飛翔し、多少曇っていても活動する。配偶行動は昼間も夕方にも生じ、日没後夜間も観察されている。産卵は樹皮下や割れ目に産みつける。",
+      "approved_page": "57",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-043",
+      "record_id": "note-1004723",
+      "insect_id": "species-3751",
+      "japanese_name": "チャバネフユエダシャク",
+      "scientific_name": "Erannis golda Djakonov, 1929",
+      "note_type": "生態情報",
+      "source_account": 8,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2
+      ],
+      "printed_pages": [
+        57
+      ],
+      "old_content": "非常に多くの植物につき多食性。公園のサクラやコナラ、クヌギによく見られる。大雪山系でクロウスゴ（ツツジ科）から幼虫採集され高山帯での生息も確認。産卵は樹皮の割れ目に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "非常に多くの植物につき多食性。公園のサクラやコナラ、クヌギによく見られる。大雪山系でクロウスゴ（ツツジ科）から幼虫採集され高山帯での生息も確認。産卵は樹皮の割れ目に産みつける。",
+      "approved_page": "57",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-044",
+      "record_id": "note-1004724",
+      "insect_id": "species-3752",
+      "japanese_name": "オオチャバネフユエダシャク",
+      "scientific_name": "Erannis gigantea Inoue, 1955",
+      "note_type": "生態情報",
+      "source_account": 9,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        2,
+        3
+      ],
+      "printed_pages": [
+        57,
+        58
+      ],
+      "old_content": "マツ科に固有。本州ではカラマツを最も好む。配偶行動はチャバネフユエダシャク同様日没後ある程度時間が経ってから起こることが多い。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "マツ科に固有。本州ではカラマツを最も好む。配偶行動はチャバネフユエダシャク同様日没後ある程度時間が経ってから起こることが多い。",
+      "approved_page": "58",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-045",
+      "record_id": "note-1004725",
+      "insect_id": "species-3753",
+      "japanese_name": "チャオビフユエダシャク",
+      "scientific_name": "Phigaliohybernia fulvinfula Inoue, 1942",
+      "note_type": "生態情報",
+      "source_account": 10,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        58
+      ],
+      "old_content": "野外ではコナラで得られているが、イロハモミジ、クヌギ、ソメイヨシノでも飼育されている。配偶行動は日没後比較的早い時間に生じる。近年、発生が不規則で採集難易度が高まる傾向。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "野外ではコナラで得られているが、イロハモミジ、クヌギ、ソメイヨシノでも飼育されている。配偶行動は日没後比較的早い時間に生じる。",
+      "approved_page": "58",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "exclude_collector_difficulty_guidance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-046",
+      "record_id": "note-1004726",
+      "insect_id": "species-3754",
+      "japanese_name": "シモフリトゲエダシャク",
+      "scientific_name": "Phigalia sinuosaria Leech, 1897",
+      "note_type": "生態情報",
+      "source_account": 11,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        59
+      ],
+      "old_content": "多食性で、ソメイヨシノやコナラによく見られる。♀のコーリングは日没後2〜3時間後に起こる。交尾ペアは樹幹の上方に移動する傾向がある。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "多食性で、ソメイヨシノやコナラによく見られる。♀のコーリングは日没後2〜3時間後に起こる。交尾ペアは樹幹の上方に移動する傾向がある。",
+      "approved_page": "59",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-047",
+      "record_id": "note-1004727",
+      "insect_id": "species-3755",
+      "japanese_name": "ウスシモフリトゲエダシャク",
+      "scientific_name": "Phigalia djakonovi Moltrecht, 1933",
+      "note_type": "生態情報",
+      "source_account": 12,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3
+      ],
+      "printed_pages": [
+        59
+      ],
+      "old_content": "野外食草は未知。飼育幼虫はソメイヨシノで飼育されている。野外で確実に採集された♀は1頭のみで、交尾ペアの採集記録はない。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "野外食草は未知。飼育幼虫はソメイヨシノで飼育されている。野外で確実に採集された♀は1頭のみで、交尾ペアの採集記録はない。",
+      "approved_page": "59",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-048",
+      "record_id": "note-1004728",
+      "insect_id": "species-3756",
+      "japanese_name": "シロトゲエダシャク",
+      "scientific_name": "Phigalia verecundaria (Leech, 1897)",
+      "note_type": "生態情報",
+      "source_account": 13,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        3,
+        4
+      ],
+      "printed_pages": [
+        59,
+        60
+      ],
+      "old_content": "多食性で、ブナ科やバラ科の植物によく見られる。配偶行動が非常に遅い時間（23時頃〜午前2時頃）に生じる。産卵は樹皮上や割れ目に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "多食性で、ブナ科やバラ科の植物によく見られる。配偶行動が非常に遅い時間（23時頃〜午前2時頃）に生じる。産卵は樹皮上や割れ目に産みつける。",
+      "approved_page": "60",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-049",
+      "record_id": "note-1004729",
+      "insect_id": "species-3757",
+      "japanese_name": "フチグロトゲエダシャク",
+      "scientific_name": "Nyssiodes lefuarius (Erschoff, 1872)",
+      "note_type": "生態情報",
+      "source_account": 14,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        4
+      ],
+      "printed_pages": [
+        60
+      ],
+      "old_content": "多食性で草本類の多くの植物につく。採卵飼育ではマメ科の植物をよく食べる。典型的な早春の昼飛性種で、晴天でなければ飛翔しない。産卵はクズの樹皮の割れ目に産卵管をさし入れて行う。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "多食性で草本類の多くの植物につく。採卵飼育ではマメ科の植物をよく食べる。典型的な早春の昼飛性種で、晴天でなければ飛翔しない。産卵はクズの樹皮の割れ目に産卵管をさし入れて行う。",
+      "approved_page": "60",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-050",
+      "record_id": "note-1004730",
+      "insect_id": "species-3758",
+      "japanese_name": "カバシタムクゲエダシャク",
+      "scientific_name": "Sebastosema bubonaria Warren, 1896",
+      "note_type": "生態情報",
+      "source_account": 15,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        4
+      ],
+      "printed_pages": [
+        61
+      ],
+      "old_content": "ニシキギ科に固有。マユミ、マサキ、ツルマサキでも終齢幼虫まで成長し蛹化に成功。配偶行動は晴天で気温が上がると♀は物体を登りコーリング行動を行い、♂はフェロモンを感知して交尾する。♀1個体から800〜1,200卵産みつけられていた。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "ニシキギ科に固有。マユミ、マサキ、ツルマサキでも終齢幼虫まで成長し蛹化に成功。配偶行動は晴天で気温が上がると♀は物体を登りコーリング行動を行い、♂はフェロモンを感知して交尾する。♀1個体から800〜1,200卵産みつけられていた。",
+      "approved_page": "61",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-051",
+      "record_id": "note-1004731",
+      "insect_id": "species-3874",
+      "japanese_name": "シロオビフユシャク",
+      "scientific_name": "Alsophila japonensis (Warren, 1894)",
+      "note_type": "生態情報",
+      "source_account": 16,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        4,
+        5
+      ],
+      "printed_pages": [
+        61,
+        62
+      ],
+      "old_content": "非常に多食性で多くの植物につくが、ブナ科やバラ科の植物によく見られる。産卵は食樹などの幹や枝などに数十の卵塊を産みつけ、尾毛で覆う。フユシャク亜科は半球状のフェロモン腺を出してコーリングを行う。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "非常に多食性で多くの植物につくが、ブナ科やバラ科の植物によく見られる。産卵は食樹などの幹や枝などに数十の卵塊を産みつけ、尾毛で覆う。フユシャク亜科は半球状のフェロモン腺を出してコーリングを行う。",
+      "approved_page": "62",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-052",
+      "record_id": "note-1004732",
+      "insect_id": "species-3875",
+      "japanese_name": "ユキムカエフユシャク",
+      "scientific_name": "Alsophila inouei Nakajima, 1989",
+      "note_type": "生態情報",
+      "source_account": 17,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        62
+      ],
+      "old_content": "食草はハンノキ科に固有で、成虫の産地もハンノキ類に強い相関が見られる。出現期間が短くピークが分かりにくく、交尾ペアの採集は非常に困難。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "食草はハンノキ科に固有で、成虫の産地もハンノキ類に強い相関が見られる。出現期間は短い。",
+      "approved_page": "62",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "retain_objective_phenology_exclude_collector_difficulty"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-053",
+      "record_id": "note-1004733",
+      "insect_id": "species-3876",
+      "japanese_name": "サクフウフユシャク",
+      "scientific_name": "Alsophila yanagitai Nakajima, 1995",
+      "note_type": "生態情報",
+      "source_account": 18,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        62
+      ],
+      "old_content": "習性等は不明。現在まで1ペア採れているのみ。九州（熊本県、大分県）固有種。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "習性等は不明。現在まで1ペア採れているのみ。九州（熊本県、大分県）固有種。",
+      "approved_page": "62",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-054",
+      "record_id": "note-1004734",
+      "insect_id": "species-3877",
+      "japanese_name": "クロバネフユシャク",
+      "scientific_name": "Alsophila foedata Inoue, 1944",
+      "note_type": "生態情報",
+      "source_account": 19,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        63
+      ],
+      "old_content": "食性はコナラ属（Quercus）に固有で、クヌギをより好む。成虫もクヌギ林に依存している。配偶行動は日没後1〜2時間以内に行われると思われる。産卵は交尾後約3時間で約130卵を帯状に産みつけ、卵塊は尾毛の毛で被われる。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "食性はコナラ属（Quercus）に固有で、クヌギをより好む。成虫もクヌギ林に依存している。産卵は交尾後約3時間で約130卵を帯状に産みつけ、卵塊は尾毛の毛で被われる。",
+      "approved_page": "63",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "exclude_source_inference_retain_observations"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-055",
+      "record_id": "note-1004735",
+      "insect_id": "species-3878",
+      "japanese_name": "スジモンフユシャク",
+      "scientific_name": "Alsophiloides acroama (Inoue, 1944)",
+      "note_type": "生態情報",
+      "source_account": 20,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5
+      ],
+      "printed_pages": [
+        63
+      ],
+      "old_content": "食性はモミの単食性。成虫の分布も食樹のモミに制限され、地域によってはモミ林に珍しくない。配偶行動は日没後すぐに生じ、♀がコーリング行動を行う。♂は日没とともに薄明期から飛翔を始め、モミの幹の周辺を飛び交う。出現のピークは2〜3日と短い。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "食性はモミの単食性。成虫の分布も食樹のモミに制限され、地域によってはモミ林に珍しくない。配偶行動は日没後すぐに生じ、♀がコーリング行動を行う。♂は日没とともに薄明期から飛翔を始め、モミの幹の周辺を飛び交う。出現のピークは2〜3日と短い。",
+      "approved_page": "63",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-056",
+      "record_id": "note-1004736",
+      "insect_id": "species-3879",
+      "japanese_name": "クロテンフユシャク",
+      "scientific_name": "Inurois membranaria (Christoph, 1881)",
+      "note_type": "生態情報",
+      "source_account": 21,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        5,
+        6
+      ],
+      "printed_pages": [
+        63,
+        64
+      ],
+      "old_content": "比較的広食性だが、ブナ科のコナラ属（Quercus）によくつく。採卵飼育でもコナラ、クヌギを好んで食べる。幼虫の体色には緑色型と褐色型がある。配偶行動はほとんどの種が日没とともに薄明期に生じ交尾に至る。産卵は50〜80卵くらいの比較的大きい卵塊を1〜数カ所に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "比較的広食性だが、ブナ科のコナラ属（Quercus）によくつく。採卵飼育でもコナラ、クヌギを好んで食べる。幼虫の体色には緑色型と褐色型がある。配偶行動はほとんどの種が日没とともに薄明期に生じ交尾に至る。産卵は50〜80卵くらいの比較的大きい卵塊を1〜数カ所に産みつける。",
+      "approved_page": "64",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-057",
+      "record_id": "note-1004737",
+      "insect_id": "species-3880",
+      "japanese_name": "ウスバフユシャク",
+      "scientific_name": "Inurois fletcheri Inoue, 1954",
+      "note_type": "生態情報",
+      "source_account": 22,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6
+      ],
+      "printed_pages": [
+        64
+      ],
+      "old_content": "多食性で多くの植物につくが、野外でウメ、サクラ類などによく見られる。幼虫の体色には緑色型・黒褐色型・赤褐色型が生じる。♂の「はばたき歩き」と呼ばれる特有の飛翔行動がある。産卵は小塊を数カ所に産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "多食性で多くの植物につくが、野外でウメ、サクラ類などによく見られる。幼虫の体色には緑色型・黒褐色型・赤褐色型が生じる。♂の「はばたき歩き」と呼ばれる特有の飛翔行動がある。産卵は小塊を数カ所に産みつける。",
+      "approved_page": "64",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-058",
+      "record_id": "note-1004738",
+      "insect_id": "species-3881",
+      "japanese_name": "ヤマウスバフユシャク",
+      "scientific_name": "Inurois nikkoensis Nakajima, 1992",
+      "note_type": "生態情報",
+      "source_account": 24,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6
+      ],
+      "printed_pages": [
+        65
+      ],
+      "old_content": "野外食草は未知。飼育幼虫はソメイヨシノで飼育できる。産地ではピークを掴めば採集は困難ではない。ミトコンドリアDNAの解析ではウスバフユシャクと同じであるという。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "野外食草は未知。飼育幼虫はソメイヨシノで飼育できる。ミトコンドリアDNAの解析ではウスバフユシャクと同じであるという。",
+      "approved_page": "65",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "exclude_collector_difficulty_guidance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-059",
+      "record_id": "note-1004739",
+      "insect_id": "species-3882",
+      "japanese_name": "シュゼンジフユシャク",
+      "scientific_name": "Inurois kobayashii Nakajima, 1992",
+      "note_type": "生態情報",
+      "source_account": 27,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        66
+      ],
+      "old_content": "静岡県伊豆市修善寺周辺のみで得られている日本固有種。野外食草は未知。飼育幼虫はソメイヨシノで飼育されている。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "静岡県伊豆市修善寺周辺のみで得られている日本固有種。野外食草は未知。飼育幼虫はソメイヨシノで飼育されている。",
+      "approved_page": "66",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-060",
+      "record_id": "note-1004740",
+      "insect_id": "species-3883",
+      "japanese_name": "アカウスバフユシャク",
+      "scientific_name": "Inurois minutulus Nakajima & Kudo, 1987",
+      "note_type": "生態情報",
+      "source_account": 23,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6
+      ],
+      "printed_pages": [
+        65
+      ],
+      "old_content": "伊豆諸島（伊豆大島、神津島、三宅島、八丈島）固有種。野外食草は未知。孵化幼虫はソメイヨシノで飼育されている。配偶行動はウスバフユシャクと同じで日没とともに生じる。♀のコーリングは樹幹以外の周辺の流木の枝や葉上で行われる。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "伊豆諸島（伊豆大島、神津島、三宅島、八丈島）固有種。野外食草は未知。孵化幼虫はソメイヨシノで飼育されている。配偶行動はウスバフユシャクと同じで日没とともに生じる。♀のコーリングは樹幹以外の周辺の流木の枝や葉上で行われる。",
+      "approved_page": "65",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-061",
+      "record_id": "note-1004741",
+      "insect_id": "species-3884",
+      "japanese_name": "フタスジフユシャク",
+      "scientific_name": "Inurois asahinai Inoue, 1974",
+      "note_type": "生態情報",
+      "source_account": 25,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        6,
+        7
+      ],
+      "printed_pages": [
+        65,
+        66
+      ],
+      "old_content": "配偶行動はウスバフユシャクと同じで日没とともに早い時間に♀がコーリングを行い交尾に至る。ミトコンドリアDNAの解析ではクジュウフユシャク、シュゼンジフユシャクは本種と同じであるという。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "配偶行動はウスバフユシャクと同じで日没とともに早い時間に♀がコーリングを行い交尾に至る。ミトコンドリアDNAの解析ではクジュウフユシャク、シュゼンジフユシャクは本種と同じであるという。",
+      "approved_page": "66",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-062",
+      "record_id": "note-1004742",
+      "insect_id": "species-3885",
+      "japanese_name": "クジュウフユシャク",
+      "scientific_name": "Inurois kyushuensis Inoue, 1974",
+      "note_type": "生態情報",
+      "source_account": 26,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        66
+      ],
+      "old_content": "九州（佐賀県・熊本県・大分県・鹿児島県）固有種。幼虫は緑色型と褐色型（茶〜暗茶褐色）が生じる。産卵は枝の二叉した部分に10卵くらいの小塊として産みつける。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "九州（佐賀県・熊本県・大分県・鹿児島県）固有種。幼虫は緑色型と褐色型（茶〜暗茶褐色）が生じる。産卵は枝の二叉した部分に10卵くらいの小塊として産みつける。",
+      "approved_page": "66",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-063",
+      "record_id": "note-1004743",
+      "insect_id": "species-3886",
+      "japanese_name": "ホソウスバフユシャク",
+      "scientific_name": "Inurois tenuis Butler, 1879",
+      "note_type": "生態情報",
+      "source_account": 28,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        67
+      ],
+      "old_content": "比較的広食性だがブナ科のコナラ属（Quercus）を好み、クヌギ・コナラによく見られる。幼虫には緑色型と褐色型がある（緑：褐=25:9）。配偶行動はウスバフユシャクなど他の種と同様で日没とともに生じ、早い時間に交尾に至る。産卵は130卵くらいの卵を帯状に産みつける（他種と異なる産卵様式）。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "比較的広食性だがブナ科のコナラ属（Quercus）を好み、クヌギ・コナラによく見られる。幼虫には緑色型と褐色型がある（緑：褐=25:9）。配偶行動はウスバフユシャクなど他の種と同様で日没とともに生じ、早い時間に交尾に至る。産卵は130卵くらいの卵を帯状に産みつける（他種と異なる産卵様式）。",
+      "approved_page": "67",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-064",
+      "record_id": "note-1004744",
+      "insect_id": "species-3887",
+      "japanese_name": "ウスモンフユシャク",
+      "scientific_name": "Inurois fumosa (Inoue, 1944)",
+      "note_type": "生態情報",
+      "source_account": 29,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        7
+      ],
+      "printed_pages": [
+        67
+      ],
+      "old_content": "配偶行動は日没とともに早い時間に起き交尾に至る。♀は産卵のため交尾後地上30〜40cm付近を移動し、1mくらいの所に静止して産卵し、1時間くらいの間に数カ所に小卵塊を産みつける。地色が茶色〜赤褐色で暗く赤みを帯びる。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "配偶行動は日没とともに早い時間に起き交尾に至る。♀は産卵のため交尾後地上30〜40cm付近を移動し、1mくらいの所に静止して産卵し、1時間くらいの間に数カ所に小卵塊を産みつける。地色が茶色〜赤褐色で暗く赤みを帯びる。",
+      "approved_page": "67",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-065",
+      "record_id": "note-1004745",
+      "insect_id": "species-4253",
+      "japanese_name": "ナミスジフユナミシャク",
+      "scientific_name": "Operophtera brunnea Nakajima, 1991",
+      "note_type": "生態情報",
+      "source_account": 30,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        68
+      ],
+      "old_content": "多食性。採卵飼育でもシダレヤナギ、クヌギで飼育されており多食性。終齢幼虫は土中に入って土繭を作り蛹化する。配偶行動はウスバフユシャクの仲間同様日没後早い時間に起こることが多い。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "多食性。採卵飼育でもシダレヤナギ、クヌギで飼育されており多食性。終齢幼虫は土中に入って土繭を作り蛹化する。配偶行動はウスバフユシャクの仲間同様日没後早い時間に起こることが多い。",
+      "approved_page": "68",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-066",
+      "record_id": "note-1004746",
+      "insect_id": "species-4255",
+      "japanese_name": "イチモジフユナミシャク",
+      "scientific_name": "Operophtera rectipostmediana Inoue, 1942",
+      "note_type": "生態情報",
+      "source_account": 31,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        68
+      ],
+      "old_content": "採卵飼育ではシダレヤナギ、コナラ、クヌギ、ノイバラで飼育されている。終齢幼虫は土中に潜り土繭を作り蛹化する。♀は緑色で、♀の黒化型も生じる。青森県弘前公園では黒化型の出現頻度が非常に高い。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "採卵飼育ではシダレヤナギ、コナラ、クヌギ、ノイバラで飼育されている。終齢幼虫は土中に潜り土繭を作り蛹化する。♀は緑色で、♀の黒化型も生じる。青森県弘前公園では黒化型の出現頻度が非常に高い。",
+      "approved_page": "68",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-067",
+      "record_id": "note-1004747",
+      "insect_id": "species-4256",
+      "japanese_name": "サザナミフユナミシャク",
+      "scientific_name": "Operophtera japonaria (Leech, 1891)",
+      "note_type": "生態情報",
+      "source_account": 32,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        69
+      ],
+      "old_content": "配偶行動は日没後少し時間が経ってから起こる。交尾したペアは幹を歩行し広い所に移動するので採集が困難な種。秋田県田沢湖で採れる個体は前翅の地色が淡色で全体に白っぽくなる変異がある。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "配偶行動は日没後少し時間が経ってから起こる。交尾したペアは幹を歩行し広い所に移動する。秋田県田沢湖で採れる個体は前翅の地色が淡色で全体に白っぽくなる変異がある。",
+      "approved_page": "69",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "retain_behavior_exclude_collector_difficulty"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-068",
+      "record_id": "note-1004748",
+      "insect_id": "species-4257",
+      "japanese_name": "ミヤマフユナミシャク",
+      "scientific_name": "Operophtera nana Inoue, 1955",
+      "note_type": "生態情報",
+      "source_account": 33,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8
+      ],
+      "printed_pages": [
+        69
+      ],
+      "old_content": "食性はカラマツの単食性なので、成虫の分布もカラマツ林に限定される。配偶行動は日没後まもなく起きる。産卵はカラマツの樹皮下や割れ目に産卵管をさし込んで行う。交尾後は枝を歩行し枝の先端に移動する。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "食性はカラマツの単食性なので、成虫の分布もカラマツ林に限定される。配偶行動は日没後まもなく起きる。産卵はカラマツの樹皮下や割れ目に産卵管をさし込んで行う。交尾後は枝を歩行し枝の先端に移動する。",
+      "approved_page": "69",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-069",
+      "record_id": "note-1004749",
+      "insect_id": "species-4258",
+      "japanese_name": "クロオビフユナミシャク",
+      "scientific_name": "Operophtera relegata Prout, 1908",
+      "note_type": "生態情報",
+      "source_account": 34,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        8,
+        9
+      ],
+      "printed_pages": [
+        69,
+        70
+      ],
+      "old_content": "多食性だが、クヌギ、コナラなどのブナ科の樹木によく見られる。配偶行動は日没後比較的早い時間に起き交尾に至る。産卵はクヌギなどの樹皮のへこんだ部分や割れ目に行う。",
+      "old_page": "",
+      "action": "verify_and_add_page",
+      "approved_content": "多食性だが、クヌギ、コナラなどのブナ科の樹木によく見られる。配偶行動は日没後比較的早い時間に起き交尾に至る。産卵はクヌギなどの樹皮のへこんだ部分や割れ目に行う。",
+      "approved_page": "70",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "verified_source_note_add_page_provenance"
+    },
+    {
+      "audit_id": "WINTER-GEOMETRID-070",
+      "record_id": "note-1004750",
+      "insect_id": "species-4259",
+      "japanese_name": "ヒメクロオビフユナミシャク",
+      "scientific_name": "Operophtera crispifascia Inoue, 1982",
+      "note_type": "生態情報",
+      "source_account": 35,
+      "taxon_scope": "species",
+      "pdf_pages": [
+        9
+      ],
+      "printed_pages": [
+        70
+      ],
+      "old_content": "ブナ林に依存。野外で確認されている食樹はイヌブナのみだが、孵化幼虫はブナでも飼育されており、野外でもブナを食べると思われる。配偶行動は日没後1〜2時間の早い時間に起こる。産卵は枝の割れ目や樹皮のめくれた下に行う。",
+      "old_page": "",
+      "action": "replace_note",
+      "approved_content": "ブナ林に依存。野外で確認されている食樹はイヌブナのみだが、孵化幼虫はブナでも飼育されている。配偶行動は日没後1〜2時間の早い時間に起こる。産卵は枝の割れ目や樹皮のめくれた下に行う。",
+      "approved_page": "70",
+      "evidence": "原PDF画像で種見出し、生態欄、出現時期欄を照合。",
+      "decision": "exclude_source_inference_retain_observations"
+    }
+  ]
+}

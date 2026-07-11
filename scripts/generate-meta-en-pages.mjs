@@ -23,7 +23,7 @@ import {
   getPrimaryEnglishName,
   slugifyScientificLabel,
 } from './lib/englishNaming.mjs';
-import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
+import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,6 +63,10 @@ const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.js
 const KAMIKIRI_AUDIT_PATH = path.join(
   __dirname,
   '../data/source_audits/japanese-longhorn-beetles-2007.csv',
+);
+const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json',
 );
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const EN_INDEX_PAGE_SIZE = 1000;
@@ -1293,6 +1297,10 @@ async function generateEnglishMetaPages() {
         }),
         scientificName: cleanString(insect.scientificName),
         japaneseReference: buildJapaneseReferenceLabel(insect.name || insect.japaneseName),
+        japaneseRouteNames: [
+          cleanString(insect.routeName || insect.name || insect.japaneseName),
+          cleanString(insect.name || insect.japaneseName),
+        ].filter(Boolean),
       };
       insectEntriesByType.get(type).push(entry);
       insectEntriesById.set(insect.id, entry);
@@ -1319,7 +1327,10 @@ async function generateEnglishMetaPages() {
     });
   });
 
-  const mergedTaxonRedirects = loadKamikiriMergedTaxonRedirects(KAMIKIRI_AUDIT_PATH);
+  const mergedTaxonRedirects = loadMergedTaxonRedirects({
+    kamikiriPath: KAMIKIRI_AUDIT_PATH,
+    leafBeetlePath: LEAF_BEETLE_CANONICAL_AUDIT_PATH,
+  });
   for (const redirect of mergedTaxonRedirects) {
     const canonical = insectEntriesById.get(redirect.canonicalId);
     if (!canonical) {
@@ -1348,7 +1359,7 @@ async function generateEnglishMetaPages() {
         `[meta-en] merged duplicate scientific slug conflicts: ${legacyScientificSlug}`,
       );
     }
-    const title = `${redirect.legacyScientificName} | Longhorn Beetle profile from Japan`;
+    const title = `${redirect.legacyScientificName} | ${redirect.englishTypeLabel || EN_TYPE_LABELS[canonical.type] || 'Insect'} profile from Japan`;
     fs.writeFileSync(
       path.join(EN_META_DIR, canonical.type, `${legacyScientificSlug}.html`),
       buildLegacyRedirectHtml({
@@ -1358,13 +1369,14 @@ async function generateEnglishMetaPages() {
         redirectKind: 'taxonomy-merge',
       }),
     );
+    const canonicalRouteNames = new Set(canonical.japaneseRouteNames || []);
     for (const legacyName of new Set([
       redirect.legacyDisplayName,
       redirect.legacyRouteName,
       redirect.legacyJapaneseName,
       redirect.duplicateJapaneseName,
       redirect.sourceJapaneseName,
-    ].filter(Boolean))) {
+    ].filter((name) => name && !canonicalRouteNames.has(cleanString(name))))) {
       queueLegacyRedirect(
         `/en/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
         canonical.href,

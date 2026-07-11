@@ -64,7 +64,7 @@ test('寄主植物索引の全目視監査判断をページ・OCR行付きで�
   }
 });
 
-test('採用1650組だけをCSVへ一度ずつ反映し、除外・保留組は追加しない', () => {
+test('元索引台帳では採用1650組だけを元record_idで反映し、別共有台帳と混同しない', () => {
   for (const row of auditRows) {
     const recordId = `host-${row.audit_id}`;
     const host = hostsByRecordId.get(recordId);

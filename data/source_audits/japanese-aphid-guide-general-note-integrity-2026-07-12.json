@@ -1,0 +1,4563 @@
+{
+  "audit_version": "japanese-aphid-guide-all-accounts-v1-2026-07-12",
+  "reviewed_on": "2026-07-12",
+  "reference": "日本原色アブラムシ図鑑",
+  "method": "OCR was used only to locate candidate text. Every account heading, objective ecology statement, parasitism statement, page boundary, and target scope was checked against the original PDF page image before acceptance.",
+  "source_pdf": {
+    "filename": "japanese-aphid-guide-original.pdf",
+    "sha256": "d50ba1738d8088d464399da7ffc18b6d5f3418c7954fe58fc9e5b8c95691a61c",
+    "page_count": 122,
+    "role": "original_full_pdf_image_review"
+  },
+  "candidate_ocr": {
+    "filename": "ocr-boxes.jsonl",
+    "sha256": "17708b004357f0dd8ba722dfe14e976a895f24e36c176d7e7e25fb5144807da7",
+    "role": "candidate_location_only_not_acceptance_evidence"
+  },
+  "coverage": {
+    "filename": "japanese-aphid-guide-all-accounts-2026-07-12.csv",
+    "sha256": "201bd3c808f7dfc41ab1af6dca5a8efbd9132dd259a5979510af80cfc5afb9d4",
+    "account_count": 240,
+    "applied_account_count": 232,
+    "held_account_count": 8,
+    "approved_target_note_count": 235,
+    "original_pdf_pages_reviewed": 122
+  },
+  "expected_profile": {
+    "existing_source_note_count": 148,
+    "approved_source_note_count": 235,
+    "host_action_count": 48,
+    "insect_action_count": 1
+  },
+  "existing_source_note_profile_sha256": "ccc5f7d02560711c86b29d2a0c3c69046889fa987924891fefd650d7bb77501e",
+  "existing_source_notes": [
+    {
+      "record_id": "note-1005203",
+      "insect_id": "species-23091",
+      "note_type": "生態情報",
+      "content": "寄生: するがわが。寄生幹、枝に寄生し，コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005204",
+      "insect_id": "species-23093",
+      "note_type": "生態情報",
+      "content": "寄生: しわが国では本属の種のなかでもっとも普通種である。わが国には近似種に。コロニーは小さいことが多い",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005205",
+      "insect_id": "species-21538",
+      "note_type": "生態情報",
+      "content": "寄生: し、害虫と",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005206",
+      "insect_id": "species-21541",
+      "note_type": "生態情報",
+      "content": "冬寄主植物にはビワ、ナナカマドなどが知られ、これらの植物上で卵態で越冬する、ビワの葉に寄生する個体の写真は卵生雌である",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005207",
+      "insect_id": "species-21541",
+      "note_type": "生態情報",
+      "content": "寄生: する種として著名である、コロニーは。淡緑色のやや大形のアブラムシでナシに寄生する種として著名である、コロニーは。冬寄主植物にはビワ、ナナカマドなどが知られ、これらの植物上で卵態で越",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005208",
+      "insect_id": "species-21561",
+      "note_type": "生態情報",
+      "content": "寄生: するが，本種は前記2種とともに広葉樹に寄生す。寄生幹、枝に寄生し，コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005209",
+      "insect_id": "species-21077",
+      "note_type": "生態情報",
+      "content": "寄生: 葉裏に寄生し，コロニーは大きい。。寄生葉裏に寄生し，コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005210",
+      "insect_id": "species-21096",
+      "note_type": "生態情報",
+      "content": "寄生: し、一部はタケ類に寄。寄生葉裏に点々と散在することが多く、ときに大きいコロニーを形成する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005211",
+      "insect_id": "species-21097",
+      "note_type": "生態情報",
+      "content": "初夏の若葉の色にアブラムシの体色が似ている",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005212",
+      "insect_id": "species-21097",
+      "note_type": "生態情報",
+      "content": "寄生: する。コロニーはときに大",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005213",
+      "insect_id": "species-21098",
+      "note_type": "生態情報",
+      "content": "寄生: する。本属。寄生小枝に寄生し，コロニーはやや大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005214",
+      "insect_id": "species-21138",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで、新梢の伸びる季節に出現し。て葉裏の主脈にそって寄生するコロニーがみられる",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005216",
+      "insect_id": "species-21110",
+      "note_type": "出現時期",
+      "content": "秋",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005217",
+      "insect_id": "species-21110",
+      "note_type": "生態情報",
+      "content": "寄生: する特異なアブラムシ。コロニーは小さい。秋には両性世代の個体が出現して卵態で越冬する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005218",
+      "insect_id": "species-21117",
+      "note_type": "生態情報",
+      "content": "寄生: する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005219",
+      "insect_id": "species-21109",
+      "note_type": "生態情報",
+      "content": "夏季の開花は顕著に少なくなる被害がある",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005220",
+      "insect_id": "species-21109",
+      "note_type": "生態情報",
+      "content": "寄生: すること。コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005221",
+      "insect_id": "species-21127",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシの種類は多いが、そのなかの一種。でアキニレの葉裏に小さいコロニーを形成して寄生する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005222",
+      "insect_id": "species-21130",
+      "note_type": "生態情報",
+      "content": "寄生: 葉裏に点在し、コロニーはみられない。。寄生葉裏に点在し、コロニーはみられない",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005223",
+      "insect_id": "species-21141",
+      "note_type": "出現時期",
+      "content": "初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005224",
+      "insect_id": "species-21141",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシ類で、山野に多い広葉樹のクヌギ、ナラ、コナラ、。コロニーはほとんど形成しない",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005225",
+      "insect_id": "species-21137",
+      "note_type": "生態情報",
+      "content": "写真はコナラの葉裏に寄生する本種で，山口県霜降山で6月中旬に採集した個体で。本属のアブラムシでシイに寄生する種は本種のみで，写真は山口県霜降山で11月上",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005226",
+      "insect_id": "species-21137",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種である。本属の種のなかでは大形で、写。寄生葉裏に点在するが、多くは写真のように小さいコロニーを形成する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005227",
+      "insect_id": "species-21071",
+      "note_type": "出現時期",
+      "content": "秋冷期（高地では春夏にもみられる）",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005228",
+      "insect_id": "species-21071",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種で秋冷の季節に入って繁殖することが多く、高地。寄生新梢の先部の葉裏に寄生し、コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005229",
+      "insect_id": "species-21100",
+      "note_type": "生態情報",
+      "content": "寄生: するきわめて普通種である、写真のように体にやや多量の質白色",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005230",
+      "insect_id": "species-21081",
+      "note_type": "生態情報",
+      "content": "寄生: する。写真は山口県下関で採",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005231",
+      "insect_id": "species-21551",
+      "note_type": "生態情報",
+      "content": "寄生: 地ぎわの幹に寄生する。。科の植物で多くはエノキ、ケヤキの幹の地ぎわに寄生し，コロニーにはアリが訪れて",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005232",
+      "insect_id": "species-21495",
+      "note_type": "生態情報",
+      "content": "寄生: することが知られ、多食性アブラムシと考えられるよう",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005233",
+      "insect_id": "species-21497",
+      "note_type": "生態情報",
+      "content": "寄生: する。写真は山口県。寄生葉裏の主脈にそって寄生し、コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005234",
+      "insect_id": "species-21434",
+      "note_type": "生態情報",
+      "content": "寄生: し害虫",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005235",
+      "insect_id": "species-21498",
+      "note_type": "生態情報",
+      "content": "暖冬の年は単性世代で越冬することがある",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005236",
+      "insect_id": "species-21498",
+      "note_type": "生態情報",
+      "content": "寄生: する。。寄生新梢に多く、コロニーはきわめて大きい。暖冬の年は単性世代で越冬することがある",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005237",
+      "insect_id": "species-21501",
+      "note_type": "生態情報",
+      "content": "寄生: する大形で赤。コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005238",
+      "insect_id": "species-23095",
+      "note_type": "生態情報",
+      "content": "寄生: する一種で、広く分布する普通種である。形態は Macrosiphoniella。寄生葉裏に寄生し，コロニーは中ぐらい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005239",
+      "insect_id": "species-23096",
+      "note_type": "生態情報",
+      "content": "寄生: する一種で，本属の種のなかでは体はやや小形である。普通種である。寄生茎の上部に寄生し，コロニーは小さいことが多い",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005240",
+      "insect_id": "species-21430",
+      "note_type": "出現時期",
+      "content": "西日本では12月に両性世代がみられる",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005241",
+      "insect_id": "species-21430",
+      "note_type": "生態情報",
+      "content": "寄生: するものが多いが、キクに寄生するのは本種のみである。体色は光沢のあ。較してやや短いのが特徴である、また新芽部に大きいコロニーを形成することが多い",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005242",
+      "insect_id": "species-21431",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種で、命名者はヨモギアオアブラムシ、ヨモギヒメヒ。寄生生長部の茎、葉裏に多く、コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005243",
+      "insect_id": "species-23098",
+      "note_type": "生態情報",
+      "content": "寄生: 茎の上部と葉裏に寄生する。葉裏の場合は主脈に沿って寄生することが多い。。コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005244",
+      "insect_id": "species-23100",
+      "note_type": "生態情報",
+      "content": "寄生: す。し、多くは寄主植物の茎に密棲し、大きいコロニーを形成して生活する本属の代表的",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005245",
+      "insect_id": "species-23102",
+      "note_type": "出現時期",
+      "content": "春秋",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005246",
+      "insect_id": "species-23102",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで、害虫としてもよく知られ。コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005247",
+      "insect_id": "species-23106",
+      "note_type": "生態情報",
+      "content": "寄生: することが多い。ヨーロッパからアジアに広く分布する。。寄生多く茎に寄生し、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005248",
+      "insect_id": "species-23107",
+      "note_type": "生態情報",
+      "content": "寄生: する大形のア。寄生茎の上部に多く、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005249",
+      "insect_id": "species-21454",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005250",
+      "insect_id": "species-21454",
+      "note_type": "生態情報",
+      "content": "寄生: する緑色大形のきわめて普通種であ。寄生茎，葉裏に寄生し，コロニーは大きく、活動的である",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005251",
+      "insect_id": "species-21456",
+      "note_type": "出現時期",
+      "content": "西日本では11月中旬両性世代が出現する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005252",
+      "insect_id": "species-21456",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種で、大きなコロニー。Lespedeza 属のヤマハギ、マルバハギなどに寄生する普通種で、大きなコロニー",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005253",
+      "insect_id": "species-21494",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005254",
+      "insect_id": "species-21494",
+      "note_type": "生態情報",
+      "content": "寄生: する。単性世代の状態で越冬することがある。。コロニーは小さいことが多い。単性世代の状態で越冬することがある",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005255",
+      "insect_id": "species-23109",
+      "note_type": "生態情報",
+      "content": "寄生: 茎と葉裏に寄生し，コロニーは大きい。。寄生茎と葉裏に寄生し，コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005256",
+      "insect_id": "species-23110",
+      "note_type": "生態情報",
+      "content": "寄生: することが知られるアプ。寄生幼茎部と葉裏に寄生し，コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005257",
+      "insect_id": "species-23111",
+      "note_type": "生態情報",
+      "content": "寄生: するが，本。寄生葉柄、花梗に寄生することが多く，コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005258",
+      "insect_id": "species-21508",
+      "note_type": "生態情報",
+      "content": "寄生: するようである、本種はTitanosiphon 属に入れられることがある。。寄生上部の茎に寄生し、点在することが多くコロニーの形成は少ない",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005259",
+      "insect_id": "species-23112",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005260",
+      "insect_id": "species-23112",
+      "note_type": "生態情報",
+      "content": "寄生: し、しばしば大発生することがある。。寄生茎、葉裏に寄生し、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005261",
+      "insect_id": "species-21383",
+      "note_type": "生態情報",
+      "content": "寄生: する C. ribis （Linne）スグリトックリ。寄生茎，花穂葉裏に寄生し、コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005262",
+      "insect_id": "species-21401",
+      "note_type": "生態情報",
+      "content": "これらの植物はすべて冬寄主植物と考えられる",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005263",
+      "insect_id": "species-21401",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，寄主植物の根ぎわあるいは根に寄生してア。寄生多くは根に寄生し、コロニーは小さい。これらの植物はすべて冬寄主植物と考えられ、と",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005264",
+      "insect_id": "species-21480",
+      "note_type": "生態情報",
+      "content": "寄生: する大形種である。本属は Capitophorus クギケアブラムシ属にきわめて。寄生葉裏に寄生し、コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005265",
+      "insect_id": "species-23114",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005266",
+      "insect_id": "species-23114",
+      "note_type": "生態情報",
+      "content": "寄生: し、寄生された葉は裏面から表面に巻いてつつ状の巻葉となる。葉は変色。寄生葉の表面に寄生し、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005267",
+      "insect_id": "species-23115",
+      "note_type": "生態情報",
+      "content": "寄生: 葉裏に点々と寄生するが、まれに小さいコロニーが形成される。。点在することが多くコロニーの形成が少ないために発見しにくい種である",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005268",
+      "insect_id": "species-23116",
+      "note_type": "生態情報",
+      "content": "本種の冬寄主植物で、夏寄主植物には Galium ヤエムグラ属、Artemisia ヨモギ属",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005269",
+      "insect_id": "species-23116",
+      "note_type": "生態情報",
+      "content": "寄生: することが知られているが、筆者はウメでは観察する機会がなくしばしば Prunus 属の庭園木として栽植されるニワウメでコロニーを観察した、わが国ではニワウメが。本種の冬寄主植物で、夏寄主植物には Galium ヤエムグラ属、Artemisia ヨモギ属",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005270",
+      "insect_id": "species-23118",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで、写真はホリバワダ。する．コロニーは小さい場合が多い",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005271",
+      "insect_id": "species-21473",
+      "note_type": "生態情報",
+      "content": "寄生: する。分布の広い種である。寄生部位は葉。寄生多くは葉裏に寄生し、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005272",
+      "insect_id": "species-23119",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005274",
+      "insect_id": "species-21511",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシである．わが国では比較的おそく1965年に記録。コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005275",
+      "insect_id": "species-23122",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005276",
+      "insect_id": "species-23122",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種で，サクラの害虫として知。寄生サクラ、ヒキオコシとも葉裏に多く寄生し，サクラではコロニーは大きい。isodonis Takahashi はその記載によれば本種の夏寄主植物上の個体によく似ている",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005277",
+      "insect_id": "species-23124",
+      "note_type": "生態情報",
+      "content": "寄生: 上部の葉の裏面に多く寄生し，葉はわずかに縮む、コロニーは大きい。。寄生上部の葉の裏面に多く寄生し，葉はわずかに縮む、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005278",
+      "insect_id": "species-21423",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシはかなりの種が知られているが、本種はなかでも普通。寄生葉裏に寄生して、コロニーはしばしば大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005279",
+      "insect_id": "species-23125",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，分布の広い普通種である。世界に。寄生葉裏，葉柄に寄生し，コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005280",
+      "insect_id": "species-21351",
+      "note_type": "出現時期",
+      "content": "秋、春",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005281",
+      "insect_id": "species-21351",
+      "note_type": "生態情報",
+      "content": "寄生: して繁殖するが、コロニーは小さい。秋はゴボウク。に Polygonum 属のタデ類に寄生して繁殖するが、コロニーは小さい。ギケアブラムシと同じようにグミに移住して卵態で越冬し、春にグミの新芽、新葉に",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005282",
+      "insect_id": "species-23126",
+      "note_type": "生態情報",
+      "content": "寄生: するシソコプ。寄生茎の上部、花穂に寄生し、コロニーは小さいが密集している",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005283",
+      "insect_id": "species-23128",
+      "note_type": "生態情報",
+      "content": "冬寄主植物には Prunus サクラ属植物のスモモ、ウメなどが知られ、夏寄主植物。アブラムシの名がある、春スモモ上の個体ではこの突起体はやや短い",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005284",
+      "insect_id": "species-23128",
+      "note_type": "生態情報",
+      "content": "寄生: することが多い。。寄生葉裏に寄生し、コロニーは大きい。冬寄主植物には Prunus サクラ属植物のスモモ、ウメなどが知られ、夏寄主植物",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005285",
+      "insect_id": "species-21468",
+      "note_type": "生態情報",
+      "content": "寄生: するが、ニラにも好んで寄生する。。コロニーは大きいことが多く、この場合ネギの生長はわるくなり、ときに葉が枯れる",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005286",
+      "insect_id": "species-23129",
+      "note_type": "生態情報",
+      "content": "寄生: し、広く分布する普通種である。。寄生新梢部の茎，葉裏に多く寄生し、コロニーはやや大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005287",
+      "insect_id": "species-21520",
+      "note_type": "生態情報",
+      "content": "冬寄主植物のサクラでは無翅形胎生雌は出現しない",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005288",
+      "insect_id": "species-21520",
+      "note_type": "生態情報",
+      "content": "寄生: するが、後者には少ない。夏寄主植物としてヨ。夏寄主植物としてヨ。本種はサクラの葉に写真のような黄紅色の袋状の虫癭をつくるアブラムシで、比較",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005289",
+      "insect_id": "species-21492",
+      "note_type": "出現時期",
+      "content": "春から夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005290",
+      "insect_id": "species-21492",
+      "note_type": "生態情報",
+      "content": "寄生: する代表的な一種であるが、本種は形態的に脚の節が顕著に退化して痕跡。寄生ワラビ，ガマズミともに葉裏に寄生し，コロニーは大きく，大発生する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005291",
+      "insect_id": "species-21396",
+      "note_type": "生態情報",
+      "content": "寄生: し、葉を袋状に巻縮してその中で生活する。後出",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005292",
+      "insect_id": "species-21363",
+      "note_type": "生態情報",
+      "content": "一部の群は冬寄主植物を利用する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005293",
+      "insect_id": "species-21363",
+      "note_type": "生態情報",
+      "content": "寄生: し、本種のほかに C. glibertiae カクレミノフタオアブラム。寄生葉裏に多くときに茎、葉柄に寄生し，コロニーはきわめて大きい。一部の群は冬寄主植物",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005294",
+      "insect_id": "species-21450",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシ。寄生葉裏に多く寄生し、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005295",
+      "insect_id": "species-23131",
+      "note_type": "生態情報",
+      "content": "冬寄主植物として Caprifoliaceae スイカズラ科の Lonicera スイカズラ属植物。本種は分布の広い普通種で、夏季にはタデ属のイシミカワ、ママコノシリ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005296",
+      "insect_id": "species-23131",
+      "note_type": "生態情報",
+      "content": "寄生: する。。寄生生長部の茎、葉裏に寄生し、コロニーはやや大きい。で冬寄主植物として Caprifoliaceae スイカズラ科の Lonicera スイカズラ属植物",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005297",
+      "insect_id": "species-23132",
+      "note_type": "生態情報",
+      "content": "寄生: 生長部の茎に多く寄生し、コロニーは小さいことが多い。。寄生生長部の茎に多く寄生し、コロニーは小さいことが多い",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005298",
+      "insect_id": "species-23133",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，分布の広。寄生生長部の茎，葉裏に寄生し、コロニーはやや大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005299",
+      "insect_id": "species-23134",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，前記種のタデケクダヒゲナガアブラムシと。寄生茎と葉裏に寄生し，コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005300",
+      "insect_id": "species-21489",
+      "note_type": "生態情報",
+      "content": "冬寄主植物は Pyrus 属のナシ、夏寄主植物は Artemisia 属のヨモギである。夏季はヨモギに移住して根ぎわか根",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005301",
+      "insect_id": "species-21489",
+      "note_type": "生態情報",
+      "content": "寄生: し、葉は巻縮する。夏季はヨモギに移住して根ぎわか根。に寄生し、大きなコロニーを形成して生活する。冬寄主植物は Pyrus 属のナシ、夏寄主植物は Artemisia 属のヨモギである",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005302",
+      "insect_id": "species-21378",
+      "note_type": "生態情報",
+      "content": "寄生: することはなく Arte-。寄生新葉の裏面に多く、コロニーはやや大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005303",
+      "insect_id": "species-23136",
+      "note_type": "生態情報",
+      "content": "なお夏季は上記のほか Umbelliferae セリ科植物のセリ、ヤブニンジン。冬寄主植物には Lonicera",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005304",
+      "insect_id": "species-23136",
+      "note_type": "生態情報",
+      "content": "寄生: 生長部の茎に寄生し，コロニーは小さい。。寄生生長部の茎に寄生し，コロニーは小さい。冬寄主植物には Lonicera",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005305",
+      "insect_id": "species-21291",
+      "note_type": "生態情報",
+      "content": "寄生: して。寄生新葉の裏面に多く、コロニーは小さい。被寄生葉は縁が下方に巻き虫癭のような袋状になり、葉色は緑色から黄赤色のつよ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005306",
+      "insect_id": "species-21275",
+      "note_type": "生態情報",
+      "content": "spiraecola Patch ユキヤナギアブラムシであることがわかり、ミカンの害虫で特に秋に多い。分布の広い普通種でわが国での冬寄主植物は Spiraea シモツケ属のユキヤナギ，コデマリ、Malus リンゴ属、Chaenomeles ボケ属などの植物で、卵態で越冬し夏は多",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005307",
+      "insect_id": "species-21275",
+      "note_type": "生態情報",
+      "content": "寄生: する。多食性である。。葉裏に多く、コロニーは大きい。デマリ、Malus リンゴ属、Chaenomeles ボケ属などの植物で、卵態で越冬し夏は多。分布の広い普通種でわが国での冬寄主植物は Spiraea シモツケ属のユキヤナギ，コ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005308",
+      "insect_id": "species-21287",
+      "note_type": "生態情報",
+      "content": "寄生: するが、本種はナワ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005309",
+      "insect_id": "species-23137",
+      "note_type": "生態情報",
+      "content": "ヒユ科イノコズチ属の植物の根に寄生し、広く分布する普通種。ダイズアブラムシに似る。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005310",
+      "insect_id": "species-21262",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種で、体が橙黄色、触角、角状管、尾片、脚がともに黒色と色彩がきわだっ。コロニー",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005311",
+      "insect_id": "species-21264",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，Aphis gossypii ワタア。コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005312",
+      "insect_id": "species-21271",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005313",
+      "insect_id": "species-21271",
+      "note_type": "生態情報",
+      "content": "寄生: するのが多くみられる、特に。Rumex 属のギシギシに大きなコロニーを形成して寄生するのが多くみられる、特に",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005314",
+      "insect_id": "species-23138",
+      "note_type": "生態情報",
+      "content": "5節にはそれぞれ約35,15、5個の後生感覚器がある．この数はやや多い個体（5月",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005315",
+      "insect_id": "species-23138",
+      "note_type": "生態情報",
+      "content": "寄生: する普通種で，ニワトコフクレアブラムシとともに。寄生新梢の茎および葉裏に多く、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005316",
+      "insect_id": "species-21278",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005317",
+      "insect_id": "species-21278",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，。アリが訪れアブラムシのコロニーを土。夏季は夏寄主植物のイネ科の Phragmites 属植物",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005318",
+      "insect_id": "species-21297",
+      "note_type": "出現時期",
+      "content": "初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005319",
+      "insect_id": "species-21297",
+      "note_type": "生態情報",
+      "content": "寄生: する代表的な種で、アジア地方に広く分布するアブラムシである。従来。冬寄主植物にカマッカが知られる",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005320",
+      "insect_id": "species-23139",
+      "note_type": "生態情報",
+      "content": "寄生: することが知られている。形態は後出のヒエ。寄生葉鞘の先部が葉の基部に寄生し、コロニーは小きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005321",
+      "insect_id": "species-21300",
+      "note_type": "生態情報",
+      "content": "寄生: し、鞘の先部に写真のように個体が密集してコロニーを形成する。。ススキに寄生し、鞘の先部に写真のように個体が密集してコロニーを形成する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005322",
+      "insect_id": "species-21322",
+      "note_type": "生態情報",
+      "content": "寄生: し、葉は裏面から表面に向って二つ折れに両縁が巻き、。寄生葉の表面に多く寄生し、コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005323",
+      "insect_id": "species-21311",
+      "note_type": "生態情報",
+      "content": "寄生: する著名な害虫が多い。。コロニーは",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005324",
+      "insect_id": "species-21310",
+      "note_type": "生態情報",
+      "content": "本種は川，池などの水辺に多くいるアブラムシである、夏季の夏寄主植物としては。冬寄主植物はウメ、モモなどで特にウメに多く春季に新梢の茎，葉裏に密に群棲して寄生する、同じように冬寄主植物",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005325",
+      "insect_id": "species-21310",
+      "note_type": "生態情報",
+      "content": "寄生: する。冬寄主植物はウメ、モモなどで特。寄生葉裏、葉柄などに多く寄生し、コロニーは大きい。本種は川，池などの水辺に多くいるアブラムシである、夏季の夏寄主植物としては",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005326",
+      "insect_id": "species-21311",
+      "note_type": "生態情報",
+      "content": "夏季にはメヒシバなどの根ぎわにしばしば寄生することがある、冬寄主植物には Prunus サクラ属のモモ、サクラなどが知られる",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005327",
+      "insect_id": "species-21312",
+      "note_type": "生態情報",
+      "content": "冬寄主植物には Prunus サクラ属のモモ、ウメ、サクラ類のほかヤマブキなどが知られる。春季の冬寄主植物上の個体は体全体に蝋質白色粉をおおっている",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005328",
+      "insect_id": "species-21312",
+      "note_type": "生態情報",
+      "content": "寄生: 部位は地上部の茎、葉などから地下部の茎、。コロニーは大きい。冬寄主植物には Prunus サクラ属のモモ、ウメ、サクラ類のほかヤマブキなどが",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005329",
+      "insect_id": "species-23141",
+      "note_type": "生態情報",
+      "content": "冬寄主植物は Cornaceae ミズキ科の Cornus 属植物のミズキ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005330",
+      "insect_id": "species-23141",
+      "note_type": "生態情報",
+      "content": "寄生: する。わ。寄生、ミズキでは葉裏に、イネ科植物では土ぎわの茎，地下根に小さいコロニーで。キで、夏寄主植物は Gramineae 科のOryza イネ属、Panicum キビ属、Setaria",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005331",
+      "insect_id": "species-21000",
+      "note_type": "生態情報",
+      "content": "雄で越冬し、春産卵する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005332",
+      "insect_id": "species-21000",
+      "note_type": "生態情報",
+      "content": "寄生: するものとし。雄で越冬し、春産卵する。Castanopsis シイノキ属植物に移住するもののあることが知ら。あるイスノキに虫癭を形成するのでよく知られるアブラムシの一群で、このなかには",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005333",
+      "insect_id": "species-23143",
+      "note_type": "生態情報",
+      "content": "近年になって夏季にイスノキで採集された。触角はツブラジイで越冬した個体では",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005334",
+      "insect_id": "species-23143",
+      "note_type": "生態情報",
+      "content": "寄生: することは長く知られ。触角はツブラジイで越冬した個体では。同じように虫癭を形成する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005335",
+      "insect_id": "species-21009",
+      "note_type": "出現時期",
+      "content": "11月ごろ、春",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005336",
+      "insect_id": "species-21009",
+      "note_type": "生態情報",
+      "content": "寄生: する。寄生された葉はスス病が発生し黒く汚れることが多い。11月ころにイスノキか。寄生カシノキでは小，中枝に多くコロニーは大きい。らカシノキ類に移住して産子し、この幼虫はカシノキの若い小枝に群棲して生長し、",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005337",
+      "insect_id": "species-21011",
+      "note_type": "生態情報",
+      "content": "寄生: する。クスノキ科の植物に寄生する近似種には次のような。コロニーは大きい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005338",
+      "insect_id": "species-23145",
+      "note_type": "出現時期",
+      "content": "11月ごろ、5月ごろ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005339",
+      "insect_id": "species-23145",
+      "note_type": "生態情報",
+      "content": "寄生: アラカシでは小，中枝に群棲して寄生する。。11月ころに虫癭から有翅形が出現して移住虫となりアラ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005340",
+      "insect_id": "species-23146",
+      "note_type": "生態情報",
+      "content": "寄生: 小枝に群棲する.",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005341",
+      "insect_id": "species-21067",
+      "note_type": "出現時期",
+      "content": "4月上旬、5月下旬ごろ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005342",
+      "insect_id": "species-21067",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで、ヨーロッパで古くか",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005343",
+      "insect_id": "species-23148",
+      "note_type": "生態情報",
+      "content": "寄生: する",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005344",
+      "insect_id": "species-20985",
+      "note_type": "生態情報",
+      "content": "わが国では1930年10月に鹿児島県の指宿市で Arundinaria simonii （= Pleioblastus",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005345",
+      "insect_id": "species-20985",
+      "note_type": "生態情報",
+      "content": "寄生: 葉に寄生し、コロニーは小さい。。寄生葉に寄生し、コロニーは小さい",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005346",
+      "insect_id": "species-21041",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで，体は全体が",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005347",
+      "insect_id": "species-21059",
+      "note_type": "出現時期",
+      "content": "春から初夏",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005348",
+      "insect_id": "species-21059",
+      "note_type": "生態情報",
+      "content": "寄生: することが知られている。秋にはケヤキに帰り、卵態。で越冬する。し、次の世代は有翅形が虫癭内で成長して春の移住虫となり、夏の寄主植物であるク。本種は春から初夏にケヤキの葉の表面に写真のような長く突出した袋状の虫癭をつ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005349",
+      "insect_id": "species-23150",
+      "note_type": "出現時期",
+      "content": "秋、翌春",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005350",
+      "insect_id": "species-23150",
+      "note_type": "生態情報",
+      "content": "寄生: し、分泌する蝋質物で体をおおい越冬する。翌春、幼虫は生長して春の移住虫。に寄生し、分泌する蝋質物で体をおおい越冬する。秋にヌルデから移住虫がチョウチンゴケに飛来して産子し、この幼虫が寄主の地ぎわ。ときに虫癭の周囲には星形に突起体がでることがあ",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005351",
+      "insect_id": "species-23152",
+      "note_type": "出現時期",
+      "content": "春季",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    },
+    {
+      "record_id": "note-1005352",
+      "insect_id": "species-23152",
+      "note_type": "生態情報",
+      "content": "寄生: するアブラムシで、名のように多量のり質綿状物を体。有翅形（春の移住虫）は体色が頭、胸部で暗赤褐色から黒褐色、腹部では黄緑色から",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "",
+      "year": ""
+    }
+  ],
+  "approved_source_notes": [
+    {
+      "record_id": "note-aphid-guide-a001-species-23091-ecology",
+      "insect_id": "species-23091",
+      "note_type": "生態情報",
+      "content": "枝上に多く寄生する。西南日本ではイブキで普通にみられ、行動はあまり活発でない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "225",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a002-species-23092-ecology",
+      "insect_id": "species-23092",
+      "note_type": "生態情報",
+      "content": "幹や枝に大きなコロニーを形成し、活発に幹・枝上を移動する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "226",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a003-species-23093-ecology",
+      "insect_id": "species-23093",
+      "note_type": "生態情報",
+      "content": "小枝または古枝の先端部に寄生し葉には寄生しない。コロニーは小さいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "227",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a004-species-21123-ecology",
+      "insect_id": "species-21123",
+      "note_type": "生態情報",
+      "content": "新梢や枝に寄生し大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "228",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a005-species-21565-ecology",
+      "insect_id": "species-21565",
+      "note_type": "生態情報",
+      "content": "葉に大きなコロニーを形成し活動性が高い。ときに大発生し、秋に両性世代となって葉に産卵する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "229",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a006-species-21538-ecology",
+      "insect_id": "species-21538",
+      "note_type": "生態情報",
+      "content": "幹や枝に多数集合して寄生する。クリに普通で害虫として記録される。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "230",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a007-species-21541-ecology",
+      "insect_id": "species-21541",
+      "note_type": "生態情報",
+      "content": "葉裏の主脈の両側に並び大きなコロニーを形成する。ビワやナナカマドなどの冬寄主上で卵態越冬する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "231",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a008-species-21561-ecology",
+      "insect_id": "species-21561",
+      "note_type": "生態情報",
+      "content": "ヤナギ類の幹や枝に大きなコロニーを形成し排泄物が多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "232",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a009-species-21077-ecology",
+      "insect_id": "species-21077",
+      "note_type": "生態情報",
+      "content": "シラカンバの葉裏に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "233",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a010-species-21096-ecology",
+      "insect_id": "species-21096",
+      "note_type": "生態情報",
+      "content": "葉裏に点々と散在することが多いが、ときに大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "234",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a011-species-21097-ecology",
+      "insect_id": "species-21097",
+      "note_type": "生態情報",
+      "content": "ホオノキの若葉の葉裏で主脈に沿って並び、コロニーはときに大きくなる。初夏の若葉上でみられる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "235",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a012-species-21098-ecology",
+      "insect_id": "species-21098",
+      "note_type": "生態情報",
+      "content": "クマシデ類の小枝に寄生し、コロニーはやや大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "236",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a013-species-21138-ecology",
+      "insect_id": "species-21138",
+      "note_type": "生態情報",
+      "content": "新梢の茎や新葉の裏面に大きなコロニーを形成し、新梢が伸びる季節に出現する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "237",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a014-species-21121-ecology",
+      "insect_id": "species-21121",
+      "note_type": "生態情報",
+      "content": "茎や葉裏に寄生し、まれに大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "238",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a015-species-21110-ecology",
+      "insect_id": "species-21110",
+      "note_type": "生態情報",
+      "content": "葉裏に多く寄生して小さなコロニーを形成し、ときに葉を巻く。秋に両性世代が出現し卵態で越冬する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "239",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a016-species-21116-ecology",
+      "insect_id": "species-21116",
+      "note_type": "生態情報",
+      "content": "タケ・ササ類の葉裏に散在することが多く活動性が高い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "240",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a017-species-21117-ecology",
+      "insect_id": "species-21117",
+      "note_type": "生態情報",
+      "content": "タケ・ササ類の葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "241",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a018-species-21109-ecology",
+      "insect_id": "species-21109",
+      "note_type": "生態情報",
+      "content": "サルスベリの葉裏に多く、ときに新梢の茎にも寄生して大きなコロニーを形成する。大発生時にはすす病や開花減少を伴う。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "242",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a019-species-21127-ecology",
+      "insect_id": "species-21127",
+      "note_type": "生態情報",
+      "content": "アキニレの葉裏にコロニーを形成して寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "243",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a020-species-21129-ecology",
+      "insect_id": "species-21129",
+      "note_type": "生態情報",
+      "content": "葉裏に散在し、コロニーを形成することは少ない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "244",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a021-species-21130-ecology",
+      "insect_id": "species-21130",
+      "note_type": "生態情報",
+      "content": "ケヤキの葉裏に点在しコロニーは形成しない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "245",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a022-species-21141-ecology",
+      "insect_id": "species-21141",
+      "note_type": "生態情報",
+      "content": "コナラ属植物の葉裏に点在しコロニーはほとんど形成しない。初夏に普通にみられる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "246",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a023-species-21131-ecology",
+      "insect_id": "species-21131",
+      "note_type": "生態情報",
+      "content": "コナラ属植物の葉裏に点在する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "247",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a024-species-21137-ecology",
+      "insect_id": "species-21137",
+      "note_type": "生態情報",
+      "content": "葉裏に点在するが、多くは小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "248",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a025-species-21150-ecology",
+      "insect_id": "species-21150",
+      "note_type": "生態情報",
+      "content": "コナラ属植物の葉裏に点在して寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "249",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a026-species-23075-ecology",
+      "insect_id": "species-23075",
+      "note_type": "生態情報",
+      "content": "コナラの葉裏で成虫は点在し、幼虫は主脈に沿って小さなコロニーを形成する。行動は活発で、山口県霜降山で6月中旬に採集された。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "250",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a027-species-23076-ecology",
+      "insect_id": "species-23076",
+      "note_type": "生態情報",
+      "content": "シイ類の葉裏に点在し、山口県霜降山で11月上旬に採集された。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "251",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a028-species-21084-ecology",
+      "insect_id": "species-21084",
+      "note_type": "生態情報",
+      "content": "クヌギ・コナラの葉裏に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "252",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a029-species-21071-ecology",
+      "insect_id": "species-21071",
+      "note_type": "生態情報",
+      "content": "小枝・葉柄・葉裏などに点在することが多い。秋冷期に繁殖し、高地では春から夏にもみられ、跳躍する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "253",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a030-species-21171-ecology",
+      "insect_id": "species-21171",
+      "note_type": "生態情報",
+      "content": "ヤナギ類の新梢先端の葉裏に寄生し小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "254",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a031-species-23077-ecology",
+      "insect_id": "species-23077",
+      "note_type": "生態情報",
+      "content": "ポプラの葉裏にやや大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "255",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a032-species-21179-ecology",
+      "insect_id": "species-21179",
+      "note_type": "生態情報",
+      "content": "春にモミジの新梢で発生し葉裏基部に大きなコロニーを形成する。越夏型幼虫は葉裏で動かず夏を越して秋に発育を再開する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "256",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a033-species-21100-ecology",
+      "insect_id": "species-21100",
+      "note_type": "生態情報",
+      "content": "イヌマキ類の新梢の茎や葉に寄生し葉では裏面に多い。しばしば大発生してすす病を伴う。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "257",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a034-species-21081-ecology",
+      "insect_id": "species-21081",
+      "note_type": "生態情報",
+      "content": "オニグルミ類の葉裏に個々に散在して寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "258",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a035-species-21551-ecology",
+      "insect_id": "species-21551",
+      "note_type": "生態情報",
+      "content": "クヌギの地際の幹に寄生し、アリによって土砂で覆われる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "259",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a036-species-21560-ecology",
+      "insect_id": "species-21560",
+      "note_type": "生態情報",
+      "content": "エノキ・ケヤキ類の地際の幹に小さなコロニーを形成し、アリが訪れて土砂で覆う。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "260",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a037-species-21495-ecology",
+      "insect_id": "species-21495",
+      "note_type": "生態情報",
+      "content": "多食性で多くは茎に寄生し、ムギ類では穂を好む。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "261",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a038-species-21496-ecology",
+      "insect_id": "species-21496",
+      "note_type": "生態情報",
+      "content": "クマヤナギの新梢部の葉に多く、葉表面の主脈に沿って寄生することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "262",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a039-species-21432-ecology",
+      "insect_id": "species-21432",
+      "note_type": "生態情報",
+      "content": "ハンショウヅル・ボタンヅルの葉裏に散在することが多く、幼茎にも小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "263",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a040-species-21497-ecology",
+      "insect_id": "species-21497",
+      "note_type": "生態情報",
+      "content": "クマノミズキ・ヤマボウシの葉裏の主脈に沿って小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "264",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a041-species-21434-ecology",
+      "insect_id": "species-21434",
+      "note_type": "生態情報",
+      "content": "多食性で生長部の茎や葉裏に多く、しばしば花にも寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "265",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a042-species-21498-ecology",
+      "insect_id": "species-21498",
+      "note_type": "生態情報",
+      "content": "バラ類の新梢にきわめて大きなコロニーを形成し季節を問わず発生する。暖冬年には単性世代で越冬することがある。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "266",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a043-species-21501-ecology",
+      "insect_id": "species-21501",
+      "note_type": "生態情報",
+      "content": "アブラススキの茎に多く、とくに穂茎に多く寄生して大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "267",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a044-species-21102-ecology",
+      "insect_id": "species-21102",
+      "note_type": "生態情報",
+      "content": "ヒキオコシ・ツノハシバミ・アカシデなどの葉柄や葉裏に多く、寄生葉は著しく巻縮する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "268",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a045-species-23094-ecology",
+      "insect_id": "species-23094",
+      "note_type": "生態情報",
+      "content": "ヨモギ・ゴボウ類の葉裏に多く、小さなコロニーを形成することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "269",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a046-species-23095-ecology",
+      "insect_id": "species-23095",
+      "note_type": "生態情報",
+      "content": "ヨモギ類の葉裏に中程度のコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "270",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a047-species-23096-ecology",
+      "insect_id": "species-23096",
+      "note_type": "生態情報",
+      "content": "ヨモギ類の茎上部に寄生しコロニーは小さいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "271",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a048-species-21430-ecology",
+      "insect_id": "species-21430",
+      "note_type": "生態情報",
+      "content": "キク類の生長部や葉裏に寄生してきわめて大きなコロニーを形成する。キクの普通害虫である。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "272",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a049-species-21424-ecology",
+      "insect_id": "species-21424",
+      "note_type": "生態情報",
+      "content": "ヨメナ類の葉裏に大きなコロニーを形成する。西日本では12月に両性世代がみられる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "273",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a050-species-21431-ecology",
+      "insect_id": "species-21431",
+      "note_type": "生態情報",
+      "content": "ヨモギ・ハマギク類の生長部の茎や葉裏に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "274",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a051-species-23097-ecology",
+      "insect_id": "species-23097",
+      "note_type": "生態情報",
+      "content": "ツリガネニンジンの茎上部に多く、ときに茎全長に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "275",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a052-species-23098-ecology",
+      "insect_id": "species-23098",
+      "note_type": "生態情報",
+      "content": "茎上部と葉裏に寄生し、葉裏では主脈に沿うことが多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "276",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a053-species-23099-ecology",
+      "insect_id": "species-23099",
+      "note_type": "生態情報",
+      "content": "ノゲシ類の茎上部にきわめて大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "277",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a054-species-23100-ecology",
+      "insect_id": "species-23100",
+      "note_type": "生態情報",
+      "content": "茎上部に多く、ときに葉裏にも寄生してきわめて大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "278",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a055-species-23101-ecology",
+      "insect_id": "species-23101",
+      "note_type": "生態情報",
+      "content": "アザミ類の茎上部や花穂に多く寄生し大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "279",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a056-species-23102-ecology",
+      "insect_id": "species-23102",
+      "note_type": "生態情報",
+      "content": "春と秋にゴボウの葉裏や葉柄に大きなコロニーを形成する。西日本ではゴボウ、北日本ではオケラやベニバナの記録がある。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "280",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a057-species-23103-ecology",
+      "insect_id": "species-23103",
+      "note_type": "生態情報",
+      "content": "キキョウ類の新芽の生長点や葉裏に寄生し、コロニーはときに大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "281",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a058-species-23104-ecology",
+      "insect_id": "species-23104",
+      "note_type": "生態情報",
+      "content": "アキノノゲシ・アキノキリンソウ類の茎上部や葉裏に比較的小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "282",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a059-species-23105-ecology",
+      "insect_id": "species-23105",
+      "note_type": "生態情報",
+      "content": "イナカギク・ノコンギク類の上部の茎や葉裏に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "283",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a060-species-23106-ecology",
+      "insect_id": "species-23106",
+      "note_type": "生態情報",
+      "content": "コウゾリナ類の茎に多く寄生し大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "284",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a061-species-23107-ecology",
+      "insect_id": "species-23107",
+      "note_type": "生態情報",
+      "content": "アキノキリンソウ類の茎上部に多く寄生し大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "285",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a062-species-21411-ecology",
+      "insect_id": "species-21411",
+      "note_type": "生態情報",
+      "content": "ゴンズイ類の茎に寄生することが多く花梗には特に多い。大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "286",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a063-species-21454-ecology",
+      "insect_id": "species-21454",
+      "note_type": "生態情報",
+      "content": "春から初夏にソラマメ類の茎や葉裏に大きなコロニーを形成し活動性が高い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "287",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a064-species-21456-ecology",
+      "insect_id": "species-21456",
+      "note_type": "生態情報",
+      "content": "ハギ類の新梢の茎に多く葉裏にも寄生し、しばしば大きなコロニーを形成する。西日本では11月中旬に両性世代が出現する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "288",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a065-species-21493-ecology",
+      "insect_id": "species-21493",
+      "note_type": "生態情報",
+      "content": "クスノキなど多種の新梢の茎に多く葉裏にも寄生し小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "289",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a066-species-21494-ecology",
+      "insect_id": "species-21494",
+      "note_type": "生態情報",
+      "content": "カナメモチ類の新梢の茎や葉裏に寄生し小さなコロニーを形成することが多い。単性世代で越冬する場合がある。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "290",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a067-species-23108-ecology",
+      "insect_id": "species-23108",
+      "note_type": "生態情報",
+      "content": "ヨメナの葉裏に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "291",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a068-species-23109-ecology",
+      "insect_id": "species-23109",
+      "note_type": "生態情報",
+      "content": "アザミ類の茎と葉裏に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "292",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a069-species-23110-ecology",
+      "insect_id": "species-23110",
+      "note_type": "生態情報",
+      "content": "カキドオシ類の幼茎と葉裏に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "293",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a070-species-21325-ecology",
+      "insect_id": "species-21325",
+      "note_type": "生態情報",
+      "content": "ヤエムグラ・ヤマブキ・フキ類の葉裏に多く、ときに茎にも寄生して小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "294",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a071-species-23111-ecology",
+      "insect_id": "species-23111",
+      "note_type": "生態情報",
+      "content": "葉柄や花梗に寄生することが多くコロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "295",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a072-species-21326-ecology",
+      "insect_id": "species-21326",
+      "note_type": "生態情報",
+      "content": "葉裏に点在し、春に幹母が寄生した葉は巻縮する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "296",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a073-species-21483-ecology",
+      "insect_id": "species-21483",
+      "note_type": "生態情報",
+      "content": "多食性で春に植物の生長部を好み、茎や葉裏に多い。冬寄主はニワトコである。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "297",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a074-species-21327-ecology",
+      "insect_id": "species-21327",
+      "note_type": "生態情報",
+      "content": "アブラチャン類の葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "298",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a075-species-21508-ecology",
+      "insect_id": "species-21508",
+      "note_type": "生態情報",
+      "content": "上部の茎に点在することが多くコロニーを形成することは少ない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "299",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a076-species-21484-ecology",
+      "insect_id": "species-21484",
+      "note_type": "生態情報",
+      "content": "ヘクソカズラ類の蔓茎や葉裏に寄生しコロニーはときに大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "300",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a077-species-21339-ecology",
+      "insect_id": "species-21339",
+      "note_type": "生態情報",
+      "content": "シソ・エゴマの葉裏に寄生し、開花期には花梗にも多い。コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "301",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a078-species-23112-ecology",
+      "insect_id": "species-23112",
+      "note_type": "生態情報",
+      "content": "春から初夏にエンドウ類の茎や葉裏に大きなコロニーを形成し、しばしば大発生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "302",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a079-species-21331-ecology",
+      "insect_id": "species-21331",
+      "note_type": "生態情報",
+      "content": "多食性で多種植物の葉裏に多く、小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "303",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a080-species-21334-ecology",
+      "insect_id": "species-21334",
+      "note_type": "生態情報",
+      "content": "ノアザミの茎上部に群棲し常に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "304",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a081-species-23078-ecology",
+      "insect_id": "species-23078",
+      "note_type": "生態情報",
+      "content": "シラヤマギクの成葉の裏面に寄生し、下葉に多くコロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "305",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a082-species-23079-ecology",
+      "insect_id": "species-23079",
+      "note_type": "生態情報",
+      "content": "寄主植物は不明で、茎に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "306",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a083-species-21404-ecology",
+      "insect_id": "species-21404",
+      "note_type": "生態情報",
+      "content": "ノゲシ類の生長部の茎に多く、ときに葉裏にも寄生してきわめて大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "307",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a084-species-21410-ecology",
+      "insect_id": "species-21410",
+      "note_type": "生態情報",
+      "content": "ホウセンカ類の新梢の茎や葉裏に寄生し大きなコロニーを形成することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "308",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a085-species-21380-ecology",
+      "insect_id": "species-21380",
+      "note_type": "生態情報",
+      "content": "ゲンノショウコ類の葉裏に寄生し、葉を下方へ巻縮させ赤色を帯びさせる。コロニーは中程度。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "309",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a086-species-21381-ecology",
+      "insect_id": "species-21381",
+      "note_type": "生態情報",
+      "content": "ヤマハッカ類の葉裏に寄生し葉を巻縮させ、中程度のコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "310",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a087-species-21383-ecology",
+      "insect_id": "species-21383",
+      "note_type": "生態情報",
+      "content": "フィソステギア類の茎・花穂・葉裏に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "311",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a088-species-21401-ecology",
+      "insect_id": "species-21401",
+      "note_type": "生態情報",
+      "content": "ツリフネソウ類の地際の茎と地下の根に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "312",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a089-species-23080-ecology",
+      "insect_id": "species-23080",
+      "note_type": "生態情報",
+      "content": "根に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "313",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a090-species-23113-ecology",
+      "insect_id": "species-23113",
+      "note_type": "生態情報",
+      "content": "ウツギ類の新葉の裏面に多く寄生し小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "314",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a091-species-23081-ecology",
+      "insect_id": "species-23081",
+      "note_type": "生態情報",
+      "content": "イボクサの生長部の茎と葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "315",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a092-species-21480-ecology",
+      "insect_id": "species-21480",
+      "note_type": "生態情報",
+      "content": "キク・ヨモギ類の葉裏に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "316",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a093-species-23114-ecology",
+      "insect_id": "species-23114",
+      "note_type": "生態情報",
+      "content": "春から初夏にヨメナの幼植物の葉表に大きなコロニーを形成し、葉を裏面から表面へ筒状に巻く。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "317",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a094-species-23115-ecology",
+      "insect_id": "species-23115",
+      "note_type": "生態情報",
+      "content": "ヤブマオ・コアカソ類の葉裏に点在し、まれに小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "318",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a095-species-23116-ecology",
+      "insect_id": "species-23116",
+      "note_type": "生態情報",
+      "content": "ニワウメでは新梢の葉裏や茎に大きなコロニーを形成する。ニワウメなどが冬寄主でヤエムグラ属・ヨモギ属が夏寄主として知られる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "319",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a096-species-23117-ecology",
+      "insect_id": "species-23117",
+      "note_type": "生態情報",
+      "content": "ワスレグサ属植物の生長部の心部や新葉の裏面に大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "320",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a097-species-23118-ecology",
+      "insect_id": "species-23118",
+      "note_type": "生態情報",
+      "content": "ホソバワダン類の生長点の茎葉や葉裏に多く、古い葉にも寄生する。コロニーは小さいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "321",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a098-species-21473-ecology",
+      "insect_id": "species-21473",
+      "note_type": "生態情報",
+      "content": "リンゴ類の葉裏に大きなコロニーを形成し葉を下方へ巻縮させる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "322",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a099-species-23119-ecology",
+      "insect_id": "species-23119",
+      "note_type": "生態情報",
+      "content": "春から初夏にウメ類の新葉の裏面に大きなコロニーを形成し葉を下方へ巻縮させる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "323",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a100-species-23120-ecology",
+      "insect_id": "species-23120",
+      "note_type": "生態情報",
+      "content": "サクラ類の葉に寄生して葉を裏面から上方へ巻縮させる。夏寄主としてヒキオコシが知られる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "324",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a101-species-23121-ecology",
+      "insect_id": "species-23121",
+      "note_type": "生態情報",
+      "content": "多食性で葉裏に多く、ときに生長部の茎や花にも寄生する著名な農業害虫である。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "325",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a102-species-21511-ecology",
+      "insect_id": "species-21511",
+      "note_type": "生態情報",
+      "content": "ウマノアシガタ類の葉裏に多く、ときに葉柄にも寄生して小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "326",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a103-species-23122-ecology",
+      "insect_id": "species-23122",
+      "note_type": "生態情報",
+      "content": "春から初夏にサクラの葉裏に多く寄生して巻葉をつくり大きなコロニーを形成する。夏はヒキオコシに寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "327",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a104-species-23123-ecology",
+      "insect_id": "species-23123",
+      "note_type": "生態情報",
+      "content": "春から初夏にモモ・スモモの葉に寄生して巻葉をつくり、6月頃にボタンヅル類へ移住し秋に冬寄主へ戻る。葉裏に大きなコロニーを形成しアリが訪れることが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "328",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a105-species-23082-ecology",
+      "insect_id": "species-23082",
+      "note_type": "生態情報",
+      "content": "イネ科植物とみられる葉に小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "329",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a106-species-23124-ecology",
+      "insect_id": "species-23124",
+      "note_type": "生態情報",
+      "content": "クワクサの上部の葉裏に多く寄生し葉をわずかに縮ませ、大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "330",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a107-species-21474-ecology",
+      "insect_id": "species-21474",
+      "note_type": "生態情報",
+      "content": "シソの地際の茎または地下の根に群棲し大きなコロニーを形成する。地際ではアリが訪れて土砂で覆う。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "331",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a108-species-21423-ecology",
+      "insect_id": "species-21423",
+      "note_type": "生態情報",
+      "content": "シダ類の葉裏に寄生し、しばしば大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "332",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a109-species-21471-ecology",
+      "insect_id": "species-21471",
+      "note_type": "生態情報",
+      "content": "春から初夏にカリン・リンゴ類の葉裏や茎に寄生して大きな集団を形成し、葉を巻縮させることが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "333",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a110-species-21346-ecology",
+      "insect_id": "species-21346",
+      "note_type": "生態情報",
+      "content": "春は越冬寄主のグミの新芽・葉裏・葉柄で大繁殖し、夏はアザミ類やゴボウへ移住する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "334",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a111-species-21348-ecology",
+      "insect_id": "species-21348",
+      "note_type": "生態情報",
+      "content": "ヨモギ類の葉裏に多く寄生し小さなコロニーを形成することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "335",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a112-species-23125-ecology",
+      "insect_id": "species-23125",
+      "note_type": "生態情報",
+      "content": "イチゴの葉裏や葉柄に寄生し小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "336",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a113-species-21350-ecology",
+      "insect_id": "species-21350",
+      "note_type": "生態情報",
+      "content": "春から夏はタデ類の葉裏に点在して小さなコロニーを形成し、秋にグミへ移住して卵態越冬し、春にグミの新芽・新葉で大繁殖する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "337",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a113-species-21351-ecology",
+      "insect_id": "species-21351",
+      "note_type": "生態情報",
+      "content": "春から夏はタデ類の葉裏に点在して小さなコロニーを形成し、秋にグミへ移住して卵態越冬し、春にグミの新芽・新葉で大繁殖する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "337",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a114-species-23126-ecology",
+      "insect_id": "species-23126",
+      "note_type": "生態情報",
+      "content": "トウバナ・アキノタムラソウ類の茎上部や花穂に密集した小さなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "338",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a115-species-23127-ecology",
+      "insect_id": "species-23127",
+      "note_type": "生態情報",
+      "content": "シクラメンなどの葉裏と葉柄に多く寄生しやや大きなコロニーを形成する。温室内で発生する花卉害虫である。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "339",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a116-species-23128-ecology",
+      "insect_id": "species-23128",
+      "note_type": "生態情報",
+      "content": "冬寄主はスモモ・ウメ類、夏寄主はカナムグラ・ホップ類で、葉裏に大きなコロニーを形成する。スモモでは葉を巻縮させる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "340",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a117-species-21468-ecology",
+      "insect_id": "species-21468",
+      "note_type": "生態情報",
+      "content": "ネギ類の葉に大きなコロニーを形成してしばしば大発生し、生長不良や葉枯れを生じさせる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "341",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a118-species-23083-ecology",
+      "insect_id": "species-23083",
+      "note_type": "生態情報",
+      "content": "クサノオウの茎と葉裏に点在することが多くコロニーを形成することは少ない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "342",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a119-species-23129-ecology",
+      "insect_id": "species-23129",
+      "note_type": "生態情報",
+      "content": "ウツギ類の新梢の茎や葉裏に多く寄生しやや大きなコロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "343",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a121-species-21413-ecology",
+      "insect_id": "species-21413",
+      "note_type": "生態情報",
+      "content": "葉裏に多く寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "345",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a122-species-21512-ecology",
+      "insect_id": "species-21512",
+      "note_type": "生態情報",
+      "content": "ヨモギ上ではサクラフシアブラムシの夏寄主世代と混棲することがある。冬寄主植物は未解明である。 葉裏に多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "346",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a123-species-21519-ecology",
+      "insect_id": "species-21519",
+      "note_type": "生態情報",
+      "content": "春から初夏に新梢上部の葉を巻縮させ、葉は黄赤色から赤色に変わる。夏にはサクラから移住する。広く分布する普通種である。 葉裏に寄生し、葉は顕著に縮む。コロニーは大きいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "347",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a124-species-21520-ecology",
+      "insect_id": "species-21520",
+      "note_type": "生態情報",
+      "content": "サクラの葉に黄紅色の袋状虫癭をつくる。オオシマザクラに多くヤマザクラでは少ない。夏寄主はヨモギ類で、冬寄主のサクラでは無翅胎生雌を生じない。 サクラでは葉に虫癭を形成し、ヨモギでは葉裏に多く寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "348",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a125-species-23084-ecology",
+      "insect_id": "species-23084",
+      "note_type": "生態情報",
+      "content": "西日本でチュウゴクオウトウの葉縁に袋状虫癭をつくり、同植物以外からは採集されていない。第2世代の有翅形が移住後、虫癭部は枯死して茶褐色になる。夏寄主は不明である。 一本の木の極めて多数の葉に虫癭が形成される。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "349",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a126-species-21492-ecology",
+      "insect_id": "species-21492",
+      "note_type": "生態情報",
+      "content": "春から夏にワラビでしばしば発生する広分布の普通種で、冬寄主はガマズミ類である。 ワラビ、ガマズミともに葉裏に寄生し、コロニーは大きく、大発生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "350",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a127-species-21396-ecology",
+      "insect_id": "species-21396",
+      "note_type": "生態情報",
+      "content": "キツリフネの葉を袋状に巻縮させ、その内部で生活する。キツリフネ以外からは採集されていない。 葉に寄生し、葉は巻縮して袋状の虫癭になる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "351",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a128-species-21397-ecology",
+      "insect_id": "species-21397",
+      "note_type": "生態情報",
+      "content": "ツリフネソウ・キツリフネの葉を細長い袋状の虫癭にし、葉の一部を赤変させる。山地に広く分布し、国外では韓国にも分布する。 葉表に寄生し、葉は葉表に巻縮して虫癭を形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "352",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a129-species-21395-ecology",
+      "insect_id": "species-21395",
+      "note_type": "生態情報",
+      "content": "葉表で生活し、葉を上方へ巻いた袋状の虫癭にして赤紫色に変色させる。 葉に寄生して虫癭を形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "353",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a131-species-23130-ecology",
+      "insect_id": "species-23130",
+      "note_type": "生態情報",
+      "content": "冬寄主上で卵越冬し、春に有翅形が夏寄主へ移住して単性世代を送り、秋に両性世代が冬寄主へ移る。 茎の上部あるいは葉の表裏に寄生する。散在して生活することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "355",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a132-species-21362-ecology",
+      "insect_id": "species-21362",
+      "note_type": "生態情報",
+      "content": "冬寄主にヤナギ類、夏寄主にセリ科植物を利用する群を含む。山野のタラノキ類に大集団をつくる広分布の普通種である。 葉裏に多く、ときに茎、葉柄に寄生し、コロニーは極めて大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "356",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a133-species-21363-ecology",
+      "insect_id": "species-21363",
+      "note_type": "生態情報",
+      "content": "カクレミノに寄生し、山野に自生する寄主上で見られる。 葉裏に多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "357",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a134-species-21364-ecology",
+      "insect_id": "species-21364",
+      "note_type": "生態情報",
+      "content": "冬寄主はヤナギ類、春夏の寄主はシラネセンキュウ・ミツバ類で、広く分布する普通種である。 ヤナギでは葉裏、ときに茎に、ミツバでは茎に多く、アリが土砂で覆うことがある。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "358",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a135-species-21368-ecology",
+      "insect_id": "species-21368",
+      "note_type": "生態情報",
+      "content": "冬寄主はヤナギ類、夏寄主はセリ・ミツバ類で、広く分布する普通種である。 ヤナギでは新梢の茎、葉裏に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "359",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a136-species-21448-ecology",
+      "insect_id": "species-21448",
+      "note_type": "生態情報",
+      "content": "山野のキイチゴ類に寄生し、写真の個体群はクマイチゴ上で観察された。 葉裏に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "360",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a137-species-21449-ecology",
+      "insect_id": "species-21449",
+      "note_type": "生態情報",
+      "content": "春から初夏にキイチゴ類で見られる普通種で、冬寄主はリョウブである。 生長部の茎、葉裏に多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "361",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a138-species-21450-ecology",
+      "insect_id": "species-21450",
+      "note_type": "生態情報",
+      "content": "ナガバモミジイチゴ類に寄生する。 葉裏に多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "362",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a139-species-23131-ecology",
+      "insect_id": "species-23131",
+      "note_type": "生態情報",
+      "content": "東南アジアに広く分布し、日本でも広分布の普通種である。本属では一般に冬寄主としてスイカズラ類、夏寄主としてタデ類が知られ、本種は夏にイシミカワ・ママコノシリヌクイへ寄生する。 生長部の茎、葉裏に寄生し、コロニーはやや大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "363",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a140-species-23132-ecology",
+      "insect_id": "species-23132",
+      "note_type": "生態情報",
+      "content": "1923年に大分県のスイカズラから記載され、本州から西日本に広く分布する普通種である。 生長部の茎に多く寄生し、コロニーは小さいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "364",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a141-species-21509-ecology",
+      "insect_id": "species-21509",
+      "note_type": "生態情報",
+      "content": "イヌタデに寄生し、中国・ジャワにも分布する、日本の普通種である。 茎および葉裏に多く、また花穂にも寄生する。コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "365",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a142-species-23133-ecology",
+      "insect_id": "species-23133",
+      "note_type": "生態情報",
+      "content": "日本では主にミゾソバに寄生する広分布の普通種で、台湾ではイシミカワ、のちにスイカズラからも採集された。 生長部の茎、葉裏に寄生し、コロニーはやや大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "366",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a143-species-23134-ecology",
+      "insect_id": "species-23134",
+      "note_type": "生態情報",
+      "content": "ミゾソバのみに寄生する。 茎と葉裏に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "367",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a144-species-21526-ecology",
+      "insect_id": "species-21526",
+      "note_type": "生態情報",
+      "content": "ヨーロッパおよび東南アジアに分布し、日本でも広分布の普通種である。冬寄主はツツジ類、夏寄主はカヤツリグサ類である。 茎、葉に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "368",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a145-species-21489-ecology",
+      "insect_id": "species-21489",
+      "note_type": "生態情報",
+      "content": "冬寄主はナシ、夏寄主はヨモギで、初春にナシの新梢・葉を巻縮させ、夏はヨモギの根に大きなコロニーをつくる。ナシの害虫である。 ナシでは多く葉裏に群棲する。ヨモギでは根、特に主根に多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "369",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a146-species-21417-ecology",
+      "insect_id": "species-21417",
+      "note_type": "生態情報",
+      "content": "台湾でケマンソウ類から記載され、日本ではキケマン類から採集される。 葉裏に寄生し、コロニーはときに大きい。山地に多く分布するようである。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "370",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a148-species-21419-ecology",
+      "insect_id": "species-21419",
+      "note_type": "生態情報",
+      "content": "夏寄主はイタドリ、冬寄主はクロウメモドキで、山野に普通に見られる。 葉裏に寄生し、コロニーは大きい。クロウメモドキでは茎に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "372",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a149-species-21390-ecology",
+      "insect_id": "species-21390",
+      "note_type": "生態情報",
+      "content": "路傍のオオバコに寄生する広分布の普通種で、アリが訪れたコロニーは土砂で覆われることが多い。 地ぎわの葉柄に多く、葉裏にも寄生する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "373",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a150-species-21389-ecology",
+      "insect_id": "species-21389",
+      "note_type": "生態情報",
+      "content": "世界に広く分布する花卉球根害虫で、チューリップ等のほか貯蔵球根にも発生する。日本では輸入球根の検疫時にも確認され、近年は関東・近畿の一部でも発生が知られる。 地ぎわに多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "374",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a151-species-21416-ecology",
+      "insect_id": "species-21416",
+      "note_type": "生態情報",
+      "content": "世界的なアブラナ科野菜害虫で、ウイルス病の媒介種でもある。日本では春と秋にダイコン・キャベツで大発生し、単性世代での越冬と両性世代の双方が知られる。 多くは葉裏に、秋季には下葉に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "375",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a152-species-21418-ecology",
+      "insect_id": "species-21418",
+      "note_type": "生態情報",
+      "content": "冬寄主はバラ類、夏寄主はカラマツソウ類で、広く分布する普通種である。 葉裏に多く寄生し、コロニーは小さい。春は生長点の茎にも寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "376",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a153-species-21341-ecology",
+      "insect_id": "species-21341",
+      "note_type": "生態情報",
+      "content": "ヨーロッパに広く分布し、冬寄主はウメ・スモモ類、夏寄主は多種のキク科植物である。寄生葉を巻縮させる。 新芽と葉裏に多い。寄生された葉は巻縮する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "377",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a154-species-21344-ecology",
+      "insect_id": "species-21344",
+      "note_type": "生態情報",
+      "content": "世界各地で知られるアブラナ科野菜の農業害虫で、日本では春の菜種上部などに群生する。 茎、葉裏、花穂などに多く、コロニーは極めて大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "378",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a155-species-23135-ecology",
+      "insect_id": "species-23135",
+      "note_type": "生態情報",
+      "content": "ヨモギ属のみに寄生し、キクには寄生しない。 新葉の裏面に多く、コロニーはやや大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "379",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a156-species-21379-ecology",
+      "insect_id": "species-21379",
+      "note_type": "生態情報",
+      "content": "キク属植物に広く寄生する普通種で、露地・施設栽培のキク害虫として知られる。最初の記録はインドの栽培菊からである。 生長点の茎、葉裏に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "380",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a157-species-23136-ecology",
+      "insect_id": "species-23136",
+      "note_type": "生態情報",
+      "content": "生長部の茎に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "381",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a158-species-21490-ecology",
+      "insect_id": "species-21490",
+      "note_type": "生態情報",
+      "content": "夏はハナウド・ノダケなどのセリ科植物に群生し、ときにニンジン害虫となる。冬寄主はヤマウグイスカグラで、広く分布する普通種である。 生長部の茎に多く、葉裏にも寄生する。コロニーは寄主植物により異なる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "382",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a159-species-21291-ecology",
+      "insect_id": "species-21291",
+      "note_type": "生態情報",
+      "content": "ヨモギの被寄生葉は葉縁が下方に巻いて袋状となり、緑色から黄赤色へ変色する。ヨーロッパからアジアに広く分布し、日本でも普通である。 新葉の裏面に多く、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "383",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a160-species-21275-ecology",
+      "insect_id": "species-21275",
+      "note_type": "生態情報",
+      "content": "広分布の多食性普通種で、日本ではユキヤナギ・コデマリ・リンゴ・ボケ類などで卵越冬し、夏は多種の草本に寄生する。ミカン・果樹・花卉の害虫として知られる。 新梢の茎、葉裏に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "384",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a161-species-21225-ecology",
+      "insect_id": "species-21225",
+      "note_type": "生態情報",
+      "content": "春から初夏に多く現れ、クサギの葉を顕著に巻縮させて下方へ巻く。春の個体は大型、夏の個体は小型である。 新葉の裏面に多く寄生する。コロニーは春に大きく夏は小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "386",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a161-species-21226-ecology",
+      "insect_id": "species-21226",
+      "note_type": "生態情報",
+      "content": "春から初夏に多く現れ、クサギの葉を顕著に巻縮させて下方へ巻く。春の個体は大型、夏の個体は小型である。 新葉の裏面に多く寄生する。コロニーは春に大きく夏は小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "386",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a162-species-21219-ecology",
+      "insect_id": "species-21219",
+      "note_type": "生態情報",
+      "content": "ツユクサに寄生する普通種である。 葉裏、花に点在して寄生することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "387",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a163-species-21229-ecology",
+      "insect_id": "species-21229",
+      "note_type": "生態情報",
+      "content": "世界各地に分布するマメ科作物害虫で、日本でもアズキ・ソラマメ・インゲンなどで大発生することがある。 茎、種実の莢などに多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "388",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a163-species-21230-ecology",
+      "insect_id": "species-21230",
+      "note_type": "生態情報",
+      "content": "世界各地に分布するマメ科作物害虫で、日本でもアズキ・ソラマメ・インゲンなどで大発生することがある。 茎、種実の莢などに多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "388",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a164-species-21233-ecology",
+      "insect_id": "species-21233",
+      "note_type": "生態情報",
+      "content": "ワタアブラムシに似るが極めて小型で、エゴマ類に寄生する。 葉裏に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "389",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a165-species-21238-ecology",
+      "insect_id": "species-21238",
+      "note_type": "生態情報",
+      "content": "世界に広く分布し、ヤナギ属だけに寄生する。原典は日本個体群に Aphis farinosa yanagicola の名を用いる見解にも言及している。 多くは新梢の茎部に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "390",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a166-species-21240-ecology",
+      "insect_id": "species-21240",
+      "note_type": "生態情報",
+      "content": "北米でイチゴ害虫として知られ、日本では卵態で越冬する。アリが訪れたコロニーは土で覆われることが多い。 根ぎわの茎、葉柄に多く、大きいコロニーでは地上部の葉裏にも寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "391",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a167-species-21241-ecology",
+      "insect_id": "species-21241",
+      "note_type": "生態情報",
+      "content": "寄主のフキがある場所に普通に分布し、山地のツワブキにも寄生することがある。被寄生葉は萎縮することが多い。 葉裏に寄生し、コロニーは大きい。葉は萎縮することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "392",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a168-species-21242-ecology",
+      "insect_id": "species-21242",
+      "note_type": "生態情報",
+      "content": "主にダイズに寄生し、ときに他のマメ科植物にも寄生する。アリが訪れることが多い。 葉にはほとんど寄生せず、茎の節部、葉柄、結実期には花梗、莢の基部などに寄生する。コロニーは大きいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "393",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a169-species-21244-ecology",
+      "insect_id": "species-21244",
+      "note_type": "生態情報",
+      "content": "世界的な多食性害虫である。日本など温帯では夏寄主上で単性世代を繰り返し、晩秋に冬寄主へ移って卵越冬する完全生活環をもつ一方、暖地では単性世代で冬を越す。 新芽部の茎にも寄生するが、ほとんど葉裏に寄生し、特に地表に近い下葉に多く見られる。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "394",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a170-species-21249-ecology",
+      "insect_id": "species-21249",
+      "note_type": "生態情報",
+      "content": "春から初夏にカヂイチゴなどの太い新梢の茎へ大集団で寄生する。 新梢の茎に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "396",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a171-species-21287-ecology",
+      "insect_id": "species-21287",
+      "note_type": "生態情報",
+      "content": "ナワシロイチゴに寄生し、葉を巻縮させる。有翅形は採集されていない。 生長点および葉裏に寄生し、葉は巻縮する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "397",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a172-species-21251-ecology",
+      "insect_id": "species-21251",
+      "note_type": "生態情報",
+      "content": "ヒカゲイノコズチの根に寄生する広分布の普通種である。 根に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "398",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a173-species-21254-ecology",
+      "insect_id": "species-21254",
+      "note_type": "生態情報",
+      "content": "ヨモギ類に寄生する広分布の普通種で、小型で不活発である。 上部の茎、幼葉の裏面に多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "399",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a174-species-21259-ecology",
+      "insect_id": "species-21259",
+      "note_type": "生態情報",
+      "content": "ミズタガラシ類に寄生する。 茎、葉裏に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "400",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a175-species-21262-ecology",
+      "insect_id": "species-21262",
+      "note_type": "生態情報",
+      "content": "日本ではキョウチクトウ・ガガイモ類に寄生する普通種である。 新梢の茎、葉裏に多く寄生し、開花期には花梗にも多く寄生する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "401",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a176-species-21264-ecology",
+      "insect_id": "species-21264",
+      "note_type": "生態情報",
+      "content": "オドリコソウに寄生し、原典はワタアブラムシとは別種として扱う。 多くは葉裏に寄生し、ときに花柄に寄生する。コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "402",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a177-species-21268-ecology",
+      "insect_id": "species-21268",
+      "note_type": "生態情報",
+      "content": "スベリヒユ科植物に寄生する。 茎の先部に多く、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "403",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a178-species-21271-ecology",
+      "insect_id": "species-21271",
+      "note_type": "生態情報",
+      "content": "日本で広く分布する普通種で、春から初夏にギシギシの花茎などへ大きな集団をつくる。 茎、花穂、葉裏に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "404",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a179-species-23138-ecology",
+      "insect_id": "species-23138",
+      "note_type": "生態情報",
+      "content": "ニワトコに寄生する普通種である。 新梢の茎および葉裏に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "405",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a181-species-21278-ecology",
+      "insect_id": "species-21278",
+      "note_type": "生態情報",
+      "content": "原野・路傍のスミレの根ぎわに寄生する広分布の普通種で、アリが訪れたコロニーは土砂で覆われる。 多くは根ぎわの葉柄下部に寄生する。アリが訪れ、コロニーを土砂で覆っている。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "407",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a182-species-23085-ecology",
+      "insect_id": "species-23085",
+      "note_type": "生態情報",
+      "content": "アキノタムラソウに寄生する未同定種である。 主として茎に寄生するが、葉裏でも生活する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "408",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a183-species-21295-ecology",
+      "insect_id": "species-21295",
+      "note_type": "生態情報",
+      "content": "世界に広く分布するモモ害虫で、春から初夏はモモ・スモモ類、夏はヨシに寄生する。しばしばモモで大発生する。 生長部の茎、葉裏に多く、ときに葉表にも寄生する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "409",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a184-species-21297-ecology",
+      "insect_id": "species-21297",
+      "note_type": "生態情報",
+      "content": "アジアに広く分布し、日本では初夏に竹類の葉裏に多い。冬寄主としてカマツカが知られる。 葉裏に寄生する。冬寄主植物にカマツカが知られる。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "410",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a185-species-23139-ecology",
+      "insect_id": "species-23139",
+      "note_type": "生態情報",
+      "content": "台湾から記載され、ススキに寄生する。 葉鞘の先部か葉の基部に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "411",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a186-species-21300-ecology",
+      "insect_id": "species-21300",
+      "note_type": "生態情報",
+      "content": "ススキの葉鞘先端に密集し、アリが訪れることが多い。東南アジアに広く分布する普通種である。 茎の節や葉鞘と葉身の境の部分に寄生することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "412",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a187-species-21301-ecology",
+      "insect_id": "species-21301",
+      "note_type": "生態情報",
+      "content": "原典では同定に疑問符が付され、有翅形は未採集である。野外では淡緑褐色系と淡黄緑色系が見られる。 葉裏に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "413",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a188-species-21303-ecology",
+      "insect_id": "species-21303",
+      "note_type": "生態情報",
+      "content": "水田雑草のヒエ類に寄生し、東南アジアではサトウキビ害虫として知られる。西日本のソルゴーにも発生する。 葉の表裏に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "414",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a189-species-23086-ecology",
+      "insect_id": "species-23086",
+      "note_type": "生態情報",
+      "content": "チカラシバに寄生する未同定種で、原典の写真個体は11月採集である。 採集は11月で、穂に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "415",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a190-species-21319-ecology",
+      "insect_id": "species-21319",
+      "note_type": "生態情報",
+      "content": "世界に広く分布するムギ類害虫で、北米では気象条件により大発生する。日本では1924年の記録があるが、長年害虫としては報告されていない。 葉裏に寄生し、コロニーは小さいことが多いが、ときに大きく発展する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "416",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a191-species-21322-ecology",
+      "insect_id": "species-21322",
+      "note_type": "生態情報",
+      "content": "ナシ害虫として知られ、初夏に新梢の葉を強く巻縮させ、大発生時には新梢の茎にも群生して広範な被害を生じる。 葉の表面に多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "417",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a192-species-21323-ecology",
+      "insect_id": "species-21323",
+      "note_type": "生態情報",
+      "content": "ショウブに多く寄生し、カヤツリグサ科・ガマ科植物にも寄生する。 葉裏、茎に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "418",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a193-species-21288-ecology",
+      "insect_id": "species-21288",
+      "note_type": "生態情報",
+      "content": "西南日本に広く分布する普通種で、ミカン・ツバキ・サザンカ・チャなどに寄生する亜熱帯性の害虫である。 多くは葉裏に寄生し、コロニーは小さいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "419",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a194-species-21290-ecology",
+      "insect_id": "species-21290",
+      "note_type": "生態情報",
+      "content": "ミカン属だけに寄生し、世界に広く分布する主要なミカン害虫である。 新梢の茎、葉裏に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "420",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a195-species-21263-ecology",
+      "insect_id": "species-21263",
+      "note_type": "生態情報",
+      "content": "ヌルデを好む多食性種で、庭園樹にしばしば発生するが作物への害はほとんどない。 茎、葉裏に寄生し、コロニーは極めて大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "421",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a196-species-23087-ecology",
+      "insect_id": "species-23087",
+      "note_type": "生態情報",
+      "content": "クチナシに寄生する未同定種である。 新梢の茎、葉裏に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "422",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a197-species-23088-ecology",
+      "insect_id": "species-23088",
+      "note_type": "生態情報",
+      "content": "シャシャンボに寄生する未同定種で、新梢の生長部に多い。 新梢の生長部に多く寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "423",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a198-species-21308-ecology",
+      "insect_id": "species-21308",
+      "note_type": "生態情報",
+      "content": "世界的に著名なイネ科作物害虫で、特にトウモロコシに好んで寄生する。 葉の表裏に寄生し、トウモロコシの実の苞にも好んで寄生する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "424",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a199-species-21310-ecology",
+      "insect_id": "species-21310",
+      "note_type": "生態情報",
+      "content": "川・池などの水辺に多く、夏はスイレン・ハス・オモダカ類など、冬はウメ・モモ類に寄生する広分布の多食性種である。 葉裏、葉柄などに多く寄生し、コロニーは大きい。多食性である。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "425",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a200-species-21311-ecology",
+      "insect_id": "species-21311",
+      "note_type": "生態情報",
+      "content": "世界に広く分布するムギ類害虫で、冬はモモ・サクラ類、夏はイネ科雑草に寄生する。 葉に多く寄生し、出穂期には穂にも好んで寄生する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "426",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a201-species-21312-ecology",
+      "insect_id": "species-21312",
+      "note_type": "生態情報",
+      "content": "地上部から地下部まで多様な部位を利用する極めて多食性の種で、施設内のキュウリ・トマトの根で大発生することがある。 ウメでは新梢の茎に多く、葉裏にも寄生する。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "427",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a202-species-21213-ecology",
+      "insect_id": "species-21213",
+      "note_type": "生態情報",
+      "content": "ヨーロッパから北米まで広く分布し、ヤナギ類の枝に寄生する。原典は Pterocomma pilosum konoi を本種のシノニムとして扱う。 枝に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "428",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a203-species-21188-ecology",
+      "insect_id": "species-21188",
+      "note_type": "生態情報",
+      "content": "日本に広く分布する一属一種で、夏季にも両性世代が出現する。 新葉の裏面に寄生し、コロニーは大きいことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "429",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a204-species-21193-ecology",
+      "insect_id": "species-21193",
+      "note_type": "生態情報",
+      "content": "西日本に広く分布し、初夏にツブラジイ等の新梢小枝へ大きなコロニーをつくる。 枝に寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "430",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a205-species-21195-ecology",
+      "insect_id": "species-21195",
+      "note_type": "生態情報",
+      "content": "ツブラジイの葉裏に寄生する比較的珍しい種である。 葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "431",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a206-species-21200-ecology",
+      "insect_id": "species-21200",
+      "note_type": "生態情報",
+      "content": "東アジアに多い群の普通種で、日本では広く分布する。原典はニホンケブカアブラムシとの同一性を未解決のまま別種として扱う。 枝に多く集合して寄生し、コロニーはときに大きく発展する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "432",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a207-species-21203-ecology",
+      "insect_id": "species-21203",
+      "note_type": "生態情報",
+      "content": "クヌギ・ウバメガシに寄生し、特にウバメガシに多い。 新梢の枝に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "433",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a208-species-21204-ecology",
+      "insect_id": "species-21204",
+      "note_type": "生態情報",
+      "content": "ツブラジイだけに寄生し、西日本・九州に広く分布する普通種である。 枝に寄生するが、生長部に集合することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "434",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a209-species-21209-ecology",
+      "insect_id": "species-21209",
+      "note_type": "生態情報",
+      "content": "山地のアラカシ類に寄生する広分布の普通種である。 新梢葉裏に多く寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "435",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a210-species-23140-ecology",
+      "insect_id": "species-23140",
+      "note_type": "生態情報",
+      "content": "ヤブタバコに寄生する広分布の普通種で、有翅形は6月から10月に出現する。 多くは地ぎわの茎にコロニーで寄生する。有翅形は6月から10月に出現する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "436",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a211-species-23089-ecology",
+      "insect_id": "species-23089",
+      "note_type": "生態情報",
+      "content": "ツリフネソウ・オタカラコウから採集された未同定種で、過去の同定再検討により Aleurodaphis mikaniae とは別とされた。 茎に寄生し、コロニーを形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "437",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a212-species-23141-ecology",
+      "insect_id": "species-23141",
+      "note_type": "生態情報",
+      "content": "冬寄主はミズキ、夏寄主はイネ・キビ・エノコログサ類で、広分布の普通種である。日本では稲の害虫として関東で多く発生する。 ミズキでは葉裏に、イネ科植物では土ぎわの茎、地下根に小さいコロニーで寄生することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "438",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a213-species-20981-ecology",
+      "insect_id": "species-20981",
+      "note_type": "生態情報",
+      "content": "東南アジアに分布するサトウキビ害虫で、単子葉植物群に寄生する単性世代種である。有翅形の出現期間は短い。 葉裏に多く寄生し、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "439",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a214-species-20982-ecology",
+      "insect_id": "species-20982",
+      "note_type": "生態情報",
+      "content": "春から初夏にエゴノキへササ舟状の虫癭をつくり、春の移住虫は夏寄主へ移る。秋に有翅形がエゴノキへ戻る。 エゴノキでは虫癭を形成し、夏寄主植物では葉裏に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "440",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a215-species-21000-ecology",
+      "insect_id": "species-21000",
+      "note_type": "生態情報",
+      "content": "イスノキ上だけで年4世代を送り、移住しない。卵生雌で越冬して春に産卵し、1か月あまりで孵化した幼虫が幹母へ育つ。2–3世代を虫癭内で過ごした後、産性雌が両性世代を生じる。 一枚の葉に多数の虫癭が形成される。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "441",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a216-species-23143-ecology",
+      "insect_id": "species-23143",
+      "note_type": "生態情報",
+      "content": "ツブラジイとイスノキを利用し、イスノキでは虫癭をつくる。 ツブラジイでは枝に寄生し、イスノキでは虫癭を形成する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "442",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a217-species-21008-ecology",
+      "insect_id": "species-21008",
+      "note_type": "生態情報",
+      "content": "イスノキに虫癭をつくり、西日本にも分布する。 虫癭を形成し、その中で生活する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "443",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a218-species-21009-ecology",
+      "insect_id": "species-21009",
+      "note_type": "生態情報",
+      "content": "カシノキ類上で生長した無翅形は11月末ごろ成虫となり、春の有翅形がイスノキへ移住する。一部は年間を通じカシノキ上で生活する。 カシノキでは小・中枝に多く、コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "444",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a219-species-23144-ecology",
+      "insect_id": "species-23144",
+      "note_type": "生態情報",
+      "content": "年間を通じイスノキ上で生活し移住しない。9月ごろ孵化した幼虫が幹母へ育つ際に虫癭をつくり、約2週間の虫癭期を経て11月上旬に両性世代を生じる。 両性世代は葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "445",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a220-species-21011-ecology",
+      "insect_id": "species-21011",
+      "note_type": "生態情報",
+      "content": "タブノキに寄生する広分布の普通種である。 小枝に寄生し、腹面は樹皮に密着している。コロニーは大きい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "446",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a221-species-23145-ecology",
+      "insect_id": "species-23145",
+      "note_type": "生態情報",
+      "content": "イスノキに大型虫癭をつくり、11月ごろ有翅形がアラカシ・シイ類へ移住する。翌春にイスノキへ戻り、交尾・産卵後に虫癭を形成する。 アラカシでは小・中枝に群棲して寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "447",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a222-species-21007-ecology",
+      "insect_id": "species-21007",
+      "note_type": "生態情報",
+      "content": "冬寄主はイスノキ、夏寄主はコナラ・ミズナラ類で、イスノキでは虫癭をつくる。西日本では11月中旬にコナラからイスノキへ移住する。 イスノキでは葉に虫癭をつくり、コナラでは葉裏に寄生する。西日本では11月中旬にコナラからイスノキに移住する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "448",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a224-species-23147-ecology",
+      "insect_id": "species-23147",
+      "note_type": "生態情報",
+      "content": "年3世代のみを送り、幹母は4月上旬、産性雌は5月上旬、両性世代は5月下旬ごろ現れる。卵期間が長く、有翅形の成虫期間はおおむね1日である。 新葉に寄生することが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "450",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a225-species-23148-ecology",
+      "insect_id": "species-23148",
+      "note_type": "生態情報",
+      "content": "サワグルミ・クルミ類に寄生する。 葉裏の主脈に沿って寄生することが多く、葉はわずかに裏面へ巻く。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "451",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a227-species-20985-ecology",
+      "insect_id": "species-20985",
+      "note_type": "生態情報",
+      "content": "1930年に鹿児島県で採集され、のちに下関市でも採集された、記録の少ない種である。 葉に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "453",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a228-species-21041-ecology",
+      "insect_id": "species-21041",
+      "note_type": "生態情報",
+      "content": "カヤツリグサ科植物に寄生し、虫体は白色の綿状蝋質物に覆われる。 茎部に密集して寄生する。綿状蝋質物に覆われ、虫体はほとんど見えない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "454",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a229-species-21059-ecology",
+      "insect_id": "species-21059",
+      "note_type": "生態情報",
+      "content": "春から初夏にケヤキ葉表へ長い袋状虫癭をつくり、春の有翅形はクマザサの根へ移る。秋にケヤキへ戻り卵越冬する。 クマザサの根部に寄生する。ケヤキでは虫癭内で生活する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "455",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a230-species-23149-ecology",
+      "insect_id": "species-23149",
+      "note_type": "生態情報",
+      "content": "広分布の普通種で、ボタンヅル類の蔓性茎の葉柄部に群生し、蝋質綿状物に覆われる。 茎に多く、ときに根に寄生する。群棲するが個体数は少ない。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "456",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a231-species-21047-ecology",
+      "insect_id": "species-21047",
+      "note_type": "生態情報",
+      "content": "ハルニレで卵越冬し、春に葉裏へ偽虫癭をつくる。次世代の有翅形は夏寄主へ移住するが夏寄主は不明で、秋にハルニレへ戻る。 葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "457",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a232-species-23090-ecology",
+      "insect_id": "species-23090",
+      "note_type": "生態情報",
+      "content": "イチゴ苗の細根に寄生して生長を抑制する未同定種で、原典の写真個体は10月中旬の発生である。 地中の根に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "458",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a233-species-21043-ecology",
+      "insect_id": "species-21043",
+      "note_type": "生態情報",
+      "content": "原典は標本不足のため疑問符付きで同定する。蔓茎と葉に寄生し、被寄生葉を不規則に巻縮させる。 蔓茎の先部と葉裏に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "459",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a234-species-21028-ecology",
+      "insect_id": "species-21028",
+      "note_type": "生態情報",
+      "content": "キンモクセイ・ヒイラギの幹や太枝へ寄生する大型種で、冬は卵越し、春の移住先となる夏寄主は不明である。1913年に山口県と東京で確認された。 幹枝に群棲して寄生するが、一群の個体数は少ないことが多い。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "460",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a235-species-21030-ecology",
+      "insect_id": "species-21030",
+      "note_type": "生態情報",
+      "content": "春4月中下旬にカマツカの葉縁を裏面へ巻き、孵化幼虫が幹母へ育つ。幹母は有翅胎生雌となる幼虫を産む。 新葉の裏面に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "461",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a236-species-21038-ecology",
+      "insect_id": "species-21038",
+      "note_type": "生態情報",
+      "content": "ヌルデの複葉柄に虫癭をつくり、秋にチョウチンゴケへ移住して越冬する。翌春にヌルデへ戻って両性世代を生じ、その子世代が虫癭を形成する。虫癭からはタンニンが得られる。 ヌルデでは虫癭を形成し、チョウチンゴケでは茎、葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "462",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a238-species-21065-ecology",
+      "insect_id": "species-21065",
+      "note_type": "生態情報",
+      "content": "初夏にハルニレの葉へ赤みを帯びた不正形の虫癭をつくる。 イネ科植物では根に寄生し、コロニーは小さい。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "464",
+      "year": ""
+    },
+    {
+      "record_id": "note-aphid-guide-a239-species-23152-ecology",
+      "insect_id": "species-23152",
+      "note_type": "生態情報",
+      "content": "春にリンゴ類の新梢葉へ出現し、被寄生葉を全体がねじれた巻葉にする。 春季は葉裏に寄生する。",
+      "reference": "日本原色アブラムシ図鑑",
+      "page": "465",
+      "year": ""
+    }
+  ],
+  "host_actions": [
+    {
+      "audit_id": "aphid-guide-a043-host-original-wording",
+      "action": "patch_host",
+      "record_id": "hostplant-902258",
+      "source_account": 43,
+      "expected": {
+        "record_id": "hostplant-902258",
+        "insect_id": "species-21501",
+        "plant_name": "アブラススキ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "茎",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "葉裏に多く寄生"
+      },
+      "approved": {
+        "record_id": "hostplant-902258",
+        "insect_id": "species-21501",
+        "plant_name": "アブラススキ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "茎（特に穂茎）",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "restore_original_parasitism_wording"
+    },
+    {
+      "audit_id": "aphid-guide-a113-host-hostplant-902412",
+      "action": "patch_host",
+      "record_id": "hostplant-902412",
+      "source_account": 113,
+      "expected": {
+        "record_id": "hostplant-902412",
+        "insect_id": "species-21351",
+        "plant_name": "アイタデ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "タデでは葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "タデでは点在 / グミ上ではコロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902412",
+        "insect_id": "species-21351",
+        "plant_name": "アイタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "点在し、コロニーは小さい"
+      },
+      "decision": "restore_original_host_specific_parasitism_fields"
+    },
+    {
+      "audit_id": "aphid-guide-a113-host-hostplant-902413",
+      "action": "patch_host",
+      "record_id": "hostplant-902413",
+      "source_account": 113,
+      "expected": {
+        "record_id": "hostplant-902413",
+        "insect_id": "species-21351",
+        "plant_name": "イヌタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "タデでは葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "タデでは点在 / グミ上ではコロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902413",
+        "insect_id": "species-21351",
+        "plant_name": "イヌタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "点在し、コロニーは小さい"
+      },
+      "decision": "restore_original_host_specific_parasitism_fields"
+    },
+    {
+      "audit_id": "aphid-guide-a113-host-hostplant-902414",
+      "action": "patch_host",
+      "record_id": "hostplant-902414",
+      "source_account": 113,
+      "expected": {
+        "record_id": "hostplant-902414",
+        "insect_id": "species-21351",
+        "plant_name": "ハルタデ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "タデでは葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "タデでは点在 / グミ上ではコロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902414",
+        "insect_id": "species-21351",
+        "plant_name": "ハルタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "点在し、コロニーは小さい"
+      },
+      "decision": "restore_original_host_specific_parasitism_fields"
+    },
+    {
+      "audit_id": "aphid-guide-a113-host-hostplant-902415",
+      "action": "patch_host",
+      "record_id": "hostplant-902415",
+      "source_account": 113,
+      "expected": {
+        "record_id": "hostplant-902415",
+        "insect_id": "species-21351",
+        "plant_name": "ナツグミ",
+        "plant_family": "グミ科",
+        "observation_type": "文献",
+        "plant_part": "タデでは葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "タデでは点在 / グミ上ではコロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902415",
+        "insect_id": "species-21351",
+        "plant_name": "ナツグミ",
+        "plant_family": "グミ科",
+        "observation_type": "文献",
+        "plant_part": "新芽・新葉",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "秋に移住して卵態越冬し、翌春に大繁殖する"
+      },
+      "decision": "restore_original_host_specific_parasitism_fields"
+    },
+    {
+      "audit_id": "aphid-guide-a113-share-1",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a113-species-21350-01",
+      "source_account": 113,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a113-species-21350-01",
+        "insect_id": "species-21350",
+        "plant_name": "アイタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "点在し、コロニーは小さい"
+      },
+      "decision": "share_unqualified_species_account_to_parent_and_current_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a113-share-2",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a113-species-21350-02",
+      "source_account": 113,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a113-species-21350-02",
+        "insect_id": "species-21350",
+        "plant_name": "イヌタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "点在し、コロニーは小さい"
+      },
+      "decision": "share_unqualified_species_account_to_parent_and_current_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a113-share-3",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a113-species-21350-03",
+      "source_account": 113,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a113-species-21350-03",
+        "insect_id": "species-21350",
+        "plant_name": "ハルタデ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "点在し、コロニーは小さい"
+      },
+      "decision": "share_unqualified_species_account_to_parent_and_current_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a113-share-4",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a113-species-21350-04",
+      "source_account": 113,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a113-species-21350-04",
+        "insect_id": "species-21350",
+        "plant_name": "ナツグミ",
+        "plant_family": "グミ科",
+        "observation_type": "文献",
+        "plant_part": "新芽・新葉",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "秋に移住して卵態越冬し、翌春に大繁殖する"
+      },
+      "decision": "share_unqualified_species_account_to_parent_and_current_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a120-delete-wrong-genus-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902433",
+      "source_account": 120,
+      "expected": {
+        "record_id": "hostplant-902433",
+        "insect_id": "species-21125",
+        "plant_name": "ヤマドリゼンマイ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "生長部の若い葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーはきわめて大きい"
+      },
+      "approved": null,
+      "decision": "remove_epithet_only_false_match"
+    },
+    {
+      "audit_id": "aphid-guide-a130-hold-hostplant-902449",
+      "action": "delete_host",
+      "record_id": "hostplant-902449",
+      "source_account": 130,
+      "expected": {
+        "record_id": "hostplant-902449",
+        "insect_id": "species-21073",
+        "plant_name": "ミゾソバ",
+        "plant_family": "タデ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "remove_epithet_only_false_match_and_hold"
+    },
+    {
+      "audit_id": "aphid-guide-a130-hold-hostplant-902450",
+      "action": "delete_host",
+      "record_id": "hostplant-902450",
+      "source_account": 130,
+      "expected": {
+        "record_id": "hostplant-902450",
+        "insect_id": "species-21073",
+        "plant_name": "ドウダンツツジ",
+        "plant_family": "ツツジ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "remove_epithet_only_false_match_and_hold"
+    },
+    {
+      "audit_id": "aphid-guide-a147-hold-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902487",
+      "source_account": 147,
+      "expected": {
+        "record_id": "hostplant-902487",
+        "insect_id": "species-21292",
+        "plant_name": "ウメモドキ",
+        "plant_family": "モチノキ科",
+        "observation_type": "文献",
+        "plant_part": "小枝",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "ときに葉裏にも寄生する / コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "remove_wrong_species_host_and_hold"
+    },
+    {
+      "audit_id": "aphid-guide-a180-hold-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902581",
+      "source_account": 180,
+      "expected": {
+        "record_id": "hostplant-902581",
+        "insect_id": "species-21500",
+        "plant_name": "サルトリイバラ",
+        "plant_family": "サルトリイバラ科",
+        "observation_type": "文献",
+        "plant_part": "新梢の茎、葉柄、葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは小さい"
+      },
+      "approved": null,
+      "decision": "remove_wrong_genus_host_and_hold"
+    },
+    {
+      "audit_id": "aphid-guide-a223-hold-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902686",
+      "source_account": 223,
+      "expected": {
+        "record_id": "hostplant-902686",
+        "insect_id": "species-23146",
+        "plant_name": "ヤブニッケイ",
+        "plant_family": "クスノキ科",
+        "observation_type": "文献",
+        "plant_part": "小枝",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "群棲する / 文献では「ヤブニッケイ？」表記"
+      },
+      "approved": null,
+      "decision": "remove_qualified_identification_host_and_hold"
+    },
+    {
+      "audit_id": "aphid-guide-a226-hold-hostplant-902695",
+      "action": "delete_host",
+      "record_id": "hostplant-902695",
+      "source_account": 226,
+      "expected": {
+        "record_id": "hostplant-902695",
+        "insect_id": "species-23148",
+        "plant_name": "クヌギ",
+        "plant_family": "ブナ科",
+        "observation_type": "文献",
+        "plant_part": "新葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": ""
+      },
+      "approved": null,
+      "decision": "withhold_explicit_unrepresented_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a226-hold-hostplant-902696",
+      "action": "delete_host",
+      "record_id": "hostplant-902696",
+      "source_account": 226,
+      "expected": {
+        "record_id": "hostplant-902696",
+        "insect_id": "species-23148",
+        "plant_name": "コナラ",
+        "plant_family": "ブナ科",
+        "observation_type": "文献",
+        "plant_part": "新葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": ""
+      },
+      "approved": null,
+      "decision": "withhold_explicit_unrepresented_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a226-hold-hostplant-902697",
+      "action": "delete_host",
+      "record_id": "hostplant-902697",
+      "source_account": 226,
+      "expected": {
+        "record_id": "hostplant-902697",
+        "insect_id": "species-23148",
+        "plant_name": "アラカシ",
+        "plant_family": "ブナ科",
+        "observation_type": "文献",
+        "plant_part": "新葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": ""
+      },
+      "approved": null,
+      "decision": "withhold_explicit_unrepresented_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a237-hold-hostplant-902720",
+      "action": "delete_host",
+      "record_id": "hostplant-902720",
+      "source_account": 237,
+      "expected": {
+        "record_id": "hostplant-902720",
+        "insect_id": "species-23150",
+        "plant_name": "ハルニレ",
+        "plant_family": "ニレ科",
+        "observation_type": "文献",
+        "plant_part": "チカラシバでは根",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは小さい"
+      },
+      "approved": null,
+      "decision": "remove_rows_from_unresolved_account"
+    },
+    {
+      "audit_id": "aphid-guide-a237-hold-hostplant-902721",
+      "action": "delete_host",
+      "record_id": "hostplant-902721",
+      "source_account": 237,
+      "expected": {
+        "record_id": "hostplant-902721",
+        "insect_id": "species-23150",
+        "plant_name": "アキニレ",
+        "plant_family": "ニレ科",
+        "observation_type": "文献",
+        "plant_part": "チカラシバでは根",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは小さい"
+      },
+      "approved": null,
+      "decision": "remove_rows_from_unresolved_account"
+    },
+    {
+      "audit_id": "aphid-guide-a237-hold-hostplant-902722",
+      "action": "delete_host",
+      "record_id": "hostplant-902722",
+      "source_account": 237,
+      "expected": {
+        "record_id": "hostplant-902722",
+        "insect_id": "species-23150",
+        "plant_name": "コブニレ",
+        "plant_family": "ニレ科",
+        "observation_type": "文献",
+        "plant_part": "チカラシバでは根",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは小さい"
+      },
+      "approved": null,
+      "decision": "remove_rows_from_unresolved_account"
+    },
+    {
+      "audit_id": "aphid-guide-a237-hold-hostplant-902723",
+      "action": "delete_host",
+      "record_id": "hostplant-902723",
+      "source_account": 237,
+      "expected": {
+        "record_id": "hostplant-902723",
+        "insect_id": "species-23150",
+        "plant_name": "チカラシバ",
+        "plant_family": "イネ科",
+        "observation_type": "文献",
+        "plant_part": "チカラシバでは根",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは小さい"
+      },
+      "approved": null,
+      "decision": "remove_rows_from_unresolved_account"
+    },
+    {
+      "audit_id": "aphid-guide-a240-hold-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902730",
+      "source_account": 240,
+      "expected": {
+        "record_id": "hostplant-902730",
+        "insect_id": "species-23152",
+        "plant_name": "クリ",
+        "plant_family": "ブナ科",
+        "observation_type": "文献",
+        "plant_part": "果実の球果",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーはきわめて大きい"
+      },
+      "approved": null,
+      "decision": "remove_row_from_unresolved_account"
+    },
+    {
+      "audit_id": "aphid-guide-a161-share-species-21225",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a161-species-21225-01",
+      "source_account": 161,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a161-species-21225-01",
+        "insect_id": "species-21225",
+        "plant_name": "クサギ",
+        "plant_family": "シソ科",
+        "observation_type": "文献",
+        "plant_part": "新葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春には大きく巻く葉は小さい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a161-share-species-21226",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a161-species-21226-01",
+      "source_account": 161,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a161-species-21226-01",
+        "insect_id": "species-21226",
+        "plant_name": "クサギ",
+        "plant_family": "シソ科",
+        "observation_type": "文献",
+        "plant_part": "新葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春には大きく巻く葉は小さい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a161-delete-parent-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902538",
+      "source_account": 161,
+      "expected": {
+        "record_id": "hostplant-902538",
+        "insect_id": "species-21224",
+        "plant_name": "クサギ",
+        "plant_family": "シソ科",
+        "observation_type": "文献",
+        "plant_part": "新葉の裏面",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春には大きく巻く葉は小さい"
+      },
+      "approved": null,
+      "decision": "replace_parent_duplicate_with_subspecies_shares"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21229-1",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21229-01",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21229-01",
+        "insect_id": "species-21229",
+        "plant_name": "アズキ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21229-2",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21229-02",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21229-02",
+        "insect_id": "species-21229",
+        "plant_name": "ソラマメ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21229-3",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21229-03",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21229-03",
+        "insect_id": "species-21229",
+        "plant_name": "エンドウ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21229-4",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21229-04",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21229-04",
+        "insect_id": "species-21229",
+        "plant_name": "ゲンゲ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21229-5",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21229-05",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21229-05",
+        "insect_id": "species-21229",
+        "plant_name": "スズメノエンドウ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21230-1",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21230-01",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21230-01",
+        "insect_id": "species-21230",
+        "plant_name": "アズキ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21230-2",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21230-02",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21230-02",
+        "insect_id": "species-21230",
+        "plant_name": "ソラマメ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21230-3",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21230-03",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21230-03",
+        "insect_id": "species-21230",
+        "plant_name": "エンドウ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21230-4",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21230-04",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21230-04",
+        "insect_id": "species-21230",
+        "plant_name": "ゲンゲ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-share-species-21230-5",
+      "action": "add_host",
+      "record_id": "hostplant-aphid-guide-a163-species-21230-05",
+      "source_account": 163,
+      "expected": null,
+      "approved": {
+        "record_id": "hostplant-aphid-guide-a163-species-21230-05",
+        "insect_id": "species-21230",
+        "plant_name": "スズメノエンドウ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "share_or_move_original_account_host_record"
+    },
+    {
+      "audit_id": "aphid-guide-a163-delete-parent-hostplant-902540",
+      "action": "delete_host",
+      "record_id": "hostplant-902540",
+      "source_account": 163,
+      "expected": {
+        "record_id": "hostplant-902540",
+        "insect_id": "species-21228",
+        "plant_name": "アズキ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "replace_parent_duplicate_with_subspecies_shares"
+    },
+    {
+      "audit_id": "aphid-guide-a163-delete-parent-hostplant-902541",
+      "action": "delete_host",
+      "record_id": "hostplant-902541",
+      "source_account": 163,
+      "expected": {
+        "record_id": "hostplant-902541",
+        "insect_id": "species-21228",
+        "plant_name": "ソラマメ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "replace_parent_duplicate_with_subspecies_shares"
+    },
+    {
+      "audit_id": "aphid-guide-a163-delete-parent-hostplant-902542",
+      "action": "delete_host",
+      "record_id": "hostplant-902542",
+      "source_account": 163,
+      "expected": {
+        "record_id": "hostplant-902542",
+        "insect_id": "species-21228",
+        "plant_name": "エンドウ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "replace_parent_duplicate_with_subspecies_shares"
+    },
+    {
+      "audit_id": "aphid-guide-a163-delete-parent-hostplant-902543",
+      "action": "delete_host",
+      "record_id": "hostplant-902543",
+      "source_account": 163,
+      "expected": {
+        "record_id": "hostplant-902543",
+        "insect_id": "species-21228",
+        "plant_name": "ゲンゲ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "replace_parent_duplicate_with_subspecies_shares"
+    },
+    {
+      "audit_id": "aphid-guide-a163-delete-parent-hostplant-902544",
+      "action": "delete_host",
+      "record_id": "hostplant-902544",
+      "source_account": 163,
+      "expected": {
+        "record_id": "hostplant-902544",
+        "insect_id": "species-21228",
+        "plant_name": "スズメノエンドウ",
+        "plant_family": "マメ科",
+        "observation_type": "文献",
+        "plant_part": "茎、種実の莢など",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": null,
+      "decision": "replace_parent_duplicate_with_subspecies_shares"
+    },
+    {
+      "audit_id": "aphid-guide-a165-move-host",
+      "action": "patch_host",
+      "record_id": "hostplant-902549",
+      "source_account": 165,
+      "expected": {
+        "record_id": "hostplant-902549",
+        "insect_id": "species-21237",
+        "plant_name": "ヤナギ類",
+        "plant_family": "ヤナギ科",
+        "observation_type": "文献",
+        "plant_part": "新梢の茎部",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902549",
+        "insect_id": "species-21238",
+        "plant_name": "ヤナギ類",
+        "plant_family": "ヤナギ科",
+        "observation_type": "文献",
+        "plant_part": "新梢の茎部",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "move_japanese_population_host_to_current_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a172-move-host",
+      "action": "patch_host",
+      "record_id": "hostplant-902569",
+      "source_account": 172,
+      "expected": {
+        "record_id": "hostplant-902569",
+        "insect_id": "species-23137",
+        "plant_name": "ヒカゲイノコズチ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "根",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902569",
+        "insect_id": "species-21251",
+        "plant_name": "ヒカゲイノコズチ",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "根",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "move_host_from_temporary_duplicate_to_accepted_taxon"
+    },
+    {
+      "audit_id": "aphid-guide-a202-move-host",
+      "action": "patch_host",
+      "record_id": "hostplant-902638",
+      "source_account": 202,
+      "expected": {
+        "record_id": "hostplant-902638",
+        "insect_id": "species-21212",
+        "plant_name": "ヤナギ属",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "枝",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "approved": {
+        "record_id": "hostplant-902638",
+        "insect_id": "species-21213",
+        "plant_name": "ヤナギ属",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "枝",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "コロニーは大きい"
+      },
+      "decision": "move_japanese_population_host_to_current_subspecies"
+    },
+    {
+      "audit_id": "aphid-guide-a215-delete-duplicate-host",
+      "action": "delete_host",
+      "record_id": "hostplant-902671",
+      "source_account": 215,
+      "expected": {
+        "record_id": "hostplant-902671",
+        "insect_id": "species-23142",
+        "plant_name": "イスノキ",
+        "plant_family": "マンサク科",
+        "observation_type": "文献",
+        "plant_part": "葉",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "一枚の葉に多数の虫癭が形成される"
+      },
+      "approved": null,
+      "decision": "remove_temporary_duplicate_host"
+    },
+    {
+      "audit_id": "aphid-guide-a239-move-hostplant-902727",
+      "action": "patch_host",
+      "record_id": "hostplant-902727",
+      "source_account": 239,
+      "expected": {
+        "record_id": "hostplant-902727",
+        "insect_id": "species-23151",
+        "plant_name": "カイドウ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春季は葉裏に寄生する"
+      },
+      "approved": {
+        "record_id": "hostplant-902727",
+        "insect_id": "species-23152",
+        "plant_name": "カイドウ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春季は葉裏に寄生する"
+      },
+      "decision": "move_next_account_hosts_from_temporary_duplicate"
+    },
+    {
+      "audit_id": "aphid-guide-a239-move-hostplant-902728",
+      "action": "patch_host",
+      "record_id": "hostplant-902728",
+      "source_account": 239,
+      "expected": {
+        "record_id": "hostplant-902728",
+        "insect_id": "species-23151",
+        "plant_name": "ハナカイドウ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春季は葉裏に寄生する"
+      },
+      "approved": {
+        "record_id": "hostplant-902728",
+        "insect_id": "species-23152",
+        "plant_name": "ハナカイドウ",
+        "plant_family": "バラ科",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春季は葉裏に寄生する"
+      },
+      "decision": "move_next_account_hosts_from_temporary_duplicate"
+    },
+    {
+      "audit_id": "aphid-guide-a239-move-hostplant-902729",
+      "action": "patch_host",
+      "record_id": "hostplant-902729",
+      "source_account": 239,
+      "expected": {
+        "record_id": "hostplant-902729",
+        "insect_id": "species-23151",
+        "plant_name": "マルメロ？",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春季は葉裏に寄生する"
+      },
+      "approved": {
+        "record_id": "hostplant-902729",
+        "insect_id": "species-23152",
+        "plant_name": "マルメロ？",
+        "plant_family": "",
+        "observation_type": "文献",
+        "plant_part": "葉裏",
+        "life_stage": "",
+        "reference": "日本原色アブラムシ図鑑",
+        "notes": "春季は葉裏に寄生する"
+      },
+      "decision": "move_next_account_hosts_from_temporary_duplicate"
+    }
+  ],
+  "insect_actions": [
+    {
+      "audit_id": "aphid-guide-a113-parent-japanese-name",
+      "action": "patch_insect",
+      "record_id": "species-21350",
+      "source_account": 113,
+      "expected": {
+        "insect_id": "species-21350",
+        "family": "Aphididae",
+        "family_jp": "アブラムシ科",
+        "subfamily": "Aphidinae",
+        "subfamily_jp": "亜科",
+        "tribe": "Macrosiphini",
+        "tribe_jp": "ヒゲナガアブラムシ族",
+        "genus": "Capitophorus",
+        "subgenus": "",
+        "species": "hippophaes",
+        "subspecies": "",
+        "author": "",
+        "year": "",
+        "japanese_name": "1852)",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Capitophorus hippophaes",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "approved": {
+        "insect_id": "species-21350",
+        "family": "Aphididae",
+        "family_jp": "アブラムシ科",
+        "subfamily": "Aphidinae",
+        "subfamily_jp": "亜科",
+        "tribe": "Macrosiphini",
+        "tribe_jp": "ヒゲナガアブラムシ族",
+        "genus": "Capitophorus",
+        "subgenus": "",
+        "species": "hippophaes",
+        "subspecies": "",
+        "author": "",
+        "year": "",
+        "japanese_name": "タデクギケアブラムシ",
+        "old_japanese_name": "",
+        "alternative_name": "",
+        "other_names": "",
+        "scientific_name": "Capitophorus hippophaes",
+        "synonyms": "",
+        "changes_since_standard": "",
+        "notes": ""
+      },
+      "decision": "replace_parser_fragment_with_original_account_japanese_name"
+    }
+  ]
+}

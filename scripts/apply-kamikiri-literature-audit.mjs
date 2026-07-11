@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,6 +22,20 @@ const AUDIT_PATH = process.env.KAMIKIRI_LITERATURE_AUDIT_PATH
 const HOST_INDEX_AUDIT_PATH = process.env.KAMIKIRI_HOST_INDEX_AUDIT_PATH
   ? path.resolve(process.env.KAMIKIRI_HOST_INDEX_AUDIT_PATH)
   : path.join(ROOT, 'data', 'source_audits', 'japanese-longhorn-beetles-2007-host-index.csv');
+const SHARED_HOST_INDEX_AUDIT_PATH = process.env.KAMIKIRI_SHARED_HOST_INDEX_AUDIT_PATH
+  ? path.resolve(process.env.KAMIKIRI_SHARED_HOST_INDEX_AUDIT_PATH)
+  : path.join(
+      ROOT,
+      'data',
+      'source_audits',
+      'japanese-longhorn-beetles-2007-shared-host-index.csv',
+    );
+const COMPREHENSIVE_AUDIT_PATH = path.join(
+  ROOT,
+  'data',
+  'source_audits',
+  'japanese-longhorn-beetles-2007-comprehensive-integrity-2026-07-12.json',
+);
 const INSECTS_PATH = path.join(DATA_ROOT, 'normalized_data', 'insects.csv');
 const HOSTPLANTS_PATH = path.join(DATA_ROOT, 'normalized_data', 'hostplants.csv');
 const NOTES_PATH = path.join(DATA_ROOT, 'normalized_data', 'general_notes.csv');
@@ -37,6 +52,22 @@ const MERGED_DUPLICATE_DECISION = 'merge_duplicate_taxon';
 const PENDING_DECISION = 'needs_review';
 const HOST_INDEX_INCLUDED_DECISION = 'include';
 const HOST_INDEX_EXCLUDED_DECISION = 'exclude_ocr_or_boundary';
+const SHARED_HOST_INDEX_DECISION = 'include_shared';
+const SPECIES_LEVEL_SHARED = 'species_level_shared';
+const HISTORICAL_SUBSPECIES_CONCEPT_SHARED = 'historical_subspecies_concept_shared';
+const EXPECTED_SHARED_SOURCE_ROWS = 138;
+const EXPECTED_SHARED_HOST_ROWS = 454;
+const EXPECTED_SPECIES_LEVEL_SHARED_SOURCE_ROWS = 108;
+const EXPECTED_SPECIES_LEVEL_SHARED_HOST_ROWS = 394;
+const EXPECTED_HISTORICAL_SHARED_SOURCE_ROWS = 30;
+const EXPECTED_HISTORICAL_SHARED_HOST_ROWS = 60;
+const EXPECTED_EXCLUDED_OVERBROAD_TARGETS = 59;
+
+const historicalSubspeciesConceptTargets = new Map([
+  ['Aegosoma sinicum', new Set(['1-1', '1-2'])],
+  ['Leptura ochraceofasciata', new Set(['species-22251', 'species-22253'])],
+  ['Thranius variegatus', new Set(['species-22169', 'species-22171'])],
+]);
 
 const taxonomyCorrections = new Map([
   ['species-22458', {
@@ -73,6 +104,11 @@ const hostplantCorrectionsByRecordId = new Map([
 
 const clean = (value) => (value ?? '').toString().trim();
 
+const splitList = (value) => clean(value)
+  .split(/[;；]/)
+  .map((item) => item.trim())
+  .filter(Boolean);
+
 function readCsv(filePath, requiredColumns = []) {
   const text = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
@@ -86,6 +122,46 @@ function readCsv(filePath, requiredColumns = []) {
     }
   }
   return parsed.data;
+}
+
+function comprehensiveAuditState() {
+  if (!fs.existsSync(COMPREHENSIVE_AUDIT_PATH)) return 'absent';
+  const ledger = JSON.parse(fs.readFileSync(COMPREHENSIVE_AUDIT_PATH, 'utf8'));
+  if (ledger.audit_id !== 'japanese-longhorn-beetles-2007-comprehensive-integrity-2026-07-12') {
+    throw new Error('Comprehensive audit identity mismatch');
+  }
+  const collections = {
+    note: readCsv(NOTES_PATH, ['record_id', 'insect_id', 'note_type', 'content', 'reference', 'page', 'year']),
+    host: readCsv(HOSTPLANTS_PATH, [
+      'record_id', 'insect_id', 'plant_name', 'plant_family', 'observation_type',
+      'plant_part', 'life_stage', 'reference', 'notes',
+    ]),
+    insect: readCsv(INSECTS_PATH, ['insect_id', 'japanese_name', 'scientific_name', 'notes']),
+  };
+  const byKind = Object.fromEntries(Object.entries(collections).map(([kind, rows]) => [
+    kind,
+    new Map(rows.map((row) => [kind === 'insect' ? clean(row.insect_id) : clean(row.record_id), row])),
+  ]));
+  const same = (actual, expected) =>
+    actual && Object.entries(expected).every(([column, value]) => clean(actual[column]) === clean(value));
+  const states = [...(ledger.actions || []), ...(ledger.metadata_cleanup_actions || [])].map((action) => {
+    const kind = action.op.endsWith('_note') ? 'note' : action.op.endsWith('_host') ? 'host' : 'insect';
+    const idColumn = kind === 'insect' ? 'insect_id' : 'record_id';
+    const id = clean(action.before?.[idColumn] || action.after?.[idColumn]);
+    const current = byKind[kind].get(id);
+    if (action.op.startsWith('delete_')) {
+      if (!current) return 'applied';
+      if (same(current, action.before)) return 'pending';
+      return 'conflict';
+    }
+    if (same(current, action.after)) return 'applied';
+    if (action.op.startsWith('add_') && !current) return 'pending';
+    if (action.op.startsWith('update_') && same(current, action.before)) return 'pending';
+    return 'conflict';
+  });
+  if (states.every((state) => state === 'applied')) return 'applied';
+  if (states.every((state) => state === 'pending')) return 'pending';
+  throw new Error('Comprehensive audit is in a conflicting or partially applied state');
 }
 
 function parseHostPlants(value, auditId) {
@@ -302,6 +378,190 @@ for (const row of hostIndexAuditRows) {
   hostIndexAudits.push(audit);
 }
 
+const hostIndexAuditsById = new Map(hostIndexAudits.map((audit) => [audit.audit_id, audit]));
+const eligibleSharedSourceAudits = hostIndexAudits.filter(
+  (audit) =>
+    audit.decision === PENDING_DECISION &&
+    /亜種|基亜種|分割|配分/.test(audit.review_note) &&
+    !/[?？]/.test(audit.review_note),
+);
+if (eligibleSharedSourceAudits.length !== EXPECTED_SHARED_SOURCE_ROWS) {
+  throw new Error(
+    `Expected ${EXPECTED_SHARED_SOURCE_ROWS} subspecies-sharing source rows; ` +
+    `found ${eligibleSharedSourceAudits.length}`,
+  );
+}
+
+const sharedHostIndexAuditRows = readCsv(SHARED_HOST_INDEX_AUDIT_PATH, [
+  'share_audit_id',
+  'source_audit_id',
+  'classification',
+  'source_species_group',
+  'source_japanese_name',
+  'source_mapped_insect_id',
+  'target_insect_ids',
+  'target_japanese_names',
+  'proposed_record_ids',
+  'excluded_target_insect_ids',
+  'plant_name',
+  'plant_family',
+  'canonical_reference',
+  'pdf_file',
+  'source_pdf_sha256',
+  'ocr_sha256',
+  'source_pdf_page',
+  'source_printed_page',
+  'source_ocr_line',
+  'decision',
+  'reviewed_on',
+  'source_review_note',
+  'shared_rationale',
+  'excluded_rationale',
+]);
+const sharedAuditIds = new Set();
+const sharedSourceAuditIds = new Set();
+const sharedRecordIds = new Set();
+const sharedHostIndexAudits = [];
+
+for (const row of sharedHostIndexAuditRows) {
+  const audit = Object.fromEntries(
+    Object.entries(row).map(([key, value]) => [key, clean(value)]),
+  );
+  if (!audit.share_audit_id || !audit.source_audit_id) {
+    throw new Error('Kamikiri shared host-index row is missing share/source audit_id');
+  }
+  if (sharedAuditIds.has(audit.share_audit_id)) {
+    throw new Error(`Duplicate kamikiri shared audit_id: ${audit.share_audit_id}`);
+  }
+  if (sharedSourceAuditIds.has(audit.source_audit_id)) {
+    throw new Error(`Duplicate kamikiri shared source_audit_id: ${audit.source_audit_id}`);
+  }
+  const sourceAudit = hostIndexAuditsById.get(audit.source_audit_id);
+  if (!sourceAudit || sourceAudit.decision !== PENDING_DECISION) {
+    throw new Error(`${audit.share_audit_id}: source row is not a pending host-index audit`);
+  }
+  if (/[?？]/.test(sourceAudit.review_note)) {
+    throw new Error(`${audit.share_audit_id}: question-mark source must remain excluded`);
+  }
+  const sourceFields = new Map([
+    ['source_mapped_insect_id', 'insect_id'],
+    ['source_japanese_name', 'source_japanese_name'],
+    ['plant_name', 'plant_name'],
+    ['plant_family', 'plant_family'],
+    ['canonical_reference', 'canonical_reference'],
+    ['pdf_file', 'pdf_file'],
+    ['source_pdf_sha256', 'source_pdf_sha256'],
+    ['ocr_sha256', 'ocr_sha256'],
+    ['source_pdf_page', 'source_pdf_page'],
+    ['source_printed_page', 'source_printed_page'],
+    ['source_ocr_line', 'source_ocr_line'],
+    ['source_review_note', 'review_note'],
+  ]);
+  for (const [sharedField, sourceField] of sourceFields) {
+    if (audit[sharedField] !== sourceAudit[sourceField]) {
+      throw new Error(`${audit.share_audit_id}: ${sharedField} no longer matches source audit`);
+    }
+  }
+  if (audit.canonical_reference !== REFERENCE) {
+    throw new Error(`${audit.share_audit_id}: reference mismatch`);
+  }
+  if (audit.pdf_file !== PDF_FILE) throw new Error(`${audit.share_audit_id}: PDF filename mismatch`);
+  if (audit.source_pdf_sha256 !== PDF_SHA256) {
+    throw new Error(`${audit.share_audit_id}: PDF hash mismatch`);
+  }
+  if (audit.ocr_sha256 !== OCR_SHA256) throw new Error(`${audit.share_audit_id}: OCR hash mismatch`);
+  if (!REVIEWED_ON_RE.test(audit.reviewed_on)) {
+    throw new Error(`${audit.share_audit_id}: invalid review date`);
+  }
+  if (audit.decision !== SHARED_HOST_INDEX_DECISION) {
+    throw new Error(`${audit.share_audit_id}: unsupported shared decision ${audit.decision}`);
+  }
+  if (![SPECIES_LEVEL_SHARED, HISTORICAL_SUBSPECIES_CONCEPT_SHARED].includes(audit.classification)) {
+    throw new Error(`${audit.share_audit_id}: unsupported shared classification ${audit.classification}`);
+  }
+  const target_insect_ids = splitList(audit.target_insect_ids);
+  const target_japanese_names = splitList(audit.target_japanese_names);
+  const proposed_record_ids = splitList(audit.proposed_record_ids);
+  const excluded_target_insect_ids = splitList(audit.excluded_target_insect_ids);
+  if (
+    target_insect_ids.length === 0 ||
+    target_insect_ids.length !== target_japanese_names.length ||
+    target_insect_ids.length !== proposed_record_ids.length
+  ) {
+    throw new Error(`${audit.share_audit_id}: target IDs, names, and record IDs must align`);
+  }
+  if (new Set(target_insect_ids).size !== target_insect_ids.length) {
+    throw new Error(`${audit.share_audit_id}: duplicate target insect_id`);
+  }
+  if (new Set(excluded_target_insect_ids).size !== excluded_target_insect_ids.length) {
+    throw new Error(`${audit.share_audit_id}: duplicate excluded target insect_id`);
+  }
+  if (excluded_target_insect_ids.some((id) => target_insect_ids.includes(id))) {
+    throw new Error(`${audit.share_audit_id}: included and excluded targets overlap`);
+  }
+  if (!audit.source_species_group || !audit.shared_rationale) {
+    throw new Error(`${audit.share_audit_id}: species group or sharing rationale is missing`);
+  }
+  if (excluded_target_insect_ids.length > 0 && !audit.excluded_rationale) {
+    throw new Error(`${audit.share_audit_id}: excluded targets require a rationale`);
+  }
+  for (const recordId of proposed_record_ids) {
+    if (!/^host-kamikiri-shared-[0-9a-f]{12}$/.test(recordId)) {
+      throw new Error(`${audit.share_audit_id}: invalid proposed record_id ${recordId}`);
+    }
+    if (sharedRecordIds.has(recordId)) {
+      throw new Error(`Duplicate kamikiri shared record_id: ${recordId}`);
+    }
+    sharedRecordIds.add(recordId);
+  }
+  sharedAuditIds.add(audit.share_audit_id);
+  sharedSourceAuditIds.add(audit.source_audit_id);
+  sharedHostIndexAudits.push({
+    ...audit,
+    target_insect_ids,
+    target_japanese_names,
+    proposed_record_ids,
+    excluded_target_insect_ids,
+  });
+}
+
+const eligibleSharedSourceIds = new Set(
+  eligibleSharedSourceAudits.map((audit) => audit.audit_id),
+);
+if (
+  sharedSourceAuditIds.size !== eligibleSharedSourceIds.size ||
+  [...eligibleSharedSourceIds].some((id) => !sharedSourceAuditIds.has(id))
+) {
+  throw new Error('Shared host-index ledger does not cover the 138 eligible source rows exactly');
+}
+const sharedSourceCountFor = (classification) => sharedHostIndexAudits.filter(
+  (audit) => audit.classification === classification,
+).length;
+const sharedHostCountFor = (classification) => sharedHostIndexAudits
+  .filter((audit) => audit.classification === classification)
+  .reduce((count, audit) => count + audit.target_insect_ids.length, 0);
+const sharedHostCount = sharedHostIndexAudits.reduce(
+  (count, audit) => count + audit.target_insect_ids.length,
+  0,
+);
+const excludedOverbroadTargetCount = sharedHostIndexAudits.reduce(
+  (count, audit) => count + audit.excluded_target_insect_ids.length,
+  0,
+);
+if (
+  sharedHostIndexAudits.length !== EXPECTED_SHARED_SOURCE_ROWS ||
+  sharedHostCount !== EXPECTED_SHARED_HOST_ROWS ||
+  sharedSourceCountFor(SPECIES_LEVEL_SHARED) !== EXPECTED_SPECIES_LEVEL_SHARED_SOURCE_ROWS ||
+  sharedHostCountFor(SPECIES_LEVEL_SHARED) !== EXPECTED_SPECIES_LEVEL_SHARED_HOST_ROWS ||
+  sharedSourceCountFor(HISTORICAL_SUBSPECIES_CONCEPT_SHARED) !==
+    EXPECTED_HISTORICAL_SHARED_SOURCE_ROWS ||
+  sharedHostCountFor(HISTORICAL_SUBSPECIES_CONCEPT_SHARED) !==
+    EXPECTED_HISTORICAL_SHARED_HOST_ROWS ||
+  excludedOverbroadTargetCount !== EXPECTED_EXCLUDED_OVERBROAD_TARGETS
+) {
+  throw new Error('Shared host-index ledger count guard failed');
+}
+
 function parseRecord(record, fileLabel) {
   const parsed = Papa.parse(record);
   if (parsed.errors.length > 0) throw new Error(`${fileLabel}: ${parsed.errors[0].message}`);
@@ -395,10 +655,22 @@ function assertUniqueKamikiriHostPairs(csvText, filePath) {
   const seen = new Set();
   for (const row of parsed.data) {
     if (clean(row.reference) !== REFERENCE) continue;
-    const key = `${clean(row.insect_id)}\u0000${clean(row.plant_name)}`;
+    // A plant may legitimately occur twice when the source distinguishes, for
+    // example, a larval wood host from an adult feeding plant. Reject only a
+    // fully duplicated biological relation, not a distinct life-stage record.
+    const key = [
+      row.insect_id,
+      row.plant_name,
+      row.plant_family,
+      row.observation_type,
+      row.plant_part,
+      row.life_stage,
+      row.reference,
+      row.notes,
+    ].map(clean).join('\u0000');
     if (seen.has(key)) {
       throw new Error(
-        `${path.relative(ROOT, filePath)} has duplicate ${REFERENCE} host pair: ` +
+        `${path.relative(ROOT, filePath)} has duplicate ${REFERENCE} host relation: ` +
         `${clean(row.insect_id)} / ${clean(row.plant_name)}`,
       );
     }
@@ -421,7 +693,13 @@ function writeOutputsAtomically(outputs) {
   }
 }
 
-const insects = readCsv(INSECTS_PATH, ['insect_id', 'japanese_name']);
+const insects = readCsv(INSECTS_PATH, [
+  'insect_id',
+  'japanese_name',
+  'genus',
+  'species',
+  'scientific_name',
+]);
 const insectsById = new Map(insects.map((row) => [clean(row.insect_id), row]));
 for (const audit of auditsByInsectId.values()) {
   const insect = insectsById.get(audit.insect_id);
@@ -441,6 +719,68 @@ for (const audit of hostIndexAudits) {
   if (clean(insect.japanese_name) !== audit.current_japanese_name) {
     throw new Error(`${audit.audit_id}: host-index current Japanese name no longer matches insects.csv`);
   }
+}
+
+const sameSet = (left, right) =>
+  left.size === right.size && [...left].every((value) => right.has(value));
+const sharedHostPairKeys = new Set();
+for (const audit of sharedHostIndexAudits) {
+  const sourceInsect = insectsById.get(audit.source_mapped_insect_id);
+  if (!sourceInsect) {
+    throw new Error(`${audit.share_audit_id}: source insect_id is absent from insects.csv`);
+  }
+  const sourceSpeciesGroup = `${clean(sourceInsect.genus)} ${clean(sourceInsect.species)}`;
+  if (sourceSpeciesGroup !== audit.source_species_group) {
+    throw new Error(`${audit.share_audit_id}: source species group no longer matches insects.csv`);
+  }
+  const siblingIds = new Set(
+    insects
+      .filter(
+        (insect) =>
+          clean(insect.genus) === clean(sourceInsect.genus) &&
+          clean(insect.species) === clean(sourceInsect.species),
+      )
+      .map((insect) => clean(insect.insect_id)),
+  );
+  const targetIds = new Set(audit.target_insect_ids);
+  const excludedIds = new Set(audit.excluded_target_insect_ids);
+  const coveredIds = new Set([...targetIds, ...excludedIds]);
+  if (!sameSet(siblingIds, coveredIds)) {
+    throw new Error(`${audit.share_audit_id}: included/excluded targets do not cover the species group`);
+  }
+  if (audit.classification === SPECIES_LEVEL_SHARED) {
+    if (excludedIds.size > 0 || !sameSet(siblingIds, targetIds)) {
+      throw new Error(`${audit.share_audit_id}: species-level record must reach every current subspecies`);
+    }
+    if (historicalSubspeciesConceptTargets.has(audit.source_species_group)) {
+      throw new Error(`${audit.share_audit_id}: explicit historical subspecies concept was over-shared`);
+    }
+  } else {
+    const expectedTargets = historicalSubspeciesConceptTargets.get(audit.source_species_group);
+    if (!expectedTargets || !sameSet(expectedTargets, targetIds)) {
+      throw new Error(`${audit.share_audit_id}: historical subspecies targets do not match the reviewed scope`);
+    }
+  }
+  audit.target_insect_ids.forEach((targetId, index) => {
+    const target = insectsById.get(targetId);
+    if (!target) throw new Error(`${audit.share_audit_id}: target ${targetId} is absent from insects.csv`);
+    if (clean(target.japanese_name) !== audit.target_japanese_names[index]) {
+      throw new Error(`${audit.share_audit_id}: target Japanese name no longer matches ${targetId}`);
+    }
+    const expectedRecordId = `host-kamikiri-shared-${crypto
+      .createHash('sha1')
+      .update(`${audit.source_audit_id}|${targetId}`)
+      .digest('hex')
+      .slice(0, 12)}`;
+    if (audit.proposed_record_ids[index] !== expectedRecordId) {
+      throw new Error(`${audit.share_audit_id}: proposed record_id drift for ${targetId}`);
+    }
+    const pairKey = `${targetId}\u0000${audit.plant_name}`;
+    if (sharedHostPairKeys.has(pairKey)) {
+      throw new Error(`${audit.share_audit_id}: duplicate shared host pair ${targetId} / ${audit.plant_name}`);
+    }
+    sharedHostPairKeys.add(pairKey);
+  });
 }
 
 const mergedAudits = [...auditsByInsectId.values()].filter(
@@ -478,10 +818,11 @@ for (const audit of mergedAudits) {
   }
 }
 
-const splitList = (value) => clean(value)
-  .split(/[;；]/)
-  .map((item) => item.trim())
-  .filter(Boolean);
+const comprehensiveState = comprehensiveAuditState();
+if (comprehensiveState === 'applied') {
+  console.log('Comprehensive 2026-07-12 audit is already applied; legacy audit makes no changes.');
+  process.exit(0);
+}
 
 const mergeAdditionsByCanonicalId = new Map();
 for (const audit of mergedAudits) {
@@ -551,9 +892,29 @@ for (const audit of includedHostIndexAudits) {
     notes: '',
   });
 }
+const sharedHostRows = sharedHostIndexAudits.flatMap((audit) =>
+  audit.target_insect_ids.map((targetInsectId, index) => ({
+    record_id: audit.proposed_record_ids[index],
+    insect_id: targetInsectId,
+    plant_name: audit.plant_name,
+    plant_family: audit.plant_family,
+    observation_type: '文献',
+    plant_part: '',
+    life_stage: '幼虫',
+    reference: REFERENCE,
+    notes: '',
+  })),
+);
+if (sharedHostRows.length !== EXPECTED_SHARED_HOST_ROWS) {
+  throw new Error(
+    `Expected ${EXPECTED_SHARED_HOST_ROWS} shared host rows; found ${sharedHostRows.length}`,
+  );
+}
+hostRows.push(...sharedHostRows);
 const hostIndexRecordIds = new Set(
   hostIndexAudits.map((audit) => `host-${audit.audit_id}`),
 );
+const sharedHostRecordIds = new Set(sharedHostRows.map((row) => row.record_id));
 
 const rewrittenHostplants = buildRewrittenCsv(
   HOSTPLANTS_PATH,
@@ -563,7 +924,7 @@ const rewrittenHostplants = buildRewrittenCsv(
     const insectId = clean(values[indexes.insect_id]);
     const reference = clean(values[indexes.reference]);
     const audit = appliedAuditsByInsectId.get(insectId);
-    if (hostIndexRecordIds.has(recordId)) return null;
+    if (hostIndexRecordIds.has(recordId) || sharedHostRecordIds.has(recordId)) return null;
     if (audit?.decision === MERGED_DUPLICATE_DECISION) return null;
     if (audit && reference === REFERENCE) return null;
     const correction = hostplantCorrectionsByRecordId.get(recordId);
@@ -774,5 +1135,7 @@ console.log(
   `kept ${pendingCount} pending for review ` +
   `(${hostRows.length} host rows, ${noteRows.length} note rows); ` +
   `host-index ${includedHostIndexAudits.length} included, ${excludedHostIndexCount} excluded, ` +
-  `${pendingHostIndexCount} pending`,
+  `${pendingHostIndexCount} pending; shared-host-index ` +
+  `${sharedHostIndexAudits.length} source rows -> ${sharedHostRows.length} host rows, ` +
+  `${excludedOverbroadTargetCount} overbroad targets excluded`,
 );

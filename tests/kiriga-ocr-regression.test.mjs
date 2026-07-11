@@ -39,19 +39,18 @@ test('コケイロホソキリガ does not expose OCR-only hostplant note fragme
   });
 });
 
-test('コケイロホソキリガ emergence time uses the standard-zukan 10-1 month range', () => {
+test('コケイロホソキリガ emergence time uses the PDF-audited winter-noctuid account', () => {
   ['normalized_data/general_notes.csv', 'public/general_notes.csv'].forEach((csvPath) => {
     const rows = parseCsv(csvPath);
     const targetRows = rows.filter((row) => row.insect_id === 'species-6031');
     assert.equal(
-      targetRows.some((row) => (row.content || '').includes('翌年5月')),
-      false,
-      `${csvPath} should not include the blocked 翌年5月 emergence note for species-6031`,
-    );
-    assert.equal(
-      targetRows.some((row) => row.note_type === '出現時期' && row.content === '10～1月'),
+      targetRows.some((row) =>
+        row.note_type === '出現時期' &&
+        row.content === '10月羽化〜翌年5月' &&
+        row.reference === '日本の冬夜蛾' &&
+        row.page === '64'),
       true,
-      `${csvPath} should keep the standard-zukan 10～1月 emergence note`,
+      `${csvPath} should include the PDF-audited emergence note`,
     );
   });
 
@@ -63,17 +62,18 @@ test('コケイロホソキリガ emergence time uses the standard-zukan 10-1 mo
   const target = normalized.moths.find((moth) => moth.id === 'species-6031');
   assert.ok(target, 'normalized moth data should include species-6031');
   assert.equal(target.name, 'コケイロホソキリガ');
-  assert.equal(target.emergenceTime, '10～1月');
+  assert.equal(target.emergenceTime, '10月羽化〜翌年5月');
+  assert.equal(target.emergenceTimeSource, '日本の冬夜蛾');
   assert.equal(
     target.hostPlantsDetailed.some((row) => ['音', 'し'].includes((row.notes || '').trim())),
     false,
   );
 });
 
-test('モンハイイロキリガ and ウスアオキリガ emergence use standard-zukan timing', () => {
+test('モンハイイロキリガ and ウスアオキリガ emergence use PDF-audited timing', () => {
   const expected = new Map([
-    ['species-6026', { name: 'モンハイイロキリガ', emergenceTime: '9〜11月' }],
-    ['species-6027', { name: 'ウスアオキリガ', emergenceTime: '9〜11月' }],
+    ['species-6026', { name: 'モンハイイロキリガ', emergenceTime: '10月頃羽化〜翌年5月', page: '64' }],
+    ['species-6027', { name: 'ウスアオキリガ', emergenceTime: '10月羽化〜翌年5月', page: '65' }],
   ]);
 
   ['normalized_data/general_notes.csv', 'public/general_notes.csv'].forEach((csvPath) => {
@@ -81,14 +81,12 @@ test('モンハイイロキリガ and ウスアオキリガ emergence use standa
     expected.forEach((meta, insectId) => {
       const emergenceRows = rows.filter((row) => row.insect_id === insectId && row.note_type === '出現時期');
       assert.equal(
-        emergenceRows.some((row) => (row.content || '').includes('翌年5月')),
-        false,
-        `${csvPath} should not include an OCR-derived 翌年5月 emergence row for ${meta.name}`,
-      );
-      assert.equal(
-        emergenceRows.some((row) => row.content === meta.emergenceTime && row.reference === '日本産蛾類標準図鑑2'),
+        emergenceRows.some((row) =>
+          row.content === meta.emergenceTime &&
+          row.reference === '日本の冬夜蛾' &&
+          row.page === meta.page),
         true,
-        `${csvPath} should keep the standard-zukan emergence row for ${meta.name}`,
+        `${csvPath} should keep the PDF-audited emergence row for ${meta.name}`,
       );
     });
   });
@@ -103,6 +101,7 @@ test('モンハイイロキリガ and ウスアオキリガ emergence use standa
     assert.ok(target, `normalized moth data should include ${meta.name}`);
     assert.equal(target.name, meta.name);
     assert.equal(target.emergenceTime, meta.emergenceTime);
+    assert.equal(target.emergenceTimeSource, '日本の冬夜蛾');
   });
 });
 
