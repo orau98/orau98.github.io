@@ -17,6 +17,38 @@ const INSECT_TYPE_ORDER = Object.freeze({
   aphid: 6,
 });
 
+export const TAXONOMIC_RANK_ORDER = Object.freeze([
+  'order',
+  'suborder',
+  'infraorder',
+  'superfamily',
+  'family',
+  'subfamily',
+  'tribe',
+  'subtribe',
+  'genus',
+  'subgenus',
+  'species',
+  'subspecies',
+]);
+
+const taxonomicRankPriority = new Map(
+  TAXONOMIC_RANK_ORDER.map((rank, index) => [rank, index]),
+);
+
+// 分類チップは入力順に依存させず、常に上位階級から下位階級へ並べる。
+// 未知の階級も捨てず、既知の階級の後ろに入力順を保って残す。
+export const orderTaxonomyRanks = (items = []) =>
+  items
+    .filter((item) => item && item.rank)
+    .map((item, sourceIndex) => ({ item, sourceIndex }))
+    .sort((a, b) => {
+      const aPriority = taxonomicRankPriority.get(a.item.rank) ?? Number.MAX_SAFE_INTEGER;
+      const bPriority = taxonomicRankPriority.get(b.item.rank) ?? Number.MAX_SAFE_INTEGER;
+      return aPriority - bPriority || a.sourceIndex - b.sourceIndex;
+    })
+    .map(({ item }) => item);
+
 // 学名から属名と種小名を取り出す。
 // 例: "Acmaeodera (Cobosiella) luzonica Nonfried, 1895" → { genus: 'Acmaeodera', species: 'luzonica' }
 //     "Micropterix aureatella (Scopoli, 1763)"          → { genus: 'Micropterix', species: 'aureatella' }
