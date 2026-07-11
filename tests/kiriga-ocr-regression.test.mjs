@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 import Papa from 'papaparse';
 
+import { collectGeneralNoteIssues } from '../scripts/lib/generalNoteQuality.mjs';
 import { convertNormalizedDataToStandardFormat } from '../src/utils/normalizedDataParser.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -146,5 +147,56 @@ test('日本のキリガ OCR hostplant rows do not keep short note fragments', (
     assert.ok(mizuki, `${csvPath} should keep the テンスジキリガ ミズキ hostplant row`);
     assert.equal(mizuki.plant_name, 'ミズキ');
     assert.equal(mizuki.plant_family, 'ミズキ科');
+  });
+});
+
+test('日本の冬夜蛾 ecology notes exactly match the species-by-species PDF audit', () => {
+  const auditRows = parseCsv('data/source_audits/japan-winter-noctuid-ecology.csv');
+  const includedAuditRows = auditRows.filter((row) => row.decision === 'include');
+  const insectNames = new Map(
+    parseCsv('normalized_data/insects.csv').map((row) => [row.insect_id, row.japanese_name]),
+  );
+  assert.equal(auditRows.length, 83, 'the PDF audit should cover all 83 legacy ecology rows');
+  assert.equal(new Set(auditRows.map((row) => row.record_id)).size, 83);
+  assert.equal(new Set(auditRows.map((row) => row.insect_id)).size, 83);
+  assert.equal(includedAuditRows.length, 83, 'all audited rows should have approved objective content');
+  includedAuditRows.forEach((audit) => {
+    assert.equal(insectNames.get(audit.insect_id), audit.japanese_name);
+  });
+
+  ['normalized_data/general_notes.csv', 'public/general_notes.csv'].forEach((csvPath) => {
+    const rows = parseCsv(csvPath);
+    const legacyRows = rows.filter(
+      (row) => row.reference === '日本のキリガ' && ['生態', '生態情報'].includes(row.note_type),
+    );
+    assert.equal(legacyRows.length, 0, `${csvPath} should not keep legacy unaudited ecology rows`);
+
+    const actualRows = rows.filter(
+      (row) => row.reference === '日本の冬夜蛾' && row.note_type === '生態情報',
+    );
+    assert.equal(actualRows.length, includedAuditRows.length, `${csvPath} should match the audit row count`);
+    const actualById = new Map(actualRows.map((row) => [row.record_id, row]));
+
+    includedAuditRows.forEach((audit) => {
+      const actual = actualById.get(audit.record_id);
+      assert.ok(actual, `${csvPath} should include ${audit.record_id} (${audit.japanese_name})`);
+      assert.equal(actual.insect_id, audit.insect_id);
+      assert.equal(actual.content, audit.approved_content);
+      assert.equal(actual.page, audit.printed_page);
+      assert.deepEqual(
+        collectGeneralNoteIssues(actual),
+        [],
+        `${csvPath} should keep only publishable objective content for ${audit.japanese_name}`,
+      );
+    });
+
+    const allContent = actualRows.map((row) => row.content).join('\n');
+    assert.doesNotMatch(allContent, /条件に恵まれると|幸福感|美しさである/);
+    const tanigawa = actualById.get('note-1004752');
+    assert.equal(
+      tanigawa.content,
+      '灯火採集で得られる。飛来のピークは19～20時頃。気温が5℃を下回るような寒い日でもライトに飛来する。♀の飛来数は少ない。山地のブナやカツラ、イタヤカエデなどが生える林で採れている。',
+    );
+    assert.equal(tanigawa.page, '54');
   });
 });
