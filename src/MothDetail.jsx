@@ -42,7 +42,7 @@ import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
-import { sortInsectsTaxonomically } from './utils/taxonomicOrder';
+import { orderTaxonomyRanks, sortInsectsTaxonomically } from './utils/taxonomicOrder';
 import { getPublicHostPlantSectionNote } from './utils/publicHostPlantNotes';
 import {
   INDEX_FOLLOW_ROBOTS,
@@ -750,6 +750,19 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     japaneseName: moth?.classification?.tribeJapanese,
     scientificName: moth?.classification?.tribe,
   });
+  const subtribeChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: moth?.classification?.subtribeJapanese,
+    scientificName: moth?.classification?.subtribe,
+  });
+  const taxonomyChips = orderTaxonomyRanks([
+    { rank: 'order', chip: orderChip },
+    { rank: 'family', chip: familyChip },
+    { rank: 'subfamily', chip: subfamilyChip },
+    { rank: 'tribe', chip: tribeChip },
+    { rank: 'subtribe', chip: subtribeChip },
+    { rank: 'genus', label: genusChipLabel },
+  ]);
   const canonicalHref = moth
     ? absUrl(
       isEnglish
@@ -1195,55 +1208,55 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             <span className="sm:hidden">{isEnglish ? 'Back' : '一覧へ'}</span>
             <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
           </Link>
-          {orderChip.label && (
-            <span className="inline-flex items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1.5 text-xs font-medium text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 sm:px-3 sm:text-sm">
-              <span className="font-medium">{orderChip.label}</span>
-              {orderChip.referenceLabel && (
-                <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{orderChip.referenceLabel}</span>
-              )}
-            </span>
-          )}
-          {familyChip.label && familyChip.queryValue && (
-            <Link
-              to={localizePath(`/?classification=${encodeURIComponent(familyChip.queryValue)}`, locale)}
-              className="inline-flex items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1.5 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm"
-            >
-              <span className="font-medium">{familyChip.label}</span>
-              {familyChip.referenceLabel && (
-                <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{familyChip.referenceLabel}</span>
-              )}
-            </Link>
-          )}
-          {genusChipLabel && (
-            <Link
-              to={localizePath(`/?tab=insects&q=${encodeURIComponent(genusChipLabel)}`, locale)}
-              className="inline-flex items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm"
-            >
-              <span className="font-medium italic">{genusChipLabel}</span>
-            </Link>
-          )}
-          {subfamilyChip.label && subfamilyChip.queryValue && (
-            <Link
-              to={localizePath(`/?classification=${encodeURIComponent(subfamilyChip.queryValue)}`, locale)}
-              className="hidden items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1.5 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 lg:inline-flex"
-            >
-              <span className="font-medium">{subfamilyChip.label}</span>
-              {subfamilyChip.referenceLabel && (
-                <span className="ml-1 text-xs opacity-80">{subfamilyChip.referenceLabel}</span>
-              )}
-            </Link>
-          )}
-          {tribeChip.label && tribeChip.queryValue && (
-            <Link
-              to={localizePath(`/?classification=${encodeURIComponent(tribeChip.queryValue)}`, locale)}
-              className="hidden items-center rounded-lg border border-blue-200/50 bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 xl:inline-flex"
-            >
-              <span className="font-medium">{tribeChip.label}</span>
-              {tribeChip.referenceLabel && (
-                <span className="ml-1 text-xs opacity-80">{tribeChip.referenceLabel}</span>
-              )}
-            </Link>
-          )}
+          {taxonomyChips.map((item) => {
+            if (item.rank === 'order') {
+              if (!item.chip.label) return null;
+              return (
+                <span key={item.rank} className="inline-flex items-center rounded-lg border border-emerald-200/60 bg-emerald-100 px-2.5 py-1.5 text-xs font-medium text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 sm:px-3 sm:text-sm">
+                  <span className="font-medium">{item.chip.label}</span>
+                  {item.chip.referenceLabel && (
+                    <span className="ml-1 hidden text-[11px] opacity-80 sm:inline">{item.chip.referenceLabel}</span>
+                  )}
+                </span>
+              );
+            }
+
+            if (item.rank === 'genus') {
+              if (!item.label) return null;
+              return (
+                <Link
+                  key={item.rank}
+                  to={localizePath(`/?tab=insects&q=${encodeURIComponent(item.label)}`, locale)}
+                  className="inline-flex items-center rounded-lg border border-slate-200/60 bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-800 transition-all duration-200 hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-900/30 dark:text-slate-300 dark:hover:bg-slate-900/50 sm:px-3 sm:text-sm"
+                >
+                  <span className="font-medium italic">{item.label}</span>
+                </Link>
+              );
+            }
+
+            if (!item.chip.label || !item.chip.queryValue) return null;
+            const isFamily = item.rank === 'family';
+            const isSubfamily = item.rank === 'subfamily';
+            const isTribe = item.rank === 'tribe';
+            const className = isFamily
+              ? 'inline-flex items-center rounded-lg border border-blue-200/60 bg-blue-100 px-2.5 py-1.5 text-xs font-medium text-blue-800 transition-all duration-200 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 sm:px-3 sm:text-sm'
+              : isSubfamily
+                ? 'hidden items-center rounded-lg border border-emerald-200/50 bg-emerald-100 px-3 py-1.5 text-sm font-medium text-emerald-800 transition-all duration-200 hover:bg-emerald-200 dark:border-emerald-700/50 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50 lg:inline-flex'
+                : `hidden items-center rounded-lg border ${isTribe ? 'border-blue-200/50 bg-blue-100 text-blue-800 hover:bg-blue-200 dark:border-blue-700/50 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50' : 'border-violet-200/50 bg-violet-100 text-violet-800 hover:bg-violet-200 dark:border-violet-700/50 dark:bg-violet-900/30 dark:text-violet-300 dark:hover:bg-violet-900/50'} px-3 py-1.5 text-sm font-medium transition-all duration-200 xl:inline-flex`;
+
+            return (
+              <Link
+                key={item.rank}
+                to={localizePath(`/?classification=${encodeURIComponent(item.chip.queryValue)}`, locale)}
+                className={className}
+              >
+                <span className="font-medium">{item.chip.label}</span>
+                {item.chip.referenceLabel && (
+                  <span className={`${isFamily ? 'hidden text-[11px] sm:inline' : 'text-xs'} ml-1 opacity-80`}>{item.chip.referenceLabel}</span>
+                )}
+              </Link>
+            );
+          })}
         </div>
 
 

@@ -2,10 +2,41 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  orderTaxonomyRanks,
   parseGenusSpecies,
   sortInsectsTaxonomically,
   sortPlantNamesTaxonomically,
 } from '../src/utils/taxonomicOrder.js';
+
+test('orderTaxonomyRanks keeps detail chips in broad-to-narrow hierarchy', () => {
+  const unordered = [
+    { rank: 'genus', label: 'Graphium' },
+    { rank: 'tribe', label: 'Leptocircini' },
+    { rank: 'family', label: 'Papilionidae' },
+    { rank: 'order', label: 'Lepidoptera' },
+    { rank: 'subtribe', label: 'Leptocircina' },
+    { rank: 'subfamily', label: 'Papilioninae' },
+  ];
+
+  assert.deepEqual(
+    orderTaxonomyRanks(unordered).map(({ rank }) => rank),
+    ['order', 'family', 'subfamily', 'tribe', 'subtribe', 'genus'],
+  );
+});
+
+test('orderTaxonomyRanks keeps sparse and future taxonomy data safe', () => {
+  const sparse = [
+    { rank: 'genus', label: 'Graphium' },
+    { rank: 'custom-rank', label: 'Future rank' },
+    { rank: 'superfamily', label: 'Papilionoidea' },
+    { rank: 'family', label: 'Papilionidae' },
+  ];
+
+  assert.deepEqual(
+    orderTaxonomyRanks(sparse).map(({ rank }) => rank),
+    ['superfamily', 'family', 'genus', 'custom-rank'],
+  );
+});
 
 test('parseGenusSpecies extracts genus and species, skipping subgenus and author', () => {
   assert.deepEqual(parseGenusSpecies('Micropterix aureatella (Scopoli, 1763)'), {
