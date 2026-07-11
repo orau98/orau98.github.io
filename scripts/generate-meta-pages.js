@@ -20,7 +20,10 @@ import {
 } from '../src/utils/filename.js';
 import { bibliography } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
-import { getPublicHostPlantNote } from '../src/utils/publicHostPlantNotes.js';
+import {
+  getPublicHostPlantNote,
+  getPublicHostPlantSectionNote,
+} from '../src/utils/publicHostPlantNotes.js';
 import { normalizeJapaneseInsectName } from '../src/utils/insectNameAliases.js';
 import {
   isValidPlantName,
@@ -2396,7 +2399,7 @@ async function generateMetaPages() {
       const _species = row.species || '';
       const _author = row.author || '';
       const _year = row.year || '';
-      const notes = row.notes || '';
+      const notes = getPublicHostPlantSectionNote(row.notes || '');
       const alternativeNames = combineInsectAlternativeNames(row);
       const synonyms = row.synonyms || '';
       
