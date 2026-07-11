@@ -3247,6 +3247,10 @@ function generateMetaIndexes(indexData) {
     .host-plant-directory-item { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--color-border, #eee); }
     .host-plant-directory-item a { color: var(--color-link, #1976d2); text-decoration: none; }
     .host-plant-directory-item a:hover { text-decoration: underline; }
+    .pager { margin: 1.5rem 0; }
+    .pager-inner { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+    .pager a, .pager span { min-width: 2rem; text-align: center; padding: 0.3rem 0.55rem; border: 1px solid var(--color-border, #ddd); border-radius: 6px; text-decoration: none; font-size: 0.9rem; color: var(--color-link, #1976d2); }
+    .pager span[aria-current="page"] { font-weight: 700; background: var(--color-accent, #4caf50); color: #fff; border-color: var(--color-accent, #4caf50); }
     @media (max-width: 760px) {
       .featured-host-plants, .host-plant-directory-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -3255,9 +3259,156 @@ function generateMetaIndexes(indexData) {
     }
   </style>`;
 
+  const HUB_PAGE_SIZE = 600;
+  const hubPageFileName = (pageNo) => (pageNo === 1 ? 'index.html' : `page-${pageNo}.html`);
+  const hubPagePath = (dir, pageNo) =>
+    pageNo === 1 ? `/meta/${dir}/index.html` : `/meta/${dir}/page-${pageNo}.html`;
+  const hubPageUrl = (dir, pageNo) => `${BASE_ORIGIN}${hubPagePath(dir, pageNo)}`;
+
+  const removeStaleHubPages = (dirPath) => {
+    for (const fileName of fs.readdirSync(dirPath)) {
+      if (!/^page-\d+\.html$/.test(fileName)) continue;
+      try { fs.unlinkSync(path.join(dirPath, fileName)); } catch { /* ignore stale build output */ }
+    }
+  };
+
+  const buildPagerHtml = (dir, pageCount, currentPage) => {
+    if (pageCount <= 1) return '';
+    const links = Array.from({ length: pageCount }, (_, index) => index + 1)
+      .map((pageNo) => {
+        if (pageNo === currentPage) return `<span aria-current="page">${pageNo}</span>`;
+        const rel = pageNo === currentPage - 1
+          ? ' rel="prev"'
+          : (pageNo === currentPage + 1 ? ' rel="next"' : '');
+        return `<a href="${hubPagePath(dir, pageNo)}"${rel}>${pageNo}</a>`;
+      })
+      .join('\n        ');
+    return `      <nav class="pager" aria-label="ページ送り">
+        <div class="pager-inner">
+        ${links}
+        </div>
+      </nav>`;
+  };
+
+  const emitPaginatedHub = ({ sec, dirPath, familyBlocks, descriptionBase }) => {
+    const familyTotals = new Map(familyBlocks.map(({ family, items }) => [family, items.length]));
+    const flatItems = familyBlocks.flatMap(({ family, items }) =>
+      items.map((item) => ({ family, ...item })),
+    );
+    const pageCount = Math.max(1, Math.ceil(flatItems.length / HUB_PAGE_SIZE));
+
+    for (let pageNo = 1; pageNo <= pageCount; pageNo++) {
+      const pageStart = (pageNo - 1) * HUB_PAGE_SIZE;
+      const pageItems = flatItems.slice(pageStart, pageStart + HUB_PAGE_SIZE);
+      const pageUrl = hubPageUrl(sec.dir, pageNo);
+      const pageSuffix = `（${pageNo}/${pageCount}）`;
+      const title = `${sec.title}${pageSuffix} | 昆虫植物図鑑`;
+      const description = `${descriptionBase}（${pageNo}/${pageCount}ページ）`;
+      const prevLink = pageNo > 1
+        ? `\n  <link rel="prev" href="${hubPageUrl(sec.dir, pageNo - 1)}">`
+        : '';
+      const nextLink = pageNo < pageCount
+        ? `\n  <link rel="next" href="${hubPageUrl(sec.dir, pageNo + 1)}">`
+        : '';
+
+      const groupedItems = [];
+      for (const item of pageItems) {
+        const lastGroup = groupedItems[groupedItems.length - 1];
+        if (!lastGroup || lastGroup.family !== item.family) {
+          groupedItems.push({ family: item.family, items: [item] });
+        } else {
+          lastGroup.items.push(item);
+        }
+      }
+      const mainContent = groupedItems.map(({ family, items }) => {
+        const heading = family
+          ? `${escapeRedirectHtml(family)}（${familyTotals.get(family)}種）`
+          : `全${flatItems.length}種`;
+        const links = items
+          .map(({ href, label }) => `<li><a href="${href}">${escapeRedirectHtml(label)}</a></li>`)
+          .join('\n          ');
+        return `<section class="family-group">
+        <h2>${heading}</h2>
+        <ul class="species-list">
+          ${links}
+        </ul>
+      </section>`;
+      }).join('\n      ');
+
+      const listStructuredData = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: `${sec.title}${pageSuffix}`,
+        description,
+        url: pageUrl,
+        inLanguage: 'ja',
+        mainEntity: {
+          '@type': 'ItemList',
+          numberOfItems: flatItems.length,
+          itemListElement: pageItems.slice(0, 100).map((item, index) => ({
+            '@type': 'ListItem',
+            position: pageStart + index + 1,
+            item: {
+              '@type': 'WebPage',
+              name: item.label,
+              url: `${BASE_ORIGIN}${item.href}`,
+            },
+          })),
+        },
+      }, null, 2);
+      const pagerHtml = buildPagerHtml(sec.dir, pageCount, pageNo);
+      const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  ${GA_HEAD_TAGS}
+  ${ADSENSE_HEAD_TAGS}
+  <title>${title}</title>
+  <meta name="description" content="${description}">
+  <link rel="canonical" href="${pageUrl}">${prevLink}${nextLink}
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${description}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="${pageUrl}">
+  <meta property="og:site_name" content="昆虫植物図鑑">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${description}">
+  <script type="application/ld+json">${listStructuredData}</script>
+  <link rel="stylesheet" href="${META_STYLE_PATH}">
+${indexStyles}
+</head>
+<body>
+${headerHtml}
+  <div class="meta-page">
+    <header class="meta-header">
+      <h1>${sec.title}${pageSuffix}</h1>
+    </header>
+    <main>
+      <p class="index-summary">全${flatItems.length}種を${familyBlocks.length}科に分けて掲載しています。${pageSuffix}</p>
+${pagerHtml}
+      ${mainContent}
+${pagerHtml}
+    </main>
+    <section class="navigation">
+      <a href="/" class="back-link">図鑑トップへ</a>
+    </section>
+  </div>
+</body>
+</html>`;
+      fs.writeFileSync(path.join(dirPath, hubPageFileName(pageNo)), html);
+    }
+
+    console.log(`[index] ${sec.dir}: ${flatItems.length}種 / ${familyBlocks.length}科 / ${pageCount}ページ`);
+  };
+
   for (const sec of sections) {
     const dirPath = path.join(base, sec.dir);
     if (!fs.existsSync(dirPath)) continue;
+    removeStaleHubPages(dirPath);
     const listUrl = `${BASE_ORIGIN}/meta/${sec.dir}/index.html`;
 
     // ---- 植物インデックス ----
@@ -3274,6 +3425,25 @@ function generateMetaIndexes(indexData) {
       );
       const sortedFamilies = Object.keys(familyData).sort(jaSort);
       const totalPlants = sortedFamilies.reduce((s, f) => s + familyData[f].length, 0);
+      if (totalPlants > HUB_PAGE_SIZE) {
+        const familyBlocks = sortedFamilies.map((family) => ({
+          family,
+          items: familyData[family]
+            .slice()
+            .sort((a, b) => jaSort(a.name, b.name))
+            .map((plant) => ({
+              href: `/meta/plant/${encodeURIComponent(plant.file)}.html`,
+              label: plant.name.replace(/\([^)]+科\)$/, '').trim() || plant.name,
+            })),
+        }));
+        emitPaginatedHub({
+          sec,
+          dirPath,
+          familyBlocks,
+          descriptionBase: `昆虫植物図鑑の食草植物一覧。${totalPlants}種の植物を科別に掲載。`,
+        });
+        continue;
+      }
       const flatPlants = sortedFamilies.flatMap(f => familyData[f]).slice(0, 100);
       const pageDescription = `昆虫植物図鑑の食草植物一覧。${totalPlants}種の植物を科別に掲載。`;
 
@@ -3390,6 +3560,34 @@ ${headerHtml}
         .map(f => ({ id: f.replace(/\.html$/i, ''), name: f.replace(/\.html$/i, '') }));
     } else {
       flatItems = sortedFamilies.flatMap(f => typeData[f]);
+    }
+
+    if (!isButterflyHub && flatItems.length > HUB_PAGE_SIZE) {
+      const familyBlocks = totalSpecies > 0
+        ? sortedFamilies.map((family) => ({
+            family,
+            items: typeData[family]
+              .slice()
+              .sort((a, b) => jaSort(a.name, b.name))
+              .map((species) => ({
+                href: `/meta/${sec.dir}/${encodeURIComponent(species.id)}.html`,
+                label: species.name,
+              })),
+          }))
+        : [{
+            family: '',
+            items: flatItems.map((species) => ({
+              href: `/meta/${sec.dir}/${encodeURIComponent(species.id)}.html`,
+              label: species.name,
+            })),
+          }];
+      emitPaginatedHub({
+        sec,
+        dirPath,
+        familyBlocks,
+        descriptionBase: `昆虫植物図鑑の${sec.title}。${flatItems.length}種を科別に掲載し、各種の食草・寄主植物ページへ案内します。`,
+      });
+      continue;
     }
 
     // JSON-LD: 先頭100件
