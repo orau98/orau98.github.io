@@ -237,10 +237,12 @@ const validateLegacyRedirectHtml = (filePath, html) => {
   const robots = getMetaContent(html, 'name', 'robots');
   const canonical = getLinkHref(html, 'canonical');
   const refreshContent = getMetaHttpEquivContent(html, 'refresh');
+  const redirectKind = getMetaContent(html, 'name', 'x-redirect-kind');
 
   const isCrawlableMigration =
     /^(?:en\/)?(?:moth|butterfly|beetle|longhornbeetle|barkbeetle|leafbeetle|aphid)\/.+\/index\.html$/u.test(distRelativePath) ||
-    /^(?:en\/)?guides\//u.test(distRelativePath);
+    /^(?:en\/)?guides\//u.test(distRelativePath) ||
+    redirectKind === 'taxonomy-merge';
   if (isCrawlableMigration) {
     ensure(!robots.includes('noindex'), `${relativePath}: permanent public redirect must be crawlable`);
   } else {
@@ -443,7 +445,10 @@ ensure(metaFiles.length > 0, 'dist/meta HTML files not found');
 // は課さず、リダイレクトページとしての要件のみ検証する
 const isRedirectStub = (html) =>
   getMetaHttpEquivContent(html, 'refresh').length > 0 &&
-  getMetaContent(html, 'name', 'robots').includes('noindex');
+  (
+    getMetaContent(html, 'name', 'robots').includes('noindex') ||
+    getMetaContent(html, 'name', 'x-redirect-kind') === 'taxonomy-merge'
+  );
 
 // hreflang 相互整合チェック用に、indexable なメタページの canonical と
 // alternate リンクを収集する（noindex ページは対象外）
@@ -544,6 +549,8 @@ for (const relativeDir of legacyRouteDirs) {
     const html = readFile(filePath);
     if (relativeDir === 'plant' || relativeDir === 'en/plant') {
       validatePlantRouteHtml(filePath, html);
+    } else if (getMetaContent(html, 'name', 'x-redirect-kind') === 'taxonomy-merge') {
+      validateLegacyRedirectHtml(filePath, html);
     } else {
       validateInsectRouteHtml(filePath, html);
     }

@@ -2,10 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { slugifyScientificLabel } from './lib/englishNaming.mjs';
+import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
 const RESPONSIVE_IMAGES_SKIPPED = process.env.SKIP_RESPONSIVE_IMAGES === '1';
+const KAMIKIRI_AUDIT_PATH = path.join(
+  ROOT,
+  'data/source_audits/japanese-longhorn-beetles-2007.csv',
+);
 const REQUIRED_FILES = [
   'index.html',
   '.nojekyll',
@@ -317,10 +323,12 @@ for (const segment of insectProfileSegments) {
     !routeDirectories.some((entry) => /%[0-9a-f]{2}/i.test(entry.name)),
     `${segment} shared routes must not keep literal percent-encoded directory names`,
   );
-  const decodedRoute = routeDirectories.find((entry) =>
-    Array.from(entry.name).some((character) => character.codePointAt(0) > 127),
-  );
-  assert(decodedRoute, `${segment} must include at least one decoded shared route`);
+  const decodedRoute = routeDirectories.find((entry) => {
+    if (!Array.from(entry.name).some((character) => character.codePointAt(0) > 127)) return false;
+    const html = readDistText(path.join(segment, entry.name, 'index.html'));
+    return html.includes('window.__INSECT_ROUTE_SHELL__');
+  });
+  assert(decodedRoute, `${segment} must include at least one decoded shared SPA route`);
   const decodedRouteHtml = readDistText(path.join(segment, decodedRoute.name, 'index.html'));
   assert(
     decodedRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
@@ -609,6 +617,112 @@ assert(
     return fs.existsSync(fullPath) && readDistText(relativePath).includes(okinagusaImagePath);
   }),
   'オキナグサ static meta page must include the responsive plant image',
+);
+
+const mergedKamikiriRedirects = loadKamikiriMergedTaxonRedirects(KAMIKIRI_AUDIT_PATH);
+assert(
+  mergedKamikiriRedirects.length === 97,
+  `expected 97 merged kamikiri redirects, found ${mergedKamikiriRedirects.length}`,
+);
+const longhornRuntimeIds = new Set(
+  readDistJson('assets/data-lite/longhornbeetles.json').map((insect) => insect.id),
+);
+const englishInsectRoutes = readDistJson('seo-route-map.insects.json');
+const japaneseLonghornSitemap = readDistText('sitemap-longhornbeetle.xml');
+const englishLonghornSitemap = readDistText('sitemap-en-longhornbeetle.xml');
+for (const redirect of mergedKamikiriRedirects) {
+  assert(
+    !longhornRuntimeIds.has(redirect.duplicateId) && longhornRuntimeIds.has(redirect.canonicalId),
+    `merged kamikiri runtime IDs are inconsistent: ${redirect.duplicateId} -> ${redirect.canonicalId}`,
+  );
+
+  const jaRelativePath = path.join('meta', 'longhornbeetle', `${redirect.duplicateId}.html`);
+  assert(fs.existsSync(path.join(DIST_DIR, jaRelativePath)), `missing merged ID redirect: ${jaRelativePath}`);
+  const jaHtml = readDistText(jaRelativePath);
+  const jaTarget = `https://orau98.github.io/meta/longhornbeetle/${redirect.canonicalId}.html`;
+  assert(/http-equiv=["']refresh["']/i.test(jaHtml), `${jaRelativePath} must refresh immediately`);
+  assert(jaHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} canonical mismatch`);
+  assert(jaHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} migration marker missing`);
+  assert(!/noindex/i.test(jaHtml), `${jaRelativePath} migration must remain crawlable`);
+  assert(
+    !japaneseLonghornSitemap.includes(`/meta/longhornbeetle/${redirect.duplicateId}.html`),
+    `${jaRelativePath} migration URL must not be submitted in the sitemap`,
+  );
+
+  const englishTargetPath = englishInsectRoutes[redirect.canonicalId];
+  assert(englishTargetPath, `missing English canonical route for ${redirect.canonicalId}`);
+  const legacyScientificSlug = slugifyScientificLabel(redirect.legacyScientificName);
+  const enRelativePath = path.join('en', 'meta', 'longhornbeetle', `${legacyScientificSlug}.html`);
+  assert(fs.existsSync(path.join(DIST_DIR, enRelativePath)), `missing merged English redirect: ${enRelativePath}`);
+  const enHtml = readDistText(enRelativePath);
+  const enTarget = `https://orau98.github.io${englishTargetPath}`;
+  assert(/http-equiv=["']refresh["']/i.test(enHtml), `${enRelativePath} must refresh immediately`);
+  assert(enHtml.includes(`rel="canonical" href="${enTarget}"`), `${enRelativePath} canonical mismatch`);
+  assert(enHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} migration marker missing`);
+  assert(!/noindex/i.test(enHtml), `${enRelativePath} migration must remain crawlable`);
+  assert(
+    !englishLonghornSitemap.includes(`/en/meta/longhornbeetle/${legacyScientificSlug}.html`),
+    `${enRelativePath} migration URL must not be submitted in the sitemap`,
+  );
+
+  for (const legacyName of new Set([
+    redirect.legacyDisplayName,
+    redirect.legacyRouteName,
+  ])) {
+    const legacyNamedRouteKey = /[/\\?#%]/.test(legacyName)
+      ? redirect.duplicateId
+      : legacyName;
+    for (const { prefix, target, label } of [
+      { prefix: [], target: jaTarget, label: 'Japanese' },
+      { prefix: ['en'], target: enTarget, label: 'English' },
+    ]) {
+      const namedRelativePath = path.join(
+        ...prefix,
+        'longhornbeetle',
+        legacyNamedRouteKey,
+        'index.html',
+      );
+      assert(
+        fs.existsSync(path.join(DIST_DIR, namedRelativePath)),
+        `missing merged ${label} named-route redirect: ${namedRelativePath}`,
+      );
+      const namedHtml = readDistText(namedRelativePath);
+      assert(
+        /http-equiv=["']refresh["']/i.test(namedHtml),
+        `${namedRelativePath} must refresh immediately`,
+      );
+      assert(
+        namedHtml.includes(`rel="canonical" href="${target}"`),
+        `${namedRelativePath} canonical mismatch`,
+      );
+      assert(
+        namedHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'),
+        `${namedRelativePath} migration marker missing`,
+      );
+      assert(!/noindex/i.test(namedHtml), `${namedRelativePath} migration must remain crawlable`);
+    }
+  }
+}
+
+assert(
+  fs.existsSync(path.join(
+    DIST_DIR,
+    'en',
+    'meta',
+    'longhornbeetle',
+    'glaphyra-glaphyra-shibatai-okinawana.html',
+  )),
+  'exact deleted scientific name must restore the Glaphyra (Glaphyra) English URL',
+);
+assert(
+  !fs.existsSync(path.join(
+    DIST_DIR,
+    'en',
+    'meta',
+    'longhornbeetle',
+    'glaphyra-shibatai-okinawana-hayashi-matsuda-1976.html',
+  )),
+  'simplified source taxon must not create a replacement URL that never existed',
 );
 
 console.log('[smoke-dist] ok');

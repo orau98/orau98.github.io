@@ -127,10 +127,13 @@ function getFileLastmod(filePath) {
   }
 }
 
-function isNoindexPage(filePath) {
+function isNonCanonicalPage(filePath) {
   try {
     const html = fs.readFileSync(filePath, 'utf-8');
-    return /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+    return (
+      /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html) ||
+      /<meta\s+name=["']x-redirect-kind["']\s+content=["']taxonomy-merge["']/i.test(html)
+    );
   } catch {
     return false;
   }
@@ -168,7 +171,7 @@ function writePublicAndDistFile(filename, content, distPath) {
 }
 
 function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {}) {
-  if (!fs.existsSync(filePath) || isNoindexPage(filePath)) {
+  if (!fs.existsSync(filePath) || isNonCanonicalPage(filePath)) {
     return false;
   }
   const targetKey = options.targetKey || 'main';
@@ -313,16 +316,16 @@ function generateSplitSitemaps() {
 
     // 植物は基底名ページ（例「オニグルミ.html」）が正規ページで、
     // 科名付き（例「オニグルミ(クルミ科).html」）は noindex リダイレクトスタブ。
-    // スタブは直後の noindex フィルタで除外されるため、ここでの特別扱いは不要。
+    // スタブは直後の非正規ページフィルタで除外されるため、ここでの特別扱いは不要。
 
-    const preNoindexCount = files.length;
+    const preFilterCount = files.length;
     files = files.filter((file) => {
       if (file === 'index.html') return true;
-      return !isNoindexPage(path.join(absDir, file));
+      return !isNonCanonicalPage(path.join(absDir, file));
     });
-    const removedByNoindex = preNoindexCount - files.length;
-    if (removedByNoindex > 0) {
-      console.log(`[sitemap] ${key}: excluded noindex pages = ${removedByNoindex}`);
+    const removedNonCanonical = preFilterCount - files.length;
+    if (removedNonCanonical > 0) {
+      console.log(`[sitemap] ${key}: excluded noncanonical pages = ${removedNonCanonical}`);
     }
 
     // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）

@@ -3,7 +3,8 @@
  * 日本産カミキリムシの寄主植物一覧テキストから食草データを抽出するスクリプト。
  *
  * OCRテキストの寄主植物一覧セクションを解析し、
- * - normalized_data/insects.csv で和名→insect_id を解決（曖昧マッチ含む）
+ * - normalized_data/insects.csv とPDF監査台帳で和名→insect_id を厳密解決
+ * - 類似度・部分一致は候補にも自動採用せず、未照合として隔離
  * - hostplants.csv の既存「日本産カミキリムシ」データとの重複を除外
  * - 結果を reports/kamikiri_hostplant_list.json に出力
  */
@@ -11,6 +12,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createHash } from 'node:crypto';
 import Papa from 'papaparse';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -22,10 +24,16 @@ const OCR_FILE = process.env.KAMIKIRI_OCR_FILE
   : DEFAULT_OCR_FILE;
 const INSECTS_CSV = path.join(BASE, 'normalized_data/insects.csv');
 const HOSTS_CSV   = path.join(BASE, 'normalized_data/hostplants.csv');
+const AUDIT_CSV = path.join(BASE, 'data/source_audits/japanese-longhorn-beetles-2007.csv');
+const HOST_INDEX_AUDIT_CSV = path.join(
+  BASE,
+  'data/source_audits/japanese-longhorn-beetles-2007-host-index.csv',
+);
 const OUT_JSON = process.env.KAMIKIRI_OUT_JSON
   ? path.resolve(process.env.KAMIKIRI_OUT_JSON)
   : path.join(BASE, 'reports/kamikiri_hostplant_list.json');
 const HOSTPLANT_LIST_HEADING_RE = /^(寄主植物一覧|寄上植物一覧|寄王植物一覧|寺主植物一覧)\s+\d+/;
+const HOSTPLANT_SECTION_START_RE = /^寄.{0,4}植.{0,4}[物牧].{0,3}[一－-]?覧\s+683\s*$/u;
 const FAMILY_HEADING_RE = /^([ぁ-ん\u30A0-\u30FFー一-龠a-zA-Z]{2,20}?[科料])\s+[A-Z][A-Za-z]/u;
 
 // ===================================================================
@@ -52,52 +60,19 @@ function normalizeExtractedPlantFamily(family, plantName) {
   return family;
 }
 
-/** Jaro-Winkler類似度 */
-function jaroWinkler(s1, s2) {
-  if (s1 === s2) return 1.0;
-  const l1 = s1.length, l2 = s2.length;
-  if (!l1 || !l2) return 0.0;
-  const matchDist = Math.max(Math.floor(Math.max(l1, l2) / 2) - 1, 0);
-  const s1m = new Array(l1).fill(false);
-  const s2m = new Array(l2).fill(false);
-  let matches = 0, transpositions = 0;
-  for (let i = 0; i < l1; i++) {
-    const lo = Math.max(0, i - matchDist);
-    const hi = Math.min(i + matchDist + 1, l2);
-    for (let j = lo; j < hi; j++) {
-      if (s2m[j] || s1[i] !== s2[j]) continue;
-      s1m[i] = s2m[j] = true; matches++; break;
-    }
-  }
-  if (!matches) return 0.0;
-  const a = [], b = [];
-  for (let i = 0; i < l1; i++) if (s1m[i]) a.push(s1[i]);
-  for (let j = 0; j < l2; j++) if (s2m[j]) b.push(s2[j]);
-  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) transpositions++;
-  const jaro = (matches/l1 + matches/l2 + (matches - transpositions/2)/matches) / 3;
-  let prefix = 0;
-  for (let i = 0; i < Math.min(4, l1, l2); i++) {
-    if (s1[i] === s2[i]) prefix++; else break;
-  }
-  return jaro + prefix * 0.1 * (1 - jaro);
-}
-
-function getClosestMatch(word, possibilities, cutoff = 0.80) {
-  let best = null, bestScore = 0;
-  for (const p of possibilities) {
-    const sc = jaroWinkler(word, p);
-    if (sc >= cutoff && sc > bestScore) { best = p; bestScore = sc; }
-  }
-  return best ? { key: best, score: bestScore } : null;
-}
-
 // ===================================================================
 // 1. insects.csv からカミキリムシ辞書を構築
 // ===================================================================
 const INSECTS_TEXT = fs.readFileSync(INSECTS_CSV, 'utf8');
 const insectsParsed = Papa.parse(INSECTS_TEXT, { header: true, skipEmptyLines: true });
 
-const kamikiriByNorm = new Map();  // 正規化和名 -> { iid, jname }
+const candidatesByNorm = new Map();
+const addCandidate = (name, candidate) => {
+  const key = normalize(name);
+  if (!key) return;
+  if (!candidatesByNorm.has(key)) candidatesByNorm.set(key, new Map());
+  candidatesByNorm.get(key).set(candidate.iid, candidate);
+};
 
 for (const row of insectsParsed.data) {
   if (!row || row.family !== 'Cerambycidae') continue;
@@ -105,54 +80,129 @@ for (const row of insectsParsed.data) {
   const jname = (row.japanese_name || '').trim();
   if (!iid || !jname) continue;
 
-  const n = normalize(jname);
-  if (n && !kamikiriByNorm.has(n)) kamikiriByNorm.set(n, { iid, jname });
+  addCandidate(jname, { iid, jname, method: 'exact_japanese_name' });
 
   // 亜種行: "ルリボシカミキリ 基亜種" → "ルリボシカミキリ"
   const base = jname.replace(/\s+(基亜種|亜種\d*|[A-Z].+亜種).*/u, '').trim();
-  const nb = normalize(base);
-  if (nb && nb !== n && !kamikiriByNorm.has(nb)) kamikiriByNorm.set(nb, { iid, jname });
+  if (base !== jname) addCandidate(base, { iid, jname, method: 'exact_derived_base_name' });
 
   for (const col of ['old_japanese_name', 'alternative_name', 'other_names']) {
     for (const alt of (row[col] || '').split(/[;；、,，]/)) {
-      const na = normalize(alt.trim());
-      if (na && !kamikiriByNorm.has(na)) kamikiriByNorm.set(na, { iid, jname });
+      if (alt.trim()) addCandidate(alt.trim(), { iid, jname, method: `exact_${col}` });
     }
   }
 }
 
-const allNormKeys = [...kamikiriByNorm.keys()];
-console.log(`カミキリムシ登録エントリ数: ${kamikiriByNorm.size} (別名・亜種含む)`);
+const reviewedCrosswalk = new Map();
+let reviewedDerivedAliasOverrideCount = 0;
+if (fs.existsSync(AUDIT_CSV)) {
+  const auditParsed = Papa.parse(fs.readFileSync(AUDIT_CSV, 'utf8'), {
+    header: true,
+    skipEmptyLines: true,
+  });
+  if (auditParsed.errors.length > 0) {
+    throw new Error(`PDF監査台帳を解析できません: ${auditParsed.errors[0].message}`);
+  }
+  for (const row of auditParsed.data) {
+    if ((row.decision || '').trim() !== 'include') continue;
+    const sourceName = normalize(row.source_japanese_name);
+    const iid = (row.insect_id || '').trim();
+    if (!sourceName || !iid) continue;
+    if (reviewedCrosswalk.has(sourceName) && reviewedCrosswalk.get(sourceName).iid !== iid) {
+      throw new Error(`PDF監査台帳の原典和名が複数IDへ衝突しています: ${row.source_japanese_name}`);
+    }
+    const registeredCandidates = [...(candidatesByNorm.get(sourceName)?.values() || [])];
+    const conflictingCandidates = registeredCandidates.filter((candidate) => candidate.iid !== iid);
+    const reviewedDerivedAliasOverride =
+      registeredCandidates.some((candidate) => candidate.iid === iid) &&
+      conflictingCandidates.length > 0 &&
+      conflictingCandidates.every((candidate) => candidate.method === 'exact_derived_base_name') &&
+      Boolean((row.source_taxon || '').trim()) &&
+      Boolean((row.pdf_page || '').trim()) &&
+      Boolean((row.printed_page || '').trim());
+    if (conflictingCandidates.length > 0 && !reviewedDerivedAliasOverride) {
+      throw new Error(
+        `PDF監査台帳の原典和名が別の登録IDと衝突しています: ` +
+        `${row.source_japanese_name} -> ${iid}, ` +
+        `${conflictingCandidates.map((candidate) => candidate.iid).join(',')}`,
+      );
+    }
+    if (reviewedDerivedAliasOverride) reviewedDerivedAliasOverrideCount += 1;
+    const insect = insectsParsed.data.find((candidate) => candidate?.insect_id === iid);
+    if (!insect) throw new Error(`PDF監査台帳のinsect_idが存在しません: ${iid}`);
+    reviewedCrosswalk.set(sourceName, { iid, jname: insect.japanese_name, method: 'reviewed_source_crosswalk' });
+  }
+}
+
+const kamikiriByNorm = new Map();
+const ambiguousByNorm = new Map();
+for (const [key, candidates] of candidatesByNorm) {
+  const values = [...candidates.values()];
+  if (values.length === 1) kamikiriByNorm.set(key, values[0]);
+  else ambiguousByNorm.set(key, values);
+}
+
+console.log(
+  `カミキリムシ厳密照合辞書: 一意=${kamikiriByNorm.size}, ` +
+  `曖昧=${ambiguousByNorm.size}, 原典監査済み対応=${reviewedCrosswalk.size}`,
+);
+
+const hostIndexAuditsByEvidence = new Map();
+if (fs.existsSync(HOST_INDEX_AUDIT_CSV)) {
+  const hostIndexAuditParsed = Papa.parse(fs.readFileSync(HOST_INDEX_AUDIT_CSV, 'utf8'), {
+    header: true,
+    skipEmptyLines: true,
+  });
+  if (hostIndexAuditParsed.errors.length > 0) {
+    throw new Error(`寄主索引監査台帳を解析できません: ${hostIndexAuditParsed.errors[0].message}`);
+  }
+  for (const row of hostIndexAuditParsed.data) {
+    const insectId = (row.insect_id || '').trim();
+    const sourceOcrLine = Number(row.source_ocr_line);
+    const matchMethod = (row.match_method || '').trim();
+    if (!insectId || !Number.isInteger(sourceOcrLine) || !matchMethod) continue;
+    const key = `${insectId}\u0000${sourceOcrLine}\u0000${matchMethod}`;
+    if (hostIndexAuditsByEvidence.has(key)) {
+      throw new Error(`寄主索引監査台帳の証拠が重複しています: ${key}`);
+    }
+    hostIndexAuditsByEvidence.set(key, {
+      audit_id: (row.audit_id || '').trim(),
+      decision: (row.decision || '').trim(),
+    });
+  }
+}
 
 // ===================================================================
 // 2. OCRテキスト読み込み
 // ===================================================================
 const ocrText  = fs.readFileSync(OCR_FILE, 'utf8');
 const allLines = ocrText.split('\n');
-const headingIndex = allLines.findIndex((line) => HOSTPLANT_LIST_HEADING_RE.test(line.trim()));
+let headingIndex = allLines.findIndex((line) => HOSTPLANT_SECTION_START_RE.test(line.trim()));
+if (headingIndex === -1) {
+  headingIndex = allLines.findIndex((line) => HOSTPLANT_LIST_HEADING_RE.test(line.trim()));
+}
 if (headingIndex === -1) {
   throw new Error('OCRテキスト内に寄主植物一覧の開始行が見つかりません。');
 }
-let startIndex = -1;
-for (let index = headingIndex; index >= 0; index--) {
-  if (FAMILY_HEADING_RE.test(allLines[index].trim())) {
-    startIndex = index;
-    break;
-  }
-}
-if (startIndex === -1) {
-  startIndex = allLines.findIndex((line, index) =>
-    index > headingIndex && FAMILY_HEADING_RE.test(line.trim())
-  );
-}
+const startIndex = allLines.findIndex((line, index) =>
+  index > headingIndex && FAMILY_HEADING_RE.test(line.trim())
+);
 if (startIndex === -1) {
   throw new Error('OCRテキスト内に寄主植物一覧の最初の科名行が見つかりません。');
 }
-const endLine = Number.parseInt(process.env.KAMIKIRI_HOSTPLANT_END_LINE || '21076', 10);
-const endIndex = Number.isFinite(endLine)
-  ? Math.min(endLine, allLines.length)
-  : allLines.length;
-const rawLines = allLines.slice(startIndex, endIndex).map(l => l.replace(/\r$/, ''));
+const configuredEndLine = process.env.KAMIKIRI_HOSTPLANT_END_LINE
+  ? Number.parseInt(process.env.KAMIKIRI_HOSTPLANT_END_LINE, 10)
+  : null;
+const nextIndexHeading = allLines.findIndex((line, index) =>
+  index > startIndex && /^(学名索引|和名索引)\s*$/u.test(line.trim())
+);
+const endIndex = Number.isFinite(configuredEndLine)
+  ? Math.min(configuredEndLine, allLines.length)
+  : (nextIndexHeading >= 0 ? nextIndexHeading : allLines.length);
+const rawLines = allLines.slice(startIndex, endIndex).map((line, offset) => ({
+  text: line.replace(/\r$/, ''),
+  lineNumber: startIndex + offset + 1,
+}));
 console.log(`OCR対象行数: ${rawLines.length} (${startIndex + 1}〜${endIndex}行、見出し=${headingIndex + 1}行)`);
 
 // ===================================================================
@@ -178,29 +228,45 @@ function isPlantHeadingLine(line) {
 // OCRにはページ単位の空白しかないため、科名行・植物名行を境界にする。
 const segments = [];
 let block = [];
+let currentPdfPage = null;
+for (let index = 0; index < startIndex; index += 1) {
+  const pageMatch = allLines[index].match(/^---\s*ページ\s+(\d+)\s*---$/);
+  if (pageMatch) currentPdfPage = Number.parseInt(pageMatch[1], 10);
+}
 const pushBlock = () => {
   if (block.length > 0) {
-    segments.push(block.join(' '));
+    segments.push({
+      text: block.map((entry) => entry.text).join(' '),
+      ocrLineStart: block[0].lineNumber,
+      pdfPage: block[0].pdfPage,
+    });
     block = [];
   }
 };
 
-for (const line of rawLines.map(l => l.trim())) {
+for (const { text: rawLine, lineNumber } of rawLines) {
+  const line = rawLine.trim();
+  const pageMatch = line.match(/^---\s*ページ\s+(\d+)\s*---$/);
+  if (pageMatch) {
+    pushBlock();
+    currentPdfPage = Number.parseInt(pageMatch[1], 10);
+    continue;
+  }
   if (SKIP_RE.test(line) || line.startsWith('--- ページ')) continue;
 
   if (FAMILY_HEADING_RE.test(line)) {
     pushBlock();
-    segments.push(line);
+    segments.push({ text: line, ocrLineStart: lineNumber, pdfPage: currentPdfPage });
     continue;
   }
 
   if (isPlantHeadingLine(line)) {
     pushBlock();
-    block = [line];
+    block = [{ text: line, lineNumber, pdfPage: currentPdfPage }];
     continue;
   }
 
-  if (block.length > 0) block.push(line);
+  if (block.length > 0) block.push({ text: line, lineNumber, pdfPage: currentPdfPage });
 }
 pushBlock();
 
@@ -215,10 +281,13 @@ function fixKamikiri(s) {
   return s;
 }
 
-const fixedSegments = segments.map(fixKamikiri);
+const fixedSegments = segments.map((segment) => ({
+  ...segment,
+  text: fixKamikiri(segment.text),
+}));
 console.log(`セグメント数: ${fixedSegments.length}`);
 console.log('先頭セグメントサンプル:');
-fixedSegments.slice(0, 3).forEach(s => console.log(`  ${s.slice(0, 100)}`));
+fixedSegments.slice(0, 3).forEach(({ text }) => console.log(`  ${text.slice(0, 100)}`));
 
 // ===================================================================
 // 4. セグメントを解析して (科名, 植物名, カミキリ名リスト) を構築
@@ -226,7 +295,7 @@ fixedSegments.slice(0, 3).forEach(s => console.log(`  ${s.slice(0, 100)}`));
 
 // カミキリムシ和名: 5文字以上のカタカナ・漢字で「カミキリ」で終わるトークン
 // Unicode ranges: ぁ-ん (3041-3096), ァ-ヶ (30A1-30F6), ー (30FC), 一-龠 (4E00-9FA0)
-const RE_KAMIKIRI = /([ぁ-ん\u30A0-\u30FFー一-龠\uFF10-\uFF19\uFF21-\uFF5a]{2,60}?カミキリ)/gu;
+const RE_KAMIKIRI = /([ぁ-ん\u30A0-\u30FFー一-龠\uFF10-\uFF19\uFF21-\uFF5a]{2,60}?カミキリ(?:類似|類|型|様)?)(?![ぁ-ん\u30A0-\u30FFー一-龠])/gu;
 
 function extractKamikiriNames(text) {
   const results = [];
@@ -302,7 +371,8 @@ function extractPlantFromMixed(seg) {
 // 状態機械でセグメントを走査
 let currentFamily = '';
 let currentPlant  = '';
-const records = [];  // { plant, family, kamikiriNames }
+let currentPlantSource = { pdfPage: null, ocrLineStart: null };
+const records = [];  // { plant, family, kamikiriNames, sourcePdfPage, sourceOcrLine }
 
 // OCRの植物索引だけでは近縁名・OCR崩れで誤照合しやすい箇所。
 // 本文の寄主植物欄と植物索引を照合して確認した補正を明示する。
@@ -369,8 +439,8 @@ const DENIED_PAIRS = new Set([
   return `${iid}||${normalize(plant)}`;
 }));
 
-for (const seg of fixedSegments) {
-  const s = seg.trim();
+for (const segment of fixedSegments) {
+  const s = segment.text.trim();
   if (!s) continue;
 
   // --- 科名チェック ---
@@ -380,7 +450,13 @@ for (const seg of fixedSegments) {
     // 科名行に続くカミキリ名があれば取得
     const names = extractKamikiriNames(s);
     if (names.length > 0 && currentPlant) {
-      records.push({ plant: currentPlant, family: normalizeExtractedPlantFamily(currentFamily, currentPlant), kamikiriNames: names });
+      records.push({
+        plant: currentPlant,
+        family: normalizeExtractedPlantFamily(currentFamily, currentPlant),
+        kamikiriNames: names,
+        sourcePdfPage: segment.pdfPage ?? currentPlantSource.pdfPage,
+        sourceOcrLine: segment.ocrLineStart ?? currentPlantSource.ocrLineStart,
+      });
     }
     continue;
   }
@@ -395,9 +471,16 @@ for (const seg of fixedSegments) {
       // 先に前の植物との紐付けを保存（もしあれば）
       // そして新しい植物として更新
       currentPlant = mixedPlant;
+      currentPlantSource = { pdfPage: segment.pdfPage, ocrLineStart: segment.ocrLineStart };
     }
     if (currentPlant) {
-      records.push({ plant: currentPlant, family: normalizeExtractedPlantFamily(currentFamily, currentPlant), kamikiriNames: names });
+      records.push({
+        plant: currentPlant,
+        family: normalizeExtractedPlantFamily(currentFamily, currentPlant),
+        kamikiriNames: names,
+        sourcePdfPage: segment.pdfPage ?? currentPlantSource.pdfPage,
+        sourceOcrLine: segment.ocrLineStart ?? currentPlantSource.ocrLineStart,
+      });
     }
     // else: 植物名を見逃した（OCR破損等）→ スキップ
     continue;
@@ -407,6 +490,7 @@ for (const seg of fixedSegments) {
   const plant = extractPlantName(s);
   if (plant) {
     currentPlant = plant;
+    currentPlantSource = { pdfPage: segment.pdfPage, ocrLineStart: segment.ocrLineStart };
     continue;
   }
   // それ以外（OCR誤字・不明行）はスキップ
@@ -419,7 +503,13 @@ for (const record of MANUAL_RECORDS) {
   for (const name of record.kamikiriNames) {
     const key = `${normalize(record.plant)}||${normalize(record.family)}||${normalize(name)}`;
     if (recordKeys.has(key)) continue;
-    records.push({ ...record, kamikiriNames: [name], manual: true });
+    records.push({
+      ...record,
+      kamikiriNames: [name],
+      manual: true,
+      sourcePdfPage: null,
+      sourceOcrLine: null,
+    });
     recordKeys.add(key);
   }
 }
@@ -432,48 +522,33 @@ records.slice(0, 10).forEach(({ plant, family, kamikiriNames }) => {
 });
 
 // ===================================================================
-// 5. カミキリムシ和名 → insect_id の曖昧マッチング
+// 5. カミキリムシ和名 → insect_id の厳密マッチング
 // ===================================================================
 function findInsectId(rawName) {
   const n = normalize(rawName);
-  if (!n) return { iid: null, jname: null, score: 0 };
+  if (!n) return { iid: null, jname: null, score: 0, method: 'no_match' };
 
-  // 完全一致
+  if (reviewedCrosswalk.has(n)) {
+    const { iid, jname, method } = reviewedCrosswalk.get(n);
+    return { iid, jname, score: 1, method };
+  }
+
+  // 登録和名・登録済み別名の一意な完全一致だけを採用する。
   if (kamikiriByNorm.has(n)) {
-    const { iid, jname } = kamikiriByNorm.get(n);
-    return { iid, jname, score: 1.0 };
+    const { iid, jname, method } = kamikiriByNorm.get(n);
+    return { iid, jname, score: 1, method };
+  }
+  if (ambiguousByNorm.has(n)) {
+    return {
+      iid: null,
+      jname: null,
+      score: 0,
+      method: 'ambiguous_exact_name',
+      possibleIds: ambiguousByNorm.get(n).map((candidate) => candidate.iid),
+    };
   }
 
-  // 末尾ゴミ除去して再試行
-  const n2 = n.replace(/(様|類|型|類似)$/, '');
-  if (n2 !== n && kamikiriByNorm.has(n2)) {
-    const { iid, jname } = kamikiriByNorm.get(n2);
-    return { iid, jname, score: 0.95 };
-  }
-
-  // 部分一致（短い側が長い側に含まれる）
-  let bestIid = null, bestJname = null, bestScore = 0;
-  for (const [reg, { iid, jname }] of kamikiriByNorm) {
-    let score = 0;
-    if (n.includes(reg) && reg.length >= 5) {
-      score = reg.length / n.length;
-    } else if (reg.includes(n) && n.length >= 5) {
-      score = n.length / reg.length;
-    }
-    if (score >= 0.75 && score > bestScore) {
-      bestScore = score; bestIid = iid; bestJname = jname;
-    }
-  }
-  if (bestScore >= 0.75) return { iid: bestIid, jname: bestJname, score: bestScore };
-
-  // Jaro-Winkler 曖昧マッチ
-  const hit = getClosestMatch(n, allNormKeys, 0.82);
-  if (hit) {
-    const { iid, jname } = kamikiriByNorm.get(hit.key);
-    return { iid, jname, score: Math.round(hit.score * 1000) / 1000 };
-  }
-
-  return { iid: null, jname: null, score: 0 };
+  return { iid: null, jname: null, score: 0, method: 'no_match' };
 }
 
 // ===================================================================
@@ -495,17 +570,25 @@ console.log(`\n既存カミキリムシ食草ペア数: ${existing.size}`);
 // 7. 結果を組み立て
 // ===================================================================
 const results = [];
-const stats   = { exact: 0, fuzzy: 0, no_match: 0 };
+const stats   = { exact: 0, reviewed_crosswalk: 0, ambiguous: 0, no_match: 0 };
 let deniedCount = 0;
 const seenResultPairs = new Set();
 
-for (const { plant, family, kamikiriNames } of records) {
+for (const {
+  plant,
+  family,
+  kamikiriNames,
+  sourcePdfPage = null,
+  sourceOcrLine = null,
+  manual = false,
+} of records) {
   const plantNorm = normalize(plant);
   for (const rawName of kamikiriNames) {
-    const { iid, jname, score } = findInsectId(rawName);
+    const { iid, jname, score, method, possibleIds = [] } = findInsectId(rawName);
 
     if (!iid) {
-      stats.no_match++;
+      if (method === 'ambiguous_exact_name') stats.ambiguous++;
+      else stats.no_match++;
       results.push({
         insect_id:    null,
         insect_name:  rawName,
@@ -514,7 +597,17 @@ for (const { plant, family, kamikiriNames } of records) {
         plant_name:   plant,
         plant_family: family,
         is_new:       false,
-        note:         'no_match'
+        match_method: method,
+        possible_ids: possibleIds,
+        source_pdf_page: sourcePdfPage,
+        source_printed_page_range: Number.isInteger(sourcePdfPage)
+          ? [sourcePdfPage * 2 + 332, sourcePdfPage * 2 + 333]
+          : [],
+        source_ocr_line: sourceOcrLine,
+        manual_correction: manual,
+        audit_id: null,
+        audit_decision: null,
+        note:         method
       });
       continue;
     }
@@ -528,29 +621,48 @@ for (const { plant, family, kamikiriNames } of records) {
     if (seenResultPairs.has(resultPairKey)) continue;
     seenResultPairs.add(resultPairKey);
 
-    if (score >= 0.99) stats.exact++;
-    else stats.fuzzy++;
+    if (method.startsWith('reviewed_source_crosswalk')) stats.reviewed_crosswalk++;
+    else stats.exact++;
 
     const isNew = !existing.has(`${iid}||${plantNorm}`);
+    const hostIndexAudit = Number.isInteger(sourceOcrLine)
+      ? hostIndexAuditsByEvidence.get(`${iid}\u0000${sourceOcrLine}\u0000${method}`)
+      : null;
 
     results.push({
       insect_id:    iid,
       insect_name:  jname,
       matched_name: normalize(rawName) !== normalize(jname) ? rawName : null,
       match_score:  score,
+      match_method: method,
       plant_name:   plant,
       plant_family: family,
       is_new:       isNew,
-      note:         score < 0.99 ? 'fuzzy_match' : ''
+      source_pdf_page: sourcePdfPage,
+      source_printed_page_range: Number.isInteger(sourcePdfPage)
+        ? [sourcePdfPage * 2 + 332, sourcePdfPage * 2 + 333]
+        : [],
+      source_ocr_line: sourceOcrLine,
+      manual_correction: manual,
+      audit_id: hostIndexAudit?.audit_id || null,
+      audit_decision: hostIndexAudit?.decision || null,
+      note:         ''
     });
   }
 }
 
 const newCount  = results.filter(r => r.is_new).length;
+const auditedNewCount = results.filter(r => r.is_new && r.audit_decision).length;
+const unreviewedNewCount = results.filter(r => r.is_new && r.insect_id && !r.audit_decision).length;
 const matchedCount = results.filter(r => r.insect_id).length;
-console.log(`\nマッチ統計: 完全=${stats.exact}, 曖昧=${stats.fuzzy}, 未マッチ=${stats.no_match}`);
+console.log(
+  `\nマッチ統計: 完全=${stats.exact}, 原典監査済み対応=${stats.reviewed_crosswalk}, ` +
+  `曖昧名隔離=${stats.ambiguous}, 未マッチ=${stats.no_match}, 類似度自動採用=0`,
+);
 console.log(`総レコード数: ${results.length}`);
 console.log(`新規 (is_new=true): ${newCount}`);
+console.log(`  うち目視監査済み: ${auditedNewCount}`);
+console.log(`  うち未監査: ${unreviewedNewCount}`);
 console.log(`既存 (is_new=false): ${matchedCount - newCount}`);
 console.log(`除外 (manual denylist): ${deniedCount}`);
 
@@ -558,7 +670,41 @@ console.log(`除外 (manual denylist): ${deniedCount}`);
 // 8. JSON 出力
 // ===================================================================
 fs.mkdirSync(path.dirname(OUT_JSON), { recursive: true });
-fs.writeFileSync(OUT_JSON, JSON.stringify(results, null, 2), 'utf8');
+const report = {
+  schema_version: 3,
+  mode: 'candidate_ledger_only_no_csv_writes',
+  source: {
+    reference: '日本産カミキリムシ',
+    ocr_sha256: createHash('sha256').update(ocrText).digest('hex'),
+    hostplant_section: {
+      heading_line: headingIndex + 1,
+      first_family_line: startIndex + 1,
+      end_line_exclusive: endIndex + 1,
+    },
+  },
+  safety: {
+    fuzzy_automatic_matching: false,
+    ambiguous_exact_names_automatically_applied: false,
+    reviewed_crosswalk_may_override_derived_base_alias_only: true,
+    derived_base_candidates_require_index_and_taxon_account_review: true,
+    new_candidates_require_source_review_before_csv_application: true,
+  },
+  summary: {
+    exact_matches: stats.exact,
+    reviewed_source_crosswalk_matches: stats.reviewed_crosswalk,
+    reviewed_derived_alias_overrides: reviewedDerivedAliasOverrideCount,
+    ambiguous_exact_names: stats.ambiguous,
+    unresolved_names: stats.no_match,
+    denied_pairs: deniedCount,
+    total_results: results.length,
+    matched_results: matchedCount,
+    new_candidates: newCount,
+    audited_new_candidates: auditedNewCount,
+    unreviewed_new_candidates: unreviewedNewCount,
+  },
+  results,
+};
+fs.writeFileSync(OUT_JSON, JSON.stringify(report, null, 2), 'utf8');
 console.log(`\n出力完了: ${OUT_JSON}`);
 console.log(`  総エントリ数: ${results.length}`);
 console.log(`  新規 (is_new=true): ${newCount}`);
@@ -575,7 +721,7 @@ results.filter(r => r.note === 'no_match').slice(0, 15).forEach(r => {
   console.log(`  "${r.insect_name}" / ${r.plant_name}`);
 });
 
-console.log('\n--- 曖昧マッチ サンプル ---');
-results.filter(r => r.note === 'fuzzy_match').slice(0, 15).forEach(r => {
-  console.log(`  OCR:"${r.matched_name}" → ${r.insect_name} sc=${r.match_score} / ${r.plant_name}`);
+console.log('\n--- 曖昧な完全一致（自動採用せず隔離）サンプル ---');
+results.filter(r => r.note === 'ambiguous_exact_name').slice(0, 15).forEach(r => {
+  console.log(`  OCR:"${r.insect_name}" candidates=${r.possible_ids.join(',')} / ${r.plant_name}`);
 });
