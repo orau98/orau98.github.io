@@ -20,12 +20,22 @@ const expectedLamiini = new Map([
 ]);
 
 test('insects CSV parses every mixed-source row independently', () => {
+  let normalizedIds = null;
   for (const csvPath of csvPaths) {
     const raw = fs.readFileSync(path.join(ROOT, csvPath), 'utf8');
     const parsed = Papa.parse(raw, { header: true, skipEmptyLines: true });
 
     assert.deepEqual(parsed.errors, [], `${csvPath} should parse without joined rows`);
-    assert.equal(parsed.data.length, 10060, `${csvPath} should keep every insect row`);
+    const ids = parsed.data.map((row) => row.insect_id);
+    assert.equal(new Set(ids).size, ids.length, `${csvPath} should keep unique insect rows`);
+    assert.equal(ids.length, 9963, `${csvPath} should retain every canonical insect row`);
+    assert.equal(
+      parsed.data.filter((row) => row.family === 'Cerambycidae').length,
+      1166,
+      `${csvPath} should retain every canonical Cerambycidae row`,
+    );
+    if (normalizedIds === null) normalizedIds = ids;
+    else assert.deepEqual(ids, normalizedIds, `${csvPath} should match normalized_data IDs`);
     assert.equal(
       parsed.data.filter((row) => row.subfamily === 'Scolytinae').length,
       322,
@@ -37,7 +47,12 @@ test('insects CSV parses every mixed-source row independently', () => {
       assert.equal(byId.get(insectId)?.japanese_name, japaneseName, `${csvPath}: ${insectId}`);
       assert.equal(byId.get(insectId)?.__parsed_extra, undefined, `${csvPath}: ${insectId} should not absorb adjacent rows`);
     }
-    assert.equal(byId.get('species-22772')?.scientific_name, 'Monochamus yokoyamai Gressitt, 1937');
+    assert.equal(byId.has('species-22772'), false, `${csvPath}: old-combination duplicate should be merged`);
+    assert.equal(
+      byId.get('species-22771')?.synonyms.includes('Monochamus yokoyamai Gressitt, 1937'),
+      true,
+      `${csvPath}: merged old combination should remain searchable as a synonym`,
+    );
   }
 });
 

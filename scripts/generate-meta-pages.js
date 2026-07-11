@@ -30,6 +30,7 @@ import {
   isValidPlantName,
   SUSPICIOUS_PLANT_NAME_SET,
 } from './lib/dataLiteBuilders.mjs';
+import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,6 +62,10 @@ const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.102
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
 const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
+const KAMIKIRI_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/japanese-longhorn-beetles-2007.csv',
+);
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -553,7 +558,13 @@ function buildPlantPictureHtml(img, altText) {
   return `<img src="${escapeRedirectHtml(fileUrl)}" alt="${escapeRedirectHtml(altText)}" loading="lazy" decoding="async">`;
 }
 
-function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '', noindex = true }) {
+function buildLegacyRedirectHtml({
+  lang = 'ja',
+  title = '',
+  targetUrl = '',
+  noindex = true,
+  redirectKind = '',
+}) {
   const safeTitle = escapeRedirectHtml(title || '昆虫植物図鑑');
   const safeTargetUrl = escapeRedirectHtml(targetUrl);
   const bodyCopy = lang === 'en'
@@ -568,6 +579,7 @@ function buildLegacyRedirectHtml({ lang = 'ja', title = '', targetUrl = '', noin
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
+  ${redirectKind ? `<meta name="x-redirect-kind" content="${escapeRedirectHtml(redirectKind)}">` : ''}
   <title>${safeTitle}</title>
   <link rel="canonical" href="${safeTargetUrl}">
   <meta http-equiv="refresh" content="0;url=${safeTargetUrl}">
@@ -684,32 +696,6 @@ function loadCSV(filePath) {
       }
     }
     
-    // Sanitize general_notes.csv: ensure 7 columns and quote content field
-    if (filePath.endsWith(path.sep + 'general_notes.csv') || filePath.includes('/general_notes.csv')) {
-      const lines = csvContent.split(/\r?\n/);
-      const header = lines.shift() || '';
-      const fixed = [header];
-      for (const raw of lines) {
-        if (!raw || !raw.trim()) continue;
-        // Already well-formed lines are kept as-is if they appear to have balanced quotes
-        if ((raw.match(/\"/g) || []).length % 2 === 0) {
-          // Try to coerce to 7 columns by capturing the last three comma-separated tokens
-          const m = raw.match(/^(.*?),(.*?),(.*?),(.*),(.*?),(.*?),(.*?)$/);
-          if (m) {
-            let content = (m[4] || '').replace(/\r$/, '');
-            // Escape inner quotes and wrap content in quotes to protect commas
-            if (!/^\s*\".*\"\s*$/.test(content)) {
-              content = '"' + content.replace(/\"/g, '""') + '"';
-            }
-            fixed.push([m[1], m[2], m[3], content, m[5], m[6], m[7]].join(','));
-            continue;
-          }
-        }
-        fixed.push(raw);
-      }
-      csvContent = fixed.join('\n');
-    }
-
     const result = Papa.parse(csvContent, {
       header: true,
       skipEmptyLines: true,
@@ -2302,7 +2288,13 @@ async function generateMetaPages() {
   const legacyRedirects = new Map();
   let legacyRedirectConflicts = 0;
   let legacyRedirectWriteSkips = 0;
-  const queueLegacyRedirect = (routePath, targetPath, title, lang = 'ja') => {
+  const queueLegacyRedirect = (
+    routePath,
+    targetPath,
+    title,
+    lang = 'ja',
+    redirectKind = '',
+  ) => {
     if (!routePath || !targetPath) return;
     const normalizedRoutePath = String(routePath).replace(/\/{2,}/g, '/');
     const targetUrl = targetPath.startsWith('http') ? targetPath : `${BASE_ORIGIN}${targetPath}`;
@@ -2311,8 +2303,12 @@ async function generateMetaPages() {
       legacyRedirectConflicts++;
       return;
     }
+    if (existing && redirectKind && !existing.redirectKind) {
+      legacyRedirects.set(normalizedRoutePath, { ...existing, redirectKind });
+      return;
+    }
     if (!existing) {
-      legacyRedirects.set(normalizedRoutePath, { targetUrl, title, lang });
+      legacyRedirects.set(normalizedRoutePath, { targetUrl, title, lang, redirectKind });
     }
   };
   const queueInsectLegacyRedirects = ({ type, insectId, displayName, targetPath, title }) => {
@@ -2793,6 +2789,55 @@ async function generateMetaPages() {
       fs.writeFileSync(filename, html);
     });
 
+    // 分類統合で削除した旧IDの静的URLを、正本ページへ恒久転送する。
+    // 既存の被リンクやブックマークを404にせず、重複ページも再生成しない。
+    const insectPageById = new Map(
+      insectPageQueue.map(({ insect, type }) => [insect.id, { insect, type }]),
+    );
+    const mergedTaxonRedirects = loadKamikiriMergedTaxonRedirects(KAMIKIRI_AUDIT_PATH);
+    for (const redirect of mergedTaxonRedirects) {
+      const canonical = insectPageById.get(redirect.canonicalId);
+      if (!canonical) {
+        throw new Error(
+          `[meta] merged taxon target is missing: ${redirect.duplicateId} -> ${redirect.canonicalId}`,
+        );
+      }
+      if (insectPageById.has(redirect.duplicateId)) {
+        throw new Error(`[meta] merged duplicate still has a canonical page: ${redirect.duplicateId}`);
+      }
+
+      const targetPath = `/meta/${canonical.type}/${redirect.canonicalId}.html`;
+      const targetUrl = `${BASE_ORIGIN}${targetPath}`;
+      const title = `${redirect.legacyDisplayName} | 昆虫植物図鑑`;
+      const duplicateOutputPath = path.join(
+        __dirname,
+        `../public/meta/${canonical.type}/${redirect.duplicateId}.html`,
+      );
+      fs.writeFileSync(duplicateOutputPath, buildLegacyRedirectHtml({
+        lang: 'ja',
+        title,
+        targetUrl,
+        noindex: false,
+        redirectKind: 'taxonomy-merge',
+      }));
+
+      for (const legacyName of new Set([
+        redirect.legacyDisplayName,
+        redirect.legacyRouteName,
+        redirect.legacyJapaneseName,
+        redirect.duplicateJapaneseName,
+        redirect.sourceJapaneseName,
+      ].filter(Boolean))) {
+        queueLegacyRedirect(
+          `/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
+          targetPath,
+          title,
+          'ja',
+          'taxonomy-merge',
+        );
+      }
+    }
+
     // 植物ページを生成
     let plantCount = 0;
     let skippedPlants = 0;
@@ -2897,7 +2942,7 @@ async function generateMetaPages() {
       verifyTarget: false,
     });
 
-    legacyRedirects.forEach(({ targetUrl, title, lang }, routePath) => {
+    legacyRedirects.forEach(({ targetUrl, title, lang, redirectKind }, routePath) => {
       try {
         const outputPath = routePathToOutputPath(publicDir, routePath);
         ensureDir(path.dirname(outputPath));
@@ -2906,6 +2951,7 @@ async function generateMetaPages() {
           title,
           targetUrl,
           noindex: false,
+          redirectKind,
         }));
       } catch (error) {
         legacyRedirectWriteSkips++;
@@ -2923,6 +2969,7 @@ async function generateMetaPages() {
     console.log(`- アブラムシ: ${aphidCount}種`);
     console.log(`- 食草: ${plantCount}種`);
     console.log(`- レガシールート redirect: ${legacyRedirects.size}件`);
+    console.log(`- 統合分類群ID redirect: ${mergedTaxonRedirects.length}件`);
     console.log(`- 実流入ガイド redirect: ${legacyGuideRedirectCount}件`);
     if (skippedPlants > 0) {
       console.log(`- スキップされた無効な植物: ${skippedPlants}件`);

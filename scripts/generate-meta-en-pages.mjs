@@ -23,6 +23,7 @@ import {
   getPrimaryEnglishName,
   slugifyScientificLabel,
 } from './lib/englishNaming.mjs';
+import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +60,10 @@ const PLANT_IMAGES_DIR = path.join(__dirname, '../public/images/plants');
 const PUBLIC_DIR = path.join(__dirname, '../public');
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.insects.json');
 const SEO_ROUTE_MAP_PLANTS_PATH = path.join(PUBLIC_DIR, 'seo-route-map.plants.json');
+const KAMIKIRI_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/japanese-longhorn-beetles-2007.csv',
+);
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const EN_INDEX_PAGE_SIZE = 1000;
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
@@ -237,7 +242,13 @@ function sitePathExists(sitePath) {
   return Boolean(filePath && fs.existsSync(filePath));
 }
 
-function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '', noindex = true }) {
+function buildLegacyRedirectHtml({
+  lang = 'en',
+  title = '',
+  targetUrl = '',
+  noindex = true,
+  redirectKind = '',
+}) {
   const safeTitle = escapeAttr(title || EN_SITE_NAME);
   const safeTargetUrl = escapeAttr(targetUrl);
   return `<!DOCTYPE html>
@@ -246,6 +257,7 @@ function buildLegacyRedirectHtml({ lang = 'en', title = '', targetUrl = '', noin
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
+  ${redirectKind ? `<meta name="x-redirect-kind" content="${escapeAttr(redirectKind)}">` : ''}
   <title>${safeTitle}</title>
   <link rel="canonical" href="${safeTargetUrl}">
   <meta http-equiv="refresh" content="0;url=${safeTargetUrl}">
@@ -1232,7 +1244,7 @@ async function generateEnglishMetaPages() {
   const legacyRedirects = new Map();
   let legacyRedirectConflicts = 0;
   let legacyRedirectWriteSkips = 0;
-  const queueLegacyRedirect = (routePath, targetPath, title) => {
+  const queueLegacyRedirect = (routePath, targetPath, title, redirectKind = '') => {
     if (!routePath || !targetPath) return;
     const normalizedRoutePath = String(routePath).replace(/\/{2,}/g, '/');
     const targetUrl = targetPath.startsWith('http') ? targetPath : `${BASE_ORIGIN}${targetPath}`;
@@ -1241,8 +1253,12 @@ async function generateEnglishMetaPages() {
       legacyRedirectConflicts++;
       return;
     }
+    if (existing && redirectKind && !existing.redirectKind) {
+      legacyRedirects.set(normalizedRoutePath, { ...existing, redirectKind });
+      return;
+    }
     if (!existing) {
-      legacyRedirects.set(normalizedRoutePath, { targetUrl, title });
+      legacyRedirects.set(normalizedRoutePath, { targetUrl, title, redirectKind });
     }
   };
 
@@ -1268,6 +1284,7 @@ async function generateEnglishMetaPages() {
       fs.writeFileSync(outputPath, html);
       const entry = {
         id: insect.id,
+        type,
         href: `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
         primaryName: getPrimaryEnglishName({
           scientificName: insect.scientificName,
@@ -1301,6 +1318,61 @@ async function generateEnglishMetaPages() {
       }
     });
   });
+
+  const mergedTaxonRedirects = loadKamikiriMergedTaxonRedirects(KAMIKIRI_AUDIT_PATH);
+  for (const redirect of mergedTaxonRedirects) {
+    const canonical = insectEntriesById.get(redirect.canonicalId);
+    if (!canonical) {
+      throw new Error(
+        `[meta-en] merged taxon target is missing: ${redirect.duplicateId} -> ${redirect.canonicalId}`,
+      );
+    }
+    if (insectEntriesById.has(redirect.duplicateId)) {
+      throw new Error(`[meta-en] merged duplicate still has a canonical page: ${redirect.duplicateId}`);
+    }
+    const legacyScientificSlug = slugifyScientificLabel(redirect.legacyScientificName);
+    if (!legacyScientificSlug) {
+      throw new Error(`[meta-en] merged duplicate has no scientific slug: ${redirect.duplicateId}`);
+    }
+    const canonicalSlug = decodeURIComponent(canonical.href.split('/').at(-1).replace(/\.html$/, ''));
+    if (legacyScientificSlug === canonicalSlug) {
+      throw new Error(
+        `[meta-en] merged duplicate scientific slug equals canonical slug: ${legacyScientificSlug}`,
+      );
+    }
+    if (
+      usedInsectSlugsByType.get(canonical.type)?.has(legacyScientificSlug) &&
+      legacyScientificSlug !== canonicalSlug
+    ) {
+      throw new Error(
+        `[meta-en] merged duplicate scientific slug conflicts: ${legacyScientificSlug}`,
+      );
+    }
+    const title = `${redirect.legacyScientificName} | Longhorn Beetle profile from Japan`;
+    fs.writeFileSync(
+      path.join(EN_META_DIR, canonical.type, `${legacyScientificSlug}.html`),
+      buildLegacyRedirectHtml({
+        title,
+        targetUrl: `${BASE_ORIGIN}${canonical.href}`,
+        noindex: false,
+        redirectKind: 'taxonomy-merge',
+      }),
+    );
+    for (const legacyName of new Set([
+      redirect.legacyDisplayName,
+      redirect.legacyRouteName,
+      redirect.legacyJapaneseName,
+      redirect.duplicateJapaneseName,
+      redirect.sourceJapaneseName,
+    ].filter(Boolean))) {
+      queueLegacyRedirect(
+        `/en/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
+        canonical.href,
+        title,
+        'taxonomy-merge',
+      );
+    }
+  }
 
   const plantEntries = [];
   Array.from(plantRecords.values())
@@ -1358,7 +1430,7 @@ async function generateEnglishMetaPages() {
     pluralLabel: EN_TYPE_PLURALS.plant,
   };
   writeEnglishSectionIndexPages(plantSection, indexablePlantEntries);
-  legacyRedirects.forEach(({ targetUrl, title }, routePath) => {
+  legacyRedirects.forEach(({ targetUrl, title, redirectKind }, routePath) => {
     try {
       const outputPath = routePathToOutputPath(PUBLIC_DIR, routePath);
       ensureDir(path.dirname(outputPath));
@@ -1366,6 +1438,7 @@ async function generateEnglishMetaPages() {
         title,
         targetUrl,
         noindex: false,
+        redirectKind,
       }));
     } catch (error) {
       legacyRedirectWriteSkips++;
@@ -1403,6 +1476,7 @@ async function generateEnglishMetaPages() {
   console.log(`[meta-en] aphids: ${counts.aphids}`);
   console.log(`[meta-en] plants: ${counts.hostPlants}`);
   console.log(`[meta-en] legacy redirects: ${legacyRedirects.size}`);
+  console.log(`[meta-en] merged taxon redirects: ${mergedTaxonRedirects.length}`);
   if (legacyRedirectConflicts > 0) {
     console.warn(`[meta-en] skipped conflicting legacy redirects: ${legacyRedirectConflicts}`);
   }

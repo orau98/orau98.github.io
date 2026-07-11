@@ -20,6 +20,7 @@
     "resolve-hostplant-family": "node scripts/resolve_hostplant_family_with_ylist.mjs",
     "validate-normalized": "node scripts/validate-normalized.mjs",
     "apply:kiriga-ecology-audit": "node scripts/apply-kiriga-ecology-audit.mjs",
+    "apply:kamikiri-literature-audit": "node scripts/apply-kamikiri-literature-audit.mjs",
     "prebuild": "npm run validate-normalized && npm run sync:public-insects && npm run build:data-lite && npm run build:image-index && npm run build:plant-image-index && npm run build:images:responsive && npm run generate-meta:all && npm run generate-sitemap",
     "deploy": "echo 'Use GitHub Actions: push to main to deploy.'",
     "build:data-lite": "node scripts/build-data-lite.mjs",
@@ -46,6 +47,7 @@
     "extract:parallel": "bash scripts/run_extract_parallel.sh",
     "check:api:parallel": "bash scripts/run_api_parallel.sh",
     "extract:kamikiri-hostplants": "node scripts/extract_kamikiri_hostplants.mjs",
+    "audit:kamikiri-species-accounts": "node scripts/extract-kamikiri-species-accounts.mjs",
     "import:scolytinae-catalog": "node scripts/import-scolytinae-catalog.mjs",
     "import:scolytinae-hosts": "node scripts/import-scolytinae-host-records.mjs"
   },

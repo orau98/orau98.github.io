@@ -411,7 +411,6 @@ test('curated long OCR plant blocks keep source-supported longhorn rows', () => 
   const truePairs = [
     ['10-1', 'イスノキ'],
     ['7-1', 'イスノキ'],
-    ['species-21842', 'イスノキ'],
     ['species-22311', 'イスノキ'],
     ['species-22139', 'イスノキ'],
     ['species-22078', 'イスノキ'],

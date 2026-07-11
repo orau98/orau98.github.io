@@ -434,6 +434,7 @@ const ensureInsectProfileRouteShells = () => {
       })),
     ];
     let count = 0;
+    let preservedTaxonomyRedirects = 0;
 
     for (const { baseDir, locale, routeSegment } of routeGroups) {
       if (!fs.existsSync(baseDir)) continue;
@@ -448,6 +449,10 @@ const ensureInsectProfileRouteShells = () => {
         if (!fs.existsSync(sourceIndex)) continue;
 
         const sourceHtml = fs.readFileSync(sourceIndex, 'utf8');
+        if (sourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"')) {
+          preservedTaxonomyRedirects++;
+          continue;
+        }
         let canonicalPath = '';
         let canonicalIndexable = false;
         const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
@@ -491,6 +496,9 @@ const ensureInsectProfileRouteShells = () => {
     }
 
     console.log(`[postbuild] Synced ${count} insect profile SPA route shell(s).`);
+    console.log(
+      `[postbuild] Preserved ${preservedTaxonomyRedirects} taxonomy-merge insect redirect(s).`,
+    );
   } catch (error) {
     console.warn('[postbuild] Failed to sync insect profile SPA route shells:', error?.message || error);
   }

@@ -18,7 +18,9 @@ const __dirname = path.dirname(__filename);
 
 const ROOT = path.join(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT, 'public');
-const OUT_DIR = path.join(PUBLIC_DIR, 'assets', 'data-lite');
+const OUT_DIR = process.env.DATA_LITE_OUT_DIR
+  ? path.resolve(process.env.DATA_LITE_OUT_DIR)
+  : path.join(PUBLIC_DIR, 'assets', 'data-lite');
 
 function readText(filePath) {
   if (!fs.existsSync(filePath)) return '';
