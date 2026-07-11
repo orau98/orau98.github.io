@@ -52,3 +52,13 @@ test('蝶の明示的な訪花植物一覧を複数種で保持する', () => {
   assert.ok(keys.has('species-20313:ミヤマアズマギク'));
   assert.ok(keys.has('species-20435:ムニンセンニンソウ'));
 });
+
+test('出典のページ位置を食草・訪花の備考へ重複させない', () => {
+  const rows = readCsv('normalized_data/hostplants.csv');
+  const pollutedRows = rows.filter((row) => /PDF\s*p\.|\u518a子\s*p\./i.test(row.notes || ''));
+
+  assert.deepEqual(
+    pollutedRows.map((row) => row.record_id),
+    [],
+  );
+});
