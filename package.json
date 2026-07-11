@@ -27,6 +27,7 @@
     "audit:image-resolution": "node scripts/audit-insect-image-resolution.mjs",
     "audit:data-structure": "node scripts/audit-data-structure.mjs",
     "audit:csv-quality": "node scripts/audit-csv-quality.mjs",
+    "clean:hostplant-notes": "node scripts/clean-hostplant-notes.mjs",
     "audit:seo": "node scripts/audit-seo.mjs",
     "rename:plant-images": "node scripts/rename-plant-images-from-japanese.mjs",
     "build:plant-image-index": "node scripts/update_plant_image_filenames.mjs",

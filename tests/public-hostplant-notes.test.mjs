@@ -42,6 +42,45 @@ test('host plant note filter removes OCR audit metadata', () => {
   );
 });
 
+test('host plant note filter removes source locators and redundant structured labels', () => {
+  for (const segment of [
+    '図鑑4 p.155',
+    '掲載頁: 31-32',
+    'PDF本文で確認',
+    '記録地域: 海外（韓国）',
+    '地域根拠: Host trees欄に(Korea)と明記',
+    '原著植物名: Picea jezoensis',
+    'YList採用名: Picea jezoensis var. jezoensis',
+    '寄主根拠: 原著のHost trees欄',
+    '海外記録',
+    '国外記録',
+    'ヨーロッパ',
+    'ヨーロッパの記録',
+    'ヨーロッパの記録（horseshoe vetch）',
+    '中国で記録、日本では未確認',
+    '台湾記録',
+    'ロシア記録',
+    'オーストラリア記録',
+    '北アメリカ',
+    'マレー半島',
+    'パラワン島',
+    'ラオス',
+    '朝鮮半島',
+    '日本での寄主植物は未確認',
+  ]) {
+    assert.equal(isInternalHostPlantNoteSegment(segment), true, segment);
+  }
+
+  assert.equal(
+    getPublicHostPlantNote('図鑑4 p.155 / 国外記録 / 葉裏に潜る'),
+    '葉裏に潜る',
+  );
+  assert.equal(
+    getPublicHostPlantNote('記録地域: 海外（韓国） / 原著植物名: Picea jezoensis / 掲載頁: 12'),
+    '',
+  );
+});
+
 test('host plant section notes hide source bookkeeping and no-data placeholders', () => {
   assert.equal(
     getPublicHostPlantSectionNote('日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。'),
@@ -121,4 +160,26 @@ test('hostplants CSV files do not contain internal OCR or cleanup notes', () => 
       `${csvPath} should not contain visitor-facing internal hostplant notes`,
     );
   });
+});
+
+test('overseas status is structured and is not repeated in visitor-facing notes', () => {
+  const corrected = new Map([
+    ['hostplant-004211', '国外'],
+    ['hostplant-004212', '国外'],
+    ['hostplant-004213', '国外'],
+    ['hostplant-004214', '国外'],
+    ['hostplant-PDFAUDIT-20260710-0120', '野外（国外）'],
+    ['hostplant-PDFAUDIT-20260710-0121', '野外（国外）'],
+  ]);
+
+  for (const csvPath of ['normalized_data/hostplants.csv', 'public/hostplants.csv']) {
+    const rows = parseCsv(csvPath);
+    const byId = new Map(rows.map((row) => [row.record_id, row]));
+    for (const [recordId, observationType] of corrected) {
+      const row = byId.get(recordId);
+      assert.ok(row, `${csvPath}: missing ${recordId}`);
+      assert.equal(row.observation_type, observationType, `${csvPath}: ${recordId}`);
+      assert.equal(getPublicHostPlantNote(row.notes || ''), row.notes || '', `${csvPath}: ${recordId}`);
+    }
+  }
 });

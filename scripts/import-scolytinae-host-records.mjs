@@ -159,21 +159,10 @@ for (const row of source.rows) {
     plant_part: row.plant_part || "樹皮下・材",
     life_stage: row.life_stage || "記載なし",
     reference: row.reference,
-    notes: getPublicHostPlantNote(
-      [
-        `記録地域: ${row.geography_label}`,
-        `地域根拠: ${row.geography_basis}`,
-        `原著植物名: ${row.plant_scientific_name_original}`,
-        row.plant_scientific_name_accepted
-          ? `YList採用名: ${row.plant_scientific_name_accepted}`
-          : "",
-        `寄主根拠: ${row.evidence_type}`,
-        row.page ? `掲載頁: ${row.page}` : "",
-        row.notes || "",
-      ]
-        .filter(Boolean)
-        .join(" / "),
-    ),
+    // Geography, source names, evidence type, and page are already retained in
+    // the structured source JSON and audit output. Only visitor-facing ecology
+    // notes belong in hostplants.csv.
+    notes: getPublicHostPlantNote(row.notes || ""),
   });
 }
 

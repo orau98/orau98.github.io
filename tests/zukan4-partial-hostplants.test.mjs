@@ -20,13 +20,16 @@ const sourceRows = (relativePath) => parseCsv(relativePath)
 const rowsFor = (rows, insectId) => rows.filter((row) => row.insect_id === insectId);
 const namesFor = (rows, insectId) => new Set(rowsFor(rows, insectId).map((row) => row.plant_name));
 
-test('図鑑4 p.86–155 の監査済み寄主445件を両CSVに保持する', () => {
+test('図鑑4 p.86–155 の監査済み寄主445件を両CSVに保持し、ページ管理情報は表示備考に入れない', () => {
   for (const csvPath of CSV_PATHS) {
     const rows = sourceRows(csvPath);
     assert.equal(rows.length, 445, csvPath);
     assert.equal(new Set(rows.map((row) => row.record_id)).size, 445, `${csvPath}: record_id must be unique`);
-    assert.equal(rows.every((row) => /^図鑑4 p\.\d+/.test(row.notes)), true, `${csvPath}: page provenance`);
+    assert.equal(rows.every((row) => !/図鑑4\s+p\.\d+/.test(row.notes)), true, `${csvPath}: page locators stay out of public notes`);
   }
+
+  const report = parseCsv('reports/zukan4-partial-p086-155-hostplants.csv');
+  assert.equal(report.every((row) => /^\d+$/.test(row.book_page)), true, 'audit ledger keeps page provenance');
 });
 
 test('段組み・ページまたぎを正しい種へ割り当てる', () => {
@@ -100,6 +103,7 @@ test('巻末側の代表種を欠落させない', () => {
       assert.equal(grape.some((row) => row.plant_name === name && row.observation_type === '文献'), true, `${csvPath}: species-0601 missing ${name}`);
     }
     assert.equal(grape.some((row) => row.plant_name === 'Vitis属' && row.observation_type === '野外（国外）'), true);
+    assert.equal(grape.find((row) => row.plant_name === 'Vitis属')?.notes ?? '', '');
   }
 });
 

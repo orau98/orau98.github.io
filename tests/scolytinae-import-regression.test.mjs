@@ -21,6 +21,21 @@ const insectIds = new Set(insects.map((row) => row.insect_id));
 const hostplants = readCsv("normalized_data/hostplants.csv").filter((row) =>
   insectIds.has(row.insect_id),
 );
+const sourceRecords = new Map(
+  [
+    "data/scolytinae_host_record_groups.json",
+    "data/scolytinae_nobuchi_1964_hosts.json",
+    "data/scolytinae_xylosandrus_1981_hosts.json",
+  ].flatMap((filePath) => {
+    const document = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return (document.groups || []).flatMap((group) =>
+      (group.hosts || []).map((host, index) => [
+        `${group.record_prefix}-${String(index + 1).padStart(2, "0")}`,
+        { ...group, ...host },
+      ]),
+    );
+  }),
+);
 
 test("Scolytinae catalog imports all 322 sequential species", () => {
   assert.equal(insects.length, 322);
@@ -68,14 +83,22 @@ test("host records retain explicit, inferred, overseas, and unknown geography", 
     (row) => row.insect_id === "species-SC176" && row.plant_name === "ハイマツ",
   );
   assert.equal(hakkoda?.observation_type, "文献（国内・明記）");
-  assert.match(hakkoda?.notes || "", /青森県八甲田山/);
+  assert.equal(hakkoda?.notes || "", "");
+  assert.match(
+    sourceRecords.get("N74-JAPO-01")?.geography_label || "",
+    /青森県八甲田山/,
+  );
 
   const korea = hostplants.filter((row) => row.insect_id === "species-SC206");
   assert.equal(korea.length, 2);
   assert.ok(
     korea.every((row) => row.observation_type === "文献（海外・明記）"),
   );
-  assert.ok(korea.every((row) => row.notes.includes("海外（韓国）")));
+  assert.ok(korea.every((row) => row.notes === ""));
+  assert.match(
+    sourceRecords.get("N79-SUBO-KOREA-01")?.geography_label || "",
+    /海外（韓国）/,
+  );
 });
 
 test("1964 specimen records are image-checked and limited to explicit Japanese records", () => {
@@ -95,7 +118,8 @@ test("1964 specimen records are image-checked and limited to explicit Japanese r
     niisimai.some(
       (row) =>
         row.plant_name === "シリブカガシ" &&
-        row.notes.includes("Lithocarpus glaber"),
+        sourceRecords.get("N64-NIIS-03")?.plant_scientific_name_accepted ===
+          "Lithocarpus glaber",
     ),
   );
 
@@ -160,7 +184,8 @@ test("1975 type records and 1981 Xylosandrus hosts keep their evidence scope", (
     germanus.some(
       (row) =>
         row.plant_name === "タカノツメ（樹木）" &&
-        row.notes.includes("Gamblea innovans"),
+        sourceRecords.get("N81-GERM-119")?.plant_scientific_name_accepted ===
+          "Gamblea innovans",
     ),
   );
 });
