@@ -14,7 +14,7 @@ export const normalizeLatinTaxonName = (value = '') => {
   return v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
 };
 
-const SUSPICIOUS_PLANT_NAME_SET = new Set([
+export const SUSPICIOUS_PLANT_NAME_SET = new Set([
   '葉',
   '葉裏',
   '葉表',
