@@ -254,3 +254,27 @@ test('コジマヒゲナガコバネカミキリの写真をアヤモンチビ�
     [],
   );
 });
+
+test('誤同定だったアカマダラの写真を表示しない', () => {
+  const imageExtensions = JSON.parse(
+    fs.readFileSync(new URL('../public/image_extensions.json', import.meta.url), 'utf8'),
+  );
+  const imageNames = new Set(Object.keys(imageExtensions));
+  const normalizedEntries = buildNormalizedEntries(imageNames, imageExtensions);
+  const akamadara = {
+    name: 'アカマダラ',
+    scientificName: 'Araschnia levana Linnaeus, 1758',
+    scientificFilename: 'Araschnia_levana',
+  };
+
+  assert.equal(imageExtensions['アカマダラ'], undefined);
+  assert.deepEqual(
+    resolveImageBaseCandidates(buildInsectImageBaseCandidates(akamadara), {
+      imageNames,
+      imageExtensions,
+      normalizedEntries,
+      includeUnresolved: false,
+    }),
+    [],
+  );
+});
