@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 
 import {
   buildInsectImageBaseCandidates,
@@ -192,5 +193,64 @@ test('buildInsectImageBaseCandidates includes scientific synonym filename aliase
       includeUnresolved: false,
     }),
     ['Parnassius_glacialis'],
+  );
+});
+
+test('コジマヒゲナガコバネカミキリの写真をアヤモンチビカミキリ各亜種へ流用しない', () => {
+  const imageExtensions = JSON.parse(
+    fs.readFileSync(new URL('../public/image_extensions.json', import.meta.url), 'utf8'),
+  );
+  const imageNames = new Set(Object.keys(imageExtensions));
+  const normalizedEntries = buildNormalizedEntries(imageNames, imageExtensions);
+
+  assert.equal(imageExtensions['コジマヒゲナガコバネカミキリ'], '.jpg');
+  assert.equal(imageExtensions['アヤモンチビカミキリ基亜種'], undefined);
+  assert.equal(imageExtensions['アヤモンチビカミキリ沖縄亜種'], undefined);
+
+  const kojima = {
+    name: 'コジマヒゲナガコバネカミキリ',
+    scientificName: 'Molorchus (Molorchus) kojimai Matsushita, 1939',
+    scientificFilename: 'Molorchus_kojimai',
+  };
+
+  const baseSubspecies = {
+    name: 'アヤモンチビカミキリ 基亜種',
+    scientificName: 'Sybra (Sybra) ordinata ordinata Bates, 1873',
+    scientificFilename: 'Sybra_ordinata_ordinata',
+    alternativeNames: 'アヤモンチビカミキリ',
+  };
+  const okinawaSubspecies = {
+    name: 'アヤモンチビカミキリ 沖縄亜種',
+    scientificName: 'Sybra (Sybra) ordinata loochooana Breuning, 1939',
+    scientificFilename: 'Sybra_ordinata_loochooana',
+    alternativeNames: 'オキナワアヤモンチビカミキリ',
+  };
+
+  assert.deepEqual(
+    resolveImageBaseCandidates(buildInsectImageBaseCandidates(kojima), {
+      imageNames,
+      imageExtensions,
+      normalizedEntries,
+      includeUnresolved: false,
+    }),
+    ['コジマヒゲナガコバネカミキリ'],
+  );
+  assert.deepEqual(
+    resolveImageBaseCandidates(buildInsectImageBaseCandidates(baseSubspecies), {
+      imageNames,
+      imageExtensions,
+      normalizedEntries,
+      includeUnresolved: false,
+    }),
+    [],
+  );
+  assert.deepEqual(
+    resolveImageBaseCandidates(buildInsectImageBaseCandidates(okinawaSubspecies), {
+      imageNames,
+      imageExtensions,
+      normalizedEntries,
+      includeUnresolved: false,
+    }),
+    [],
   );
 });
