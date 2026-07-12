@@ -160,12 +160,15 @@ test('112 exact actions apply across three tables and become byte-idempotent', (
     assert.equal(notes.has('note-1005003'), false);
     assert.equal(
       noteRows.filter((row) => row.reference === SOURCE).length,
-      250,
+      249,
     );
     assert.equal(
       hostRows.filter((row) => row.reference === SOURCE).length,
-      1719,
+      1711,
     );
+    assert.equal(insects.has('species-20436'), false);
+    assert.equal(hostRows.some((row) => row.insect_id === 'species-20436'), false);
+    assert.equal(noteRows.some((row) => row.insect_id === 'species-20436'), false);
 
     const afterFirst = dataHashes(dataRoot);
     const check = runApply(dataRoot, '--check');

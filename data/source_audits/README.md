@@ -151,6 +151,14 @@ npm run apply:leaf-beetle-canonical-merge -- --check
 npm run apply:leaf-beetle-canonical-merge
 ```
 
+## イチモンジセセリ重複IDの統合追補（2026-07-12）
+
+`butterfly-canonical-taxonomy-merge-2026-07-12.json` は、『日本産蝶類標準図鑑』の
+同一見出し（PDF 164頁、冊子177頁、`BTG-0274`）へ対応していた `species-20432` と
+`species-20436` を、前者へ統合する追補台帳です。重複側の7食草と出現時期は正準側に
+原本再監査済み行があり、マコモ1件は原本の同種欄にないため、重複側の関連行を削除します。
+旧IDの静的URLは正準ページへ恒久転送し、sitemapから除外します。
+
 ## 日本産タマムシ大図鑑の原本監査（2026-07-11）
 
 `japanese-jewel-beetles-grand-atlas-audit-2026-07-11.json` は、PDF原本と

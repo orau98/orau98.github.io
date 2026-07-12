@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { parseCsv, serializeField, toObjects } from './lib/csvQuality.mjs';
+import { loadButterflyMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_ROOT = process.env.BUTTERFLY_GUIDE_DATA_ROOT
@@ -14,6 +15,10 @@ const DATA_ROOT = process.env.BUTTERFLY_GUIDE_DATA_ROOT
 const AUDIT_PATH = path.join(
   ROOT,
   'data/source_audits/japanese-butterfly-guide-integrity-actions-2026-07-12.json',
+);
+const CANONICAL_MERGE_PATH = path.join(
+  ROOT,
+  'data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
 );
 const PATHS = {
   insects: path.join(DATA_ROOT, 'normalized_data/insects.csv'),
@@ -34,8 +39,10 @@ const EXPECTED_COUNTS = Object.freeze({
   newTaxonActions: 4,
   hostActions: 49,
   noteActions: 38,
-  hostRowsAfter: 1719,
-  noteRowsAfter: 250,
+  // The later canonical-ID addendum removes eight legacy host rows and one
+  // duplicate note from species-20436 after the original guide audit.
+  hostRowsAfter: 1711,
+  noteRowsAfter: 249,
 });
 const ALLOWED_ACTIONS = Object.freeze({
   insects: new Set(['update_insect_japanese_name', 'add_insect_taxon']),
@@ -278,6 +285,13 @@ function validateResult(outputs, actionGroups) {
   for (const row of [...tables.hosts.rows, ...tables.notes.rows]) {
     if (!tables.insects.byId.has(row.insect_id)) throw new Error(`orphan relationship: ${row.record_id} -> ${row.insect_id}`);
   }
+  const [canonicalMerge] = loadButterflyMergedTaxonRedirects(CANONICAL_MERGE_PATH);
+  if (
+    !tables.insects.byId.has(canonicalMerge.canonicalId)
+    || tables.insects.byId.has(canonicalMerge.duplicateId)
+    || tables.hosts.rows.some((row) => row.insect_id === canonicalMerge.duplicateId)
+    || tables.notes.rows.some((row) => row.insect_id === canonicalMerge.duplicateId)
+  ) throw new Error('butterfly canonical-ID addendum is not fully applied');
   const sourceHosts = tables.hosts.rows.filter((row) => row.reference === SOURCE);
   const sourceNotes = tables.notes.rows.filter((row) => row.reference === SOURCE);
   if (sourceHosts.length !== EXPECTED_COUNTS.hostRowsAfter) {

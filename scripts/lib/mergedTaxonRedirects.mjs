@@ -89,7 +89,54 @@ export function loadLeafBeetleMergedTaxonRedirects(filePath) {
   return redirects;
 }
 
-export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath }) {
+export function loadButterflyMergedTaxonRedirects(filePath) {
+  const audit = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  if (
+    audit.schema_version !== 1
+    || audit.audit_name !== '蝶類重複分類群の正準ID統合追補'
+    || audit.counts?.mappings !== 1
+    || audit.counts?.duplicate_taxon_deletions !== 1
+    || audit.counts?.duplicate_hostplant_deletions !== 8
+    || audit.counts?.duplicate_note_deletions !== 1
+    || audit.mappings?.length !== 1
+  ) throw new Error(`${filePath}: unexpected butterfly canonical-merge ledger`);
+
+  return audit.mappings.map((mapping) => {
+    const duplicateId = clean(mapping.duplicate_id);
+    const canonicalId = clean(mapping.canonical_id);
+    const japaneseName = clean(mapping.japanese_name);
+    const scientificName = clean(mapping.scientific_name);
+    if (
+      !duplicateId
+      || !canonicalId
+      || duplicateId === canonicalId
+      || !japaneseName
+      || !scientificName
+      || clean(mapping.taxon_group) !== 'butterfly'
+      || clean(mapping.decision) !== 'merge_duplicate_taxon'
+      || !clean(mapping.evidence)
+    ) throw new Error(`${filePath}: invalid butterfly redirect ${duplicateId} -> ${canonicalId}`);
+    return {
+      auditId: `${duplicateId}->${canonicalId}`,
+      duplicateId,
+      canonicalId,
+      duplicateJapaneseName: japaneseName,
+      sourceJapaneseName: japaneseName,
+      sourceTaxon: scientificName,
+      legacyJapaneseName: japaneseName,
+      legacyScientificName: scientificName,
+      legacyRouteName: japaneseName,
+      legacyDisplayName: japaneseName,
+      taxonGroup: 'butterfly',
+      englishTypeLabel: 'Butterfly',
+      // The duplicate and canonical rows had the same scientific name, so
+      // there is no distinct legacy English slug to generate.
+      skipEnglishScientificRedirect: true,
+    };
+  });
+}
+
+export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterflyPath }) {
   const redirects = [
     ...loadKamikiriMergedTaxonRedirects(kamikiriPath).map((redirect) => ({
       ...redirect,
@@ -97,6 +144,7 @@ export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath }) {
       englishTypeLabel: 'Longhorn Beetle',
     })),
     ...loadLeafBeetleMergedTaxonRedirects(leafBeetlePath),
+    ...(butterflyPath ? loadButterflyMergedTaxonRedirects(butterflyPath) : []),
   ];
   const duplicateIds = new Set();
   for (const redirect of redirects) {

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "audit_name": "蝶類重複分類群の正準ID統合追補",
+  "reviewed_on": "2026-07-12",
+  "source": {
+    "reference": "日本産蝶類標準図鑑",
+    "pdf_page": 164,
+    "printed_page": 177,
+    "source_account_id": "BTG-0274",
+    "source_pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
+  },
+  "counts": {
+    "mappings": 1,
+    "duplicate_taxon_deletions": 1,
+    "duplicate_hostplant_deletions": 8,
+    "duplicate_note_deletions": 1
+  },
+  "mappings": [
+    {
+      "duplicate_id": "species-20436",
+      "canonical_id": "species-20432",
+      "japanese_name": "イチモンジセセリ",
+      "scientific_name": "Parnara guttata Bremer et Grey, 1852",
+      "taxon_group": "butterfly",
+      "decision": "merge_duplicate_taxon",
+      "evidence": "原PDFの同一見出しBTG-0274へ両IDが対応していた。species-20432には原本再監査済みの食草・出現時期が集約済みで、species-20436の7食草と出現時期は重複、マコモ1件は原本欄にないため削除する。"
+    }
+  ]
+}

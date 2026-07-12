@@ -68,6 +68,10 @@ const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
   __dirname,
   '../data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json',
 );
+const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
+);
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const EN_INDEX_PAGE_SIZE = 1000;
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
@@ -1330,6 +1334,7 @@ async function generateEnglishMetaPages() {
   const mergedTaxonRedirects = loadMergedTaxonRedirects({
     kamikiriPath: KAMIKIRI_AUDIT_PATH,
     leafBeetlePath: LEAF_BEETLE_CANONICAL_AUDIT_PATH,
+    butterflyPath: BUTTERFLY_CANONICAL_AUDIT_PATH,
   });
   for (const redirect of mergedTaxonRedirects) {
     const canonical = insectEntriesById.get(redirect.canonicalId);
@@ -1346,29 +1351,28 @@ async function generateEnglishMetaPages() {
       throw new Error(`[meta-en] merged duplicate has no scientific slug: ${redirect.duplicateId}`);
     }
     const canonicalSlug = decodeURIComponent(canonical.href.split('/').at(-1).replace(/\.html$/, ''));
-    if (legacyScientificSlug === canonicalSlug) {
+    if (legacyScientificSlug === canonicalSlug && !redirect.skipEnglishScientificRedirect) {
       throw new Error(
         `[meta-en] merged duplicate scientific slug equals canonical slug: ${legacyScientificSlug}`,
       );
     }
-    if (
-      usedInsectSlugsByType.get(canonical.type)?.has(legacyScientificSlug) &&
-      legacyScientificSlug !== canonicalSlug
-    ) {
-      throw new Error(
-        `[meta-en] merged duplicate scientific slug conflicts: ${legacyScientificSlug}`,
+    const title = `${redirect.legacyScientificName} | ${redirect.englishTypeLabel || EN_TYPE_LABELS[canonical.type] || 'Insect'} profile from Japan`;
+    if (legacyScientificSlug !== canonicalSlug) {
+      if (usedInsectSlugsByType.get(canonical.type)?.has(legacyScientificSlug)) {
+        throw new Error(
+          `[meta-en] merged duplicate scientific slug conflicts: ${legacyScientificSlug}`,
+        );
+      }
+      fs.writeFileSync(
+        path.join(EN_META_DIR, canonical.type, `${legacyScientificSlug}.html`),
+        buildLegacyRedirectHtml({
+          title,
+          targetUrl: `${BASE_ORIGIN}${canonical.href}`,
+          noindex: false,
+          redirectKind: 'taxonomy-merge',
+        }),
       );
     }
-    const title = `${redirect.legacyScientificName} | ${redirect.englishTypeLabel || EN_TYPE_LABELS[canonical.type] || 'Insect'} profile from Japan`;
-    fs.writeFileSync(
-      path.join(EN_META_DIR, canonical.type, `${legacyScientificSlug}.html`),
-      buildLegacyRedirectHtml({
-        title,
-        targetUrl: `${BASE_ORIGIN}${canonical.href}`,
-        noindex: false,
-        redirectKind: 'taxonomy-merge',
-      }),
-    );
     const canonicalRouteNames = new Set(canonical.japaneseRouteNames || []);
     for (const legacyName of new Set([
       redirect.legacyDisplayName,

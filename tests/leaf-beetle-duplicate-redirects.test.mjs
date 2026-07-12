@@ -12,6 +12,7 @@ import {
 
 const LEAF_AUDIT_PATH = 'data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json';
 const KAMIKIRI_AUDIT_PATH = 'data/source_audits/japanese-longhorn-beetles-2007.csv';
+const BUTTERFLY_AUDIT_PATH = 'data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json';
 const parsed = Papa.parse(fs.readFileSync('normalized_data/insects.csv', 'utf8'), {
   header: true,
   skipEmptyLines: true,
@@ -71,15 +72,17 @@ test('the fake Hemipyxis spelling redirects old URLs but is never a searchable s
   assert.doesNotMatch(canonical.synonyms, /hegenagae/i);
 });
 
-test('the generic redirect inventory preserves 97 kamikiri routes and adds 13 leaf-beetle routes', () => {
+test('the generic redirect inventory preserves all canonical taxon merges', () => {
   const all = loadMergedTaxonRedirects({
     kamikiriPath: KAMIKIRI_AUDIT_PATH,
     leafBeetlePath: LEAF_AUDIT_PATH,
+    butterflyPath: BUTTERFLY_AUDIT_PATH,
   });
-  assert.equal(all.length, 110);
+  assert.equal(all.length, 111);
   assert.equal(all.filter(({ taxonGroup }) => taxonGroup === 'longhornbeetle').length, 97);
   assert.equal(all.filter(({ taxonGroup }) => taxonGroup === 'leafbeetle').length, 13);
-  assert.equal(new Set(all.map(({ duplicateId }) => duplicateId)).size, 110);
+  assert.equal(all.filter(({ taxonGroup }) => taxonGroup === 'butterfly').length, 1);
+  assert.equal(new Set(all.map(({ duplicateId }) => duplicateId)).size, 111);
 });
 
 test('meta generators and the postbuild guard use permanent taxonomy-merge redirects', () => {

@@ -4,7 +4,10 @@ import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 import { slugifyScientificLabel } from './lib/englishNaming.mjs';
 import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
-import { loadLeafBeetleMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
+import {
+  loadButterflyMergedTaxonRedirects,
+  loadLeafBeetleMergedTaxonRedirects,
+} from './lib/mergedTaxonRedirects.mjs';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -16,6 +19,10 @@ const KAMIKIRI_AUDIT_PATH = path.join(
 const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
   ROOT,
   'data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json',
+);
+const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
+  ROOT,
+  'data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
 );
 const REQUIRED_FILES = [
   'index.html',
@@ -794,6 +801,39 @@ for (const redirect of mergedLeafBeetleRedirects) {
       assert(!/noindex/i.test(namedHtml), `${namedRelativePath} migration must remain crawlable`);
     }
   }
+}
+
+const mergedButterflyRedirects = loadButterflyMergedTaxonRedirects(
+  BUTTERFLY_CANONICAL_AUDIT_PATH,
+);
+assert(
+  mergedButterflyRedirects.length === 1,
+  `expected 1 merged butterfly redirect, found ${mergedButterflyRedirects.length}`,
+);
+const butterflyRuntimeIds = new Set(
+  readDistJson('assets/data-lite/butterflies.json').map((insect) => insect.id),
+);
+const japaneseButterflySitemap = readDistText('sitemap-butterfly.xml');
+for (const redirect of mergedButterflyRedirects) {
+  assert(
+    !butterflyRuntimeIds.has(redirect.duplicateId)
+      && butterflyRuntimeIds.has(redirect.canonicalId),
+    `merged butterfly runtime IDs are inconsistent: ${redirect.duplicateId} -> ${redirect.canonicalId}`,
+  );
+  const jaRelativePath = path.join('meta', 'butterfly', `${redirect.duplicateId}.html`);
+  assert(fs.existsSync(path.join(DIST_DIR, jaRelativePath)), `missing merged butterfly ID redirect: ${jaRelativePath}`);
+  const jaHtml = readDistText(jaRelativePath);
+  const jaTarget = `https://orau98.github.io/meta/butterfly/${redirect.canonicalId}.html`;
+  assert(/http-equiv=["']refresh["']/i.test(jaHtml), `${jaRelativePath} must refresh immediately`);
+  assert(jaHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} canonical mismatch`);
+  assert(jaHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} migration marker missing`);
+  assert(!/noindex/i.test(jaHtml), `${jaRelativePath} migration must remain crawlable`);
+  assert(
+    !japaneseButterflySitemap.includes(`/meta/butterfly/${redirect.duplicateId}.html`),
+    `${jaRelativePath} migration URL must not be submitted in the sitemap`,
+  );
+  assert(!englishInsectRoutes[redirect.duplicateId], `duplicate butterfly must not have an English canonical route: ${redirect.duplicateId}`);
+  assert(englishInsectRoutes[redirect.canonicalId], `missing English canonical route for ${redirect.canonicalId}`);
 }
 
 assert(

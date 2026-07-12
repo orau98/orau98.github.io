@@ -70,6 +70,10 @@ const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
   __dirname,
   '../data/source_audits/leaf-beetle-canonical-taxonomy-merge-2026-07-12.json',
 );
+const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
+);
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -2801,6 +2805,7 @@ async function generateMetaPages() {
     const mergedTaxonRedirects = loadMergedTaxonRedirects({
       kamikiriPath: KAMIKIRI_AUDIT_PATH,
       leafBeetlePath: LEAF_BEETLE_CANONICAL_AUDIT_PATH,
+      butterflyPath: BUTTERFLY_CANONICAL_AUDIT_PATH,
     });
     for (const redirect of mergedTaxonRedirects) {
       const canonical = insectPageById.get(redirect.canonicalId);
