@@ -34,6 +34,9 @@ const REQUIRED_FILES = [
   'meta/moth/index.html',
   'meta/plant/index.html',
   'meta/plant/グスクカンアオイ.html',
+  'meta/plant/アカミノルイヨウショウマ.html',
+  'meta/plant/ナガバギシギシ.html',
+  'meta/plant/キハダ.html',
   'en/meta/moth/index.html',
   'en/meta/plant/index.html',
   'robots.txt',
@@ -302,6 +305,81 @@ assert(
     identificationProfileHtml.includes('比較対象') &&
     identificationProfileHtml.includes('日本の野生植物'),
   'a profile-only plant with audited identification traits must get a source-backed static page',
+);
+
+const indexableProfileName = 'アカミノルイヨウショウマ';
+const indexableProfileRelativePath = `meta/plant/${indexableProfileName}.html`;
+const indexableProfileHtml = readDistText(indexableProfileRelativePath);
+const indexableProfileUrl = `https://orau98.github.io/meta/plant/${encodeURIComponent(indexableProfileName)}.html`;
+assert(
+  hasIndexFollowRobots(indexableProfileHtml) &&
+    indexableProfileHtml.includes('｜植物プロフィール｜昆虫植物図鑑</title>') &&
+    indexableProfileHtml.includes('Actaea erythroearpa') &&
+    indexableProfileHtml.includes('日本の野生植物 第1巻 p.369'),
+  'a complete twice-reviewed profile-only plant must be indexable with scientific name and source',
+);
+assert(
+  indexableProfileHtml.includes('"@type": "WebPage"') &&
+    indexableProfileHtml.includes('"scientificName": "Actaea erythroearpa"') &&
+    !indexableProfileHtml.includes('"hasEcologicalInteraction"') &&
+    !indexableProfileHtml.includes('0種') &&
+    !indexableProfileHtml.includes('食草として重要'),
+  'profile-only metadata and body must not invent empty insect interactions or food-plant claims',
+);
+assert(
+  indexableProfileHtml.includes(`/?tab=plants&amp;q=${encodeURIComponent(indexableProfileName)}`) &&
+    indexableProfileHtml.includes('図鑑でこの植物を探す'),
+  'a profile-only page must continue into the matching SPA plant search',
+);
+
+const thinProfileName = 'ナガバギシギシ';
+const thinProfileHtml = readDistText(`meta/plant/${thinProfileName}.html`);
+const thinProfileUrl = `https://orau98.github.io/meta/plant/${encodeURIComponent(thinProfileName)}.html`;
+assert(
+  !hasIndexFollowRobots(thinProfileHtml) &&
+    /<meta name="robots" content="noindex, follow/.test(thinProfileHtml),
+  'an identification-only thin profile must remain noindex',
+);
+
+const plantHubHtml = fs.readdirSync(path.join(DIST_DIR, 'meta', 'plant'))
+  .filter((file) => /^index(?:-\d+)?\.html$/.test(file))
+  .map((file) => readDistText(path.join('meta', 'plant', file)))
+  .join('\n');
+const plantSitemapHtml = readDistText('sitemap-plant.xml');
+const discoverySeedHtml = readDistText('search-console-discovery-seed.xml');
+assert(
+  plantHubHtml.includes(`>${indexableProfileName}</a>`) &&
+    plantSitemapHtml.includes(indexableProfileUrl) &&
+    discoverySeedHtml.includes(indexableProfileUrl),
+  'an indexable profile-only plant must be linked from the hub, sitemap, and discovery seed',
+);
+for (const oneInsectProfileName of ['ナガバノスミレサイシン', 'ルイヨウショウマ']) {
+  const oneInsectProfileUrl = `https://orau98.github.io/meta/plant/${encodeURIComponent(oneInsectProfileName)}.html`;
+  assert(
+    discoverySeedHtml.includes(oneInsectProfileUrl),
+    `a source-reviewed profile must stay in the discovery seed even when it has one related insect: ${oneInsectProfileName}`,
+  );
+}
+assert(
+  !plantHubHtml.includes(`>${thinProfileName}</a>`) &&
+    !plantSitemapHtml.includes(thinProfileUrl) &&
+    !discoverySeedHtml.includes(thinProfileUrl),
+  'a thin noindex profile must stay out of discovery inventories',
+);
+
+const kihadaDetail = readDistJson('assets/data-lite/plant-details.json').キハダ;
+const kihadaProfileHtml = readDistText('meta/plant/キハダ.html');
+assert(
+  kihadaDetail?.profile?.habit === '落葉高木' &&
+    kihadaDetail?.additionalProfiles?.[0]?.sourcePlantName === 'ミヤマキハダ' &&
+    kihadaDetail.additionalProfiles[0].distinguishingFeatures.includes('オオバキハダ'),
+  'YList alias canonicalization must preserve the canonical and source-name profiles separately',
+);
+assert(
+  kihadaProfileHtml.includes('「ミヤマキハダ」としての植物プロフィール') &&
+    kihadaProfileHtml.includes('オオバキハダに似るが') &&
+    kihadaProfileHtml.includes('日本の野生植物 第2巻 p.112'),
+  'the canonical static page must render the preserved source-name profile with its own citation',
 );
 
 const okinagusaEnglishRoutePath = path.join('en', 'plant', 'オキナグサ', 'index.html');

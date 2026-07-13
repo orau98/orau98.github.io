@@ -5,6 +5,7 @@ import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
   collectPlantPageNames,
+  isIndexablePlantProfile,
   isNonPlantResourceName,
   isSuspiciousPlantName,
 } from '../scripts/lib/dataLiteBuilders.mjs';
@@ -22,6 +23,62 @@ test('collectPlantPageNames includes audited profile-only plants for static page
     ),
     ['グスクカンアオイ', 'クスノキ'],
   );
+});
+
+test('isIndexablePlantProfile requires a complete, twice-reviewed and OCR-clean profile', () => {
+  const profile = {
+    source: '日本の野生植物 第2巻',
+    page: '97',
+    printedPage: '193',
+    habit: '多年草',
+    height: '10～20cm',
+    flowerPeriod: '6～8月',
+    distribution: '北海道・本州に分布する',
+    habitat: '山地の湿った林内に生える',
+    similarTaxa: '近縁種A',
+    distinguishingFeatures: '近縁種Aより葉が広く、花弁の先が浅く切れ込む。',
+    extractionMethod: '識別欄は原PDF画像目視確認＋手動要約；本文欄は原PDF画像目視確認＋手動修正',
+  };
+  const detail = { scientificName: 'Planta exemplaris', family: '例科' };
+
+  assert.equal(isIndexablePlantProfile(profile, detail), true);
+
+  for (const field of [
+    'habit',
+    'height',
+    'flowerPeriod',
+    'distribution',
+    'habitat',
+    'similarTaxa',
+    'distinguishingFeatures',
+    'source',
+    'page',
+    'printedPage',
+  ]) {
+    assert.equal(
+      isIndexablePlantProfile({ ...profile, [field]: '' }, detail),
+      false,
+      `${field} is required`,
+    );
+  }
+
+  assert.equal(
+    isIndexablePlantProfile({
+      ...profile,
+      extractionMethod: '識別欄は原PDF画像目視確認＋手動要約',
+    }, detail),
+    false,
+  );
+  assert.equal(
+    isIndexablePlantProfile({ ...profile, flowerPeriod: '6一8月' }, detail),
+    false,
+  );
+  assert.equal(
+    isIndexablePlantProfile({ ...profile, distribution: '本州（岩手県以）' }, detail),
+    false,
+  );
+  assert.equal(isIndexablePlantProfile(profile, { family: '例科' }), false);
+  assert.equal(isIndexablePlantProfile(profile, { scientificName: 'Planta exemplaris' }), false);
 });
 
 test('buildHostPlantDataset canonicalizes aliases and excludes flower visits from host plants', () => {
@@ -205,6 +262,90 @@ test('buildHostPlantDataset keeps an identification-only audited profile', () =>
     'ミヤマウイキョウと比べ、葉は3出せず2-3回羽状複葉になる。',
   );
   assert.equal(plantDetails.シラネニンジン.profile.printedPage, '612');
+});
+
+test('buildHostPlantDataset preserves every profile after YList alias canonicalization', () => {
+  const ylistLite = {
+    aliasToCanonical: {
+      ミヤマキハダ: 'キハダ',
+    },
+    plants: {
+      キハダ: {
+        familyJp: 'ミカン科',
+        familyEn: 'Rutaceae',
+        orderJp: 'ムクロジ目',
+        orderEn: 'Sapindales',
+        scientificName: 'Phellodendron amurense var. amurense',
+        aliases: ['ミヤマキハダ'],
+      },
+    },
+  };
+  const profiles = [
+    {
+      plant_name: 'ミヤマキハダ',
+      similar_taxa: 'オオバキハダ',
+      distinguishing_features: 'オオバキハダに似るが、樹皮が厚く、小葉基部は広いくさび形である。',
+      printed_page: '112',
+      source: '日本の野生植物 第2巻',
+      page: '57',
+      extraction_method: '識別欄は原PDF画像目視確認＋手動要約',
+    },
+    {
+      plant_name: 'キハダ',
+      scientific_name: 'Phellodendron amurense',
+      family: 'ミカン科',
+      family_latin: 'RUTACEAE',
+      genus_jp: 'キハダ属',
+      genus_scientific: 'Phellodendron',
+      habit: '落葉高木',
+      height: '10～15m',
+      distribution: '北海道・本州・四国・九州に分布する',
+      habitat: '山地の林内に生える',
+      source: '日本の野生植物 第2巻',
+      page: '57',
+      extraction_method: 'macOS Vision OCR + rule parser',
+    },
+    {
+      plant_name: 'クスノキ',
+      scientific_name: 'Cinnamomum camphora',
+      family: 'クスノキ科',
+      family_latin: 'LAURACEAE',
+      genus_scientific: 'Cinnamomum',
+      habit: '常緑高木',
+      source: '日本の野生植物 第1巻',
+      page: '70',
+    },
+  ];
+
+  const forward = buildHostPlantDataset([], ylistLite, profiles).plantDetails;
+  const reversed = buildHostPlantDataset([], ylistLite, profiles.toReversed()).plantDetails;
+
+  assert.deepEqual(reversed, forward, 'profile output must not depend on CSV row order');
+
+  const kihada = forward.キハダ;
+  assert.equal(kihada.profile.habit, '落葉高木', 'the exact canonical-name profile must be primary');
+  assert.equal(kihada.profile.height, '10～15m');
+  assert.equal(kihada.profile.distinguishingFeatures, '', 'the primary profile must not absorb alias facts');
+  assert.equal(kihada.additionalProfiles.length, 1);
+  assert.equal(kihada.additionalProfiles[0].sourcePlantName, 'ミヤマキハダ');
+  assert.equal(
+    kihada.additionalProfiles[0].distinguishingFeatures,
+    'オオバキハダに似るが、樹皮が厚く、小葉基部は広いくさび形である。',
+  );
+  assert.equal(kihada.additionalProfiles[0].habit, '', 'the alias profile must not absorb canonical facts');
+  assert.equal(kihada.additionalProfiles[0].distribution, '');
+  assert.equal(kihada.additionalProfiles[0].printedPage, '112');
+
+  assert.equal(
+    Object.hasOwn(forward.クスノキ, 'additionalProfiles'),
+    false,
+    'singleton profiles must keep the compact legacy shape',
+  );
+  const retainedProfileCount = Object.values(forward).reduce(
+    (count, detail) => count + (detail.profile ? 1 : 0) + (detail.additionalProfiles?.length || 0),
+    0,
+  );
+  assert.equal(retainedProfileCount, profiles.length, 'canonicalization must not discard a fact-bearing profile');
 });
 
 test('buildHostPlantDataset keeps the richest profile for duplicate plant names', () => {
