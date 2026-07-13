@@ -28,3 +28,51 @@ export const getBackTarget = (location, fallback = '/') => {
   return fallback;
 };
 
+export const buildExplorerListPath = ({
+  pathname = '/',
+  searchParams = '',
+  activeTab = 'insects',
+  searchTerm = '',
+} = {}) => {
+  const params = new URLSearchParams(searchParams);
+  params.set('tab', activeTab === 'plants' ? 'plants' : 'insects');
+
+  const query = String(searchTerm || '');
+  if (query) params.set('q', query);
+  else params.delete('q');
+
+  const serialized = params.toString();
+  return `${pathname || '/'}${serialized ? `?${serialized}` : ''}`;
+};
+
+export const buildExplorerDetailContext = ({
+  pathname = '/',
+  searchParams = '',
+  activeTab = 'insects',
+  searchTerm = '',
+  targetPath = '',
+  scrollY = 0,
+  timestamp = Date.now(),
+} = {}) => {
+  const returnPath = buildExplorerListPath({
+    pathname,
+    searchParams,
+    activeTab,
+    searchTerm,
+  });
+
+  return {
+    returnPath,
+    navigationState: {
+      from: returnPath,
+      fromList: returnPath,
+    },
+    scrollRestore: {
+      y: Number.isFinite(Number(scrollY)) ? Number(scrollY) : 0,
+      tab: activeTab === 'plants' ? 'plants' : 'insects',
+      from: returnPath,
+      to: String(targetPath || ''),
+      ts: Number.isFinite(Number(timestamp)) ? Number(timestamp) : Date.now(),
+    },
+  };
+};

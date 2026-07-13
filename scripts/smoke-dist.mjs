@@ -8,6 +8,7 @@ import {
   loadButterflyMergedTaxonRedirects,
   loadLeafBeetleMergedTaxonRedirects,
 } from './lib/mergedTaxonRedirects.mjs';
+import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -125,6 +126,41 @@ const readDistJson = (relativePath) => {
   }
 };
 
+const validateEnglishRedirectCanonical = ({
+  html,
+  mappedTargetPath = '',
+  sourcePath,
+  type,
+  canonicalId,
+}) => {
+  const canonicalHref = html.match(
+    /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i,
+  )?.[1];
+  assert(canonicalHref, `${sourcePath} canonical target missing`);
+
+  if (mappedTargetPath) {
+    assert(
+      canonicalHref === `https://orau98.github.io${mappedTargetPath}`,
+      `${sourcePath} canonical mismatch`,
+    );
+    return canonicalHref;
+  }
+
+  const targetRelativePath = decodeURIComponent(new URL(canonicalHref).pathname)
+    .replace(/^\/+/, '');
+  assert(
+    fs.existsSync(path.join(DIST_DIR, targetRelativePath)),
+    `${sourcePath} noindex canonical target is missing: ${canonicalHref}`,
+  );
+  const targetHtml = readDistText(targetRelativePath);
+  assert(
+    hasNoindexRobotsMeta(targetHtml) &&
+      targetHtml.includes(`href="/meta/${type}/${canonicalId}.html"`),
+    `${sourcePath} unmapped canonical must be the matching noindex English profile`,
+  );
+  return canonicalHref;
+};
+
 assert(fs.existsSync(DIST_DIR), 'dist directory not found');
 
 for (const relativePath of REQUIRED_FILES) {
@@ -202,6 +238,54 @@ for (const relativePath of RUNTIME_DATA_FILES) {
     `missing or empty runtime data file: ${relativePath}`,
   );
 }
+
+const englishRouteMaps = {
+  insects: readDistJson('seo-route-map.insects.json'),
+  plants: readDistJson('seo-route-map.plants.json'),
+};
+for (const [mapName, routeMap] of Object.entries(englishRouteMaps)) {
+  for (const [key, href] of Object.entries(routeMap)) {
+    const targetRelativePath = decodeURIComponent(new URL(href, 'https://orau98.github.io').pathname)
+      .replace(/^\/+/, '');
+    const targetPath = path.join(DIST_DIR, targetRelativePath);
+    assert(fs.existsSync(targetPath), `${mapName} route map target is missing: ${key} -> ${href}`);
+    assert(
+      hasIndexFollowRobots(readDistText(targetRelativePath)),
+      `${mapName} route map target must be indexable: ${key} -> ${href}`,
+    );
+  }
+}
+
+const exactScientificPlantLinkCases = [
+  {
+    source: 'meta/moth/species-0353.html',
+    scientificName: 'Artemisia maritima',
+    canonicalName: 'ミブヨモギ',
+  },
+  {
+    source: 'meta/moth/species-0680.html',
+    scientificName: 'Salix caprea',
+    canonicalName: 'バッコヤナギ',
+  },
+];
+for (const { source, scientificName, canonicalName } of exactScientificPlantLinkCases) {
+  const html = readDistText(source);
+  const canonicalHref = `/meta/plant/${encodeURIComponent(canonicalName)}.html`;
+  const invalidHref = `/meta/plant/${encodeURIComponent(scientificName)}.html`;
+  assert(
+    html.includes(`href="${canonicalHref}"`) && !html.includes(`href="${invalidHref}"`),
+    `${source} must resolve ${scientificName} to the generated ${canonicalName} page`,
+  );
+}
+
+const unresolvedScientificPlantHtml = readDistText('meta/moth/species-0352.html');
+assert(
+  unresolvedScientificPlantHtml.includes('Artemisia laciniata') &&
+    !unresolvedScientificPlantHtml.includes(
+      `href="/meta/plant/${encodeURIComponent('Artemisia laciniata')}.html"`,
+    ),
+  'unresolved scientific plant names must remain visible plain text without a broken link',
+);
 
 // Structural sanity checks on the runtime data contract.
 const manifest = readDistJson('assets/data-lite/manifest.json');
@@ -452,9 +536,9 @@ assert(
   'アオアツバ reload route must keep the React insect detail instead of redirecting to /meta/',
 );
 
+const englishRouteMap = englishRouteMaps.insects;
 for (const section of INSECT_SECTION_CONFIGS) {
   const insects = readDistJson(`assets/data-lite/${section.collectionKey}.json`);
-  const englishRouteMap = readDistJson('seo-route-map.insects.json');
   for (const insect of insects) {
     for (const locale of ['ja', 'en']) {
       const routePath = decodeURIComponent(buildInsectPath(insect, locale));
@@ -468,13 +552,6 @@ for (const section of INSECT_SECTION_CONFIGS) {
         `${locale} app route has no static entry: ${routePath} (${insect.id})`,
       );
       const routeHtml = fs.readFileSync(routeFile, 'utf8');
-      const expectedTarget = locale === 'en'
-        ? englishRouteMap[insect.id]
-        : `/${insect.id}.html`;
-      assert(
-        expectedTarget && routeHtml.includes(expectedTarget),
-        `${locale} app route points to the wrong profile: ${routePath} (${insect.id})`,
-      );
       assert(
         routeHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
           routeHtml.includes('<div id="root"></div>') &&
@@ -491,6 +568,24 @@ for (const section of INSECT_SECTION_CONFIGS) {
       const canonicalHtml = readDistText(canonicalRelativePath);
       const routeNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml);
       const canonicalNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml);
+      const mappedEnglishTarget = englishRouteMap[insect.id];
+      if (locale === 'en' && mappedEnglishTarget) {
+        assert(
+          routeHtml.includes(mappedEnglishTarget),
+          `${locale} app route points to the wrong profile: ${routePath} (${insect.id})`,
+        );
+      } else if (locale === 'en') {
+        assert(
+          canonicalRelativePath.startsWith(`en/meta/${section.type}/`) &&
+            canonicalNoindex,
+          `unmapped English app route must retain its noindex profile for ${insect.id}`,
+        );
+      } else {
+        assert(
+          routeHtml.includes(`/${insect.id}.html`),
+          `${locale} app route points to the wrong profile: ${routePath} (${insect.id})`,
+        );
+      }
       assert(
         routeNoindex === canonicalNoindex,
         `${locale} app route robots must match canonical target indexability: ${routePath}`,
@@ -802,15 +897,19 @@ for (const redirect of mergedKamikiriRedirects) {
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,
   );
 
-  const englishTargetPath = englishInsectRoutes[redirect.canonicalId];
-  assert(englishTargetPath, `missing English canonical route for ${redirect.canonicalId}`);
+  const englishTargetPath = englishInsectRoutes[redirect.canonicalId] || '';
   const legacyScientificSlug = slugifyScientificLabel(redirect.legacyScientificName);
   const enRelativePath = path.join('en', 'meta', 'longhornbeetle', `${legacyScientificSlug}.html`);
   assert(fs.existsSync(path.join(DIST_DIR, enRelativePath)), `missing merged English redirect: ${enRelativePath}`);
   const enHtml = readDistText(enRelativePath);
-  const enTarget = `https://orau98.github.io${englishTargetPath}`;
+  const enTarget = validateEnglishRedirectCanonical({
+    html: enHtml,
+    mappedTargetPath: englishTargetPath,
+    sourcePath: enRelativePath,
+    type: 'longhornbeetle',
+    canonicalId: redirect.canonicalId,
+  });
   assert(/http-equiv=["']refresh["']/i.test(enHtml), `${enRelativePath} must refresh immediately`);
-  assert(enHtml.includes(`rel="canonical" href="${enTarget}"`), `${enRelativePath} canonical mismatch`);
   assert(enHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} migration marker missing`);
   assert(!/noindex/i.test(enHtml), `${enRelativePath} migration must remain crawlable`);
   assert(
@@ -892,8 +991,7 @@ for (const redirect of mergedLeafBeetleRedirects) {
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,
   );
 
-  const englishTargetPath = englishInsectRoutes[redirect.canonicalId];
-  assert(englishTargetPath, `missing English canonical route for ${redirect.canonicalId}`);
+  const englishTargetPath = englishInsectRoutes[redirect.canonicalId] || '';
   const legacyScientificSlug = slugifyScientificLabel(redirect.legacyScientificName);
   const enRelativePath = path.join('en', 'meta', 'leafbeetle', `${legacyScientificSlug}.html`);
   assert(
@@ -901,9 +999,14 @@ for (const redirect of mergedLeafBeetleRedirects) {
     `missing merged leaf-beetle English redirect: ${enRelativePath}`,
   );
   const enHtml = readDistText(enRelativePath);
-  const enTarget = `https://orau98.github.io${englishTargetPath}`;
+  const enTarget = validateEnglishRedirectCanonical({
+    html: enHtml,
+    mappedTargetPath: englishTargetPath,
+    sourcePath: enRelativePath,
+    type: 'leafbeetle',
+    canonicalId: redirect.canonicalId,
+  });
   assert(/http-equiv=["']refresh["']/i.test(enHtml), `${enRelativePath} must refresh immediately`);
-  assert(enHtml.includes(`rel="canonical" href="${enTarget}"`), `${enRelativePath} canonical mismatch`);
   assert(enHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} migration marker missing`);
   assert(!/noindex/i.test(enHtml), `${enRelativePath} migration must remain crawlable`);
   assert(
@@ -974,7 +1077,8 @@ for (const redirect of mergedButterflyRedirects) {
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,
   );
   assert(!englishInsectRoutes[redirect.duplicateId], `duplicate butterfly must not have an English canonical route: ${redirect.duplicateId}`);
-  assert(englishInsectRoutes[redirect.canonicalId], `missing English canonical route for ${redirect.canonicalId}`);
+  // The English route map intentionally contains indexable pages only. The exhaustive
+  // app-route loop above separately verifies unmapped noindex canonical profiles.
 }
 
 assert(

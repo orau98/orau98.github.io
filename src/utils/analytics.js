@@ -1,11 +1,17 @@
 const GA_MEASUREMENT_ID = 'G-MFEQF99G0H';
 
-export function trackPageView({ pathname = '/', search = '', hash = '' } = {}) {
+export function getPageViewPath({ pathname = '/' } = {}) {
+  return pathname || '/';
+}
+
+export function trackPageView({ pathname = '/' } = {}) {
   if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
     return false;
   }
 
-  const pagePath = `${pathname || '/'}${search || ''}${hash || ''}` || '/';
+  // 検索語・タブ・絞り込み・ページ番号は同じExplorer画面内の状態であり、
+  // 実ページ表示として数えない。SPAのpathname遷移だけをpage_viewにする。
+  const pagePath = getPageViewPath({ pathname });
   const pageLocation = new URL(pagePath, window.location.origin).toString();
 
   window.gtag('event', 'page_view', {

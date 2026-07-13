@@ -24,6 +24,7 @@ import {
   slugifyScientificLabel,
 } from './lib/englishNaming.mjs';
 import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
+import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -405,7 +406,7 @@ function isGeneratedMetaPageIndexableByHref(href) {
   const filePath = path.join(__dirname, '../public', relativePath);
   if (!fs.existsSync(filePath)) return false;
   const html = fs.readFileSync(filePath, 'utf-8');
-  return !/<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+  return !hasNoindexRobotsMeta(html);
 }
 
 function resolveInsectImageUrl(insect) {
@@ -1310,7 +1311,9 @@ async function generateEnglishMetaPages() {
       };
       insectEntriesByType.get(type).push(entry);
       insectEntriesById.set(insect.id, entry);
-      englishInsectRouteMap[insect.id] = entry.href;
+      if (isGeneratedMetaPageIndexableByHref(entry.href)) {
+        englishInsectRouteMap[insect.id] = entry.href;
+      }
       const japaneseName = cleanString(insect.name || insect.japaneseName);
       if (japaneseName) {
         if (!insectObjectsByJapaneseName.has(japaneseName)) {
@@ -1423,7 +1426,9 @@ async function generateEnglishMetaPages() {
         scientificName: display.scientificName,
         japaneseReference: display.japaneseReference,
       });
-      englishPlantRouteMap[plantRecord.canonicalName] = plantRecord.href;
+      if (isGeneratedMetaPageIndexableByHref(plantRecord.href)) {
+        englishPlantRouteMap[plantRecord.canonicalName] = plantRecord.href;
+      }
       queueLegacyRedirect(
         `/en/plant/${encodeURIComponent(plantRecord.canonicalName)}/index.html`,
         plantRecord.href,

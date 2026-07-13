@@ -320,6 +320,13 @@ const validateSeoRouteMap = (filePath) => {
     ensure(Boolean(distPath), `${relativePath}: unresolved href for ${key}`);
     if (distPath) {
       ensure(fs.existsSync(distPath), `${relativePath}: target not found for ${key} -> ${href}`);
+      if (fs.existsSync(distPath)) {
+        const robots = getMetaContent(readFile(distPath), 'name', 'robots');
+        ensure(
+          !robots.includes('noindex'),
+          `${relativePath}: route map points to noindex target for ${key} -> ${href}`,
+        );
+      }
     }
   }
 };
@@ -450,19 +457,54 @@ const isRedirectStub = (html) =>
     getMetaContent(html, 'name', 'x-redirect-kind') === 'taxonomy-merge'
   );
 
-// hreflang 相互整合チェック用に、indexable なメタページの canonical と
-// alternate リンクを収集する（noindex ページは対象外）
+// hreflang 相互整合チェック用に、全メタページの状態と indexable ページの
+// canonical/alternate を収集する。noindex の参照先も検出対象に含める。
+const hreflangPageStates = new Map();
 const hreflangRecords = new Map();
 
 const recordHreflangEntry = (filePath, html) => {
   const robots = getMetaContent(html, 'name', 'robots');
-  if (robots.includes('noindex')) return;
   const canonical = getLinkHref(html, 'canonical');
   if (!canonical) return;
-  hreflangRecords.set(canonical, {
+  const record = {
     relativePath: path.relative(ROOT, filePath),
     alternates: getAlternateLinks(html),
-  });
+    robots,
+  };
+  hreflangPageStates.set(canonical, record);
+  if (!robots.includes('noindex')) {
+    hreflangRecords.set(canonical, record);
+  }
+};
+
+const validateInternalMetaLinks = (filePath, html) => {
+  const relativePath = path.relative(ROOT, filePath);
+  for (const tag of getTags(html, 'a')) {
+    const href = String(parseAttributes(tag).href || '').trim();
+    if (!href || href.startsWith('#')) continue;
+
+    let targetUrl = null;
+    try {
+      targetUrl = new URL(href, SITE_ORIGIN);
+    } catch {
+      continue;
+    }
+    if (targetUrl.origin !== SITE_ORIGIN) continue;
+    if (!/^\/(?:en\/)?meta\//.test(targetUrl.pathname)) continue;
+
+    const targetPath = resolveSitePathToDistPath(targetUrl.href);
+    ensure(
+      Boolean(targetPath && fs.existsSync(targetPath)),
+      `${relativePath}: internal meta link target not found -> ${href}`,
+    );
+    if (!targetPath || !fs.existsSync(targetPath)) continue;
+
+    const targetHtml = readFile(targetPath);
+    ensure(
+      !isRedirectStub(targetHtml),
+      `${relativePath}: internal meta link points to redirect stub -> ${href}`,
+    );
+  }
 };
 
 const validateMetaFile = (filePath) => {
@@ -472,6 +514,7 @@ const validateMetaFile = (filePath) => {
   } else {
     validateHtml(filePath, html, { requireAnalytics: true });
     recordHreflangEntry(filePath, html);
+    validateInternalMetaLinks(filePath, html);
   }
 };
 
@@ -499,8 +542,21 @@ for (const [canonical, record] of hreflangRecords) {
   for (const alt of record.alternates) {
     if (alt.hreflang === 'x-default') continue;
     if (alt.href === canonical) continue;
+    const targetState = hreflangPageStates.get(alt.href);
+    if (targetState) {
+      const isJapaneseToEnglishPair =
+        record.relativePath.startsWith('dist/meta/') &&
+        targetState.relativePath.startsWith('dist/en/meta/');
+      if (isJapaneseToEnglishPair) {
+        ensure(
+          !targetState.robots.includes('noindex'),
+          `${record.relativePath}: hreflang points to noindex page -> ${targetState.relativePath}`,
+        );
+      }
+      if (targetState.robots.includes('noindex')) continue;
+    }
     const target = hreflangRecords.get(alt.href);
-    // メタページ在庫外（ホーム等）や noindex ページへの参照はここでは対象外
+    // メタページ在庫外（ホーム等）はここでは対象外
     if (!target) continue;
     hreflangPairChecks++;
     ensure(

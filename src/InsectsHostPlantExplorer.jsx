@@ -43,6 +43,7 @@ import {
   localizePath,
   stripLocalePrefix,
 } from "./utils/locale";
+import { buildExplorerDetailContext } from "./utils/navState";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -1827,8 +1828,29 @@ const InsectsHostPlantExplorer = memo(
         // 遷移後に検索デバウンスが発火して一覧へ引き戻さないよう先にクリアする
         if (searchTimeoutRef.current) {
           clearTimeout(searchTimeoutRef.current);
+          searchTimeoutRef.current = null;
         }
-        navigate(selection.detailPath);
+
+        // 入力から300ms以内に候補を選んだ場合も、入力中の検索語を一覧URLへ反映する。
+        // 現在の履歴エントリをreplaceしてから詳細をpushするため、ブラウザの戻る操作と
+        // 詳細内の「一覧に戻る」のどちらでも同じ検索・フィルター状態へ復帰できる。
+        const detailContext = buildExplorerDetailContext({
+          pathname: location.pathname,
+          searchParams: getCurrentParams(),
+          activeTab,
+          searchTerm: searchByTab[activeTab] || "",
+          targetPath: selection.detailPath,
+          scrollY: typeof window !== "undefined" ? window.scrollY : 0,
+          timestamp: Date.now(),
+        });
+        safeSessionSet(
+          SCROLL_RESTORE_KEY,
+          JSON.stringify(detailContext.scrollRestore),
+        );
+        navigate(detailContext.returnPath, { replace: true });
+        navigate(selection.detailPath, {
+          state: detailContext.navigationState,
+        });
         return;
       }
       const value =
